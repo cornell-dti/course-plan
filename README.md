@@ -1,4 +1,4 @@
-# vue-app
+# CoursePlan
 
 ## Project setup
 ```
