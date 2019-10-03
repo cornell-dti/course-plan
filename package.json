@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "format": "prettier --write '**/*.{js,vue,scss,css,html}'",
+    "format:check": "prettier --check '**/*.{js,vue,scss,css,html}'"
   },
   "dependencies": {
     "firebase": "^6.6.2",
@@ -16,6 +18,7 @@
   "devDependencies": {
     "@vue/cli-plugin-eslint": "^3.11.0",
     "@vue/cli-service": "^3.11.0",
+    "@vue/eslint-config-airbnb": "^4.0.1",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
