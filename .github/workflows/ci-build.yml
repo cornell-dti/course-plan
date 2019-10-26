@@ -43,7 +43,7 @@ jobs:
           script: |
             github.issues.createComment({
               owner: 'cornell-dti',
-              repo: 'samwise',
+              repo: 'course-plan',
               issue_number: ${{ github.event.number }},
               body: 'Deployed to https://cornell-dti.github.io/course-plan/${{ github.event.number }}/index.html'
             });
