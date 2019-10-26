@@ -3,15 +3,15 @@
     <div class="semester">
       <div class="semester-title">Fall 2019</div>
       <div class="semester-list">
-        <course class = "semester-class" subject="CS" code="2110" name="Object-Oriented Programming and Data Structures"></course>
+        <course class="semester-class" subject="PHIL" :code="1100" name="Introduction to Philosophy" :credits="3" :semesters="['Fall', 'Spring']" :check=true color="2BBCC6" requirement="KCM"></course>
       </div>
     </div>
     <div class="semester">
       <div class="semester-title">Spring 2020</div>
-      <div class="semester-list">
-        <course class = "semester-class" subject="CS" code="2110" name="Object-Oriented Programming and Data Structures"></course>
-        <course class = "semester-class" subject="CS" code="1110" name="Introduction to Computing Using Python"></course>
-      </div>
+      <!-- <div class="semester-list">
+        <course class="semester-class" subject="CS" code=2110 name="Object-Oriented Programming and Data Structures"></course>
+        <course class="semester-class" subject="CS" code=1110 name="Introduction to Computing Using Python"></course>
+      </div> -->
     </div>
     <div class="semester"></div>
     <div class="semester"></div>
