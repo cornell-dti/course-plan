@@ -1,5 +1,5 @@
 <template>
-  <div class="course">
+  <div v-bind:class="{ 'course--min': !notCompact }" class="course">
     <div class="course-color" :style="cssVars">
       <div class="course-dotColumn">
         <span class="course-dot"></span>
@@ -12,32 +12,17 @@
         <span class="course-dot"></span>
       </div>
     </div>
-    <div class="course-content">
-      <div class="course-main">
-        <div class="course-code">{{ subject }} {{ code }}</div>
-        <div class="course-name">{{ name }}</div>
-        <div class="course-info">
+    <div v-bind:class="{ 'course-content--min': !notCompact }" class="course-content">
+      <div v-bind:class="{ 'course-main--min': !notCompact }" class="course-main">
+        <div v-bind:class="{ 'course-code--min': !notCompact }" class="course-code">{{ subject }} {{ code }}</div>
+        <div v-if="notCompact" class="course-name">{{ name }}</div>
+        <div v-if="notCompact" class="course-info">
           <span class="course-credits">{{ creditString }}</span>
           <span :v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
           <div class="course-checkmarkWrapper tooltip">
-            <img :v-if="check" class="course-checkmark" src="../assets/images/checkmark.svg" />
+            <img :v-if="check" class="course-checkmark" src="../assets/images/info.svg" />
             <div class="tooltiptext">{{ requirementString }}</div>
           </div>
-        </div>
-        <!-- <div class="course-buttons">
-          <a class="course-button" :href="review">
-            <img class="course-image" src="@/assets/cornell-logo.webp">
-          </a>
-          <a class="course-button" :href="roster">
-            <img class="course-image" src="@/assets/dti-logo.png">
-          </a>
-        </div> -->
-      </div>
-      <div class="course-tripleDots">
-        <div class="course-dotRow">
-          <span class="course-dot course-dot--menu"></span>
-          <span class="course-dot course-dot--menu"></span>
-          <span class="course-dot course-dot--menu"></span>
         </div>
       </div>
     </div>
@@ -59,6 +44,14 @@ export default {
     requirement: String,
   },
   computed: {
+    notCompact() {
+      return true;
+    },
+
+    rqString() {
+      return "RQ"
+    },
+
     requirementString() {
       return "Satisfies " + this.requirement + " requirement";
     },
@@ -80,6 +73,7 @@ export default {
     review() {
       return `https://www.cureviews.org/course/${this.subject}/${this.code}`;
     }, 
+
     // TODO: change semester from FA18
     roster() {
       return `https://classes.cornell.edu/browse/roster/FA18/class/${this.subject}/${this.code}`;
@@ -98,6 +92,7 @@ export default {
 <style scoped lang="scss">
 // TODO: font families
 // TODO: common variables (colors)
+// TODO: fix info button and add warning button
 .course
 {
   width: 21.25rem;
@@ -105,6 +100,18 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: white;
+
+  &--min {
+    width: 10.5rem;
+    height: 2rem;
+  }
+
+  &-main {
+    &--min {
+      display: flex;
+      align-items: center;
+    }
+  }
 
   &-color {
     width: 1.35rem;
@@ -126,13 +133,14 @@ export default {
   }
 
   &-dot {
-    opacity: .5;
-    height: 3px;
-    width: 3px;
+    opacity: .8;
+    height: 2px;
+    width: 2px;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
-    margin-bottom: .312rem;
+    margin-bottom: 2px;
+    margin-top: 2px;
 
     &--menu {
       background-color: #C4C4C4;
@@ -146,12 +154,21 @@ export default {
     display: flex;
     justify-content: space-between;
     width: 100%;
+
+    &--min {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
   }
 
   &-code {
     font-size: 14px;
     line-height: 17px;
     color: #858585;
+
+    &--min {
+      color: #3D3D3D;
+    }
   }
 
   &-name {
@@ -165,25 +182,36 @@ export default {
   &-info {
     font-size: 14px;
     line-height: 17px;
+    font-style: italic;
     color: #757575;
     display: flex;
     align-items: center;
   }
 
   &-semesters {
-    border-left: 1px #757575 solid;
-    margin-left: .3rem;
-    padding-left: .3rem;
+    margin-left: .2rem;
+
+    &:before {
+      margin-right: .2rem;
+      font-style: normal;
+      content: '|'
+    }
   }
 
   &-checkmarkWrapper {
-    border-left: 1px #757575 solid;
-    margin-left: .3rem;
-    padding-left: .3rem;
+    font-style: normal;
     display: flex;
+    margin-left: .2rem;
+    display: flex;
+    align-items: center;
+
+    &:before {
+      margin-right: .2rem;
+      font-style: normal;
+      content: '|'
+    }
   }
 
-  // TODO: center
   &-checkmark {
     width: 16px;
   }
