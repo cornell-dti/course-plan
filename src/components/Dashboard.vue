@@ -5,9 +5,12 @@
 </template>
 
 <script>
-import { Component, Vue} from "vue-property-decorator";
+import Vue from 'vue';
 import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
+
+var dragula = require('@/vueDragulaConfig.js');
+Vue.component('course', Course);
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);

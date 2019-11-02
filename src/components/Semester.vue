@@ -10,9 +10,9 @@
           <span class="semester-credits">{{ creditString  }}</span>
         </div>
       </div>
-      <div class="semester-courses">
+      <div class="semester-courses" v-dragula="courses" bag="first-bag">
         <div v-for="course in courses" v-bind:key="course.id" class="semester-courseWrapper">
-          <course v-bind="course"/>
+          <course v-bind="course" class="semester-course" />
         </div>
         <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }">
           <button class="semester-button semester-addButton">{{ buttonString }}</button>
@@ -125,6 +125,10 @@ export default {
 
   &-courseWrapper {
     margin: .5rem 0 .5rem 0;
+  }
+
+  &-course {
+    touch-action: none;
   }
 
   &-addWrapper {
