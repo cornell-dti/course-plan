@@ -1,34 +1,48 @@
 <template>
   <div id="dashboard">
-    <div class="semester">
-      <div class="semester-title">Fall 2019</div>
-      <div class="semester-list">
-        <course class="semester-class" subject="PHIL" :code="1100" name="Introduction to Philosophy" :credits="3" :semesters="['Fall', 'Spring']" :check=true color="2BBCC6" requirement="KCM"></course>
-      </div>
-    </div>
-    <div class="semester">
-      <div class="semester-title">Spring 2020</div>
-      <!-- <div class="semester-list">
-        <course class="semester-class" subject="CS" code=2110 name="Object-Oriented Programming and Data Structures"></course>
-        <course class="semester-class" subject="CS" code=1110 name="Introduction to Computing Using Python"></course>
-      </div> -->
-    </div>
-    <div class="semester"></div>
-    <div class="semester"></div>
-    <div class="semester"></div>
-    <div class="semester"></div>
-    <div class="semester"></div>
-    <div class="semester"></div>
+    <semesterview :semesters="semesters"/>
   </div>
 </template>
 
 <script>
 import { Component, Vue} from "vue-property-decorator";
 import Course from '@/components/Course';
+import SemesterView from '@/components/SemesterView';
 
 Vue.component('course', Course);
+Vue.component('semesterview', SemesterView);
 
-export default {};
+export default {
+  computed: {
+    semesters() {
+      let course = {
+        subject: 'PHIL',
+        code: 1100,
+        name: 'Introduction to Philosophy',
+        credits: 3,
+        semesters: ['Fall', 'Spring'],
+        color: "2BBCC6",
+        check: true,
+        requirement: "KCM"
+      };
+      let semester1 = {
+        name: "Freshman Fall",
+        courses: [course, course]
+      }
+      let semester2 = {
+        name: "Freshman Spring",
+        courses: [course, course, course]
+      }
+      let semester3 = {
+        name: "Sophomore Fall",
+        courses: [course]
+      }
+      let semesters = [semester1, semester2, semester3];
+
+      return semesters;
+    }
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -42,30 +56,6 @@ export default {};
   margin: 1rem;
   padding: 1rem;
   height: 12.12rem;
-
-  &:nth-child(even) {
-    background: lightblue;
-  }
-
-  &:nth-child(odd) {
-    background: lightpink;
-  }
-
-  &-title {
-    font-weight: bold;
-  }
-
-  &-list
-  {
-    margin-top: .5rem;
-    display: flex;
-    flex-direction: row;
-  }
-
-  &-class
-  {
-    margin-right: .5rem;
-  }
 }
 
 </style>

@@ -1,0 +1,140 @@
+<template>
+  <div class="semester" v-bind:class="{ 'semester--min': !exists }">
+    <div v-if="exists" class="semester-content">
+      <div class="semester-top">
+        <div class="semester-left">
+          <span class="semester-name">{{ name }}</span>
+          <img class="semester-icon" src="../assets/images/pencil.svg"/>
+        </div>
+        <div class="semester-right">
+          <span class="semester-credits">{{ creditString  }}</span>
+        </div>
+      </div>
+      <div class="semester-courses">
+        <div v-for="course in courses" v-bind:key="course.id" class="semester-courseWrapper">
+          <course v-bind="course"/>
+        </div>
+        <div class="semester-courseWrapper semester-addWrapper">
+          <button class="semester-button semester-addButton">{{ buttonString }}</button>
+        </div>
+      </div>
+    </div>
+    <div v-if="!exists" class="semester-empty">
+      <button class="semester-button semester-semesterButton">{{ semesterString }}</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { Component, Vue} from "vue-property-decorator";
+import Course from '@/components/Course';
+
+Vue.component('course', Course);
+
+export default {
+  // TODO: fonts! (Proxima Nova)
+  // TODO: recolor pencil and all other svg icons to that gray
+  props: {
+    name: String,
+    courses: Array,
+    exists: Boolean,
+  },
+  computed: {
+    // TODO: calculate credits from all classes
+    creditString() {
+      let credits = 0;
+      this.courses.forEach(course => {
+        credits += course.credits;
+      });
+      return credits.toString() + " cr.";
+    },
+    buttonString() {
+      return '+ COURSE';
+    },
+    semesterString() {
+      return '+ SEMESTER';
+    }
+  }
+};
+</script>
+
+
+<style scoped lang="scss">
+.semester
+{
+  padding: .875rem 1.125rem;
+  border: 2px solid #D8D8D8;
+  border-radius: 11px;
+  width: fit-content;
+
+  &--min {
+    border: 2px dashed #D8D8D8;
+    padding: 1.5rem 6rem;
+  }
+
+  &-empty {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  
+  &-top {
+    display: flex;
+    justify-content: space-between;
+    color: #858585;
+  }
+
+  &-left {
+    display: flex;
+  }
+
+  &-name {
+    font-size: 18px;
+    line-height: 22px;
+    margin-right: .5rem;
+    font-weight: bold;
+  }
+
+  &-icon {
+    width: 14px;
+  }
+
+  &-credits {
+    font-size: 14px; 
+    line-height: 17px;
+  }
+
+  &-courseWrapper {
+    margin: .5rem 0 .5rem 0;
+  }
+
+  &-addWrapper {
+    width: 21.25rem;
+    height: 4.625rem;
+    border-radius: .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #D8D8D8;
+  }
+
+  &-button {
+    border-radius: 7px;
+    width: 11.5rem;
+    height: 2rem;
+    font-size: 14px;
+    line-height: 17px;
+    color: white;
+    box-shadow: -4px -4px 10px #EEEEEE, 4px 4px 10px rgba(0, 0, 0, 0.25);
+  }
+
+  &-addButton {
+    background-color: #5B676D;
+  }
+
+  &-semesterButton {
+    background-color: #777E82
+  }
+}
+
+</style>

@@ -100,6 +100,7 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: white;
+  box-shadow: -4px -4px 10px #EFEFEF, 4px 4px 10px #EFEFEF;
 
   &--min {
     width: 10.5rem;
