@@ -1,10 +1,20 @@
 <template>
-  <div class="semesterView">
-    <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper"> 
-      <semester v-bind="sem" :exists="true"/>
+  <div>
+    <div v-if="!compact" class="semesterView"> 
+      <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper"> 
+        <semester v-bind="sem" :exists="true"/>
+      </div>
+      <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
+        <semester :exists="false"/>
+      </div>
     </div>
-    <div class="semesterView-wrapper">
-      <semester :exists="false"/>
+    <div v-if="compact" class="semesterView"> 
+      <div  v-for="sem in compactSemesters" v-bind:key="sem.id" class="semesterView-wrapper semesterView-wrapper--compact"> 
+        <semester v-bind="sem" :exists="true"/>
+      </div>
+      <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
+        <semester :exists="false" :compact="compact"/>
+      </div>
     </div>
   </div>
 </template>
@@ -20,6 +30,26 @@ Vue.component('semester', Semester);
 export default {
   props: {
     semesters: Array,
+    compact: Boolean,
+  },
+  computed: {
+    // Duplicate the semesters array, but set the compact boolean to true
+    compactSemesters() {
+      let compactSem = [];
+      this.semesters.forEach(sem => {
+        let newSem = JSON.parse(JSON.stringify(sem));
+        let newCourses = [];
+        sem.courses.forEach(course => {
+          let newCourse = JSON.parse(JSON.stringify(course));
+          newCourse.compact = true;
+          newCourses.push(newCourse)
+        });
+        newSem.courses = newCourses;
+        newSem.compact = true;
+        compactSem.push(newSem);
+      });
+      return compactSem;
+    }
   }
 };
 </script>
@@ -35,6 +65,10 @@ export default {
     justify-content: center;
     flex-basis: 50%;
     margin-bottom: 1.5rem;
+
+    &--compact {
+      flex-basis: 25%;
+    }
   }
 }
 

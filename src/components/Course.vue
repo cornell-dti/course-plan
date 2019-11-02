@@ -42,10 +42,11 @@ export default {
     color: String,
     check: Boolean,
     requirement: String,
+    compact: Boolean,
   },
   computed: {
     notCompact() {
-      return true;
+      return !this.compact;
     },
 
     rqString() {

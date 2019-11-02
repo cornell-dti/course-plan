@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard">
-    <semesterview :semesters="semesters"/>
+    <semesterview :semesters="semesters" :compact="false" />
   </div>
 </template>
 

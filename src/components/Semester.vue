@@ -1,12 +1,12 @@
 <template>
-  <div class="semester" v-bind:class="{ 'semester--min': !exists }">
+  <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact }">
     <div v-if="exists" class="semester-content">
-      <div class="semester-top">
-        <div class="semester-left">
+      <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
+        <div class="semester-left" v-bind:class="{ 'semester-left--compact': compact }">
           <span class="semester-name">{{ name }}</span>
           <img class="semester-icon" src="../assets/images/pencil.svg"/>
         </div>
-        <div class="semester-right">
+        <div class="semester-right" v-bind:class="{ 'semester-right--compact': compact }">
           <span class="semester-credits">{{ creditString  }}</span>
         </div>
       </div>
@@ -14,13 +14,13 @@
         <div v-for="course in courses" v-bind:key="course.id" class="semester-courseWrapper">
           <course v-bind="course"/>
         </div>
-        <div class="semester-courseWrapper semester-addWrapper">
+        <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }">
           <button class="semester-button semester-addButton">{{ buttonString }}</button>
         </div>
       </div>
     </div>
     <div v-if="!exists" class="semester-empty">
-      <button class="semester-button semester-semesterButton">{{ semesterString }}</button>
+      <button class="semester-button semester-semesterButton" v-bind:class="{ 'semester-semesterButton--compact': compact }">{{ semesterString }}</button>
     </div>
   </div>
 </template>
@@ -38,6 +38,7 @@ export default {
     name: String,
     courses: Array,
     exists: Boolean,
+    compact: Boolean
   },
   computed: {
     // TODO: calculate credits from all classes
@@ -72,6 +73,10 @@ export default {
     padding: 1.5rem 6rem;
   }
 
+  &--compact {
+    padding: .875rem 1.125rem;
+  }
+
   &-empty {
     display: flex;
     align-items: center;
@@ -82,10 +87,24 @@ export default {
     display: flex;
     justify-content: space-between;
     color: #858585;
+
+    &--compact {
+      flex-direction: column;
+    }
   }
 
   &-left {
     display: flex;
+    
+    &--compact {
+      justify-content: space-between;
+    }
+  }
+
+  &-right {
+    &--compact {
+      margin-top: .25rem;
+    }
   }
 
   &-name {
@@ -116,6 +135,12 @@ export default {
     justify-content: center;
     align-items: center;
     border: 2px dashed #D8D8D8;
+
+    &--compact {
+      width: 10.5rem;
+      border: 0;
+      height: unset;
+    }
   }
 
   &-button {
@@ -133,7 +158,11 @@ export default {
   }
 
   &-semesterButton {
-    background-color: #777E82
+    background-color: #777E82;
+
+    &--compact {
+      width: 10.5rem;
+    }
   }
 }
 
