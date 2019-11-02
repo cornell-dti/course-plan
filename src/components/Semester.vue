@@ -15,7 +15,7 @@
           <course v-bind="course" class="semester-course" />
         </div>
         <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }">
-          <button class="semester-button semester-addButton">{{ buttonString }}</button>
+          <button class="semester-button semester-addButton" v-on:click="printArrayLength">{{ buttonString }}</button>
         </div>
       </div>
     </div>
@@ -55,6 +55,11 @@ export default {
     semesterString() {
       return '+ SEMESTER';
     }
+  },
+  methods: {
+    printArrayLength() {
+      console.log(this.courses.length);
+    },
   }
 };
 </script>
