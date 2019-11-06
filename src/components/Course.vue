@@ -16,12 +16,20 @@
       <div v-bind:class="{ 'course-main--min': !notCompact }" class="course-main">
         <div v-bind:class="{ 'course-code--min': !notCompact }" class="course-code">{{ subject }} {{ code }}</div>
         <div v-if="notCompact" class="course-name">{{ name }}</div>
-        <div v-if="notCompact" class="course-info">
-          <span class="course-credits">{{ creditString }}</span>
-          <span :v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
-          <div class="course-checkmarkWrapper tooltip">
-            <img :v-if="check" class="course-checkmark" src="../assets/images/info.svg" />
+        <div class="course-info">
+          <span v-if="notCompact" class="course-credits">{{ creditString }}</span>
+          <span v-if="notCompact && semesterString" class="course-semesters">{{ semesterString }}</span>
+          <div v-if="notCompact" class="course-outerWrapper tooltip">
+            <div class="course-iconWrapper course-iconWrapper--info">
+              <img :v-if="requirements" class="course-icon course-icon--info" src="../assets/images/info.svg" />
+            </div>
             <div class="tooltiptext">{{ requirementString }}</div>
+          </div>
+          <div class="course-outerWrapper tooltip">
+            <div class="course-iconWrapper">
+              <img class="course-icon" src="../assets/images/caution.svg" />
+            </div>
+            <div class="tooltiptext">{{ cautionString }}</div>
           </div>
         </div>
       </div>
@@ -40,9 +48,8 @@ export default {
     credits: Number,
     semesters: Array,
     color: String,
-    check: Boolean,
-    requirement: String,
-    compact: Boolean,
+    requirements: Array,
+    compact: Boolean
   },
   computed: {
     notCompact() {
@@ -53,8 +60,39 @@ export default {
       return "RQ"
     },
 
+    // TODO: bold requirements
     requirementString() {
-      return "Satisfies " + this.requirement + " requirement";
+      if (this.requirements == null || this.requirements.length == 0) {
+        return;
+      }
+
+      let str = "Satisfies ";
+      let endStr = " requirement";
+      let length = this.requirements.length;
+      if (length == 1) {
+        return str + this.requirements[0] + endStr;
+      }
+
+      // loop through all but the last requirement and comma separate
+      for(let i = 0; i < length - 1; i++) {
+        str += this.requirements[i] + ", ";
+      }
+
+      console.log(str);
+
+      // remove the comma if only 2 requirements
+      if(length == 2) {
+        str = str.substring(0, str.length-2) + " ";
+      }
+
+      console.log(str);
+
+      return str + "and " + this.requirements[length-1] + endStr;
+    },
+
+    // TODO: waiting on Emily comments    
+    cautionString() {
+
     },
 
     semesterString() {
@@ -93,7 +131,6 @@ export default {
 <style scoped lang="scss">
 // TODO: font families
 // TODO: common variables (colors)
-// TODO: fix info button and add warning button
 .course
 {
   width: 21.25rem;
@@ -112,6 +149,9 @@ export default {
     &--min {
       display: flex;
       align-items: center;
+      width: 100%;
+      justify-content: space-between;
+      margin-right:.5rem;
     }
   }
 
@@ -200,22 +240,27 @@ export default {
     }
   }
 
-  &-checkmarkWrapper {
+  &-iconWrapper {
     font-style: normal;
     display: flex;
     margin-left: .2rem;
-    display: flex;
     align-items: center;
 
-    &:before {
-      margin-right: .2rem;
-      font-style: normal;
-      content: '|'
+    &--info {
+      &:before {
+        margin-right: .2rem;
+        font-style: normal;
+        content: '|'
+      }
     }
   }
 
-  &-checkmark {
-    width: 16px;
+  &-icon {
+    width: 13px;
+
+    &--info {
+      margin-right: 4px;
+    }
   }
 
   &-buttons {
@@ -241,8 +286,9 @@ export default {
   text-align: center;
   padding: .5rem;
   border-radius: 6px;
-  left: -5.75rem;
+  left: -5.2rem;
   border: .75px solid #A7A7A7;
+  top: 1.25rem;
  
   /* Position the tooltip text */
   position: absolute;

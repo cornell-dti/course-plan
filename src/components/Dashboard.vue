@@ -26,7 +26,7 @@ export default {
         semesters: ['Fall', 'Spring'],
         color: "2BBCC6",
         check: true,
-        requirement: "KCM"
+        requirements: ["KCM", "CA"]
       };
       let semester1 = {
         name: "Freshman Fall",
