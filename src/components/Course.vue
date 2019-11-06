@@ -23,7 +23,7 @@
             <div class="course-iconWrapper course-iconWrapper--info">
               <img :v-if="requirements" class="course-icon course-icon--info" src="../assets/images/info.svg" />
             </div>
-            <div class="tooltiptext">{{ requirementString }}</div>
+            <div class="tooltiptext tooltiptext--info" v-html="requirementString"></div>
           </div>
           <div class="course-outerWrapper tooltip">
             <div class="course-iconWrapper">
@@ -67,27 +67,23 @@ export default {
       }
 
       let str = "Satisfies ";
-      let endStr = " requirement";
+      let endStr = "</b> requirement";
       let length = this.requirements.length;
       if (length == 1) {
-        return str + this.requirements[0] + endStr;
+        return str + '<b>' + this.requirements[0] + endStr;
       }
 
       // loop through all but the last requirement and comma separate
       for(let i = 0; i < length - 1; i++) {
-        str += this.requirements[i] + ", ";
+        str += '<b>' + this.requirements[i] + "</b>, ";
       }
-
-      console.log(str);
 
       // remove the comma if only 2 requirements
       if(length == 2) {
         str = str.substring(0, str.length-2) + " ";
       }
 
-      console.log(str);
-
-      return str + "and " + this.requirements[length-1] + endStr;
+      return str + "and <b>" + this.requirements[length-1] + endStr;
     },
 
     // TODO: waiting on Emily comments    
@@ -139,6 +135,15 @@ export default {
   flex-direction: row;
   background-color: white;
   box-shadow: -4px -4px 10px #EFEFEF, 4px 4px 10px #EFEFEF;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  &:active,
+  &:focus {
+    border: 1px solid #2B6693;
+  }
 
   &--min {
     width: 10.5rem;
@@ -224,7 +229,6 @@ export default {
   &-info {
     font-size: 14px;
     line-height: 17px;
-    font-style: italic;
     color: #757575;
     display: flex;
     align-items: center;
@@ -304,7 +308,7 @@ export default {
   content: " ";
   position: absolute;
   bottom: 100%;  /* At the top of the tooltip */
-  right: 9px;
+  right: 22px;
   margin-left: -10px;
   border-width: 5px;
   border-style: solid;
@@ -316,13 +320,21 @@ export default {
   content: " ";
   position: absolute;
   bottom: 100%;  /* At the top of the tooltip */
-  right: 7px;
+  right: 20px;
   margin-left: -2px;
   border-width: 7px;
   border-style: solid;
   border-color: transparent transparent #A7A7A7 transparent;
 
   z-index: 2;
+}
+
+.tooltip .tooltiptext--info::after {
+  right: 10px;
+}
+
+.tooltip .tooltiptext--info::before {
+  right: 8px;
 }
 
 </style>
