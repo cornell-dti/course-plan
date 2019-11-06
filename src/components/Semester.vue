@@ -160,15 +160,12 @@ export default {
     line-height: 17px;
     color: white;
     box-shadow: -4px -4px 10px #EEEEEE, 4px 4px 10px rgba(0, 0, 0, 0.25);
-  }
-
-  &-addButton {
-    background-color: #5B676D;
+    background-color: transparent;
+    border: 1px #5B676D solid;
+    color: #858585;
   }
 
   &-semesterButton {
-    background-color: #777E82;
-
     &--compact {
       width: 10.5rem;
     }
