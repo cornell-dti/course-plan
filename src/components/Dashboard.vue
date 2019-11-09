@@ -19,6 +19,9 @@ Vue.component('semesterview', SemesterView);
 export default {
   computed: {
     semesters() {
+      let courseMap = new Map();
+      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
+      courseMap.set('CA', ['CS 2110']);
       const course = {
         subject: 'PHIL',
         code: 1100,
@@ -27,7 +30,7 @@ export default {
         semesters: ['Fall', 'Spring'],
         color: '2BBCC6',
         check: true,
-        requirements: ['KCM', 'CA']
+        requirementsMap: courseMap
       };
       const semester1 = {
         name: 'Freshman Fall',
