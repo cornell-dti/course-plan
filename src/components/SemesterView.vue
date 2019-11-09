@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <div v-if="!compact" class="semesterView"> 
+  <div class="semesterView">
+    <div><button v-on:click="changeCompact">Change View</button></div>
+    <div v-if="!compact" class="semesterView-content"> 
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper"> 
         <semester v-bind="sem" :exists="true"/>
       </div>
@@ -8,8 +9,8 @@
         <semester :exists="false"/>
       </div>
     </div>
-    <div v-if="compact" class="semesterView"> 
-      <div  v-for="sem in compactSemesters" v-bind:key="sem.id" class="semesterView-wrapper semesterView-wrapper--compact"> 
+    <div v-if="compact" class="semesterView-content"> 
+      <div v-for="sem in compactSemesters" v-bind:key="sem.id" class="semesterView-wrapper semesterView-wrapper--compact"> 
         <semester v-bind="sem" :exists="true"/>
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
@@ -50,6 +51,11 @@ export default {
       });
       return compactSem;
     }
+  },
+  methods: {
+    changeCompact() {
+      this.compact = !this.compact;
+    }
   }
 };
 </script>
@@ -58,7 +64,12 @@ export default {
 .semesterView
 {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+
+  &-content {
+    display: flex;
+    flex-wrap: wrap;
+  }
 
   &-wrapper {
     display: flex;
