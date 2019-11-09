@@ -28,14 +28,14 @@
 </template>
 
 <script>
-import { Component, Vue} from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 import Course from '@/components/Course';
 
 Vue.component('course', Course);
 
 export default {
   // TODO: fonts! (Proxima Nova)
-  // TODO: recolor pencil and all other svg icons to that gray  
+  // TODO: recolor pencil and all other svg icons to that gray
   props: {
     name: String,
     courses: Array,
@@ -49,7 +49,7 @@ export default {
       this.courses.forEach(course => {
         credits += course.credits;
       });
-      return credits.toString() + " cr.";
+      return `${credits.toString()} cr.`;
     },
     buttonString() {
       return '+ COURSE';
@@ -61,7 +61,7 @@ export default {
   methods: {
     printArrayLength() {
       console.log(this.courses.length);
-    },
+    }
   }
 };
 </script>
@@ -89,7 +89,7 @@ export default {
     align-items: center;
     height: 100%;
   }
-  
+
   &-top {
     display: flex;
     justify-content: space-between;
@@ -102,7 +102,7 @@ export default {
 
   &-left {
     display: flex;
-    
+
     &--compact {
       justify-content: space-between;
     }
@@ -126,7 +126,7 @@ export default {
   }
 
   &-credits {
-    font-size: 14px; 
+    font-size: 14px;
     line-height: 17px;
   }
 

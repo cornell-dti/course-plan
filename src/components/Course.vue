@@ -38,12 +38,12 @@
 </template>
 
 <script>
-import { Component, Vue} from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
 export default {
   props: {
     subject: String,
-    code: Number, 
+    code: Number,
     name: String,
     credits: Number,
     semesters: Array,
@@ -57,7 +57,7 @@ export default {
     },
 
     rqString() {
-      return "RQ"
+      return 'RQ';
     },
 
     // TODO: bold requirements
@@ -66,48 +66,48 @@ export default {
         return;
       }
 
-      let str = "Satisfies ";
-      let endStr = "</b> requirement";
-      let length = this.requirements.length;
+      let str = 'Satisfies ';
+      const endStr = '</b> requirement';
+      const { length } = this.requirements;
       if (length == 1) {
-        return str + '<b>' + this.requirements[0] + endStr;
+        return `${str}<b>${this.requirements[0]}${endStr}`;
       }
 
       // loop through all but the last requirement and comma separate
-      for(let i = 0; i < length - 1; i++) {
-        str += '<b>' + this.requirements[i] + "</b>, ";
+      for (let i = 0; i < length - 1; i++) {
+        str += `<b>${this.requirements[i]}</b>, `;
       }
 
       // remove the comma if only 2 requirements
-      if(length == 2) {
-        str = str.substring(0, str.length-2) + " ";
+      if (length == 2) {
+        str = `${str.substring(0, str.length - 2)} `;
       }
 
-      return str + "and <b>" + this.requirements[length-1] + endStr;
+      return `${str}and <b>${this.requirements[length - 1]}${endStr}`;
     },
 
-    // TODO: waiting on Emily comments    
+    // TODO: waiting on Emily comments
     cautionString() {
 
     },
 
     semesterString() {
-      let semesterString = "";
+      let semesterString = '';
       this.semesters.forEach(semester => {
-        semesterString += semester + ", "
+        semesterString += `${semester}, `;
       });
-      if(semesterString.length > 0) {
+      if (semesterString.length > 0) {
         return semesterString.substring(0, semesterString.length - 2);
       }
       return semesterString;
     },
 
     creditString() {
-      return this.credits + " credits";
+      return `${this.credits} credits`;
     },
     review() {
       return `https://www.cureviews.org/course/${this.subject}/${this.code}`;
-    }, 
+    },
 
     // TODO: change semester from FA18
     roster() {
@@ -116,8 +116,8 @@ export default {
 
     cssVars() {
       return {
-        '--bg-color': '#' + this.color
-      }
+        '--bg-color': `#${this.color}`
+      };
     }
   }
 };
@@ -293,7 +293,7 @@ export default {
   left: -5.2rem;
   border: .75px solid #A7A7A7;
   top: 1.25rem;
- 
+
   /* Position the tooltip text */
   position: absolute;
   z-index: 1;
