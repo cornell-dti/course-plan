@@ -10,13 +10,15 @@
           <span class="semester-credits">{{ creditString  }}</span>
         </div>
       </div>
-      <div class="semester-courses" v-dragula="courses" bag="first-bag">
-        <div v-for="course in courses" v-bind:key="course.id" class="semester-courseWrapper">
-          <course v-bind="course" class="semester-course" />
+      <div class="semester-courses">
+        <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
+          <div v-for="course in courses" v-bind:key="course.id" class="semester-courseWrapper">
+            <course v-bind="course" class="semester-course" />
+          </div>
         </div>
-        <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }">
-          <button class="semester-button semester-addButton" v-on:click="printArrayLength">{{ buttonString }}</button>
-        </div>
+          <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }">
+            <button class="semester-button semester-addButton" v-on:click="printArrayLength">{{ buttonString }}</button>
+          </div>
       </div>
     </div>
     <div v-if="!exists" class="semester-empty">
@@ -33,7 +35,7 @@ Vue.component('course', Course);
 
 export default {
   // TODO: fonts! (Proxima Nova)
-  // TODO: recolor pencil and all other svg icons to that gray
+  // TODO: recolor pencil and all other svg icons to that gray  
   props: {
     name: String,
     courses: Array,
@@ -172,6 +174,11 @@ export default {
     &--compact {
       width: 10.5rem;
     }
+  }
+
+  .draggable-semester-courses{
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
 }
 
