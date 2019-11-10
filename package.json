@@ -10,6 +10,7 @@
     "format:check": "prettier --check '**/*.{js,vue,scss,css,html}'"
   },
   "dependencies": {
+    "dragula": "^3.7.2",
     "firebase": "^6.6.2",
     "vue": "^2.6.10",
     "vue-dragula": "^1.3.1",

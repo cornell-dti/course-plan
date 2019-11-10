@@ -1,6 +1,6 @@
 import Vue from 'vue';
-// import VueDragula from 'vue-dragula';
-// var Vue = require('vue');
+
+import 'dragula/dist/dragula.css';
 const VueDragula = require('vue-dragula');
 
 Vue.use(VueDragula);
