@@ -21,7 +21,7 @@
           <span v-if="notCompact && semesterString" class="course-semesters">{{ semesterString }}</span>
           <div v-if="notCompact" class="course-outerWrapper tooltip">
             <div class="course-iconWrapper course-iconWrapper--info">
-              <img :v-if="requirements" class="course-icon course-icon--info" src="../assets/images/info.svg" />
+              <img class="course-icon course-icon--info" src="../assets/images/info.svg" />
             </div>
             <div class="tooltiptext tooltiptext--info" v-html="requirementString"></div>
           </div>
@@ -29,7 +29,7 @@
             <div class="course-iconWrapper">
               <img class="course-icon" src="../assets/images/caution.svg" />
             </div>
-            <div class="tooltiptext">{{ cautionString }}</div>
+            <div class="tooltiptext tooltiptext--caution" v-html="cautionString"></div>
           </div>
         </div>
       </div>
@@ -38,17 +38,17 @@
 </template>
 
 <script>
-import { Component, Vue} from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
 export default {
   props: {
     subject: String,
-    code: Number, 
+    code: Number,
     name: String,
     credits: Number,
     semesters: Array,
     color: String,
-    requirements: Array,
+    requirementsMap: Map,
     compact: Boolean
   },
   computed: {
@@ -57,57 +57,83 @@ export default {
     },
 
     rqString() {
-      return "RQ"
+      return 'RQ';
     },
 
     // TODO: bold requirements
     requirementString() {
-      if (this.requirements == null || this.requirements.length == 0) {
+      if (this.requirementsMap == null || this.requirementsMap.keys() == null || this.requirementsMap.keys().length == 0) {
         return;
       }
 
-      let str = "Satisfies ";
-      let endStr = "</b> requirement";
-      let length = this.requirements.length;
+      let keys = Array.from(this.requirementsMap.keys());
+      let str = 'Satisfies ';
+      const endStr = '</b> requirement';
+      const length = keys.length;
       if (length == 1) {
-        return str + '<b>' + this.requirements[0] + endStr;
+        return `${str}<b>${keys[0]}${endStr}`;
       }
 
       // loop through all but the last requirement and comma separate
-      for(let i = 0; i < length - 1; i++) {
-        str += '<b>' + this.requirements[i] + "</b>, ";
+      for (let i = 0; i < length - 1; i++) {
+        str += `<b>${keys[i]}</b>, `;
       }
 
       // remove the comma if only 2 requirements
-      if(length == 2) {
-        str = str.substring(0, str.length-2) + " ";
+      if (length == 2) {
+        str = `${str.substring(0, str.length - 2)} `;
       }
 
-      return str + "and <b>" + this.requirements[length-1] + endStr;
+      return `${str}and <b>${keys[length - 1]}${endStr}`;
     },
 
-    // TODO: waiting on Emily comments    
     cautionString() {
+      if (this.requirementsMap == null || this.requirementsMap.keys() == null || this.requirementsMap.keys().length == 0) {
+        return;
+      }
 
+      let str = ''; 
+      this.requirementsMap.forEach(function(courses, req) {
+        str += '<li>';
+        if(courses.length == 1) {
+          str += courses[0] + ' also fulfills <b>' + req + '</b> requirement';
+        } else {
+          // loop through all but the last course and comma separate
+          for (let i = 0; i < courses.length - 1; i++) {
+            str += `${courses[i]}, `;
+          }
+
+          // remove the comma if only 2 requirements
+          if (length == 2) {
+            str = `${str.substring(0, str.length - 2)} `;
+          }
+
+          str += `${str}and ${courses[courses.length-1]} also fulfills <b>${req}</b> requirement`;  
+        }
+        str += '</li>'
+        console.log(str);
+      });
+
+      return str;
     },
 
     semesterString() {
-      let semesterString = "";
+      let semesterString = '';
       this.semesters.forEach(semester => {
-        semesterString += semester + ", "
+        semesterString += `${semester}, `;
       });
-      if(semesterString.length > 0) {
+      if (semesterString.length > 0) {
         return semesterString.substring(0, semesterString.length - 2);
       }
       return semesterString;
     },
 
     creditString() {
-      return this.credits + " credits";
+      return `${this.credits} credits`;
     },
     review() {
       return `https://www.cureviews.org/course/${this.subject}/${this.code}`;
-    }, 
+    },
 
     // TODO: change semester from FA18
     roster() {
@@ -116,8 +142,8 @@ export default {
 
     cssVars() {
       return {
-        '--bg-color': '#' + this.color
-      }
+        '--bg-color': `#${this.color}`
+      };
     }
   }
 };
@@ -274,6 +300,7 @@ export default {
   }
 }
 
+// TODO: convert px to rem for spacing
 /* Tooltip container */
 .tooltip {
   position: relative;
@@ -293,10 +320,15 @@ export default {
   left: -5.2rem;
   border: .75px solid #A7A7A7;
   top: 1.25rem;
- 
+
   /* Position the tooltip text */
   position: absolute;
   z-index: 1;
+
+  &--caution {
+    width: 180px;
+    text-align: left;
+  }
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
@@ -308,7 +340,7 @@ export default {
   content: " ";
   position: absolute;
   bottom: 100%;  /* At the top of the tooltip */
-  right: 22px;
+  right: 82px;
   margin-left: -10px;
   border-width: 5px;
   border-style: solid;
@@ -320,7 +352,7 @@ export default {
   content: " ";
   position: absolute;
   bottom: 100%;  /* At the top of the tooltip */
-  right: 20px;
+  right: 80px;
   margin-left: -2px;
   border-width: 7px;
   border-style: solid;

@@ -9,7 +9,8 @@ import Vue from 'vue';
 import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
 
-var dragula = require('@/vueDragulaConfig.js');
+const dragula = require('@/vueDragulaConfig.js');
+
 Vue.component('course', Course);
 
 Vue.component('course', Course);
@@ -18,29 +19,32 @@ Vue.component('semesterview', SemesterView);
 export default {
   computed: {
     semesters() {
-      let course = {
+      let courseMap = new Map();
+      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
+      courseMap.set('CA', ['CS 2110']);
+      const course = {
         subject: 'PHIL',
         code: 1100,
         name: 'Introduction to Philosophy',
         credits: 3,
         semesters: ['Fall', 'Spring'],
-        color: "2BBCC6",
+        color: '2BBCC6',
         check: true,
-        requirements: ["KCM", "CA"]
+        requirementsMap: courseMap
       };
-      let semester1 = {
-        name: "Freshman Fall",
+      const semester1 = {
+        name: 'Freshman Fall',
         courses: [course, course]
-      }
-      let semester2 = {
-        name: "Freshman Spring",
+      };
+      const semester2 = {
+        name: 'Freshman Spring',
         courses: [course, course, course]
-      }
-      let semester3 = {
-        name: "Sophomore Fall",
+      };
+      const semester3 = {
+        name: 'Sophomore Fall',
         courses: [course]
-      }
-      let semesters = [semester1, semester2, semester3];
+      };
+      const semesters = [semester1, semester2, semester3];
 
       return semesters;
     }
