@@ -136,6 +136,12 @@ export default {
 
   &-course {
     touch-action: none;
+    cursor:grab;
+  }
+
+  &-course:active:hover {
+    touch-action: none;
+    cursor:grabbing;
   }
 
   &-addWrapper {
