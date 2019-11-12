@@ -88,33 +88,33 @@ export default {
     },
 
     cautionString() {
-      if (this.requirementsMap == null || this.requirementsMap.keys() == null || this.requirementsMap.keys().length == 0) {
-        return;
-      }
+      // if (this.requirementsMap == null || this.requirementsMap.keys() == null || this.requirementsMap.keys().length == 0) {
+      //   return;
+      // }
 
-      let str = ''; 
-      this.requirementsMap.forEach(function(courses, req) {
-        str += '<li>';
-        if(courses.length == 1) {
-          str += courses[0] + ' also fulfills <b>' + req + '</b> requirement';
-        } else {
-          // loop through all but the last course and comma separate
-          for (let i = 0; i < courses.length - 1; i++) {
-            str += `${courses[i]}, `;
-          }
+      // let str = ''; 
+      // this.requirementsMap.forEach(function(courses, req) {
+      //   str += '<li>';
+      //   if(courses.length == 1) {
+      //     str += courses[0] + ' also fulfills <b>' + req + '</b> requirement';
+      //   } else {
+      //     // loop through all but the last course and comma separate
+      //     for (let i = 0; i < courses.length - 1; i++) {
+      //       str += `${courses[i]}, `;
+      //     }
 
-          // remove the comma if only 2 requirements
-          if (length == 2) {
-            str = `${str.substring(0, str.length - 2)} `;
-          }
+      //     // remove the comma if only 2 requirements
+      //     if (length == 2) {
+      //       str = `${str.substring(0, str.length - 2)} `;
+      //     }
 
-          str += `${str}and ${courses[courses.length-1]} also fulfills <b>${req}</b> requirement`;  
-        }
-        str += '</li>'
-        console.log(str);
-      });
+      //     str += `${str}and ${courses[courses.length-1]} also fulfills <b>${req}</b> requirement`;  
+      //   }
+      //   str += '</li>'
+      //   console.log(str);
+      // });
 
-      return str;
+      // return str;
     },
 
     semesterString() {

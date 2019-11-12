@@ -16,13 +16,15 @@
             <course v-bind="course" class="semester-course" />
           </div>
         </div>
-          <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }">
-            <button class="semester-button semester-addButton" v-on:click="printArrayLength">{{ buttonString }}</button>
+          <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }" v-on:click="printArrayLength">
+            <span class="semester-buttonText" v-bind:class="{ 'semester-buttonText--compact': compact }">{{ buttonString }}</span>
           </div>
       </div>
     </div>
     <div v-if="!exists" class="semester-empty">
-      <button class="semester-button semester-semesterButton" v-bind:class="{ 'semester-semesterButton--compact': compact }">{{ semesterString }}</button>
+      <div class="semester-button semester-semesterButton" v-bind:class="{ 'semester-semesterButton--compact': compact }">
+        <span class="semester-buttonText" v-bind:class="{ 'semester-buttonText--compact': compact }">{{ semesterString }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -35,7 +37,6 @@ Vue.component('course', Course);
 
 export default {
   // TODO: fonts! (Proxima Nova)
-  // TODO: recolor pencil and all other svg icons to that gray
   props: {
     name: String,
     courses: Array,
@@ -78,15 +79,25 @@ export default {
   &--min {
     border: 2px dashed #D8D8D8;
     padding: 1.5rem 6rem;
+    width: 23.75rem;
+    height: 9.38rem;
+
+    // specific dimensions for min compact semester
+    &.semester--compact {
+      width: 12.5rem;
+      height: 3.5rem;
+    }
   }
 
   &--compact {
     padding: .875rem 1.125rem;
+
   }
 
   &-empty {
     display: flex;
     align-items: center;
+    justify-content: center;
     height: 100%;
   }
 
@@ -155,33 +166,24 @@ export default {
 
     &--compact {
       width: 10.5rem;
-      border: 0;
-      height: unset;
+      height: 2rem;
     }
   }
 
-  &-button {
-    border-radius: 7px;
-    width: 11.5rem;
-    height: 2rem;
-    font-size: 14px;
-    line-height: 17px;
-    color: white;
-    box-shadow: -4px -4px 10px #EEEEEE, 4px 4px 10px rgba(0, 0, 0, 0.25);
-    background-color: transparent;
-    border: 1px #5B676D solid;
-    color: #858585;
-  }
+  &-buttonText {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #D8D8D8;
 
-  &-semesterButton {
     &--compact {
-      width: 10.5rem;
+      font-size: 14px;
+      line-height: 17px;
     }
   }
 
   .draggable-semester-courses{
     padding-top: 5px;
-    padding-bottom: 5px;
   }
 
   //Styling for drag and drop components and movement
