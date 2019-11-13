@@ -1,5 +1,6 @@
 <template>
   <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact }">
+    <newCourse class="semester-newCourse" />
     <div v-if="exists" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
         <div class="semester-left" v-bind:class="{ 'semester-left--compact': compact }">
@@ -16,13 +17,13 @@
             <course v-bind="course" class="semester-course" />
           </div>
         </div>
-          <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }" v-on:click="printArrayLength">
+          <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }" v-on:click="openCourseModal">
             <span class="semester-buttonText" v-bind:class="{ 'semester-buttonText--compact': compact }">{{ buttonString }}</span>
           </div>
       </div>
     </div>
     <div v-if="!exists" class="semester-empty">
-      <div class="semester-button semester-semesterButton" v-bind:class="{ 'semester-semesterButton--compact': compact }">
+      <div class="semester-semesterWrapper" v-bind:class="{ 'semester-semesterWrapper--compact': compact }">
         <span class="semester-buttonText" v-bind:class="{ 'semester-buttonText--compact': compact }">{{ semesterString }}</span>
       </div>
     </div>
@@ -32,8 +33,10 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 import Course from '@/components/Course';
+import NewCourse from '@/components/Modals/NewCourse';
 
 Vue.component('course', Course);
+Vue.component('newCourse', NewCourse);
 
 export default {
   // TODO: fonts! (Proxima Nova)
@@ -42,6 +45,12 @@ export default {
     courses: Array,
     exists: Boolean,
     compact: Boolean
+  },
+  mounted: function () {
+    this.$el.addEventListener('click', this.closeCourseModal)
+  },
+  beforeDestroy: function () {
+    this.$el.removeEventListener('click', this.closeCourseModal)
   },
   computed: {
     // TODO: calculate credits from all classes
@@ -62,6 +71,16 @@ export default {
   methods: {
     printArrayLength() {
       console.log(this.courses.length);
+    },
+    openCourseModal() {
+      let modal = document.getElementsByClassName("semester-newCourse")[0];
+      modal.style.display = "block";
+    },
+    closeCourseModal: function (event) {
+      let modal = document.getElementsByClassName("semester-newCourse")[0];
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
     }
   }
 };
@@ -69,6 +88,12 @@ export default {
 
 
 <style scoped lang="scss">
+@mixin hover-button {
+  border-color: #15A6CF;
+  background: rgba(0, 0, 0, 0.03);
+  color: #15A6CF;
+}
+
 .semester
 {
   padding: .875rem 1.125rem;
@@ -81,6 +106,13 @@ export default {
     padding: 1.5rem 6rem;
     width: 23.75rem;
     height: 9.38rem;
+    color:#D8D8D8;
+
+    &:hover,
+    &:active,
+    &:focus {
+      @include hover-button();
+    }
 
     // specific dimensions for min compact semester
     &.semester--compact {
@@ -163,10 +195,17 @@ export default {
     justify-content: center;
     align-items: center;
     border: 2px dashed #D8D8D8;
+    color: #D8D8D8;
 
     &--compact {
       width: 10.5rem;
       height: 2rem;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      @include hover-button();
     }
   }
 
@@ -174,12 +213,25 @@ export default {
     font-weight: 500;
     font-size: 16px;
     line-height: 20px;
-    color: #D8D8D8;
 
     &--compact {
       font-size: 14px;
       line-height: 17px;
     }
+  }
+
+  /* The Modal (background) */
+  .semester-newCourse {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   }
 
   .draggable-semester-courses{
