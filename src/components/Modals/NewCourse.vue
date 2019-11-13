@@ -72,10 +72,10 @@ export default {
             let code = [], title = [];
             for (let attr in courses) {
               if (~attr.toUpperCase().indexOf(val)) {
-                code.push(courses[attr].title);
+                code.push(courses[attr].t);
               }
-              else if (courses[attr].title && ~courses[attr].title.toUpperCase().indexOf(val)) {
-                  title.push(courses[attr].title);
+              else if (courses[attr].t && ~courses[attr].t.toUpperCase().indexOf(val)) {
+                  title.push(courses[attr].t);
               }
             }
             code.sort();
