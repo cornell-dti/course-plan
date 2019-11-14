@@ -1,6 +1,6 @@
 <template>
   <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact }">
-    <newCourse class="semester-newCourse" />
+    <modal class="semester-modal" :course="true" :custom="false" />
     <div v-if="exists" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
         <div class="semester-left" v-bind:class="{ 'semester-left--compact': compact }">
@@ -33,10 +33,10 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 import Course from '@/components/Course';
-import NewCourse from '@/components/Modals/NewCourse';
+import Modal from '@/components/Modals/Modal';
 
 Vue.component('course', Course);
-Vue.component('newCourse', NewCourse);
+Vue.component('modal', Modal);
 
 export default {
   // TODO: fonts! (Proxima Nova)
@@ -73,11 +73,11 @@ export default {
       console.log(this.courses.length);
     },
     openCourseModal() {
-      let modal = document.getElementsByClassName("semester-newCourse")[0];
+      let modal = document.getElementsByClassName("semester-modal")[0];
       modal.style.display = "block";
     },
     closeCourseModal: function (event) {
-      let modal = document.getElementsByClassName("semester-newCourse")[0];
+      let modal = document.getElementsByClassName("semester-modal")[0];
       if (event.target == modal) {
         modal.style.display = "none";
       }
@@ -221,7 +221,7 @@ export default {
   }
 
   /* The Modal (background) */
-  .semester-newCourse {
+  .semester-modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */

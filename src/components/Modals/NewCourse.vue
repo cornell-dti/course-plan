@@ -1,18 +1,8 @@
 <template>
   <div class="newCourse">
-    <div class="newCourse-content">
-      <div class="newCourse-top">
-        <span class="newCourse-title">{{ title }}</span>
-        <img class="newCourse-exit" src=""/>
-      </div>
-      <div class="newCourse-text">{{ text }}</div>
-      <div class="autocomplete">
-        <input class="newCourse-dropdown" :placeholder="placeholder"/>
-      </div>
-      <div class="newCourse-buttonWrapper">
-        <button class="newCourse-button" v-on:click="closeCourseModal">{{ cancel }}</button>
-        <button class="newCourse-button newCourse-button--add">{{ add }}</button>
-      </div>
+    <div class="newCourse-text">{{ text }}</div>
+    <div class="autocomplete">
+      <input class="newCourse-dropdown" :placeholder="placeholder"/>
     </div>
   </div>
 </template>
@@ -23,20 +13,11 @@ import courses from '../../assets/courses/courses.json'
 
 export default {
   computed: {
-    title() {
-      return "New Course";
-    },
     text() {
       return "Search or Create New Course";
     },
     placeholder() {
       return "\"CS 1110\", \"Multivariable Calculus\", etc.";
-    },
-    add() {
-      return "ADD";
-    },
-    cancel() {
-      return "CANCEL";
     }
   },
   mounted: function () {
@@ -167,31 +148,7 @@ export default {
 <style lang="scss">
 // TODO: font family
 .newCourse {
-  padding: 1rem;
-
-  &-content {
-    background: #FFFFFF;
-    border-radius: 9px;
-    width: 27.75rem;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1rem;
-  }
-
-  &-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: .5rem;
-  }
-
-  &-title {
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 20px;
-    color: #3D3D3D;
-  }
-
-  &-description {
+  &-text {
     font-size: 14px;
     line-height: 17px;
     color: #757575;
@@ -208,27 +165,6 @@ export default {
 
     &::placeholder {
       color: #B6B6B6;
-    }
-  }
-
-  &-buttonWrapper {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  &-button {
-    width: 4.75rem;
-    height: 2rem;
-    color: #5B676D;
-    border-radius: 3px;
-    border: 1px solid #3D3D3D;
-    background-color: #FFFFFF;
-
-    &--add {
-      color: #ffffff;
-      background-color: #508197;
-      margin-left: .5rem;
-      border: none;
     }
   }
 }
@@ -266,7 +202,6 @@ input {
   padding: 10px;
   cursor: pointer;
   background-color: #fff;
-  border-bottom: 1px solid #d4d4d4;
 }
 .autocomplete-items div:hover {
   /*when hovering an item:*/
