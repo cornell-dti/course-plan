@@ -1,6 +1,7 @@
 <template>
   <div id="dashboard">
     <semesterview :semesters="semesters" :compact="false" />
+    <requirements />
   </div>
 </template>
 
@@ -8,13 +9,13 @@
 import Vue from 'vue';
 import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
+import Requirements from '@/components/Requirements';
 
 const dragula = require('@/vueDragulaConfig.js');
 
 Vue.component('course', Course);
-
-Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
+Vue.component('requirements', Requirements);
 
 export default {
   computed: {
@@ -55,7 +56,7 @@ export default {
 <style scoped lang="scss">
 #dashboard
 {
-  margin: 1rem;
+  display: flex;
 }
 
 .semester
