@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     closeCourseModal: function (event) {
-      let modal = document.getElementsByClassName("semester-newCourse")[0];
+      let modal = document.getElementById("courseModal");
       modal.style.display = "none";
     },
     autocomplete(inp, courses) {
@@ -175,7 +175,6 @@ export default {
   display: inline-block;
   width: 100%;
   margin-top: .5rem;
-  margin-bottom: 1rem;
 }
 input {
   border: 1px solid transparent;

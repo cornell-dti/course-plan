@@ -1,13 +1,13 @@
 <template>
   <div class="modal">
-    <div class="modal-content">
+    <div class="modal-content" :id="contentId">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
-        <img class="modal-exit" src="../../assets/images/x.png" v-on:click="closeCourseModal"/>
+        <img class="modal-exit" src="../../assets/images/x.png" v-on:click="closeCurrentModal"/>
       </div>
       <component class="modal-body" v-bind:is="body"></component>
       <div class="modal-buttonWrapper">
-        <button class="modal-button" v-on:click="closeCourseModal">{{ cancel }}</button>
+        <button class="modal-button" v-on:click="closeCurrentModal">{{ cancel }}</button>
         <button class="modal-button modal-button--add">{{ add }}</button>
       </div>
     </div>
@@ -27,15 +27,17 @@ Vue.component('newSemester', NewSemester);
 
 export default {
   props: {
-    course: Boolean,
-    custom: Boolean
+    type: String,
   },
   computed: {
+    contentId() {
+      return "content-" + this.type;
+    },
     title() {
       let start = "New ";
-      if(!this.course) {
+      if(this.type == "semester") {
         return start + "Semester"
-      } else if(!this.custom) {
+      } else if(this.type == "course") {
         return start + "Course";
       } else {
         return start + "Custom Course";
@@ -48,9 +50,9 @@ export default {
       return "CANCEL";
     },
     body() {
-      if(!this.course) {
+      if(this.type == "semester") {
         return "newSemester";
-      } else if(!this.custom) {
+      } else if(this.type == "course") {
         return "newCourse";
       } else {
         return "newCustomCourse";
@@ -58,8 +60,8 @@ export default {
     }
   },
   methods: {
-    closeCourseModal: function (event) {
-      let modal = document.getElementsByClassName("semester-modal")[0];
+    closeCurrentModal: function (event) {
+      let modal = document.getElementById(this.type + "Modal");
       modal.style.display = "none";
     }
   }
@@ -74,7 +76,6 @@ export default {
   &-content {
     background: #FFFFFF;
     border-radius: 9px;
-    width: 27.75rem;
     margin-left: auto;
     margin-right: auto;
     padding: 1rem;
@@ -99,6 +100,7 @@ export default {
   }
 
   &-buttonWrapper {
+    margin-top: 1rem;
     display: flex;
     justify-content: flex-end;
   }
@@ -118,6 +120,14 @@ export default {
       border: none;
     }
   }
+}
+
+#content-course {
+  width: 27.75rem;
+}
+
+#content-semester {
+  width: 15.5rem;
 }
 
 </style>

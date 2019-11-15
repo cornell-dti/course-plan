@@ -1,6 +1,7 @@
 <template>
   <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact }">
-    <modal class="semester-modal" :course="true" :custom="false" />
+    <modal id="courseModal" class="semester-modal" type="course" />
+    <modal id="semesterModal" class="semester-modal" type="semester" />
     <div v-if="exists" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
         <div class="semester-left" v-bind:class="{ 'semester-left--compact': compact }">
@@ -22,7 +23,7 @@
           </div>
       </div>
     </div>
-    <div v-if="!exists" class="semester-empty">
+    <div v-if="!exists" class="semester-empty" v-on:click="openSemesterModal">
       <div class="semester-semesterWrapper" v-bind:class="{ 'semester-semesterWrapper--compact': compact }">
         <span class="semester-buttonText" v-bind:class="{ 'semester-buttonText--compact': compact }">{{ semesterString }}</span>
       </div>
@@ -47,10 +48,10 @@ export default {
     compact: Boolean
   },
   mounted: function () {
-    this.$el.addEventListener('click', this.closeCourseModal)
+    this.$el.addEventListener('click', this.closeAllModals)
   },
   beforeDestroy: function () {
-    this.$el.removeEventListener('click', this.closeCourseModal)
+    this.$el.removeEventListener('click', this.closeAllModals)
   },
   computed: {
     // TODO: calculate credits from all classes
@@ -73,17 +74,23 @@ export default {
       console.log(this.courses.length);
     },
     openCourseModal() {
-      let modal = document.getElementsByClassName("semester-modal")[0];
+      let modal = document.getElementById("courseModal");
       modal.style.display = "block";
     },
-    closeCourseModal: function (event) {
-      let modal = document.getElementsByClassName("semester-modal")[0];
-      if (event.target == modal) {
-        modal.style.display = "none";
+    openSemesterModal() {
+      let modal = document.getElementById("semesterModal");
+      modal.style.display = "block";
+    },
+    closeAllModals: function (event) {
+      let modals = document.getElementsByClassName("semester-modal");
+      for(let i = 0; i < modals.length; i++) {
+        if (event.target == modals[i]) {
+          modals[i].style.display = "none";
+        }
       }
     }
   }
-};
+}
 </script>
 
 
@@ -103,7 +110,7 @@ export default {
 
   &--min {
     border: 2px dashed #D8D8D8;
-    padding: 1.5rem 6rem;
+    padding: 0;
     width: 23.75rem;
     height: 9.38rem;
     color:#D8D8D8;
