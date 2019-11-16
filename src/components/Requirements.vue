@@ -1,6 +1,10 @@
 <template>
   <div class="requirements">
-    <div class="requirements-ayesha">REQUIREMENTS GO HERE AYESHA</div>
+    <div class="requirements">
+      <div>
+        School Requirements
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,14 +17,10 @@ export default {}
 <style scoped lang="scss">
 .requirements {
   width: 25rem;
-  background-color: lightblue;
-  border: 2px black solid;
+  background-color: white;
+}
 
-  &-ayesha {
-    width: 25rem;
-    font-size: 50px;
-    color: black;
-    text-align: center;
-  }
+.title {
+  
 }
 </style>
