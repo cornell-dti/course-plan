@@ -13,11 +13,9 @@
         </div>
       </div>
       <div class="semester-courses">
-        <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-          <div v-for="course in courses" v-bind:key="course.id" class="semester-courseWrapper">
-            <course v-bind="course" class="semester-course" />
+          <div v-for="course in courses" v-bind:key="course.id" class="semester-course Wrapper draggable-semester-courses" v-dragula="courses" bag="first-bag">
+            <course v-bind="course" v-bind:id="course.subject" class="semester-course"/>
           </div>
-        </div>
           <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }" v-on:click="openCourseModal">
             <span class="semester-buttonText" v-bind:class="{ 'semester-buttonText--compact': compact }">{{ buttonString }}</span>
           </div>
@@ -48,11 +46,18 @@ export default {
     compact: Boolean
   },
   mounted: function () {
-    this.$el.addEventListener('click', this.closeAllModals)
+    this.$el.addEventListener('click', this.closeAllModals);
+
+
+    var _this = this;
+    Vue.vueDragula.eventBus.$on('drop', function (args) {
+      console.log(_this.courses);
+    })
   },
   beforeDestroy: function () {
-    this.$el.removeEventListener('click', this.closeAllModals)
+    this.$el.removeEventListener('click', this.closeAllModals);
   },
+
   computed: {
     // TODO: calculate credits from all classes
     creditString() {
