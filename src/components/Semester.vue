@@ -13,12 +13,14 @@
         </div>
       </div>
       <div class="semester-courses">
-          <div v-for="course in courses" v-bind:key="course.id" class="semester-course Wrapper draggable-semester-courses" v-dragula="courses" bag="first-bag">
+        <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
+          <div v-for="course in courses" v-bind:key="course.id" class="semester-courseWrapper">
             <course v-bind="course" v-bind:id="course.subject" class="semester-course"/>
           </div>
           <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }" v-on:click="openCourseModal">
             <span class="semester-buttonText" v-bind:class="{ 'semester-buttonText--compact': compact }">{{ buttonString }}</span>
           </div>
+        </div>
       </div>
     </div>
     <div v-if="!exists" class="semester-empty" v-on:click="openSemesterModal">
@@ -52,6 +54,7 @@ export default {
     var _this = this;
     Vue.vueDragula.eventBus.$on('drop', function (args) {
       console.log(_this.courses);
+      console.log(args[1].childNodes[0]); //gets the course semester-course div
     })
   },
   beforeDestroy: function () {
@@ -249,6 +252,7 @@ export default {
   .draggable-semester-courses{
     padding-top: 5px;
   }
+
 
   //Styling for drag and drop components and movement
     .gu-mirror {
