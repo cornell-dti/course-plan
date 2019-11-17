@@ -81,6 +81,10 @@ export default {
     padding: 1rem;
   }
 
+  &-body {
+    padding: 0;
+  }
+
   &-top {
     display: flex;
     justify-content: space-between;
