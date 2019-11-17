@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard">
-    <semesterview :semesters="semesters" :compact="false" />
+    <semesterview :semesters="semesters" :compact="compactVal" @compact-updated="compactVal = $event" />
     <requirements />
   </div>
 </template>
@@ -18,6 +18,11 @@ Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
 
 export default {
+  data: function() {
+    return {
+      compactVal: false
+    };
+  },
   computed: {
     semesters() {
       let courseMap = new Map();

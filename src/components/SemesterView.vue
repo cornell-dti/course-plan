@@ -25,6 +25,8 @@ import { Component, Vue } from 'vue-property-decorator';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 
+const clone = require('clone');
+
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 
@@ -38,11 +40,12 @@ export default {
     compactSemesters() {
       const compactSem = [];
       this.semesters.forEach(sem => {
-        const newSem = JSON.parse(JSON.stringify(sem));
+        const newSem = clone(sem);
         const newCourses = [];
         sem.courses.forEach(course => {
-          const newCourse = JSON.parse(JSON.stringify(course));
+          const newCourse = clone(course);
           newCourse.compact = true;
+          newCourse.requirementsMap = new Map(course.requirementsMap);
           newCourses.push(newCourse);
         });
         newSem.courses = newCourses;
@@ -54,7 +57,7 @@ export default {
   },
   methods: {
     changeCompact() {
-      this.compact = !this.compact;
+      this.$emit('compact-updated', !this.compact);
     }
   }
 };
