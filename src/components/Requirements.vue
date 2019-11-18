@@ -10,9 +10,9 @@
           </button>
         </div>
       </div>
-      <div class="progress"><div class="progress-bar college-color" v-bind:style="{width: `${(req.progress/req.total)*100}%`}" role="progressbar"></div></div>
+      <div class="progress"><div class="progress-bar" v-bind:style="{ 'background-color': req.color, width: `${(req.progress/req.total)*100}%`}" role="progressbar"></div></div>
       <p class="progress-text"><strong>{{ req.progress }}/{{ req.total }}</strong> Total {{ req.count }} Inputted on Schedule</p>
-      <button class="view btn college-color" v-bind:class="{ none: req.displayDetails }" v-on:click="display(index)">
+      <button class="view btn" v-bind:class="{ none: req.displayDetails }" v-bind:style="{ 'background-color': req.color }" v-on:click="display(index)">
         View All College Requirements
       </button>
       <div class="detail" v-bind:class="{ none: !req.displayDetails }">
@@ -37,9 +37,12 @@
         <div class="completed" v-if="req.completed.length > 0">
           <div class="row detail-bar">
             <p class="col detail-text p-0">Completed {{ req.type }} Requirements</p>
-            <button class="btn"><p class="hide">HIDE</p></button>
+            <button class="btn" v-bind:style="{ 'color': req.color }">
+              <p class="toggle" v-bind:class="{ none: !req.displayCompleted }" v-on:click="hide(index)">HIDE</p>
+              <p class="toggle" v-bind:class="{ none: req.displayCompleted }" v-on:click="show(index)">SHOW</p>
+            </button>
           </div>
-          <div class="list" v-for="value in req.completed" v-bind:key="value.id">
+          <div class="list" v-bind:class="{ none: !req.displayCompleted }" v-for="value in req.completed" v-bind:key="value.id">
             <div class="separator"></div>
             <div class="row req">
               <p class="col float-left p-0 req-name">{{ value.name }}</p>
@@ -66,7 +69,46 @@ export default {
           count: "Credits",
           progress: 46,
           total: 120,
-          displayDetails: true,
+          color: '#2BBCC6',
+          displayDetails: false,
+          todo: [
+            {
+              name: "CALS Credits",
+              count: "Credits",
+              progress: 12,
+              total: 55
+            },
+            {
+              name: "PE Credits",
+              count: "Credits",
+              progress: 1,
+              total: 2
+            }
+          ],
+          displayCompleted: true,
+          completed: [
+            {
+              name: "Quantitative Literacy",
+              count: "Credits",
+              progress: 2,
+              total: 2
+            },
+            {
+              name: "Chemistry/Physics",
+              count: "Credits",
+              progress: 1,
+              total: 2
+            }
+          ]
+        },
+        {
+          name: "Major Requirements",
+          type: "Major",
+          count: "Courses",
+          progress: 4,
+          total: 8,
+          color: '#4D53DC',
+          displayDetails: false,
           todo: [
             {
               name: "CALS Credits",
@@ -105,9 +147,14 @@ export default {
     display: function(index) {
       this.reqs[index].displayDetails = true;
     },
-
     close: function(index) {
       this.reqs[index].displayDetails = false;
+    },
+    show: function(index) {
+      this.reqs[index].displayCompleted = true;
+    },
+    hide: function(index) {
+      this.reqs[index].displayCompleted = false;
     }
   }
 }
@@ -117,14 +164,6 @@ export default {
 
 .btn {
   padding: 0;
-}
-
-.college-color {
-  background-color: #2BBCC6;
-}
-
-.major-color {
-  background-color: #4D53DC;
 }
 
 .requirements {
@@ -195,13 +234,12 @@ button.view {
   width: 10px;
 }
 
-.hide {
+.toggle {
   margin-top: auto;
   margin-bottom: auto;
   font-weight: bold;
   font-size: 12px;
   line-height: 12px;
-  color: #2BBCC6;
 }
 
 .req {
