@@ -12,10 +12,10 @@
       </div>
       <div class="progress"><div class="progress-bar" v-bind:style="{ 'background-color': req.color, width: `${(req.progress/req.total)*100}%`}" role="progressbar"></div></div>
       <p class="progress-text"><strong>{{ req.progress }}/{{ req.total }}</strong> Total {{ req.count }} Inputted on Schedule</p>
-      <button class="view btn" v-bind:class="{ none: req.displayDetails }" v-bind:style="{ 'background-color': req.color }" v-on:click="display(index)">
+      <button class="view btn" v-if="!req.displayDetails" v-bind:style="{ 'background-color': req.color }" v-on:click="display(index)">
         View All {{ req.type }} Requirements
       </button>
-      <div class="detail" v-bind:class="{ none: !req.displayDetails }">
+      <div class="detail" v-if="req.displayDetails">
         <div class="todo">
           <div class="row detail-bar">
             <p class="col detail-text p-0">In-Depth {{ req.type }} Requirements</p> 
@@ -38,20 +38,22 @@
           <div class="row detail-bar">
             <p class="col detail-text p-0">Completed {{ req.type }} Requirements</p>
             <button class="btn" v-bind:style="{ 'color': req.color }">
-              <p class="toggle" v-bind:class="{ none: !req.displayCompleted }" v-on:click="hide(index)">HIDE</p>
-              <p class="toggle" v-bind:class="{ none: req.displayCompleted }" v-on:click="show(index)">SHOW</p>
+              <p class="toggle" v-if="req.displayCompleted" v-on:click="hide(index)">HIDE</p>
+              <p class="toggle" v-else v-on:click="show(index)">SHOW</p>
             </button>
           </div>
-          <div class="list" v-bind:class="{ none: !req.displayCompleted }" v-for="value in req.completed" v-bind:key="value.id">
-            <div class="separator"></div>
-            <div class="row req">
-              <p class="col float-left p-0 req-name">{{ value.name }}</p>
-              <p class="col float-right text-right p-0 req-progress">({{ value.progress }}/{{ value.total }} {{ value.count }})</p>
+          <div v-if="req.displayCompleted">
+            <div class="list"  v-for="value in req.completed" v-bind:key="value.id">
+              <div class="separator"></div>
+              <div class="row req">
+                <p class="col float-left p-0 req-name">{{ value.name }}</p>
+                <p class="col float-right text-right p-0 req-progress">({{ value.progress }}/{{ value.total }} {{ value.count }})</p>
+              </div>
             </div>
           </div>
-          <div class="separator"></div>
         </div>
       </div>
+      <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
     </div>
   </div>
 </template>
@@ -264,10 +266,6 @@ button.view {
   height: 1px;
   width: 100%;
   background-color: #D7D7D7;
-}
-
-.none {
-  display: none;
 }
 
 </style>
