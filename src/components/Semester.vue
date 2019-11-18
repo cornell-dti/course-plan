@@ -47,17 +47,17 @@ export default {
     exists: Boolean,
     compact: Boolean
   },
-  mounted: function () {
+  mounted() {
     this.$el.addEventListener('click', this.closeAllModals);
 
 
-    var _this = this;
-    Vue.vueDragula.eventBus.$on('drop', function (args) {
+    const _this = this;
+    Vue.vueDragula.eventBus.$on('drop', args => {
       console.log(_this.courses);
-      console.log(args[1].childNodes[0]); //gets the course semester-course div
-    })
+      console.log(args[1].childNodes[0]); // gets the course semester-course div
+    });
   },
-  beforeDestroy: function () {
+  beforeDestroy() {
     this.$el.removeEventListener('click', this.closeAllModals);
   },
 
@@ -82,23 +82,23 @@ export default {
       console.log(this.courses.length);
     },
     openCourseModal() {
-      let modal = document.getElementById("courseModal");
-      modal.style.display = "block";
+      const modal = document.getElementById('courseModal');
+      modal.style.display = 'block';
     },
     openSemesterModal() {
-      let modal = document.getElementById("semesterModal");
-      modal.style.display = "block";
+      const modal = document.getElementById('semesterModal');
+      modal.style.display = 'block';
     },
-    closeAllModals: function (event) {
-      let modals = document.getElementsByClassName("semester-modal");
-      for(let i = 0; i < modals.length; i++) {
+    closeAllModals(event) {
+      const modals = document.getElementsByClassName('semester-modal');
+      for (let i = 0; i < modals.length; i++) {
         if (event.target == modals[i]) {
-          modals[i].style.display = "none";
+          modals[i].style.display = 'none';
         }
       }
     }
   }
-}
+};
 </script>
 
 

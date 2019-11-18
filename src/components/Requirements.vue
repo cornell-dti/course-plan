@@ -23,7 +23,7 @@
       <div class="detail" v-if="req.displayDetails">
         <div class="todo">
           <div class="row detail-bar">
-            <p class="col detail-text p-0">In-Depth {{ req.type }} Requirements</p> 
+            <p class="col detail-text p-0">In-Depth {{ req.type }} Requirements</p>
             <div class="text-right p-0">
               <button class="btn" v-on:click="turnDetails(index, false)">
                 <!-- picture of close (x) icon -->
@@ -77,23 +77,23 @@ export default {
     return {
       reqs: [
         {
-          name: "College Requirements",
-          type: "College",
-          count: "Credits",
+          name: 'College Requirements',
+          type: 'College',
+          count: 'Credits',
           progress: 46,
           total: 120,
           color: '#2BBCC6',
           displayDetails: false,
           todo: [
             {
-              name: "CALS Credits",
-              count: "Credits",
+              name: 'CALS Credits',
+              count: 'Credits',
               progress: 12,
               total: 55
             },
             {
-              name: "PE Credits",
-              count: "Credits",
+              name: 'PE Credits',
+              count: 'Credits',
               progress: 1,
               total: 2
             }
@@ -101,37 +101,37 @@ export default {
           displayCompleted: true,
           completed: [
             {
-              name: "Quantitative Literacy",
-              count: "Credits",
+              name: 'Quantitative Literacy',
+              count: 'Credits',
               progress: 2,
               total: 2
             },
             {
-              name: "Chemistry/Physics",
-              count: "Credits",
+              name: 'Chemistry/Physics',
+              count: 'Credits',
               progress: 1,
               total: 2
             }
           ]
         },
         {
-          name: "Major Requirements",
-          type: "Major",
-          count: "Courses",
+          name: 'Major Requirements',
+          type: 'Major',
+          count: 'Courses',
           progress: 4,
           total: 8,
           color: '#4D53DC',
           displayDetails: false,
           todo: [
             {
-              name: "CALS Credits",
-              count: "Credits",
+              name: 'CALS Credits',
+              count: 'Credits',
               progress: 12,
               total: 55
             },
             {
-              name: "PE Credits",
-              count: "Credits",
+              name: 'PE Credits',
+              count: 'Credits',
               progress: 1,
               total: 2
             }
@@ -139,32 +139,32 @@ export default {
           displayCompleted: true,
           completed: [
             {
-              name: "Quantitative Literacy",
-              count: "Credits",
+              name: 'Quantitative Literacy',
+              count: 'Credits',
               progress: 2,
               total: 2
             },
             {
-              name: "Chemistry/Physics",
-              count: "Credits",
+              name: 'Chemistry/Physics',
+              count: 'Credits',
               progress: 1,
               total: 2
             }
           ]
         }
       ]
-    }
+    };
   },
 
   methods: {
-    turnDetails: function(index, bool) {
+    turnDetails(index, bool) {
       this.reqs[index].displayDetails = bool;
     },
-    turnCompleted: function(index, bool) {
+    turnCompleted(index, bool) {
       this.reqs[index].displayCompleted = bool;
     }
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
@@ -174,7 +174,7 @@ export default {
 }
 
 .requirements {
-  width: 30rem;
+  width: 400px;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: white;
 }
@@ -267,7 +267,6 @@ button.view {
 }
 
 .separator {
-  margin: 0 0 0 0;
   height: 1px;
   width: 100%;
   background-color: #D7D7D7;
