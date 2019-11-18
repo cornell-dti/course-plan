@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     semesters() {
-      let courseMap = new Map();
+      const courseMap = new Map();
       courseMap.set('KCM', ['CS 1110', 'CS 1112']);
       courseMap.set('CA', ['CS 2110']);
       const course = {

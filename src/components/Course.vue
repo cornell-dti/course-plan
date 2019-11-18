@@ -66,10 +66,10 @@ export default {
         return;
       }
 
-      let keys = Array.from(this.requirementsMap.keys());
+      const keys = Array.from(this.requirementsMap.keys());
       let str = 'Satisfies ';
       const endStr = '</b> requirement';
-      const length = keys.length;
+      const { length } = keys;
       if (length == 1) {
         return `${str}<b>${keys[0]}${endStr}`;
       }
@@ -92,11 +92,11 @@ export default {
         return;
       }
 
-      let str = ''; 
-      this.requirementsMap.forEach(function(courses, req) {
+      let str = '';
+      this.requirementsMap.forEach((courses, req) => {
         str += '<li>';
-        if(courses.length == 1) {
-          str += courses[0] + ' also fulfills <b>' + req + '</b> requirement';
+        if (courses.length == 1) {
+          str += `${courses[0]} also fulfills <b>${req}</b> requirement`;
         } else {
           // loop through all but the last course and comma separate
           for (let i = 0; i < courses.length - 1; i++) {
@@ -108,9 +108,9 @@ export default {
             str = `${str.substring(0, str.length - 2)} `;
           }
 
-          str += `${str}and ${courses[courses.length-1]} also fulfills <b>${req}</b> requirement`;  
+          str += `${str}and ${courses[courses.length - 1]} also fulfills <b>${req}</b> requirement`;
         }
-        str += '</li>'
+        str += '</li>';
         console.log(str);
       });
 

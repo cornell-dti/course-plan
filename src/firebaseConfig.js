@@ -31,5 +31,5 @@ export {
   db,
   auth,
   currentUser,
-  usersCollection,
+  usersCollection
 };

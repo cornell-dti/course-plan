@@ -47,10 +47,8 @@ export default {
     exists: Boolean,
     compact: Boolean
   },
-  mounted: function () {
+  mounted() {
     this.$el.addEventListener('click', this.closeAllModals);
-
-
     var _this = this;
     var _document = document;
 
@@ -112,18 +110,18 @@ export default {
       console.log(this.courses.length);
     },
     openCourseModal() {
-      let modal = document.getElementById("courseModal");
-      modal.style.display = "block";
+      const modal = document.getElementById('courseModal');
+      modal.style.display = 'block';
     },
     openSemesterModal() {
-      let modal = document.getElementById("semesterModal");
-      modal.style.display = "block";
+      const modal = document.getElementById('semesterModal');
+      modal.style.display = 'block';
     },
-    closeAllModals: function (event) {
-      let modals = document.getElementsByClassName("semester-modal");
-      for(let i = 0; i < modals.length; i++) {
+    closeAllModals(event) {
+      const modals = document.getElementsByClassName('semester-modal');
+      for (let i = 0; i < modals.length; i++) {
         if (event.target == modals[i]) {
-          modals[i].style.display = "none";
+          modals[i].style.display = 'none';
         }
       }
     },
@@ -146,7 +144,7 @@ export default {
     }
 
   }
-}
+};
 </script>
 
 

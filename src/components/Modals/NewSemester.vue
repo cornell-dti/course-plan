@@ -32,26 +32,26 @@ import Vue from 'vue';
 export default {
   computed: {
     typeText() {
-      return "Type";
+      return 'Type';
     },
     yearText() {
-      return "Year";
+      return 'Year';
     },
     typePlaceholder() {
-      return "Select one";
+      return 'Select one';
     },
     yearOptions() {
       // TODO: what years are valid?
-      let years = ["2019", "2020", "2021", "2022"];
-      let str = "";
-      for(let i = 0; i < years.length; i++) {
-        str += "<option value=" + years[i] + ">" + years[i] + "</option>";
+      const years = ['2019', '2020', '2021', '2022'];
+      let str = '';
+      for (let i = 0; i < years.length; i++) {
+        str += `<option value=${years[i]}>${years[i]}</option>`;
       }
       return str;
     }
-  },
+  }
 
-}
+};
 </script>
 
 <style lang="scss">

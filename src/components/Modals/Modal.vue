@@ -16,7 +16,7 @@
 
 <script>
 import Vue from 'vue';
-import courses from '../../assets/courses/courses.json'
+import courses from '../../assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse';
 import NewCustomCourse from '@/components/Modals/NewCustomCourse';
 import NewSemester from '@/components/Modals/NewSemester';
@@ -27,45 +27,43 @@ Vue.component('newSemester', NewSemester);
 
 export default {
   props: {
-    type: String,
+    type: String
   },
   computed: {
     contentId() {
-      return "content-" + this.type;
+      return `content-${this.type}`;
     },
     title() {
-      let start = "New ";
-      if(this.type == "semester") {
-        return start + "Semester"
-      } else if(this.type == "course") {
-        return start + "Course";
-      } else {
-        return start + "Custom Course";
+      const start = 'New ';
+      if (this.type == 'semester') {
+        return `${start}Semester`;
+      } if (this.type == 'course') {
+        return `${start}Course`;
       }
+      return `${start}Custom Course`;
     },
     add() {
-      return "ADD";
+      return 'ADD';
     },
     cancel() {
-      return "CANCEL";
+      return 'CANCEL';
     },
     body() {
-      if(this.type == "semester") {
-        return "newSemester";
-      } else if(this.type == "course") {
-        return "newCourse";
-      } else {
-        return "newCustomCourse";
+      if (this.type == 'semester') {
+        return 'newSemester';
+      } if (this.type == 'course') {
+        return 'newCourse';
       }
+      return 'newCustomCourse';
     }
   },
   methods: {
-    closeCurrentModal: function (event) {
-      let modal = document.getElementById(this.type + "Modal");
-      modal.style.display = "none";
+    closeCurrentModal(event) {
+      const modal = document.getElementById(`${this.type}Modal`);
+      modal.style.display = 'none';
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -79,6 +77,10 @@ export default {
     margin-left: auto;
     margin-right: auto;
     padding: 1rem;
+  }
+
+  &-body {
+    padding: 0;
   }
 
   &-top {
