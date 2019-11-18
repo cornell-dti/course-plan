@@ -13,7 +13,7 @@
       <div class="progress"><div class="progress-bar" v-bind:style="{ 'background-color': req.color, width: `${(req.progress/req.total)*100}%`}" role="progressbar"></div></div>
       <p class="progress-text"><strong>{{ req.progress }}/{{ req.total }}</strong> Total {{ req.count }} Inputted on Schedule</p>
       <button class="view btn" v-bind:class="{ none: req.displayDetails }" v-bind:style="{ 'background-color': req.color }" v-on:click="display(index)">
-        View All College Requirements
+        View All {{ req.type }} Requirements
       </button>
       <div class="detail" v-bind:class="{ none: !req.displayDetails }">
         <div class="todo">
