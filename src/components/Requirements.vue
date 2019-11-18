@@ -251,7 +251,6 @@ button.view {
 
 .req {
   margin: 0.5rem 0 0 0;
-  padding: 0;
   color: #757575;
 
   &-name {
