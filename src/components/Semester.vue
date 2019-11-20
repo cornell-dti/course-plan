@@ -1,5 +1,5 @@
 <template>
-  <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact }">
+  <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact}" v-bind:id="id">
     <modal id="courseModal" class="semester-modal" type="course" />
     <modal id="semesterModal" class="semester-modal" type="semester" />
     <div v-if="exists" class="semester-content">
@@ -42,6 +42,7 @@ Vue.component('modal', Modal);
 export default {
   // TODO: fonts! (Proxima Nova)
   props: {
+    id: Number,
     name: String,
     courses: Array,
     exists: Boolean,
@@ -54,35 +55,60 @@ export default {
 
     // console.log(this.getVueInstancefromHTML('semester'));
     // console.log(this.$el.getAttribute("class"));
+      Vue.vueDragula.eventBus.$on('drop', function (args) {
+        // console.log(_this.courses);
+        // console.log(args);
+        // console.log(args[1].childNodes[0]); //gets the course semester-course div
+        // console.log(args[2].parentNode.parentNode.parentNode.getAttribute("class"));
 
-    Vue.vueDragula.eventBus.$on('drop', function (args) {
-      console.log(_this.courses);
-      console.log(args);
-      console.log(args[1].childNodes[0]); //gets the course semester-course div
-      console.log(args[2].parentNode.parentNode.parentNode.getAttribute("class"));
+        // console.log(args[2].parentNode.parentNode.parentNode.getAttribute("id"));
 
-      var target = args[2].parentNode.parentNode.parentNode.getAttribute("class");
-      var vueTarget = _this.getVueInstancefromHTML(target);
+        var target = args[2].parentNode.parentNode.parentNode.getAttribute("id");
+        // console.log(target);
+        var vueTarget = _this.getVueInstancefromHTML(target, "id");
 
-      var source = args[3].parentNode.parentNode.parentNode.getAttribute("class");
-      var vueSource = _this.getVueInstancefromHTML(source);
+        var source = args[3].parentNode.parentNode.parentNode.getAttribute("id");
+        var vueSource = _this.getVueInstancefromHTML(source, "id");
 
-      var course = args[1].childNodes[0].getAttribute("class");
-      var vueCourse = _this.getVueInstancefromHTML(course);
-      
-      console.log(vueCourse);
-      console.log(vueSource);
-      console.log(vueTarget);
+        var course = args[1].childNodes[0].getAttribute("class");
+        var vueCourse = _this.getVueInstancefromHTML(course, "class");
+        
+        
+        
+        // console.log(args);
 
+        // console.log(vueCourse);
+        const courseElem = {
+          subject: vueCourse.subject,
+          code: vueCourse.code,
+          name: vueCourse.name,
+          credits: vueCourse.credits,
+          semesters: vueCourse.semesters,
+          color: vueCourse.color,
+          check: vueCourse.check,
+          requirementsMap: vueCourse.requirementsMap
+        };
 
-      _this.updateCourseArrays(vueSource.courses, vueTarget.courses, vueCourse);
+        // console.log(courseElem);
 
-      // var vueTarget = _document.getElementsByClassName(args[2].parentElement.parentElement.parentElement)[0].__vue__;
-      // console.log(vueTarget);
-      // var element = args[1].childNodes[0];
-      // var target = args[2];
-      // var source = args[3];
-    })
+        // console.log(vueSource.courses);
+        // console.log(vueTarget.courses);
+
+        // console.log(vueTarget.courses[0]);
+
+        _this.updateCourseArrays(vueSource.courses, vueTarget.courses, courseElem);
+
+        console.log("Source courses after update");
+        console.log(vueSource.courses);
+
+        console.log("Target courses after update");
+        console.log(vueTarget.courses);
+        // var vueTarget = _document.getElementsByClassName(args[2].parentElement.parentElement.parentElement)[0].__vue__;
+        // console.log(vueTarget);
+        // var element = args[1].childNodes[0];
+        // var target = args[2];
+        // var source = args[3];
+      })
   },
 
   beforeDestroy: function () {
@@ -125,12 +151,16 @@ export default {
         }
       }
     },
-    getVueInstancefromHTML: function (class_name){
-      return document.getElementsByClassName(class_name)[0].__vue__;
+    getVueInstancefromHTML: function (name, attribute){
+      if (attribute == "class"){
+        return document.getElementsByClassName(name)[0].__vue__;
+      }
+      //attribute == "id"
+      return document.getElementById(name).__vue__;
     },
     removeCourse: function (sourceCourses, course){
       for(let i = 0; i < sourceCourses.length; i++){
-        if (course == sourceCourses[i]){
+        if (course.code == sourceCourses[i].code && course.subject == sourceCourses[i].subject){
           sourceCourses.splice(i, 1);
           i--;
         }

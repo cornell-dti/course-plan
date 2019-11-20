@@ -39,14 +39,17 @@ export default {
         requirementsMap: courseMap
       };
       const semester1 = {
+        id: 1,
         name: 'Freshman Fall',
         courses: [course, course]
       };
       const semester2 = {
+        id: 2,
         name: 'Freshman Spring',
         courses: [course, course, course]
       };
       const semester3 = {
+        id: 3,
         name: 'Sophomore Fall',
         courses: [course]
       };
