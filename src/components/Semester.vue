@@ -15,7 +15,7 @@
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
           <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
-            <course v-bind="course" v-bind:id="course.subject" class="semester-course"/>
+            <course v-bind="course" v-bind:id="course.subject" v-bind:compact="compact" class="semester-course"/>
           </div>
         </div>
           <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }" v-on:click="openCourseModal">
