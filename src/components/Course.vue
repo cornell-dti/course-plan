@@ -111,7 +111,6 @@ export default {
           str = `${str}and ${courses[courses.length - 1]} also fulfill <b>${req}</b> requirement`;
         }
         str += '</li>';
-        console.log(str);
       });
 
       return str;
