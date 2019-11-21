@@ -14,7 +14,7 @@
       </div>
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-          <div v-for="course in courses" v-bind:key="course.id" class="semester-courseWrapper">
+          <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
             <course v-bind="course" v-bind:id="course.subject" class="semester-course"/>
           </div>
         </div>
@@ -41,10 +41,29 @@ Vue.component('modal', Modal);
 
 export default {
   // TODO: fonts! (Proxima Nova)
+  data: function() {
+    const courseMap = new Map();
+    courseMap.set('KCM', ['CS 1110', 'CS 1112']);
+    courseMap.set('CA', ['CS 2110']);
+    let randomId = Math.floor(Math.random() * Math.floor(100));
+    return {
+      courses: [{
+        id: randomId,
+        subject: 'PHIL',
+        code: 1100,
+        name: 'Introduction to Philosophy',
+        credits: 3,
+        semesters: ['Fall', 'Spring'],
+        color: '2BBCC6',
+        check: true,
+        requirementsMap: courseMap
+      }]
+    };
+  },
   props: {
     id: Number,
     name: String,
-    courses: Array,
+    // courses: Array,
     exists: Boolean,
     compact: Boolean
   },
@@ -52,63 +71,6 @@ export default {
     this.$el.addEventListener('click', this.closeAllModals);
     var _this = this;
     var _document = document;
-
-    // console.log(this.getVueInstancefromHTML('semester'));
-    // console.log(this.$el.getAttribute("class"));
-      Vue.vueDragula.eventBus.$on('drop', function (args) {
-        // console.log(_this.courses);
-        // console.log(args);
-        // console.log(args[1].childNodes[0]); //gets the course semester-course div
-        // console.log(args[2].parentNode.parentNode.parentNode.getAttribute("class"));
-
-        // console.log(args[2].parentNode.parentNode.parentNode.getAttribute("id"));
-
-        var target = args[2].parentNode.parentNode.parentNode.getAttribute("id");
-        // console.log(target);
-        var vueTarget = _this.getVueInstancefromHTML(target, "id");
-
-        var source = args[3].parentNode.parentNode.parentNode.getAttribute("id");
-        var vueSource = _this.getVueInstancefromHTML(source, "id");
-
-        var course = args[1].childNodes[0].getAttribute("class");
-        var vueCourse = _this.getVueInstancefromHTML(course, "class");
-        
-        
-        
-        // console.log(args);
-
-        // console.log(vueCourse);
-        const courseElem = {
-          subject: vueCourse.subject,
-          code: vueCourse.code,
-          name: vueCourse.name,
-          credits: vueCourse.credits,
-          semesters: vueCourse.semesters,
-          color: vueCourse.color,
-          check: vueCourse.check,
-          requirementsMap: vueCourse.requirementsMap
-        };
-
-        // console.log(courseElem);
-
-        // console.log(vueSource.courses);
-        // console.log(vueTarget.courses);
-
-        // console.log(vueTarget.courses[0]);
-
-        _this.updateCourseArrays(vueSource.courses, vueTarget.courses, courseElem);
-
-        console.log("Source courses after update");
-        console.log(vueSource.courses);
-
-        console.log("Target courses after update");
-        console.log(vueTarget.courses);
-        // var vueTarget = _document.getElementsByClassName(args[2].parentElement.parentElement.parentElement)[0].__vue__;
-        // console.log(vueTarget);
-        // var element = args[1].childNodes[0];
-        // var target = args[2];
-        // var source = args[3];
-      })
   },
 
   beforeDestroy: function () {
@@ -150,29 +112,7 @@ export default {
           modals[i].style.display = 'none';
         }
       }
-    },
-    getVueInstancefromHTML: function (name, attribute){
-      if (attribute == "class"){
-        return document.getElementsByClassName(name)[0].__vue__;
-      }
-      //attribute == "id"
-      return document.getElementById(name).__vue__;
-    },
-    removeCourse: function (sourceCourses, course){
-      for(let i = 0; i < sourceCourses.length; i++){
-        if (course.code == sourceCourses[i].code && course.subject == sourceCourses[i].subject){
-          sourceCourses.splice(i, 1);
-          i--;
-        }
-      }
-    },
-    updateCourseArrays: function (sourceCourses, targetCourses, course){
-      //remove Course from source course array
-      this.removeCourse(sourceCourses, course);
-      //push course onto target course array
-      targetCourses.push(course);
     }
-
   }
 };
 </script>
