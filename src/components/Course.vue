@@ -19,17 +19,17 @@
         <div class="course-info">
           <span v-if="notCompact" class="course-credits">{{ creditString }}</span>
           <span v-if="notCompact && semesterString" class="course-semesters">{{ semesterString }}</span>
-          <div v-if="notCompact" class="course-outerWrapper tooltip">
+          <div v-if="notCompact" class="course-outerWrapper course-tooltip">
             <div class="course-iconWrapper course-iconWrapper--info">
               <img class="course-icon course-icon--info" src="../assets/images/info.svg" />
             </div>
-            <div class="tooltiptext tooltiptext--info" v-html="requirementString"></div>
+            <div class="course-tooltiptext course-tooltiptext--info" v-html="requirementString"></div>
           </div>
-          <div class="course-outerWrapper tooltip">
+          <div class="course-outerWrapper course-tooltip">
             <div class="course-iconWrapper">
               <img class="course-icon" src="../assets/images/caution.svg" />
             </div>
-            <div class="tooltiptext tooltiptext--caution" v-html="cautionString"></div>
+            <div class="course-tooltiptext course-tooltiptext--caution" v-html="cautionString"></div>
           </div>
         </div>
       </div>
@@ -302,14 +302,14 @@ export default {
 
 // TODO: convert px to rem for spacing
 /* Tooltip container */
-.tooltip {
+.course-tooltip {
   position: relative;
   display: inline-block;
   // border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
 /* Tooltip text */
-.tooltip .tooltiptext {
+.course-tooltip .course-tooltiptext {
   visibility: hidden;
   width: 120px;
   color: #858585;
@@ -332,11 +332,11 @@ export default {
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
+.course-tooltip:hover .course-tooltiptext {
   visibility: visible;
 }
 
-.tooltip .tooltiptext::after {
+.course-tooltip .course-tooltiptext::after {
   content: " ";
   position: absolute;
   bottom: 100%;  /* At the top of the tooltip */
@@ -348,7 +348,7 @@ export default {
   z-index: 3;
 }
 
-.tooltip .tooltiptext::before {
+.course-tooltip .course-tooltiptext::before {
   content: " ";
   position: absolute;
   bottom: 100%;  /* At the top of the tooltip */
@@ -361,11 +361,11 @@ export default {
   z-index: 2;
 }
 
-.tooltip .tooltiptext--info::after {
+.course-tooltip .course-tooltiptext--info::after {
   right: 10px;
 }
 
-.tooltip .tooltiptext--info::before {
+.course-tooltip .course-tooltiptext--info::before {
   right: 8px;
 }
 
