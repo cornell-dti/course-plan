@@ -104,11 +104,11 @@ export default {
           }
 
           // remove the comma if only 2 requirements
-          if (length == 2) {
+          if (courses.length == 2) {
             str = `${str.substring(0, str.length - 2)} `;
           }
 
-          str += `${str}and ${courses[courses.length - 1]} also fulfills <b>${req}</b> requirement`;
+          str = `${str}and ${courses[courses.length - 1]} also fulfill <b>${req}</b> requirement`;
         }
         str += '</li>';
         console.log(str);
