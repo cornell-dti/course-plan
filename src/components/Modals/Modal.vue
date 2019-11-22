@@ -5,7 +5,7 @@
         <span class="modal-title">{{ title }}</span>
         <img class="modal-exit" src="../../assets/images/x.png" v-on:click="closeCurrentModal"/>
       </div>
-      <component class="modal-body" v-bind:is="body"></component>
+      <component class="modal-body" v-bind:is="body" :semesterID="semesterID"></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" v-on:click="closeCurrentModal">{{ cancel }}</button>
         <button class="modal-button modal-button--add" v-on:click="addItem">{{ add }}</button>
@@ -30,7 +30,8 @@ const coursesCollection = firebaseConfig.coursesCollection;
 
 export default {
   props: {
-    type: String
+    type: String,
+    semesterID: Number
   },
   computed: {
     contentId() {
@@ -62,7 +63,12 @@ export default {
   },
   methods: {
     closeCurrentModal(event) {
-      const modal = document.getElementById(`${this.type}Modal`);
+      let modal;
+      if(this.type == "course") {
+        modal = document.getElementById(`${this.type}Modal-` + this.semesterID);
+      } else {
+        modal = document.getElementById(`${this.type}Modal`);
+      }
       modal.style.display = 'none';
     },
     addItem() {
@@ -75,7 +81,7 @@ export default {
       }
     },
     addCourse() {
-      const dropdown = document.getElementsByClassName("newCourse-dropdown")[0];
+      const dropdown = document.getElementById("dropdown-" + this.semesterID);
       const title = dropdown.value;
 
       // TODO: can I make the valid assumption that the course code is up to the colon in the title?
@@ -98,6 +104,10 @@ export default {
       }).catch(function(error) {
         console.log("Error getting document:", error);
       });
+
+      // clear input and close modal when complete
+      dropdown.value = "";
+      this.closeCurrentModal();
     }
   }
 };
