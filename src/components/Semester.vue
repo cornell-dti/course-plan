@@ -1,31 +1,48 @@
 <template>
-  <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact}" v-bind:id="id">
+  <div
+    class="semester"
+    v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact}"
+    v-bind:id="id"
+  >
     <modal id="courseModal" class="semester-modal" type="course" />
     <modal id="semesterModal" class="semester-modal" type="semester" />
     <div v-if="exists" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
         <div class="semester-left" v-bind:class="{ 'semester-left--compact': compact }">
           <span class="semester-name">{{ name }}</span>
-          <img class="semester-icon" src="../assets/images/pencil.svg"/>
+          <img class="semester-icon" src="../assets/images/pencil.svg" />
         </div>
         <div class="semester-right" v-bind:class="{ 'semester-right--compact': compact }">
-          <span class="semester-credits">{{ creditString  }}</span>
+          <span class="semester-credits">{{ creditString }}</span>
         </div>
       </div>
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
           <div v-for="course in courses" v-bind:key="course.id" class="semester-courseWrapper">
-            <course v-bind="course" v-bind:id="course.subject" class="semester-course"/>
+            <course v-bind="course" v-bind:id="course.subject" class="semester-course" />
           </div>
         </div>
-          <div class="semester-courseWrapper semester-addWrapper" v-bind:class="{ 'semester-addWrapper--compact': compact }" v-on:click="openCourseModal">
-            <span class="semester-buttonText" v-bind:class="{ 'semester-buttonText--compact': compact }">{{ buttonString }}</span>
-          </div>
+        <div
+          class="semester-courseWrapper semester-addWrapper"
+          v-bind:class="{ 'semester-addWrapper--compact': compact }"
+          v-on:click="openCourseModal"
+        >
+          <span
+            class="semester-buttonText"
+            v-bind:class="{ 'semester-buttonText--compact': compact }"
+          >{{ buttonString }}</span>
+        </div>
       </div>
     </div>
     <div v-if="!exists" class="semester-empty" v-on:click="openSemesterModal">
-      <div class="semester-semesterWrapper" v-bind:class="{ 'semester-semesterWrapper--compact': compact }">
-        <span class="semester-buttonText" v-bind:class="{ 'semester-buttonText--compact': compact }">{{ semesterString }}</span>
+      <div
+        class="semester-semesterWrapper"
+        v-bind:class="{ 'semester-semesterWrapper--compact': compact }"
+      >
+        <span
+          class="semester-buttonText"
+          v-bind:class="{ 'semester-buttonText--compact': compact }"
+        >{{ semesterString }}</span>
       </div>
     </div>
   </div>
@@ -52,66 +69,53 @@ export default {
     this.$el.addEventListener('click', this.closeAllModals);
     var _this = this;
     var _document = document;
+    Vue.vueDragula.eventBus.$on('drop', function(args) {
+      var target = args[2].parentNode.parentNode.parentNode.getAttribute('id');
 
-    // console.log(this.getVueInstancefromHTML('semester'));
-    // console.log(this.$el.getAttribute("class"));
-      Vue.vueDragula.eventBus.$on('drop', function (args) {
-        // console.log(_this.courses);
-        // console.log(args);
-        // console.log(args[1].childNodes[0]); //gets the course semester-course div
-        // console.log(args[2].parentNode.parentNode.parentNode.getAttribute("class"));
+      var vueTarget = _this.getVueInstancefromHTML(target, 'id');
+      var source = args[3].parentNode.parentNode.parentNode.getAttribute('id');
+      var vueSource = _this.getVueInstancefromHTML(source, 'id');
 
-        // console.log(args[2].parentNode.parentNode.parentNode.getAttribute("id"));
+      var course = args[1].childNodes[0].getAttribute('class');
+      var vueCourse = _this.getVueInstancefromHTML(course, 'class');
+      const courseElem = {
+        subject: vueCourse.subject,
+        code: vueCourse.code,
+        name: vueCourse.name,
+        credits: vueCourse.credits,
+        semesters: vueCourse.semesters,
+        color: vueCourse.color,
+        check: vueCourse.check,
+        requirementsMap: vueCourse.requirementsMap
+      };
 
-        var target = args[2].parentNode.parentNode.parentNode.getAttribute("id");
-        // console.log(target);
-        var vueTarget = _this.getVueInstancefromHTML(target, "id");
+      // console.log(courseElem);
 
-        var source = args[3].parentNode.parentNode.parentNode.getAttribute("id");
-        var vueSource = _this.getVueInstancefromHTML(source, "id");
+      // console.log(vueSource.courses);
+      // console.log(vueTarget.courses);
 
-        var course = args[1].childNodes[0].getAttribute("class");
-        var vueCourse = _this.getVueInstancefromHTML(course, "class");
-        
-        
-        
-        // console.log(args);
+      // console.log(vueTarget.courses[0]);
 
-        // console.log(vueCourse);
-        const courseElem = {
-          subject: vueCourse.subject,
-          code: vueCourse.code,
-          name: vueCourse.name,
-          credits: vueCourse.credits,
-          semesters: vueCourse.semesters,
-          color: vueCourse.color,
-          check: vueCourse.check,
-          requirementsMap: vueCourse.requirementsMap
-        };
+      _this.updateCourseArrays(
+        vueSource.courses,
+        vueTarget.courses,
+        courseElem
+      );
 
-        // console.log(courseElem);
+      console.log('Source courses after update');
+      console.log(vueSource.courses);
 
-        // console.log(vueSource.courses);
-        // console.log(vueTarget.courses);
-
-        // console.log(vueTarget.courses[0]);
-
-        _this.updateCourseArrays(vueSource.courses, vueTarget.courses, courseElem);
-
-        console.log("Source courses after update");
-        console.log(vueSource.courses);
-
-        console.log("Target courses after update");
-        console.log(vueTarget.courses);
-        // var vueTarget = _document.getElementsByClassName(args[2].parentElement.parentElement.parentElement)[0].__vue__;
-        // console.log(vueTarget);
-        // var element = args[1].childNodes[0];
-        // var target = args[2];
-        // var source = args[3];
-      })
+      console.log('Target courses after update');
+      console.log(vueTarget.courses);
+      // var vueTarget = _document.getElementsByClassName(args[2].parentElement.parentElement.parentElement)[0].__vue__;
+      // console.log(vueTarget);
+      // var element = args[1].childNodes[0];
+      // var target = args[2];
+      // var source = args[3];
+    });
   },
 
-  beforeDestroy: function () {
+  beforeDestroy: function() {
     this.$el.removeEventListener('click', this.closeAllModals);
   },
 
@@ -151,28 +155,30 @@ export default {
         }
       }
     },
-    getVueInstancefromHTML: function (name, attribute){
-      if (attribute == "class"){
+    getVueInstancefromHTML: function(name, attribute) {
+      if (attribute == 'class') {
         return document.getElementsByClassName(name)[0].__vue__;
       }
       //attribute == "id"
       return document.getElementById(name).__vue__;
     },
-    removeCourse: function (sourceCourses, course){
-      for(let i = 0; i < sourceCourses.length; i++){
-        if (course.code == sourceCourses[i].code && course.subject == sourceCourses[i].subject){
+    removeCourse: function(sourceCourses, course) {
+      for (let i = 0; i < sourceCourses.length; i++) {
+        if (
+          course.code == sourceCourses[i].code &&
+          course.subject == sourceCourses[i].subject
+        ) {
           sourceCourses.splice(i, 1);
           i--;
         }
       }
     },
-    updateCourseArrays: function (sourceCourses, targetCourses, course){
+    updateCourseArrays: function(sourceCourses, targetCourses, course) {
       //remove Course from source course array
       this.removeCourse(sourceCourses, course);
       //push course onto target course array
       targetCourses.push(course);
     }
-
   }
 };
 </script>
@@ -180,24 +186,23 @@ export default {
 
 <style scoped lang="scss">
 @mixin hover-button {
-  border-color: #15A6CF;
+  border-color: #15a6cf;
   background: rgba(0, 0, 0, 0.03);
-  color: #15A6CF;
+  color: #15a6cf;
 }
 
-.semester
-{
-  padding: .875rem 1.125rem;
-  border: 2px solid #D8D8D8;
+.semester {
+  padding: 0.875rem 1.125rem;
+  border: 2px solid #d8d8d8;
   border-radius: 11px;
   width: fit-content;
 
   &--min {
-    border: 2px dashed #D8D8D8;
+    border: 2px dashed #d8d8d8;
     padding: 0;
     width: 23.75rem;
     height: 9.38rem;
-    color:#D8D8D8;
+    color: #d8d8d8;
 
     &:hover,
     &:active,
@@ -213,8 +218,7 @@ export default {
   }
 
   &--compact {
-    padding: .875rem 1.125rem;
-
+    padding: 0.875rem 1.125rem;
   }
 
   &-empty {
@@ -244,14 +248,14 @@ export default {
 
   &-right {
     &--compact {
-      margin-top: .25rem;
+      margin-top: 0.25rem;
     }
   }
 
   &-name {
     font-size: 18px;
     line-height: 22px;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
     font-weight: bold;
   }
 
@@ -265,28 +269,28 @@ export default {
   }
 
   &-courseWrapper {
-    margin: .5rem 0 .5rem 0;
+    margin: 0.5rem 0 0.5rem 0;
   }
 
   &-course {
     touch-action: none;
-    cursor:grab;
+    cursor: grab;
   }
 
   &-course:active:hover {
     touch-action: none;
-    cursor:grabbing;
+    cursor: grabbing;
   }
 
   &-addWrapper {
     width: 21.25rem;
     height: 4.625rem;
-    border-radius: .5rem;
+    border-radius: 0.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px dashed #D8D8D8;
-    color: #D8D8D8;
+    border: 2px dashed #d8d8d8;
+    color: #d8d8d8;
 
     &--compact {
       width: 10.5rem;
@@ -321,22 +325,21 @@ export default {
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
   }
 
-  .draggable-semester-courses{
+  .draggable-semester-courses {
     padding-top: 5px;
   }
 
-
   //Styling for drag and drop components and movement
-    .gu-mirror {
+  .gu-mirror {
     position: fixed !important;
     margin: 0 !important;
     z-index: 9999 !important;
     opacity: 0.8;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';
     filter: alpha(opacity=80);
   }
   .gu-hide {
@@ -350,9 +353,8 @@ export default {
   }
   .gu-transit {
     opacity: 0.2;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)';
     filter: alpha(opacity=20);
   }
 }
-
 </style>
