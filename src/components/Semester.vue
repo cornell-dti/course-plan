@@ -1,6 +1,7 @@
 <template>
   <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact}" v-bind:id="id">
-    <modal id="courseModal" class="semester-modal" type="course" />
+    <!-- TODO: Remove semesterModal from semester and move to semesterview -->
+    <modal :id="'courseModal-'+id" class="semester-modal" type="course" :semesterID="id"/>
     <modal id="semesterModal" class="semester-modal" type="semester" />
     <div v-if="exists" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
@@ -98,7 +99,7 @@ export default {
       console.log(this.courses.length);
     },
     openCourseModal() {
-      const modal = document.getElementById('courseModal');
+      const modal = document.getElementById('courseModal-'+this.id);
       modal.style.display = 'block';
     },
     openSemesterModal() {
@@ -112,6 +113,36 @@ export default {
           modals[i].style.display = 'none';
         }
       }
+    },
+    addCourse(data) {
+      const courseMap = new Map();
+      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
+      courseMap.set('CA', ['CS 2110']);
+
+      let arr = data.code.split(" ");
+      const subject = arr[0];
+      const code = parseInt(arr[1]);
+      
+      // remove periods and split on ', '
+      let semesters = data.catalogWhenOffered.replace(/\./g,'')
+      semesters = semesters.split(", ")
+
+      // TODO: update parsing for the below fields
+      // Credits: Which enroll group, and min or max credits?
+      // Color: How is this determined?
+      // Need courseMap to be generated
+      const newCourse = {
+        subject: subject,
+        code: code,
+        name: data.titleLong,
+        credits: data.enrollGroups[0].unitsMaximum,
+        semesters: semesters,
+        color: '2BBCC6',
+        check: true,
+        requirementsMap: null
+      };
+
+      this.courses.push(newCourse);
     }
   }
 };
