@@ -8,7 +8,7 @@
       <component class="modal-body" v-bind:is="body"></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" v-on:click="closeCurrentModal">{{ cancel }}</button>
-        <button class="modal-button modal-button--add">{{ add }}</button>
+        <button class="modal-button modal-button--add" v-on:click="addItem">{{ add }}</button>
       </div>
     </div>
   </div>
@@ -16,7 +16,7 @@
 
 <script>
 import Vue from 'vue';
-import courses from '../../assets/courses/courses.json';
+import courses from '@/assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse';
 import NewCustomCourse from '@/components/Modals/NewCustomCourse';
 import NewSemester from '@/components/Modals/NewSemester';
@@ -24,6 +24,9 @@ import NewSemester from '@/components/Modals/NewSemester';
 Vue.component('newCourse', NewCourse);
 Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
+
+const firebaseConfig = require('@/firebaseConfig.js');
+const coursesCollection = firebaseConfig.coursesCollection;
 
 export default {
   props: {
@@ -61,6 +64,40 @@ export default {
     closeCurrentModal(event) {
       const modal = document.getElementById(`${this.type}Modal`);
       modal.style.display = 'none';
+    },
+    addItem() {
+      if(this.type == 'course') {
+        this.addCourse();
+      } else if (this.type == 'semester') {
+        // TODO: add semester
+      } else {
+        // TODO: add custom course
+      }
+    },
+    addCourse() {
+      const dropdown = document.getElementsByClassName("newCourse-dropdown")[0];
+      const title = dropdown.value;
+
+      // TODO: can I make the valid assumption that the course code is up to the colon in the title?
+      const key = title.substring(0, title.indexOf(":"));
+      const sem = courses[key].sem;
+
+      const firebaseTitle = key.replace(/\s/g, '') + '-' + sem;
+      let docRef = coursesCollection.doc(firebaseTitle);
+
+      const _this = this;
+
+      // TODO: error handling if course not found or some firebase error
+      docRef.get().then(function(doc) {
+        if (doc.exists) {
+          _this.$parent.addCourse(doc.data());
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      }).catch(function(error) {
+        console.log("Error getting document:", error);
+      });
     }
   }
 };
