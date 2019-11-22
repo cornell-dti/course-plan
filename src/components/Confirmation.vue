@@ -67,10 +67,7 @@ export default {
         left: 307px;
         top: 27px;
 
-        margin-left: 12px;
-        margin-right: 12px;
-        margin-top: 11px;
-        margin-bottom: 11px;
+        margin: auto;
     }
 
     &-text {
