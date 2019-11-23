@@ -78,6 +78,7 @@ export default {
 
       var course = args[1].childNodes[0].getAttribute('class');
       var vueCourse = _this.getVueInstancefromHTML(course, 'class');
+      
       const courseElem = {
         subject: vueCourse.subject,
         code: vueCourse.code,
