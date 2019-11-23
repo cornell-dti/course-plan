@@ -65,7 +65,7 @@ export default {
     }
   },
   methods: {
-    closeCurrentModal(event) {
+    closeCurrentModal() {
       let modal;
       if (this.type === 'course') {
         modal = document.getElementById(`${this.type}Modal-${this.semesterID}`);
