@@ -2,6 +2,7 @@
   <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact}" v-bind:id="id">
     <!-- TODO: Remove semesterModal from semester and move to semesterview -->
     <modal :id="'courseModal-'+id" class="semester-modal" type="course" :semesterID="id"/>
+    <confirmation :id="'confirmation-'+id" class="semester-confirmation" :text="confirmationText"/>
     <modal id="semesterModal" class="semester-modal" type="semester" />
     <div v-if="exists" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
@@ -36,9 +37,12 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
+import Confirmation from '@/components/Confirmation';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
+Vue.component('confirmation', Confirmation);
+
 
 export default {
   // TODO: fonts! (Proxima Nova)
@@ -58,7 +62,8 @@ export default {
         color: '2BBCC6',
         check: true,
         requirementsMap: courseMap
-      }]
+      }],
+      confirmationText: ""
     };
   },
   props: {
@@ -143,6 +148,16 @@ export default {
       };
 
       this.courses.push(newCourse);
+      
+      // Set text and display confirmation modal, then have it disappear after 3 seconds
+
+      this.confirmationText = "Added " + data.code + " to \"" + this.name + "\"";
+      let confirmationModal = document.getElementById("confirmation-" + this.id);
+      confirmationModal.style.display = 'flex';
+      
+      setTimeout(function() { 
+        confirmationModal.style.display = 'none';
+      }, 3000);
     }
   }
 };
@@ -186,6 +201,10 @@ export default {
   &--compact {
     padding: .875rem 1.125rem;
 
+  }
+
+  &-confirmation {
+    display: none;
   }
 
   &-empty {

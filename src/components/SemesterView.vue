@@ -1,7 +1,7 @@
 <template>
   <div class="semesterView">
     <div><button v-on:click="changeCompact">Change View</button></div>
-    <confirmation text='Added "🌸 Spring 2020" to plan'/>
+    <!-- <confirmation text='Added "🌸 Spring 2020" to plan'/> -->
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
         <semester v-bind="sem" :exists="true"/>
@@ -25,13 +25,13 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
-import Confirmation from '@/components/Confirmation';
+// import Confirmation from '@/components/Confirmation';
 
 const clone = require('clone');
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
-Vue.component('confirmation', Confirmation);
+// Vue.component('confirmation', Confirmation);
 
 export default {
   props: {
