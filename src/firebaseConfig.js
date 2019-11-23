@@ -28,10 +28,4 @@ const { currentUser } = auth;
 const usersCollection = db.collection('users');
 const coursesCollection = db.collection('courses');
 
-export {
-  db,
-  auth,
-  currentUser,
-  usersCollection,
-  coursesCollection
-};
+export { db, auth, currentUser, usersCollection, coursesCollection };

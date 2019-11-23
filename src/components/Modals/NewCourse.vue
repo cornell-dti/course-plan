@@ -2,7 +2,7 @@
   <div class="newCourse">
     <div class="newCourse-text">{{ text }}</div>
     <div class="autocomplete">
-      <input class="newCourse-dropdown" :id="'dropdown-'+semesterID" :placeholder="placeholder"/>
+      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :placeholder="placeholder" />
     </div>
   </div>
 </template>
@@ -38,9 +38,11 @@ export default {
       */
       let currentFocus;
       /* execute a function when someone writes in the text field: */
-      inp.addEventListener('input', function (e) {
-        let a; let b; let i; const
-          val = this.value.toUpperCase();
+      inp.addEventListener('input', function(e) {
+        let a;
+        let b;
+        let i;
+        const val = this.value.toUpperCase();
         /* close any already open lists of autocompleted values */
         closeAllLists();
         if (!val) return false;
@@ -54,8 +56,8 @@ export default {
           this.parentNode.appendChild(a);
 
           /* code array for results that contain course code and title array for results that contain title */
-          const code = []; const
-            title = [];
+          const code = [];
+          const title = [];
           for (const attr in courses) {
             if (~attr.toUpperCase().indexOf(val)) {
               code.push(courses[attr].t);
@@ -78,7 +80,7 @@ export default {
             /* insert a input field that will hold the current array item's value: */
             b.innerHTML += `<input type='hidden' value="${title}"'>`;
             /* execute a function when someone clicks on the item value (DIV element): */
-            b.addEventListener('click', function (e) {
+            b.addEventListener('click', function(e) {
               /* insert the value for the autocomplete text field: */
               inp.value = this.getElementsByTagName('input')[0].value;
               /* close the list of autocompleted values,
@@ -90,16 +92,17 @@ export default {
         }
       });
       /* execute a function presses a key on the keyboard: */
-      inp.addEventListener('keydown', function (e) {
+      inp.addEventListener('keydown', function(e) {
         let x = document.getElementById(`${this.id}autocomplete-list`);
         if (x) x = x.getElementsByTagName('div');
         if (e.keyCode === 40) {
           /* If the arrow DOWN key is pressed,
             increase the currentFocus variable: */
-          currentFocus+=1;
+          currentFocus += 1;
           /* and and make the current item more visible: */
           addActive(x);
-        } else if (e.keyCode === 38) { // up
+        } else if (e.keyCode === 38) {
+          // up
           /* If the arrow UP key is pressed,
             decrease the currentFocus variable: */
           currentFocus--;
@@ -120,13 +123,13 @@ export default {
         /* start by removing the "active" class on all items: */
         removeActive(x);
         if (currentFocus >= x.length) currentFocus = 0;
-        if (currentFocus < 0) currentFocus = (x.length - 1);
+        if (currentFocus < 0) currentFocus = x.length - 1;
         /* add class "autocomplete-active": */
         x[currentFocus].classList.add('autocomplete-active');
       }
       function removeActive(x) {
         /* a function to remove the "active" class from all autocomplete items: */
-        for (let i = 0; i < x.length; i+=1) {
+        for (let i = 0; i < x.length; i += 1) {
           x[i].classList.remove('autocomplete-active');
         }
       }
@@ -134,7 +137,7 @@ export default {
         /* close all autocomplete lists in the document,
         except the one passed as an argument: */
         const x = document.getElementsByClassName('autocomplete-items');
-        for (let i = 0; i < x.length; i+=1) {
+        for (let i = 0; i < x.length; i += 1) {
           if (elmnt != x[i] && elmnt != inp) {
             x[i].parentNode.removeChild(x[i]);
           }
@@ -164,11 +167,11 @@ export default {
     color: #757575;
     width: 100%;
     border-radius: 3px;
-    padding: .5rem;
-    border: 0.5px solid #C4C4C4;
+    padding: 0.5rem;
+    border: 0.5px solid #c4c4c4;
 
     &::placeholder {
-      color: #B6B6B6;
+      color: #b6b6b6;
     }
   }
 }
@@ -178,7 +181,7 @@ export default {
   position: relative;
   display: inline-block;
   width: 100%;
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 input {
   border: 1px solid transparent;
@@ -215,5 +218,4 @@ input {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }
-
 </style>

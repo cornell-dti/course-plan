@@ -1,6 +1,10 @@
 <template>
   <div id="dashboard">
-    <semesterview :semesters="semesters" :compact="compactVal" @compact-updated="compactVal = $event" />
+    <semesterview
+      :semesters="semesters"
+      :compact="compactVal"
+      @compact-updated="compactVal = $event"
+    />
     <requirements />
   </div>
 </template>
@@ -62,17 +66,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#dashboard
-{
+#dashboard {
   display: flex;
   justify-content: space-between;
 }
 
-.semester
-{
+.semester {
   margin: 1rem;
   padding: 1rem;
   height: 12.12rem;
 }
-
 </style>
