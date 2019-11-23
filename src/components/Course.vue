@@ -105,7 +105,7 @@ export default {
         || this.requirementsMap.keys() === null
         || this.requirementsMap.keys().length === 0
       ) {
-        return;
+        return null;
       }
 
       let str = '';

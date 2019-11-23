@@ -41,11 +41,10 @@ export default {
       inp.addEventListener('input', () => {
         let a;
         let b;
-        let i;
         const val = this.value.toUpperCase();
         /* close any already open lists of autocompleted values */
         closeAllLists();
-        if (!val) return false;
+        if (!val) return;
         currentFocus = -1;
         /* create a DIV element that will contain the items (values): */
         if (val.length >= 3) {
@@ -71,7 +70,7 @@ export default {
           /* prioritize code matches over title matches */
           const match = code.concat(title);
 
-          match.map(title => {
+          match.forEach(title => {
             /* check if the item starts with the same letters as the text field value: */
             /* create a DIV element for each matching element: */
             b = document.createElement('DIV');
@@ -80,7 +79,7 @@ export default {
             /* insert a input field that will hold the current array item's value: */
             b.innerHTML += `<input type='hidden' value="${title}"'>`;
             /* execute a function when someone clicks on the item value (DIV element): */
-            b.addEventListener('click', e => {
+            b.addEventListener('click', () => {
               /* insert the value for the autocomplete text field: */
               inp.value = this.getElementsByTagName('input')[0].value;
               /* close the list of autocompleted values,
@@ -119,7 +118,7 @@ export default {
       });
       function addActive(x) {
         /* a function to classify an item as "active": */
-        if (!x) return false;
+        if (!x) return;
         /* start by removing the "active" class on all items: */
         removeActive(x);
         if (currentFocus >= x.length) currentFocus = 0;
