@@ -10,14 +10,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '10.x'
-      - name: Yarn Install
-        run: yarn install
-      - name: Check Format
-        run: yarn format:check
+      - name: NPM Install
+        run: npm install
       - name: Run Linter
-        run: yarn lint
+        run: npm run lint
       - name: Build
-        run: yarn build
+        run: npm run build
       - name: Upload Built Static Assets
         uses: actions/upload-artifact@master
         with:
