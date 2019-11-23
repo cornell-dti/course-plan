@@ -2,7 +2,7 @@
   <div class="newCourse">
     <div class="newCourse-text">{{ text }}</div>
     <div class="autocomplete">
-      <input class="newCourse-dropdown" :placeholder="placeholder"/>
+      <input class="newCourse-dropdown" :id="'dropdown-'+semesterID" :placeholder="placeholder"/>
     </div>
   </div>
 </template>
@@ -12,6 +12,9 @@ import Vue from 'vue';
 import courses from '../../assets/courses/courses.json';
 
 export default {
+  props: {
+    semesterID: Number
+  },
   computed: {
     text() {
       return 'Search or Create New Course';
@@ -21,11 +24,11 @@ export default {
     }
   },
   mounted() {
-    this.autocomplete(document.getElementsByClassName('newCourse-dropdown')[0], courses);
+    this.autocomplete(document.getElementById('dropdown-' + this.semesterID), courses);
   },
   methods: {
     closeCourseModal(event) {
-      const modal = document.getElementById('courseModal');
+      const modal = document.getElementById('courseModal-'+ this.semesterID);
       modal.style.display = 'none';
     },
     autocomplete(inp, courses) {

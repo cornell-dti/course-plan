@@ -1,10 +1,7 @@
 <template>
-  <div
-    class="semester"
-    v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact}"
-    v-bind:id="id"
-  >
-    <modal id="courseModal" class="semester-modal" type="course" />
+  <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact}" v-bind:id="id">
+    <!-- TODO: Remove semesterModal from semester and move to semesterview -->
+    <modal :id="'courseModal-'+id" class="semester-modal" type="course" :semesterID="id"/>
     <modal id="semesterModal" class="semester-modal" type="semester" />
     <div v-if="exists" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
@@ -18,8 +15,8 @@
       </div>
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-          <div v-for="course in courses" v-bind:key="course.id" class="semester-courseWrapper">
-            <course v-bind="course" v-bind:id="course.subject" class="semester-course" />
+          <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
+            <course v-bind="course" v-bind:id="course.subject" v-bind:compact="compact" class="semester-course"/>
           </div>
         </div>
         <div
@@ -58,10 +55,29 @@ Vue.component('modal', Modal);
 
 export default {
   // TODO: fonts! (Proxima Nova)
+  data: function() {
+    const courseMap = new Map();
+    courseMap.set('KCM', ['CS 1110', 'CS 1112']);
+    courseMap.set('CA', ['CS 2110']);
+    let randomId = Math.floor(Math.random() * Math.floor(100));
+    return {
+      courses: [{
+        id: randomId,
+        subject: 'PHIL',
+        code: 1100,
+        name: 'Introduction to Philosophy',
+        credits: 3,
+        semesters: ['Fall', 'Spring'],
+        color: '2BBCC6',
+        check: true,
+        requirementsMap: courseMap
+      }]
+    };
+  },
   props: {
     id: Number,
     name: String,
-    courses: Array,
+    // courses: Array,
     exists: Boolean,
     compact: Boolean
   },
@@ -69,51 +85,6 @@ export default {
     this.$el.addEventListener('click', this.closeAllModals);
     var _this = this;
     var _document = document;
-    Vue.vueDragula.eventBus.$on('drop', function(args) {
-      var target = args[2].parentNode.parentNode.parentNode.getAttribute('id');
-
-      var vueTarget = _this.getVueInstancefromHTML(target, 'id');
-      var source = args[3].parentNode.parentNode.parentNode.getAttribute('id');
-      var vueSource = _this.getVueInstancefromHTML(source, 'id');
-
-      var course = args[1].childNodes[0].getAttribute('class');
-      var vueCourse = _this.getVueInstancefromHTML(course, 'class');
-      
-      const courseElem = {
-        subject: vueCourse.subject,
-        code: vueCourse.code,
-        name: vueCourse.name,
-        credits: vueCourse.credits,
-        semesters: vueCourse.semesters,
-        color: vueCourse.color,
-        check: vueCourse.check,
-        requirementsMap: vueCourse.requirementsMap
-      };
-
-      // console.log(courseElem);
-
-      // console.log(vueSource.courses);
-      // console.log(vueTarget.courses);
-
-      // console.log(vueTarget.courses[0]);
-
-      _this.updateCourseArrays(
-        vueSource.courses,
-        vueTarget.courses,
-        courseElem
-      );
-
-      console.log('Source courses after update');
-      console.log(vueSource.courses);
-
-      console.log('Target courses after update');
-      console.log(vueTarget.courses);
-      // var vueTarget = _document.getElementsByClassName(args[2].parentElement.parentElement.parentElement)[0].__vue__;
-      // console.log(vueTarget);
-      // var element = args[1].childNodes[0];
-      // var target = args[2];
-      // var source = args[3];
-    });
   },
 
   beforeDestroy: function() {
@@ -141,7 +112,7 @@ export default {
       console.log(this.courses.length);
     },
     openCourseModal() {
-      const modal = document.getElementById('courseModal');
+      const modal = document.getElementById('courseModal-'+this.id);
       modal.style.display = 'block';
     },
     openSemesterModal() {
@@ -156,29 +127,35 @@ export default {
         }
       }
     },
-    getVueInstancefromHTML: function(name, attribute) {
-      if (attribute == 'class') {
-        return document.getElementsByClassName(name)[0].__vue__;
-      }
-      //attribute == "id"
-      return document.getElementById(name).__vue__;
-    },
-    removeCourse: function(sourceCourses, course) {
-      for (let i = 0; i < sourceCourses.length; i++) {
-        if (
-          course.code == sourceCourses[i].code &&
-          course.subject == sourceCourses[i].subject
-        ) {
-          sourceCourses.splice(i, 1);
-          i--;
-        }
-      }
-    },
-    updateCourseArrays: function(sourceCourses, targetCourses, course) {
-      //remove Course from source course array
-      this.removeCourse(sourceCourses, course);
-      //push course onto target course array
-      targetCourses.push(course);
+    addCourse(data) {
+      const courseMap = new Map();
+      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
+      courseMap.set('CA', ['CS 2110']);
+
+      let arr = data.code.split(" ");
+      const subject = arr[0];
+      const code = parseInt(arr[1]);
+      
+      // remove periods and split on ', '
+      let semesters = data.catalogWhenOffered.replace(/\./g,'')
+      semesters = semesters.split(", ")
+
+      // TODO: update parsing for the below fields
+      // Credits: Which enroll group, and min or max credits?
+      // Color: How is this determined?
+      // Need courseMap to be generated
+      const newCourse = {
+        subject: subject,
+        code: code,
+        name: data.titleLong,
+        credits: data.enrollGroups[0].unitsMaximum,
+        semesters: semesters,
+        color: '2BBCC6',
+        check: true,
+        requirementsMap: null
+      };
+
+      this.courses.push(newCourse);
     }
   }
 };
