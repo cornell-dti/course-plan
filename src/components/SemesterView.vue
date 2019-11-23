@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 // import Confirmation from '@/components/Confirmation';

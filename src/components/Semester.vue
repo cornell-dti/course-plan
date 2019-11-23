@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
 import Confirmation from '@/components/Confirmation';
@@ -46,11 +46,11 @@ Vue.component('confirmation', Confirmation);
 
 export default {
   // TODO: fonts! (Proxima Nova)
-  data: function() {
+  data() {
     const courseMap = new Map();
     courseMap.set('KCM', ['CS 1110', 'CS 1112']);
     courseMap.set('CA', ['CS 2110']);
-    let randomId = Math.floor(Math.random() * Math.floor(100));
+    const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
       courses: [{
         id: randomId,
@@ -63,7 +63,7 @@ export default {
         check: true,
         requirementsMap: courseMap
       }],
-      confirmationText: ""
+      confirmationText: ''
     };
   },
   props: {
@@ -75,11 +75,11 @@ export default {
   },
   mounted() {
     this.$el.addEventListener('click', this.closeAllModals);
-    var _this = this;
-    var _document = document;
+    const _this = this;
+    const _document = document;
   },
 
-  beforeDestroy: function () {
+  beforeDestroy() {
     this.$el.removeEventListener('click', this.closeAllModals);
   },
 
@@ -101,10 +101,10 @@ export default {
   },
   methods: {
     printArrayLength() {
-      console.log(this.courses.length);
+      // console.log(this.courses.length);
     },
     openCourseModal() {
-      const modal = document.getElementById('courseModal-'+this.id);
+      const modal = document.getElementById(`courseModal-${this.id}`);
       modal.style.display = 'block';
     },
     openSemesterModal() {
@@ -113,8 +113,8 @@ export default {
     },
     closeAllModals(event) {
       const modals = document.getElementsByClassName('semester-modal');
-      for (let i = 0; i < modals.length; i++) {
-        if (event.target == modals[i]) {
+      for (let i = 0; i < modals.length; i+=1) {
+        if (event.target === modals[i]) {
           modals[i].style.display = 'none';
         }
       }
@@ -124,38 +124,38 @@ export default {
       courseMap.set('KCM', ['CS 1110', 'CS 1112']);
       courseMap.set('CA', ['CS 2110']);
 
-      let arr = data.code.split(" ");
+      const arr = data.code.split(' ');
       const subject = arr[0];
       const code = parseInt(arr[1]);
-      
+
       // remove periods and split on ', '
-      let semesters = data.catalogWhenOffered.replace(/\./g,'')
-      semesters = semesters.split(", ")
+      let semesters = data.catalogWhenOffered.replace(/\./g, '');
+      semesters = semesters.split(', ');
 
       // TODO: update parsing for the below fields
       // Credits: Which enroll group, and min or max credits?
       // Color: How is this determined?
       // Need courseMap to be generated
       const newCourse = {
-        subject: subject,
-        code: code,
+        subject,
+        code,
         name: data.titleLong,
         credits: data.enrollGroups[0].unitsMaximum,
-        semesters: semesters,
+        semesters,
         color: '2BBCC6',
         check: true,
         requirementsMap: null
       };
 
       this.courses.push(newCourse);
-      
+
       // Set text and display confirmation modal, then have it disappear after 3 seconds
 
-      this.confirmationText = "Added " + data.code + " to \"" + this.name + "\"";
-      let confirmationModal = document.getElementById("confirmation-" + this.id);
+      this.confirmationText = `Added ${data.code} to "${this.name}"`;
+      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
       confirmationModal.style.display = 'flex';
-      
-      setTimeout(function() { 
+
+      setTimeout(() => {
         confirmationModal.style.display = 'none';
       }, 3000);
     }

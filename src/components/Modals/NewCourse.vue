@@ -24,11 +24,11 @@ export default {
     }
   },
   mounted() {
-    this.autocomplete(document.getElementById('dropdown-' + this.semesterID), courses);
+    this.autocomplete(document.getElementById(`dropdown-${this.semesterID}`), courses);
   },
   methods: {
     closeCourseModal(event) {
-      const modal = document.getElementById('courseModal-'+ this.semesterID);
+      const modal = document.getElementById(`courseModal-${this.semesterID}`);
       modal.style.display = 'none';
     },
     autocomplete(inp, courses) {
@@ -93,19 +93,19 @@ export default {
       inp.addEventListener('keydown', function (e) {
         let x = document.getElementById(`${this.id}autocomplete-list`);
         if (x) x = x.getElementsByTagName('div');
-        if (e.keyCode == 40) {
+        if (e.keyCode === 40) {
           /* If the arrow DOWN key is pressed,
             increase the currentFocus variable: */
-          currentFocus++;
+          currentFocus+=1;
           /* and and make the current item more visible: */
           addActive(x);
-        } else if (e.keyCode == 38) { // up
+        } else if (e.keyCode === 38) { // up
           /* If the arrow UP key is pressed,
             decrease the currentFocus variable: */
           currentFocus--;
           /* and and make the current item more visible: */
           addActive(x);
-        } else if (e.keyCode == 13) {
+        } else if (e.keyCode === 13) {
           /* If the ENTER key is pressed, prevent the form from being submitted, */
           e.preventDefault();
           if (currentFocus > -1) {
@@ -126,7 +126,7 @@ export default {
       }
       function removeActive(x) {
         /* a function to remove the "active" class from all autocomplete items: */
-        for (let i = 0; i < x.length; i++) {
+        for (let i = 0; i < x.length; i+=1) {
           x[i].classList.remove('autocomplete-active');
         }
       }
@@ -134,7 +134,7 @@ export default {
         /* close all autocomplete lists in the document,
         except the one passed as an argument: */
         const x = document.getElementsByClassName('autocomplete-items');
-        for (let i = 0; i < x.length; i++) {
+        for (let i = 0; i < x.length; i+=1) {
           if (elmnt != x[i] && elmnt != inp) {
             x[i].parentNode.removeChild(x[i]);
           }

@@ -13,19 +13,16 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
-
 export default {
-    props: {
-        text: String
-    },
+  props: {
+    text: String
+  },
 
-    computed:{
-        undo() {
-            return 'UNDO';
-        },
+  computed: {
+    undo() {
+      return 'UNDO';
     }
+  }
 
 
 };
@@ -53,7 +50,7 @@ export default {
         background: #3EB53B;
         border-radius: 6px;
     }
-    
+
     &-left {
         display: flex;
         flex-direction: column;

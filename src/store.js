@@ -19,7 +19,7 @@ const store = new Vuex.Store({
           commit('setUserProfile', res.data());
         })
         .catch(err => {
-          console.log(err);
+          // console.log(err);
         });
     }
   },

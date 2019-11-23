@@ -38,8 +38,6 @@
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
-
 export default {
   props: {
     subject: String,
@@ -62,7 +60,7 @@ export default {
 
     // TODO: bold requirements
     requirementString() {
-      if (this.requirementsMap == null || this.requirementsMap.keys() == null || this.requirementsMap.keys().length == 0) {
+      if (this.requirementsMap === null || this.requirementsMap.keys() === null || this.requirementsMap.keys().length === 0) {
         return;
       }
 
@@ -70,17 +68,17 @@ export default {
       let str = 'Satisfies ';
       const endStr = '</b> requirement';
       const { length } = keys;
-      if (length == 1) {
+      if (length === 1) {
         return `${str}<b>${keys[0]}${endStr}`;
       }
 
       // loop through all but the last requirement and comma separate
-      for (let i = 0; i < length - 1; i++) {
+      for (let i = 0; i < length - 1; i+=1) {
         str += `<b>${keys[i]}</b>, `;
       }
 
       // remove the comma if only 2 requirements
-      if (length == 2) {
+      if (length === 2) {
         str = `${str.substring(0, str.length - 2)} `;
       }
 
@@ -88,23 +86,23 @@ export default {
     },
 
     cautionString() {
-      if (this.requirementsMap == null || this.requirementsMap.keys() == null || this.requirementsMap.keys().length == 0) {
+      if (this.requirementsMap === null || this.requirementsMap.keys() === null || this.requirementsMap.keys().length === 0) {
         return;
       }
 
       let str = '';
       this.requirementsMap.forEach((courses, req) => {
         str += '<li>';
-        if (courses.length == 1) {
+        if (courses.length === 1) {
           str += `${courses[0]} also fulfills <b>${req}</b> requirement`;
         } else {
           // loop through all but the last course and comma separate
-          for (let i = 0; i < courses.length - 1; i++) {
+          for (let i = 0; i < courses.length - 1; i+=1) {
             str += `${courses[i]}, `;
           }
 
           // remove the comma if only 2 requirements
-          if (courses.length == 2) {
+          if (courses.length === 2) {
             str = `${str.substring(0, str.length - 2)} `;
           }
 

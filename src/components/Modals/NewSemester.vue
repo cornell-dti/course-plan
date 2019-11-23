@@ -44,19 +44,19 @@ export default {
       // TODO: what years are valid?
       const currentYear = (new Date()).getFullYear();
       const years = [];
-      let startYear = currentYear-10;  
-      while ( startYear <= currentYear+10 ) {
-          years.push(startYear++);
-      }   
+      let startYear = currentYear - 10;
+      while (startYear <= currentYear + 10) {
+        years.push(startYear);
+        startYear += 1;
+      }
       years.map(String);
 
       // const years = ['2019', '2020', '2021', '2022'];
       let str = '';
-      for (let i = 0; i < years.length; i++) {
-        if (years[i] == currentYear){
+      for (let i = 0; i < years.length; i+=1) {
+        if (years[i] === currentYear) {
           str += `<option value=${years[i]} selected>${years[i]}</option>`;
-        }
-        else{
+        } else {
           str += `<option value=${years[i]}>${years[i]}</option>`;
         }
       }
@@ -124,7 +124,5 @@ select option:first-child { color: grey; }
 select.empty { color: grey; }
 /* Hidden placeholder */
 select option[disabled]:first-child { display: none; }
-
-
 
 </style>
