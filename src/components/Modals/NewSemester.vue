@@ -42,10 +42,23 @@ export default {
     },
     yearOptions() {
       // TODO: what years are valid?
-      const years = ['2019', '2020', '2021', '2022'];
+      const currentYear = (new Date()).getFullYear();
+      const years = [];
+      let startYear = currentYear-10;  
+      while ( startYear <= currentYear+10 ) {
+          years.push(startYear++);
+      }   
+      years.map(String);
+
+      // const years = ['2019', '2020', '2021', '2022'];
       let str = '';
       for (let i = 0; i < years.length; i++) {
-        str += `<option value=${years[i]}>${years[i]}</option>`;
+        if (years[i] == currentYear){
+          str += `<option value=${years[i]} selected>${years[i]}</option>`;
+        }
+        else{
+          str += `<option value=${years[i]}>${years[i]}</option>`;
+        }
       }
       return str;
     }
@@ -81,7 +94,23 @@ export default {
   }
 
   &-select {
+    width: 114px;
+    height: 26px;
+    left: 444px;
+    top: 183px;
+
+    background: #FFFFFF;
+    border: 1px solid #32A0F2;
+    box-sizing: border-box;
+    border-radius: 1px;
     width: 100%;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+
+    color: #B6B6B6;
   }
 
   &-icon {
@@ -95,5 +124,7 @@ select option:first-child { color: grey; }
 select.empty { color: grey; }
 /* Hidden placeholder */
 select option[disabled]:first-child { display: none; }
+
+
 
 </style>
