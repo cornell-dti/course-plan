@@ -38,7 +38,7 @@ export default {
       */
       let currentFocus;
       /* execute a function when someone writes in the text field: */
-      inp.addEventListener('input', function(e) {
+      inp.addEventListener('input', () => {
         let a;
         let b;
         let i;
@@ -80,7 +80,7 @@ export default {
             /* insert a input field that will hold the current array item's value: */
             b.innerHTML += `<input type='hidden' value="${title}"'>`;
             /* execute a function when someone clicks on the item value (DIV element): */
-            b.addEventListener('click', function(e) {
+            b.addEventListener('click', e => {
               /* insert the value for the autocomplete text field: */
               inp.value = this.getElementsByTagName('input')[0].value;
               /* close the list of autocompleted values,
@@ -92,7 +92,7 @@ export default {
         }
       });
       /* execute a function presses a key on the keyboard: */
-      inp.addEventListener('keydown', function(e) {
+      inp.addEventListener('keydown', e => {
         let x = document.getElementById(`${this.id}autocomplete-list`);
         if (x) x = x.getElementsByTagName('div');
         if (e.keyCode === 40) {
@@ -105,7 +105,7 @@ export default {
           // up
           /* If the arrow UP key is pressed,
             decrease the currentFocus variable: */
-          currentFocus--;
+          currentFocus -= 1;
           /* and and make the current item more visible: */
           addActive(x);
         } else if (e.keyCode === 13) {
@@ -138,7 +138,7 @@ export default {
         except the one passed as an argument: */
         const x = document.getElementsByClassName('autocomplete-items');
         for (let i = 0; i < x.length; i += 1) {
-          if (elmnt != x[i] && elmnt != inp) {
+          if (elmnt !== x[i] && elmnt !== inp) {
             x[i].parentNode.removeChild(x[i]);
           }
         }

@@ -71,9 +71,9 @@ export default {
     // TODO: bold requirements
     requirementString() {
       if (
-        this.requirementsMap === null ||
-        this.requirementsMap.keys() === null ||
-        this.requirementsMap.keys().length === 0
+        this.requirementsMap === null
+        || this.requirementsMap.keys() === null
+        || this.requirementsMap.keys().length === 0
       ) {
         return;
       }
@@ -101,9 +101,9 @@ export default {
 
     cautionString() {
       if (
-        this.requirementsMap === null ||
-        this.requirementsMap.keys() === null ||
-        this.requirementsMap.keys().length === 0
+        this.requirementsMap === null
+        || this.requirementsMap.keys() === null
+        || this.requirementsMap.keys().length === 0
       ) {
         return;
       }

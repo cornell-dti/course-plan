@@ -155,7 +155,7 @@ export default {
 
       const arr = data.code.split(' ');
       const subject = arr[0];
-      const code = parseInt(arr[1]);
+      const code = parseInt(arr[1], 10);
 
       // remove periods and split on ', '
       let semesters = data.catalogWhenOffered.replace(/\./g, '');
