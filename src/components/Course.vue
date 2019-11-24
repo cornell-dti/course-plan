@@ -75,7 +75,7 @@ export default {
         || this.requirementsMap.keys() === null
         || this.requirementsMap.keys().length === 0
       ) {
-        return;
+        return '';
       }
 
       const keys = Array.from(this.requirementsMap.keys());
@@ -99,6 +99,7 @@ export default {
       return `${str}and <b>${keys[length - 1]}${endStr}`;
     },
 
+    // TODO: too much DOM manipulation that vue should fix - talk to Sam
     cautionString() {
       if (
         this.requirementsMap === null

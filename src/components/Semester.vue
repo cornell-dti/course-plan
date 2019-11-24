@@ -104,8 +104,6 @@ export default {
   },
   mounted() {
     this.$el.addEventListener('click', this.closeAllModals);
-    const _this = this;
-    const _document = document;
   },
 
   beforeDestroy() {

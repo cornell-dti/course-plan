@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
 // TODO: gray out initial dropdown options
 export default {
   computed: {

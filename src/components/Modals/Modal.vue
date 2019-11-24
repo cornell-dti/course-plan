@@ -94,21 +94,21 @@ export default {
       const firebaseTitle = `${key.replace(/\s/g, '')}-${sem}`;
       const docRef = coursesCollection.doc(firebaseTitle);
 
-      const _this = this;
+      const parent = this.$parent;
 
       // TODO: error handling if course not found or some firebase error
       docRef
         .get()
         .then(doc => {
           if (doc.exists) {
-            _this.$parent.addCourse(doc.data());
+            parent.addCourse(doc.data());
           } else {
             // doc.data() will be undefined in this case
-            // console.log('No such document!');
+            console.log('No such document!');
           }
         })
         .catch(error => {
-          // console.log('Error getting document:', error);
+          console.log('Error getting document:', error);
         });
 
       // clear input and close modal when complete

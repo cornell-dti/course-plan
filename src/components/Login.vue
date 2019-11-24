@@ -70,7 +70,7 @@ export default {
           this.$router.push('/dashboard');
         })
         .catch(err => {
-          // console.log(err);
+          console.log(err);
           this.performingRequest = false;
           this.errorMsg = err.message;
         });
@@ -84,12 +84,12 @@ export default {
           this.$store.commit('setCurrentUser', user.user);
           this.$store.dispatch('fetchUserProfile');
           this.performingRequest = false;
-          // console.log(firebase.auth().currentUser);
-          // console.log(user.additionalUserInfo.profile);
+          console.log(firebase.auth().currentUser);
+          console.log(user.additionalUserInfo.profile);
           this.$router.push('/dashboard');
         })
         .catch(err => {
-          // console.log(err);
+          console.log(err);
           this.performingRequest = false;
           this.errorMsg = err.message;
         });

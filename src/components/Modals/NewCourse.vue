@@ -8,8 +8,7 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import courses from '../../assets/courses/courses.json';
+import coursesJSON from '../../assets/courses/courses.json';
 
 export default {
   props: {
@@ -24,10 +23,10 @@ export default {
     }
   },
   mounted() {
-    this.autocomplete(document.getElementById(`dropdown-${this.semesterID}`), courses);
+    this.autocomplete(document.getElementById(`dropdown-${this.semesterID}`), coursesJSON);
   },
   methods: {
-    closeCourseModal(event) {
+    closeCourseModal() {
       const modal = document.getElementById(`courseModal-${this.semesterID}`);
       modal.style.display = 'none';
     },
@@ -37,11 +36,12 @@ export default {
       @courses: object of courses from JSON
       */
       let currentFocus;
+      const inpCopy = inp;
       /* execute a function when someone writes in the text field: */
       inp.addEventListener('input', () => {
         let a;
         let b;
-        const val = this.value.toUpperCase();
+        const val = inp.value.toUpperCase();
         /* close any already open lists of autocompleted values */
         closeAllLists();
         if (!val) return;
@@ -49,18 +49,18 @@ export default {
         /* create a DIV element that will contain the items (values): */
         if (val.length >= 3) {
           a = document.createElement('DIV');
-          a.setAttribute('id', `${this.id}autocomplete-list`);
+          a.setAttribute('id', `${inp.id}autocomplete-list`);
           a.setAttribute('class', 'autocomplete-items');
           /* append the DIV element as a child of the autocomplete container: */
-          this.parentNode.appendChild(a);
+          inp.parentNode.appendChild(a);
 
           /* code array for results that contain course code and title array for results that contain title */
           const code = [];
           const title = [];
           for (const attr in courses) {
-            if (~attr.toUpperCase().indexOf(val)) {
+            if (attr.toUpperCase().includes(val)) {
               code.push(courses[attr].t);
-            } else if (courses[attr].t && ~courses[attr].t.toUpperCase().indexOf(val)) {
+            } else if (courses[attr].t && courses[attr].t.toUpperCase().includes(val)) {
               title.push(courses[attr].t);
             }
           }
@@ -70,18 +70,18 @@ export default {
           /* prioritize code matches over title matches */
           const match = code.concat(title);
 
-          match.forEach(title => {
+          match.forEach(newTitle => {
             /* check if the item starts with the same letters as the text field value: */
             /* create a DIV element for each matching element: */
             b = document.createElement('DIV');
             /* make the matching letters bold: */
-            b.innerHTML = title;
+            b.innerHTML = newTitle;
             /* insert a input field that will hold the current array item's value: */
-            b.innerHTML += `<input type='hidden' value="${title}"'>`;
+            b.innerHTML += `<input type='hidden' value="${newTitle}"'>`;
             /* execute a function when someone clicks on the item value (DIV element): */
             b.addEventListener('click', () => {
               /* insert the value for the autocomplete text field: */
-              inp.value = this.getElementsByTagName('input')[0].value;
+              inp.value = b.getElementsByTagName('input')[0].value;
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
@@ -92,7 +92,7 @@ export default {
       });
       /* execute a function presses a key on the keyboard: */
       inp.addEventListener('keydown', e => {
-        let x = document.getElementById(`${this.id}autocomplete-list`);
+        let x = document.getElementById(`${inp.id}autocomplete-list`);
         if (x) x = x.getElementsByTagName('div');
         if (e.keyCode === 40) {
           /* If the arrow DOWN key is pressed,
