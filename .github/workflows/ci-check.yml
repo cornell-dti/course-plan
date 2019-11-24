@@ -1,8 +1,8 @@
-name: CI
+name: CI Check
 on: push
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -12,12 +12,7 @@ jobs:
           node-version: '10.x'
       - name: NPM Install
         run: npm install
+      - name: Check Format
+        run: npm run format:check
       - name: Run Linter
         run: npm run lint
-      - name: Build
-        run: npm run build
-      - name: Upload Built Static Assets
-        uses: actions/upload-artifact@master
-        with:
-          name: built-assets
-          path: dist
