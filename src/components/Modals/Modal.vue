@@ -26,7 +26,8 @@ Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 
 const firebaseConfig = require('@/firebaseConfig.js');
-const coursesCollection = firebaseConfig.coursesCollection;
+
+const { coursesCollection } = firebaseConfig;
 
 export default {
   props: {
@@ -64,15 +65,15 @@ export default {
   methods: {
     closeCurrentModal(event) {
       let modal;
-      if(this.type == "course") {
-        modal = document.getElementById(`${this.type}Modal-` + this.semesterID);
+      if (this.type == 'course') {
+        modal = document.getElementById(`${this.type}Modal-${this.semesterID}`);
       } else {
         modal = document.getElementById(`${this.type}Modal`);
       }
       modal.style.display = 'none';
     },
     addItem() {
-      if(this.type == 'course') {
+      if (this.type == 'course') {
         this.addCourse();
       } else if (this.type == 'semester') {
         // TODO: add semester
@@ -81,32 +82,32 @@ export default {
       }
     },
     addCourse() {
-      const dropdown = document.getElementById("dropdown-" + this.semesterID);
+      const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
       const title = dropdown.value;
 
       // TODO: can I make the valid assumption that the course code is up to the colon in the title?
-      const key = title.substring(0, title.indexOf(":"));
-      const sem = courses[key].sem;
+      const key = title.substring(0, title.indexOf(':'));
+      const { sem } = courses[key];
 
-      const firebaseTitle = key.replace(/\s/g, '') + '-' + sem;
-      let docRef = coursesCollection.doc(firebaseTitle);
+      const firebaseTitle = `${key.replace(/\s/g, '')}-${sem}`;
+      const docRef = coursesCollection.doc(firebaseTitle);
 
       const _this = this;
 
       // TODO: error handling if course not found or some firebase error
-      docRef.get().then(function(doc) {
+      docRef.get().then(doc => {
         if (doc.exists) {
           _this.$parent.addCourse(doc.data());
         } else {
           // doc.data() will be undefined in this case
-          console.log("No such document!");
+          console.log('No such document!');
         }
-      }).catch(function(error) {
-        console.log("Error getting document:", error);
+      }).catch(error => {
+        console.log('Error getting document:', error);
       });
 
       // clear input and close modal when complete
-      dropdown.value = "";
+      dropdown.value = '';
       this.closeCurrentModal();
     }
   }

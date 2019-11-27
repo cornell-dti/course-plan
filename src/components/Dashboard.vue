@@ -22,7 +22,7 @@ Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
 
 export default {
-  data: function() {
+  data() {
     return {
       compactVal: false
     };
@@ -90,7 +90,7 @@ export default {
         name: '',
         courses: [course]
       };
-      const semesters = [semester1, semester2, semester3];
+      const semesters = [semester1];
 
       return semesters;
     }

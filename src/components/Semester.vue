@@ -55,11 +55,11 @@ Vue.component('modal', Modal);
 
 export default {
   // TODO: fonts! (Proxima Nova)
-  data: function() {
+  data() {
     const courseMap = new Map();
     courseMap.set('KCM', ['CS 1110', 'CS 1112']);
     courseMap.set('CA', ['CS 2110']);
-    let randomId = Math.floor(Math.random() * Math.floor(100));
+    const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
       courses: [{
         id: randomId,
@@ -83,11 +83,11 @@ export default {
   },
   mounted() {
     this.$el.addEventListener('click', this.closeAllModals);
-    var _this = this;
-    var _document = document;
+    const _this = this;
+    const _document = document;
   },
 
-  beforeDestroy: function() {
+  beforeDestroy() {
     this.$el.removeEventListener('click', this.closeAllModals);
   },
 
@@ -112,7 +112,7 @@ export default {
       console.log(this.courses.length);
     },
     openCourseModal() {
-      const modal = document.getElementById('courseModal-'+this.id);
+      const modal = document.getElementById(`courseModal-${this.id}`);
       modal.style.display = 'block';
     },
     openSemesterModal() {
@@ -132,24 +132,24 @@ export default {
       courseMap.set('KCM', ['CS 1110', 'CS 1112']);
       courseMap.set('CA', ['CS 2110']);
 
-      let arr = data.code.split(" ");
+      const arr = data.code.split(' ');
       const subject = arr[0];
       const code = parseInt(arr[1]);
-      
+
       // remove periods and split on ', '
-      let semesters = data.catalogWhenOffered.replace(/\./g,'')
-      semesters = semesters.split(", ")
+      let semesters = data.catalogWhenOffered.replace(/\./g, '');
+      semesters = semesters.split(', ');
 
       // TODO: update parsing for the below fields
       // Credits: Which enroll group, and min or max credits?
       // Color: How is this determined?
       // Need courseMap to be generated
       const newCourse = {
-        subject: subject,
-        code: code,
+        subject,
+        code,
         name: data.titleLong,
         credits: data.enrollGroups[0].unitsMaximum,
-        semesters: semesters,
+        semesters,
         color: '2BBCC6',
         check: true,
         requirementsMap: null

@@ -52,7 +52,7 @@
 
             <div class="row detail-bar">
               <div class="col x">
-                <button class="btn" v-b-toggle.collapse1>
+                <button class="btn" v-b-toggle= "'collapse' + index">
                   <img class="drowndown" src="../assets/images/dropdown.svg" alt="dropdown" />
                 </button>
               </div>
@@ -137,12 +137,13 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
+import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
 import Semester from '@/components/Semester';
-import VueCollapse from 'vue2-collapse';
 
 const clone = require('clone');
+
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('semester', Semester);

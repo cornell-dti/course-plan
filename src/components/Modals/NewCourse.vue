@@ -24,11 +24,11 @@ export default {
     }
   },
   mounted() {
-    this.autocomplete(document.getElementById('dropdown-' + this.semesterID), courses);
+    this.autocomplete(document.getElementById(`dropdown-${this.semesterID}`), courses);
   },
   methods: {
     closeCourseModal(event) {
-      const modal = document.getElementById('courseModal-'+ this.semesterID);
+      const modal = document.getElementById(`courseModal-${this.semesterID}`);
       modal.style.display = 'none';
     },
     autocomplete(inp, courses) {
