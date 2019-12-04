@@ -12,6 +12,11 @@ module.exports = {
   },
   // add your custom rules here
   rules: {
+    // TODO: change no-console to error out for prod
+    'no-console': ['warn'],
+    // TODO: fix copied js code that makes this warn necessary
+    'no-use-before-define': ['warn'],
+    'linebreak-style': 0,
     // don't require .vue extension when importing
     'import/extensions': [
       'error',

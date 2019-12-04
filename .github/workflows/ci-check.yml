@@ -12,7 +12,5 @@ jobs:
           node-version: '10.x'
       - name: NPM Install
         run: npm install
-      - name: Check Format
-        run: npm run format:check
       - name: Run Linter
         run: npm run lint
