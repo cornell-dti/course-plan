@@ -89,9 +89,7 @@ export default {
 
       // TODO: can I make the valid assumption that the course code is up to the colon in the title?
       const key = title.substring(0, title.indexOf(':'));
-      const { sem } = courses[key];
-
-      const firebaseTitle = `${key.replace(/\s/g, '')}-${sem}`;
+      const firebaseTitle = `${key.replace(/\s/g, '')}`;
       const docRef = coursesCollection.doc(firebaseTitle);
 
       const parent = this.$parent;
