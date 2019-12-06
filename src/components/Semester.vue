@@ -15,7 +15,7 @@
     <div v-if="exists" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
         <div class="semester-left" v-bind:class="{ 'semester-left--compact': compact }">
-          <span class="semester-name">{{ name }}</span>
+          <span class="semester-name">{{ type }} {{ year }}</span>
           <img class="semester-icon" src="../assets/images/pencil.svg" />
         </div>
         <div class="semester-right" v-bind:class="{ 'semester-right--compact': compact }">
@@ -71,6 +71,9 @@ Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
 
+const firebaseConfig = require('@/firebaseConfig.js');
+const { auth, userDataCollection } = firebaseConfig;
+
 export default {
   // TODO: fonts! (Proxima Nova)
   data() {
@@ -80,7 +83,8 @@ export default {
   },
   props: {
     id: Number,
-    name: String,
+    type: String,
+    year: Number,
     courses: Array,
     exists: Boolean,
     compact: Boolean
@@ -110,6 +114,16 @@ export default {
     }
   },
   methods: {
+    createSemesterString(semesters) {
+      let semesterString = '';
+      semesters.forEach(semester => {
+        semesterString += `${semester}, `;
+      });
+      if (semesterString.length > 0) {
+        return semesterString.substring(0, semesterString.length - 2);
+      }
+      return semesterString;
+    },
     printArrayLength() {
       // console.log(this.courses.length);
     },
@@ -132,16 +146,54 @@ export default {
     addCourse(data) {
       let newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
+      this.addToFirebase(newCourse);
 
       // Set text and display confirmation modal, then have it disappear after 3 seconds
 
-      this.confirmationText = `Added ${data.code} to "${this.name}"`;
+      this.confirmationText = `Added ${data.code} to "${this.type} ${this.year}"`;
       const confirmationModal = document.getElementById(`confirmation-${this.id}`);
       confirmationModal.style.display = 'flex';
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
       }, 3000);
+    },
+    addToFirebase(course) {
+      let firebaseCourse = {
+        catalogWhenOffered: this.createSemesterString(course.semesters) + ".",
+        code: course.subject + " " + course.code,
+        color: course.color,
+        credits: course.credits,
+        name: course.name
+      }
+
+      let user = auth.currentUser;
+      let userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+
+      // TODO: error handling if user not found or some firebase error
+      // TODO: create a user if no document found
+      docRef
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            let semesters = doc.data().semesters
+            semesters.forEach((sem) => {
+              if(sem.type === this.type && sem.year === this.year) {
+                sem.courses.push(firebaseCourse);
+              }
+            });
+            docRef.update({ 
+              semesters
+            })
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No such document!');
+          }
+        })
+        .catch(error => {
+          console.log('Error getting document:', error);
+        });      
     }
   }
 };

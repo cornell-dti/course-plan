@@ -25,7 +25,7 @@ Vue.component('requirements', Requirements);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
-const { currentUser, coursesCollection, userDataCollection, usersCollection } = firebaseConfig;
+const { auth, userDataCollection } = firebaseConfig;
 
 export default {
   data() {
@@ -40,13 +40,13 @@ export default {
   },
   methods: {
     getSemestersFromUser() {
-      let user = firebase.auth().currentUser;
+      let user = auth.currentUser;
       let userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);
 
       // TODO: error handling if user not found or some firebase error
       // TODO: create a user if no document found
-      let semesters = docRef
+      docRef
         .get()
         .then(doc => {
           if (doc.exists) {
@@ -116,7 +116,8 @@ export default {
       let semester = {
         courses,
         id: this.currSemID,
-        name: type + " " + year
+        type,
+        year
       }
       this.currSemID++;
       return semester;
