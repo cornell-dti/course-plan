@@ -36,7 +36,7 @@ export default {
       @courses: object of courses from JSON
       */
       let currentFocus;
-      let inpCopy = inp;
+      const inpCopy = inp;
       /* execute a function when someone writes in the text field: */
       inp.addEventListener('input', () => {
         let a;

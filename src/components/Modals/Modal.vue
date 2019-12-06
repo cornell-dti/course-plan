@@ -16,7 +16,6 @@
 
 <script>
 import Vue from 'vue';
-import courses from '@/assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse';
 import NewCustomCourse from '@/components/Modals/NewCustomCourse';
 import NewSemester from '@/components/Modals/NewSemester';

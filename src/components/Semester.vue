@@ -72,6 +72,7 @@ Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
 
 const firebaseConfig = require('@/firebaseConfig.js');
+
 const { auth, userDataCollection } = firebaseConfig;
 
 export default {
@@ -144,7 +145,7 @@ export default {
       }
     },
     addCourse(data) {
-      let newCourse = this.$parent.$parent.createCourse(data);
+      const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
       this.addToFirebase(newCourse);
 
@@ -159,16 +160,16 @@ export default {
       }, 3000);
     },
     addToFirebase(course) {
-      let firebaseCourse = {
-        catalogWhenOffered: this.createSemesterString(course.semesters) + ".",
-        code: course.subject + " " + course.code,
+      const firebaseCourse = {
+        catalogWhenOffered: `${this.createSemesterString(course.semesters)}.`,
+        code: `${course.subject} ${course.code}`,
         color: course.color,
         credits: course.credits,
         name: course.name
-      }
+      };
 
-      let user = auth.currentUser;
-      let userEmail = user.email;
+      const user = auth.currentUser;
+      const userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);
 
       // TODO: error handling if user not found or some firebase error
@@ -177,15 +178,15 @@ export default {
         .get()
         .then(doc => {
           if (doc.exists) {
-            let semesters = doc.data().semesters
-            semesters.forEach((sem) => {
-              if(sem.type === this.type && sem.year === this.year) {
+            const { semesters } = doc.data();
+            semesters.forEach(sem => {
+              if (sem.type === this.type && sem.year === this.year) {
                 sem.courses.push(firebaseCourse);
               }
             });
-            docRef.update({ 
+            docRef.update({
               semesters
-            })
+            });
           } else {
             // doc.data() will be undefined in this case
             console.log('No such document!');
@@ -193,7 +194,7 @@ export default {
         })
         .catch(error => {
           console.log('Error getting document:', error);
-        });      
+        });
     }
   }
 };

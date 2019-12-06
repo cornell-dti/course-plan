@@ -11,7 +11,6 @@
 
 <script>
 import Vue from 'vue';
-import firebase from 'firebase';
 
 import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
@@ -36,12 +35,12 @@ export default {
     };
   },
   mounted() {
-    this.getSemestersFromUser()
+    this.getSemestersFromUser();
   },
   methods: {
     getSemestersFromUser() {
-      let user = auth.currentUser;
-      let userEmail = user.email;
+      const user = auth.currentUser;
+      const userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);
 
       // TODO: error handling for firebase errors
@@ -49,21 +48,21 @@ export default {
         .get()
         .then(doc => {
           if (doc.exists) {
-            this.semesters = this.convertSemesters(doc.data().semesters)
+            this.semesters = this.convertSemesters(doc.data().semesters);
           } else {
             // Create a new document for new users
             // TODO: after letting users add semesters, do not add one at start
-            let semesters = [
+            const semesters = [
               {
                 courses: [],
-                type: "Fall",
+                type: 'Fall',
                 year: 2018
               }
             ];
             this.semesters = semesters;
             docRef.set({
-              semesters,
-            })
+              semesters
+            });
           }
         })
         .catch(error => {
@@ -71,11 +70,11 @@ export default {
         });
     },
     convertSemesters(firebaseSems) {
-      let semesters = [];
-      firebaseSems.forEach((firebaseSem) => {
-        let firebaseCourses = firebaseSem.courses;
-        let courses = [];
-        firebaseCourses.forEach((firebaseCourse) => {
+      const semesters = [];
+      firebaseSems.forEach(firebaseSem => {
+        const firebaseCourses = firebaseSem.courses;
+        const courses = [];
+        firebaseCourses.forEach(firebaseCourse => {
           courses.push(this.createCourse(firebaseCourse));
         });
         semesters.push(this.createSemester(courses, firebaseSem.type, firebaseSem.year));
@@ -96,16 +95,16 @@ export default {
       semesters = semesters.split(', ');
 
       // TODO: pick color if a new course instead of this default
-      let color = course.color || '2BBCC6';
+      const color = course.color || '2BBCC6';
 
       // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
-      let credits = course.credits || course.enrollGroups[0].unitsMaximum
+      const credits = course.credits || course.enrollGroups[0].unitsMaximum;
 
       // TODO: id?
       const randomId = Math.floor(Math.random() * Math.floor(100));
 
       // TODO: same field?
-      let name = course.titleLong || course.name;
+      const name = course.titleLong || course.name;
 
       // TODO: Need courseMap to be generated, check to change
       const newCourse = {
@@ -123,13 +122,13 @@ export default {
       return newCourse;
     },
     createSemester(courses, type, year) {
-      let semester = {
+      const semester = {
         courses,
         id: this.currSemID,
         type,
         year
-      }
-      this.currSemID++;
+      };
+      this.currSemID += 1;
       return semester;
     }
   }
