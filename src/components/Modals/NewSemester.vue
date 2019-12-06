@@ -7,7 +7,6 @@
           <div class="newSemester-dropdown-placeholder season-placeholder" id="season-placeholder">{{seasonPlaceholder}}</div>
           <div class="newSemester-dropdown-placeholder season-arrow" id="season-arrow"></div>
         </div>
-        <!-- <input class="newSemester-dropdown-placeholder" placeholder='Select one'/> -->
         <div class="newSemester-dropdown-content season-content" id="season-content">
           <div class="newSemester-dropdown-content-item" id="fall" v-on:click="selectSeason('fall')">
             🍂 Fall
@@ -27,12 +26,13 @@
     <div class="newSemester-section newSemester-year">
       <label class="newSemester-label" for="year">{{ yearText }}</label>
       <div class="newSemester-select" id="year">
-        <!-- <input class="newSemester-dropdown-placeholder" :placeholder="currentYear"/> -->
         <div class="newSemester-dropdown-placeholder year-wrapper" v-on:click="showHideYearContent">
           <div class="newSemester-dropdown-placeholder year-placeholder" id="year-placeholder">{{ yearPlaceholder }}</div>
           <div class="newSemester-dropdown-placeholder year-arrow" id="year-arrow"></div>
         </div>
-        <div class="newSemester-dropdown-content year-content" v-html="yearOptions" id="year-content"></div>
+        <div class="newSemester-dropdown-content year-content" id="year-content">
+          <div v-for="year in years" :key="year" :id = year class="newSemester-dropdown-content-item" v-on:click="selectYear(year)">{{year}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -42,9 +42,20 @@
 // TODO: gray out initial dropdown options
 export default {
   data: function() {
+    //years
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    let startYear = currentYear - 10;
+    while (startYear <= currentYear + 10) {
+      years.push(startYear);
+      startYear += 1;
+    }
+    years.map(String);
+
     return {
       seasonPlaceholder: "Select One",
-      yearPlaceholder: (new Date()).getFullYear()
+      yearPlaceholder: (new Date()).getFullYear(),
+      years
     };
   },
   computed: {
@@ -53,25 +64,6 @@ export default {
     },
     yearText() {
       return 'Year';
-    },
-    yearOptions() {
-      // TODO: what years are valid?
-      const currentYear = new Date().getFullYear();
-      const years = [];
-      let startYear = currentYear - 10;
-      while (startYear <= currentYear + 10) {
-        years.push(startYear);
-        startYear += 1;
-      }
-      years.map(String);
-
-      // const years = ['2019', '2020', '2021', '2022'];
-      let str = '';
-      for (let i = 0; i < years.length; i += 1) {
-        str += `<div class="newSemester-dropdown-content-item" id=${years[i]} v-on:click="selectYear(${years[i]})">${years[i]}</div>`;
-
-      }
-      return str;
     }
   },
   methods: {
@@ -133,12 +125,16 @@ export default {
     selectYear(selected_id){
       const selected_year = document.getElementById(selected_id);
 
-      console.log(selected_year.innerText);
-
       this.yearPlaceholder = selected_year.innerText;
 
       const year_arrow = document.getElementById('year-arrow');
       year_arrow.style.borderTopColor = '#C4C4C4';
+
+      const year_placeholder_text = document.getElementById('year-placeholder');
+      year_placeholder_text.style.color = '#757575'; 
+
+      const year_content = document.getElementById('year-content');
+      year_content.style.display = 'none';
     }
   }
 };
