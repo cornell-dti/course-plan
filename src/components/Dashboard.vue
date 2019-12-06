@@ -44,16 +44,26 @@ export default {
       let userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);
 
-      // TODO: error handling if user not found or some firebase error
-      // TODO: create a user if no document found
+      // TODO: error handling for firebase errors
       docRef
         .get()
         .then(doc => {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters)
           } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
+            // Create a new document for new users
+            // TODO: after letting users add semesters, do not add one at start
+            let semesters = [
+              {
+                courses: [],
+                type: "Fall",
+                year: 2018
+              }
+            ];
+            this.semesters = semesters;
+            docRef.set({
+              semesters,
+            })
           }
         })
         .catch(error => {
