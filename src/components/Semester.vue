@@ -74,31 +74,14 @@ Vue.component('confirmation', Confirmation);
 export default {
   // TODO: fonts! (Proxima Nova)
   data() {
-    const courseMap = new Map();
-    courseMap.set('KCM', ['CS 1110', 'CS 1112']);
-    courseMap.set('CA', ['CS 2110']);
-    const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
-      courses: [
-        {
-          id: randomId,
-          subject: 'PHIL',
-          code: 1100,
-          name: 'Introduction to Philosophy',
-          credits: 3,
-          semesters: ['Fall', 'Spring'],
-          color: '2BBCC6',
-          check: true,
-          requirementsMap: courseMap
-        }
-      ],
       confirmationText: ''
     };
   },
   props: {
     id: Number,
     name: String,
-    // courses: Array,
+    courses: Array,
     exists: Boolean,
     compact: Boolean
   },
@@ -147,33 +130,7 @@ export default {
       }
     },
     addCourse(data) {
-      const courseMap = new Map();
-      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
-      courseMap.set('CA', ['CS 2110']);
-
-      const arr = data.code.split(' ');
-      const subject = arr[0];
-      const code = parseInt(arr[1], 10);
-
-      // remove periods and split on ', '
-      let semesters = data.catalogWhenOffered.replace(/\./g, '');
-      semesters = semesters.split(', ');
-
-      // TODO: update parsing for the below fields
-      // Credits: Which enroll group, and min or max credits?
-      // Color: How is this determined?
-      // Need courseMap to be generated
-      const newCourse = {
-        subject,
-        code,
-        name: data.titleLong,
-        credits: data.enrollGroups[0].unitsMaximum,
-        semesters,
-        color: '2BBCC6',
-        check: true,
-        requirementsMap: null
-      };
-
+      let newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
 
       // Set text and display confirmation modal, then have it disappear after 3 seconds
