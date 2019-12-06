@@ -3,7 +3,7 @@
     <div class="modal-content" :id="contentId">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
-        <img class="modal-exit" src="../../assets/images/x.png" v-on:click="closeCurrentModal"/>
+        <img class="modal-exit" src="../../assets/images/x.png" v-on:click="closeCurrentModal" />
       </div>
       <component class="modal-body" v-bind:is="body" :semesterID="semesterID"></component>
       <div class="modal-buttonWrapper">
@@ -40,9 +40,10 @@ export default {
     },
     title() {
       const start = 'New ';
-      if (this.type == 'semester') {
+      if (this.type === 'semester') {
         return `${start}Semester`;
-      } if (this.type == 'course') {
+      }
+      if (this.type === 'course') {
         return `${start}Course`;
       }
       return `${start}Custom Course`;
@@ -54,18 +55,19 @@ export default {
       return 'CANCEL';
     },
     body() {
-      if (this.type == 'semester') {
+      if (this.type === 'semester') {
         return 'newSemester';
-      } if (this.type == 'course') {
+      }
+      if (this.type === 'course') {
         return 'newCourse';
       }
       return 'newCustomCourse';
     }
   },
   methods: {
-    closeCurrentModal(event) {
+    closeCurrentModal() {
       let modal;
-      if (this.type == 'course') {
+      if (this.type === 'course') {
         modal = document.getElementById(`${this.type}Modal-${this.semesterID}`);
       } else {
         modal = document.getElementById(`${this.type}Modal`);
@@ -73,9 +75,9 @@ export default {
       modal.style.display = 'none';
     },
     addItem() {
-      if (this.type == 'course') {
+      if (this.type === 'course') {
         this.addCourse();
-      } else if (this.type == 'semester') {
+      } else if (this.type === 'semester') {
         // TODO: add semester
       } else {
         // TODO: add custom course
@@ -92,19 +94,22 @@ export default {
       const firebaseTitle = `${key.replace(/\s/g, '')}-${sem}`;
       const docRef = coursesCollection.doc(firebaseTitle);
 
-      const _this = this;
+      const parent = this.$parent;
 
       // TODO: error handling if course not found or some firebase error
-      docRef.get().then(doc => {
-        if (doc.exists) {
-          _this.$parent.addCourse(doc.data());
-        } else {
-          // doc.data() will be undefined in this case
-          console.log('No such document!');
-        }
-      }).catch(error => {
-        console.log('Error getting document:', error);
-      });
+      docRef
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            parent.addCourse(doc.data());
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No such document!');
+          }
+        })
+        .catch(error => {
+          console.log('Error getting document:', error);
+        });
 
       // clear input and close modal when complete
       dropdown.value = '';
@@ -120,7 +125,7 @@ export default {
   padding: 1rem;
 
   &-content {
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
@@ -134,7 +139,7 @@ export default {
   &-top {
     display: flex;
     justify-content: space-between;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
   }
 
   &-exit {
@@ -146,7 +151,7 @@ export default {
     font-weight: bold;
     font-size: 16px;
     line-height: 20px;
-    color: #3D3D3D;
+    color: #3d3d3d;
   }
 
   &-buttonWrapper {
@@ -158,15 +163,15 @@ export default {
   &-button {
     width: 4.75rem;
     height: 2rem;
-    color: #5B676D;
+    color: #5b676d;
     border-radius: 3px;
-    border: 1px solid #3D3D3D;
-    background-color: #FFFFFF;
+    border: 1px solid #3d3d3d;
+    background-color: #ffffff;
 
     &--add {
       color: #ffffff;
       background-color: #508197;
-      margin-left: .5rem;
+      margin-left: 0.5rem;
       border: none;
     }
   }
@@ -179,5 +184,4 @@ export default {
 #content-semester {
   width: 15.5rem;
 }
-
 </style>

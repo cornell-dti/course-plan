@@ -8,20 +8,22 @@ import Settings from '@/components/Settings';
 
 Vue.use(Router);
 
+const baseURL = process.env.BASE_URL;
+
 const router = new Router({
   mode: 'history',
   routes: [
     {
       path: '*',
-      redirect: '/dashboard'
+      redirect: `${baseURL}/dashboard`
     },
     {
-      path: '/login',
+      path: `${baseURL}/login`,
       name: 'Login',
       component: Login
     },
     {
-      path: '/dashboard',
+      path: `${baseURL}/dashboard`,
       name: 'Dashboard',
       component: Dashboard,
       meta: {
@@ -29,7 +31,7 @@ const router = new Router({
       }
     },
     {
-      path: '/settings',
+      path: `${baseURL}/settings`,
       name: 'Settings',
       component: Settings,
       meta: {
@@ -44,7 +46,7 @@ router.beforeEach((to, from, next) => {
   const { currentUser } = firebase.auth();
 
   if (requiresAuth && !currentUser) {
-    next('/login');
+    next(`${baseURL}/login`);
   } else if (requiresAuth && currentUser) {
     next();
   } else {

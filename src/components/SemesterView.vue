@@ -1,37 +1,41 @@
 <template>
   <div class="semesterView">
     <div><button v-on:click="changeCompact">Change View</button></div>
-    <confirmation text='Added "🌸 Spring 2020" to plan'/>
+    <!-- <confirmation text='Added "🌸 Spring 2020" to plan'/> -->
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :exists="true"/>
+        <semester v-bind="sem" :exists="true" />
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :exists="false"/>
+        <semester :exists="false" />
       </div>
     </div>
     <div v-if="compact" class="semesterView-content">
-      <div v-for="sem in compactSemesters" v-bind:key="sem.id" class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :exists="true"/>
+      <div
+        v-for="sem in compactSemesters"
+        v-bind:key="sem.id"
+        class="semesterView-wrapper semesterView-wrapper--compact"
+      >
+        <semester v-bind="sem" :exists="true" />
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :exists="false" :compact="compact"/>
+        <semester :exists="false" :compact="compact" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
-import Confirmation from '@/components/Confirmation';
+// import Confirmation from '@/components/Confirmation';
 
 const clone = require('clone');
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
-Vue.component('confirmation', Confirmation);
+// Vue.component('confirmation', Confirmation);
 
 export default {
   props: {
@@ -67,8 +71,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.semesterView
-{
+.semesterView {
   display: flex;
   flex-direction: column;
 
@@ -88,5 +91,4 @@ export default {
     }
   }
 }
-
 </style>

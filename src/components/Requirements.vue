@@ -1,16 +1,35 @@
 <template>
   <div class="requirements">
-    <h1 class="title">School Requirements</h1>
+    <h1 class="title">School Requirements!</h1>
 
     <!-- loop through reqs array of req objects -->
-    <div class="reqs" v-for="(req, index) in reqs" v-bind:key="req.id">
+    <div class="req" v-for="(req, index) in reqs" v-bind:key="req.id">
       <div class="row top">
         <p class="name col p-0">{{ req.name }}</p>
         <div class="col-1 text-right p-0">
-          <button class="btn">
+          <button @click="modalShow = !modalShow" class="btn">
             <!-- svg for settings icon -->
             <img class="settings" src="../assets/images/gear.svg" />
           </button>
+        </div>
+        <b-modal v-model="modalShow">Hello From Modal!</b-modal>
+      </div>
+
+      <!--Majors tabular view -->
+      <div class="tab" v-if="req.type === 'MAJOR'">
+        <div class="row">
+          <div class="col">
+            <button v-bind:class="{ active: isActive }" @click="isActive = !isActive" class="btn">
+              <p v-bind:class="{ active: isActive }" class="major">Computer Science</p>
+              <p v-bind:class="{ active: isActive }" class="major-college">(Arts and Science)</p>
+            </button>
+          </div>
+          <div class="col">
+            <button class="btn">
+              <p class="major">Information Science</p>
+              <p class="major-college">Engineering</p>
+            </button>
+          </div>
         </div>
       </div>
       <!-- progress bar settings -->
@@ -21,83 +40,94 @@
           role="progressbar"
         ></div>
       </div>
+
       <p class="progress-text">
         <strong>{{ req.progress }}/{{ req.total }}</strong>
         Total {{ req.count }} Inputted on Schedule
       </p>
-      <!-- display button (off when req.displayDetails is false) -->
-      <button
-        class="view btn"
-        v-if="!req.displayDetails"
-        v-bind:style="{ 'background-color': req.color }"
-        v-on:click="turnDetails(index, true)"
-      >View All {{ req.type }} Requirements</button>
-      <!-- when displayDetails is true -->
-      <div class="detail" v-if="req.displayDetails">
-        <div class="ongoing">
-          <div class="row detail-bar">
-            <p class="col detail-text p-0">In-Depth {{ req.type }} Requirements</p>
 
-            <div class="text-right p-0">
-              <button class="btn" v-on:click="turnDetails(index, false)">
-                <!-- picture of close (x) icon -->
-                <img class="cancel" src="../assets/images/x.png" alt="X" />
+      <!--View more college requirements -->
+      <div class="row top">
+        <div class="col-1 text-left p-0">
+          <button class="btn" v-on:click="turnDetails(index, true)" style="color:#1AA9A5;">
+            <!-- svg for dropdown icon -->
+            <img
+              class="setting"
+              style="fill: #1AA9A5; color:#1AA9A5 "
+              src="../assets/images/dropdown-blue.png"
+              alt="dropdown"
+            />
+          </button>
+        </div>
+        <p class="col req-name" style="color:#1AA9A5;">VIEW ALL {{ req.type }} REQUIREMENTS</p>
+      </div>
+
+      <!--Show more of completed requirements -->
+      <div v-if="req.displayDetails">
+        <div class="row top">
+          <p class="sub-title col p-0">In-Depth College Requirement</p>
+          <div class="col-1 text-right p-0">
+            <button class="btn" v-on:click="turnDetails(index, true)">
+              <!-- svg for settings icon -->
+              <img class="settings" src="../assets/images/x.png" />
+            </button>
+          </div>
+        </div>
+        <div
+          v-for="(subReq, id) in req.ongoing"
+          v-bind:key="subReq.id"
+          class="semesterView-wrapper"
+        >
+          <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+          <div class="row top">
+            <div class="col-1 text-left p-0">
+              <button class="btn" v-on:click="turnSubDetails(index, id, true)">
+                <!-- svg for dropdown icon -->
+                <img
+                  class="setting"
+                  style="fill: #1AA9A5; color:#1AA9A5 "
+                  src="../assets/images/dropdown.svg"
+                  alt="dropdown"
+                />
               </button>
             </div>
+            <p class="col sup-req">{{subReq.name}}</p>
+            <p class="col sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
           </div>
 
-          <!-- loop through uncompleted reqs in req.ongoing array -->
-          <div class="list" v-for="value in req.ongoing" v-bind:key="value.id">
-            <div class="separator"></div>
-
-            <div class="row detail-bar">
-              <div class="col x">
-                <button class="btn" v-b-toggle= "'collapse' + index">
-                  <img class="drowndown" src="../assets/images/dropdown.svg" alt="dropdown" />
-                </button>
-              </div>
-              <p class="col p-0 text-center req-name">{{ value.name }}</p>
-              <p
-                class="col float-right text-center p-0 req-progress"
-              >({{ value.progress }}/{{ value.total }} {{ value.count }})</p>
+          <div v-if="subReq.display">
+            <div>
+              <p>Additional Courses</p>
+              <ul class="striped-list">
+                <li
+                  v-for="subSubReq in subReq.additonalCourses"
+                  v-bind:key="subSubReq.id"
+                  class="semesterView-wrapper"
+                >
+                  <div class="row top">
+                    <p class="col sup-req tex-left">{{subSubReq}}</p>
+                    <p class="col sup-req text-right p-0">( {{2}} / {{2}} Courses)</p>
+                  </div>
+                </li>
+              </ul>
             </div>
-
-            <b-collapse id="collapse1">
-              <b-card>
-                <p class="req-progress">Additional Requirements</p>
-                <ul>
-                  <li class="detail-text">PE Courses</li>
-                  <li class="detail-text">Swimming Requirement</li>
-                </ul>
-                <div class="row detail-bar">
-                  <p class="col detail-text p-0">Classes to fullfill Requirements</p>
-                  <div class="text-right p-0">
-                    <button class="btn" v-bind:style="{ 'color': req.color }">
-                      <!-- Toggle to display completed reqs -->
-                      <p
-                        class="toggle"
-                        v-if="req.displayCompleted"
-                        v-on:click="turnCompleted(index, false)"
-                      >SEE ALL</p>
-                      <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
-                    </button>
-                  </div>
-                </div>
-                <div class="row">
-                  <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
-                    <semester class="semester-req" v-bind="sem" :exists="true" />
-                  </div>
-                </div>
-              </b-card>
-            </b-collapse>
+            <p>Classes to Fullfill Requirements</p>
+            <div class="row">
+              <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
+                <course
+                  v-bind="courses"
+                  v-bind:id="courses.subject"
+                  v-bind:compact="compact"
+                  class="semester-course"
+                />
+              </div>
+            </div>
           </div>
-
-          <div class="separator"></div>
         </div>
-        <!-- Display completed section if there are completed reqs -->
-        <div class="completed" v-if="req.completed.length > 0">
-          <div class="row detail-bar">
-            <p class="col detail-text p-0">Completed {{ req.type }} Requirements</p>
+
+        <div class="row top">
+          <p class="sub-title col p-0">Completed Requirements</p>
+          <div class="col-1 text-right p-0">
             <button class="btn" v-bind:style="{ 'color': req.color }">
               <!-- Toggle to display completed reqs -->
               <p
@@ -108,27 +138,32 @@
               <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
             </button>
           </div>
-          <div v-if="req.displayCompleted">
-            <!-- loop through completed reqs in req.completed array -->
-            <div class="list" v-for="value in req.completed" v-bind:key="value.id">
-              <div class="separator"></div>
-              <div class="row req">
-                <p class="col float-left p-0 req-name">{{ value.name }}</p>
-                <p
-                  class="col float-right text-right p-0 req-progress"
-                >({{ value.progress }}/{{ value.total }} {{ value.count }})</p>
-                <div
-                  class="Courselist"
-                  v-for="otherCourse in req.additonalCourses"
-                  v-bind:key="otherCourse.id"
-                >
-                  <course v-bind="course" v-bind:id="otherCourse" class="semester-course" />
-                </div>
+        </div>
+        <div v-if="req.displayCompleted">
+          <div v-for="subReq in req.completed" v-bind:key="subReq.id" class="semesterView-wrapper">
+            <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+            <div class="row top">
+              <div class="col-1 text-left p-0">
+                <button class="btn" v-on:click="turnSubDetails(index, id, true)">
+                  <!-- svg for dropdown icon -->
+                  <img
+                    class="setting"
+                    style="fill: #1AA9A5; color:#1AA9A5 "
+                    src="../assets/images/dropdown.svg"
+                    alt="dropdown"
+                  />
+                </button>
               </div>
+              <p class="col sup-req">{{subReq.name}}</p>
+              <p
+                class="col sup-req text-right p-0"
+              >( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
         </div>
       </div>
+      <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+
       <!-- Add separator if not last req or not displaying details -->
       <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
     </div>
@@ -151,15 +186,20 @@ Vue.use(VueCollapse);
 
 export default {
   props: {
-    semesters: Array
+    semesters: Array,
+    compact: Boolean
   },
   mounted() {},
   data() {
+    const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
+      isActive: false,
+      modalShow: false,
       reqs: [
         {
-          name: 'College Requirements',
-          type: 'College',
+          show: false,
+          name: 'COLLEGE REQUIREMENTS',
+          type: 'COLLEGE',
           count: 'Credits',
           progress: 46,
           total: 120,
@@ -172,7 +212,8 @@ export default {
               progress: 12,
               total: 55,
               additonalCourses: ['PE Courses', 'Swimming Requirement'],
-              satisfiableCourses: ['ice skating', 'bowling']
+              satisfiableCourses: ['ice skating', 'bowling'],
+              display: false
             },
             {
               name: 'PE Credits',
@@ -180,7 +221,8 @@ export default {
               progress: 1,
               total: 2,
               additonalCourses: ['PE Courses', 'Swimming Requirement'],
-              satisfiableCourses: ['ice skating', 'bowling']
+              satisfiableCourses: ['ice skating', 'bowling'],
+              display: false
             }
           ],
           displayCompleted: true,
@@ -189,19 +231,22 @@ export default {
               name: 'Quantitative Literacy',
               count: 'Credits',
               progress: 2,
-              total: 2
+              total: 2,
+              display: false
             },
             {
               name: 'Chemistry/Physics',
               count: 'Credits',
               progress: 1,
-              total: 2
+              total: 2,
+              display: false
             }
           ]
         },
         {
-          name: 'Major Requirements',
-          type: 'Major',
+          show: true,
+          name: 'MAJOR REQUIREMENTS',
+          type: 'MAJOR',
           count: 'Courses',
           progress: 4,
           total: 8,
@@ -212,13 +257,15 @@ export default {
               name: 'CALS Credits',
               count: 'Credits',
               progress: 12,
-              total: 55
+              total: 55,
+              display: false
             },
             {
               name: 'PE ',
               count: 'Credits',
               progress: 1,
-              total: 2
+              total: 2,
+              display: false
             }
           ],
           displayCompleted: true,
@@ -227,23 +274,84 @@ export default {
               name: 'Quantitative Literacy',
               count: 'Credits',
               progress: 2,
-              total: 2
+              total: 2,
+              display: false
+            },
+            {
+              name: 'Chemistry/Physics',
+              count: 'Credits',
+              progress: 2,
+              total: 2,
+              display: false
+            }
+          ]
+        },
+
+        {
+          show: false,
+          name: 'MINOR REQUIREMENTS',
+          type: 'MINOR',
+          count: 'Courses',
+          progress: 4,
+          total: 8,
+          color: '#4D53DC',
+          displayDetails: false,
+          ongoing: [
+            {
+              name: 'CALS Credits',
+              count: 'Credits',
+              progress: 12,
+              total: 55,
+              display: false
+            },
+            {
+              name: 'PE ',
+              count: 'Credits',
+              progress: 1,
+              total: 2,
+              display: false
+            }
+          ],
+          displayCompleted: true,
+          completed: [
+            {
+              name: 'Quantitative Literacy',
+              count: 'Credits',
+              progress: 2,
+              total: 2,
+              display: false
             },
             {
               name: 'Chemistry/Physics',
               count: 'Credits',
               progress: 1,
-              total: 2
+              total: 2,
+              display: false
             }
           ]
         }
-      ]
+      ],
+      courses: {
+        id: randomId,
+        subject: 'PHIL',
+        code: 1100,
+        name: 'Introduction to Philosophy',
+        credits: 3,
+        semesters: ['Fall', 'Spring'],
+        color: '2BBCC6',
+        check: true,
+        requirementsMap: null
+      }
     };
   },
 
   methods: {
     turnDetails(index, bool) {
-      this.reqs[index].displayDetails = bool;
+      this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
+    },
+    turnSubDetails(index, id, bool) {
+      this.reqs[index].ongoing[id].display = !this.reqs[index].ongoing[id]
+        .display;
     },
 
     turnCompleted(index, bool) {
@@ -266,9 +374,11 @@ export default {
 
 h1.title {
   margin: 0 0 0 0;
-  font-weight: 600;
-  font-size: 24px;
-  line-height: 24px;
+  font-style: normal;
+  font-weight: 550;
+  font-size: 22px;
+  line-height: 29px;
+  color: #000000;
 }
 
 .top {
@@ -281,7 +391,37 @@ h1.title {
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
-  line-height: 16px;
+  line-height: 19px;
+
+  color: #000000;
+}
+
+.major {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+
+  &-college {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    /* identical to box height */
+
+    color: #000000;
+  }
+}
+
+button.active {
+  color: #508197;
+  border-bottom: solid 10px #508197;
+  padding-bottom: 5px;
+}
+p.active {
+  color: #508197;
+  font-weight: bold;
 }
 
 .settings {
@@ -293,6 +433,14 @@ h1.title {
   margin: 0.3125rem 0 0 0;
   font-size: 12px;
   line-height: 12px;
+}
+
+ul.striped-list > li {
+  padding: 2px;
+
+  border-bottom-style: rgba(196, 196, 196, 0.4);
+  border-block-color: rgba(196, 196, 196, 0.4);
+  color: #757575;
 }
 
 button.view {
@@ -362,12 +510,17 @@ button.view {
 }
 
 .req {
-  margin: 0.5rem 0 0 0;
-  color: #757575;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-style: normal;
+  font-weight: normal;
+
+  font-size: 16px;
+  line-height: 19px;
 
   &-name {
     font-size: 14px;
-    line-height: 14px;
+    line-height: 17px;
   }
 
   &-progress {
@@ -375,6 +528,14 @@ button.view {
     font-size: 12px;
     line-height: 12px;
   }
+}
+.sup-req {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+
+  color: #757575;
 }
 
 .semester-req {

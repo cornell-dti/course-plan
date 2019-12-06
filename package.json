@@ -12,6 +12,7 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.1.0",
+    "clone": "^2.1.2",
     "dragula": "^3.7.2",
     "firebase": "^6.6.2",
     "vue": "^2.6.10",

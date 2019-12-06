@@ -2,14 +2,13 @@
   <div class="newCourse">
     <div class="newCourse-text">{{ text }}</div>
     <div class="autocomplete">
-      <input class="newCourse-dropdown" :id="'dropdown-'+semesterID" :placeholder="placeholder"/>
+      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :placeholder="placeholder" />
     </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
-import courses from '../../assets/courses/courses.json';
+import coursesJSON from '../../assets/courses/courses.json';
 
 export default {
   props: {
@@ -24,10 +23,13 @@ export default {
     }
   },
   mounted() {
-    this.autocomplete(document.getElementById(`dropdown-${this.semesterID}`), courses);
+    this.autocomplete(
+      document.getElementById(`dropdown-${this.semesterID}`),
+      coursesJSON
+    );
   },
   methods: {
-    closeCourseModal(event) {
+    closeCourseModal() {
       const modal = document.getElementById(`courseModal-${this.semesterID}`);
       modal.style.display = 'none';
     },
@@ -37,29 +39,34 @@ export default {
       @courses: object of courses from JSON
       */
       let currentFocus;
+      let inpCopy = inp;
       /* execute a function when someone writes in the text field: */
-      inp.addEventListener('input', function (e) {
-        let a; let b; let i; const
-          val = this.value.toUpperCase();
+      inp.addEventListener('input', () => {
+        let a;
+        let b;
+        const val = inp.value.toUpperCase();
         /* close any already open lists of autocompleted values */
         closeAllLists();
-        if (!val) return false;
+        if (!val) return;
         currentFocus = -1;
         /* create a DIV element that will contain the items (values): */
         if (val.length >= 3) {
           a = document.createElement('DIV');
-          a.setAttribute('id', `${this.id}autocomplete-list`);
+          a.setAttribute('id', `${inp.id}autocomplete-list`);
           a.setAttribute('class', 'autocomplete-items');
           /* append the DIV element as a child of the autocomplete container: */
-          this.parentNode.appendChild(a);
+          inp.parentNode.appendChild(a);
 
           /* code array for results that contain course code and title array for results that contain title */
-          const code = []; const
-            title = [];
+          const code = [];
+          const title = [];
           for (const attr in courses) {
-            if (~attr.toUpperCase().indexOf(val)) {
+            if (attr.toUpperCase().includes(val)) {
               code.push(courses[attr].t);
-            } else if (courses[attr].t && ~courses[attr].t.toUpperCase().indexOf(val)) {
+            } else if (
+              courses[attr].t &&
+              courses[attr].t.toUpperCase().includes(val)
+            ) {
               title.push(courses[attr].t);
             }
           }
@@ -69,18 +76,18 @@ export default {
           /* prioritize code matches over title matches */
           const match = code.concat(title);
 
-          match.map(title => {
+          match.forEach(newTitle => {
             /* check if the item starts with the same letters as the text field value: */
             /* create a DIV element for each matching element: */
             b = document.createElement('DIV');
             /* make the matching letters bold: */
-            b.innerHTML = title;
+            b.innerHTML = newTitle;
             /* insert a input field that will hold the current array item's value: */
-            b.innerHTML += `<input type='hidden' value="${title}"'>`;
+            b.innerHTML += `<input type='hidden' value="${newTitle}"'>`;
             /* execute a function when someone clicks on the item value (DIV element): */
-            b.addEventListener('click', function (e) {
+            b.addEventListener('click', () => {
               /* insert the value for the autocomplete text field: */
-              inp.value = this.getElementsByTagName('input')[0].value;
+              inpCopy.value = b.getElementsByTagName('input')[0].value;
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
@@ -90,22 +97,23 @@ export default {
         }
       });
       /* execute a function presses a key on the keyboard: */
-      inp.addEventListener('keydown', function (e) {
-        let x = document.getElementById(`${this.id}autocomplete-list`);
+      inp.addEventListener('keydown', e => {
+        let x = document.getElementById(`${inp.id}autocomplete-list`);
         if (x) x = x.getElementsByTagName('div');
-        if (e.keyCode == 40) {
+        if (e.keyCode === 40) {
           /* If the arrow DOWN key is pressed,
             increase the currentFocus variable: */
-          currentFocus++;
+          currentFocus += 1;
           /* and and make the current item more visible: */
           addActive(x);
-        } else if (e.keyCode == 38) { // up
+        } else if (e.keyCode === 38) {
+          // up
           /* If the arrow UP key is pressed,
             decrease the currentFocus variable: */
-          currentFocus--;
+          currentFocus -= 1;
           /* and and make the current item more visible: */
           addActive(x);
-        } else if (e.keyCode == 13) {
+        } else if (e.keyCode === 13) {
           /* If the ENTER key is pressed, prevent the form from being submitted, */
           e.preventDefault();
           if (currentFocus > -1) {
@@ -116,17 +124,17 @@ export default {
       });
       function addActive(x) {
         /* a function to classify an item as "active": */
-        if (!x) return false;
+        if (!x) return;
         /* start by removing the "active" class on all items: */
         removeActive(x);
         if (currentFocus >= x.length) currentFocus = 0;
-        if (currentFocus < 0) currentFocus = (x.length - 1);
+        if (currentFocus < 0) currentFocus = x.length - 1;
         /* add class "autocomplete-active": */
         x[currentFocus].classList.add('autocomplete-active');
       }
       function removeActive(x) {
         /* a function to remove the "active" class from all autocomplete items: */
-        for (let i = 0; i < x.length; i++) {
+        for (let i = 0; i < x.length; i += 1) {
           x[i].classList.remove('autocomplete-active');
         }
       }
@@ -134,8 +142,8 @@ export default {
         /* close all autocomplete lists in the document,
         except the one passed as an argument: */
         const x = document.getElementsByClassName('autocomplete-items');
-        for (let i = 0; i < x.length; i++) {
-          if (elmnt != x[i] && elmnt != inp) {
+        for (let i = 0; i < x.length; i += 1) {
+          if (elmnt !== x[i] && elmnt !== inp) {
             x[i].parentNode.removeChild(x[i]);
           }
         }
@@ -164,11 +172,11 @@ export default {
     color: #757575;
     width: 100%;
     border-radius: 3px;
-    padding: .5rem;
-    border: 0.5px solid #C4C4C4;
+    padding: 0.5rem;
+    border: 0.5px solid #c4c4c4;
 
     &::placeholder {
-      color: #B6B6B6;
+      color: #b6b6b6;
     }
   }
 }
@@ -178,7 +186,7 @@ export default {
   position: relative;
   display: inline-block;
   width: 100%;
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 input {
   border: 1px solid transparent;
@@ -215,5 +223,4 @@ input {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }
-
 </style>

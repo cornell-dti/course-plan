@@ -3,31 +3,21 @@
     <div class="newSemester-section newSemester-type">
       <label class="newSemester-label" for="type">{{ typeText }}</label>
       <select class="newSemester-select" :placeholder="typePlaceholder" id="type">
-        <option value="" selected disabled>Select one</option>
-        <option value="fall">
-          🍂 Fall
-        </option>
-        <option value="spring">
-          🌸 Spring
-        </option>
-        <option value="summer">
-          ☀️ Summer
-        </option>
-        <option value="winter">
-          ❄️ Winter
-        </option>
+        <option value selected disabled>Select one</option>
+        <option value="fall">🍂 Fall</option>
+        <option value="spring">🌸 Spring</option>
+        <option value="summer">☀️ Summer</option>
+        <option value="winter">❄️ Winter</option>
       </select>
     </div>
     <div class="newSemester-section newSemester-year">
       <label class="newSemester-label" for="year">{{ yearText }}</label>
-      <select class="newSemester-select" id="year" v-html="yearOptions"/>
+      <select class="newSemester-select" id="year" v-html="yearOptions" />
     </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
-
 // TODO: gray out initial dropdown options
 export default {
   computed: {
@@ -42,18 +32,19 @@ export default {
     },
     yearOptions() {
       // TODO: what years are valid?
-      const currentYear = (new Date()).getFullYear();
+      const currentYear = new Date().getFullYear();
       const years = [];
       let startYear = currentYear - 10;
       while (startYear <= currentYear + 10) {
-        years.push(startYear++);
+        years.push(startYear);
+        startYear += 1;
       }
       years.map(String);
 
       // const years = ['2019', '2020', '2021', '2022'];
       let str = '';
-      for (let i = 0; i < years.length; i++) {
-        if (years[i] == currentYear) {
+      for (let i = 0; i < years.length; i += 1) {
+        if (years[i] === currentYear) {
           str += `<option value=${years[i]} selected>${years[i]}</option>`;
         } else {
           str += `<option value=${years[i]}>${years[i]}</option>`;
@@ -62,7 +53,6 @@ export default {
       return str;
     }
   }
-
 };
 </script>
 
@@ -89,7 +79,7 @@ export default {
   }
 
   &-label {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
   }
 
   &-select {
@@ -98,8 +88,8 @@ export default {
     left: 444px;
     top: 183px;
 
-    background: #FFFFFF;
-    border: 1px solid #32A0F2;
+    background: #ffffff;
+    border: 1px solid #32a0f2;
     box-sizing: border-box;
     border-radius: 1px;
     width: 100%;
@@ -109,7 +99,7 @@ export default {
     font-size: 14px;
     line-height: 17px;
 
-    color: #B6B6B6;
+    color: #b6b6b6;
   }
 
   &-icon {
@@ -118,11 +108,17 @@ export default {
   }
 }
 
-select option { color: black; }
-select option:first-child { color: grey; }
-select.empty { color: grey; }
+select option {
+  color: black;
+}
+select option:first-child {
+  color: grey;
+}
+select.empty {
+  color: grey;
+}
 /* Hidden placeholder */
-select option[disabled]:first-child { display: none; }
-
-
+select option[disabled]:first-child {
+  display: none;
+}
 </style>

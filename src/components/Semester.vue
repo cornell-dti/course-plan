@@ -1,7 +1,16 @@
 <template>
-  <div class="semester" v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact}" v-bind:id="id">
+  <div
+    class="semester"
+    v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact }"
+    v-bind:id="id"
+  >
     <!-- TODO: Remove semesterModal from semester and move to semesterview -->
-    <modal :id="'courseModal-'+id" class="semester-modal" type="course" :semesterID="id"/>
+    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" />
+    <confirmation
+      :id="'confirmation-' + id"
+      class="semester-confirmation"
+      :text="confirmationText"
+    />
     <modal id="semesterModal" class="semester-modal" type="semester" />
     <div v-if="exists" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
@@ -16,7 +25,12 @@
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
           <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
-            <course v-bind="course" v-bind:id="course.subject" v-bind:compact="compact" class="semester-course"/>
+            <course
+              v-bind="course"
+              v-bind:id="course.subject"
+              v-bind:compact="compact"
+              class="semester-course"
+            />
           </div>
         </div>
         <div
@@ -27,7 +41,8 @@
           <span
             class="semester-buttonText"
             v-bind:class="{ 'semester-buttonText--compact': compact }"
-          >{{ buttonString }}</span>
+            >{{ buttonString }}</span
+          >
         </div>
       </div>
     </div>
@@ -39,19 +54,22 @@
         <span
           class="semester-buttonText"
           v-bind:class="{ 'semester-buttonText--compact': compact }"
-        >{{ semesterString }}</span>
+          >{{ semesterString }}</span
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
+import Confirmation from '@/components/Confirmation';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
+Vue.component('confirmation', Confirmation);
 
 export default {
   // TODO: fonts! (Proxima Nova)
@@ -61,17 +79,20 @@ export default {
     courseMap.set('CA', ['CS 2110']);
     const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
-      courses: [{
-        id: randomId,
-        subject: 'PHIL',
-        code: 1100,
-        name: 'Introduction to Philosophy',
-        credits: 3,
-        semesters: ['Fall', 'Spring'],
-        color: '2BBCC6',
-        check: true,
-        requirementsMap: courseMap
-      }]
+      courses: [
+        {
+          id: randomId,
+          subject: 'PHIL',
+          code: 1100,
+          name: 'Introduction to Philosophy',
+          credits: 3,
+          semesters: ['Fall', 'Spring'],
+          color: '2BBCC6',
+          check: true,
+          requirementsMap: courseMap
+        }
+      ],
+      confirmationText: ''
     };
   },
   props: {
@@ -83,8 +104,6 @@ export default {
   },
   mounted() {
     this.$el.addEventListener('click', this.closeAllModals);
-    const _this = this;
-    const _document = document;
   },
 
   beforeDestroy() {
@@ -109,7 +128,7 @@ export default {
   },
   methods: {
     printArrayLength() {
-      console.log(this.courses.length);
+      // console.log(this.courses.length);
     },
     openCourseModal() {
       const modal = document.getElementById(`courseModal-${this.id}`);
@@ -121,8 +140,8 @@ export default {
     },
     closeAllModals(event) {
       const modals = document.getElementsByClassName('semester-modal');
-      for (let i = 0; i < modals.length; i++) {
-        if (event.target == modals[i]) {
+      for (let i = 0; i < modals.length; i += 1) {
+        if (event.target === modals[i]) {
           modals[i].style.display = 'none';
         }
       }
@@ -134,7 +153,7 @@ export default {
 
       const arr = data.code.split(' ');
       const subject = arr[0];
-      const code = parseInt(arr[1]);
+      const code = parseInt(arr[1], 10);
 
       // remove periods and split on ', '
       let semesters = data.catalogWhenOffered.replace(/\./g, '');
@@ -156,11 +175,20 @@ export default {
       };
 
       this.courses.push(newCourse);
+
+      // Set text and display confirmation modal, then have it disappear after 3 seconds
+
+      this.confirmationText = `Added ${data.code} to "${this.name}"`;
+      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
+      confirmationModal.style.display = 'flex';
+
+      setTimeout(() => {
+        confirmationModal.style.display = 'none';
+      }, 3000);
     }
   }
 };
 </script>
-
 
 <style scoped lang="scss">
 @mixin hover-button {
@@ -197,6 +225,10 @@ export default {
 
   &--compact {
     padding: 0.875rem 1.125rem;
+  }
+
+  &-confirmation {
+    display: none;
   }
 
   &-empty {

@@ -29,9 +29,5 @@ const usersCollection = db.collection('users');
 const coursesCollection = db.collection('courses');
 
 export {
-  db,
-  auth,
-  currentUser,
-  usersCollection,
-  coursesCollection
+  db, auth, currentUser, usersCollection, coursesCollection
 };

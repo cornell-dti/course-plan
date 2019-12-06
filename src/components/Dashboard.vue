@@ -5,7 +5,7 @@
       :compact="compactVal"
       @compact-updated="compactVal = $event"
     />
-    <requirements :semesters="semesters2" />
+    <requirements :semesters="semesters" :compact="compactVal" />
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
 
-const dragula = require('@/vueDragulaConfig.js');
+import '@/vueDragulaConfig';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
