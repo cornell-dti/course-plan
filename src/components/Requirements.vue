@@ -54,7 +54,7 @@
             <img
               class="setting"
               style="fill: #1AA9A5; color:#1AA9A5 "
-              src="../assets/images/dropdown-blue.png"
+              src="../assets/images/dropdown-blue.svg"
               alt="dropdown"
             />
           </button>

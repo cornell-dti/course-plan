@@ -15,7 +15,7 @@
     <div v-if="exists" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
         <div class="semester-left" v-bind:class="{ 'semester-left--compact': compact }">
-          <span class="semester-name">{{ name }}</span>
+          <span class="semester-name">{{ type }} {{ year }}</span>
           <img class="semester-icon" src="../assets/images/pencil.svg" />
         </div>
         <div class="semester-right" v-bind:class="{ 'semester-right--compact': compact }">
@@ -71,34 +71,22 @@ Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
 
+const firebaseConfig = require('@/firebaseConfig.js');
+
+const { auth, userDataCollection } = firebaseConfig;
+
 export default {
   // TODO: fonts! (Proxima Nova)
   data() {
-    const courseMap = new Map();
-    courseMap.set('KCM', ['CS 1110', 'CS 1112']);
-    courseMap.set('CA', ['CS 2110']);
-    const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
-      courses: [
-        {
-          id: randomId,
-          subject: 'PHIL',
-          code: 1100,
-          name: 'Introduction to Philosophy',
-          credits: 3,
-          semesters: ['Fall', 'Spring'],
-          color: '2BBCC6',
-          check: true,
-          requirementsMap: courseMap
-        }
-      ],
       confirmationText: ''
     };
   },
   props: {
     id: Number,
-    name: String,
-    // courses: Array,
+    type: String,
+    year: Number,
+    courses: Array,
     exists: Boolean,
     compact: Boolean
   },
@@ -127,6 +115,16 @@ export default {
     }
   },
   methods: {
+    createSemesterString(semesters) {
+      let semesterString = '';
+      semesters.forEach(semester => {
+        semesterString += `${semester}, `;
+      });
+      if (semesterString.length > 0) {
+        return semesterString.substring(0, semesterString.length - 2);
+      }
+      return semesterString;
+    },
     printArrayLength() {
       // console.log(this.courses.length);
     },
@@ -147,44 +145,56 @@ export default {
       }
     },
     addCourse(data) {
-      const courseMap = new Map();
-      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
-      courseMap.set('CA', ['CS 2110']);
-
-      const arr = data.code.split(' ');
-      const subject = arr[0];
-      const code = parseInt(arr[1], 10);
-
-      // remove periods and split on ', '
-      let semesters = data.catalogWhenOffered.replace(/\./g, '');
-      semesters = semesters.split(', ');
-
-      // TODO: update parsing for the below fields
-      // Credits: Which enroll group, and min or max credits?
-      // Color: How is this determined?
-      // Need courseMap to be generated
-      const newCourse = {
-        subject,
-        code,
-        name: data.titleLong,
-        credits: data.enrollGroups[0].unitsMaximum,
-        semesters,
-        color: '2BBCC6',
-        check: true,
-        requirementsMap: null
-      };
-
+      const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
+      this.addToFirebase(newCourse);
 
       // Set text and display confirmation modal, then have it disappear after 3 seconds
 
-      this.confirmationText = `Added ${data.code} to "${this.name}"`;
+      this.confirmationText = `Added ${data.code} to "${this.type} ${this.year}"`;
       const confirmationModal = document.getElementById(`confirmation-${this.id}`);
       confirmationModal.style.display = 'flex';
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
       }, 3000);
+    },
+    addToFirebase(course) {
+      const firebaseCourse = {
+        catalogWhenOffered: `${this.createSemesterString(course.semesters)}.`,
+        code: `${course.subject} ${course.code}`,
+        color: course.color,
+        credits: course.credits,
+        name: course.name
+      };
+
+      const user = auth.currentUser;
+      const userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+
+      // TODO: error handling if user not found or some firebase error
+      // TODO: create a user if no document found
+      docRef
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            const { semesters } = doc.data();
+            semesters.forEach(sem => {
+              if (sem.type === this.type && sem.year === this.year) {
+                sem.courses.push(firebaseCourse);
+              }
+            });
+            docRef.update({
+              semesters
+            });
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No such document!');
+          }
+        })
+        .catch(error => {
+          console.log('Error getting document:', error);
+        });
     }
   }
 };
