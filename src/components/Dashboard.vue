@@ -1,11 +1,16 @@
 <template>
   <div id="dashboard">
-    <semesterview
-      :semesters="semesters"
-      :compact="compactVal"
-      @compact-updated="compactVal = $event"
-    />
-    <requirements />
+    <div id="dashboard-mainView">
+      <semesterview
+        :semesters="semesters"
+        :compact="compactVal"
+        @compact-updated="compactVal = $event"
+      />
+      <requirements />
+    </div>
+    <div id="dashboard-bottomView">
+      <bottombar />
+    </div>
   </div>
 </template>
 
@@ -15,18 +20,23 @@ import Vue from 'vue';
 import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
+import BottomBar from '@/components/BottomBar';
 
 import '@/vueDragulaConfig';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
+Vue.component('bottombar', BottomBar);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
 const { auth, userDataCollection } = firebaseConfig;
 
 export default {
+  props: {
+    bottom_courses: Array
+  },
   data() {
     return {
       compactVal: false,
@@ -137,6 +147,10 @@ export default {
 
 <style scoped lang="scss">
 #dashboard {
+  display: flex;
+  flex-direction: column;
+}
+#dashboard-mainView {
   display: flex;
   justify-content: space-between;
 }
