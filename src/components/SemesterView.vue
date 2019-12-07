@@ -1,6 +1,9 @@
 <template>
   <div class="semesterView">
-    <div><button v-on:click="changeCompact">Change View</button></div>
+    <div>
+      <button v-on:click="changeCompact">Change View</button>
+      <button v-on:click="logout">Logout</button>
+    </div>
     <!-- <confirmation text='Added "🌸 Spring 2020" to plan'/> -->
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
@@ -29,9 +32,11 @@
 import Vue from 'vue';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
+import firebase from 'firebase';
 // import Confirmation from '@/components/Confirmation';
 
 const clone = require('clone');
+const fb = require('@/firebaseConfig.js')
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
@@ -65,6 +70,14 @@ export default {
   methods: {
     changeCompact() {
       this.$emit('compact-updated', !this.compact);
+    },
+    logout() {
+      const self = this;
+      firebase.auth().signOut().then(() => {
+        window.location.reload(false);
+      }, function(error) {
+        // TODO: error
+      });
     }
   }
 };
