@@ -1,11 +1,12 @@
 <template>
   <div id="dashboard">
+     <requirements :semesters="semesters" :compact="compactVal" />
     <semesterview
       :semesters="semesters"
       :compact="compactVal"
       @compact-updated="compactVal = $event"
     />
-    <requirements :semesters="semesters" :compact="compactVal" />
+   
   </div>
 </template>
 

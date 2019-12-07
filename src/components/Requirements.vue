@@ -19,18 +19,18 @@
       <div class="tab" v-if="req.type === 'MAJOR'">
         <div class="row">
           <div class="col">
-            <button v-bind:class="{ active: isActive[0] }" v-on:click="activate(index, true, isActive)" class="btn">
+            <button v-bind:class="{ active: isActive(0) }" @click="activate(actives)" class="btn">
               <div  class="tab-div">
-              <p v-bind:class="{ active: isActive[0] }" class="major">Computer Science</p> 
-              <p v-bind:class="{ active: isActive [0]}" class="major-college">(Arts and Science)</p>
+                <p v-bind:class="{ active: isActive(0)  }" class="major">Computer Science</p> 
+                <p v-bind:class="{ active: isActive(0) }" class="major-college">(Arts and Science)</p>
               </div>
             </button>
           </div>
           <div class="col">
-            <button v-bind:class="{ active: isActive[1] }" v-on:click="activate(index, true, isActive)" class="btn">
+            <button v-bind:class="{ active: isActive(1) }" @click="activate(actives)" class="btn">
               <div class="tab-div">
-              <p v-bind:class="{ active: isActive [1]}" class="major">Information Science</p> 
-              <p v-bind:class="{ active: isActive[1] }"  class="major-college">Engineering</p>
+              <p v-bind:class="{ active: actives[1]}" class="major">Information Science</p> 
+              <p v-bind:class="{ active: actives[1] }"  class="major-college">Engineering</p>
               </div>
             </button>
           </div>
@@ -70,7 +70,7 @@
 
       <!--Show more of completed requirements -->
       <div v-if="req.displayDetails">
-        <div class="row- top">
+        <div class="row  top">
           <p class="sub-title col p-0">In-Depth College Requirement</p>
          
         </div>
@@ -81,7 +81,7 @@
         >
           <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
           <div class="row top ">
-            <div class="col-1 text-left p-0">
+            <div class="col-1 middle text-left p-0">
               <button class="btn" v-on:click="turnSubDetails(index, id, true)">
                 <!-- svg for dropdown icon -->
                 <img
@@ -92,7 +92,7 @@
                 />
               </button>
             </div>
-            <div class="col  p-0">
+            <div class="col  middle p-0">
               <p class="sup-req">{{subReq.name}}</p>
             </div>
             <div class="col text-left p-0">
@@ -107,11 +107,15 @@
                 <li
                   v-for="subSubReq in subReq.additonalCourses"
                   v-bind:key="subSubReq.id"
-                  class="semesterView-wrapper"
+                  
                 >
-                  <div class="row top">
-                    <p class="col sup-req tex-left">{{subSubReq}}</p>
-                    <p class="col sup-req text-right p-0">( {{2}} / {{2}} Courses)</p>
+                  <div class="row top-small">
+                    <div class="col">
+                      <p class="sup-req tex-left">{{subSubReq}}</p>
+                    </div>
+                    <div class="col">
+                      <p class="sup-req text-right p-0">( {{2}} / {{2}} Courses)</p>
+                    </div>
                   </div>
                 </li>
               </ul>
@@ -193,12 +197,13 @@ export default {
   props: {
     semesters: Array,
     compact: Boolean
+  
   },
   mounted() {},
   data() {
     const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
-      isActive: [true,false],
+      actives: [true,false],
       modalShow: false,
       reqs: [
         {
@@ -362,19 +367,27 @@ export default {
     turnCompleted(index, bool) {
       this.reqs[index].displayCompleted = bool;
     },
+    isActive(index){
+      console.log(this.actives[index])
+      return this.actives[index];
+    },
 
     activate(index, bool, isActive){
+      console.log(isActive[0] + "    " + isActive[1])
         isActive[0] = !isActive[0] ;
         isActive[1] = !isActive[1] ;
     }
+    
   }
 };
 </script>
 
 <style scoped lang="scss">
 
-.divide{
-
+.text-center {
+    text-align: center;
+    display: flex;
+    justify-content: center;
 }
 .btn {
   padding: 0px;
@@ -405,6 +418,9 @@ h1.title {
 
 .top {
   margin: 1.5rem 0 1rem 0;
+  &-small{
+    margin: 1rem 0 1rem 0;
+  }
 }
 
 .middle{
@@ -551,8 +567,10 @@ button.view {
 
   &-name {
     font-size: 14px;
+    align-content: bottom;
     line-height: 17px;
-    margin:0px
+    margin: 0px;
+    align-self: center;
   }
 
   &-progress {
