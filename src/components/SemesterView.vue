@@ -1,8 +1,7 @@
 <template>
   <div class="semesterView">
-    <modal id="semesterModal" class="semester-modal" type="semester" />
+    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div><button v-on:click="changeCompact">Change View</button></div>
-    <!-- <confirmation text='Added "🌸 Spring 2020" to plan'/> -->
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
         <semester v-bind="sem" :isNotSemesterButton="true" />
@@ -86,7 +85,9 @@ export default {
       for (let i = 0; i < modals.length; i += 1) {
         if (event.target === modals[i]) {
           modals[i].style.display = 'none';
+          this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns()
         }
+      
       }
     },
     addSemester(type, year) {

@@ -138,23 +138,33 @@ export default {
     },
     resetDropdowns(){
       //reset season dropdown
-      resetDropdown('season-content', 'type', 'season-arrow');
+      const season_content = document.getElementById('season-content');
+      season_content.style.display = 'none';
+
+      const season_box = document.getElementById('type');
+      season_box.style.borderColor = '#C4C4C4';
+
+      const season_arrow = document.getElementById('season-arrow');
+      season_arrow.style.borderTopColor = '#C4C4C4';
 
       //reset year dropdown
-      resetDropdown('year-content', 'year', 'year-arrow');
+      const year_content = document.getElementById('year-content');
+      year_content.style.display = 'none';
+
+      const year_box = document.getElementById('year');
+      year_box.style.borderColor = '#C4C4C4';
+
+      const year_arrow = document.getElementById('year-arrow');
+      year_arrow.style.borderTopColor = '#C4C4C4';
+
       
+      const season_placeholder_text = document.getElementById('season-placeholder');
+      season_placeholder_text.style.color = '#B6B6B6'; 
       this.seasonPlaceholder = "Select One";
+
+      const year_placeholder_text = document.getElementById('year-placeholder');
+      year_placeholder_text.style.color = '#B6B6B6'; 
       this.yearPlaceholder = (new Date()).getFullYear();
-    },
-    resetDropdown(content_id, box_id, arrow_id) {
-      const content = document.getElementById(content_id);
-      content.style.display = 'none';
-
-      const box = document.getElementById(box_id);
-      box.style.borderColor = '#C4C4C4';
-
-      const arrow = document.getElementById(arrow_id);
-      arrow.style.borderTopColor = '#C4C4C4';
     }
   }
 };

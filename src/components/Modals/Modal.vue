@@ -5,7 +5,7 @@
         <span class="modal-title">{{ title }}</span>
         <img class="modal-exit" src="../../assets/images/x.png" v-on:click="closeCurrentModal" />
       </div>
-      <component class="modal-body" v-bind:is="body" :semesterID="semesterID"></component>
+      <component class="modal-body" v-bind:is="body" :semesterID="semesterID" ref="modalBodyComponent"></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" v-on:click="closeCurrentModal">{{ cancel }}</button>
         <button class="modal-button modal-button--add" v-on:click="addItem">{{ add }}</button>
@@ -72,9 +72,8 @@ export default {
       else {
         modal = document.getElementById(`${this.type}Modal`);
       }
-
       if (this.type == 'semester'){
-        
+        this.$refs.modalBodyComponent.resetDropdowns();
       }
       modal.style.display = 'none';
     },
