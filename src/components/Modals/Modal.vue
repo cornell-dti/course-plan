@@ -77,7 +77,7 @@ export default {
       if (this.type === 'course') {
         this.addCourse();
       } else if (this.type === 'semester') {
-        // TODO: add semester
+        this.addSemester();
       } else {
         // TODO: add custom course
       }
@@ -110,6 +110,14 @@ export default {
 
       // clear input and close modal when complete
       dropdown.value = '';
+      this.closeCurrentModal();
+    },
+    addSemester() {
+      const seasonInput = document.getElementById(`season-placeholder`);
+      const yearInput = document.getElementById(`year-placeholder`);
+
+      this.$parent.addSemester(seasonInput.value, yearInput.value);
+
       this.closeCurrentModal();
     }
   }

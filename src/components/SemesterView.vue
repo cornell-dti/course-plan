@@ -1,13 +1,14 @@
 <template>
   <div class="semesterView">
+    <modal id="semesterModal" class="semester-modal" type="semester" />
     <div><button v-on:click="changeCompact">Change View</button></div>
     <!-- <confirmation text='Added "🌸 Spring 2020" to plan'/> -->
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :exists="true" />
+        <semester v-bind="sem" :isNotSemesterButton="true" />
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :exists="false" />
+        <semester :isNotSemesterButton="false" />
       </div>
     </div>
     <div v-if="compact" class="semesterView-content">
@@ -16,10 +17,10 @@
         v-bind:key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact"
       >
-        <semester v-bind="sem" :exists="true" />
+        <semester v-bind="sem" :isNotSemesterButton="true" />
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :exists="false" :compact="compact" />
+        <semester :isNotSemesterButton="false" :compact="compact" />
       </div>
     </div>
   </div>
@@ -62,10 +63,29 @@ export default {
       return compactSem;
     }
   },
+    mounted() {
+    this.$el.addEventListener('click', this.closeAllModals);
+  },
+
+  beforeDestroy() {
+    this.$el.removeEventListener('click', this.closeAllModals);
+  },
   methods: {
     changeCompact() {
       this.$emit('compact-updated', !this.compact);
-    }
+    },
+    openSemesterModal() {
+      const modal = document.getElementById('semesterModal');
+      modal.style.display = 'block';
+    },
+    closeAllModals(event) {
+      const modals = document.getElementsByClassName('semester-modal');
+      for (let i = 0; i < modals.length; i += 1) {
+        if (event.target === modals[i]) {
+          modals[i].style.display = 'none';
+        }
+      }
+    },
   }
 };
 </script>
@@ -91,4 +111,18 @@ export default {
     }
   }
 }
+/* The Modal (background) */
+.semester-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
 </style>
