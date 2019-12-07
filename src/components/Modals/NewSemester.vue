@@ -39,10 +39,9 @@
 </template>
 
 <script>
-// TODO: gray out initial dropdown options
 export default {
-  data: function() {
-    //years
+  data() {
+    // years
     const currentYear = new Date().getFullYear();
     const years = [];
     let startYear = currentYear - 10;
@@ -53,7 +52,7 @@ export default {
     years.map(String);
 
     return {
-      seasonPlaceholder: "Select One",
+      seasonPlaceholder: 'Select One',
       yearPlaceholder: (new Date()).getFullYear(),
       years
     };
@@ -67,104 +66,77 @@ export default {
     }
   },
   methods: {
+    showHideContent(contentID, boxID, arrowID) {
+      const content = document.getElementById(contentID);
+      const box = document.getElementById(boxID);
+      const arrow = document.getElementById(arrowID);
+
+      const contentShown = content.style.display === 'block';
+
+      if (contentShown) { // clicked box when content shown. So then hide content
+        content.style.display = 'none';
+        box.style.borderColor = '#C4C4C4';
+        arrow.style.borderTopColor = '#C4C4C4';
+      } else {
+        content.style.display = 'block';
+        box.style.borderColor = '#32A0F2';
+        arrow.style.borderTopColor = '#32A0F2';
+      }
+    },
     showHideSeasonContent() {
-      const season_content = document.getElementById('season-content');
-
-      const content_shown = season_content.style.display == 'block';
-      
-      if (content_shown){ //clicked box when content shown. So then hide content
-        season_content.style.display = 'none';
-      }
-
-      else{ //show season content
-      season_content.style.display = 'block';
-      }
-
-      //change input box styling
-      const season_box = document.getElementById('type');
-      season_box.style.borderColor = '#32A0F2';
-
-      const season_arrow = document.getElementById('season-arrow');
-      season_arrow.style.borderTopColor = '#32A0F2';
+      this.showHideContent('season-content', 'type', 'season-arrow');
     },
     showHideYearContent() {
-      const year_content = document.getElementById('year-content');
-      
-      const content_shown = year_content.style.display == 'block';
-      
-      if (content_shown){ //clicked box when content shown. So then hide content
-        year_content.style.display = 'none';
+      this.showHideContent('year-content', 'year', 'year-arrow');
+    },
+    selectOption(isSeasonOption, selectedID, contentID, arrowID, placeholderID) {
+      const selectedOption = document.getElementById(selectedID);
+
+      if (isSeasonOption) {
+        this.seasonPlaceholder = selectedOption.innerText;
+      } else {
+        this.yearPlaceholder = selectedOption.innerText;
       }
 
-      else{ //show year_content 
-      year_content.style.display = 'block';
+      const placeholderText = document.getElementById(placeholderID);
+      placeholderText.style.color = '#757575';
+
+      const arrow = document.getElementById(arrowID);
+      arrow.style.borderTopColor = '#C4C4C4';
+
+      const content = document.getElementById(contentID);
+      content.style.display = 'none';
+    },
+    selectSeason(selectedID) {
+      this.selectOption(true, selectedID, 'season-content', 'season-arrow', 'season-placeholder');
+    },
+    selectYear(selectedID) {
+      this.selectOption(false, selectedID, 'year-content', 'year-arrow', 'year-placeholder');
+    },
+    resetDropdown(isSeasonDropdown, contentID, boxID, arrowID, placeholderID) {
+      const content = document.getElementById(contentID);
+      content.style.display = 'none';
+
+      const box = document.getElementById(boxID);
+      box.style.borderColor = '#C4C4C4';
+
+      const arrow = document.getElementById(arrowID);
+      arrow.style.borderTopColor = '#C4C4C4';
+
+      const placeholderText = document.getElementById(placeholderID);
+      placeholderText.style.color = '#B6B6B6';
+      if (isSeasonDropdown) {
+        this.seasonPlaceholder = 'Select One';
+      } else {
+        this.yearPlaceholder = (new Date()).getFullYear();
       }
-
-      //change input box styling
-      const year_box = document.getElementById('year');
-      year_box.style.borderColor = '#32A0F2';
-
-      const year_arrow = document.getElementById('year-arrow');
-      year_arrow.style.borderTopColor = '#32A0F2';
     },
-    selectSeason(selected_id){
-      const selected_season = document.getElementById(selected_id);
+    resetDropdowns() {
+      // reset season dropdown
+      this.resetDropdown(true, 'season-content', 'type', 'season-arrow', 'season-placeholder');
 
-      this.seasonPlaceholder = selected_season.innerText;
-
-      const season_arrow = document.getElementById('season-arrow');
-      season_arrow.style.borderTopColor = '#C4C4C4';
-
-      const season_placeholder_text = document.getElementById('season-placeholder');
-      season_placeholder_text.style.color = '#757575'; 
-
-      const season_content = document.getElementById('season-content');
-      season_content.style.display = 'none';
-
-    },
-    selectYear(selected_id){
-      const selected_year = document.getElementById(selected_id);
-
-      this.yearPlaceholder = selected_year.innerText;
-
-      const year_arrow = document.getElementById('year-arrow');
-      year_arrow.style.borderTopColor = '#C4C4C4';
-
-      const year_placeholder_text = document.getElementById('year-placeholder');
-      year_placeholder_text.style.color = '#757575'; 
-
-      const year_content = document.getElementById('year-content');
-      year_content.style.display = 'none';
-    },
-    resetDropdowns(){
-      //reset season dropdown
-      const season_content = document.getElementById('season-content');
-      season_content.style.display = 'none';
-
-      const season_box = document.getElementById('type');
-      season_box.style.borderColor = '#C4C4C4';
-
-      const season_arrow = document.getElementById('season-arrow');
-      season_arrow.style.borderTopColor = '#C4C4C4';
-
-      //reset year dropdown
-      const year_content = document.getElementById('year-content');
-      year_content.style.display = 'none';
-
-      const year_box = document.getElementById('year');
-      year_box.style.borderColor = '#C4C4C4';
-
-      const year_arrow = document.getElementById('year-arrow');
-      year_arrow.style.borderTopColor = '#C4C4C4';
-
-      
-      const season_placeholder_text = document.getElementById('season-placeholder');
-      season_placeholder_text.style.color = '#B6B6B6'; 
-      this.seasonPlaceholder = "Select One";
-
-      const year_placeholder_text = document.getElementById('year-placeholder');
-      year_placeholder_text.style.color = '#B6B6B6'; 
-      this.yearPlaceholder = (new Date()).getFullYear();
+      // reset year dropdown
+      this.resetDropdown(false, 'year-content', 'year', 'year-arrow', 'year-placeholder');
     }
   }
 };
@@ -222,7 +194,6 @@ export default {
   }
 
 
-
   &-icon {
     width: 12px;
     height: 12px;
@@ -270,9 +241,9 @@ export default {
           height: 6.24px;
           border-left: 6.24px solid transparent;
           border-right: 6.24px solid transparent;
-          
+
           border-top: 6.24px solid #C4C4C4;
-          
+
           //when clicked border-top-color: #32A0F2;
 
           margin-top: 10.17px;
@@ -280,7 +251,6 @@ export default {
 
           margin-right: 8.7px;
           margin-left: 5px;
-
 
 
       }

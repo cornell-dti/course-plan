@@ -43,6 +43,7 @@ Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
 
 const firebaseConfig = require('@/firebaseConfig.js');
+
 const { auth, userDataCollection } = firebaseConfig;
 
 export default {
@@ -75,7 +76,7 @@ export default {
       return compactSem;
     }
   },
-    mounted() {
+  mounted() {
     this.$el.addEventListener('click', this.closeAllModals);
   },
 
@@ -95,13 +96,12 @@ export default {
       for (let i = 0; i < modals.length; i += 1) {
         if (event.target === modals[i]) {
           modals[i].style.display = 'none';
-          this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns()
+          this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns();
         }
-      
       }
     },
     addSemester(type, year) {
-      let newSem = this.$parent.createSemester([], type, year);
+      const newSem = this.$parent.createSemester([], type, year);
       this.semesters.push(newSem);
       this.addSemesterToFirebase(newSem);
 

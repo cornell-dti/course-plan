@@ -68,11 +68,10 @@ export default {
       let modal;
       if (this.type === 'course') {
         modal = document.getElementById(`${this.type}Modal-${this.semesterID}`);
-      } 
-      else {
+      } else {
         modal = document.getElementById(`${this.type}Modal`);
       }
-      if (this.type == 'semester'){
+      if (this.type === 'semester') {
         this.$refs.modalBodyComponent.resetDropdowns();
       }
       modal.style.display = 'none';
@@ -120,7 +119,7 @@ export default {
       const seasonInput = document.getElementById(`season-placeholder`);
       const yearInput = document.getElementById(`year-placeholder`);
 
-      this.$parent.addSemester(seasonInput.innerHTML.split(" ")[1], parseInt(yearInput.innerHTML));
+      this.$parent.addSemester(seasonInput.innerHTML.split(' ')[1], parseInt(yearInput.innerHTML, 10));
 
       this.closeCurrentModal();
     }

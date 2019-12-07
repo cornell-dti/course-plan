@@ -71,6 +71,7 @@ Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
 
 const firebaseConfig = require('@/firebaseConfig.js');
+
 const { auth, userDataCollection } = firebaseConfig;
 
 export default {

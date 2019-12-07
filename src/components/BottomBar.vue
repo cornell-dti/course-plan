@@ -11,10 +11,10 @@ import BottomBarCourse from '@/components/BottomBarCourse';
 
 Vue.component('bottombarcourse', BottomBarCourse);
 export default {
-    props: {
-        bottom_courses: Array
-    }
-    
+  props: {
+    bottom_courses: Array
+  }
+
 };
 </script>
 
