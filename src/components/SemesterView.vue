@@ -2,7 +2,11 @@
   <div class="semesterView">
     <modal id="semesterModal" class="semester-modal" type="semester" />
     <div><button v-on:click="changeCompact">Change View</button></div>
-    <!-- <confirmation text='Added "🌸 Spring 2020" to plan'/> -->
+    <confirmation
+      :id="'semesterConfirmation'"
+      class="semesterView-confirmation"
+      :text="confirmationText"
+    />
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
         <semester v-bind="sem" :isNotSemesterButton="true" />
@@ -30,13 +34,13 @@
 import Vue from 'vue';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
-// import Confirmation from '@/components/Confirmation';
+import Confirmation from '@/components/Confirmation';
 
 const clone = require('clone');
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
-// Vue.component('confirmation', Confirmation);
+Vue.component('confirmation', Confirmation);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 const { auth, userDataCollection } = firebaseConfig;
@@ -45,6 +49,11 @@ export default {
   props: {
     semesters: Array,
     compact: Boolean
+  },
+  data() {
+    return {
+      confirmationText: ''
+    };
   },
   computed: {
     // Duplicate the semesters array, but set the compact boolean to true
@@ -93,6 +102,14 @@ export default {
       let newSem = this.$parent.createSemester([], type, year);
       this.semesters.push(newSem);
       this.addSemesterToFirebase(newSem);
+
+      this.confirmationText = `Added "${type} ${year}" to plan`;
+      const confirmationModal = document.getElementById(`semesterConfirmation`);
+      confirmationModal.style.display = 'flex';
+
+      setTimeout(() => {
+        confirmationModal.style.display = 'none';
+      }, 3000);
     },
     addSemesterToFirebase(sem) {
       const user = auth.currentUser;
@@ -141,6 +158,10 @@ export default {
     &--compact {
       flex-basis: 25%;
     }
+  }
+
+  &-confirmation {
+    display: none;
   }
 }
 /* The Modal (background) */

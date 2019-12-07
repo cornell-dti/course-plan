@@ -4,7 +4,6 @@
     v-bind:class="{ 'semester--min': !isNotSemesterButton, 'semester--compact': compact }"
     v-bind:id="id"
   >
-    <!-- TODO: Remove semesterModal from semester and move to semesterview -->
     <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" />
     <confirmation
       :id="'confirmation-' + id"
