@@ -72,7 +72,6 @@ Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
 
 const firebaseConfig = require('@/firebaseConfig.js');
-
 const { auth, userDataCollection } = firebaseConfig;
 
 export default {
@@ -127,7 +126,7 @@ export default {
     addCourse(data) {
       const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
-      this.addToFirebase(newCourse);
+      this.addCourseToFirebase(newCourse);
 
       // Set text and display confirmation modal, then have it disappear after 3 seconds
 
@@ -139,7 +138,7 @@ export default {
         confirmationModal.style.display = 'none';
       }, 3000);
     },
-    addToFirebase(course) {
+    addCourseToFirebase(course) {
       const firebaseCourse = {
         catalogWhenOffered: `${this.createSemesterString(course.semesters)}.`,
         code: `${course.subject} ${course.code}`,

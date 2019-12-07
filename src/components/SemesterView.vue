@@ -38,6 +38,9 @@ Vue.component('course', Course);
 Vue.component('semester', Semester);
 // Vue.component('confirmation', Confirmation);
 
+const firebaseConfig = require('@/firebaseConfig.js');
+const { auth, userDataCollection } = firebaseConfig;
+
 export default {
   props: {
     semesters: Array,
@@ -86,6 +89,35 @@ export default {
         }
       }
     },
+    addSemester(type, year) {
+      let newSem = this.$parent.createSemester([], type, year);
+      this.semesters.push(newSem);
+      this.addSemesterToFirebase(newSem);
+    },
+    addSemesterToFirebase(sem) {
+      const user = auth.currentUser;
+      const userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+
+      // TODO: error handling if user not found or some firebase error
+      docRef
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            const { semesters } = doc.data();
+            semesters.push(sem);
+            docRef.update({
+              semesters
+            });
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No such document!');
+          }
+        })
+        .catch(error => {
+          console.log('Error getting document:', error);
+        });
+    }
   }
 };
 </script>

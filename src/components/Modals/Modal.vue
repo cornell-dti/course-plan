@@ -121,7 +121,7 @@ export default {
       const seasonInput = document.getElementById(`season-placeholder`);
       const yearInput = document.getElementById(`year-placeholder`);
 
-      this.$parent.addSemester(seasonInput.value, yearInput.value);
+      this.$parent.addSemester(seasonInput.innerHTML.split(" ")[1], parseInt(yearInput.innerHTML));
 
       this.closeCurrentModal();
     }
