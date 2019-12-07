@@ -134,7 +134,14 @@ export default {
     },
 
     semesterString() {
-      return this.$parent.createSemesterString(this.semesters);
+      let semesterString = '';
+      this.semesters.forEach(semester => {
+        semesterString += `${semester}, `;
+      });
+      if (semesterString.length > 0) {
+        return semesterString.substring(0, semesterString.length - 2);
+      }
+      return semesterString;
     },
 
     creditString() {

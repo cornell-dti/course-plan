@@ -21,16 +21,26 @@
           <div class="col">
             <button v-bind:class="{ active: isActive(0) }" @click="activate(actives)" class="btn">
               <div  class="tab-div">
+<<<<<<< HEAD
                 <p v-bind:class="{ active: isActive(0)  }" class="major">Computer Science</p> 
                 <p v-bind:class="{ active: isActive(0) }" class="major-college">(Arts and Science)</p>
+=======
+              <p v-bind:class="{ active: isActive[0] }" class="major">Computer Science</p>
+              <p v-bind:class="{ active: isActive [0]}" class="major-college">(Arts and Science)</p>
+>>>>>>> ca0f589e7b24b5fdca9a1b740e210bce0f61d764
               </div>
             </button>
           </div>
           <div class="col">
             <button v-bind:class="{ active: isActive(1) }" @click="activate(actives)" class="btn">
               <div class="tab-div">
+<<<<<<< HEAD
               <p v-bind:class="{ active: actives[1]}" class="major">Information Science</p> 
               <p v-bind:class="{ active: actives[1] }"  class="major-college">Engineering</p>
+=======
+              <p v-bind:class="{ active: isActive [1]}" class="major">Information Science</p>
+              <p v-bind:class="{ active: isActive[1] }"  class="major-college">Engineering</p>
+>>>>>>> ca0f589e7b24b5fdca9a1b740e210bce0f61d764
               </div>
             </button>
           </div>
@@ -72,7 +82,7 @@
       <div v-if="req.displayDetails">
         <div class="row  top">
           <p class="sub-title col p-0">In-Depth College Requirement</p>
-         
+
         </div>
         <div
           v-for="(subReq, id) in req.ongoing"
@@ -391,7 +401,7 @@ export default {
 }
 .btn {
   padding: 0px;
-  margin: 5px;
+  margin: -4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -404,7 +414,7 @@ export default {
 }
 .sub-req-div{
   padding-left: 30px;
-  
+
 }
 
 h1.title {
