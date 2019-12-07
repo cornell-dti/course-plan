@@ -21,7 +21,7 @@
           <div class="col">
             <button v-bind:class="{ active: isActive[0] }" v-on:click="activate(index, true, isActive)" class="btn">
               <div  class="tab-div">
-              <p v-bind:class="{ active: isActive[0] }" class="major">Computer Science</p> 
+              <p v-bind:class="{ active: isActive[0] }" class="major">Computer Science</p>
               <p v-bind:class="{ active: isActive [0]}" class="major-college">(Arts and Science)</p>
               </div>
             </button>
@@ -29,7 +29,7 @@
           <div class="col">
             <button v-bind:class="{ active: isActive[1] }" v-on:click="activate(index, true, isActive)" class="btn">
               <div class="tab-div">
-              <p v-bind:class="{ active: isActive [1]}" class="major">Information Science</p> 
+              <p v-bind:class="{ active: isActive [1]}" class="major">Information Science</p>
               <p v-bind:class="{ active: isActive[1] }"  class="major-college">Engineering</p>
               </div>
             </button>
@@ -72,7 +72,7 @@
       <div v-if="req.displayDetails">
         <div class="row- top">
           <p class="sub-title col p-0">In-Depth College Requirement</p>
-         
+
         </div>
         <div
           v-for="(subReq, id) in req.ongoing"
@@ -378,7 +378,7 @@ export default {
 }
 .btn {
   padding: 0px;
-  margin: 5px;
+  margin: -4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -391,7 +391,7 @@ export default {
 }
 .sub-req-div{
   padding-left: 30px;
-  
+
 }
 
 h1.title {
