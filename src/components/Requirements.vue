@@ -19,15 +19,19 @@
       <div class="tab" v-if="req.type === 'MAJOR'">
         <div class="row">
           <div class="col">
-            <button v-bind:class="{ active: isActive }" @click="isActive = !isActive" class="btn">
-              <p v-bind:class="{ active: isActive }" class="major">Computer Science</p>
-              <p v-bind:class="{ active: isActive }" class="major-college">(Arts and Science)</p>
+            <button v-bind:class="{ active: isActive[0] }" v-on:click="activate(index, true, isActive)" class="btn">
+              <div  class="tab-div">
+              <p v-bind:class="{ active: isActive[0] }" class="major">Computer Science</p> 
+              <p v-bind:class="{ active: isActive [0]}" class="major-college">(Arts and Science)</p>
+              </div>
             </button>
           </div>
           <div class="col">
-            <button class="btn">
-              <p class="major">Information Science</p>
-              <p class="major-college">Engineering</p>
+            <button v-bind:class="{ active: isActive[1] }" v-on:click="activate(index, true, isActive)" class="btn">
+              <div class="tab-div">
+              <p v-bind:class="{ active: isActive [1]}" class="major">Information Science</p> 
+              <p v-bind:class="{ active: isActive[1] }"  class="major-college">Engineering</p>
+              </div>
             </button>
           </div>
         </div>
@@ -48,8 +52,8 @@
 
       <!--View more college requirements -->
       <div class="row top">
-        <div class="col-1 text-left ">
-          <button class="btn" v-on:click="turnDetails(index, true)" style="color:#1AA9A5;">
+        <div class="col-1 text-left p-0" >
+          <button v-bind:style="{ 'color': req.color }" class="btn" v-on:click="turnDetails(index, true)" style="color:#1AA9A5;">
             <!-- svg for dropdown icon -->
             <img
               class="setting"
@@ -59,8 +63,8 @@
             />
           </button>
         </div>
-         <div class="col text-center ">
-          <p class=" req-name" style="color:#1AA9A5;">VIEW ALL {{ req.type }} REQUIREMENTS</p>
+         <div class="col text-center p-0 ">
+          <p class=" req-name" v-bind:style="{ 'color': req.color }" >VIEW ALL {{ req.type }} REQUIREMENTS</p>
         </div>
       </div>
 
@@ -68,12 +72,7 @@
       <div v-if="req.displayDetails">
         <div class="row- top">
           <p class="sub-title col p-0">In-Depth College Requirement</p>
-          <div class="col-1 text-right p-0">
-            <button class="btn" v-on:click="turnDetails(index, true)">
-              <!-- svg for settings icon -->
-              <img class="settings" src="../assets/images/x.png" />
-            </button>
-          </div>
+         
         </div>
         <div
           v-for="(subReq, id) in req.ongoing"
@@ -81,8 +80,8 @@
           class="semesterView-wrapper"
         >
           <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
-          <div class="row top middle">
-            <div class="col-1 middle text-left p-0">
+          <div class="row top ">
+            <div class="col-1 text-left p-0">
               <button class="btn" v-on:click="turnSubDetails(index, id, true)">
                 <!-- svg for dropdown icon -->
                 <img
@@ -93,13 +92,15 @@
                 />
               </button>
             </div>
-            <div class="coltext-left p-0">
+            <div class="col  p-0">
               <p class="sup-req">{{subReq.name}}</p>
+            </div>
+            <div class="col text-left p-0">
               <p class="sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
 
-          <div v-if="subReq.display">
+          <div class="sub-req-div" v-if="subReq.display">
             <div>
               <p>Additional Courses</p>
               <ul class="striped-list">
@@ -197,7 +198,7 @@ export default {
   data() {
     const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
-      isActive: false,
+      isActive: [true,false],
       modalShow: false,
       reqs: [
         {
@@ -360,6 +361,11 @@ export default {
 
     turnCompleted(index, bool) {
       this.reqs[index].displayCompleted = bool;
+    },
+
+    activate(index, bool, isActive){
+        isActive[0] = !isActive[0] ;
+        isActive[1] = !isActive[1] ;
     }
   }
 };
@@ -371,7 +377,8 @@ export default {
 
 }
 .btn {
-  padding: 0;
+  padding: 0px;
+  margin: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -381,6 +388,10 @@ export default {
   width: 400px;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: white;
+}
+.sub-req-div{
+  padding-left: 30px;
+  
 }
 
 h1.title {
@@ -430,11 +441,14 @@ h1.title {
     color: #000000;
   }
 }
-
+.tab-div{
+  padding:1px;
+}
 button.active {
   color: #508197;
   border-bottom: solid 10px #508197;
-  padding-bottom: 5px;
+  padding-bottom: 2px;
+  margin: 5px;
 }
 p.active {
   color: #508197;
@@ -538,6 +552,7 @@ button.view {
   &-name {
     font-size: 14px;
     line-height: 17px;
+    margin:0px
   }
 
   &-progress {
