@@ -60,18 +60,8 @@ export default {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters);
           } else {
-            // Create a new document for new users
-            // TODO: after letting users add semesters, do not add one at start
-            const semesters = [
-              {
-                courses: [],
-                type: 'Fall',
-                year: 2018
-              }
-            ];
-            this.semesters = semesters;
             docRef.set({
-              semesters
+              semesters: []
             });
           }
         })
