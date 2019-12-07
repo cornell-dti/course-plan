@@ -68,8 +68,13 @@ export default {
       let modal;
       if (this.type === 'course') {
         modal = document.getElementById(`${this.type}Modal-${this.semesterID}`);
-      } else {
+      } 
+      else {
         modal = document.getElementById(`${this.type}Modal`);
+      }
+
+      if (this.type == 'semester'){
+        
       }
       modal.style.display = 'none';
     },

@@ -135,6 +135,26 @@ export default {
 
       const year_content = document.getElementById('year-content');
       year_content.style.display = 'none';
+    },
+    resetDropdowns(){
+      //reset season dropdown
+      resetDropdown('season-content', 'type', 'season-arrow');
+
+      //reset year dropdown
+      resetDropdown('year-content', 'year', 'year-arrow');
+      
+      this.seasonPlaceholder = "Select One";
+      this.yearPlaceholder = (new Date()).getFullYear();
+    },
+    resetDropdown(content_id, box_id, arrow_id) {
+      const content = document.getElementById(content_id);
+      content.style.display = 'none';
+
+      const box = document.getElementById(box_id);
+      box.style.borderColor = '#C4C4C4';
+
+      const arrow = document.getElementById(arrow_id);
+      arrow.style.borderTopColor = '#C4C4C4';
     }
   }
 };
