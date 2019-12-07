@@ -119,42 +119,6 @@ export default {
         requirementsMap: courseMap
       };
 
-<<<<<<< HEAD
-      return semesters;
-    },
-    semesters2() {
-      const courseMap = new Map();
-      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
-      courseMap.set('CA', ['CS 2110']);
-      const course = {
-        subject: 'PHIL',
-        code: 1100,
-        name: 'Introduction to Philosophy',
-        credits: 0,
-        semesters: ['Fall', 'Spring'],
-        color: '2BBCC6',
-        check: true,
-        requirementsMap: courseMap
-      };
-      const semester1 = {
-        id: 1,
-        name: '',
-        courses: [course, course]
-      };
-      const semester2 = {
-        id: 2,
-        name: '',
-        courses: [course, course, course]
-      };
-      const semester3 = {
-        id: 3,
-        name: '',
-        courses: [course]
-      };
-      const semesters = [semester1];
-
-      return semesters;
-=======
       return newCourse;
     },
     createSemester(courses, type, year) {
@@ -166,7 +130,6 @@ export default {
       };
       this.currSemID += 1;
       return semester;
->>>>>>> 601d0ed04c9f08f6fb4f2c216000e7269d882874
     }
   }
 };

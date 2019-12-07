@@ -48,7 +48,7 @@
 
       <!--View more college requirements -->
       <div class="row top">
-        <div class="col-1 text-left p-0">
+        <div class="col-1 text-left ">
           <button class="btn" v-on:click="turnDetails(index, true)" style="color:#1AA9A5;">
             <!-- svg for dropdown icon -->
             <img
@@ -59,12 +59,14 @@
             />
           </button>
         </div>
-        <p class="col req-name" style="color:#1AA9A5;">VIEW ALL {{ req.type }} REQUIREMENTS</p>
+         <div class="col text-center ">
+          <p class=" req-name" style="color:#1AA9A5;">VIEW ALL {{ req.type }} REQUIREMENTS</p>
+        </div>
       </div>
 
       <!--Show more of completed requirements -->
       <div v-if="req.displayDetails">
-        <div class="row top">
+        <div class="row- top">
           <p class="sub-title col p-0">In-Depth College Requirement</p>
           <div class="col-1 text-right p-0">
             <button class="btn" v-on:click="turnDetails(index, true)">
@@ -79,8 +81,8 @@
           class="semesterView-wrapper"
         >
           <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
-          <div class="row top">
-            <div class="col-1 text-left p-0">
+          <div class="row top middle">
+            <div class="col-1 middle text-left p-0">
               <button class="btn" v-on:click="turnSubDetails(index, id, true)">
                 <!-- svg for dropdown icon -->
                 <img
@@ -91,8 +93,10 @@
                 />
               </button>
             </div>
-            <p class="col sup-req">{{subReq.name}}</p>
-            <p class="col sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
+            <div class="coltext-left p-0">
+              <p class="sup-req">{{subReq.name}}</p>
+              <p class="sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
+            </div>
           </div>
 
           <div v-if="subReq.display">
@@ -171,13 +175,13 @@
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
+import {  Vue } from 'vue-property-decorator';
 import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
 import Semester from '@/components/Semester';
 
-const clone = require('clone');
+
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -362,8 +366,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.divide{
+
+}
 .btn {
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .requirements {
@@ -383,6 +394,12 @@ h1.title {
 
 .top {
   margin: 1.5rem 0 1rem 0;
+}
+
+.middle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .name {
