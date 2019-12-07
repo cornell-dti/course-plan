@@ -30,13 +30,12 @@
 
 <script>
 import Vue from 'vue';
+import firebase from 'firebase';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
-import firebase from 'firebase';
 // import Confirmation from '@/components/Confirmation';
 
 const clone = require('clone');
-const fb = require('@/firebaseConfig.js')
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
@@ -72,11 +71,11 @@ export default {
       this.$emit('compact-updated', !this.compact);
     },
     logout() {
-      const self = this;
       firebase.auth().signOut().then(() => {
         window.location.reload(false);
-      }, function(error) {
+      }, error => {
         // TODO: error
+        console.log(error);
       });
     }
   }
