@@ -2,7 +2,11 @@
   <div class="newSemester">
     <div class="newSemester-section newSemester-type">
       <label class="newSemester-label" for="type">{{ typeText }}</label>
-      <div class="newSemester-select" id="type">
+      <div
+        class="newSemester-select"
+        id="type"
+        v-bind:style="{ borderColor: displayOptions.season.boxBorder }"
+      >
         <div
           class="newSemester-dropdown-placeholder season-wrapper"
           v-on:click="showHideSeasonContent"
@@ -15,7 +19,7 @@
         <div
           class="newSemester-dropdown-content season-content"
           id="season-content"
-          v-if="displayContent.season"
+          v-if="displayOptions.season.shown"
         >
           <div
             class="newSemester-dropdown-content-item"
@@ -50,7 +54,11 @@
     </div>
     <div class="newSemester-section newSemester-year">
       <label class="newSemester-label" for="year">{{ yearText }}</label>
-      <div class="newSemester-select" id="year">
+      <div
+        class="newSemester-select"
+        id="year"
+        v-bind:style="{ borderColor: displayOptions.year.boxBorder }"
+      >
         <div class="newSemester-dropdown-placeholder year-wrapper" v-on:click="showHideYearContent">
           <div class="newSemester-dropdown-placeholder year-placeholder" id="year-placeholder">
             {{ yearPlaceholder }}
@@ -60,7 +68,7 @@
         <div
           class="newSemester-dropdown-content year-content"
           id="year-content"
-          v-if="displayContent.year"
+          v-if="displayOptions.year.shown"
         >
           <div
             v-for="year in years"
@@ -94,9 +102,15 @@ export default {
       seasonPlaceholder: 'Select One',
       yearPlaceholder: new Date().getFullYear(),
       years,
-      displayContent: {
-        season: false,
-        year: false
+      displayOptions: {
+        season: {
+          shown: false,
+          boxBorder: ''
+        },
+        year: {
+          shown: false,
+          boxBorder: ''
+        }
       }
     };
   },
@@ -109,27 +123,27 @@ export default {
     }
   },
   methods: {
-    showHideContent(contentID, boxID, arrowID) {
-      const box = document.getElementById(boxID);
+    showHideContent(contentID, arrowID) {
       const arrow = document.getElementById(arrowID);
 
-      const contentShown = this.displayContent[contentID];
-      this.displayContent[contentID] = !contentShown;
+      const displayOptions = this.displayOptions[contentID];
+      const contentShown = displayOptions.shown;
+      displayOptions.shown = !contentShown;
 
       if (contentShown) {
         // clicked box when content shown. So then hide content
-        box.style.borderColor = '#C4C4C4';
+        displayOptions.boxBorder = '#C4C4C4';
         arrow.style.borderTopColor = '#C4C4C4';
       } else {
-        box.style.borderColor = '#32A0F2';
+        displayOptions.boxBorder = '#32A0F2';
         arrow.style.borderTopColor = '#32A0F2';
       }
     },
     showHideSeasonContent() {
-      this.showHideContent('season', 'type', 'season-arrow');
+      this.showHideContent('season', 'season-arrow');
     },
     showHideYearContent() {
-      this.showHideContent('year', 'year', 'year-arrow');
+      this.showHideContent('year', 'year-arrow');
     },
     selectOption(isSeasonOption, selectedID, contentID, arrowID, placeholderID) {
       const selectedOption = document.getElementById(selectedID);
@@ -146,21 +160,22 @@ export default {
       const arrow = document.getElementById(arrowID);
       arrow.style.borderTopColor = '#C4C4C4';
 
-      const content = document.getElementById(contentID);
-      content.style.display = 'none';
+      this.displayOptions[contentID].shown = false;
     },
     selectSeason(selectedID) {
-      this.selectOption(true, selectedID, 'season-content', 'season-arrow', 'season-placeholder');
+      this.selectOption(true, selectedID, 'season', 'season-arrow', 'season-placeholder');
     },
     selectYear(selectedID) {
-      this.selectOption(false, selectedID, 'year-content', 'year-arrow', 'year-placeholder');
+      this.selectOption(false, selectedID, 'year', 'year-arrow', 'year-placeholder');
     },
-    resetDropdown(isSeasonDropdown, contentID, boxID, arrowID, placeholderID) {
-      const content = document.getElementById(contentID);
-      content.style.display = 'none';
-
-      const box = document.getElementById(boxID);
-      box.style.borderColor = '#C4C4C4';
+    resetDropdown(isSeasonDropdown, boxID, arrowID, placeholderID) {
+      if (isSeasonDropdown) {
+        this.displayOptions.season.shown = false;
+        this.displayOptions.season.boxBorder = '#C4C4C4';
+      } else {
+        this.displayOptions.year.shown = false;
+        this.displayOptions.year.boxBorder = '#C4C4C4';
+      }
 
       const arrow = document.getElementById(arrowID);
       arrow.style.borderTopColor = '#C4C4C4';
@@ -175,10 +190,10 @@ export default {
     },
     resetDropdowns() {
       // reset season dropdown
-      this.resetDropdown(true, 'season-content', 'type', 'season-arrow', 'season-placeholder');
+      this.resetDropdown(true, 'season-arrow', 'season-placeholder');
 
       // reset year dropdown
-      this.resetDropdown(false, 'year-content', 'year', 'year-arrow', 'year-placeholder');
+      this.resetDropdown(false, 'year-arrow', 'year-placeholder');
     }
   }
 };
