@@ -86,16 +86,16 @@
                 />
               </button>
             </div>
-            <div class="col middle p-0">
+            <div class="col middle  p-0">
               <p class="sup-req">{{subReq.name}}</p>
             </div>
-            <div class="col middle p-0">
+            <div class="col  middle p-0">
               <p class="sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
-
+   
           <div class="sub-req-div" v-if="subReq.display">
-            <div>
+            <div >
               <p>Additional Courses</p>
               <ul class="striped-list">
                 <li
@@ -115,7 +115,7 @@
               </ul>
             </div>
             <p>Classes to Fullfill Requirements</p>
-            <div class="row">
+            <div class="row fuffill">
               <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
                 <course
                   v-bind="courses"
@@ -384,6 +384,7 @@ export default {
     display: flex;
     justify-content: center;
 }
+
 .btn {
   padding: 10px;
 
@@ -408,7 +409,11 @@ export default {
   padding-left: 30px;
   margin :0px;
   
+}
 
+p.sub-req{
+  padding-left: 30px;
+  margin: 0px
 }
 
 h1.title {
@@ -492,6 +497,10 @@ ul.striped-list > li {
   border-bottom-style: rgba(196, 196, 196, 0.4);
   border-block-color: rgba(196, 196, 196, 0.4);
   color: #757575;
+}
+.fuffill{
+  padding: 20px;
+  padding-left: 0px;
 }
 
 button.view {
@@ -598,6 +607,7 @@ button.view {
 }
 
 .separator {
+
   height: 1px;
   width: 100%;
   background-color: #d7d7d7;
