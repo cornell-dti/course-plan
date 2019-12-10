@@ -30,32 +30,13 @@
           v-if="displayOptions.season.shown"
         >
           <div
+            v-for="season in seasons"
+            :key="season"
+            :id="season"
             class="newSemester-dropdown-content-item"
-            id="fall"
-            v-on:click="selectSeason('fall')"
+            v-on:click="selectSeason(season)"
           >
-            🍂 Fall
-          </div>
-          <div
-            class="newSemester-dropdown-content-item"
-            id="spring"
-            v-on:click="selectSeason('spring')"
-          >
-            🌸 Spring
-          </div>
-          <div
-            class="newSemester-dropdown-content-item"
-            id="summer"
-            v-on:click="selectSeason('summer')"
-          >
-            ☀️ Summer
-          </div>
-          <div
-            class="newSemester-dropdown-content-item"
-            id="winter"
-            v-on:click="selectSeason('winter')"
-          >
-            ❄️ Winter
+            {{ season }}
           </div>
         </div>
       </div>
@@ -106,6 +87,7 @@ export default {
   data() {
     // years
     const currentYear = new Date().getFullYear();
+    const seasons = ['🍂 Fall', '🌸 Spring', '☀️ Summer', '❄️ Winter'];
     const years = [];
     let startYear = currentYear - 10;
     while (startYear <= currentYear + 10) {
@@ -117,6 +99,7 @@ export default {
     return {
       seasonPlaceholder: 'Select One',
       yearPlaceholder: new Date().getFullYear(),
+      seasons,
       years,
       displayOptions: {
         season: {
@@ -163,25 +146,23 @@ export default {
     showHideYearContent() {
       this.showHideContent('year');
     },
-    selectOption(isSeasonOption, selectedID, contentID) {
-      const selectedOption = document.getElementById(selectedID);
-
+    selectOption(isSeasonOption, text) {
       if (isSeasonOption) {
-        this.seasonPlaceholder = selectedOption.innerText;
+        this.seasonPlaceholder = text;
       } else {
-        this.yearPlaceholder = selectedOption.innerText;
+        this.yearPlaceholder = text;
       }
-
+      const contentID = isSeasonOption ? 'season' : 'year';
       const displayOptions = this.displayOptions[contentID];
       displayOptions.shown = false;
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
     },
-    selectSeason(selectedID) {
-      this.selectOption(true, selectedID, 'season');
+    selectSeason(text) {
+      this.selectOption(true, text);
     },
-    selectYear(selectedID) {
-      this.selectOption(false, selectedID, 'year');
+    selectYear(text) {
+      this.selectOption(false, text);
     },
     resetDropdown(isSeasonDropdown) {
       if (isSeasonDropdown) {
