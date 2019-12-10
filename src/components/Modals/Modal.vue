@@ -5,7 +5,7 @@
         <span class="modal-title">{{ title }}</span>
         <img class="modal-exit" src="../../assets/images/x.png" v-on:click="closeCurrentModal" />
       </div>
-      <component class="modal-body" v-bind:is="body" :semesterID="semesterID"></component>
+      <component class="modal-body" v-bind:is="body" :semesterID="semesterID" ref="modalBodyComponent"></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" v-on:click="closeCurrentModal">{{ cancel }}</button>
         <button class="modal-button modal-button--add" v-on:click="addItem">{{ add }}</button>
@@ -71,13 +71,16 @@ export default {
       } else {
         modal = document.getElementById(`${this.type}Modal`);
       }
+      if (this.type === 'semester') {
+        this.$refs.modalBodyComponent.resetDropdowns();
+      }
       modal.style.display = 'none';
     },
     addItem() {
       if (this.type === 'course') {
         this.addCourse();
       } else if (this.type === 'semester') {
-        // TODO: add semester
+        this.addSemester();
       } else {
         // TODO: add custom course
       }
@@ -110,6 +113,14 @@ export default {
 
       // clear input and close modal when complete
       dropdown.value = '';
+      this.closeCurrentModal();
+    },
+    addSemester() {
+      const seasonInput = document.getElementById(`season-placeholder`);
+      const yearInput = document.getElementById(`year-placeholder`);
+
+      this.$parent.addSemester(seasonInput.innerHTML.trim(' ').split(' ')[1], parseInt(yearInput.innerHTML, 10));
+
       this.closeCurrentModal();
     }
   }

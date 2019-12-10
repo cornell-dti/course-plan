@@ -1,5 +1,6 @@
 <template>
   <div id="dashboard">
+<<<<<<< HEAD
      <requirements :semesters="semesters" :compact="compactVal" />
     <semesterview
       :semesters="semesters"
@@ -7,6 +8,19 @@
       @compact-updated="compactVal = $event"
     />
    
+=======
+    <div id="dashboard-mainView">
+      <semesterview
+        :semesters="semesters"
+        :compact="compactVal"
+        @compact-updated="compactVal = $event"
+      />
+      <requirements />
+    </div>
+    <div id="dashboard-bottomView">
+      <bottombar />
+    </div>
+>>>>>>> af608c1cbe5b6ddaf82ea2d3ccfe27a11586ced8
   </div>
 </template>
 
@@ -16,18 +30,23 @@ import Vue from 'vue';
 import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
+import BottomBar from '@/components/BottomBar';
 
 import '@/vueDragulaConfig';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
+Vue.component('bottombar', BottomBar);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
 const { auth, userDataCollection } = firebaseConfig;
 
 export default {
+  props: {
+    bottom_courses: Array
+  },
   data() {
     return {
       compactVal: false,
@@ -51,18 +70,8 @@ export default {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters);
           } else {
-            // Create a new document for new users
-            // TODO: after letting users add semesters, do not add one at start
-            const semesters = [
-              {
-                courses: [],
-                type: 'Fall',
-                year: 2018
-              }
-            ];
-            this.semesters = semesters;
             docRef.set({
-              semesters
+              semesters: []
             });
           }
         })
@@ -138,6 +147,10 @@ export default {
 
 <style scoped lang="scss">
 #dashboard {
+  display: flex;
+  flex-direction: column;
+}
+#dashboard-mainView {
   display: flex;
   justify-content: space-between;
 }

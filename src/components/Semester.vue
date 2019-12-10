@@ -1,18 +1,16 @@
 <template>
   <div
     class="semester"
-    v-bind:class="{ 'semester--min': !exists, 'semester--compact': compact }"
+    v-bind:class="{ 'semester--min': !isNotSemesterButton, 'semester--compact': compact }"
     v-bind:id="id"
   >
-    <!-- TODO: Remove semesterModal from semester and move to semesterview -->
     <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" />
     <confirmation
       :id="'confirmation-' + id"
       class="semester-confirmation"
       :text="confirmationText"
     />
-    <modal id="semesterModal" class="semester-modal" type="semester" />
-    <div v-if="exists" class="semester-content">
+    <div v-if="isNotSemesterButton" class="semester-content">
       <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
         <div class="semester-left" v-bind:class="{ 'semester-left--compact': compact }">
           <span class="semester-name">{{ type }} {{ year }}</span>
@@ -46,7 +44,8 @@
         </div>
       </div>
     </div>
-    <div v-if="!exists" class="semester-empty" v-on:click="openSemesterModal">
+    <div v-if="!isNotSemesterButton" class="semester-empty" v-on:click="openSemesterModal">
+
       <div
         class="semester-semesterWrapper"
         v-bind:class="{ 'semester-semesterWrapper--compact': compact }"
@@ -87,17 +86,9 @@ export default {
     type: String,
     year: Number,
     courses: Array,
-    exists: Boolean,
+    isNotSemesterButton: Boolean,
     compact: Boolean
   },
-  mounted() {
-    this.$el.addEventListener('click', this.closeAllModals);
-  },
-
-  beforeDestroy() {
-    this.$el.removeEventListener('click', this.closeAllModals);
-  },
-
   computed: {
     // TODO: calculate credits from all classes
     creditString() {
@@ -125,29 +116,17 @@ export default {
       }
       return semesterString;
     },
-    printArrayLength() {
-      // console.log(this.courses.length);
-    },
     openCourseModal() {
       const modal = document.getElementById(`courseModal-${this.id}`);
       modal.style.display = 'block';
     },
     openSemesterModal() {
-      const modal = document.getElementById('semesterModal');
-      modal.style.display = 'block';
-    },
-    closeAllModals(event) {
-      const modals = document.getElementsByClassName('semester-modal');
-      for (let i = 0; i < modals.length; i += 1) {
-        if (event.target === modals[i]) {
-          modals[i].style.display = 'none';
-        }
-      }
+      this.$parent.openSemesterModal();
     },
     addCourse(data) {
       const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
-      this.addToFirebase(newCourse);
+      this.addCourseToFirebase(newCourse);
 
       // Set text and display confirmation modal, then have it disappear after 3 seconds
 
@@ -159,7 +138,7 @@ export default {
         confirmationModal.style.display = 'none';
       }, 3000);
     },
-    addToFirebase(course) {
+    addCourseToFirebase(course) {
       const firebaseCourse = {
         catalogWhenOffered: `${this.createSemesterString(course.semesters)}.`,
         code: `${course.subject} ${course.code}`,
