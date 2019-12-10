@@ -73,6 +73,8 @@ export default {
           match.forEach(newTitle => {
             /* check if the item starts with the same letters as the text field value: */
             /* create a DIV element for each matching element: */
+            /* reinitialize b for every input div */
+            let b;
             b = document.createElement('DIV');
             /* make the matching letters bold: */
             b.innerHTML = newTitle;
