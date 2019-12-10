@@ -1,16 +1,16 @@
 <template>
-    <div class="bottombarcourse">
+    <div class="bottombar">
       <!-- have course square with just course subject and course code -->
-      <div class="bottombarcourse-square">
-        <span class="bottombarcourse-square-title">{{subject}} {{code}}</span>
-        <img class="bottombarcourse-square-exit" src="../assets/images/x.png"/>
+      <div class="bottombar-title">
+        <span class="bottombar-square-title">{{subject}} {{code}}</span>
+        <img class="bottombar-square-exit" src="../assets/images/x.png"/>
       </div>
 
       <!-- v-if: isPreview. have course bar -->
-      <div class="bottombarcourse-bar">
-        <span class="bottombarcourse-bar-title">{{name}}</span>
-        <div class="bottombarcourse-bar-planSelect">
-          <div class="bottombarcourse-bar-planSelect-label">
+      <div class="bottombar-bar">
+        <span class="bottombar-bar-title">{{name}}</span>
+        <div class="bottombar-bar-planSelect">
+          <div class="bottombar-bar-planSelect-label">
           </div>
         </div>
       </div>
@@ -48,4 +48,11 @@ export default {
 
 <style scoped lang="scss">
 
+  .bottombar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+  }
 </style>
