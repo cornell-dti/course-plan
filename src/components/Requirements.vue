@@ -116,6 +116,7 @@
             </div>
             <p>Classes to Fullfill Requirements</p>
             <div class="row fuffill">
+           
               <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
                 <course
                   v-bind="courses"

@@ -1,26 +1,16 @@
 <template>
   <div id="dashboard">
-<<<<<<< HEAD
-     <requirements :semesters="semesters" :compact="compactVal" />
-    <semesterview
-      :semesters="semesters"
-      :compact="compactVal"
-      @compact-updated="compactVal = $event"
-    />
-   
-=======
     <div id="dashboard-mainView">
       <semesterview
         :semesters="semesters"
         :compact="compactVal"
         @compact-updated="compactVal = $event"
       />
-      <requirements />
+      <requirements :semesters="semesters" />
     </div>
     <div id="dashboard-bottomView">
       <bottombar />
     </div>
->>>>>>> af608c1cbe5b6ddaf82ea2d3ccfe27a11586ced8
   </div>
 </template>
 
