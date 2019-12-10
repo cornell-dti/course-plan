@@ -14,7 +14,7 @@
           <div
             class="newSemester-dropdown-placeholder season-placeholder"
             id="season-placeholder"
-            v-bind:style="{ borderTopColor: displayOptions.season.placeholderColor }"
+            v-bind:style="{ color: displayOptions.season.placeholderColor }"
           >
             {{ seasonPlaceholder }}
           </div>
@@ -52,7 +52,7 @@
           <div
             class="newSemester-dropdown-placeholder year-placeholder"
             id="year-placeholder"
-            v-bind:style="{ borderTopColor: displayOptions.year.placeholderColor }"
+            v-bind:style="{ color: displayOptions.year.placeholderColor }"
           >
             {{ yearPlaceholder }}
           </div>
