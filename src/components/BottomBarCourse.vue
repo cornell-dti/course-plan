@@ -1,6 +1,21 @@
 <template>
     <div class="bottombarcourse">
+      <!-- have course square with just course subject and course code -->
+      <div class="bottombarcourse-square">
+        <span class="bottombarcourse-square-title">{{subject}} {{code}}</span>
+        <img class="bottombarcourse-square-exit" src="../assets/images/x.png"/>
+      </div>
 
+      <!-- v-if: isPreview. have course bar -->
+      <div class="bottombarcourse-bar">
+        <span class="bottombarcourse-bar-title">{{name}}</span>
+        <div class="bottombarcourse-bar-planSelect">
+          <div class="bottombarcourse-bar-planSelect-label">
+          </div>
+        </div>
+      </div>
+
+      <!-- v-if: isExpanded have course expanded view -->
     </div>
 </template>
 
