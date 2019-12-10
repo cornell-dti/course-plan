@@ -1,6 +1,6 @@
 <template>
   <div class="requirements">
-    <h1 class="title">School Requirements!</h1>
+    <h1 class="title">School Requirements</h1>
 
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" v-bind:key="req.id">
@@ -18,32 +18,16 @@
       <!--Majors tabular view -->
       <div class="tab" v-if="req.type === 'MAJOR'">
         <div class="row">
-          <div class="col">
-            <button v-bind:class="{ active: isActive(0) }" @click="activate(actives)" class="btn">
-              <div  class="tab-div">
-<<<<<<< HEAD
-                <p v-bind:class="{ active: isActive(0)  }" class="major">Computer Science</p> 
-                <p v-bind:class="{ active: isActive(0) }" class="major-college">(Arts and Science)</p>
-=======
-              <p v-bind:class="{ active: isActive[0] }" class="major">Computer Science</p>
-              <p v-bind:class="{ active: isActive [0]}" class="major-college">(Arts and Science)</p>
->>>>>>> ca0f589e7b24b5fdca9a1b740e210bce0f61d764
+          <div class="col-12" v-for="type in actives" v-bind:key= "type.id">
+        
+            <button v-bind:class="{ active: actives[0]}" @click="activate(0, true)" class="btn" v-bind:style='{"justify-content" :"center"}'>
+              <div class= "div-tab">
+                <p v-bind:class="{ active: actives[0] }" class="major">Computer Science</p> 
+                <p v-bind:class="{ active: actives[0] }" class="major-college">(Arts and Science)</p>
               </div>
             </button>
           </div>
-          <div class="col">
-            <button v-bind:class="{ active: isActive(1) }" @click="activate(actives)" class="btn">
-              <div class="tab-div">
-<<<<<<< HEAD
-              <p v-bind:class="{ active: actives[1]}" class="major">Information Science</p> 
-              <p v-bind:class="{ active: actives[1] }"  class="major-college">Engineering</p>
-=======
-              <p v-bind:class="{ active: isActive [1]}" class="major">Information Science</p>
-              <p v-bind:class="{ active: isActive[1] }"  class="major-college">Engineering</p>
->>>>>>> ca0f589e7b24b5fdca9a1b740e210bce0f61d764
-              </div>
-            </button>
-          </div>
+          
         </div>
       </div>
       <!-- progress bar settings -->
@@ -92,7 +76,7 @@
           <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
           <div class="row top ">
             <div class="col-1 middle text-left p-0">
-              <button class="btn" v-on:click="turnSubDetails(index, id, true)">
+              <button class="btn btn-2" v-on:click="turnSubDetails(index, id, true)">
                 <!-- svg for dropdown icon -->
                 <img
                   class="setting"
@@ -102,10 +86,10 @@
                 />
               </button>
             </div>
-            <div class="col  middle p-0">
+            <div class="col middle p-0">
               <p class="sup-req">{{subReq.name}}</p>
             </div>
-            <div class="col text-left p-0">
+            <div class="col middle p-0">
               <p class="sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
@@ -213,7 +197,8 @@ export default {
   data() {
     const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
-      actives: [true,false],
+      
+      actives: [false],
       modalShow: false,
       reqs: [
         {
@@ -378,14 +363,14 @@ export default {
       this.reqs[index].displayCompleted = bool;
     },
     isActive(index){
-      console.log(this.actives[index])
+
       return this.actives[index];
     },
 
-    activate(index, bool, isActive){
-      console.log(isActive[0] + "    " + isActive[1])
-        isActive[0] = !isActive[0] ;
-        isActive[1] = !isActive[1] ;
+    activate(index, bool ){
+  
+        this.actives[0] = !this.actives[0] ;
+        this.actives[1] = !this.actives[1] ;
     }
     
   }
@@ -400,12 +385,19 @@ export default {
     justify-content: center;
 }
 .btn {
-  padding: 0px;
+  padding: 10px;
+
   margin: -4px;
   display: flex;
   align-items: center;
   justify-content: center;
+  &-2{
+    padding-top: 0px;
+    margin:0px
+  }
 }
+
+
 
 .requirements {
   width: 400px;
@@ -414,6 +406,8 @@ export default {
 }
 .sub-req-div{
   padding-left: 30px;
+  margin :0px;
+  
 
 }
 
