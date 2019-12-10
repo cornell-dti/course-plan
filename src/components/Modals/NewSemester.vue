@@ -14,7 +14,11 @@
           <div class="newSemester-dropdown-placeholder season-placeholder" id="season-placeholder">
             {{ seasonPlaceholder }}
           </div>
-          <div class="newSemester-dropdown-placeholder season-arrow" id="season-arrow"></div>
+          <div
+            class="newSemester-dropdown-placeholder season-arrow"
+            id="season-arrow"
+            v-bind:style="{ borderTopColor: displayOptions.season.arrowColor }"
+          ></div>
         </div>
         <div
           class="newSemester-dropdown-content season-content"
@@ -63,7 +67,11 @@
           <div class="newSemester-dropdown-placeholder year-placeholder" id="year-placeholder">
             {{ yearPlaceholder }}
           </div>
-          <div class="newSemester-dropdown-placeholder year-arrow" id="year-arrow"></div>
+          <div
+            class="newSemester-dropdown-placeholder year-arrow"
+            id="year-arrow"
+            v-bind:style="{ borderTopColor: displayOptions.year.arrowColor }"
+          ></div>
         </div>
         <div
           class="newSemester-dropdown-content year-content"
@@ -105,11 +113,13 @@ export default {
       displayOptions: {
         season: {
           shown: false,
-          boxBorder: ''
+          boxBorder: '',
+          arrowColor: ''
         },
         year: {
           shown: false,
-          boxBorder: ''
+          boxBorder: '',
+          arrowColor: ''
         }
       }
     };
@@ -133,10 +143,10 @@ export default {
       if (contentShown) {
         // clicked box when content shown. So then hide content
         displayOptions.boxBorder = '#C4C4C4';
-        arrow.style.borderTopColor = '#C4C4C4';
+        displayOptions.arrowColor = '#C4C4C4';
       } else {
         displayOptions.boxBorder = '#32A0F2';
-        arrow.style.borderTopColor = '#32A0F2';
+        displayOptions.arrowColor = '#32A0F2';
       }
     },
     showHideSeasonContent() {
@@ -145,7 +155,7 @@ export default {
     showHideYearContent() {
       this.showHideContent('year', 'year-arrow');
     },
-    selectOption(isSeasonOption, selectedID, contentID, arrowID, placeholderID) {
+    selectOption(isSeasonOption, selectedID, contentID, placeholderID) {
       const selectedOption = document.getElementById(selectedID);
 
       if (isSeasonOption) {
@@ -157,29 +167,28 @@ export default {
       const placeholderText = document.getElementById(placeholderID);
       placeholderText.style.color = '#757575';
 
-      const arrow = document.getElementById(arrowID);
-      arrow.style.borderTopColor = '#C4C4C4';
-
-      this.displayOptions[contentID].shown = false;
+      const displayOptions = this.displayOptions[contentID];
+      displayOptions.shown = false;
+      displayOptions.arrowColor = '#C4C4C4';
     },
     selectSeason(selectedID) {
-      this.selectOption(true, selectedID, 'season', 'season-arrow', 'season-placeholder');
+      this.selectOption(true, selectedID, 'season', 'season-placeholder');
     },
     selectYear(selectedID) {
-      this.selectOption(false, selectedID, 'year', 'year-arrow', 'year-placeholder');
+      this.selectOption(false, selectedID, 'year', 'year-placeholder');
     },
-    resetDropdown(isSeasonDropdown, boxID, arrowID, placeholderID) {
+    resetDropdown(isSeasonDropdown, boxID) {
       if (isSeasonDropdown) {
         this.displayOptions.season.shown = false;
         this.displayOptions.season.boxBorder = '#C4C4C4';
+        this.displayOptions.season.arrowColor = '#C4C4C4';
       } else {
         this.displayOptions.year.shown = false;
         this.displayOptions.year.boxBorder = '#C4C4C4';
+        this.displayOptions.year.arrowColor = '#C4C4C4';
       }
 
-      const arrow = document.getElementById(arrowID);
-      arrow.style.borderTopColor = '#C4C4C4';
-
+      const placeholderID = isSeasonDropdown ? 'season-placeholder' : 'year-placeholder';
       const placeholderText = document.getElementById(placeholderID);
       placeholderText.style.color = '#B6B6B6';
       if (isSeasonDropdown) {
@@ -190,10 +199,10 @@ export default {
     },
     resetDropdowns() {
       // reset season dropdown
-      this.resetDropdown(true, 'season-arrow', 'season-placeholder');
+      this.resetDropdown(true);
 
       // reset year dropdown
-      this.resetDropdown(false, 'year-arrow', 'year-placeholder');
+      this.resetDropdown(false);
     }
   }
 };
