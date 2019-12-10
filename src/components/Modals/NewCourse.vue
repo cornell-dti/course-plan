@@ -40,7 +40,6 @@ export default {
       /* execute a function when someone writes in the text field: */
       inp.addEventListener('input', () => {
         let a;
-        let b;
         const val = inp.value.toUpperCase();
         /* close any already open lists of autocompleted values */
         closeAllLists();
@@ -74,21 +73,20 @@ export default {
             /* check if the item starts with the same letters as the text field value: */
             /* create a DIV element for each matching element: */
             /* reinitialize b for every input div */
-            let b;
-            b = document.createElement('DIV');
+            const div = document.createElement('DIV');
             /* make the matching letters bold: */
-            b.innerHTML = newTitle;
+            div.innerHTML = newTitle;
             /* insert a input field that will hold the current array item's value: */
-            b.innerHTML += `<input type='hidden' value="${newTitle}"'>`;
+            div.innerHTML += `<input type='hidden' value="${newTitle}"'>`;
             /* execute a function when someone clicks on the item value (DIV element): */
-            b.addEventListener('click', () => {
+            div.addEventListener('click', () => {
               /* insert the value for the autocomplete text field: */
-              inpCopy.value = b.getElementsByTagName('input')[0].value;
+              inpCopy.value = div.getElementsByTagName('input')[0].value;
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
             });
-            a.appendChild(b);
+            a.appendChild(div);
           });
         }
       });
