@@ -133,9 +133,7 @@ export default {
     }
   },
   methods: {
-    showHideContent(contentID, arrowID) {
-      const arrow = document.getElementById(arrowID);
-
+    showHideContent(contentID) {
       const displayOptions = this.displayOptions[contentID];
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
@@ -150,10 +148,10 @@ export default {
       }
     },
     showHideSeasonContent() {
-      this.showHideContent('season', 'season-arrow');
+      this.showHideContent('season');
     },
     showHideYearContent() {
-      this.showHideContent('year', 'year-arrow');
+      this.showHideContent('year');
     },
     selectOption(isSeasonOption, selectedID, contentID, placeholderID) {
       const selectedOption = document.getElementById(selectedID);
