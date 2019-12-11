@@ -51,7 +51,7 @@
         </div>
       </div>
     </div>
-    <coursemenu v-if="menuOpen" class="course-menu" v-on:delete-course="deleteCourse" v-click-outside="closeMenuIfOpen" />
+    <coursemenu v-if="menuOpen" class="course-menu" v-on:delete-course="deleteCourse" v-on:color-course="colorCourse" v-click-outside="closeMenuIfOpen" />
   </div>
 </template>
 
@@ -205,6 +205,9 @@ export default {
     },
     deleteCourse() {
       this.$emit("delete-course", this.id);
+    },
+    colorCourse(color) {
+      this.$emit("color-course", color, this.id);
     }
   },
   directives: {
