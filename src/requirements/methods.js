@@ -134,6 +134,7 @@ function createRequirementJSON(requirement, totalRequirementCredits, totalRequir
   const requirementFulfillmentData = {
     name: requirement.name,
     type: requirement.fulfilledBy,
+    required = requirement.minCount,
     courses: coursesThatFulilledRequirement
   };
   let isComplete;
@@ -142,12 +143,10 @@ function createRequirementJSON(requirement, totalRequirementCredits, totalRequir
   switch (requirement.fulfilledBy) {
     case 'count':
       isComplete = requirement.minCount <= totalRequirementCount;
-      required = requirement.minCount;
       fulfilled = totalRequirementCount;
       break;
     case 'credits':
-      isComplete = requirement.minCreds <= totalRequirementCredits;
-      required = requirement.minCreds;
+      isComplete = requirement.minCount <= totalRequirementCredits;
       fulfilled = totalRequirementCredits;
       break;
     case 'self-check':
