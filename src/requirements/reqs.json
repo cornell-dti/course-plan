@@ -1,0 +1,582 @@
+{
+    "university": {
+        "value": "UNI",
+        "name": "University",
+        "requirements": [
+            {
+                "name": "Academic Credits",
+                "search": "all-eligible",
+                "fulfilledBy" : "credits",
+                "includes": [],
+                "minCreds": 120,
+                "maxCreds": 120,
+                "applies": "all"
+            },
+            {
+                "name": "Required Cornell Credits for Transfers",
+                "search": "all-eligible",
+                "fulfilledBy" : "credits",
+                "includes": [],
+                "minCreds": 60,
+                "maxCreds": 120,
+                "applies": "transfers"
+            },
+            {
+                "name": "Physical Education",
+                "search": "subject",
+                "fulfilledBy" : "count",
+                "includes": [
+                    ["PE"]
+                ],
+                "minCount": 2,
+                "maxCount": 2,
+                "applies": "all"
+            },
+            {
+                "name": "Swimming Test",
+                "fulfilledBy": "self-check",
+                "includes": [],
+                "minCreds": 0,
+                "maxCreds": 0,
+                "applies": "all"
+            }
+        ]
+    },
+    "college": {
+        "AS": {
+            "name": "Arts and Sciences",
+            "requirements": [
+                {
+                    "name": "CAS Credits",
+                    "search": "acadGroup",
+                    "includes": [
+                        ["AS"]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCreds": 100,
+                    "maxCreds": 120,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Freshman Writing Seminars (FWS)",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        ["First-Year Writing Seminar."]
+                    ],
+                    "fulfilledBy" : "credits",
+                    "minCreds": 6,
+                    "maxCreds": 12,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Foreign Language Requirement",
+                    "multiplePaths": true,
+                    "paths": [
+                        {
+                            "name": "Intermediate Language Course",
+                            "search": "code",
+                            "includes": [
+                                [
+                                    "CHIN 2***",
+                                    "FREN 2***",
+                                    "JAPAN 2***"
+                                ]
+                            ],
+                            "fulfilledBy": "count",
+                            "minCount": 1,
+                            "uniqueCourses": 0
+                        },
+                        {
+                            "name": "11 Language Course Credits",
+                            "search": "subject",
+                            "includes": [
+                                [
+                                    "CHIN",
+                                    "FREN",
+                                    "JAPAN"
+                                ]
+                            ],
+                            "fulfilledBy" : "credits",
+                            "minCreds": 11,
+                            "maxCreds": 120,
+                            "uniqueCourses": 0
+                        }
+                    ]
+                },
+                {
+                    "name": "Four Courses in Physical & Biological Sciences and Mathematics & Quantitative Reasoning",
+                    "search": "catalogDistr",
+                    "includes": [
+                        [
+                            "(PBS-AS)",
+                            "(PBSS-AS)",
+                            "(MQR-AS)"
+                        ]
+                    ],
+                    "fulfilledBy": "count",
+                    "minCount": 4,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Physical & Biological Sceiences (PBS-AS)",
+                    "search": "catalogDistr",
+                    "includes": [
+                        [
+                            "(PBS-AS)",
+                            "(PBSS-AS)"
+                        ]
+                    ],
+                    "fulfilledBy": "count",
+                    "minCount": 2,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Mathematics & Quantitative Reasoning (MQR-AS)",
+                    "search": "catalogDistr",
+                    "includes": [
+                        ["(MQR-AS)"]
+                    ],
+                    "fulfilledBy": "count",
+                    "minCount": 1,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Five Courses in Liberal Arts",
+                    "search": "catalogDistr",
+                    "includes": [
+                        [
+                            "(CA-AS)",
+                            "(HA-AS)",
+                            "(KCM-AS)",
+                            "(LA-AS)",
+                            "(SBA-AS)"
+                        ]
+                    ],
+                    "fulfilledBy": "count",
+                    "minCount": 5,
+                    "uniqueCourses": 4
+                },
+                {
+                    "name": "Geographic catalogBreadth Requirement (GB)",
+                    "search": "catalogBreadth",
+                    "includes": [
+                        [
+                            "GB",
+                            "GHB"
+                        ]
+                    ],
+                    "fulfilledBy": "count",
+                    "minCount": 1,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Historic catalogBreadth Requirement (HB)",
+                    "search": "catalogBreadth",
+                    "includes": [
+                        [
+                            "HB",
+                            "GHB"
+                        ]
+                    ],
+                    "fulfilledBy": "count",
+                    "minCount": 1,
+                    "uniqueCourses": 0
+                }
+            ]
+        },
+        "EN": {
+            "name": "Engineering",
+            "requirements": [
+                {
+                    "name": "Mathematics",
+                    "search": "code",
+                    "includes": [
+                        ["MATH 1910"],
+                        ["MATH 1920"],
+                        [
+                            "MATH 2930",
+                            "MATH 2940"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCreds": 14,
+                    "maxCreds": 16,
+                    "uniqueCourses": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Physics",
+                    "search": "code",
+                    "includes": [
+                        ["PHYS 1112"],
+                        ["PHYS 2213"]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCreds": 8,
+                    "maxCreds": 12,
+                    "uniqueCourses": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Chemistry",
+                    "search": "code",
+                    "includes": [
+                        ["CHEM 2090"]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCreds": 4,
+                    "maxCreds": 8,
+                    "uniqueCourses": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Freshman Writing Seminars",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        ["First-Year Writing Seminar."]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCreds": 6,
+                    "maxCreds": 12,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Computing",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 1110",
+                            "CS 1112",
+                            "CS 1114",
+                            "CS 1115"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCreds": 4,
+                    "maxCreds": 4,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Introducation to Engineering",
+                    "search": "subject",
+                    "includes": [
+                        ["ENGRI"]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCreds": 4,
+                    "maxCreds": 4,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Engineering Distribution",
+                    "search": "subject",
+                    "includes": [
+                        ["ENGRD"]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCreds": 6,
+                    "maxCreds": 8,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Liberal Studies Distribution",
+                    "search": "catalogDistr",
+                    "includes": [
+                        [
+                            "CA",
+                            "HA",
+                            "LA/LAD",
+                            "KCM",
+                            "SBA",
+                            "FL",
+                            "CE"
+                        ],
+                        [
+                            "CA",
+                            "HA",
+                            "LA/LAD",
+                            "KCM",
+                            "SBA",
+                            "FL",
+                            "CE"
+                        ],
+                        [
+                            "CA",
+                            "HA",
+                            "LA/LAD",
+                            "KCM",
+                            "SBA",
+                            "FL",
+                            "CE"
+                        ],
+                        [
+                            "CA",
+                            "HA",
+                            "LA/LAD",
+                            "KCM",
+                            "SBA",
+                            "FL",
+                            "CE"
+                        ],
+                        [
+                            "CA",
+                            "HA",
+                            "LA/LAD",
+                            "KCM",
+                            "SBA",
+                            "FL",
+                            "CE"
+                        ],
+                        [
+                            "CA",
+                            "HA",
+                            "LA/LAD",
+                            "KCM",
+                            "SBA",
+                            "FL",
+                            "CE"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCreds": 18,
+                    "maxCreds": 120,
+                    "uniqueCourses": 3
+                },
+                {
+                    "name": "Advisor-Approved Electives",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCreds": 6,
+                    "maxCreds": 6,
+                    "uniqueCourses": 0
+                },
+                {
+                    "name": "Technical Communication",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCreds": 3,
+                    "maxCreds": 4,
+                    "uniqueCourses": 0
+                }
+            ]
+        }
+    },
+    "major": {
+        "CS": {
+            "name": "Computer Science",
+            "schools": [
+                "EN",
+                "AS"
+            ],
+            "requirements": [
+                {
+                    "name": "Computer Science Core Requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 1110",
+                            "CS 1112"
+                        ],
+                        [
+                            "CS 2110",
+                            "CS 2112"
+                        ],
+                        [
+                            "CS 2800",
+                            "CS 2802"
+                        ],
+                        [
+                            "CS 3110"
+                        ],
+                        [
+                            "CS 3410",
+                            "CS 3420"
+                        ],
+                        [
+                            "CS 4820"
+                        ],
+                        [
+                            "CS 4410"
+                        ]
+                    ],
+                    "fulfilledBy": "count",
+                    "minCount": 7,
+                    "uniqueCourses": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Computer Science Electives",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 3152"
+                        ], 
+                        [
+                            "CS 4152"
+                        ],
+                        [
+                            "CS 4154"
+                        ],
+                        [
+                            "CS 4740"
+                        ],
+                        [
+                            "CS 4752"
+                        ],
+                        [
+                            "CS 5150"
+                        ],
+                        [
+                            "CS 5152"
+                        ],
+                        [
+                            "CS 5412"
+                        ],
+                        [
+                            "CS 5414"
+                        ],
+                        [
+                            "CS 5431"
+                        ],
+                        [
+                            "CS 5625"
+                        ],
+                        [
+                            "CS 5643"
+                        ]
+                    ],
+                    "excludes": [
+                        "CS 4090",
+                        "CS 4998",
+                        "CS 4999"
+                    ],
+                    "fulfilledBy": "count",
+                    "minCount": 3,
+                    "uniqueCourses": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Computer Science Practicum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 4321"
+                        ],
+                        [
+                            "CS 4621"
+                        ],
+                        [
+                            "CS 4701"
+                        ],
+                        [
+                            "CS 4411"
+                        ],
+                        [
+                            "CS 3152"
+                        ],
+                        [
+                            "CS 4152"
+                        ],
+                        [
+                            "CS 4154"
+                        ],
+                        [
+                            "CS 4740"
+                        ],
+                        [
+                            "CS 4752"
+                        ],
+                        [
+                            "CS 5150"
+                        ],
+                        [
+                            "CS 5152"
+                        ],
+                        [
+                            "CS 5412"
+                        ],
+                        [
+                            "CS 5414"
+                        ],
+                        [
+                            "CS 5431"
+                        ],
+                        [
+                            "CS 5625"
+                        ],
+                        [
+                            "CS 5643"
+                        ]
+                    ],
+                    "excludes": [],
+                    "fulfilledBy": "count",
+                    "minCount": 1,
+                    "uniqueCourses": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Computer Science Technical Electives",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 3***",
+                            "MATH 3***",
+                            "BIOG 3***",
+                            "ECON 3***",
+                            "CHEM 3***",
+                            "PHYS 3***",
+                            "PSYCH 3***",
+                            "LING 3***"    
+                        ],
+                        [
+                            "CS 3***",
+                            "MATH 3***",
+                            "BIOG 3***",
+                            "ECON 3***",
+                            "CHEM 3***",
+                            "PHYS 3***",
+                            "PSYCH 3***",
+                            "LING 3***"    
+                        ],
+                        [
+                            "CS 3***",
+                            "MATH 3***",
+                            "BIOG 3***",
+                            "ECON 3***",
+                            "CHEM 3***",
+                            "PHYS 3***",
+                            "PSYCH 3***",
+                            "LING 3***"    
+                        ]
+                    ],
+                    "excludes": [],
+                    "fulfilledBy": "count",
+                    "minCount": 3,
+                    "uniqueCourses": 0,
+                    "majorDep": true
+                },
+        
+                {
+                    "name": "Computer Science External Specialization",
+                    "search": "code",
+                    "includes": [
+                        ["INFO 3***"],
+                        ["PSYCH 3***"],
+                        ["SOC 3***"]
+                    ],
+                    "excludes": [
+                        "LING 4474",
+                        "INFO 4302", 
+                        "INFO 3300", 
+                        "INFO 4300",
+                        "INFO 5300"
+                    ],
+                    "fulfilledBy": "count",
+                    "minCount": 3,
+                    "uniqueCourses": 0,
+                    "majorDep": true
+                }
+            ]
+        }
+    }
+}
