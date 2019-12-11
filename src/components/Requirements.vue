@@ -19,15 +19,15 @@
       <div class="tab" v-if="req.type === 'MAJOR'">
         <div class="row">
           <div class="col-12 middle" v-for="type in actives" v-bind:key= "type.id">
-        
+
             <button v-bind:class="{ active: actives[0]}" @click="getReqs()" class="btn">
               <div class= "div-tab">
-                <p v-bind:class="{ active: actives[0] }" class="major">Computer Science</p> 
+                <p v-bind:class="{ active: actives[0] }" class="major">Computer Science</p>
                 <p v-bind:class="{ active: actives[0] }" class="major-college">(Arts and Science)</p>
               </div>
             </button>
           </div>
-          
+
         </div>
       </div>
       <!-- progress bar settings -->
@@ -93,7 +93,7 @@
               <p class="sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
-   
+
           <div class="sub-req-div" v-if="subReq.display">
             <div >
               <p>Additional Courses</p>
@@ -101,7 +101,7 @@
                 <li
                   v-for="subSubReq in subReq.additonalCourses"
                   v-bind:key="subSubReq.id"
-                  
+
                 >
                   <div class="row top-small">
                     <div class="col">
@@ -146,8 +146,8 @@
           <div v-for="subReq in req.completed" v-bind:key="subReq.id" class="semesterView-wrapper">
             <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
             <div class="row top">
-              <div class="col-1 text-left p-0">
-                <button class="btn" v-on:click="turnSubDetails(index, id, true)">
+              <div class="col-1 middle text-left p-0">
+                <button class="btn btn-2" v-on:click="turnSubDetails(index, id, true)">
                   <!-- svg for dropdown icon -->
                   <img
                     class="setting"
@@ -157,9 +157,9 @@
                   />
                 </button>
               </div>
-              <p class="col sup-req">{{subReq.name}}</p>
+              <p class="col sup-req middle ">{{subReq.name}}</p>
               <p
-                class="col sup-req text-right p-0"
+                class="col sup-req middle text-right p-0"
               >( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
@@ -174,15 +174,16 @@
 </template>
 
 <script>
-import {  Vue } from 'vue-property-decorator';
+import { Vue } from 'vue-property-decorator';
 import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
 import Semester from '@/components/Semester';
+import * as methods from '../requirements/methods.js';
+
 const fs = require('fs');
 const request = require('request');
 const fb = require('../firebaseConfig.js');
-import *  as methods from '../requirements/methods.js'
 
 
 Vue.component('course', Course);
@@ -194,13 +195,13 @@ export default {
   props: {
     semesters: Array,
     compact: Boolean
-  
+
   },
   mounted() {},
   data() {
     const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
-      
+
       actives: [false],
       modalShow: false,
       reqs: [
@@ -354,9 +355,10 @@ export default {
   },
 
   methods: {
-    getReqs: function(){
+    getReqs() {
       methods.getRequirements(['CS 1110', 'CHIN 2202', 'CS 1112', 'CS 2110', 'CS 3410', 'CS 3110', 'INFO 2300', 'PE 1110'], 'AS', 'CS').then(res => {
-      console.log(res)})
+        console.log(res);
+      });
     },
     turnDetails(index, bool) {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
@@ -369,17 +371,15 @@ export default {
     turnCompleted(index, bool) {
       this.reqs[index].displayCompleted = bool;
     },
-    isActive(index){
-
+    isActive(index) {
       return this.actives[index];
     },
 
-    activate(index, bool ){
-  
-        this.actives[0] = !this.actives[0] ;
-        this.actives[1] = !this.actives[1] ;
+    activate(index, bool) {
+      this.actives[0] = !this.actives[0];
+      this.actives[1] = !this.actives[1];
     }
-    
+
   }
 };
 </script>
@@ -405,7 +405,6 @@ export default {
 }
 
 
-
 .requirements {
   width: 400px;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
@@ -414,7 +413,7 @@ export default {
 .sub-req-div{
   padding-left: 30px;
   margin :0px;
-  
+
 }
 
 p.sub-req{

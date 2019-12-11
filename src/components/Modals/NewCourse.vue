@@ -63,8 +63,8 @@ export default {
             if (attr.toUpperCase().includes(val)) {
               code.push(courses[attr].t);
             } else if (
-              courses[attr].t &&
-              courses[attr].t.toUpperCase().includes(val)
+              courses[attr].t
+              && courses[attr].t.toUpperCase().includes(val)
             ) {
               title.push(courses[attr].t);
             }

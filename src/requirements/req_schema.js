@@ -1,22 +1,21 @@
-var req_schema = {
-    "college-requirements": [
-        {
-            "name": "",
-            "isComplete" : true,
-            "type" : true
-        },
-        {
+const req_schema = {
+  'college-requirements': [
+    {
+      name: '',
+      isComplete: true,
+      type: true
+    },
+    {
 
-        }
-        
-
-    ],
-    "major-requirements":[
-
-    ]
-
-}
-    
+    }
 
 
-export { req_schema }
+  ],
+  'major-requirements': [
+
+  ]
+
+};
+
+
+export { req_schema };
