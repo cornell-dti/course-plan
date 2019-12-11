@@ -337,51 +337,6 @@
                             "SBA",
                             "FL",
                             "CE"
-                        ],
-                        [
-                            "CA",
-                            "HA",
-                            "LA/LAD",
-                            "KCM",
-                            "SBA",
-                            "FL",
-                            "CE"
-                        ],
-                        [
-                            "CA",
-                            "HA",
-                            "LA/LAD",
-                            "KCM",
-                            "SBA",
-                            "FL",
-                            "CE"
-                        ],
-                        [
-                            "CA",
-                            "HA",
-                            "LA/LAD",
-                            "KCM",
-                            "SBA",
-                            "FL",
-                            "CE"
-                        ],
-                        [
-                            "CA",
-                            "HA",
-                            "LA/LAD",
-                            "KCM",
-                            "SBA",
-                            "FL",
-                            "CE"
-                        ],
-                        [
-                            "CA",
-                            "HA",
-                            "LA/LAD",
-                            "KCM",
-                            "SBA",
-                            "FL",
-                            "CE"
                         ]
                     ],
                     "fulfilledBy": "credits",
@@ -500,7 +455,7 @@
                         ["AEM 3000"], 
                         ["AEM 4000"]
                     ], 
-                    "fulfilledBy": "credit",
+                    "fulfilledBy": "credits",
                     "minCount": 7.5,
                     "majorDep": true
                 },
@@ -508,31 +463,49 @@
                     "name": "Quantitative Methods",
                     "search": "code",
                     "includes": [
-                        [
-                            "MATH 1110", 
-                            "MATH 1120"
-                        ],
-                        ["AEM 2010"], 
-                        ["AEM 2100"],
-                        [
-                            "AEM 2770",
-                            "AEM 2830", 
-                            "AEM 2840", 
-                            "AEM 3100", 
-                            "AEM 3390", 
-                            "AEM 4060", 
-                            "AEM 4110", 
-                            "AEM 4120", 
-                            "AEM 4190", 
-                            "BTRY 3080", 
-                            "ECON 3130",
-                            "ECON 3140", 
-                            "ECON 4020", 
-                            "ILRST 2110", 
-                            "ECON 3110"
-                        ]
+                        {
+                            "name": "Core",
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "MATH 1110", 
+                                    "MATH 1120"
+                                ],
+                                ["AEM 2010"], 
+                                ["AEM 2100"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":3,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses",
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2770",
+                                    "AEM 2830", 
+                                    "AEM 2840", 
+                                    "AEM 3100", 
+                                    "AEM 3390", 
+                                    "AEM 4060", 
+                                    "AEM 4110", 
+                                    "AEM 4120", 
+                                    "AEM 4190", 
+                                    "BTRY 3080", 
+                                    "ECON 3130",
+                                    "ECON 3140", 
+                                    "ECON 4020", 
+                                    "ILRST 2110", 
+                                    "ECON 3110"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount":3,
+                            "majorDep": true
+                        }
                     ], 
-                    "fulfilledBy": "credit",
+                    "fulfilledBy": "count",
                     "minCount": 4,
                     "uniqueIncludes": 0,
                     "majorDep": true
@@ -541,10 +514,38 @@
                     "name": "Applied Economics",
                     "search": "code",
                     "includes": [
+                        [
+                           "AEM 2500", 
+                           "AEM 4500", 
+                           "AEM 4510", 
+                           "AEM 4515" 
+                        ], 
+                        [
+                            "AEM 3310", 
+                            "AEM 4100", 
+                            "AEM 4140", 
+                            "AEM 4160", 
+                            "AEM 4550"
+                        ], 
+                        [
+                            "AEM 2300", 
+                            "AEM 2350", 
+                            "AEM 4300", 
+                            "AEM 4350", 
+                            "AEM 4420", 
+                            "AEM 4450", 
+                            "AEM 4485", 
+                            "AEM 4545"
+                        ], 
+                        [
+                            "AEM 4150", 
+                            "AEM 4210", 
+                            "AEM 4310"
+                        ]
                     ], 
-                    "fulfilledBy": "credit",
-                    "minCount": 3,
-                    "uniqueIncludes": 0,
+                    "fulfilledBy": "credits",
+                    "minCount": 6,
+                    "uniqueIncludes": 2,
                     "majorDep": true
                 }
             ],
@@ -552,49 +553,519 @@
                 {
                     "name": "Accounting",
                     "requirements": [
-                        "AEM 3360", 
-                        "AEM 3370", 
-                        [
-                            "AEM 3355", 
-                            "AEM 3520", 
-                            "AEM 4225", 
-                            "AEM 4520", 
-                            "AEM 4521", 
-                            "AEM 4530", 
-                            "AEM 4531", 
-                            "AEM 4532", 
-                            "AEM 4533", 
-                            "AEM 4534", 
-                            "AEM 4535", 
-                            "AEM 4560", 
-                            "AEM 5090", 
-                            "NBA 5110"
-                        ]
+                        {
+                            "name": "Core",
+                            "search": "code", 
+                            "includes": [
+                                ["AEM 3360"], 
+                                ["AEM 3370"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":2,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3355", 
+                                    "AEM 3520", 
+                                    "AEM 4225", 
+                                    "AEM 4520", 
+                                    "AEM 4521", 
+                                    "AEM 4530", 
+                                    "AEM 4531", 
+                                    "AEM 4532", 
+                                    "AEM 4533", 
+                                    "AEM 4534", 
+                                    "AEM 4535", 
+                                    "AEM 4560", 
+                                    "AEM 5090", 
+                                    "NBA 5110"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 9, 
+                            "majorDep": true
+                        }
                     ]
                 }, 
                 {
                     "name": "Agribusiness Management", 
                     "requirements": [
-                        ["AEM 3020"], 
-                        ["HADM 2810"], 
-                        [
-                            "AEM 3040", 
-                            "AEM 3260", 
-                            "AEM 3290", 
-                            "AEM 4030", 
-                            "AEM 4050", 
-                            "AEM 4070", 
-                            "AEM 4150", 
-                            "AEM 4210", 
-                            "AEM 4310"
-                        ]
+                        {
+                            "name": "Core",
+                            "search": "code", 
+                            "includes": [
+                                ["AEM 3020"], 
+                                ["HADM 2810"],
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":2,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3040", 
+                                    "AEM 3260", 
+                                    "AEM 3290", 
+                                    "AEM 4030", 
+                                    "AEM 4050", 
+                                    "AEM 4070", 
+                                    "AEM 4150", 
+                                    "AEM 4210", 
+                                    "AEM 4310"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 9, 
+                            "majorDep": true
+                        }
                     ]
                 }, 
                 {
                     "name": "Applied Economics", 
                     "requirements":[
-                        "ECON 3040", 
-
+                        {
+                            "name": "Core",
+                            "search": "code", 
+                            "includes": [
+                                ["ECON 3040"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":1,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Applied Economics",
+                            "search": "code",
+                            "includes": [
+                                [
+                                   "AEM 2500", 
+                                   "AEM 4500", 
+                                   "AEM 4510", 
+                                   "AEM 4515" 
+                                ], 
+                                [
+                                    "AEM 3310", 
+                                    "AEM 4100", 
+                                    "AEM 4140", 
+                                    "AEM 4160", 
+                                    "AEM 4550"
+                                ], 
+                                [
+                                    "AEM 2300", 
+                                    "AEM 2350", 
+                                    "AEM 4300", 
+                                    "AEM 4350", 
+                                    "AEM 4420", 
+                                    "AEM 4450", 
+                                    "AEM 4485", 
+                                    "AEM 4545"
+                                ], 
+                                [
+                                    "AEM 4150", 
+                                    "AEM 4210", 
+                                    "AEM 4310"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits",
+                            "minCount": 12,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Quantitative Methods",
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2770",
+                                    "AEM 2830", 
+                                    "AEM 2840", 
+                                    "AEM 3100", 
+                                    "AEM 3390", 
+                                    "AEM 4060", 
+                                    "AEM 4110", 
+                                    "AEM 4120", 
+                                    "AEM 4190", 
+                                    "BTRY 3080", 
+                                    "ECON 3130",
+                                    "ECON 3140", 
+                                    "ECON 4020", 
+                                    "ILRST 2110", 
+                                    "ECON 3110"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount":3,
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Business Analytics", 
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3100", 
+                                    "AEM 4110"
+                                ],
+                                [
+                                    "AEM 2830", 
+                                    "AEM 2840", 
+                                    "CS 1112"
+                                ], 
+                                [
+                                    "AEM 2820", 
+                                    "CSS 4200"
+                                ]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":3,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2770", 
+                                    "AEM 3030", 
+                                    "AEM 4010", 
+                                    "AEM 4015", 
+                                    "AEM 4060", 
+                                    "AEM 4120", 
+                                    "AEM 4225", 
+                                    "AEM 4435", 
+                                    "AEM 4610", 
+                                    "AEM 4620", 
+                                    "STSCI 4060"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 6,
+                            "majorDep": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Environmental, Energy and Resource (EERE)",
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                ["ECON 3030"], 
+                                ["ECON 3040"], 
+                                ["AEM 2500"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":3,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Environmental Economics", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 4500", 
+                                    "AEM 4510", 
+                                    "AEM 4515"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount":6,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Economic Analysis", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3100", 
+                                    "AEM 4110", 
+                                    "ECON 3120", 
+                                    "ILRST 2110", 
+                                    "HADM 3740", 
+                                    "PLSCS 4200", 
+                                    "STSCI 4060", 
+                                    "HADM 4010"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount":3,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Electives", 
+                            "search": "self-check", 
+                            "fulfilledBy": "credits", 
+                            "minCount":3,
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Entrepreneurship", 
+                    "requirements": [
+                        {
+                            "name": "AEM Requirements", 
+                            "search": "code", 
+                            "includes": [
+                                "AEM 1200", 
+                                "AEM 2220", 
+                                "AEM 3110", 
+                                "AEM 3220", 
+                                "AEM 3245", 
+                                "AEM 3249", 
+                                "AEM 3250", 
+                                "AEM 3251", 
+                                "AEM 3340", 
+                                "AEM 3380", 
+                                "AEM 4080", 
+                                "AEM 4370", 
+                                "AEM 4371", 
+                                "AEM 4380", 
+                                "AEM 4390", 
+                                "AEM 4420", 
+                                "AEM 4615"
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 6, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                "AEM 1200", 
+                                "AEM 2220", 
+                                "AEM 3110", 
+                                "AEM 3220", 
+                                "AEM 3245", 
+                                "AEM 3249", 
+                                "AEM 3250", 
+                                "AEM 3251", 
+                                "AEM 3340", 
+                                "AEM 3380", 
+                                "AEM 4080", 
+                                "AEM 4370", 
+                                "AEM 4371", 
+                                "AEM 4380", 
+                                "AEM 4390", 
+                                "AEM 4420", 
+                                "AEM 4615", 
+                                "HADM 4130", 
+                                "HADM 4211", 
+                                "NBA 3000", 
+                                "NBA 6230"
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 9, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Food Industry Management", 
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                ["AEM 2480"], 
+                                ["AEM 3440"], 
+                                ["AEM 4400"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount": 3, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3270", 
+                                    "AEM 4150", 
+                                    "AEM 4460"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 6, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Finance", 
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                ["AEM 4570"], 
+                                ["AEM 4670"], 
+                                [
+                                    "AEM 3520",
+                                    "AEM 3360"
+                                ]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount": 3, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 4060", 
+                                    "AEM 4210", 
+                                    "AEM 4230", 
+                                    "AEM 4260", 
+                                    "AEM 4280", 
+                                    "AEM 4590", 
+                                    "AEM 4620", 
+                                    "AEM 4630", 
+                                    "AEM 4681"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 6, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "International Trade and Development", 
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2300", 
+                                    "AEM 2350"
+                                ]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount": 1, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2110", 
+                                    "AEM 4290", 
+                                    "AEM 4300", 
+                                    "AEM 4350", 
+                                    "AEM 4420", 
+                                    "AEM 4421", 
+                                    "AEM 4450", 
+                                    "AEM 4485", 
+                                    "AEM 4545", 
+                                    "AEM 4640"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 12, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Marketing", 
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                ["AEM 3440"], 
+                                ["AEM 4410"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount": 2, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3245", 
+                                    "AEM 3249", 
+                                    "AEM 3270", 
+                                    "AEM 3450", 
+                                    "AEM 4016", 
+                                    "AEM 4080", 
+                                    "AEM 4096", 
+                                    "AEM 4150", 
+                                    "AEM 4160", 
+                                    "AEM 4400", 
+                                    "AEM 4420", 
+                                    "AEM 4435", 
+                                    "AEM 4495", 
+                                    "AEM 4550"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 9, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Strategy", 
+                    "requirements": [
+                        {
+                            "name": "Part 1", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3220", 
+                                    "AEM 4160", 
+                                    "AEM 4190", 
+                                    "AEM 4371", 
+                                    "AEM 4380", 
+                                    "AEM 4390", 
+                                    "AEM 4615"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 6, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Part 2", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2550", 
+                                    "AEM 3110", 
+                                    "AEM 3245", 
+                                    "AEM 3260", 
+                                    "AEM 3249", 
+                                    "AEM 3320", 
+                                    "AEM 4010", 
+                                    "AEM 4015", 
+                                    "AEM 4080", 
+                                    "AEM 4580", 
+                                    "AEM 4421"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 9, 
+                            "majorDep": true
+                        }
                     ]
                 }
             ]
