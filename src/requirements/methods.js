@@ -88,7 +88,7 @@ async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequiremen
         if (indexIsFulfilled) {
           // depending on what it is fulfilled by, either increase the count or credits you took
           switch (requirement.fulfilledBy) {
-            case 'count':
+            case 'courses':
               totalRequirementCount += 1;
               break;
             case 'credits':
@@ -134,14 +134,15 @@ function createRequirementJSON(requirement, totalRequirementCredits, totalRequir
   const requirementFulfillmentData = {
     name: requirement.name,
     type: requirement.fulfilledBy,
-    required = requirement.minCount,
-    courses: coursesThatFulilledRequirement
+    courses: coursesThatFulilledRequirement,
+    required : requirement.minCount
+
   };
   let isComplete;
   let required;
   let fulfilled;
   switch (requirement.fulfilledBy) {
-    case 'count':
+    case 'courses':
       isComplete = requirement.minCount <= totalRequirementCount;
       fulfilled = totalRequirementCount;
       break;
@@ -236,12 +237,10 @@ function checkIfCourseFulfilled(courseInfo, search, includes) {
 
   return false;
 }
-export {
-  checkIfCourseFulfilled,
-  ifCodeMatch,
-  getCourseInfo,
-  parseCourseAbbreviation,
-  createRequirementJSON,
+export {checkIfCourseFulfilled, 
+  ifCodeMatch, 
+  getCourseInfo, 
+  parseCourseAbbreviation, 
+  createRequirementJSON, 
   iterateThroughRequirements,
-  getRequirements
-};
+  getRequirements};
