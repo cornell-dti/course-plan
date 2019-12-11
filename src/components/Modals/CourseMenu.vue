@@ -7,7 +7,7 @@
           <span class="courseMenu-text">Edit Color</span>
         </div>
         <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg"/>
-        
+
         <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
           <div v-for="color in colors" :key="color.id" class="courseMenu-section" v-on:click="colorCourse(color)">
             <div class="courseMenu-left">
@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -34,53 +34,53 @@ export default {
     return {
       colors: [
         {
-          "text": "Gray",
-          "hex": "#C4C4C4"
+          text: 'Gray',
+          hex: '#C4C4C4'
         },
         {
-          "text": "Red",
-          "hex": "#DA4A4A"
+          text: 'Red',
+          hex: '#DA4A4A'
         },
         {
-          "text": "Orange",
-          "hex": "#FFA53C"
+          text: 'Orange',
+          hex: '#FFA53C'
         },
         {
-          "text": "Yellow",
-          "hex": "#FFE142"
+          text: 'Yellow',
+          hex: '#FFE142'
         },
         {
-          "text": "Green",
-          "hex": "#58C913"
+          text: 'Green',
+          hex: '#58C913'
         },
         {
-          "text": "Blue",
-          "hex": "#139DC9"
+          text: 'Blue',
+          hex: '#139DC9'
         },
         {
-          "text": "Purple",
-          "hex": "#C478FF"
+          text: 'Purple',
+          hex: '#C478FF'
         },
         {
-          "text": "Pink",
-          "hex": "#F296D3"
-        },
+          text: 'Pink',
+          hex: '#F296D3'
+        }
       ],
-      displayColors: false,
-    }
+      displayColors: false
+    };
   },
   methods: {
     deleteCourse() {
-      this.$emit("delete-course");
+      this.$emit('delete-course');
     },
     colorCourse(color) {
-      this.$emit("color-course", color.hex.substring(1));
+      this.$emit('color-course', color.hex.substring(1));
     },
     setDisplayColors(bool) {
       this.displayColors = bool;
     }
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
@@ -100,7 +100,7 @@ export default {
     justify-content: space-between;
     padding: .5rem 1rem;
     position: relative;
-  
+
     &:hover,
     &:active,
     &:focus {

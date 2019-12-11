@@ -191,7 +191,7 @@ export default {
             });
           } else {
             // doc.data() will be undefined in this case
-            console.log('No such document!');
+            // console.log('No such document!');
           }
         })
         .catch(error => {
@@ -199,8 +199,8 @@ export default {
         });
     },
     deleteCourse(courseAbbr) {
-      for(let i = 0; i < this.courses.length; i++) {
-        if(this.courses[i].subject + this.courses[i].code == courseAbbr) {
+      for (let i = 0; i < this.courses.length; i += 1) {
+        if (this.courses[i].subject + this.courses[i].code === courseAbbr) {
           this.courses.splice(i, 1);
           break;
         }
@@ -208,8 +208,8 @@ export default {
       this.deleteFirebaseCourse();
     },
     colorCourse(color, courseAbbr) {
-      for(let i = 0; i < this.courses.length; i++) {
-        if(this.courses[i].subject + this.courses[i].code == courseAbbr) {
+      for (let i = 0; i < this.courses.length; i += 1) {
+        if (this.courses[i].subject + this.courses[i].code === courseAbbr) {
           this.courses[i].color = color;
           break;
         }
@@ -258,7 +258,7 @@ export default {
             semesters.forEach(sem => {
               if (sem.type === this.type && sem.year === this.year) {
                 sem.courses.forEach(course => {
-                  if(course.code.replace(/ /g,'') === courseAbbr) {
+                  if (course.code.replace(/ /g, '') === courseAbbr) {
                     course.color = color;
                   }
                 });

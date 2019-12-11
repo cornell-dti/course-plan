@@ -58,21 +58,22 @@
 <script>
 import Vue from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu';
+
 Vue.component('coursemenu', CourseMenu);
 
 const clickOutside = {
-  bind: function (el, binding, vnode) {
+  bind(el, binding, vnode) {
     el.event = function (event) {
-      if (!(el == event.target || el.contains(event.target))) {
+      if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event);
       }
     };
-    document.body.addEventListener('click', el.event)
+    document.body.addEventListener('click', el.event);
   },
-  unbind: function (el) {
-    document.body.removeEventListener('click', el.event)
-  },
-}
+  unbind(el) {
+    document.body.removeEventListener('click', el.event);
+  }
+};
 
 export default {
   props: {
@@ -90,7 +91,7 @@ export default {
     return {
       menuOpen: false,
       stopCloseFlag: false
-    }
+    };
   },
   computed: {
     notCompact() {
@@ -194,20 +195,17 @@ export default {
       this.menuOpen = true;
     },
     closeMenuIfOpen() {
-      if(this.stopCloseFlag) {
+      if (this.stopCloseFlag) {
         this.stopCloseFlag = false;
-      }
-      else {
-        if(this.menuOpen) {
-          this.menuOpen = false;
-        }
+      } else if (this.menuOpen) {
+        this.menuOpen = false;
       }
     },
     deleteCourse() {
-      this.$emit("delete-course", this.id);
+      this.$emit('delete-course', this.id);
     },
     colorCourse(color) {
-      this.$emit("color-course", color, this.id);
+      this.$emit('color-course', color, this.id);
     }
   },
   directives: {
