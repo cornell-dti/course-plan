@@ -1,5 +1,4 @@
-import firebase from 'firebase';
-import 'firebase/firestore';
+const firebase = require('firebase');
 
 // firebase init goes here
 const config = {
@@ -29,6 +28,6 @@ const usersCollection = db.collection('users');
 const coursesCollection = db.collection('courses');
 const userDataCollection = db.collection('userData');
 
-export {
+module.exports = {
   db, auth, currentUser, usersCollection, coursesCollection, userDataCollection
 };

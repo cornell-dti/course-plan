@@ -19,15 +19,15 @@
       <div class="tab" v-if="req.type === 'MAJOR'">
         <div class="row">
           <div class="col-12 middle" v-for="type in actives" v-bind:key= "type.id">
-        
+
             <button v-bind:class="{ active: actives[0]}" @click="getReqs()" class="btn">
               <div class= "div-tab">
-                <p v-bind:class="{ active: actives[0] }" class="major">Computer Science</p> 
+                <p v-bind:class="{ active: actives[0] }" class="major">Computer Science</p>
                 <p v-bind:class="{ active: actives[0] }" class="major-college">(Arts and Science)</p>
               </div>
             </button>
           </div>
-          
+
         </div>
       </div>
       <!-- progress bar settings -->
@@ -93,7 +93,7 @@
               <p class="sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
-   
+
           <div class="sub-req-div" v-if="subReq.display">
             <div >
               <p>Additional Courses</p>
@@ -101,7 +101,7 @@
                 <li
                   v-for="subSubReq in subReq.additonalCourses"
                   v-bind:key="subSubReq.id"
-                  
+
                 >
                   <div class="row top-small">
                     <div class="col">
@@ -179,8 +179,10 @@ import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
 import Semester from '@/components/Semester';
-const fs = require('fs');
+// const fs = require('fs');
+import reqsData from '../requirements/reqs.json';
 const request = require('request');
+// import * as fs from 'fs'
 const fb = require('../firebaseConfig.js');
 import *  as methods from '../requirements/methods.js'
 
@@ -194,13 +196,13 @@ export default {
   props: {
     semesters: Array,
     compact: Boolean
-  
+
   },
   mounted() {},
   data() {
     const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
-      
+      reqsData: reqsData,
       actives: [false],
       modalShow: false,
       reqs: [
@@ -355,7 +357,8 @@ export default {
 
   methods: {
     getReqs: function(){
-      methods.getRequirements(['CS 1110', 'CHIN 2202', 'CS 1112', 'CS 2110', 'CS 3410', 'CS 3110', 'INFO 2300', 'PE 1110'], 'AS', 'CS').then(res => {
+      console.log("SEEKING REQUIREMENTS");
+      this.getRequirements(['CS 1110', 'CHIN 2202', 'CS 1112', 'CS 2110', 'CS 3410', 'CS 3110', 'INFO 2300', 'PE 1110'], 'AS', 'CS').then(res => {
       console.log(res)})
     },
     turnDetails(index, bool) {
@@ -375,11 +378,222 @@ export default {
     },
 
     activate(index, bool ){
-  
+
         this.actives[0] = !this.actives[0] ;
         this.actives[1] = !this.actives[1] ;
+    },
+
+    async getRequirements(coursesTaken, college, major, isTransfer = false){
+        // const fs = require('fs');
+        // import * as fs from 'fs'
+        // const request = require('request');
+        // const fb = require('../firebaseConfig.js');
+        //TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
+        let totalCreditsTaken = 0;
+        let coursesTakenWithInfo = {};
+        for(const courseTaken of coursesTaken){
+            const courseInfo = await this.getCourseInfo(courseTaken);
+            totalCreditsTaken += courseInfo.enrollGroups.unitsMaximum;
+            coursesTakenWithInfo[courseTaken] = courseInfo;
+        }
+
+        // Terminate firebase connection
+        // fb.app.delete();
+
+        //prepare final output JSONs
+        let finalRequirementJSONs = [];
+
+        let reqsData = this.reqsData;
+
+        //PART 1: check university requirements
+        if(!reqsData.university) throw new Error('University requirements not found.');
+        const universityReqs = reqsData.university;
+        finalRequirementJSONs = finalRequirementJSONs.concat(
+            await this.iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements));
+
+        //PART 2: check college requirements
+        if(!(college in reqsData.college)) throw new Error('College not found.');
+        const collegeReqs = reqsData.college[college];
+        finalRequirementJSONs = finalRequirementJSONs.concat(
+           await this.iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements));
+
+        //PART 3: check major reqs
+        if(!(major in reqsData.major)) throw new Error('Major not found.');
+        const majorReqs = reqsData.major[major];
+        finalRequirementJSONs = finalRequirementJSONs.concat(
+            await this.iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements));
+
+        // console.log(finalRequirementJSONs);
+        return finalRequirementJSONs;
+    },
+
+    async iterateThroughRequirements(coursesTakenWithInfo, requirements){
+        // array of requirement status information to be returned
+        let requirementJSONs = [];
+        let count = 0;
+        let self = this;
+        // helper to recursively call when an object has subpaths
+        function helper(coursesTakenWithInfo, requirements, parentName = null) {
+            for(const requirement of requirements) {
+                // if(!isTransfer && requirement.applies === "transfers") continue;
+                // temporarily skip these until we can implement them later
+
+                // Recursively call function if there are subpaths
+                if (requirement.multiplePaths) {
+                    const requirementName = requirement.name;
+                    requirementJSONs.push({name: requirementName, paths: [], isComplete: false});
+                    helper(coursesTakenWithInfo, requirement.paths, requirementName);
+                    continue;
+                }
+
+                let totalRequirementCredits = 0;
+                let totalRequirementCount = 0;
+                let coursesThatFulilledRequirement = [];
+                //check each course to see if it fulfilled that requirement
+
+                let codes = Object.keys(coursesTakenWithInfo);
+
+                // If not in path, push new object to requirementsJSONs
+                for(let code of codes) {
+                    // console.log('I am looking at the data of:', requirement.includes);
+
+                    const courseInfo = coursesTakenWithInfo[code];
+
+                    const indexIsFulfilled = self.checkIfCourseFulfilled(courseInfo, requirement.search, requirement.includes);
+
+                    if(indexIsFulfilled){
+                        //depending on what it is fulfilled by, either increase the count or credits you took
+                        switch(requirement.fulfilledBy){
+                            case 'count':
+                                totalRequirementCount ++;
+                                break;
+                            case 'credits':
+                                totalRequirementCredits += courseInfo.enrollGroups[0].unitsMaximum;
+                                break;
+                            case 'self-check':
+                                continue;
+                            default:
+                                throw new Error('Fulfillment type unknown.');
+                        }
+
+                        //add the course to the list of courses used to fulfill that one requirement
+                        coursesThatFulilledRequirement.push(code);
+                    }
+                }
+
+                const generatedResults = self.createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement);
+
+                // If at end path (no parent path)
+                if (!parentName) {
+                    requirementJSONs.push(generatedResults);
+                }
+                // If in path, append to path of parent
+                else {
+                    let parent = requirementJSONs.find(key => key.name === parentName);
+                    parent.paths.push(generatedResults);
+                    parent.isComplete = parent.isComplete || generatedResults.isComplete;
+                }
+            }
+        }
+
+        helper(coursesTakenWithInfo, requirements);
+
+        return requirementJSONs;
+    },
+
+    createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement){
+        let requirementFulfillmentData =
+        {
+            "name" : requirement.name,
+            "type" : requirement.fulfilledBy,
+            "courses" : coursesThatFulilledRequirement,
+        };
+        let isComplete;
+        let required;
+        let fulfilled;
+        switch(requirement.fulfilledBy){
+            case 'count':
+                isComplete = requirement.minCount <= totalRequirementCount;
+                required = requirement.minCount;
+                fulfilled = totalRequirementCount;
+                break;
+            case 'credits':
+                isComplete = requirement.minCreds <= totalRequirementCredits;
+                required = requirement.minCreds;
+                fulfilled = totalRequirementCredits;
+                break;
+            case 'self-check':
+                isComplete = 'unknown';
+                required = 'unknown';
+                fulfilled = 'unknown';
+                break;
+            default:
+                throw new Error('Fulfillment type unknown.');
+        }
+        requirementFulfillmentData['isComplete'] = isComplete;
+        requirementFulfillmentData['required'] = required;
+        requirementFulfillmentData['fulfilled'] = fulfilled;
+        return requirementFulfillmentData;
+    },
+
+    parseCourseAbbreviation(courseAbbreviation){
+        const regex = /([a-zA-Z]+) ([0-9][0-9][0-9][0-9]$)?/g;
+        const matches = regex.exec(courseAbbreviation);
+        if(matches === null) throw new Error('Invalid course abbreviation');
+        return {'courseSubject' : matches[1].toUpperCase(), 'courseNumber' : matches[2]};
+    },
+
+    getCourseInfo(courseCode) {
+        const courseAbbrev = this.parseCourseAbbreviation(courseCode);
+        const courseSubject = courseAbbrev.courseSubject.toUpperCase();
+        const number = courseAbbrev.courseNumber;
+
+        return new Promise((resolve, reject) => {
+            // Using Firebase
+            const coursesCollection = fb.db.collection('courses');
+            const courseRef = coursesCollection.doc(courseSubject+number);
+
+            courseRef.get()
+            .then(doc => {
+                if (!doc.exists) reject('No document exists');
+                else resolve(doc.data());
+            })
+            .catch(err => {
+                reject('Error getting doc', err);
+            })
+        })
+    },
+
+    ifCodeMatch(courseName, courseCode) {
+        for (let i = 0; i < courseName.length; i++) {
+            if (courseCode[i] !== '*' && courseName[i] !== courseCode[i]) return false;
+        }
+        return true;
+    },
+
+    checkIfCourseFulfilled(courseInfo, search, includes) {
+        // console.log(courseInfo.courseSubject + courseInfo.catalogNbr);
+
+        if (search === 'all' || search === 'all-eligible' || search === 'self-check') return true;
+        for (const [i, include] of includes.entries()) {
+            for (const option of include) {
+                if (search === 'code') {
+                    if (this.ifCodeMatch(`${courseInfo.courseSubject} ${courseInfo.catalogNbr}`, option)) {
+
+                        // Important: removes array option list from requirements
+                        if (includes.length > 1) includes.splice(i, 1);
+
+                        return true;
+                    }
+                }
+                else if (courseInfo[search].includes(option)) return true;
+            }
+        }
+
+        return false;
     }
-    
+
+
   }
 };
 </script>
@@ -414,7 +628,7 @@ export default {
 .sub-req-div{
   padding-left: 30px;
   margin :0px;
-  
+
 }
 
 p.sub-req{
