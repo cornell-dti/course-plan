@@ -11,10 +11,11 @@ const fb = require('../firebaseConfig.js');
 async function getRequirements(coursesTaken, college, major) { // isTransfer = false
   // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
   const coursesTakenWithInfo = {};
-  for (const courseTaken of coursesTaken) {
-    const courseInfo = await getCourseInfo(courseTaken);
-    coursesTakenWithInfo[courseTaken] = courseInfo;
-  }
+  const courseData = await Promise.all(
+    coursesTaken.map(courseTaken => getCourseInfo(courseTaken))
+  );
+
+  for (let i = 0; i < coursesTaken.length; i += 1) { coursesTakenWithInfo[coursesTaken[i]] = courseData[i]; }
 
   // Terminate firebase connection
   fb.app.delete();
@@ -28,21 +29,21 @@ async function getRequirements(coursesTaken, college, major) { // isTransfer = f
   if (!reqsData.university) throw new Error('University requirements not found.');
   const universityReqs = reqsData.university;
   finalRequirementJSONs = finalRequirementJSONs.concat(
-    await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements)
+    await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements, 'university')
   );
 
   // PART 2: check college requirements
   if (!(college in reqsData.college)) throw new Error('College not found.');
   const collegeReqs = reqsData.college[college];
   finalRequirementJSONs = finalRequirementJSONs.concat(
-    await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements)
+    await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements, 'college')
   );
 
   // PART 3: check major reqs
   if (!(major in reqsData.major)) throw new Error('Major not found.');
   const majorReqs = reqsData.major[major];
   finalRequirementJSONs = finalRequirementJSONs.concat(
-    await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements)
+    await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, 'major')
   );
 
   return finalRequirementJSONs;
@@ -53,13 +54,14 @@ async function getRequirements(coursesTaken, college, major) { // isTransfer = f
  * Loops through requirement data and compare all courses on (to identify whether they satisfy the requirement)
  * @param {*} allCoursesTakenWithInfo : object of courses taken with API information (CS 2110: {info})
  * @param {*} allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
+ * @param {*} requirementType : type of requirement being checked (college, major, or university)
  */
-async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequirements) {
+async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequirements, requirementType) {
   // array of requirement status information to be returned
   const requirementJSONs = [];
 
   // helper to recursively call when an object has subpaths
-  function helper(coursesTakenWithInfo, requirements, parentName = null) {
+  function helper(coursesTakenWithInfo, requirements, rType, parentName = null) {
     for (const requirement of requirements) {
       // if(!isTransfer && requirement.applies === "transfers") continue;
       // temporarily skip these until we can implement them later
@@ -88,7 +90,7 @@ async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequiremen
         if (indexIsFulfilled) {
           // depending on what it is fulfilled by, either increase the count or credits you took
           switch (requirement.fulfilledBy) {
-            case 'courses':
+            case 'count':
               totalRequirementCount += 1;
               break;
             case 'credits':
@@ -105,7 +107,7 @@ async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequiremen
         }
       }
 
-      const generatedResults = createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement);
+      const generatedResults = createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement, rType);
 
       // If at end path (no parent path)
       if (!parentName) requirementJSONs.push(generatedResults);
@@ -118,7 +120,7 @@ async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequiremen
     }
   }
 
-  helper(allCoursesTakenWithInfo, allRequirements);
+  helper(allCoursesTakenWithInfo, allRequirements, requirementType);
 
   return requirementJSONs;
 }
@@ -130,23 +132,25 @@ async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequiremen
  * @param {*} totalRequirementCount : total number of courses that satisfied requirement
  * @param {*} coursesThatFulilledRequirement : courses that satisfied requirement
  */
-function createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement) {
+function createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement, requirementType) {
   const requirementFulfillmentData = {
     name: requirement.name,
     type: requirement.fulfilledBy,
     courses: coursesThatFulilledRequirement,
-    required : requirement.minCount
+    requirementType
 
   };
   let isComplete;
   let required;
   let fulfilled;
   switch (requirement.fulfilledBy) {
-    case 'courses':
+    case 'count':
+      required = requirement.minCount;
       isComplete = requirement.minCount <= totalRequirementCount;
       fulfilled = totalRequirementCount;
       break;
     case 'credits':
+      required = requirement.minCreds;
       isComplete = requirement.minCount <= totalRequirementCredits;
       fulfilled = totalRequirementCredits;
       break;
@@ -198,7 +202,7 @@ function getCourseInfo(courseCode) {
         else resolve(doc.data());
       })
       .catch(() => {
-        reject(new Error('Error getting doc'));
+        reject(new Error('An error occured.'));
       });
   });
 }
@@ -237,10 +241,16 @@ function checkIfCourseFulfilled(courseInfo, search, includes) {
 
   return false;
 }
-export {checkIfCourseFulfilled, 
-  ifCodeMatch, 
-  getCourseInfo, 
-  parseCourseAbbreviation, 
-  createRequirementJSON, 
-  iterateThroughRequirements,
-  getRequirements};
+
+getRequirements(['CS 2110', 'CS 3410'], 'AS', 'CS').then(req => {
+  console.log(req);
+});
+
+// export {checkIfCourseFulfilled,
+//   ifCodeMatch,
+//   getCourseInfo,
+//   parseCourseAbbreviation,
+//   createRequirementJSON,
+//   iterateThroughRequirements,
+//   getRequirements
+// };
