@@ -51,8 +51,7 @@
         </div>
       </div>
     </div>
-    <!-- <coursemenu v-if="menuOpen" class="course-menu" v-click-outside="closeMenuIfOpen"/> -->
-    <coursemenu v-if="menuOpen" class="course-menu" v-on:delete-course="deleteCourse"/>
+    <coursemenu v-if="menuOpen" class="course-menu" v-on:delete-course="deleteCourse" v-click-outside="closeMenuIfOpen" />
   </div>
 </template>
 
@@ -90,6 +89,7 @@ export default {
   data() {
     return {
       menuOpen: false,
+      stopCloseFlag: false
     }
   },
   computed: {
@@ -190,11 +190,17 @@ export default {
   },
   methods: {
     openMenu() {
+      this.stopCloseFlag = true;
       this.menuOpen = true;
     },
     closeMenuIfOpen() {
-      if(this.menuOpen) {
-        this.menuOpen = false;
+      if(this.stopCloseFlag) {
+        this.stopCloseFlag = false;
+      }
+      else {
+        if(this.menuOpen) {
+          this.menuOpen = false;
+        }
       }
     },
     deleteCourse() {
@@ -286,7 +292,7 @@ export default {
       height: 5px;
       background-color: #c4c4c4;
       opacity: 1;
-      margin: 0 2px; 
+      margin: 0 2px;
     }
   }
 
