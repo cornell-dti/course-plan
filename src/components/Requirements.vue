@@ -194,8 +194,9 @@ Vue.use(VueCollapse);
 export default {
   props: {
     semesters: Array,
+    currentClasses: Array,
+    user: Object,
     compact: Boolean
-
   },
   mounted() {},
   data() {
@@ -356,8 +357,11 @@ export default {
 
   methods: {
     getReqs: function(){
+      console.log(this.currentClasses);
       console.log("SEEKING REQUIREMENTS");
-      this.getRequirements(['CS 1110', 'CHIN 2202', 'CS 1112', 'CS 2110', 'CS 3410', 'CS 3110', 'INFO 2300', 'PE 1110'], 'AS', 'CS').then(res => {
+      //this.getRequirements(['CS 1110', 'CHIN 2202', 'CS 1112', 'CS 2110', 'CS 3410', 'CS 3110', 'INFO 2300', 'PE 1110'], 'AS', 'CS').then(res => {
+      //console.log(res)})
+      this.getRequirements(this.currentClasses, this.user.college, this.user.major).then(res => {
       console.log(res)})
     },
     turnDetails(index, bool) {
