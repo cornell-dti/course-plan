@@ -6,7 +6,7 @@
           <img class="courseMenu-icon" src="../../assets/images/paint.svg"/>
           <span class="courseMenu-text">Edit Color</span>
         </div>
-        <img class="courseMenu-arrow" src="../../assets/images/move.svg"/>
+        <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg"/>
         
         <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
           <div v-for="color in colors" :key="color.id" class="courseMenu-section" v-on:click="colorCourse(color)">
