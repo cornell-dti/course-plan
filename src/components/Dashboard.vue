@@ -6,7 +6,10 @@
         :compact="compactVal"
         @compact-updated="compactVal = $event"
       />
-      <requirements :semesters="semesters" />
+      <requirements 
+        :semesters="semesters" 
+        :courses="currentClasses"
+       />
     </div>
     <div id="dashboard-bottomView">
       <bottombar />
@@ -41,13 +44,18 @@ export default {
     return {
       compactVal: false,
       currSemID: 1,
-      semesters: []
+      semesters: [],
+      currentClasses: []
     };
   },
   mounted() {
     this.getSemestersFromUser();
+
   },
   methods: {
+    getCurrentClassesFromUser(){
+      const x = 0;
+    },
     getSemestersFromUser() {
       const user = auth.currentUser;
       const userEmail = user.email;
@@ -73,6 +81,7 @@ export default {
       const semesters = [];
       firebaseSems.forEach(firebaseSem => {
         const firebaseCourses = firebaseSem.courses;
+        this.currentClasses = firebaseSem.courses;
         const courses = [];
         firebaseCourses.forEach(firebaseCourse => {
           courses.push(this.createCourse(firebaseCourse));
