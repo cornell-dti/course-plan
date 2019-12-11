@@ -26,31 +26,34 @@ async function getRequirements(coursesTaken, college, major, isTransfer = false)
     // Terminate firebase connection
     // fb.app.delete();
 
-    //prepare final output JSONs
-    let finalRequirementJSONs = [];
+  // prepare final output JSONs
+  let finalRequirementJSONs = [];
 
-    const reqsData = JSON.parse(fs.readFileSync('reqs.json'));
+  const reqsData = JSON.parse(fs.readFileSync('reqs.json'));
 
-    //PART 1: check university requirements
-    if(!reqsData.university) throw new Error('University requirements not found.');
-    const universityReqs = reqsData.university;
-    finalRequirementJSONs = finalRequirementJSONs.concat(
-        await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements));
+  // PART 1: check university requirements
+  if (!reqsData.university) throw new Error('University requirements not found.');
+  const universityReqs = reqsData.university;
+  finalRequirementJSONs = finalRequirementJSONs.concat(
+    await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements)
+  );
 
-    //PART 2: check college requirements
-    if(!(college in reqsData.college)) throw new Error('College not found.');
-    const collegeReqs = reqsData.college[college];
-    finalRequirementJSONs = finalRequirementJSONs.concat(
-       await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements));
+  // PART 2: check college requirements
+  if (!(college in reqsData.college)) throw new Error('College not found.');
+  const collegeReqs = reqsData.college[college];
+  finalRequirementJSONs = finalRequirementJSONs.concat(
+    await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements)
+  );
 
-    //PART 3: check major reqs
-    if(!(major in reqsData.major)) throw new Error('Major not found.');
-    const majorReqs = reqsData.major[major];
-    finalRequirementJSONs = finalRequirementJSONs.concat(
-        await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements));
+  // PART 3: check major reqs
+  if (!(major in reqsData.major)) throw new Error('Major not found.');
+  const majorReqs = reqsData.major[major];
+  finalRequirementJSONs = finalRequirementJSONs.concat(
+    await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements)
+  );
 
-    // console.log(finalRequirementJSONs);
-    return finalRequirementJSONs;
+  // console.log(finalRequirementJSONs);
+  return finalRequirementJSONs;
 }
 
 /**
@@ -125,7 +128,24 @@ async function iterateThroughRequirements(coursesTakenWithInfo, requirements){
                 parent.isComplete = parent.isComplete || generatedResults.isComplete;
             }
         }
+      }
+
+      const generatedResults = createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement);
+
+      // If at end path (no parent path)
+      if (!parentName) {
+        requirementJSONs.push(generatedResults);
+      }
+      // If in path, append to path of parent
+      else {
+        const parent = requirementJSONs.find(key => key.name === parentName);
+        parent.paths.push(generatedResults);
+        parent.isComplete = parent.isComplete || generatedResults.isComplete;
+      }
     }
+  }
+
+  helper(coursesTakenWithInfo, requirements);
 
     helper(coursesTakenWithInfo, requirements);
 
@@ -248,6 +268,7 @@ function checkIfCourseFulfilled(courseInfo, search, includes) {
             }
             else if (courseInfo[search].includes(option)) return true;
         }
+      } else if (courseInfo[search].includes(option)) return true;
     }
 
     return false;
@@ -257,4 +278,4 @@ function checkIfCourseFulfilled(courseInfo, search, includes) {
 //     console.log(res);
 // })
 
-export {getRequirements}
+export { getRequirements };

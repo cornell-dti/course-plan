@@ -146,8 +146,8 @@
           <div v-for="subReq in req.completed" v-bind:key="subReq.id" class="semesterView-wrapper">
             <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
             <div class="row top">
-              <div class="col-1 text-left p-0">
-                <button class="btn" v-on:click="turnSubDetails(index, id, true)">
+              <div class="col-1 middle text-left p-0">
+                <button class="btn btn-2" v-on:click="turnSubDetails(index, id, true)">
                   <!-- svg for dropdown icon -->
                   <img
                     class="setting"
@@ -157,9 +157,9 @@
                   />
                 </button>
               </div>
-              <p class="col sup-req">{{subReq.name}}</p>
+              <p class="col sup-req middle ">{{subReq.name}}</p>
               <p
-                class="col sup-req text-right p-0"
+                class="col sup-req middle text-right p-0"
               >( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
@@ -174,7 +174,7 @@
 </template>
 
 <script>
-import {  Vue } from 'vue-property-decorator';
+import { Vue } from 'vue-property-decorator';
 import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
@@ -184,7 +184,6 @@ import reqsData from '../requirements/reqs.json';
 const request = require('request');
 // import * as fs from 'fs'
 const fb = require('../firebaseConfig.js');
-import *  as methods from '../requirements/methods.js'
 
 
 Vue.component('course', Course);
@@ -372,8 +371,7 @@ export default {
     turnCompleted(index, bool) {
       this.reqs[index].displayCompleted = bool;
     },
-    isActive(index){
-
+    isActive(index) {
       return this.actives[index];
     },
 
@@ -617,7 +615,6 @@ export default {
     margin:0px
   }
 }
-
 
 
 .requirements {
