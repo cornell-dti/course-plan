@@ -8,8 +8,7 @@
                 "search": "all-eligible",
                 "fulfilledBy" : "credits",
                 "includes": [],
-                "minCreds": 120,
-                "maxCreds": 120,
+                "minCount": 120,
                 "applies": "all"
             },
             {
@@ -17,14 +16,13 @@
                 "search": "all-eligible",
                 "fulfilledBy" : "credits",
                 "includes": [],
-                "minCreds": 60,
-                "maxCreds": 120,
+                "minCount": 60,
                 "applies": "transfers"
             },
             {
                 "name": "Physical Education",
                 "search": "subject",
-                "fulfilledBy" : "count",
+                "fulfilledBy" : "courses",
                 "includes": [
                     ["PE"]
                 ],
@@ -36,13 +34,18 @@
                 "name": "Swimming Test",
                 "fulfilledBy": "self-check",
                 "includes": [],
-                "minCreds": 0,
-                "maxCreds": 0,
+                "minCount": 0,
                 "applies": "all"
             }
         ]
     },
     "college": {
+        "AG":{
+
+        },
+        "AR":{
+
+        },
         "AS": {
             "name": "Arts and Sciences",
             "requirements": [
@@ -53,9 +56,8 @@
                         ["AS"]
                     ],
                     "fulfilledBy": "credits",
-                    "minCreds": 100,
-                    "maxCreds": 120,
-                    "uniqueCourses": 0
+                    "minCount": 100,
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Freshman Writing Seminars (FWS)",
@@ -64,9 +66,8 @@
                         ["First-Year Writing Seminar."]
                     ],
                     "fulfilledBy" : "credits",
-                    "minCreds": 6,
-                    "maxCreds": 12,
-                    "uniqueCourses": 0
+                    "minCount": 6,
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Foreign Language Requirement",
@@ -77,29 +78,82 @@
                             "search": "code",
                             "includes": [
                                 [
+                                    "ARAB 2***",
+                                    "BENGL 2***", 
+                                    "BURM 2***",
                                     "CHIN 2***",
                                     "FREN 2***",
-                                    "JAPAN 2***"
+                                    "GERST 2***", 
+                                    "GREEK 2***",
+                                    "HEBRW 2***",
+                                    "HINDI 2***", 
+                                    "INDO 2***", 
+                                    "ITAL 2***", 
+                                    "JAPAN 2***",
+                                    "KHMER 2***", 
+                                    "KOREA 2***", 
+                                    "LATIN 2***", 
+                                    "NEPAL 2***", 
+                                    "PERSN 2***", 
+                                    "POLSH 2***",
+                                    "PORT 2***", 
+                                    "RUSSA 2***", 
+                                    "SANSK 2***", 
+                                    "SINHA 2***", 
+                                    "SPAN 2***", 
+                                    "SWAHL 2***", 
+                                    "TAG 2***", 
+                                    "THAI 2***", 
+                                    "TURK 2***", 
+                                    "VIET 2***", 
+                                    "YORUB 2***", 
+                                    "ZULU 2***"
                                 ]
                             ],
-                            "fulfilledBy": "count",
+                            "fulfilledBy": "courses",
                             "minCount": 1,
-                            "uniqueCourses": 0
+                            "uniqueIncludes": 0
                         },
                         {
                             "name": "11 Language Course Credits",
                             "search": "subject",
                             "includes": [
                                 [
+                                    "ARAB",
+                                    "BENGL", 
+                                    "BURM",
                                     "CHIN",
                                     "FREN",
-                                    "JAPAN"
+                                    "GERST", 
+                                    "GREEK",
+                                    "HEBRW",
+                                    "HINDI", 
+                                    "INDO", 
+                                    "ITAL", 
+                                    "JAPAN",
+                                    "KHMER", 
+                                    "KOREA", 
+                                    "LATIN", 
+                                    "NEPAL", 
+                                    "PERSN", 
+                                    "POLSH",
+                                    "PORT", 
+                                    "RUSSA", 
+                                    "SANSK", 
+                                    "SINHA", 
+                                    "SPAN", 
+                                    "SWAHL", 
+                                    "TAG", 
+                                    "THAI", 
+                                    "TURK", 
+                                    "VIET", 
+                                    "YORUB", 
+                                    "ZULU"
                                 ]
                             ],
                             "fulfilledBy" : "credits",
-                            "minCreds": 11,
-                            "maxCreds": 120,
-                            "uniqueCourses": 0
+                            "minCount": 11,
+                            "uniqueIncludes": 0
                         }
                     ]
                 },
@@ -113,9 +167,9 @@
                             "(MQR-AS)"
                         ]
                     ],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 4,
-                    "uniqueCourses": 0
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Physical & Biological Sceiences (PBS-AS)",
@@ -126,9 +180,9 @@
                             "(PBSS-AS)"
                         ]
                     ],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 2,
-                    "uniqueCourses": 0
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Mathematics & Quantitative Reasoning (MQR-AS)",
@@ -136,9 +190,9 @@
                     "includes": [
                         ["(MQR-AS)"]
                     ],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 1,
-                    "uniqueCourses": 0
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Five Courses in Liberal Arts",
@@ -152,9 +206,9 @@
                             "(SBA-AS)"
                         ]
                     ],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 5,
-                    "uniqueCourses": 4
+                    "uniqueIncludes": 4
                 },
                 {
                     "name": "Geographic catalogBreadth Requirement (GB)",
@@ -165,9 +219,9 @@
                             "GHB"
                         ]
                     ],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 1,
-                    "uniqueCourses": 0
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Historic catalogBreadth Requirement (HB)",
@@ -178,9 +232,9 @@
                             "GHB"
                         ]
                     ],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 1,
-                    "uniqueCourses": 0
+                    "uniqueIncludes": 0
                 }
             ]
         },
@@ -199,9 +253,8 @@
                         ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCreds": 14,
-                    "maxCreds": 16,
-                    "uniqueCourses": 0,
+                    "minCount": 14,
+                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
@@ -212,9 +265,8 @@
                         ["PHYS 2213"]
                     ],
                     "fulfilledBy": "credits",
-                    "minCreds": 8,
-                    "maxCreds": 12,
-                    "uniqueCourses": 0,
+                    "minCount": 8,
+                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
@@ -224,9 +276,8 @@
                         ["CHEM 2090"]
                     ],
                     "fulfilledBy": "credits",
-                    "minCreds": 4,
-                    "maxCreds": 8,
-                    "uniqueCourses": 0,
+                    "minCount": 4,
+                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
@@ -236,9 +287,8 @@
                         ["First-Year Writing Seminar."]
                     ],
                     "fulfilledBy": "credits",
-                    "minCreds": 6,
-                    "maxCreds": 12,
-                    "uniqueCourses": 0
+                    "minCount": 6,
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Computing",
@@ -252,9 +302,8 @@
                         ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCreds": 4,
-                    "maxCreds": 4,
-                    "uniqueCourses": 0
+                    "minCount": 4,
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Introducation to Engineering",
@@ -263,9 +312,8 @@
                         ["ENGRI"]
                     ],
                     "fulfilledBy": "credits",
-                    "minCreds": 4,
-                    "maxCreds": 4,
-                    "uniqueCourses": 0
+                    "minCount": 4,
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Engineering Distribution",
@@ -274,9 +322,8 @@
                         ["ENGRD"]
                     ],
                     "fulfilledBy": "credits",
-                    "minCreds": 6,
-                    "maxCreds": 8,
-                    "uniqueCourses": 0
+                    "minCount": 6,
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Liberal Studies Distribution",
@@ -338,30 +385,235 @@
                         ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCreds": 18,
-                    "maxCreds": 120,
-                    "uniqueCourses": 3
+                    "minCount": 18,
+                    "uniqueIncludes": 3
                 },
                 {
                     "name": "Advisor-Approved Electives",
                     "includes": [],
                     "fulfilledBy": "self-check",
-                    "minCreds": 6,
-                    "maxCreds": 6,
-                    "uniqueCourses": 0
+                    "minCount": 6,
+                    "uniqueIncludes": 0
                 },
                 {
                     "name": "Technical Communication",
                     "includes": [],
                     "fulfilledBy": "self-check",
-                    "minCreds": 3,
-                    "maxCreds": 4,
-                    "uniqueCourses": 0
+                    "minCount": 3,
+                    "uniqueIncludes": 0
                 }
             ]
+        }, 
+        "HE":{
+
+        },
+        "IL":{
+
+        }, 
+        "BU":{
+
         }
     },
     "major": {
+        "ASRC":{
+            "name": "Africana Studies",
+            "schools": ["AS"],
+            "requirements": [
+                {
+                    "name": "Introduction to Africana Studies",
+                    "search": "code",
+                    "includes": ["ASRC 1500"],
+                    "fulfilledBy":"courses",
+                    "minCount":1,
+                    "majorDep": true
+                },
+                {
+                    "name": "Diaspora Studies",
+                    "search": "self-check",
+                    "fulfilledBy":"courses",
+                    "minCount":3,
+                    "majorDep": true
+                }, 
+                {
+                    "name": "Specific Focus",
+                    "search": "self-check",
+                    "fulfilledBy":"courses",
+                    "minCount":4,
+                    "majorDep": true
+                }, 
+                {
+                    "name": "Seminar Courses",
+                    "search": "code",
+                    "includes": ["ASRC 4***"],
+                    "fulfilledBy":"courses",
+                    "minCount":2,
+                    "majorDep": true
+                }
+            ]
+        },
+        "AGSCI":{
+
+        },
+        "AMST":{
+
+        },
+        "ANSC":{
+
+        },
+        "ANTHR":{
+
+        },
+        "AEM":{
+            "name": "Applied Economics and Management", 
+            "schools": ["AG"],
+            "requirements": [
+                {
+                    "name": "Economics and Management",
+                    "search": "code",
+                    "includes": [
+                        ["ECON 1110"],
+                        ["ECON 1120"], 
+                        ["AEM 2220"],
+                        ["AEM 2225"], 
+                        ["AEM 2240"],
+                        ["AEM 2600"], 
+                        ["AEM 2601"], 
+                        ["AEM 2700"], 
+                        ["AEM 3200"], 
+                        ["AEM 3230"]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 10,
+                    "majorDep": true
+                }, 
+                {
+                    "name": "Grand Challenges @ Dyson",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 2000", 
+                            "AEM 2555", 
+                            "AEM 2800", 
+                            "AEM 2805", 
+                            "AEM 4940"
+                        ], 
+                        ["AEM 3000"], 
+                        ["AEM 4000"]
+                    ], 
+                    "fulfilledBy": "credit",
+                    "minCount": 7.5,
+                    "majorDep": true
+                },
+                {
+                    "name": "Quantitative Methods",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "MATH 1110", 
+                            "MATH 1120"
+                        ],
+                        ["AEM 2010"], 
+                        ["AEM 2100"],
+                        [
+                            "AEM 2770",
+                            "AEM 2830", 
+                            "AEM 2840", 
+                            "AEM 3100", 
+                            "AEM 3390", 
+                            "AEM 4060", 
+                            "AEM 4110", 
+                            "AEM 4120", 
+                            "AEM 4190", 
+                            "BTRY 3080", 
+                            "ECON 3130",
+                            "ECON 3140", 
+                            "ECON 4020", 
+                            "ILRST 2110", 
+                            "ECON 3110"
+                        ]
+                    ], 
+                    "fulfilledBy": "credit",
+                    "minCount": 4,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                }, 
+                {
+                    "name": "Applied Economics",
+                    "search": "code",
+                    "includes": [
+                    ], 
+                    "fulfilledBy": "credit",
+                    "minCount": 3,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                }
+            ],
+            "concentrations":[
+                {
+                    "name": "Accounting",
+                    "requirements": [
+                        "AEM 3360", 
+                        "AEM 3370", 
+                        [
+                            "AEM 3355", 
+                            "AEM 3520", 
+                            "AEM 4225", 
+                            "AEM 4520", 
+                            "AEM 4521", 
+                            "AEM 4530", 
+                            "AEM 4531", 
+                            "AEM 4532", 
+                            "AEM 4533", 
+                            "AEM 4534", 
+                            "AEM 4535", 
+                            "AEM 4560", 
+                            "AEM 5090", 
+                            "NBA 5110"
+                        ]
+                    ]
+                }, 
+                {
+                    "name": "Agribusiness Management", 
+                    "requirements": [
+                        ["AEM 3020"], 
+                        ["HADM 2810"], 
+                        [
+                            "AEM 3040", 
+                            "AEM 3260", 
+                            "AEM 3290", 
+                            "AEM 4030", 
+                            "AEM 4050", 
+                            "AEM 4070", 
+                            "AEM 4150", 
+                            "AEM 4210", 
+                            "AEM 4310"
+                        ]
+                    ]
+                }, 
+                {
+                    "name": "Applied Economics", 
+                    "requirements":[
+                        "ECON 3040", 
+
+                    ]
+                }
+            ]
+        },
+        "ARKEO":{
+
+        },
+        "ARCH":{
+
+        },
+        "ASIAN":{
+
+        },
+        "ASTRO":{
+
+        },
+        "EAS":{
+
+        },
         "CS": {
             "name": "Computer Science",
             "schools": [
@@ -399,9 +651,9 @@
                             "CS 4410"
                         ]
                     ],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 7,
-                    "uniqueCourses": 0,
+                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
@@ -450,9 +702,9 @@
                         "CS 4998",
                         "CS 4999"
                     ],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 3,
-                    "uniqueCourses": 0,
+                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
@@ -509,9 +761,9 @@
                         ]
                     ],
                     "excludes": [],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 1,
-                    "uniqueCourses": 0,
+                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
@@ -550,9 +802,9 @@
                         ]
                     ],
                     "excludes": [],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 3,
-                    "uniqueCourses": 0,
+                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
         
@@ -571,11 +823,19 @@
                         "INFO 4300",
                         "INFO 5300"
                     ],
-                    "fulfilledBy": "count",
+                    "fulfilledBy": "courses",
                     "minCount": 3,
-                    "uniqueCourses": 0,
+                    "uniqueIncludes": 0,
                     "majorDep": true
                 }
+            ]
+        }, 
+        "INFO": {
+            "name": "Information Science",
+            "schools": [
+                "AS", 
+                "EN", 
+                "AG"
             ]
         }
     }
