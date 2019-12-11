@@ -27,9 +27,10 @@
           <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
             <course
               v-bind="course"
-              v-bind:id="course.subject"
+              v-bind:id="course.subject + course.code"
               v-bind:compact="compact"
               class="semester-course"
+              v-on:delete-course="deleteCourse"
             />
           </div>
         </div>
@@ -182,6 +183,43 @@ export default {
             semesters.forEach(sem => {
               if (sem.type === this.type && sem.year === this.year) {
                 sem.courses.push(firebaseCourse);
+              }
+            });
+            docRef.update({
+              semesters
+            });
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No such document!');
+          }
+        })
+        .catch(error => {
+          console.log('Error getting document:', error);
+        });
+    },
+    deleteCourse(courseAbbr) {
+      for(let i = 0; i < this.courses.length; i++) {
+        if(this.courses[i].subject + this.courses[i].code == courseAbbr) {
+          this.courses.splice(i, 1);
+          break;
+        }
+      }
+      this.updateFirebaseCourses();
+    },
+    updateFirebaseCourses() {
+      // TODO: make user / docRef global, and start reusing update code
+      const user = auth.currentUser;
+      const userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+
+      docRef
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            const { semesters } = doc.data();
+            semesters.forEach(sem => {
+              if (sem.type === this.type && sem.year === this.year) {
+                sem.courses = this.courses;
               }
             });
             docRef.update({

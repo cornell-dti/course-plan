@@ -52,7 +52,7 @@
       </div>
     </div>
     <!-- <coursemenu v-if="menuOpen" class="course-menu" v-click-outside="closeMenuIfOpen"/> -->
-    <coursemenu v-if="menuOpen" class="course-menu"/>
+    <coursemenu v-if="menuOpen" class="course-menu" v-on:delete-course="deleteCourse"/>
   </div>
 </template>
 
@@ -84,7 +84,8 @@ export default {
     semesters: Array,
     color: String,
     requirementsMap: Map,
-    compact: Boolean
+    compact: Boolean,
+    id: String
   },
   data() {
     return {
@@ -195,6 +196,9 @@ export default {
       if(this.menuOpen) {
         this.menuOpen = false;
       }
+    },
+    deleteCourse() {
+      this.$emit("delete-course", this.id);
     }
   },
   directives: {

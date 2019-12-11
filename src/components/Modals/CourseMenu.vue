@@ -8,7 +8,7 @@
         </div>
         <img class="courseMenu-arrow" src="../../assets/images/move.svg"/>
       </div>
-      <div class="courseMenu-section">
+      <div class="courseMenu-section" v-on:click="deleteCourse">
         <div class="courseMenu-left">
           <img class="courseMenu-icon" src="../../assets/images/trash.svg"/>
           <span class="courseMenu-text">Delete</span>
@@ -20,7 +20,11 @@
 
 <script>
 export default {
-
+  methods: {
+    deleteCourse() {
+      this.$emit("delete-course");
+    }
+  }
 }
 </script>
 
