@@ -90,7 +90,7 @@ async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequiremen
         if (indexIsFulfilled) {
           // depending on what it is fulfilled by, either increase the count or credits you took
           switch (requirement.fulfilledBy) {
-            case 'count':
+            case 'courses':
               totalRequirementCount += 1;
               break;
             case 'credits':
@@ -137,20 +137,20 @@ function createRequirementJSON(requirement, totalRequirementCredits, totalRequir
     name: requirement.name,
     type: requirement.fulfilledBy,
     courses: coursesThatFulilledRequirement,
-    requirementType
+    requirementType : requirementType,
+    required: requirement.minCount
 
   };
   let isComplete;
   let required;
   let fulfilled;
   switch (requirement.fulfilledBy) {
-    case 'count':
+    case 'courses':
       required = requirement.minCount;
       isComplete = requirement.minCount <= totalRequirementCount;
       fulfilled = totalRequirementCount;
       break;
     case 'credits':
-      required = requirement.minCreds;
       isComplete = requirement.minCount <= totalRequirementCredits;
       fulfilled = totalRequirementCredits;
       break;
@@ -242,15 +242,12 @@ function checkIfCourseFulfilled(courseInfo, search, includes) {
   return false;
 }
 
-getRequirements(['CS 2110', 'CS 3410'], 'AS', 'CS').then(req => {
-  console.log(req);
-});
-
-// export {checkIfCourseFulfilled,
-//   ifCodeMatch,
-//   getCourseInfo,
-//   parseCourseAbbreviation,
-//   createRequirementJSON,
-//   iterateThroughRequirements,
-//   getRequirements
-// };
+export {
+  checkIfCourseFulfilled,
+  ifCodeMatch,
+  getCourseInfo,
+  parseCourseAbbreviation,
+  createRequirementJSON,
+  iterateThroughRequirements,
+  getRequirements
+};
