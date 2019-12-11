@@ -2,15 +2,6 @@
   <div class="newSemester">
     <div class="newSemester-section newSemester-type">
       <label class="newSemester-label" for="type">{{ typeText }}</label>
-<<<<<<< HEAD
-      <select class="newSemester-select" :placeholder="typePlaceholder" id="type">
-        <option value selected disabled>Select one</option>
-        <option value="fall">🍂 Fall</option>
-        <option value="spring">🌸 Spring</option>
-        <option value="summer">☀️ Summer</option>
-        <option value="winter">❄️ Winter</option>
-      </select>
-=======
       <div
         class="newSemester-select"
         id="type"
@@ -49,7 +40,6 @@
           </div>
         </div>
       </div>
->>>>>>> af608c1cbe5b6ddaf82ea2d3ccfe27a11586ced8
     </div>
     <div class="newSemester-section newSemester-year">
       <label class="newSemester-label" for="year">{{ yearText }}</label>

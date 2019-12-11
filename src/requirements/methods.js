@@ -10,6 +10,7 @@ const fb = require('../firebaseConfig.js');
  */
 
 async function getRequirements(coursesTaken, college, major, isTransfer = false){
+    const fb = require('../firebaseConfig.js');
     //TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
     let totalCreditsTaken = 0;
     let coursesTakenWithInfo = {};
@@ -17,6 +18,7 @@ async function getRequirements(coursesTaken, college, major, isTransfer = false)
         const courseInfo = await getCourseInfo(courseTaken);
         totalCreditsTaken += courseInfo.enrollGroups.unitsMaximum;
         coursesTakenWithInfo[courseTaken] = courseInfo;
+   
     }
 
     // Terminate firebase connection
@@ -289,3 +291,6 @@ function checkIfCourseFulfilled(courseInfo, search, includes) {
 getRequirements(['CS 1110', 'CHIN 2202', 'CS 1112', 'CS 2110', 'CS 3410', 'CS 3110', 'INFO 2300', 'PE 1110'], 'AS', 'CS').then(res => {
     console.log(res);
 })
+
+
+export {getRequirements}

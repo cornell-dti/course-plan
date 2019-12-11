@@ -18,9 +18,9 @@
       <!--Majors tabular view -->
       <div class="tab" v-if="req.type === 'MAJOR'">
         <div class="row">
-          <div class="col-12" v-for="type in actives" v-bind:key= "type.id">
+          <div class="col-12 middle" v-for="type in actives" v-bind:key= "type.id">
         
-            <button v-bind:class="{ active: actives[0]}" @click="activate(0, true)" class="btn" v-bind:style='{"justify-content" :"center"}'>
+            <button v-bind:class="{ active: actives[0]}" @click="getReqs()" class="btn">
               <div class= "div-tab">
                 <p v-bind:class="{ active: actives[0] }" class="major">Computer Science</p> 
                 <p v-bind:class="{ active: actives[0] }" class="major-college">(Arts and Science)</p>
@@ -115,8 +115,7 @@
               </ul>
             </div>
             <p>Classes to Fullfill Requirements</p>
-            <div class="row fuffill">
-           
+            <div class="row fuffill" bag="first-bag" >
               <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
                 <course
                   v-bind="courses"
@@ -180,7 +179,10 @@ import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
 import Semester from '@/components/Semester';
-
+const fs = require('fs');
+const request = require('request');
+const fb = require('../firebaseConfig.js');
+import *  as methods from '../requirements/methods.js'
 
 
 Vue.component('course', Course);
@@ -256,7 +258,7 @@ export default {
           count: 'Courses',
           progress: 4,
           total: 8,
-          color: '#4D53DC',
+          color: '#2BBCC6',
           displayDetails: false,
           ongoing: [
             {
@@ -300,7 +302,7 @@ export default {
           count: 'Courses',
           progress: 4,
           total: 8,
-          color: '#4D53DC',
+          color: '#2BBCC6',
           displayDetails: false,
           ongoing: [
             {
@@ -352,6 +354,10 @@ export default {
   },
 
   methods: {
+    getReqs: function(){
+      methods.getRequirements(['CS 1110', 'CHIN 2202', 'CS 1112', 'CS 2110', 'CS 3410', 'CS 3110', 'INFO 2300', 'PE 1110'], 'AS', 'CS').then(res => {
+      console.log(res)})
+    },
     turnDetails(index, bool) {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
@@ -388,7 +394,6 @@ export default {
 
 .btn {
   padding: 10px;
-
   margin: -4px;
   display: flex;
   align-items: center;
