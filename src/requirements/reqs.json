@@ -547,56 +547,6 @@
                     "uniqueIncludes": 0,
                     "majorDep": true
                 }
-            ],
-            "concentrations":[
-                {
-                    "name": "Accounting",
-                    "requirements": [
-                        "AEM 3360", 
-                        "AEM 3370", 
-                        [
-                            "AEM 3355", 
-                            "AEM 3520", 
-                            "AEM 4225", 
-                            "AEM 4520", 
-                            "AEM 4521", 
-                            "AEM 4530", 
-                            "AEM 4531", 
-                            "AEM 4532", 
-                            "AEM 4533", 
-                            "AEM 4534", 
-                            "AEM 4535", 
-                            "AEM 4560", 
-                            "AEM 5090", 
-                            "NBA 5110"
-                        ]
-                    ]
-                }, 
-                {
-                    "name": "Agribusiness Management", 
-                    "requirements": [
-                        ["AEM 3020"], 
-                        ["HADM 2810"], 
-                        [
-                            "AEM 3040", 
-                            "AEM 3260", 
-                            "AEM 3290", 
-                            "AEM 4030", 
-                            "AEM 4050", 
-                            "AEM 4070", 
-                            "AEM 4150", 
-                            "AEM 4210", 
-                            "AEM 4310"
-                        ]
-                    ]
-                }, 
-                {
-                    "name": "Applied Economics", 
-                    "requirements":[
-                        "ECON 3040", 
-
-                    ]
-                }
             ]
         },
         "ARKEO":{

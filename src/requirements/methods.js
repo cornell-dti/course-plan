@@ -135,7 +135,7 @@ function createRequirementJSON(requirement, totalRequirementCredits, totalRequir
     name: requirement.name,
     type: requirement.fulfilledBy,
     courses: coursesThatFulilledRequirement,
-    required : requirement.minCount
+    required: requirement.minCount
 
   };
   let isComplete;
@@ -237,10 +237,13 @@ function checkIfCourseFulfilled(courseInfo, search, includes) {
 
   return false;
 }
-export {checkIfCourseFulfilled, 
-  ifCodeMatch, 
-  getCourseInfo, 
-  parseCourseAbbreviation, 
-  createRequirementJSON, 
+
+export {
+  checkIfCourseFulfilled,
+  ifCodeMatch,
+  getCourseInfo,
+  parseCourseAbbreviation,
+  createRequirementJSON,
   iterateThroughRequirements,
-  getRequirements};
+  getRequirements
+};
