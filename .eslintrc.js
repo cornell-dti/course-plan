@@ -17,6 +17,8 @@ module.exports = {
     // TODO: fix copied js code that makes this warn necessary
     'no-use-before-define': ['warn'],
     'linebreak-style': 0,
+    //TODO: make requests asynchronous
+    'no-await-in-loop': ['warn'],
     // don't require .vue extension when importing
     'import/extensions': [
       'error',

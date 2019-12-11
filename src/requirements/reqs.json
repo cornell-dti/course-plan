@@ -1,0 +1,1313 @@
+{
+    "university": {
+        "value": "UNI",
+        "name": "University",
+        "requirements": [
+            {
+                "name": "Academic Credits",
+                "search": "all-eligible",
+                "fulfilledBy" : "credits",
+                "includes": [],
+                "minCount": 120,
+                "applies": "all"
+            },
+            {
+                "name": "Required Cornell Credits for Transfers",
+                "search": "all-eligible",
+                "fulfilledBy" : "credits",
+                "includes": [],
+                "minCount": 60,
+                "applies": "transfers"
+            },
+            {
+                "name": "Physical Education",
+                "search": "subject",
+                "fulfilledBy" : "courses",
+                "includes": [
+                    ["PE"]
+                ],
+                "minCount": 2,
+                "maxCount": 2,
+                "applies": "all"
+            },
+            {
+                "name": "Swimming Test",
+                "fulfilledBy": "self-check",
+                "includes": [],
+                "minCount": 0,
+                "applies": "all"
+            }
+        ]
+    },
+    "college": {
+        "AG":{
+
+        },
+        "AR":{
+
+        },
+        "AS": {
+            "name": "Arts and Sciences",
+            "requirements": [
+                {
+                    "name": "CAS Credits",
+                    "search": "acadGroup",
+                    "includes": [
+                        ["AS"]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 100,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Freshman Writing Seminars (FWS)",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        ["First-Year Writing Seminar."]
+                    ],
+                    "fulfilledBy" : "credits",
+                    "minCount": 6,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Foreign Language Requirement",
+                    "multiplePaths": true,
+                    "paths": [
+                        {
+                            "name": "Intermediate Language Course",
+                            "search": "code",
+                            "includes": [
+                                [
+                                    "ARAB 2***",
+                                    "BENGL 2***", 
+                                    "BURM 2***",
+                                    "CHIN 2***",
+                                    "FREN 2***",
+                                    "GERST 2***", 
+                                    "GREEK 2***",
+                                    "HEBRW 2***",
+                                    "HINDI 2***", 
+                                    "INDO 2***", 
+                                    "ITAL 2***", 
+                                    "JAPAN 2***",
+                                    "KHMER 2***", 
+                                    "KOREA 2***", 
+                                    "LATIN 2***", 
+                                    "NEPAL 2***", 
+                                    "PERSN 2***", 
+                                    "POLSH 2***",
+                                    "PORT 2***", 
+                                    "RUSSA 2***", 
+                                    "SANSK 2***", 
+                                    "SINHA 2***", 
+                                    "SPAN 2***", 
+                                    "SWAHL 2***", 
+                                    "TAG 2***", 
+                                    "THAI 2***", 
+                                    "TURK 2***", 
+                                    "VIET 2***", 
+                                    "YORUB 2***", 
+                                    "ZULU 2***"
+                                ]
+                            ],
+                            "fulfilledBy": "courses",
+                            "minCount": 1,
+                            "uniqueIncludes": 0
+                        },
+                        {
+                            "name": "11 Language Course Credits",
+                            "search": "subject",
+                            "includes": [
+                                [
+                                    "ARAB",
+                                    "BENGL", 
+                                    "BURM",
+                                    "CHIN",
+                                    "FREN",
+                                    "GERST", 
+                                    "GREEK",
+                                    "HEBRW",
+                                    "HINDI", 
+                                    "INDO", 
+                                    "ITAL", 
+                                    "JAPAN",
+                                    "KHMER", 
+                                    "KOREA", 
+                                    "LATIN", 
+                                    "NEPAL", 
+                                    "PERSN", 
+                                    "POLSH",
+                                    "PORT", 
+                                    "RUSSA", 
+                                    "SANSK", 
+                                    "SINHA", 
+                                    "SPAN", 
+                                    "SWAHL", 
+                                    "TAG", 
+                                    "THAI", 
+                                    "TURK", 
+                                    "VIET", 
+                                    "YORUB", 
+                                    "ZULU"
+                                ]
+                            ],
+                            "fulfilledBy" : "credits",
+                            "minCount": 11,
+                            "uniqueIncludes": 0
+                        }
+                    ]
+                },
+                {
+                    "name": "Four Courses in Physical & Biological Sciences and Mathematics & Quantitative Reasoning",
+                    "search": "catalogDistr",
+                    "includes": [
+                        [
+                            "(PBS-AS)",
+                            "(PBSS-AS)",
+                            "(MQR-AS)"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 4,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Physical & Biological Sceiences (PBS-AS)",
+                    "search": "catalogDistr",
+                    "includes": [
+                        [
+                            "(PBS-AS)",
+                            "(PBSS-AS)"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Mathematics & Quantitative Reasoning (MQR-AS)",
+                    "search": "catalogDistr",
+                    "includes": [
+                        ["(MQR-AS)"]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Five Courses in Liberal Arts",
+                    "search": "catalogDistr",
+                    "includes": [
+                        [
+                            "(CA-AS)",
+                            "(HA-AS)",
+                            "(KCM-AS)",
+                            "(LA-AS)",
+                            "(SBA-AS)"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 5,
+                    "uniqueIncludes": 4
+                },
+                {
+                    "name": "Geographic catalogBreadth Requirement (GB)",
+                    "search": "catalogBreadth",
+                    "includes": [
+                        [
+                            "GB",
+                            "GHB"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Historic catalogBreadth Requirement (HB)",
+                    "search": "catalogBreadth",
+                    "includes": [
+                        [
+                            "HB",
+                            "GHB"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1,
+                    "uniqueIncludes": 0
+                }
+            ]
+        },
+        "EN": {
+            "name": "Engineering",
+            "requirements": [
+                {
+                    "name": "Mathematics",
+                    "search": "code",
+                    "includes": [
+                        ["MATH 1910"],
+                        ["MATH 1920"],
+                        [
+                            "MATH 2930",
+                            "MATH 2940"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 14,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Physics",
+                    "search": "code",
+                    "includes": [
+                        ["PHYS 1112"],
+                        ["PHYS 2213"]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 8,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Chemistry",
+                    "search": "code",
+                    "includes": [
+                        ["CHEM 2090"]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 4,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Freshman Writing Seminars",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        ["First-Year Writing Seminar."]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 6,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Computing",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 1110",
+                            "CS 1112",
+                            "CS 1114",
+                            "CS 1115"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 4,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Introducation to Engineering",
+                    "search": "subject",
+                    "includes": [
+                        ["ENGRI"]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 4,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Engineering Distribution",
+                    "search": "subject",
+                    "includes": [
+                        ["ENGRD"]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 6,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Liberal Studies Distribution",
+                    "search": "catalogDistr",
+                    "includes": [
+                        [
+                            "CA",
+                            "HA",
+                            "LA/LAD",
+                            "KCM",
+                            "SBA",
+                            "FL",
+                            "CE"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 18,
+                    "uniqueIncludes": 3
+                },
+                {
+                    "name": "Advisor-Approved Electives",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 6,
+                    "uniqueIncludes": 0
+                },
+                {
+                    "name": "Technical Communication",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 3,
+                    "uniqueIncludes": 0
+                }
+            ]
+        }, 
+        "HE":{
+
+        },
+        "IL":{
+
+        }, 
+        "BU":{
+
+        }
+    },
+    "major": {
+        "ASRC":{
+            "name": "Africana Studies",
+            "schools": ["AS"],
+            "requirements": [
+                {
+                    "name": "Introduction to Africana Studies",
+                    "search": "code",
+                    "includes": ["ASRC 1500"],
+                    "fulfilledBy":"courses",
+                    "minCount":1,
+                    "majorDep": true
+                },
+                {
+                    "name": "Diaspora Studies",
+                    "search": "self-check",
+                    "fulfilledBy":"courses",
+                    "minCount":3,
+                    "majorDep": true
+                }, 
+                {
+                    "name": "Specific Focus",
+                    "search": "self-check",
+                    "fulfilledBy":"courses",
+                    "minCount":4,
+                    "majorDep": true
+                }, 
+                {
+                    "name": "Seminar Courses",
+                    "search": "code",
+                    "includes": ["ASRC 4***"],
+                    "fulfilledBy":"courses",
+                    "minCount":2,
+                    "majorDep": true
+                }
+            ]
+        },
+        "AGSCI":{
+
+        },
+        "AMST":{
+
+        },
+        "ANSC":{
+
+        },
+        "ANTHR":{
+
+        },
+        "AEM":{
+            "name": "Applied Economics and Management", 
+            "schools": ["AG"],
+            "requirements": [
+                {
+                    "name": "Economics and Management",
+                    "search": "code",
+                    "includes": [
+                        ["ECON 1110"],
+                        ["ECON 1120"], 
+                        ["AEM 2220"],
+                        ["AEM 2225"], 
+                        ["AEM 2240"],
+                        ["AEM 2600"], 
+                        ["AEM 2601"], 
+                        ["AEM 2700"], 
+                        ["AEM 3200"], 
+                        ["AEM 3230"]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 10,
+                    "majorDep": true
+                }, 
+                {
+                    "name": "Grand Challenges @ Dyson",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 2000", 
+                            "AEM 2555", 
+                            "AEM 2800", 
+                            "AEM 2805", 
+                            "AEM 4940"
+                        ], 
+                        ["AEM 3000"], 
+                        ["AEM 4000"]
+                    ], 
+                    "fulfilledBy": "credits",
+                    "minCount": 7.5,
+                    "majorDep": true
+                },
+                {
+                    "name": "Quantitative Methods",
+                    "search": "code",
+                    "includes": [
+                        {
+                            "name": "Core",
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "MATH 1110", 
+                                    "MATH 1120"
+                                ],
+                                ["AEM 2010"], 
+                                ["AEM 2100"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":3,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses",
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2770",
+                                    "AEM 2830", 
+                                    "AEM 2840", 
+                                    "AEM 3100", 
+                                    "AEM 3390", 
+                                    "AEM 4060", 
+                                    "AEM 4110", 
+                                    "AEM 4120", 
+                                    "AEM 4190", 
+                                    "BTRY 3080", 
+                                    "ECON 3130",
+                                    "ECON 3140", 
+                                    "ECON 4020", 
+                                    "ILRST 2110", 
+                                    "ECON 3110"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount":3,
+                            "majorDep": true
+                        }
+                    ], 
+                    "fulfilledBy": "count",
+                    "minCount": 4,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                }, 
+                {
+                    "name": "Applied Economics",
+                    "search": "code",
+                    "includes": [
+                        [
+                           "AEM 2500", 
+                           "AEM 4500", 
+                           "AEM 4510", 
+                           "AEM 4515" 
+                        ], 
+                        [
+                            "AEM 3310", 
+                            "AEM 4100", 
+                            "AEM 4140", 
+                            "AEM 4160", 
+                            "AEM 4550"
+                        ], 
+                        [
+                            "AEM 2300", 
+                            "AEM 2350", 
+                            "AEM 4300", 
+                            "AEM 4350", 
+                            "AEM 4420", 
+                            "AEM 4450", 
+                            "AEM 4485", 
+                            "AEM 4545"
+                        ], 
+                        [
+                            "AEM 4150", 
+                            "AEM 4210", 
+                            "AEM 4310"
+                        ]
+                    ], 
+                    "fulfilledBy": "credits",
+                    "minCount": 6,
+                    "uniqueIncludes": 2,
+                    "majorDep": true
+                }
+            ],
+            "concentrations":[
+                {
+                    "name": "Accounting",
+                    "requirements": [
+                        {
+                            "name": "Core",
+                            "search": "code", 
+                            "includes": [
+                                ["AEM 3360"], 
+                                ["AEM 3370"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":2,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3355", 
+                                    "AEM 3520", 
+                                    "AEM 4225", 
+                                    "AEM 4520", 
+                                    "AEM 4521", 
+                                    "AEM 4530", 
+                                    "AEM 4531", 
+                                    "AEM 4532", 
+                                    "AEM 4533", 
+                                    "AEM 4534", 
+                                    "AEM 4535", 
+                                    "AEM 4560", 
+                                    "AEM 5090", 
+                                    "NBA 5110"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 9, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Agribusiness Management", 
+                    "requirements": [
+                        {
+                            "name": "Core",
+                            "search": "code", 
+                            "includes": [
+                                ["AEM 3020"], 
+                                ["HADM 2810"],
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":2,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3040", 
+                                    "AEM 3260", 
+                                    "AEM 3290", 
+                                    "AEM 4030", 
+                                    "AEM 4050", 
+                                    "AEM 4070", 
+                                    "AEM 4150", 
+                                    "AEM 4210", 
+                                    "AEM 4310"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 9, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Applied Economics", 
+                    "requirements":[
+                        {
+                            "name": "Core",
+                            "search": "code", 
+                            "includes": [
+                                ["ECON 3040"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":1,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Applied Economics",
+                            "search": "code",
+                            "includes": [
+                                [
+                                   "AEM 2500", 
+                                   "AEM 4500", 
+                                   "AEM 4510", 
+                                   "AEM 4515" 
+                                ], 
+                                [
+                                    "AEM 3310", 
+                                    "AEM 4100", 
+                                    "AEM 4140", 
+                                    "AEM 4160", 
+                                    "AEM 4550"
+                                ], 
+                                [
+                                    "AEM 2300", 
+                                    "AEM 2350", 
+                                    "AEM 4300", 
+                                    "AEM 4350", 
+                                    "AEM 4420", 
+                                    "AEM 4450", 
+                                    "AEM 4485", 
+                                    "AEM 4545"
+                                ], 
+                                [
+                                    "AEM 4150", 
+                                    "AEM 4210", 
+                                    "AEM 4310"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits",
+                            "minCount": 12,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Quantitative Methods",
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2770",
+                                    "AEM 2830", 
+                                    "AEM 2840", 
+                                    "AEM 3100", 
+                                    "AEM 3390", 
+                                    "AEM 4060", 
+                                    "AEM 4110", 
+                                    "AEM 4120", 
+                                    "AEM 4190", 
+                                    "BTRY 3080", 
+                                    "ECON 3130",
+                                    "ECON 3140", 
+                                    "ECON 4020", 
+                                    "ILRST 2110", 
+                                    "ECON 3110"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount":3,
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Business Analytics", 
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3100", 
+                                    "AEM 4110"
+                                ],
+                                [
+                                    "AEM 2830", 
+                                    "AEM 2840", 
+                                    "CS 1112"
+                                ], 
+                                [
+                                    "AEM 2820", 
+                                    "CSS 4200"
+                                ]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":3,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2770", 
+                                    "AEM 3030", 
+                                    "AEM 4010", 
+                                    "AEM 4015", 
+                                    "AEM 4060", 
+                                    "AEM 4120", 
+                                    "AEM 4225", 
+                                    "AEM 4435", 
+                                    "AEM 4610", 
+                                    "AEM 4620", 
+                                    "STSCI 4060"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 6,
+                            "majorDep": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Environmental, Energy and Resource (EERE)",
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                ["ECON 3030"], 
+                                ["ECON 3040"], 
+                                ["AEM 2500"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount":3,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Environmental Economics", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 4500", 
+                                    "AEM 4510", 
+                                    "AEM 4515"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount":6,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Economic Analysis", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3100", 
+                                    "AEM 4110", 
+                                    "ECON 3120", 
+                                    "ILRST 2110", 
+                                    "HADM 3740", 
+                                    "PLSCS 4200", 
+                                    "STSCI 4060", 
+                                    "HADM 4010"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount":3,
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Electives", 
+                            "search": "self-check", 
+                            "fulfilledBy": "credits", 
+                            "minCount":3,
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Entrepreneurship", 
+                    "requirements": [
+                        {
+                            "name": "AEM Requirements", 
+                            "search": "code", 
+                            "includes": [
+                                "AEM 1200", 
+                                "AEM 2220", 
+                                "AEM 3110", 
+                                "AEM 3220", 
+                                "AEM 3245", 
+                                "AEM 3249", 
+                                "AEM 3250", 
+                                "AEM 3251", 
+                                "AEM 3340", 
+                                "AEM 3380", 
+                                "AEM 4080", 
+                                "AEM 4370", 
+                                "AEM 4371", 
+                                "AEM 4380", 
+                                "AEM 4390", 
+                                "AEM 4420", 
+                                "AEM 4615"
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 6, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                "AEM 1200", 
+                                "AEM 2220", 
+                                "AEM 3110", 
+                                "AEM 3220", 
+                                "AEM 3245", 
+                                "AEM 3249", 
+                                "AEM 3250", 
+                                "AEM 3251", 
+                                "AEM 3340", 
+                                "AEM 3380", 
+                                "AEM 4080", 
+                                "AEM 4370", 
+                                "AEM 4371", 
+                                "AEM 4380", 
+                                "AEM 4390", 
+                                "AEM 4420", 
+                                "AEM 4615", 
+                                "HADM 4130", 
+                                "HADM 4211", 
+                                "NBA 3000", 
+                                "NBA 6230"
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 9, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Food Industry Management", 
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                ["AEM 2480"], 
+                                ["AEM 3440"], 
+                                ["AEM 4400"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount": 3, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3270", 
+                                    "AEM 4150", 
+                                    "AEM 4460"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 6, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Finance", 
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                ["AEM 4570"], 
+                                ["AEM 4670"], 
+                                [
+                                    "AEM 3520",
+                                    "AEM 3360"
+                                ]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount": 3, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 4060", 
+                                    "AEM 4210", 
+                                    "AEM 4230", 
+                                    "AEM 4260", 
+                                    "AEM 4280", 
+                                    "AEM 4590", 
+                                    "AEM 4620", 
+                                    "AEM 4630", 
+                                    "AEM 4681"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 6, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "International Trade and Development", 
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2300", 
+                                    "AEM 2350"
+                                ]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount": 1, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2110", 
+                                    "AEM 4290", 
+                                    "AEM 4300", 
+                                    "AEM 4350", 
+                                    "AEM 4420", 
+                                    "AEM 4421", 
+                                    "AEM 4450", 
+                                    "AEM 4485", 
+                                    "AEM 4545", 
+                                    "AEM 4640"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 12, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Marketing", 
+                    "requirements": [
+                        {
+                            "name": "Core", 
+                            "search": "code", 
+                            "includes": [
+                                ["AEM 3440"], 
+                                ["AEM 4410"]
+                            ], 
+                            "fulfilledBy": "courses", 
+                            "minCount": 2, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Chosen Courses", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3245", 
+                                    "AEM 3249", 
+                                    "AEM 3270", 
+                                    "AEM 3450", 
+                                    "AEM 4016", 
+                                    "AEM 4080", 
+                                    "AEM 4096", 
+                                    "AEM 4150", 
+                                    "AEM 4160", 
+                                    "AEM 4400", 
+                                    "AEM 4420", 
+                                    "AEM 4435", 
+                                    "AEM 4495", 
+                                    "AEM 4550"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 9, 
+                            "majorDep": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Strategy", 
+                    "requirements": [
+                        {
+                            "name": "Part 1", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 3220", 
+                                    "AEM 4160", 
+                                    "AEM 4190", 
+                                    "AEM 4371", 
+                                    "AEM 4380", 
+                                    "AEM 4390", 
+                                    "AEM 4615"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 6, 
+                            "majorDep": true
+                        }, 
+                        {
+                            "name": "Part 2", 
+                            "search": "code", 
+                            "includes": [
+                                [
+                                    "AEM 2550", 
+                                    "AEM 3110", 
+                                    "AEM 3245", 
+                                    "AEM 3260", 
+                                    "AEM 3249", 
+                                    "AEM 3320", 
+                                    "AEM 4010", 
+                                    "AEM 4015", 
+                                    "AEM 4080", 
+                                    "AEM 4580", 
+                                    "AEM 4421"
+                                ]
+                            ], 
+                            "fulfilledBy": "credits", 
+                            "minCount": 9, 
+                            "majorDep": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "ARKEO":{
+
+        },
+        "ARCH":{
+
+        },
+        "ASIAN":{
+
+        },
+        "ASTRO":{
+
+        },
+        "EAS":{
+
+        },
+        "CS": {
+            "name": "Computer Science",
+            "schools": [
+                "EN",
+                "AS"
+            ],
+            "requirements": [
+                {
+                    "name": "Computer Science Core Requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 1110",
+                            "CS 1112"
+                        ],
+                        [
+                            "CS 2110",
+                            "CS 2112"
+                        ],
+                        [
+                            "CS 2800",
+                            "CS 2802"
+                        ],
+                        [
+                            "CS 3110"
+                        ],
+                        [
+                            "CS 3410",
+                            "CS 3420"
+                        ],
+                        [
+                            "CS 4820"
+                        ],
+                        [
+                            "CS 4410"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 7,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Computer Science Electives",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 3152"
+                        ], 
+                        [
+                            "CS 4152"
+                        ],
+                        [
+                            "CS 4154"
+                        ],
+                        [
+                            "CS 4740"
+                        ],
+                        [
+                            "CS 4752"
+                        ],
+                        [
+                            "CS 5150"
+                        ],
+                        [
+                            "CS 5152"
+                        ],
+                        [
+                            "CS 5412"
+                        ],
+                        [
+                            "CS 5414"
+                        ],
+                        [
+                            "CS 5431"
+                        ],
+                        [
+                            "CS 5625"
+                        ],
+                        [
+                            "CS 5643"
+                        ]
+                    ],
+                    "excludes": [
+                        "CS 4090",
+                        "CS 4998",
+                        "CS 4999"
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Computer Science Practicum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 4321"
+                        ],
+                        [
+                            "CS 4621"
+                        ],
+                        [
+                            "CS 4701"
+                        ],
+                        [
+                            "CS 4411"
+                        ],
+                        [
+                            "CS 3152"
+                        ],
+                        [
+                            "CS 4152"
+                        ],
+                        [
+                            "CS 4154"
+                        ],
+                        [
+                            "CS 4740"
+                        ],
+                        [
+                            "CS 4752"
+                        ],
+                        [
+                            "CS 5150"
+                        ],
+                        [
+                            "CS 5152"
+                        ],
+                        [
+                            "CS 5412"
+                        ],
+                        [
+                            "CS 5414"
+                        ],
+                        [
+                            "CS 5431"
+                        ],
+                        [
+                            "CS 5625"
+                        ],
+                        [
+                            "CS 5643"
+                        ]
+                    ],
+                    "excludes": [],
+                    "fulfilledBy": "courses",
+                    "minCount": 1,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                },
+                {
+                    "name": "Computer Science Technical Electives",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 3***",
+                            "MATH 3***",
+                            "BIOG 3***",
+                            "ECON 3***",
+                            "CHEM 3***",
+                            "PHYS 3***",
+                            "PSYCH 3***",
+                            "LING 3***"    
+                        ],
+                        [
+                            "CS 3***",
+                            "MATH 3***",
+                            "BIOG 3***",
+                            "ECON 3***",
+                            "CHEM 3***",
+                            "PHYS 3***",
+                            "PSYCH 3***",
+                            "LING 3***"    
+                        ],
+                        [
+                            "CS 3***",
+                            "MATH 3***",
+                            "BIOG 3***",
+                            "ECON 3***",
+                            "CHEM 3***",
+                            "PHYS 3***",
+                            "PSYCH 3***",
+                            "LING 3***"    
+                        ]
+                    ],
+                    "excludes": [],
+                    "fulfilledBy": "courses",
+                    "minCount": 3,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                },
+        
+                {
+                    "name": "Computer Science External Specialization",
+                    "search": "code",
+                    "includes": [
+                        ["INFO 3***"],
+                        ["PSYCH 3***"],
+                        ["SOC 3***"]
+                    ],
+                    "excludes": [
+                        "LING 4474",
+                        "INFO 4302", 
+                        "INFO 3300", 
+                        "INFO 4300",
+                        "INFO 5300"
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3,
+                    "uniqueIncludes": 0,
+                    "majorDep": true
+                }
+            ]
+        }, 
+        "INFO": {
+            "name": "Information Science",
+            "schools": [
+                "AS", 
+                "EN", 
+                "AG"
+            ]
+        }
+    }
+}
