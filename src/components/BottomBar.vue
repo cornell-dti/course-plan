@@ -32,8 +32,8 @@ Vue.component('bottombarcourse', BottomBarCourse);
 export default {
   data() {
     return {
-      subject: "CS",
-      code: 1110,
+      subject: "ENGRD",
+      code: 2700,
       name: "Basic Engineering Probability and Statistics",
       credits: 3,
       semesters: ["Fall", "Spring", "Summer", "Winter"],
