@@ -14,8 +14,15 @@
     </div>
     <div v-bind:class="{ 'course-content--min': !notCompact }" class="course-content">
       <div v-bind:class="{ 'course-main--min': !notCompact }" class="course-main">
-        <div v-bind:class="{ 'course-code--min': !notCompact }" class="course-code">
-          {{ subject }} {{ code }}
+        <div class = "course-top">
+          <div v-bind:class="{ 'course-code--min': !notCompact }" class="course-code">
+            {{ subject }} {{ code }}
+          </div>
+          <div class="course-dotRow" v-on:click="openMenu">
+            <span class="course-dot course-dot--menu"></span>
+            <span class="course-dot course-dot--menu"></span>
+            <span class="course-dot course-dot--menu"></span>
+          </div>
         </div>
         <div v-if="notCompact" class="course-name">{{ name }}</div>
         <div class="course-info">
@@ -44,10 +51,30 @@
         </div>
       </div>
     </div>
+    <coursemenu v-if="menuOpen" class="course-menu" v-on:delete-course="deleteCourse" v-on:color-course="colorCourse" v-click-outside="closeMenuIfOpen" />
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import CourseMenu from '@/components/Modals/CourseMenu';
+
+Vue.component('coursemenu', CourseMenu);
+
+const clickOutside = {
+  bind(el, binding, vnode) {
+    el.event = function (event) {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event);
+      }
+    };
+    document.body.addEventListener('click', el.event);
+  },
+  unbind(el) {
+    document.body.removeEventListener('click', el.event);
+  }
+};
+
 export default {
   props: {
     subject: String,
@@ -57,7 +84,14 @@ export default {
     semesters: Array,
     color: String,
     requirementsMap: Map,
-    compact: Boolean
+    compact: Boolean,
+    id: String
+  },
+  data() {
+    return {
+      menuOpen: false,
+      stopCloseFlag: false
+    };
   },
   computed: {
     notCompact() {
@@ -161,6 +195,28 @@ export default {
         '--bg-color': `#${this.color}`
       };
     }
+  },
+  methods: {
+    openMenu() {
+      this.stopCloseFlag = true;
+      this.menuOpen = true;
+    },
+    closeMenuIfOpen() {
+      if (this.stopCloseFlag) {
+        this.stopCloseFlag = false;
+      } else if (this.menuOpen) {
+        this.menuOpen = false;
+      }
+    },
+    deleteCourse() {
+      this.$emit('delete-course', this.id);
+    },
+    colorCourse(color) {
+      this.$emit('color-course', color, this.id);
+    }
+  },
+  directives: {
+    'click-outside': clickOutside
   }
 };
 </script>
@@ -175,6 +231,7 @@ export default {
   flex-direction: row;
   background-color: white;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
+  position: relative;
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
@@ -191,6 +248,9 @@ export default {
   }
 
   &-main {
+    width: 100%;
+    margin-right: 1rem;
+
     &--min {
       display: flex;
       align-items: center;
@@ -219,6 +279,12 @@ export default {
     }
   }
 
+  &-dotRow{
+    display: flex;
+    position: relative;
+  }
+
+
   &-dot {
     opacity: 0.8;
     height: 2px;
@@ -230,8 +296,11 @@ export default {
     margin-top: 2px;
 
     &--menu {
+      width: 5px;
+      height: 5px;
       background-color: #c4c4c4;
       opacity: 1;
+      margin: 0 2px;
     }
   }
 
@@ -246,6 +315,12 @@ export default {
       margin-bottom: 0;
       margin-top: 0;
     }
+  }
+
+  &-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   &-code {
@@ -311,6 +386,13 @@ export default {
     display: flex;
     justify-content: space-around;
     margin: 0.5rem;
+  }
+
+  &-menu {
+    position: absolute;
+    right: -3rem;
+    top: 2rem;
+    z-index: 1;
   }
 }
 
