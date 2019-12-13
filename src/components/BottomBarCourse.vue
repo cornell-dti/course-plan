@@ -6,24 +6,70 @@
       </div>
       
       <div class="bottombar-title">
-        <span class="bottombar-square-title">{{ name }}</span>
+        <span class="bottombar-square-title">{{ name }}</span><button class="btn" v-on:click="showBar = !showBar">Toggle</button>
       </div>
 
       <!-- v-if: isPreview. have course bar -->
-      <div class="bottombar-bar">
+      <div v-bind:class="{ hide: !showBar }">
         <div class="bottombar-bar-info">
-          <div class="line">
-            <div class="section left">
+          <div class="info">
+          <div>
+            <div class="section">
               <h1 class="info-head">Credits</h1>
               <p class="info-fact">{{ credits }}</p>
             </div>
-            <div class="section right">
+            <div class="section">
               <h1 class="info-head">Offered</h1>
-              <p class="info-fact">{{ credits }}</p>
+              <p class="info-fact">{{ semesters.join(", ") }}</p>
             </div>
+          </div>
+          <div>
+            <div class="section">
+              <h1 class="info-head">Instructors</h1>
+              <p class="info-fact">{{ instructors.join(", ") }}</p>
+            </div>
+            <div class="section">
+              <h1 class="info-head">Enrollment Information</h1>
+              <p class="info-fact">{{ enrollment_info.join(", ") }}</p>
+            </div>
+          </div>
+          <div>
+            <div class="section">
+              <h1 class="info-head">Distribution Category</h1>
+              <p class="info-fact">{{ distribution_categories.join(", ") }}</p>
+            </div>
+            <div class="section">
+              <h1 class="info-head">{{ latest_sem }} Lecture Info</h1>
+              <p class="info-fact">{{ latest_lec_info.join(", ") }}</p>
+            </div>
+          </div>
+          <div class="info-link">
+            <a :href="`https://classes.cornell.edu/browse/roster/${ latest_sem }/class/${ subject }/${ code }`" class="info-link-blue" target="_blank">View Course Information on Roster</a>
+          </div>
           </div>
         </div>
         <div class="bottombar-bar-details">
+          <div class="details">
+            <div class="details-head">Class Ratings</div>
+            <div class="details-ratings">
+              <h1 class="details-ratings-title">Overall Rating: <strong>{{ overall_rating }}</strong></h1>
+              <div class="progress rating">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            <div class="details-ratings">
+              <h1 class="details-ratings-title">Difficulty: <strong>{{ difficulty }}</strong></h1>
+              <div class="progress rating">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            <div class="details-ratings">
+              <h1 class="details-ratings-title">Workload: <strong>{{ workload }}</strong></h1>
+              <div class="progress rating">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -45,7 +91,8 @@ export default {
     instructors: Array, // array of strings
     distribution_categories: Array, // array of strings
     enrollment_info: Array,
-    sp17_lec_info: Array,
+    latest_sem: String,
+    latest_lec_info: Array,
     overall_rating: Number,
     difficulty: Number,
     workload: Number,
@@ -53,6 +100,12 @@ export default {
     description: String,
     isExpanded: Boolean,
     isPreview: Boolean
+  },
+
+  data: function() {
+    return {
+      showBar: true
+    };
   }
 
 };
@@ -81,15 +134,15 @@ export default {
     }
 
     &-bar {
-      height: 30vh;
+      height: 40vh;
       width: 100%;
 
       &-info {
         float: left;
-        padding: 21px;
         height: 100%;
         width: 35%;
         background: #F8F8F8;
+        overflow: scroll;
       }
 
       &-details {
@@ -97,35 +150,76 @@ export default {
         height: 100%;
         width: 65%;
         background: #FFF;
+        overflow: scroll;
       }
     }
 
   }
 
   .info {
+    margin: 20px;
 
     &-head {
-      height: 15px;
+      margin-top: 5px;
+      font-weight: 500;
       font-size: 12px;
       color: #9D9D9D;
     }
 
     &-fact {
-      height: 12px;
       font-size: 16px;
       color: #3D3D3D;
     }
+
+    &-link {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 16px;
+      text-decoration-line: underline;
+
+      &-blue {
+        color: #4181FF;
+      }
+    }
   }
 
-  .line {
-    // height: 30px;
-  }
-
-  .left {
+  .section {
+    margin-bottom: 8px;
     float: left;
+    width: 50%;
+    height: inherit;
   }
 
-  .right {
-    float: right;
+
+  .details {
+    margin: 20px;
+
+    &-head {
+      margin-top: 5px;
+      font-weight: 500;
+      font-size: 12px;
+      color: #9D9D9D;
+    }
+
+    &-ratings {
+      margin-right: 3%;
+      width: 30%;
+      float: left;
+
+      &-title {
+        font-size: 16px;
+        line-height: 16px;
+        color: #3D3D3D;
+      }
+    } 
+  }
+
+  .rating {
+    width: 100%;
+    border-radius: 100px;
+  }
+
+  .hide {
+    height: 0;
   }
 </style>

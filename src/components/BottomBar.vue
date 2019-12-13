@@ -11,7 +11,8 @@
         :instructors="instructors"
         :distribution_categories="distribution_categories"
         :enrollment_info="enrollment_info"
-        :sp17_lec_info="sp17_lec_info"
+        :latest_sem="latest_sem"
+        :latest_lec_info="latest_lec_info"
         :overall_rating="overall_rating"
         :difficulty="difficulty"
         :workload="workload"
@@ -43,7 +44,8 @@ export default {
       instructors: ["J.Pender"], // array of strings
       distribution_categories: ["MQR-AS"], // array of strings
       enrollment_info: ["Lecture", "Lab"],
-      sp17_lec_info: ["TR 1:25PM - 2:40PM", "MW 1:25PM - 2:40PM"],
+      latest_sem: "SP17",
+      latest_lec_info: ["TR 1:25PM - 2:40PM", "MW 1:25PM - 2:40PM"],
       overall_rating: 1,
       difficulty: 3.4,
       workload: 4.0,
