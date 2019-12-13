@@ -2,6 +2,62 @@
   <div class="requirements">
     <h1 class="title">School Requirements</h1>
 
+    <div class="req" v-for="(reqType, typeID) in reqs1" v-bind:key="reqType.id">
+       <!-- Top row for each Requirement Type -->
+        <div class="row top">
+          <p  v-if = "typeID=='collegeReqs'" class="name col p-0">{{user.college}} REQUIREMENTS</p>
+          <p  v-else-if = "typeID=='majorReqs'" class="name col p-0">{{user.major}} REQUIREMENTS</p>
+          <p  v-else  class="name col p-0">EXTRA MINOR TODO REQUIREMENTS</p>
+           <!-- MINOR-->
+           
+          <div class="col-1 text-right p-0">
+            <button @click="modalShow = !modalShow" class="btn">
+              <!-- svg for settings icon -->
+              <img class="settings" src="../assets/images/gear.svg" />
+            </button>
+          </div>
+          <b-modal v-model="modalShow">Hello From Modal!</b-modal>
+        </div>
+
+        <!--Majors tabular view 
+       
+        <div class="tab" v-if="req.type === 'MAJOR'">
+          <div class="row">
+            <div class="col-12 middle" v-for="type in actives" v-bind:key= "type.id">
+
+              <button v-bind:class="{ active: actives[0]}" @click="getReqs()" class="btn">
+                <div class= "div-tab">
+                  <p v-bind:class="{ active: actives[0] }" class="major">Computer Science</p>
+                  <p v-bind:class="{ active: actives[0] }" class="major-college">(Arts and Science)</p>
+                </div>
+              </button>
+            </div>
+
+          </div>
+        </div>
+         asefkl
+        -->
+
+
+      <!-- progress bar settings 
+      <div class="progress">
+        <div
+          class="progress-bar"
+          v-bind:style="{ 'background-color': reqType.color, width: `${(req.progress/req.total)*100}%`}"
+          role="progressbar"
+        ></div>
+      </div>
+
+      <div class="req" v-for="(req) in reqType[typeID]" v-bind:key="req.id">
+      
+        
+   
+       
+      </div>
+        -->
+    </div>
+  
+
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" v-bind:key="req.id">
       <div class="row top">
@@ -89,7 +145,7 @@
             <div class="col middle  p-0">
               <p class="sup-req">{{subReq.name}}</p>
             </div>
-            <div class="col  middle p-0">
+            <div class="col   p-0">
               <p class="sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
@@ -159,7 +215,7 @@
               </div>
               <p class="col sup-req middle ">{{subReq.name}}</p>
               <p
-                class="col sup-req middle text-right p-0"
+                class="col sup-req  text-right p-0"
               >( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
@@ -198,14 +254,18 @@ export default {
     user: Object,
     compact: Boolean
   },
-  mounted() {},
+  mounted() {
+    this.getReqs();
+  },
+
   data() {
     const randomId = Math.floor(Math.random() * Math.floor(100));
     return {
       reqsData: reqsData,
       actives: [false],
-      modalShow: false,
-      reqs: [
+      modalShow: false,  
+      reqs1: [],
+       reqs: [
         {
           show: false,
           name: 'COLLEGE REQUIREMENTS',
@@ -341,6 +401,7 @@ export default {
           ]
         }
       ],
+
       courses: {
         id: randomId,
         subject: 'PHIL',
@@ -356,14 +417,7 @@ export default {
   },
 
   methods: {
-    getReqs: function(){
-      console.log(this.currentClasses);
-      console.log("SEEKING REQUIREMENTS");
-      //this.getRequirements(['CS 1110', 'CHIN 2202', 'CS 1112', 'CS 2110', 'CS 3410', 'CS 3110', 'INFO 2300', 'PE 1110'], 'AS', 'CS').then(res => {
-      //console.log(res)})
-      this.getRequirements(this.currentClasses, this.user.college, this.user.major).then(res => {
-      console.log(res)})
-    },
+   
     turnDetails(index, bool) {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
@@ -378,13 +432,82 @@ export default {
     isActive(index) {
       return this.actives[index];
     },
-
     activate(index, bool ){
-
         this.actives[0] = !this.actives[0] ;
         this.actives[1] = !this.actives[1] ;
     },
+    async reformatRequiremetns(oldJSON){
+      const collegeReqs = [];
+      const majorReqs = [];
+      const minorReqs = [];
+      const newJSON = {};
+      let progress = 
+      [
+        ['0', '0'],
+        [0, 0],
+        [0, 0]
+      ];
 
+
+      //TODO make dynamic for multiple majors
+      console.log("FIRST " + progress);
+      Array.from(oldJSON).forEach(el => {
+        console.log(el.requirementType);
+        console.log(el.fulfilled);
+        const progressF = progress[0][0] + el.fulfilled;
+        var progressTotal = progress[0][1] + el.required;
+        //console.log(progressF+ "/" + el.required);
+        if(el.requirementType=='university' || el.requirementType=='college' || el.requirementType=='Foreign Language Requirement'){
+          collegeReqs.push(el);
+          progress[0][0] = progressF;
+          progress[0][1] = progressTotal;
+        
+      
+        }
+        else if(el.requirementType=='major'){
+         majorReqs.push(el);
+          progress[0][0] = progressF;
+          progress[0][1] = progressTotal;
+    
+        }
+        else if(el.requirementType=='minor'){
+          minorReqs.push(el);
+          progress[1][0] = progressF;
+          progress[1][1] = progressTotal;
+        }
+        else{
+          //throw new Error('Invalid requirement type.');
+        }
+ 
+        newJSON["collegeReqs"] = collegeReqs;
+        newJSON["majorReqs"] = majorReqs;
+        newJSON["minorReqs"] = minorReqs;
+        console.log(progress);
+             
+      });
+
+      this.reqs1 = newJSON;
+     // this.progress = progess;
+
+     progress[1][1] = 12;
+
+      console.log("req1" + this.reqs1);
+      console.log(progress);
+
+
+    },
+     getReqs: function(){
+      console.log(this.currentClasses );
+      console.log(this.user.college);
+      console.log(this.user.major);
+      console.log("SEEKING REQUIREMENTS");
+   
+      this.getRequirements(this.currentClasses, this.user.college, this.user.major).then(res => {
+        console.log(res);
+        this.reformatRequiremetns(res).then(res2 => console.log(res2));
+
+      })
+    },
     async getRequirements(coursesTaken, college, major, isTransfer = false){
         // const fs = require('fs');
         // import * as fs from 'fs'
@@ -398,9 +521,7 @@ export default {
             totalCreditsTaken += courseInfo.enrollGroups.unitsMaximum;
             coursesTakenWithInfo[courseTaken] = courseInfo;
         }
-
         // Terminate firebase connection
-        // fb.app.delete();
 
         //prepare final output JSONs
         let finalRequirementJSONs = [];
@@ -411,31 +532,30 @@ export default {
         if(!reqsData.university) throw new Error('University requirements not found.');
         const universityReqs = reqsData.university;
         finalRequirementJSONs = finalRequirementJSONs.concat(
-            await this.iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements));
+            await this.iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements, 'university'));
 
         //PART 2: check college requirements
         if(!(college in reqsData.college)) throw new Error('College not found.');
         const collegeReqs = reqsData.college[college];
         finalRequirementJSONs = finalRequirementJSONs.concat(
-           await this.iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements));
+           await this.iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements, 'college'));
 
         //PART 3: check major reqs
         if(!(major in reqsData.major)) throw new Error('Major not found.');
         const majorReqs = reqsData.major[major];
         finalRequirementJSONs = finalRequirementJSONs.concat(
-            await this.iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements));
-
+            await this.iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, 'major'));
         // console.log(finalRequirementJSONs);
         return finalRequirementJSONs;
     },
 
-    async iterateThroughRequirements(coursesTakenWithInfo, requirements){
+    async iterateThroughRequirements(coursesTakenWithInfo, requirements, requirementType){
         // array of requirement status information to be returned
         let requirementJSONs = [];
         let count = 0;
         let self = this;
         // helper to recursively call when an object has subpaths
-        function helper(coursesTakenWithInfo, requirements, parentName = null) {
+        function helper(coursesTakenWithInfo, requirements, rType, parentName = null) {
             for(const requirement of requirements) {
                 // if(!isTransfer && requirement.applies === "transfers") continue;
                 // temporarily skip these until we can implement them later
@@ -483,7 +603,7 @@ export default {
                     }
                 }
 
-                const generatedResults = self.createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement);
+                const generatedResults = self.createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement, rType);
 
                 // If at end path (no parent path)
                 if (!parentName) {
@@ -498,17 +618,19 @@ export default {
             }
         }
 
-        helper(coursesTakenWithInfo, requirements);
+        helper(coursesTakenWithInfo, requirements, requirementType);
 
         return requirementJSONs;
     },
 
-    createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement){
-        let requirementFulfillmentData =
+    createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement, requirementType){
+
+        let requirementFulfillmentData = 
         {
             "name" : requirement.name,
             "type" : requirement.fulfilledBy,
             "courses" : coursesThatFulilledRequirement,
+            "requirementType" : requirementType
         };
         let isComplete;
         let required;

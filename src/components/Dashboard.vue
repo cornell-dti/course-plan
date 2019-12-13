@@ -49,7 +49,9 @@ export default {
       currentClasses: [],
       user:{
         major: "CS",
-        college: "AS"
+        majorFN: "COMPUTER SCIENCE",
+        college: "AS",
+        collegeFN: "Arts and Science"
       }
     };
   },

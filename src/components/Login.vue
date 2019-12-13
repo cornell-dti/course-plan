@@ -45,7 +45,6 @@
 
 <script>
 import firebase from 'firebase';
-
 const fb = require('../firebaseConfig.js');
 
 export default {
