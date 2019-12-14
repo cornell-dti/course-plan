@@ -7,7 +7,7 @@
         @compact-updated="compactVal = $event"
       />
       <requirements
-        :semesters="semesters" 
+        :semesters="semesters"
         :currentClasses="currentClasses"
         :user="user"
        />
@@ -47,20 +47,19 @@ export default {
       currSemID: 1,
       semesters: [],
       currentClasses: [],
-      user:{
-        major: "CS",
-        majorFN: "COMPUTER SCIENCE",
-        college: "AS",
-        collegeFN: "Arts and Science"
+      user: {
+        major: 'CS',
+        majorFN: 'COMPUTER SCIENCE',
+        college: 'AS',
+        collegeFN: 'Arts and Science'
       }
     };
   },
   mounted() {
     this.getSemestersFromUser();
-
   },
   methods: {
-    getCurrentClassesFromUser(){
+    getCurrentClassesFromUser() {
       const x = 0;
     },
     getSemestersFromUser() {
@@ -92,7 +91,7 @@ export default {
         const courses = [];
         const currCourses = [];
         firebaseCourses.forEach(firebaseCourse => {
-          const arr = this.createCourse(firebaseCourse)
+          const arr = this.createCourse(firebaseCourse);
           courses.push(arr[0]);
           currCourses.push(arr[1]);
         });
@@ -139,7 +138,7 @@ export default {
         requirementsMap: courseMap
       };
 
-      const shortCourse = subject+ " " + code;
+      const shortCourse = `${subject} ${code}`;
 
       return [newCourse, shortCourse];
     },
