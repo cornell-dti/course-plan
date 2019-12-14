@@ -54,13 +54,13 @@
             <div class="details-ratings">
               <h1 class="details-ratings-title">Overall Rating: <strong>{{ overall_rating }}</strong></h1>
               <div class="progress rating">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
               <h1 class="details-ratings-title">Difficulty: <strong>{{ difficulty }}</strong></h1>
               <div class="progress rating">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
@@ -69,6 +69,11 @@
                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
+            <a :href="`https://www.cureviews.org/course/${ subject }/${ code }`" class="details-ratings-link" target="_blank">See all reviews</a>
+            <div class="details-head">Prerequisites</div>
+            <p>{{ prerequisites.join(", ") }}</p>
+            <div class="details-head">Description</div>
+            <p>{{ description }}</p>
           </div>
         </div>
       </div>
@@ -195,7 +200,7 @@ export default {
     margin: 20px;
 
     &-head {
-      margin-top: 5px;
+      margin-top: 10px;
       font-weight: 500;
       font-size: 12px;
       color: #9D9D9D;
@@ -210,6 +215,12 @@ export default {
         font-size: 16px;
         line-height: 16px;
         color: #3D3D3D;
+      }
+
+      &-link {
+        font-size: 12px;
+        text-decoration-line: underline;
+        color: #4181FF;
       }
     } 
   }
