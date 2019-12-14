@@ -1,25 +1,28 @@
 <template>
   <div class="requirements">
     <h1 class="title">School Requirements</h1>
-
+    
+ <!-- VIEW WITH INTEGRATED DATA
+   
+    Majors tabular view 
     <div class="req" v-for="(reqType, typeID) in reqs1" v-bind:key="reqType.id">
-       <!-- Top row for each Requirement Type -->
+        Top row for each Requirement Type 
         <div class="row top">
           <p  v-if = "typeID=='collegeReqs'" class="name col p-0">{{user.college}} REQUIREMENTS</p>
           <p  v-else-if = "typeID=='majorReqs'" class="name col p-0">{{user.major}} REQUIREMENTS</p>
           <p  v-else  class="name col p-0">EXTRA MINOR TODO REQUIREMENTS</p>
-           <!-- MINOR-->
+          
            
           <div class="col-1 text-right p-0">
             <button @click="modalShow = !modalShow" class="btn">
-              <!-- svg for settings icon -->
+          
               <img class="settings" src="../assets/images/gear.svg" />
             </button>
           </div>
           <b-modal v-model="modalShow">Hello From Modal!</b-modal>
         </div>
 
-        <!--Majors tabular view 
+       Majors tabular view 
        
         <div class="tab" v-if="req.type === 'MAJOR'">
           <div class="row">
@@ -35,11 +38,10 @@
 
           </div>
         </div>
-         asefkl
-        -->
+         
 
 
-      <!-- progress bar settings 
+      progress bar settings 
       <div class="progress">
         <div
           class="progress-bar"
@@ -54,10 +56,10 @@
    
        
       </div>
-        -->
+       
     </div>
   
-
+ --> 
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" v-bind:key="req.id">
       <div class="row top">
