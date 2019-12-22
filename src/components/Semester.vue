@@ -134,9 +134,9 @@ export default {
       const confirmationModal = document.getElementById(`confirmation-${this.id}`);
       confirmationModal.style.display = 'flex';
 
-      setTimeout(() => {
-        confirmationModal.style.display = 'none';
-      }, 3000);
+      // setTimeout(() => {
+      //   confirmationModal.style.display = 'none';
+      // }, 5000);
     },
     addCourseToFirebase(course) {
       const firebaseCourse = {

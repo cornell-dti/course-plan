@@ -1,16 +1,16 @@
 <template>
-    <div class="bottombar">
+    <div class="bottombar" v-bind:class="{ hide: !isPreview }">
       <!-- have course square with just course subject and course code -->
       <div class="bottombar-tabs">
         <!-- Add tabs -->
       </div>
       
       <div class="bottombar-title">
-        <span class="bottombar-square-title">{{ name }}</span><button class="btn" v-on:click="showBar = !showBar">Toggle</button>
+        <span class="bottombar-square-title">{{ name }}</span><button class="btn" v-on:click="isExpanded = !isExpanded">Toggle</button>
       </div>
 
       <!-- v-if: isPreview. have course bar -->
-      <div v-bind:class="{ hide: !showBar }">
+      <div v-bind:class="{ hide: !isExpanded }">
         <div class="bottombar-bar-info">
           <div class="info">
           <div>
@@ -105,14 +105,7 @@ export default {
     description: String,
     isExpanded: Boolean,
     isPreview: Boolean
-  },
-
-  data: function() {
-    return {
-      showBar: true
-    };
   }
-
 };
 </script>
 

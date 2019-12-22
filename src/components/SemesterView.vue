@@ -146,6 +146,7 @@ export default {
 .semesterView {
   display: flex;
   flex-direction: column;
+  // height: 3000px;
 
   &-content {
     display: flex;

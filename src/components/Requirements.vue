@@ -198,6 +198,7 @@ export default {
 }
 
 .requirements {
+  height: 100vh;
   width: 400px;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: white;

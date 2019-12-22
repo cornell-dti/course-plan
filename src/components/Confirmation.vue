@@ -30,25 +30,26 @@ export default {
 
 <style scoped lang="scss">
 .confirmation {
-  position: absolute;
-  width: 410px;
+  position: fixed;
+  z-index: 10;
   height: 41px;
   left: 295px;
   top: 16px;
   background: #ffffff;
   border-radius: 6px;
+  border: 1px solid #2b6693;
   display: flex;
   flex-direction: row;
 
   &-left {
     // position: absolute;
-    width: 43px;
-    height: 41px;
+    width: 41px;
+    height: 39px;
     left: 295px;
     top: 16px;
 
     background: #3eb53b;
-    border-radius: 6px;
+    border-radius: 5px;
   }
 
   &-left {
@@ -68,7 +69,7 @@ export default {
   }
 
   &-text {
-    width: 274px;
+    // width: 274px;
     height: 16px;
     left: 349px;
     top: 29px;

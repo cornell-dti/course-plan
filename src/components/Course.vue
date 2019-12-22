@@ -229,8 +229,7 @@ export default {
   }
 
   &-content {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin: 0.75rem 0.75rem 0.75rem 0;
     display: flex;
     justify-content: space-between;
     width: 100%;
