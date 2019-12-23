@@ -22,7 +22,7 @@
       </div>
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-          <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
+          <div v-for="course in courses" :key="course.id" class="semester-courseWrapper" @click="click(course)">
             <course
               v-bind="course"
               v-bind:id="course.subject"
@@ -174,6 +174,10 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
+    },
+
+    click(course) {
+      this.$emit('update', {subject: course.subject, number: course.code, roster: 'FA19'});
     }
   }
 };

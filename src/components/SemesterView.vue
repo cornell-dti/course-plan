@@ -9,7 +9,7 @@
     />
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :isNotSemesterButton="true" />
+        <semester v-bind="sem" :isNotSemesterButton="true" @update="update" />
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" />
@@ -137,6 +137,10 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
+    },
+
+    update(course) {
+      this.$emit('update', course);
     }
   }
 };

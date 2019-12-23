@@ -5,11 +5,12 @@
         :semesters="semesters"
         :compact="compactVal"
         @compact-updated="compactVal = $event"
+        @update="update"
       />
       <requirements />
     </div>
     <div id="dashboard-bottomView">
-      <bottombar />
+      <bottombar :data="bottomBar"/>
     </div>
   </div>
 </template>
@@ -41,7 +42,30 @@ export default {
     return {
       compactVal: false,
       currSemID: 1,
-      semesters: []
+      semesters: [],
+
+      bottomBar: {
+        subject: "ENGRD",
+        code: 2700,
+        name: "Basic Engineering Probability and Statistics",
+        credits: '3',
+        semesters: ["Fall", "Spring", "Summer", "Winter"],
+        color: '2BBCC6',
+        // requirementsMap: Map,
+        id: 1,
+        instructors: ["J.Pender"], // array of strings
+        distribution_categories: ["MQR-AS"], // array of strings
+        enrollment_info: ["Lecture", "Lab"],
+        latest_sem: "SP17",
+        latest_lec_info: ["TR 1:25PM - 2:40PM", "MW 1:25PM - 2:40PM"],
+        overall_rating: 1,
+        difficulty: 3.4,
+        workload: 4.0,
+        prerequisites: ["MATH 1910", "MATH 1920"],
+        description: "Gives students a working knowledge of basic probability and statistics and their application to engineering. Includes computer analysis of data and simulation. Topics include random variables, probability distributions, expectation, estimation, testing, experimental design, quality control, and regression.",
+        isExpanded: true,
+        isPreview: false
+      }
     };
   },
   mounted() {
@@ -130,6 +154,53 @@ export default {
       };
       this.currSemID += 1;
       return semester;
+    },
+
+    update(course) {
+
+      // Make API Requests
+      const url = `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${course.roster}&subject=${course.subject}&q=${course.subject}%20${course.number}`;
+
+      const xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = () => { 
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            let response = JSON.parse(xmlHttp.responseText);
+            if (response.data) {
+              const courseData = response.data.classes[0];
+
+              console.log(courseData);
+
+              const barData = {
+                subject: courseData.subject,
+                code: courseData.catalogNbr,
+                name: courseData.titleLong,
+                credits: (courseData.enrollGroups[0].unitsMinimum === courseData.enrollGroups[0].unitsMaximum) ? `${courseData.enrollGroups[0].unitsMinimum}` : `${courseData.enrollGroups[0].unitsMinimum} - ${courseData.enrollGroups[0].unitsMaximum}`,
+
+                // TODO: REMAINING OF DATA
+                semesters: ["ARRAY OF SEMESTERS"],
+                color: '2BBCC6',
+                // requirementsMap: Map,
+                id: 1,
+                instructors: ["ARR OF INSTRUCTORS"], // array of strings
+                distribution_categories: ["MQR-AS"], // array of strings
+                enrollment_info: ["Lecture", "Lab"],
+                latest_sem: "SP17",
+                latest_lec_info: ["TR 1:25PM - 2:40PM", "MW 1:25PM - 2:40PM"],
+                overall_rating: 1,
+                difficulty: 3.4,
+                workload: 4.0,
+                prerequisites: ["MATH 1910", "MATH 1920"],
+                description: courseData.description,
+                isExpanded: true,
+                isPreview: true
+              }
+
+              this.bottomBar = barData;
+            }
+          }
+      }
+      xmlHttp.open("GET", url, true); // true for asynchronous 
+      xmlHttp.send(null);
     }
   }
 };
