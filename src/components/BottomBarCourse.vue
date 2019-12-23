@@ -5,13 +5,13 @@
         <!-- Add tabs -->
       </div>
       
-      <div class="bottombar-title">
-        <span class="bottombar-square-title">{{ name }}</span><button class="btn" v-on:click="isExpanded = !isExpanded">Toggle</button>
+      <div class="bottombar-title" :style="{ background: `#${color}` }" @click="isExpanded = !isExpanded">
+        <span class="bottombar-square-title">{{ name }}</span>
       </div>
 
       <!-- v-if: isPreview. have course bar -->
-      <div v-bind:class="{ hide: !isExpanded }">
-        <div class="bottombar-bar-info">
+      <div>
+        <div :class="{ hide: !isExpanded }" class="bottombar-bar-info">
           <div class="info">
           <div>
             <div class="section">
@@ -48,7 +48,7 @@
           </div>
           </div>
         </div>
-        <div class="bottombar-bar-details">
+        <div :class="{ hide: !isExpanded }" class="bottombar-bar-details">
           <div class="details">
             <div class="details-head">Class Ratings</div>
             <div class="details-ratings">
@@ -88,7 +88,7 @@ export default {
     subject: String,
     code: Number,
     name: String,
-    credits: Number,
+    credits: String,
     semesters: Array,
     color: String,
     // requirementsMap: Map,
@@ -129,15 +129,15 @@ export default {
       background: #25A2AA;
       color: #FFF;
       font-size: 16px;
+      cursor: pointer;
     }
 
     &-bar {
-      height: 40vh;
       width: 100%;
 
       &-info {
         float: left;
-        height: 100%;
+        height: 40vh;
         width: 35%;
         background: #F8F8F8;
         overflow: scroll;
@@ -145,7 +145,7 @@ export default {
 
       &-details {
         float: right;
-        height: 100%;
+        height: 40vh;
         width: 65%;
         background: #FFF;
         overflow: scroll;

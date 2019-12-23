@@ -5,7 +5,7 @@
         :semesters="semesters"
         :compact="compactVal"
         @compact-updated="compactVal = $event"
-        @update="update"
+        @update="updateBar"
       />
       <requirements />
     </div>
@@ -156,34 +156,68 @@ export default {
       return semester;
     },
 
-    update(course) {
+    updateBar(course) {
 
-      // Make API Requests
+      // Make API Requests for Course data
       const url = `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${course.roster}&subject=${course.subject}&q=${course.subject}%20${course.number}`;
 
       const xmlHttp = new XMLHttpRequest();
-      xmlHttp.onreadystatechange = () => { 
+      xmlHttp.onreadystatechange = () => {
           if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             let response = JSON.parse(xmlHttp.responseText);
             if (response.data) {
               const courseData = response.data.classes[0];
 
+              // Update Bar Information
               console.log(courseData);
+
+              // Calculate credits (3 or 3 - 4)
+              const { unitsMinimum, unitsMaximum } = courseData.enrollGroups[0];
+              const creditsCalc = (unitsMinimum === unitsMaximum) ? `${unitsMinimum}` : `${unitsMinimum} - ${unitsMaximum}`;
+              // Calculate semesters into array (["String", "Fall"])
+              const semestersRemovePeriod = courseData.catalogWhenOffered.replace(/\./g, '');
+              const semestersCalc = semestersRemovePeriod.split(",");
+              
+              // Iterate through enrollment groups and meetings to identify all instructors and enrollment data
+              const instructors = {};
+              const enrollment = {};
+              courseData.enrollGroups.map(group => {
+                group.classSections.map(section => {
+                  // Add section
+                  const enroll = section.ssrComponent;
+                  if (!enrollment[enroll]) enrollment[enroll] = true;
+
+                  section.meetings.map(meeting => {
+                    meeting.instructors.map(instructor => {
+                      const { netid, firstName, lastName } = instructor;
+                      if (!instructors[netid]) instructors[netid] = `${firstName} ${lastName}`
+                    })
+                  })
+                })
+              })
+
+              // Parse instructors to instructors array (["David Gries (grs23)", "Bob Iger (bi23)"])
+              const instructorsCalc = [];
+              Object.keys(instructors).map(netid => {
+                instructorsCalc.push(`${instructors[netid]} (${netid})`);
+              })
+
+              // Parse enrollment to enrollment array (["LEC", "LAB"])
+              const enrollmentCalc = Object.keys(enrollment);
 
               const barData = {
                 subject: courseData.subject,
-                code: courseData.catalogNbr,
+                code: parseInt(courseData.catalogNbr),
                 name: courseData.titleLong,
-                credits: (courseData.enrollGroups[0].unitsMinimum === courseData.enrollGroups[0].unitsMaximum) ? `${courseData.enrollGroups[0].unitsMinimum}` : `${courseData.enrollGroups[0].unitsMinimum} - ${courseData.enrollGroups[0].unitsMaximum}`,
-
-                // TODO: REMAINING OF DATA
-                semesters: ["ARRAY OF SEMESTERS"],
-                color: '2BBCC6',
+                credits: creditsCalc,
+                semesters: semestersCalc,
+                color: course.color,
                 // requirementsMap: Map,
                 id: 1,
-                instructors: ["ARR OF INSTRUCTORS"], // array of strings
-                distribution_categories: ["MQR-AS"], // array of strings
-                enrollment_info: ["Lecture", "Lab"],
+                instructors: instructorsCalc,
+                distribution_categories: ["MQR-AS"], // TODO
+                enrollment_info: enrollmentCalc,
+                // TODO
                 latest_sem: "SP17",
                 latest_lec_info: ["TR 1:25PM - 2:40PM", "MW 1:25PM - 2:40PM"],
                 overall_rating: 1,
