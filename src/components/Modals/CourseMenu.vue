@@ -1,26 +1,37 @@
 <template>
   <div class="courseMenu">
     <div class="courseMenu-content">
-      <div class="courseMenu-section" @mouseover="setDisplayColors(true)" @mouseleave="setDisplayColors(false)">
+      <div
+        class="courseMenu-section"
+        @mouseover="setDisplayColors(true)"
+        @mouseleave="setDisplayColors(false)"
+      >
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/paint.svg"/>
+          <img class="courseMenu-icon" src="../../assets/images/paint.svg" />
           <span class="courseMenu-text">Edit Color</span>
         </div>
-        <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg"/>
+        <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
 
         <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
-          <div v-for="color in colors" :key="color.id" class="courseMenu-section" v-on:click="colorCourse(color)">
+          <div
+            v-for="color in colors"
+            :key="color.id"
+            class="courseMenu-section"
+            @click="colorCourse(color)"
+          >
             <div class="courseMenu-left">
-              <div class="courseMenu-icon courseMenu-icon--color" v-bind:style="{backgroundColor: color.hex}"></div>
-              <span class="courseMenu-text">{{color.text}}</span>
+              <div
+                class="courseMenu-icon courseMenu-icon--color"
+                :style="{ backgroundColor: color.hex }"
+              ></div>
+              <span class="courseMenu-text">{{ color.text }}</span>
             </div>
           </div>
         </div>
-
       </div>
-      <div class="courseMenu-section" v-on:click="deleteCourse">
+      <div class="courseMenu-section" @click="deleteCourse">
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/trash.svg"/>
+          <img class="courseMenu-icon" src="../../assets/images/trash.svg" />
           <span class="courseMenu-text">Delete</span>
         </div>
       </div>
@@ -86,8 +97,8 @@ export default {
 <style scoped lang="scss">
 .courseMenu {
   &-content {
-    background: #FFFFFF;
-    border: 1px solid #ACACAC;
+    background: #ffffff;
+    border: 1px solid #acacac;
     box-sizing: border-box;
     border-radius: 9px;
     font-size: 14px;
@@ -98,7 +109,7 @@ export default {
   &-section {
     display: flex;
     justify-content: space-between;
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     position: relative;
 
     &:hover,
@@ -139,5 +150,4 @@ export default {
     right: -9rem;
   }
 }
-
 </style>

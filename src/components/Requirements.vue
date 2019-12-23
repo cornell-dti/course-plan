@@ -2,7 +2,7 @@
   <div class="requirements">
     <h1 class="title">School Requirements</h1>
     <!-- loop through reqs array of req objects -->
-    <div class="reqs" v-for="(req, index) in reqs" v-bind:key="req.id">
+    <div class="reqs" v-for="(req, index) in reqs" :key="req.id">
       <div class="row top">
         <p class="name col p-0">{{ req.name }}</p>
         <div class="col-1 text-right p-0">
@@ -16,7 +16,7 @@
       <div class="progress">
         <div
           class="progress-bar"
-          v-bind:style="{
+          :style="{
             'background-color': req.color,
             width: `${(req.progress / req.total) * 100}%`
           }"
@@ -31,8 +31,8 @@
       <button
         class="view btn"
         v-if="!req.displayDetails"
-        v-bind:style="{ 'background-color': req.color }"
-        v-on:click="turnDetails(index, true)"
+        :style="{ 'background-color': req.color }"
+        @click="turnDetails(index, true)"
       >
         View All {{ req.type }} Requirements
       </button>
@@ -42,14 +42,14 @@
           <div class="row detail-bar">
             <p class="col detail-text p-0">In-Depth {{ req.type }} Requirements</p>
             <div class="text-right p-0">
-              <button class="btn" v-on:click="turnDetails(index, false)">
+              <button class="btn" @click="turnDetails(index, false)">
                 <!-- picture of close (x) icon -->
                 <img class="cancel" src="../assets/images/x.png" alt="X" />
               </button>
             </div>
           </div>
           <!-- loop through uncompleted reqs in req.ongoing array -->
-          <div class="list" v-for="value in req.ongoing" v-bind:key="value.id">
+          <div class="list" v-for="value in req.ongoing" :key="value.id">
             <div class="separator"></div>
             <div class="row req">
               <p class="col float-left p-0 req-name">{{ value.name }}</p>
@@ -64,21 +64,17 @@
         <div class="completed" v-if="req.completed.length > 0">
           <div class="row detail-bar">
             <p class="col detail-text p-0">Completed {{ req.type }} Requirements</p>
-            <button class="btn" v-bind:style="{ color: req.color }">
+            <button class="btn" :style="{ color: req.color }">
               <!-- Toggle to display completed reqs -->
-              <p
-                class="toggle"
-                v-if="req.displayCompleted"
-                v-on:click="turnCompleted(index, false)"
-              >
+              <p class="toggle" v-if="req.displayCompleted" @click="turnCompleted(index, false)">
                 HIDE
               </p>
-              <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
+              <p class="toggle" v-else @click="turnCompleted(index, true)">SHOW</p>
             </button>
           </div>
           <div v-if="req.displayCompleted">
             <!-- loop through completed reqs in req.completed array -->
-            <div class="list" v-for="value in req.completed" v-bind:key="value.id">
+            <div class="list" v-for="value in req.completed" :key="value.id">
               <div class="separator"></div>
               <div class="row req">
                 <p class="col float-left p-0 req-name">{{ value.name }}</p>

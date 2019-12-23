@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="{ 'course--min': !notCompact }" class="course">
+  <div :class="{ 'course--min': !notCompact }" class="course">
     <div class="course-color" :style="cssVars">
       <div class="course-dotColumn">
         <span class="course-dot"></span>
@@ -12,13 +12,13 @@
         <span class="course-dot"></span>
       </div>
     </div>
-    <div v-bind:class="{ 'course-content--min': !notCompact }" class="course-content">
-      <div v-bind:class="{ 'course-main--min': !notCompact }" class="course-main">
-        <div class = "course-top">
-          <div v-bind:class="{ 'course-code--min': !notCompact }" class="course-code">
+    <div :class="{ 'course-content--min': !notCompact }" class="course-content">
+      <div :class="{ 'course-main--min': !notCompact }" class="course-main">
+        <div class="course-top">
+          <div :class="{ 'course-code--min': !notCompact }" class="course-code">
             {{ subject }} {{ code }}
           </div>
-          <div class="course-dotRow" v-on:click="openMenu">
+          <div class="course-dotRow" @click="openMenu">
             <span class="course-dot course-dot--menu"></span>
             <span class="course-dot course-dot--menu"></span>
             <span class="course-dot course-dot--menu"></span>
@@ -51,7 +51,13 @@
         </div>
       </div>
     </div>
-    <coursemenu v-if="menuOpen" class="course-menu" v-on:delete-course="deleteCourse" v-on:color-course="colorCourse" v-click-outside="closeMenuIfOpen" />
+    <coursemenu
+      v-if="menuOpen"
+      class="course-menu"
+      @delete-course="deleteCourse"
+      @color-course="colorCourse"
+      v-click-outside="closeMenuIfOpen"
+    />
   </div>
 </template>
 
@@ -272,11 +278,10 @@ export default {
     }
   }
 
-  &-dotRow{
+  &-dotRow {
     display: flex;
     position: relative;
   }
-
 
   &-dot {
     opacity: 0.8;
