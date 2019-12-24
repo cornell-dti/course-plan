@@ -18,8 +18,8 @@
         :workload="data.workload"
         :prerequisites="data.prerequisites"
         :description="data.description"
+        :isPreview="data.isPreview"
         :isExpanded="data.isExpanded"
-        :isPreview="data.isPreview" 
         />
     </div>
 </template>

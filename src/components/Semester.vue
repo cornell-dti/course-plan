@@ -134,9 +134,9 @@ export default {
       const confirmationModal = document.getElementById(`confirmation-${this.id}`);
       confirmationModal.style.display = 'flex';
 
-      // setTimeout(() => {
-      //   confirmationModal.style.display = 'none';
-      // }, 5000);
+      setTimeout(() => {
+        confirmationModal.style.display = 'none';
+      }, 5000);
     },
     addCourseToFirebase(course) {
       const firebaseCourse = {
@@ -177,7 +177,8 @@ export default {
     },
 
     click(course) {
-      this.$emit('update', {subject: course.subject, number: course.code, roster: 'FA19', color: course.color});
+      // this.$emit('update', {subject: course.subject, number: course.code, roster: 'FA19', color: course.color});
+      this.$parent.$parent.updateBar({subject: course.subject, number: course.code, roster: 'FA19', color: course.color});
     }
   }
 };

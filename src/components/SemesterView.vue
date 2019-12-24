@@ -1,5 +1,5 @@
 <template>
-  <div class="semesterView">
+  <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar">
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div><button v-on:click="changeCompact">Change View</button></div>
     <confirmation
@@ -9,7 +9,7 @@
     />
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :isNotSemesterButton="true" @update="update" />
+        <semester v-bind="sem" :isNotSemesterButton="true"/>
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" />
@@ -50,7 +50,8 @@ const { auth, userDataCollection } = firebaseConfig;
 export default {
   props: {
     semesters: Array,
-    compact: Boolean
+    compact: Boolean,
+    isBottomBar: Boolean
   },
   data() {
     return {
@@ -139,8 +140,8 @@ export default {
         });
     },
 
-    update(course) {
-      this.$emit('update', course);
+    closeBar() {
+      this.$parent.closeBar();
     }
   }
 };
@@ -151,6 +152,7 @@ export default {
   display: flex;
   flex-direction: column;
   // height: 3000px;
+  margin-bottom: 40px;
 
   &-content {
     display: flex;
@@ -184,6 +186,10 @@ export default {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.bottomBar {
+  margin-bottom: 300px;
 }
 
 </style>

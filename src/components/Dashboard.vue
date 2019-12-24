@@ -4,8 +4,8 @@
       <semesterview
         :semesters="semesters"
         :compact="compactVal"
+        :isBottomBar="bottomBar.isExpanded"
         @compact-updated="compactVal = $event"
-        @update="updateBar"
       />
       <requirements />
     </div>
@@ -44,6 +44,7 @@ export default {
       currSemID: 1,
       semesters: [],
 
+      // Template default bottombar info
       bottomBar: {
         subject: "ENGRD",
         code: 2700,
@@ -63,8 +64,8 @@ export default {
         workload: 4.0,
         prerequisites: ["MATH 1910", "MATH 1920"],
         description: "Gives students a working knowledge of basic probability and statistics and their application to engineering. Includes computer analysis of data and simulation. Topics include random variables, probability distributions, expectation, estimation, testing, experimental design, quality control, and regression.",
-        isExpanded: true,
-        isPreview: false
+        isPreview: false,
+        isExpanded: false
       }
     };
   },
@@ -156,85 +157,96 @@ export default {
       return semester;
     },
 
-    updateBar(course) {
+    async updateBar(course) {
 
-      // Make API Requests for Course data
-      const url = `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${course.roster}&subject=${course.subject}&q=${course.subject}%20${course.number}`;
+      const res = await fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${course.roster}&subject=${course.subject}&q=${course.subject}%20${course.number}`);
+      const courseJSON = await res.json();
 
-      const xmlHttp = new XMLHttpRequest();
-      xmlHttp.onreadystatechange = () => {
-          if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-            let response = JSON.parse(xmlHttp.responseText);
-            if (response.data) {
-              const courseData = response.data.classes[0];
+      if (courseJSON.data) {
+        const courseData = courseJSON.data.classes[0];
 
-              // Update Bar Information
-              console.log(courseData);
+        // Update Bar Information
+        console.log(courseData);
 
-              // Calculate credits (3 or 3 - 4)
-              const { unitsMinimum, unitsMaximum } = courseData.enrollGroups[0];
-              const creditsCalc = (unitsMinimum === unitsMaximum) ? `${unitsMinimum}` : `${unitsMinimum} - ${unitsMaximum}`;
-              // Calculate semesters into array (["String", "Fall"])
-              const semestersRemovePeriod = courseData.catalogWhenOffered.replace(/\./g, '');
-              const semestersCalc = semestersRemovePeriod.split(",");
-              
-              // Iterate through enrollment groups and meetings to identify all instructors and enrollment data
-              const instructors = {};
-              const enrollment = {};
-              courseData.enrollGroups.map(group => {
-                group.classSections.map(section => {
-                  // Add section
-                  const enroll = section.ssrComponent;
-                  if (!enrollment[enroll]) enrollment[enroll] = true;
+        // Calculate credits (3 or 3 - 4)
+        const { unitsMinimum, unitsMaximum } = courseData.enrollGroups[0];
+        const creditsCalc = (unitsMinimum === unitsMaximum) ? `${unitsMinimum}` : `${unitsMinimum} - ${unitsMaximum}`;
+        // Calculate semesters into array (["String", "Fall"])
+        const semestersRemovePeriod = courseData.catalogWhenOffered.replace(/\./g, '');
+        const semestersCalc = semestersRemovePeriod.split(",");
+        
+        // Iterate through enrollment groups and meetings to identify all instructors lecture times and enrollment data
+        const enrollment = {};
+        const lectureTimes = {};
+        const instructors = {};
+        courseData.enrollGroups.map(group => {
+          group.classSections.map(section => {
+            // Add section
+            const enroll = section.ssrComponent;
+            enrollment[enroll] = true;
 
-                  section.meetings.map(meeting => {
-                    meeting.instructors.map(instructor => {
-                      const { netid, firstName, lastName } = instructor;
-                      if (!instructors[netid]) instructors[netid] = `${firstName} ${lastName}`
-                    })
-                  })
-                })
+            section.meetings.map(meeting => {
+              const { pattern, timeStart, timeEnd } = meeting;
+              // Only add the time if it is a lecture
+              if (enroll === 'LEC') lectureTimes[`${pattern} ${timeStart} - ${timeEnd}`] = true;
+
+              meeting.instructors.map(instructor => {
+                const { netid, firstName, lastName } = instructor;
+                instructors[netid] = `${firstName} ${lastName}`
               })
+            })
+          })
+        })
 
-              // Parse instructors to instructors array (["David Gries (grs23)", "Bob Iger (bi23)"])
-              const instructorsCalc = [];
-              Object.keys(instructors).map(netid => {
-                instructorsCalc.push(`${instructors[netid]} (${netid})`);
-              })
+        // Parse instructors to instructors array (["David Gries (grs23)", "Bob Iger (bi23)"])
+        const instructorsCalc = [];
+        Object.keys(instructors).map(netid => {
+          instructorsCalc.push(`${instructors[netid]} (${netid})`);
+        })
 
-              // Parse enrollment to enrollment array (["LEC", "LAB"])
-              const enrollmentCalc = Object.keys(enrollment);
+        let distributionCalc = courseData.catalogDistr.split(",");
+        if (distributionCalc.length === 0 || distributionCalc[0] === '') distributionCalc = ['None'];
 
-              const barData = {
-                subject: courseData.subject,
-                code: parseInt(courseData.catalogNbr),
-                name: courseData.titleLong,
-                credits: creditsCalc,
-                semesters: semestersCalc,
-                color: course.color,
-                // requirementsMap: Map,
-                id: 1,
-                instructors: instructorsCalc,
-                distribution_categories: ["MQR-AS"], // TODO
-                enrollment_info: enrollmentCalc,
-                // TODO
-                latest_sem: "SP17",
-                latest_lec_info: ["TR 1:25PM - 2:40PM", "MW 1:25PM - 2:40PM"],
-                overall_rating: 1,
-                difficulty: 3.4,
-                workload: 4.0,
-                prerequisites: ["MATH 1910", "MATH 1920"],
-                description: courseData.description,
-                isExpanded: true,
-                isPreview: true
-              }
+        // Parse enrollment to enrollment array (["LEC", "LAB"])
+        const enrollmentCalc = Object.keys(enrollment);
 
-              this.bottomBar = barData;
-            }
-          }
+        // Parse lecture times info
+        let lecturesCalc = Object.keys(lectureTimes);
+        if (lecturesCalc.length === 0 || lecturesCalc[0] === '') lecturesCalc = ['None'];
+
+        const barData = {
+          subject: courseData.subject,
+          code: parseInt(courseData.catalogNbr),
+          name: courseData.titleLong,
+          credits: creditsCalc,
+          semesters: semestersCalc,
+          color: course.color,
+          // requirementsMap: Map,
+          id: 1,
+          instructors: instructorsCalc,
+          distribution_categories: distributionCalc,
+          enrollment_info: enrollmentCalc,
+          latest_sem: "SP17", // TODO make to semester course is stored
+          latest_lec_info: lecturesCalc,
+          overall_rating: 1,
+          difficulty: 3.4,
+          workload: 4.0,
+          prerequisites: ["TODO"],
+          description: courseData.description,
+          isPreview: true,
+          isExpanded: true
+        }
+
+        this.bottomBar = barData;
       }
-      xmlHttp.open("GET", url, true); // true for asynchronous 
-      xmlHttp.send(null);
+    },
+
+    openBar() {
+      this.bottomBar.isExpanded = true;
+    },
+
+    closeBar() {
+      this.bottomBar.isExpanded = false;
     }
   }
 };

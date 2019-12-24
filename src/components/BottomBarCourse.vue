@@ -5,7 +5,7 @@
         <!-- Add tabs -->
       </div>
       
-      <div class="bottombar-title" :style="{ background: `#${color}` }" @click="isExpanded = !isExpanded">
+      <div class="bottombar-title" :style="{ background: `#${color}` }" @click="toggle">
         <span class="bottombar-square-title">{{ name }}</span>
       </div>
 
@@ -103,8 +103,15 @@ export default {
     workload: Number,
     prerequisites: Array,
     description: String,
-    isExpanded: Boolean,
-    isPreview: Boolean
+    isPreview: Boolean,
+    isExpanded: Boolean
+  },
+
+  methods: {
+    toggle() {
+      if (this.isExpanded) this.$parent.$parent.closeBar();
+      else this.$parent.$parent.openBar();
+    }
   }
 };
 </script>
@@ -137,7 +144,7 @@ export default {
 
       &-info {
         float: left;
-        height: 40vh;
+        height: 261px;
         width: 35%;
         background: #F8F8F8;
         overflow: scroll;
@@ -145,7 +152,7 @@ export default {
 
       &-details {
         float: right;
-        height: 40vh;
+        height: 261px;
         width: 65%;
         background: #FFF;
         overflow: scroll;
@@ -165,6 +172,7 @@ export default {
     }
 
     &-fact {
+      padding-right: 10px;
       font-size: 16px;
       color: #3D3D3D;
     }
