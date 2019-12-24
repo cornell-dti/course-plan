@@ -46,24 +46,24 @@ export default {
 
       // Template default bottombar info
       bottomBar: {
-        subject: "ENGRD",
+        subject: 'ENGRD',
         code: 2700,
-        name: "Basic Engineering Probability and Statistics",
+        name: 'Basic Engineering Probability and Statistics',
         credits: '3',
-        semesters: ["Fall", "Spring", "Summer", "Winter"],
+        semesters: ['Fall', 'Spring', 'Summer', 'Winter'],
         color: '2BBCC6',
         // requirementsMap: Map,
         id: 1,
-        instructors: ["J.Pender"], // array of strings
-        distribution_categories: ["MQR-AS"], // array of strings
-        enrollment_info: ["Lecture", "Lab"],
-        latest_sem: "SP17",
-        latest_lec_info: ["TR 1:25PM - 2:40PM", "MW 1:25PM - 2:40PM"],
+        instructors: ['J.Pender'], // array of strings
+        distribution_categories: ['MQR-AS'], // array of strings
+        enrollment_info: ['Lecture', 'Lab'],
+        latest_sem: 'SP17',
+        latest_lec_info: ['TR 1:25PM - 2:40PM', 'MW 1:25PM - 2:40PM'],
         overall_rating: 1,
         difficulty: 3.4,
         workload: 4.0,
-        prerequisites: ["MATH 1910", "MATH 1920"],
-        description: "Gives students a working knowledge of basic probability and statistics and their application to engineering. Includes computer analysis of data and simulation. Topics include random variables, probability distributions, expectation, estimation, testing, experimental design, quality control, and regression.",
+        prerequisites: ['MATH 1910', 'MATH 1920'],
+        description: 'Gives students a working knowledge of basic probability and statistics and their application to engineering. Includes computer analysis of data and simulation. Topics include random variables, probability distributions, expectation, estimation, testing, experimental design, quality control, and regression.',
         isPreview: false,
         isExpanded: false
       }
@@ -158,7 +158,6 @@ export default {
     },
 
     async updateBar(course) {
-
       const res = await fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${course.roster}&subject=${course.subject}&q=${course.subject}%20${course.number}`);
       const courseJSON = await res.json();
 
@@ -173,38 +172,38 @@ export default {
         const creditsCalc = (unitsMinimum === unitsMaximum) ? `${unitsMinimum}` : `${unitsMinimum} - ${unitsMaximum}`;
         // Calculate semesters into array (["String", "Fall"])
         const semestersRemovePeriod = courseData.catalogWhenOffered.replace(/\./g, '');
-        const semestersCalc = semestersRemovePeriod.split(",");
-        
+        const semestersCalc = semestersRemovePeriod.split(',');
+
         // Iterate through enrollment groups and meetings to identify all instructors lecture times and enrollment data
         const enrollment = {};
         const lectureTimes = {};
         const instructors = {};
-        courseData.enrollGroups.map(group => {
-          group.classSections.map(section => {
+        courseData.enrollGroups.forEach(group => {
+          group.classSections.forEach(section => {
             // Add section
             const enroll = section.ssrComponent;
             enrollment[enroll] = true;
 
-            section.meetings.map(meeting => {
+            section.meetings.forEach(meeting => {
               const { pattern, timeStart, timeEnd } = meeting;
               // Only add the time if it is a lecture
               if (enroll === 'LEC') lectureTimes[`${pattern} ${timeStart} - ${timeEnd}`] = true;
 
-              meeting.instructors.map(instructor => {
+              meeting.instructors.forEach(instructor => {
                 const { netid, firstName, lastName } = instructor;
-                instructors[netid] = `${firstName} ${lastName}`
-              })
-            })
-          })
-        })
+                instructors[netid] = `${firstName} ${lastName}`;
+              });
+            });
+          });
+        });
 
         // Parse instructors to instructors array (["David Gries (grs23)", "Bob Iger (bi23)"])
         const instructorsCalc = [];
-        Object.keys(instructors).map(netid => {
+        Object.keys(instructors).forEach(netid => {
           instructorsCalc.push(`${instructors[netid]} (${netid})`);
-        })
+        });
 
-        let distributionCalc = courseData.catalogDistr.split(",");
+        let distributionCalc = courseData.catalogDistr.split(',');
         if (distributionCalc.length === 0 || distributionCalc[0] === '') distributionCalc = ['None'];
 
         // Parse enrollment to enrollment array (["LEC", "LAB"])
@@ -216,7 +215,7 @@ export default {
 
         const barData = {
           subject: courseData.subject,
-          code: parseInt(courseData.catalogNbr),
+          code: parseInt(courseData.catalogNbr, 10),
           name: courseData.titleLong,
           credits: creditsCalc,
           semesters: semestersCalc,
@@ -226,16 +225,16 @@ export default {
           instructors: instructorsCalc,
           distribution_categories: distributionCalc,
           enrollment_info: enrollmentCalc,
-          latest_sem: "SP17", // TODO make to semester course is stored
+          latest_sem: 'SP17', // TODO make to semester course is stored
           latest_lec_info: lecturesCalc,
           overall_rating: 1,
           difficulty: 3.4,
           workload: 4.0,
-          prerequisites: ["TODO"],
+          prerequisites: ['TODO'],
           description: courseData.description,
           isPreview: true,
           isExpanded: true
-        }
+        };
 
         this.bottomBar = barData;
       }

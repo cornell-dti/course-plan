@@ -4,7 +4,7 @@
       <div class="bottombar-tabs">
         <!-- Add tabs -->
       </div>
-      
+
       <div class="bottombar-title" :style="{ background: `#${color}` }" @click="toggle">
         <span class="bottombar-square-title">{{ name }}</span>
       </div>
@@ -124,7 +124,7 @@ export default {
     left: 0;
     width: 100%;
     background-color: #FFF;
-    
+
     &-tabs {
       height: 0px;
     }
@@ -223,7 +223,7 @@ export default {
         text-decoration-line: underline;
         color: #4181FF;
       }
-    } 
+    }
   }
 
   .rating {
