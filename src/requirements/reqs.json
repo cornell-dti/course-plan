@@ -599,7 +599,7 @@
                             "search": "code", 
                             "includes": [
                                 ["AEM 3020"], 
-                                ["HADM 2810"]
+                                ["HADM 2810"],
                             ], 
                             "fulfilledBy": "courses", 
                             "minCount":2,
