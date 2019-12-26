@@ -303,7 +303,7 @@ export default {
   }
 
   &-content {
-    margin: 0.75rem 0.75rem 0.75rem 0;
+    margin: 0.75rem 0 0.75rem 0;
     display: flex;
     justify-content: space-between;
     width: 100%;

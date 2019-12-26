@@ -86,6 +86,15 @@ export default {
     isNotSemesterButton: Boolean,
     compact: Boolean
   },
+
+  mounted() {
+    document.addEventListener('touchmove', e => {
+      e.preventDefault();
+    }, {
+      passive: false
+    });
+  },
+
   computed: {
     // TODO: calculate credits from all classes
     creditString() {

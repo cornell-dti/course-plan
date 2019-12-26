@@ -137,7 +137,7 @@ function createRequirementJSON(requirement, totalRequirementCredits, totalRequir
     name: requirement.name,
     type: requirement.fulfilledBy,
     courses: coursesThatFulilledRequirement,
-    requirementType : requirementType,
+    requirementType,
     required: requirement.minCount
 
   };
