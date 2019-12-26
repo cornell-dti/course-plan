@@ -88,10 +88,20 @@ export default {
   },
 
   mounted() {
-    document.addEventListener('touchmove', e => {
-      e.preventDefault();
-    }, {
-      passive: false
+    let scrollable = true;
+    const listener = (e) => {
+      if (!scrollable) e.preventDefault();
+    };
+
+    document.addEventListener('touchmove', listener, { passive: false });
+
+    const service = Vue.$dragula.$service;
+
+    service.eventBus.$on('drag', () => {
+      scrollable = false;
+    });
+    service.eventBus.$on('drag', () => {
+      scrollable = true;
     });
   },
 
