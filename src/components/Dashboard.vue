@@ -165,7 +165,7 @@ export default {
         const courseData = courseJSON.data.classes[0];
 
         // Update Bar Information
-        console.log(courseData);
+        // console.log(courseData);
 
         // Calculate credits (3 or 3 - 4)
         const { unitsMinimum, unitsMaximum } = courseData.enrollGroups[0];

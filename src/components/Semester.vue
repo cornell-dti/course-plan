@@ -75,7 +75,8 @@ export default {
   // TODO: fonts! (Proxima Nova)
   data() {
     return {
-      confirmationText: ''
+      confirmationText: '',
+      scrollable: true
     };
   },
   props: {
@@ -88,23 +89,21 @@ export default {
   },
 
   mounted() {
-    let scrollable = true;
-    const listener = (e) => {
-      if (!scrollable) e.preventDefault();
-    };
 
-    document.addEventListener('touchmove', listener, { passive: false });
+    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
 
     const service = Vue.$dragula.$service;
 
     service.eventBus.$on('drag', () => {
-      scrollable = false;
-      console.log(scrollable);
+      this.$data.scrollable = false;
     });
     service.eventBus.$on('drop', () => {
-      scrollable = true;
-      console.log(scrollable);
+      this.$data.scrollable = true;
     });
+  },
+
+  beforeDestroy() {
+    this.$el.removeEventListener('touchmove', this.dragListener);
   },
 
   computed: {
@@ -277,6 +276,10 @@ export default {
       this.$parent.$parent.updateBar({
         subject: course.subject, number: course.code, roster: 'FA19', color: course.color
       });
+    },
+
+    dragListener(event) {
+      if (!this.$data.scrollable) event.preventDefault();
     }
   }
 };

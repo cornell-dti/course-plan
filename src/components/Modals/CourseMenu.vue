@@ -116,6 +116,7 @@ export default {
     &:active,
     &:focus {
       background-color: #2fa1f2;
+      color: #fff;
     }
 
     &:first-child {
