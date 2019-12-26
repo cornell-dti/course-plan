@@ -99,9 +99,11 @@ export default {
 
     service.eventBus.$on('drag', () => {
       scrollable = false;
+      console.log(scrollable);
     });
-    service.eventBus.$on('drag', () => {
+    service.eventBus.$on('drop', () => {
       scrollable = true;
+      console.log(scrollable);
     });
   },
 
