@@ -89,7 +89,6 @@ export default {
   },
 
   mounted() {
-
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
 
     const service = Vue.$dragula.$service;
