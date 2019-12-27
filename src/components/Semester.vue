@@ -22,14 +22,16 @@
       </div>
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-          <div v-for="course in courses" :key="course.id" class="semester-courseWrapper" @click="click(course)">
+          <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
             <course
               v-bind="course"
               :id="course.subject + course.code"
               :compact="compact"
+              :active="activatedCourse.subject === course.subject && activatedCourse.number === course.code"
               class="semester-course"
               @delete-course="deleteCourse"
               @color-course="colorCourse"
+              @updateBar="updateBar"
             />
           </div>
         </div>
@@ -85,7 +87,8 @@ export default {
     year: Number,
     courses: Array,
     isNotSemesterButton: Boolean,
-    compact: Boolean
+    compact: Boolean,
+    activatedCourse: Boolean
   },
 
   mounted() {
@@ -270,11 +273,8 @@ export default {
         });
     },
 
-    click(course) {
-      // this.$emit('update', {subject: course.subject, number: course.code, roster: 'FA19', color: course.color});
-      this.$parent.$parent.updateBar({
-        subject: course.subject, number: course.code, roster: 'FA19', color: course.color
-      });
+    updateBar(course) {
+      this.$emit('updateBar', course);
     },
 
     dragListener(event) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar">
+  <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div><button v-on:click="changeCompact">Change View</button></div>
     <confirmation
@@ -9,7 +9,7 @@
     />
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :isNotSemesterButton="true"/>
+        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" />
@@ -19,8 +19,7 @@
       <div
         v-for="sem in compactSemesters"
         v-bind:key="sem.id"
-        class="semesterView-wrapper semesterView-wrapper--compact"
-      >
+        class="semesterView-wrapper semesterView-wrapper--compact">
         <semester v-bind="sem" :isNotSemesterButton="true" />
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
@@ -55,7 +54,9 @@ export default {
   },
   data() {
     return {
-      confirmationText: ''
+      confirmationText: '',
+      key: 0,
+      activatedCourse: false
     };
   },
   computed: {
@@ -138,6 +139,12 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
+    },
+
+    updateBar(course) {
+      this.activatedCourse = course;
+      this.key += 1;
+      this.$emit('updateBar', course);
     },
 
     closeBar() {
