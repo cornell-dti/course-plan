@@ -88,7 +88,7 @@ export default {
     courses: Array,
     isNotSemesterButton: Boolean,
     compact: Boolean,
-    activatedCourse: Boolean
+    activatedCourse: Object
   },
 
   mounted() {

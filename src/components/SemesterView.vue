@@ -56,7 +56,7 @@ export default {
     return {
       confirmationText: '',
       key: 0,
-      activatedCourse: false
+      activatedCourse: {}
     };
   },
   computed: {
@@ -158,7 +158,6 @@ export default {
 .semesterView {
   display: flex;
   flex-direction: column;
-  // height: 3000px;
   margin-bottom: 40px;
 
   &-content {

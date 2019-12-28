@@ -37,7 +37,7 @@ const { auth, userDataCollection } = firebaseConfig;
 
 export default {
   props: {
-    bottom_courses: Array
+    bottomCourses: Array
   },
   data() {
     return {
@@ -45,29 +45,8 @@ export default {
       currSemID: 1,
       semesters: [],
 
-      // Template default bottombar info
-      bottomBar: {
-        subject: 'ENGRD',
-        code: 2700,
-        name: 'Basic Engineering Probability and Statistics',
-        credits: '3',
-        semesters: ['Fall', 'Spring', 'Summer', 'Winter'],
-        color: '2BBCC6',
-        // requirementsMap: Map,
-        id: 1,
-        instructors: ['J.Pender'], // array of strings
-        distribution_categories: ['MQR-AS'], // array of strings
-        enrollment_info: ['Lecture', 'Lab'],
-        latest_sem: 'SP17',
-        latest_lec_info: ['TR 1:25PM - 2:40PM', 'MW 1:25PM - 2:40PM'],
-        overall_rating: 1,
-        difficulty: 3.4,
-        workload: 4.0,
-        prerequisites: ['MATH 1910', 'MATH 1920'],
-        description: 'Gives students a working knowledge of basic probability and statistics and their application to engineering. Includes computer analysis of data and simulation. Topics include random variables, probability distributions, expectation, estimation, testing, experimental design, quality control, and regression.',
-        isPreview: false,
-        isExpanded: false
-      }
+      // Default bottombar info without info
+      bottomBar: {isPreview: false, isExpanded: false}
     };
   },
   mounted() {
@@ -224,11 +203,11 @@ export default {
           // requirementsMap: Map,
           id: 1,
           instructors: instructorsCalc,
-          distribution_categories: distributionCalc,
-          enrollment_info: enrollmentCalc,
-          latest_sem: 'SP17', // TODO make to semester course is stored
-          latest_lec_info: lecturesCalc,
-          overall_rating: 1,
+          distributionCategories: distributionCalc,
+          enrollmentInfo: enrollmentCalc,
+          latestSem: 'SP17', // TODO make to semester course is stored
+          latestLecInfo: lecturesCalc,
+          overallRating: 1,
           difficulty: 3.4,
           workload: 4.0,
           prerequisites: ['TODO'],

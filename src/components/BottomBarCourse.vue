@@ -20,31 +20,31 @@
             </div>
             <div class="section">
               <h1 class="info-head">Offered</h1>
-              <p class="info-fact">{{ semesters.join(", ") }}</p>
+              <p class="info-fact">{{ joinIfExists(semesters) }}</p>
             </div>
           </div>
           <div>
             <div class="section">
               <h1 class="info-head">Instructors</h1>
-              <p class="info-fact">{{ instructors.join(", ") }}</p>
+              <p class="info-fact">{{ joinIfExists(instructors) }}</p>
             </div>
             <div class="section">
               <h1 class="info-head">Enrollment Information</h1>
-              <p class="info-fact">{{ enrollment_info.join(", ") }}</p>
+              <p class="info-fact">{{ joinIfExists(enrollmentInfo) }}</p>
             </div>
           </div>
           <div>
             <div class="section">
               <h1 class="info-head">Distribution Category</h1>
-              <p class="info-fact">{{ distribution_categories.join(", ") }}</p>
+              <p class="info-fact">{{ joinIfExists(distributionCategories) }}</p>
             </div>
             <div class="section">
-              <h1 class="info-head">{{ latest_sem }} Lecture Info</h1>
-              <p class="info-fact">{{ latest_lec_info.join(", ") }}</p>
+              <h1 class="info-head">{{ latestSem }} Lecture Info</h1>
+              <p class="info-fact">{{ joinIfExists(latestLecInfo) }}</p>
             </div>
           </div>
           <div class="info-link">
-            <a :href="`https://classes.cornell.edu/browse/roster/${ latest_sem }/class/${ subject }/${ code }`" class="info-link-blue" target="_blank">View Course Information on Roster</a>
+            <a :href="`https://classes.cornell.edu/browse/roster/${ latestSem }/class/${ subject }/${ code }`" class="info-link-blue" target="_blank">View Course Information on Roster</a>
           </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
           <div class="details">
             <div class="details-head">Class Ratings</div>
             <div class="details-ratings">
-              <h1 class="details-ratings-title">Overall Rating: <strong>{{ overall_rating }}</strong></h1>
+              <h1 class="details-ratings-title">Overall Rating: <strong>{{ overallRating }}</strong></h1>
               <div class="progress rating">
                 <div class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
@@ -71,7 +71,7 @@
             </div>
             <a :href="`https://www.cureviews.org/course/${ subject }/${ code }`" class="details-ratings-link" target="_blank">See all reviews</a>
             <div class="details-head">Prerequisites</div>
-            <p>{{ prerequisites.join(", ") }}</p>
+            <p>{{ joinIfExists(prerequisites) }}</p>
             <div class="details-head">Description</div>
             <p>{{ description }}</p>
           </div>
@@ -94,11 +94,11 @@ export default {
     // requirementsMap: Map,
     id: Number,
     instructors: Array, // array of strings
-    distribution_categories: Array, // array of strings
-    enrollment_info: Array,
-    latest_sem: String,
-    latest_lec_info: Array,
-    overall_rating: Number,
+    distributionCategories: Array, // array of strings
+    enrollmentInfo: Array,
+    latestSem: String,
+    latestLecInfo: Array,
+    overallRating: Number,
     difficulty: Number,
     workload: Number,
     prerequisites: Array,
@@ -111,7 +111,11 @@ export default {
     toggle() {
       if (this.isExpanded) this.$parent.$parent.closeBar();
       else this.$parent.$parent.openBar();
-    }
+    },
+
+    joinIfExists(arr) {
+      return (arr) ? arr.join(',') : '';
+    },
   }
 };
 </script>
