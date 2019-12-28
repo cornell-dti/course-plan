@@ -115,7 +115,7 @@ export default {
 
     joinIfExists(arr) {
       return (arr) ? arr.join(',') : '';
-    },
+    }
   }
 };
 </script>

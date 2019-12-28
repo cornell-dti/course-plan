@@ -46,7 +46,7 @@ export default {
       semesters: [],
 
       // Default bottombar info without info
-      bottomBar: {isPreview: false, isExpanded: false}
+      bottomBar: { isPreview: false, isExpanded: false }
     };
   },
   mounted() {
