@@ -83,8 +83,8 @@ export default {
 
     margin-left: 8px;
     margin-right: 16px;
-    margin-top: 13px; 
-    margin-bottom: 12px; 
+    margin-top: 13px;
+    margin-bottom: 12px;
   }
 
   &-right {
