@@ -32,8 +32,8 @@ export default {
 .confirmation {
   position: fixed;
   z-index: 10;
-  height: 41px;
-  left: 295px;
+  height: 42px;
+  left: 296px;
   top: 16px;
   background: #ffffff;
   border-radius: 6px;
@@ -42,10 +42,9 @@ export default {
   flex-direction: row;
 
   &-left {
-    // position: absolute;
-    width: 41px;
-    height: 39px;
-    left: 295px;
+    width: 42px;
+    height: 42px;
+    left: 296px;
     top: 16px;
 
     background: #3eb53b;
@@ -59,55 +58,52 @@ export default {
   }
 
   &-left img {
-    // position: absolute;
     width: 20px;
     height: 20px;
-    left: 307px;
-    top: 27px;
+    left: 304px;
+    top: 24px;
 
     margin: auto;
   }
 
   &-text {
-    // width: 274px;
     height: 16px;
-    left: 349px;
-    top: 29px;
+    left: 352px;
+    top: 32px;
 
     font-family: Helvetica Neue;
     font-style: normal;
     font-weight: normal;
     font-size: 16px;
-    line-height: 19px;
+    line-height: 24px;
     display: flex;
     align-items: center;
 
     color: #7b7d7e;
 
-    margin-left: 11px;
-    margin-right: 19px;
-    margin-top: 13px;
-    margin-bottom: 12px;
+    margin-left: 8px;
+    margin-right: 16px;
+    margin-top: 13px; 
+    margin-bottom: 12px; 
   }
 
   &-right {
-    // position: absolute;
-    width: 49px;
+    width: 48px;
     height: 16px;
-    left: 642px;
-    top: 29px;
+    left: 640px;
+    top: 32px;
 
     font-family: Helvetica Neue;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
-    line-height: 20px;
+    line-height: 24px;
     display: flex;
     align-items: center;
 
     color: #32a0f2;
-    margin-left: 19px;
-    margin-right: 14px;
+    margin-left: 16px;
+    margin-right: 16px;
     margin-top: 13px;
     margin-bottom: 12px;
   }
