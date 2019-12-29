@@ -2,61 +2,6 @@
   <div class="requirements">
     <h1 class="title">School Requirements</h1>
 
- <!-- VIEW WITH INTEGRATED DATA
-
-    Majors tabular view
-    <div class="req" v-for="(reqType, typeID) in reqs1" v-bind:key="reqType.id">
-        Top row for each Requirement Type
-        <div class="row top">
-          <p  v-if = "typeID=='collegeReqs'" class="name col p-0">{{user.college}} REQUIREMENTS</p>
-          <p  v-else-if = "typeID=='majorReqs'" class="name col p-0">{{user.major}} REQUIREMENTS</p>
-          <p  v-else  class="name col p-0">EXTRA MINOR TODO REQUIREMENTS</p>
-
-
-          <div class="col-1 text-right p-0">
-            <button @click="modalShow = !modalShow" class="btn">
-
-              <img class="settings" src="../assets/images/gear.svg" />
-            </button>
-          </div>
-          <b-modal v-model="modalShow">Hello From Modal!</b-modal>
-        </div>
-
-       Majors tabular view
-
-        <div class="tab" v-if="req.type === 'MAJOR'">
-          <div class="row">
-            <div class="col-12 middle" v-for="type in actives" v-bind:key= "type.id">
-
-              <button v-bind:class="{ active: actives[0]}" @click="getReqs()" class="btn">
-                <div class= "div-tab">
-                  <p v-bind:class="{ active: actives[0] }" class="major">Computer Science</p>
-                  <p v-bind:class="{ active: actives[0] }" class="major-college">(Arts and Science)</p>
-                </div>
-              </button>
-            </div>
-
-          </div>
-        </div>
-
-
-      progress bar settings
-      <div class="progress">
-        <div
-          class="progress-bar"
-          v-bind:style="{ 'background-color': reqType.color, width: `${(req.progress/req.total)*100}%`}"
-          role="progressbar"
-        ></div>
-      </div>
-
-      <div class="req" v-for="(req) in reqType[typeID]" v-bind:key="req.id">
-
-
-      </div>
-
-    </div>
-
- -->
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" v-bind:key="req.id">
       <div class="row top">
@@ -67,29 +12,13 @@
             <img class="settings" src="../assets/images/gear.svg" />
           </button>
         </div>
-        <b-modal v-model="modalShow">Hello From Modal!</b-modal>
       </div>
-
-      <!--Majors tabular view -->
-      <div class="tab" v-if="req.type === 'MAJOR'">
-        <div class="row">
-          <div class="col-12 middle" v-for="type in actives" v-bind:key= "type.id">
-
-            <button v-bind:class="{ active: actives[0]}" @click="getReqs()" class="btn">
-              <div class= "div-tab">
-                <p v-bind:class="{ active: actives[0] }" class="major">Computer Science</p>
-                <p v-bind:class="{ active: actives[0] }" class="major-college">(Arts and Science)</p>
-              </div>
-            </button>
-          </div>
-
-        </div>
-      </div>
+      
       <!-- progress bar settings -->
       <div class="progress">
         <div
           class="progress-bar"
-          v-bind:style="{ 'background-color': req.color, width: `${(req.progress/req.total)*100}%`}"
+          v-bind:style="{ 'background-color': `#${req.color}`, width: `${(req.progress/req.total)*100}%`}"
           role="progressbar"
         ></div>
       </div>
@@ -101,62 +30,56 @@
 
       <!--View more college requirements -->
       <div class="row top">
-        <div class="col-1 text-left p-0" >
-          <button v-bind:style="{ 'color': req.color }" class="btn" v-on:click="turnDetails(index, true)" style="color:#1AA9A5;">
+        <div class="col-1 p-0" >
+          <button v-bind:style="{ 'color': `#${req.color}` }" class="btn" v-on:click="turnDetails(index, true)" style="color:#1AA9A5;">
             <!-- svg for dropdown icon -->
             <img
-              class="setting"
+              class="arrow"
               style="fill: #1AA9A5; color:#1AA9A5 "
               src="../assets/images/dropdown-blue.svg"
               alt="dropdown"
             />
           </button>
         </div>
-         <div class="col text-center p-0 ">
-          <p class=" req-name" v-bind:style="{ 'color': req.color }" >VIEW ALL {{ req.type }} REQUIREMENTS</p>
+         <div class="col p-0 ">
+          <p class="req-name" v-bind:style="{ 'color': `#${req.color}` }">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.type }} REQUIREMENTS</p>
         </div>
       </div>
 
       <!--Show more of completed requirements -->
       <div v-if="req.displayDetails">
-        <div class="row  top">
-          <p class="sub-title col p-0">In-Depth College Requirement</p>
-
-        </div>
+        <p class="sub-title">On-Going Requirements</p>
+        <div class="separator"></div>
         <div
           v-for="(subReq, id) in req.ongoing"
-          v-bind:key="subReq.id"
-          class="semesterView-wrapper"
-        >
-          <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
-          <div class="row top ">
-            <div class="col-1 middle text-left p-0">
-              <button class="btn btn-2" v-on:click="turnSubDetails(index, id, true)">
+          v-bind:key="subReq.id">
+          <div class="row depth-req">
+            <div class="col-1">
+              <button class="btn" v-on:click="turnSubDetails(index, id, true)">
                 <!-- svg for dropdown icon -->
                 <img
-                  class="setting"
+                  class="arrow"
                   style="fill: #1AA9A5; color:#1AA9A5 "
                   src="../assets/images/dropdown.svg"
                   alt="dropdown"
                 />
               </button>
             </div>
-            <div class="col middle  p-0">
+            <div class="col-7">
               <p class="sup-req">{{subReq.name}}</p>
             </div>
-            <div class="col   p-0">
-              <p class="sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
+            <div class="col">
+              <p class="sup-req-progress text-right">( {{subReq.progress}}/{{subReq.total}} Credits)</p>
             </div>
           </div>
 
-          <div class="sub-req-div" v-if="subReq.display">
+          <!-- <div class="sub-req-div" v-if="subReq.display">
             <div >
               <p>Additional Courses</p>
               <ul class="striped-list">
                 <li
                   v-for="subSubReq in subReq.additonalCourses"
                   v-bind:key="subSubReq.id"
-
                 >
                   <div class="row top-small">
                     <div class="col">
@@ -180,47 +103,49 @@
                 />
               </div>
             </div>
-          </div>
+          </div> -->
+          <div class="separator"></div>
         </div>
 
-        <div class="row top">
-          <p class="sub-title col p-0">Completed Requirements</p>
-          <div class="col-1 text-right p-0">
-            <button class="btn" v-bind:style="{ 'color': req.color }">
+        <div class="row completed">
+          <p class="col sub-title">Completed Requirements</p>
+          <div class="col-1 text-right">
+            <button class="btn float-right" v-bind:style="{ 'color': `#${req.color}` }">
               <!-- Toggle to display completed reqs -->
               <p
                 class="toggle"
                 v-if="req.displayCompleted"
-                v-on:click="turnCompleted(index, false)"
-              >HIDE</p>
+                v-on:click="turnCompleted(index, false)">HIDE</p>
               <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
             </button>
           </div>
         </div>
+        
         <div v-if="req.displayCompleted">
-          <div v-for="subReq in req.completed" v-bind:key="subReq.id" class="semesterView-wrapper">
+          <div v-for="subReq in req.completed" v-bind:key="subReq.id">
             <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
-            <div class="row top">
-              <div class="col-1 middle text-left p-0">
-                <button class="btn btn-2" v-on:click="turnSubDetails(index, id, true)">
+            <div class="row depth-req">
+              <div class="col-1">
+                <button class="btn" v-on:click="turnSubDetails(index, id, true)">
                   <!-- svg for dropdown icon -->
                   <img
-                    class="setting"
+                    class="arrow"
                     style="fill: #1AA9A5; color:#1AA9A5 "
                     src="../assets/images/dropdown.svg"
                     alt="dropdown"
                   />
                 </button>
               </div>
-              <p class="col sup-req middle ">{{subReq.name}}</p>
-              <p
-                class="col sup-req  text-right p-0"
-              >( {{subReq.progress}} / {{subReq.total}} Credits)</p>
+              <div class="col-7">
+                <p class="sup-req">{{subReq.name}}</p>
+              </div>
+              <div class="col">
+                <p class="sup-req-progress text-right">( {{subReq.progress}}/{{subReq.total}} Credits)</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
 
       <!-- Add separator if not last req or not displaying details -->
       <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
@@ -267,13 +192,12 @@ export default {
       reqs1: [],
       reqs: [
         {
-          show: false,
           name: 'COLLEGE REQUIREMENTS',
           type: 'COLLEGE',
           count: 'Credits',
           progress: 46,
           total: 120,
-          color: '#2BBCC6',
+          color: '2BBCC6',
           displayDetails: false,
           ongoing: [
             {
@@ -314,13 +238,12 @@ export default {
           ]
         },
         {
-          show: true,
           name: 'MAJOR REQUIREMENTS',
           type: 'MAJOR',
           count: 'Courses',
           progress: 4,
           total: 8,
-          color: '#2BBCC6',
+          color: '508197',
           displayDetails: false,
           ongoing: [
             {
@@ -358,13 +281,12 @@ export default {
         },
 
         {
-          show: false,
           name: 'MINOR REQUIREMENTS',
           type: 'MINOR',
           count: 'Courses',
           progress: 4,
           total: 8,
-          color: '#2BBCC6',
+          color: '92C3E6',
           displayDetails: false,
           ongoing: [
             {
@@ -429,298 +351,18 @@ export default {
     turnCompleted(index, bool) {
       this.reqs[index].displayCompleted = bool;
     },
-    isActive(index) {
-      return this.actives[index];
-    },
-    activate(index, bool) {
-      this.actives[0] = !this.actives[0];
-      this.actives[1] = !this.actives[1];
-    },
-    async reformatRequiremetns(oldJSON) {
-      const collegeReqs = [];
-      const majorReqs = [];
-      const minorReqs = [];
-      const newJSON = {};
-      const progress = [
-        ['0', '0'],
-        [0, 0],
-        [0, 0]
-      ];
 
-
-      // TODO make dynamic for multiple majors
-      console.log(`FIRST ${progress}`);
-      Array.from(oldJSON).forEach(el => {
-        console.log(el.requirementType);
-        console.log(el.fulfilled);
-        const progressF = progress[0][0] + el.fulfilled;
-        const progressTotal = progress[0][1] + el.required;
-        // console.log(progressF+ "/" + el.required);
-        if (el.requirementType == 'university' || el.requirementType == 'college' || el.requirementType == 'Foreign Language Requirement') {
-          collegeReqs.push(el);
-          progress[0][0] = progressF;
-          progress[0][1] = progressTotal;
-        } else if (el.requirementType == 'major') {
-          majorReqs.push(el);
-          progress[0][0] = progressF;
-          progress[0][1] = progressTotal;
-        } else if (el.requirementType == 'minor') {
-          minorReqs.push(el);
-          progress[1][0] = progressF;
-          progress[1][1] = progressTotal;
-        } else {
-          // throw new Error('Invalid requirement type.');
-        }
-
-        newJSON.collegeReqs = collegeReqs;
-        newJSON.majorReqs = majorReqs;
-        newJSON.minorReqs = minorReqs;
-        console.log(progress);
-      });
-
-      this.reqs1 = newJSON;
-      // this.progress = progess;
-
-      progress[1][1] = 12;
-
-      console.log(`req1${this.reqs1}`);
-      console.log(progress);
-    },
     getReqs() {
-      console.log(this.currentClasses);
-      console.log(this.user.college);
-      console.log(this.user.major);
-      console.log('SEEKING REQUIREMENTS');
-
-      this.getRequirements(this.currentClasses, this.user.college, this.user.major).then(res => {
-        console.log(res);
-        this.reformatRequiremetns(res).then(res2 => console.log(res2));
-      });
-    },
-    async getRequirements(coursesTaken, college, major, isTransfer = false) {
-      // const fs = require('fs');
-      // import * as fs from 'fs'
-      // const request = require('request');
-      // const fb = require('../firebaseConfig.js');
-      // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
-      let totalCreditsTaken = 0;
-      const coursesTakenWithInfo = {};
-      for (const courseTaken of coursesTaken) {
-        const courseInfo = await this.getCourseInfo(courseTaken);
-        totalCreditsTaken += courseInfo.enrollGroups.unitsMaximum;
-        coursesTakenWithInfo[courseTaken] = courseInfo;
-      }
-      // Terminate firebase connection
-
-      // prepare final output JSONs
-      let finalRequirementJSONs = [];
-
-      const { reqsData } = this;
-
-      // PART 1: check university requirements
-      if (!reqsData.university) throw new Error('University requirements not found.');
-      const universityReqs = reqsData.university;
-      finalRequirementJSONs = finalRequirementJSONs.concat(
-        await this.iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements, 'university')
-      );
-
-      // PART 2: check college requirements
-      if (!(college in reqsData.college)) throw new Error('College not found.');
-      const collegeReqs = reqsData.college[college];
-      finalRequirementJSONs = finalRequirementJSONs.concat(
-        await this.iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements, 'college')
-      );
-
-      // PART 3: check major reqs
-      if (!(major in reqsData.major)) throw new Error('Major not found.');
-      const majorReqs = reqsData.major[major];
-      finalRequirementJSONs = finalRequirementJSONs.concat(
-        await this.iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, 'major')
-      );
-      // console.log(finalRequirementJSONs);
-      return finalRequirementJSONs;
-    },
-
-    async iterateThroughRequirements(coursesTakenWithInfo, requirements, requirementType) {
-      // array of requirement status information to be returned
-      const requirementJSONs = [];
-      const count = 0;
-      const self = this;
-      // helper to recursively call when an object has subpaths
-      function helper(coursesTakenWithInfo, requirements, rType, parentName = null) {
-        for (const requirement of requirements) {
-          // if(!isTransfer && requirement.applies === "transfers") continue;
-          // temporarily skip these until we can implement them later
-
-          // Recursively call function if there are subpaths
-          if (requirement.multiplePaths) {
-            const requirementName = requirement.name;
-            requirementJSONs.push({ name: requirementName, paths: [], isComplete: false });
-            helper(coursesTakenWithInfo, requirement.paths, requirementName);
-            continue;
-          }
-
-          let totalRequirementCredits = 0;
-          let totalRequirementCount = 0;
-          const coursesThatFulilledRequirement = [];
-          // check each course to see if it fulfilled that requirement
-
-          const codes = Object.keys(coursesTakenWithInfo);
-
-          // If not in path, push new object to requirementsJSONs
-          for (const code of codes) {
-            // console.log('I am looking at the data of:', requirement.includes);
-
-            const courseInfo = coursesTakenWithInfo[code];
-
-            const indexIsFulfilled = self.checkIfCourseFulfilled(courseInfo, requirement.search, requirement.includes);
-
-            if (indexIsFulfilled) {
-              // depending on what it is fulfilled by, either increase the count or credits you took
-              switch (requirement.fulfilledBy) {
-                case 'count':
-                  totalRequirementCount++;
-                  break;
-                case 'credits':
-                  totalRequirementCredits += courseInfo.enrollGroups[0].unitsMaximum;
-                  break;
-                case 'self-check':
-                  continue;
-                default:
-                  throw new Error('Fulfillment type unknown.');
-              }
-
-              // add the course to the list of courses used to fulfill that one requirement
-              coursesThatFulilledRequirement.push(code);
-            }
-          }
-
-          const generatedResults = self.createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement, rType);
-
-          // If at end path (no parent path)
-          if (!parentName) {
-            requirementJSONs.push(generatedResults);
-          }
-          // If in path, append to path of parent
-          else {
-            const parent = requirementJSONs.find(key => key.name === parentName);
-            parent.paths.push(generatedResults);
-            parent.isComplete = parent.isComplete || generatedResults.isComplete;
-          }
-        }
-      }
-
-      helper(coursesTakenWithInfo, requirements, requirementType);
-
-      return requirementJSONs;
-    },
-
-    createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement, requirementType) {
-      const requirementFulfillmentData = {
-        name: requirement.name,
-        type: requirement.fulfilledBy,
-        courses: coursesThatFulilledRequirement,
-        requirementType
-      };
-      let isComplete;
-      let required;
-      let fulfilled;
-      switch (requirement.fulfilledBy) {
-        case 'count':
-          isComplete = requirement.minCount <= totalRequirementCount;
-          required = requirement.minCount;
-          fulfilled = totalRequirementCount;
-          break;
-        case 'credits':
-          isComplete = requirement.minCreds <= totalRequirementCredits;
-          required = requirement.minCreds;
-          fulfilled = totalRequirementCredits;
-          break;
-        case 'self-check':
-          isComplete = 'unknown';
-          required = 'unknown';
-          fulfilled = 'unknown';
-          break;
-        default:
-          throw new Error('Fulfillment type unknown.');
-      }
-      requirementFulfillmentData.isComplete = isComplete;
-      requirementFulfillmentData.required = required;
-      requirementFulfillmentData.fulfilled = fulfilled;
-      return requirementFulfillmentData;
-    },
-
-    parseCourseAbbreviation(courseAbbreviation) {
-      const regex = /([a-zA-Z]+) ([0-9][0-9][0-9][0-9]$)?/g;
-      const matches = regex.exec(courseAbbreviation);
-      if (matches === null) throw new Error('Invalid course abbreviation');
-      return { courseSubject: matches[1].toUpperCase(), courseNumber: matches[2] };
-    },
-
-    getCourseInfo(courseCode) {
-      const courseAbbrev = this.parseCourseAbbreviation(courseCode);
-      const courseSubject = courseAbbrev.courseSubject.toUpperCase();
-      const number = courseAbbrev.courseNumber;
-
-      return new Promise((resolve, reject) => {
-        // Using Firebase
-        const coursesCollection = fb.db.collection('courses');
-        const courseRef = coursesCollection.doc(courseSubject + number);
-
-        courseRef.get()
-          .then(doc => {
-            if (!doc.exists) reject('No document exists');
-            else resolve(doc.data());
-          })
-          .catch(err => {
-            reject('Error getting doc', err);
-          });
-      });
-    },
-
-    ifCodeMatch(courseName, courseCode) {
-      for (let i = 0; i < courseName.length; i++) {
-        if (courseCode[i] !== '*' && courseName[i] !== courseCode[i]) return false;
-      }
-      return true;
-    },
-
-    checkIfCourseFulfilled(courseInfo, search, includes) {
-      // console.log(courseInfo.courseSubject + courseInfo.catalogNbr);
-
-      if (search === 'all' || search === 'all-eligible' || search === 'self-check') return true;
-      for (const [i, include] of includes.entries()) {
-        for (const option of include) {
-          if (search === 'code') {
-            if (this.ifCodeMatch(`${courseInfo.courseSubject} ${courseInfo.catalogNbr}`, option)) {
-              // Important: removes array option list from requirements
-              if (includes.length > 1) includes.splice(i, 1);
-
-              return true;
-            }
-          } else if (courseInfo[search].includes(option)) return true;
-        }
-      }
-
-      return false;
+      console.log("Todo check requirements");
     }
-
-
   }
 };
 </script>
 
 <style scoped lang="scss">
 
-.text-center {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-}
-
 .btn {
-  padding: 10px;
-  margin: -4px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -730,30 +372,49 @@ export default {
   }
 }
 
+.btn:focus,.btn:active {
+   outline: none !important;
+   box-shadow: none;
+}
+
+.row {
+  margin: 0;
+}
+
+.row > div {
+  padding: 0;
+}
 
 .requirements {
-  width: 400px;
+  min-height: 100vh;
+  flex-basis: 400px;
+  flex-grow: 0;
+  flex-shrink: 0;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: white;
 }
-.sub-req-div{
-  padding-left: 30px;
-  margin :0px;
 
+.depth-req {
+  margin: 0.5rem 0 0.5rem 0;
+  height: 14px;
 }
 
-p.sub-req{
+.sub-req-div{
   padding-left: 30px;
-  margin: 0px
+  margin: 0px;
 }
 
 h1.title {
-  margin: 0 0 0 0;
   font-style: normal;
   font-weight: 550;
   font-size: 22px;
   line-height: 29px;
   color: #000000;
+}
+
+.progress {
+  border-radius: 1rem;
+  height: 10px;
 }
 
 .top {
@@ -775,9 +436,21 @@ h1.title {
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
-  line-height: 19px;
+  line-height: 16px;
 
   color: #000000;
+}
+
+.sub-title {
+  padding: 0;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.completed {
+  margin-top: 1rem;
 }
 
 .major {
@@ -811,9 +484,13 @@ p.active {
   font-weight: bold;
 }
 
-.settings {
+.settings, .arrow {
   height: 14px;
   width: 14px;
+}
+
+.arrow {
+  margin-top: -4px;
 }
 
 .progress-text {
@@ -910,10 +587,10 @@ button.view {
   line-height: 19px;
 
   &-name {
+    margin-left: 0.5rem;
+    font-weight: 600;
     font-size: 14px;
-    align-content: bottom;
-    line-height: 17px;
-    margin: 0px;
+    line-height: 14px;
     align-self: center;
   }
 
@@ -927,9 +604,15 @@ button.view {
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
-  line-height: 17px;
+  line-height: 14px;
 
   color: #757575;
+
+  &-progress {
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 12px;
+  }
 }
 
 .semester-req {
@@ -938,7 +621,6 @@ button.view {
 }
 
 .separator {
-
   height: 1px;
   width: 100%;
   background-color: #d7d7d7;
