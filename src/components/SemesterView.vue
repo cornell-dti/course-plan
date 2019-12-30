@@ -1,7 +1,11 @@
 <template>
   <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
-    <div><button v-on:click="changeCompact">Change View</button></div>
+    <div class="semesterView-switch">
+      <span class="semesterView-switchText">View:</span>
+      <div class="semesterView-switchImage" @click="setNotCompact"></div>
+      <div class="semesterView-switchImage semesterView-switchImage--compact" @click="setCompact"></div>
+    </div>
     <confirmation
       :id="'semesterConfirmation'"
       class="semesterView-confirmation"
@@ -87,8 +91,15 @@ export default {
     this.$el.removeEventListener('click', this.closeAllModals);
   },
   methods: {
-    changeCompact() {
-      this.$emit('compact-updated', !this.compact);
+    setCompact() {
+      if(!this.compact) {
+        this.$emit('compact-updated', !this.compact);
+      }
+    },
+    setNotCompact() {
+      if(this.compact) {
+        this.$emit('compact-updated', !this.compact);
+      }
     },
     openSemesterModal() {
       const modal = document.getElementById('semesterModal');
@@ -158,21 +169,70 @@ export default {
 .semesterView {
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  margin: 1.5rem 3rem 3rem;
+  max-width: 49rem;
 
   &-content {
     display: flex;
     flex-wrap: wrap;
   }
 
+  &-switch {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: #858585;
+  }
+
+  &-switchText {
+    margin-right: .5rem;
+    font-size: 16px;
+    line-height: 19px;
+  }
+
+  &-switchImage {
+    background-image: url('~@/assets/images/views/twoColumn.svg');
+    width: 2.25rem;
+    height: 2.25rem;
+    background-repeat: no-repeat;
+    background-size: auto;
+    background-position: center;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+    }
+
+    &--compact {
+      background-image: url('~@/assets/images/views/fourColumn.svg');
+
+      &:hover,
+      &:focus,
+      &:active {
+        background-image: url('~@/assets/images/views/fourColumnSelected.svg');
+      }
+    }
+
+    &:not(:last-child) {
+      margin-right: .5rem;
+    }
+  }
+
   &-wrapper {
     display: flex;
     justify-content: center;
-    flex-basis: 50%;
     margin-bottom: 1.5rem;
 
+    &:nth-child(odd) {
+      margin-right: 1.5rem;
+    }
+
     &--compact {
-      flex-basis: 25%;
+      &:not(:nth-child(4n+1)) {
+        margin-right: 1.5rem;
+      }
     }
   }
 
