@@ -27,9 +27,11 @@
               v-bind="course"
               :id="course.subject + course.code"
               :compact="compact"
+              :active="activatedCourse.subject === course.subject && activatedCourse.number === course.code"
               class="semester-course"
               @delete-course="deleteCourse"
               @color-course="colorCourse"
+              @updateBar="updateBar"
             />
           </div>
         </div>
@@ -75,7 +77,8 @@ export default {
   // TODO: fonts! (Proxima Nova)
   data() {
     return {
-      confirmationText: ''
+      confirmationText: '',
+      scrollable: true
     };
   },
   props: {
@@ -84,8 +87,27 @@ export default {
     year: Number,
     courses: Array,
     isNotSemesterButton: Boolean,
-    compact: Boolean
+    compact: Boolean,
+    activatedCourse: Object
   },
+
+  mounted() {
+    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+
+    const service = Vue.$dragula.$service;
+
+    service.eventBus.$on('drag', () => {
+      this.$data.scrollable = false;
+    });
+    service.eventBus.$on('drop', () => {
+      this.$data.scrollable = true;
+    });
+  },
+
+  beforeDestroy() {
+    this.$el.removeEventListener('touchmove', this.dragListener);
+  },
+
   computed: {
     // TODO: calculate credits from all classes
     creditString() {
@@ -133,7 +155,7 @@ export default {
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
-      }, 3000);
+      }, 5000);
     },
     addCourseToFirebase(course) {
       const firebaseCourse = {
@@ -249,6 +271,14 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
+    },
+
+    updateBar(course) {
+      this.$emit('updateBar', course);
+    },
+
+    dragListener(event) {
+      if (!this.$data.scrollable) event.preventDefault();
     }
   }
 };

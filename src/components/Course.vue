@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'course--min': !notCompact }" class="course">
+  <div :class="{ 'course--min': !notCompact, 'active': active }" class="course" @click="updateBar()">
     <div class="course-color" :style="cssVars">
       <div class="course-dotColumn">
         <span class="course-dot"></span>
@@ -91,7 +91,8 @@ export default {
     color: String,
     requirementsMap: Map,
     compact: Boolean,
-    id: String
+    id: String,
+    active: Boolean
   },
   data() {
     return {
@@ -197,6 +198,7 @@ export default {
   },
   methods: {
     openMenu() {
+      console.log('Menu');
       this.stopCloseFlag = true;
       this.menuOpen = true;
     },
@@ -209,10 +211,20 @@ export default {
     },
     deleteCourse() {
       this.$emit('delete-course', this.id);
+      this.closeMenuIfOpen();
     },
     colorCourse(color) {
       this.$emit('color-course', color, this.id);
+      this.closeMenuIfOpen();
+    },
+    updateBar() {
+      if (!this.menuOpen) {
+        this.$emit('updateBar', {
+          subject: this.subject, number: this.code, roster: 'FA19', color: this.color
+        });
+      }
     }
+
   },
   directives: {
     'click-outside': clickOutside
@@ -234,11 +246,6 @@ export default {
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
-  }
-
-  &:active,
-  &:focus {
-    border: 1px solid #2b6693;
   }
 
   &--min {
@@ -303,8 +310,7 @@ export default {
   }
 
   &-content {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin: 0.75rem 0 0.75rem 0;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -392,6 +398,10 @@ export default {
     top: 2rem;
     z-index: 1;
   }
+}
+
+.active {
+  border: 1px solid #2b6693;
 }
 
 // TODO: convert px to rem for spacing
