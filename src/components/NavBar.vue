@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="navbar-bottom">
-      <div class="navbar-iconWrapper">
+      <div class="navbar-iconWrapper" @click="logout">
         <img class="navbar-icon" src="@/assets/images/navbar/logout.svg">
       </div>
     </div>
@@ -20,7 +20,20 @@
 </template>
 
 <script>
-export default {};
+import firebase from 'firebase';
+
+export default {
+  methods: {
+    logout() {
+      firebase.auth().signOut().then(() => {
+        window.location.reload(false);
+      }, error => {
+        // TODO: error
+        console.log(error);
+      });
+    }
+  }
+};
 </script>
 
 
