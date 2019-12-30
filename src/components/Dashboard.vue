@@ -1,6 +1,7 @@
 <template>
   <div id="dashboard">
     <div id="dashboard-mainView">
+      <navbar />
       <semesterview
         :semesters="semesters"
         :compact="compactVal"
@@ -21,6 +22,7 @@ import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
 import BottomBar from '@/components/BottomBar';
+import NavBar from '@/components/NavBar';
 
 import '@/vueDragulaConfig';
 
@@ -28,6 +30,7 @@ Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
 Vue.component('bottombar', BottomBar);
+Vue.component('navbar', NavBar);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
