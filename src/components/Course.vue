@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="{ 'course--min': !notCompact }" class="course">
+  <div :class="{ 'course--min': !notCompact, 'active': active }" class="course" @click="updateBar()">
     <div class="course-color" :style="cssVars">
       <div class="course-dotColumn">
         <span class="course-dot"></span>
@@ -12,13 +12,13 @@
         <span class="course-dot"></span>
       </div>
     </div>
-    <div v-bind:class="{ 'course-content--min': !notCompact }" class="course-content">
-      <div v-bind:class="{ 'course-main--min': !notCompact }" class="course-main">
-        <div class = "course-top">
-          <div v-bind:class="{ 'course-code--min': !notCompact }" class="course-code">
+    <div :class="{ 'course-content--min': !notCompact }" class="course-content">
+      <div :class="{ 'course-main--min': !notCompact }" class="course-main">
+        <div class="course-top">
+          <div :class="{ 'course-code--min': !notCompact }" class="course-code">
             {{ subject }} {{ code }}
           </div>
-          <div class="course-dotRow" v-on:click="openMenu">
+          <div class="course-dotRow" @click="openMenu">
             <span class="course-dot course-dot--menu"></span>
             <span class="course-dot course-dot--menu"></span>
             <span class="course-dot course-dot--menu"></span>
@@ -51,7 +51,13 @@
         </div>
       </div>
     </div>
-    <coursemenu v-if="menuOpen" class="course-menu" v-on:delete-course="deleteCourse" v-on:color-course="colorCourse" v-click-outside="closeMenuIfOpen" />
+    <coursemenu
+      v-if="menuOpen"
+      class="course-menu"
+      @delete-course="deleteCourse"
+      @color-course="colorCourse"
+      v-click-outside="closeMenuIfOpen"
+    />
   </div>
 </template>
 
@@ -85,7 +91,8 @@ export default {
     color: String,
     requirementsMap: Map,
     compact: Boolean,
-    id: String
+    id: String,
+    active: Boolean
   },
   data() {
     return {
@@ -198,6 +205,7 @@ export default {
   },
   methods: {
     openMenu() {
+      console.log('Menu');
       this.stopCloseFlag = true;
       this.menuOpen = true;
     },
@@ -210,10 +218,20 @@ export default {
     },
     deleteCourse() {
       this.$emit('delete-course', this.id);
+      this.closeMenuIfOpen();
     },
     colorCourse(color) {
       this.$emit('color-course', color, this.id);
+      this.closeMenuIfOpen();
+    },
+    updateBar() {
+      if (!this.menuOpen) {
+        this.$emit('updateBar', {
+          subject: this.subject, number: this.code, roster: 'FA19', color: this.color
+        });
+      }
     }
+
   },
   directives: {
     'click-outside': clickOutside
@@ -235,11 +253,6 @@ export default {
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
-  }
-
-  &:active,
-  &:focus {
-    border: 1px solid #2b6693;
   }
 
   &--min {
@@ -279,11 +292,10 @@ export default {
     }
   }
 
-  &-dotRow{
+  &-dotRow {
     display: flex;
     position: relative;
   }
-
 
   &-dot {
     opacity: 0.8;
@@ -305,8 +317,7 @@ export default {
   }
 
   &-content {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin: 0.75rem 0 0.75rem 0;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -394,6 +405,10 @@ export default {
     top: 2rem;
     z-index: 1;
   }
+}
+
+.active {
+  border: 1px solid #2b6693;
 }
 
 // TODO: convert px to rem for spacing

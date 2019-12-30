@@ -1,5 +1,5 @@
 <template>
-  <div class="semesterView">
+  <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div><button v-on:click="changeCompact">Change View</button></div>
     <confirmation
@@ -9,22 +9,21 @@
     />
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :isNotSemesterButton="true" />
+        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" />
+        <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
     </div>
     <div v-if="compact" class="semesterView-content">
       <div
         v-for="sem in compactSemesters"
         v-bind:key="sem.id"
-        class="semesterView-wrapper semesterView-wrapper--compact"
-      >
-        <semester v-bind="sem" :isNotSemesterButton="true" />
+        class="semesterView-wrapper semesterView-wrapper--compact">
+        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" :compact="compact" />
+        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
     </div>
   </div>
@@ -50,11 +49,14 @@ const { auth, userDataCollection } = firebaseConfig;
 export default {
   props: {
     semesters: Array,
-    compact: Boolean
+    compact: Boolean,
+    isBottomBar: Boolean
   },
   data() {
     return {
-      confirmationText: ''
+      confirmationText: '',
+      key: 0,
+      activatedCourse: {}
     };
   },
   computed: {
@@ -137,6 +139,16 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
+    },
+
+    updateBar(course) {
+      this.activatedCourse = course;
+      this.key += 1;
+      this.$emit('updateBar', course);
+    },
+
+    closeBar() {
+      this.$emit('close-bar');
     }
   }
 };
@@ -146,6 +158,7 @@ export default {
 .semesterView {
   display: flex;
   flex-direction: column;
+  margin-bottom: 40px;
 
   &-content {
     display: flex;
@@ -179,6 +192,10 @@ export default {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.bottomBar {
+  margin-bottom: 300px;
 }
 
 </style>

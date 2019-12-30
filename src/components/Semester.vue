@@ -1,8 +1,8 @@
 <template>
   <div
     class="semester"
-    v-bind:class="{ 'semester--min': !isNotSemesterButton, 'semester--compact': compact }"
-    v-bind:id="id"
+    :class="{ 'semester--min': !isNotSemesterButton, 'semester--compact': compact }"
+    :id="id"
   >
     <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" />
     <confirmation
@@ -11,12 +11,12 @@
       :text="confirmationText"
     />
     <div v-if="isNotSemesterButton" class="semester-content">
-      <div class="semester-top" v-bind:class="{ 'semester-top--compact': compact }">
-        <div class="semester-left" v-bind:class="{ 'semester-left--compact': compact }">
+      <div class="semester-top" :class="{ 'semester-top--compact': compact }">
+        <div class="semester-left" :class="{ 'semester-left--compact': compact }">
           <span class="semester-name">{{ type }} {{ year }}</span>
           <img class="semester-icon" src="../assets/images/pencil.svg" />
         </div>
-        <div class="semester-right" v-bind:class="{ 'semester-right--compact': compact }">
+        <div class="semester-right" :class="{ 'semester-right--compact': compact }">
           <span class="semester-credits">{{ creditString }}</span>
         </div>
       </div>
@@ -25,38 +25,35 @@
           <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
             <course
               v-bind="course"
-              v-bind:id="course.subject + course.code"
-              v-bind:compact="compact"
+              :id="course.subject + course.code"
+              :compact="compact"
+              :active="activatedCourse.subject === course.subject && activatedCourse.number === course.code"
               class="semester-course"
-              v-on:delete-course="deleteCourse"
-              v-on:color-course="colorCourse"
+              @delete-course="deleteCourse"
+              @color-course="colorCourse"
+              @updateBar="updateBar"
             />
           </div>
         </div>
         <div
           class="semester-courseWrapper semester-addWrapper"
-          v-bind:class="{ 'semester-addWrapper--compact': compact }"
-          v-on:click="openCourseModal"
+          :class="{ 'semester-addWrapper--compact': compact }"
+          @click="openCourseModal"
         >
-          <span
-            class="semester-buttonText"
-            v-bind:class="{ 'semester-buttonText--compact': compact }"
-            >{{ buttonString }}</span
-          >
+          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
+            buttonString
+          }}</span>
         </div>
       </div>
     </div>
-    <div v-if="!isNotSemesterButton" class="semester-empty" v-on:click="openSemesterModal">
-
+    <div v-if="!isNotSemesterButton" class="semester-empty" @click="openSemesterModal">
       <div
         class="semester-semesterWrapper"
-        v-bind:class="{ 'semester-semesterWrapper--compact': compact }"
+        :class="{ 'semester-semesterWrapper--compact': compact }"
       >
-        <span
-          class="semester-buttonText"
-          v-bind:class="{ 'semester-buttonText--compact': compact }"
-          >{{ semesterString }}</span
-        >
+        <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
+          semesterString
+        }}</span>
       </div>
     </div>
   </div>
@@ -80,7 +77,8 @@ export default {
   // TODO: fonts! (Proxima Nova)
   data() {
     return {
-      confirmationText: ''
+      confirmationText: '',
+      scrollable: true
     };
   },
   props: {
@@ -89,8 +87,27 @@ export default {
     year: Number,
     courses: Array,
     isNotSemesterButton: Boolean,
-    compact: Boolean
+    compact: Boolean,
+    activatedCourse: Object
   },
+
+  mounted() {
+    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+
+    const service = Vue.$dragula.$service;
+
+    service.eventBus.$on('drag', () => {
+      this.$data.scrollable = false;
+    });
+    service.eventBus.$on('drop', () => {
+      this.$data.scrollable = true;
+    });
+  },
+
+  beforeDestroy() {
+    this.$el.removeEventListener('touchmove', this.dragListener);
+  },
+
   computed: {
     // TODO: calculate credits from all classes
     creditString() {
@@ -138,7 +155,7 @@ export default {
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
-      }, 3000);
+      }, 5000);
     },
     addCourseToFirebase(course) {
       const firebaseCourse = {
@@ -254,6 +271,14 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
+    },
+
+    updateBar(course) {
+      this.$emit('updateBar', course);
+    },
+
+    dragListener(event) {
+      if (!this.$data.scrollable) event.preventDefault();
     }
   }
 };
