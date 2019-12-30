@@ -13,7 +13,7 @@
           </button>
         </div>
       </div>
-      
+
       <!-- progress bar settings -->
       <div class="progress">
         <div
@@ -31,7 +31,7 @@
       <!--View more college requirements -->
       <div class="row top">
         <div class="col-1 p-0" >
-          <button v-bind:style="{ 'color': `#${req.color}` }" class="btn" v-on:click="turnDetails(index, true)" style="color:#1AA9A5;">
+          <button v-bind:style="{ 'color': `#${req.color}` }" class="btn" v-on:click="toggleDetails(index)" style="color:#1AA9A5;">
             <!-- svg for dropdown icon -->
             <img
               class="arrow"
@@ -120,7 +120,7 @@
             </button>
           </div>
         </div>
-        
+
         <div v-if="req.displayCompleted">
           <div v-for="subReq in req.completed" v-bind:key="subReq.id">
             <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
@@ -161,8 +161,6 @@ import Modal from '@/components/Modals/Modal';
 import Semester from '@/components/Semester';
 
 import reqsData from '../requirements/reqs.json';
-
-const request = require('request');
 // import * as fs from 'fs'
 const fb = require('../firebaseConfig.js');
 
@@ -180,18 +178,18 @@ export default {
     compact: Boolean
   },
   mounted() {
-    this.getReqs(["CS 2110", "CS 1110", "PE 1110", "PE 1300"], "AS", "CS").then(groups => {
+    this.getReqs(['CS 2110', 'CS 1110', 'PE 1110', 'PE 1300'], 'AS', 'CS').then(groups => {
       // Turn result into data readable by requirements menu
-      console.log(groups);
+      // console.log(groups);
 
       groups.forEach(group => {
-        let singleMenuRequirement = {ongoing: [], completed: []};
+        const singleMenuRequirement = { ongoing: [], completed: [] };
         singleMenuRequirement.name = `${group.groupName.toUpperCase()} REQUIREMENT`;
         singleMenuRequirement.group = group.groupName.toUpperCase();
         singleMenuRequirement.color = '105351';
         singleMenuRequirement.displayDetails = false;
         singleMenuRequirement.displayCompleted = false;
-        
+
         group.reqs.forEach(req => {
           if (req.progressBar) {
             singleMenuRequirement.type = req.type.charAt(0).toUpperCase() + req.type.substring(1);
@@ -207,16 +205,16 @@ export default {
           } else {
             singleMenuRequirement.completed.push(req);
           }
-        })
+        });
 
         if (!singleMenuRequirement.type) {
-          singleMenuRequirement.type = "Requirements"
+          singleMenuRequirement.type = 'Requirements';
           singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
           singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
         }
 
         this.reqs.push(singleMenuRequirement);
-      })
+      });
     });
   },
 
@@ -397,12 +395,12 @@ export default {
   },
 
   methods: {
-    turnDetails(index, bool) {
+    toggleDetails(index) {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
 
     turnSubDetails(index, id, bool) {
-      this.reqs[index].ongoing[id].display = !this.reqs[index].ongoing[id].display;
+      this.reqs[index].ongoing[id].display = bool;
     },
 
     turnCompleted(index, bool) {
@@ -410,44 +408,42 @@ export default {
     },
 
     async getReqs(coursesTaken, college, major) {
+      // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
+      const coursesTakenWithInfo = {};
+      const courseData = await Promise.all(
+        coursesTaken.map(courseTaken => getCourseInfo(courseTaken))
+      );
 
-      return getRequirements(coursesTaken, college, major);
+      for (let i = 0; i < coursesTaken.length; i += 1) { coursesTakenWithInfo[coursesTaken[i]] = courseData[i]; }
 
-      async function getRequirements(coursesTaken, college, major) { // isTransfer = false
-        // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
-        const coursesTakenWithInfo = {};
-        const courseData = await Promise.all(
-          coursesTaken.map(courseTaken => getCourseInfo(courseTaken))
-        );
+      // prepare final output JSONs
+      const finalRequirementJSONs = [];
 
-        for (let i = 0; i < coursesTaken.length; i += 1) { coursesTakenWithInfo[coursesTaken[i]] = courseData[i]; }
+      // PART 1: check university requirements
+      if (!reqsData.university) throw new Error('University requirements not found.');
+      const universityReqs = reqsData.university;
+      finalRequirementJSONs.push({
+        groupName: 'University',
+        reqs: await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements, 'university')
+      });
 
-        // prepare final output JSONs
-        let finalRequirementJSONs = [];
+      // PART 2: check college requirements
+      if (!(college in reqsData.college)) throw new Error('College not found.');
+      const collegeReqs = reqsData.college[college];
+      finalRequirementJSONs.push({
+        groupName: 'College',
+        reqs: await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements, 'college')
+      });
 
-        // PART 1: check university requirements
-        if (!reqsData.university) throw new Error('University requirements not found.');
-        const universityReqs = reqsData.university;
-        finalRequirementJSONs.push({groupName: "University", 
-          reqs: await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements, 'university')
-        });
+      // PART 3: check major reqs
+      if (!(major in reqsData.major)) throw new Error('Major not found.');
+      const majorReqs = reqsData.major[major];
+      finalRequirementJSONs.push({
+        groupName: 'Major',
+        reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, 'major')
+      });
 
-        // PART 2: check college requirements
-        if (!(college in reqsData.college)) throw new Error('College not found.');
-        const collegeReqs = reqsData.college[college];
-        finalRequirementJSONs.push({groupName: "College",
-          reqs: await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements, 'college')
-        });
-
-        // PART 3: check major reqs
-        if (!(major in reqsData.major)) throw new Error('Major not found.');
-        const majorReqs = reqsData.major[major];
-        finalRequirementJSONs.push({groupName: "Major",
-          reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, 'major')
-        });
-
-        return finalRequirementJSONs;
-      }
+      return finalRequirementJSONs;
 
 
       /**
@@ -461,7 +457,7 @@ export default {
         const requirementJSONs = [];
 
         // helper to recursively call when an object has subpaths
-        function helper(coursesTakenWithInfo, requirements, rType, parentName = null) {
+        function helper(coursesTakenWithInfoInner, requirements, rType, parentName = null) {
           for (const requirement of requirements) {
             // if(!isTransfer && requirement.applies === "transfers") continue;
             // temporarily skip these until we can implement them later
@@ -470,6 +466,7 @@ export default {
             if (requirement.multiplePaths) {
               const requirementName = requirement.name;
               requirementJSONs.push({ name: requirementName, paths: [], isComplete: false });
+
               helper(coursesTakenWithInfo, requirement.paths, requirementName);
               continue;
             }
@@ -507,7 +504,7 @@ export default {
               }
             }
 
-            const generatedResults = createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement, );
+            const generatedResults = createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement);
 
             // If at end path (no parent path)
             if (!parentName) requirementJSONs.push(generatedResults);
@@ -532,7 +529,7 @@ export default {
        * @param {*} totalRequirementCount : total number of courses that satisfied requirement
        * @param {*} coursesThatFulilledRequirement : courses that satisfied requirement
        */
-      function createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement, requirementType) {
+      function createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement) {
         const requirementFulfillmentData = {
           name: requirement.name,
           type: requirement.fulfilledBy,

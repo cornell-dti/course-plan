@@ -64,9 +64,6 @@ export default {
     this.getSemestersFromUser();
   },
   methods: {
-    getCurrentClassesFromUser() {
-      const x = 0;
-    },
     getSemestersFromUser() {
       const user = auth.currentUser;
       const userEmail = user.email;
