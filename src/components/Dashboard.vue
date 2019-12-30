@@ -7,11 +7,12 @@
         :isBottomBar="bottomBar.isExpanded"
         @compact-updated="compactVal = $event"
         @updateBar="updateBar"
+        @close-bar="closeBar"
       />
       <requirements />
     </div>
     <div id="dashboard-bottomView">
-      <bottombar :data="bottomBar"/>
+      <bottombar :data="bottomBar" @close-bar="closeBar" @open-bar="openBar"/>
     </div>
   </div>
 </template>

@@ -20,6 +20,7 @@
         :description="data.description"
         :isPreview="data.isPreview"
         :isExpanded="data.isExpanded"
+        @toggle="toggle"
         />
     </div>
 </template>
@@ -34,6 +35,12 @@ export default {
   props: {
     bottomCourses: Array,
     data: Object
+  },
+  methods: {
+    toggle(isExpanded) {
+      if (isExpanded) this.$emit('close-bar');
+      else this.$emit('open-bar');
+    }
   }
 };
 </script>

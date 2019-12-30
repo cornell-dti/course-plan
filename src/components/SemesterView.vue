@@ -148,7 +148,7 @@ export default {
     },
 
     closeBar() {
-      this.$parent.closeBar();
+      this.$emit('close-bar');
     }
   }
 };

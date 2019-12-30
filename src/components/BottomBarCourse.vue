@@ -109,8 +109,7 @@ export default {
 
   methods: {
     toggle() {
-      if (this.isExpanded) this.$parent.$parent.closeBar();
-      else this.$parent.$parent.openBar();
+      this.$emit('toggle', this.isExpanded);
     },
 
     joinIfExists(arr) {
