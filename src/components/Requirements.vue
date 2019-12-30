@@ -69,7 +69,7 @@
               <p class="sup-req">{{subReq.name}}</p>
             </div>
             <div class="col">
-              <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} Credits )</p>
+              <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
             </div>
           </div>
 
@@ -140,7 +140,7 @@
                 <p class="sup-req">{{subReq.name}}</p>
               </div>
               <div class="col">
-                <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} Credits )</p>
+                <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
               </div>
             </div>
           </div>
@@ -178,21 +178,33 @@ export default {
     compact: Boolean
   },
   mounted() {
-    this.getReqs(['CS 2110', 'CS 1110', 'PE 1110', 'PE 1300'], 'AS', 'CS').then(groups => {
+    
+    // Get array of courses from semesters data
+
+    const courses = this.getCourseCodesArray();
+
+
+    this.getReqs(courses, this.user.college, this.user.major).then(groups => {
       // Turn result into data readable by requirements menu
       // console.log(groups);
 
       groups.forEach(group => {
-        const singleMenuRequirement = { ongoing: [], completed: [] };
-        singleMenuRequirement.name = `${group.groupName.toUpperCase()} REQUIREMENT`;
-        singleMenuRequirement.group = group.groupName.toUpperCase();
-        singleMenuRequirement.color = '105351';
-        singleMenuRequirement.displayDetails = false;
-        singleMenuRequirement.displayCompleted = false;
+        const singleMenuRequirement = { 
+          ongoing: [],
+          completed: [],
+          name: `${group.groupName.toUpperCase()} REQUIREMENT`,
+          group: group.groupName.toUpperCase(),
+          color: '105351',
+          displayDetails: false,
+          displayCompleted: false
+        };
 
         group.reqs.forEach(req => {
+          if (req.type) req.type = req.type.charAt(0).toUpperCase() + req.type.substring(1);
+
+          // Create progress bar with requirement with progressBar = true
           if (req.progressBar) {
-            singleMenuRequirement.type = req.type.charAt(0).toUpperCase() + req.type.substring(1);
+            singleMenuRequirement.type = req.type;
             singleMenuRequirement.fulfilled = req.fulfilled;
             singleMenuRequirement.required = req.required;
           }
@@ -224,6 +236,7 @@ export default {
       actives: [false],
       modalShow: false,
       reqs: [
+        // Data structure for menu
         // {
         //   name: 'UNIVERSITY REQUIREMENT',
         //   group: 'UNIVERSITY',
@@ -259,137 +272,6 @@ export default {
         //     }
         //   ]
         // }
-        // {
-        //   name: 'COLLEGE REQUIREMENTS',
-        //   type: 'COLLEGE',
-        //   type: 'Credits',
-        //   progress: 46,
-        //   total: 120,
-        //   color: '2BBCC6',
-        //   displayDetails: false,
-        //   ongoing: [
-        //     {
-        //       name: 'CALS Credits',
-        //       type: 'Credits',
-        //       progress: 12,
-        //       total: 55,
-        //       additonalCourses: ['PE Courses', 'Swimming Requirement'],
-        //       satisfiableCourses: ['ice skating', 'bowling'],
-        //       display: false
-        //     },
-        //     {
-        //       name: 'PE Credits',
-        //       type: 'Credits',
-        //       progress: 1,
-        //       total: 2,
-        //       additonalCourses: ['PE Courses', 'Swimming Requirement'],
-        //       satisfiableCourses: ['ice skating', 'bowling'],
-        //       display: false
-        //     }
-        //   ],
-        //   displayCompleted: true,
-        //   completed: [
-        //     {
-        //       name: 'Quantitative Literacy',
-        //       type: 'Credits',
-        //       progress: 2,
-        //       total: 2,
-        //       display: false
-        //     },
-        //     {
-        //       name: 'Chemistry/Physics',
-        //       type: 'Credits',
-        //       progress: 1,
-        //       total: 2,
-        //       display: false
-        //     }
-        //   ]
-        // },
-        // {
-        //   name: 'MAJOR REQUIREMENTS',
-        //   type: 'MAJOR',
-        //   type: 'Courses',
-        //   progress: 4,
-        //   total: 8,
-        //   color: '508197',
-        //   displayDetails: false,
-        //   ongoing: [
-        //     {
-        //       name: 'CALS Credits',
-        //       type: 'Credits',
-        //       progress: 12,
-        //       total: 55,
-        //       display: false
-        //     },
-        //     {
-        //       name: 'PE ',
-        //       type: 'Credits',
-        //       progress: 1,
-        //       total: 2,
-        //       display: false
-        //     }
-        //   ],
-        //   displayCompleted: true,
-        //   completed: [
-        //     {
-        //       name: 'Quantitative Literacy',
-        //       type: 'Credits',
-        //       progress: 2,
-        //       total: 2,
-        //       display: false
-        //     },
-        //     {
-        //       name: 'Chemistry/Physics',
-        //       type: 'Credits',
-        //       progress: 2,
-        //       total: 2,
-        //       display: false
-        //     }
-        //   ]
-        // },
-
-        // {
-        //   name: 'MINOR REQUIREMENTS',
-        //   type: 'MINOR',
-        //   type: 'Courses',
-        //   progress: 4,
-        //   total: 8,
-        //   color: '92C3E6',
-        //   displayDetails: false,
-        //   ongoing: [
-        //     {
-        //       name: 'CALS Credits',
-        //       type: 'Credits',
-        //       progress: 12,
-        //       total: 55,
-        //       display: false
-        //     },
-        //     {
-        //       name: 'PE ',
-        //       type: 'Credits',
-        //       progress: 1,
-        //       total: 2,
-        //       display: false
-        //     }
-        //   ],
-        //   displayCompleted: true,
-        //   completed: [
-        //     {
-        //       name: 'Quantitative Literacy',
-        //       type: 'Credits',
-        //       progress: 2,
-        //       total: 2,
-        //       display: false
-        //     },
-        //     {
-        //       name: 'Chemistry/Physics',
-        //       type: 'Credits',
-        //       progress: 1,
-        //       total: 2,
-        //       display: false
-        //     }
-        //   ]
-        // }
       ]
     };
   },
@@ -405,6 +287,17 @@ export default {
 
     turnCompleted(index, bool) {
       this.reqs[index].displayCompleted = bool;
+    },
+
+    getCourseCodesArray() {
+      let courses = [];
+      this.semesters.forEach(semester => {
+        semester.courses.forEach(course => {
+          courses.push(`${course.subject} ${course.code}`);
+        })
+      })
+
+      return courses;
     },
 
     async getReqs(coursesTaken, college, major) {
