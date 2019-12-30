@@ -46,6 +46,7 @@ export default {
     width: 2.5rem;
     background-repeat: no-repeat;
     background-size: auto;
+    background-position: center;
 
     &:not(:first-child) {
       margin-top: 2.25rem;

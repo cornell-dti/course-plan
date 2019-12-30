@@ -1,7 +1,10 @@
 <template>
   <div id="dashboard">
     <div id="dashboard-mainView">
-      <navbar />
+      <div class="dashboard-menus">
+        <navbar />
+        <requirements />
+      </div>
       <semesterview
         :semesters="semesters"
         :compact="compactVal"
@@ -10,7 +13,6 @@
         @updateBar="updateBar"
         @close-bar="closeBar"
       />
-      <requirements />
     </div>
     <div id="dashboard-bottomView">
       <bottombar :data="bottomBar" @close-bar="closeBar" @open-bar="openBar"/>
@@ -242,7 +244,9 @@ export default {
 }
 #dashboard-mainView {
   display: flex;
-  justify-content: space-between;
+}
+.dashboard-menus {
+  display: flex;
 }
 
 .semester {
