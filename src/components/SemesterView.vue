@@ -92,12 +92,12 @@ export default {
   },
   methods: {
     setCompact() {
-      if(!this.compact) {
+      if (!this.compact) {
         this.$emit('compact-updated', !this.compact);
       }
     },
     setNotCompact() {
-      if(this.compact) {
+      if (this.compact) {
         this.$emit('compact-updated', !this.compact);
       }
     },
