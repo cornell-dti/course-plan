@@ -1,9 +1,9 @@
 <template>
-  <div id="dashboard">
-    <div id="dashboard-mainView">
+  <div class="dashboard">
+    <div class="dashboard-mainView">
       <div class="dashboard-menus">
-        <navbar />
-        <requirements />
+        <navbar class="dashboard-nav" />
+        <requirements class="dashboard-reqs"/>
       </div>
       <semesterview
         :semesters="semesters"
@@ -238,15 +238,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#dashboard {
+.dashboard {
   display: flex;
   flex-direction: column;
-}
-#dashboard-mainView {
-  display: flex;
-}
-.dashboard-menus {
-  display: flex;
+
+  &-mainView {
+    display: flex;
+  }
+
+  &-menus {
+    display: flex;
+  }
+
+  &-reqs {
+    margin-left: 4.5rem;
+  }
 }
 
 .semester {

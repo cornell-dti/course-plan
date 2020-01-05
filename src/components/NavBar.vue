@@ -35,7 +35,9 @@ export default {
 .navbar {
   background-color: #F7F7F7;
   width: 4.5rem;
+  height: 100vh;
   display: flex;
+  position: fixed;
   flex-direction: column;
   justify-content: space-between;
   padding-top: 2.25rem;
