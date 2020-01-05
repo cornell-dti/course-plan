@@ -3,8 +3,8 @@
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
-      <div class="semesterView-switchImage" @click="setNotCompact"></div>
-      <div class="semesterView-switchImage semesterView-switchImage--compact" @click="setCompact"></div>
+      <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
+      <div class="semesterView-switchImage semesterView-fourColumn" @click="setCompact" :class="{ 'semesterView-fourColumn--active': compact }"></div>
     </div>
     <confirmation
       :id="'semesterConfirmation'"
@@ -192,31 +192,36 @@ export default {
   }
 
   &-switchImage {
-    background-image: url('~@/assets/images/views/twoColumn.svg');
     width: 2.25rem;
     height: 2.25rem;
     background-repeat: no-repeat;
     background-size: auto;
     background-position: center;
 
-    &:hover,
-    &:focus,
-    &:active {
-      background-image: url('~@/assets/images/views/twoColumnSelected.svg');
-    }
-
-    &--compact {
-      background-image: url('~@/assets/images/views/fourColumn.svg');
-
-      &:hover,
-      &:focus,
-      &:active {
-        background-image: url('~@/assets/images/views/fourColumnSelected.svg');
-      }
-    }
-
     &:not(:last-child) {
       margin-right: .5rem;
+    }
+  }
+
+  &-twoColumn {
+    background-image: url('~@/assets/images/views/twoColumn.svg');
+    
+    &:hover,
+    &:focus,
+    &:active, 
+    &--active {
+      background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+    }
+  }
+
+  &-fourColumn {
+    background-image: url('~@/assets/images/views/fourColumn.svg');
+
+    &:hover,
+    &:focus,
+    &:active, 
+    &--active {
+      background-image: url('~@/assets/images/views/fourColumnSelected.svg');
     }
   }
 
