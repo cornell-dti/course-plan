@@ -205,10 +205,10 @@ export default {
 
   &-twoColumn {
     background-image: url('~@/assets/images/views/twoColumn.svg');
-    
+
     &:hover,
     &:focus,
-    &:active, 
+    &:active,
     &--active {
       background-image: url('~@/assets/images/views/twoColumnSelected.svg');
     }
@@ -219,7 +219,7 @@ export default {
 
     &:hover,
     &:focus,
-    &:active, 
+    &:active,
     &--active {
       background-image: url('~@/assets/images/views/fourColumnSelected.svg');
     }
