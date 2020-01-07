@@ -178,7 +178,6 @@ export default {
     compact: Boolean
   },
   mounted() {
-    
     // Get array of courses from semesters data
 
     const courses = this.getCourseCodesArray();
@@ -189,7 +188,7 @@ export default {
       // console.log(groups);
 
       groups.forEach(group => {
-        const singleMenuRequirement = { 
+        const singleMenuRequirement = {
           ongoing: [],
           completed: [],
           name: `${group.groupName.toUpperCase()} REQUIREMENT`,
@@ -290,12 +289,12 @@ export default {
     },
 
     getCourseCodesArray() {
-      let courses = [];
+      const courses = [];
       this.semesters.forEach(semester => {
         semester.courses.forEach(course => {
           courses.push(`${course.subject} ${course.code}`);
-        })
-      })
+        });
+      });
 
       return courses;
     },
