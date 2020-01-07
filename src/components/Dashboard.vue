@@ -87,21 +87,18 @@ export default {
     },
     convertSemesters(firebaseSems) {
       const semesters = [];
+
       firebaseSems.forEach(firebaseSem => {
         const firebaseCourses = firebaseSem.courses;
-        this.currentClasses = firebaseSem.courses;
         const courses = [];
-        const currCourses = [];
         firebaseCourses.forEach(firebaseCourse => {
-          const arr = this.createCourse(firebaseCourse);
-          courses.push(arr[0]);
-          currCourses.push(arr[1]);
+          courses.push(this.createCourse(firebaseCourse));
         });
-        this.currentClasses = currCourses;
         semesters.push(this.createSemester(courses, firebaseSem.type, firebaseSem.year));
       });
       return semesters;
     },
+
     createCourse(course) {
       const courseMap = new Map();
       courseMap.set('KCM', ['CS 1110', 'CS 1112']);
@@ -140,9 +137,7 @@ export default {
         requirementsMap: courseMap
       };
 
-      const shortCourse = `${subject} ${code}`;
-
-      return [newCourse, shortCourse];
+      return newCourse;
     },
     createSemester(courses, type, year) {
       const semester = {
