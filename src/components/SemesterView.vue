@@ -170,11 +170,11 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 1.5rem 3rem 3rem;
-  max-width: 49rem;
 
   &-content {
     display: flex;
     flex-wrap: wrap;
+    margin: 0 -.75rem;
   }
 
   &-switch {
@@ -228,16 +228,15 @@ export default {
   &-wrapper {
     display: flex;
     justify-content: center;
+    flex-basis: 50%;
     margin-bottom: 1.5rem;
 
-    &:nth-child(odd) {
-      margin-right: 1.5rem;
-    }
+    padding:0 .75rem;
+
+    flex-grow: 1;
 
     &--compact {
-      &:not(:nth-child(4n+1)) {
-        margin-right: 1.5rem;
-      }
+      flex-basis: 25%;
     }
   }
 
