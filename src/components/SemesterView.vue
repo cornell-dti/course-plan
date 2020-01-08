@@ -18,6 +18,7 @@
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
+      <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
     <div v-if="compact" class="semesterView-content">
       <div
@@ -29,6 +30,10 @@
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
+      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div><div></div></div>
     </div>
   </div>
 </template>
@@ -228,20 +233,28 @@ export default {
   &-wrapper {
     display: flex;
     justify-content: center;
-    flex-basis: 50%;
+    flex: 1 1 50%;
+
     margin-bottom: 1.5rem;
-
-    padding:0 .75rem;
-
-    flex-grow: 1;
+    padding: 0 .75rem;
 
     &--compact {
-      flex-basis: 25%;
+      flex: 1 1 25%;
     }
   }
 
   &-confirmation {
     display: none;
+  }
+
+  &-empty {
+    flex: 1 1 50%;
+    padding: 0 .75rem;
+
+    &--compact {
+      flex: 1 1 25%;
+      min-width: 14.5rem;
+    }
   }
 }
 /* The Modal (background) */
