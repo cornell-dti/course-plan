@@ -312,7 +312,7 @@ export default {
 
     // specific dimensions for min compact semester
     &.semester--compact {
-      width: 12.5rem;
+      width: 13rem;
       height: 3.5rem;
     }
   }

@@ -1,7 +1,11 @@
 <template>
   <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
-    <div><button v-on:click="changeCompact">Change View</button></div>
+    <div class="semesterView-switch">
+      <span class="semesterView-switchText">View:</span>
+      <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
+      <div class="semesterView-switchImage semesterView-fourColumn" @click="setCompact" :class="{ 'semesterView-fourColumn--active': compact }"></div>
+    </div>
     <confirmation
       :id="'semesterConfirmation'"
       class="semesterView-confirmation"
@@ -14,6 +18,7 @@
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
+      <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
     <div v-if="compact" class="semesterView-content">
       <div
@@ -25,6 +30,10 @@
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
+      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div><div></div></div>
     </div>
   </div>
 </template>
@@ -87,8 +96,15 @@ export default {
     this.$el.removeEventListener('click', this.closeAllModals);
   },
   methods: {
-    changeCompact() {
-      this.$emit('compact-updated', !this.compact);
+    setCompact() {
+      if (!this.compact) {
+        this.$emit('compact-updated', !this.compact);
+      }
+    },
+    setNotCompact() {
+      if (this.compact) {
+        this.$emit('compact-updated', !this.compact);
+      }
     },
     openSemesterModal() {
       const modal = document.getElementById('semesterModal');
@@ -158,26 +174,87 @@ export default {
 .semesterView {
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  margin: 1.5rem 3rem 3rem;
 
   &-content {
     display: flex;
     flex-wrap: wrap;
+    margin: 0 -.75rem;
+  }
+
+  &-switch {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: #858585;
+  }
+
+  &-switchText {
+    margin-right: .5rem;
+    font-size: 16px;
+    line-height: 19px;
+  }
+
+  &-switchImage {
+    width: 2.25rem;
+    height: 2.25rem;
+    background-repeat: no-repeat;
+    background-size: auto;
+    background-position: center;
+
+    &:not(:last-child) {
+      margin-right: .5rem;
+    }
+  }
+
+  &-twoColumn {
+    background-image: url('~@/assets/images/views/twoColumn.svg');
+
+    &:hover,
+    &:focus,
+    &:active,
+    &--active {
+      background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+    }
+  }
+
+  &-fourColumn {
+    background-image: url('~@/assets/images/views/fourColumn.svg');
+
+    &:hover,
+    &:focus,
+    &:active,
+    &--active {
+      background-image: url('~@/assets/images/views/fourColumnSelected.svg');
+    }
   }
 
   &-wrapper {
     display: flex;
     justify-content: center;
-    flex-basis: 50%;
+    flex: 1 1 50%;
+
     margin-bottom: 1.5rem;
+    padding: 0 .75rem;
 
     &--compact {
-      flex-basis: 25%;
+      flex: 1 1 25%;
     }
   }
 
   &-confirmation {
     display: none;
+  }
+
+  &-empty {
+    flex: 1 1 50%;
+    padding: 0 .75rem;
+
+    &--compact {
+      flex: 1 1 25%;
+      min-width: 14.5rem;
+    }
   }
 }
 /* The Modal (background) */

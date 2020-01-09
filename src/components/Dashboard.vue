@@ -1,6 +1,10 @@
 <template>
-  <div id="dashboard">
-    <div id="dashboard-mainView">
+  <div class="dashboard">
+    <div class="dashboard-mainView">
+      <div class="dashboard-menus">
+        <navbar class="dashboard-nav" />
+        <requirements class="dashboard-reqs"/>
+      </div>
       <semesterview
         :semesters="semesters"
         :compact="compactVal"
@@ -9,7 +13,6 @@
         @updateBar="updateBar"
         @close-bar="closeBar"
       />
-      <requirements />
     </div>
     <div id="dashboard-bottomView">
       <bottombar :data="bottomBar" @close-bar="closeBar" @open-bar="openBar"/>
@@ -24,6 +27,7 @@ import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
 import BottomBar from '@/components/BottomBar';
+import NavBar from '@/components/NavBar';
 
 import '@/vueDragulaConfig';
 
@@ -31,6 +35,7 @@ Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
 Vue.component('bottombar', BottomBar);
+Vue.component('navbar', NavBar);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
@@ -233,13 +238,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#dashboard {
+.dashboard {
   display: flex;
   flex-direction: column;
-}
-#dashboard-mainView {
-  display: flex;
-  justify-content: space-between;
+
+  &-mainView {
+    display: flex;
+  }
+
+  &-menus {
+    display: flex;
+  }
+
+  &-reqs {
+    margin-left: 4.5rem;
+  }
 }
 
 .semester {
