@@ -1,9 +1,9 @@
-<template>
+<template v-if="semesters">
   <div class="requirements">
     <h1 class="title">School Requirements</h1>
 
     <!-- loop through reqs array of req objects -->
-    <div class="req" v-for="(req, index) in reqs" v-bind:key="req.id">
+    <div class="req" v-for="(req, index) in reqs" :key="req.id">
       <div class="row top">
         <p class="name col p-0">{{ req.name }}</p>
         <div class="col-1 text-right p-0">
@@ -72,38 +72,6 @@
               <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
             </div>
           </div>
-
-          <!-- <div class="sub-req-div" v-if="subReq.display">
-            <div >
-              <p>Additional Courses</p>
-              <ul class="striped-list">
-                <li
-                  v-for="subSubReq in subReq.additonalCourses"
-                  v-bind:key="subSubReq.id"
-                >
-                  <div class="row top-small">
-                    <div class="col">
-                      <p class="sup-req tex-left">{{subSubReq}}</p>
-                    </div>
-                    <div class="col">
-                      <p class="sup-req text-right p-0">( {{2}} / {{2}} Courses)</p>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <p>Classes to Fullfill Requirements</p>
-            <div class="row fuffill" bag="first-bag" >
-              <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-                <course
-                  v-bind="courses"
-                  v-bind:id="courses.subject"
-                  v-bind:compact="compact"
-                  class="semester-course"
-                />
-              </div>
-            </div>
-          </div> -->
           <div class="separator"></div>
         </div>
 
@@ -158,22 +126,18 @@ import { Vue } from 'vue-property-decorator';
 import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
-import Semester from '@/components/Semester';
 
 import reqsData from '../requirements/reqs.json';
 // import * as fs from 'fs'
 const fb = require('../firebaseConfig.js');
 
-
 Vue.component('course', Course);
 Vue.component('modal', Modal);
-Vue.component('semester', Semester);
 Vue.use(VueCollapse);
 
 export default {
   props: {
     semesters: Array,
-    currentClasses: Array,
     user: Object,
     compact: Boolean
   },
@@ -181,7 +145,6 @@ export default {
     // Get array of courses from semesters data
 
     const courses = this.getCourseCodesArray();
-
 
     this.getReqs(courses, this.user.college, this.user.major).then(groups => {
       // Turn result into data readable by requirements menu

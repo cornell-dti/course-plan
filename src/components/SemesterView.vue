@@ -12,10 +12,10 @@
       :text="confirmationText"
     />
     <div v-if="!compact" class="semesterView-content">
-      <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
+      <div v-for="sem in semesters" :key="sem.id" class="semesterView-wrapper">
         <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
-      <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
+      <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
       <div class="semesterView-empty" aria-hidden="true"></div>
@@ -23,11 +23,11 @@
     <div v-if="compact" class="semesterView-content">
       <div
         v-for="sem in compactSemesters"
-        v-bind:key="sem.id"
+        :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
         <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
-      <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
+      <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>

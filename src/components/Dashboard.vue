@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div class="dashboard" v-if="loaded">
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <navbar class="dashboard-nav" />
@@ -50,6 +50,7 @@ export default {
   },
   data() {
     return {
+      loaded: false,
       compactVal: false,
       currSemID: 1,
       semesters: [],
@@ -65,20 +66,10 @@ export default {
     };
   },
   mounted() {
-    this.getSemestersFromUser();
-  },
-  methods: {
-    getSemestersFromUser() {
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
-      // TODO: error handling for firebase errors
-      docRef
-        .get()
-        .then(doc => {
+    this.getSemestersFromUser().then(doc => {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters);
+            this.loaded = true;
           } else {
             docRef.set({
               semesters: []
@@ -88,6 +79,15 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
+  },
+  methods: {
+    getSemestersFromUser() {
+      const user = auth.currentUser;
+      const userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+      
+      // TODO: error handling for firebase errors
+      return docRef.get();
     },
     convertSemesters(firebaseSems) {
       const semesters = [];
