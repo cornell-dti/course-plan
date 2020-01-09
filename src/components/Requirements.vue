@@ -555,10 +555,8 @@ export default {
 }
 
 .requirements {
-  min-height: 100vh;
-  flex-basis: 400px;
-  flex-grow: 0;
-  flex-shrink: 0;
+  height: 100vh;
+  min-width: 25rem;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: white;
 }
