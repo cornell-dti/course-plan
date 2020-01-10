@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard">
+    <onboarding class="dashboard-onboarding" :class="{ 'dashboard--hidden': !isOnboarding }" />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <navbar class="dashboard-nav" />
@@ -28,6 +29,8 @@ import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
 import BottomBar from '@/components/BottomBar';
 import NavBar from '@/components/NavBar';
+import Onboarding from '@/components/Modals/Onboarding';
+
 
 import '@/vueDragulaConfig';
 
@@ -36,6 +39,7 @@ Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
 Vue.component('bottombar', BottomBar);
 Vue.component('navbar', NavBar);
+Vue.component('onboarding', Onboarding);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
@@ -52,7 +56,8 @@ export default {
       semesters: [],
 
       // Default bottombar info without info
-      bottomBar: { isPreview: false, isExpanded: false }
+      bottomBar: { isPreview: false, isExpanded: false },
+      isOnboarding: false
     };
   },
   mounted() {
@@ -71,9 +76,7 @@ export default {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters);
           } else {
-            docRef.set({
-              semesters: []
-            });
+            this.startOnboarding();
           }
         })
         .catch(error => {
@@ -232,6 +235,18 @@ export default {
 
     closeBar() {
       this.bottomBar.isExpanded = false;
+    },
+
+    startOnboarding() {
+      this.isOnboarding = true;
+
+      // docRef.set({
+      //   semesters: []
+      // });
+    },
+
+    endOnboarding() {
+      this.isOnboarding = false;
     }
   }
 };
@@ -252,6 +267,23 @@ export default {
 
   &-reqs {
     margin-left: 4.5rem;
+  }
+
+  /* The Modal (background) */
+  &-onboarding {
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  }
+
+  &--hidden {
+    display: none;
   }
 }
 
