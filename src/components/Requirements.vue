@@ -1,5 +1,6 @@
 <template v-if="semesters">
   <div class="requirements">
+    <div class="fixed">
     <h1 class="title">School Requirements</h1>
 
     <!-- loop through reqs array of req objects -->
@@ -118,6 +119,7 @@
       <!-- Add separator if not last req or not displaying details -->
       <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -517,11 +519,19 @@ export default {
   padding: 0;
 }
 
-.requirements {
+.requirements, .fixed {
   height: 100vh;
-  min-width: 25rem;
+  width: 25rem;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: white;
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 4.5rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .depth-req {
@@ -529,7 +539,7 @@ export default {
   min-height: 14px;
 }
 
-.sub-req-div{
+.sub-req-div {
   padding-left: 30px;
   margin: 0px;
 }

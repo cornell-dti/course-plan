@@ -6,6 +6,7 @@
         <requirements class="dashboard-reqs"
           :semesters="semesters"
           :user="user"
+          :key="requirementsKey"
          />
       </div>
       <semesterview
@@ -62,11 +63,22 @@ export default {
         collegeFN: 'Arts and Science'
       },
       // Default bottombar info without info
-      bottomBar: { isPreview: false, isExpanded: false }
+      bottomBar: { isPreview: false, isExpanded: false },
+      requirementsKey: 0
     };
   },
   mounted() {
-    this.getSemestersFromUser().then(doc => {
+    this.getSemestersFromUser();
+  },
+  methods: {
+    getSemestersFromUser() {
+      const user = auth.currentUser;
+      const userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+
+      // TODO: error handling for firebase errors
+      docRef.get()
+        .then(doc => {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters);
             this.loaded = true;
@@ -79,15 +91,6 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
-  },
-  methods: {
-    getSemestersFromUser() {
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-      
-      // TODO: error handling for firebase errors
-      return docRef.get();
     },
     convertSemesters(firebaseSems) {
       const semesters = [];
@@ -141,6 +144,9 @@ export default {
         requirementsMap: courseMap
       };
 
+      // Update requirements menu
+      this.updateRequirementsMenu();
+
       return newCourse;
     },
     createSemester(courses, type, year) {
@@ -152,6 +158,10 @@ export default {
       };
       this.currSemID += 1;
       return semester;
+    },
+
+    updateRequirementsMenu() {
+      this.requirementsKey += 1;
     },
 
     async updateBar(course) {
