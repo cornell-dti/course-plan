@@ -5,23 +5,20 @@
       <div
         class="newSemester-select"
         id="type"
-        v-bind:style="{ borderColor: displayOptions.season.boxBorder }"
+        :style="{ borderColor: displayOptions.season.boxBorder }"
       >
-        <div
-          class="newSemester-dropdown-placeholder season-wrapper"
-          v-on:click="showHideSeasonContent"
-        >
+        <div class="newSemester-dropdown-placeholder season-wrapper" @click="showHideSeasonContent">
           <div
             class="newSemester-dropdown-placeholder season-placeholder"
             id="season-placeholder"
-            v-bind:style="{ color: displayOptions.season.placeholderColor }"
+            :style="{ color: displayOptions.season.placeholderColor }"
           >
             {{ seasonPlaceholder }}
           </div>
           <div
             class="newSemester-dropdown-placeholder season-arrow"
             id="season-arrow"
-            v-bind:style="{ borderTopColor: displayOptions.season.arrowColor }"
+            :style="{ borderTopColor: displayOptions.season.arrowColor }"
           ></div>
         </div>
         <div
@@ -34,7 +31,7 @@
             :key="season"
             :id="season"
             class="newSemester-dropdown-content-item"
-            v-on:click="selectSeason(season)"
+            @click="selectSeason(season)"
           >
             {{ season }}
           </div>
@@ -46,20 +43,20 @@
       <div
         class="newSemester-select"
         id="year"
-        v-bind:style="{ borderColor: displayOptions.year.boxBorder }"
+        :style="{ borderColor: displayOptions.year.boxBorder }"
       >
-        <div class="newSemester-dropdown-placeholder year-wrapper" v-on:click="showHideYearContent">
+        <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
           <div
             class="newSemester-dropdown-placeholder year-placeholder"
             id="year-placeholder"
-            v-bind:style="{ color: displayOptions.year.placeholderColor }"
+            :style="{ color: displayOptions.year.placeholderColor }"
           >
             {{ yearPlaceholder }}
           </div>
           <div
             class="newSemester-dropdown-placeholder year-arrow"
             id="year-arrow"
-            v-bind:style="{ borderTopColor: displayOptions.year.arrowColor }"
+            :style="{ borderTopColor: displayOptions.year.arrowColor }"
           ></div>
         </div>
         <div
@@ -72,7 +69,7 @@
             :key="year"
             :id="year"
             class="newSemester-dropdown-content-item"
-            v-on:click="selectYear(year)"
+            @click="selectYear(year)"
           >
             {{ year }}
           </div>

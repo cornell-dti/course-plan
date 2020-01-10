@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="{ 'course--min': !notCompact }" class="course">
+  <div :class="{ 'course--min': !notCompact, 'active': active }" class="course" @click="updateBar()">
     <div class="course-color" :style="cssVars">
       <div class="course-dotColumn">
         <span class="course-dot"></span>
@@ -12,10 +12,17 @@
         <span class="course-dot"></span>
       </div>
     </div>
-    <div v-bind:class="{ 'course-content--min': !notCompact }" class="course-content">
-      <div v-bind:class="{ 'course-main--min': !notCompact }" class="course-main">
-        <div v-bind:class="{ 'course-code--min': !notCompact }" class="course-code">
-          {{ subject }} {{ code }}
+    <div :class="{ 'course-content--min': !notCompact }" class="course-content">
+      <div :class="{ 'course-main--min': !notCompact }" class="course-main">
+        <div class="course-top">
+          <div :class="{ 'course-code--min': !notCompact }" class="course-code">
+            {{ subject }} {{ code }}
+          </div>
+          <div class="course-dotRow" @click="openMenu">
+            <span class="course-dot course-dot--menu"></span>
+            <span class="course-dot course-dot--menu"></span>
+            <span class="course-dot course-dot--menu"></span>
+          </div>
         </div>
         <div v-if="notCompact" class="course-name">{{ name }}</div>
         <div class="course-info">
@@ -44,10 +51,36 @@
         </div>
       </div>
     </div>
+    <coursemenu
+      v-if="menuOpen"
+      class="course-menu"
+      @delete-course="deleteCourse"
+      @color-course="colorCourse"
+      v-click-outside="closeMenuIfOpen"
+    />
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import CourseMenu from '@/components/Modals/CourseMenu';
+
+Vue.component('coursemenu', CourseMenu);
+
+const clickOutside = {
+  bind(el, binding, vnode) {
+    el.event = function (event) {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event);
+      }
+    };
+    document.body.addEventListener('click', el.event);
+  },
+  unbind(el) {
+    document.body.removeEventListener('click', el.event);
+  }
+};
+
 export default {
   props: {
     subject: String,
@@ -57,7 +90,15 @@ export default {
     semesters: Array,
     color: String,
     requirementsMap: Map,
-    compact: Boolean
+    compact: Boolean,
+    id: String,
+    active: Boolean
+  },
+  data() {
+    return {
+      menuOpen: false,
+      stopCloseFlag: false
+    };
   },
   computed: {
     notCompact() {
@@ -161,6 +202,39 @@ export default {
         '--bg-color': `#${this.color}`
       };
     }
+  },
+  methods: {
+    openMenu() {
+      console.log('Menu');
+      this.stopCloseFlag = true;
+      this.menuOpen = true;
+    },
+    closeMenuIfOpen() {
+      if (this.stopCloseFlag) {
+        this.stopCloseFlag = false;
+      } else if (this.menuOpen) {
+        this.menuOpen = false;
+      }
+    },
+    deleteCourse() {
+      this.$emit('delete-course', this.id);
+      this.closeMenuIfOpen();
+    },
+    colorCourse(color) {
+      this.$emit('color-course', color, this.id);
+      this.closeMenuIfOpen();
+    },
+    updateBar() {
+      if (!this.menuOpen) {
+        this.$emit('updateBar', {
+          subject: this.subject, number: this.code, roster: 'FA19', color: this.color
+        });
+      }
+    }
+
+  },
+  directives: {
+    'click-outside': clickOutside
   }
 };
 </script>
@@ -175,14 +249,10 @@ export default {
   flex-direction: row;
   background-color: white;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
+  position: relative;
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
-  }
-
-  &:active,
-  &:focus {
-    border: 1px solid #2b6693;
   }
 
   &--min {
@@ -191,6 +261,9 @@ export default {
   }
 
   &-main {
+    width: 100%;
+    margin-right: 1rem;
+
     &--min {
       display: flex;
       align-items: center;
@@ -219,6 +292,11 @@ export default {
     }
   }
 
+  &-dotRow {
+    display: flex;
+    position: relative;
+  }
+
   &-dot {
     opacity: 0.8;
     height: 2px;
@@ -230,14 +308,16 @@ export default {
     margin-top: 2px;
 
     &--menu {
+      width: 5px;
+      height: 5px;
       background-color: #c4c4c4;
       opacity: 1;
+      margin: 0 2px;
     }
   }
 
   &-content {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin: 0.75rem 0 0.75rem 0;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -246,6 +326,12 @@ export default {
       margin-bottom: 0;
       margin-top: 0;
     }
+  }
+
+  &-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   &-code {
@@ -312,6 +398,17 @@ export default {
     justify-content: space-around;
     margin: 0.5rem;
   }
+
+  &-menu {
+    position: absolute;
+    right: -3rem;
+    top: 2rem;
+    z-index: 1;
+  }
+}
+
+.active {
+  border: 1px solid #2b6693;
 }
 
 // TODO: convert px to rem for spacing

@@ -3,7 +3,11 @@
     <h1 class="title">School Requirements</h1>
 
     <!-- loop through reqs array of req objects -->
+<<<<<<< HEAD
     <div class="req" v-for="(req, index) in reqs" v-bind:key="req.id">
+=======
+    <div class="reqs" v-for="(req, index) in reqs" :key="req.id">
+>>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
       <div class="row top">
         <p class="name col p-0">{{ req.name }}</p>
         <div class="col-1 text-right p-0">
@@ -34,7 +38,14 @@
       <div class="progress">
         <div
           class="progress-bar"
+<<<<<<< HEAD
           v-bind:style="{ 'background-color': req.color, width: `${(req.progress/req.total)*100}%`}"
+=======
+          :style="{
+            'background-color': req.color,
+            width: `${(req.progress / req.total) * 100}%`
+          }"
+>>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
           role="progressbar"
         ></div>
       </div>
@@ -43,6 +54,7 @@
         <strong>{{ req.progress }}/{{ req.total }}</strong>
         Total {{ req.count }} Inputted on Schedule
       </p>
+<<<<<<< HEAD
 
       <!--View more college requirements -->
       <div class="row top">
@@ -84,6 +96,26 @@
                   src="../assets/images/dropdown.svg"
                   alt="dropdown"
                 />
+=======
+      <!-- display button (off when req.displayDetails is false) -->
+      <button
+        class="view btn"
+        v-if="!req.displayDetails"
+        :style="{ 'background-color': req.color }"
+        @click="turnDetails(index, true)"
+      >
+        View All {{ req.type }} Requirements
+      </button>
+      <!-- when displayDetails is true -->
+      <div class="detail" v-if="req.displayDetails">
+        <div class="ongoing">
+          <div class="row detail-bar">
+            <p class="col detail-text p-0">In-Depth {{ req.type }} Requirements</p>
+            <div class="text-right p-0">
+              <button class="btn" @click="turnDetails(index, false)">
+                <!-- picture of close (x) icon -->
+                <img class="cancel" src="../assets/images/x.png" alt="X" />
+>>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
               </button>
             </div>
             <div class="col middle  p-0">
@@ -93,6 +125,7 @@
               <p class="sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
+<<<<<<< HEAD
 
           <div class="sub-req-div" v-if="subReq.display">
             <div >
@@ -124,9 +157,20 @@
                   class="semester-course"
                 />
               </div>
+=======
+          <!-- loop through uncompleted reqs in req.ongoing array -->
+          <div class="list" v-for="value in req.ongoing" :key="value.id">
+            <div class="separator"></div>
+            <div class="row req">
+              <p class="col float-left p-0 req-name">{{ value.name }}</p>
+              <p class="col float-right text-right p-0 req-progress">
+                ({{ value.progress }}/{{ value.total }} {{ value.count }})
+              </p>
+>>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
             </div>
           </div>
         </div>
+<<<<<<< HEAD
 
         <div class="row top">
           <p class="sub-title col p-0">Completed Requirements</p>
@@ -156,6 +200,29 @@
                     alt="dropdown"
                   />
                 </button>
+=======
+        <!-- Display completed section if there are completed reqs -->
+        <div class="completed" v-if="req.completed.length > 0">
+          <div class="row detail-bar">
+            <p class="col detail-text p-0">Completed {{ req.type }} Requirements</p>
+            <button class="btn" :style="{ color: req.color }">
+              <!-- Toggle to display completed reqs -->
+              <p class="toggle" v-if="req.displayCompleted" @click="turnCompleted(index, false)">
+                HIDE
+              </p>
+              <p class="toggle" v-else @click="turnCompleted(index, true)">SHOW</p>
+            </button>
+          </div>
+          <div v-if="req.displayCompleted">
+            <!-- loop through completed reqs in req.completed array -->
+            <div class="list" v-for="value in req.completed" :key="value.id">
+              <div class="separator"></div>
+              <div class="row req">
+                <p class="col float-left p-0 req-name">{{ value.name }}</p>
+                <p class="col float-right text-right p-0 req-progress">
+                  ({{ value.progress }}/{{ value.total }} {{ value.count }})
+                </p>
+>>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
               </div>
               <p class="col sup-req middle ">{{subReq.name}}</p>
               <p
@@ -406,7 +473,8 @@ export default {
 
 
 .requirements {
-  width: 400px;
+  height: 100vh;
+  min-width: 25rem;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: white;
 }
