@@ -9,7 +9,7 @@
         <div class="col-1 text-right p-0">
           <button @click="modalShow = !modalShow" class="btn">
             <!-- svg for settings icon -->
-            <img class="settings" src="../assets/images/gear.svg" />
+            <img class="settings" src="../assets/images/gear.svg" alt = "settings"/>
           </button>
         </div>
         <b-modal v-model="modalShow">Hello From Modal!</b-modal>
