@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard" v-if="loaded">
-    <onboarding class="dashboard-onboarding" :class="{ 'dashboard--hidden': !isOnboarding }" :firstName="firstName" :lastName="lastName" />
+    <onboarding class="dashboard-onboarding" :class="{ 'dashboard--hidden': !isOnboarding }" :firstName="firstName" :lastName="lastName" @onboard="endOnboarding" />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <navbar class="dashboard-nav" />
@@ -269,7 +269,19 @@ export default {
       // });
     },
 
-    endOnboarding() {
+    endOnboarding(onboardingData) {
+      const user = auth.currentUser;
+      const userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+      console.log(onboardingData);
+
+      // set a new document with the user's name and information, and empty course data
+      docRef.set({
+        name: onboardingData.name,
+        userData: onboardingData.userData,
+        semesters: [],
+      });
+
       this.isOnboarding = false;
     }
   }
