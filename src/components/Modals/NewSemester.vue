@@ -143,38 +143,31 @@ export default {
     showHideYearContent() {
       this.showHideContent('year');
     },
-    selectOption(isSeasonOption, text) {
-      if (isSeasonOption) {
+    selectOption(type, text) {
+      if (type === 'season') {
         this.seasonPlaceholder = text;
       } else {
         this.yearPlaceholder = text;
       }
-      const contentID = isSeasonOption ? 'season' : 'year';
-      const displayOptions = this.displayOptions[contentID];
+      const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
     },
     selectSeason(text) {
-      this.selectOption(true, text);
+      this.selectOption('season', text);
     },
     selectYear(text) {
-      this.selectOption(false, text);
+      this.selectOption('year', text);
     },
-    resetDropdown(isSeasonDropdown) {
-      if (isSeasonDropdown) {
-        this.displayOptions.season.shown = false;
-        this.displayOptions.season.boxBorder = '#C4C4C4';
-        this.displayOptions.season.arrowColor = '#C4C4C4';
-        this.displayOptions.season.placeholderColor = '#B6B6B6';
-      } else {
-        this.displayOptions.year.shown = false;
-        this.displayOptions.year.boxBorder = '#C4C4C4';
-        this.displayOptions.year.arrowColor = '#C4C4C4';
-        this.displayOptions.year.placeholderColor = '#B6B6B6';
-      }
+    resetDropdown(type) {
+      let displayOptions = this.displayOptions[type];
+      displayOptions.shown = false;
+      displayOptions.boxBorder = '#C4C4C4';
+      displayOptions.arrowColor = '#C4C4C4';
+      displayOptions.placeholderColor = '#B6B6B6';
 
-      if (isSeasonDropdown) {
+      if (type === 'season') {
         this.seasonPlaceholder = 'Select One';
       } else {
         this.yearPlaceholder = new Date().getFullYear();
@@ -182,10 +175,10 @@ export default {
     },
     resetDropdowns() {
       // reset season dropdown
-      this.resetDropdown(true);
+      this.resetDropdown('season');
 
       // reset year dropdown
-      this.resetDropdown(false);
+      this.resetDropdown('year');
     }
   }
 };

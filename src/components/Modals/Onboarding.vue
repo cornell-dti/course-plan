@@ -31,17 +31,119 @@
           <div class="onboarding-inputs">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <label class="onboarding-label">Your College*</label>
-              <input class="onboarding-input"/>
+              <div
+                class="onboarding-select onboarding-input"
+                id="college"
+                :style="{ borderColor: displayOptions.college.boxBorder }"
+              >
+                <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideCollegeContent">
+                  <div
+                    class="onboarding-dropdown-placeholder college-placeholder"
+                    id="college-placeholder"
+                    :style="{ color: displayOptions.college.placeholderColor }"
+                  >
+                    {{ displayOptions.college.placeholder }}
+                  </div>
+                  <div
+                    class="onboarding-dropdown-placeholder college-arrow"
+                    id="college-arrow"
+                    :style="{ borderTopColor: displayOptions.college.arrowColor }"
+                  ></div>
+                </div>
+                <div
+                  class="onboarding-dropdown-content college-content"
+                  id="college-content"
+                  v-if="displayOptions.college.shown"
+                >
+                  <div
+                    v-for="college in colleges"
+                    :key="college"
+                    :id="college"
+                    class="onboarding-dropdown-content-item"
+                    @click="selectCollege(college)"
+                  >
+                    {{ college }}
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <!-- TODO: Add and remove functionality -->
               <label class="onboarding-label">Your Major*</label>
-              <input class="onboarding-input"/>
+              <div
+                class="onboarding-select onboarding-input"
+                id="major"
+                :style="{ borderColor: displayOptions.major.boxBorder }"
+              >
+                <div class="onboarding-dropdown-placeholder major-wrapper" @click="showHideMajorContent">
+                  <div
+                    class="onboarding-dropdown-placeholder major-placeholder"
+                    id="major-placeholder"
+                    :style="{ color: displayOptions.major.placeholderColor }"
+                  >
+                    {{ displayOptions.major.placeholder }}
+                  </div>
+                  <div
+                    class="onboarding-dropdown-placeholder major-arrow"
+                    id="major-arrow"
+                    :style="{ borderTopColor: displayOptions.major.arrowColor }"
+                  ></div>
+                </div>
+                <div
+                  class="onboarding-dropdown-content major-content"
+                  id="major-content"
+                  v-if="displayOptions.major.shown"
+                >
+                  <div
+                    v-for="major in majors"
+                    :key="major"
+                    :id="major"
+                    class="onboarding-dropdown-content-item"
+                    @click="selectMajor(major)"
+                  >
+                    {{ major }}
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- TODO: Autofill -->
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <label class="onboarding-label">Your Minor</label>
-              <input class="onboarding-input"/>
+              <div
+                class="onboarding-select onboarding-input"
+                id="minor"
+                :style="{ borderColor: displayOptions.minor.boxBorder }"
+              >
+                <div class="onboarding-dropdown-placeholder minor-wrapper" @click="showHideMinorContent">
+                  <div
+                    class="onboarding-dropdown-placeholder minor-placeholder"
+                    id="minor-placeholder"
+                    :style="{ color: displayOptions.minor.placeholderColor }"
+                  >
+                    {{ displayOptions.minor.placeholder }}
+                  </div>
+                  <div
+                    class="onboarding-dropdown-placeholder minor-arrow"
+                    id="minor-arrow"
+                    :style="{ borderTopColor: displayOptions.minor.arrowColor }"
+                  ></div>
+                </div>
+                <div
+                  class="onboarding-dropdown-content minor-content"
+                  id="minor-content"
+                  v-if="displayOptions.minor.shown"
+                >
+                  <div
+                    v-for="minor in minors"
+                    :key="minor"
+                    :id="minor"
+                    class="onboarding-dropdown-content-item"
+                    @click="selectMinor(minor)"
+                  >
+                    {{ minor }}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -58,6 +160,91 @@ export default {
   props: {
     firstName: String,
     lastName: String
+  },
+  data() {
+    return {
+      // TODO: Get real college, major, and minor lists
+      colleges: ['Engineering', 'Arts & Sciences', 'CALS'],
+      majors: ['CS', 'INFO'],
+      minors: ['CS', 'INFO'],
+      displayOptions: {
+        college: {
+          shown: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: 'Select one'
+        },
+        major: {
+          shown: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: 'Select one'
+        },
+        minor: {
+          shown: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: 'Select one'
+        }
+      }
+    }
+  },
+  methods: {
+    showHideContent(contentID) {
+      const displayOptions = this.displayOptions[contentID];
+      const contentShown = displayOptions.shown;
+      displayOptions.shown = !contentShown;
+
+      if (contentShown) {
+        // clicked box when content shown. So then hide content
+        displayOptions.boxBorder = '#C4C4C4';
+        displayOptions.arrowColor = '#C4C4C4';
+      } else {
+        displayOptions.boxBorder = '#32A0F2';
+        displayOptions.arrowColor = '#32A0F2';
+      }
+    },
+    showHideCollegeContent() {
+      this.showHideContent('college');
+    },
+    showHideMajorContent() {
+      this.showHideContent('major');
+    },
+    showHideMinorContent() {
+      this.showHideContent('minor');
+    },
+    selectOption(type, text) {
+      const displayOptions = this.displayOptions[type];
+      displayOptions.placeholder = text;
+      displayOptions.shown = false;
+      displayOptions.arrowColor = '#C4C4C4';
+      displayOptions.placeholderColor = '#757575';
+    },
+    selectCollege(text) {
+      this.selectOption('college', text);
+    },
+    selectMajor(text) {
+      this.selectOption('major', text);
+    },
+    selectMinor(text) {
+      this.selectOption('minor', text);
+    },
+    resetDropdown(type) {
+      let displayOptions = this.displayOptions[type];
+      displayOptions.shown = false;
+      displayOptions.boxBorder = '#C4C4C4';
+      displayOptions.arrowColor = '#C4C4C4';
+      displayOptions.placeholderColor = '#B6B6B6';
+      displayOptions.placeholder = 'Select one';
+    },
+    resetDropdowns() {
+      this.resetDropdown('college');
+      this.resetDropdown('major');
+      this.resetDropdown('minor');
+    }
   }
 }
 
@@ -128,7 +315,6 @@ export default {
   }
 
   &-label {
-    font-weight: normal;
     font-size: 16px;
     line-height: 19px;
     color: #757575;
@@ -137,7 +323,6 @@ export default {
   }
 
   &-input {
-    font-weight: normal;
     font-size: 14px;
     line-height: 17px;
     color: #757575;
@@ -198,5 +383,119 @@ export default {
       background: #1AA9A5;
     }
   }
+
+  &-select {
+    background: #ffffff;
+    border: 1px solid #c4c4c4;
+
+    box-sizing: border-box;
+    border-radius: 1px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 17px;
+
+    color: #b6b6b6;
+    position: relative;
+  }
+
+  &-dropdown {
+    &-placeholder {
+      height: 100%;
+      font-size: 14px;
+      line-height: 17px;
+      margin-left: .25rem;
+      display: flex;
+      align-items: center;
+
+      color: #b6b6b6;
+
+      background: transparent;
+
+      &.college-wrapper,
+      &.major-wrapper,
+      &.minor-wrapper {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100%;
+      }
+
+      &.college-wrapper,
+      &.major-wrapper,
+      &.minor-wrapper {
+        width: 100%;
+        height: 100%;
+      }
+
+      &.college-placeholder,
+      &.major-placeholder,
+      &.minor-placeholder {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        width: 100%;
+      }
+
+      &.college-arrow,
+      &.major-arrow,
+      &.minor-arrow {
+        border-left: 6.24px solid transparent;
+        border-right: 6.24px solid transparent;
+
+        border-top: 6.24px solid #c4c4c4;
+        background: transparent;
+
+        //when clicked border-top-color: #32A0F2;
+
+        margin-top: 30px;
+        margin-bottom: 10.17px;
+
+        margin-right: 8.7px;
+        margin-left: 5px;
+      }
+    }
+  }
+
+  &-dropdown-content {
+    z-index: 2;
+    position: absolute;
+    width: inherit;
+    background: #ffffff;
+    box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;
+
+    margin-top: 3px;
+
+    &-item {
+      height: 2.25rem;
+      font-size: 14px;
+      line-height: 17px;
+      display: flex;
+      align-items: center;
+
+      color: #757575;
+
+      padding-left: 10px;
+    }
+  }
+
+  &-dropdown-content div:hover {
+    background: rgba(50, 160, 242, 0.15);
+    width: 100%;
+  }
 }
+
+select option {
+  color: black;
+}
+select option:first-child {
+  color: grey;
+}
+select.empty {
+  color: grey;
+}
+/* Hidden placeholder */
+select option[disabled]:first-child {
+  display: none;
+}
+
 </style>
