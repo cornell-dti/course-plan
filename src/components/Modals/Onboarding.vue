@@ -148,8 +148,9 @@
           </div>
         </div>
       </div>
-        <div class="onboarding-bottom">
+      <div class="onboarding-bottom">
         <button class="onboarding-button" @click="submitOnboarding">Continue</button>
+        <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">Please fill out all required fields and try again.</div>
       </div>
     </div>
   </div>
@@ -191,32 +192,38 @@ export default {
           placeholderColor: '',
           placeholder: placeholderText
         }
-      }
+      },
+      isError: false,
     }
   },
   methods: {
     submitOnboarding() {
-      let onboardingData = {
-        name: {
-          firstName: this.firstName,
-          middleName: this.middleName,
-          lastName: this.lastName,
-        },
-        userData: {
-          college: this.displayOptions.college.placeholder,
-          major: this.displayOptions.major.placeholder,
-          minor: this.displayOptions.minor.placeholder,
+      // Display error if a required field is empty, otherwise submit
+      if(this.firstName === '' || this.lastName === '' || this.displayOptions.college.placeholder === placeholderText || this.displayOptions.major.placeholder === placeholderText) {
+        this.isError = true;
+      } else {
+        let onboardingData = {
+          name: {
+            firstName: this.firstName,
+            middleName: this.middleName,
+            lastName: this.lastName,
+          },
+          userData: {
+            college: this.displayOptions.college.placeholder,
+            major: this.displayOptions.major.placeholder,
+            minor: this.displayOptions.minor.placeholder,
+          }
         }
+
+        // If set to the placeholderText, set to an empty string
+        Object.keys(onboardingData.userData).forEach(function(key) {
+          if(onboardingData.userData[key] === placeholderText) {
+            onboardingData.userData[key] = "";
+          }
+        });
+
+        this.$emit('onboard', onboardingData);
       }
-
-      // If set to the placeholderText, set to an empty string
-      Object.keys(onboardingData.userData).forEach(function(key) {
-        if(onboardingData.userData[key] === placeholderText) {
-          onboardingData.userData[key] = "";
-        }
-      });
-
-      this.$emit('onboard', onboardingData);
     },
     showHideContent(contentID) {
       const displayOptions = this.displayOptions[contentID];
@@ -378,14 +385,15 @@ export default {
 
   &-bottom {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 
     border-top: 1px solid #E5E5E5;
     box-sizing: border-box;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 9px;
     padding-top: 1rem;
-    padding-bottom: 2.5rem;
+    height: 5.25rem;
   }
 
   &-button {
@@ -399,7 +407,7 @@ export default {
     line-height: 17px;
     color: #FFFFFF;
 
-    min-width: 20rem;
+    width: 20rem;
     min-height: 1.75rem;
 
     &:hover,
@@ -407,6 +415,13 @@ export default {
     &:active {
       background: #1AA9A5;
     }
+  }
+
+  &-error {
+    margin-top: .5rem;
+    font-size: 14px;
+    line-height: 17px;
+    color: #D8000C;
   }
 
   &-select {
@@ -506,6 +521,10 @@ export default {
   &-dropdown-content div:hover {
     background: rgba(50, 160, 242, 0.15);
     width: 100%;
+  }
+
+  &--hidden {
+    display: none;
   }
 }
 

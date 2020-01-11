@@ -273,7 +273,6 @@ export default {
       const user = auth.currentUser;
       const userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);
-      console.log(onboardingData);
 
       // set a new document with the user's name and information, and empty course data
       docRef.set({
