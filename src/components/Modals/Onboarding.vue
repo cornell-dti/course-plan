@@ -12,7 +12,7 @@
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
               <!-- TODO: Autofill -->
               <label class="onboarding-label">First Name*</label>
-              <input class="onboarding-input"/>
+              <input class="onboarding-input" :value="firstName" />
             </div>
             <!-- TODO: Optional vs Required -->
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
@@ -21,7 +21,7 @@
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
               <label class="onboarding-label">Last Name*</label>
-              <input class="onboarding-input"/>
+              <input class="onboarding-input" :value="lastName" />
             </div>
           </div>
         </div>
@@ -54,7 +54,12 @@
 </template>
 
 <script>
-export default {}
+export default {
+  props: {
+    firstName: String,
+    lastName: String
+  }
+}
 
 </script>
 

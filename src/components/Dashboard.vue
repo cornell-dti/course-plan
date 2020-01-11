@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard" v-if="loaded">
-    <onboarding class="dashboard-onboarding" :class="{ 'dashboard--hidden': !isOnboarding }" />
+    <onboarding class="dashboard-onboarding" :class="{ 'dashboard--hidden': !isOnboarding }" :firstName="firstName" :lastName="lastName" />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <navbar class="dashboard-nav" />
@@ -54,6 +54,8 @@ export default {
     bottomCourses: Array
   },
   data() {
+    const user = auth.currentUser;
+    let names = user.displayName.split(" ");
     return {
       loaded: false,
       compactVal: false,
@@ -69,7 +71,9 @@ export default {
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
-      isOnboarding: false
+      isOnboarding: false,
+      firstName: names[0],
+      lastName: names[1]
     };
   },
   mounted() {
