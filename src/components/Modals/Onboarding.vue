@@ -17,7 +17,7 @@
             <!-- TODO: Optional vs Required -->
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
               <label class="onboarding-label">Middle Name</label>
-              <input class="onboarding-input"/>
+              <input class="onboarding-input" v-model="middleName" />
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
               <label class="onboarding-label">Last Name*</label>
@@ -149,13 +149,14 @@
         </div>
       </div>
         <div class="onboarding-bottom">
-        <button class="onboarding-button">Continue</button>
+        <button class="onboarding-button" @click="submitOnboarding">Continue</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+const placeholderText = 'Select one';
 export default {
   props: {
     firstName: String,
@@ -167,32 +168,56 @@ export default {
       colleges: ['Engineering', 'Arts & Sciences', 'CALS'],
       majors: ['CS', 'INFO'],
       minors: ['CS', 'INFO'],
+      middleName: "",
       displayOptions: {
         college: {
           shown: false,
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '',
-          placeholder: 'Select one'
+          placeholder: placeholderText
         },
         major: {
           shown: false,
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '',
-          placeholder: 'Select one'
+          placeholder: placeholderText
         },
         minor: {
           shown: false,
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '',
-          placeholder: 'Select one'
+          placeholder: placeholderText
         }
       }
     }
   },
   methods: {
+    submitOnboarding() {
+      let onboardingData = {
+        name: {
+          firstName: this.firstName,
+          middleName: this.middleName,
+          lastName: this.lastName,
+        },
+        userData: {
+          college: this.displayOptions.college.placeholder,
+          major: this.displayOptions.major.placeholder,
+          minor: this.displayOptions.minor.placeholder,
+        }
+      }
+
+      // If set to the placeholderText, set to an empty string
+      Object.keys(onboardingData.userData).forEach(function(key) {
+        if(onboardingData.userData[key] === placeholderText) {
+          onboardingData.userData[key] = "";
+        }
+      });
+
+      this.$emit('onboard', onboardingData);
+    },
     showHideContent(contentID) {
       const displayOptions = this.displayOptions[contentID];
       const contentShown = displayOptions.shown;
