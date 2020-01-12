@@ -116,8 +116,7 @@ export default {
       const code = parseInt(arr[1], 10);
 
       // remove periods and split on ', '
-      let semesters = course.catalogWhenOffered.replace(/\./g, '');
-      semesters = semesters.split(', ');
+      const semesters = course.semesters || course.catalogWhenOffered.replace(/\./g, '').split(', ');
 
       // TODO: pick color if a new course instead of this default
       const color = course.color || '2BBCC6';
