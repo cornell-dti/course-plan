@@ -36,8 +36,7 @@
             <!-- svg for dropdown icon -->
             <img
               class="arrow"
-              style="fill: #1AA9A5; color:#1AA9A5 "
-              src="../assets/images/dropdown-blue.svg"
+              src="@/assets/images/dropdown-blue.svg"
               alt="dropdown"
             />
           </button>
@@ -60,8 +59,7 @@
                 <!-- svg for dropdown icon -->
                 <img
                   class="arrow"
-                  style="fill: #1AA9A5; color:#1AA9A5 "
-                  src="../assets/images/dropdown.svg"
+                  src="@/assets/images/dropdown.svg"
                   alt="dropdown"
                 />
               </button>
@@ -99,8 +97,7 @@
                   <!-- svg for dropdown icon -->
                   <img
                     class="arrow"
-                    style="fill: #1AA9A5; color:#1AA9A5 "
-                    src="../assets/images/dropdown.svg"
+                    src="@/assets/images/dropdown.svg"
                     alt="dropdown"
                   />
                 </button>
@@ -150,7 +147,6 @@ export default {
 
     this.getReqs(courses, this.user.college, this.user.major).then(groups => {
       // Turn result into data readable by requirements menu
-      // console.log(groups);
 
       groups.forEach(group => {
         const singleMenuRequirement = {
@@ -314,8 +310,9 @@ export default {
         const requirementJSONs = [];
 
         // helper to recursively call when an object has subpaths
-        function helper(coursesTakenWithInfoInner, requirements, rType, parentName = null) {
+        function callRecursiveSubpaths(coursesTakenWithInfoInner, requirements, rType, parentName = null) {
           for (const requirement of requirements) {
+            // TODO: For different groups of students (e.g. transfers, FYSAs, etc...)
             // if(!isTransfer && requirement.applies === "transfers") continue;
             // temporarily skip these until we can implement them later
 
@@ -324,7 +321,7 @@ export default {
               const requirementName = requirement.name;
               requirementJSONs.push({ name: requirementName, paths: [], isComplete: false });
 
-              helper(coursesTakenWithInfo, requirement.paths, requirementName);
+              callRecursiveSubpaths(coursesTakenWithInfo, requirement.paths, requirementName);
               continue;
             }
 
@@ -374,7 +371,7 @@ export default {
           }
         }
 
-        helper(allCoursesTakenWithInfo, allRequirements, requirementType);
+        callRecursiveSubpaths(allCoursesTakenWithInfo, allRequirements, requirementType);
 
         return requirementJSONs;
       }
@@ -415,15 +412,15 @@ export default {
       }
 
       /**
-       * Given a course abbreviation (i.e. INFO 1300), it will split it up into the subject and number, returned as a dictionary
+       * Given a course code (i.e. INFO 1300), it will split it up into the subject and number, returned as a dictionary
        * (i.e. INFO 1300 => {"subject" : INFO, "courseNumber" : 1300})
        *
        * @return the number of credits the course is worth
        */
-      function parseCourseAbbreviation(courseAbbreviation) {
+      function parseCourseCode(courseCode) {
         const regex = /([a-zA-Z]+) ([0-9][0-9][0-9][0-9]$)?/g;
-        const matches = regex.exec(courseAbbreviation);
-        if (matches === null) throw new Error('Invalid course abbreviation');
+        const matches = regex.exec(courseCode);
+        if (matches === null) throw new Error('Invalid course code');
         return { subject: matches[1].toUpperCase(), courseNumber: matches[2] };
       }
 
@@ -433,9 +430,9 @@ export default {
        * @param {*} semester : the roster name to search from (FA19)
        */
       function getCourseInfo(courseCode) {
-        const courseAbbrev = parseCourseAbbreviation(courseCode);
-        const subject = courseAbbrev.subject.toUpperCase();
-        const number = courseAbbrev.courseNumber;
+        const courseCodeObj = parseCourseCode(courseCode);
+        const subject = courseCodeObj.subject.toUpperCase();
+        const number = courseCodeObj.courseNumber;
 
         return new Promise((resolve, reject) => {
           // Using Firebase
@@ -630,6 +627,8 @@ p.active {
 }
 
 .arrow {
+  fill: #1AA9A5;
+  color:#1AA9A5;
   margin-top: -4px;
 }
 
