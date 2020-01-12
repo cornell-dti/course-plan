@@ -165,7 +165,7 @@ export default {
       this.showHideContent('year');
     },
     closeDropdownIfOpen(type) {
-      let displayOptions = this.displayOptions[type];
+      const displayOptions = this.displayOptions[type];
       if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
@@ -199,7 +199,7 @@ export default {
       this.selectOption('year', text);
     },
     resetDropdown(type) {
-      let displayOptions = this.displayOptions[type];
+      const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.stopClose = false;
       displayOptions.boxBorder = '#C4C4C4';

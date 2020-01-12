@@ -71,7 +71,6 @@
               </div>
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <!-- TODO: Add and remove functionality -->
               <label class="onboarding-label">Your Major*</label>
               <div class="onboarding-selectWrapper">
                 <div

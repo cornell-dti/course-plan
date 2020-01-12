@@ -51,7 +51,7 @@ export default {
   },
   data() {
     const user = auth.currentUser;
-    let names = user.displayName.split(" ");
+    const names = user.displayName.split(' ');
     return {
       compactVal: false,
       currSemID: 1,
@@ -61,7 +61,7 @@ export default {
       bottomBar: { isPreview: false, isExpanded: false },
       isOnboarding: false,
       firstName: names[0],
-      lastName: names[1],
+      lastName: names[1]
     };
   },
   mounted() {
@@ -258,7 +258,7 @@ export default {
       docRef.set({
         name: onboardingData.name,
         userData: onboardingData.userData,
-        semesters: [],
+        semesters: []
       });
 
       this.isOnboarding = false;
