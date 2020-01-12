@@ -4,8 +4,9 @@
       <label class="newSemester-label" for="type">{{ typeText }}</label>
       <div
         class="newSemester-select"
-        id="type"
+        id="season"
         :style="{ borderColor: displayOptions.season.boxBorder }"
+        v-click-outside="closeSeasonDropdownIfOpen"
       >
         <div class="newSemester-dropdown-placeholder season-wrapper" @click="showHideSeasonContent">
           <div
@@ -44,6 +45,7 @@
         class="newSemester-select"
         id="year"
         :style="{ borderColor: displayOptions.year.boxBorder }"
+        v-click-outside="closeYearDropdownIfOpen"
       >
         <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
           <div
@@ -80,6 +82,20 @@
 </template>
 
 <script>
+const clickOutside = {
+  bind(el, binding, vnode) {
+    el.event = function (event) {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event);
+      }
+    };
+    document.body.addEventListener('click', el.event);
+  },
+  unbind(el) {
+    document.body.removeEventListener('click', el.event);
+  }
+};
+
 export default {
   data() {
     // years
@@ -101,18 +117,23 @@ export default {
       displayOptions: {
         season: {
           shown: false,
+          stopClose: false,
           boxBorder: '',
           arrowColor: '',
           placeholderColor: ''
         },
         year: {
           shown: false,
+          stopClose: false,
           boxBorder: '',
           arrowColor: '',
           placeholderColor: ''
         }
       }
     };
+  },
+  directives: {
+    'click-outside': clickOutside
   },
   computed: {
     typeText() {
@@ -123,8 +144,8 @@ export default {
     }
   },
   methods: {
-    showHideContent(contentID) {
-      const displayOptions = this.displayOptions[contentID];
+    showHideContent(type) {
+      const displayOptions = this.displayOptions[type];
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
 
@@ -143,6 +164,22 @@ export default {
     showHideYearContent() {
       this.showHideContent('year');
     },
+    closeDropdownIfOpen(type) {
+      let displayOptions = this.displayOptions[type];
+      if (displayOptions.stopClose) {
+        displayOptions.stopClose = false;
+      } else if (displayOptions.shown) {
+        displayOptions.shown = false;
+        displayOptions.boxBorder = '#C4C4C4';
+        displayOptions.arrowColor = '#C4C4C4';
+      }
+    },
+    closeSeasonDropdownIfOpen() {
+      this.closeDropdownIfOpen('season');
+    },
+    closeYearDropdownIfOpen() {
+      this.closeDropdownIfOpen('year');
+    },
     selectOption(type, text) {
       if (type === 'season') {
         this.seasonPlaceholder = text;
@@ -151,6 +188,7 @@ export default {
       }
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
+      displayOptions.boxBorder = '#C4C4C4';
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
     },
@@ -163,6 +201,7 @@ export default {
     resetDropdown(type) {
       let displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
+      displayOptions.stopClose = false;
       displayOptions.boxBorder = '#C4C4C4';
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.placeholderColor = '#B6B6B6';

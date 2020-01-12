@@ -10,11 +10,9 @@
           <div class="onboarding-subHeader">Your Name</div>
           <div class="onboarding-inputs onboarding-inputs--name">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-              <!-- TODO: Autofill -->
               <label class="onboarding-label">First Name*</label>
               <input class="onboarding-input" :value="firstName" />
             </div>
-            <!-- TODO: Optional vs Required -->
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
               <label class="onboarding-label">Middle Name</label>
               <input class="onboarding-input" v-model="middleName" />
@@ -35,6 +33,7 @@
                 class="onboarding-select onboarding-input"
                 id="college"
                 :style="{ borderColor: displayOptions.college.boxBorder }"
+                v-click-outside="closeCollegeDropdownIfOpen"
               >
                 <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideCollegeContent">
                   <div
@@ -74,6 +73,7 @@
                 class="onboarding-select onboarding-input"
                 id="major"
                 :style="{ borderColor: displayOptions.major.boxBorder }"
+                v-click-outside="closeMajorDropdownIfOpen"
               >
                 <div class="onboarding-dropdown-placeholder major-wrapper" @click="showHideMajorContent">
                   <div
@@ -106,13 +106,13 @@
                 </div>
               </div>
             </div>
-            <!-- TODO: Autofill -->
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <label class="onboarding-label">Your Minor</label>
               <div
                 class="onboarding-select onboarding-input"
                 id="minor"
                 :style="{ borderColor: displayOptions.minor.boxBorder }"
+                v-click-outside="closeMinorDropdownIfOpen"
               >
                 <div class="onboarding-dropdown-placeholder minor-wrapper" @click="showHideMinorContent">
                   <div
@@ -157,7 +157,23 @@
 </template>
 
 <script>
+
 const placeholderText = 'Select one';
+
+const clickOutside = {
+  bind(el, binding, vnode) {
+    el.event = function (event) {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event);
+      }
+    };
+    document.body.addEventListener('click', el.event);
+  },
+  unbind(el) {
+    document.body.removeEventListener('click', el.event);
+  }
+};
+
 export default {
   props: {
     firstName: String,
@@ -173,6 +189,7 @@ export default {
       displayOptions: {
         college: {
           shown: false,
+          stopClose: false,
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '',
@@ -180,6 +197,7 @@ export default {
         },
         major: {
           shown: false,
+          stopClose: false,
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '',
@@ -187,6 +205,7 @@ export default {
         },
         minor: {
           shown: false,
+          stopClose: false,
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '',
@@ -195,6 +214,9 @@ export default {
       },
       isError: false,
     }
+  },
+  directives: {
+    'click-outside': clickOutside
   },
   methods: {
     submitOnboarding() {
@@ -225,8 +247,8 @@ export default {
         this.$emit('onboard', onboardingData);
       }
     },
-    showHideContent(contentID) {
-      const displayOptions = this.displayOptions[contentID];
+    showHideContent(type) {
+      const displayOptions = this.displayOptions[type];
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
 
@@ -248,11 +270,31 @@ export default {
     showHideMinorContent() {
       this.showHideContent('minor');
     },
+    closeDropdownIfOpen(type) {
+      let displayOptions = this.displayOptions[type];
+      if (displayOptions.stopClose) {
+        displayOptions.stopClose = false;
+      } else if (displayOptions.shown) {
+        displayOptions.shown = false;
+        displayOptions.boxBorder = '#C4C4C4';
+        displayOptions.arrowColor = '#C4C4C4';
+      }
+    },
+    closeCollegeDropdownIfOpen() {
+      this.closeDropdownIfOpen('college');
+    },
+    closeMajorDropdownIfOpen() {
+      this.closeDropdownIfOpen('major');
+    },
+    closeMinorDropdownIfOpen() {
+      this.closeDropdownIfOpen('minor');
+    },
     selectOption(type, text) {
       const displayOptions = this.displayOptions[type];
       displayOptions.placeholder = text;
       displayOptions.shown = false;
       displayOptions.arrowColor = '#C4C4C4';
+      displayOptions.boxBorder = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
     },
     selectCollege(text) {
@@ -267,6 +309,7 @@ export default {
     resetDropdown(type) {
       let displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
+      displayOptions.stopClose = false;
       displayOptions.boxBorder = '#C4C4C4';
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.placeholderColor = '#B6B6B6';
