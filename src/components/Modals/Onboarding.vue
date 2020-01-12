@@ -29,39 +29,43 @@
           <div class="onboarding-inputs">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <label class="onboarding-label">Your College*</label>
-              <div
-                class="onboarding-select onboarding-input"
-                id="college"
-                :style="{ borderColor: displayOptions.college.boxBorder }"
-                v-click-outside="closeCollegeDropdownIfOpen"
-              >
-                <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideCollegeContent">
-                  <div
-                    class="onboarding-dropdown-placeholder college-placeholder"
-                    id="college-placeholder"
-                    :style="{ color: displayOptions.college.placeholderColor }"
-                  >
-                    {{ displayOptions.college.placeholder }}
+              <div class="onboarding-selectWrapper">
+                <div
+                  class="onboarding-select onboarding-input"
+                  id="college"
+                  v-for="(options, index) in displayOptions.college"
+                  :key = index
+                  :style="{ borderColor: options.boxBorder }"
+                  v-click-outside:[index]="closeCollegeDropdownIfOpen"
+                >
+                  <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideCollegeContent(index)">
+                    <div
+                      class="onboarding-dropdown-placeholder college-placeholder"
+                      id="college-placeholder"
+                      :style="{ color: options.placeholderColor }"
+                    >
+                      {{ options.placeholder }}
+                    </div>
+                    <div
+                      class="onboarding-dropdown-placeholder college-arrow"
+                      id="college-arrow"
+                      :style="{ borderTopColor: options.arrowColor }"
+                    ></div>
                   </div>
                   <div
-                    class="onboarding-dropdown-placeholder college-arrow"
-                    id="college-arrow"
-                    :style="{ borderTopColor: displayOptions.college.arrowColor }"
-                  ></div>
-                </div>
-                <div
-                  class="onboarding-dropdown-content college-content"
-                  id="college-content"
-                  v-if="displayOptions.college.shown"
-                >
-                  <div
-                    v-for="college in colleges"
-                    :key="college"
-                    :id="college"
-                    class="onboarding-dropdown-content-item"
-                    @click="selectCollege(college)"
+                    class="onboarding-dropdown-content college-content"
+                    id="college-content"
+                    v-if="options.shown"
                   >
-                    {{ college }}
+                    <div
+                      v-for="college in colleges"
+                      :key="college"
+                      :id="college"
+                      class="onboarding-dropdown-content-item"
+                      @click="selectCollege(college, index)"
+                    >
+                      {{ college }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -69,79 +73,103 @@
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <!-- TODO: Add and remove functionality -->
               <label class="onboarding-label">Your Major*</label>
-              <div
-                class="onboarding-select onboarding-input"
-                id="major"
-                :style="{ borderColor: displayOptions.major.boxBorder }"
-                v-click-outside="closeMajorDropdownIfOpen"
-              >
-                <div class="onboarding-dropdown-placeholder major-wrapper" @click="showHideMajorContent">
-                  <div
-                    class="onboarding-dropdown-placeholder major-placeholder"
-                    id="major-placeholder"
-                    :style="{ color: displayOptions.major.placeholderColor }"
-                  >
-                    {{ displayOptions.major.placeholder }}
-                  </div>
-                  <div
-                    class="onboarding-dropdown-placeholder major-arrow"
-                    id="major-arrow"
-                    :style="{ borderTopColor: displayOptions.major.arrowColor }"
-                  ></div>
-                </div>
+              <div class="onboarding-selectWrapper">
                 <div
-                  class="onboarding-dropdown-content major-content"
-                  id="major-content"
-                  v-if="displayOptions.major.shown"
+                  class="onboarding-select onboarding-input"
+                  id="major"
+                  v-for="(options, index) in displayOptions.major"
+                  :key = index
+                  :style="{ borderColor: options.boxBorder }"
+                  v-click-outside:[index]="closeMajorDropdownIfOpen"
                 >
-                  <div
-                    v-for="major in majors"
-                    :key="major"
-                    :id="major"
-                    class="onboarding-dropdown-content-item"
-                    @click="selectMajor(major)"
-                  >
-                    {{ major }}
+                  <div class="onboarding-dropdown-placeholder major-wrapper" @click="showHideMajorContent(index)">
+                    <div
+                      class="onboarding-dropdown-placeholder major-placeholder"
+                      id="major-placeholder"
+                      :style="{ color: options.placeholderColor }"
+                    >
+                      {{ options.placeholder }}
+                    </div>
+                    <div
+                      class="onboarding-dropdown-placeholder major-arrow"
+                      id="major-arrow"
+                      :style="{ borderTopColor: options.arrowColor }"
+                    ></div>
                   </div>
+                  <div
+                    class="onboarding-dropdown-content major-content"
+                    id="major-content"
+                    v-if="options.shown"
+                  >
+                    <div
+                      v-for="major in majors"
+                      :key="major"
+                      :id="major"
+                      class="onboarding-dropdown-content-item"
+                      @click="selectMajor(major, index)"
+                    >
+                      {{ major }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="onboarding-addRemoveWrapper">
+                <div class="onboarding-add" @click="addMajor">
+                  Add
+                </div>
+                <div class="onboarding-remove" @click="removeMajor" :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }">
+                  Remove
                 </div>
               </div>
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <label class="onboarding-label">Your Minor</label>
-              <div
-                class="onboarding-select onboarding-input"
-                id="minor"
-                :style="{ borderColor: displayOptions.minor.boxBorder }"
-                v-click-outside="closeMinorDropdownIfOpen"
-              >
-                <div class="onboarding-dropdown-placeholder minor-wrapper" @click="showHideMinorContent">
-                  <div
-                    class="onboarding-dropdown-placeholder minor-placeholder"
-                    id="minor-placeholder"
-                    :style="{ color: displayOptions.minor.placeholderColor }"
-                  >
-                    {{ displayOptions.minor.placeholder }}
-                  </div>
-                  <div
-                    class="onboarding-dropdown-placeholder minor-arrow"
-                    id="minor-arrow"
-                    :style="{ borderTopColor: displayOptions.minor.arrowColor }"
-                  ></div>
-                </div>
+              <div class="onboarding-selectWrapper">
                 <div
-                  class="onboarding-dropdown-content minor-content"
-                  id="minor-content"
-                  v-if="displayOptions.minor.shown"
+                  class="onboarding-select onboarding-input"
+                  id="minor"
+                  v-for="(options, index) in displayOptions.minor"
+                  :key = index
+                  :style="{ borderColor: options.boxBorder }"
+                  v-click-outside:[index]="closeMinorDropdownIfOpen"
                 >
-                  <div
-                    v-for="minor in minors"
-                    :key="minor"
-                    :id="minor"
-                    class="onboarding-dropdown-content-item"
-                    @click="selectMinor(minor)"
-                  >
-                    {{ minor }}
+                  <div class="onboarding-dropdown-placeholder minor-wrapper" @click="showHideMinorContent(index)">
+                    <div
+                      class="onboarding-dropdown-placeholder minor-placeholder"
+                      id="minor-placeholder"
+                      :style="{ color: options.placeholderColor }"
+                    >
+                      {{ options.placeholder }}
+                    </div>
+                    <div
+                      class="onboarding-dropdown-placeholder minor-arrow"
+                      id="minor-arrow"
+                      :style="{ borderTopColor: options.arrowColor }"
+                    ></div>
                   </div>
+                  <div
+                    class="onboarding-dropdown-content minor-content"
+                    id="minor-content"
+                    v-if="options.shown"
+                  >
+                    <div
+                      v-for="minor in minors"
+                      :key="minor"
+                      :id="minor"
+                      class="onboarding-dropdown-content-item"
+                      @click="selectMinor(minor, index)"
+                    >
+                      {{ minor }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="onboarding-addRemoveWrapper">
+                <div class="onboarding-add" @click="addMinor">
+                  Add
+                </div>
+                <div class="onboarding-remove" @click="removeMinor" :class="{ 'onboarding--hidden': displayOptions.minor.length <= 1 }">
+                  Remove
                 </div>
               </div>
             </div>
@@ -157,14 +185,12 @@
 </template>
 
 <script>
-
 const placeholderText = 'Select one';
-
 const clickOutside = {
   bind(el, binding, vnode) {
     el.event = function (event) {
       if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event);
+        vnode.context[binding.expression](event, binding.arg);
       }
     };
     document.body.addEventListener('click', el.event);
@@ -185,35 +211,41 @@ export default {
       colleges: ['Engineering', 'Arts & Sciences', 'CALS'],
       majors: ['CS', 'INFO'],
       minors: ['CS', 'INFO'],
-      middleName: "",
+      middleName: '',
       displayOptions: {
-        college: {
-          shown: false,
-          stopClose: false,
-          boxBorder: '',
-          arrowColor: '',
-          placeholderColor: '',
-          placeholder: placeholderText
-        },
-        major: {
-          shown: false,
-          stopClose: false,
-          boxBorder: '',
-          arrowColor: '',
-          placeholderColor: '',
-          placeholder: placeholderText
-        },
-        minor: {
-          shown: false,
-          stopClose: false,
-          boxBorder: '',
-          arrowColor: '',
-          placeholderColor: '',
-          placeholder: placeholderText
-        }
+        college: [
+          {
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            placeholder: placeholderText
+          }
+        ],
+        major: [
+          {
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            placeholder: placeholderText
+          }
+        ],
+        minor: [
+          {
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            placeholder: placeholderText
+          }
+        ]
       },
-      isError: false,
-    }
+      isError: false
+    };
   },
   directives: {
     'click-outside': clickOutside
@@ -221,34 +253,49 @@ export default {
   methods: {
     submitOnboarding() {
       // Display error if a required field is empty, otherwise submit
-      if(this.firstName === '' || this.lastName === '' || this.displayOptions.college.placeholder === placeholderText || this.displayOptions.major.placeholder === placeholderText) {
+      if (this.firstName === '' || this.lastName === '' || this.noOptionSelected(this.displayOptions.college) || this.noOptionSelected(this.displayOptions.major)) {
         this.isError = true;
       } else {
-        let onboardingData = {
+        const onboardingData = {
           name: {
             firstName: this.firstName,
             middleName: this.middleName,
-            lastName: this.lastName,
+            lastName: this.lastName
           },
           userData: {
-            college: this.displayOptions.college.placeholder,
-            major: this.displayOptions.major.placeholder,
-            minor: this.displayOptions.minor.placeholder,
+            colleges: this.notPlaceholderOptions(this.displayOptions.college),
+            majors: this.notPlaceholderOptions(this.displayOptions.major),
+            minors: this.notPlaceholderOptions(this.displayOptions.minor)
           }
-        }
-
-        // If set to the placeholderText, set to an empty string
-        Object.keys(onboardingData.userData).forEach(function(key) {
-          if(onboardingData.userData[key] === placeholderText) {
-            onboardingData.userData[key] = "";
-          }
-        });
+        };
 
         this.$emit('onboard', onboardingData);
       }
     },
-    showHideContent(type) {
-      const displayOptions = this.displayOptions[type];
+    // check to see if a set of options (college, major, minor) only has placeholder texts (so no options selected)
+    noOptionSelected(options) {
+      let bool = true;
+      options.forEach(option => {
+        if (option.placeholder !== placeholderText) {
+          bool = false;
+        }
+      });
+
+      return bool;
+    },
+    notPlaceholderOptions(options) {
+      const list = [];
+      options.forEach(option => {
+        if (option.placeholder !== placeholderText) {
+          list.push(option.placeholder);
+        }
+      });
+
+      return list;
+    },
+    showHideContent(type, i) {
+      let displayOptions = this.displayOptions[type];
+      displayOptions = displayOptions[i];
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
 
@@ -261,17 +308,18 @@ export default {
         displayOptions.arrowColor = '#32A0F2';
       }
     },
-    showHideCollegeContent() {
-      this.showHideContent('college');
+    showHideCollegeContent(i) {
+      this.showHideContent('college', i);
     },
-    showHideMajorContent() {
-      this.showHideContent('major');
+    showHideMajorContent(i) {
+      this.showHideContent('major', i);
     },
-    showHideMinorContent() {
-      this.showHideContent('minor');
+    showHideMinorContent(i) {
+      this.showHideContent('minor', i);
     },
-    closeDropdownIfOpen(type) {
+    closeDropdownIfOpen(type, i) {
       let displayOptions = this.displayOptions[type];
+      displayOptions = displayOptions[i];
       if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
@@ -280,48 +328,63 @@ export default {
         displayOptions.arrowColor = '#C4C4C4';
       }
     },
-    closeCollegeDropdownIfOpen() {
-      this.closeDropdownIfOpen('college');
+    closeCollegeDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('college', i);
     },
-    closeMajorDropdownIfOpen() {
-      this.closeDropdownIfOpen('major');
+    closeMajorDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('major', i);
     },
-    closeMinorDropdownIfOpen() {
-      this.closeDropdownIfOpen('minor');
+    closeMinorDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('minor', i);
     },
-    selectOption(type, text) {
-      const displayOptions = this.displayOptions[type];
+    selectOption(type, text, i) {
+      let displayOptions = this.displayOptions[type];
+      displayOptions = displayOptions[i];
       displayOptions.placeholder = text;
       displayOptions.shown = false;
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.boxBorder = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
     },
-    selectCollege(text) {
-      this.selectOption('college', text);
+    selectCollege(text, i) {
+      this.selectOption('college', text, i);
     },
-    selectMajor(text) {
-      this.selectOption('major', text);
+    selectMajor(text, i) {
+      this.selectOption('major', text, i);
     },
-    selectMinor(text) {
-      this.selectOption('minor', text);
+    selectMinor(text, i) {
+      this.selectOption('minor', text, i);
     },
-    resetDropdown(type) {
-      let displayOptions = this.displayOptions[type];
-      displayOptions.shown = false;
-      displayOptions.stopClose = false;
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.placeholderColor = '#B6B6B6';
-      displayOptions.placeholder = 'Select one';
+    addMajor() {
+      const newMajor = {
+        shown: false,
+        stopClose: false,
+        boxBorder: '',
+        arrowColor: '',
+        placeholderColor: '',
+        placeholder: placeholderText
+      };
+      this.displayOptions.major.push(newMajor);
     },
-    resetDropdowns() {
-      this.resetDropdown('college');
-      this.resetDropdown('major');
-      this.resetDropdown('minor');
+    removeMajor() {
+      this.displayOptions.major.pop();
+    },
+    addMinor() {
+      const minor = {
+        shown: false,
+        stopClose: false,
+        boxBorder: '',
+        arrowColor: '',
+        placeholderColor: '',
+        placeholder: placeholderText
+      };
+      this.displayOptions.minor.push(minor);
+    },
+    removeMinor() {
+      this.displayOptions.minor.pop();
     }
   }
-}
+};
 
 </script>
 
@@ -421,9 +484,30 @@ export default {
 
     &--college {
       &:not(:last-child) {
+        margin-bottom: 1rem;
+      }
+      &:first-child {
         margin-bottom: 2rem;
       }
     }
+  }
+
+  &-addRemoveWrapper {
+    margin-top: .5rem;
+    display: flex;
+    justify-content: flex-end;
+
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+  &-add {
+    color: #1AA9A5;
+  }
+
+  &-remove {
+    margin-left: .5rem;
+    color: #FF7979
   }
 
   &-bottom {
@@ -479,6 +563,10 @@ export default {
 
     color: #b6b6b6;
     position: relative;
+
+    &:not(:first-child) {
+      margin-top: .5rem;
+    }
   }
 
   &-dropdown {
