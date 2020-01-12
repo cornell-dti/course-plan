@@ -358,13 +358,14 @@ export default {
 
   &-name {
     font-size: 18px;
-    line-height: 22px;
+    line-height: 18px;
     margin-right: 0.5rem;
     font-weight: bold;
   }
 
   &-icon {
     width: 14px;
+    height: 14px;
   }
 
   &-credits {

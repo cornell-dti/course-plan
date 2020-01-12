@@ -1,9 +1,13 @@
 <template>
-  <div class="dashboard">
+  <div class="dashboard" v-if="loaded">
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <navbar class="dashboard-nav" />
-        <requirements class="dashboard-reqs"/>
+        <requirements class="dashboard-reqs"
+          :semesters="semesters"
+          :user="user"
+          :key="requirementsKey"
+         />
       </div>
       <semesterview
         :semesters="semesters"
@@ -47,12 +51,20 @@ export default {
   },
   data() {
     return {
+      loaded: false,
       compactVal: false,
       currSemID: 1,
       semesters: [],
-
+      currentClasses: [],
+      user: {
+        major: 'CS',
+        majorFN: 'COMPUTER SCIENCE',
+        college: 'AS',
+        collegeFN: 'Arts and Science'
+      },
       // Default bottombar info without info
-      bottomBar: { isPreview: false, isExpanded: false }
+      bottomBar: { isPreview: false, isExpanded: false },
+      requirementsKey: 0
     };
   },
   mounted() {
@@ -65,11 +77,11 @@ export default {
       const docRef = userDataCollection.doc(userEmail);
 
       // TODO: error handling for firebase errors
-      docRef
-        .get()
+      docRef.get()
         .then(doc => {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters);
+            this.loaded = true;
           } else {
             docRef.set({
               semesters: []
@@ -82,6 +94,7 @@ export default {
     },
     convertSemesters(firebaseSems) {
       const semesters = [];
+
       firebaseSems.forEach(firebaseSem => {
         const firebaseCourses = firebaseSem.courses;
         const courses = [];
@@ -92,6 +105,7 @@ export default {
       });
       return semesters;
     },
+
     createCourse(course) {
       const courseMap = new Map();
       courseMap.set('KCM', ['CS 1110', 'CS 1112']);
@@ -102,8 +116,7 @@ export default {
       const code = parseInt(arr[1], 10);
 
       // remove periods and split on ', '
-      let semesters = course.catalogWhenOffered.replace(/\./g, '');
-      semesters = semesters.split(', ');
+      const semesters = course.semesters || course.catalogWhenOffered.replace(/\./g, '').split(', ');
 
       // TODO: pick color if a new course instead of this default
       const color = course.color || '2BBCC6';
@@ -130,6 +143,9 @@ export default {
         requirementsMap: courseMap
       };
 
+      // Update requirements menu
+      this.updateRequirementsMenu();
+
       return newCourse;
     },
     createSemester(courses, type, year) {
@@ -141,6 +157,10 @@ export default {
       };
       this.currSemID += 1;
       return semester;
+    },
+
+    updateRequirementsMenu() {
+      this.requirementsKey += 1;
     },
 
     async updateBar(course) {

@@ -23,7 +23,10 @@ export default {
     }
   },
   mounted() {
-    this.autocomplete(document.getElementById(`dropdown-${this.semesterID}`), coursesJSON);
+    this.autocomplete(
+      document.getElementById(`dropdown-${this.semesterID}`),
+      coursesJSON
+    );
   },
   methods: {
     closeCourseModal() {
@@ -59,7 +62,10 @@ export default {
           for (const attr in courses) {
             if (attr.toUpperCase().includes(val)) {
               code.push(courses[attr].t);
-            } else if (courses[attr].t && courses[attr].t.toUpperCase().includes(val)) {
+            } else if (
+              courses[attr].t
+              && courses[attr].t.toUpperCase().includes(val)
+            ) {
               title.push(courses[attr].t);
             }
           }
