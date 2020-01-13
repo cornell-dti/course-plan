@@ -25,6 +25,7 @@
           <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
             <course
               v-bind="course"
+              :courseObj="course"
               :id="course.subject + course.number"
               :compact="compact"
               :active="activatedCourse.subject === course.subject && activatedCourse.number === course.number"
@@ -125,16 +126,6 @@ export default {
     }
   },
   methods: {
-    createSemesterString(semesters) {
-      let semesterString = '';
-      semesters.forEach(semester => {
-        semesterString += `${semester}, `;
-      });
-      if (semesterString.length > 0) {
-        return semesterString.substring(0, semesterString.length - 2);
-      }
-      return semesterString;
-    },
     openCourseModal() {
       const modal = document.getElementById(`courseModal-${this.id}`);
       modal.style.display = 'block';
@@ -158,12 +149,20 @@ export default {
       }, 5000);
     },
     addCourseToFirebase(course) {
+      // Customize information added to firebase. Currently, not all course data is added
       const firebaseCourse = {
-        catalogWhenOffered: `${this.createSemesterString(course.semesters)}.`,
         code: `${course.subject} ${course.number}`,
-        color: course.color,
+        name: course.name,
+        description: course.description,
         credits: course.credits,
-        name: course.name
+        semesters: course.semesters,
+        prereqs: course.prereqs,
+        enrollment: course.enrollment,
+        lectureTimes: course.lectureTimes,
+        instructors: course.instructors,
+        distributions: course.distributions,
+        lastRoster: course.lastRoster,
+        color: course.color
       };
 
       const user = auth.currentUser;

@@ -1,5 +1,5 @@
 <template>
-    <div class="bottombar" v-bind:class="{ hide: !isPreview }">
+    <div class="bottombar" :class="{ hide: !isPreview }">
       <!-- have course square with just course subject and course code -->
       <div class="bottombar-tabs">
         <!-- Add tabs -->
@@ -20,31 +20,31 @@
             </div>
             <div class="section">
               <h1 class="info-head">Offered</h1>
-              <p class="info-fact">{{ joinIfExists(semesters) }}</p>
+              <p class="info-fact">{{ semesters }}</p>
             </div>
           </div>
           <div>
             <div class="section">
               <h1 class="info-head">Instructors</h1>
-              <p class="info-fact">{{ joinIfExists(instructors) }}</p>
+              <p class="info-fact">{{ instructors }}</p>
             </div>
             <div class="section">
               <h1 class="info-head">Enrollment Information</h1>
-              <p class="info-fact">{{ joinIfExists(enrollmentInfo) }}</p>
+              <p class="info-fact">{{ enrollmentInfo }}</p>
             </div>
           </div>
           <div>
             <div class="section">
               <h1 class="info-head">Distribution Category</h1>
-              <p class="info-fact">{{ joinIfExists(distributionCategories) }}</p>
+              <p class="info-fact">{{ distributionCategories }}</p>
             </div>
             <div class="section">
               <h1 class="info-head">{{ latestSem }} Lecture Info</h1>
-              <p class="info-fact">{{ joinIfExists(latestLecInfo) }}</p>
+              <p class="info-fact">{{ latestLecInfo }}</p>
             </div>
           </div>
           <div class="info-link">
-            <a :href="`https://classes.cornell.edu/browse/roster/${ latestSem }/class/${ subject }/${ code }`" class="info-link-blue" target="_blank">View Course Information on Roster</a>
+            <a :href="`https://classes.cornell.edu/browse/roster/${ latestSem }/class/${ subject }/${ number }`" class="info-link-blue" target="_blank">View Course Information on Roster</a>
           </div>
           </div>
         </div>
@@ -69,9 +69,9 @@
                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
-            <a :href="`https://www.cureviews.org/course/${ subject }/${ code }`" class="details-ratings-link" target="_blank">See all reviews</a>
+            <a :href="`https://www.cureviews.org/course/${ subject }/${ number }`" class="details-ratings-link" target="_blank">See all reviews</a>
             <div class="details-head">Prerequisites</div>
-            <p>{{ joinIfExists(prerequisites) }}</p>
+            <p>{{ prerequisites }}</p>
             <div class="details-head">Description</div>
             <p>{{ description }}</p>
           </div>
@@ -86,9 +86,9 @@
 export default {
   props: {
     subject: String,
-    code: Number,
+    number: String,
     name: String,
-    credits: String,
+    credits: Number,
     semesters: Array,
     color: String,
     // requirementsMap: Map,
@@ -101,7 +101,7 @@ export default {
     overallRating: Number,
     difficulty: Number,
     workload: Number,
-    prerequisites: Array,
+    prerequisites: String,
     description: String,
     isPreview: Boolean,
     isExpanded: Boolean

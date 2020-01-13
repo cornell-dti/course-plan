@@ -19,7 +19,10 @@
       />
     </div>
     <div id="dashboard-bottomView">
-      <bottombar :data="bottomBar" @close-bar="closeBar" @open-bar="openBar"/>
+      <bottombar
+      :data="bottomBar"
+      @close-bar="closeBar"
+      @open-bar="openBar"/>
     </div>
   </div>
 </template>
@@ -106,28 +109,79 @@ export default {
       return semesters;
     },
 
+    /**
+     * Creates a course on frontend with either user or API data
+     */
     createCourse(course) {
-      const courseMap = new Map();
-      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
-      courseMap.set('CA', ['CS 2110']);
+      // TODO: id?
+      const randomId = Math.floor(Math.random() * Math.floor(1000));
 
       const subject = course.code.split(" ")[0] || course.subject;
       const number = course.code.split(" ")[1] || course.catalogNbr;
 
-      // remove periods and split on ', '
-      const semesters = course.semesters || course.catalogWhenOffered.replace(/\./g, '').split(', ');
+      // TODO: same field?
+      const name = course.titleLong || course.name;
 
-      // TODO: pick color if a new course instead of this default
-      const color = course.color || '2BBCC6';
+      // Description of course. Please leave the redundancy in place as a sanity check.
+      const description = course.description || course.description;
 
       // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
 
-      // TODO: id?
-      const randomId = Math.floor(Math.random() * Math.floor(100));
+      // Semesters: remove periods and split on ', '
+      const semesters = course.semesters || course.catalogWhenOffered.replace(/\./g, '').split(', ');
 
-      // TODO: same field?
-      const name = course.titleLong || course.name;
+      // Get prereqs of course as string ()
+      const prereqs = course.prereqs || course.catalogPrereqCoreq;
+
+      // To be redefined if does not exist
+      let enrollment = course.enrollment;
+      let lectureTimes = course.lectureTimes;
+      let instructors = course.instructors;
+      
+      if (!(enrollment || lectureTimes || instructors)) {
+        // If new course, iterate through enrollment groups to retrieve enrollment info, lecture times, and instructors
+        
+        // Hash maps used to remove redundancies
+        const enrollmentMap = {};
+        const lectureTimesMap = {};
+        const instructorsMap = {};
+        course.enrollGroups.forEach(group => {
+          group.classSections.forEach(section => {
+            // Add section
+            const enroll = section.ssrComponent;
+            enrollmentMap[enroll] = true;
+
+            section.meetings.forEach(meeting => {
+              const { pattern, timeStart, timeEnd } = meeting;
+              // Only add the time if it is a lecture
+              if (enroll === 'LEC') lectureTimesMap[`${pattern} ${timeStart} - ${timeEnd}`] = true;
+
+              meeting.instructors.forEach(instructor => {
+                const { netid, firstName, lastName } = instructor;
+                instructorsMap[netid] = `${firstName} ${lastName}`;
+              });
+            });
+          });
+        });
+        
+        enrollment = Object.keys(enrollmentMap);
+        lectureTimes = Object.keys(lectureTimesMap);
+        instructors = Object.keys(instructorsMap).map(netid => `${instructorsMap[netid]} (${netid})`);
+      }
+
+      // Distribution of course (e.g. MQR-AS)
+      const distributions = course.distributions || course.catalogDistr.split(',');
+
+      // Get last semester of available course. TODO: Remove when no longer firebase data dependant
+      const lastRoster = course.lastRoster || course.semester;
+
+      // TODO: pick color if a new course instead of this default
+      const color = course.color || '2BBCC6';
+
+      const courseMap = new Map();
+      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
+      courseMap.set('CA', ['CS 2110']);
 
       // TODO: Need courseMap to be generated, check to change
       const newCourse = {
@@ -135,8 +189,15 @@ export default {
         subject,
         number,
         name,
+        description,
         credits,
         semesters,
+        prereqs,
+        enrollment,
+        lectureTimes,
+        instructors,
+        distributions,
+        lastRoster,
         color,
         check: true,
         requirementsMap: courseMap
@@ -162,87 +223,30 @@ export default {
       this.requirementsKey += 1;
     },
 
-    async updateBar(course) {
-      const res = await fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${course.roster}&subject=${course.subject}&q=${course.subject}%20${course.number}`);
-      const courseJSON = await res.json();
-
-      if (courseJSON.data) {
-        const courseData = courseJSON.data.classes[0];
-
-        // Update Bar Information
-        // console.log(courseData);
-
-        // Calculate credits (3 or 3 - 4)
-        const { unitsMinimum, unitsMaximum } = courseData.enrollGroups[0];
-        const creditsCalc = (unitsMinimum === unitsMaximum) ? `${unitsMinimum}` : `${unitsMinimum} - ${unitsMaximum}`;
-        // Calculate semesters into array (["String", "Fall"])
-        const semestersRemovePeriod = courseData.catalogWhenOffered.replace(/\./g, '');
-        const semestersCalc = semestersRemovePeriod.split(',');
-
-        // Iterate through enrollment groups and meetings to identify all instructors lecture times and enrollment data
-        const enrollment = {};
-        const lectureTimes = {};
-        const instructors = {};
-        courseData.enrollGroups.forEach(group => {
-          group.classSections.forEach(section => {
-            // Add section
-            const enroll = section.ssrComponent;
-            enrollment[enroll] = true;
-
-            section.meetings.forEach(meeting => {
-              const { pattern, timeStart, timeEnd } = meeting;
-              // Only add the time if it is a lecture
-              if (enroll === 'LEC') lectureTimes[`${pattern} ${timeStart} - ${timeEnd}`] = true;
-
-              meeting.instructors.forEach(instructor => {
-                const { netid, firstName, lastName } = instructor;
-                instructors[netid] = `${firstName} ${lastName}`;
-              });
-            });
-          });
-        });
-
-        // Parse instructors to instructors array (["David Gries (grs23)", "Bob Iger (bi23)"])
-        const instructorsCalc = [];
-        Object.keys(instructors).forEach(netid => {
-          instructorsCalc.push(`${instructors[netid]} (${netid})`);
-        });
-
-        let distributionCalc = courseData.catalogDistr.split(',');
-        if (distributionCalc.length === 0 || distributionCalc[0] === '') distributionCalc = ['None'];
-
-        // Parse enrollment to enrollment array (["LEC", "LAB"])
-        const enrollmentCalc = Object.keys(enrollment);
-
-        // Parse lecture times info
-        let lecturesCalc = Object.keys(lectureTimes);
-        if (lecturesCalc.length === 0 || lecturesCalc[0] === '') lecturesCalc = ['None'];
-
-        const barData = {
-          subject: courseData.subject,
-          code: parseInt(courseData.catalogNbr, 10),
-          name: courseData.titleLong,
-          credits: creditsCalc,
-          semesters: semestersCalc,
-          color: course.color,
-          // requirementsMap: Map,
-          id: 1,
-          instructors: instructorsCalc,
-          distributionCategories: distributionCalc,
-          enrollmentInfo: enrollmentCalc,
-          latestSem: 'SP17', // TODO make to semester course is stored
-          latestLecInfo: lecturesCalc,
-          overallRating: 1,
-          difficulty: 3.4,
-          workload: 4.0,
-          prerequisites: ['TODO'],
-          description: courseData.description,
-          isPreview: true,
-          isExpanded: true
-        };
-
-        this.bottomBar = barData;
-      }
+    updateBar(course) {
+      // Update Bar Information
+      this.bottomBar = {
+        subject: course.subject,
+        number: course.number,
+        name: course.name,
+        credits: course.credits,
+        semesters: course.semesters,
+        color: course.color,
+        // requirementsMap: Map,
+        id: 1,
+        instructors: course.instructors,
+        distributionCategories: course.distributions,
+        enrollmentInfo: course.enrollment,
+        latestSem: course.lastRoster,
+        latestLecInfo: course.lectureTimes,
+        overallRating: 1,
+        difficulty: 3.4,
+        workload: 4.0,
+        prerequisites: course.prereqs,
+        description: course.description,
+        isPreview: true,
+        isExpanded: true
+      };
     },
 
     openBar() {

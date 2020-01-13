@@ -83,6 +83,7 @@ const clickOutside = {
 
 export default {
   props: {
+    courseObj: Object,
     subject: String,
     number: String,
     name: String,
@@ -226,9 +227,7 @@ export default {
     },
     updateBar() {
       if (!this.menuOpen) {
-        this.$emit('updateBar', {
-          subject: this.subject, number: this.number, roster: 'FA19', color: this.color
-        });
+        this.$emit('updateBar', this.courseObj);
       }
     }
 
