@@ -122,7 +122,7 @@ export default {
       let index;
 
       if (review < 2) {
-        index = 0;s
+        index = 0;
 
       } else if (review >= 2 && review < 4) {
         index = 1;
