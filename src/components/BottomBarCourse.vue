@@ -54,19 +54,19 @@
             <div class="details-ratings">
               <h1 class="details-ratings-title">Overall Rating: <strong>{{ overallRating }}</strong></h1>
               <div class="progress rating">
-                <div class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" :style="{ width: `${(overallRating/5)*100}%`, background: reviewsColor(overallRating) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
               <h1 class="details-ratings-title">Difficulty: <strong>{{ difficulty }}</strong></h1>
               <div class="progress rating">
-                <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" :style="{ width: `${(difficulty/5)*100}%`, background: reviewsColor(difficulty, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
               <h1 class="details-ratings-title">Workload: <strong>{{ workload }}</strong></h1>
               <div class="progress rating">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" :style="{ width: `${(workload/5)*100}%`, background: reviewsColor(workload, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <a :href="`https://www.cureviews.org/course/${ subject }/${ number }`" class="details-ratings-link" target="_blank">See all reviews</a>
@@ -89,15 +89,15 @@ export default {
     number: String,
     name: String,
     credits: Number,
-    semesters: Array,
+    semesters: String,
     color: String,
     // requirementsMap: Map,
     id: Number,
-    instructors: Array, // array of strings
-    distributionCategories: Array, // array of strings
-    enrollmentInfo: Array,
+    instructors: String, // array of strings
+    distributionCategories: String, // array of strings
+    enrollmentInfo: String,
     latestSem: String,
-    latestLecInfo: Array,
+    latestLecInfo: String,
     overallRating: Number,
     difficulty: Number,
     workload: Number,
@@ -114,6 +114,25 @@ export default {
 
     joinIfExists(arr) {
       return (arr) ? arr.join(',') : '';
+    },
+
+    reviewsColor(review, flip = false) {
+      
+      const colors = ['#d9534f', '#f0ad4e', '#5cb85c'];
+      let index;
+
+      if (review < 2) {
+        index = 0;s
+
+      } else if (review >= 2 && review < 4) {
+        index = 1;
+
+      } else {
+        index = 2;
+
+      }
+
+      return (flip) ? colors[colors.length - 1 - index] : colors[index];
     }
   }
 };
@@ -227,6 +246,10 @@ export default {
         color: #4181FF;
       }
     }
+  }
+
+  .progress-bar {
+    transition: width 0s ease;
   }
 
   .rating {

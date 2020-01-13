@@ -230,23 +230,40 @@ export default {
         number: course.number,
         name: course.name,
         credits: course.credits,
-        semesters: course.semesters,
+        semesters: this.joinOrNAString(course.semesters),
         color: course.color,
+        latestSem: course.lastRoster,
         // requirementsMap: Map,
         id: 1,
-        instructors: course.instructors,
-        distributionCategories: course.distributions,
-        enrollmentInfo: course.enrollment,
-        latestSem: course.lastRoster,
-        latestLecInfo: course.lectureTimes,
-        overallRating: 1,
-        difficulty: 3.4,
-        workload: 4.0,
+        // Array data
+        instructors: this.joinOrNAString(course.instructors),
+        distributionCategories: this.joinOrNAString(course.distributions),
+        enrollmentInfo: this.joinOrNAString(course.enrollment),
+        latestLecInfo: this.joinOrNAString(course.lectureTimes),
+        // TODO: CUReviews data
+        overallRating: null,
+        difficulty: null,
+        workload: null,
         prerequisites: course.prereqs,
         description: course.description,
         isPreview: true,
         isExpanded: true
       };
+
+      this.getReviews(course.subject, course.number, review => {
+        this.bottomBar.overallRating = review.classRating;
+        this.bottomBar.difficulty = review.classDifficulty;
+        this.bottomBar.workload= review.classWorkload;
+      });
+      
+    },
+
+    getReviews(subject, number, callback) {
+      fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(res => {
+        res.json().then(reviews => {
+          callback(reviews.classes[0]);
+        })
+      })
     },
 
     openBar() {
@@ -255,6 +272,10 @@ export default {
 
     closeBar() {
       this.bottomBar.isExpanded = false;
+    },
+
+    joinOrNAString(arr) {
+      return (arr.length !== 0 && arr[0] !== '') ? arr.join(", ") : "N/A";
     }
   }
 };
