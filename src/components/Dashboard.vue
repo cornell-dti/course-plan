@@ -135,9 +135,7 @@ export default {
       const prereqs = course.prereqs || course.catalogPrereqCoreq;
 
       // To be redefined if does not exist
-      let { enrollment } = course;
-      let { lectureTimes } = course;
-      let { instructors } = course;
+      let { enrollment, lectureTimes, instructors } = course;
 
       if (!(enrollment || lectureTimes || instructors)) {
         // If new course, iterate through enrollment groups to retrieve enrollment info, lecture times, and instructors
