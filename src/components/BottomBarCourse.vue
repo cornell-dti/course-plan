@@ -117,19 +117,15 @@ export default {
     },
 
     reviewsColor(review, flip = false) {
-      
       const colors = ['#d9534f', '#f0ad4e', '#5cb85c'];
       let index;
 
       if (review < 2) {
         index = 0;
-
       } else if (review >= 2 && review < 4) {
         index = 1;
-
       } else {
         index = 2;
-
       }
 
       return (flip) ? colors[colors.length - 1 - index] : colors[index];

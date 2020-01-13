@@ -116,8 +116,8 @@ export default {
       // TODO: id?
       const randomId = Math.floor(Math.random() * Math.floor(1000));
 
-      const subject = course.code.split(" ")[0] || course.subject;
-      const number = course.code.split(" ")[1] || course.catalogNbr;
+      const subject = course.code.split(' ')[0] || course.subject;
+      const number = course.code.split(' ')[1] || course.catalogNbr;
 
       // TODO: same field?
       const name = course.titleLong || course.name;
@@ -135,13 +135,13 @@ export default {
       const prereqs = course.prereqs || course.catalogPrereqCoreq;
 
       // To be redefined if does not exist
-      let enrollment = course.enrollment;
-      let lectureTimes = course.lectureTimes;
-      let instructors = course.instructors;
-      
+      let { enrollment } = course;
+      let { lectureTimes } = course;
+      let { instructors } = course;
+
       if (!(enrollment || lectureTimes || instructors)) {
         // If new course, iterate through enrollment groups to retrieve enrollment info, lecture times, and instructors
-        
+
         // Hash maps used to remove redundancies
         const enrollmentMap = {};
         const lectureTimesMap = {};
@@ -164,7 +164,7 @@ export default {
             });
           });
         });
-        
+
         enrollment = Object.keys(enrollmentMap);
         lectureTimes = Object.keys(lectureTimesMap);
         instructors = Object.keys(instructorsMap).map(netid => `${instructorsMap[netid]} (${netid})`);
@@ -253,17 +253,16 @@ export default {
       this.getReviews(course.subject, course.number, review => {
         this.bottomBar.overallRating = review.classRating;
         this.bottomBar.difficulty = review.classDifficulty;
-        this.bottomBar.workload= review.classWorkload;
+        this.bottomBar.workload = review.classWorkload;
       });
-      
     },
 
     getReviews(subject, number, callback) {
       fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(res => {
         res.json().then(reviews => {
           callback(reviews.classes[0]);
-        })
-      })
+        });
+      });
     },
 
     openBar() {
@@ -275,7 +274,7 @@ export default {
     },
 
     joinOrNAString(arr) {
-      return (arr.length !== 0 && arr[0] !== '') ? arr.join(", ") : "N/A";
+      return (arr.length !== 0 && arr[0] !== '') ? arr.join(', ') : 'N/A';
     }
   }
 };
