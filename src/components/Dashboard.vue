@@ -111,9 +111,8 @@ export default {
       courseMap.set('KCM', ['CS 1110', 'CS 1112']);
       courseMap.set('CA', ['CS 2110']);
 
-      const arr = course.code.split(' ');
-      const subject = arr[0];
-      const code = parseInt(arr[1], 10);
+      const subject = course.code.split(" ")[0] || course.subject;
+      const number = course.code.split(" ")[1] || course.catalogNbr;
 
       // remove periods and split on ', '
       const semesters = course.semesters || course.catalogWhenOffered.replace(/\./g, '').split(', ');
@@ -134,7 +133,7 @@ export default {
       const newCourse = {
         id: randomId,
         subject,
-        code,
+        number,
         name,
         credits,
         semesters,

@@ -25,9 +25,9 @@
           <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
             <course
               v-bind="course"
-              :id="course.subject + course.code"
+              :id="course.subject + course.number"
               :compact="compact"
-              :active="activatedCourse.subject === course.subject && activatedCourse.number === course.code"
+              :active="activatedCourse.subject === course.subject && activatedCourse.number === course.number"
               class="semester-course"
               @delete-course="deleteCourse"
               @color-course="colorCourse"
@@ -160,7 +160,7 @@ export default {
     addCourseToFirebase(course) {
       const firebaseCourse = {
         catalogWhenOffered: `${this.createSemesterString(course.semesters)}.`,
-        code: `${course.subject} ${course.code}`,
+        code: `${course.subject} ${course.number}`,
         color: course.color,
         credits: course.credits,
         name: course.name
@@ -196,7 +196,7 @@ export default {
     },
     deleteCourse(courseAbbr) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].subject + this.courses[i].code === courseAbbr) {
+        if (this.courses[i].subject + this.courses[i].number === courseAbbr) {
           this.courses.splice(i, 1);
           break;
         }
@@ -205,7 +205,7 @@ export default {
     },
     colorCourse(color, courseAbbr) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].subject + this.courses[i].code === courseAbbr) {
+        if (this.courses[i].subject + this.courses[i].number === courseAbbr) {
           this.courses[i].color = color;
           break;
         }
