@@ -58,11 +58,11 @@
                     v-if="options.shown"
                   >
                     <div
-                      v-for="college in colleges"
-                      :key="college"
+                      v-for="(college, acronym) in colleges"
+                      :key="acronym"
                       :id="college"
                       class="onboarding-dropdown-content-item"
-                      @click="selectCollege(college, index)"
+                      @click="selectCollege(college, acronym, index)"
                     >
                       {{ college }}
                     </div>
@@ -101,11 +101,11 @@
                     v-if="options.shown"
                   >
                     <div
-                      v-for="major in majors"
-                      :key="major"
+                      v-for="(major, acronym) in majors"
+                      :key="acronym"
                       :id="major"
                       class="onboarding-dropdown-content-item"
-                      @click="selectMajor(major, index)"
+                      @click="selectMajor(major, acronym, index)"
                     >
                       {{ major }}
                     </div>
@@ -152,11 +152,11 @@
                     v-if="options.shown"
                   >
                     <div
-                      v-for="minor in minors"
-                      :key="minor"
+                      v-for="(minor, acronym) in minors"
+                      :key="acronym"
                       :id="minor"
                       class="onboarding-dropdown-content-item"
-                      @click="selectMinor(minor, index)"
+                      @click="selectMinor(minor, acronym, index)"
                     >
                       {{ minor }}
                     </div>
@@ -184,6 +184,8 @@
 </template>
 
 <script>
+import reqsData from '@/requirements/reqs.json';
+
 const placeholderText = 'Select one';
 const clickOutside = {
   bind(el, binding, vnode) {
@@ -206,10 +208,11 @@ export default {
   },
   data() {
     return {
+      reqsData,
       // TODO: Get real college, major, and minor lists
-      colleges: ['Engineering', 'Arts & Sciences', 'CALS'],
-      majors: ['CS', 'INFO'],
-      minors: ['CS', 'INFO'],
+      colleges: {},
+      majors: {},
+      minors: {},
       middleName: '',
       displayOptions: {
         college: [
@@ -219,7 +222,8 @@ export default {
             boxBorder: '',
             arrowColor: '',
             placeholderColor: '',
-            placeholder: placeholderText
+            placeholder: placeholderText,
+            acronym: ''
           }
         ],
         major: [
@@ -229,7 +233,8 @@ export default {
             boxBorder: '',
             arrowColor: '',
             placeholderColor: '',
-            placeholder: placeholderText
+            placeholder: placeholderText,
+            acronym: ''
           }
         ],
         minor: [
@@ -239,7 +244,8 @@ export default {
             boxBorder: '',
             arrowColor: '',
             placeholderColor: '',
-            placeholder: placeholderText
+            placeholder: placeholderText,
+            acronym: ''
           }
         ]
       },
@@ -249,7 +255,39 @@ export default {
   directives: {
     'click-outside': clickOutside
   },
+  mounted() {
+    this.setCollegesMap();
+    this.setMajorsList();
+  },
   methods: {
+    // Set the colleges map to with acronym keys and full name values
+    setCollegesMap() {
+      const colleges = {};
+      const collegeJSON = reqsData.college;
+      for (const key in collegeJSON) {
+        if ('name' in collegeJSON[key]) {
+          colleges[key] = collegeJSON[key].name;
+        }
+      }
+
+      this.colleges = colleges;
+    },
+    // Set the majors map to with acronym keys and full name values
+    setMajorsList() {
+      const majors = {};
+      const majorJSON = reqsData.major;
+      for (const key in majorJSON) {
+        if ('name' in majorJSON[key]) {
+          majors[key] = majorJSON[key].name;
+        }
+      }
+
+      this.majors = majors;
+    },
+    // TODO: add minors when the list exists
+    setMinorsList() {
+      this.minors = {};
+    },
     submitOnboarding() {
       // Display error if a required field is empty, otherwise submit
       if (this.firstName === '' || this.lastName === '' || this.noOptionSelected(this.displayOptions.college) || this.noOptionSelected(this.displayOptions.major)) {
@@ -286,7 +324,12 @@ export default {
       const list = [];
       options.forEach(option => {
         if (option.placeholder !== placeholderText) {
-          list.push(option.placeholder);
+          const obj = {
+            acronym: option.acronym,
+            fullName: option.placeholder
+          };
+
+          list.push(obj);
         }
       });
 
@@ -336,23 +379,24 @@ export default {
     closeMinorDropdownIfOpen(event, i) {
       this.closeDropdownIfOpen('minor', i);
     },
-    selectOption(type, text, i) {
+    selectOption(type, text, acronym, i) {
       let displayOptions = this.displayOptions[type];
       displayOptions = displayOptions[i];
       displayOptions.placeholder = text;
+      displayOptions.acronym = acronym;
       displayOptions.shown = false;
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.boxBorder = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
     },
-    selectCollege(text, i) {
-      this.selectOption('college', text, i);
+    selectCollege(text, acronym, i) {
+      this.selectOption('college', text, acronym, i);
     },
-    selectMajor(text, i) {
-      this.selectOption('major', text, i);
+    selectMajor(text, acronym, i) {
+      this.selectOption('major', text, acronym, i);
     },
-    selectMinor(text, i) {
-      this.selectOption('minor', text, i);
+    selectMinor(text, acronym, i) {
+      this.selectOption('minor', text, acronym, i);
     },
     addMajor() {
       const newMajor = {

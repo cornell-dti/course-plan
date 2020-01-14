@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard" v-if="loaded">
+  <div class="dashboard">
     <onboarding class="dashboard-onboarding" :class="{ 'dashboard--hidden': !isOnboarding }" :firstName="firstName" :lastName="lastName" @onboard="endOnboarding" />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
@@ -10,7 +10,7 @@
           :key="requirementsKey"
          />
       </div>
-      <semesterview
+      <semesterview v-if="loaded"
         :semesters="semesters"
         :compact="compactVal"
         :isBottomBar="bottomBar.isExpanded"
