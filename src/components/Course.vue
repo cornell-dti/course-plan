@@ -16,7 +16,7 @@
       <div :class="{ 'course-main--min': !notCompact }" class="course-main">
         <div class="course-top">
           <div :class="{ 'course-code--min': !notCompact }" class="course-code">
-            {{ subject }} {{ code }}
+            {{ subject }} {{ number }}
           </div>
           <div class="course-dotRow" @click="openMenu">
             <span class="course-dot course-dot--menu"></span>
@@ -83,8 +83,9 @@ const clickOutside = {
 
 export default {
   props: {
+    courseObj: Object,
     subject: String,
-    code: Number,
+    number: String,
     name: String,
     credits: Number,
     semesters: Array,
@@ -189,12 +190,12 @@ export default {
       return `${this.credits} credits`;
     },
     review() {
-      return `https://www.cureviews.org/course/${this.subject}/${this.code}`;
+      return `https://www.cureviews.org/course/${this.subject}/${this.number}`;
     },
 
     // TODO: change semester from FA18
     roster() {
-      return `https://classes.cornell.edu/browse/roster/FA18/class/${this.subject}/${this.code}`;
+      return `https://classes.cornell.edu/browse/roster/FA18/class/${this.subject}/${this.number}`;
     },
 
     cssVars() {
@@ -226,9 +227,7 @@ export default {
     },
     updateBar() {
       if (!this.menuOpen) {
-        this.$emit('updateBar', {
-          subject: this.subject, number: this.code, roster: 'FA19', color: this.color
-        });
+        this.$emit('updateBar', this.courseObj);
       }
     }
 
