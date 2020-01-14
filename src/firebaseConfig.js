@@ -28,7 +28,8 @@ const { currentUser } = auth;
 const usersCollection = db.collection('users');
 const coursesCollection = db.collection('courses');
 const userDataCollection = db.collection('userData');
+const emailsCollection = db.collection('emails');
 
 export {
-  db, auth, currentUser, usersCollection, coursesCollection, userDataCollection
+  db, auth, currentUser, usersCollection, coursesCollection, userDataCollection, emailsCollection
 };

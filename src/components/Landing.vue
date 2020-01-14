@@ -17,11 +17,11 @@
                 <h1 class="plan-head">Plan Your Courses Ahead</h1> 
                 <p class="plan-subhead">Introducing the new way to plan courses at Cornell</p>
                 <b-row class = "email">
-                    <b-col cols="12" md="8"><input type="text" v-model="message" placeholder="Your Email Address"></b-col>
-                    <b-col cols="6" md="4"><b-button variant= "primary" class="email-button"> Get Started </b-button> </b-col>   
+                    <b-col cols="12" md="8"><input  class= "email-input" type="text" placeholder="Your Email Address" v-model="newUser.email" ></b-col>
+                    <b-col cols="6" md="4"><b-button variant= "primary" class="email-button" v-on:click="addUser"> Get Started </b-button> </b-col>   
                 </b-row>
             </b-col>
-            <b-col cols= "6">
+            <b-col style="position:relative" cols= "6">
                 <img class="laptop" src="../assets/images/laptop.svg" alt = "laptop preview" />
             </b-col>
 
@@ -32,7 +32,7 @@
     <div class= "green">
         <b-row>
             <b-col>
-                <h1 class= "new"> New Way to Track Your Requirements </h1>
+                <h1 class= "new-1"> New Way to Track Your Requirements </h1>
                 <b-row class = "tasks">
                     <b-col cols="1"> <img  src="../assets/images/Task1.svg" alt = "checklist" /></b-col>
                     <b-col cols="11" >  <p class= "new">Fully personalized to track your requirements</p> </b-col>
@@ -53,7 +53,7 @@
                 </b-row>
             </b-col>
             <b-col>
-                <img class="laptop" src="../assets/images/Person_planning.svg" alt = "laptop preview" />
+                <img style="position:relative" class="women" src="../assets/images/Person_planning.svg" alt = "women planning" />
             </b-col>
         </b-row>
     </div>
@@ -84,16 +84,41 @@
     <div class= "first">
         <b-row> <h1 class= "new-1 text-center">Be The First One To Use It</h1> </b-row>
         <b-row> <p class= "new text-center">Gain early access by filling out your email below and help us grow into what you need!</p> </b-row>
-    
         <b-row class = "email">
-                    <b-col cols="12" md="8"><input type="text" v-model="message" placeholder="Your Email Address"></b-col>
-                    <b-col cols="6" md="4"><b-button variant= "primary" class="email-button"> Get Started </b-button> </b-col>   
+            <b-col cols="8" ><input type="text" placeholder="Your Email Address" v-model="newUser.email" ></b-col>
+            <b-col cols="4" ><b-button variant= "primary" class="email-button" v-on:click="addUser"> Get Started </b-button> </b-col>   
         </b-row>
     </div>
+ 
   </div>
 </template>
 
 <script>
+const firebaseConfig = require('@/firebaseConfig.js');
+const { emailsCollection } = firebaseConfig;
+
+export default {
+  name: 'LandingPage',
+  props: {
+  
+  },
+  firebase: {
+    users: emailsCollection
+  },
+  data() {
+    return {
+      newUser: {
+        email: ''
+      }
+    }
+  },
+  methods: {
+    addUser: function () {
+        emailsCollection.add(this.newUser);
+        this.newUser.email = '';
+    }
+  }
+}
 
 </script>
 
@@ -121,15 +146,20 @@
 .plan{
     display: flex;
     flex-direction: column;
-    padding:89px 0px 0px 104px;
+    padding:89px 0px 240px 104px;
     margin-right: 0px;
     max-width: 100%;
     &-green{
         background-color: #1AA9A5;
     }
-  
-
-    
+}
+.laptop{
+    position: absolute;
+    bottom: -300px;
+}
+.women{
+    position: absolute;
+    bottom: -100px;
 }
 
 .plan-head{
@@ -146,15 +176,14 @@
     color: #000000;
 }
 .email{
-    padding-top: 50px;
-    
-
+    padding-top: 40px;
+    width: 600px;
 }
 input{
     padding: 10px ;
     margin-right: 10px;
     width: 100%;
-   
+    height: 100%;
     border-radius: 6px;
     border-color:#1AA9A5;
 }
@@ -164,17 +193,14 @@ input{
     border-color: #1AA9A5;
     width: 100%;
     padding : 15px 30px;
-
 }
-
-
 .green{
     background-color: #1AA9A5;
     margin-right: 0px;
     max-width: 100%;
     display: flex;
     flex-direction: column;
-    padding:80px 0px 0px 104px;
+    padding:80px 0px 50px 104px;
 
     }
 
@@ -183,7 +209,7 @@ input{
    max-width: 100%;
     display: flex;
     flex-direction: column;
-    padding:20px 0px 89px 0px;
+    padding:0px 0px 89px 0px;
 
 }
 
@@ -219,7 +245,7 @@ h1.new{
 h1.new-1{
     font-weight: 600;
     font-size: 40px;
-    padding-top: 150px;
+    padding-top: 30px;
     padding-bottom: 0px;
 
     color: #FFFFFF;

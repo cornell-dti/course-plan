@@ -3,11 +3,7 @@
     <h1 class="title">School Requirements</h1>
 
     <!-- loop through reqs array of req objects -->
-<<<<<<< HEAD
-    <div class="req" v-for="(req, index) in reqs" v-bind:key="req.id">
-=======
     <div class="reqs" v-for="(req, index) in reqs" :key="req.id">
->>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
       <div class="row top">
         <p class="name col p-0">{{ req.name }}</p>
         <div class="col-1 text-right p-0">
@@ -38,14 +34,10 @@
       <div class="progress">
         <div
           class="progress-bar"
-<<<<<<< HEAD
-          v-bind:style="{ 'background-color': req.color, width: `${(req.progress/req.total)*100}%`}"
-=======
           :style="{
             'background-color': req.color,
             width: `${(req.progress / req.total) * 100}%`
           }"
->>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
           role="progressbar"
         ></div>
       </div>
@@ -54,49 +46,6 @@
         <strong>{{ req.progress }}/{{ req.total }}</strong>
         Total {{ req.count }} Inputted on Schedule
       </p>
-<<<<<<< HEAD
-
-      <!--View more college requirements -->
-      <div class="row top">
-        <div class="col-1 text-left p-0" >
-          <button v-bind:style="{ 'color': req.color }" class="btn" v-on:click="turnDetails(index, true)" style="color:#1AA9A5;">
-            <!-- svg for dropdown icon -->
-            <img
-              class="setting"
-              style="fill: #1AA9A5; color:#1AA9A5 "
-              src="../assets/images/dropdown-blue.svg"
-              alt="dropdown"
-            />
-          </button>
-        </div>
-         <div class="col text-center p-0 ">
-          <p class=" req-name" v-bind:style="{ 'color': req.color }" >VIEW ALL {{ req.type }} REQUIREMENTS</p>
-        </div>
-      </div>
-
-      <!--Show more of completed requirements -->
-      <div v-if="req.displayDetails">
-        <div class="row  top">
-          <p class="sub-title col p-0">In-Depth College Requirement</p>
-
-        </div>
-        <div
-          v-for="(subReq, id) in req.ongoing"
-          v-bind:key="subReq.id"
-          class="semesterView-wrapper"
-        >
-          <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
-          <div class="row top ">
-            <div class="col-1 middle text-left p-0">
-              <button class="btn btn-2" v-on:click="turnSubDetails(index, id, true)">
-                <!-- svg for dropdown icon -->
-                <img
-                  class="setting"
-                  style="fill: #1AA9A5; color:#1AA9A5 "
-                  src="../assets/images/dropdown.svg"
-                  alt="dropdown"
-                />
-=======
       <!-- display button (off when req.displayDetails is false) -->
       <button
         class="view btn"
@@ -115,7 +64,6 @@
               <button class="btn" @click="turnDetails(index, false)">
                 <!-- picture of close (x) icon -->
                 <img class="cancel" src="../assets/images/x.png" alt="X" />
->>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
               </button>
             </div>
             <div class="col middle  p-0">
@@ -125,39 +73,6 @@
               <p class="sup-req text-right p-0">( {{subReq.progress}} / {{subReq.total}} Credits)</p>
             </div>
           </div>
-<<<<<<< HEAD
-
-          <div class="sub-req-div" v-if="subReq.display">
-            <div >
-              <p>Additional Courses</p>
-              <ul class="striped-list">
-                <li
-                  v-for="subSubReq in subReq.additonalCourses"
-                  v-bind:key="subSubReq.id"
-
-                >
-                  <div class="row top-small">
-                    <div class="col">
-                      <p class="sup-req tex-left">{{subSubReq}}</p>
-                    </div>
-                    <div class="col">
-                      <p class="sup-req text-right p-0">( {{2}} / {{2}} Courses)</p>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <p>Classes to Fullfill Requirements</p>
-            <div class="row fuffill" bag="first-bag" >
-              <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-                <course
-                  v-bind="courses"
-                  v-bind:id="courses.subject"
-                  v-bind:compact="compact"
-                  class="semester-course"
-                />
-              </div>
-=======
           <!-- loop through uncompleted reqs in req.ongoing array -->
           <div class="list" v-for="value in req.ongoing" :key="value.id">
             <div class="separator"></div>
@@ -166,41 +81,9 @@
               <p class="col float-right text-right p-0 req-progress">
                 ({{ value.progress }}/{{ value.total }} {{ value.count }})
               </p>
->>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
             </div>
           </div>
         </div>
-<<<<<<< HEAD
-
-        <div class="row top">
-          <p class="sub-title col p-0">Completed Requirements</p>
-          <div class="col-1 text-right p-0">
-            <button class="btn" v-bind:style="{ 'color': req.color }">
-              <!-- Toggle to display completed reqs -->
-              <p
-                class="toggle"
-                v-if="req.displayCompleted"
-                v-on:click="turnCompleted(index, false)"
-              >HIDE</p>
-              <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
-            </button>
-          </div>
-        </div>
-        <div v-if="req.displayCompleted">
-          <div v-for="subReq in req.completed" v-bind:key="subReq.id" class="semesterView-wrapper">
-            <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
-            <div class="row top">
-              <div class="col-1 middle text-left p-0">
-                <button class="btn btn-2" v-on:click="turnSubDetails(index, id, true)">
-                  <!-- svg for dropdown icon -->
-                  <img
-                    class="setting"
-                    style="fill: #1AA9A5; color:#1AA9A5 "
-                    src="../assets/images/dropdown.svg"
-                    alt="dropdown"
-                  />
-                </button>
-=======
         <!-- Display completed section if there are completed reqs -->
         <div class="completed" v-if="req.completed.length > 0">
           <div class="row detail-bar">
@@ -222,7 +105,6 @@
                 <p class="col float-right text-right p-0 req-progress">
                   ({{ value.progress }}/{{ value.total }} {{ value.count }})
                 </p>
->>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
               </div>
               <p class="col sup-req middle ">{{subReq.name}}</p>
               <p
