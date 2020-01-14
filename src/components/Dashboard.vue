@@ -239,9 +239,9 @@ export default {
         enrollmentInfo: this.joinOrNAString(course.enrollment),
         latestLecInfo: this.joinOrNAString(course.lectureTimes),
         // TODO: CUReviews data
-        overallRating: null,
-        difficulty: null,
-        workload: null,
+        overallRating: 0,
+        difficulty: 0,
+        workload: 0,
         prerequisites: course.prereqs,
         description: course.description,
         isPreview: true,

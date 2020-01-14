@@ -52,24 +52,24 @@
           <div class="details">
             <div class="details-head">Class Ratings</div>
             <div class="details-ratings">
-              <h1 class="details-ratings-title">Overall Rating: <strong>{{ overallRating }}</strong></h1>
+              <h1 class="details-ratings-title">Overall Rating: <strong>{{ CUROverallRating }}</strong></h1>
               <div class="progress rating">
                 <div class="progress-bar" role="progressbar" :style="{ width: `${(overallRating/5)*100}%`, background: reviewsColor(overallRating) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
-              <h1 class="details-ratings-title">Difficulty: <strong>{{ difficulty }}</strong></h1>
+              <h1 class="details-ratings-title">Difficulty: <strong>{{ CURDifficulty }}</strong></h1>
               <div class="progress rating">
                 <div class="progress-bar" role="progressbar" :style="{ width: `${(difficulty/5)*100}%`, background: reviewsColor(difficulty, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
-              <h1 class="details-ratings-title">Workload: <strong>{{ workload }}</strong></h1>
+              <h1 class="details-ratings-title">Workload: <strong>{{ CURWorkload }}</strong></h1>
               <div class="progress rating">
                 <div class="progress-bar" role="progressbar" :style="{ width: `${(workload/5)*100}%`, background: reviewsColor(workload, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
-            <a :href="`https://www.cureviews.org/course/${ subject }/${ number }`" class="details-ratings-link" target="_blank">See all reviews</a>
+            <a :href="`https://www.cureviews.org/course/${ subject }/${ number }`" class="details-ratings-link" target="_blank">View All Reviews</a>
             <div class="details-head">Prerequisites</div>
             <p>{{ prerequisites }}</p>
             <div class="details-head">Description</div>
@@ -93,8 +93,8 @@ export default {
     color: String,
     // requirementsMap: Map,
     id: Number,
-    instructors: String, // array of strings
-    distributionCategories: String, // array of strings
+    instructors: String,
+    distributionCategories: String,
     enrollmentInfo: String,
     latestSem: String,
     latestLecInfo: String,
@@ -129,6 +129,26 @@ export default {
       }
 
       return (flip) ? colors[colors.length - 1 - index] : colors[index];
+    }
+  },
+
+  computed: {
+    CUROverallRating() {
+      if (this.overallRating === 0) return '';
+      if (!this.overallRating) return 'No Reviews';
+      return this.overallRating;
+    },
+
+    CURDifficulty() {
+      if (this.difficulty === 0) return '';
+      if (!this.difficulty) return 'No Reviews';
+      return this.difficulty;
+    },
+
+    CURWorkload() {
+      if (this.workload === 0) return '';
+      if (!this.workload) return 'No Reviews';
+      return this.workload;
     }
   }
 };
