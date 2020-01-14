@@ -405,7 +405,8 @@ export default {
         boxBorder: '',
         arrowColor: '',
         placeholderColor: '',
-        placeholder: placeholderText
+        placeholder: placeholderText,
+        acronym: ''
       };
       this.displayOptions.major.push(newMajor);
     },
