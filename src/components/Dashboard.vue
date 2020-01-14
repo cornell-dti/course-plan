@@ -4,13 +4,13 @@
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <navbar class="dashboard-nav" />
-        <requirements class="dashboard-reqs"
+        <requirements class="dashboard-reqs" v-if="isOnboarded"
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
          />
       </div>
-      <semesterview v-if="loaded"
+      <semesterview v-if="isOnboarded"
         :semesters="semesters"
         :compact="compactVal"
         :isBottomBar="bottomBar.isExpanded"
@@ -63,15 +63,16 @@ export default {
       semesters: [],
       currentClasses: [],
       user: {
-        major: 'CS',
-        majorFN: 'COMPUTER SCIENCE',
-        college: 'AS',
-        collegeFN: 'Arts and Science'
+        major: '',
+        majorFN: '',
+        college: '',
+        collegeFN: ''
       },
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
       isOnboarding: false,
+      isOnboarded: false,
       firstName: names[0],
       lastName: names[1]
     };
@@ -263,15 +264,21 @@ export default {
 
     startOnboarding() {
       this.isOnboarding = true;
-
-      // docRef.set({
-      //   semesters: []
-      // });
     },
 
     endOnboarding(onboardingData) {
-      const user = auth.currentUser;
-      const userEmail = user.email;
+      const user = {
+        // TODO: take into account multiple majors and colleges
+        major: onboardingData.userData.majors[0].acronym,
+        majorFN: onboardingData.userData.majors[0].fullName,
+        college: onboardingData.userData.colleges[0].acronym,
+        collegeFN: onboardingData.userData.colleges[0].fullName
+      };
+
+      this.user = user;
+      this.isOnboarded = true;
+
+      const userEmail = auth.currentUser.email;
       const docRef = userDataCollection.doc(userEmail);
 
       // set a new document with the user's name and information, and empty course data
