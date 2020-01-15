@@ -4,13 +4,13 @@
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <navbar class="dashboard-nav" />
-        <requirements class="dashboard-reqs" v-if="isOnboarded"
+        <requirements class="dashboard-reqs" v-if="loaded"
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
          />
       </div>
-      <semesterview v-if="isOnboarded"
+      <semesterview v-if="loaded"
         :semesters="semesters"
         :compact="compactVal"
         :isBottomBar="bottomBar.isExpanded"
@@ -72,7 +72,6 @@ export default {
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
       isOnboarding: false,
-      isOnboarded: false,
       firstName: names[0],
       lastName: names[1]
     };
@@ -91,6 +90,7 @@ export default {
         .then(doc => {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters);
+            this.user = this.parseUserData(doc.data().userData);
             this.loaded = true;
           } else {
             this.startOnboarding();
@@ -267,16 +267,10 @@ export default {
     },
 
     endOnboarding(onboardingData) {
-      const user = {
-        // TODO: take into account multiple majors and colleges
-        major: onboardingData.userData.majors[0].acronym,
-        majorFN: onboardingData.userData.majors[0].fullName,
-        college: onboardingData.userData.colleges[0].acronym,
-        collegeFN: onboardingData.userData.colleges[0].fullName
-      };
+      const user = this.parseUserData(onboardingData.userData);
 
       this.user = user;
-      this.isOnboarded = true;
+      this.loaded = true;
 
       const userEmail = auth.currentUser.email;
       const docRef = userDataCollection.doc(userEmail);
@@ -289,6 +283,18 @@ export default {
       });
 
       this.isOnboarding = false;
+    },
+
+    parseUserData(data) {
+      const user = {
+        // TODO: take into account multiple majors and colleges
+        major: data.majors[0].acronym,
+        majorFN: data.majors[0].fullName,
+        college: data.colleges[0].acronym,
+        collegeFN: data.colleges[0].fullName
+      };
+
+      return user;
     }
   }
 };
