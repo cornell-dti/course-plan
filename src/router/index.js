@@ -10,20 +10,18 @@ Vue.use(Router);
 
 const baseURL = process.env.BASE_URL;
 
+console.log({ baseURL });
+
 const router = new Router({
   mode: 'history',
   routes: [
-    {
-      path: '*',
-      redirect: `${baseURL}/dashboard`
-    },
     {
       path: `${baseURL}/login`,
       name: 'Login',
       component: Login
     },
     {
-      path: `${baseURL}/dashboard`,
+      path: `${baseURL}/`,
       name: 'Dashboard',
       component: Dashboard,
       meta: {
@@ -37,6 +35,10 @@ const router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '*',
+      redirect: `${baseURL}/`
     }
   ]
 });
