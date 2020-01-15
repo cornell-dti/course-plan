@@ -14,6 +14,10 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
+      path: '*',
+      redirect: `${baseURL}/`
+    },
+    {
       path: `${baseURL}/login`,
       name: 'Login',
       component: Login
@@ -33,10 +37,6 @@ const router = new Router({
       meta: {
         requiresAuth: true
       }
-    },
-    {
-      path: '*',
-      redirect: `${baseURL}/`
     }
   ]
 });
