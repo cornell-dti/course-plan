@@ -10,8 +10,6 @@ Vue.use(Router);
 
 const baseURL = process.env.BASE_URL;
 
-console.log({ baseURL });
-
 const router = new Router({
   mode: 'history',
   routes: [
