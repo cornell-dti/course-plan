@@ -15,7 +15,10 @@ const router = new Router({
   routes: [
     {
       path: '*',
-      redirect: `${baseURL}/`
+      redirect: `${baseURL}/`,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: `${baseURL}/login`,
