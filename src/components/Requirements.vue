@@ -6,13 +6,12 @@
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
       <div class="row top">
-        <p class="name col p-0">{{ req.name }}</p>
-        <div class="col-1 text-right p-0">
+        <p class="name col p-0">{{ req.name }} <span class="specific" v-if="req.specific">({{ req.specific }})</span></p>
+        <!-- <div class="col-1 text-right p-0">
           <button @click="modalShow = !modalShow" class="btn">
-            <!-- svg for settings icon -->
             <img class="settings" src="../assets/images/gear.svg" />
           </button>
-        </div>
+        </div> -->
       </div>
 
       <!-- progress bar settings -->
@@ -32,7 +31,7 @@
       <!--View more college requirements -->
       <div class="row top">
         <div class="col-1 p-0" >
-          <button v-bind:style="{ 'color': `#${req.color}` }" class="btn" v-on:click="toggleDetails(index)" style="color:#1AA9A5;">
+          <button v-bind:style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
             <!-- svg for dropdown icon -->
             <img
               class="arrow"
@@ -42,7 +41,7 @@
           </button>
         </div>
          <div class="col p-0 ">
-          <p class="req-name" v-bind:style="{ 'color': `#${req.color}` }">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</p>
+          <button class="btn req-name" v-bind:style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
         </div>
       </div>
 
@@ -154,12 +153,14 @@ export default {
           completed: [],
           name: `${group.groupName.toUpperCase()} REQUIREMENT`,
           group: group.groupName.toUpperCase(),
+          specific: (group.specific) ? group.specific : null,
           color: '105351',
           displayDetails: false,
           displayCompleted: false
         };
 
         group.reqs.forEach(req => {
+          // Account for progress type
           if (req.type) req.type = req.type.charAt(0).toUpperCase() + req.type.substring(1);
 
           // Create progress bar with requirement with progressBar = true
@@ -179,6 +180,7 @@ export default {
           }
         });
 
+        // Make number of requirements items progress bar in absense of identified progress metric
         if (!singleMenuRequirement.type) {
           singleMenuRequirement.type = 'Requirements';
           singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
@@ -201,6 +203,7 @@ export default {
         //   name: 'UNIVERSITY REQUIREMENT',
         //   group: 'UNIVERSITY',
         //   type: 'Credits',
+        //   specific: 'AS',
         //   fulfilled: 46,
         //   required: 120,
         //   color: '105351',
@@ -253,7 +256,7 @@ export default {
       const courses = [];
       this.semesters.forEach(semester => {
         semester.courses.forEach(course => {
-          courses.push(`${course.subject} ${course.code}`);
+          courses.push(`${course.subject} ${course.number}`);
         });
       });
 
@@ -277,6 +280,7 @@ export default {
       const universityReqs = reqsData.university;
       finalRequirementJSONs.push({
         groupName: 'University',
+        specific: null,
         reqs: await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements, 'university')
       });
 
@@ -285,6 +289,7 @@ export default {
       const collegeReqs = reqsData.college[college];
       finalRequirementJSONs.push({
         groupName: 'College',
+        specific: college,
         reqs: await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements, 'college')
       });
 
@@ -293,6 +298,7 @@ export default {
       const majorReqs = reqsData.major[major];
       finalRequirementJSONs.push({
         groupName: 'Major',
+        specific: major,
         reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, 'major')
       });
 
@@ -433,7 +439,6 @@ export default {
         const courseCodeObj = parseCourseCode(courseCode);
         const subject = courseCodeObj.subject.toUpperCase();
         const number = courseCodeObj.courseNumber;
-        console.log(courseCode);
 
         return new Promise((resolve, reject) => {
           // Using Firebase
@@ -577,6 +582,10 @@ h1.title {
   line-height: 16px;
 
   color: #000000;
+}
+
+.specific {
+  color: #757575;
 }
 
 .sub-title {

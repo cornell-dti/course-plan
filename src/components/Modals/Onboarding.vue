@@ -3,9 +3,10 @@
     <div class="onboarding-main">
       <div class="onboarding-content">
         <div class="onboarding-top">
-          <div class="onboarding-header">👏 Welcome to CoursePlan</div>
+          <div v-if="!isEditingProfile" class="onboarding-header">👏 Welcome to CoursePlan</div>
+          <div v-if="isEditingProfile" class="onboarding-header">👋 Hi {{ user.firstName }}</div>
           <div v-if="!isEditingProfile" class="onboarding-description">Let's get to know you first!</div>
-          <div v-if="isEditingProfile" class="onboarding-description">Edit your profile!</div>
+          <div v-if="isEditingProfile" class="onboarding-description">Let's edit your profile!</div>
         </div>
         <div class="onboarding-section">
           <div class="onboarding-subHeader">Your Name</div>
@@ -72,7 +73,7 @@
               </div>
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major (optional)</label>
+              <label class="onboarding-label">Your Major (required)</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
