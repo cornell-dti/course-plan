@@ -14,16 +14,12 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '*',
-      redirect: `${baseURL}/dashboard`
-    },
-    {
       path: `${baseURL}/login`,
       name: 'Login',
       component: Login
     },
     {
-      path: `${baseURL}/dashboard`,
+      path: `${baseURL}/`,
       name: 'Dashboard',
       component: Dashboard,
       meta: {
@@ -42,7 +38,13 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(x => x.meta.requiresAuth);
+  const { matched } = to;
+  if (matched.length === 0) {
+    next(baseURL);
+    return;
+  }
+
+  const requiresAuth = matched.some(x => x.meta.requiresAuth);
   const { currentUser } = firebase.auth();
 
   if (requiresAuth && !currentUser) {
