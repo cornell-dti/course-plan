@@ -2,7 +2,7 @@
     <div class="bottombar">
         <bottombarcourse
         :subject="data.subject"
-        :code="data.code"
+        :number="data.number"
         :name="data.name"
         :credits="data.credits"
         :semesters="data.semesters"

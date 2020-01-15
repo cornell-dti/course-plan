@@ -65,7 +65,8 @@ export default {
     return {
       confirmationText: '',
       key: 0,
-      activatedCourse: {}
+      activatedCourse: {},
+      isCourseClicked: false
     };
   },
   computed: {
@@ -161,10 +162,14 @@ export default {
       this.activatedCourse = course;
       this.key += 1;
       this.$emit('updateBar', course);
+      this.isCourseClicked = true;
     },
 
     closeBar() {
-      this.$emit('close-bar');
+      if (!this.isCourseClicked) {
+        this.$emit('close-bar');
+      }
+      this.isCourseClicked = false;
     }
   }
 };

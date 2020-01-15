@@ -253,7 +253,7 @@ export default {
       const courses = [];
       this.semesters.forEach(semester => {
         semester.courses.forEach(course => {
-          courses.push(`${course.subject} ${course.code}`);
+          courses.push(`${course.subject} ${course.number}`);
         });
       });
 

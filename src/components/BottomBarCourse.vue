@@ -1,5 +1,5 @@
 <template>
-    <div class="bottombar" v-bind:class="{ hide: !isPreview }">
+    <div class="bottombar" :class="{ hide: !isPreview }">
       <!-- have course square with just course subject and course code -->
       <div class="bottombar-tabs">
         <!-- Add tabs -->
@@ -20,31 +20,31 @@
             </div>
             <div class="section">
               <h1 class="info-head">Offered</h1>
-              <p class="info-fact">{{ joinIfExists(semesters) }}</p>
+              <p class="info-fact">{{ semesters }}</p>
             </div>
           </div>
           <div>
             <div class="section">
               <h1 class="info-head">Instructors</h1>
-              <p class="info-fact">{{ joinIfExists(instructors) }}</p>
+              <p class="info-fact">{{ instructors }}</p>
             </div>
             <div class="section">
               <h1 class="info-head">Enrollment Information</h1>
-              <p class="info-fact">{{ joinIfExists(enrollmentInfo) }}</p>
+              <p class="info-fact">{{ enrollmentInfo }}</p>
             </div>
           </div>
           <div>
             <div class="section">
               <h1 class="info-head">Distribution Category</h1>
-              <p class="info-fact">{{ joinIfExists(distributionCategories) }}</p>
+              <p class="info-fact">{{ distributionCategories }}</p>
             </div>
             <div class="section">
               <h1 class="info-head">{{ latestSem }} Lecture Info</h1>
-              <p class="info-fact">{{ joinIfExists(latestLecInfo) }}</p>
+              <p class="info-fact">{{ latestLecInfo }}</p>
             </div>
           </div>
           <div class="info-link">
-            <a :href="`https://classes.cornell.edu/browse/roster/${ latestSem }/class/${ subject }/${ code }`" class="info-link-blue" target="_blank">View Course Information on Roster</a>
+            <a :href="`https://classes.cornell.edu/browse/roster/${ latestSem }/class/${ subject }/${ number }`" class="info-link-blue" target="_blank">View Course Information on Roster</a>
           </div>
           </div>
         </div>
@@ -52,26 +52,26 @@
           <div class="details">
             <div class="details-head">Class Ratings</div>
             <div class="details-ratings">
-              <h1 class="details-ratings-title">Overall Rating: <strong>{{ overallRating }}</strong></h1>
+              <h1 class="details-ratings-title">Overall Rating: <strong>{{ CUROverallRating }}</strong></h1>
               <div class="progress rating">
-                <div class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" :style="{ width: `${(overallRating/5)*100}%`, background: reviewsColor(overallRating) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
-              <h1 class="details-ratings-title">Difficulty: <strong>{{ difficulty }}</strong></h1>
+              <h1 class="details-ratings-title">Difficulty: <strong>{{ CURDifficulty }}</strong></h1>
               <div class="progress rating">
-                <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" :style="{ width: `${(difficulty/5)*100}%`, background: reviewsColor(difficulty, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
-              <h1 class="details-ratings-title">Workload: <strong>{{ workload }}</strong></h1>
+              <h1 class="details-ratings-title">Workload: <strong>{{ CURWorkload }}</strong></h1>
               <div class="progress rating">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" :style="{ width: `${(workload/5)*100}%`, background: reviewsColor(workload, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
-            <a :href="`https://www.cureviews.org/course/${ subject }/${ code }`" class="details-ratings-link" target="_blank">See all reviews</a>
+            <a :href="`https://www.cureviews.org/course/${ subject }/${ number }`" class="details-ratings-link" target="_blank">View All Reviews</a>
             <div class="details-head">Prerequisites</div>
-            <p>{{ joinIfExists(prerequisites) }}</p>
+            <p>{{ prerequisites }}</p>
             <div class="details-head">Description</div>
             <p>{{ description }}</p>
           </div>
@@ -86,22 +86,22 @@
 export default {
   props: {
     subject: String,
-    code: Number,
+    number: String,
     name: String,
-    credits: String,
-    semesters: Array,
+    credits: Number,
+    semesters: String,
     color: String,
     // requirementsMap: Map,
     id: Number,
-    instructors: Array, // array of strings
-    distributionCategories: Array, // array of strings
-    enrollmentInfo: Array,
+    instructors: String,
+    distributionCategories: String,
+    enrollmentInfo: String,
     latestSem: String,
-    latestLecInfo: Array,
+    latestLecInfo: String,
     overallRating: Number,
     difficulty: Number,
     workload: Number,
-    prerequisites: Array,
+    prerequisites: String,
     description: String,
     isPreview: Boolean,
     isExpanded: Boolean
@@ -114,6 +114,41 @@ export default {
 
     joinIfExists(arr) {
       return (arr) ? arr.join(',') : '';
+    },
+
+    reviewsColor(review, flip = false) {
+      const colors = ['#d9534f', '#f0ad4e', '#5cb85c'];
+      let index;
+
+      if (review < 2) {
+        index = 0;
+      } else if (review >= 2 && review < 4) {
+        index = 1;
+      } else {
+        index = 2;
+      }
+
+      return (flip) ? colors[colors.length - 1 - index] : colors[index];
+    }
+  },
+
+  computed: {
+    CUROverallRating() {
+      if (this.overallRating === 0) return '';
+      if (!this.overallRating) return 'No Reviews';
+      return this.overallRating;
+    },
+
+    CURDifficulty() {
+      if (this.difficulty === 0) return '';
+      if (!this.difficulty) return 'No Reviews';
+      return this.difficulty;
+    },
+
+    CURWorkload() {
+      if (this.workload === 0) return '';
+      if (!this.workload) return 'No Reviews';
+      return this.workload;
     }
   }
 };
@@ -227,6 +262,10 @@ export default {
         color: #4181FF;
       }
     }
+  }
+
+  .progress-bar {
+    transition: width 0s ease;
   }
 
   .rating {
