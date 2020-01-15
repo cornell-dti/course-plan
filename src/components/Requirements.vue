@@ -7,11 +7,6 @@
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
       <div class="row top">
         <p class="name col p-0">{{ req.name }} <span class="specific" v-if="req.specific">({{ req.specific }})</span></p>
-        <!-- <div class="col-1 text-right p-0">
-          <button @click="modalShow = !modalShow" class="btn">
-            <img class="settings" src="../assets/images/gear.svg" />
-          </button>
-        </div> -->
       </div>
 
       <!-- progress bar settings -->
