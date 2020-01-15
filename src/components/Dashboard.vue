@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard">
-    <onboarding class="dashboard-onboarding" :class="{ 'dashboard--hidden': !isOnboarding }" :firstName="firstName" :lastName="lastName" @onboard="endOnboarding" />
+    <onboarding class="dashboard-onboarding" v-if="isOnboarding " @onboard="endOnboarding" :isEditingProfile="isEditingProfile" :user="user"/>
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
-        <navbar class="dashboard-nav" />
+        <navbar class="dashboard-nav" @editProfile="editProfile" />
         <requirements class="dashboard-reqs" v-if="loaded"
           :semesters="semesters"
           :user="user"
@@ -61,26 +61,29 @@ export default {
       compactVal: false,
       currSemID: 1,
       semesters: [],
+      firebaseSems: [],
       currentClasses: [],
       user: {
         major: '',
         majorFN: '',
         college: '',
-        collegeFN: ''
+        collegeFN: '',
+        firstName: names[0],
+        lastName: names[1],
+        middleName: '',
       },
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
       isOnboarding: false,
-      firstName: names[0],
-      lastName: names[1]
+      isEditingProfile: false
     };
   },
   mounted() {
-    this.getSemestersFromUser();
+    this.getInformationFromUser();
   },
   methods: {
-    getSemestersFromUser() {
+    getInformationFromUser() {
       const user = auth.currentUser;
       const userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);
@@ -90,7 +93,8 @@ export default {
         .then(doc => {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters);
-            this.user = this.parseUserData(doc.data().userData);
+            this.firebaseSems = doc.data().semesters;
+            this.user = this.parseUserData(doc.data().userData, doc.data().name);
             this.loaded = true;
           } else {
             this.startOnboarding();
@@ -267,7 +271,7 @@ export default {
     },
 
     endOnboarding(onboardingData) {
-      const user = this.parseUserData(onboardingData.userData);
+      const user = this.parseUserData(onboardingData.userData, onboardingData.name);
 
       this.user = user;
       this.loaded = true;
@@ -275,26 +279,36 @@ export default {
       const userEmail = auth.currentUser.email;
       const docRef = userDataCollection.doc(userEmail);
 
-      // set a new document with the user's name and information, and empty course data
-      docRef.set({
+      const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,
-        semesters: []
-      });
+        semesters: this.firebaseSems,
+      };
+
+      // set the new name and userData, along with either an empty list of semesters or preserve the old list
+      docRef.set(data);
 
       this.isOnboarding = false;
     },
 
-    parseUserData(data) {
+    parseUserData(data, name) {
       const user = {
         // TODO: take into account multiple majors and colleges
         major: data.majors[0].acronym,
         majorFN: data.majors[0].fullName,
         college: data.colleges[0].acronym,
-        collegeFN: data.colleges[0].fullName
+        collegeFN: data.colleges[0].fullName,
+        firstName: name.firstName,
+        middleName: name.middleName,
+        lastName: name.lastName
       };
 
       return user;
+    },
+
+    editProfile() {
+      this.isOnboarding = true;
+      this.isEditingProfile = true;
     }
   }
 };
@@ -328,10 +342,6 @@ export default {
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  }
-
-  &--hidden {
-    display: none;
   }
 }
 

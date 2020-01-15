@@ -4,14 +4,15 @@
       <div class="onboarding-content">
         <div class="onboarding-top">
           <div class="onboarding-header">👏Welcome to CoursePlan</div>
-          <div class="onboarding-description">Let's get to know you first!</div>
+          <div v-if="!isEditingProfile" class="onboarding-description">Let's get to know you first!</div>
+          <div v-if="isEditingProfile" class="onboarding-description">Edit your profile!</div>
         </div>
         <div class="onboarding-section">
           <div class="onboarding-subHeader">Your Name</div>
           <div class="onboarding-inputs onboarding-inputs--name">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
               <label class="onboarding-label">First Name*</label>
-              <input class="onboarding-input" :value="firstName" />
+              <input class="onboarding-input" v-model="firstName" />
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
               <label class="onboarding-label">Middle Name</label>
@@ -19,7 +20,7 @@
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
               <label class="onboarding-label">Last Name*</label>
-              <input class="onboarding-input" :value="lastName" />
+              <input class="onboarding-input" v-model="lastName" />
             </div>
           </div>
         </div>
@@ -203,17 +204,38 @@ const clickOutside = {
 
 export default {
   props: {
-    firstName: String,
-    lastName: String
+    isEditingProfile: Boolean,
+    user: Object
   },
   data() {
+    // Set dropdown colleges and majors if already filled out
+    let collegeText = placeholderText;
+    let collegeAcronym = '';
+    let collegePlaceholderColor = '';
+    if (this.user.college !== '') {
+      collegeText = this.user.collegeFN;
+      collegeAcronym = this.user.college;
+      collegePlaceholderColor = '#757575';
+    }
+
+    let majorText = placeholderText;
+    let majorAcronym = '';
+    let majorPlaceholderColor = '';
+    if (this.user.major !== '') {
+      majorText = this.user.majorFN;
+      majorAcronym = this.user.major;
+      majorPlaceholderColor = '#757575';
+    }
+
     return {
       reqsData,
       // TODO: Get real college, major, and minor lists
       colleges: {},
       majors: {},
       minors: {},
-      middleName: '',
+      firstName: this.user.firstName,
+      middleName: this.user.middleName,
+      lastName: this.user.lastName,
       displayOptions: {
         college: [
           {
@@ -221,9 +243,9 @@ export default {
             stopClose: false,
             boxBorder: '',
             arrowColor: '',
-            placeholderColor: '',
-            placeholder: placeholderText,
-            acronym: ''
+            placeholderColor: collegePlaceholderColor,
+            placeholder: collegeText,
+            acronym: collegeAcronym
           }
         ],
         major: [
@@ -232,9 +254,9 @@ export default {
             stopClose: false,
             boxBorder: '',
             arrowColor: '',
-            placeholderColor: '',
-            placeholder: placeholderText,
-            acronym: ''
+            placeholderColor: majorPlaceholderColor,
+            placeholder: majorText,
+            acronym: majorAcronym
           }
         ],
         minor: [
