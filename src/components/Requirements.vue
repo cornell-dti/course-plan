@@ -253,7 +253,7 @@ export default {
       const courses = [];
       this.semesters.forEach(semester => {
         semester.courses.forEach(course => {
-          courses.push(`${course.subject} ${course.number}`);
+          courses.push(`${course.subject} ${course.code}`);
         });
       });
 
@@ -433,6 +433,7 @@ export default {
         const courseCodeObj = parseCourseCode(courseCode);
         const subject = courseCodeObj.subject.toUpperCase();
         const number = courseCodeObj.courseNumber;
+        console.log(courseCode);
 
         return new Promise((resolve, reject) => {
           // Using Firebase

@@ -3,7 +3,7 @@
     <div class="onboarding-main">
       <div class="onboarding-content">
         <div class="onboarding-top">
-          <div class="onboarding-header">👏Welcome to CoursePlan</div>
+          <div class="onboarding-header">👏 Welcome to CoursePlan</div>
           <div v-if="!isEditingProfile" class="onboarding-description">Let's get to know you first!</div>
           <div v-if="isEditingProfile" class="onboarding-description">Edit your profile!</div>
         </div>
@@ -29,7 +29,7 @@
           <div class="onboarding-subHeader">Your College</div>
           <div class="onboarding-inputs">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your College*</label>
+              <label class="onboarding-label">Your College (required)</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -72,7 +72,7 @@
               </div>
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major*</label>
+              <label class="onboarding-label">Your Major (optional)</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -123,7 +123,7 @@
               </div>
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Minor</label>
+              <label class="onboarding-label">Your Minor (optional)</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -590,11 +590,10 @@ export default {
   }
 
   &-button {
-    background: #D7D7D7;
-    border: 0.5px solid #C4C4C4;
+    background: #1AA9A5;
+    border: 0;
     box-sizing: border-box;
-    border-radius: 9px;
-
+    border-radius: 5px;
     font-weight: bold;
     font-size: 14px;
     line-height: 17px;
@@ -606,7 +605,7 @@ export default {
     &:hover,
     &:focus,
     &:active {
-      background: #1AA9A5;
+      background: #D7D7D7;
     }
   }
 

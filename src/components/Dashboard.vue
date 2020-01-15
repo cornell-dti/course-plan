@@ -73,7 +73,7 @@ export default {
         collegeFN: '',
         firstName: names[0],
         lastName: names[1],
-        middleName: '',
+        middleName: ''
       },
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
@@ -282,7 +282,7 @@ export default {
     closeBar() {
       this.bottomBar.isExpanded = false;
     },
-    
+
     startOnboarding() {
       this.isOnboarding = true;
     },
@@ -299,13 +299,15 @@ export default {
       const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,
-        semesters: this.firebaseSems,
+        semesters: this.firebaseSems
       };
 
       // set the new name and userData, along with either an empty list of semesters or preserve the old list
       docRef.set(data);
 
       this.isOnboarding = false;
+
+      this.updateRequirementsMenu();
     },
 
     parseUserData(data, name) {
@@ -327,7 +329,7 @@ export default {
       this.isOnboarding = true;
       this.isEditingProfile = true;
     },
-    
+
     joinOrNAString(arr) {
       return (arr.length !== 0 && arr[0] !== '') ? arr.join(', ') : 'N/A';
     }
