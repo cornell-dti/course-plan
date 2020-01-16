@@ -7,21 +7,21 @@
             </b-col>
              <b-col cols ="3" align-self="center">
                  <b-row>
-                    <b-button style="margin-right: 20px;" variant="outline-primary" class="signin-button"> Sign in </b-button> 
-                    <b-button variant="outline-primary" class="signin-button"> Log in </b-button> 
+                    <b-button style="margin-right: 20px;" variant="outline-primary" class="signin-button"> Sign in </b-button>
+                    <b-button variant="outline-primary" class="signin-button"> Log in </b-button>
                 </b-row>
             </b-col>
         </b-row>
     </div>
 
     <div class="plan">
-        <b-row> 
+        <b-row>
             <b-col cols="5">
-                <h1 class="plan-head">Plan Your Courses Ahead</h1> 
+                <h1 class="plan-head">Plan Your Courses Ahead</h1>
                 <p class="plan-subhead">Introducing the new way to plan courses at Cornell</p>
                 <b-row class = "email">
                     <b-col cols="12" md="8"><input  class= "email-input" type="text" placeholder="Your Email Address" v-model="newUser.email" ></b-col>
-                    <b-col cols="6" md="4"><b-button variant= "primary" class="email-button" v-on:click="addUser"> Get Started </b-button> </b-col>   
+                    <b-col cols="6" md="4"><b-button variant= "primary" class="email-button" v-on:click="addUser"> Get Started </b-button> </b-col>
                 </b-row>
             </b-col>
             <b-col style="position:relative" cols= "6">
@@ -44,7 +44,7 @@
                 <b-row class = "tasks">
                     <b-col cols="1"> <img  src="../assets/images/Task2.svg" alt = "browser" /></b-col>
                     <b-col cols="11" >  <p class= "new">Customizable interface to view your courses</p> </b-col>
-                    
+
                 </b-row>
                 <b-row class = "tasks">
                     <b-col cols="1"> <img  src="../assets/images/Task3.svg" alt = "Network" /></b-col>
@@ -67,7 +67,7 @@
                   <img class="preview" src="../assets/images/Drag1.svg" alt = "Dragging preview" />
             </b-col>
             <b-col>
-                <h1 class= "new">Drage Your Course In</h1>  
+                <h1 class= "new">Drage Your Course In</h1>
             </b-col>
         </b-row>
     </div>
@@ -75,12 +75,12 @@
     <div class= "blue">
         <b-row>
             <b-col>
-                <h1 class= "new">Plan Your Semesters</h1>  
+                <h1 class= "new">Plan Your Semesters</h1>
             </b-col>
             <b-col>
                   <img class="schedule" src="../assets/images/schedule.svg" alt = "Dragging preview" />
             </b-col>
-            
+
         </b-row>
     </div>
 
@@ -89,21 +89,22 @@
         <b-row> <p class= "new text-center">Gain early access by filling out your email below and help us grow into what you need!</p> </b-row>
         <b-row class = "email">
             <b-col cols="8" ><input type="text" placeholder="Your Email Address" v-model="newUser.email" ></b-col>
-            <b-col cols="4" ><b-button variant= "primary" class="email-button" v-on:click="addUser"> Get Started </b-button> </b-col>   
+            <b-col cols="4" ><b-button variant= "primary" class="email-button" v-on:click="addUser"> Get Started </b-button> </b-col>
         </b-row>
     </div>
- 
+
   </div>
 </template>
 
 <script>
 const firebaseConfig = require('@/firebaseConfig.js');
+
 const { emailsCollection } = firebaseConfig;
 
 export default {
   name: 'LandingPage',
   props: {
-  
+
   },
   firebase: {
     users: emailsCollection
@@ -113,15 +114,15 @@ export default {
       newUser: {
         email: ''
       }
-    }
+    };
   },
   methods: {
-    addUser: function () {
-        emailsCollection.add(this.newUser);
-        this.newUser.email = '';
+    addUser() {
+      emailsCollection.add(this.newUser);
+      this.newUser.email = '';
     }
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
