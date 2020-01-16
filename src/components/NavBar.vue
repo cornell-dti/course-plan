@@ -4,7 +4,7 @@
       <div class="navbar-iconWrapper">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
       </div>
-      <div class="navbar-iconWrapper" id="profileIcon"></div>
+      <div class="navbar-iconWrapper" id="profileIcon" @click="editProfile"></div>
       <div class="navbar-iconWrapper" id="star"></div>
     </div>
     <div class="navbar-bottom">
@@ -25,6 +25,9 @@ export default {
         // TODO: error
         console.log(error);
       });
+    },
+    editProfile() {
+      this.$emit('editProfile');
     }
   }
 };

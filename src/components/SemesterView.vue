@@ -144,7 +144,7 @@ export default {
 
 <style scoped lang="scss">
 .semesterView {
-
+  width: 100%;
   display: flex;
   flex-direction: column;
 

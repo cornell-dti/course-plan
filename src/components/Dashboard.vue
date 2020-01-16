@@ -1,15 +1,16 @@
 <template>
-  <div class="dashboard" v-if="loaded">
+  <div class="dashboard">
+    <onboarding class="dashboard-onboarding" v-if="isOnboarding " @onboard="endOnboarding" :isEditingProfile="isEditingProfile" :user="user"/>
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
-        <navbar class="dashboard-nav" />
-        <requirements class="dashboard-reqs"
+        <navbar class="dashboard-nav" @editProfile="editProfile" />
+        <requirements class="dashboard-reqs" v-if="loaded"
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
          />
       </div>
-      <semesterview
+      <semesterview v-if="loaded"
         :semesters="semesters"
         :compact="compactVal"
         :isBottomBar="bottomBar.isExpanded"
@@ -35,6 +36,8 @@ import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
 import BottomBar from '@/components/BottomBar';
 import NavBar from '@/components/NavBar';
+import Onboarding from '@/components/Modals/Onboarding';
+
 
 import '@/vueDragulaConfig';
 
@@ -43,6 +46,7 @@ Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
 Vue.component('bottombar', BottomBar);
 Vue.component('navbar', NavBar);
+Vue.component('onboarding', Onboarding);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
@@ -53,28 +57,36 @@ export default {
     bottomCourses: Array
   },
   data() {
+    const user = auth.currentUser;
+    const names = user.displayName.split(' ');
     return {
       loaded: false,
       compactVal: false,
       currSemID: 1,
       semesters: [],
+      firebaseSems: [],
       currentClasses: [],
       user: {
-        major: 'CS',
-        majorFN: 'COMPUTER SCIENCE',
-        college: 'AS',
-        collegeFN: 'Arts and Science'
+        major: '',
+        majorFN: '',
+        college: '',
+        collegeFN: '',
+        firstName: names[0],
+        lastName: names[1],
+        middleName: ''
       },
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
-      requirementsKey: 0
+      requirementsKey: 0,
+      isOnboarding: false,
+      isEditingProfile: false
     };
   },
   mounted() {
-    this.getSemestersFromUser();
+    this.getInformationFromUser();
   },
   methods: {
-    getSemestersFromUser() {
+    getInformationFromUser() {
       const user = auth.currentUser;
       const userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);
@@ -84,11 +96,11 @@ export default {
         .then(doc => {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters);
+            this.firebaseSems = doc.data().semesters;
+            this.user = this.parseUserData(doc.data().userData, doc.data().name);
             this.loaded = true;
           } else {
-            docRef.set({
-              semesters: []
-            });
+            this.startOnboarding();
           }
         })
         .catch(error => {
@@ -271,6 +283,53 @@ export default {
       this.bottomBar.isExpanded = false;
     },
 
+    startOnboarding() {
+      this.isOnboarding = true;
+    },
+
+    endOnboarding(onboardingData) {
+      const user = this.parseUserData(onboardingData.userData, onboardingData.name);
+
+      this.user = user;
+      this.loaded = true;
+
+      const userEmail = auth.currentUser.email;
+      const docRef = userDataCollection.doc(userEmail);
+
+      const data = {
+        name: onboardingData.name,
+        userData: onboardingData.userData,
+        semesters: this.firebaseSems
+      };
+
+      // set the new name and userData, along with either an empty list of semesters or preserve the old list
+      docRef.set(data);
+
+      this.isOnboarding = false;
+
+      this.updateRequirementsMenu();
+    },
+
+    parseUserData(data, name) {
+      const user = {
+        // TODO: take into account multiple majors and colleges
+        major: data.majors[0].acronym,
+        majorFN: data.majors[0].fullName,
+        college: data.colleges[0].acronym,
+        collegeFN: data.colleges[0].fullName,
+        firstName: name.firstName,
+        middleName: name.middleName,
+        lastName: name.lastName
+      };
+
+      return user;
+    },
+
+    editProfile() {
+      this.isOnboarding = true;
+      this.isEditingProfile = true;
+    },
+
     joinOrNAString(arr) {
       return (arr.length !== 0 && arr[0] !== '') ? arr.join(', ') : 'N/A';
     }
@@ -293,6 +352,19 @@ export default {
 
   &-reqs {
     margin-left: 4.5rem;
+  }
+
+  /* The Modal (background) */
+  &-onboarding {
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
   }
 }
 
