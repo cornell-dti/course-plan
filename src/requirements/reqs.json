@@ -106,7 +106,7 @@
                             "uniqueIncludes": 0
                         },
                         {
-                            "name": "11 Language Course Credits",
+                            "name": "Language Course Credits",
                             "search": "subject",
                             "includes": [
                                 [
@@ -149,7 +149,7 @@
                     ]
                 },
                 {
-                    "name": "Four Courses in Physical & Biological Sciences and Mathematics & Quantitative Reasoning",
+                    "name": "Physical & Biological Sciences and Mathematics & Quantitative Reasoning",
                     "search": "catalogDistr",
                     "includes": [
                         [
@@ -186,7 +186,7 @@
                     "uniqueIncludes": 0
                 },
                 {
-                    "name": "Five Courses in Liberal Arts",
+                    "name": "Liberal Arts",
                     "search": "catalogDistr",
                     "includes": [
                         [

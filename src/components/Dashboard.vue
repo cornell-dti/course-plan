@@ -13,6 +13,7 @@
           :key="requirementsKey"
           :isBottomPreview="bottomBar.isPreview"
           :isBottomBar="bottomBar.isExpanded"
+          @requirementsMap="loadRequirementsMap"
          />
       </div>
       <semesterview v-if="loaded"
@@ -69,6 +70,7 @@ export default {
       compactVal: false,
       currSemID: 1,
       semesters: [],
+      requirementsMap : {},
       firebaseSems: [],
       currentClasses: [],
       user: {
@@ -194,9 +196,11 @@ export default {
       // TODO: pick color if a new course instead of this default
       const color = course.color || '2BBCC6';
 
-      const courseMap = new Map();
-      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
-      courseMap.set('CA', ['CS 2110']);
+      if (`${subject} ${number}` in this.requirementsMap) {
+        console.log("Yay");
+      }
+
+      const alerts = {requirement: "Hi", caution: null};
 
       // TODO: Need courseMap to be generated, check to change
       const newCourse = {
@@ -214,8 +218,8 @@ export default {
         distributions,
         lastRoster,
         color,
-        check: true,
-        requirementsMap: courseMap
+        alerts,
+        check: true
       };
 
       // Update requirements menu
@@ -238,6 +242,11 @@ export default {
       this.requirementsKey += 1;
     },
 
+    loadRequirementsMap(map) {
+      // Get map of requirements. TODO: Update courses to enable information
+      this.requirementsMap = map;
+    },
+
     updateBar(course) {
       // Update Bar Information
       this.bottomBar = {
@@ -248,7 +257,6 @@ export default {
         semesters: this.joinOrNAString(course.semesters),
         color: course.color,
         latestSem: course.lastRoster,
-        // requirementsMap: Map,
         id: 1,
         // Array data
         instructors: this.joinOrNAString(course.instructors),

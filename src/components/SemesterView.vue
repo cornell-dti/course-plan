@@ -79,7 +79,6 @@ export default {
         sem.courses.forEach(course => {
           const newCourse = clone(course);
           newCourse.compact = true;
-          newCourse.requirementsMap = new Map(course.requirementsMap);
           newCourses.push(newCourse);
         });
         newSem.courses = newCourses;

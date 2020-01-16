@@ -30,7 +30,7 @@
           <span v-if="notCompact && semesterString" class="course-semesters">{{
             semesterString
           }}</span>
-          <div v-if="notCompact" class="course-outerWrapper course-tooltip">
+          <div v-if="notCompact && alerts.requirement" class="course-outerWrapper course-tooltip">
             <div class="course-iconWrapper course-iconWrapper--info">
               <img class="course-icon course-icon--info" src="../assets/images/info.svg" />
             </div>
@@ -39,7 +39,7 @@
               v-html="requirementString"
             ></div>
           </div>
-          <div class="course-outerWrapper course-tooltip">
+          <div v-if="alerts.caution" class="course-outerWrapper course-tooltip">
             <div class="course-iconWrapper">
               <img class="course-icon" src="../assets/images/caution.svg" />
             </div>
@@ -90,7 +90,7 @@ export default {
     credits: Number,
     semesters: Array,
     color: String,
-    requirementsMap: Map,
+    alerts: Object,
     compact: Boolean,
     id: String,
     active: Boolean
@@ -112,67 +112,12 @@ export default {
 
     // TODO: bold requirements
     requirementString() {
-      if (
-        this.requirementsMap === null
-        || this.requirementsMap.keys() === null
-        || this.requirementsMap.keys().length === 0
-      ) {
-        return '';
-      }
-
-      const keys = Array.from(this.requirementsMap.keys());
-      let str = 'Satisfies ';
-      const endStr = '</b> requirement';
-      const { length } = keys;
-      if (length === 1) {
-        return `${str}<b>${keys[0]}${endStr}`;
-      }
-
-      // loop through all but the last requirement and comma separate
-      for (let i = 0; i < length - 1; i += 1) {
-        str += `<b>${keys[i]}</b>, `;
-      }
-
-      // remove the comma if only 2 requirements
-      if (length === 2) {
-        str = `${str.substring(0, str.length - 2)} `;
-      }
-
-      return `${str}and <b>${keys[length - 1]}${endStr}`;
+      return this.alerts.requirement;
     },
 
     // TODO: too much DOM manipulation that vue should fix - talk to Sam
     cautionString() {
-      if (
-        this.requirementsMap === null
-        || this.requirementsMap.keys() === null
-        || this.requirementsMap.keys().length === 0
-      ) {
-        return null;
-      }
-
-      let str = '';
-      this.requirementsMap.forEach((courses, req) => {
-        str += '<li>';
-        if (courses.length === 1) {
-          str += `${courses[0]} also fulfills <b>${req}</b> requirement`;
-        } else {
-          // loop through all but the last course and comma separate
-          for (let i = 0; i < courses.length - 1; i += 1) {
-            str += `${courses[i]}, `;
-          }
-
-          // remove the comma if only 2 requirements
-          if (courses.length === 2) {
-            str = `${str.substring(0, str.length - 2)} `;
-          }
-
-          str = `${str}and ${courses[courses.length - 1]} also fulfill <b>${req}</b> requirement`;
-        }
-        str += '</li>';
-      });
-
-      return str;
+      return this.alerts.caution;
     },
 
     semesterString() {

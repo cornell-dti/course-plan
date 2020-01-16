@@ -103,6 +103,8 @@ export default {
     service.eventBus.$on('drop', () => {
       this.$data.scrollable = true;
     });
+
+    this.duplicateCautions();
   },
 
   beforeDestroy() {
@@ -282,6 +284,16 @@ export default {
 
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
+    },
+
+    duplicateCautions() {
+      if (this.courses) {
+        const coursesMap = {};
+        this.courses.forEach(course => {
+          if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = "Duplicate";
+          coursesMap[`${course.subject} ${course.number}`] = true;
+        })
+      }
     }
   }
 };
