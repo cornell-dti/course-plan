@@ -3,7 +3,7 @@
     <onboarding class="dashboard-onboarding" v-if="isOnboarding " @onboard="endOnboarding" :isEditingProfile="isEditingProfile" :user="user"/>
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
-        <navbar class="dashboard-nav" 
+        <navbar class="dashboard-nav"
         @editProfile="editProfile"
         :isBottomPreview="bottomBar.isPreview"
         />

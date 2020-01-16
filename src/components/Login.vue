@@ -67,7 +67,7 @@ export default {
           this.$store.commit('setCurrentUser', user);
           this.$store.dispatch('fetchUserProfile');
           this.performingRequest = false;
-          this.$router.push('/dashboard');
+          this.$router.push(`${process.env.BASE_URL}/`);
         })
         .catch(err => {
           console.log(err);
@@ -86,7 +86,7 @@ export default {
           this.performingRequest = false;
           console.log(firebase.auth().currentUser);
           console.log(user.additionalUserInfo.profile);
-          this.$router.push('/dashboard');
+          this.$router.push(`${process.env.BASE_URL}/`);
         })
         .catch(err => {
           console.log(err);

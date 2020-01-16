@@ -475,7 +475,7 @@ export default {
 
   &-cancel {
     cursor: pointer;
-    text-align: right; 
+    text-align: right;
 
     &-icon {
       margin: 25px 25px 0 0;
