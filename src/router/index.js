@@ -16,7 +16,7 @@ const router = new Router({
   routes: [
     {
       path: '*',
-      redirect: `${baseURL}/landing`
+      redirect: `${baseURL}/dashboard`
     },
     {
       path: `${baseURL}/landing`,
