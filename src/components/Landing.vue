@@ -8,7 +8,7 @@
              <b-col cols ="3" align-self="center">
                  <b-row>
                     <b-button style="margin-right: 20px;" variant="outline-primary" class="signin-button"> Sign in </b-button>
-                    <b-button variant="outline-primary" class="signin-button"> Log in </b-button>
+                    <b-button @click="socialLogin" variant="outline-primary" class="signin-button"> Log in </b-button>
                 </b-row>
             </b-col>
         </b-row>
