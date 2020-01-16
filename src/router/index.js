@@ -5,7 +5,6 @@ import firebase from 'firebase';
 import Login from '@/components/Login';
 import Dashboard from '@/components/Dashboard';
 import Settings from '@/components/Settings';
-import Landing from '@/components/Landing';
 
 Vue.use(Router);
 
