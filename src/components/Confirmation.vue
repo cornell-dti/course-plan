@@ -32,8 +32,7 @@ export default {
 .confirmation {
   position: fixed;
   z-index: 10;
-  height: 42px;
-  left: 296px;
+  left: 50%;
   top: 16px;
   background: #ffffff;
   border-radius: 6px;
@@ -42,10 +41,8 @@ export default {
   flex-direction: row;
 
   &-left {
-    width: 42px;
-    height: 42px;
-    left: 296px;
-    top: 16px;
+    min-width: 42px;
+    min-height: 42px;
 
     background: #3eb53b;
     border-radius: 5px;
@@ -60,22 +57,19 @@ export default {
   &-left img {
     width: 20px;
     height: 20px;
-    left: 304px;
-    top: 24px;
 
     margin: auto;
   }
 
   &-text {
     height: 16px;
-    left: 352px;
-    top: 32px;
+    min-width: 10rem;
 
     font-family: Helvetica Neue;
     font-style: normal;
     font-weight: normal;
     font-size: 16px;
-    line-height: 24px;
+    line-height: 16px;
     display: flex;
     align-items: center;
 
@@ -90,8 +84,6 @@ export default {
   &-right {
     width: 48px;
     height: 16px;
-    left: 640px;
-    top: 32px;
 
     font-family: Helvetica Neue;
     font-style: normal;

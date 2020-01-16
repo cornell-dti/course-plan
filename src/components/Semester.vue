@@ -127,6 +127,10 @@ export default {
   },
   methods: {
     openCourseModal() {
+      // Delete confirmation for the use case of adding multiple courses consecutively
+      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
+      confirmationModal.style.display = 'none';
+
       const modal = document.getElementById(`courseModal-${this.id}`);
       modal.style.display = 'block';
     },
@@ -140,7 +144,7 @@ export default {
 
       // Set text and display confirmation modal, then have it disappear after 3 seconds
 
-      this.confirmationText = `Added ${data.code} to "${this.type} ${this.year}"`;
+      this.confirmationText = `Added ${data.code} to ${this.type} ${this.year}`;
       const confirmationModal = document.getElementById(`confirmation-${this.id}`);
       confirmationModal.style.display = 'flex';
 

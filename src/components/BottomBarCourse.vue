@@ -175,6 +175,12 @@ export default {
       color: #FFF;
       font-size: 16px;
       cursor: pointer;
+      filter: brightness(100%);
+
+      &:hover {
+        filter: brightness(95%);
+        transition: all 0.2s ease;
+      }
     }
 
     &-bar {

@@ -68,7 +68,7 @@
           <div class="separator"></div>
         </div>
 
-        <div class="row completed">
+        <div v-if="req.completed.length > 0" class="row completed">
           <p class="col sub-title">Completed Requirements</p>
           <div class="col-1 text-right">
             <button class="btn float-right" v-bind:style="{ 'color': `#${req.color}` }">
@@ -107,8 +107,8 @@
         </div>
       </div>
 
-      <!-- Add separator if not last req or not displaying details -->
-      <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+      <!-- Add separator if additional completed requirements -->
+      <div class="separator" v-if="req.completed.length > 0"></div>
     </div>
   </div>
   </div>

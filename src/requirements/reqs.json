@@ -12,14 +12,6 @@
                 "progressBar": true
             },
             {
-                "name": "Required Cornell Credits for Transfers",
-                "search": "all-eligible",
-                "fulfilledBy": "credits",
-                "includes": [],
-                "minCount": 60,
-                "applies": "transfers"
-            },
-            {
                 "name": "Physical Education",
                 "search": "subject",
                 "fulfilledBy": "courses",

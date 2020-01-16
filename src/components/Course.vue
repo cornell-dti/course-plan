@@ -274,7 +274,7 @@ export default {
 
   &-color {
     width: 1.35rem;
-    border-radius: 0.5rem 0 0 0.5rem;
+    border-radius: 0.42rem 0 0 0.42rem;
     background-color: var(--bg-color);
     margin-right: 1rem;
     display: flex;

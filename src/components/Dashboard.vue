@@ -311,7 +311,6 @@ export default {
       docRef.set(data);
 
       this.cancelOnboarding();
-
       this.updateRequirementsMenu();
     },
 
