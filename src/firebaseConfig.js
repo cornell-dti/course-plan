@@ -23,8 +23,8 @@ const { currentUser } = auth;
 //   timestampsInSnapshots: true
 // }
 // db.settings(settings)
-
 // firebase collections
+
 const usersCollection = db.collection('users');
 const coursesCollection = db.collection('courses');
 const userDataCollection = db.collection('userData');

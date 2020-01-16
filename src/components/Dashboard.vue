@@ -1,9 +1,12 @@
 <template>
-  <div class="dashboard">
+  <div class="dashboard" v-if="loaded">
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <navbar class="dashboard-nav" />
-        <requirements class="dashboard-reqs"/>
+        <requirements class="dashboard-reqs"
+          :semesters="semesters"
+          :user="user"
+         />
       </div>
       <semesterview
         :semesters="semesters"
@@ -13,10 +16,6 @@
         @updateBar="updateBar"
         @close-bar="closeBar"
       />
-<<<<<<< HEAD
-      <requirements :semesters="semesters" />
-=======
->>>>>>> 50fb24b7a0c641b512a50463b3feb34f4709118a
     </div>
     <div id="dashboard-bottomView">
       <bottombar :data="bottomBar" @close-bar="closeBar" @open-bar="openBar"/>
@@ -49,31 +48,29 @@ export default {
   props: {
     bottomCourses: Array
   },
+  
   data() {
     return {
+      loaded: false,
       compactVal: false,
       currSemID: 1,
       semesters: [],
-
+      currentClasses: [],
+      user: {
+        major: 'CS',
+        majorFN: 'COMPUTER SCIENCE',
+        college: 'AS',
+        collegeFN: 'Arts and Science'
+      },
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false }
     };
   },
   mounted() {
-    this.getSemestersFromUser();
-  },
-  methods: {
-    getSemestersFromUser() {
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
-      // TODO: error handling for firebase errors
-      docRef
-        .get()
-        .then(doc => {
+    this.getSemestersFromUser().then(doc => {
           if (doc.exists) {
             this.semesters = this.convertSemesters(doc.data().semesters);
+            this.loaded = true;
           } else {
             docRef.set({
               semesters: []
@@ -83,9 +80,19 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
+  },
+  methods: {
+    getSemestersFromUser() {
+      const user = auth.currentUser;
+      const userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+      
+      // TODO: error handling for firebase errors
+      return docRef.get();
     },
     convertSemesters(firebaseSems) {
       const semesters = [];
+
       firebaseSems.forEach(firebaseSem => {
         const firebaseCourses = firebaseSem.courses;
         const courses = [];
@@ -96,6 +103,7 @@ export default {
       });
       return semesters;
     },
+
     createCourse(course) {
       const courseMap = new Map();
       courseMap.set('KCM', ['CS 1110', 'CS 1112']);

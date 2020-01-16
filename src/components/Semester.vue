@@ -25,9 +25,10 @@
           <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
             <course
               v-bind="course"
-              :id="course.subject + course.code"
+              :courseObj="course"
+              :id="course.subject + course.number"
               :compact="compact"
-              :active="activatedCourse.subject === course.subject && activatedCourse.number === course.code"
+              :active="activatedCourse.subject === course.subject && activatedCourse.number === course.number"
               class="semester-course"
               @delete-course="deleteCourse"
               @color-course="colorCourse"
@@ -125,16 +126,6 @@ export default {
     }
   },
   methods: {
-    createSemesterString(semesters) {
-      let semesterString = '';
-      semesters.forEach(semester => {
-        semesterString += `${semester}, `;
-      });
-      if (semesterString.length > 0) {
-        return semesterString.substring(0, semesterString.length - 2);
-      }
-      return semesterString;
-    },
     openCourseModal() {
       const modal = document.getElementById(`courseModal-${this.id}`);
       modal.style.display = 'block';
@@ -158,12 +149,20 @@ export default {
       }, 5000);
     },
     addCourseToFirebase(course) {
+      // Customize information added to firebase. Currently, not all course data is added
       const firebaseCourse = {
-        catalogWhenOffered: `${this.createSemesterString(course.semesters)}.`,
-        code: `${course.subject} ${course.code}`,
-        color: course.color,
+        code: `${course.subject} ${course.number}`,
+        name: course.name,
+        description: course.description,
         credits: course.credits,
-        name: course.name
+        semesters: course.semesters,
+        prereqs: course.prereqs,
+        enrollment: course.enrollment,
+        lectureTimes: course.lectureTimes,
+        instructors: course.instructors,
+        distributions: course.distributions,
+        lastRoster: course.lastRoster,
+        color: course.color
       };
 
       const user = auth.currentUser;
@@ -196,7 +195,7 @@ export default {
     },
     deleteCourse(courseAbbr) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].subject + this.courses[i].code === courseAbbr) {
+        if (this.courses[i].subject + this.courses[i].number === courseAbbr) {
           this.courses.splice(i, 1);
           break;
         }
@@ -205,7 +204,7 @@ export default {
     },
     colorCourse(color, courseAbbr) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].subject + this.courses[i].code === courseAbbr) {
+        if (this.courses[i].subject + this.courses[i].number === courseAbbr) {
           this.courses[i].color = color;
           break;
         }
@@ -358,13 +357,14 @@ export default {
 
   &-name {
     font-size: 18px;
-    line-height: 22px;
+    line-height: 18px;
     margin-right: 0.5rem;
     font-weight: bold;
   }
 
   &-icon {
     width: 14px;
+    height: 14px;
   }
 
   &-credits {

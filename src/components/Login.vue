@@ -335,5 +335,8 @@ col.tasks{
     padding-left: 400px;
     padding-right : 400px;
 }
+.body{
+  
+}
 
 </style>

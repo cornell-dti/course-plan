@@ -1,11 +1,7 @@
 <template>
-  <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
+  <div class="semesterView">
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
-    <div class="semesterView-switch">
-      <span class="semesterView-switchText">View:</span>
-      <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
-      <div class="semesterView-switchImage semesterView-fourColumn" @click="setCompact" :class="{ 'semesterView-fourColumn--active': compact }"></div>
-    </div>
+    <div><button v-on:click="changeCompact">Change View</button></div>
     <confirmation
       :id="'semesterConfirmation'"
       class="semesterView-confirmation"
@@ -13,27 +9,23 @@
     />
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" v-bind:key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester v-bind="sem" :isNotSemesterButton="true" />
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester :isNotSemesterButton="false" />
       </div>
-      <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
     <div v-if="compact" class="semesterView-content">
       <div
         v-for="sem in compactSemesters"
         v-bind:key="sem.id"
-        class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        class="semesterView-wrapper semesterView-wrapper--compact"
+      >
+        <semester v-bind="sem" :isNotSemesterButton="true" />
       </div>
       <div class="semesterView-wrapper" v-bind:class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester :isNotSemesterButton="false" :compact="compact" />
       </div>
-      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div><div></div></div>
     </div>
   </div>
 </template>
@@ -58,14 +50,11 @@ const { auth, userDataCollection } = firebaseConfig;
 export default {
   props: {
     semesters: Array,
-    compact: Boolean,
-    isBottomBar: Boolean
+    compact: Boolean
   },
   data() {
     return {
-      confirmationText: '',
-      key: 0,
-      activatedCourse: {}
+      confirmationText: ''
     };
   },
   computed: {
@@ -96,15 +85,8 @@ export default {
     this.$el.removeEventListener('click', this.closeAllModals);
   },
   methods: {
-    setCompact() {
-      if (!this.compact) {
-        this.$emit('compact-updated', !this.compact);
-      }
-    },
-    setNotCompact() {
-      if (this.compact) {
-        this.$emit('compact-updated', !this.compact);
-      }
+    changeCompact() {
+      this.$emit('compact-updated', !this.compact);
     },
     openSemesterModal() {
       const modal = document.getElementById('semesterModal');
@@ -155,16 +137,6 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
-    },
-
-    updateBar(course) {
-      this.activatedCourse = course;
-      this.key += 1;
-      this.$emit('updateBar', course);
-    },
-
-    closeBar() {
-      this.$emit('close-bar');
     }
   }
 };
@@ -172,89 +144,28 @@ export default {
 
 <style scoped lang="scss">
 .semesterView {
+  
   display: flex;
   flex-direction: column;
-  margin: 1.5rem 3rem 3rem;
 
   &-content {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 -.75rem;
-  }
-
-  &-switch {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 1rem;
-    color: #858585;
-  }
-
-  &-switchText {
-    margin-right: .5rem;
-    font-size: 16px;
-    line-height: 19px;
-  }
-
-  &-switchImage {
-    width: 2.25rem;
-    height: 2.25rem;
-    background-repeat: no-repeat;
-    background-size: auto;
-    background-position: center;
-
-    &:not(:last-child) {
-      margin-right: .5rem;
-    }
-  }
-
-  &-twoColumn {
-    background-image: url('~@/assets/images/views/twoColumn.svg');
-
-    &:hover,
-    &:focus,
-    &:active,
-    &--active {
-      background-image: url('~@/assets/images/views/twoColumnSelected.svg');
-    }
-  }
-
-  &-fourColumn {
-    background-image: url('~@/assets/images/views/fourColumn.svg');
-
-    &:hover,
-    &:focus,
-    &:active,
-    &--active {
-      background-image: url('~@/assets/images/views/fourColumnSelected.svg');
-    }
   }
 
   &-wrapper {
     display: flex;
     justify-content: center;
-    flex: 1 1 50%;
-
+    flex-basis: 50%;
     margin-bottom: 1.5rem;
-    padding: 0 .75rem;
 
     &--compact {
-      flex: 1 1 25%;
+      flex-basis: 25%;
     }
   }
 
   &-confirmation {
     display: none;
-  }
-
-  &-empty {
-    flex: 1 1 50%;
-    padding: 0 .75rem;
-
-    &--compact {
-      flex: 1 1 25%;
-      min-width: 14.5rem;
-    }
   }
 }
 /* The Modal (background) */
@@ -269,10 +180,6 @@ export default {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-.bottomBar {
-  margin-bottom: 300px;
 }
 
 </style>
