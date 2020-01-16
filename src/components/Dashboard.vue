@@ -3,11 +3,16 @@
     <onboarding class="dashboard-onboarding" v-if="isOnboarding " @onboard="endOnboarding" :isEditingProfile="isEditingProfile" :user="user"/>
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
-        <navbar class="dashboard-nav" @editProfile="editProfile" />
+        <navbar class="dashboard-nav" 
+        @editProfile="editProfile"
+        :isBottomPreview="bottomBar.isPreview"
+        />
         <requirements class="dashboard-reqs" v-if="loaded"
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
+          :isBottomPreview="bottomBar.isPreview"
+          :isBottomBar="bottomBar.isExpanded"
          />
       </div>
       <semesterview v-if="loaded"
@@ -254,7 +259,7 @@ export default {
         overallRating: 0,
         difficulty: 0,
         workload: 0,
-        prerequisites: course.prereqs,
+        prerequisites: this.noneIfEmpty(course.prereqs),
         description: course.description,
         isPreview: true,
         isExpanded: true
@@ -305,9 +310,13 @@ export default {
       // set the new name and userData, along with either an empty list of semesters or preserve the old list
       docRef.set(data);
 
-      this.isOnboarding = false;
+      this.cancelOnboarding();
 
       this.updateRequirementsMenu();
+    },
+
+    cancelOnboarding() {
+      this.isOnboarding = false;
     },
 
     parseUserData(data, name) {
@@ -332,6 +341,10 @@ export default {
 
     joinOrNAString(arr) {
       return (arr.length !== 0 && arr[0] !== '') ? arr.join(', ') : 'N/A';
+    },
+
+    noneIfEmpty(str) {
+      return (str && str.length !== 0) ? str : 'None';
     }
   }
 };

@@ -1,7 +1,10 @@
 <template>
   <div class="onboarding">
     <div class="onboarding-main">
-      <div class="onboarding-content">
+      <div v-if="isEditingProfile" class="onboarding-cancel" @click="cancelOnboarding()">
+        <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="X">
+      </div>
+      <div class="onboarding-content" :class="{ editing: isEditingProfile }">
         <div class="onboarding-top">
           <div v-if="!isEditingProfile" class="onboarding-header">👏 Welcome to CoursePlan</div>
           <div v-if="isEditingProfile" class="onboarding-header">👋 Hi {{ user.firstName }}</div>
@@ -449,6 +452,9 @@ export default {
     },
     removeMinor() {
       this.displayOptions.minor.pop();
+    },
+    cancelOnboarding() {
+      this.$parent.cancelOnboarding();
     }
   }
 };
@@ -464,12 +470,20 @@ export default {
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
-    padding-top: 2.5rem;
     width: 36rem;
   }
 
+  &-cancel {
+    cursor: pointer;
+    text-align: right; 
+
+    &-icon {
+      margin: 25px 25px 0 0;
+    }
+  }
+
   &-content {
-    padding: 0 2.5rem 0 2.5rem;
+    padding: 2.5rem 2.5rem 0 2.5rem;
   }
 
   &-top {
@@ -569,10 +583,12 @@ export default {
   }
 
   &-add {
+    cursor: pointer;
     color: #1AA9A5;
   }
 
   &-remove {
+    cursor: pointer;
     margin-left: .5rem;
     color: #FF7979
   }
@@ -723,6 +739,10 @@ export default {
   &--hidden {
     display: none;
   }
+}
+
+.editing {
+  padding-top: 0;
 }
 
 select option {
