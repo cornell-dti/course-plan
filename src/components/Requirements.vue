@@ -233,7 +233,7 @@ export default {
       ],
       requirementsMap: {
         // CS 1110: 'MQR-AS'
-      },
+      }
     };
   },
 
@@ -262,7 +262,6 @@ export default {
     },
 
     async getReqs(coursesTaken, college, major) {
-
       // TODO: Hacky and temporary solution to add data to requirementsMap
       const that = this;
 
@@ -324,14 +323,13 @@ export default {
 
         // helper to recursively call when an object has subpaths
         function callRecursiveSubpaths(coursesTakenWithInfoInner, requirements, rType, parentName = null) {
-
           for (const requirement of requirements) {
             // TODO: For different groups of students (e.g. transfers, FYSAs, etc...)
             // if(!isTransfer && requirement.applies === "transfers") continue;
             // temporarily skip these until we can implement them later
 
             const requirementName = requirement.name;
-            
+
             // Recursively call function if there are subpaths
             if (requirement.multiplePaths) {
               requirementJSONs.push({ name: requirementName, paths: [], isComplete: false });
@@ -372,7 +370,7 @@ export default {
                 coursesThatFulilledRequirement.push(code);
 
                 // Add course to dictionary with name
-                if (code in satisfiedRequirementMap) satisfiedRequirementMap[code].push(requirementName) 
+                if (code in satisfiedRequirementMap) satisfiedRequirementMap[code].push(requirementName);
                 else satisfiedRequirementMap[code] = [requirementName];
               }
             }
@@ -391,7 +389,7 @@ export default {
         }
 
         callRecursiveSubpaths(allCoursesTakenWithInfo, allRequirements, requirementType);
-        
+
         // Merge satisfied credits into satisfiedCourseCredits (for alerts)
         that.mergerequirementsMap(satisfiedRequirementMap);
 
@@ -507,13 +505,12 @@ export default {
 
         return false;
       }
-
     },
     mergerequirementsMap(satisfiedMap) {
-        Object.keys(satisfiedMap).forEach(course => {
-          if (course in this.requirementsMap) this.requirementsMap[course] = this.requirementsMap[course].concat(satisfiedMap[course]);
-          else this.requirementsMap[course] = satisfiedMap[course];
-        })
+      Object.keys(satisfiedMap).forEach(course => {
+        if (course in this.requirementsMap) this.requirementsMap[course] = this.requirementsMap[course].concat(satisfiedMap[course]);
+        else this.requirementsMap[course] = satisfiedMap[course];
+      });
     },
 
     emitRequirementsMap() {

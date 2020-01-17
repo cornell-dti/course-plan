@@ -104,7 +104,7 @@ export default {
       this.$data.scrollable = true;
     });
 
-    this.duplicateCautions();
+    this.buildDuplicateCautions();
   },
 
   beforeDestroy() {
@@ -286,13 +286,13 @@ export default {
       if (!this.$data.scrollable) event.preventDefault();
     },
 
-    duplicateCautions() {
+    buildDuplicateCautions() {
       if (this.courses) {
         const coursesMap = {};
         this.courses.forEach(course => {
-          if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = "Duplicate";
+          if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = 'Duplicate';
           coursesMap[`${course.subject} ${course.number}`] = true;
-        })
+        });
       }
     }
   }

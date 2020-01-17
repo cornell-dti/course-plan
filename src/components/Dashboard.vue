@@ -70,7 +70,6 @@ export default {
       compactVal: false,
       currSemID: 1,
       semesters: [],
-      requirementsMap : {},
       firebaseSems: [],
       currentClasses: [],
       user: {
@@ -196,11 +195,7 @@ export default {
       // TODO: pick color if a new course instead of this default
       const color = course.color || '2BBCC6';
 
-      if (`${subject} ${number}` in this.requirementsMap) {
-        console.log("Yay");
-      }
-
-      const alerts = {requirement: "Hi", caution: null};
+      const alerts = { requirement: null, caution: null };
 
       // TODO: Need courseMap to be generated, check to change
       const newCourse = {
@@ -242,9 +237,28 @@ export default {
       this.requirementsKey += 1;
     },
 
-    loadRequirementsMap(map) {
-      // Get map of requirements. TODO: Update courses to enable information
-      this.requirementsMap = map;
+    loadRequirementsMap(requirementsMap) {
+      // Get map of requirements
+      this.buildRequirementsAlert(requirementsMap);
+    },
+
+    buildRequirementsAlert(requirementsMap) {
+      // Update semesters with alerts
+      this.semesters.forEach(semester => {
+        semester.courses.forEach(course => {
+          const courseCode = `${course.subject} ${course.number}`;
+          if (courseCode in requirementsMap) {
+            // Add and to parse array to natural language
+            const courseReqs = requirementsMap[courseCode];
+            if (courseReqs.length > 1) {
+              const listLength = courseReqs.length;
+              courseReqs[listLength - 2] = `${courseReqs[listLength - 2]}, and ${courseReqs.pop()}`;
+            }
+            const parsedCourseReqs = `Satisfies ${courseReqs.join(', ')} Requirements`;
+            course.alerts.requirement = parsedCourseReqs;
+          }
+        });
+      });
     },
 
     updateBar(course) {
