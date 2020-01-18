@@ -124,7 +124,7 @@ export default {
       this.semesters.push(newSem);
       this.addSemesterToFirebase(newSem);
 
-      this.confirmationText = `Added "${type} ${year}" to plan`;
+      this.confirmationText = `Added ${type} ${year} to plan`;
       const confirmationModal = document.getElementById(`semesterConfirmation`);
       confirmationModal.style.display = 'flex';
 

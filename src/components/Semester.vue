@@ -98,10 +98,10 @@ export default {
     const service = Vue.$dragula.$service;
 
     service.eventBus.$on('drag', () => {
-      this.$data.scrollable = false;
+      this.scrollable = false;
     });
     service.eventBus.$on('drop', () => {
-      this.$data.scrollable = true;
+      this.scrollable = true;
     });
 
     this.buildDuplicateCautions();
@@ -141,6 +141,17 @@ export default {
 
       this.$parent.openSemesterModal();
     },
+    openConfirmationModal(msg) {
+      // Set text and display confirmation modal, then have it disappear after 5 seconds
+
+      this.confirmationText = msg;
+      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
+      confirmationModal.style.display = 'flex';
+
+      setTimeout(() => {
+        confirmationModal.style.display = 'none';
+      }, 5000);
+    },
     closeConfirmationModal() {
       const confirmationModal = document.getElementById(`confirmation-${this.id}`);
       confirmationModal.style.display = 'none';
@@ -149,16 +160,7 @@ export default {
       const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
       this.updateFirebaseSemester();
-
-      // Set text and display confirmation modal, then have it disappear after 3 seconds
-
-      this.confirmationText = `Added ${data.code} to ${this.type} ${this.year}`;
-      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
-      confirmationModal.style.display = 'flex';
-
-      setTimeout(() => {
-        confirmationModal.style.display = 'none';
-      }, 5000);
+      this.openConfirmationModal(`Added ${data.code} to ${this.type} ${this.year}`);
     },
     /**
      * Reduces course object to only information needed to be stored on Firebase
@@ -183,16 +185,17 @@ export default {
     },
     deleteCourse(courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].subject + this.courses[i].number === courseCode) {
+        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
           this.courses.splice(i, 1);
           break;
         }
       }
       this.updateFirebaseSemester();
+      this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
     },
-    colorCourse(color, courseAbbr) {
+    colorCourse(color, courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].subject + this.courses[i].number === courseAbbr) {
+        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
           this.courses[i].color = color;
           break;
         }
@@ -203,7 +206,7 @@ export default {
      * Updates semester user data
      */
     updateFirebaseSemester() {
-      // TODO: make user / docRef global, and start reusing update code
+      // TODO: make user / docRef global
       const user = auth.currentUser;
       const userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);

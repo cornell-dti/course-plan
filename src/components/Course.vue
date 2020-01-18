@@ -163,11 +163,11 @@ export default {
       }
     },
     deleteCourse() {
-      this.$emit('delete-course', this.id);
+      this.$emit('delete-course', `${this.subject} ${this.number}`);
       this.closeMenuIfOpen();
     },
     colorCourse(color) {
-      this.$emit('color-course', color, this.id);
+      this.$emit('color-course', color, `${this.subject} ${this.number}`);
       this.closeMenuIfOpen();
     },
     updateBar() {
