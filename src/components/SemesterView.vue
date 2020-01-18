@@ -69,6 +69,14 @@ export default {
       isCourseClicked: false
     };
   },
+  watch: {
+    semesters: {
+      deep: true,
+      handler() {
+        this.updateFirebaseSemester();
+      }
+    }
+  },
   computed: {
     // Duplicate the semesters array, but set the compact boolean to true
     compactSemesters() {
@@ -122,7 +130,6 @@ export default {
     addSemester(type, year) {
       const newSem = this.$parent.createSemester([], type, year);
       this.semesters.push(newSem);
-      this.addSemesterToFirebase(newSem);
 
       this.confirmationText = `Added ${type} ${year} to plan`;
       const confirmationModal = document.getElementById(`semesterConfirmation`);
@@ -130,31 +137,7 @@ export default {
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
-      }, 3000);
-    },
-    addSemesterToFirebase(sem) {
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
-      // TODO: error handling if user not found or some firebase error
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const { semesters } = doc.data();
-            semesters.push(sem);
-            docRef.update({
-              semesters
-            });
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
+      }, 5000);
     },
 
     updateBar(course) {
@@ -169,6 +152,54 @@ export default {
         this.$emit('close-bar');
       }
       this.isCourseClicked = false;
+    },
+    /**
+     * Reduces course object to only information needed to be stored on Firebase
+     * Works in conjunction with addCourse()
+     * CHANGE WILL ALTER DATA STRUCTURE
+     */
+    toFirebaseCourse(course) {
+      return {
+        code: `${course.subject} ${course.number}`,
+        name: course.name,
+        description: course.description,
+        credits: course.credits,
+        semesters: course.semesters,
+        prereqs: course.prereqs,
+        enrollment: course.enrollment,
+        lectureTimes: course.lectureTimes,
+        instructors: course.instructors,
+        distributions: course.distributions,
+        lastRoster: course.lastRoster,
+        color: course.color
+      };
+    },
+    /**
+     * Updates semester user data
+     */
+    updateFirebaseSemester() {
+      // TODO: make user / docRef global
+      const user = auth.currentUser;
+      const userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+
+      docRef
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            const firebaseSemesters = clone(this.semesters);
+            firebaseSemesters.forEach(sem => {
+              sem.courses = sem.courses.map(course => this.toFirebaseCourse(course));
+            });
+            docRef.update({ semesters: firebaseSemesters });
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No such document!');
+          }
+        })
+        .catch(error => {
+          console.log('Error getting document:', error);
+        });
     }
   }
 };

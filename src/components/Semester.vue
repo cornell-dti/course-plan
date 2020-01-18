@@ -70,10 +70,6 @@ Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
 
-const firebaseConfig = require('@/firebaseConfig.js');
-
-const { auth, userDataCollection } = firebaseConfig;
-
 export default {
   // TODO: fonts! (Proxima Nova)
   data() {
@@ -159,29 +155,7 @@ export default {
     addCourse(data) {
       const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
-      this.updateFirebaseSemester();
       this.openConfirmationModal(`Added ${data.code} to ${this.type} ${this.year}`);
-    },
-    /**
-     * Reduces course object to only information needed to be stored on Firebase
-     * Works in conjunction with addCourse()
-     * CHANGE WILL ALTER DATA STRUCTURE
-     */
-    toFirebaseCourse(course) {
-      return {
-        code: `${course.subject} ${course.number}`,
-        name: course.name,
-        description: course.description,
-        credits: course.credits,
-        semesters: course.semesters,
-        prereqs: course.prereqs,
-        enrollment: course.enrollment,
-        lectureTimes: course.lectureTimes,
-        instructors: course.instructors,
-        distributions: course.distributions,
-        lastRoster: course.lastRoster,
-        color: course.color
-      };
     },
     deleteCourse(courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
@@ -190,7 +164,6 @@ export default {
           break;
         }
       }
-      this.updateFirebaseSemester();
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
     },
     colorCourse(color, courseCode) {
@@ -200,39 +173,6 @@ export default {
           break;
         }
       }
-      this.updateFirebaseSemester();
-    },
-    /**
-     * Updates semester user data
-     */
-    updateFirebaseSemester() {
-      // TODO: make user / docRef global
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const { semesters } = doc.data();
-            semesters.forEach(sem => {
-              if (sem.type === this.type && sem.year === this.year) {
-                const firebaseCourses = this.courses.map(course => this.toFirebaseCourse(course));
-                sem.courses = firebaseCourses;
-              }
-            });
-            docRef.update({
-              semesters
-            });
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
     },
     updateBar(course) {
       this.$emit('updateBar', course);
