@@ -130,19 +130,25 @@ export default {
   methods: {
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
-      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
-      confirmationModal.style.display = 'none';
+      this.closeConfirmationModal();
 
       const modal = document.getElementById(`courseModal-${this.id}`);
       modal.style.display = 'block';
     },
     openSemesterModal() {
+      // Delete confirmation for the use case of adding multiple semesters consecutively
+      this.closeConfirmationModal();
+
       this.$parent.openSemesterModal();
+    },
+    closeConfirmationModal() {
+      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
+      confirmationModal.style.display = 'none';
     },
     addCourse(data) {
       const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
-      this.addCourseToFirebase(newCourse);
+      this.updateFirebaseSemester();
 
       // Set text and display confirmation modal, then have it disappear after 3 seconds
 
@@ -154,9 +160,13 @@ export default {
         confirmationModal.style.display = 'none';
       }, 5000);
     },
-    addCourseToFirebase(course) {
-      // Customize information added to firebase. Currently, not all course data is added
-      const firebaseCourse = {
+    /**
+     * Reduces course object to only information needed to be stored on Firebase
+     * Works in conjunction with addCourse()
+     * CHANGE WILL ALTER DATA STRUCTURE
+     */
+    toFirebaseCourse(course) {
+      return {
         code: `${course.subject} ${course.number}`,
         name: course.name,
         description: course.description,
@@ -170,43 +180,15 @@ export default {
         lastRoster: course.lastRoster,
         color: course.color
       };
-
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
-      // TODO: error handling if user not found or some firebase error
-      // TODO: create a user if no document found
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const { semesters } = doc.data();
-            semesters.forEach(sem => {
-              if (sem.type === this.type && sem.year === this.year) {
-                sem.courses.push(firebaseCourse);
-              }
-            });
-            docRef.update({
-              semesters
-            });
-          } else {
-            // doc.data() will be undefined in this case
-            // console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
     },
-    deleteCourse(courseAbbr) {
+    deleteCourse(courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].subject + this.courses[i].number === courseAbbr) {
+        if (this.courses[i].subject + this.courses[i].number === courseCode) {
           this.courses.splice(i, 1);
           break;
         }
       }
-      this.deleteFirebaseCourse();
+      this.updateFirebaseSemester();
     },
     colorCourse(color, courseAbbr) {
       for (let i = 0; i < this.courses.length; i += 1) {
@@ -215,9 +197,12 @@ export default {
           break;
         }
       }
-      this.updateFirebaseColor(color, courseAbbr);
+      this.updateFirebaseSemester();
     },
-    deleteFirebaseCourse() {
+    /**
+     * Updates semester user data
+     */
+    updateFirebaseSemester() {
       // TODO: make user / docRef global, and start reusing update code
       const user = auth.currentUser;
       const userEmail = user.email;
@@ -230,7 +215,8 @@ export default {
             const { semesters } = doc.data();
             semesters.forEach(sem => {
               if (sem.type === this.type && sem.year === this.year) {
-                sem.courses = this.courses;
+                const firebaseCourses = this.courses.map(course => this.toFirebaseCourse(course));
+                sem.courses = firebaseCourses;
               }
             });
             docRef.update({
@@ -245,47 +231,12 @@ export default {
           console.log('Error getting document:', error);
         });
     },
-    updateFirebaseColor(color, courseAbbr) {
-      // TODO: make user / docRef global, and start reusing update code
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const { semesters } = doc.data();
-            semesters.forEach(sem => {
-              if (sem.type === this.type && sem.year === this.year) {
-                sem.courses.forEach(course => {
-                  if (course.code.replace(/ /g, '') === courseAbbr) {
-                    course.color = color;
-                  }
-                });
-              }
-            });
-            docRef.update({
-              semesters
-            });
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
-    },
-
     updateBar(course) {
       this.$emit('updateBar', course);
     },
-
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
     },
-
     buildDuplicateCautions() {
       if (this.courses) {
         const coursesMap = {};

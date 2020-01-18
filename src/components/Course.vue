@@ -88,6 +88,7 @@ export default {
     number: String,
     name: String,
     credits: Number,
+    prereqs: String,
     semesters: Array,
     color: String,
     alerts: Object,
@@ -151,7 +152,6 @@ export default {
   },
   methods: {
     openMenu() {
-      console.log('Menu');
       this.stopCloseFlag = true;
       this.menuOpen = true;
     },

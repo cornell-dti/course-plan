@@ -149,8 +149,8 @@ export default {
       // Semesters: remove periods and split on ', '
       const semesters = course.semesters || course.catalogWhenOffered.replace(/\./g, '').split(', ');
 
-      // Get prereqs of course as string ()
-      const prereqs = course.prereqs || course.catalogPrereqCoreq;
+      // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
+      const prereqs = course.prereqs || course.catalogPrereqCoreq || '';
 
       // To be redefined if does not exist
       let { enrollment, lectureTimes, instructors } = course;
