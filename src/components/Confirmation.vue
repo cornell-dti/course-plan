@@ -64,7 +64,6 @@ export default {
     height: 16px;
     min-width: 10rem;
 
-    // font-family: Helvetica Neue;
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
