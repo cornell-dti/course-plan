@@ -9,7 +9,7 @@ method - unsure what the right move is right now
     </div>
     <div class="confirmation-text">{{ text }}</div>
     <div class="confirmation-right">
-      <span class="undo-buttonText">{{ undo }}</span>
+      <!-- <span class="undo-buttonText">{{ undo }}</span> -->
     </div>
   </div>
 </template>
@@ -21,9 +21,9 @@ export default {
   },
 
   computed: {
-    undo() {
-      return 'UNDO';
-    }
+    // undo() {
+    //   return 'UNDO';
+    // }
   }
 };
 </script>
@@ -32,11 +32,10 @@ export default {
 .confirmation {
   position: fixed;
   z-index: 10;
-  left: 50%;
   top: 16px;
   background: #ffffff;
   border-radius: 6px;
-  border: 1px solid #2b6693;
+  box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
   display: flex;
   flex-direction: row;
 
@@ -65,15 +64,15 @@ export default {
     height: 16px;
     min-width: 10rem;
 
-    font-family: Helvetica Neue;
+    // font-family: Helvetica Neue;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 600;
     font-size: 16px;
-    line-height: 16px;
+    line-height: 19px;
     display: flex;
     align-items: center;
 
-    color: #7b7d7e;
+    color: #7B7D7E;
 
     margin-left: 8px;
     margin-right: 16px;
