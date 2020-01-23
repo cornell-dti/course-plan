@@ -183,6 +183,8 @@ export default {
     border-radius: 3px;
     border: 1px solid #3d3d3d;
     background-color: #ffffff;
+    display: flex;
+    justify-content: center;
 
     &--add {
       color: #ffffff;
