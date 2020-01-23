@@ -2,28 +2,37 @@
     "university": {
         "value": "UNI",
         "name": "University",
-        "requirements": [{
+        "requirements": [
+            {
                 "name": "Academic Credits",
+                "description": "To graduate, a student must earn a minimum of 120 academic credits. Physical education credits and “10XX” courses do not count toward the 120 required credits.",
+                "source": "http://courses.cornell.edu/content.php?catoid=31&navoid=7901",
                 "search": "all-eligible",
-                "fulfilledBy": "credits",
                 "includes": [],
+                "fulfilledBy": "credits",
                 "minCount": 120,
                 "applies": "all",
                 "progressBar": true
             },
             {
                 "name": "Physical Education",
+                "description": "All incoming freshmen are required to take two credits (two courses) of Physical Education, one credit each semester of the first year on campus.",
+                "source": "http://courses.cornell.edu/content.php?catoid=36&navoid=9249",
                 "search": "subject",
-                "fulfilledBy": "courses",
                 "includes": [
-                    ["PE"]
+                    [
+                        "PE"
+                    ]
                 ],
+                "fulfilledBy": "courses",
                 "minCount": 2,
                 "maxCount": 2,
                 "applies": "all"
             },
             {
                 "name": "Swimming Test",
+                "description": "The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming and water safety competency requirement for all entering first-year undergraduate students.",
+                "source": "http://courses.cornell.edu/content.php?catoid=36&navoid=9249",
                 "fulfilledBy": "self-check",
                 "includes": [],
                 "minCount": 0,
@@ -33,38 +42,235 @@
     },
     "college": {
         "AG": {
-
+            "name": "Agriculture and Life Sciences",
+            "requirements": [
+                {
+                    "name": "CALS Credits",
+                    "description": "55 CALS credits are required for graduation. CALS credits include all courses from departments within CALS and courses offered in Applied Economics and Management, Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Information Science, Nutritional Science, and The Department of Statistics and Data Science.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements",
+                    "search": "acadGroup",
+                    "includes": [
+                        [
+                            "AG",
+                            "BU"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 55,
+                    "progressBar": true
+                },
+                {
+                    "name": "Introductory Life Sciences/Biology",
+                    "description": "Students must complete at least six academic credits from the list of courses that fulfill distribution requirements.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ANSC 1100",
+                            "BIOAP 1100",
+                            "BIOEE 1560",
+                            "BIOEE 1610",
+                            "BIOEE 1610",
+                            "BIOEE 1610",
+                            "BIOEE 1610",
+                            "BIOEE 1780",
+                            "BIOEE 1780",
+                            "BIOEE 1780",
+                            "BIOEE 2070",
+                            "BIOEE 2526",
+                            "BIOG 1106",
+                            "BIOG 1140",
+                            "BIOG 1140",
+                            "BIOG 1191",
+                            "BIOG 1440",
+                            "BIOG 1440",
+                            "BIOG 1440",
+                            "BIOG 1445",
+                            "BIOG 1445",
+                            "BIOG 1500",
+                            "BIOG 1500",
+                            "BIOG 1500",
+                            "BIOMG 1150",
+                            "BIOMG 1290",
+                            "BIOMG 1350",
+                            "BIOMG 1350",
+                            "BIOMG 1350",
+                            "BIOMI 1100",
+                            "BIOMI 1120",
+                            "BIOPL 1120",
+                            "BIOPL 1130",
+                            "BIOPL 2400",
+                            "BIOPL 2410",
+                            "BIOPL 2490",
+                            "BIOSM 1500",
+                            "BIOSM 1551",
+                            "BIOSM 1610",
+                            "BIOSM 1650",
+                            "BIOSM 1780",
+                            "CSS 1120",
+                            "EAS 1560",
+                            "ENTOM 2011",
+                            "ENTOM 2020",
+                            "ENTOM 2030",
+                            "FDSC 2204",
+                            "HORT 1115",
+                            "HORT 2204",
+                            "PLBIO 2100",
+                            "PLBIO 2400",
+                            "PLBIO 2410",
+                            "PLBIO 2450",
+                            "PLBIO 2470",
+                            "PLBIO 2490",
+                            "PLBRG 2010",
+                            "PLHRT 1115",
+                            "PLHRT 2204",
+                            "PLPA 2013",
+                            "PLPA 2015",
+                            "PLPA 2900",
+                            "PLPPM 2013",
+                            "PLPPM 2015",
+                            "PLPPM 2900",
+                            "PLSCI 1150",
+                            "PLSCI 1300",
+                            "PLSCI 1420",
+                            "PLSCI 4190",
+                            "PLSCS 1120",
+                            "STS 2871",
+                            "VIEN 2204"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 6
+                },
+                {
+                    "name": "Physical and Life Sciences",
+                    "description": "18 credits in at least three disciplines of which six credits must be introductory life sciences/biology and three credits in chemistry or physics and a quantitative literacy course.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Chemistry/Physics",
+                    "description": "Complete a minimum of three academic credits of chemistry or physics. Includes all Cornell courses with the CHEM or PHYS prefix at Cornell (excluding courses that are supplemental, independent study, research, TA, internship, and First-Year Writing Seminar).",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "subject",
+                    "includes": [
+                        [
+                            "CHEM",
+                            "PHYS"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 3
+                },
+                {
+                    "name": "Quantitative Literacy",
+                    "description": "Faculty legislation requires minimum competency in quantitative literacy. This requirement can be satisfied by earning a score of 4 or 5 on the AP Calculus exam or a score of 5 on the AP Statistics exam, or transfer an approved calculus or statistics course with a minimum letter grade of “C” or better; or take an approved calculus or statistics course at Cornell.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "subject",
+                    "includes": [
+                        [
+                            "MATH",
+                            "STSCI"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Social Sciences and Humanities",
+                    "description": "Students must complete four courses of 3 or more credits each from the following seven categories of courses in the humanities and social sciences. At least one course category MUST be completed in three different categories. No more than two courses in the same department will be counted toward the distribution requirement. To view a searchable list of courses, please search for courses that fulfill distribution requirements.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "(CA-",
+                            "(D-",
+                            "(FL-",
+                            "(HA-",
+                            "(KCM-",
+                            "(LA-",
+                            "(SBA-"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 4,
+                    "uniqueIncludes": 3
+                },
+                {
+                    "name": "Human Diversity (D)",
+                    "description": "At least one course category MUST be completed in three different categories. Human Diversity (D) is a required category and MUST be completed.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "catalogDistr",
+                    "includes": [
+                        [
+                            "(D-"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Written and Oral Expression",
+                    "description": "9 credits total, of which at least six must be in written expression. Oral expression is not required by the college, but may be required for some majors. If not required, all nine credits may be in written expression. Writing in the Majors courses do not count towards the writing requirement.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        [
+                            "written expression",
+                            "oral expression"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 9
+                },
+                {
+                    "name": "Written Expression",
+                    "description": "At least six credits must be in written expression.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        [
+                            "written expression"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 6
+                }
+            ]
         },
-        "AR": {
-
-        },
+        "AR": {},
         "AS": {
             "name": "Arts and Sciences",
-            "requirements": [{
+            "requirements": [
+                {
                     "name": "CAS Credits",
                     "search": "acadGroup",
                     "includes": [
-                        ["AS"]
+                        [
+                            "AS"
+                        ]
                     ],
                     "fulfilledBy": "credits",
                     "minCount": 100,
-                    "uniqueIncludes": 0,
                     "progressBar": true
                 },
                 {
                     "name": "Freshman Writing Seminars (FWS)",
                     "search": "catalogSatisfiesReq",
                     "includes": [
-                        ["First-Year Writing Seminar."]
+                        [
+                            "First-Year Writing Seminar."
+                        ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 6,
-                    "uniqueIncludes": 0
+                    "minCount": 6
                 },
                 {
                     "name": "Foreign Language Requirement",
                     "multiplePaths": true,
-                    "paths": [{
+                    "paths": [
+                        {
                             "name": "Intermediate Language Course",
                             "search": "code",
                             "includes": [
@@ -102,8 +308,7 @@
                                 ]
                             ],
                             "fulfilledBy": "courses",
-                            "minCount": 1,
-                            "uniqueIncludes": 0
+                            "minCount": 1
                         },
                         {
                             "name": "Language Course Credits",
@@ -143,8 +348,7 @@
                                 ]
                             ],
                             "fulfilledBy": "credits",
-                            "minCount": 11,
-                            "uniqueIncludes": 0
+                            "minCount": 11
                         }
                     ]
                 },
@@ -159,8 +363,7 @@
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 4,
-                    "uniqueIncludes": 0
+                    "minCount": 4
                 },
                 {
                     "name": "Physical & Biological Sceiences (PBS-AS)",
@@ -172,18 +375,18 @@
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 2,
-                    "uniqueIncludes": 0
+                    "minCount": 2
                 },
                 {
                     "name": "Mathematics & Quantitative Reasoning (MQR-AS)",
                     "search": "catalogDistr",
                     "includes": [
-                        ["(MQR-AS)"]
+                        [
+                            "(MQR-AS)"
+                        ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 1,
-                    "uniqueIncludes": 0
+                    "minCount": 1
                 },
                 {
                     "name": "Liberal Arts",
@@ -211,8 +414,7 @@
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 1,
-                    "uniqueIncludes": 0
+                    "minCount": 1
                 },
                 {
                     "name": "Historic catalogBreadth Requirement (HB)",
@@ -224,19 +426,23 @@
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 1,
-                    "uniqueIncludes": 0
+                    "minCount": 1
                 }
             ]
         },
         "EN": {
             "name": "Engineering",
-            "requirements": [{
+            "requirements": [
+                {
                     "name": "Mathematics",
                     "search": "code",
                     "includes": [
-                        ["MATH 1910"],
-                        ["MATH 1920"],
+                        [
+                            "MATH 1910"
+                        ],
+                        [
+                            "MATH 1920"
+                        ],
                         [
                             "MATH 2930",
                             "MATH 2940"
@@ -244,41 +450,45 @@
                     ],
                     "fulfilledBy": "credits",
                     "minCount": 14,
-                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
                     "name": "Physics",
                     "search": "code",
                     "includes": [
-                        ["PHYS 1112"],
-                        ["PHYS 2213"]
+                        [
+                            "PHYS 1112"
+                        ],
+                        [
+                            "PHYS 2213"
+                        ]
                     ],
                     "fulfilledBy": "credits",
                     "minCount": 8,
-                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
                     "name": "Chemistry",
                     "search": "code",
                     "includes": [
-                        ["CHEM 2090"]
+                        [
+                            "CHEM 2090"
+                        ]
                     ],
                     "fulfilledBy": "credits",
                     "minCount": 4,
-                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
                     "name": "Freshman Writing Seminars",
                     "search": "catalogSatisfiesReq",
                     "includes": [
-                        ["First-Year Writing Seminar."]
+                        [
+                            "First-Year Writing Seminar."
+                        ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 6,
-                    "uniqueIncludes": 0
+                    "minCount": 6
                 },
                 {
                     "name": "Computing",
@@ -292,28 +502,29 @@
                         ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 4,
-                    "uniqueIncludes": 0
+                    "minCount": 4
                 },
                 {
                     "name": "Introducation to Engineering",
                     "search": "subject",
                     "includes": [
-                        ["ENGRI"]
+                        [
+                            "ENGRI"
+                        ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 4,
-                    "uniqueIncludes": 0
+                    "minCount": 4
                 },
                 {
                     "name": "Engineering Distribution",
                     "search": "subject",
                     "includes": [
-                        ["ENGRD"]
+                        [
+                            "ENGRD"
+                        ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 6,
-                    "uniqueIncludes": 0
+                    "minCount": 6
                 },
                 {
                     "name": "Liberal Studies Distribution",
@@ -337,36 +548,33 @@
                     "name": "Advisor-Approved Electives",
                     "includes": [],
                     "fulfilledBy": "self-check",
-                    "minCount": 6,
-                    "uniqueIncludes": 0
+                    "minCount": 6
                 },
                 {
                     "name": "Technical Communication",
                     "includes": [],
                     "fulfilledBy": "self-check",
-                    "minCount": 3,
-                    "uniqueIncludes": 0
+                    "minCount": 3
                 }
             ]
         },
-        "HE": {
-
-        },
-        "IL": {
-
-        },
-        "BU": {
-
-        }
+        "HE": {},
+        "IL": {},
+        "BU": {}
     },
     "major": {
         "ASRC": {
             "name": "Africana Studies",
-            "schools": ["AS"],
-            "requirements": [{
+            "schools": [
+                "AS"
+            ],
+            "requirements": [
+                {
                     "name": "Introduction to Africana Studies",
                     "search": "code",
-                    "includes": ["ASRC 1500"],
+                    "includes": [
+                        "ASRC 1500"
+                    ],
                     "fulfilledBy": "courses",
                     "minCount": 1,
                     "majorDep": true
@@ -388,42 +596,59 @@
                 {
                     "name": "Seminar Courses",
                     "search": "code",
-                    "includes": ["ASRC 4***"],
+                    "includes": [
+                        "ASRC 4***"
+                    ],
                     "fulfilledBy": "courses",
                     "minCount": 2,
                     "majorDep": true
                 }
             ]
         },
-        "AGSCI": {
-
-        },
-        "AMST": {
-
-        },
-        "ANSC": {
-
-        },
-        "ANTHR": {
-
-        },
+        "AGSCI": {},
+        "AMST": {},
+        "ANSC": {},
+        "ANTHR": {},
         "AEM": {
             "name": "Applied Economics and Management",
-            "schools": ["AG"],
-            "requirements": [{
+            "schools": [
+                "AG"
+            ],
+            "requirements": [
+                {
                     "name": "Economics and Management",
                     "search": "code",
                     "includes": [
-                        ["ECON 1110"],
-                        ["ECON 1120"],
-                        ["AEM 2220"],
-                        ["AEM 2225"],
-                        ["AEM 2240"],
-                        ["AEM 2600"],
-                        ["AEM 2601"],
-                        ["AEM 2700"],
-                        ["AEM 3200"],
-                        ["AEM 3230"]
+                        [
+                            "ECON 1110"
+                        ],
+                        [
+                            "ECON 1120"
+                        ],
+                        [
+                            "AEM 2220"
+                        ],
+                        [
+                            "AEM 2225"
+                        ],
+                        [
+                            "AEM 2240"
+                        ],
+                        [
+                            "AEM 2600"
+                        ],
+                        [
+                            "AEM 2601"
+                        ],
+                        [
+                            "AEM 2700"
+                        ],
+                        [
+                            "AEM 3200"
+                        ],
+                        [
+                            "AEM 3230"
+                        ]
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 10,
@@ -440,8 +665,12 @@
                             "AEM 2805",
                             "AEM 4940"
                         ],
-                        ["AEM 3000"],
-                        ["AEM 4000"]
+                        [
+                            "AEM 3000"
+                        ],
+                        [
+                            "AEM 4000"
+                        ]
                     ],
                     "fulfilledBy": "credits",
                     "minCount": 7.5,
@@ -455,8 +684,12 @@
                             "MATH 1110",
                             "MATH 1120"
                         ],
-                        ["AEM 2010"],
-                        ["AEM 2100"],
+                        [
+                            "AEM 2010"
+                        ],
+                        [
+                            "AEM 2100"
+                        ],
                         [
                             "AEM 2770",
                             "AEM 2830",
@@ -511,7 +744,6 @@
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 6,
-                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
@@ -554,28 +786,19 @@
                 }
             ]
         },
-        "ARKEO": {
-
-        },
-        "ARCH": {
-
-        },
-        "ASIAN": {
-
-        },
-        "ASTRO": {
-
-        },
-        "EAS": {
-
-        },
+        "ARKEO": {},
+        "ARCH": {},
+        "ASIAN": {},
+        "ASTRO": {},
+        "EAS": {},
         "CS": {
             "name": "Computer Science",
             "schools": [
                 "EN",
                 "AS"
             ],
-            "requirements": [{
+            "requirements": [
+                {
                     "name": "Computer Science Core Requirements",
                     "search": "code",
                     "includes": [
@@ -607,7 +830,6 @@
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 7,
-                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
@@ -658,11 +880,12 @@
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 3,
-                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
                     "name": "Computer Science Practicum",
+                    "description": "The CS Project involves a 4000-level or above practicum or project-intensive course.",
+                    "source": "https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives",
                     "search": "code",
                     "includes": [
                         [
@@ -720,7 +943,6 @@
                     "excludes": [],
                     "fulfilledBy": "courses",
                     "minCount": 1,
-                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
                 {
@@ -761,17 +983,21 @@
                     "excludes": [],
                     "fulfilledBy": "courses",
                     "minCount": 3,
-                    "uniqueIncludes": 0,
                     "majorDep": true
                 },
-
                 {
                     "name": "Computer Science External Specialization",
                     "search": "code",
                     "includes": [
-                        ["INFO 3***"],
-                        ["PSYCH 3***"],
-                        ["SOC 3***"]
+                        [
+                            "INFO 3***"
+                        ],
+                        [
+                            "PSYCH 3***"
+                        ],
+                        [
+                            "SOC 3***"
+                        ]
                     ],
                     "excludes": [
                         "LING 4474",
@@ -782,13 +1008,10 @@
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 3,
-                    "uniqueIncludes": 0,
                     "majorDep": true
                 }
             ]
         },
-        "INFO": {
-
-        }
+        "INFO": {}
     }
 }
