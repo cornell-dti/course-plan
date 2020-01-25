@@ -56,6 +56,9 @@ const firebaseConfig = require('@/firebaseConfig.js');
 const { auth, userDataCollection } = firebaseConfig;
 
 // enum to define seasons as integers in season order
+const SeasonsEnum = Object.freeze({
+  winter: 0,
+  spring: 1,
   summer: 2,
   fall: 3
 });
