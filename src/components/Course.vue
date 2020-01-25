@@ -205,9 +205,6 @@ export default {
   }
 
   &-main {
-    width: 100%;
-    margin-right: 1rem;
-
     &--min {
       display: flex;
       align-items: center;
@@ -218,10 +215,9 @@ export default {
   }
 
   &-color {
-    width: 1.35rem;
+    width: 1.25rem;
     border-radius: 0.42rem 0 0 0.42rem;
     background-color: var(--bg-color);
-    margin-right: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -261,10 +257,10 @@ export default {
   }
 
   &-content {
-    margin: 0.75rem 0 0.75rem 0;
+    width: 18rem;
+    margin: 0.75rem 1rem;
     display: flex;
     justify-content: space-between;
-    width: 100%;
 
     &--min {
       margin-bottom: 0;
@@ -294,6 +290,11 @@ export default {
     color: #3d3d3d;
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
+    width: 18rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &-info {
