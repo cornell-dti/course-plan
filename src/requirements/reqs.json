@@ -533,7 +533,7 @@
                     "minCount": 4
                 },
                 {
-                    "name": "Introducation to Engineering",
+                    "name": "Introduction to Engineering",
                     "description": "One introduction to engineering (ENGRI) course.",
                     "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": "subject",
@@ -581,7 +581,7 @@
                 {
                     "name": "Advisor-Approved Electives",
                     "description": "'Advisor-Approved' means that you have justified your selection to your advisor and that your advisor has approved the selection. It makes good sense to use these electives for lower-level introductory courses that may be required prerequisites for the 3000+ technical elective courses and the courses used to satisfy the Specialization. Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS. Up to 6 credits of advisor approved electives may be allowed for ROTC courses at the 3000-level or above.",
-                    "source": "https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives#adv_elective",                    
+                    "source": "https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives#adv_elective",
                     "includes": [],
                     "fulfilledBy": "self-check",
                     "minCount": 6
@@ -734,6 +734,106 @@
                 }
             ]
         },
-        "INFO": {}
+        "ISST": {
+            "name": "Information Science, Systems, and Technology",
+            "schools": [
+                "EN"
+            ],
+            "requirements": [
+                {
+                    "name": "Probability, Statistics, and Optimization",
+                    "description": "ORIE 3300: Optimization I, ORIE 3500: Engineering Probability and Statistics II",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ORIE 3300"
+                        ],
+                        [
+                            "ORIE 3500"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Information Systems",
+                    "description": "INFO 2300: Intermediate Design and Programming for the Web, ORIE 3800: Information Systems and Analysis or ORIE 3120: Practical Tools for Operations Research, Machine Learning and Data Science, one of -- INFO 3300: Data-Driven Web Applications, INFO 4300: Language and Information",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "INFO 2300"
+                        ],
+                        [
+                            "ORIE 3800"
+                        ],
+                        [
+                            "INFO 3300",
+                            "INFO 4300"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Economic, Organization, and Social Context",
+                    "description": "INFO 2040: Networks, one of -- INFO 2450: Communication and Technology, ENGRC 3350: Communications for Engineering Managers",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "INFO 2040"
+                        ],
+                        [
+                            "INFO 2450",
+                            "ENGRC 3350"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Engineering Mathematics",
+                    "description": "For majors in ISST, the sequence of required mathematics courses is MATH 1910, MATH 1920, MATH 2940, and finally, one of MATH 2930 or MATH 3040 or CS 2800.",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/math",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "MATH 1910"
+                        ],
+                        [
+                            "MATH 1920"
+                        ],
+                        [
+                            "MATH 2940"
+                        ],
+                        [
+                            "MATH 2930",
+                            "MATH 3040",
+                            "CS 2800"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 4
+                },
+                {
+                    "name": "Engineering Distributions",
+                    "description": "The major requires ENGRD 2700 as an Engineering Distribution course. ENGRD 2110 is also required by the major and it is recommended that this course be taken as an Engineering Distribution course.",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/math",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ENGRD 2110"
+                        ],
+                        [
+                            "ENGRD 2700"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                }
+            ]
+        }
     }
 }
