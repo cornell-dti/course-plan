@@ -512,8 +512,8 @@ export default {
 
       /**
        * Check if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
-       * @param {*} courseName : name of the course (as a code)
-       * @param {*} code : code to check courseName (can contain * to denote any value)
+       * @param {string} courseName : name of the course (as a code)
+       * @param {string} code : code to check courseName (can contain * to denote any value)
        */
       function ifCodeMatch(courseName, code) {
         for (let i = 0; i < courseName.length; i += 1) {
@@ -524,15 +524,28 @@ export default {
       }
 
       /**
+       * Check if the course satisfies all-eligible query (not PE or 10XX course)
+       * @param {string} subject : subject of course to check
+       * @param {string} number : number of course to check
+       */
+      function ifAllEligible(subject, number) {
+        return !ifCodeMatch(subject, 'PE') && !ifCodeMatch(number, '10**');
+      }
+
+      /**
        * Check if the course fullfills the given requirement. Returns true if fulfills requirement. False otherswise
        * @param {*} courseInfo : information of the course from API data
        * @param {*} search : the scope of search for the requirement (e.g all-eligible, code, catalogDistr)
        * @param {*} includes : the query for the search (e.g (MQR-AS), CS 2***)
        */
       function checkIfCourseFulfilled(courseInfo, search, includes) {
-        if (search === 'all' || search === 'all-eligible' || search === 'self-check') return true;
+        // Special search: if search code is all or self-check. Anything would work
+        if (search === 'all' || search === 'self-check') return true;
+        // Special search: if search code is not PE or 10XX course
+        if (search === 'all-eligible') return ifAllEligible(courseInfo.subject, courseInfo.catalogNbr.toString());
         for (const [i, include] of includes.entries()) {
           for (const option of include) {
+            // Special search: if course code matches code
             if (search === 'code') {
               if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, option)) {
                 // Important: removes array option list from requirements
