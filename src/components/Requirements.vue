@@ -13,7 +13,7 @@
       <div class="progress">
         <div
           class="progress-bar"
-          v-bind:style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
+          :style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
           role="progressbar"
         ></div>
       </div>
@@ -26,7 +26,7 @@
       <!--View more college requirements -->
       <div class="row top">
         <div class="col-1 p-0" >
-          <button v-bind:style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
+          <button :style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
             <!-- svg for dropdown icon -->
             <img
               v-if="req.displayDetails"
@@ -43,7 +43,7 @@
           </button>
         </div>
          <div class="col p-0 ">
-          <button class="btn req-name" v-bind:style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
+          <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
         </div>
       </div>
 
@@ -53,7 +53,7 @@
         <div class="separator"></div>
         <div
           v-for="(subReq, id) in req.ongoing"
-          v-bind:key="subReq.id">
+          :key="subReq.id">
           <div class="row depth-req">
             <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
               <button class="btn">
@@ -79,8 +79,8 @@
               <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
             </div>
           </div>
-          <div v-if="subReq.displayDescription" class="row description">
-            {{ subReq.description }}
+          <div v-if="subReq.displayDescription" class="description">
+            {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
           </div>
           <div class="separator"></div>
         </div>
@@ -88,7 +88,7 @@
         <div v-if="req.completed.length > 0" class="row completed">
           <p class="col sub-title">Completed Requirements</p>
           <div class="col-1 text-right">
-            <button class="btn float-right" v-bind:style="{ 'color': `#${req.color}` }">
+            <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
               <!-- Toggle to display completed reqs -->
               <p
                 class="toggle"
@@ -100,7 +100,7 @@
         </div>
 
         <div v-if="req.displayCompleted">
-          <div v-for="(subReq, id) in req.completed" v-bind:key="subReq.id">
+          <div v-for="(subReq, id) in req.completed" :key="subReq.id">
             <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
             <div class="row depth-req">
               <div class="col-1" @click="toggleDescription(index, 'completed', id)">
@@ -127,8 +127,8 @@
                 <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
               </div>
             </div>
-            <div v-if="subReq.displayDescription" class="row description">
-              {{ subReq.description }}
+            <div v-if="subReq.displayDescription" class="description">
+              {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
             </div>
           </div>
         </div>
@@ -446,7 +446,8 @@ export default {
           type: requirement.fulfilledBy,
           courses: coursesThatFulilledRequirement,
           required: requirement.minCount,
-          description: requirement.description
+          description: requirement.description,
+          source: requirement.source
         };
         let fulfilled;
         switch (requirement.fulfilledBy) {
