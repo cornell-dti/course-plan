@@ -57,6 +57,11 @@ const firebaseConfig = require('@/firebaseConfig.js');
 
 const { auth, userDataCollection } = firebaseConfig;
 
+// enum to define seasons as integers in season order
+  summer: 2,
+  fall: 3
+});
+
 export default {
   props: {
     semesters: Array,
@@ -149,7 +154,18 @@ export default {
     },
     addSemester(type, year) {
       const newSem = this.$parent.createSemester([], type, year);
-      this.semesters.push(newSem);
+
+      // find the index in which the semester should be added to maintain chronological order
+      let i;
+      for (i = 0; i < this.semesters.length; i += 1) {
+        const oldSem = this.semesters[i];
+        if (oldSem.year > year) {
+          break;
+        } else if (oldSem.year === year && SeasonsEnum[oldSem.type.toLowerCase()] > SeasonsEnum[type.toLowerCase()]) {
+          break;
+        }
+      }
+      this.semesters.splice(i, 0, newSem);
 
       this.openSemesterConfirmationModal(type, year, true);
     },
@@ -238,7 +254,7 @@ export default {
   &-content {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 -.75rem;
+    margin: 0 -0.75rem;
   }
 
   &-switch {
@@ -250,7 +266,7 @@ export default {
   }
 
   &-switchText {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
     font-size: 16px;
     line-height: 19px;
   }
@@ -263,7 +279,7 @@ export default {
     background-position: center;
 
     &:not(:last-child) {
-      margin-right: .5rem;
+      margin-right: 0.5rem;
     }
   }
 
@@ -295,7 +311,7 @@ export default {
     flex: 1 1 50%;
 
     margin-bottom: 1.5rem;
-    padding: 0 .75rem;
+    padding: 0 0.75rem;
 
     &--compact {
       flex: 1 1 25%;
@@ -309,7 +325,7 @@ export default {
 
   &-empty {
     flex: 1 1 50%;
-    padding: 0 .75rem;
+    padding: 0 0.75rem;
 
     &--compact {
       flex: 1 1 25%;
@@ -334,5 +350,4 @@ export default {
 .bottomBar {
   margin-bottom: 300px;
 }
-
 </style>
