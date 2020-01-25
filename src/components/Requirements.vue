@@ -13,7 +13,7 @@
       <div class="progress">
         <div
           class="progress-bar"
-          v-bind:style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
+          :style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
           role="progressbar"
         ></div>
       </div>
@@ -26,17 +26,24 @@
       <!--View more college requirements -->
       <div class="row top">
         <div class="col-1 p-0" >
-          <button v-bind:style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
+          <button :style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
             <!-- svg for dropdown icon -->
             <img
-              class="arrow"
+              v-if="req.displayDetails"
+              class="arrow arrow-down"
               src="@/assets/images/dropdown-blue.svg"
+              alt="dropdown"
+            />
+            <img
+              v-else
+              class="arrow"
+              src="@/assets/images/dropright-blue.svg"
               alt="dropdown"
             />
           </button>
         </div>
          <div class="col p-0 ">
-          <button class="btn req-name" v-bind:style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
+          <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
         </div>
       </div>
 
@@ -46,24 +53,34 @@
         <div class="separator"></div>
         <div
           v-for="(subReq, id) in req.ongoing"
-          v-bind:key="subReq.id">
+          :key="subReq.id">
           <div class="row depth-req">
-            <div class="col-1">
-              <button class="btn" v-on:click="turnSubDetails(index, id, true)">
+            <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
+              <button class="btn">
                 <!-- svg for dropdown icon -->
                 <img
-                  class="arrow"
+                  v-if="subReq.displayDescription"
+                  class="arrow arrow-down"
                   src="@/assets/images/dropdown.svg"
+                  alt="dropdown"
+                />
+                <img
+                  v-else
+                  class="arrow"
+                  src="@/assets/images/dropright.svg"
                   alt="dropdown"
                 />
               </button>
             </div>
-            <div class="col-7">
-              <p class="sup-req">{{subReq.name}}</p>
+            <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
+              <p class="sup-req pointer">{{subReq.name}}</p>
             </div>
             <div class="col">
               <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
             </div>
+          </div>
+          <div v-if="subReq.displayDescription" class="description">
+            {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
           </div>
           <div class="separator"></div>
         </div>
@@ -71,7 +88,7 @@
         <div v-if="req.completed.length > 0" class="row completed">
           <p class="col sub-title">Completed Requirements</p>
           <div class="col-1 text-right">
-            <button class="btn float-right" v-bind:style="{ 'color': `#${req.color}` }">
+            <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
               <!-- Toggle to display completed reqs -->
               <p
                 class="toggle"
@@ -83,25 +100,35 @@
         </div>
 
         <div v-if="req.displayCompleted">
-          <div v-for="subReq in req.completed" v-bind:key="subReq.id">
+          <div v-for="(subReq, id) in req.completed" :key="subReq.id">
             <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
             <div class="row depth-req">
-              <div class="col-1">
-                <button class="btn" v-on:click="turnSubDetails(index, id, true)">
+              <div class="col-1" @click="toggleDescription(index, 'completed', id)">
+                <button class="btn">
                   <!-- svg for dropdown icon -->
-                  <img
-                    class="arrow"
-                    src="@/assets/images/dropdown.svg"
-                    alt="dropdown"
-                  />
+                <img
+                  v-if="subReq.displayDescription"
+                  class="arrow arrow-down"
+                  src="@/assets/images/dropdown.svg"
+                  alt="dropdown"
+                />
+                <img
+                  v-else
+                  class="arrow"
+                  src="@/assets/images/dropright.svg"
+                  alt="dropdown"
+                />
                 </button>
               </div>
-              <div class="col-7">
-                <p class="sup-req">{{subReq.name}}</p>
+              <div class="col-7" @click="toggleDescription(index, 'completed', id)">
+                <p class="sup-req pointer">{{subReq.name}}</p>
               </div>
               <div class="col">
                 <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
               </div>
+            </div>
+            <div v-if="subReq.displayDescription" class="description">
+              {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
             </div>
           </div>
         </div>
@@ -141,6 +168,7 @@ export default {
     const courses = this.getCourseCodesArray();
 
     this.getReqs(courses, this.user.college, this.user.major).then(groups => {
+      console.log(groups);
       // Turn result into data readable by requirements menu
       groups.forEach(group => {
         const singleMenuRequirement = {
@@ -166,7 +194,7 @@ export default {
           }
 
           // Default display value of false for all requirement lists
-          req.display = false;
+          req.displayDescription = false;
 
           if (!req.fulfilled || req.fulfilled < req.required) {
             singleMenuRequirement.ongoing.push(req);
@@ -210,14 +238,16 @@ export default {
         //       type: 'Credits',
         //       fulfilled: 12,
         //       required: 55,
-        //       display: false
+        //       description: 'All students need to to take 55 credits',
+        //       displayDescription: false
         //     },
         //     {
         //       name: 'PE Credits',
         //       type: 'Credits',
         //       fulfilled: 1,
         //       required: 2,
-        //       display: false
+        //       description: 'All students must take 2 PE courses in freshman year',
+        //       displayDescription: false
         //     }
         //   ],
         //   completed: [
@@ -226,7 +256,8 @@ export default {
         //       type: 'Credits',
         //       fulfilled: 2,
         //       required: 2,
-        //       display: false
+        //       description: 'Quantitiative literacy required for all CALS students',
+        //       displayDescription: false
         //     }
         //   ]
         // }
@@ -242,8 +273,14 @@ export default {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
 
-    turnSubDetails(index, id, bool) {
-      this.reqs[index].ongoing[id].display = bool;
+    toggleDescription(index, type, id) {
+      if (type === 'ongoing') {
+        const currentBool = this.reqs[index].ongoing[id].displayDescription;
+        this.reqs[index].ongoing[id].displayDescription = !currentBool;
+      } else if (type === 'completed') {
+        const currentBool = this.reqs[index].completed[id].displayDescription;
+        this.reqs[index].completed[id].displayDescription = !currentBool;
+      }
     },
 
     turnCompleted(index, bool) {
@@ -408,7 +445,9 @@ export default {
           name: requirement.name,
           type: requirement.fulfilledBy,
           courses: coursesThatFulilledRequirement,
-          required: requirement.minCount
+          required: requirement.minCount,
+          description: requirement.description,
+          source: requirement.source
         };
         let fulfilled;
         switch (requirement.fulfilledBy) {
@@ -427,6 +466,7 @@ export default {
 
         requirementFulfillmentData.fulfilled = fulfilled;
 
+        // Make requirement use for progressbar if progressbar attr is true
         if (requirement.progressBar) requirementFulfillmentData.progressBar = true;
         return requirementFulfillmentData;
       }
@@ -571,6 +611,16 @@ export default {
   margin: 0px;
 }
 
+.description {
+  margin: 0 0 0.5rem 1.8rem;
+  color: #353535;
+  font-size: 15px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
 h1.title {
   font-style: normal;
   font-weight: 550;
@@ -591,7 +641,7 @@ h1.title {
   }
 }
 
-.middle{
+.middle {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -663,7 +713,10 @@ p.active {
 .arrow {
   fill: #1AA9A5;
   color:#1AA9A5;
-  margin-top: -4px;
+
+  &-down {
+    margin-top: -4px;
+  }
 }
 
 .progress-text {
