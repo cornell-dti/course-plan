@@ -13,7 +13,7 @@
     />
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" :key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester"/>
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
@@ -44,12 +44,14 @@ import Vue from 'vue';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
+import DeleteSemester from '@/components/Modals/DeleteSemester';
 
 const clone = require('clone');
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
+Vue.component('deletesemester', DeleteSemester);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
@@ -114,6 +116,20 @@ export default {
         this.$emit('compact-updated', !this.compact);
       }
     },
+    openSemesterConfirmationModal(type, year, isAdd) {
+      if (isAdd) {
+        this.confirmationText = `Added ${type} ${year} to plan`;
+      } else {
+        this.confirmationText = `Deleted ${type} ${year} from plan`;
+      }
+
+      const confirmationModal = document.getElementById(`semesterConfirmation`);
+      confirmationModal.style.display = 'flex';
+
+      setTimeout(() => {
+        confirmationModal.style.display = 'none';
+      }, 5000);
+    },
     openSemesterModal() {
       const modal = document.getElementById('semesterModal');
       modal.style.display = 'block';
@@ -126,18 +142,25 @@ export default {
           this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns();
         }
       }
+      const deleteSemesterModal = document.getElementById('deleteSemesterModal');
+      if (event.target === deleteSemesterModal) {
+        deleteSemesterModal.style.display = 'none';
+      }
     },
     addSemester(type, year) {
       const newSem = this.$parent.createSemester([], type, year);
       this.semesters.push(newSem);
 
-      this.confirmationText = `Added ${type} ${year} to plan`;
-      const confirmationModal = document.getElementById(`semesterConfirmation`);
-      confirmationModal.style.display = 'flex';
-
-      setTimeout(() => {
-        confirmationModal.style.display = 'none';
-      }, 5000);
+      this.openSemesterConfirmationModal(type, year, true);
+    },
+    deleteSemester(type, year) {
+      for (let i = 0; i < this.semesters.length; i += 1) {
+        if (this.semesters[i].type === type && this.semesters[i].year === year) {
+          this.semesters.splice(i, 1);
+          break;
+        }
+      }
+      this.openSemesterConfirmationModal(type, year, false);
     },
 
     updateBar(course) {
@@ -281,6 +304,7 @@ export default {
 
   &-confirmation {
     display: none;
+    margin: auto;
   }
 
   &-empty {

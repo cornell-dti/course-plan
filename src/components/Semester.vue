@@ -10,14 +10,23 @@
       class="semester-confirmation"
       :text="confirmationText"
     />
+    <deletesemester
+      id="deleteSemesterModal"
+      class="semester-modal-delete"
+      @delete-semester="deleteSemester"
+    />
     <div v-if="isNotSemesterButton" class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
           <span class="semester-name">{{ type }} {{ year }}</span>
-          <img class="semester-icon" src="../assets/images/pencil.svg" />
+          <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
-          <span class="semester-credits">{{ creditString }}</span>
+          <div class="semester-dotRow" @click="openSemesterMenu">
+            <span class="semester-dot semester-dot--menu"></span>
+            <span class="semester-dot semester-dot--menu"></span>
+            <span class="semester-dot semester-dot--menu"></span>
+          </div>
         </div>
       </div>
       <div class="semester-courses">
@@ -57,6 +66,11 @@
         }}</span>
       </div>
     </div>
+    <semestermenu
+      v-if="semesterMenuOpen"
+      class="semester-menu"
+      @open-delete-semester-modal="openDeleteSemesterModal"
+      v-click-outside="closeSemesterMenuIfOpen" />
   </div>
 </template>
 
@@ -65,17 +79,39 @@ import Vue from 'vue';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
 import Confirmation from '@/components/Confirmation';
+import SemesterMenu from '@/components/Modals/SemesterMenu';
+import DeleteSemester from '@/components/Modals/DeleteSemester';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
+Vue.component('semestermenu', SemesterMenu);
+Vue.component('deletesemester', DeleteSemester);
+
+const clickOutside = {
+  bind(el, binding, vnode) {
+    el.event = function (event) {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event);
+      }
+    };
+    document.body.addEventListener('click', el.event);
+  },
+  unbind(el) {
+    document.body.removeEventListener('click', el.event);
+  }
+};
+
 
 export default {
   // TODO: fonts! (Proxima Nova)
   data() {
     return {
       confirmationText: '',
-      scrollable: true
+      scrollable: true,
+
+      semesterMenuOpen: false,
+      stopCloseFlag: false
     };
   },
   props: {
@@ -114,7 +150,7 @@ export default {
       this.courses.forEach(course => {
         credits += course.credits;
       });
-      return `${credits.toString()} cr.`;
+      return `${credits.toString()} credits`;
     },
     buttonString() {
       return '+ COURSE';
@@ -188,7 +224,28 @@ export default {
           coursesMap[`${course.subject} ${course.number}`] = true;
         });
       }
+    },
+    openSemesterMenu() {
+      this.stopCloseFlag = true;
+      this.semesterMenuOpen = true;
+    },
+    closeSemesterMenuIfOpen() {
+      if (this.stopCloseFlag) {
+        this.stopCloseFlag = false;
+      } else if (this.semesterMenuOpen) {
+        this.semesterMenuOpen = false;
+      }
+    },
+    openDeleteSemesterModal() {
+      const modal = document.getElementById('deleteSemesterModal');
+      modal.style.display = 'block';
+    },
+    deleteSemester() {
+      this.$emit('delete-semester', this.type, this.year);
     }
+  },
+  directives: {
+    'click-outside': clickOutside
   }
 };
 </script>
@@ -205,6 +262,7 @@ export default {
   border: 2px solid #d8d8d8;
   border-radius: 11px;
   width: fit-content;
+  position: relative;
 
   &--min {
     border: 2px dashed #d8d8d8;
@@ -253,6 +311,7 @@ export default {
 
   &-left {
     display: flex;
+    flex-direction: column;
 
     &--compact {
       justify-content: space-between;
@@ -264,6 +323,38 @@ export default {
       margin-top: 0.25rem;
     }
   }
+
+  &-dotRow {
+    display: flex;
+    position: relative;
+  }
+
+  &-dot {
+    opacity: 0.8;
+    height: 2px;
+    width: 2px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+    margin-bottom: 2px;
+    margin-top: 2px;
+
+    &--menu {
+      width: 5px;
+      height: 5px;
+      background-color: #c4c4c4;
+      opacity: 1;
+      margin: 0 2px;
+    }
+  }
+
+  &-menu {
+    position: absolute;
+    right: -3rem;
+    top: 2rem;
+    z-index: 1;
+  }
+
 
   &-name {
     font-size: 18px;
@@ -370,5 +461,18 @@ export default {
     -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)';
     filter: alpha(opacity=20);
   }
+
+.semester-modal-delete {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
 }
 </style>
