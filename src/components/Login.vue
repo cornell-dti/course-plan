@@ -268,7 +268,7 @@ export default {
 
     .new{
         background-color: #1AA9A5;
-        padding:59px 0px 0px 104px;
+        padding:50px 0px 50px 104px;
 
     }
     .new-1{
@@ -301,7 +301,7 @@ export default {
     }
     .women{
         position: absolute;
-        bottom: -40px;
+        bottom: -70px;
     }
 
 
