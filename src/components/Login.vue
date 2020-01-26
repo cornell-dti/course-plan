@@ -21,7 +21,7 @@
         <div class="container p-0">
             <div class="row top-bar no-gutters">
                 <div class="col">
-                    <div class="row no-gutters"><h1 class="plan-head">Plan Your Courses Ahead</h1></div>
+                    <div class="row no-gutters"><h1 class="plan-head mt-5">Plan Your Courses Ahead</h1></div>
                     <div class="row no-gutters"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
                     <div class="row">
                         <div class="col-5" >
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <img  style="position:relative" class= "laptop" src="../assets/images/laptop.svg" alt = "laptop preview" />
+                    <img  style="position:relative" class="laptop" src="../assets/images/laptop.png" alt = "laptop preview" />
                 </div>
             </div>
         </div>
@@ -65,9 +65,9 @@
 
         <!-- DRAG -->
         <div class="container-fluid plan p-0">
-            <div class=" drag row no-gutters">
+            <div class="drag row no-gutters">
                 <div class = "col" >
-                    <img style="position:relative" class="preview" src="../assets/images/dragyourcourseimg.svg" alt = "Dragging preview" />
+                    <img style="position:relative" class="preview" src="../assets/images/drag.svg" alt = "Dragging preview" />
                 </div>
                 <div class = "col comment" >
                     <h1  class="head" style = "text-align: left;">Drag Your Course In</h1>
@@ -80,13 +80,13 @@
 
         <!-- SEMESTERS -->
         <div class="container-fluid p-0 small">
-            <div class="row semester ">
+            <div class="row semester m-0">
                 <div class = "col comment" >
                     <h1 class= "head" style = "text-align: left;">Plan Your Semesters</h1>
                     <p class= "sub">Use Courseplan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
                 </div>
                 <div class = "col" >
-                    <img style="position:relative" class="schedule" src="../assets/images/schedule.svg" alt = "Plan preview" />
+                    <img class="schedule" src="../assets/images/schedule.svg" alt = "Plan preview" />
                 </div>
             </div>
         </div>
@@ -111,7 +111,7 @@
 
         <!--FOOTER-->
         <div class="container-fluid footer p-0">
-            <div class= "row footer justify-content-center">
+            <div class= "row footer justify-content-center m-0">
                 <div class="col-3">
                     <p class= "footer"> Cornell DTI @ 2019</p>
                 </div>
@@ -225,8 +225,8 @@ export default {
     .plan-head{
         padding-bottom: 30px;
         font-weight: bold;
-        font-size: 72px;
-        line-height: 73px;
+        font-size: 60px;
+        line-height: 60px;
         color: #4F4F4F;
 
     }
@@ -234,8 +234,8 @@ export default {
         padding-bottom: 30px;
         font-style: normal;
         font-weight: 300;
-        font-size: 32px;
-        line-height: 34px;
+        font-size: 25px;
+        line-height: 35px;
         color: #000000;
     }
 
@@ -251,7 +251,7 @@ export default {
         background-color: #1AA9A5;
         border-radius : 6px;
         border-color: #1AA9A5;
-        width: 100%;
+        width: 300px;
         padding : 15px 30px;
         color: white;
 
@@ -262,6 +262,7 @@ export default {
     }
     .laptop{
         position: absolute;
+        width: 900px;
         bottom: -30px;
     }
 
@@ -278,7 +279,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 15px;
+        padding: 10px;
     }
     .sub{
         font-weight: normal;
@@ -301,6 +302,7 @@ export default {
     }
     .women{
         position: absolute;
+        right: 0;
         bottom: -70px;
     }
 
@@ -312,15 +314,16 @@ export default {
     }
     .preview{
         position: absolute;
-        bottom: -50px;
     }
 
     .schedule{
         position: absolute;
-        bottom: -100px;
+        right: 0;
+        bottom: -50px;
+        width: 700px;
     }
     .comment{
-        padding: 170px 70px 20px 70px;
+        padding: 170px 70px 250px 70px;
     }
 
     .semester{
