@@ -11,7 +11,7 @@
         <!--TOP BAR-->
         <div class="container p-0">
             <div class="row top-bar justify-content-between no-gutters">
-                <div class="col-10">
+                <div class="col">
                     <img class="logo" src="../assets/images/logo.svg" alt = "logo" />
                   </div>
             </div>
@@ -24,13 +24,13 @@
                     <div class="row no-gutters"><h1 class="plan-head">Plan Your Courses Ahead</h1></div>
                     <div class="row no-gutters"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
                     <div class="row">
-                        <div class="col-5" >
+                        <div class="col-6" >
                             <button  @click="socialLogin"  class="email-button" variant= "primary"  v-on:click="addUser"> GET STARTED </button>
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <img  style="position:relative" class= "laptop" src="../assets/images/laptop.svg" alt = "laptop preview" />
+                    <img  id= "hide" style="position:relative" class= "laptop" src="../assets/images/laptop.svg" alt = "laptop preview" />
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <img style="position:absolute" class="women" src="../assets/images/Person_planning.svg" alt = "women planning" />
+                    <img id= "hide"  style="position:absolute" class="women" src="../assets/images/Person_planning.svg" alt = "women planning" />
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
         <div class="container-fluid plan p-0">
             <div class=" drag row no-gutters">
                 <div class = "col" >
-                    <img style="position:relative" class="preview" src="../assets/images/dragyourcourseimg.svg" alt = "Dragging preview" />
+                    <img  id= "hide"  style="position:relative" class="preview" src="../assets/images/dragyourcourseimg.svg" alt = "Dragging preview" />
                 </div>
                 <div class = "col comment" >
                     <h1  class="head" style = "text-align: left;">Drag Your Course In</h1>
@@ -86,26 +86,28 @@
                     <p class= "sub">Use Courseplan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
                 </div>
                 <div class = "col" >
-                    <img style="position:relative" class="schedule" src="../assets/images/schedule.svg" alt = "Plan preview" />
+                    <img id= "hide"  style="position:relative" class="schedule" src="../assets/images/schedule.svg" alt = "Plan preview" />
                 </div>
             </div>
         </div>
 
         <!-- FIRST -->
         <div class="container first">
-            <div class="row justify-content-center">
-              <div class= "col-8 justify-content-center">
-                <h1 class= "head-center text-center">Be The First One To Use It</h1>
-                <p class= "sub text-center" style= "padding: 30px; ">Gain early access by filling out your email below and help us grow into what you need!</p>
+          <div class = "container inside">
+              <div class="row justify-content-center">
+                <div class= "col justify-content-center">
+                  <h1 class= "head-center text-center">Be The First One To Use It</h1>
+                  <p class= "sub text-center" style= "padding: 30px; ">Gain early access by filling out your email below and help us grow into what you need!</p>
+                </div>
               </div>
-            </div>
-            <div class="row email ">
-                <div class="col-7  ">
-                    <input type="text" placeholder="Your Email Address" v-model="newUser.email" >
-                </div>
-                <div class="col-5 ">
-                    <button class="email-button" variant= "primary"  v-on:click="addUser"> GET STARTED </button>
-                </div>
+              <div class="row email ">
+                  <div class="col-7  ">
+                      <input type="text" placeholder="Your Email Address" v-model="newUser.email" >
+                  </div>
+                  <div class="col-5 ">
+                      <button class="email-button" variant= "primary"  v-on:click="addUser"> Add email </button>
+                  </div>
+              </div>
             </div>
           </div>
 
@@ -206,7 +208,8 @@ export default {
     }
 
     .top-bar{
-        padding:59px 0px 0px 104px;
+        padding:59px 0px 10px 104px;
+
     }
 
     .signin-button{
@@ -248,13 +251,13 @@ export default {
         padding : 15px 30px;
     }
     .email-button{
+        text-align: center;
         background-color: #1AA9A5;
         border-radius : 6px;
         border-color: #1AA9A5;
         width: 100%;
         padding : 15px 30px;
         color: white;
-
     }
 
     .email-top{
@@ -264,10 +267,20 @@ export default {
         position: absolute;
         bottom: -30px;
     }
-
+    @media (max-width:629px) {
+      img#hide{
+        display: none;
+      }
+    }
+    .img{
+        width: auto ;
+  max-width: 100% ;
+  height: auto ;
+    }
 
     .new{
         background-color: #1AA9A5;
+        max-width: 100%;
         padding:50px 0px 50px 104px;
 
     }
@@ -320,7 +333,7 @@ export default {
         bottom: -100px;
     }
     .comment{
-        padding: 170px 70px 20px 70px;
+        padding: 170px 30px 20px 30px;
     }
 
     .semester{
@@ -344,10 +357,13 @@ export default {
     .email{
         padding-right: 50px;
         padding-left: 50px;
-        width: 600px;
+        max-width: 600px ;
     }
    .container.footer{
       max-width: 800px;
+    }
+    .container.inside{
+      max-width: 600px;
     }
 
     p.footer{
