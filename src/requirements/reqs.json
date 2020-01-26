@@ -608,6 +608,168 @@
         "IL": {}
     },
     "major": {
+        "AEM": {
+            "name": "Applied Economics and Management",
+            "schools": [
+                "AG"
+            ],
+            "requirements": [
+                {
+                    "name": "Management Requirements",
+                    "description": "AEM 3200 and AEM 3230 are optional for the following three concentrations: applied economics; environmental, energy, and resource economics; and international trade and development.",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 2200"
+                        ],
+                        [
+                            "AEM 2225"
+                        ],
+                        [
+                            "AEM 2240"
+                        ],
+                        [
+                            "AEM 2420"
+                        ],
+                        [
+                            "AEM 2601"
+                        ],
+                        [
+                            "AEM 3200"
+                        ],
+                        [
+                            "AEM 3230"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 7
+                },
+                {
+                    "name": "Economics Requirements",
+                    "description": "For students concentrating in environmental, energy, and resource economics, ECON 3030 is required instead of AEM 2600.",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ECON 1110"
+                        ],
+                        [
+                            "ECON 1120"
+                        ],
+                        [
+                            "AEM 2600",
+                            "ECON 3030"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Quantitative Methods Requirements",
+                    "description": "",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 2100"
+                        ],
+                        [
+                            "MATH 1110",
+                            "MATH 1120"
+                        ],
+                        [
+                            "AEM 2010"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Quantitative Methods Elective Requirements",
+                    "description": "At least 3 elective credits from the following.",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 2770",
+                            "AEM 2830",
+                            "AEM 2840",
+                            "AEM 3100",
+                            "AEM 3390",
+                            "AEM 4060",
+                            "AEM 4110",
+                            "AEM 4120",
+                            "AEM 4190",
+                            "BTRY 3080",
+                            "ILRST 3080",
+                            "STSCI 3080",
+                            "ECON 3130",
+                            "ECON 3140",
+                            "ECON 4020",
+                            "ILRST 2110",
+                            "ILRST 3110"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 3
+                },
+                {
+                    "name": "Applied Economics Requirements",
+                    "description": "At least 6 credits; must come from two of the four categories below. Courses used to fulfill a quantitative methods requirement or a concentration requirement or elective cannot also be counted toward a core applied economics requirement, unless that concentration is environmental, energy, and resource economics.",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Environmental, Energy, and Resource Economics",
+                    "description": "",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 2500"
+                        ],
+                        [
+                            "AEM 4500"
+                        ],
+                        [
+                            "AEM 4510"
+                        ],
+                        [
+                            "AEM 4515"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 4
+                },
+                {
+                    "name": "Economic Analysis",
+                    "description": "",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 3310"
+                        ],
+                        [
+                            "AEM 4100"
+                        ],
+                        [
+                            "AEM 4140"
+                        ],
+                        [
+                            "AEM 4160"
+                        ],
+                        [
+                            "AEM 4550"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 5
+                }
+            ]
+        },
         "CS": {
             "name": "Computer Science",
             "schools": [
@@ -737,12 +899,13 @@
         "INFO SCI": {
             "name": "Information Science",
             "schools": [
-                "AS"
+                "AS",
+                "AG"
             ],
             "requirements": [
                 {
                     "name": "Core Courses",
-                    "description": "The core curriculum and required courses form the foundation of the Information Science major, that each student can then build upon to create their own unique skill set.",
+                    "description": "Students are required to complete five core courses.",
                     "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements/core",
                     "search": "code",
                     "includes": [
@@ -935,6 +1098,74 @@
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 2
+                }
+            ]
+        },
+        "ORE": {
+            "name": "Operations Research and Engineering",
+            "schools": [
+                "EN"
+            ],
+            "requirements": [
+                {
+                    "name": "Major Required Classes",
+                    "description": "The following courses may be substituted for ORIE 3150, if not used to meet other require- ments: MATH 3110 (Introduction to Analysis), MATH 4130 (Honors Real Analysis), MATH 4310 (Linear Algebra), MATH 4330 (Honors Linear Algebra), any 600 level ORIE course.",
+                    "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ORIE 3120"
+                        ],
+                        [
+                            "ORIE 3150"
+                        ],
+                        [
+                            "ORIE 3300"
+                        ],
+                        [
+                            "ORIE 3310"
+                        ],
+                        [
+                            "ORIE 3500"
+                        ],
+                        [
+                            "ORIE 3510"
+                        ],
+                        [
+                            "ORIE 4580"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 7
+                },
+                {
+                    "name": "ORIE Electives",
+                    "description": "At least 9 credits of ORIE electives at the 4000 level or above",
+                    "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ORIE 4***",
+                            "ORIE 5***",
+                            "ORIE 6***"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 9
+                },
+                {
+                    "name": "Major Approved Electives (Non–ORIE)",
+                    "description": "Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. Technical courses in Engineering at the 2000 level or above.",
+                    "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Major Approved Elective",
+                    "description": "Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. Technical courses in Engineering at the 2000 level or above.",
+                    "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
                 }
             ]
         }
