@@ -81,7 +81,7 @@
         <!-- SEMESTERS -->
         <div class="container-fluid p-0 small">
             <div class="row semester m-0">
-                <div class = "col comment" >
+                <div class = "col-4 comment" >
                     <h1 class= "head" style = "text-align: left;">Plan Your Semesters</h1>
                     <p class= "sub">Use Courseplan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
                 </div>
@@ -113,13 +113,13 @@
         <div class="container-fluid footer p-0">
             <div class= "row footer justify-content-center m-0">
                 <div class="col-3">
-                    <p class= "footer"> Cornell DTI @ 2019</p>
+                    <p class= "footer"> Cornell DTI @ 2020</p>
                 </div>
                 <div class="col-3">
-                    <p class= "footer">Built with LOVE</p>
+                    <p class= "footer">Built with ❤️</p>
                 </div>
                 <div class="col-3">
-                    <p class= "footer">Private Policy</p>
+                    <p class= "footer">Privacy Policy</p>
                 </div>
 
             </div>
@@ -363,6 +363,12 @@ export default {
     }
     .row.footer{
         padding : 40px;
+    }
+
+    @media (max-width: 1335px) {
+        .landing {
+            display: none;
+        }
     }
 
 
