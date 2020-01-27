@@ -168,7 +168,6 @@ export default {
     const courses = this.getCourseCodesArray();
 
     this.getReqs(courses, this.user.college, this.user.major).then(groups => {
-      console.log(groups);
       // Turn result into data readable by requirements menu
       groups.forEach(group => {
         const singleMenuRequirement = {
@@ -291,7 +290,7 @@ export default {
       const courses = [];
       this.semesters.forEach(semester => {
         semester.courses.forEach(course => {
-          courses.push(`${course.subject} ${course.number}`);
+          courses.push({ code: `${course.subject} ${course.number}`, roster: course.lastRoster });
         });
       });
 
@@ -305,10 +304,10 @@ export default {
       // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
       const coursesTakenWithInfo = {};
       const courseData = await Promise.all(
-        coursesTaken.map(courseTaken => getCourseInfo(courseTaken))
+        coursesTaken.map(courseTaken => getCourseInfo(courseTaken.code, courseTaken.roster))
       );
 
-      for (let i = 0; i < coursesTaken.length; i += 1) { coursesTakenWithInfo[coursesTaken[i]] = courseData[i]; }
+      for (let i = 0; i < coursesTaken.length; i += 1) { coursesTakenWithInfo[coursesTaken[i].code] = courseData[i]; }
 
       // prepare final output JSONs
       const finalRequirementJSONs = [];
@@ -486,28 +485,24 @@ export default {
 
       /**
        * Given a course code and a roster, get all course info from Cornell API
-       * @param {*} courseCode : code name of the course to search (CS 2110)
+       * @param {*} code : code name of the course to search (CS 2110)
+       * @param {*} code : roster name of the course to search (FA19)
        * @param {*} semester : the roster name to search from (FA19)
        */
-      function getCourseInfo(courseCode) {
-        const courseCodeObj = parseCourseCode(courseCode);
+      function getCourseInfo(code, roster) {
+        const courseCodeObj = parseCourseCode(code);
         const subject = courseCodeObj.subject.toUpperCase();
-        const number = courseCodeObj.courseNumber;
 
         return new Promise((resolve, reject) => {
-          // Using Firebase
-          const coursesCollection = fb.db.collection('courses');
-          const courseRef = coursesCollection.doc(subject + number);
-
-          courseRef.get()
-            .then(doc => {
-              if (!doc.exists) reject(new Error('No document exists'));
-              else resolve(doc.data());
-            })
-            .catch(() => {
-              reject(new Error('An error occured.'));
-            });
-        });
+          fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${code}`)
+          .then(res => {
+            return res.json();
+          })
+          .then(resultJSON => {
+            const courseResult = resultJSON.data.classes[0];
+            resolve(courseResult);
+          });
+        })
       }
 
       /**

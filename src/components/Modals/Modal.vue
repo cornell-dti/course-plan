@@ -95,29 +95,22 @@ export default {
       const title = dropdown.value;
       // name used to transmit roster information
       const roster = dropdown.name;
-      console.log(roster);
 
       // TODO: can I make the valid assumption that the course code is up to the colon in the title?
-      const key = title.substring(0, title.indexOf(':'));
-      const firebaseTitle = `${key.replace(/\s/g, '')}`;
-      const docRef = coursesCollection.doc(firebaseTitle);
+      const courseCode = title.substring(0, title.indexOf(':'));
+      const subject = courseCode.split(' ')[0];
 
       const parent = this.$parent;
 
-      // TODO: error handling if course not found or some firebase error
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            parent.addCourse(doc.data());
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
+      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
+      .then(res => {
+        return res.json();
+      })
+      .then(resultJSON => {
+        const course = resultJSON.data.classes[0];
+        course.roster = roster;
+        parent.addCourse(course);
+      });
 
       // clear input and close modal when complete
       dropdown.value = '';
