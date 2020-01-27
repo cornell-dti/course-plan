@@ -59,18 +59,24 @@ export default {
           /* code array for results that contain course code and title array for results that contain title */
           const code = [];
           const title = [];
+
           for (const attr in courses) {
-            if (attr.toUpperCase().includes(val)) {
-              code.push(courses[attr].t);
-            } else if (
-              courses[attr].t
-              && courses[attr].t.toUpperCase().includes(val)
-            ) {
-              title.push(courses[attr].t);
+            if (courses[attr]) {
+              const result = { title: `${attr}: ${courses[attr].t}`, roster: courses[attr].r };
+              if (attr.toUpperCase().includes(val)) {
+                code.push(result);
+              } else if (
+                courses[attr].t
+                && courses[attr].t.toUpperCase().includes(val)
+              ) {
+                title.push(result);
+              }
             }
           }
-          code.sort();
-          title.sort();
+
+          // Sort both results by title
+          code.sort((first, second) => first.title - second.title);
+          title.sort((first, second) => first.title - second.title);
 
           /* prioritize code matches over title matches */
           const match = code.concat(title);
@@ -81,13 +87,14 @@ export default {
             /* reinitialize b for every input div */
             const div = document.createElement('DIV');
             /* make the matching letters bold: */
-            div.innerHTML = newTitle;
+            div.innerHTML = newTitle.title;
             /* insert a input field that will hold the current array item's value: */
-            div.innerHTML += `<input type='hidden' value="${newTitle}"'>`;
+            div.innerHTML += `<input type='hidden' value="${newTitle.title}" name="${newTitle.roster}">`;
             /* execute a function when someone clicks on the item value (DIV element): */
             div.addEventListener('click', () => {
               /* insert the value for the autocomplete text field: */
-              inpCopy.value = div.getElementsByTagName('input')[0].value;
+              inpCopy.value = newTitle.title;
+              inpCopy.name = newTitle.roster;
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
