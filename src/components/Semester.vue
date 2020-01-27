@@ -4,7 +4,7 @@
     :class="{ 'semester--min': !isNotSemesterButton, 'semester--compact': compact }"
     :id="id"
   >
-    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" />
+    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" />
     <confirmation
       :id="'confirmation-' + id"
       class="semester-confirmation"
@@ -216,14 +216,21 @@ export default {
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
     },
+    // buildDuplicateCautions() {
+    //   if (this.courses) {
+    //     const coursesMap = {};
+    //     this.courses.forEach(course => {
+    //       if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = 'Duplicate';
+    //       coursesMap[`${course.subject} ${course.number}`] = true;
+    //     });
+    //   }
+    // },
     buildDuplicateCautions() {
-      if (this.courses) {
-        const coursesMap = {};
-        this.courses.forEach(course => {
-          if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = 'Duplicate';
-          coursesMap[`${course.subject} ${course.number}`] = true;
-        });
-      }
+      this.$emit("build-duplicate-cautions");
+    },
+    checkCourseDuplicate(key) {
+      console.log("in checkfunc");
+      this.$emit("check-course-duplicate", key);
     },
     openSemesterMenu() {
       this.stopCloseFlag = true;

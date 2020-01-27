@@ -1,6 +1,6 @@
 <template>
   <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
-    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
+    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" @check-course-duplicate="checkCourseDuplicate" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
       <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
@@ -11,12 +11,24 @@
       class="semesterView-confirmation"
       :text="confirmationText"
     />
+    <caution
+      :id="'semesterCaution'"
+      class="semesterView-caution"
+      :text="cautionText"
+    />
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" :key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester"/>
+        <semester
+          v-bind="sem"
+          :isNotSemesterButton="true"
+          @updateBar="updateBar"
+          :activatedCourse="activatedCourse"
+          @delete-semester="deleteSemester"
+          @build-duplicate-cautions="buildDuplicateCautions"
+        />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse" @check-course-duplicate="checkCourseDuplicate"/>
       </div>
       <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
@@ -45,6 +57,7 @@ import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
+import Caution from '@/components/Caution';
 
 const clone = require('clone');
 
@@ -52,6 +65,7 @@ Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
 Vue.component('deletesemester', DeleteSemester);
+Vue.component('caution', Caution);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
@@ -74,6 +88,7 @@ export default {
   data() {
     return {
       confirmationText: '',
+      cautionText: '',
       key: 0,
       activatedCourse: {},
       isCourseClicked: false
@@ -124,6 +139,32 @@ export default {
         this.$emit('compact-updated', !this.compact);
       }
     },
+    checkCourseDuplicate(key) {
+      console.log("in checkfunc");
+      const modal = document.getElementById(`semesterModal`);
+      if (this.semesters) {
+        modal.ref.courseIsAddable = true;
+        this.semesters.forEach(semester => {
+          semester.courses.forEach(course => {
+            if (`${course.subject} ${course.number}` === key) {
+              modal.ref.courseIsAddable = false;
+              this.openCautionModal();
+            }
+          });
+        });
+      }
+    },
+    buildDuplicateCautions() {
+      if (this.semesters) {
+        const coursesMap = {};
+        this.semesters.forEach(semester => {
+          semester.courses.forEach(course => {
+            if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = 'Duplicate';
+            coursesMap[`${course.subject} ${course.number}`] = true;
+          });
+        });
+      }
+    },
     openSemesterConfirmationModal(type, year, isAdd) {
       if (isAdd) {
         this.confirmationText = `Added ${type} ${year} to plan`;
@@ -136,6 +177,15 @@ export default {
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
+      }, 5000);
+    },
+    openCautionModal() {
+      this.cautionText = `Unable to add course. Already in plan`;
+      const cautionModal = document.getElementById(`semesterCaution`);
+      cautionModal.style.display = 'flex';
+
+      setTimeout(() => {
+        cautionModal.style.display = 'none';
       }, 5000);
     },
     openSemesterModal() {
@@ -321,7 +371,7 @@ export default {
     }
   }
 
-  &-confirmation {
+  &-confirmation, &-caution {
     display: none;
     margin: auto;
   }

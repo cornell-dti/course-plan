@@ -34,9 +34,15 @@ const firebaseConfig = require('@/firebaseConfig.js');
 const { coursesCollection } = firebaseConfig;
 
 export default {
+  // data() {
+  //   return {
+  //     courseIsAddable: true
+  //   };
+  // },
   props: {
     type: String,
-    semesterID: Number
+    semesterID: Number,
+    courseIsAddable: Boolean
   },
   computed: {
     contentId() {
@@ -81,9 +87,20 @@ export default {
       }
       modal.style.display = 'none';
     },
+    checkCourseDuplicate(key) {
+      this.$emit('check-course-duplicate', key);
+    },
     addItem() {
       if (this.type === 'course') {
-        this.addCourse();
+        const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
+        const title = dropdown.value;
+
+        // TODO: can I make the valid assumption that the course code is up to the colon in the title?
+        const key = title.substring(0, title.indexOf(':'));
+        this.checkCourseDuplicate(key);
+        if (this.courseIsAddable) {
+          this.addCourse();
+        }
       } else if (this.type === 'semester') {
         this.addSemester();
       } else {
@@ -105,7 +122,7 @@ export default {
       docRef
         .get()
         .then(doc => {
-          if (doc.exists) {
+          if (doc.exists && this.courseIsAddable) {
             parent.addCourse(doc.data());
           } else {
             // doc.data() will be undefined in this case

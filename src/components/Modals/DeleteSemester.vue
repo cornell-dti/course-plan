@@ -61,7 +61,7 @@ export default {
     margin-left: auto;
     margin-right: auto;
     padding: 1rem;
-    width: 27.75rem;
+    width: 24rem;
     top: 4.75rem;
   }
 
@@ -76,8 +76,8 @@ export default {
   }
 
   &-message {
-    font-size: 16px;
-    line-height: 19px;
+    font-size: 14px;
+    line-height: 17px;
     color: #3D3D3D;
   }
 
