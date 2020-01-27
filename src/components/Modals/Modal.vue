@@ -29,10 +29,6 @@ Vue.component('newCourse', NewCourse);
 Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 
-const firebaseConfig = require('@/firebaseConfig.js');
-
-const { coursesCollection } = firebaseConfig;
-
 export default {
   props: {
     type: String,
@@ -103,14 +99,12 @@ export default {
       const parent = this.$parent;
 
       fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
-      .then(res => {
-        return res.json();
-      })
-      .then(resultJSON => {
-        const course = resultJSON.data.classes[0];
-        course.roster = roster;
-        parent.addCourse(course);
-      });
+        .then(res => res.json())
+        .then(resultJSON => {
+          const course = resultJSON.data.classes[0];
+          course.roster = roster;
+          parent.addCourse(course);
+        });
 
       // clear input and close modal when complete
       dropdown.value = '';
