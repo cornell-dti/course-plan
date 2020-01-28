@@ -1,6 +1,6 @@
 <template>
   <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
-    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" @check-course-duplicate="checkCourseDuplicate" />
+    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
       <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
@@ -28,7 +28,7 @@
         />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse" @check-course-duplicate="checkCourseDuplicate"/>
+        <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
       <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
@@ -139,21 +139,6 @@ export default {
         this.$emit('compact-updated', !this.compact);
       }
     },
-    checkCourseDuplicate(key) {
-      console.log("in checkfunc");
-      const modal = document.getElementById(`semesterModal`);
-      if (this.semesters) {
-        modal.ref.courseIsAddable = true;
-        this.semesters.forEach(semester => {
-          semester.courses.forEach(course => {
-            if (`${course.subject} ${course.number}` === key) {
-              modal.ref.courseIsAddable = false;
-              this.openCautionModal();
-            }
-          });
-        });
-      }
-    },
     buildDuplicateCautions() {
       if (this.semesters) {
         const coursesMap = {};
@@ -180,7 +165,7 @@ export default {
       }, 5000);
     },
     openCautionModal() {
-      this.cautionText = `Unable to add course. Already in plan`;
+      this.cautionText = `Unable to add course. Already in plan.`;
       const cautionModal = document.getElementById(`semesterCaution`);
       cautionModal.style.display = 'flex';
 

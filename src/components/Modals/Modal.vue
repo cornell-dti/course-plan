@@ -34,15 +34,15 @@ const firebaseConfig = require('@/firebaseConfig.js');
 const { coursesCollection } = firebaseConfig;
 
 export default {
-  // data() {
-  //   return {
-  //     courseIsAddable: true
-  //   };
-  // },
+  data() {
+    return {
+      courseIsAddable: true
+    };
+  },
   props: {
     type: String,
-    semesterID: Number,
-    courseIsAddable: Boolean
+    semesterID: Number
+    // courseIsAddable: Boolean
   },
   computed: {
     contentId() {
