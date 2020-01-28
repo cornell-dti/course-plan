@@ -104,7 +104,6 @@ const clickOutside = {
 
 
 export default {
-  // TODO: fonts! (Proxima Nova)
   data() {
     return {
       confirmationText: '',

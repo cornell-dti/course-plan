@@ -83,7 +83,6 @@ export default {
     width: 48px;
     height: 16px;
 
-    font-family: Helvetica Neue;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
