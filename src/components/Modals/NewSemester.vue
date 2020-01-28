@@ -265,7 +265,6 @@ export default {
     box-sizing: border-box;
     border-radius: 1px;
     width: 100%;
-    font-family: Helvetica Neue;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
@@ -281,7 +280,6 @@ export default {
 
   &-dropdown {
     &-placeholder {
-      font-family: Helvetica Neue;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
@@ -379,7 +377,6 @@ export default {
       left: 454px;
       top: 213px;
 
-      font-family: Helvetica Neue;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
