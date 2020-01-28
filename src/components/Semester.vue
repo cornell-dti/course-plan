@@ -135,7 +135,7 @@ export default {
       this.scrollable = true;
     });
 
-    this.buildDuplicateCautions();
+    this.buildCautions();
   },
 
   beforeDestroy() {
@@ -191,6 +191,7 @@ export default {
       const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
       this.openConfirmationModal(`Added ${data.code} to ${this.type} ${this.year}`);
+      this.buildCautions();
     },
     deleteCourse(courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
@@ -215,8 +216,19 @@ export default {
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
     },
+    buildCautions() {
+      this.buildDuplicateCautions();
+      // this.buildIncorrectPlacementCautions();
+    },
     buildDuplicateCautions() {
-      this.$emit("build-duplicate-cautions");
+      this.$emit('build-duplicate-cautions');
+    },
+    buildIncorrectPlacementCautions() {
+      if (this.courses) {
+        this.courses.forEach(course => {
+          if (!course.semesters.includes(this.type)) course.alerts.caution = `Course unavailable in the ${this.type}`;
+        });
+      }
     },
     checkCourseDuplicate(key) {
       if (this.courses) {

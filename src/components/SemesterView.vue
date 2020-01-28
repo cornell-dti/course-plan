@@ -21,8 +21,8 @@
         <semester
           v-bind="sem"
           :isNotSemesterButton="true"
-          @updateBar="updateBar"
           :activatedCourse="activatedCourse"
+          @updateBar="updateBar"
           @delete-semester="deleteSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
         />
@@ -99,6 +99,7 @@ export default {
       deep: true,
       handler() {
         this.updateFirebaseSemester();
+        console.log('Change');
       }
     }
   },
