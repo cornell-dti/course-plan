@@ -134,8 +134,8 @@ export default {
       // TODO: id?
       const randomId = Math.floor(Math.random() * Math.floor(1000));
 
-      const subject = course.code.split(' ')[0] || course.subject;
-      const number = course.code.split(' ')[1] || course.catalogNbr;
+      const subject = (course.code && course.code.split(' ')[0]) || course.subject;
+      const number = (course.code && course.code.split(' ')[1]) || course.catalogNbr;
 
       // TODO: same field?
       const name = course.titleLong || course.name;
@@ -190,7 +190,7 @@ export default {
       const distributions = course.distributions || course.catalogDistr.split(',');
 
       // Get last semester of available course. TODO: Remove when no longer firebase data dependant
-      const lastRoster = course.lastRoster || course.semester;
+      const lastRoster = course.lastRoster || course.roster;
 
       // TODO: pick color if a new course instead of this default
       const color = course.color || '2BBCC6';
