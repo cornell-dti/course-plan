@@ -163,7 +163,7 @@ export default {
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
-      }, 5000);
+      }, 3000);
     },
     openCautionModal() {
       this.cautionText = `Unable to add course. Already in plan.`;
@@ -172,7 +172,7 @@ export default {
 
       setTimeout(() => {
         cautionModal.style.display = 'none';
-      }, 5000);
+      }, 3000);
     },
     openSemesterModal() {
       const modal = document.getElementById('semesterModal');

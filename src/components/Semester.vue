@@ -181,7 +181,7 @@ export default {
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
-      }, 5000);
+      }, 3000);
     },
     closeConfirmationModal() {
       const confirmationModal = document.getElementById(`confirmation-${this.id}`);
