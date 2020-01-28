@@ -190,7 +190,8 @@ export default {
     addCourse(data) {
       const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
-      this.openConfirmationModal(`Added ${data.code} to ${this.type} ${this.year}`);
+      const courseCode = `${data.subject} ${data.catalogNbr}`;
+      this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
       this.buildCautions();
     },
     deleteCourse(courseCode) {
