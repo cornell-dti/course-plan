@@ -218,7 +218,8 @@
                     "includes": [
                         [
                             "written expression",
-                            "oral expression"
+                            "oral expression",
+                            "First-Year Writing Seminar"
                         ]
                     ],
                     "fulfilledBy": "credits",
@@ -231,7 +232,8 @@
                     "search": "catalogSatisfiesReq",
                     "includes": [
                         [
-                            "written expression"
+                            "written expression",
+                            "First-Year Writing Seminar"
                         ]
                     ],
                     "fulfilledBy": "credits",
@@ -615,6 +617,13 @@
             ],
             "requirements": [
                 {
+                    "name": "AEM Concentration Requirement",
+                    "description": "AEM majors must choose at least one of the following eleven concentrations by the beginning of their junior year, and may choose no more than two. No more than one course may fulfill the elective credits of two concentrations. Courses used to fulfill a core Applied Economics or Quantitative Methods requirement cannot also count towards a concentration requirement except in EERE. One class from the core requirements may be taken for a S/U grade. NO S/U grades will be accepted in a declared concentration, unless a class is offered S/U only. All course petitions or substitutions are managed through the Dyson Office of Student Services in consultation with a committee of faculty from each concentration",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
                     "name": "Management Requirements",
                     "description": "AEM 3200 and AEM 3230 are optional for the following three concentrations: applied economics; environmental, energy, and resource economics; and international trade and development.",
                     "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
@@ -722,51 +731,47 @@
                     "fulfilledBy": "self-check"
                 },
                 {
-                    "name": "Environmental, Energy, and Resource Economics",
-                    "description": "",
+                    "name": "Grand Challenges Reqiurement Part 1: Written expression course",
+                    "description": "Sophomore year: 3 credits. Focus: Critical thinking. These course options are centered around contemporary global issues and will help you learn communication, business analysis, and critical thinking skills as you develop cultural awareness. Available courses may vary per semester. You’ll choose one of the following:",
                     "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
                     "search": "code",
                     "includes": [
                         [
-                            "AEM 2500"
-                        ],
-                        [
-                            "AEM 4500"
-                        ],
-                        [
-                            "AEM 4510"
-                        ],
-                        [
-                            "AEM 4515"
+                            "AEM 2000",
+                            "AEM 2555",
+                            "AEM 2800",
+                            "AEM 2805",
+                            "AEM 4940"
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 4
+                    "minCount": 1
                 },
                 {
-                    "name": "Economic Analysis",
-                    "description": "",
+                    "name": "Grand Challenges Reqiurement Part 2: Pre-Project Weekend Immersion",
+                    "description": "Junior year: 1.5 credits. Focus: Working as part of a team",
                     "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
                     "search": "code",
                     "includes": [
                         [
-                            "AEM 3310"
-                        ],
-                        [
-                            "AEM 4100"
-                        ],
-                        [
-                            "AEM 4140"
-                        ],
-                        [
-                            "AEM 4160"
-                        ],
-                        [
-                            "AEM 4550"
+                            "AEM 3000"
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 5
+                    "minCount": 1
+                },
+                {
+                    "name": "Grand Challenges Reqiurement Part 3: Project Course",
+                    "description": "Senior year, 3 credits. Focus: Local and global community involvement",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 4000"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
                 }
             ]
         },
@@ -1152,6 +1157,26 @@
                     ],
                     "fulfilledBy": "credits",
                     "minCount": 9
+                },
+                {
+                    "name": "Engineering Distribution Courses",
+                    "description": "ENGRI 1xxx, ENGRD 2700, and ENGRD xxxx. ENGRD 2110 is recommended",
+                    "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ENGRD 2700"
+                        ],
+                        [
+                            "ENGRD 2***",
+                            "ENGRD 3***"
+                        ],
+                        [
+                            "ENGRI 1***"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
                 },
                 {
                     "name": "Major Approved Electives (Non–ORIE)",
