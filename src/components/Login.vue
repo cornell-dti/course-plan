@@ -48,6 +48,8 @@ import firebase from 'firebase';
 
 const fb = require('../firebaseConfig.js');
 
+const { alphaWhitelistCollection } = fb;
+
 export default {
   data() {
     return {
@@ -64,10 +66,23 @@ export default {
       fb.auth
         .signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password)
         .then(user => {
-          this.$store.commit('setCurrentUser', user);
-          this.$store.dispatch('fetchUserProfile');
-          this.performingRequest = false;
-          this.$router.push(`${process.env.BASE_URL}/`);
+          alphaWhitelistCollection.get().then(querySnapshot => {
+            let isAlphaEmail = false;
+            querySnapshot.forEach(doc => {
+              if (doc.data().email === this.loginForm.email) {
+                isAlphaEmail = true;
+              }
+            });
+            this.performingRequest = false;
+            if (!isAlphaEmail) {
+              fb.auth.signOut();
+              return;
+            }
+
+            this.$store.commit('setCurrentUser', user);
+            this.$store.dispatch('fetchUserProfile');
+            this.$router.push(`${process.env.BASE_URL}/`);
+          });
         })
         .catch(err => {
           console.log(err);
@@ -81,12 +96,24 @@ export default {
       fb.auth
         .signInWithPopup(provider)
         .then(user => {
-          this.$store.commit('setCurrentUser', user.user);
-          this.$store.dispatch('fetchUserProfile');
-          this.performingRequest = false;
-          console.log(firebase.auth().currentUser);
-          console.log(user.additionalUserInfo.profile);
-          this.$router.push(`${process.env.BASE_URL}/`);
+          // Check whitelist emails to ensure user can log in
+          alphaWhitelistCollection.get().then(querySnapshot => {
+            let isAlphaEmail = false;
+            querySnapshot.forEach(doc => {
+              if (doc.data().email === user.user.email) {
+                isAlphaEmail = true;
+              }
+            });
+            this.performingRequest = false;
+            if (!isAlphaEmail) {
+              fb.auth.signOut();
+              return;
+            }
+
+            this.$store.commit('setCurrentUser', user.user);
+            this.$store.dispatch('fetchUserProfile');
+            this.$router.push(`${process.env.BASE_URL}/`);
+          });
         })
         .catch(err => {
           console.log(err);
