@@ -193,7 +193,7 @@ export default {
       const lastRoster = course.lastRoster || course.roster;
 
       // TODO: pick color if a new course instead of this default
-      const color = course.color || '2BBCC6';
+      const color = course.color || 'C4C4C4';
 
       const alerts = { requirement: null, caution: null };
 
