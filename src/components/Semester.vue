@@ -4,7 +4,7 @@
     :class="{ 'semester--min': !isNotSemesterButton, 'semester--compact': compact }"
     :id="id"
   >
-    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" />
+    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" ref="modal" />
     <confirmation
       :id="'confirmation-' + id"
       class="semester-confirmation"
@@ -135,7 +135,7 @@ export default {
       this.scrollable = true;
     });
 
-    this.buildDuplicateCautions();
+    this.buildCautions();
   },
 
   beforeDestroy() {
@@ -181,7 +181,7 @@ export default {
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
-      }, 5000);
+      }, 3000);
     },
     closeConfirmationModal() {
       const confirmationModal = document.getElementById(`confirmation-${this.id}`);
@@ -190,7 +190,9 @@ export default {
     addCourse(data) {
       const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
-      this.openConfirmationModal(`Added ${data.code} to ${this.type} ${this.year}`);
+      const courseCode = `${data.subject} ${data.catalogNbr}`;
+      this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
+      this.buildCautions();
     },
     deleteCourse(courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
@@ -215,12 +217,28 @@ export default {
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
     },
+    buildCautions() {
+      this.buildDuplicateCautions();
+      // this.buildIncorrectPlacementCautions();
+    },
     buildDuplicateCautions() {
+      this.$emit('build-duplicate-cautions');
+    },
+    buildIncorrectPlacementCautions() {
       if (this.courses) {
-        const coursesMap = {};
         this.courses.forEach(course => {
-          if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = 'Duplicate';
-          coursesMap[`${course.subject} ${course.number}`] = true;
+          if (!course.semesters.includes(this.type)) course.alerts.caution = `Course unavailable in the ${this.type}`;
+        });
+      }
+    },
+    checkCourseDuplicate(key) {
+      if (this.courses) {
+        this.$refs.modal.courseIsAddable = true;
+        this.courses.forEach(course => {
+          if (`${course.subject} ${course.number}` === key) {
+            this.$refs.modal.courseIsAddable = false;
+            this.$parent.openCautionModal();
+          }
         });
       }
     },

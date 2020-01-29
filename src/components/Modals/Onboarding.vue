@@ -525,7 +525,6 @@ export default {
   }
 
   &-subHeader {
-    font-weight: 600;
     font-size: 24px;
     line-height: 29px;
 
@@ -611,9 +610,8 @@ export default {
     border: 0;
     box-sizing: border-box;
     border-radius: 5px;
-    font-weight: bold;
     font-size: 14px;
-    line-height: 17px;
+    line-height: 14px;
     color: #FFFFFF;
 
     width: 20rem;

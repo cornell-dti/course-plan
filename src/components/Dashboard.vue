@@ -10,9 +10,9 @@
         <requirements class="dashboard-reqs" v-if="loaded"
           :semesters="semesters"
           :user="user"
-          :key="requirementsKey"
           :isBottomPreview="bottomBar.isPreview"
           :isBottomBar="bottomBar.isExpanded"
+          :key="requirementsKey"
           @requirementsMap="loadRequirementsMap"
          />
       </div>

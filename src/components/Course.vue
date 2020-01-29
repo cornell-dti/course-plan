@@ -30,7 +30,7 @@
           <span v-if="notCompact && semesterString" class="course-semesters">{{
             semesterString
           }}</span>
-          <div v-if="notCompact && alerts.requirement" class="course-outerWrapper course-tooltip">
+          <!-- <div v-if="notCompact && alerts.requirement" class="course-outerWrapper course-tooltip">
             <div class="course-iconWrapper course-iconWrapper--info">
               <img class="course-icon course-icon--info" src="../assets/images/info.svg" />
             </div>
@@ -38,10 +38,10 @@
               class="course-tooltiptext course-tooltiptext--info"
               v-html="requirementString"
             ></div>
-          </div>
+          </div> -->
           <div v-if="alerts.caution" class="course-outerWrapper course-tooltip">
-            <div class="course-iconWrapper">
-              <img class="course-icon" src="../assets/images/caution.svg" />
+            <div class="course-iconWrapper course-iconWrapper--caution">
+              <img class="course-icon course-icon--caution" src="../assets/images/caution.svg" />
             </div>
             <div
               class="course-tooltiptext course-tooltiptext--caution"
@@ -328,7 +328,15 @@ export default {
     margin-left: 0.2rem;
     align-items: center;
 
-    &--info {
+    // &--info {
+    //   &:before {
+    //     margin-right: 0.2rem;
+    //     font-style: normal;
+    //     content: '|';
+    //   }
+    // }
+
+    &--caution {
       &:before {
         margin-right: 0.2rem;
         font-style: normal;

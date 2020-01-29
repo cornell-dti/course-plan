@@ -30,9 +30,15 @@ Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 
 export default {
+  data() {
+    return {
+      courseIsAddable: true
+    };
+  },
   props: {
     type: String,
     semesterID: Number
+    // courseIsAddable: Boolean
   },
   computed: {
     contentId() {
@@ -77,9 +83,20 @@ export default {
       }
       modal.style.display = 'none';
     },
+    checkCourseDuplicate(key) {
+      this.$emit('check-course-duplicate', key);
+    },
     addItem() {
       if (this.type === 'course') {
-        this.addCourse();
+        const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
+        const title = dropdown.value;
+
+        // TODO: can I make the valid assumption that the course code is up to the colon in the title?
+        const key = title.substring(0, title.indexOf(':'));
+        this.checkCourseDuplicate(key);
+        if (this.courseIsAddable) {
+          this.addCourse();
+        }
       } else if (this.type === 'semester') {
         this.addSemester();
       } else {
@@ -98,12 +115,29 @@ export default {
 
       const parent = this.$parent;
 
+
+      // // TODO: error handling if course not found or some firebase error
+      // docRef
+      //   .get()
+      //   .then(doc => {
+      //     if (doc.exists && this.courseIsAddable) {
+      //       parent.addCourse(doc.data());
+      //     } else {
+      //       // doc.data() will be undefined in this case
+      //       console.log('No such document!');
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log('Error getting document:', error);
       fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
         .then(res => res.json())
         .then(resultJSON => {
           const course = resultJSON.data.classes[0];
           course.roster = roster;
-          parent.addCourse(course);
+
+          if (this.courseIsAddable) {
+            parent.addCourse(course);
+          }
         });
 
       // clear input and close modal when complete
