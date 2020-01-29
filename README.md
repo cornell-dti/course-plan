@@ -1,6 +1,6 @@
 # CoursePlan
 
-Access the alpha (if you have access) at [courseplan.io](http://courseplan.io "courseplan.io")
+Access CoursePlan at [courseplan.io](http://courseplan.io "courseplan.io")
 
 CoursePlan is a four-year academic planner for Cornell undergraduates developed by the Design & Tech Initiative. CoursePlan helps undergraduates track their courses and their requirements automatically depending on their college, major, and minor. It aims to allow students view the big picture of their time at Cornell.
 

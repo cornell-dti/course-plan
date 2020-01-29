@@ -1,4 +1,4 @@
-# Requirements data
+# Requirements Data
 The requirements data and its interpreting algorithm is uniquely developed by and for CoursePlan. The data for requirements data can be accessed at `requirements/reqs.json`. The structure is designed to be able to accurately express almost all requirements at Cornell while making it as easy as possible to read and maintain. Here's an example of the data for the College of Engineering.
 
 ```json
@@ -16,8 +16,8 @@ The requirements data and its interpreting algorithm is uniquely developed by an
 		},
 		{
 			"name": "Freshman Writing Seminars",
-			"description": "All students are required to take two first-year writing seminars.",
-			"source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
+            "description": "All students are required to take two first-year writing seminars",
+            "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
 			"search": "catalogSatisfiesReq",
 			"includes": [["First-Year Writing Seminar."]],
 			"fulfilledBy": "credits",
