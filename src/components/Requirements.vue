@@ -167,6 +167,8 @@ export default {
     // Get array of courses from semesters data
     const courses = this.getCourseCodesArray();
 
+    console.log(this.user.major);
+
     this.getReqs(courses, this.user.college, this.user.major).then(groups => {
       console.log(groups);
       // Turn result into data readable by requirements menu
@@ -330,6 +332,8 @@ export default {
         specific: college,
         reqs: await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements, 'college')
       });
+
+      console.log(major);
 
       // PART 3: check major reqs
       if (!(major in reqsData.major)) throw new Error('Major not found.');
