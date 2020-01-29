@@ -230,7 +230,7 @@ export default {
 
   &-section {
     font-size: 14px;
-    line-height: 17px;
+    line-height: 15px;
     color: #757575;
     display: flex;
     flex-direction: column;
@@ -268,7 +268,7 @@ export default {
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
-    line-height: 17px;
+    line-height: 14px;
 
     color: #b6b6b6;
   }
@@ -283,7 +283,7 @@ export default {
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
-      line-height: 17px;
+      line-height: 15px;
 
       color: #b6b6b6;
 
@@ -380,7 +380,7 @@ export default {
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
-      line-height: 17px;
+      line-height: 15px;
       display: flex;
       align-items: center;
 

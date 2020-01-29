@@ -232,6 +232,7 @@ export default {
   }
 
   &-dotRow {
+    padding: 3px 0 5px 0;
     display: flex;
     position: relative;
   }
