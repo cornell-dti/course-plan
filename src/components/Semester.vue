@@ -202,6 +202,8 @@ export default {
         }
       }
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
+      // Update requirements menu
+      this.$parent.$parent.updateRequirementsMenu();
     },
     colorCourse(color, courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
