@@ -241,7 +241,158 @@
                 }
             ]
         },
-        "AR": {},
+        "AR": {
+            "name": "Architecture, Art and Planning",
+            "requirements": [
+                {
+                    "name": "Introductory Studio Practice",
+                    "description": "6 classes of studio practice: Introductory 2000-level studios. To be completed by the end of the third semester.",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 2201"
+                        ],
+                        [
+                            "ART 2301"
+                        ],
+                        [
+                            "ART 2401"
+                        ],
+                        [
+                            "ART 2501"
+                        ],
+                        [
+                            "ART 2601"
+                        ],
+                        [
+                            "ART 2701"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 6
+                },
+                {
+                    "name": "Elective Studio Practice",
+                    "description": "4 classes of studio practice: Elective 3000-level studios. B.F.A. students are required to successfully complete four 3000-level studios from any of the six different studio practice areas as well as Rome and/or New York City. Students may enroll in a 3000-level studio once they have successfully completed the 2000-level studio in that same studio practice area. Sample classes include:",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 3201"
+                        ],
+                        [
+                            "ART 3301"
+                        ],
+                        [
+                            "ART 3401"
+                        ],
+                        [
+                            "ART 3501"
+                        ],
+                        [
+                            "ART 3601"
+                        ],
+                        [
+                            "ART 3705"
+                        ],
+                        [
+                            "ART 3001"
+                        ],
+                        [
+                            "ART 3003"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 4
+                },
+                {
+                    "name": "Pre-thesis Studio Practice",
+                    "description": "1 class of studio practice: Pre-thesis",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 3006"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Thesis Studio Practice",
+                    "description": "2 classes of studio practice: Thesis year. All required 3000-level studios and ART 3006 must be completed before ART 4003 Thesis I, and all elective 3000-level studios must be completed before ART 4004 Thesis II.",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 4003"
+                        ],
+                        [
+                            "ART 4004"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Shop Instruction",
+                    "description": "1 class of shop instruction",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 2900"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Theory and Criticism",
+                    "description": "3 classes of theory and criticism",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 2103"
+                        ],
+                        [
+                            "ART 4100"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Art History",
+                    "description": "3 classes of art history. One modern/contemporary art history class, one global art history class, and one additional art history elective.",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Freshman Writing Seminars",
+                    "description": "2 writing classes. Any two writing classes from the following: First-Year Writing Seminars (FWS), ENGL 2880, ENGL 2890",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        [
+                            "First-Year Writing Seminar."
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 6
+                },
+                {
+                    "name": "Elective Plan",
+                    "description": "Any academic class at Cornell chosen in consultation with faculty advisor.",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                }
+            ]
+        },
         "AS": {
             "name": "Arts and Sciences",
             "requirements": [
@@ -660,7 +811,9 @@
                         [
                             "ILRLE 2400"
                         ]
-                    ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 9
                 },
                 {
                     "name": "Freshman Writing Seminars",
@@ -695,7 +848,7 @@
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 1
-                },
+                }
             ]
         }
     },
