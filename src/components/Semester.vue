@@ -171,6 +171,11 @@ export default {
 
       const modal = document.getElementById(`courseModal-${this.id}`);
       modal.style.display = 'block';
+
+      // Activate focus
+      const input = document.getElementById(`dropdown-${this.id}`);
+      input.value = '';
+      input.focus();
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively

@@ -264,7 +264,7 @@ export default {
             arrowColor: '',
             placeholderColor: majorPlaceholderColor,
             placeholder: majorText,
-            acronym: majorAcronym,
+            acronym: majorAcronym
           }
         ],
         minor: [
