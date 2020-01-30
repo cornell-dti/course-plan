@@ -2,7 +2,7 @@
   <div class="newCourse">
     <div class="newCourse-text">{{ text }}</div>
     <div class="autocomplete">
-      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" />
+      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
   </div>
 </template>
@@ -162,7 +162,7 @@ export default {
     },
 
     addCourse() {
-      this.$parent.addItem();
+      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$parent.addItem();
     }
   }
 };

@@ -168,6 +168,7 @@ export default {
 
       // Activate focus
       const input = document.getElementById(`dropdown-${this.id}`);
+      input.value = '';
       input.focus();
     },
     openSemesterModal() {
