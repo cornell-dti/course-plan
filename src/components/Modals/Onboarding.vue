@@ -76,6 +76,8 @@
                 </div>
               </div>
             </div>
+
+
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <label class="onboarding-label">Your Major (required)</label>
               <div class="onboarding-selectWrapper">
@@ -119,6 +121,7 @@
                   </div>
                 </div>
               </div>
+              <!--
               <div class="onboarding-addRemoveWrapper" :class="{ 'onboarding--hidden': Object.keys(majors).length <= 0}">
                 <div class="onboarding-add" @click="addMajor">
                   Add
@@ -127,7 +130,9 @@
                   Remove
                 </div>
               </div>
+              -->
             </div>
+            <!--
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <label class="onboarding-label">Your Minor (optional)</label>
               <div class="onboarding-selectWrapper">
@@ -180,6 +185,7 @@
                 </div>
               </div>
             </div>
+            -->
           </div>
         </div>
       </div>
