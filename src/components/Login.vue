@@ -12,7 +12,7 @@
         <div class="container p-0">
             <div class="row top-bar justify-content-between no-gutters">
                 <div class="col-10">
-                    <img class="logo" src="../assets/images/logo.svg" alt = "logo" />
+                    <img class="logo" src="@/assets/images/logo.svg" alt = "logo" />
                   </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <img id= "hide"  style="position:relative" class="laptop" src="../assets/images/laptop.png" alt = "laptop preview" />
+                    <img id= "hide"  style="position:relative" class="laptop" src="@/assets/images/laptop.png" alt = "laptop preview" />
                 </div>
             </div>
         </div>
@@ -41,24 +41,24 @@
             <div class="row new no-gutters">
                 <div class="col">
                     <div class="row tasks">
-                        <div class="col-1 tasks"><img src="../assets/images/Task1.svg" alt = "checklist"/></div>
+                        <div class="col-1 tasks"><img src="@/assets/images/Task1.svg" alt = "checklist"/></div>
                         <div class="col-11"><p class= "sub">Fully personalized to track your requirements</p></div>
                     </div>
                     <div class="row tasks">
-                        <div class="col-1 tasks"><img  src="../assets/images/Task2.svg" alt = "browser" /></div>
+                        <div class="col-1 tasks"><img  src="@/assets/images/Task2.svg" alt = "browser" /></div>
                         <div class="col-11"><p class= "sub">Customizable interface to view your courses</p>  </div>
                     </div>
                     <div class="row tasks">
-                        <div class="col-1 tasks"><img  src="../assets/images/Task3.svg" alt = "Network" /></div>
+                        <div class="col-1 tasks"><img  src="@/assets/images/Task3.svg" alt = "Network" /></div>
                         <div class="col-11"><p class= "sub">Built-in system to check your progress</p></div>
                     </div>
                     <div class="row tasks">
-                        <div class="col-1 tasks"><img  src="../assets/images/Task4.svg" alt = "Starred comment" /></div>
+                        <div class="col-1 tasks"><img  src="@/assets/images/Task4.svg" alt = "Starred comment" /></div>
                         <div class="col-11"><p class= "sub">Recommends courses based on your needs</p> </div>
                     </div>
                 </div>
                 <div class="col">
-                    <img id= "hide" style="position:absolute" class="women" src="../assets/images/Person_planning.svg" alt = "women planning" />
+                    <img id= "hide" style="position:absolute" class="women" src="@/assets/images/Person_planning.svg" alt = "women planning" />
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
         <div class="container-fluid plan p-0">
             <div class="drag row no-gutters">
                 <div class = "col" >
-                    <img id= "hide" style="position:relative" class="preview" src="../assets/images/drag.svg" alt = "Dragging preview" />
+                    <img id= "hide" style="position:relative" class="preview" src="@/assets/images/drag.svg" alt = "Dragging preview" />
                 </div>
                 <div class = "col comment" >
                     <h1  class="head" style = "text-align: left;">Drag Your Course In</h1>
@@ -86,7 +86,7 @@
                     <p class= "sub">Use Courseplan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
                 </div>
                 <div class = "col" >
-                    <img id= "hide" class="schedule" src="../assets/images/schedule.svg" alt = "Plan preview" />
+                    <img id= "hide" class="schedule" src="@/assets/images/schedule.svg" alt = "Plan preview" />
                 </div>
             </div>
         </div>
@@ -351,4 +351,6 @@ export default {
         display: none;
       }
     }
+
+
 </style>
