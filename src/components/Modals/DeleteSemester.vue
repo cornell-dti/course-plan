@@ -40,6 +40,7 @@ export default {
   //   };
   // },
   props: {
+    deleteSemID: Number,
     deleteSemType: String,
     deleteSemYear: Number
   },
@@ -57,14 +58,10 @@ export default {
   },
   methods: {
     closeCurrentModal() {
-      const modal = document.getElementById('deleteSemesterModal');
+      const modal = document.getElementById(`deleteSemesterModal-${this.deleteSemID}`);
       modal.style.display = 'none';
     },
     deleteSemester() {
-      console.log("in delete semester");
-      console.log(this.deleteSemType);
-      console.log(this.deleteSemYear);
-      // console.log(this.$parent);
       this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);
       this.closeCurrentModal();
     }

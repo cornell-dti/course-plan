@@ -11,9 +11,10 @@
       :text="confirmationText"
     />
     <deletesemester
-      id="deleteSemesterModal"
+      :id="'deleteSemesterModal-' + id"
       class="semester-modal-delete"
       @delete-semester="deleteSemester"
+      :deleteSemID="deleteSemID"
       :deleteSemType="deleteSemType"
       :deleteSemYear="deleteSemYear"
       ref="deletesemester"
@@ -115,6 +116,7 @@ export default {
       semesterMenuOpen: false,
       stopCloseFlag: false,
 
+      deleteSemID: 0,
       deleteSemType: '',
       deleteSemYear: 0
     };
@@ -267,17 +269,12 @@ export default {
       }
     },
     openDeleteSemesterModal() {
-      console.log("in semester");
-      console.log(this.type);
-      console.log(this.year);
       this.deleteSemType = this.type;
       this.deleteSemYear = this.year;
-      const modal = document.getElementById('deleteSemesterModal');
+      this.deleteSemID = this.id;
+
+      const modal = document.getElementById(`deleteSemesterModal-${this.id}`);
       modal.style.display = 'block';
-      console.log(this.$refs.deletesemester);
-      // this.$refs.deletesemester.semType = this.type;
-      // this.$refs.deletesemester.semYear = this.year;
-      // console.log(this.$refs.deletesemester);
     },
     deleteSemester(type, year) {
       this.$emit('delete-semester', type, year);

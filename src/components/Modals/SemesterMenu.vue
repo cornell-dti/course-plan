@@ -15,9 +15,6 @@
 export default {
   methods: {
     openDeleteSemesterModal() {
-      console.log("in semester menu");
-      console.log(this.$parent.type);
-      console.log(this.$parent.year);
       this.$emit('open-delete-semester-modal');
       const semesterMenu = document.getElementById('semesterMenu');
       semesterMenu.style.display = 'none';

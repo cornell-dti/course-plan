@@ -37,10 +37,10 @@
         v-for="sem in compactSemesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
       </div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
@@ -57,6 +57,7 @@ import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
 import Caution from '@/components/Caution';
+import DeleteSemester from '@/components/Modals/DeleteSemester';
 
 const clone = require('clone');
 
@@ -64,6 +65,7 @@ Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
 Vue.component('caution', Caution);
+Vue.component('deletesemester', DeleteSemester);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
@@ -183,7 +185,7 @@ export default {
           this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns();
         }
       }
-      const deleteSemesterModal = document.getElementById('deleteSemesterModal');
+      const deleteSemesterModal = document.getElementById('deleteSemester');
       if (event.target === deleteSemesterModal) {
         deleteSemesterModal.style.display = 'none';
       }
