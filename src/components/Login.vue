@@ -25,7 +25,7 @@
                     <div class="row no-gutters"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
                     <div class="row">
                         <div class="col-5" >
-                            <button  @click="socialLogin"  class="email-button" variant= "primary"  v-on:click="addUser"> GET STARTED </button>
+                            <button  @click="socialLogin"  class="email-button" variant= "primary"> ACCESS ALPHA </button>
                         </div>
                     </div>
                 </div>
@@ -151,9 +151,6 @@ export default {
       performingRequest: false
     };
   },
-  firebase: {
-    users: emailsCollection
-  },
   methods: {
     login() {
       this.performingRequest = true;
@@ -221,11 +218,11 @@ export default {
     addUser(email) {
       console.log(email);
       if (this.validateEmail(this.newUser.email)) {
-        alert('You have entered an valid email address!');
+        alert('Your email has been added to the waitlist. We\'ll be in touch shortly!');
+        // Todo: add email to list
       } else {
         alert('You have entered an invalid email address!');
       }
-      emailsCollection.add(this.newUser);
       this.newUser.email = '';
     },
     getYear() {
@@ -261,7 +258,6 @@ export default {
     }
     .plan-head{
         padding-bottom: 30px;
-        font-weight: bold;
         font-size: 60px;
         line-height: 60px;
         color: #4F4F4F;
