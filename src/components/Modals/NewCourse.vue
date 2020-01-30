@@ -2,7 +2,7 @@
   <div class="newCourse">
     <div class="newCourse-text">{{ text }}</div>
     <div class="autocomplete">
-      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :placeholder="placeholder" />
+      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" />
     </div>
   </div>
 </template>
@@ -159,6 +159,10 @@ export default {
       document.addEventListener('click', e => {
         closeAllLists(e.target);
       });
+    },
+
+    addCourse() {
+      this.$parent.addItem();
     }
   }
 };

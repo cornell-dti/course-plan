@@ -99,7 +99,6 @@ export default {
       deep: true,
       handler() {
         this.updateFirebaseSemester();
-        console.log('Change');
       }
     }
   },

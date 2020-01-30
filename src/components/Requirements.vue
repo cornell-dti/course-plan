@@ -328,7 +328,6 @@ export default {
         reqs: await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements)
       });
 
-      console.log(major);
       // PART 3: check major reqs
       if (!(major in reqsData.major)) throw new Error('Major not found.');
       const majorReqs = reqsData.major[major];
