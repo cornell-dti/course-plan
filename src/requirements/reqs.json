@@ -606,7 +606,24 @@
                 }
             ]
         },
-        "HE": {},
+        "HE": {
+            "name": "Human Ecology",
+            "requirements": [
+                {
+                    "name": "Freshman Writing Seminars",
+                    "description": "All students are required to take two first-year writing seminars.",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        [
+                            "First-Year Writing Seminar."
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 6
+                }
+            ]
+        },
         "IL": {}
     },
     "major": {
