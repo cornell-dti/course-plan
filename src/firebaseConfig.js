@@ -25,10 +25,11 @@ const { currentUser } = auth;
 
 // firebase collections
 const usersCollection = db.collection('users');
-const coursesCollection = db.collection('courses');
+// const coursesCollection = db.collection('courses');
 const userDataCollection = db.collection('userData');
 const emailsCollection = db.collection('emails');
 
 module.exports = {
-  db, auth, currentUser, usersCollection, coursesCollection, userDataCollection, emailsCollection
+  // Temp: removed coursesCollection
+  db, auth, currentUser, usersCollection, userDataCollection, emailsCollection
 };

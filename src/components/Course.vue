@@ -14,7 +14,7 @@
     </div>
     <div :class="{ 'course-content--min': !notCompact }" class="course-content">
       <div :class="{ 'course-main--min': !notCompact }" class="course-main">
-        <div class="course-top">
+        <div :class="{ 'course-top--min': !notCompact }" class="course-top">
           <div :class="{ 'course-code--min': !notCompact }" class="course-code">
             {{ subject }} {{ number }}
           </div>
@@ -205,23 +205,18 @@ export default {
   }
 
   &-main {
-    width: 100%;
-    margin-right: 1rem;
-
     &--min {
       display: flex;
       align-items: center;
       width: 100%;
       justify-content: space-between;
-      margin-right: 0.5rem;
     }
   }
 
   &-color {
-    width: 1.35rem;
+    width: 1.25rem;
     border-radius: 0.42rem 0 0 0.42rem;
     background-color: var(--bg-color);
-    margin-right: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -261,14 +256,16 @@ export default {
   }
 
   &-content {
-    margin: 0.75rem 0 0.75rem 0;
+    width: 18rem;
+    margin: 0.75rem 1rem;
     display: flex;
     justify-content: space-between;
-    width: 100%;
 
     &--min {
+      width: 9.25rem;
       margin-bottom: 0;
       margin-top: 0;
+      margin-right: .5rem;
     }
   }
 
@@ -276,6 +273,12 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    &--min {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
   }
 
   &-code {
@@ -294,6 +297,11 @@ export default {
     color: #3d3d3d;
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
+    width: 18rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &-info {
