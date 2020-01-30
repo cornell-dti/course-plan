@@ -279,6 +279,7 @@ export default {
   border-color: #15a6cf;
   background: rgba(0, 0, 0, 0.03);
   color: #15a6cf;
+  cursor: pointer;
 }
 
 .semester {
@@ -352,6 +353,11 @@ export default {
     padding: 5px 0 8px 0;
     display: flex;
     position: relative;
+    &:hover,
+    &:active,
+    &:focus {
+      cursor: pointer;
+    }
   }
 
   &-dot {
