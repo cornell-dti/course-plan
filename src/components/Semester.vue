@@ -4,16 +4,20 @@
     :class="{ 'semester--min': !isNotSemesterButton, 'semester--compact': compact }"
     :id="id"
   >
-    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" />
+    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" ref="modal" />
     <confirmation
       :id="'confirmation-' + id"
       class="semester-confirmation"
       :text="confirmationText"
     />
     <deletesemester
-      id="deleteSemesterModal"
+      :id="'deleteSemesterModal-' + id"
       class="semester-modal-delete"
       @delete-semester="deleteSemester"
+      :deleteSemID="deleteSemID"
+      :deleteSemType="deleteSemType"
+      :deleteSemYear="deleteSemYear"
+      ref="deletesemester"
     />
     <div v-if="isNotSemesterButton" class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
@@ -104,14 +108,17 @@ const clickOutside = {
 
 
 export default {
-  // TODO: fonts! (Proxima Nova)
   data() {
     return {
       confirmationText: '',
       scrollable: true,
 
       semesterMenuOpen: false,
-      stopCloseFlag: false
+      stopCloseFlag: false,
+
+      deleteSemID: 0,
+      deleteSemType: '',
+      deleteSemYear: 0
     };
   },
   props: {
@@ -136,7 +143,7 @@ export default {
       this.scrollable = true;
     });
 
-    this.buildDuplicateCautions();
+    this.buildCautions();
   },
 
   beforeDestroy() {
@@ -166,6 +173,11 @@ export default {
 
       const modal = document.getElementById(`courseModal-${this.id}`);
       modal.style.display = 'block';
+
+      // Activate focus
+      const input = document.getElementById(`dropdown-${this.id}`);
+      input.value = '';
+      input.focus();
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
@@ -182,7 +194,7 @@ export default {
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
-      }, 5000);
+      }, 3000);
     },
     closeConfirmationModal() {
       const confirmationModal = document.getElementById(`confirmation-${this.id}`);
@@ -191,7 +203,9 @@ export default {
     addCourse(data) {
       const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
-      this.openConfirmationModal(`Added ${data.code} to ${this.type} ${this.year}`);
+      const courseCode = `${data.subject} ${data.catalogNbr}`;
+      this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
+      this.buildCautions();
     },
     deleteCourse(courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
@@ -201,6 +215,8 @@ export default {
         }
       }
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
+      // Update requirements menu
+      this.$parent.$parent.updateRequirementsMenu();
     },
     colorCourse(color, courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
@@ -216,12 +232,28 @@ export default {
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
     },
+    buildCautions() {
+      this.buildDuplicateCautions();
+      // this.buildIncorrectPlacementCautions();
+    },
     buildDuplicateCautions() {
+      this.$emit('build-duplicate-cautions');
+    },
+    buildIncorrectPlacementCautions() {
       if (this.courses) {
-        const coursesMap = {};
         this.courses.forEach(course => {
-          if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = 'Duplicate';
-          coursesMap[`${course.subject} ${course.number}`] = true;
+          if (!course.semesters.includes(this.type)) course.alerts.caution = `Course unavailable in the ${this.type}`;
+        });
+      }
+    },
+    checkCourseDuplicate(key) {
+      if (this.courses) {
+        this.$refs.modal.courseIsAddable = true;
+        this.courses.forEach(course => {
+          if (`${course.subject} ${course.number}` === key) {
+            this.$refs.modal.courseIsAddable = false;
+            this.$parent.openCautionModal();
+          }
         });
       }
     },
@@ -237,11 +269,16 @@ export default {
       }
     },
     openDeleteSemesterModal() {
-      const modal = document.getElementById('deleteSemesterModal');
+      this.deleteSemType = this.type;
+      this.deleteSemYear = this.year;
+      this.deleteSemID = this.id;
+
+      const modal = document.getElementById(`deleteSemesterModal-${this.id}`);
       modal.style.display = 'block';
     },
-    deleteSemester() {
-      this.$emit('delete-semester', this.type, this.year);
+    deleteSemester(type, year) {
+      this.$emit('delete-semester', type, year);
+      this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
     }
   },
   directives: {
@@ -325,6 +362,7 @@ export default {
   }
 
   &-dotRow {
+    padding: 5px 0 8px 0;
     display: flex;
     position: relative;
   }

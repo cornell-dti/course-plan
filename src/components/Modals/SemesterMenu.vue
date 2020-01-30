@@ -33,6 +33,7 @@ export default {
     font-size: 14px;
     color: #404040;
     width: 12rem;
+    cursor: pointer;
   }
 
   &-section {
@@ -44,8 +45,7 @@ export default {
     &:hover,
     &:active,
     &:focus {
-      background-color: #2fa1f2;
-      color: #fff;
+      background-color: rgba(50, 160, 242, 0.15);
     }
 
     &:first-child {

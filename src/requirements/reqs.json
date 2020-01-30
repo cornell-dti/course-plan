@@ -533,7 +533,7 @@
                     "minCount": 4
                 },
                 {
-                    "name": "Introducation to Engineering",
+                    "name": "Introduction to Engineering",
                     "description": "One introduction to engineering (ENGRI) course.",
                     "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": "subject",

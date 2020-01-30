@@ -2,7 +2,11 @@
   <div class="deleteSemesterModal">
     <div class="deleteSemesterModal-content" id="deleteSemester">
       <div class="deleteSemesterModal-top">
-        <span class="deleteSemesterModal-message">{{ message }}</span>
+        <span class="deleteSemesterModal-title">{{ title }}</span>
+        <img class="deleteSemesterModal-exit" src="../../assets/images/x.png" @click="closeCurrentModal" />
+      </div>
+      <div class="deleteSemesterModal-body">
+        <div class="deleteSemesterModal-body-text">{{ text }}</div>
       </div>
       <div class="deleteSemesterModal-buttonWrapper">
         <button class="deleteSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
@@ -29,21 +33,36 @@ Vue.component('newSemester', NewSemester);
 
 
 export default {
+  // data() {
+  //   return {
+  //     deleteSemType: this.$parent.type,
+  //     deleteSemYear: this.$parent.year
+  //   };
+  // },
+  props: {
+    deleteSemID: Number,
+    deleteSemType: String,
+    deleteSemYear: Number
+  },
+
   computed: {
-    message() {
-      return 'Are you sure you want to delete this semester and all of the courses in it?';
+    text() {
+      return 'Are you sure you want to delete this semester? You cannot undo this action.';
     },
     cancel() {
       return 'Cancel';
+    },
+    title() {
+      return 'Delete Semester';
     }
   },
   methods: {
     closeCurrentModal() {
-      const modal = document.getElementById('deleteSemesterModal');
+      const modal = document.getElementById(`deleteSemesterModal-${this.deleteSemID}`);
       modal.style.display = 'none';
     },
     deleteSemester() {
-      this.$emit('delete-semester');
+      this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);
       this.closeCurrentModal();
     }
   }
@@ -60,8 +79,8 @@ export default {
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
-    padding: 1rem;
-    width: 27.75rem;
+    padding: 1.2rem;
+    width: 24rem;
     top: 4.75rem;
   }
 
@@ -75,24 +94,38 @@ export default {
     margin-bottom: 0.5rem;
   }
 
-  &-message {
-    font-size: 16px;
-    line-height: 19px;
+  &-exit {
+    width: 10.5px;
+    height: 10.5px;
+    cursor: pointer;
+  }
+
+  &-title {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    color: #3D3D3D;
+  }
+
+  &-text {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
     color: #3D3D3D;
   }
 
   &-buttonWrapper {
     margin-top: 1rem;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
   }
 
   &-button {
-    width: 7rem;
+    width: 4.75rem;
     height: 2rem;
-    color: #5B676D;
+    color: #508197;
     border-radius: 3px;
-    border: 1px solid #3d3d3d;
+    border: 1px solid #508197;
     background-color: #ffffff;
     display: flex;
     justify-content: center;
@@ -111,7 +144,7 @@ export default {
 
     &--delete {
       color: #ffffff;
-      background-color: #EB6D6D;
+      background-color: #508197;
       margin-left: 0.8rem;
       border: none;
       display: flex;

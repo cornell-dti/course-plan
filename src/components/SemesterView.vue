@@ -11,9 +11,21 @@
       class="semesterView-confirmation"
       :text="confirmationText"
     />
+    <caution
+      :id="'semesterCaution'"
+      class="semesterView-caution"
+      :text="cautionText"
+    />
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" :key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester"/>
+        <semester
+          v-bind="sem"
+          :isNotSemesterButton="true"
+          :activatedCourse="activatedCourse"
+          @updateBar="updateBar"
+          @delete-semester="deleteSemester"
+          @build-duplicate-cautions="buildDuplicateCautions"
+        />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
@@ -25,10 +37,10 @@
         v-for="sem in compactSemesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
       </div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
@@ -44,6 +56,7 @@ import Vue from 'vue';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
+import Caution from '@/components/Caution';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
 
 const clone = require('clone');
@@ -51,6 +64,7 @@ const clone = require('clone');
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
+Vue.component('caution', Caution);
 Vue.component('deletesemester', DeleteSemester);
 
 const firebaseConfig = require('@/firebaseConfig.js');
@@ -74,6 +88,7 @@ export default {
   data() {
     return {
       confirmationText: '',
+      cautionText: '',
       key: 0,
       activatedCourse: {},
       isCourseClicked: false
@@ -124,6 +139,17 @@ export default {
         this.$emit('compact-updated', !this.compact);
       }
     },
+    buildDuplicateCautions() {
+      if (this.semesters) {
+        const coursesMap = {};
+        this.semesters.forEach(semester => {
+          semester.courses.forEach(course => {
+            if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = 'Duplicate';
+            coursesMap[`${course.subject} ${course.number}`] = true;
+          });
+        });
+      }
+    },
     openSemesterConfirmationModal(type, year, isAdd) {
       if (isAdd) {
         this.confirmationText = `Added ${type} ${year} to plan`;
@@ -136,7 +162,16 @@ export default {
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
-      }, 5000);
+      }, 3000);
+    },
+    openCautionModal() {
+      this.cautionText = `Unable to add course. Already in plan.`;
+      const cautionModal = document.getElementById(`semesterCaution`);
+      cautionModal.style.display = 'flex';
+
+      setTimeout(() => {
+        cautionModal.style.display = 'none';
+      }, 3000);
     },
     openSemesterModal() {
       const modal = document.getElementById('semesterModal');
@@ -150,7 +185,7 @@ export default {
           this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns();
         }
       }
-      const deleteSemesterModal = document.getElementById('deleteSemesterModal');
+      const deleteSemesterModal = document.getElementById('deleteSemester');
       if (event.target === deleteSemesterModal) {
         deleteSemesterModal.style.display = 'none';
       }
@@ -321,7 +356,7 @@ export default {
     }
   }
 
-  &-confirmation {
+  &-confirmation, &-caution {
     display: none;
     margin: auto;
   }
