@@ -33,6 +33,17 @@ Vue.component('newSemester', NewSemester);
 
 
 export default {
+  // data() {
+  //   return {
+  //     deleteSemType: this.$parent.type,
+  //     deleteSemYear: this.$parent.year
+  //   };
+  // },
+  props: {
+    deleteSemType: String,
+    deleteSemYear: Number
+  },
+
   computed: {
     text() {
       return 'Are you sure you want to delete this semester? You cannot undo this action.';
@@ -50,7 +61,11 @@ export default {
       modal.style.display = 'none';
     },
     deleteSemester() {
-      this.$emit('delete-semester');
+      console.log("in delete semester");
+      console.log(this.deleteSemType);
+      console.log(this.deleteSemYear);
+      // console.log(this.$parent);
+      this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);
       this.closeCurrentModal();
     }
   }

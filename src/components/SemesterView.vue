@@ -56,7 +56,6 @@ import Vue from 'vue';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
-import DeleteSemester from '@/components/Modals/DeleteSemester';
 import Caution from '@/components/Caution';
 
 const clone = require('clone');
@@ -64,7 +63,6 @@ const clone = require('clone');
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
-Vue.component('deletesemester', DeleteSemester);
 Vue.component('caution', Caution);
 
 const firebaseConfig = require('@/firebaseConfig.js');

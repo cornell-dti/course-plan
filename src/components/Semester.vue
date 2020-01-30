@@ -14,6 +14,9 @@
       id="deleteSemesterModal"
       class="semester-modal-delete"
       @delete-semester="deleteSemester"
+      :deleteSemType="deleteSemType"
+      :deleteSemYear="deleteSemYear"
+      ref="deletesemester"
     />
     <div v-if="isNotSemesterButton" class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
@@ -110,7 +113,10 @@ export default {
       scrollable: true,
 
       semesterMenuOpen: false,
-      stopCloseFlag: false
+      stopCloseFlag: false,
+
+      deleteSemType: '',
+      deleteSemYear: 0
     };
   },
   props: {
@@ -256,11 +262,21 @@ export default {
       }
     },
     openDeleteSemesterModal() {
+      console.log("in semester");
+      console.log(this.type);
+      console.log(this.year);
+      this.deleteSemType = this.type;
+      this.deleteSemYear = this.year;
       const modal = document.getElementById('deleteSemesterModal');
       modal.style.display = 'block';
+      console.log(this.$refs.deletesemester);
+      // this.$refs.deletesemester.semType = this.type;
+      // this.$refs.deletesemester.semYear = this.year;
+      // console.log(this.$refs.deletesemester);
     },
-    deleteSemester() {
-      this.$emit('delete-semester', this.type, this.year);
+    deleteSemester(type, year) {
+      this.$emit('delete-semester', type, year);
+      this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
     }
   },
   directives: {
