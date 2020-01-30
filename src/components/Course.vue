@@ -40,7 +40,7 @@
             ></div>
           </div> -->
           <div v-if="alerts.caution" class="course-outerWrapper course-tooltip">
-            <div class="course-iconWrapper course-iconWrapper--caution">
+            <div v-if="!this.compact" class="course-iconWrapper course-iconWrapper--caution">
               <img class="course-icon course-icon--caution" src="../assets/images/caution.svg" />
             </div>
             <div
