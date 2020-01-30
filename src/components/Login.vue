@@ -105,7 +105,7 @@
                       <input type="text" placeholder="Your Email Address" v-model="newUser.email" >
                   </div>
                   <div class="col-5 ">
-                      <button class="email-button" variant= "primary"  v-on:click="addUser"> Add email </button>
+                      <button class="email-button" variant= "primary"  v-on:click="addUser(newUser.email)"> Add email </button>
                   </div>
               </div>
             </div>
@@ -115,14 +115,14 @@
         <!--FOOTER-->
         <div class="container-fluid footer p-0">
             <div class= "row footer justify-content-center m-0">
-                <div class="col-3">
-                    <p class= "footer"> Cornell DTI @ 2020</p>
+                <div class="col-3 footer">
+                    <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ {{getYear()}}</a>
                 </div>
                 <div class="col-3">
                     <p class= "footer">Built with ❤️</p>
                 </div>
-                <div class="col-3">
-                    <p class= "footer">Privacy Policy</p>
+                <div class="col-3 footer">
+                    <a  class="footer" href=" https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
                 </div>
 
             </div>
@@ -189,10 +189,24 @@ export default {
           this.errorMsg = err.message;
         });
     },
-    addUser() {
+    validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
+    },
+    addUser(email) {
+      console.log(email);
+      if (this.validateEmail(this.newUser.email)) {
+        alert('You have entered an valid email address!');
+      } else {
+        alert('You have entered an invalid email address!');
+      }
       emailsCollection.add(this.newUser);
       this.newUser.email = '';
+    },
+    getYear() {
+      const today = new Date();
+      return today.getFullYear();
     }
+
   }
 };
 </script>
@@ -249,6 +263,12 @@ export default {
         width: 300px;
         padding : 15px 30px;
         color: white;
+        &:hover,
+        &:focus,
+        &:active {
+            border-color: #13807c;
+            background-color: #13807c;
+        }
     }
     .email-top{
         padding: 20px 20px 20px 20px;
@@ -324,8 +344,8 @@ export default {
         text-align: center;
         padding:180px 100px 100px 104px;
     }
-   .container.footer{
-      max-width: 800px;
+    button{
+          outline: none;
     }
     p.footer{
         text-align: center;
@@ -334,6 +354,17 @@ export default {
         font-size: 24px;
         line-height: 28px;
         color: #757575;
+    }
+    a.footer {
+        text-align: center;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 24px;
+        line-height: 28px;
+        color: #757575;
+    }
+    .col-3.footer{
+        text-align: center;
     }
     .row.footer{
         padding : 40px;
