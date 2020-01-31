@@ -329,14 +329,15 @@ export default {
       });
 
       // PART 3: check major reqs
-      if (!(major in reqsData.major)) throw new Error('Major not found.');
-      const majorReqs = reqsData.major[major];
-      finalRequirementJSONs.push({
-        groupName: 'Major',
-        specific: major,
-        reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements)
-      });
-
+      // Major is optional
+      if (major in reqsData.major) {
+        const majorReqs = reqsData.major[major];
+        finalRequirementJSONs.push({
+          groupName: 'Major',
+          specific: major,
+          reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements)
+        });
+      }
 
       // Send satisfied credits data back to dashboard to build alerts
       this.emitRequirementsMap();
