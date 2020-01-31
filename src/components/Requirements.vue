@@ -510,7 +510,6 @@ export default {
        */
       function checkIfCourseFulfilled(courseInfo, search, includes) {
         // Special search: if search code is all or self-check. Anything would work
-        console.log(courseInfo, search);
         if (search === 'all' || search === 'self-check') return true;
         // Special search: if search code is not PE or 10XX course
         if (search === 'all-eligible') return ifAllEligible(courseInfo.subject, courseInfo.catalogNbr.toString());

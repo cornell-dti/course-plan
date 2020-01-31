@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'course--min': !notCompact, 'active': active }" class="course" @click="updateBar()">
+  <div :class="{ 'course--min': compact, 'active': active }" class="course" @click="updateBar()">
     <div class="course-color" :style="cssVars">
       <div class="course-dotColumn">
         <span class="course-dot"></span>
@@ -12,10 +12,10 @@
         <span class="course-dot"></span>
       </div>
     </div>
-    <div :class="{ 'course-content--min': !notCompact }" class="course-content">
-      <div :class="{ 'course-main--min': !notCompact }" class="course-main">
-        <div :class="{ 'course-top--min': !notCompact }" class="course-top">
-          <div :class="{ 'course-code--min': !notCompact }" class="course-code">
+    <div :class="{ 'course-content--min': compact }" class="course-content">
+      <div :class="{ 'course-main--min': compact }" class="course-main">
+        <div :class="{ 'course-top--min': compact }" class="course-top">
+          <div :class="{ 'course-code--min': compact }" class="course-code">
             {{ subject }} {{ number }}
           </div>
           <div class="course-dotRow" @click="openMenu">
@@ -24,13 +24,13 @@
             <span class="course-dot course-dot--menu"></span>
           </div>
         </div>
-        <div v-if="notCompact" class="course-name">{{ name }}</div>
+        <div v-if="!compact" class="course-name">{{ name }}</div>
         <div class="course-info">
-          <span v-if="notCompact" class="course-credits">{{ creditString }}</span>
-          <span v-if="notCompact && semesterString" class="course-semesters">{{
+          <span v-if="!compact" class="course-credits">{{ creditString }}</span>
+          <span v-if="!compact && semesterString" class="course-semesters">{{
             semesterString
           }}</span>
-          <!-- <div v-if="notCompact && alerts.requirement" class="course-outerWrapper course-tooltip">
+          <!-- <div v-if="!compact && alerts.requirement" class="course-outerWrapper course-tooltip">
             <div class="course-iconWrapper course-iconWrapper--info">
               <img class="course-icon course-icon--info" src="../assets/images/info.svg" />
             </div>
@@ -40,7 +40,7 @@
             ></div>
           </div> -->
           <div v-if="alerts.caution" class="course-outerWrapper course-tooltip">
-            <div v-if="!this.compact" class="course-iconWrapper course-iconWrapper--caution">
+            <div v-if="!compact" class="course-iconWrapper course-iconWrapper--caution">
               <img class="course-icon course-icon--caution" src="../assets/images/caution.svg" />
             </div>
             <div
@@ -103,10 +103,6 @@ export default {
     };
   },
   computed: {
-    notCompact() {
-      return !this.compact;
-    },
-
     rqString() {
       return 'RQ';
     },

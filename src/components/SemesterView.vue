@@ -32,12 +32,13 @@
       </div>
       <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
+    <!-- TODO: investigate if there needs to be two different content divs with two sets of semesters -->
     <div v-if="compact" class="semesterView-content">
       <div
-        v-for="sem in compactSemesters"
+        v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" />
+        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
@@ -100,25 +101,6 @@ export default {
       handler() {
         this.updateFirebaseSemester();
       }
-    }
-  },
-  computed: {
-    // Duplicate the semesters array, but set the compact boolean to true
-    compactSemesters() {
-      const compactSem = [];
-      this.semesters.forEach(sem => {
-        const newSem = clone(sem);
-        const newCourses = [];
-        sem.courses.forEach(course => {
-          const newCourse = clone(course);
-          newCourse.compact = true;
-          newCourses.push(newCourse);
-        });
-        newSem.courses = newCourses;
-        newSem.compact = true;
-        compactSem.push(newSem);
-      });
-      return compactSem;
     }
   },
   mounted() {
