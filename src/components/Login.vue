@@ -81,11 +81,11 @@
         <!-- SEMESTERS -->
         <div class="container-fluid p-0 small">
             <div class="row semester phonepad m-0">
-                <div class = "col-12 col-md-6 comment" >
+                <div class = "col-12 col-md-5 comment" >
                     <h1 class= "head">Plan Your Semesters</h1>
                     <p class= "sub">Use Courseplan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
                 </div>
-                <div class = "col-md-6 image-wrapper image-wrapper--semester" >
+                <div class = "col-md-7 image-wrapper image-wrapper--semester" >
                     <img id= "hide" class="schedule" src="@/assets/images/schedule.svg" alt = "Plan preview" />
                 </div>
             </div>
@@ -412,7 +412,7 @@ export default {
     }
     .schedule{
       margin-top: 16px;
-      width: 700px;
+      width: 650px;
 
       @media (max-width: 1274px) {
         width: 72vw;
