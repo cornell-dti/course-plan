@@ -107,7 +107,7 @@
                       <input type="text" placeholder="Your Email Address" v-model="newUser.email" >
                   </div>
                   <div class="col-5 ">
-                      <button class="email-button" variant= "primary"  v-on:click="addUser(newUser.email)"> Add email </button>
+                      <button class="email-button" variant= "primary"  v-on:click="addUser"> Add email </button>
                   </div>
               </div>
             </div>
@@ -138,7 +138,7 @@ import firebase from 'firebase';
 
 const fb = require('../firebaseConfig.js');
 
-const { alphaWhitelistCollection } = fb;
+const { alphaWhitelistCollection, landingEmailsCollection } = fb;
 
 export default {
   data() {
@@ -217,11 +217,10 @@ export default {
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
     },
-    addUser(email) {
-      console.log(email);
+    addUser() {
       if (this.validateEmail(this.newUser.email)) {
         alert('Your email has been added to the waitlist. We\'ll be in touch shortly!');
-        // Todo: add email to list
+        landingEmailsCollection.add(this.newUser);
       } else {
         alert('You have entered an invalid email address!');
       }
