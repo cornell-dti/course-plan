@@ -23,7 +23,7 @@
                 <div class="col">
                     <div class="row no-gutters"><h1 class="plan-head mt-5">Plan Your Courses Ahead</h1></div>
                     <div class="row no-gutters"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
-                    <div class="row">
+                    <div class="row mb-4">
                         <div class="col-5" >
                             <button  @click="socialLogin"  class="email-button" variant= "primary"> ACCESS ALPHA </button>
                         </div>
@@ -37,9 +37,10 @@
 
         <!--NEW WAY-->
         <div class="new container p-0">
-            <h1 class= "new-1 head" style = "text-align: left;">New Way to Track Your Requirements </h1>
-            <div class="row new no-gutters">
-                <div class="col">
+          <div class="row m-0">
+            <div class="col">
+              <h1 class= "new-1 head" style = "text-align: left;">New Way to Track Your Requirements </h1>
+              <div class="new no-gutters">
                     <div class="row tasks">
                         <div class="col-1 tasks"><img src="@/assets/images/Task1.svg" alt = "checklist"/></div>
                         <div class="col-11"><p class= "sub">Fully personalized to track your requirements</p></div>
@@ -57,8 +58,9 @@
                         <div class="col-11"><p class= "sub">Recommends courses based on your needs</p> </div>
                     </div>
                 </div>
-                <div class="col">
-                    <img id= "hide" style="position:absolute" class="women" src="@/assets/images/Person_planning.svg" alt = "women planning" />
+            </div>
+                <div class="col text-center">
+                    <img id= "hide" class="women" src="@/assets/images/Person_planning.svg" alt = "women planning" />
                 </div>
             </div>
         </div>
@@ -67,7 +69,7 @@
         <div class="container-fluid plan p-0">
             <div class="drag row no-gutters">
                 <div class = "col" >
-                    <img id= "hide" style="position:relative" class="preview" src="@/assets/images/drag.svg" alt = "Dragging preview" />
+                    <img class="preview" src="@/assets/images/drag.svg" alt = "Dragging preview" />
                 </div>
                 <div class = "col comment" >
                     <h1  class="head" style = "text-align: left;">Drag Your Course In</h1>
@@ -81,12 +83,12 @@
         <!-- SEMESTERS -->
         <div class="container-fluid p-0 small">
             <div class="row semester m-0">
-                <div class = "col-4 comment" >
-                    <h1 class= "head" style = "text-align: left;">Plan Your Semesters</h1>
+                <div class = "col comment" >
+                    <h1 class= "head text-left">Plan Your Semesters</h1>
                     <p class= "sub">Use Courseplan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
                 </div>
-                <div class = "col" >
-                    <img id= "hide" class="schedule" src="@/assets/images/schedule.svg" alt = "Plan preview" />
+                <div class = "col text-right p-0">
+                    <img class="schedule" src="@/assets/images/schedule.svg" alt = "Plan preview" />
                 </div>
             </div>
         </div>
@@ -241,170 +243,151 @@ export default {
       max-width: 100%;
     }
     .container {
-        max-width: 100%;
+      max-width: 100%;
     }
     .top-bar{
-        padding:59px 0px 0px 104px;
+      padding:59px 0px 0px 104px;
     }
     .signin-button{
-        color: #1AA9A5;
-        font-weight: 550;
-        border-color: #1AA9A5;
-        padding: 10px 30px;
-        border-radius: 6px;
+      color: #1AA9A5;
+      font-weight: 550;
+      border-color: #1AA9A5;
+      padding: 10px 30px;
+      border-radius: 6px;
     }
     .plan{
-        padding:59px 0px 59px 104px;
+      padding:59px 0px 59px 104px;
     }
     .plan-head{
-        padding-bottom: 30px;
-        font-size: 60px;
-        line-height: 60px;
-        color: #4F4F4F;
+      padding-bottom: 30px;
+      font-size: 60px;
+      line-height: 60px;
+      color: #4F4F4F;
     }
     .plan-subhead{
-        padding-bottom: 30px;
-        font-style: normal;
-        font-weight: 300;
-        font-size: 25px;
-        line-height: 35px;
-        color: #000000;
+      padding-bottom: 30px;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 25px;
+      line-height: 35px;
+      color: #000000;
     }
     input{
-        margin-right: 10px;
-        width: 100%;
-        height: 100%;
-        border-radius: 6px;
-        border-color:#1AA9A5;
-        padding : 15px 30px;
+      margin-right: 10px;
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+      border-color:#1AA9A5;
+      padding : 15px 30px;
     }
     .email-button{
-        border: 0;
-        background-color: #1AA9A5;
-        border-radius : 6px;
-        border-color: #1AA9A5;
-        width: 300px;
-        padding : 15px 30px;
-        color: white;
-        &:hover,
-        &:focus,
-        &:active {
-            border-color: #13807c;
-            background-color: #13807c;
-        }
-    }
-    .email-top{
-        padding: 20px 20px 20px 20px;
-    }
-    .laptop{
-        position: absolute;
-        width: 900px;
-        bottom: -30px;
-    }
-    .new{
-        background-color: #1AA9A5;
-        padding:50px 0px 50px 104px;
-    }
-    .new-1{
-        padding: 120px 0px 59px 104px;
-    }
-    .tasks{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-    }
-    .sub{
-        font-weight: normal;
-        font-size: 24px;
-        color: #FFFFFF;
-        margin : 0;
-    }
-    .head{
-        text-align: center;
-        font-weight: 600;
-        font-size: 40px;
-        color: #FFFFFF;
-        padding-bottom: 0px;
-    }
-    .head-center{
-        font-weight: 600;
-        font-size: 40px;
-        color: #FFFFFF;
-        padding-bottom: 0px;
-    }
-    .women{
-        position: absolute;
-        right: 0;
-        bottom: -70px;
-    }
-    .drag{
-        background-color:  #105351;
-        padding:59px 104px 0px 104px;
-    }
-    .preview{
-        position: absolute;
-    }
-    .schedule{
-        position: absolute;
-        right: 0;
-        bottom: -50px;
-        width: 700px;
-    }
-    .comment{
-        padding: 170px 30px 250px 30px;
-    }
-    .semester{
-        background-color:  #92C3E6;
-        padding:0px 0px 0px 104px;
-    }
-    .first{
-        background-color:  #508197;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding:180px 100px 100px 104px;
-    }
-    button{
-          outline: none;
-    }
-    p.footer{
-        text-align: center;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 24px;
-        line-height: 28px;
-        color: #757575;
-    }
-    a.footer {
-        text-align: center;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 24px;
-        line-height: 28px;
-        color: #757575;
-    }
-    .col-3.footer{
-        text-align: center;
-    }
-    .row.footer{
-        padding : 40px;
-    }
-       .container.inside{
-      max-width: 600px;
-    }
-    @media (max-width: 1335px) {
-        .landing {
-            display: none;
-        }
-    }
-    @media (max-width:629px) {
-      img#hide{
-        display: none;
+      border: 0;
+      background-color: #1AA9A5;
+      border-radius : 6px;
+      border-color: #1AA9A5;
+      width: 300px;
+      padding : 15px 30px;
+      color: white;
+      &:hover,
+      &:focus,
+      &:active {
+          border-color: #13807c;
+          background-color: #13807c;
       }
     }
-
+    .email-top{
+      padding: 20px 20px 20px 20px;
+    }
+    .laptop{
+      position: absolute;
+      width: 900px;
+    }
+    .new{
+      background-color: #1AA9A5;
+      padding:50px 0px 96px 104px;
+    }
+    .new-1{
+      padding: 100px 0px 59px 104px;
+    }
+    .tasks{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+    .sub{
+      font-weight: normal;
+      font-size: 24px;
+      color: #FFFFFF;
+      margin: 0;
+    }
+    .head{
+      text-align: center;
+      font-weight: 600;
+      font-size: 40px;
+      color: #FFFFFF;
+      padding-bottom: 0px;
+    }
+    .head-center{
+      font-weight: 600;
+      font-size: 40px;
+      color: #FFFFFF;
+      padding-bottom: 0px;
+    }
+    .drag{
+      background-color:  #105351;
+      padding:59px 104px 0px 104px;
+    }
+    .preview{
+      position: relative;
+    }
+    .schedule{
+      margin-top: 16px;
+      width: 700px;
+    }
+    .comment{
+      padding: 170px 30px 120px 30px;
+    }
+    .semester{
+      background-color:  #92C3E6;
+      padding:0px 0px 0px 104px;
+    }
+    .first{
+      background-color:  #508197;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding:180px 100px 100px 104px;
+    }
+    button{
+      outline: none;
+    }
+    p.footer{
+      text-align: center;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 24px;
+      line-height: 28px;
+      color: #757575;
+    }
+    a.footer {
+      text-align: center;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 24px;
+      line-height: 28px;
+      color: #757575;
+    }
+    .col-3.footer{
+      text-align: center;
+    }
+    .row.footer{
+      padding : 40px;
+    }
+    .container.inside{
+      max-width: 600px;
+    }
 
 </style>
