@@ -279,6 +279,7 @@ export default {
         padding : 15px 30px;
     }
     .email-button{
+        border: 0;
         background-color: #1AA9A5;
         border-radius : 6px;
         border-color: #1AA9A5;
