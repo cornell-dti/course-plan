@@ -20,24 +20,24 @@
         <!--PLAN AHEAD-->
         <div class="container p-0">
             <div class="row top-bar no-gutters">
-                <div class="col top-col">
+                <div class="col">
                     <div class="row no-gutters top-section"><h1 class="plan-head mt-5">Plan Your Courses Ahead</h1></div>
                     <div class="row no-gutters top-section"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
                     <div class="row mb-4 top-section">
                         <div class="col-5 top-section" >
-                            <button  @click="socialLogin"  class="email-button email-button--top" variant= "primary"> ACCESS ALPHA </button>
+                            <button  @click="socialLogin"  class="email-button email-button-top" variant= "primary"> ACCESS ALPHA </button>
                         </div>
                     </div>
                 </div>
-                <div class="col top-col top-section">
-                    <img id= "hide"  style="position:relative" class="laptop" src="@/assets/images/laptop.png" alt = "laptop preview" />
+                <div class="col top-section">
+                    <img class="laptop" src="@/assets/images/laptop.png" alt = "laptop preview" />
                 </div>
             </div>
         </div>
 
         <!--NEW WAY-->
         <div class="new container p-0">
-          <div class="row m-0">
+          <div class="row m-0 pb-5">
             <div class="col">
               <h1 class= "new-1 head" style = "text-align: left;">New Way to Track Your Requirements </h1>
               <div class="new no-gutters">
@@ -60,7 +60,7 @@
                 </div>
             </div>
                 <div class="col text-center">
-                    <img id= "hide" class="women" src="@/assets/images/Person_planning.svg" alt = "women planning" />
+                    <img class="women" src="@/assets/images/Person_planning.svg" alt = "women planning" />
                 </div>
             </div>
         </div>
@@ -68,7 +68,7 @@
         <!-- DRAG -->
         <div class="container-fluid plan p-0">
             <div class="drag row no-gutters">
-                <div class = "col" >
+                <div class = "col text-center">
                     <img class="preview" src="@/assets/images/drag.svg" alt = "Dragging preview" />
                 </div>
                 <div class = "col comment" >
@@ -307,20 +307,25 @@ export default {
           background-color: #13807c;
       }
 
-      &--top {
-        width: 13.5rem;
+      &-top {
+        min-width: 13.5rem;
       }
     }
     .email-top{
       padding: 20px 20px 20px 20px;
     }
     .laptop{
-      position: absolute;
+      position: relative;
       width: 900px;
+
+      @media (max-width: 1274px) {
+        width: 100%;
+      }
+
     }
     .new{
       background-color: #1AA9A5;
-      padding:50px 0px 96px 104px;
+      padding:50px 0px 40px 104px;
     }
     .new-1{
       padding: 100px 0px 59px 104px;
@@ -350,23 +355,37 @@ export default {
       color: #FFFFFF;
       padding-bottom: 0px;
     }
+
+    .women {
+      @media (max-width: 1274px) {
+        width: 62vw;
+      }
+    }
     .drag{
       background-color:  #105351;
-      padding:59px 104px 0px 104px;
+      padding:60px 104px 20px 104px;
     }
     .preview{
       position: relative;
+
+      @media (max-width: 1274px) {
+        width: 70vw;
+      }
     }
     .schedule{
       margin-top: 16px;
       width: 700px;
+
+      @media (max-width: 1274px) {
+        width: 72vw;
+      }
     }
     .comment{
-      padding: 170px 30px 120px 30px;
+      padding: 130px 30px 40px 30px;
     }
     .semester{
       background-color:  #92C3E6;
-      padding:0px 0px 0px 104px;
+      padding:60px 0px 20px 104px;
     }
     .first{
       background-color:  #508197;
@@ -375,7 +394,11 @@ export default {
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding:180px 100px 100px 104px;
+      padding: 180px 100px 104px 100px;
+
+      @media (max-width: 720px) {
+        padding: 40px 30px 40px 30px;
+      }
     }
     button{
       outline: none;
