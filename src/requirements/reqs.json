@@ -1100,7 +1100,7 @@
                 },
                 {
                     "name": "Economics Requirements",
-                    "description": "For students concentrating in environmental, energy, and resource economics, ECON 3030 is required instead of AEM 2600.",
+                    "description": "ECON 1110, ECON 1120, AND AEM 2600. For students concentrating in environmental, energy, and resource economics, ECON 3030 is required instead of AEM 2600.",
                     "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
                     "search": "code",
                     "includes": [
@@ -1120,7 +1120,7 @@
                 },
                 {
                     "name": "Quantitative Methods Requirements",
-                    "description": "",
+                    "description": "AEM 2100, MATH 1110 OR MATH 1120, AND AEM 2010",
                     "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
                     "search": "code",
                     "includes": [
@@ -1389,7 +1389,7 @@
             "requirements": [
                 {
                     "name": "Core Courses",
-                    "description": "Students are required to complete five core courses.",
+                    "description": "Students are required to complete five core courses: INFO 1200, INFO 1300, INFO 2040, INFO 2450, and INFO 2950.",
                     "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements/core",
                     "search": "code",
                     "includes": [
@@ -1419,7 +1419,7 @@
                     "search": "code",
                     "includes": [
                         [
-                            "CS1110"
+                            "CS 1110"
                         ],
                         [
                             "MATH 1106",
