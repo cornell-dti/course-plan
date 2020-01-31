@@ -343,14 +343,16 @@ export default {
     parseUserData(data, name) {
       const user = {
         // TODO: take into account multiple majors and colleges
-        major: data.majors[0].acronym,
-        majorFN: data.majors[0].fullName,
         college: data.colleges[0].acronym,
         collegeFN: data.colleges[0].fullName,
         firstName: name.firstName,
         middleName: name.middleName,
         lastName: name.lastName
       };
+      if ('majors' in data && data.majors.length > 0) {
+        user.major = data.majors[0].acronym;
+        user.majorFN = data.majors[0].fullName;
+      }
 
       return user;
     },

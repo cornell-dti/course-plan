@@ -77,7 +77,7 @@
               </div>
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major (required)</label>
+              <label class="onboarding-label">Your Major</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -229,7 +229,7 @@ export default {
     let majorText = placeholderText;
     let majorAcronym = '';
     let majorPlaceholderColor = '';
-    if (this.user.major !== '') {
+    if ('major' in this.user && this.user.major.length > 0) {
       majorText = this.user.majorFN;
       majorAcronym = this.user.major;
       majorPlaceholderColor = '#757575';
@@ -287,6 +287,7 @@ export default {
   },
   mounted() {
     this.setCollegesMap();
+    this.setMajorsList();
     this.setMinorsList();
   },
   methods: {
@@ -319,7 +320,6 @@ export default {
           }
         }
       }
-
       this.majors = majors;
     },
     // TODO: add minors when the list exists
@@ -352,7 +352,7 @@ export default {
     },
     submitOnboarding() {
       // Display error if a required field is empty, otherwise submit
-      if (this.firstName === '' || this.lastName === '' || this.noOptionSelected(this.displayOptions.college) || this.noOptionSelected(this.displayOptions.major)) {
+      if (this.firstName === '' || this.lastName === '' || this.noOptionSelected(this.displayOptions.college)) {
         this.isError = true;
       } else {
         const onboardingData = {
