@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'course--min': compact, 'active': active }" class="course" @click="updateBar()">
-    <div class="course-color" :style="cssVars">
+    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
       <div class="course-dotColumn">
         <span class="course-dot"></span>
         <span class="course-dot"></span>
@@ -190,6 +190,7 @@ export default {
   background-color: white;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
   position: relative;
+  height: 5.625rem;
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
@@ -211,11 +212,17 @@ export default {
 
   &-color {
     width: 1.25rem;
+    height: 5.625rem;
     border-radius: 0.42rem 0 0 0.42rem;
     background-color: var(--bg-color);
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &--active {
+      width: 19px;
+      height: 5.5rem;
+    }
   }
 
   &-dotColumn {
@@ -254,9 +261,11 @@ export default {
 
   &-content {
     width: 18rem;
-    margin: 0.75rem 1rem;
+    margin: 0 1rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+
 
     &--min {
       width: 9.25rem;
@@ -366,6 +375,8 @@ export default {
 
 .active {
   border: 1px solid #2b6693;
+  height: 5.625rem;
+  width: 21.375rem;
 }
 
 // TODO: convert px to rem for spacing
