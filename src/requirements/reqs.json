@@ -279,27 +279,13 @@
                     "search": "code",
                     "includes": [
                         [
-                            "ART 3201"
-                        ],
-                        [
-                            "ART 3301"
-                        ],
-                        [
-                            "ART 3401"
-                        ],
-                        [
-                            "ART 3501"
-                        ],
-                        [
-                            "ART 3601"
-                        ],
-                        [
-                            "ART 3705"
-                        ],
-                        [
-                            "ART 3001"
-                        ],
-                        [
+                            "ART 3201",
+                            "ART 3301",
+                            "ART 3401",
+                            "ART 3501",
+                            "ART 3601",
+                            "ART 3705",
+                            "ART 3001",
                             "ART 3003"
                         ]
                     ],
@@ -362,7 +348,14 @@
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 3
+                    "minCount": 2
+                },
+                {
+                    "name": "Theory and Criticism Elective",
+                    "description": "One additional theory and criticism elective.",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
                 },
                 {
                     "name": "Art History",
@@ -389,7 +382,8 @@
                     "description": "Any academic class at Cornell chosen in consultation with faculty advisor.",
                     "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
                     "includes": [],
-                    "fulfilledBy": "self-check"
+                    "fulfilledBy": "self-check",
+                    "minCount": 37
                 }
             ]
         },
@@ -848,6 +842,14 @@
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 1
+                },
+                {
+                    "name": "Distribution Requirements",
+                    "description": "Students are required to complete one course from each of the following lists to fulfill the distribution requirements. All courses must be taken for a letter grade.",
+                    "source": "https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 3
                 }
             ]
         },
@@ -1006,6 +1008,47 @@
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 1
+                },
+                {
+                    "name": "SHA Electives",
+                    "description": "A minimum of 14 credits, 3000-level or higher, in SHA.",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "includes": [
+                        [
+                            "HADM 3***"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 14
+                },
+                {
+                    "name": "Non-HADM Electives",
+                    "description": "A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 15
+                },
+                {
+                    "name": "Freshman Writing Seminars",
+                    "description": "A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        [
+                            "First-Year Writing Seminar."
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 3
+                },
+                {
+                    "name": "Free Electives",
+                    "description": "A minimum of 24 credits, to be taken either in or outside SHA.",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 24
                 }
             ]
         }
