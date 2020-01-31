@@ -872,6 +872,13 @@
         "BU": {
             "name": "SC Johnson College of Business",
             "requirements": [
+                {
+                    "name": "Major Requirements",
+                    "description": "Graduation requirements depend on major. For undergraduates, it is either Dyson or SHA requirements.",
+                    "source": "https://business.cornell.edu/programs/undergraduate/",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                }
             ]
         }
     },
@@ -879,7 +886,8 @@
         "AEM": {
             "name": "Applied Economics and Management",
             "schools": [
-                "AG"
+                "AG",
+                "BU"
             ],
             "requirements": [
                 {
@@ -1170,7 +1178,6 @@
         "HADM": {
             "name": "Hotel Administration",
             "schools": [
-                "AG",
                 "BU"
             ],
             "requirements": [
@@ -1331,6 +1338,7 @@
                     "name": "SHA Electives",
                     "description": "A minimum of 14 credits, 3000-level or higher, in SHA.",
                     "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "code",
                     "includes": [
                         [
                             "HADM 3***"
