@@ -28,8 +28,10 @@ const usersCollection = db.collection('users');
 // const coursesCollection = db.collection('courses');
 const userDataCollection = db.collection('userData');
 const alphaWhitelistCollection = db.collection('alphaWhitelist');
+const landingEmailsCollection = db.collection('landingEmails');
+
 
 module.exports = {
   // Temp: removed coursesCollection
-  db, auth, currentUser, usersCollection, userDataCollection, alphaWhitelistCollection
+  db, auth, currentUser, usersCollection, userDataCollection, landingEmailsCollection, alphaWhitelistCollection
 };

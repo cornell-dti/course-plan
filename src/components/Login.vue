@@ -39,7 +39,7 @@
         <div class="new container p-0">
             <h1 class= "new-1 phonepad head">New Way to Track Your Requirements </h1>
             <div class="row new no-gutters">
-                <div class="col">
+                <div class="col-12 col-md-6">
                     <div class="row tasks">
                         <div class="col-1 tasks"><img src="@/assets/images/Task1.svg" alt = "checklist"/></div>
                         <div class="col-11"><p class= "sub">Fully personalized to track your requirements</p></div>
@@ -57,7 +57,7 @@
                         <div class="col-11"><p class= "sub">Recommends courses based on your needs</p> </div>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-6 col-md-6">
                     <img id= "hide" style="position:absolute" class="women" src="@/assets/images/Person_planning.svg" alt = "women planning" />
                 </div>
             </div>
@@ -136,7 +136,7 @@ import firebase from 'firebase';
 
 const fb = require('../firebaseConfig.js');
 
-const { alphaWhitelistCollection } = fb;
+const { alphaWhitelistCollection, landingEmailsCollection } = fb;
 
 export default {
   data() {
@@ -215,11 +215,10 @@ export default {
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
     },
-    addUser(email) {
-      console.log(email);
+    addUser() {
       if (this.validateEmail(this.newUser.email)) {
         alert('Your email has been added to the waitlist. We\'ll be in touch shortly!');
-        // Todo: add email to list
+        landingEmailsCollection.add(this.newUser);
       } else {
         alert('You have entered an invalid email address!');
       }
@@ -241,34 +240,47 @@ export default {
       max-width: 100%;
     }
     .container {
-        max-width: 100%;
+      max-width: 100%;
     }
     .top-bar{
-        padding:59px 0px 0px 104px;
+      padding:59px 0px 0px 104px;
+
+      @media (max-width: 1274px) {
+        padding: 59px 104px 0px 104px;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    .top-section {
+      @media (max-width: 1274px) {
+        display: flex;
+        justify-content: center;
+        text-align: left;
+      }
     }
     .signin-button{
-        color: #1AA9A5;
-        font-weight: 550;
-        border-color: #1AA9A5;
-        padding: 10px 30px;
-        border-radius: 6px;
+      color: #1AA9A5;
+      font-weight: 550;
+      border-color: #1AA9A5;
+      padding: 10px 30px;
+      border-radius: 6px;
     }
     .plan{
-        padding:59px 0px 59px 104px;
+      padding:59px 0px 59px 104px;
     }
     .plan-head{
-        padding-bottom: 30px;
-        font-size: 60px;
-        line-height: 60px;
-        color: #4F4F4F;
+      padding-bottom: 30px;
+      font-size: 60px;
+      line-height: 60px;
+      color: #4F4F4F;
     }
     .plan-subhead{
-        padding-bottom: 30px;
-        font-style: normal;
-        font-weight: 300;
-        font-size: 25px;
-        line-height: 35px;
-        color: #000000;
+      padding-bottom: 30px;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 25px;
+      line-height: 35px;
+      color: #000000;
     }
     input{
         width: 100%;
@@ -278,44 +290,52 @@ export default {
         padding : 15px 30px;
     }
     .email{
-      padding-top: 20px;
-      padding-bottom: 20px;
+      padding: 20px;
     }
     .email-button{
-        background-color: #1AA9A5;
-        border-radius : 6px;
-        border-color: #1AA9A5;
-        padding : 15px 30px;
-        color: white;
-        &:hover,
-        &:focus,
-        &:active {
-            border-color: #13807c;
-            background-color: #13807c;
-        }
+      border: 0;
+      background-color: #1AA9A5;
+      border-radius : 6px;
+      border-color: #1AA9A5;
+      width: 100%;
+      padding : 15px 30px;
+      color: white;
+      &:hover,
+      &:focus,
+      &:active {
+          border-color: #13807c;
+          background-color: #13807c;
+      }
+
+      &--top {
+        width: 13.5rem;
+      }
     }
     .email-top{
-        padding: 20px 20px 20px 20px;
+      padding: 20px 20px 20px 20px;
     }
     .laptop{
-        position: absolute;
-        width: 900px;
-        bottom: -30px;
+      position: absolute;
+      width: 900px;
+    }
+    .women{
+      position: absolute;
+      bottom: -120px;
     }
 
     .new{
-        background-color: #1AA9A5;
-        padding:50px 0px 50px 104px;
+      background-color: #1AA9A5;
+      padding:50px 0px 96px 104px;
     }
     .new-1{
       text-align: left;
         padding: 120px 0px 59px 104px;
     }
     .tasks{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
     }
     .sub{
         font-weight: normal;
@@ -331,72 +351,65 @@ export default {
         padding-bottom: 0px;
     }
     .head-center{
-        font-weight: 600;
-        font-size: 40px;
-        color: #FFFFFF;
-        padding-bottom: 0px;
-    }
-    .women{
-        position: absolute;
-        right: 0;
-        bottom: -70px;
+      font-weight: 600;
+      font-size: 40px;
+      color: #FFFFFF;
+      padding-bottom: 0px;
     }
     .drag{
-        background-color:  #105351;
-        padding:59px 104px 0px 104px;
+      background-color:  #105351;
+      padding:59px 104px 0px 104px;
     }
     .preview{
-        position: absolute;
+      position: relative;
     }
     .schedule{
-        position: absolute;
-        right: 0;
-        bottom: -50px;
-        width: 700px;
+      margin-top: 16px;
+      width: 700px;
     }
     .comment{
       text-align: left;
         padding: 170px 30px 250px 30px;
     }
     .semester{
-        background-color:  #92C3E6;
-        padding:0px 0px 0px 104px;
+      background-color:  #92C3E6;
+      padding:0px 0px 0px 104px;
     }
     .first{
-        background-color:  #508197;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding:180px 100px 100px 104px;
+      background-color:  #508197;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding:180px 100px 100px 104px;
     }
     button{
-          outline: none;
+      outline: none;
     }
     p.footer{
-        text-align: center;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 24px;
-        line-height: 28px;
-        color: #757575;
+      text-align: center;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 24px;
+      line-height: 28px;
+      color: #757575;
     }
     a.footer {
-        text-align: center;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 24px;
-        line-height: 28px;
-        color: #757575;
+      text-align: center;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 24px;
+      line-height: 28px;
+      color: #757575;
     }
     .col-3.footer{
-        text-align: center;
+      text-align: center;
     }
     .row.footer{
-        padding : 40px;
+      padding : 40px;
     }
-       .container.inside{
+    .container.inside{
       max-width: 600px;
     }
     @media (max-width: 1335px) {
