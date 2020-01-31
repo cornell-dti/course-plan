@@ -285,7 +285,7 @@ export default {
       background-color: #1AA9A5;
       border-radius : 6px;
       border-color: #1AA9A5;
-      width: 300px;
+      width: 100%;
       padding : 15px 30px;
       color: white;
       &:hover,
