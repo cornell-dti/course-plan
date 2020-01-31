@@ -2,6 +2,7 @@
 node_modules
 /dist
 .vscode
+.firebase
 
 # local env files
 .env.local
