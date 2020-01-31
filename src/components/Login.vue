@@ -18,29 +18,28 @@
         </div>
 
         <!--PLAN AHEAD-->
-        <div class="container p-0">
-            <div class="row top-bar no-gutters">
+        <div class="container p-0 m-0">
+            <div class="row top-bar phonepad no-gutters">
                 <div class="col">
                     <div class="row no-gutters top-section"><h1 class="plan-head mt-5">Plan Your Courses Ahead</h1></div>
                     <div class="row no-gutters top-section"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
-                    <div class="row mb-4 top-section">
-                        <div class="col-5 top-section" >
-                            <button  @click="socialLogin"  class="email-button email-button-top" variant= "primary"> ACCESS ALPHA </button>
+                    <div class="row justify-content-center">
+                        <div class="col top-section" >
+                            <button  @click="socialLogin"  class="email-button email-button--top" variant= "primary"> ACCESS ALPHA </button>
                         </div>
                     </div>
                 </div>
-                <div class="col top-section">
-                    <img class="laptop" src="@/assets/images/laptop.png" alt = "laptop preview" />
+                <div class="col-12 col-md-6 top-section image-wrapper image-wrapper--laptop">
+                    <img style="position:relative" class="laptop" src="@/assets/images/laptop.png" alt = "laptop preview" />
                 </div>
             </div>
         </div>
 
         <!--NEW WAY-->
         <div class="new container p-0">
-          <div class="row m-0 pb-5">
-            <div class="col">
-              <h1 class= "new-1 head" style = "text-align: left;">New Way to Track Your Requirements </h1>
-              <div class="new no-gutters">
+            <h1 class= "new-1 phonepad head">New Way to Track Your Requirements </h1>
+            <div class="row new no-gutters">
+                <div class="col-12 col-md-6 tasks-wrapper">
                     <div class="row tasks">
                         <div class="col-1 tasks"><img src="@/assets/images/Task1.svg" alt = "checklist"/></div>
                         <div class="col-11"><p class= "sub">Fully personalized to track your requirements</p></div>
@@ -58,18 +57,17 @@
                         <div class="col-11"><p class= "sub">Recommends courses based on your needs</p> </div>
                     </div>
                 </div>
-            </div>
-                <div class="col text-center">
-                    <img class="women" src="@/assets/images/Person_planning.svg" alt = "women planning" />
+                <div class="col-6 col-md-6 image-wrapper women-wrapper">
+                    <img id= "hide" class="women" src="@/assets/images/Person_planning.svg" alt = "women planning" />
                 </div>
             </div>
         </div>
 
         <!-- DRAG -->
         <div class="container-fluid plan p-0">
-            <div class="drag row no-gutters">
-                <div class = "col text-center">
-                    <img class="preview" src="@/assets/images/drag.svg" alt = "Dragging preview" />
+            <div class="drag phonepad row no-gutters">
+                <div class = "col-md-6 image-wrapper image-wrapper--drag" >
+                    <img id= "hide" style="position:relative" class="preview" src="@/assets/images/drag.svg" alt = "Dragging preview" />
                 </div>
                 <div class = "col-12 col-md-6 comment" >
                     <h1  class="head">Drag Your Course In</h1>
@@ -87,7 +85,7 @@
                     <h1 class= "head">Plan Your Semesters</h1>
                     <p class= "sub">Use Courseplan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
                 </div>
-                <div class = "col-md-6" >
+                <div class = "col-md-6 image-wrapper image-wrapper--semester" >
                     <img id= "hide" class="schedule" src="@/assets/images/schedule.svg" alt = "Plan preview" />
                 </div>
             </div>
@@ -247,17 +245,18 @@ export default {
     .top-bar{
       padding:59px 0px 0px 104px;
 
-      @media (max-width: 1274px) {
+      @media (max-width: 1154px) {
         padding: 59px 104px 0px 104px;
         display: flex;
         flex-direction: column;
       }
     }
     .top-section {
-      @media (max-width: 1274px) {
+      @media (max-width: 1154px) {
         display: flex;
         justify-content: center;
-        text-align: left;
+        text-align: center;
+        max-width: 100%;
       }
     }
     .signin-button{
@@ -309,30 +308,52 @@ export default {
           background-color: #13807c;
       }
 
-      &-top {
-        min-width: 13.5rem;
+      &--top {
+        width: 13.5rem;
+        @media (max-width: 1154px) {
+          margin-bottom: 1rem;
+        }
       }
     }
     .email-top{
       padding: 20px 20px 20px 20px;
     }
+    .image-wrapper {
+      overflow: hidden;
+      @media (max-width: 1154px) {
+        display: none;
+      }
+      &--drag {
+        overflow: unset;
+      }
+      &--laptop {
+        display: block;
+      }
+      &--semester {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
     .laptop{
       position: relative;
       width: 900px;
-
-      @media (max-width: 1274px) {
-        width: 100%;
+      @media (max-width: 1154px) {
+        max-width: inherit;
       }
-
     }
     .women{
-      position: absolute;
-      bottom: -120px;
+      position: relative;
+    }
+    .women-wrapper {
+      margin-top: -120px
     }
 
     .new{
       background-color: #1AA9A5;
-      padding:50px 0px 40px 104px;
+      padding:50px 0px 96px 104px;
+      @media (min-width: 1155px) {
+        margin-bottom: -120px;
+      }
     }
     .new-1{
       text-align: left;
@@ -344,12 +365,17 @@ export default {
       justify-content: center;
       padding: 10px;
     }
+    .tasks-wrapper {
+      @media (max-width: 1154px) {
+        max-width: 100%;
+        flex: unset;
+      }
+    }
     .sub{
         font-weight: normal;
         font-size: 24px;
         color: #FFFFFF;
-        margin : 0;
-        padding: 0px 0px 0px 20px;
+        margin: 0;
     }
     .head{
         font-weight: 600;
@@ -371,7 +397,11 @@ export default {
     }
     .drag{
       background-color:  #105351;
-      padding:60px 104px 20px 104px;
+      padding:59px 104px 0px 104px;
+      @media (max-width: 1154px) {
+        display: flex;
+        justify-content: center;
+      }
     }
     .preview{
       position: relative;
@@ -389,11 +419,20 @@ export default {
       }
     }
     .comment{
-      padding: 130px 30px 40px 30px;
+      text-align: left;
+      padding: 170px 30px 250px 30px;
+      @media (max-width: 1154px) {
+        max-width: 100%;
+        flex: unset;
+      }
     }
     .semester{
       background-color:  #92C3E6;
-      padding:60px 0px 20px 104px;
+      padding:0px 0px 0px 104px;
+      @media (max-width: 1154px) {
+        display: flex;
+        justify-content: center;
+      }
     }
     .first{
       background-color:  #508197;
@@ -411,6 +450,9 @@ export default {
     button{
       outline: none;
     }
+    p {
+      padding: 0;
+    }
     p.footer{
       text-align: center;
       font-style: normal;
@@ -427,6 +469,10 @@ export default {
       line-height: 28px;
       color: #757575;
     }
+    .col-3 {
+      margin-left: .5rem;
+      margin-right: .5rem;
+    }
     .col-3.footer{
       text-align: center;
     }
@@ -439,10 +485,9 @@ export default {
     @media (max-width: 1335px) {
 
     }
-    @media (max-width:629px) {
+    @media (max-width:1154px) {
       img#hide{
         display: none;
-
       }
       .top-bar{
         padding:50px;
