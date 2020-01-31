@@ -20,16 +20,16 @@
         <!--PLAN AHEAD-->
         <div class="container p-0">
             <div class="row top-bar no-gutters">
-                <div class="col">
-                    <div class="row no-gutters"><h1 class="plan-head mt-5">Plan Your Courses Ahead</h1></div>
-                    <div class="row no-gutters"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
-                    <div class="row mb-4">
-                        <div class="col-5" >
-                            <button  @click="socialLogin"  class="email-button" variant= "primary"> ACCESS ALPHA </button>
+                <div class="col top-col">
+                    <div class="row no-gutters top-section"><h1 class="plan-head mt-5">Plan Your Courses Ahead</h1></div>
+                    <div class="row no-gutters top-section"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
+                    <div class="row mb-4 top-section">
+                        <div class="col-5 top-section" >
+                            <button  @click="socialLogin"  class="email-button email-button--top" variant= "primary"> ACCESS ALPHA </button>
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col top-col top-section">
                     <img id= "hide"  style="position:relative" class="laptop" src="@/assets/images/laptop.png" alt = "laptop preview" />
                 </div>
             </div>
@@ -246,6 +246,19 @@ export default {
     }
     .top-bar{
       padding:59px 0px 0px 104px;
+
+      @media (max-width: 1274px) {
+        padding: 59px 104px 0px 104px;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    .top-section {
+      @media (max-width: 1274px) {
+        display: flex;
+        justify-content: center;
+        text-align: left;
+      }
     }
     .signin-button{
       color: #1AA9A5;
@@ -292,6 +305,10 @@ export default {
       &:active {
           border-color: #13807c;
           background-color: #13807c;
+      }
+
+      &--top {
+        width: 13.5rem;
       }
     }
     .email-top{
