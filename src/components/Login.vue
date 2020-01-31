@@ -71,8 +71,8 @@
                 <div class = "col text-center">
                     <img class="preview" src="@/assets/images/drag.svg" alt = "Dragging preview" />
                 </div>
-                <div class = "col comment" >
-                    <h1  class="head" style = "text-align: left;">Drag Your Course In</h1>
+                <div class = "col-12 col-md-6 comment" >
+                    <h1  class="head">Drag Your Course In</h1>
                     <p class= "sub"> Courseplan’s intuitive interface recommends courses based on unfulfilled
                         requirements and allows you to easily drag and drop them into your planner </p>
                 </div>
@@ -82,19 +82,19 @@
 
         <!-- SEMESTERS -->
         <div class="container-fluid p-0 small">
-            <div class="row semester m-0">
-                <div class = "col comment" >
-                    <h1 class= "head text-left">Plan Your Semesters</h1>
+            <div class="row semester phonepad m-0">
+                <div class = "col-12 col-md-6 comment" >
+                    <h1 class= "head">Plan Your Semesters</h1>
                     <p class= "sub">Use Courseplan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
                 </div>
-                <div class = "col text-right p-0">
-                    <img class="schedule" src="@/assets/images/schedule.svg" alt = "Plan preview" />
+                <div class = "col-md-6" >
+                    <img id= "hide" class="schedule" src="@/assets/images/schedule.svg" alt = "Plan preview" />
                 </div>
             </div>
         </div>
 
         <!-- FIRST -->
-        <div class="container first m-0">
+        <div class="container justify-content-center phonepad first m-0">
           <div class = "container inside">
               <div class="row justify-content-center">
                 <div class= "col justify-content-center">
@@ -102,12 +102,12 @@
                   <p class= "sub text-center" style= "padding: 30px; ">Gain early access by filling out your email below and help us grow into what you need!</p>
                 </div>
               </div>
-              <div class="row email ">
-                  <div class="col-7  ">
+              <div class="row justify-content-center">
+                  <div class="col-8 col-md-7 email m-0">
                       <input type="text" placeholder="Your Email Address" v-model="newUser.email" >
                   </div>
-                  <div class="col-5 ">
-                      <button class="email-button" variant= "primary"  v-on:click="addUser"> Add email </button>
+                  <div class="col-8 col-md-5 email ">
+                      <button class="email-button" variant= "primary"  v-on:click="addUser(newUser.email)"> Add email </button>
                   </div>
               </div>
             </div>
@@ -285,12 +285,14 @@ export default {
       color: #000000;
     }
     input{
-      margin-right: 10px;
-      width: 100%;
-      height: 100%;
-      border-radius: 6px;
-      border-color:#1AA9A5;
-      padding : 15px 30px;
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+        border-color:#1AA9A5;
+        padding : 15px 30px;
+    }
+    .email{
+      padding: 20px;
     }
     .email-button{
       border: 0;
@@ -323,12 +325,18 @@ export default {
       }
 
     }
+    .women{
+      position: absolute;
+      bottom: -120px;
+    }
+
     .new{
       background-color: #1AA9A5;
       padding:50px 0px 40px 104px;
     }
     .new-1{
-      padding: 100px 0px 59px 104px;
+      text-align: left;
+        padding: 120px 0px 59px 104px;
     }
     .tasks{
       display: flex;
@@ -337,17 +345,17 @@ export default {
       padding: 10px;
     }
     .sub{
-      font-weight: normal;
-      font-size: 24px;
-      color: #FFFFFF;
-      margin: 0;
+        font-weight: normal;
+        font-size: 24px;
+        color: #FFFFFF;
+        margin : 0;
+        padding: 0px 0px 0px 20px;
     }
     .head{
-      text-align: center;
-      font-weight: 600;
-      font-size: 40px;
-      color: #FFFFFF;
-      padding-bottom: 0px;
+        font-weight: 600;
+        font-size: 40px;
+        color: #FFFFFF;
+        padding-bottom: 0px;
     }
     .head-center{
       font-weight: 600;
@@ -428,5 +436,40 @@ export default {
     .container.inside{
       max-width: 600px;
     }
+    @media (max-width: 1335px) {
+
+    }
+    @media (max-width:629px) {
+      img#hide{
+        display: none;
+
+      }
+      .top-bar{
+        padding:50px;
+      }
+      .new{
+        padding:0px 50px 100px 50px;
+      }
+      .phonepad{
+        padding:50px;
+        text-align: center;
+      }
+      .comment{
+        text-align:center;
+        padding: 100px 30px 100px 30px;
+      }
+      .input{
+        width:200px;
+      }
+      .center{
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+      }
+
+    }
+    *, html {padding:0; margin:0;}
+
 
 </style>
