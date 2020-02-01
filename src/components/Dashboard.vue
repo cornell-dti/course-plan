@@ -269,7 +269,6 @@ export default {
         semesters: this.joinOrNAString(course.semesters),
         color: course.color,
         latestSem: course.lastRoster,
-        id: 1,
         // Array data
         instructors: this.joinOrNAString(course.instructors),
         distributionCategories: this.joinOrNAString(course.distributions),
