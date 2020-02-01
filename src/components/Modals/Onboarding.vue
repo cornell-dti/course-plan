@@ -1,7 +1,7 @@
 <template>
   <div class="onboarding">
     <div class="onboarding-main">
-      <div v-if="isEditingProfile" class="onboarding-cancel" @click="cancelOnboarding()">
+      <div v-if="isEditingProfile" class="onboarding-cancel" @click="$emit('cancelOnboarding')">
         <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="X">
       </div>
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
@@ -490,9 +490,6 @@ export default {
     },
     removeMinor() {
       this.displayOptions.minor.pop();
-    },
-    cancelOnboarding() {
-      this.$parent.cancelOnboarding();
     }
   }
 };
