@@ -63,7 +63,7 @@ export default {
           for (const attr in courses) {
             if (courses[attr]) {
               const result = { title: `${attr}: ${courses[attr].t}`, roster: courses[attr].r };
-              if (attr.toUpperCase().includes(val)) {
+              if (attr.toUpperCase().includes(val) && attr !== 'lastScanned') {
                 code.push(result);
               } else if (
                 courses[attr].t
