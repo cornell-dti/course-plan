@@ -1388,7 +1388,7 @@
                     "name": "Pre-1800",
                     "description": "12 credits (normally 3 courses) must be from courses in which 50% or more of the material consists of literature originally written in English before 1800 (such courses are indicated in the English course listings)",
                     "source": "https://english.cornell.edu/majoring-and-minoring-english-cornell#requirements-for-the-major",
-                    "search": "catalogCommeents",
+                    "search": "catalogComments",
                     "includes": [
                         [
                             "This course will satisfy the pre-1800 requirement for English majors.",
