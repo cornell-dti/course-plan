@@ -192,12 +192,10 @@ export default {
       // Get last semester of available course. TODO: Remove when no longer firebase data dependant
       const lastRoster = course.lastRoster || course.roster;
 
-      // TODO: pick color if a new course instead of this default
       const color = course.color || 'C4C4C4';
 
       const alerts = { requirement: null, caution: null };
 
-      // TODO: Need courseMap to be generated, check to change
       const newCourse = {
         id: randomId,
         subject,

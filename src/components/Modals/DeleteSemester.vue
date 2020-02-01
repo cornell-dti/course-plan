@@ -3,7 +3,7 @@
     <div class="deleteSemesterModal-content" id="deleteSemester">
       <div class="deleteSemesterModal-top">
         <span class="deleteSemesterModal-title">{{ title }}</span>
-        <img class="deleteSemesterModal-exit" src="../../assets/images/x.png" @click="closeCurrentModal" />
+        <img class="deleteSemesterModal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
       </div>
       <div class="deleteSemesterModal-body">
         <div class="deleteSemesterModal-body-text">{{ text }}</div>
@@ -12,7 +12,7 @@
         <button class="deleteSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
         <div class="deleteSemesterModal-button deleteSemesterModal-button--delete" @click="deleteSemester">
             <div class="deleteSemesterModal-button-left">
-                <img class="deleteSemesterModal-button-left-icon" src="../../assets/images/trash-white.svg" />
+                <img class="deleteSemesterModal-button-left-icon" src="@/assets/images/trash-white.svg" />
                 <span class="deleteSemesterModal-button-left-text">Delete</span>
             </div>
         </div>
@@ -33,12 +33,6 @@ Vue.component('newSemester', NewSemester);
 
 
 export default {
-  // data() {
-  //   return {
-  //     deleteSemType: this.$parent.type,
-  //     deleteSemYear: this.$parent.year
-  //   };
-  // },
   props: {
     deleteSemID: Number,
     deleteSemType: String,
@@ -70,7 +64,6 @@ export default {
 </script>
 
 <style lang="scss">
-// TODO: font family
 .deleteSemesterModal {
   padding: 1rem;
 
