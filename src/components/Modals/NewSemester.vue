@@ -230,7 +230,7 @@ export default {
 
   &-section {
     font-size: 14px;
-    line-height: 17px;
+    line-height: 15px;
     color: #757575;
     display: flex;
     flex-direction: column;
@@ -265,11 +265,10 @@ export default {
     box-sizing: border-box;
     border-radius: 1px;
     width: 100%;
-    font-family: Helvetica Neue;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
-    line-height: 17px;
+    line-height: 14px;
 
     color: #b6b6b6;
   }
@@ -281,11 +280,10 @@ export default {
 
   &-dropdown {
     &-placeholder {
-      font-family: Helvetica Neue;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
-      line-height: 17px;
+      line-height: 15px;
 
       color: #b6b6b6;
 
@@ -379,11 +377,10 @@ export default {
       left: 454px;
       top: 213px;
 
-      font-family: Helvetica Neue;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
-      line-height: 17px;
+      line-height: 15px;
       display: flex;
       align-items: center;
 

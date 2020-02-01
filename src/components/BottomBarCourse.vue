@@ -52,19 +52,19 @@
           <div class="details">
             <div class="details-head">Class Ratings</div>
             <div class="details-ratings">
-              <h1 class="details-ratings-title">Overall Rating: <strong>{{ CUROverallRating }}</strong></h1>
+              <p class="details-ratings-title"><span class="details-ratings-title-strong">Overall Rating: </span> {{ CUROverallRating }}</p>
               <div class="progress rating">
                 <div class="progress-bar" role="progressbar" :style="{ width: `${(overallRating/5)*100}%`, background: reviewsColor(overallRating) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
-              <h1 class="details-ratings-title">Difficulty: <strong>{{ CURDifficulty }}</strong></h1>
+              <p class="details-ratings-title"><span class="details-ratings-title-strong">Difficulty:</span> {{ CURDifficulty }}</p>
               <div class="progress rating">
                 <div class="progress-bar" role="progressbar" :style="{ width: `${(difficulty/5)*100}%`, background: reviewsColor(difficulty, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
-              <h1 class="details-ratings-title">Workload: <strong>{{ CURWorkload }}</strong></h1>
+              <p class="details-ratings-title"><span class="details-ratings-title-strong">Workload:</span> {{ CURWorkload }}</p>
               <div class="progress rating">
                 <div class="progress-bar" role="progressbar" :style="{ width: `${(workload/5)*100}%`, background: reviewsColor(workload, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
@@ -155,7 +155,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
   .bottombar {
     position: fixed;
     bottom: 0;
@@ -175,6 +174,12 @@ export default {
       color: #FFF;
       font-size: 16px;
       cursor: pointer;
+      filter: brightness(100%);
+
+      &:hover {
+        filter: brightness(95%);
+        transition: all 0.2s ease;
+      }
     }
 
     &-bar {
@@ -216,13 +221,13 @@ export default {
     }
 
     &-link {
-      font-weight: 600;
       font-size: 16px;
       line-height: 16px;
       text-decoration-line: underline;
 
       &-blue {
         color: #4181FF;
+        font-weight: 500;
       }
     }
   }
@@ -254,6 +259,10 @@ export default {
         font-size: 16px;
         line-height: 16px;
         color: #3D3D3D;
+
+        &-strong {
+          font-weight: 500;
+        }
       }
 
       &-link {

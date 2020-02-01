@@ -1,11 +1,10 @@
 <template>
-  <div class="navbar">
+  <div class="navbar" :class="{ bottomPreview: isBottomPreview }">
     <div class="navbar-top">
       <div class="navbar-iconWrapper">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
       </div>
       <div class="navbar-iconWrapper" id="profileIcon" @click="editProfile"></div>
-      <div class="navbar-iconWrapper" id="star"></div>
     </div>
     <div class="navbar-bottom">
       <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
@@ -17,6 +16,10 @@
 import firebase from 'firebase';
 
 export default {
+  props: {
+    isBottomPreview: Boolean
+  },
+
   methods: {
     logout() {
       firebase.auth().signOut().then(() => {
@@ -44,7 +47,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   padding-top: 2.25rem;
-  padding-bottom: 2.25rem;
+  padding-bottom: 2rem;
 
   &-iconWrapper {
     height: 2.5rem;
@@ -87,5 +90,9 @@ export default {
   &:active {
     background-image: url('~@/assets/images/navbar/logoutBlue.svg');
   }
+}
+
+.bottomPreview {
+  padding-bottom: calc(2.25rem + 15px);
 }
 </style>

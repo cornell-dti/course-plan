@@ -115,8 +115,7 @@ export default {
     &:hover,
     &:active,
     &:focus {
-      background-color: #2fa1f2;
-      color: #fff;
+      background-color: rgba(50, 160, 242, 0.15);
     }
 
     &:first-child {

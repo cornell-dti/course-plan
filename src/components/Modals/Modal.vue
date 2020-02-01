@@ -3,7 +3,7 @@
     <div class="modal-content" :id="contentId">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
-        <img class="modal-exit" src="../../assets/images/x.png" @click="closeCurrentModal" />
+        <img class="modal-exit" src="../../assets/images/x.png" @click="closeCurrentModal"/>
       </div>
       <component
         class="modal-body"
@@ -29,11 +29,12 @@ Vue.component('newCourse', NewCourse);
 Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 
-const firebaseConfig = require('@/firebaseConfig.js');
-
-const { coursesCollection } = firebaseConfig;
-
 export default {
+  data() {
+    return {
+      courseIsAddable: true
+    };
+  },
   props: {
     type: String,
     semesterID: Number
@@ -81,9 +82,20 @@ export default {
       }
       modal.style.display = 'none';
     },
+    checkCourseDuplicate(key) {
+      this.$emit('check-course-duplicate', key);
+    },
     addItem() {
       if (this.type === 'course') {
-        this.addCourse();
+        const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
+        const title = dropdown.value;
+
+        // TODO: can I make the valid assumption that the course code is up to the colon in the title?
+        const key = title.substring(0, title.indexOf(':'));
+        this.checkCourseDuplicate(key);
+        if (this.courseIsAddable) {
+          this.addCourse();
+        }
       } else if (this.type === 'semester') {
         this.addSemester();
       } else {
@@ -93,27 +105,38 @@ export default {
     addCourse() {
       const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
       const title = dropdown.value;
+      // name used to transmit roster information
+      const roster = dropdown.name;
 
       // TODO: can I make the valid assumption that the course code is up to the colon in the title?
-      const key = title.substring(0, title.indexOf(':'));
-      const firebaseTitle = `${key.replace(/\s/g, '')}`;
-      const docRef = coursesCollection.doc(firebaseTitle);
+      const courseCode = title.substring(0, title.indexOf(':'));
+      const subject = courseCode.split(' ')[0];
 
       const parent = this.$parent;
 
-      // TODO: error handling if course not found or some firebase error
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            parent.addCourse(doc.data());
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
+      // To use for retrieve course data from Firebase
+      // // TODO: error handling if course not found or some firebase error
+      // docRef
+      //   .get()
+      //   .then(doc => {
+      //     if (doc.exists && this.courseIsAddable) {
+      //       parent.addCourse(doc.data());
+      //     } else {
+      //       // doc.data() will be undefined in this case
+      //       console.log('No such document!');
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log('Error getting document:', error);
+      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
+        .then(res => res.json())
+        .then(resultJSON => {
+          const course = resultJSON.data.classes[0];
+          course.roster = roster;
+
+          if (this.courseIsAddable) {
+            parent.addCourse(course);
           }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
         });
 
       // clear input and close modal when complete
@@ -183,6 +206,8 @@ export default {
     border-radius: 3px;
     border: 1px solid #3d3d3d;
     background-color: #ffffff;
+    display: flex;
+    justify-content: center;
 
     &--add {
       color: #ffffff;

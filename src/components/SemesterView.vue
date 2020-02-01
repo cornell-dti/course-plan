@@ -11,24 +11,37 @@
       class="semesterView-confirmation"
       :text="confirmationText"
     />
+    <caution
+      :id="'semesterCaution'"
+      class="semesterView-caution"
+      :text="cautionText"
+    />
     <div v-if="!compact" class="semesterView-content">
       <div v-for="sem in semesters" :key="sem.id" class="semesterView-wrapper">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester
+          v-bind="sem"
+          :isNotSemesterButton="true"
+          :activatedCourse="activatedCourse"
+          @updateBar="updateBar"
+          @delete-semester="deleteSemester"
+          @build-duplicate-cautions="buildDuplicateCautions"
+        />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
       <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
+    <!-- TODO: investigate if there needs to be two different content divs with two sets of semesters -->
     <div v-if="compact" class="semesterView-content">
       <div
-        v-for="sem in compactSemesters"
+        v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
       </div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
@@ -44,16 +57,28 @@ import Vue from 'vue';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
+import Caution from '@/components/Caution';
+import DeleteSemester from '@/components/Modals/DeleteSemester';
 
 const clone = require('clone');
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
+Vue.component('caution', Caution);
+Vue.component('deletesemester', DeleteSemester);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
 const { auth, userDataCollection } = firebaseConfig;
+
+// enum to define seasons as integers in season order
+const SeasonsEnum = Object.freeze({
+  winter: 0,
+  spring: 1,
+  summer: 2,
+  fall: 3
+});
 
 export default {
   props: {
@@ -64,29 +89,18 @@ export default {
   data() {
     return {
       confirmationText: '',
+      cautionText: '',
       key: 0,
       activatedCourse: {},
       isCourseClicked: false
     };
   },
-  computed: {
-    // Duplicate the semesters array, but set the compact boolean to true
-    compactSemesters() {
-      const compactSem = [];
-      this.semesters.forEach(sem => {
-        const newSem = clone(sem);
-        const newCourses = [];
-        sem.courses.forEach(course => {
-          const newCourse = clone(course);
-          newCourse.compact = true;
-          newCourse.requirementsMap = new Map(course.requirementsMap);
-          newCourses.push(newCourse);
-        });
-        newSem.courses = newCourses;
-        newSem.compact = true;
-        compactSem.push(newSem);
-      });
-      return compactSem;
+  watch: {
+    semesters: {
+      deep: true,
+      handler() {
+        this.updateFirebaseSemester();
+      }
     }
   },
   mounted() {
@@ -107,6 +121,40 @@ export default {
         this.$emit('compact-updated', !this.compact);
       }
     },
+    buildDuplicateCautions() {
+      if (this.semesters) {
+        const coursesMap = {};
+        this.semesters.forEach(semester => {
+          semester.courses.forEach(course => {
+            if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = 'Duplicate';
+            coursesMap[`${course.subject} ${course.number}`] = true;
+          });
+        });
+      }
+    },
+    openSemesterConfirmationModal(type, year, isAdd) {
+      if (isAdd) {
+        this.confirmationText = `Added ${type} ${year} to plan`;
+      } else {
+        this.confirmationText = `Deleted ${type} ${year} from plan`;
+      }
+
+      const confirmationModal = document.getElementById(`semesterConfirmation`);
+      confirmationModal.style.display = 'flex';
+
+      setTimeout(() => {
+        confirmationModal.style.display = 'none';
+      }, 3000);
+    },
+    openCautionModal() {
+      this.cautionText = `Unable to add course. Already in plan.`;
+      const cautionModal = document.getElementById(`semesterCaution`);
+      cautionModal.style.display = 'flex';
+
+      setTimeout(() => {
+        cautionModal.style.display = 'none';
+      }, 3000);
+    },
     openSemesterModal() {
       const modal = document.getElementById('semesterModal');
       modal.style.display = 'block';
@@ -119,43 +167,36 @@ export default {
           this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns();
         }
       }
+      const deleteSemesterModal = document.getElementById('deleteSemester');
+      if (event.target === deleteSemesterModal) {
+        deleteSemesterModal.style.display = 'none';
+      }
     },
     addSemester(type, year) {
       const newSem = this.$parent.createSemester([], type, year);
-      this.semesters.push(newSem);
-      this.addSemesterToFirebase(newSem);
 
-      this.confirmationText = `Added "${type} ${year}" to plan`;
-      const confirmationModal = document.getElementById(`semesterConfirmation`);
-      confirmationModal.style.display = 'flex';
+      // find the index in which the semester should be added to maintain chronological order
+      let i;
+      for (i = 0; i < this.semesters.length; i += 1) {
+        const oldSem = this.semesters[i];
+        if (oldSem.year > year) {
+          break;
+        } else if (oldSem.year === year && SeasonsEnum[oldSem.type.toLowerCase()] > SeasonsEnum[type.toLowerCase()]) {
+          break;
+        }
+      }
+      this.semesters.splice(i, 0, newSem);
 
-      setTimeout(() => {
-        confirmationModal.style.display = 'none';
-      }, 3000);
+      this.openSemesterConfirmationModal(type, year, true);
     },
-    addSemesterToFirebase(sem) {
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
-      // TODO: error handling if user not found or some firebase error
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const { semesters } = doc.data();
-            semesters.push(sem);
-            docRef.update({
-              semesters
-            });
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
+    deleteSemester(type, year) {
+      for (let i = 0; i < this.semesters.length; i += 1) {
+        if (this.semesters[i].type === type && this.semesters[i].year === year) {
+          this.semesters.splice(i, 1);
+          break;
+        }
+      }
+      this.openSemesterConfirmationModal(type, year, false);
     },
 
     updateBar(course) {
@@ -170,6 +211,54 @@ export default {
         this.$emit('close-bar');
       }
       this.isCourseClicked = false;
+    },
+    /**
+     * Reduces course object to only information needed to be stored on Firebase
+     * Works in conjunction with addCourse()
+     * CHANGE WILL ALTER DATA STRUCTURE
+     */
+    toFirebaseCourse(course) {
+      return {
+        code: `${course.subject} ${course.number}`,
+        name: course.name,
+        description: course.description,
+        credits: course.credits,
+        semesters: course.semesters,
+        prereqs: course.prereqs,
+        enrollment: course.enrollment,
+        lectureTimes: course.lectureTimes,
+        instructors: course.instructors,
+        distributions: course.distributions,
+        lastRoster: course.lastRoster,
+        color: course.color
+      };
+    },
+    /**
+     * Updates semester user data
+     */
+    updateFirebaseSemester() {
+      // TODO: make user / docRef global
+      const user = auth.currentUser;
+      const userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+
+      docRef
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            const firebaseSemesters = clone(this.semesters);
+            firebaseSemesters.forEach(sem => {
+              sem.courses = sem.courses.map(course => this.toFirebaseCourse(course));
+            });
+            docRef.update({ semesters: firebaseSemesters });
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No such document!');
+          }
+        })
+        .catch(error => {
+          console.log('Error getting document:', error);
+        });
     }
   }
 };
@@ -185,7 +274,7 @@ export default {
   &-content {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 -.75rem;
+    margin: 0 -0.75rem;
   }
 
   &-switch {
@@ -197,7 +286,7 @@ export default {
   }
 
   &-switchText {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
     font-size: 16px;
     line-height: 19px;
   }
@@ -210,7 +299,7 @@ export default {
     background-position: center;
 
     &:not(:last-child) {
-      margin-right: .5rem;
+      margin-right: 0.5rem;
     }
   }
 
@@ -242,20 +331,21 @@ export default {
     flex: 1 1 50%;
 
     margin-bottom: 1.5rem;
-    padding: 0 .75rem;
+    padding: 0 0.75rem;
 
     &--compact {
       flex: 1 1 25%;
     }
   }
 
-  &-confirmation {
+  &-confirmation, &-caution {
     display: none;
+    margin: auto;
   }
 
   &-empty {
     flex: 1 1 50%;
-    padding: 0 .75rem;
+    padding: 0 0.75rem;
 
     &--compact {
       flex: 1 1 25%;
@@ -280,5 +370,4 @@ export default {
 .bottomBar {
   margin-bottom: 300px;
 }
-
 </style>

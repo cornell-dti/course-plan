@@ -4,20 +4,33 @@
     :class="{ 'semester--min': !isNotSemesterButton, 'semester--compact': compact }"
     :id="id"
   >
-    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" />
+    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" ref="modal" />
     <confirmation
       :id="'confirmation-' + id"
       class="semester-confirmation"
       :text="confirmationText"
     />
+    <deletesemester
+      :id="'deleteSemesterModal-' + id"
+      class="semester-modal-delete"
+      @delete-semester="deleteSemester"
+      :deleteSemID="deleteSemID"
+      :deleteSemType="deleteSemType"
+      :deleteSemYear="deleteSemYear"
+      ref="deletesemester"
+    />
     <div v-if="isNotSemesterButton" class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
           <span class="semester-name">{{ type }} {{ year }}</span>
-          <img class="semester-icon" src="../assets/images/pencil.svg" />
+          <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
-          <span class="semester-credits">{{ creditString }}</span>
+          <div class="semester-dotRow" @click="openSemesterMenu">
+            <span class="semester-dot semester-dot--menu"></span>
+            <span class="semester-dot semester-dot--menu"></span>
+            <span class="semester-dot semester-dot--menu"></span>
+          </div>
         </div>
       </div>
       <div class="semester-courses">
@@ -57,6 +70,11 @@
         }}</span>
       </div>
     </div>
+    <semestermenu
+      v-if="semesterMenuOpen"
+      class="semester-menu"
+      @open-delete-semester-modal="openDeleteSemesterModal"
+      v-click-outside="closeSemesterMenuIfOpen" />
   </div>
 </template>
 
@@ -65,21 +83,42 @@ import Vue from 'vue';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
 import Confirmation from '@/components/Confirmation';
+import SemesterMenu from '@/components/Modals/SemesterMenu';
+import DeleteSemester from '@/components/Modals/DeleteSemester';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
+Vue.component('semestermenu', SemesterMenu);
+Vue.component('deletesemester', DeleteSemester);
 
-const firebaseConfig = require('@/firebaseConfig.js');
+const clickOutside = {
+  bind(el, binding, vnode) {
+    el.event = function (event) {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event);
+      }
+    };
+    document.body.addEventListener('click', el.event);
+  },
+  unbind(el) {
+    document.body.removeEventListener('click', el.event);
+  }
+};
 
-const { auth, userDataCollection } = firebaseConfig;
 
 export default {
-  // TODO: fonts! (Proxima Nova)
   data() {
     return {
       confirmationText: '',
-      scrollable: true
+      scrollable: true,
+
+      semesterMenuOpen: false,
+      stopCloseFlag: false,
+
+      deleteSemID: 0,
+      deleteSemType: '',
+      deleteSemYear: 0
     };
   },
   props: {
@@ -98,11 +137,13 @@ export default {
     const service = Vue.$dragula.$service;
 
     service.eventBus.$on('drag', () => {
-      this.$data.scrollable = false;
+      this.scrollable = false;
     });
     service.eventBus.$on('drop', () => {
-      this.$data.scrollable = true;
+      this.scrollable = true;
     });
+
+    this.buildCautions();
   },
 
   beforeDestroy() {
@@ -116,7 +157,7 @@ export default {
       this.courses.forEach(course => {
         credits += course.credits;
       });
-      return `${credits.toString()} cr.`;
+      return `${credits.toString()} credits`;
     },
     buttonString() {
       return '+ COURSE';
@@ -127,158 +168,120 @@ export default {
   },
   methods: {
     openCourseModal() {
+      // Delete confirmation for the use case of adding multiple courses consecutively
+      this.closeConfirmationModal();
+
       const modal = document.getElementById(`courseModal-${this.id}`);
       modal.style.display = 'block';
+
+      // Activate focus
+      const input = document.getElementById(`dropdown-${this.id}`);
+      input.value = '';
+      input.focus();
     },
     openSemesterModal() {
+      // Delete confirmation for the use case of adding multiple semesters consecutively
+      this.closeConfirmationModal();
+
       this.$parent.openSemesterModal();
     },
-    addCourse(data) {
-      const newCourse = this.$parent.$parent.createCourse(data);
-      this.courses.push(newCourse);
-      this.addCourseToFirebase(newCourse);
+    openConfirmationModal(msg) {
+      // Set text and display confirmation modal, then have it disappear after 5 seconds
 
-      // Set text and display confirmation modal, then have it disappear after 3 seconds
-
-      this.confirmationText = `Added ${data.code} to "${this.type} ${this.year}"`;
+      this.confirmationText = msg;
       const confirmationModal = document.getElementById(`confirmation-${this.id}`);
       confirmationModal.style.display = 'flex';
 
       setTimeout(() => {
         confirmationModal.style.display = 'none';
-      }, 5000);
+      }, 3000);
     },
-    addCourseToFirebase(course) {
-      // Customize information added to firebase. Currently, not all course data is added
-      const firebaseCourse = {
-        code: `${course.subject} ${course.number}`,
-        name: course.name,
-        description: course.description,
-        credits: course.credits,
-        semesters: course.semesters,
-        prereqs: course.prereqs,
-        enrollment: course.enrollment,
-        lectureTimes: course.lectureTimes,
-        instructors: course.instructors,
-        distributions: course.distributions,
-        lastRoster: course.lastRoster,
-        color: course.color
-      };
-
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
-      // TODO: error handling if user not found or some firebase error
-      // TODO: create a user if no document found
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const { semesters } = doc.data();
-            semesters.forEach(sem => {
-              if (sem.type === this.type && sem.year === this.year) {
-                sem.courses.push(firebaseCourse);
-              }
-            });
-            docRef.update({
-              semesters
-            });
-          } else {
-            // doc.data() will be undefined in this case
-            // console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
+    closeConfirmationModal() {
+      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
+      confirmationModal.style.display = 'none';
     },
-    deleteCourse(courseAbbr) {
+    addCourse(data) {
+      const newCourse = this.$parent.$parent.createCourse(data);
+      this.courses.push(newCourse);
+      const courseCode = `${data.subject} ${data.catalogNbr}`;
+      this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
+      this.buildCautions();
+    },
+    deleteCourse(courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].subject + this.courses[i].number === courseAbbr) {
+        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
           this.courses.splice(i, 1);
           break;
         }
       }
-      this.deleteFirebaseCourse();
+      this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
+      // Update requirements menu
+      this.$parent.$parent.updateRequirementsMenu();
     },
-    colorCourse(color, courseAbbr) {
+    colorCourse(color, courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].subject + this.courses[i].number === courseAbbr) {
+        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
           this.courses[i].color = color;
           break;
         }
       }
-      this.updateFirebaseColor(color, courseAbbr);
     },
-    deleteFirebaseCourse() {
-      // TODO: make user / docRef global, and start reusing update code
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const { semesters } = doc.data();
-            semesters.forEach(sem => {
-              if (sem.type === this.type && sem.year === this.year) {
-                sem.courses = this.courses;
-              }
-            });
-            docRef.update({
-              semesters
-            });
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
-    },
-    updateFirebaseColor(color, courseAbbr) {
-      // TODO: make user / docRef global, and start reusing update code
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const { semesters } = doc.data();
-            semesters.forEach(sem => {
-              if (sem.type === this.type && sem.year === this.year) {
-                sem.courses.forEach(course => {
-                  if (course.code.replace(/ /g, '') === courseAbbr) {
-                    course.color = color;
-                  }
-                });
-              }
-            });
-            docRef.update({
-              semesters
-            });
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
-    },
-
     updateBar(course) {
       this.$emit('updateBar', course);
     },
-
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
+    },
+    buildCautions() {
+      this.buildDuplicateCautions();
+    },
+    buildDuplicateCautions() {
+      this.$emit('build-duplicate-cautions');
+    },
+    buildIncorrectPlacementCautions() {
+      if (this.courses) {
+        this.courses.forEach(course => {
+          if (!course.semesters.includes(this.type)) course.alerts.caution = `Course unavailable in the ${this.type}`;
+        });
+      }
+    },
+    checkCourseDuplicate(key) {
+      if (this.courses) {
+        this.$refs.modal.courseIsAddable = true;
+        this.courses.forEach(course => {
+          if (`${course.subject} ${course.number}` === key) {
+            this.$refs.modal.courseIsAddable = false;
+            this.$parent.openCautionModal();
+          }
+        });
+      }
+    },
+    openSemesterMenu() {
+      this.stopCloseFlag = true;
+      this.semesterMenuOpen = true;
+    },
+    closeSemesterMenuIfOpen() {
+      if (this.stopCloseFlag) {
+        this.stopCloseFlag = false;
+      } else if (this.semesterMenuOpen) {
+        this.semesterMenuOpen = false;
+      }
+    },
+    openDeleteSemesterModal() {
+      this.deleteSemType = this.type;
+      this.deleteSemYear = this.year;
+      this.deleteSemID = this.id;
+
+      const modal = document.getElementById(`deleteSemesterModal-${this.id}`);
+      modal.style.display = 'block';
+    },
+    deleteSemester(type, year) {
+      this.$emit('delete-semester', type, year);
+      this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
     }
+  },
+  directives: {
+    'click-outside': clickOutside
   }
 };
 </script>
@@ -295,6 +298,7 @@ export default {
   border: 2px solid #d8d8d8;
   border-radius: 11px;
   width: fit-content;
+  position: relative;
 
   &--min {
     border: 2px dashed #d8d8d8;
@@ -343,6 +347,7 @@ export default {
 
   &-left {
     display: flex;
+    flex-direction: column;
 
     &--compact {
       justify-content: space-between;
@@ -354,6 +359,40 @@ export default {
       margin-top: 0.25rem;
     }
   }
+
+  &-dotRow {
+    padding: 5px 0 8px 0;
+    display: flex;
+    position: relative;
+    cursor: pointer;
+  }
+
+  &-dot {
+    opacity: 0.8;
+    height: 2px;
+    width: 2px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+    margin-bottom: 2px;
+    margin-top: 2px;
+
+    &--menu {
+      width: 5px;
+      height: 5px;
+      background-color: #c4c4c4;
+      opacity: 1;
+      margin: 0 2px;
+    }
+  }
+
+  &-menu {
+    position: absolute;
+    right: -3rem;
+    top: 2rem;
+    z-index: 1;
+  }
+
 
   &-name {
     font-size: 18px;
@@ -460,5 +499,18 @@ export default {
     -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)';
     filter: alpha(opacity=20);
   }
+
+.semester-modal-delete {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
 }
 </style>

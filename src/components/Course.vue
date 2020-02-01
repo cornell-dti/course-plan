@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ 'course--min': !notCompact, 'active': active }" class="course" @click="updateBar()">
-    <div class="course-color" :style="cssVars">
+  <div :class="{ 'course--min': compact, 'active': active }" class="course" @click="updateBar()">
+    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
       <div class="course-dotColumn">
         <span class="course-dot"></span>
         <span class="course-dot"></span>
@@ -12,10 +12,10 @@
         <span class="course-dot"></span>
       </div>
     </div>
-    <div :class="{ 'course-content--min': !notCompact }" class="course-content">
-      <div :class="{ 'course-main--min': !notCompact }" class="course-main">
-        <div class="course-top">
-          <div :class="{ 'course-code--min': !notCompact }" class="course-code">
+    <div :class="{ 'course-content--min': compact }" class="course-content">
+      <div :class="{ 'course-main--min': compact }" class="course-main">
+        <div :class="{ 'course-top--min': compact }" class="course-top">
+          <div :class="{ 'course-code--min': compact }" class="course-code">
             {{ subject }} {{ number }}
           </div>
           <div class="course-dotRow" @click="openMenu">
@@ -24,13 +24,13 @@
             <span class="course-dot course-dot--menu"></span>
           </div>
         </div>
-        <div v-if="notCompact" class="course-name">{{ name }}</div>
+        <div v-if="!compact" class="course-name">{{ name }}</div>
         <div class="course-info">
-          <span v-if="notCompact" class="course-credits">{{ creditString }}</span>
-          <span v-if="notCompact && semesterString" class="course-semesters">{{
+          <span v-if="!compact" class="course-credits">{{ creditString }}</span>
+          <span v-if="!compact && semesterString" class="course-semesters">{{
             semesterString
           }}</span>
-          <div v-if="notCompact" class="course-outerWrapper course-tooltip">
+          <!-- <div v-if="!compact && alerts.requirement" class="course-outerWrapper course-tooltip">
             <div class="course-iconWrapper course-iconWrapper--info">
               <img class="course-icon course-icon--info" src="../assets/images/info.svg" />
             </div>
@@ -38,10 +38,10 @@
               class="course-tooltiptext course-tooltiptext--info"
               v-html="requirementString"
             ></div>
-          </div>
-          <div class="course-outerWrapper course-tooltip">
-            <div class="course-iconWrapper">
-              <img class="course-icon" src="../assets/images/caution.svg" />
+          </div> -->
+          <div v-if="alerts.caution" class="course-outerWrapper course-tooltip">
+            <div v-if="!compact" class="course-iconWrapper course-iconWrapper--caution">
+              <img class="course-icon course-icon--caution" src="../assets/images/caution.svg" />
             </div>
             <div
               class="course-tooltiptext course-tooltiptext--caution"
@@ -88,9 +88,10 @@ export default {
     number: String,
     name: String,
     credits: Number,
+    prereqs: String,
     semesters: Array,
     color: String,
-    requirementsMap: Map,
+    alerts: Object,
     compact: Boolean,
     id: String,
     active: Boolean
@@ -102,77 +103,18 @@ export default {
     };
   },
   computed: {
-    notCompact() {
-      return !this.compact;
-    },
-
     rqString() {
       return 'RQ';
     },
 
     // TODO: bold requirements
     requirementString() {
-      if (
-        this.requirementsMap === null
-        || this.requirementsMap.keys() === null
-        || this.requirementsMap.keys().length === 0
-      ) {
-        return '';
-      }
-
-      const keys = Array.from(this.requirementsMap.keys());
-      let str = 'Satisfies ';
-      const endStr = '</b> requirement';
-      const { length } = keys;
-      if (length === 1) {
-        return `${str}<b>${keys[0]}${endStr}`;
-      }
-
-      // loop through all but the last requirement and comma separate
-      for (let i = 0; i < length - 1; i += 1) {
-        str += `<b>${keys[i]}</b>, `;
-      }
-
-      // remove the comma if only 2 requirements
-      if (length === 2) {
-        str = `${str.substring(0, str.length - 2)} `;
-      }
-
-      return `${str}and <b>${keys[length - 1]}${endStr}`;
+      return this.alerts.requirement;
     },
 
     // TODO: too much DOM manipulation that vue should fix - talk to Sam
     cautionString() {
-      if (
-        this.requirementsMap === null
-        || this.requirementsMap.keys() === null
-        || this.requirementsMap.keys().length === 0
-      ) {
-        return null;
-      }
-
-      let str = '';
-      this.requirementsMap.forEach((courses, req) => {
-        str += '<li>';
-        if (courses.length === 1) {
-          str += `${courses[0]} also fulfills <b>${req}</b> requirement`;
-        } else {
-          // loop through all but the last course and comma separate
-          for (let i = 0; i < courses.length - 1; i += 1) {
-            str += `${courses[i]}, `;
-          }
-
-          // remove the comma if only 2 requirements
-          if (courses.length === 2) {
-            str = `${str.substring(0, str.length - 2)} `;
-          }
-
-          str = `${str}and ${courses[courses.length - 1]} also fulfill <b>${req}</b> requirement`;
-        }
-        str += '</li>';
-      });
-
-      return str;
+      return this.alerts.caution;
     },
 
     semesterString() {
@@ -206,7 +148,6 @@ export default {
   },
   methods: {
     openMenu() {
-      console.log('Menu');
       this.stopCloseFlag = true;
       this.menuOpen = true;
     },
@@ -218,11 +159,11 @@ export default {
       }
     },
     deleteCourse() {
-      this.$emit('delete-course', this.id);
+      this.$emit('delete-course', `${this.subject} ${this.number}`);
       this.closeMenuIfOpen();
     },
     colorCourse(color) {
-      this.$emit('color-course', color, this.id);
+      this.$emit('color-course', color, `${this.subject} ${this.number}`);
       this.closeMenuIfOpen();
     },
     updateBar() {
@@ -249,6 +190,7 @@ export default {
   background-color: white;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
   position: relative;
+  height: 5.625rem;
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
@@ -260,26 +202,27 @@ export default {
   }
 
   &-main {
-    width: 100%;
-    margin-right: 1rem;
-
     &--min {
       display: flex;
       align-items: center;
       width: 100%;
       justify-content: space-between;
-      margin-right: 0.5rem;
     }
   }
 
   &-color {
-    width: 1.35rem;
-    border-radius: 0.5rem 0 0 0.5rem;
+    width: 1.25rem;
+    height: 5.625rem;
+    border-radius: 0.42rem 0 0 0.42rem;
     background-color: var(--bg-color);
-    margin-right: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &--active {
+      width: 19px;
+      height: 5.5rem;
+    }
   }
 
   &-dotColumn {
@@ -292,6 +235,7 @@ export default {
   }
 
   &-dotRow {
+    padding: 8px 0 8px 0;
     display: flex;
     position: relative;
   }
@@ -316,14 +260,18 @@ export default {
   }
 
   &-content {
-    margin: 0.75rem 0 0.75rem 0;
+    width: 18rem;
+    margin: 0 1rem;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    align-items: center;
+
 
     &--min {
+      width: 9.25rem;
       margin-bottom: 0;
       margin-top: 0;
+      margin-right: .5rem;
     }
   }
 
@@ -331,6 +279,12 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    &--min {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
   }
 
   &-code {
@@ -349,6 +303,11 @@ export default {
     color: #3d3d3d;
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
+    width: 18rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &-info {
@@ -375,7 +334,16 @@ export default {
     margin-left: 0.2rem;
     align-items: center;
 
-    &--info {
+    // TODO: styling for info icon on course card
+    // &--info {
+    //   &:before {
+    //     margin-right: 0.2rem;
+    //     font-style: normal;
+    //     content: '|';
+    //   }
+    // }
+
+    &--caution {
       &:before {
         margin-right: 0.2rem;
         font-style: normal;
@@ -408,6 +376,8 @@ export default {
 
 .active {
   border: 1px solid #2b6693;
+  height: 5.625rem;
+  width: 21.375rem;
 }
 
 // TODO: convert px to rem for spacing

@@ -1,13 +1,24 @@
 <template>
   <div class="dashboard">
-    <onboarding class="dashboard-onboarding" v-if="isOnboarding " @onboard="endOnboarding" :isEditingProfile="isEditingProfile" :user="user"/>
+    <onboarding class="dashboard-onboarding" v-if="isOnboarding"
+      :isEditingProfile="isEditingProfile"
+      :user="user"
+      @onboard="endOnboarding"
+      @cancelOnboarding="cancelOnboarding"
+    />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
-        <navbar class="dashboard-nav" @editProfile="editProfile" />
+        <navbar class="dashboard-nav"
+        @editProfile="editProfile"
+        :isBottomPreview="bottomBar.isPreview"
+        />
         <requirements class="dashboard-reqs" v-if="loaded"
           :semesters="semesters"
           :user="user"
+          :isBottomPreview="bottomBar.isPreview"
+          :isBottomBar="bottomBar.isExpanded"
           :key="requirementsKey"
+          @requirementsMap="loadRequirementsMap"
          />
       </div>
       <semesterview v-if="loaded"
@@ -128,8 +139,8 @@ export default {
       // TODO: id?
       const randomId = Math.floor(Math.random() * Math.floor(1000));
 
-      const subject = course.code.split(' ')[0] || course.subject;
-      const number = course.code.split(' ')[1] || course.catalogNbr;
+      const subject = (course.code && course.code.split(' ')[0]) || course.subject;
+      const number = (course.code && course.code.split(' ')[1]) || course.catalogNbr;
 
       // TODO: same field?
       const name = course.titleLong || course.name;
@@ -143,8 +154,8 @@ export default {
       // Semesters: remove periods and split on ', '
       const semesters = course.semesters || course.catalogWhenOffered.replace(/\./g, '').split(', ');
 
-      // Get prereqs of course as string ()
-      const prereqs = course.prereqs || course.catalogPrereqCoreq;
+      // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
+      const prereqs = course.prereqs || course.catalogPrereqCoreq || '';
 
       // To be redefined if does not exist
       let { enrollment, lectureTimes, instructors } = course;
@@ -184,16 +195,12 @@ export default {
       const distributions = course.distributions || course.catalogDistr.split(',');
 
       // Get last semester of available course. TODO: Remove when no longer firebase data dependant
-      const lastRoster = course.lastRoster || course.semester;
+      const lastRoster = course.lastRoster || course.roster;
 
-      // TODO: pick color if a new course instead of this default
-      const color = course.color || '2BBCC6';
+      const color = course.color || 'C4C4C4';
 
-      const courseMap = new Map();
-      courseMap.set('KCM', ['CS 1110', 'CS 1112']);
-      courseMap.set('CA', ['CS 2110']);
+      const alerts = { requirement: null, caution: null };
 
-      // TODO: Need courseMap to be generated, check to change
       const newCourse = {
         id: randomId,
         subject,
@@ -209,8 +216,8 @@ export default {
         distributions,
         lastRoster,
         color,
-        check: true,
-        requirementsMap: courseMap
+        alerts,
+        check: true
       };
 
       // Update requirements menu
@@ -233,6 +240,30 @@ export default {
       this.requirementsKey += 1;
     },
 
+    loadRequirementsMap(requirementsMap) {
+      // Get map of requirements
+      this.buildRequirementsAlert(requirementsMap);
+    },
+
+    buildRequirementsAlert(requirementsMap) {
+      // Update semesters with alerts
+      this.semesters.forEach(semester => {
+        semester.courses.forEach(course => {
+          const courseCode = `${course.subject} ${course.number}`;
+          if (courseCode in requirementsMap) {
+            // Add and to parse array to natural language
+            const courseReqs = requirementsMap[courseCode];
+            if (courseReqs.length > 1) {
+              const listLength = courseReqs.length;
+              courseReqs[listLength - 2] = `${courseReqs[listLength - 2]}, and ${courseReqs.pop()}`;
+            }
+            const parsedCourseReqs = `Satisfies ${courseReqs.join(', ')} Requirements`;
+            course.alerts.requirement = parsedCourseReqs;
+          }
+        });
+      });
+    },
+
     updateBar(course) {
       // Update Bar Information
       this.bottomBar = {
@@ -243,8 +274,6 @@ export default {
         semesters: this.joinOrNAString(course.semesters),
         color: course.color,
         latestSem: course.lastRoster,
-        // requirementsMap: Map,
-        id: 1,
         // Array data
         instructors: this.joinOrNAString(course.instructors),
         distributionCategories: this.joinOrNAString(course.distributions),
@@ -254,7 +283,7 @@ export default {
         overallRating: 0,
         difficulty: 0,
         workload: 0,
-        prerequisites: course.prereqs,
+        prerequisites: this.noneIfEmpty(course.prereqs),
         description: course.description,
         isPreview: true,
         isExpanded: true
@@ -305,22 +334,27 @@ export default {
       // set the new name and userData, along with either an empty list of semesters or preserve the old list
       docRef.set(data);
 
-      this.isOnboarding = false;
-
+      this.cancelOnboarding();
       this.updateRequirementsMenu();
+    },
+
+    cancelOnboarding() {
+      this.isOnboarding = false;
     },
 
     parseUserData(data, name) {
       const user = {
         // TODO: take into account multiple majors and colleges
-        major: data.majors[0].acronym,
-        majorFN: data.majors[0].fullName,
         college: data.colleges[0].acronym,
         collegeFN: data.colleges[0].fullName,
         firstName: name.firstName,
         middleName: name.middleName,
         lastName: name.lastName
       };
+      if ('majors' in data && data.majors.length > 0) {
+        user.major = data.majors[0].acronym;
+        user.majorFN = data.majors[0].fullName;
+      }
 
       return user;
     },
@@ -332,6 +366,10 @@ export default {
 
     joinOrNAString(arr) {
       return (arr.length !== 0 && arr[0] !== '') ? arr.join(', ') : 'N/A';
+    },
+
+    noneIfEmpty(str) {
+      return (str && str.length !== 0) ? str : 'None';
     }
   }
 };

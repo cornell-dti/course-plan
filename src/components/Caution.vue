@@ -1,14 +1,11 @@
-// One prop for text // Otherwise - the same for courses and semesters // Can leave as display: none
-like the 2 modals in Semester.vue until necessary? Or can itself be created from the addCourse()
-method - unsure what the right move is right now
-
 <template>
-  <div class="confirmation">
-    <div class="confirmation-left">
-      <img class="confirmation-icon" src="../assets/images/checkmark.svg" />
+  <div class="caution">
+    <div class="caution-left">
+      <img class="caution-icon" src="../assets/images/caution-white.svg" />
     </div>
-    <div class="confirmation-text">{{ text }}</div>
-    <div class="confirmation-right">
+    <div class="caution-text">{{ text }}</div>
+    <div class="caution-right">
+      <!-- TODO: implement undo functionality -->
       <!-- <span class="undo-buttonText">{{ undo }}</span> -->
     </div>
   </div>
@@ -21,6 +18,7 @@ export default {
   },
 
   computed: {
+    // TODO: implement undo functionality
     // undo() {
     //   return 'UNDO';
     // }
@@ -29,7 +27,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.confirmation {
+.caution {
   position: fixed;
   z-index: 10;
   top: 16px;
@@ -43,7 +41,7 @@ export default {
     min-width: 42px;
     min-height: 42px;
 
-    background: #3eb53b;
+    background: #EB6D6D;
     border-radius: 5px;
   }
 

@@ -2,36 +2,37 @@
     "university": {
         "value": "UNI",
         "name": "University",
-        "requirements": [{
+        "requirements": [
+            {
                 "name": "Academic Credits",
+                "description": "To graduate, a student must earn a minimum of 120 academic credits. Physical education credits and “10XX” courses do not count toward the 120 required credits.",
+                "source": "http://courses.cornell.edu/content.php?catoid=31&navoid=7901",
                 "search": "all-eligible",
-                "fulfilledBy": "credits",
                 "includes": [],
+                "fulfilledBy": "credits",
                 "minCount": 120,
                 "applies": "all",
                 "progressBar": true
             },
             {
-                "name": "Required Cornell Credits for Transfers",
-                "search": "all-eligible",
-                "fulfilledBy": "credits",
-                "includes": [],
-                "minCount": 60,
-                "applies": "transfers"
-            },
-            {
                 "name": "Physical Education",
+                "description": "All incoming freshmen are required to take two credits (two courses) of Physical Education, one credit each semester of the first year on campus.",
+                "source": "http://courses.cornell.edu/content.php?catoid=36&navoid=9249",
                 "search": "subject",
-                "fulfilledBy": "courses",
                 "includes": [
-                    ["PE"]
+                    [
+                        "PE"
+                    ]
                 ],
+                "fulfilledBy": "courses",
                 "minCount": 2,
                 "maxCount": 2,
                 "applies": "all"
             },
             {
                 "name": "Swimming Test",
+                "description": "The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming and water safety competency requirement for all entering first-year undergraduate students.",
+                "source": "http://courses.cornell.edu/content.php?catoid=36&navoid=9249",
                 "fulfilledBy": "self-check",
                 "includes": [],
                 "minCount": 0,
@@ -41,123 +42,476 @@
     },
     "college": {
         "AG": {
-
+            "name": "Agriculture and Life Sciences",
+            "requirements": [
+                {
+                    "name": "CALS Credits",
+                    "description": "55 CALS credits are required for graduation. CALS credits include all courses from departments within CALS and courses offered in Applied Economics and Management, Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Information Science, Nutritional Science, and The Department of Statistics and Data Science.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements",
+                    "search": "acadGroup",
+                    "includes": [
+                        [
+                            "AG",
+                            "BU"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 55,
+                    "progressBar": true
+                },
+                {
+                    "name": "Introductory Life Sciences/Biology",
+                    "description": "Students must complete at least six academic credits from the list of courses that fulfill distribution requirements.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ANSC 1100",
+                            "BIOAP 1100",
+                            "BIOEE 1560",
+                            "BIOEE 1610",
+                            "BIOEE 1610",
+                            "BIOEE 1610",
+                            "BIOEE 1610",
+                            "BIOEE 1780",
+                            "BIOEE 1780",
+                            "BIOEE 1780",
+                            "BIOEE 2070",
+                            "BIOEE 2526",
+                            "BIOG 1106",
+                            "BIOG 1140",
+                            "BIOG 1140",
+                            "BIOG 1191",
+                            "BIOG 1440",
+                            "BIOG 1440",
+                            "BIOG 1440",
+                            "BIOG 1445",
+                            "BIOG 1445",
+                            "BIOG 1500",
+                            "BIOG 1500",
+                            "BIOG 1500",
+                            "BIOMG 1150",
+                            "BIOMG 1290",
+                            "BIOMG 1350",
+                            "BIOMG 1350",
+                            "BIOMG 1350",
+                            "BIOMI 1100",
+                            "BIOMI 1120",
+                            "BIOPL 1120",
+                            "BIOPL 1130",
+                            "BIOPL 2400",
+                            "BIOPL 2410",
+                            "BIOPL 2490",
+                            "BIOSM 1500",
+                            "BIOSM 1551",
+                            "BIOSM 1610",
+                            "BIOSM 1650",
+                            "BIOSM 1780",
+                            "CSS 1120",
+                            "EAS 1560",
+                            "ENTOM 2011",
+                            "ENTOM 2020",
+                            "ENTOM 2030",
+                            "FDSC 2204",
+                            "HORT 1115",
+                            "HORT 2204",
+                            "PLBIO 2100",
+                            "PLBIO 2400",
+                            "PLBIO 2410",
+                            "PLBIO 2450",
+                            "PLBIO 2470",
+                            "PLBIO 2490",
+                            "PLBRG 2010",
+                            "PLHRT 1115",
+                            "PLHRT 2204",
+                            "PLPA 2013",
+                            "PLPA 2015",
+                            "PLPA 2900",
+                            "PLPPM 2013",
+                            "PLPPM 2015",
+                            "PLPPM 2900",
+                            "PLSCI 1150",
+                            "PLSCI 1300",
+                            "PLSCI 1420",
+                            "PLSCI 4190",
+                            "PLSCS 1120",
+                            "STS 2871",
+                            "VIEN 2204"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 6
+                },
+                {
+                    "name": "Physical and Life Sciences",
+                    "description": "18 credits in at least three disciplines of which six credits must be introductory life sciences/biology and three credits in chemistry or physics and a quantitative literacy course.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Chemistry/Physics",
+                    "description": "Complete a minimum of three academic credits of chemistry or physics. Includes all Cornell courses with the CHEM or PHYS prefix at Cornell (excluding courses that are supplemental, independent study, research, TA, internship, and First-Year Writing Seminar).",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "subject",
+                    "includes": [
+                        [
+                            "CHEM",
+                            "PHYS"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 3
+                },
+                {
+                    "name": "Quantitative Literacy",
+                    "description": "Faculty legislation requires minimum competency in quantitative literacy. This requirement can be satisfied by earning a score of 4 or 5 on the AP Calculus exam or a score of 5 on the AP Statistics exam, or transfer an approved calculus or statistics course with a minimum letter grade of “C” or better; or take an approved calculus or statistics course at Cornell.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "subject",
+                    "includes": [
+                        [
+                            "MATH",
+                            "STSCI"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Social Sciences and Humanities",
+                    "description": "Students must complete four courses of 3 or more credits each from the following seven categories of courses in the humanities and social sciences. At least one course category MUST be completed in three different categories. No more than two courses in the same department will be counted toward the distribution requirement. To view a searchable list of courses, please search for courses that fulfill distribution requirements.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "(CA-",
+                            "(D-",
+                            "(FL-",
+                            "(HA-",
+                            "(KCM-",
+                            "(LA-",
+                            "(SBA-"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 4,
+                    "uniqueIncludes": 3
+                },
+                {
+                    "name": "Human Diversity (D)",
+                    "description": "At least one course category MUST be completed in three different categories. Human Diversity (D) is a required category and MUST be completed.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "catalogDistr",
+                    "includes": [
+                        [
+                            "(D-"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Written and Oral Expression",
+                    "description": "9 credits total, of which at least six must be in written expression. Oral expression is not required by the college, but may be required for some majors. If not required, all nine credits may be in written expression. Writing in the Majors courses do not count towards the writing requirement.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        [
+                            "written expression",
+                            "oral expression",
+                            "First-Year Writing Seminar"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 9
+                },
+                {
+                    "name": "Written Expression",
+                    "description": "At least six credits must be in written expression.",
+                    "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        [
+                            "written expression",
+                            "First-Year Writing Seminar"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 6
+                }
+            ]
         },
         "AR": {
-
+            "name": "Architecture, Art and Planning",
+            "requirements": [
+                {
+                    "name": "Introductory Studio Practice",
+                    "description": "6 classes of studio practice: Introductory 2000-level studios. To be completed by the end of the third semester.",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 2201"
+                        ],
+                        [
+                            "ART 2301"
+                        ],
+                        [
+                            "ART 2401"
+                        ],
+                        [
+                            "ART 2501"
+                        ],
+                        [
+                            "ART 2601"
+                        ],
+                        [
+                            "ART 2701"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 6
+                },
+                {
+                    "name": "Elective Studio Practice",
+                    "description": "4 classes of studio practice: Elective 3000-level studios. B.F.A. students are required to successfully complete four 3000-level studios from any of the six different studio practice areas as well as Rome and/or New York City. Students may enroll in a 3000-level studio once they have successfully completed the 2000-level studio in that same studio practice area. Sample classes include:",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 3201",
+                            "ART 3301",
+                            "ART 3401",
+                            "ART 3501",
+                            "ART 3601",
+                            "ART 3705",
+                            "ART 3001",
+                            "ART 3003"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 4
+                },
+                {
+                    "name": "Pre-thesis Studio Practice",
+                    "description": "1 class of studio practice: Pre-thesis",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 3006"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Thesis Studio Practice",
+                    "description": "2 classes of studio practice: Thesis year. All required 3000-level studios and ART 3006 must be completed before ART 4003 Thesis I, and all elective 3000-level studios must be completed before ART 4004 Thesis II.",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 4003"
+                        ],
+                        [
+                            "ART 4004"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Shop Instruction",
+                    "description": "1 class of shop instruction",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 2900"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Theory and Criticism",
+                    "description": "3 classes of theory and criticism",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ART 2103"
+                        ],
+                        [
+                            "ART 4100"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Theory and Criticism Elective",
+                    "description": "One additional theory and criticism elective.",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Art History",
+                    "description": "3 classes of art history. One modern/contemporary art history class, one global art history class, and one additional art history elective.",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Freshman Writing Seminars",
+                    "description": "2 writing classes. Any two writing classes from the following: First-Year Writing Seminars (FWS), ENGL 2880, ENGL 2890",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        [
+                            "First-Year Writing Seminar."
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 6
+                },
+                {
+                    "name": "Elective Plan",
+                    "description": "Any academic class at Cornell chosen in consultation with faculty advisor.",
+                    "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 37
+                }
+            ]
         },
         "AS": {
             "name": "Arts and Sciences",
-            "requirements": [{
+            "requirements": [
+                {
                     "name": "CAS Credits",
+                    "description": "100 credits in Arts & Sciences is a minimum number, as is the 120 credit total. Students can take more than 20 credits outside of the College as long as they take 100 credits within; they can also take all their credits in Arts & Sciences and accumulate more than 120. Note: AP, IB, and A-Level credits count toward the 120 total credits but not toward the 100 A&S credits.",
+                    "source": "https://as.cornell.edu/degree-requirements",
                     "search": "acadGroup",
                     "includes": [
-                        ["AS"]
+                        [
+                            "AS"
+                        ]
                     ],
                     "fulfilledBy": "credits",
                     "minCount": 100,
-                    "uniqueIncludes": 0,
                     "progressBar": true
                 },
                 {
                     "name": "Freshman Writing Seminars (FWS)",
+                    "description": "A 5 on either the AP English Composition or Literature exam, or a 7 on the IB HL English Literature or Language exam will count towards one of these seminars. First-year students should plan to take an FWS during their first semester at Cornell.",
+                    "source": "https://as.cornell.edu/degree-requirements",
                     "search": "catalogSatisfiesReq",
                     "includes": [
-                        ["First-Year Writing Seminar."]
+                        [
+                            "First-Year Writing Seminar."
+                        ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 6,
-                    "uniqueIncludes": 0
+                    "minCount": 6
                 },
                 {
                     "name": "Foreign Language Requirement",
-                    "multiplePaths": true,
-                    "paths": [{
-                            "name": "Intermediate Language Course",
-                            "search": "code",
-                            "includes": [
-                                [
-                                    "ARAB 2***",
-                                    "BENGL 2***",
-                                    "BURM 2***",
-                                    "CHIN 2***",
-                                    "FREN 2***",
-                                    "GERST 2***",
-                                    "GREEK 2***",
-                                    "HEBRW 2***",
-                                    "HINDI 2***",
-                                    "INDO 2***",
-                                    "ITAL 2***",
-                                    "JAPAN 2***",
-                                    "KHMER 2***",
-                                    "KOREA 2***",
-                                    "LATIN 2***",
-                                    "NEPAL 2***",
-                                    "PERSN 2***",
-                                    "POLSH 2***",
-                                    "PORT 2***",
-                                    "RUSSA 2***",
-                                    "SANSK 2***",
-                                    "SINHA 2***",
-                                    "SPAN 2***",
-                                    "SWAHL 2***",
-                                    "TAG 2***",
-                                    "THAI 2***",
-                                    "TURK 2***",
-                                    "VIET 2***",
-                                    "YORUB 2***",
-                                    "ZULU 2***"
-                                ]
-                            ],
-                            "fulfilledBy": "courses",
-                            "minCount": 1,
-                            "uniqueIncludes": 0
-                        },
-                        {
-                            "name": "11 Language Course Credits",
-                            "search": "subject",
-                            "includes": [
-                                [
-                                    "ARAB",
-                                    "BENGL",
-                                    "BURM",
-                                    "CHIN",
-                                    "FREN",
-                                    "GERST",
-                                    "GREEK",
-                                    "HEBRW",
-                                    "HINDI",
-                                    "INDO",
-                                    "ITAL",
-                                    "JAPAN",
-                                    "KHMER",
-                                    "KOREA",
-                                    "LATIN",
-                                    "NEPAL",
-                                    "PERSN",
-                                    "POLSH",
-                                    "PORT",
-                                    "RUSSA",
-                                    "SANSK",
-                                    "SINHA",
-                                    "SPAN",
-                                    "SWAHL",
-                                    "TAG",
-                                    "THAI",
-                                    "TURK",
-                                    "VIET",
-                                    "YORUB",
-                                    "ZULU"
-                                ]
-                            ],
-                            "fulfilledBy": "credits",
-                            "minCount": 11,
-                            "uniqueIncludes": 0
-                        }
-                    ]
+                    "description": "A student must either pass an intermediate Cornell language course at the 2000-level or above or complete at least 11 credits in a single foreign language at Cornell. AP and IB credits cannot complete this requirement, but usually indicate that you place into a higher level course. Note: Native speakers of a foreign language may be exempted from this requirement.",
+                    "source": "https://as.cornell.edu/degree-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
                 },
                 {
-                    "name": "Four Courses in Physical & Biological Sciences and Mathematics & Quantitative Reasoning",
+                    "name": "Intermediate Language Course",
+                    "description": "Option 1 - Successfully complete one intermediate course of 3 or more credits at Cornell at the 2000 level or above.",
+                    "source": "https://as.cornell.edu/Foreign-Language",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ARAB 2***",
+                            "BENGL 2***",
+                            "BURM 2***",
+                            "CHIN 2***",
+                            "FREN 2***",
+                            "GERST 2***",
+                            "GREEK 2***",
+                            "HEBRW 2***",
+                            "HINDI 2***",
+                            "INDO 2***",
+                            "ITAL 2***",
+                            "JAPAN 2***",
+                            "KHMER 2***",
+                            "KOREA 2***",
+                            "LATIN 2***",
+                            "NEPAL 2***",
+                            "PERSN 2***",
+                            "POLSH 2***",
+                            "PORT 2***",
+                            "RUSSA 2***",
+                            "SANSK 2***",
+                            "SINHA 2***",
+                            "SPAN 2***",
+                            "SWAHL 2***",
+                            "TAG 2***",
+                            "THAI 2***",
+                            "TURK 2***",
+                            "VIET 2***",
+                            "YORUB 2***",
+                            "ZULU 2***"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Language Course Credits",
+                    "description": "Option 2 - Successfully complete at least 11 credits of study (2 or 3 semesters) in a single foreign language taken in the appropriate sequence at Cornell.",
+                    "source": "https://as.cornell.edu/Foreign-Language",
+                    "search": "subject",
+                    "includes": [
+                        [
+                            "ARAB",
+                            "BENGL",
+                            "BURM",
+                            "CHIN",
+                            "FREN",
+                            "GERST",
+                            "GREEK",
+                            "HEBRW",
+                            "HINDI",
+                            "INDO",
+                            "ITAL",
+                            "JAPAN",
+                            "KHMER",
+                            "KOREA",
+                            "LATIN",
+                            "NEPAL",
+                            "PERSN",
+                            "POLSH",
+                            "PORT",
+                            "RUSSA",
+                            "SANSK",
+                            "SINHA",
+                            "SPAN",
+                            "SWAHL",
+                            "TAG",
+                            "THAI",
+                            "TURK",
+                            "VIET",
+                            "YORUB",
+                            "ZULU"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 11
+                },
+                {
+                    "name": "(PBS-AS) or (MQR-AS)",
+                    "description": "Four courses in Physical & Biological Sciences (PBS-AS/PBSS-AS),  and Mathematics & Quantitative Reasoning (MQR-AS).",
+                    "source": "https://as.cornell.edu/degree-requirements",
                     "search": "catalogDistr",
                     "includes": [
                         [
@@ -167,11 +521,12 @@
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 4,
-                    "uniqueIncludes": 0
+                    "minCount": 4
                 },
                 {
                     "name": "Physical & Biological Sceiences (PBS-AS)",
+                    "description": "Students must take 2 courses in Physical & Biological Sciences (PBS).",
+                    "source": "https://as.cornell.edu/degree-requirements",
                     "search": "catalogDistr",
                     "includes": [
                         [
@@ -180,21 +535,25 @@
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 2,
-                    "uniqueIncludes": 0
+                    "minCount": 2
                 },
                 {
                     "name": "Mathematics & Quantitative Reasoning (MQR-AS)",
+                    "description": "Students must take 1 in Mathematics & Quantitative Reasoning (MQR).",
+                    "source": "https://as.cornell.edu/degree-requirements",
                     "search": "catalogDistr",
                     "includes": [
-                        ["(MQR-AS)"]
+                        [
+                            "(MQR-AS)"
+                        ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 1,
-                    "uniqueIncludes": 0
+                    "minCount": 1
                 },
                 {
-                    "name": "Five Courses in Liberal Arts",
+                    "name": "Liberal Arts",
+                    "description": "Five Arts & Sciences courses of 3 or more credits from at least 4 of the following social sciences, humanities, and arts categories:",
+                    "source": "https://as.cornell.edu/degree-requirements",
                     "search": "catalogDistr",
                     "includes": [
                         [
@@ -210,7 +569,9 @@
                     "uniqueIncludes": 4
                 },
                 {
-                    "name": "Geographic catalogBreadth Requirement (GB)",
+                    "name": "Geographic Breadth Requirement (GB)",
+                    "description": "One course that focuses on an area or a people other than those of the United States, Canada, or Europe. Courses fulfilling this requirement are marked with a GB in the Class Roster.",
+                    "source": "https://as.cornell.edu/degree-requirements",
                     "search": "catalogBreadth",
                     "includes": [
                         [
@@ -219,11 +580,12 @@
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 1,
-                    "uniqueIncludes": 0
+                    "minCount": 1
                 },
                 {
                     "name": "Historic catalogBreadth Requirement (HB)",
+                    "description": "One course that focuses on an historic period before the 20th century. Courses fulfilling this requirement are marked with an HB in the Class Roster.",
+                    "source": "https://as.cornell.edu/degree-requirements",
                     "search": "catalogBreadth",
                     "includes": [
                         [
@@ -232,64 +594,79 @@
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 1,
-                    "uniqueIncludes": 0
+                    "minCount": 1
                 }
             ]
         },
         "EN": {
             "name": "Engineering",
-            "requirements": [{
+            "requirements": [
+                {
                     "name": "Mathematics",
+                    "description": "MATH 1910, 1920, 2930 or 2940, and a mathematics course chosen by the Major.",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": "code",
                     "includes": [
-                        ["MATH 1910"],
-                        ["MATH 1920"],
+                        [
+                            "MATH 1910"
+                        ],
+                        [
+                            "MATH 1920"
+                        ],
                         [
                             "MATH 2930",
                             "MATH 2940"
                         ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 14,
-                    "uniqueIncludes": 0,
-                    "majorDep": true
+                    "minCount": 14
                 },
                 {
                     "name": "Physics",
+                    "description": "PHYS 1112 and 2213, and, depending on the Major, either PHYS 2214 or a designated mathematics or science course.",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": "code",
                     "includes": [
-                        ["PHYS 1112"],
-                        ["PHYS 2213"]
+                        [
+                            "PHYS 1112"
+                        ],
+                        [
+                            "PHYS 2213"
+                        ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 8,
-                    "uniqueIncludes": 0,
-                    "majorDep": true
+                    "minCount": 8
                 },
                 {
                     "name": "Chemistry",
+                    "description": "CHEM 2090.  Majors in Chemical Engineering or those planning on a health-related career should take CHEM 2090 and then 2080.  Students in Environmental Engineering should take CHEM 2090 and CHEM 1570/3570.  Earth and Atmospheric Sciences majors should take CHEM 2090 and then 2080/1570.",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": "code",
                     "includes": [
-                        ["CHEM 2090"]
+                        [
+                            "CHEM 2090"
+                        ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 4,
-                    "uniqueIncludes": 0,
-                    "majorDep": true
+                    "minCount": 4
                 },
                 {
                     "name": "Freshman Writing Seminars",
+                    "description": "All students are required to take two first-year writing seminars.",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": "catalogSatisfiesReq",
                     "includes": [
-                        ["First-Year Writing Seminar."]
+                        [
+                            "First-Year Writing Seminar."
+                        ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 6,
-                    "uniqueIncludes": 0
+                    "minCount": 6
                 },
                 {
                     "name": "Computing",
+                    "description": "(CS 1110, 1112, 1114, or 1115)",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": "code",
                     "includes": [
                         [
@@ -300,31 +677,38 @@
                         ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 4,
-                    "uniqueIncludes": 0
+                    "minCount": 4
                 },
                 {
-                    "name": "Introducation to Engineering",
+                    "name": "Introduction to Engineering",
+                    "description": "One introduction to engineering (ENGRI) course.",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": "subject",
                     "includes": [
-                        ["ENGRI"]
+                        [
+                            "ENGRI"
+                        ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 4,
-                    "uniqueIncludes": 0
+                    "minCount": 4
                 },
                 {
                     "name": "Engineering Distribution",
+                    "description": "Two different category distribution courses (ENGRD), one of which may be required by the Major.",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": "subject",
                     "includes": [
-                        ["ENGRD"]
+                        [
+                            "ENGRD"
+                        ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 6,
-                    "uniqueIncludes": 0
+                    "minCount": 6
                 },
                 {
                     "name": "Liberal Studies Distribution",
+                    "description": "Liberal Studies Distribution (six courses)",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": "catalogDistr",
                     "includes": [
                         [
@@ -343,102 +727,287 @@
                 },
                 {
                     "name": "Advisor-Approved Electives",
+                    "description": "'Advisor-Approved' means that you have justified your selection to your advisor and that your advisor has approved the selection. It makes good sense to use these electives for lower-level introductory courses that may be required prerequisites for the 3000+ technical elective courses and the courses used to satisfy the Specialization. Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS. Up to 6 credits of advisor approved electives may be allowed for ROTC courses at the 3000-level or above.",
+                    "source": "https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives#adv_elective",
                     "includes": [],
                     "fulfilledBy": "self-check",
-                    "minCount": 6,
-                    "uniqueIncludes": 0
+                    "minCount": 6
+                },
+                {
+                    "name": "Major Program",
+                    "description": "Major-required courses, major-approved electives, and courses outside the major.",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 3
                 },
                 {
                     "name": "Technical Communication",
+                    "description": "In addition to the first-year writing seminars, a technical writing course must be taken as an engineering distribution, liberal studies, Advisor-approved electives, or Major course.",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "includes": [],
                     "fulfilledBy": "self-check",
-                    "minCount": 3,
-                    "uniqueIncludes": 0
+                    "minCount": 3
                 }
             ]
         },
         "HE": {
-
-        },
-        "IL": {
-
-        },
-        "BU": {
-
-        }
-    },
-    "major": {
-        "ASRC": {
-            "name": "Africana Studies",
-            "schools": ["AS"],
-            "requirements": [{
-                    "name": "Introduction to Africana Studies",
-                    "search": "code",
-                    "includes": ["ASRC 1500"],
-                    "fulfilledBy": "courses",
-                    "minCount": 1,
-                    "majorDep": true
+            "name": "Human Ecology",
+            "requirements": [
+                {
+                    "name": "Human Ecology Credits",
+                    "description": "Students must complete a minimum of 43 Human Ecology credits from College Distribution, Major Requirements and electives.",
+                    "source": "https://www.human.cornell.edu/academics/policies/requirements",
+                    "search": "acadGroup",
+                    "includes": [
+                        [
+                            "HE"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 43,
+                    "progressBar": true
                 },
                 {
-                    "name": "Diaspora Studies",
-                    "search": "self-check",
-                    "fulfilledBy": "courses",
-                    "minCount": 3,
-                    "majorDep": true
+                    "name": "Technical Communication",
+                    "description": "In addition to the first-year writing seminars, a technical writing course must be taken as an engineering distribution, liberal studies, Advisor-approved electives, or Major course.",
+                    "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
                 },
                 {
-                    "name": "Specific Focus",
-                    "search": "self-check",
-                    "fulfilledBy": "courses",
-                    "minCount": 4,
-                    "majorDep": true
-                },
-                {
-                    "name": "Seminar Courses",
-                    "search": "code",
-                    "includes": ["ASRC 4***"],
-                    "fulfilledBy": "courses",
-                    "minCount": 2,
-                    "majorDep": true
+                    "name": "9 Credits In HE Outside Major",
+                    "description": "Students must earn 9 credits in Human Ecology departments outside their major department with rules:",
+                    "source": "https://www.human.cornell.edu/academics/policies/requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 9
                 }
             ]
         },
-        "AGSCI": {
-
-        },
-        "AMST": {
-
-        },
-        "ANSC": {
-
-        },
-        "ANTHR": {
-
-        },
-        "AEM": {
-            "name": "Applied Economics and Management",
-            "schools": ["AG"],
-            "requirements": [{
-                    "name": "Economics and Management",
+        "IL": {
+            "name": "Industrial Labor Relations",
+            "requirements": [
+                {
+                    "name": "Core Requirements",
+                    "description": "Students are required to fulfill the following core requirements for a letter grade:",
+                    "source": "https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements",
                     "search": "code",
                     "includes": [
-                        ["ECON 1110"],
-                        ["ECON 1120"],
-                        ["AEM 2220"],
-                        ["AEM 2225"],
-                        ["AEM 2240"],
-                        ["AEM 2600"],
-                        ["AEM 2601"],
-                        ["AEM 2700"],
-                        ["AEM 3200"],
-                        ["AEM 3230"]
+                        [
+                            "ILROB 1220"
+                        ],
+                        [
+                            "ILRLR 1100"
+                        ],
+                        [
+                            "ECON 1110"
+                        ],
+                        [
+                            "ECON 1120"
+                        ],
+                        [
+                            "ILRST 2100"
+                        ],
+                        [
+                            "ILRLR 2010"
+                        ],
+                        [
+                            "ILRHR 2600"
+                        ],
+                        [
+                            "ILRLR 2050"
+                        ],
+                        [
+                            "ILRLE 2400"
+                        ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 10,
-                    "majorDep": true
+                    "minCount": 9
                 },
                 {
-                    "name": "Grand Challenges @ Dyson",
+                    "name": "Freshman Writing Seminars",
+                    "description": "Students are required to fulfill the following writing requirements for a letter grade:",
+                    "source": "https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        [
+                            "First-Year Writing Seminar."
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 3
+                },
+                {
+                    "name": "ILR Advance Writing",
+                    "description": "Courses must be taken for a letter grade in order to count toward the ILR Requirements",
+                    "source": "https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements/ilr-advanced-writing-courses",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ILRHR 2360",
+                            "ILRIC 2390",
+                            "ILRLE 2400",
+                            "ILRLR 2060",
+                            "ILRLR 2070",
+                            "ILROB 2230",
+                            "ILROB 2290",
+                            "ENGL 2880",
+                            "ENGL 2890"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Distribution Requirements",
+                    "description": "Students are required to complete one course from each of the following lists to fulfill the distribution requirements. All courses must be taken for a letter grade.",
+                    "source": "https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 3
+                }
+            ]
+        },
+        "BU": {
+            "name": "SC Johnson College of Business",
+            "requirements": [
+                {
+                    "name": "Major Requirements",
+                    "description": "Graduation requirements depend on major. For undergraduates, it is either Dyson or SHA requirements.",
+                    "source": "https://business.cornell.edu/programs/undergraduate/",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                }
+            ]
+        }
+    },
+    "major": {
+        "AEM": {
+            "name": "Applied Economics and Management",
+            "schools": [
+                "AG",
+                "BU"
+            ],
+            "requirements": [
+                {
+                    "name": "AEM Concentration Requirement",
+                    "description": "AEM majors must choose at least one of the following eleven concentrations by the beginning of their junior year, and may choose no more than two. No more than one course may fulfill the elective credits of two concentrations. Courses used to fulfill a core Applied Economics or Quantitative Methods requirement cannot also count towards a concentration requirement except in EERE. One class from the core requirements may be taken for a S/U grade. NO S/U grades will be accepted in a declared concentration, unless a class is offered S/U only. All course petitions or substitutions are managed through the Dyson Office of Student Services in consultation with a committee of faculty from each concentration",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Management Requirements",
+                    "description": "AEM 3200 and AEM 3230 are optional for the following three concentrations: applied economics; environmental, energy, and resource economics; and international trade and development.",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 2200"
+                        ],
+                        [
+                            "AEM 2225"
+                        ],
+                        [
+                            "AEM 2240"
+                        ],
+                        [
+                            "AEM 2420"
+                        ],
+                        [
+                            "AEM 2601"
+                        ],
+                        [
+                            "AEM 3200"
+                        ],
+                        [
+                            "AEM 3230"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 7
+                },
+                {
+                    "name": "Economics Requirements",
+                    "description": "ECON 1110, ECON 1120, AND AEM 2600. For students concentrating in environmental, energy, and resource economics, ECON 3030 is required instead of AEM 2600.",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ECON 1110"
+                        ],
+                        [
+                            "ECON 1120"
+                        ],
+                        [
+                            "AEM 2600",
+                            "ECON 3030"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Quantitative Methods Requirements",
+                    "description": "AEM 2100, MATH 1110 OR MATH 1120, AND AEM 2010",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 2100"
+                        ],
+                        [
+                            "MATH 1110",
+                            "MATH 1120"
+                        ],
+                        [
+                            "AEM 2010"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Quantitative Methods Elective Requirements",
+                    "description": "At least 3 elective credits from the following.",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 2770",
+                            "AEM 2830",
+                            "AEM 2840",
+                            "AEM 3100",
+                            "AEM 3390",
+                            "AEM 4060",
+                            "AEM 4110",
+                            "AEM 4120",
+                            "AEM 4190",
+                            "BTRY 3080",
+                            "ILRST 3080",
+                            "STSCI 3080",
+                            "ECON 3130",
+                            "ECON 3140",
+                            "ECON 4020",
+                            "ILRST 2110",
+                            "ILRST 3110"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 3
+                },
+                {
+                    "name": "Applied Economics Requirements",
+                    "description": "At least 6 credits; must come from two of the four categories below. Courses used to fulfill a quantitative methods requirement or a concentration requirement or elective cannot also be counted toward a core applied economics requirement, unless that concentration is environmental, energy, and resource economics.",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Grand Challenges Reqiurement Part 1: Written expression course",
+                    "description": "Sophomore year: 3 credits. Focus: Critical thinking. These course options are centered around contemporary global issues and will help you learn communication, business analysis, and critical thinking skills as you develop cultural awareness. Available courses may vary per semester. You’ll choose one of the following:",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
                     "search": "code",
                     "includes": [
                         [
@@ -447,135 +1016,38 @@
                             "AEM 2800",
                             "AEM 2805",
                             "AEM 4940"
-                        ],
-                        ["AEM 3000"],
-                        ["AEM 4000"]
-                    ],
-                    "fulfilledBy": "credits",
-                    "minCount": 7.5,
-                    "majorDep": true
-                },
-                {
-                    "name": "Quantitative Methods",
-                    "search": "code",
-                    "includes": [
-                        [
-                            "MATH 1110",
-                            "MATH 1120"
-                        ],
-                        ["AEM 2010"],
-                        ["AEM 2100"],
-                        [
-                            "AEM 2770",
-                            "AEM 2830",
-                            "AEM 2840",
-                            "AEM 3100",
-                            "AEM 3390",
-                            "AEM 4060",
-                            "AEM 4110",
-                            "AEM 4120",
-                            "AEM 4190",
-                            "BTRY 3080",
-                            "ECON 3130",
-                            "ECON 3140",
-                            "ECON 4020",
-                            "ILRST 2110",
-                            "ECON 3110"
-                        ],
-                        [
-                            "AEM 2770",
-                            "AEM 2830",
-                            "AEM 2840",
-                            "AEM 3100",
-                            "AEM 3390",
-                            "AEM 4060",
-                            "AEM 4110",
-                            "AEM 4120",
-                            "AEM 4190",
-                            "BTRY 3080",
-                            "ECON 3130",
-                            "ECON 3140",
-                            "ECON 4020",
-                            "ILRST 2110",
-                            "ECON 3110"
-                        ],
-                        [
-                            "AEM 2770",
-                            "AEM 2830",
-                            "AEM 2840",
-                            "AEM 3100",
-                            "AEM 3390",
-                            "AEM 4060",
-                            "AEM 4110",
-                            "AEM 4120",
-                            "AEM 4190",
-                            "BTRY 3080",
-                            "ECON 3130",
-                            "ECON 3140",
-                            "ECON 4020",
-                            "ILRST 2110",
-                            "ECON 3110"
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 6,
-                    "uniqueIncludes": 0,
-                    "majorDep": true
+                    "minCount": 1
                 },
                 {
-                    "name": "Applied Economics",
+                    "name": "Grand Challenges Reqiurement Part 2: Pre-Project Weekend Immersion",
+                    "description": "Junior year: 1.5 credits. Focus: Working as part of a team",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
                     "search": "code",
                     "includes": [
                         [
-                            "AEM 2500",
-                            "AEM 4500",
-                            "AEM 4510",
-                            "AEM 4515"
-                        ],
-                        [
-                            "AEM 3310",
-                            "AEM 4100",
-                            "AEM 4140",
-                            "AEM 4160",
-                            "AEM 4550"
-                        ],
-                        [
-                            "AEM 2300",
-                            "AEM 2350",
-                            "AEM 4300",
-                            "AEM 4350",
-                            "AEM 4420",
-                            "AEM 4450",
-                            "AEM 4485",
-                            "AEM 4545"
-                        ],
-                        [
-                            "AEM 4150",
-                            "AEM 4210",
-                            "AEM 4310"
+                            "AEM 3000"
                         ]
                     ],
-                    "fulfilledBy": "credits",
-                    "minCount": 6,
-                    "uniqueIncludes": 2,
-                    "majorDep": true
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Grand Challenges Reqiurement Part 3: Project Course",
+                    "description": "Senior year, 3 credits. Focus: Local and global community involvement",
+                    "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "AEM 4000"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
                 }
             ]
-        },
-        "ARKEO": {
-
-        },
-        "ARCH": {
-
-        },
-        "ASIAN": {
-
-        },
-        "ASTRO": {
-
-        },
-        "EAS": {
-
         },
         "CS": {
             "name": "Computer Science",
@@ -583,18 +1055,33 @@
                 "EN",
                 "AS"
             ],
-            "requirements": [{
-                    "name": "Computer Science Core Requirements",
+            "requirements": [
+                {
+                    "name": "Introductory Programming",
+                    "description": "CS 111x (CS 1110, 1112, 1114, or 1115) and CS 2110 (or CS 2112) or equivalent.",
+                    "source": "https://www.cs.cornell.edu/undergrad/csmajor",
                     "search": "code",
                     "includes": [
                         [
                             "CS 1110",
-                            "CS 1112"
+                            "CS 1112",
+                            "CS 1114",
+                            "CS 1115"
                         ],
                         [
                             "CS 2110",
                             "CS 2112"
-                        ],
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Computer Science Core",
+                    "description": "CS 2800 (or CS 2802), CS 3110, CS 3410 or CS 3420, CS 4410, and CS 4820",
+                    "source": "https://www.cs.cornell.edu/undergrad/csmajor",
+                    "search": "code",
+                    "includes": [
                         [
                             "CS 2800",
                             "CS 2802"
@@ -614,79 +1101,16 @@
                         ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 7,
-                    "uniqueIncludes": 0,
-                    "majorDep": true
+                    "minCount": 5
                 },
                 {
-                    "name": "Computer Science Electives",
+                    "name": "CS Practicum or Project",
+                    "description": "CS practicums (CS 4xx1) or CS 3152, CS 4152, CS 4154, CS 4740, CS 4752, CS 5150, CS 5152, CS 5412, CS 5414, CS 5431, CS 5625, or CS 5643.",
+                    "source": "https://www.cs.cornell.edu/undergrad/csmajor",
                     "search": "code",
                     "includes": [
                         [
-                            "CS 3152"
-                        ],
-                        [
-                            "CS 4152"
-                        ],
-                        [
-                            "CS 4154"
-                        ],
-                        [
-                            "CS 4740"
-                        ],
-                        [
-                            "CS 4752"
-                        ],
-                        [
-                            "CS 5150"
-                        ],
-                        [
-                            "CS 5152"
-                        ],
-                        [
-                            "CS 5412"
-                        ],
-                        [
-                            "CS 5414"
-                        ],
-                        [
-                            "CS 5431"
-                        ],
-                        [
-                            "CS 5625"
-                        ],
-                        [
-                            "CS 5643"
-                        ]
-                    ],
-                    "excludes": [
-                        "CS 4090",
-                        "CS 4998",
-                        "CS 4999"
-                    ],
-                    "fulfilledBy": "courses",
-                    "minCount": 3,
-                    "uniqueIncludes": 0,
-                    "majorDep": true
-                },
-                {
-                    "name": "Computer Science Practicum",
-                    "search": "code",
-                    "includes": [
-                        [
-                            "CS 4121"
-                        ],
-                        [
-                            "CS 4321"
-                        ],
-                        [
-                            "CS 4621"
-                        ],
-                        [
-                            "CS 4701"
-                        ],
-                        [
-                            "CS 4411"
+                            "CS 4**1"
                         ],
                         [
                             "CS 3152"
@@ -725,78 +1149,562 @@
                             "CS 5643"
                         ]
                     ],
-                    "excludes": [],
                     "fulfilledBy": "courses",
-                    "minCount": 1,
-                    "uniqueIncludes": 0,
-                    "majorDep": true
+                    "minCount": 1
                 },
                 {
-                    "name": "Computer Science Technical Electives",
+                    "name": "Technical Electives",
+                    "description": "The Technical Electives must be made up of three 3000+ level courses.  These courses must be taken for a letter grade, and each must earn three or more credit hours.",
+                    "source": "https://www.cs.cornell.edu/undergrad/csmajor/technicalelectives",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "External Specialization",
+                    "description": "The External Specialization involves nine or more credit hours at the 3000+ level. Absolutely no CS courses are allowed. The three courses must be related to each other. Frequently, the three courses are from the same department, e.g., OR&IE 3300 (Optimization I), OR&IE 3310 (Optimization II), and OR&IE 4330 (Discrete Models). However, a great strength of Cornell is the multitude of interdisciplinary threads that cut across departmental boundaries. Thus, Psychology 4150 (Concepts, Categories, and Word Meanings), Philosophy 3320 (Philosophy of Language), and Linguistics 5530 (Representation of Structure in Vision and Language) define an acceptable Specialization.",
+                    "source": "https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Major-approved Elective(s)",
+                    "description": "The major elective is any course or courses approved by your CS major advisor. This elective requirement can be met by multiple courses totalling 3 credits, or one course of 3+ credit hours. Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS.",
+                    "source": "https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                }
+            ]
+        },
+        "HADM": {
+            "name": "Hotel Administration",
+            "schools": [
+                "BU"
+            ],
+            "requirements": [
+                {
+                    "name": "Accounting; Real Estate Development",
+                    "description": "HADM 1210, HADM 2210, HADM 2220, HADM 3210",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
                     "search": "code",
                     "includes": [
                         [
-                            "CS 3***",
-                            "MATH 3***",
-                            "BIOG 3***",
-                            "ECON 3***",
-                            "CHEM 3***",
-                            "PHYS 3***",
-                            "PSYCH 3***",
-                            "LING 3***"
+                            "HADM 1210"
                         ],
                         [
-                            "CS 3***",
-                            "MATH 3***",
-                            "BIOG 3***",
-                            "ECON 3***",
-                            "CHEM 3***",
-                            "PHYS 3***",
-                            "PSYCH 3***",
-                            "LING 3***"
+                            "HADM 2210"
                         ],
                         [
-                            "CS 3***",
-                            "MATH 3***",
-                            "BIOG 3***",
-                            "ECON 3***",
-                            "CHEM 3***",
-                            "PHYS 3***",
-                            "PSYCH 3***",
-                            "LING 3***"
+                            "HADM 2220"
+                        ],
+                        [
+                            "HADM 3210"
                         ]
                     ],
-                    "excludes": [],
                     "fulfilledBy": "courses",
-                    "minCount": 3,
-                    "uniqueIncludes": 0,
-                    "majorDep": true
+                    "minCount": 4
                 },
-
                 {
-                    "name": "Computer Science External Specialization",
+                    "name": "Employment Relations; HR; Law",
+                    "description": "HADM 1150, HADM 2810, HADM 3870",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
                     "search": "code",
                     "includes": [
-                        ["INFO 3***"],
-                        ["PSYCH 3***"],
-                        ["SOC 3***"]
-                    ],
-                    "excludes": [
-                        "LING 4474",
-                        "INFO 4302",
-                        "INFO 3300",
-                        "INFO 4300",
-                        "INFO 5300"
+                        [
+                            "HADM 1150"
+                        ],
+                        [
+                            "HADM 2810"
+                        ],
+                        [
+                            "HADM 3870"
+                        ]
                     ],
                     "fulfilledBy": "courses",
-                    "minCount": 3,
-                    "uniqueIncludes": 0,
-                    "majorDep": true
+                    "minCount": 3
+                },
+                {
+                    "name": "Food and Beverage Management",
+                    "description": "HADM 2360, HADM 3350",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "HADM 2360"
+                        ],
+                        [
+                            "HADM 3350"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Information Systems",
+                    "description": "HADM 1740",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "HADM 1740"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "Management Communication",
+                    "description": "HADM 1650, HADM 3650",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "HADM 1650"
+                        ],
+                        [
+                            "HADM 3650"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Operations",
+                    "description": "HADM 1350, HADM 1360, HADM 2010, HADM 3010",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "HADM 1350"
+                        ],
+                        [
+                            "HADM 1360"
+                        ],
+                        [
+                            "HADM 2010"
+                        ],
+                        [
+                            "HADM 3010"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 4
+                },
+                {
+                    "name": "Properties Development and Management",
+                    "description": "HADM 2550, HADM 3550",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "HADM 2550"
+                        ],
+                        [
+                            "HADM 3550"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Services Marketing",
+                    "description": "HADM 1410, HADM 2430",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "HADM 1410"
+                        ],
+                        [
+                            "HADM 2430"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Strategy",
+                    "description": "HADM 4410",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "HADM 4410"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 1
+                },
+                {
+                    "name": "SHA Electives",
+                    "description": "A minimum of 14 credits, 3000-level or higher, in SHA.",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "HADM 3***"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 14
+                },
+                {
+                    "name": "Non-HADM Electives",
+                    "description": "A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 15
+                },
+                {
+                    "name": "Freshman Writing Seminars",
+                    "description": "A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "search": "catalogSatisfiesReq",
+                    "includes": [
+                        [
+                            "First-Year Writing Seminar."
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 3
+                },
+                {
+                    "name": "Free Electives",
+                    "description": "A minimum of 24 credits, to be taken either in or outside SHA.",
+                    "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 24
+                }
+            ]
+        },
+        "HIST": {
+            "name": "History",
+            "schools": [
+                "AS"
+            ],
+            "requirements": [
+                {
+                    "name": "History Major Classes",
+                    "description": "9 history courses (with a grade of “C” or better). 4 of the nine courses must be taken from one each of the following five categories: Asian, North America, European, Global South (Africa/Caribbean/Latin American and Middle East), and Transregional (Transregional, Comparative, and Methodological). Note: a single course may fulfill more than one requirement as long as the total number of history courses is nine. For example, a course in medieval European history that is also a seminar would count for that requirement, as well as both a course in history before 1800 and as a course in European History.",
+                    "source": "https://history.cornell.edu/undergraduate",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 9
+                },
+                {
+                    "name": "Pre 1800 Classes",
+                    "description": "3 of the nine courses must be in history before 1800 (Courses that fulfill the Arts & Sciences historical breadth requirement do not necessarily fulfill the History pre-1800 requirement.)",
+                    "source": "https://history.cornell.edu/undergraduate",
+                    "search": "catalogCourseSubfield",
+                    "includes": [
+                        "HPE"
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Seminars",
+                    "description": "2 of the nine courses must be seminars, and one of these seminars must be a 4000-level seminar.  Service-learning 4000-level courses, HIST 4001, HIST 4002, may not be used to fulfill the 4000-level seminar requirement.",
+                    "source": "https://history.cornell.edu/undergraduate",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 2
                 }
             ]
         },
         "INFO": {
-
+            "name": "Information Science",
+            "schools": [
+                "AS",
+                "AG"
+            ],
+            "requirements": [
+                {
+                    "name": "Core Courses",
+                    "description": "Students are required to complete five core courses: INFO 1200, INFO 1300, INFO 2040, INFO 2450, and INFO 2950.",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements/core",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "INFO 1200"
+                        ],
+                        [
+                            "INFO 1300"
+                        ],
+                        [
+                            "INFO 2040"
+                        ],
+                        [
+                            "INFO 2450"
+                        ],
+                        [
+                            "INFO 2950"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 5
+                },
+                {
+                    "name": "Programming and Math Requirements",
+                    "description": "All Information Science majors are required to take CS 1110, Introduction to Computing Using Python, Calculus I, and a Statistics course. The list of approved Calculus I and Statistics is provided below. All classes used to complete major requirements must be taken for a letter grade. Advanced Placement credits may not be used to fulfill the Statistics requirement for students matriculating as of or after Fall 2015, however, they may be used to fulfill the Calculus requirement. Students that have taken CS 1112 should take CS 1133, Transition to Python, to be prepared for INFO 2950, Introduction to Data Science.",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/programming-and-math",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "CS 1110"
+                        ],
+                        [
+                            "MATH 1106",
+                            "MATH 1110",
+                            "MATH 1910"
+                        ],
+                        [
+                            "AEM 2100",
+                            "BTRY 3010",
+                            "CEE 3040",
+                            "ECON 3110",
+                            "ECON 3130",
+                            "ENGRD 2700",
+                            "ILRST 2100",
+                            "MATH 1710",
+                            "PAM 2100",
+                            "PSYCH 2500",
+                            "SOC 3010",
+                            "STSCI 2100",
+                            "STSCI 2150",
+                            "STSCI 2200"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Concentration",
+                    "description": "Students are required to complete AT LEAST one concentration from the seven concentrations available",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-0",
+                    "includes": [],
+                    "fulfilledBy": "self-check",
+                    "minCount": 1
+                },
+                {
+                    "name": "Electives",
+                    "description": "All students are required to complete three electives that are chosen from the following options: INFO 2300, CS 2110, CS 3110, CS 3410 or any INFO 3000+ or higher course including INFO 4900 (except INFO 4998). These courses must be taken for a letter grade, each must earn three or more credit hours, and all must be completed with a grade of C- or higher.Students may only fulfill one of their electives with INFO 4900 (3 credits or more).",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "INFO 2300"
+                        ],
+                        [
+                            "CS 2110"
+                        ],
+                        [
+                            "CS 3110"
+                        ],
+                        [
+                            "CS 3410"
+                        ],
+                        [
+                            "INFO 3***",
+                            "INFO 4***",
+                            "INFO 5***",
+                            "INFO 6***"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                }
+            ]
+        },
+        "ISST": {
+            "name": "Information Science, Systems, and Technology",
+            "schools": [
+                "EN"
+            ],
+            "requirements": [
+                {
+                    "name": "Probability, Statistics, and Optimization",
+                    "description": "ORIE 3300: Optimization I, ORIE 3500: Engineering Probability and Statistics II",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ORIE 3300"
+                        ],
+                        [
+                            "ORIE 3500"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Information Systems",
+                    "description": "INFO 2300: Intermediate Design and Programming for the Web, ORIE 3800: Information Systems and Analysis or ORIE 3120: Practical Tools for Operations Research, Machine Learning and Data Science, one of -- INFO 3300: Data-Driven Web Applications, INFO 4300: Language and Information",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "INFO 2300"
+                        ],
+                        [
+                            "ORIE 3800"
+                        ],
+                        [
+                            "INFO 3300",
+                            "INFO 4300"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Economic, Organization, and Social Context",
+                    "description": "INFO 2040: Networks, one of -- INFO 2450: Communication and Technology, ENGRC 3350: Communications for Engineering Managers",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "INFO 2040"
+                        ],
+                        [
+                            "INFO 2450",
+                            "ENGRC 3350"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Engineering Mathematics",
+                    "description": "For majors in ISST, the sequence of required mathematics courses is MATH 1910, MATH 1920, MATH 2940, and finally, one of MATH 2930 or MATH 3040 or CS 2800.",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/math",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "MATH 1910"
+                        ],
+                        [
+                            "MATH 1920"
+                        ],
+                        [
+                            "MATH 2940"
+                        ],
+                        [
+                            "MATH 2930",
+                            "MATH 3040",
+                            "CS 2800"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 4
+                },
+                {
+                    "name": "Engineering Distributions",
+                    "description": "The major requires ENGRD 2700 as an Engineering Distribution course. ENGRD 2110 is also required by the major and it is recommended that this course be taken as an Engineering Distribution course.",
+                    "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/math",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ENGRD 2110"
+                        ],
+                        [
+                            "ENGRD 2700"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                }
+            ]
+        },
+        "ORIE": {
+            "name": "Operations Research and Engineering",
+            "schools": [
+                "EN"
+            ],
+            "requirements": [
+                {
+                    "name": "Major Required Classes",
+                    "description": "The following courses may be substituted for ORIE 3150, if not used to meet other require- ments: MATH 3110 (Introduction to Analysis), MATH 4130 (Honors Real Analysis), MATH 4310 (Linear Algebra), MATH 4330 (Honors Linear Algebra), any 600 level ORIE course.",
+                    "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ORIE 3120"
+                        ],
+                        [
+                            "ORIE 3150"
+                        ],
+                        [
+                            "ORIE 3300"
+                        ],
+                        [
+                            "ORIE 3310"
+                        ],
+                        [
+                            "ORIE 3500"
+                        ],
+                        [
+                            "ORIE 3510"
+                        ],
+                        [
+                            "ORIE 4580"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 7
+                },
+                {
+                    "name": "ORIE Electives",
+                    "description": "At least 9 credits of ORIE electives at the 4000 level or above",
+                    "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ORIE 4***",
+                            "ORIE 5***",
+                            "ORIE 6***"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 9
+                },
+                {
+                    "name": "Engineering Distribution Courses",
+                    "description": "ENGRI 1xxx, ENGRD 2700, and ENGRD xxxx. ENGRD 2110 is recommended",
+                    "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
+                    "search": "code",
+                    "includes": [
+                        [
+                            "ENGRD 2700"
+                        ],
+                        [
+                            "ENGRD 2***",
+                            "ENGRD 3***"
+                        ],
+                        [
+                            "ENGRI 1***"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Major Approved Electives (Non–ORIE)",
+                    "description": "Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. Technical courses in Engineering at the 2000 level or above.",
+                    "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                },
+                {
+                    "name": "Major Approved Elective",
+                    "description": "Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. Technical courses in Engineering at the 2000 level or above.",
+                    "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
+                }
+            ]
         }
     }
 }

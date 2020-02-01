@@ -1,6 +1,6 @@
 <template v-if="semesters">
   <div class="requirements">
-    <div class="fixed">
+    <div class="fixed" :class="{ bottomPreview: isBottomPreview && !isBottomBar, bottomBar: isBottomBar }">
     <h1 class="title">School Requirements</h1>
 
     <!-- loop through reqs array of req objects -->
@@ -13,7 +13,7 @@
       <div class="progress">
         <div
           class="progress-bar"
-          v-bind:style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
+          :style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
           role="progressbar"
         ></div>
       </div>
@@ -26,17 +26,24 @@
       <!--View more college requirements -->
       <div class="row top">
         <div class="col-1 p-0" >
-          <button v-bind:style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
+          <button :style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
             <!-- svg for dropdown icon -->
             <img
-              class="arrow"
+              v-if="req.displayDetails"
+              class="arrow arrow-down"
               src="@/assets/images/dropdown-blue.svg"
+              alt="dropdown"
+            />
+            <img
+              v-else
+              class="arrow"
+              src="@/assets/images/dropright-blue.svg"
               alt="dropdown"
             />
           </button>
         </div>
          <div class="col p-0 ">
-          <button class="btn req-name" v-bind:style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
+          <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
         </div>
       </div>
 
@@ -46,32 +53,42 @@
         <div class="separator"></div>
         <div
           v-for="(subReq, id) in req.ongoing"
-          v-bind:key="subReq.id">
+          :key="subReq.id">
           <div class="row depth-req">
-            <div class="col-1">
-              <button class="btn" v-on:click="turnSubDetails(index, id, true)">
+            <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
+              <button class="btn">
                 <!-- svg for dropdown icon -->
                 <img
-                  class="arrow"
+                  v-if="subReq.displayDescription"
+                  class="arrow arrow-down"
                   src="@/assets/images/dropdown.svg"
+                  alt="dropdown"
+                />
+                <img
+                  v-else
+                  class="arrow"
+                  src="@/assets/images/dropright.svg"
                   alt="dropdown"
                 />
               </button>
             </div>
-            <div class="col-7">
-              <p class="sup-req">{{subReq.name}}</p>
+            <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
+              <p class="sup-req pointer">{{subReq.name}}</p>
             </div>
             <div class="col">
               <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
             </div>
           </div>
+          <div v-if="subReq.displayDescription" class="description">
+            {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+          </div>
           <div class="separator"></div>
         </div>
 
-        <div class="row completed">
+        <div v-if="req.completed.length > 0" class="row completed">
           <p class="col sub-title">Completed Requirements</p>
           <div class="col-1 text-right">
-            <button class="btn float-right" v-bind:style="{ 'color': `#${req.color}` }">
+            <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
               <!-- Toggle to display completed reqs -->
               <p
                 class="toggle"
@@ -83,32 +100,42 @@
         </div>
 
         <div v-if="req.displayCompleted">
-          <div v-for="subReq in req.completed" v-bind:key="subReq.id">
+          <div v-for="(subReq, id) in req.completed" :key="subReq.id">
             <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
             <div class="row depth-req">
-              <div class="col-1">
-                <button class="btn" v-on:click="turnSubDetails(index, id, true)">
+              <div class="col-1" @click="toggleDescription(index, 'completed', id)">
+                <button class="btn">
                   <!-- svg for dropdown icon -->
-                  <img
-                    class="arrow"
-                    src="@/assets/images/dropdown.svg"
-                    alt="dropdown"
-                  />
+                <img
+                  v-if="subReq.displayDescription"
+                  class="arrow arrow-down"
+                  src="@/assets/images/dropdown.svg"
+                  alt="dropdown"
+                />
+                <img
+                  v-else
+                  class="arrow"
+                  src="@/assets/images/dropright.svg"
+                  alt="dropdown"
+                />
                 </button>
               </div>
-              <div class="col-7">
-                <p class="sup-req">{{subReq.name}}</p>
+              <div class="col-7" @click="toggleDescription(index, 'completed', id)">
+                <p class="sup-req pointer">{{subReq.name}}</p>
               </div>
               <div class="col">
                 <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
               </div>
             </div>
+            <div v-if="subReq.displayDescription" class="description">
+              {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Add separator if not last req or not displaying details -->
-      <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+      <!-- Add separator if additional completed requirements -->
+      <div class="separator" v-if="req.completed.length > 0"></div>
     </div>
   </div>
   </div>
@@ -121,8 +148,6 @@ import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
 
 import reqsData from '../requirements/reqs.json';
-// import * as fs from 'fs'
-const fb = require('../firebaseConfig.js');
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -132,16 +157,16 @@ export default {
   props: {
     semesters: Array,
     user: Object,
-    compact: Boolean
+    compact: Boolean,
+    isBottomPreview: Boolean,
+    isBottomBar: Boolean
   },
   mounted() {
     // Get array of courses from semesters data
-
     const courses = this.getCourseCodesArray();
 
     this.getReqs(courses, this.user.college, this.user.major).then(groups => {
       // Turn result into data readable by requirements menu
-
       groups.forEach(group => {
         const singleMenuRequirement = {
           ongoing: [],
@@ -166,7 +191,7 @@ export default {
           }
 
           // Default display value of false for all requirement lists
-          req.display = false;
+          req.displayDescription = false;
 
           if (!req.fulfilled || req.fulfilled < req.required) {
             singleMenuRequirement.ongoing.push(req);
@@ -210,14 +235,16 @@ export default {
         //       type: 'Credits',
         //       fulfilled: 12,
         //       required: 55,
-        //       display: false
+        //       description: 'All students need to to take 55 credits',
+        //       displayDescription: false
         //     },
         //     {
         //       name: 'PE Credits',
         //       type: 'Credits',
         //       fulfilled: 1,
         //       required: 2,
-        //       display: false
+        //       description: 'All students must take 2 PE courses in freshman year',
+        //       displayDescription: false
         //     }
         //   ],
         //   completed: [
@@ -226,11 +253,15 @@ export default {
         //       type: 'Credits',
         //       fulfilled: 2,
         //       required: 2,
-        //       display: false
+        //       description: 'Quantitiative literacy required for all CALS students',
+        //       displayDescription: false
         //     }
         //   ]
         // }
-      ]
+      ],
+      requirementsMap: {
+        // CS 1110: 'MQR-AS'
+      }
     };
   },
 
@@ -239,8 +270,14 @@ export default {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
 
-    turnSubDetails(index, id, bool) {
-      this.reqs[index].ongoing[id].display = bool;
+    toggleDescription(index, type, id) {
+      if (type === 'ongoing') {
+        const currentBool = this.reqs[index].ongoing[id].displayDescription;
+        this.reqs[index].ongoing[id].displayDescription = !currentBool;
+      } else if (type === 'completed') {
+        const currentBool = this.reqs[index].completed[id].displayDescription;
+        this.reqs[index].completed[id].displayDescription = !currentBool;
+      }
     },
 
     turnCompleted(index, bool) {
@@ -251,7 +288,7 @@ export default {
       const courses = [];
       this.semesters.forEach(semester => {
         semester.courses.forEach(course => {
-          courses.push(`${course.subject} ${course.number}`);
+          courses.push({ code: `${course.subject} ${course.number}`, roster: course.lastRoster });
         });
       });
 
@@ -259,13 +296,16 @@ export default {
     },
 
     async getReqs(coursesTaken, college, major) {
+      // TODO: Hacky and temporary solution to add data to requirementsMap
+      const that = this;
+
       // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
       const coursesTakenWithInfo = {};
       const courseData = await Promise.all(
-        coursesTaken.map(courseTaken => getCourseInfo(courseTaken))
+        coursesTaken.map(courseTaken => getCourseInfo(courseTaken.code, courseTaken.roster))
       );
 
-      for (let i = 0; i < coursesTaken.length; i += 1) { coursesTakenWithInfo[coursesTaken[i]] = courseData[i]; }
+      for (let i = 0; i < coursesTaken.length; i += 1) { coursesTakenWithInfo[coursesTaken[i].code] = courseData[i]; }
 
       // prepare final output JSONs
       const finalRequirementJSONs = [];
@@ -276,7 +316,7 @@ export default {
       finalRequirementJSONs.push({
         groupName: 'University',
         specific: null,
-        reqs: await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements, 'university')
+        reqs: await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements)
       });
 
       // PART 2: check college requirements
@@ -285,20 +325,24 @@ export default {
       finalRequirementJSONs.push({
         groupName: 'College',
         specific: college,
-        reqs: await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements, 'college')
+        reqs: await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements)
       });
 
       // PART 3: check major reqs
-      if (!(major in reqsData.major)) throw new Error('Major not found.');
-      const majorReqs = reqsData.major[major];
-      finalRequirementJSONs.push({
-        groupName: 'Major',
-        specific: major,
-        reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, 'major')
-      });
+      // Major is optional
+      if (major in reqsData.major) {
+        const majorReqs = reqsData.major[major];
+        finalRequirementJSONs.push({
+          groupName: 'Major',
+          specific: major,
+          reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements)
+        });
+      }
+
+      // Send satisfied credits data back to dashboard to build alerts
+      this.emitRequirementsMap();
 
       return finalRequirementJSONs;
-
 
       /**
        * Loops through requirement data and compare all courses on (to identify whether they satisfy the requirement)
@@ -306,73 +350,61 @@ export default {
        * @param {*} allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
        * @param {*} requirementType : type of requirement being checked (college, major, or university)
        */
-      async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequirements, requirementType) {
+      async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequirements) {
         // array of requirement status information to be returned
         const requirementJSONs = [];
+        // Dictionary for generating information on course alerts
+        const satisfiedRequirementMap = {};
 
-        // helper to recursively call when an object has subpaths
-        function callRecursiveSubpaths(coursesTakenWithInfoInner, requirements, rType, parentName = null) {
-          for (const requirement of requirements) {
-            // TODO: For different groups of students (e.g. transfers, FYSAs, etc...)
-            // if(!isTransfer && requirement.applies === "transfers") continue;
-            // temporarily skip these until we can implement them later
+        for (const requirement of allRequirements) {
+          // TODO: For different groups of students (e.g. transfers, FYSAs, etc...)
+          // if(!isTransfer && requirement.applies === "transfers") continue;
+          // temporarily skip these until we can implement them later
 
-            // Recursively call function if there are subpaths
-            if (requirement.multiplePaths) {
-              const requirementName = requirement.name;
-              requirementJSONs.push({ name: requirementName, paths: [], isComplete: false });
+          const requirementName = requirement.name;
 
-              callRecursiveSubpaths(coursesTakenWithInfo, requirement.paths, requirementName);
-              continue;
-            }
+          let totalRequirementCredits = 0;
+          let totalRequirementCount = 0;
+          const coursesThatFulilledRequirement = [];
 
-            let totalRequirementCredits = 0;
-            let totalRequirementCount = 0;
-            const coursesThatFulilledRequirement = [];
-            // check each course to see if it fulfilled that requirement
+          // check each course to see if it fulfilled that requirement
+          const codes = Object.keys(coursesTakenWithInfo);
 
-            const codes = Object.keys(coursesTakenWithInfo);
+          for (const code of codes) {
+            const courseInfo = coursesTakenWithInfo[code];
 
-            // If not in path, push new object to requirementsJSONs
-            for (const code of codes) {
-              const courseInfo = coursesTakenWithInfo[code];
+            const indexIsFulfilled = checkIfCourseFulfilled(courseInfo, requirement.search, requirement.includes);
 
-              const indexIsFulfilled = checkIfCourseFulfilled(courseInfo, requirement.search, requirement.includes);
-
-              if (indexIsFulfilled) {
-                // depending on what it is fulfilled by, either increase the count or credits you took
-                switch (requirement.fulfilledBy) {
-                  case 'courses':
-                    totalRequirementCount += 1;
-                    break;
-                  case 'credits':
-                    totalRequirementCredits += courseInfo.enrollGroups[0].unitsMaximum;
-                    break;
-                  case 'self-check':
-                    continue;
-                  default:
-                    throw new Error('Fulfillment type unknown.');
-                }
-
-                // add the course to the list of courses used to fulfill that one requirement
-                coursesThatFulilledRequirement.push(code);
+            if (indexIsFulfilled) {
+              // depending on what it is fulfilled by, either increase the count or credits you took
+              switch (requirement.fulfilledBy) {
+                case 'courses':
+                  totalRequirementCount += 1;
+                  break;
+                case 'credits':
+                  totalRequirementCredits += courseInfo.enrollGroups[0].unitsMaximum;
+                  break;
+                case 'self-check':
+                  continue;
+                default:
+                  throw new Error('Fulfillment type unknown.');
               }
-            }
 
-            const generatedResults = createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement);
+              // add the course to the list of courses used to fulfill that one requirement
+              coursesThatFulilledRequirement.push(code);
 
-            // If at end path (no parent path)
-            if (!parentName) requirementJSONs.push(generatedResults);
-            // If in path, append to path of parent
-            else {
-              const parent = requirementJSONs.find(key => key.name === parentName);
-              parent.paths.push(generatedResults);
-              parent.isComplete = parent.isComplete || generatedResults.isComplete;
+              // Add course to dictionary with name
+              if (code in satisfiedRequirementMap) satisfiedRequirementMap[code].push(requirementName);
+              else satisfiedRequirementMap[code] = [requirementName];
             }
           }
+
+          const generatedResults = createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement);
+          requirementJSONs.push(generatedResults);
         }
 
-        callRecursiveSubpaths(allCoursesTakenWithInfo, allRequirements, requirementType);
+        // Merge satisfied credits into satisfiedCourseCredits (for alerts)
+        that.mergerequirementsMap(satisfiedRequirementMap);
 
         return requirementJSONs;
       }
@@ -389,7 +421,9 @@ export default {
           name: requirement.name,
           type: requirement.fulfilledBy,
           courses: coursesThatFulilledRequirement,
-          required: requirement.minCount
+          required: requirement.minCount,
+          description: requirement.description,
+          source: requirement.source
         };
         let fulfilled;
         switch (requirement.fulfilledBy) {
@@ -408,6 +442,7 @@ export default {
 
         requirementFulfillmentData.fulfilled = fulfilled;
 
+        // Make requirement use for progressbar if progressbar attr is true
         if (requirement.progressBar) requirementFulfillmentData.progressBar = true;
         return requirementFulfillmentData;
       }
@@ -427,34 +462,28 @@ export default {
 
       /**
        * Given a course code and a roster, get all course info from Cornell API
-       * @param {*} courseCode : code name of the course to search (CS 2110)
+       * @param {*} code : code name of the course to search (CS 2110)
+       * @param {*} code : roster name of the course to search (FA19)
        * @param {*} semester : the roster name to search from (FA19)
        */
-      function getCourseInfo(courseCode) {
-        const courseCodeObj = parseCourseCode(courseCode);
+      function getCourseInfo(code, roster) {
+        const courseCodeObj = parseCourseCode(code);
         const subject = courseCodeObj.subject.toUpperCase();
-        const number = courseCodeObj.courseNumber;
 
-        return new Promise((resolve, reject) => {
-          // Using Firebase
-          const coursesCollection = fb.db.collection('courses');
-          const courseRef = coursesCollection.doc(subject + number);
-
-          courseRef.get()
-            .then(doc => {
-              if (!doc.exists) reject(new Error('No document exists'));
-              else resolve(doc.data());
-            })
-            .catch(() => {
-              reject(new Error('An error occured.'));
+        return new Promise(resolve => {
+          fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${code}`)
+            .then(res => res.json())
+            .then(resultJSON => {
+              const courseResult = resultJSON.data.classes[0];
+              resolve(courseResult);
             });
         });
       }
 
       /**
        * Check if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
-       * @param {*} courseName : name of the course (as a code)
-       * @param {*} code : code to check courseName (can contain * to denote any value)
+       * @param {string} courseName : name of the course (as a code)
+       * @param {string} code : code to check courseName (can contain * to denote any value)
        */
       function ifCodeMatch(courseName, code) {
         for (let i = 0; i < courseName.length; i += 1) {
@@ -465,19 +494,30 @@ export default {
       }
 
       /**
+       * Check if the course satisfies all-eligible query (not PE or 10XX course)
+       * @param {string} subject : subject of course to check
+       * @param {string} number : number of course to check
+       */
+      function ifAllEligible(subject, number) {
+        return !ifCodeMatch(subject, 'PE') && !ifCodeMatch(number, '10**');
+      }
+
+      /**
        * Check if the course fullfills the given requirement. Returns true if fulfills requirement. False otherswise
        * @param {*} courseInfo : information of the course from API data
        * @param {*} search : the scope of search for the requirement (e.g all-eligible, code, catalogDistr)
        * @param {*} includes : the query for the search (e.g (MQR-AS), CS 2***)
        */
       function checkIfCourseFulfilled(courseInfo, search, includes) {
-        if (search === 'all' || search === 'all-eligible' || search === 'self-check') return true;
-        for (const [i, include] of includes.entries()) {
+        // Special search: if search code is all or self-check. Anything would work
+        if (search === 'all' || search === 'self-check') return true;
+        // Special search: if search code is not PE or 10XX course
+        if (search === 'all-eligible') return ifAllEligible(courseInfo.subject, courseInfo.catalogNbr.toString());
+        for (const include of includes) {
           for (const option of include) {
+            // Special search: if course code matches code
             if (search === 'code') {
               if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, option)) {
-                // Important: removes array option list from requirements
-                if (includes.length > 1) includes.splice(i, 1);
                 return true;
               }
             } else if (courseInfo[search].includes(option)) return true;
@@ -486,6 +526,16 @@ export default {
 
         return false;
       }
+    },
+    mergerequirementsMap(satisfiedMap) {
+      Object.keys(satisfiedMap).forEach(course => {
+        if (course in this.requirementsMap) this.requirementsMap[course] = this.requirementsMap[course].concat(satisfiedMap[course]);
+        else this.requirementsMap[course] = satisfiedMap[course];
+      });
+    },
+
+    emitRequirementsMap() {
+      this.$emit('requirementsMap', this.requirementsMap);
     }
   }
 };
@@ -542,6 +592,16 @@ export default {
   margin: 0px;
 }
 
+.description {
+  margin: 0 0 0.5rem 1.8rem;
+  color: #353535;
+  font-size: 15px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
 h1.title {
   font-style: normal;
   font-weight: 550;
@@ -562,7 +622,7 @@ h1.title {
   }
 }
 
-.middle{
+.middle {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -634,7 +694,10 @@ p.active {
 .arrow {
   fill: #1AA9A5;
   color:#1AA9A5;
-  margin-top: -4px;
+
+  &-down {
+    margin-top: -4px;
+  }
 }
 
 .progress-text {
@@ -732,7 +795,7 @@ button.view {
 
   &-name {
     margin-left: 0.5rem;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
     line-height: 14px;
     align-self: center;
@@ -768,5 +831,13 @@ button.view {
   height: 1px;
   width: 100%;
   background-color: #d7d7d7;
+}
+
+.bottomBar {
+  padding-bottom: 300px;
+}
+
+.bottomPreview {
+  padding-bottom: 40px;
 }
 </style>
