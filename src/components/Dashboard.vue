@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard">
-    <onboarding class="dashboard-onboarding" v-if="isOnboarding " 
+    <onboarding class="dashboard-onboarding" v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
       :user="user"
       @onboard="endOnboarding"
