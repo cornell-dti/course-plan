@@ -12,7 +12,7 @@
         </div>
         <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
 
-        <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
+        <div v-if="displayColors" class="">
           <div
             v-for="color in colors"
             :key="color.id"
@@ -24,7 +24,6 @@
                 class="courseMenu-icon courseMenu-icon--color"
                 :style="{ backgroundColor: color.hex }"
               ></div>
-              <span class="courseMenu-text">{{ color.text }}</span>
             </div>
           </div>
         </div>
