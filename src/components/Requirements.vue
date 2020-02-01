@@ -518,8 +518,6 @@ export default {
             // Special search: if course code matches code
             if (search === 'code') {
               if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, option)) {
-                // Important: removes array option list from requirements
-                // if (includes.length > 1) includes.splice(i, 1);
                 return true;
               }
             } else if (courseInfo[search].includes(option)) return true;
