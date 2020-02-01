@@ -334,6 +334,7 @@ export default {
     margin-left: 0.2rem;
     align-items: center;
 
+    // TODO: styling for info icon on course card
     // &--info {
     //   &:before {
     //     margin-right: 0.2rem;

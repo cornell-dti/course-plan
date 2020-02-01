@@ -38,7 +38,6 @@ export default {
   props: {
     type: String,
     semesterID: Number
-    // courseIsAddable: Boolean
   },
   computed: {
     contentId() {

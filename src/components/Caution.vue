@@ -5,6 +5,7 @@
     </div>
     <div class="caution-text">{{ text }}</div>
     <div class="caution-right">
+      <!-- TODO: implement undo functionality -->
       <!-- <span class="undo-buttonText">{{ undo }}</span> -->
     </div>
   </div>
@@ -17,6 +18,7 @@ export default {
   },
 
   computed: {
+    // TODO: implement undo functionality
     // undo() {
     //   return 'UNDO';
     // }

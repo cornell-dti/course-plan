@@ -3,7 +3,7 @@
     <div class="semesterMenu-content">
       <div class="semesterMenu-section" @click="openDeleteSemesterModal">
         <div class="semesterMenu-left">
-          <img class="semesterMenu-icon" src="../../assets/images/trash.svg" />
+          <img class="semesterMenu-icon" src="@/assets/images/trash.svg" />
           <span class="semesterMenu-text">Delete Semester</span>
         </div>
       </div>
@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       isOpenModal: false
-    }
+    };
   },
 
   methods: {
