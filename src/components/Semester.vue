@@ -234,8 +234,6 @@ export default {
     },
     buildCautions() {
       this.buildDuplicateCautions();
-      // this.buildDuplicateCautions();
-      // this.buildIncorrectPlacementCautions();
     },
     buildDuplicateCautions() {
       this.$emit('build-duplicate-cautions');

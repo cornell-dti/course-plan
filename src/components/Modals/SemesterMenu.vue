@@ -1,5 +1,5 @@
 <template>
-  <div class="semesterMenu" id="semesterMenu">
+  <div class="semesterMenu" id="semesterMenu" :class="{ 'd-none': isOpenModal }">
     <div class="semesterMenu-content">
       <div class="semesterMenu-section" @click="openDeleteSemesterModal">
         <div class="semesterMenu-left">
@@ -13,11 +13,16 @@
 
 <script>
 export default {
+  data() {
+    return {
+      isOpenModal: false
+    }
+  },
+
   methods: {
     openDeleteSemesterModal() {
       this.$emit('open-delete-semester-modal');
-      const semesterMenu = document.getElementById('semesterMenu');
-      semesterMenu.style.display = 'none';
+      this.isOpenModal = true;
     }
   }
 };
