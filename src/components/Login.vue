@@ -152,35 +152,6 @@ export default {
     };
   },
   methods: {
-    login() {
-      this.performingRequest = true;
-      fb.auth
-        .signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password)
-        .then(user => {
-          alphaWhitelistCollection.get().then(querySnapshot => {
-            let isAlphaEmail = false;
-            querySnapshot.forEach(doc => {
-              if (doc.data().email === this.loginForm.email) {
-                isAlphaEmail = true;
-              }
-            });
-            this.performingRequest = false;
-            if (!isAlphaEmail) {
-              fb.auth.signOut();
-              return;
-            }
-
-            this.$store.commit('setCurrentUser', user);
-            this.$store.dispatch('fetchUserProfile');
-            this.$router.push(`${process.env.BASE_URL}/`);
-          });
-        })
-        .catch(err => {
-          console.log(err);
-          this.performingRequest = false;
-          this.errorMsg = err.message;
-        });
-    },
     socialLogin() {
       this.performingRequest = true;
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -189,15 +160,7 @@ export default {
         .then(user => {
           // Check whitelist emails to ensure user can log in
           alphaWhitelistCollection.get().then(querySnapshot => {
-            let isAlphaEmail = false;
-            querySnapshot.forEach(doc => {
-              if (doc.data().email === user.user.email) {
-                isAlphaEmail = true;
-              }
-            });
-            this.performingRequest = false;
-            if (!isAlphaEmail) {
-              fb.auth.signOut();
+            if (!this.checkEmailAccess(querySnapshot, user)) {
               return;
             }
 
@@ -211,6 +174,22 @@ export default {
           this.performingRequest = false;
           this.errorMsg = err.message;
         });
+    },
+    checkEmailAccess(snapshot, user) {
+      let isAlphaEmail = false;
+      snapshot.forEach(doc => {
+        if (doc.data().email === user.user.email) {
+          isAlphaEmail = true;
+        }
+      });
+      this.performingRequest = false;
+      if (!isAlphaEmail) {
+        fb.auth.signOut();
+        alert('Sorry, but you do not have alpha access.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
+        return false;
+      }
+
+      return true;
     },
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
