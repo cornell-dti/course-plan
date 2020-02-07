@@ -520,7 +520,8 @@ export default {
               if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, option)) {
                 return true;
               }
-            } else if (courseInfo[search].includes(option)) return true;
+            // Make sure courseInfo[search] is not null
+            } else if (courseInfo[search] && courseInfo[search].includes(option)) return true;
           }
         }
 
