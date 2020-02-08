@@ -365,15 +365,11 @@ export default {
     padding: 5px 0 8px 0;
     display: flex;
     position: relative;
-<<<<<<< HEAD
     &:hover,
     &:active,
     &:focus {
       cursor: pointer;
     }
-=======
-    cursor: pointer;
->>>>>>> e1e3afd8ade6c85e717916c212952edea714c821
   }
 
   &-dot {

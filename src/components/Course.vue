@@ -12,19 +12,11 @@
         <span class="course-dot"></span>
       </div>
     </div>
-<<<<<<< HEAD
-    <div :class="{ 'course-content--min': !notCompact }" class="course-content">
-      <div :class="{ 'course-main--min': !notCompact }" class="course-main">
-        <div :class="{ 'course-top--min': !notCompact }" class="course-top">
-          <div :class="{ 'course-code--min': !notCompact }" class="course-code">
-            {{subject }} {{ number }}
-=======
     <div :class="{ 'course-content--min': compact }" class="course-content">
       <div :class="{ 'course-main--min': compact }" class="course-main">
         <div :class="{ 'course-top--min': compact }" class="course-top">
           <div :class="{ 'course-code--min': compact }" class="course-code">
             {{ subject }} {{ number }}
->>>>>>> e1e3afd8ade6c85e717916c212952edea714c821
           </div>
           <div class="course-dotRow" @click="openMenu">
             <span class="course-dot course-dot--menu"></span>

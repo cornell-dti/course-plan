@@ -1,0 +1,232 @@
+[debug] [2020-02-08T16:34:31.455Z] ----------------------------------------------------------------------
+[debug] [2020-02-08T16:34:31.456Z] Command:       /usr/local/Cellar/node/13.2.0/bin/node /usr/local/bin/firebase emulators:start
+[debug] [2020-02-08T16:34:31.456Z] CLI Version:   7.12.1
+[debug] [2020-02-08T16:34:31.456Z] Platform:      darwin
+[debug] [2020-02-08T16:34:31.456Z] Node Version:  v13.2.0
+[debug] [2020-02-08T16:34:31.457Z] Time:          Sat Feb 08 2020 11:34:31 GMT-0500 (Eastern Standard Time)
+[debug] [2020-02-08T16:34:31.457Z] ----------------------------------------------------------------------
+[debug] [2020-02-08T16:34:31.457Z] 
+[debug] [2020-02-08T16:34:31.464Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-02-08T16:34:31.465Z] > authorizing via signed-in user
+[info] i  emulators: Starting emulators: functions, hosting
+[warn] ⚠  Your requested "node" version "8" doesn't match your global version "13"
+[info] ✔  functions: Emulator started at http://localhost:5001
+[debug] [2020-02-08T16:34:31.771Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-02-08T16:34:31.772Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-02-08T16:34:31.980Z] <<< HTTP RESPONSE 200
+[debug] [2020-02-08T16:34:31.995Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/cornell-courseplan/webApps/-/config  
+ 
+[debug] [2020-02-08T16:34:32.724Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: dist
+[info] ✔  hosting: Local server: http://localhost:5000
+[info] ✔  hosting: Emulator started at http://localhost:5000
+[info] i  functions: Watching "/Users/ayesha/Desktop/course-plan/functions" for Cloud Functions...
+[debug] [2020-02-08T16:34:33.031Z] [worker-pool] addWorker(~diagnostic~)
+[debug] [2020-02-08T16:34:33.031Z] [worker-pool] Adding worker with key ~diagnostic~, total=1
+[debug] [2020-02-08T16:34:33.031Z] [worker-pool] submitWork(triggerId=)
+[debug] [2020-02-08T16:34:33.032Z] [worker-~diagnostic~-bb9d4abe-becf-4a75-87ce-b95e2193bc27]: Assigning socketPath: /var/folders/ys/zv37hx_134qc6l73tmvg286h0000gn/T/fire_emu_5309.sock
+[debug] [2020-02-08T16:34:33.032Z] [worker-~diagnostic~-bb9d4abe-becf-4a75-87ce-b95e2193bc27]: BUSY
+[debug] [2020-02-08T16:34:33.252Z] [runtime-status] [5309] Functions runtime initialized. {"cwd":"/Users/ayesha/Desktop/course-plan/functions","node_version":"13.2.0"}
+[debug] [2020-02-08T16:34:33.252Z] [runtime-status] [5309] Disabled runtime features: undefined
+[debug] [2020-02-08T16:34:33.256Z] [runtime-status] [5309] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:34:33.257Z] [runtime-status] [5309] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:34:33.736Z] [runtime-status] [5309] Found google-gax at /Users/ayesha/Desktop/course-plan/functions/node_modules/google-gax/build/src/index.js
+[debug] [2020-02-08T16:34:33.736Z] [runtime-status] [5309] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"},{"name":"google-gax","status":"mocked"}]
+[debug] [2020-02-08T16:34:33.790Z] [runtime-status] [5309] Checked functions.config() {"config":{}}
+[debug] [2020-02-08T16:34:33.791Z] [runtime-status] [5309] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:34:33.792Z] [runtime-status] [5309] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:34:33.792Z] [runtime-status] [5309] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:34:33.868Z] [runtime-status] [5309] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}}
+[debug] [2020-02-08T16:34:33.869Z] [runtime-status] [5309] initializeApp(DEFAULT) {"databaseURL":"https://cornell-courseplan.firebaseio.com","storageBucket":"cornell-courseplan.appspot.com","projectId":"cornell-courseplan"}
+[warn] ⚠  TypeError: instance.INTERNAL.registerComponent is not a function
+    at registerDatabase (/Users/ayesha/Desktop/course-plan/functions/node_modules/@firebase/database/dist/index.node.cjs.js:15320:39)
+    at Object.<anonymous> (/Users/ayesha/Desktop/course-plan/functions/node_modules/@firebase/database/dist/index.node.cjs.js:15353:5)
+    at Module._compile (internal/modules/cjs/loader.js:1121:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1160:10)
+    at Module.load (internal/modules/cjs/loader.js:976:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:884:14)
+    at Module.require (internal/modules/cjs/loader.js:1016:19)
+    at require (internal/modules/cjs/helpers.js:69:18)
+    at FirebaseNamespace.get [as database] (/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/firebase-namespace.js:282:38)
+    at makeProxiedDatabase (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:401:31)
+[warn] ⚠  We were unable to load your functions code. (see above)
+[debug] [2020-02-08T16:34:33.959Z] [worker-~diagnostic~-bb9d4abe-becf-4a75-87ce-b95e2193bc27]: exited
+[debug] [2020-02-08T16:34:33.959Z] [worker-~diagnostic~-bb9d4abe-becf-4a75-87ce-b95e2193bc27]: FINISHED
+[debug] [2020-02-08T16:36:28.183Z] File /Users/ayesha/Desktop/course-plan/functions/index.js changed, reloading triggers
+[debug] [2020-02-08T16:36:29.186Z] [worker-pool] Cleaned up workers for ~diagnostic~: 1 --> 0
+[debug] [2020-02-08T16:36:29.192Z] [worker-pool] addWorker(~diagnostic~)
+[debug] [2020-02-08T16:36:29.192Z] [worker-pool] Adding worker with key ~diagnostic~, total=1
+[debug] [2020-02-08T16:36:29.192Z] [worker-pool] submitWork(triggerId=)
+[debug] [2020-02-08T16:36:29.192Z] [worker-~diagnostic~-c9419fb6-4e6b-47ec-8a15-2c39e04fcc59]: Assigning socketPath: /var/folders/ys/zv37hx_134qc6l73tmvg286h0000gn/T/fire_emu_5326.sock
+[debug] [2020-02-08T16:36:29.192Z] [worker-~diagnostic~-c9419fb6-4e6b-47ec-8a15-2c39e04fcc59]: BUSY
+[debug] [2020-02-08T16:36:29.427Z] [runtime-status] [5326] Functions runtime initialized. {"cwd":"/Users/ayesha/Desktop/course-plan/functions","node_version":"13.2.0"}
+[debug] [2020-02-08T16:36:29.428Z] [runtime-status] [5326] Disabled runtime features: undefined
+[debug] [2020-02-08T16:36:29.429Z] [runtime-status] [5326] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:36:29.430Z] [runtime-status] [5326] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:36:29.573Z] [runtime-status] [5326] Found google-gax at /Users/ayesha/Desktop/course-plan/functions/node_modules/google-gax/build/src/index.js
+[debug] [2020-02-08T16:36:29.573Z] [runtime-status] [5326] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"},{"name":"google-gax","status":"mocked"}]
+[debug] [2020-02-08T16:36:29.603Z] [runtime-status] [5326] Checked functions.config() {"config":{}}
+[debug] [2020-02-08T16:36:29.604Z] [runtime-status] [5326] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:36:29.605Z] [runtime-status] [5326] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:36:29.606Z] [runtime-status] [5326] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:36:29.638Z] [runtime-status] [5326] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}}
+[debug] [2020-02-08T16:36:29.639Z] [runtime-status] [5326] initializeApp(DEFAULT) {"databaseURL":"https://cornell-courseplan.firebaseio.com","storageBucket":"cornell-courseplan.appspot.com","projectId":"cornell-courseplan"}
+[warn] ⚠  TypeError: instance.INTERNAL.registerComponent is not a function
+    at registerDatabase (/Users/ayesha/Desktop/course-plan/functions/node_modules/@firebase/database/dist/index.node.cjs.js:15320:39)
+    at Object.<anonymous> (/Users/ayesha/Desktop/course-plan/functions/node_modules/@firebase/database/dist/index.node.cjs.js:15353:5)
+    at Module._compile (internal/modules/cjs/loader.js:1121:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1160:10)
+    at Module.load (internal/modules/cjs/loader.js:976:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:884:14)
+    at Module.require (internal/modules/cjs/loader.js:1016:19)
+    at require (internal/modules/cjs/helpers.js:69:18)
+    at FirebaseNamespace.get [as database] (/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/firebase-namespace.js:282:38)
+    at makeProxiedDatabase (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:401:31)
+[warn] ⚠  We were unable to load your functions code. (see above)
+[debug] [2020-02-08T16:36:29.694Z] [worker-~diagnostic~-c9419fb6-4e6b-47ec-8a15-2c39e04fcc59]: exited
+[debug] [2020-02-08T16:36:29.694Z] [worker-~diagnostic~-c9419fb6-4e6b-47ec-8a15-2c39e04fcc59]: FINISHED
+[debug] [2020-02-08T16:53:32.414Z] File /Users/ayesha/Desktop/course-plan/functions/index.js changed, reloading triggers
+[debug] [2020-02-08T16:53:33.415Z] [worker-pool] Cleaned up workers for ~diagnostic~: 1 --> 0
+[debug] [2020-02-08T16:53:33.420Z] [worker-pool] addWorker(~diagnostic~)
+[debug] [2020-02-08T16:53:33.420Z] [worker-pool] Adding worker with key ~diagnostic~, total=1
+[debug] [2020-02-08T16:53:33.420Z] [worker-pool] submitWork(triggerId=)
+[debug] [2020-02-08T16:53:33.420Z] [worker-~diagnostic~-41af8a46-c23a-4f9c-9bd4-5c7e91f1466f]: Assigning socketPath: /var/folders/ys/zv37hx_134qc6l73tmvg286h0000gn/T/fire_emu_5386.sock
+[debug] [2020-02-08T16:53:33.420Z] [worker-~diagnostic~-41af8a46-c23a-4f9c-9bd4-5c7e91f1466f]: BUSY
+[debug] [2020-02-08T16:53:33.677Z] [runtime-status] [5386] Functions runtime initialized. {"cwd":"/Users/ayesha/Desktop/course-plan/functions","node_version":"13.2.0"}
+[debug] [2020-02-08T16:53:33.679Z] [runtime-status] [5386] Disabled runtime features: undefined
+[debug] [2020-02-08T16:53:33.680Z] [runtime-status] [5386] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:53:33.681Z] [runtime-status] [5386] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:53:33.837Z] [runtime-status] [5386] Found google-gax at /Users/ayesha/Desktop/course-plan/functions/node_modules/google-gax/build/src/index.js
+[debug] [2020-02-08T16:53:33.837Z] [runtime-status] [5386] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"},{"name":"google-gax","status":"mocked"}]
+[debug] [2020-02-08T16:53:33.867Z] [runtime-status] [5386] Checked functions.config() {"config":{}}
+[debug] [2020-02-08T16:53:33.867Z] [runtime-status] [5386] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:53:33.868Z] [runtime-status] [5386] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:53:33.868Z] [runtime-status] [5386] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:53:33.898Z] [runtime-status] [5386] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}}
+[warn] ⚠  /Users/ayesha/Desktop/course-plan/functions/index.js:17
+    await firebase.firestore().collection('events').get()
+    ^^^^^
+
+SyntaxError: await is only valid in async function
+    at wrapSafe (internal/modules/cjs/loader.js:1043:16)
+    at Module._compile (internal/modules/cjs/loader.js:1091:27)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1160:10)
+    at Module.load (internal/modules/cjs/loader.js:976:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:884:14)
+    at Module.require (internal/modules/cjs/loader.js:1016:19)
+    at require (internal/modules/cjs/helpers.js:69:18)
+    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:718:33
+    at Generator.next (<anonymous>)
+    at fulfilled (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:58)
+[warn] ⚠  We were unable to load your functions code. (see above)
+[debug] [2020-02-08T16:53:33.916Z] [worker-~diagnostic~-41af8a46-c23a-4f9c-9bd4-5c7e91f1466f]: exited
+[debug] [2020-02-08T16:53:33.916Z] [worker-~diagnostic~-41af8a46-c23a-4f9c-9bd4-5c7e91f1466f]: FINISHED
+[debug] [2020-02-08T16:54:12.108Z] File /Users/ayesha/Desktop/course-plan/functions/index.js changed, reloading triggers
+[debug] [2020-02-08T16:54:13.113Z] [worker-pool] Cleaned up workers for ~diagnostic~: 1 --> 0
+[debug] [2020-02-08T16:54:13.116Z] [worker-pool] addWorker(~diagnostic~)
+[debug] [2020-02-08T16:54:13.116Z] [worker-pool] Adding worker with key ~diagnostic~, total=1
+[debug] [2020-02-08T16:54:13.116Z] [worker-pool] submitWork(triggerId=)
+[debug] [2020-02-08T16:54:13.116Z] [worker-~diagnostic~-1f4c2bda-2a4d-4f6b-a212-474b0e35298f]: Assigning socketPath: /var/folders/ys/zv37hx_134qc6l73tmvg286h0000gn/T/fire_emu_5395.sock
+[debug] [2020-02-08T16:54:13.116Z] [worker-~diagnostic~-1f4c2bda-2a4d-4f6b-a212-474b0e35298f]: BUSY
+[debug] [2020-02-08T16:54:13.333Z] [runtime-status] [5395] Functions runtime initialized. {"cwd":"/Users/ayesha/Desktop/course-plan/functions","node_version":"13.2.0"}
+[debug] [2020-02-08T16:54:13.334Z] [runtime-status] [5395] Disabled runtime features: undefined
+[debug] [2020-02-08T16:54:13.335Z] [runtime-status] [5395] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:54:13.336Z] [runtime-status] [5395] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:54:13.480Z] [runtime-status] [5395] Found google-gax at /Users/ayesha/Desktop/course-plan/functions/node_modules/google-gax/build/src/index.js
+[debug] [2020-02-08T16:54:13.481Z] [runtime-status] [5395] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"},{"name":"google-gax","status":"mocked"}]
+[debug] [2020-02-08T16:54:13.508Z] [runtime-status] [5395] Checked functions.config() {"config":{}}
+[debug] [2020-02-08T16:54:13.509Z] [runtime-status] [5395] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:54:13.509Z] [runtime-status] [5395] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:54:13.509Z] [runtime-status] [5395] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:54:13.538Z] [runtime-status] [5395] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}}
+[warn] ⚠  /Users/ayesha/Desktop/course-plan/functions/index.js:17
+    await firebase.firestore().collection('events').get()
+    ^^^^^
+
+SyntaxError: await is only valid in async function
+    at wrapSafe (internal/modules/cjs/loader.js:1043:16)
+    at Module._compile (internal/modules/cjs/loader.js:1091:27)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1160:10)
+    at Module.load (internal/modules/cjs/loader.js:976:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:884:14)
+    at Module.require (internal/modules/cjs/loader.js:1016:19)
+    at require (internal/modules/cjs/helpers.js:69:18)
+    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:718:33
+    at Generator.next (<anonymous>)
+    at fulfilled (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:58)
+[warn] ⚠  We were unable to load your functions code. (see above)
+[debug] [2020-02-08T16:54:13.556Z] [worker-~diagnostic~-1f4c2bda-2a4d-4f6b-a212-474b0e35298f]: exited
+[debug] [2020-02-08T16:54:13.556Z] [worker-~diagnostic~-1f4c2bda-2a4d-4f6b-a212-474b0e35298f]: FINISHED
+[debug] [2020-02-08T16:54:26.042Z] File /Users/ayesha/Desktop/course-plan/functions/index.js changed, reloading triggers
+[debug] [2020-02-08T16:54:27.046Z] [worker-pool] Cleaned up workers for ~diagnostic~: 1 --> 0
+[debug] [2020-02-08T16:54:27.053Z] [worker-pool] addWorker(~diagnostic~)
+[debug] [2020-02-08T16:54:27.053Z] [worker-pool] Adding worker with key ~diagnostic~, total=1
+[debug] [2020-02-08T16:54:27.054Z] [worker-pool] submitWork(triggerId=)
+[debug] [2020-02-08T16:54:27.054Z] [worker-~diagnostic~-79feb2e2-8f38-4e49-90a4-93f87ff31615]: Assigning socketPath: /var/folders/ys/zv37hx_134qc6l73tmvg286h0000gn/T/fire_emu_5404.sock
+[debug] [2020-02-08T16:54:27.054Z] [worker-~diagnostic~-79feb2e2-8f38-4e49-90a4-93f87ff31615]: BUSY
+[debug] [2020-02-08T16:54:27.280Z] [runtime-status] [5404] Functions runtime initialized. {"cwd":"/Users/ayesha/Desktop/course-plan/functions","node_version":"13.2.0"}
+[debug] [2020-02-08T16:54:27.281Z] [runtime-status] [5404] Disabled runtime features: undefined
+[debug] [2020-02-08T16:54:27.282Z] [runtime-status] [5404] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:54:27.283Z] [runtime-status] [5404] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:54:27.418Z] [runtime-status] [5404] Found google-gax at /Users/ayesha/Desktop/course-plan/functions/node_modules/google-gax/build/src/index.js
+[debug] [2020-02-08T16:54:27.419Z] [runtime-status] [5404] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"},{"name":"google-gax","status":"mocked"}]
+[debug] [2020-02-08T16:54:27.450Z] [runtime-status] [5404] Checked functions.config() {"config":{}}
+[debug] [2020-02-08T16:54:27.450Z] [runtime-status] [5404] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:54:27.451Z] [runtime-status] [5404] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:54:27.451Z] [runtime-status] [5404] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:54:27.481Z] [runtime-status] [5404] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}}
+[warn] ⚠  /Users/ayesha/Desktop/course-plan/functions/index.js:17
+    await firebase.firestore().collection('events').get()
+    ^^^^^
+
+SyntaxError: await is only valid in async function
+    at wrapSafe (internal/modules/cjs/loader.js:1043:16)
+    at Module._compile (internal/modules/cjs/loader.js:1091:27)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1160:10)
+    at Module.load (internal/modules/cjs/loader.js:976:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:884:14)
+    at Module.require (internal/modules/cjs/loader.js:1016:19)
+    at require (internal/modules/cjs/helpers.js:69:18)
+    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:718:33
+    at Generator.next (<anonymous>)
+    at fulfilled (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:58)
+[warn] ⚠  We were unable to load your functions code. (see above)
+[debug] [2020-02-08T16:54:27.499Z] [worker-~diagnostic~-79feb2e2-8f38-4e49-90a4-93f87ff31615]: exited
+[debug] [2020-02-08T16:54:27.499Z] [worker-~diagnostic~-79feb2e2-8f38-4e49-90a4-93f87ff31615]: FINISHED
+[debug] [2020-02-08T16:54:39.083Z] File /Users/ayesha/Desktop/course-plan/functions/index.js changed, reloading triggers
+[debug] [2020-02-08T16:54:40.088Z] [worker-pool] Cleaned up workers for ~diagnostic~: 1 --> 0
+[debug] [2020-02-08T16:54:40.096Z] [worker-pool] addWorker(~diagnostic~)
+[debug] [2020-02-08T16:54:40.098Z] [worker-pool] Adding worker with key ~diagnostic~, total=1
+[debug] [2020-02-08T16:54:40.098Z] [worker-pool] submitWork(triggerId=)
+[debug] [2020-02-08T16:54:40.098Z] [worker-~diagnostic~-a19c090c-2515-4dc8-8db4-987b7c76fd75]: Assigning socketPath: /var/folders/ys/zv37hx_134qc6l73tmvg286h0000gn/T/fire_emu_5413.sock
+[debug] [2020-02-08T16:54:40.098Z] [worker-~diagnostic~-a19c090c-2515-4dc8-8db4-987b7c76fd75]: BUSY
+[debug] [2020-02-08T16:54:40.318Z] [runtime-status] [5413] Functions runtime initialized. {"cwd":"/Users/ayesha/Desktop/course-plan/functions","node_version":"13.2.0"}
+[debug] [2020-02-08T16:54:40.319Z] [runtime-status] [5413] Disabled runtime features: undefined
+[debug] [2020-02-08T16:54:40.321Z] [runtime-status] [5413] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:54:40.322Z] [runtime-status] [5413] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:54:40.457Z] [runtime-status] [5413] Found google-gax at /Users/ayesha/Desktop/course-plan/functions/node_modules/google-gax/build/src/index.js
+[debug] [2020-02-08T16:54:40.457Z] [runtime-status] [5413] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"},{"name":"google-gax","status":"mocked"}]
+[debug] [2020-02-08T16:54:40.491Z] [runtime-status] [5413] Checked functions.config() {"config":{}}
+[debug] [2020-02-08T16:54:40.492Z] [runtime-status] [5413] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:54:40.492Z] [runtime-status] [5413] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-02-08T16:54:40.493Z] [runtime-status] [5413] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-02-08T16:54:40.526Z] [runtime-status] [5413] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/ayesha/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}}
+[warn] ⚠  /Users/ayesha/Desktop/course-plan/functions/index.js:17
+    await firebase.firestore().collection('events').get()
+    ^^^^^
+
+SyntaxError: await is only valid in async function
+    at wrapSafe (internal/modules/cjs/loader.js:1043:16)
+    at Module._compile (internal/modules/cjs/loader.js:1091:27)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1160:10)
+    at Module.load (internal/modules/cjs/loader.js:976:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:884:14)
+    at Module.require (internal/modules/cjs/loader.js:1016:19)
+    at require (internal/modules/cjs/helpers.js:69:18)
+    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:718:33
+    at Generator.next (<anonymous>)
+    at fulfilled (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:58)
+[warn] ⚠  We were unable to load your functions code. (see above)
+[debug] [2020-02-08T16:54:40.545Z] [worker-~diagnostic~-a19c090c-2515-4dc8-8db4-987b7c76fd75]: exited
+[debug] [2020-02-08T16:54:40.545Z] [worker-~diagnostic~-a19c090c-2515-4dc8-8db4-987b7c76fd75]: FINISHED

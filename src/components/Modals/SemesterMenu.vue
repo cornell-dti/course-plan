@@ -18,21 +18,10 @@ export default {
       isOpenModal: false
     };
   },
-
   methods: {
     openDeleteSemesterModal() {
       this.$emit('open-delete-semester-modal');
-<<<<<<< HEAD
-      const semesterMenu = document.getElementById('semesterMenu');
-      semesterMenu.style.display = 'none';
-    },
-    openEditSemesterModal() {
-      this.$emit('open-delete-semester-modal');
-      const semesterMenu = document.getElementById('semesterMenu');
-      semesterMenu.style.display = 'none';
-=======
       this.isOpenModal = true;
->>>>>>> e1e3afd8ade6c85e717916c212952edea714c821
     }
   }
 };
@@ -50,46 +39,38 @@ export default {
     width: 12rem;
     cursor: pointer;
   }
-
   &-section {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem 1rem;
     position: relative;
-
     &:hover,
     &:active,
     &:focus {
       background-color: rgba(50, 160, 242, 0.15);
     }
-
     &:first-child {
       padding-top: 1rem;
       border-top-left-radius: 9px;
       border-top-right-radius: 9px;
     }
-
     &:last-child {
       padding-bottom: 1rem;
       border-bottom-left-radius: 9px;
       border-bottom-right-radius: 9px;
     }
   }
-
   &-left {
     display: flex;
     align-items: center;
   }
-
   &-icon {
     margin-right: 1rem;
-
     &--color {
       width: 16px;
       height: 16px;
     }
   }
-
   &-text {
       color: #EB6D6D;
   }

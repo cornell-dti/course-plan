@@ -48,8 +48,8 @@ export default {
   data() {
     return {
       isA: this.semId % 2 === 0 && !this.isCompact,
-      isB: this.semId % 3 === 1 && !this.isCompact,
-      isC: this.semId % 2 === 1 && this.isCompact && this.semId !== 1,
+      isB: this.semId % 2 === 1 && !this.isCompact,
+      isC: this.semId % 3 === 0 && this.isCompact && this.semId !== 1,
       colors: [
         {
           text: 'Gray',
