@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ 'course--min': !notCompact, 'active': active }" class="course" @click="updateBar()">
-    <div class="course-color" :style="cssVars">
+  <div :class="{ 'course--min': compact, 'active': active }" class="course" @click="updateBar()">
+    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active, 'course-color--min': compact }">
       <div class="course-dotColumn">
         <span class="course-dot"></span>
         <span class="course-dot"></span>
@@ -12,11 +12,19 @@
         <span class="course-dot"></span>
       </div>
     </div>
+<<<<<<< HEAD
     <div :class="{ 'course-content--min': !notCompact }" class="course-content">
       <div :class="{ 'course-main--min': !notCompact }" class="course-main">
         <div :class="{ 'course-top--min': !notCompact }" class="course-top">
           <div :class="{ 'course-code--min': !notCompact }" class="course-code">
             {{subject }} {{ number }}
+=======
+    <div :class="{ 'course-content--min': compact }" class="course-content">
+      <div :class="{ 'course-main--min': compact }" class="course-main">
+        <div :class="{ 'course-top--min': compact }" class="course-top">
+          <div :class="{ 'course-code--min': compact }" class="course-code">
+            {{ subject }} {{ number }}
+>>>>>>> e1e3afd8ade6c85e717916c212952edea714c821
           </div>
           <div class="course-dotRow" @click="openMenu">
             <span class="course-dot course-dot--menu"></span>
@@ -24,13 +32,13 @@
             <span class="course-dot course-dot--menu"></span>
           </div>
         </div>
-        <div v-if="notCompact" class="course-name">{{ name }}</div>
+        <div v-if="!compact" class="course-name">{{ name }}</div>
         <div class="course-info">
-          <span v-if="notCompact" class="course-credits">{{ creditString }}</span>
-          <span v-if="notCompact && semesterString" class="course-semesters">{{
+          <span v-if="!compact" class="course-credits">{{ creditString }}</span>
+          <span v-if="!compact && semesterString" class="course-semesters">{{
             semesterString
           }}</span>
-          <!-- <div v-if="notCompact && alerts.requirement" class="course-outerWrapper course-tooltip">
+          <!-- <div v-if="!compact && alerts.requirement" class="course-outerWrapper course-tooltip">
             <div class="course-iconWrapper course-iconWrapper--info">
               <img class="course-icon course-icon--info" src="../assets/images/info.svg" />
             </div>
@@ -40,7 +48,7 @@
             ></div>
           </div> -->
           <div v-if="alerts.caution" class="course-outerWrapper course-tooltip">
-            <div class="course-iconWrapper course-iconWrapper--caution">
+            <div v-if="!compact" class="course-iconWrapper course-iconWrapper--caution">
               <img class="course-icon course-icon--caution" src="../assets/images/caution.svg" />
             </div>
             <div
@@ -106,10 +114,6 @@ export default {
     };
   },
   computed: {
-    notCompact() {
-      return !this.compact;
-    },
-
     rqString() {
       return 'RQ';
     },
@@ -198,6 +202,7 @@ export default {
   background-color: white;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
   position: relative;
+  height: 5.625rem;
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
@@ -205,7 +210,7 @@ export default {
 
   &--min {
     width: 10.5rem;
-    height: 2rem;
+    height: 2.125rem;
   }
 
   &-main {
@@ -219,11 +224,25 @@ export default {
 
   &-color {
     width: 1.25rem;
+    height: 5.625rem;
     border-radius: 0.42rem 0 0 0.42rem;
     background-color: var(--bg-color);
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &--active {
+      width: 19px;
+      height: 5.5rem;
+    }
+
+    &--min {
+      height: 2.125rem;
+
+      &.course-color--active {
+        height: 2rem;
+      }
+    }
   }
 
   &-dotColumn {
@@ -262,9 +281,11 @@ export default {
 
   &-content {
     width: 18rem;
-    margin: 0.75rem 1rem;
+    margin: 0 1rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+
 
     &--min {
       width: 9.25rem;
@@ -333,6 +354,7 @@ export default {
     margin-left: 0.2rem;
     align-items: center;
 
+    // TODO: styling for info icon on course card
     // &--info {
     //   &:before {
     //     margin-right: 0.2rem;
@@ -374,6 +396,13 @@ export default {
 
 .active {
   border: 1px solid #2b6693;
+  height: 5.625rem;
+  width: 21.375rem;
+
+  &.course--min {
+    height: 2.125rem;
+    width: 10.5rem;
+  }
 }
 
 // TODO: convert px to rem for spacing

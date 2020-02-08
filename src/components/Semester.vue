@@ -11,9 +11,13 @@
       :text="confirmationText"
     />
     <deletesemester
-      id="deleteSemesterModal"
+      :id="'deleteSemesterModal-' + id"
       class="semester-modal-delete"
       @delete-semester="deleteSemester"
+      :deleteSemID="deleteSemID"
+      :deleteSemType="deleteSemType"
+      :deleteSemYear="deleteSemYear"
+      ref="deletesemester"
     />
     <div v-if="isNotSemesterButton" class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
@@ -110,7 +114,11 @@ export default {
       confirmationText: '',
       scrollable: true,
       semesterMenuOpen: false,
-      stopCloseFlag: false
+      stopCloseFlag: false,
+
+      deleteSemID: 0,
+      deleteSemType: '',
+      deleteSemYear: 0
     };
   },
   props: {
@@ -226,7 +234,6 @@ export default {
     },
     buildCautions() {
       this.buildDuplicateCautions();
-      // this.buildIncorrectPlacementCautions();
     },
     buildDuplicateCautions() {
       this.$emit('build-duplicate-cautions');
@@ -261,11 +268,16 @@ export default {
       }
     },
     openDeleteSemesterModal() {
-      const modal = document.getElementById('deleteSemesterModal');
+      this.deleteSemType = this.type;
+      this.deleteSemYear = this.year;
+      this.deleteSemID = this.id;
+
+      const modal = document.getElementById(`deleteSemesterModal-${this.id}`);
       modal.style.display = 'block';
     },
-    deleteSemester() {
-      this.$emit('delete-semester', this.type, this.year);
+    deleteSemester(type, year) {
+      this.$emit('delete-semester', type, year);
+      this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
     }
   },
   directives: {
@@ -353,11 +365,15 @@ export default {
     padding: 5px 0 8px 0;
     display: flex;
     position: relative;
+<<<<<<< HEAD
     &:hover,
     &:active,
     &:focus {
       cursor: pointer;
     }
+=======
+    cursor: pointer;
+>>>>>>> e1e3afd8ade6c85e717916c212952edea714c821
   }
 
   &-dot {

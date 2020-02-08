@@ -65,19 +65,19 @@
           <div class="details">
             <div class="details-head">Class Ratings</div>
             <div class="details-ratings">
-              <p class="details-ratings-title"><strong>Overall Rating:</strong> {{ CUROverallRating }}</p>
+              <p class="details-ratings-title"><span class="details-ratings-title-strong">Overall Rating: </span> {{ CUROverallRating }}</p>
               <div class="progress rating">
                 <div class="progress-bar" role="progressbar" :style="{ width: `${(overallRating/5)*100}%`, background: reviewsColor(overallRating) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
-              <p class="details-ratings-title"><strong>Difficulty:</strong> {{ CURDifficulty }}</p>
+              <p class="details-ratings-title"><span class="details-ratings-title-strong">Difficulty:</span> {{ CURDifficulty }}</p>
               <div class="progress rating">
                 <div class="progress-bar" role="progressbar" :style="{ width: `${(difficulty/5)*100}%`, background: reviewsColor(difficulty, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
             <div class="details-ratings">
-              <p class="details-ratings-title"><strong>Workload:</strong> {{ CURWorkload }}</p>
+              <p class="details-ratings-title"><span class="details-ratings-title-strong">Workload:</span> {{ CURWorkload }}</p>
               <div class="progress rating">
                 <div class="progress-bar" role="progressbar" :style="{ width: `${(workload/5)*100}%`, background: reviewsColor(workload, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
@@ -168,11 +168,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-  strong {
-    font-weight: 500;
-  }
-
   .bottombar {
     position: fixed;
     bottom: 0;
@@ -283,6 +278,10 @@ export default {
         font-size: 16px;
         line-height: 16px;
         color: #3D3D3D;
+
+        &-strong {
+          font-weight: 500;
+        }
       }
 
       &-link {

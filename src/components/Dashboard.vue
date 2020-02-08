@@ -1,6 +1,11 @@
 <template>
   <div class="dashboard">
-    <onboarding class="dashboard-onboarding" v-if="isOnboarding " @onboard="endOnboarding" :isEditingProfile="isEditingProfile" :user="user"/>
+    <onboarding class="dashboard-onboarding" v-if="isOnboarding"
+      :isEditingProfile="isEditingProfile"
+      :user="user"
+      @onboard="endOnboarding"
+      @cancelOnboarding="cancelOnboarding"
+    />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <navbar class="dashboard-nav"
@@ -192,12 +197,10 @@ export default {
       // Get last semester of available course. TODO: Remove when no longer firebase data dependant
       const lastRoster = course.lastRoster || course.roster;
 
-      // TODO: pick color if a new course instead of this default
       const color = course.color || 'C4C4C4';
 
       const alerts = { requirement: null, caution: null };
 
-      // TODO: Need courseMap to be generated, check to change
       const newCourse = {
         id: randomId,
         subject,
@@ -271,7 +274,6 @@ export default {
         semesters: this.joinOrNAString(course.semesters),
         color: course.color,
         latestSem: course.lastRoster,
-        id: 1,
         // Array data
         instructors: this.joinOrNAString(course.instructors),
         distributionCategories: this.joinOrNAString(course.distributions),
@@ -343,14 +345,16 @@ export default {
     parseUserData(data, name) {
       const user = {
         // TODO: take into account multiple majors and colleges
-        major: data.majors[0].acronym,
-        majorFN: data.majors[0].fullName,
         college: data.colleges[0].acronym,
         collegeFN: data.colleges[0].fullName,
         firstName: name.firstName,
         middleName: name.middleName,
         lastName: name.lastName
       };
+      if ('majors' in data && data.majors.length > 0) {
+        user.major = data.majors[0].acronym;
+        user.majorFN = data.majors[0].fullName;
+      }
 
       return user;
     },

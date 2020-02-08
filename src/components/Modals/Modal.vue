@@ -38,7 +38,6 @@ export default {
   props: {
     type: String,
     semesterID: Number
-    // courseIsAddable: Boolean
   },
   computed: {
     contentId() {
@@ -115,7 +114,7 @@ export default {
 
       const parent = this.$parent;
 
-
+      // To use for retrieve course data from Firebase
       // // TODO: error handling if course not found or some firebase error
       // docRef
       //   .get()

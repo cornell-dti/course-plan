@@ -32,15 +32,16 @@
       </div>
       <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
+    <!-- TODO: investigate if there needs to be two different content divs with two sets of semesters -->
     <div v-if="compact" class="semesterView-content">
       <div
-        v-for="sem in compactSemesters"
+        v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
+        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
       </div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
@@ -52,20 +53,19 @@
 
 <script>
 import Vue from 'vue';
-// import firebase from 'firebase';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
-import DeleteSemester from '@/components/Modals/DeleteSemester';
 import Caution from '@/components/Caution';
+import DeleteSemester from '@/components/Modals/DeleteSemester';
 
 const clone = require('clone');
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
-Vue.component('deletesemester', DeleteSemester);
 Vue.component('caution', Caution);
+Vue.component('deletesemester', DeleteSemester);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
@@ -100,25 +100,6 @@ export default {
       handler() {
         this.updateFirebaseSemester();
       }
-    }
-  },
-  computed: {
-    // Duplicate the semesters array, but set the compact boolean to true
-    compactSemesters() {
-      const compactSem = [];
-      this.semesters.forEach(sem => {
-        const newSem = clone(sem);
-        const newCourses = [];
-        sem.courses.forEach(course => {
-          const newCourse = clone(course);
-          newCourse.compact = true;
-          newCourses.push(newCourse);
-        });
-        newSem.courses = newCourses;
-        newSem.compact = true;
-        compactSem.push(newSem);
-      });
-      return compactSem;
     }
   },
   mounted() {
@@ -185,7 +166,7 @@ export default {
           this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns();
         }
       }
-      const deleteSemesterModal = document.getElementById('deleteSemesterModal');
+      const deleteSemesterModal = document.getElementById('deleteSemester');
       if (event.target === deleteSemesterModal) {
         deleteSemesterModal.style.display = 'none';
       }

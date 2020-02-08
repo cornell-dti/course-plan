@@ -1,9 +1,9 @@
 <template>
-  <div class="semesterMenu" id="semesterMenu">
+  <div class="semesterMenu" id="semesterMenu" :class="{ 'd-none': isOpenModal }">
     <div class="semesterMenu-content">
       <div class="semesterMenu-section" @click="openDeleteSemesterModal">
         <div class="semesterMenu-left">
-          <img class="semesterMenu-icon" src="../../assets/images/trash.svg" />
+          <img class="semesterMenu-icon" src="@/assets/images/trash.svg" />
           <span class="semesterMenu-text">Delete Semester</span>
         </div>
       </div>
@@ -13,9 +13,16 @@
 
 <script>
 export default {
+  data() {
+    return {
+      isOpenModal: false
+    };
+  },
+
   methods: {
     openDeleteSemesterModal() {
       this.$emit('open-delete-semester-modal');
+<<<<<<< HEAD
       const semesterMenu = document.getElementById('semesterMenu');
       semesterMenu.style.display = 'none';
     },
@@ -23,6 +30,9 @@ export default {
       this.$emit('open-delete-semester-modal');
       const semesterMenu = document.getElementById('semesterMenu');
       semesterMenu.style.display = 'none';
+=======
+      this.isOpenModal = true;
+>>>>>>> e1e3afd8ade6c85e717916c212952edea714c821
     }
   }
 };
