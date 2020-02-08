@@ -1,3 +1,4 @@
+
 const functions = require('firebase-functions');
 
 // // Create and Deploy Your First Cloud Functions
@@ -12,16 +13,29 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-function getMarkers() {
-    const markers = [];
-    await firebase.firestore().collection('events').get()
-      .then(querySnapshot => {
-        querySnapshot.docs.forEach(doc => {
-        markers.push(doc.data());
-      });
-    });
-    return markers;
-  }
+function getCurrentYear(){
+    var d = new Date(); 
+    d.getFullYear(); 
+}
+function getCurrentSeason(){
+    var d = new Date(); 
+    d.getMonth(); 
+    if(d>0 && d<6){
+        return 'Spring'
+    }
+    else if(d>5 && d<8){
+        return 'Summer'
+    }
+    else if(d>7 && d<13){
+        return 'Fall'
+    }
+    else{
+        return 'Winter' 
+    }
+
+
+}
+
 var size = 0;
 function listAllUsers(nextPageToken) {
     // List batch of users, 1000 at a time.
@@ -40,19 +54,23 @@ function listAllUsers(nextPageToken) {
         console.log('Error listing users:', error);
       });
   }
+
 //Returns all the users that have signed up on firebase
 exports.trackUsers = functions.https.onRequest(async (req, res) => {
     size = 0;
     listAllUsers();
-    res.redirct(303,size.toString());
+    res.send(303,size.toString());
 });
-
 //Returns all the semesters each user has
 exports.trackSemesters = functions.https.onRequest(async (req, res) => {
-    const snapshot = await firebase.firestore().collection('userData').get()
-    const documents = [];
-    snapshot.forEach(doc => {
-       documents[doc.id] = doc.data().semesters.length;
-    });
-    res.redirct(303,documents.toString());
+    admin.firestore().collection("userData").get()
+    .then(snapshot => {
+        const data = snapshot.data()
+        res.send(data);
+    })
+    .catch(error => {
+        // Handle the error
+        console.log(error)
+        res.status(500).send(error.toString())
+    })
 });
