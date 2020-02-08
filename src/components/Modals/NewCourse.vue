@@ -49,7 +49,8 @@ export default {
         if (!val) return;
         currentFocus = -1;
         /* create a DIV element that will contain the items (values): */
-        if (val.length >= 3) {
+        // search after value length of 2 to reduce search times of courses
+        if (val.length >= 2) {
           a = document.createElement('DIV');
           a.setAttribute('id', `${inp.id}autocomplete-list`);
           a.setAttribute('class', 'autocomplete-items');
@@ -79,7 +80,10 @@ export default {
           title.sort((first, second) => first.title - second.title);
 
           /* prioritize code matches over title matches */
-          const match = code.concat(title);
+          let match = code.concat(title);
+
+          // limit the number of results to 10
+          match = match.slice(0, 10);
 
           match.forEach(newTitle => {
             /* check if the item starts with the same letters as the text field value: */
@@ -98,6 +102,7 @@ export default {
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
+              this.addCourse();
             });
             a.appendChild(div);
           });
@@ -137,7 +142,7 @@ export default {
         if (currentFocus >= x.length) currentFocus = 0;
         if (currentFocus < 0) currentFocus = x.length - 1;
         /* add class "autocomplete-active": */
-        x[currentFocus].classList.add('autocomplete-active');
+        x[currentFocus].classList.add('autocomplete-active');        
       }
       function removeActive(x) {
         /* a function to remove the "active" class from all autocomplete items: */
