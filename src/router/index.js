@@ -5,6 +5,10 @@ import firebase from 'firebase';
 import Login from '@/components/Login';
 import Dashboard from '@/components/Dashboard';
 import Settings from '@/components/Settings';
+// The Firebase Admin SDK to access the Firebase Realtime Database.
+const admin = require('firebase-admin');
+
+admin.initializeApp();
 
 Vue.use(Router);
 

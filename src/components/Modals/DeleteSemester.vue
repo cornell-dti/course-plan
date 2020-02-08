@@ -8,6 +8,9 @@
       <div class="deleteSemesterModal-body">
         <div class="deleteSemesterModal-body-text">{{ text }}</div>
       </div>
+      <div>
+
+      </div>
       <div class="deleteSemesterModal-buttonWrapper">
         <button class="deleteSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
         <div class="deleteSemesterModal-button deleteSemesterModal-button--delete" @click="deleteSemester">
@@ -35,13 +38,13 @@ Vue.component('newSemester', NewSemester);
 export default {
   computed: {
     text() {
-      return 'Are you sure you want to delete this semester? You cannot undo this action.';
+      return 'Are you sure you want to edit this semester?.';
     },
     cancel() {
       return 'Cancel';
     },
     title() {
-      return 'Delete Semester';
+      return 'Edit Semester';
     }
   },
   methods: {

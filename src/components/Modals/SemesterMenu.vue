@@ -18,6 +18,11 @@ export default {
       this.$emit('open-delete-semester-modal');
       const semesterMenu = document.getElementById('semesterMenu');
       semesterMenu.style.display = 'none';
+    },
+    openEditSemesterModal() {
+      this.$emit('open-delete-semester-modal');
+      const semesterMenu = document.getElementById('semesterMenu');
+      semesterMenu.style.display = 'none';
     }
   }
 };

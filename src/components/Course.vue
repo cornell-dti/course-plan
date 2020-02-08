@@ -16,7 +16,7 @@
       <div :class="{ 'course-main--min': !notCompact }" class="course-main">
         <div :class="{ 'course-top--min': !notCompact }" class="course-top">
           <div :class="{ 'course-code--min': !notCompact }" class="course-code">
-            {{ subject }} {{ number }}
+            {{subject }} {{ number }}
           </div>
           <div class="course-dotRow" @click="openMenu">
             <span class="course-dot course-dot--menu"></span>
@@ -53,6 +53,8 @@
     </div>
     <coursemenu
       v-if="menuOpen"
+      :semId="semId"
+      :isCompact="compact"
       class="course-menu"
       @delete-course="deleteCourse"
       @color-course="colorCourse"
@@ -94,7 +96,8 @@ export default {
     alerts: Object,
     compact: Boolean,
     id: String,
-    active: Boolean
+    active: Boolean,
+    semId: Number
   },
   data() {
     return {
@@ -174,8 +177,9 @@ export default {
       if (!this.menuOpen) {
         this.$emit('updateBar', this.courseObj);
       }
+    },
+    whichSide() {
     }
-
   },
   directives: {
     'click-outside': clickOutside

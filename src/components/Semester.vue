@@ -39,6 +39,7 @@
               :compact="compact"
               :active="activatedCourse.subject === course.subject && activatedCourse.number === course.number"
               class="semester-course"
+              :semId="id"
               @delete-course="deleteCourse"
               @color-course="colorCourse"
               @updateBar="updateBar"
@@ -108,7 +109,6 @@ export default {
     return {
       confirmationText: '',
       scrollable: true,
-
       semesterMenuOpen: false,
       stopCloseFlag: false
     };
@@ -155,7 +155,7 @@ export default {
       return '+ COURSE';
     },
     semesterString() {
-      return '+ SEMESTER';
+      return `HIII${this.id}+ SEMESTER`;
     }
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="courseMenu">
+  <div v-bind:class="{'courseMenu-movedNotCompact': isA , 'courseMenu': isB, 'courseMenu-movedCompact':isC}" class="courseMenu" >
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
@@ -12,7 +12,7 @@
         </div>
         <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
 
-        <div v-if="displayColors" class="">
+        <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
           <div
             v-for="color in colors"
             :key="color.id"
@@ -24,6 +24,7 @@
                 class="courseMenu-icon courseMenu-icon--color"
                 :style="{ backgroundColor: color.hex }"
               ></div>
+              <span class="courseMenu-text">{{ color.text }}</span>
             </div>
           </div>
         </div>
@@ -40,8 +41,15 @@
 
 <script>
 export default {
+  props: {
+    semId: Number,
+    isCompact: Boolean
+  },
   data() {
     return {
+      isA: this.semId % 2 === 0 && !this.isCompact,
+      isB: this.semId % 3 === 1 && !this.isCompact,
+      isC: this.semId % 2 === 1 && this.isCompact && this.semId !== 1,
       colors: [
         {
           text: 'Gray',
@@ -95,6 +103,16 @@ export default {
 
 <style scoped lang="scss">
 .courseMenu {
+  &-movedNotCompact{
+  top: 20px; /* your required value */
+  left: -50px;
+  position: fixed;
+  }
+  &-movedCompact{
+    top: 20px; /* your required value */
+    left: -50px;;
+    position: fixed;
+  }
   &-content {
     background: #ffffff;
     border: 1px solid #acacac;
