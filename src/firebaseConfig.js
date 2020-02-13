@@ -1,4 +1,6 @@
-const firebase = require('firebase');
+const firebase = require('firebase/app');
+require('firebase/auth');
+require('firebase/firestore');
 
 // firebase init goes here
 const config = {
@@ -31,7 +33,6 @@ const usersCollection = db.collection('users');
 const userDataCollection = db.collection('userData');
 const alphaWhitelistCollection = db.collection('alphaWhitelistV2');
 const landingEmailsCollection = db.collection('landingEmails');
-
 
 module.exports = {
   // Temp: removed coursesCollection

@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
 const fb = require('../firebaseConfig.js');
 

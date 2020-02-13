@@ -53,7 +53,6 @@
 
 <script>
 import Vue from 'vue';
-// import firebase from 'firebase';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
