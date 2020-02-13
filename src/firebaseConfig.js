@@ -15,7 +15,7 @@ require('firebase/firestore');
 // };
 // firebase.initializeApp(config);
 
-// Deployment config
+// Development config
 const developmentConfig = {
   apiKey: 'AIzaSyAfePy1Tbrqm55bYR7BHHl50r-9NTVj0Rs',
   authDomain: 'cornelldti-courseplan-dev.firebaseapp.com',
