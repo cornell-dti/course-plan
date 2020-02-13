@@ -12,7 +12,7 @@ const config = {
   measurementId: 'G-8B1JVCBX0Z'
 };
 firebase.initializeApp(config);
-const analytics = firebase.analytics();
+// const analytics = firebase.analytics();
 
 // firebase utils
 const db = firebase.firestore();
@@ -35,5 +35,5 @@ const landingEmailsCollection = db.collection('landingEmails');
 
 module.exports = {
   // Temp: removed coursesCollection
-  db, auth, analytics, currentUser, usersCollection, userDataCollection, landingEmailsCollection, alphaWhitelistCollection
+  db, auth, currentUser, usersCollection, userDataCollection, landingEmailsCollection, alphaWhitelistCollection
 };
