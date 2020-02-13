@@ -159,15 +159,7 @@ export default {
         .signInWithPopup(provider)
         .then(user => {
           // Check whitelist emails to ensure user can log in
-          alphaWhitelistCollection.get().then(querySnapshot => {
-            if (!this.checkEmailAccess(querySnapshot, user)) {
-              return;
-            }
-
-            this.$store.commit('setCurrentUser', user.user);
-            this.$store.dispatch('fetchUserProfile');
-            this.$router.push(`${process.env.BASE_URL}/`);
-          });
+          this.checkEmailAccess(user);
         })
         .catch(err => {
           console.log(err);
@@ -175,22 +167,29 @@ export default {
           this.errorMsg = err.message;
         });
     },
-    checkEmailAccess(snapshot, user) {
-      let isAlphaEmail = false;
-      snapshot.forEach(doc => {
-        if (doc.data().email === user.user.email) {
-          isAlphaEmail = true;
+    checkEmailAccess(user) {
+      const docRef = alphaWhitelistCollection.doc(user.user.email);
+      docRef.get().then(doc => {
+        if (doc.exists) {
+          this.performingRequest = false;
+          this.$store.commit('setCurrentUser', user.user);
+          this.$store.dispatch('fetchUserProfile');
+          this.$router.push(`${process.env.BASE_URL}/`);
+        } else {
+          this.handleUserWithoutAccess();
         }
+      }).catch(error => {
+        console.log(error);
+        this.handleUserWithoutAccess();
       });
-      this.performingRequest = false;
-      if (!isAlphaEmail) {
-        fb.auth.signOut();
-        alert('Sorry, but you do not have alpha access.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
-        return false;
-      }
-
-      return true;
     },
+
+    handleUserWithoutAccess() {
+      this.performingRequest = false;
+      fb.auth.signOut();
+      alert('Sorry, but you do not have alpha access.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
+    },
+
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
     },

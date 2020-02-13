@@ -27,7 +27,7 @@ const { currentUser } = auth;
 const usersCollection = db.collection('users');
 // const coursesCollection = db.collection('courses');
 const userDataCollection = db.collection('userData');
-const alphaWhitelistCollection = db.collection('alphaWhitelist');
+const alphaWhitelistCollection = db.collection('alphaWhitelistV2');
 const landingEmailsCollection = db.collection('landingEmails');
 
 
