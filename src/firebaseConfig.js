@@ -4,29 +4,29 @@ require('firebase/auth');
 require('firebase/firestore');
 
 // Production config
-// const config = {
-//   apiKey: 'AIzaSyDkKOpImjbjS2O0RhIQNJLQXx2SuYbxsfU',
-//   authDomain: 'cornell-courseplan.firebaseapp.com',
-//   databaseURL: 'https://cornell-courseplan.firebaseio.com',
-//   projectId: 'cornell-courseplan',
-//   storageBucket: '',
-//   messagingSenderId: '1031551180906',
-//   appId: '1:1031551180906:web:bdcea6ec074e673ea72a13'
-//   measurementId: 'G-8B1JVCBX0Z'
-// };
-// firebase.initializeApp(config);
+const config = {
+  apiKey: 'AIzaSyDkKOpImjbjS2O0RhIQNJLQXx2SuYbxsfU',
+  authDomain: 'cornell-courseplan.firebaseapp.com',
+  databaseURL: 'https://cornell-courseplan.firebaseio.com',
+  projectId: 'cornell-courseplan',
+  storageBucket: '',
+  messagingSenderId: '1031551180906',
+  appId: '1:1031551180906:web:bdcea6ec074e673ea72a13',
+  measurementId: 'G-8B1JVCBX0Z'
+};
+firebase.initializeApp(config);
 
 // Development config
-const developmentConfig = {
-  apiKey: 'AIzaSyAfePy1Tbrqm55bYR7BHHl50r-9NTVj0Rs',
-  authDomain: 'cornelldti-courseplan-dev.firebaseapp.com',
-  databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
-  projectId: 'cornelldti-courseplan-dev',
-  storageBucket: '',
-  messagingSenderId: '321304703190',
-  appId: '1:321304703190:web:2f2fefb4a0284465b99977',
-};
-firebase.initializeApp(developmentConfig);
+// const developmentConfig = {
+//   apiKey: 'AIzaSyAfePy1Tbrqm55bYR7BHHl50r-9NTVj0Rs',
+//   authDomain: 'cornelldti-courseplan-dev.firebaseapp.com',
+//   databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
+//   projectId: 'cornelldti-courseplan-dev',
+//   storageBucket: '',
+//   messagingSenderId: '321304703190',
+//   appId: '1:321304703190:web:2f2fefb4a0284465b99977',
+// };
+// firebase.initializeApp(developmentConfig);
 
 // firebase utils
 const db = firebase.firestore();
