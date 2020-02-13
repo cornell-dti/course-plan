@@ -10,9 +10,11 @@ const config = {
   projectId: 'cornell-courseplan',
   storageBucket: '',
   messagingSenderId: '1031551180906',
-  appId: '1:1031551180906:web:bdcea6ec074e673ea72a13'
+  appId: '1:1031551180906:web:bdcea6ec074e673ea72a13',
+  measurementId: 'G-8B1JVCBX0Z'
 };
 firebase.initializeApp(config);
+// const analytics = firebase.analytics();
 
 // firebase utils
 const db = firebase.firestore();
@@ -29,16 +31,10 @@ const { currentUser } = auth;
 const usersCollection = db.collection('users');
 // const coursesCollection = db.collection('courses');
 const userDataCollection = db.collection('userData');
-const alphaWhitelistCollection = db.collection('alphaWhitelist');
+const alphaWhitelistCollection = db.collection('alphaWhitelistV2');
 const landingEmailsCollection = db.collection('landingEmails');
 
 module.exports = {
   // Temp: removed coursesCollection
-  db,
-  auth,
-  currentUser,
-  usersCollection,
-  userDataCollection,
-  landingEmailsCollection,
-  alphaWhitelistCollection
+  db, auth, currentUser, usersCollection, userDataCollection, landingEmailsCollection, alphaWhitelistCollection
 };
