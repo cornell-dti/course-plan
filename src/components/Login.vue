@@ -42,19 +42,19 @@
                 <div class="col-12 col-md-6 tasks-wrapper">
                     <div class="row tasks">
                         <div class="col-1 tasks"><img src="@/assets/images/Task1.svg" alt = "checklist"/></div>
-                        <div class="col-11"><p class= "sub">Fully personalized to track your requirements</p></div>
+                        <div class="col-11"><p class= "sub sub--task">Fully personalized to track your requirements</p></div>
                     </div>
                     <div class="row tasks">
                         <div class="col-1 tasks"><img  src="@/assets/images/Task2.svg" alt = "browser" /></div>
-                        <div class="col-11"><p class= "sub">Customizable interface to view your courses</p>  </div>
+                        <div class="col-11"><p class= "sub sub--task">Customizable interface to view your courses</p>  </div>
                     </div>
                     <div class="row tasks">
                         <div class="col-1 tasks"><img  src="@/assets/images/Task3.svg" alt = "Network" /></div>
-                        <div class="col-11"><p class= "sub">Built-in system to check your progress</p></div>
+                        <div class="col-11"><p class= "sub sub--task">Built-in system to check your progress</p></div>
                     </div>
                     <div class="row tasks">
                         <div class="col-1 tasks"><img  src="@/assets/images/Task4.svg" alt = "Starred comment" /></div>
-                        <div class="col-11"><p class= "sub">Recommends courses based on your needs</p> </div>
+                        <div class="col-11"><p class= "sub sub--task">Recommends courses based on your needs</p> </div>
                     </div>
                 </div>
                 <div class="col-6 col-md-6 image-wrapper women-wrapper">
@@ -152,35 +152,6 @@ export default {
     };
   },
   methods: {
-    login() {
-      this.performingRequest = true;
-      fb.auth
-        .signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password)
-        .then(user => {
-          alphaWhitelistCollection.get().then(querySnapshot => {
-            let isAlphaEmail = false;
-            querySnapshot.forEach(doc => {
-              if (doc.data().email === this.loginForm.email) {
-                isAlphaEmail = true;
-              }
-            });
-            this.performingRequest = false;
-            if (!isAlphaEmail) {
-              fb.auth.signOut();
-              return;
-            }
-
-            this.$store.commit('setCurrentUser', user);
-            this.$store.dispatch('fetchUserProfile');
-            this.$router.push(`${process.env.BASE_URL}/`);
-          });
-        })
-        .catch(err => {
-          console.log(err);
-          this.performingRequest = false;
-          this.errorMsg = err.message;
-        });
-    },
     socialLogin() {
       this.performingRequest = true;
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -188,23 +159,7 @@ export default {
         .signInWithPopup(provider)
         .then(user => {
           // Check whitelist emails to ensure user can log in
-          alphaWhitelistCollection.get().then(querySnapshot => {
-            let isAlphaEmail = false;
-            querySnapshot.forEach(doc => {
-              if (doc.data().email === user.user.email) {
-                isAlphaEmail = true;
-              }
-            });
-            this.performingRequest = false;
-            if (!isAlphaEmail) {
-              fb.auth.signOut();
-              return;
-            }
-
-            this.$store.commit('setCurrentUser', user.user);
-            this.$store.dispatch('fetchUserProfile');
-            this.$router.push(`${process.env.BASE_URL}/`);
-          });
+          this.checkEmailAccess(user);
         })
         .catch(err => {
           console.log(err);
@@ -212,6 +167,29 @@ export default {
           this.errorMsg = err.message;
         });
     },
+    checkEmailAccess(user) {
+      const docRef = alphaWhitelistCollection.doc(user.user.email);
+      docRef.get().then(doc => {
+        if (doc.exists) {
+          this.performingRequest = false;
+          this.$store.commit('setCurrentUser', user.user);
+          this.$store.dispatch('fetchUserProfile');
+          this.$router.push(`${process.env.BASE_URL}/`);
+        } else {
+          this.handleUserWithoutAccess();
+        }
+      }).catch(error => {
+        console.log(error);
+        this.handleUserWithoutAccess();
+      });
+    },
+
+    handleUserWithoutAccess() {
+      this.performingRequest = false;
+      fb.auth.signOut();
+      alert('Sorry, but you do not have alpha access.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
+    },
+
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
     },
@@ -292,6 +270,11 @@ export default {
     }
     .email{
       padding: 20px;
+      @media (max-width: 767px) {
+        width: 350px;
+        max-width: 350px;
+        flex: unset;
+      }
     }
     .email-button{
       border: 0;
@@ -376,6 +359,10 @@ export default {
         font-size: 24px;
         color: #FFFFFF;
         margin: 0;
+
+        &--task {
+          margin-left: 2rem;
+        }
     }
     .head{
         font-weight: 600;
@@ -407,7 +394,7 @@ export default {
       position: relative;
 
       @media (max-width: 1274px) {
-        width: 70vw;
+        width: 62vw;
       }
     }
     .schedule{
@@ -415,7 +402,7 @@ export default {
       width: 650px;
 
       @media (max-width: 1274px) {
-        width: 72vw;
+        width: 50vw;
       }
     }
     .comment{

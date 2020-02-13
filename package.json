@@ -10,6 +10,7 @@
     "format:check": "prettier --check '**/*.{js,vue,scss,css,html}'"
   },
   "dependencies": {
+    "@firebase/analytics": "^0.2.13",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.1.0",
     "clone": "^2.1.2",
