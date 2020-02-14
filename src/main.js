@@ -28,3 +28,6 @@ fb.auth.onAuthStateChanged(() => {
     });
   }
 });
+
+
+// Code to query the database for data collection

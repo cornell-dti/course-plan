@@ -35,7 +35,7 @@
       </div>
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-          <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
+          <div v-for="course in deleteDupilcateCourses" :key="course.id" class="semester-courseWrapper">
             <course
               v-bind="course"
               :courseObj="course"
@@ -54,7 +54,7 @@
           :class="{ 'semester-addWrapper--compact': compact }"
           @click="openCourseModal"
         >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
+          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" v-dragula="courses" bag="first-bag" >{{
             buttonString
           }}</span>
         </div>
@@ -159,12 +159,25 @@ export default {
       });
       return `${credits.toString()} credits`;
     },
+    deleteDupilcateCourses() {
+      const uniqueCoursesNames = [];
+      const uniqueCourses = [];
+      this.courses.forEach(course => {
+        if (uniqueCoursesNames.indexOf(course.name) === -1) {
+          uniqueCourses.push(course);
+          uniqueCoursesNames.push(course.name);
+          console.log(course.name);
+        }
+      });
+      return uniqueCourses;
+    },
     buttonString() {
       return '+ COURSE';
     },
     semesterString() {
       return '+ SEMESTER';
-    }
+    },
+
   },
   methods: {
     openCourseModal() {
