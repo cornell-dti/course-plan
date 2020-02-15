@@ -15,25 +15,7 @@
       </div>
       <div :class="{ hide: !bottomCourses[0].isExpanded }" class="bottombar-course">
         <bottombarcourse
-        :subject="bottomCourses[0].subject"
-        :number="bottomCourses[0].number"
-        :name="bottomCourses[0].name"
-        :credits="bottomCourses[0].credits"
-        :semesters="bottomCourses[0].semesters"
-        :color="bottomCourses[0].color"
-        :id="bottomCourses[0].id"
-        :instructors="bottomCourses[0].instructors"
-        :distributionCategories="bottomCourses[0].distributionCategories"
-        :enrollmentInfo="bottomCourses[0].enrollmentInfo"
-        :latestSem="bottomCourses[0].latestSem"
-        :latestLecInfo="bottomCourses[0].latestLecInfo"
-        :overallRating="bottomCourses[0].overallRating"
-        :difficulty="bottomCourses[0].difficulty"
-        :workload="bottomCourses[0].workload"
-        :prerequisites="bottomCourses[0].prerequisites"
-        :description="bottomCourses[0].description"
-        :isPreview="bottomCourses[0].isPreview"
-        :isExpanded="bottomCourses[0].isExpanded"
+        :courseObj="bottomCourses[0]"
         @toggle="toggle"
         />
       </div>
