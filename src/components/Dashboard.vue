@@ -21,20 +21,33 @@
           @requirementsMap="loadRequirementsMap"
          />
       </div>
-      <semesterview v-if="loaded"
+      <!-- TODO: isBottomBar fix -->
+      <!-- <semesterview v-if="loaded"
         :semesters="semesters"
         :compact="compactVal"
         :isBottomBar="bottomBar.isExpanded"
         @compact-updated="compactVal = $event"
         @updateBar="updateBar"
         @close-bar="closeBar"
+      /> -->
+      <semesterview v-if="loaded"
+        :semesters="semesters"
+        :compact="compactVal"
+        @compact-updated="compactVal = $event"
+        @updateBar="updateBar"
+        @close-bar="closeBar"
       />
     </div>
     <div id="dashboard-bottomView">
-      <bottombar
+      <!-- <bottombar
       :data="bottomBar"
       @close-bar="closeBar"
-      @open-bar="openBar"/>
+      @open-bar="openBar"/> -->
+      <bottombar
+      :bottomCourses="bottomCourses"
+      @close-bar="closeBar"
+      @open-bar="openBar"
+      />
     </div>
   </div>
 </template>
@@ -64,9 +77,6 @@ const firebaseConfig = require('@/firebaseConfig.js');
 const { auth, userDataCollection } = firebaseConfig;
 
 export default {
-  props: {
-    bottomCourses: Array
-  },
   data() {
     const user = auth.currentUser;
     const names = user.displayName.split(' ');
@@ -86,6 +96,7 @@ export default {
         lastName: names[1],
         middleName: ''
       },
+      bottomCourses: [],
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
@@ -266,7 +277,30 @@ export default {
 
     updateBar(course) {
       // Update Bar Information
-      this.bottomBar = {
+      // this.bottomBar = {
+      //   subject: course.subject,
+      //   number: course.number,
+      //   name: course.name,
+      //   credits: course.credits,
+      //   semesters: this.joinOrNAString(course.semesters),
+      //   color: course.color,
+      //   latestSem: course.lastRoster,
+      //   // Array data
+      //   instructors: this.joinOrNAString(course.instructors),
+      //   distributionCategories: this.joinOrNAString(course.distributions),
+      //   enrollmentInfo: this.joinOrNAString(course.enrollment),
+      //   latestLecInfo: this.joinOrNAString(course.lectureTimes),
+      //   // TODO: CUReviews data
+      //   overallRating: 0,
+      //   difficulty: 0,
+      //   workload: 0,
+      //   prerequisites: this.noneIfEmpty(course.prereqs),
+      //   description: course.description,
+      //   isPreview: true,
+      //   isExpanded: true
+      // };
+      // Prepending bottomCourse to front of bottom courses array
+      this.bottomCourses.unshift({
         subject: course.subject,
         number: course.number,
         name: course.name,
@@ -287,12 +321,15 @@ export default {
         description: course.description,
         isPreview: true,
         isExpanded: true
-      };
+      });
 
       this.getReviews(course.subject, course.number, review => {
-        this.bottomBar.overallRating = review.classRating;
-        this.bottomBar.difficulty = review.classDifficulty;
-        this.bottomBar.workload = review.classWorkload;
+        // this.bottomBar.overallRating = review.classRating;
+        // this.bottomBar.difficulty = review.classDifficulty;
+        // this.bottomBar.workload = review.classWorkload;
+        this.bottomCourses[0].overallRating = review.classRating;
+        this.bottomCourses[0].difficulty = review.classDifficulty;
+        this.bottomCourses[0].workload = review.classWorkload;
       });
     },
 

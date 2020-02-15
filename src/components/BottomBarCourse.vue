@@ -1,17 +1,18 @@
 <template>
-    <div class="bottombar" :class="{ hide: !isPreview }">
+    <div class="bottombarcourse" :class="{ hide: !isPreview }">
       <!-- have course square with just course subject and course code -->
-      <div class="bottombar-tabs">
+      <div class="bottombarcourse-tabs">
         <!-- Add tabs -->
       </div>
 
-      <div class="bottombar-title" :style="{ background: `#${color}` }" @click="toggle">
+      <!-- <div class="bottombar-title" :style="{ background: `#${color}` }" @click="toggle">
         <span class="bottombar-square-title">{{ name }}</span>
-      </div>
+      </div> -->
 
       <!-- v-if: isPreview. have course bar -->
       <div>
-        <div :class="{ hide: !isExpanded }" class="bottombar-bar-info">
+        <!-- <div :class="{ hide: !isExpanded }" class="bottombar-bar-info"> -->
+        <div class="bottombarcourse-bar-info">
           <div class="info">
           <div>
             <div class="section">
@@ -48,7 +49,8 @@
           </div>
           </div>
         </div>
-        <div :class="{ hide: !isExpanded }" class="bottombar-bar-details">
+        <!-- <div :class="{ hide: !isExpanded }" class="bottombar-bar-details"> -->
+        <div class="bottombarcourse-bar-details">
           <div class="details">
             <div class="details-head">Class Ratings</div>
             <div class="details-ratings">
@@ -155,7 +157,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .bottombar {
+  .bottombarcourse {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -166,21 +168,21 @@ export default {
       height: 0px;
     }
 
-    &-title {
-      padding-left: 24px;
-      height: 40px;
-      line-height: 40px;
-      background: #25A2AA;
-      color: #FFF;
-      font-size: 16px;
-      cursor: pointer;
-      filter: brightness(100%);
+    // &-title {
+    //   padding-left: 24px;
+    //   height: 40px;
+    //   line-height: 40px;
+    //   background: #25A2AA;
+    //   color: #FFF;
+    //   font-size: 16px;
+    //   cursor: pointer;
+    //   filter: brightness(100%);
 
-      &:hover {
-        filter: brightness(95%);
-        transition: all 0.2s ease;
-      }
-    }
+    //   &:hover {
+    //     filter: brightness(95%);
+    //     transition: all 0.2s ease;
+    //   }
+    // }
 
     &-bar {
       width: 100%;
