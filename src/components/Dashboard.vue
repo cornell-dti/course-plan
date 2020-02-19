@@ -60,6 +60,7 @@ Vue.component('navbar', NavBar);
 Vue.component('onboarding', Onboarding);
 
 const firebaseConfig = require('@/firebaseConfig.js');
+const subjectColors = require('@/assets/subjects/subjects.json');
 
 const { auth, userDataCollection } = firebaseConfig;
 
@@ -197,7 +198,8 @@ export default {
       // Get last semester of available course. TODO: Remove when no longer firebase data dependant
       const lastRoster = course.lastRoster || course.roster;
 
-      const color = course.color || 'C4C4C4';
+      // Create course from saved color. Otherwise, create course from subject color group
+      const color = course.color || subjectColors[subject];
 
       const alerts = { requirement: null, caution: null };
 
