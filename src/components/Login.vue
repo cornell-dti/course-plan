@@ -102,10 +102,10 @@
               </div>
               <div class="row justify-content-center">
                   <div class="col-12 col-md-12 email m-0 pb-0">
-                      <input class="text-center waitlist-info" type="text" placeholder="Your Email Address" v-model="waitlist.email" >
+                      <input class="waitlist-info" type="text" placeholder="Your Email Address" v-model="waitlist.email" >
                   </div>
                   <div class="col-12 col-md-12 email m-0">
-                      <input class="text-center waitlist-info" type="text" placeholder="Your Major" v-model="waitlist.major" >
+                      <input class="waitlist-info" type="text" placeholder="Your Major" v-model="waitlist.major" >
                   </div>
                   <div class="col-12 col-md-12 email">
                       <button class="email-button" variant= "primary"  v-on:click="addUser()"> Join Waitlist </button>
@@ -125,7 +125,7 @@
                     <p class= "footer">Built with ❤️</p>
                 </div>
                 <div class="col-3 footer">
-                    <a  class="footer" href=" https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
+                    <a  class="footer" href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
                 </div>
 
             </div>
