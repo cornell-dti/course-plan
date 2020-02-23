@@ -211,7 +211,7 @@ export default {
       } else if (!this.validateEmail(this.waitlist.email)) {
         alert('You have entered an invalid email address!');
       } else {
-        alert('You have entered an invalid major!');
+        alert('You have not entered a major!');
       }
     },
     getYear() {
