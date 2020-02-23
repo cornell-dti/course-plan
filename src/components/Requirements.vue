@@ -509,19 +509,27 @@ export default {
        * @param {*} includes : the query for the search (e.g (MQR-AS), CS 2***)
        */
       function checkIfCourseFulfilled(courseInfo, search, includes) {
-        // Special search: if search code is all or self-check. Anything would work
-        if (search === 'all' || search === 'self-check') return true;
-        // Special search: if search code is not PE or 10XX course
-        if (search === 'all-eligible') return ifAllEligible(courseInfo.subject, courseInfo.catalogNbr.toString());
-        for (const include of includes) {
-          for (const option of include) {
-            // Special search: if course code matches code
-            if (search === 'code') {
-              if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, option)) {
-                return true;
+        // Check if search exists. False if not
+        if (search !== undefined) {
+          // Special search: if search code is all or self-check. Anything would work
+          if (search.includes('all') || search.includes('self-check')) return true;
+          // Special search: if search code is not PE or 10XX course
+          if (search.includes('all-eligible')) return ifAllEligible(courseInfo.subject, courseInfo.catalogNbr.toString());
+          for (const include of includes) {
+            for (const option of include) {
+              // Special search: if course code matches code
+              if (search.includes('code')) {
+                if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, option)) {
+                  return true;
+                }
+              // Make sure courseInfo[search] is not null
+              } else {
+                // Loop through search (for search commands with multiple options)
+                for (let singleSearch of search) {
+                  if (courseInfo[singleSearch] && courseInfo[singleSearch].includes(option)) return true;
+                }
               }
-            // Make sure courseInfo[search] is not null
-            } else if (courseInfo[search] && courseInfo[search].includes(option)) return true;
+            }
           }
         }
 
