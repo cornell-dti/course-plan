@@ -196,7 +196,7 @@ export default {
         }
       }
       this.openSemesterConfirmationModal(type, year, false);
-      
+
       // Update requirements menu from dashboard
       this.$parent.updateRequirementsMenu();
     },

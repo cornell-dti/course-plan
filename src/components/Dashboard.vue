@@ -196,7 +196,7 @@ export default {
 
       // Distribution of course (e.g. MQR-AS)
       // alternateDistributions option in case catalogDistr for the course is null
-      const alternateDistributions = (course.catalogDistr) ? /\(([^)]+)\)/.exec(course.catalogDistr)[1].split(', ') : [""];
+      const alternateDistributions = (course.catalogDistr) ? /\(([^)]+)\)/.exec(course.catalogDistr)[1].split(', ') : [''];
       const distributions = course.distributions || alternateDistributions;
 
       // Get last semester of available course. TODO: Remove when no longer firebase data dependant

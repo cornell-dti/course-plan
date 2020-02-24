@@ -475,7 +475,7 @@ export default {
           fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${code}`)
             .then(res => res.json())
             .then(resultJSON => {
-              const classes = resultJSON.data.classes;
+              const { classes } = resultJSON.data;
               // Check that course code matches with api result. Example: MATH 1110 returns MATH 1011 because both matches
               for (const singleClass of classes) {
                 if (singleClass.subject === subject && singleClass.catalogNbr === catalogNbr) resolve(singleClass);
@@ -526,11 +526,11 @@ export default {
               for (const excludeOption of exclude) {
                 // Special search: if course code matches code
                 if (search.includes('code')) {
-                  if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, excludeOption)) return false
+                  if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, excludeOption)) return false;
                 // Make sure courseInfo[search] is not null
                 } else {
                   // Loop through search (for search commands with multiple options)
-                  for (let singleSearch of search) {
+                  for (const singleSearch of search) {
                     if (courseInfo[singleSearch] && courseInfo[singleSearch].includes(excludeOption)) return false;
                   }
                 }
@@ -542,12 +542,12 @@ export default {
           for (const include of includes) {
             for (const includeOption of include) {
               // Special search: if course code matches code
-              if (search.includes('code')) {                
+              if (search.includes('code')) {
                 if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, includeOption)) return true;
               // Make sure courseInfo[search] is not null
               } else {
                 // Loop through search (for search commands with multiple options)
-                for (let singleSearch of search) {
+                for (const singleSearch of search) {
                   if (courseInfo[singleSearch] && courseInfo[singleSearch].includes(includeOption)) return true;
                 }
               }
