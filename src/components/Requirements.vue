@@ -469,13 +469,17 @@ export default {
       function getCourseInfo(code, roster) {
         const courseCodeObj = parseCourseCode(code);
         const subject = courseCodeObj.subject.toUpperCase();
+        const catalogNbr = courseCodeObj.courseNumber;
 
         return new Promise(resolve => {
           fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${code}`)
             .then(res => res.json())
             .then(resultJSON => {
-              const courseResult = resultJSON.data.classes[0];
-              resolve(courseResult);
+              const classes = resultJSON.data.classes;
+              // Check that course code matches with api result. Example: MATH 1110 returns MATH 1011 because both matches
+              for (const singleClass of classes) {
+                if (singleClass.subject === subject && singleClass.catalogNbr === catalogNbr) resolve(singleClass);
+              }
             });
         });
       }
@@ -516,7 +520,7 @@ export default {
           // Special search: if search code is not PE or 10XX course
           if (search.includes('all-eligible')) return ifAllEligible(courseInfo.subject, courseInfo.catalogNbr.toString());
 
-          // Excludes is optional. If it exists, a match returns false
+          // Excludes is optional. If it exists, a match with search command returns false
           if (excludes) {
             for (const exclude of excludes) {
               for (const excludeOption of exclude) {
@@ -538,8 +542,8 @@ export default {
           for (const include of includes) {
             for (const includeOption of include) {
               // Special search: if course code matches code
-              if (search.includes('code')) {
-                if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, includeOption)) return true
+              if (search.includes('code')) {                
+                if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, includeOption)) return true;
               // Make sure courseInfo[search] is not null
               } else {
                 // Loop through search (for search commands with multiple options)

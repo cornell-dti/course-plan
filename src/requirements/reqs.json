@@ -1175,6 +1175,84 @@
                 }
             ]
         },
+        "ECON": {
+            "name": "Economics",
+            "schools": "AS",
+            "requirements": [
+                {
+                    "name": "Admission to the Major",
+                    "description": "Before applying for admission to the Economics Major, students must complete ECON 1110, ECON 1120, and MATH 1110 (or equivalents).",
+                    "source": "https://economics.cornell.edu/major",
+                    "search": ["code"],
+                    "includes": [
+                        [
+                            "ECON 1110"
+                        ],
+                        [
+                            "ECON 1120"
+                        ],
+                        [
+                            "MATH 1110"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Core Economics",
+                    "description": "All students must take four core economics courses: ECON 3030, ECON 3040, ECON 3110 or ECON 3130, and ECON 3120 or ECON 3140.",
+                    "source": "https://economics.cornell.edu/major",
+                    "search": ["code"],
+                    "includes": [
+                        [
+                            "ECON 3030"
+                        ],
+                        [
+                            "ECON 3040"
+                        ],
+                        [
+                            "ECON 3110",
+                            "ECON 3130"
+                        ],
+                        [
+                            "ECON 3120",
+                            "ECON 3140"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 4
+                },
+                {
+                    "name": "4000-level Courses",
+                    "description": "All students must take at least three courses at the 4000-level or higher.",
+                    "source": "https://economics.cornell.edu/major",
+                    "search": ["code"],
+                    "includes": [
+                        [
+                            "ECON 4***"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 3
+                },
+                {
+                    "name": "Basic Requirements",
+                    "description": "Twelve courses listed by the Department of Economics, or approved by the student’s major advisor",
+                    "source": "https://economics.cornell.edu/major",
+                    "search": ["code"],
+                    "includes": [
+                        [
+                            "ECON 1110",
+                            "ECON 1120",
+                            "ECON 3***",
+                            "ECON 4***"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 12
+                }
+            ]
+        },
         "ENGL": {
             "name": "English",
             "schools": [
@@ -1206,8 +1284,7 @@
                         ]
                     ],
                     "fulfilledBy": "credits",
-                    "minCount": 40,
-                    "progressBar": true
+                    "minCount": 40
                 },
                 {
                     "name": "Pre-1800",
@@ -1243,6 +1320,63 @@
                     "includes": [],
                     "fulfilledBy": "self-check",
                     "minCount": 12
+                }
+            ]
+        },
+        "GOVT": {
+            "name": "Government",
+            "schools": "AS",
+            "requirements": [
+                {
+                    "name": "Introductory Government Courses",
+                    "description": "Pass two of the introductory government courses in the subfields of American Government (AM), Comparative Politics (CP), Political Theory (PT), and International Relations (IR)",
+                    "source": "https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf",
+                    "search": ["code"],
+                    "includes": [
+                        [
+                            "GOVT 1111",
+                            "GOVT 1313",
+                            "GOVT 1615",
+                            "GOVT 1616",
+                            "GOVT 1817",
+                            "GOVT 1827"
+                        ]
+                    ],
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                },
+                {
+                    "name": "Government Coursework",
+                    "description": "Accumulate an additional 28 credits of government course work at the 2000-level or above.",
+                    "source": "https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf",
+                    "search": ["code"],
+                    "includes": [
+                        [
+                            "GOVT 2***"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 28
+                },
+                {
+                    "name": "Tenth Government Course",
+                    "description": "The tenth GOVT course: must be worth a minimum of three credits, can be taken at any level. Freshman writing seminars cannot be used.",
+                    "source": "https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf",
+                    "search": ["code"],
+                    "includes": [
+                        [
+                            "GOVT ****"
+                        ]
+                    ],
+                    "fulfilledBy": "credits",
+                    "minCount": 3
+                },
+                {
+                    "name": "Government Seminar",
+                    "description": "At least one of the GOVT courses listed in items II or III above must be a 4000-level seminar (i.e. a course with 15 or fewer students, taught by a GOVT professor, and typically requiring a research paper).",
+                    "source": "https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf",
+                    "includes": [],
+                    "fulfilledBy": "self-check"
                 }
             ]
         },
