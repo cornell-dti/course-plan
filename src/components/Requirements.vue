@@ -373,7 +373,7 @@ export default {
           for (const code of codes) {
             const courseInfo = coursesTakenWithInfo[code];
 
-            const indexIsFulfilled = checkIfCourseFulfilled(courseInfo, requirement.search, requirement.includes);
+            const indexIsFulfilled = checkIfCourseFulfilled(courseInfo, requirement.search, requirement.includes, requirement.excludes);
 
             if (indexIsFulfilled) {
               // depending on what it is fulfilled by, either increase the count or credits you took
@@ -508,25 +508,43 @@ export default {
        * @param {*} search : the scope of search for the requirement (e.g all-eligible, code, catalogDistr)
        * @param {*} includes : the query for the search (e.g (MQR-AS), CS 2***)
        */
-      function checkIfCourseFulfilled(courseInfo, search, includes) {
+      function checkIfCourseFulfilled(courseInfo, search, includes, excludes) {
         // Check if search exists. False if not
         if (search !== undefined) {
           // Special search: if search code is all or self-check. Anything would work
           if (search.includes('all') || search.includes('self-check')) return true;
           // Special search: if search code is not PE or 10XX course
           if (search.includes('all-eligible')) return ifAllEligible(courseInfo.subject, courseInfo.catalogNbr.toString());
+
+          // Excludes is optional. If it exists, a match returns false
+          if (excludes) {
+            for (const exclude of excludes) {
+              for (const excludeOption of exclude) {
+                // Special search: if course code matches code
+                if (search.includes('code')) {
+                  if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, excludeOption)) return false
+                // Make sure courseInfo[search] is not null
+                } else {
+                  // Loop through search (for search commands with multiple options)
+                  for (let singleSearch of search) {
+                    if (courseInfo[singleSearch] && courseInfo[singleSearch].includes(excludeOption)) return false;
+                  }
+                }
+              }
+            }
+          }
+
+          // Includes is mandatory. Function will check for include match with search command
           for (const include of includes) {
-            for (const option of include) {
+            for (const includeOption of include) {
               // Special search: if course code matches code
               if (search.includes('code')) {
-                if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, option)) {
-                  return true;
-                }
+                if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, includeOption)) return true
               // Make sure courseInfo[search] is not null
               } else {
                 // Loop through search (for search commands with multiple options)
                 for (let singleSearch of search) {
-                  if (courseInfo[singleSearch] && courseInfo[singleSearch].includes(option)) return true;
+                  if (courseInfo[singleSearch] && courseInfo[singleSearch].includes(includeOption)) return true;
                 }
               }
             }
