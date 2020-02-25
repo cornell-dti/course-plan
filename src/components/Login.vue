@@ -101,11 +101,14 @@
                 </div>
               </div>
               <div class="row justify-content-center">
-                  <div class="col-8 col-md-7 email m-0">
-                      <input type="text" placeholder="Your Email Address" v-model="newUser.email" >
+                  <div class="col-12 col-md-12 email m-0 pb-0">
+                      <input class="waitlist-info" type="text" placeholder="Your Email Address" v-model="waitlist.email" >
                   </div>
-                  <div class="col-8 col-md-5 email ">
-                      <button class="email-button" variant= "primary"  v-on:click="addUser(newUser.email)"> Add email </button>
+                  <div class="col-12 col-md-12 email m-0">
+                      <input class="waitlist-info" type="text" placeholder="Your Major" v-model="waitlist.major" >
+                  </div>
+                  <div class="col-12 col-md-12 email">
+                      <button class="email-button" variant= "primary"  v-on:click="addUser()"> Join Waitlist </button>
                   </div>
               </div>
             </div>
@@ -122,7 +125,7 @@
                     <p class= "footer">Built with ❤️</p>
                 </div>
                 <div class="col-3 footer">
-                    <a  class="footer" href=" https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
+                    <a  class="footer" href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
                 </div>
 
             </div>
@@ -145,8 +148,9 @@ export default {
         email: '',
         password: ''
       },
-      newUser: {
-        email: ''
+      waitlist: {
+        email: '',
+        major: ''
       },
       performingRequest: false
     };
@@ -193,14 +197,22 @@ export default {
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
     },
+    validateMajor(major) {
+      return major.trim().length > 0;
+    },
     addUser() {
-      if (this.validateEmail(this.newUser.email)) {
-        alert('Your email has been added to the waitlist. We\'ll be in touch shortly!');
-        landingEmailsCollection.add(this.newUser);
-      } else {
+      if (this.validateEmail(this.waitlist.email) && this.validateMajor(this.waitlist.major)) {
+        alert('You have been added to the waitlist. We\'ll be in touch shortly!');
+        landingEmailsCollection.add(this.waitlist);
+
+        // Clear fields
+        this.waitlist.email = '';
+        this.waitlist.major = '';
+      } else if (!this.validateEmail(this.waitlist.email)) {
         alert('You have entered an invalid email address!');
+      } else {
+        alert('You have not entered a major!');
       }
-      this.newUser.email = '';
     },
     getYear() {
       const today = new Date();
@@ -433,6 +445,9 @@ export default {
       @media (max-width: 720px) {
         padding: 40px 30px 40px 30px;
       }
+    }
+    input:focus::placeholder {
+      color: transparent;
     }
     button{
       outline: none;
