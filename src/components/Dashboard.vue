@@ -26,7 +26,7 @@
         :compact="compactVal"
         :isBottomBar="bottomBar.isExpanded"
         @compact-updated="compactVal = $event"
-        @update-ar="updateBar"
+        @update-bar="updateBar"
         @close-bar="closeBar"
         @updateRequirementsMenu="updateRequirementsMenu"
       />
