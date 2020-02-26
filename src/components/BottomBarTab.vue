@@ -1,7 +1,9 @@
 <template>
   <div class="bottombartab" :style="{ background: `#${color}` }" @click="bottomBarTabToggle(courseObj)">
-    <!-- <img class="bottombartab-arrow" /> -->
-    <div class="bottombartab-name">{{subject}} {{number}}</div>
+    <div class="bottombartab-wrapper">
+      <img v-if="isFirstTab" class="bottombartab-arrow" src="@/assets/images/downarrow-white.svg" />
+      <div class="bottombartab-name">{{subject}} {{number}}</div>
+    </div>
     <img class="bottombartab-delete" src="@/assets/images/x-white.svg" @click="deleteBottomTab(subject, number)"/>
   </div>
 </template>
@@ -14,7 +16,8 @@ export default {
     number: String,
     color: String,
     id: Number,
-    courseObj: Object
+    courseObj: Object,
+    isFirstTab: Boolean
   },
 
   methods: {
@@ -47,6 +50,18 @@ export default {
     padding-right: 8px;
 
     cursor: pointer;
+
+    &-wrapper {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
+
+    &-arrow {
+      width: 14px;
+      height: 50%;
+      margin-right: 4%;
+    }
 
     &-name {
       color: white;

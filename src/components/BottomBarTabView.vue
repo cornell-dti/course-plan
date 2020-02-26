@@ -1,7 +1,7 @@
 <template>
   <div class="bottombartabview">
     <div class="bottombartabview-bottomCourseWrapper">
-      <div v-for="bottomCourse in bottomCourses" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
+      <div v-for="bottomCourse in bottomCourses.slice(0, 1)" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
         <bottombartab
           v-bind="bottomCourse"
           :id="bottomCourse.id"
@@ -9,6 +9,20 @@
           :number="bottomCourse.number"
           :color="bottomCourse.color"
           :courseObj ="bottomCourse"
+          :isFirstTab = true
+          @bottomBarTabToggle="bottomBarTabToggle"
+          @deleteBottomTab="deleteBottomTab"
+        />
+      </div>
+      <div v-for="bottomCourse in bottomCourses.slice(1)" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
+        <bottombartab
+          v-bind="bottomCourse"
+          :id="bottomCourse.id"
+          :subject="bottomCourse.subject"
+          :number="bottomCourse.number"
+          :color="bottomCourse.color"
+          :courseObj ="bottomCourse"
+          :isFirstTab = false
           @bottomBarTabToggle="bottomBarTabToggle"
           @deleteBottomTab="deleteBottomTab"
         />
