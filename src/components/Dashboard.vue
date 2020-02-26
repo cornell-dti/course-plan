@@ -152,8 +152,9 @@ export default {
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
 
       // Semesters: remove periods and split on ', '
-      // alternateSemesters option in case catalogWhenOffered for the course is null
-      const alternateSemesters = (course.catalogWhenOffered != null) ? course.catalogWhenOffered.replace(/\./g, '').split(', ') : [];
+      // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
+      const catalogWhenOfferedDoesNotExist = course.catalogWhenOffered === undefined || course.catalogWhenOffered === null || course.catalogWhenOffered === '';
+      const alternateSemesters = (catalogWhenOfferedDoesNotExist) ? [] : course.catalogWhenOffered.replace(/\./g, '').split(', ');
       const semesters = course.semesters || alternateSemesters;
 
       // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
@@ -194,8 +195,9 @@ export default {
       }
 
       // Distribution of course (e.g. MQR-AS)
-      // alternateDistributions option in case catalogDistr for the course is null
-      const alternateDistributions = (course.catalogDistr != null) ? /\(([^)]+)\)/.exec(course.catalogDistr)[1].split(', ') : [""];
+      // alternateDistributions option in case catalogDistr for the course is null, undef, ''
+      const catalogDistrDoesNotExist = course.catalogDistr === undefined || course.catalogDistr === null || course.catalogDistr === '';
+      const alternateDistributions = (catalogDistrDoesNotExist) ? [''] : /\(([^)]+)\)/.exec(course.catalogDistr)[1].split(', ');
       const distributions = course.distributions || alternateDistributions;
 
       // Get last semester of available course. TODO: Remove when no longer firebase data dependant
