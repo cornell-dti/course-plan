@@ -28,5 +28,3 @@ fb.auth.onAuthStateChanged(() => {
     });
   }
 });
-
-
