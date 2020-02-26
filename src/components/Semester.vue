@@ -137,6 +137,7 @@ export default {
     const service = Vue.$dragula.$service;
 
     service.eventBus.$on('drag', () => {
+      
       this.scrollable = false;
     });
     service.eventBus.$on('drop', () => {
@@ -176,7 +177,7 @@ export default {
     },
     semesterString() {
       return '+ SEMESTER';
-    },
+    }
 
   },
   methods: {
