@@ -153,7 +153,7 @@ export default {
 
       // Semesters: remove periods and split on ', '
       // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
-      const catalogWhenOfferedDoesNotExist = course.catalogWhenOffered === undefined || course.catalogWhenOffered === null || course.catalogWhenOffered === '';
+      const catalogWhenOfferedDoesNotExist = (!course.catalogWhenOffered) || course.catalogWhenOffered === '';
       const alternateSemesters = (catalogWhenOfferedDoesNotExist) ? [] : course.catalogWhenOffered.replace(/\./g, '').split(', ');
       const semesters = course.semesters || alternateSemesters;
 
@@ -196,7 +196,7 @@ export default {
 
       // Distribution of course (e.g. MQR-AS)
       // alternateDistributions option in case catalogDistr for the course is null, undef, ''
-      const catalogDistrDoesNotExist = course.catalogDistr === undefined || course.catalogDistr === null || course.catalogDistr === '';
+      const catalogDistrDoesNotExist = (!course.catalogDistr) || course.catalogDistr === '';
       const alternateDistributions = (catalogDistrDoesNotExist) ? [''] : /\(([^)]+)\)/.exec(course.catalogDistr)[1].split(', ');
       const distributions = course.distributions || alternateDistributions;
 
