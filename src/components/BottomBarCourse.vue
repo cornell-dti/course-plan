@@ -6,7 +6,20 @@
       </div>
 
       <div class="bottombar-title" :style="{ background: `#${color}` }" @click="toggle">
-        <span class="bottombar-square-title">{{ name }}</span>
+          <span class="bottombar-square-title">{{ name }}</span>
+          <img
+            v-if="isExpanded"
+            class="bottombar-cancel"
+            src="@/assets/images/pulldown.png"
+            alt="dropdown"
+          />
+          <img
+            v-else
+            class="bottombar-cancel"
+            src="@/assets/images/pullup.png"
+            alt="dropdown"
+          />
+
       </div>
 
       <!-- v-if: isPreview. have course bar -->
@@ -161,6 +174,12 @@ export default {
     left: 0;
     width: 100%;
     background-color: #FFF;
+
+    &-cancel{
+      float:right;
+      padding: 5px 25px 0px 10px;
+
+    }
 
     &-tabs {
       height: 0px;

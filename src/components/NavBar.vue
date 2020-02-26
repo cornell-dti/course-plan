@@ -4,10 +4,10 @@
       <div class="navbar-iconWrapper">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
       </div>
-      <div class="navbar-iconWrapper" id="profileIcon" @click="editProfile"></div>
+      <div class="navbar-iconWrapper pointer" id="profileIcon" @click="editProfile"></div>
     </div>
     <div class="navbar-bottom">
-      <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
+      <div class="navbar-iconWrapper pointer" id="logout" @click="logout"></div>
     </div>
   </div>
 </template>
@@ -62,6 +62,9 @@ export default {
   }
 }
 
+.pointer{
+  cursor: pointer;
+}
 #profileIcon {
   background-image: url('~@/assets/images/navbar/profileIcon.svg');
 
@@ -79,6 +82,7 @@ export default {
   &:focus,
   &:active {
     background-image: url('~@/assets/images/navbar/starBlue.svg');
+
   }
 }
 

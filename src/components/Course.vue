@@ -53,6 +53,8 @@
     </div>
     <coursemenu
       v-if="menuOpen"
+      :semId="semId"
+      :isCompact="compact"
       class="course-menu"
       @delete-course="deleteCourse"
       @color-course="colorCourse"
@@ -94,7 +96,8 @@ export default {
     alerts: Object,
     compact: Boolean,
     id: String,
-    active: Boolean
+    active: Boolean,
+    semId: Number
   },
   data() {
     return {
@@ -170,8 +173,9 @@ export default {
       if (!this.menuOpen) {
         this.$emit('updateBar', this.courseObj);
       }
+    },
+    whichSide() {
     }
-
   },
   directives: {
     'click-outside': clickOutside

@@ -302,6 +302,7 @@ export default {
     }
   }
 
+
   &-twoColumn {
     background-image: url('~@/assets/images/views/twoColumn.svg');
 
@@ -309,7 +310,9 @@ export default {
     &:focus,
     &:active,
     &--active {
+      cursor: pointer;
       background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+
     }
   }
 
@@ -320,6 +323,7 @@ export default {
     &:focus,
     &:active,
     &--active {
+      cursor: pointer;
       background-image: url('~@/assets/images/views/fourColumnSelected.svg');
     }
   }
