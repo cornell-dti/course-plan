@@ -26,8 +26,9 @@
         :compact="compactVal"
         :isBottomBar="bottomBar.isExpanded"
         @compact-updated="compactVal = $event"
-        @updateBar="updateBar"
+        @update-ar="updateBar"
         @close-bar="closeBar"
+        @updateRequirementsMenu="updateRequirementsMenu"
       />
     </div>
     <div id="dashboard-bottomView">

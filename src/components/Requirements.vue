@@ -510,7 +510,8 @@ export default {
        * Check if the course fullfills the given requirement. Returns true if fulfills requirement. False otherswise
        * @param {*} courseInfo : information of the course from API data
        * @param {*} search : the scope of search for the requirement (e.g all-eligible, code, catalogDistr)
-       * @param {*} includes : the query for the search (e.g (MQR-AS), CS 2***)
+       * @param {*} includes : the query for the search to satisfy requirement (e.g (MQR-AS), CS 2***)
+       * @param {*} excludes : the query for the search that does not satisfy requirement (e.g (MQR-AS), CS 2***)
        */
       function checkIfCourseFulfilled(courseInfo, search, includes, excludes) {
         // Check if search exists. False if not
