@@ -139,7 +139,7 @@ import firebase from 'firebase/app';
 
 const fb = require('../firebaseConfig.js');
 
-const { alphaWhitelistCollection, landingEmailsCollection } = fb;
+const { whitelistCollection, landingEmailsCollection } = fb;
 
 export default {
   data() {
@@ -172,7 +172,7 @@ export default {
         });
     },
     checkEmailAccess(user) {
-      const docRef = alphaWhitelistCollection.doc(user.user.email);
+      const docRef = whitelistCollection.doc(user.user.email);
       docRef.get().then(doc => {
         if (doc.exists) {
           this.performingRequest = false;
@@ -191,7 +191,7 @@ export default {
     handleUserWithoutAccess() {
       this.performingRequest = false;
       fb.auth.signOut();
-      alert('Sorry, but you do not have alpha access.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
+      alert('Sorry, but you do not have access currently.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
     },
 
     validateEmail(email) {

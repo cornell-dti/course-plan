@@ -46,10 +46,10 @@ const { currentUser } = auth;
 const usersCollection = db.collection('users');
 // const coursesCollection = db.collection('courses');
 const userDataCollection = db.collection('userData');
-const alphaWhitelistCollection = db.collection('alphaWhitelistV2');
+const whitelistCollection = db.collection('betaWhitelist');
 const landingEmailsCollection = db.collection('landingEmails');
 
 module.exports = {
   // Temp: removed coursesCollection
-  db, auth, currentUser, usersCollection, userDataCollection, landingEmailsCollection, alphaWhitelistCollection
+  db, auth, currentUser, usersCollection, userDataCollection, landingEmailsCollection, whitelistCollection
 };
