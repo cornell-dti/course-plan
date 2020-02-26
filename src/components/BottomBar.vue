@@ -3,6 +3,7 @@
       <div class="bottombar-tabview">
           <bottombartabview
           :bottomCourses="bottomCourses"
+          :seeMoreCourses="seeMoreCourses"
           @bottomBarTabToggle="bottomBarTabToggle"
           />
       </div>
@@ -35,8 +36,8 @@ Vue.component('bottombartitle', BottomBarTitle);
 
 export default {
   props: {
-    bottomCourses: Array
-    // data: Object
+    bottomCourses: Array,
+    seeMoreCourses: Array
   },
 
   methods: {

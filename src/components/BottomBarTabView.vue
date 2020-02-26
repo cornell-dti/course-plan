@@ -12,6 +12,24 @@
         @deleteBottomTab="deleteBottomTab"
       />
     </div>
+    <div class="bottombartabview-seeMoreWrapper">
+      <div class="bottombarSeeMoreTab" @click="bottomBarSeeMoreToggle">
+          <div class="bottombarSeeMoreTab-name">{{seeMoreString}}</div>
+          <img class="bottombarSeeMoreTab-arrow" src="@/assets/images/uparrow-white.svg" />
+      </div>
+
+      <div v-if="seeMoreOpen" class="seeMoreCourse-content">
+          <div
+            v-for="seeMoreCourse in seeMoreCourses"
+            :key="seeMoreCourse.id"
+            class="seeMoreCourse-section"
+          >
+              <span class="seeMoreCourse-text">{{ seeMoreCourse.subject }} {{ seeMoreCourse.number}}</span>
+          </div>
+      </div>
+
+    </div>
+
   </div>
 </template>
 
@@ -22,8 +40,20 @@ import BottomBarTab from '@/components/BottomBarTab';
 Vue.component('bottombartab', BottomBarTab);
 
 export default {
+  data() {
+    return {
+      seeMoreOpen: false
+    };
+  },
   props: {
     bottomCourses: Array,
+    seeMoreCourses: Array
+  },
+
+  computed: {
+    seeMoreString() {
+      return 'See More';
+    }
   },
 
   methods: {
@@ -38,7 +68,13 @@ export default {
           break;
         }
       }
+    },
+
+    bottomBarSeeMoreToggle() {
+      this.seeMoreOpen = !this.seeMoreOpen;
+      console.log(this.seeMoreOpen);
     }
+
   }
 };
 
@@ -46,12 +82,39 @@ export default {
 
 <style scoped lang="scss">
 .bottombartabview {
-  width: 50%;
+  width: 92%;
   display: flex;
   flex-direction: row;
 
   &-courseWrapper {
     margin-right: 0.25rem;
   }
+
+  &-seeMoreWrapper {
+    // display:flex;
+    // flex-direction: column;
+    margin-left: auto;
+    .bottombarSeeMoreTab {
+      color: white;
+      position: absolute;
+      width: 7.38rem;
+      height: 1.75rem;
+      background-color: #508197;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      display: flex;
+      align-items: center;
+
+      justify-content: space-between;
+      padding-left: 8px;
+      padding-right: 8px;
+      cursor:pointer;
+      &-arrow {
+        width: 14px;
+        height: 50%;
+      }
+    }
+  }
+
 }
 </style>

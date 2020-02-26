@@ -45,6 +45,7 @@
       @open-bar="openBar"/> -->
       <bottombar
       :bottomCourses="bottomCourses"
+      :seeMoreCourses="seeMoreCourses"
       @close-bar="closeBar"
       @open-bar="openBar"
       />
@@ -97,6 +98,7 @@ export default {
         middleName: ''
       },
       bottomCourses: [],
+      seeMoreCourses: [],
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
@@ -277,15 +279,7 @@ export default {
 
     updateBar(course) {
       // Update Bar Information
-      // if course already exists in bottomCourses, first remove course
-      for (let i = 0; i < this.bottomCourses.length; i += 1) {
-        if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number) {
-          this.bottomCourses.splice(i, 1);
-        }
-      }
-
-      // Prepending bottomCourse to front of bottom courses array
-      this.bottomCourses.unshift({
+      const courseToAdd = {
         subject: course.subject,
         number: course.number,
         name: course.name,
@@ -306,8 +300,27 @@ export default {
         description: course.description,
         isPreview: true,
         isExpanded: true
-      });
+      };
+      // if course already exists in bottomCourses, first remove course
+      for (let i = 0; i < this.bottomCourses.length; i += 1) {
+        if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number) {
+          this.bottomCourses.splice(i, 1);
+        }
+      }
 
+      // Prepending bottomCourse to front of bottom courses array if bottomCourses < 4
+      if (this.bottomCourses.length < 4) {
+        this.bottomCourses.unshift(courseToAdd);
+      } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
+        for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
+          if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number) {
+            this.seeMoreCourses.splice(i, 1);
+          }
+        }
+        this.bottomCourses.unshift(courseToAdd);
+        this.seeMoreCourses.unshift(this.bottomCourses[this.bottomCourses.length - 1]);
+        this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
+      }
       this.getReviews(course.subject, course.number, review => {
         // this.bottomBar.overallRating = review.classRating;
         // this.bottomBar.difficulty = review.classDifficulty;
