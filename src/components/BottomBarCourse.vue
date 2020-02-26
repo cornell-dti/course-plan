@@ -71,7 +71,7 @@
                 <div class="progress-bar" role="progressbar" :style="{ width: `${(courseObj.workload/5)*100}%`, background: reviewsColor(courseObj.workload, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
-            <a :href="`https://www.cureviews.org/course/${ subject }/${ number }`" class="details-ratings-link" target="_blank">View All Reviews</a>
+            <a :href="`https://www.cureviews.org/course/${ courseObj.subject }/${ courseObj.number }`" class="details-ratings-link" target="_blank">View All Reviews</a>
             <div class="details-head">Prerequisites</div>
             <p>{{ courseObj.prerequisites }}</p>
             <div class="details-head">Description</div>

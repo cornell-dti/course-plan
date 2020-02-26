@@ -277,28 +277,13 @@ export default {
 
     updateBar(course) {
       // Update Bar Information
-      // this.bottomBar = {
-      //   subject: course.subject,
-      //   number: course.number,
-      //   name: course.name,
-      //   credits: course.credits,
-      //   semesters: this.joinOrNAString(course.semesters),
-      //   color: course.color,
-      //   latestSem: course.lastRoster,
-      //   // Array data
-      //   instructors: this.joinOrNAString(course.instructors),
-      //   distributionCategories: this.joinOrNAString(course.distributions),
-      //   enrollmentInfo: this.joinOrNAString(course.enrollment),
-      //   latestLecInfo: this.joinOrNAString(course.lectureTimes),
-      //   // TODO: CUReviews data
-      //   overallRating: 0,
-      //   difficulty: 0,
-      //   workload: 0,
-      //   prerequisites: this.noneIfEmpty(course.prereqs),
-      //   description: course.description,
-      //   isPreview: true,
-      //   isExpanded: true
-      // };
+      // if course already exists in bottomCourses, first remove course
+      for (let i = 0; i < this.bottomCourses.length; i += 1) {
+        if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number) {
+          this.bottomCourses.splice(i, 1);
+        }
+      }
+
       // Prepending bottomCourse to front of bottom courses array
       this.bottomCourses.unshift({
         subject: course.subject,
