@@ -26,8 +26,9 @@
         :compact="compactVal"
         :isBottomBar="bottomBar.isExpanded"
         @compact-updated="compactVal = $event"
-        @updateBar="updateBar"
+        @update-bar="updateBar"
         @close-bar="closeBar"
+        @updateRequirementsMenu="updateRequirementsMenu"
       />
     </div>
     <div id="dashboard-bottomView">
@@ -152,7 +153,9 @@ export default {
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
 
       // Semesters: remove periods and split on ', '
-      const semesters = course.semesters || course.catalogWhenOffered.replace(/\./g, '').split(', ');
+      // alternateSemesters option in case catalogWhenOffered for the course is null
+      const alternateSemesters = (course.catalogWhenOffered != null) ? course.catalogWhenOffered.replace(/\./g, '').split(', ') : [];
+      const semesters = course.semesters || alternateSemesters;
 
       // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
       const prereqs = course.prereqs || course.catalogPrereqCoreq || '';
@@ -192,7 +195,9 @@ export default {
       }
 
       // Distribution of course (e.g. MQR-AS)
-      const distributions = course.distributions || course.catalogDistr.split(',');
+      // alternateDistributions option in case catalogDistr for the course is null
+      const alternateDistributions = (course.catalogDistr) ? /\(([^)]+)\)/.exec(course.catalogDistr)[1].split(', ') : [''];
+      const distributions = course.distributions || alternateDistributions;
 
       // Get last semester of available course. TODO: Remove when no longer firebase data dependant
       const lastRoster = course.lastRoster || course.roster;

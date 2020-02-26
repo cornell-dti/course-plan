@@ -20,7 +20,7 @@ jobs:
       - name: NPM Install
         run: npm install
       - name: Build
-        run: PUBLIC_URL="/course-plan/${{ github.event.number }}" npm run build
+        run: PUBLIC_URL="/course-plan/${{ github.event.number }}" npm run build:staging
       - name: Upload Built Static Assets
         uses: actions/upload-artifact@master
         with:
