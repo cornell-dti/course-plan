@@ -87,6 +87,7 @@ export default {
         lastName: names[1],
         middleName: ''
       },
+      subjectColors: {},
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
@@ -110,6 +111,7 @@ export default {
             this.semesters = this.convertSemesters(doc.data().semesters);
             this.firebaseSems = doc.data().semesters;
             this.user = this.parseUserData(doc.data().userData, doc.data().name);
+            this.subjectColors = doc.data().subjectColors;
             this.loaded = true;
           } else {
             this.startOnboarding();
@@ -153,9 +155,8 @@ export default {
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
 
       // Semesters: remove periods and split on ', '
-      // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
-      const catalogWhenOfferedDoesNotExist = (!course.catalogWhenOffered) || course.catalogWhenOffered === '';
-      const alternateSemesters = (catalogWhenOfferedDoesNotExist) ? [] : course.catalogWhenOffered.replace(/\./g, '').split(', ');
+      // alternateSemesters option in case catalogWhenOffered for the course is null
+      const alternateSemesters = (course.catalogWhenOffered != null) ? course.catalogWhenOffered.replace(/\./g, '').split(', ') : [];
       const semesters = course.semesters || alternateSemesters;
 
       // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
@@ -196,15 +197,15 @@ export default {
       }
 
       // Distribution of course (e.g. MQR-AS)
-      // alternateDistributions option in case catalogDistr for the course is null, undef, ''
-      const catalogDistrDoesNotExist = (!course.catalogDistr) || course.catalogDistr === '';
-      const alternateDistributions = (catalogDistrDoesNotExist) ? [''] : /\(([^)]+)\)/.exec(course.catalogDistr)[1].split(', ');
+      // alternateDistributions option in case catalogDistr for the course is null
+      const alternateDistributions = (course.catalogDistr) ? /\(([^)]+)\)/.exec(course.catalogDistr)[1].split(', ') : [''];
       const distributions = course.distributions || alternateDistributions;
 
       // Get last semester of available course. TODO: Remove when no longer firebase data dependant
       const lastRoster = course.lastRoster || course.roster;
 
-      const color = course.color || 'C4C4C4';
+      // Create course from saved color. Otherwise, create course from subject color group
+      const color = course.color || this.addColor(subject);
 
       const alerts = { requirement: null, caution: null };
 
@@ -232,6 +233,74 @@ export default {
 
       return newCourse;
     },
+
+    addColor(subject) {
+
+      if (this.subjectColors && this.subjectColors[subject]) return this.subjectColors[subject];
+
+      const colors = [
+        {
+          text: 'Gray',
+          hex: 'C4C4C4'
+        },
+        {
+          text: 'Red',
+          hex: 'DA4A4A'
+        },
+        {
+          text: 'Orange',
+          hex: 'FFA53C'
+        },
+        {
+          text: 'Yellow',
+          hex: 'FFE142'
+        },
+        {
+          text: 'Green',
+          hex: '58C913'
+        },
+        {
+          text: 'Blue',
+          hex: '139DC9'
+        },
+        {
+          text: 'Purple',
+          hex: 'C478FF'
+        },
+        {
+          text: 'Pink',
+          hex: 'F296D3'
+        }
+      ];
+
+      // If subjectColor attribute does not exist, make it an empty object
+      if (this.subjectColors === undefined) this.subjectColors = {};
+
+      // Create list of used colors
+      let colorsUsedMap = {};
+      for (let subjectKey of Object.keys(this.subjectColors)) {
+        const subjectColor = this.subjectColors[subjectKey];
+        colorsUsedMap[subjectColor] = true;
+      }
+
+      // Filter out used colors
+      let unusedColors = colors.filter((color) => !colorsUsedMap[color.hex]);
+      if (unusedColors.length === 0) unusedColors = colors;
+
+      let randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
+      
+      // Update subjectColors on Firebase with new subject color group
+      const user = auth.currentUser;
+      const userEmail = user.email;
+      const docRef = userDataCollection.doc(userEmail);
+
+      this.subjectColors[subject] = randomColor;
+      docRef.update({subjectColors: this.subjectColors});
+
+      // Return randomly generated color
+      return randomColor;
+    },
+    
     createSemester(courses, type, year) {
       const semester = {
         courses,
@@ -335,7 +404,8 @@ export default {
       const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,
-        semesters: this.firebaseSems
+        semesters: this.firebaseSems,
+        subjectColors: this.subjectColors
       };
 
       // set the new name and userData, along with either an empty list of semesters or preserve the old list
