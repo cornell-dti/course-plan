@@ -99,17 +99,7 @@ const clickOutside = {
 export default {
   data() {
     // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
-    let currentSeason;
-    const currentMonth = new Date().getMonth();
-    if (currentMonth === 0) {
-      currentSeason = '❄️ Winter';
-    } else if (currentMonth <= 4) {
-      currentSeason = '🌸 Spring';
-    } else if (currentMonth <= 7) {
-      currentSeason = '☀️ Summer';
-    } else {
-      currentSeason = '🍂 Fall';
-    }
+    const currentSeason = this.getCurrentSeason();
 
     // years
     const currentYear = new Date().getFullYear();
@@ -157,6 +147,20 @@ export default {
     }
   },
   methods: {
+    getCurrentSeason() {
+      let currentSeason;
+      const currentMonth = new Date().getMonth();
+      if (currentMonth === 0) {
+        currentSeason = '❄️ Winter';
+      } else if (currentMonth <= 4) {
+        currentSeason = '🌸 Spring';
+      } else if (currentMonth <= 7) {
+        currentSeason = '☀️ Summer';
+      } else {
+        currentSeason = '🍂 Fall';
+      }
+      return currentSeason;
+    },
     showHideContent(type) {
       const displayOptions = this.displayOptions[type];
       const contentShown = displayOptions.shown;
@@ -220,7 +224,7 @@ export default {
       displayOptions.placeholderColor = '#B6B6B6';
 
       if (type === 'season') {
-        this.seasonPlaceholder = 'Select One';
+        this.seasonPlaceholder = this.getCurrentSeason();
       } else {
         this.yearPlaceholder = new Date().getFullYear();
       }
