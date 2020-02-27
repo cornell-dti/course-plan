@@ -426,7 +426,7 @@ export default {
   }
 
   &-addWrapper {
-    width: 21.25rem;
+    width: 21.375rem;
     height: 4.625rem;
     border-radius: 0.5rem;
     display: flex;

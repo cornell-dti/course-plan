@@ -111,6 +111,7 @@ export default {
       // TODO: can I make the valid assumption that the course code is up to the colon in the title?
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
+      const number = courseCode.split(' ')[1];
 
       const parent = this.$parent;
 
@@ -131,12 +132,16 @@ export default {
       fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
         .then(res => res.json())
         .then(resultJSON => {
-          const course = resultJSON.data.classes[0];
-          course.roster = roster;
-
-          if (this.courseIsAddable) {
-            parent.addCourse(course);
-          }
+          // check catalogNbr of resultJSON class matches number of course to add
+          resultJSON.data.classes.forEach(resultJSONclass => {
+            if (resultJSONclass.catalogNbr === number) {
+              const course = resultJSONclass;
+              course.roster = roster;
+              if (this.courseIsAddable) {
+                parent.addCourse(course);
+              }
+            }
+          });
         });
 
       // clear input and close modal when complete
