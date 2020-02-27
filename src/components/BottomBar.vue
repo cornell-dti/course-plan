@@ -4,20 +4,20 @@
           <bottombartabview
           :bottomCourses="bottomCourses"
           :seeMoreCourses="seeMoreCourses"
+          :isExpanded="isExpanded"
           @bottomBarTabToggle="bottomBarTabToggle"
+          @toggleFromTab="toggleFromTab"
           />
       </div>
-      <div class="bottombar-title" @click="toggle">
-        <!-- <span class="bottombar-square-title">Name of Course</span> -->
+      <div class="bottombar-title" @click="toggle()">
         <bottombartitle
         :color="bottomCourses[0].color"
         :name="bottomCourses[0].name"
         />
       </div>
-      <div :class="{ hide: !bottomCourses[0].isExpanded }" class="bottombar-course">
+      <div v-if="this.isExpanded" class="bottombar-course">
         <bottombarcourse
         :courseObj="bottomCourses[0]"
-        @toggle="toggle"
         />
       </div>
     </div>
@@ -37,12 +37,13 @@ Vue.component('bottombartitle', BottomBarTitle);
 export default {
   props: {
     bottomCourses: Array,
-    seeMoreCourses: Array
+    seeMoreCourses: Array,
+    isExpanded: Boolean
   },
 
   methods: {
-    toggle(isExpanded) {
-      if (isExpanded) this.$emit('close-bar');
+    toggle() {
+      if (this.isExpanded) this.$emit('close-bar');
       else this.$emit('open-bar');
     },
     bottomBarTabToggle(courseObj) {
@@ -51,6 +52,9 @@ export default {
         this.bottomCourses.splice(this.bottomCourses.indexOf(courseObj), 1);
         this.bottomCourses.unshift(courseObj);
       }
+    },
+    toggleFromTab() {
+      this.toggle();
     }
   }
 };

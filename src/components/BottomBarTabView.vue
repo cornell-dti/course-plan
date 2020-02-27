@@ -10,8 +10,10 @@
           :color="bottomCourse.color"
           :courseObj ="bottomCourse"
           :isFirstTab = true
+          :isExpanded ="isExpanded"
           @bottomBarTabToggle="bottomBarTabToggle"
           @deleteBottomTab="deleteBottomTab"
+          @toggleFromTab="toggleFromTab"
         />
       </div>
       <div v-for="bottomCourse in bottomCourses.slice(1)" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
@@ -23,8 +25,10 @@
           :color="bottomCourse.color"
           :courseObj ="bottomCourse"
           :isFirstTab = false
+          :isExpanded ="isExpanded"
           @bottomBarTabToggle="bottomBarTabToggle"
           @deleteBottomTab="deleteBottomTab"
+          @toggleFromTab="toggleFromTab"
         />
       </div>
     </div>
@@ -67,7 +71,8 @@ export default {
   },
   props: {
     bottomCourses: Array,
-    seeMoreCourses: Array
+    seeMoreCourses: Array,
+    isExpanded: Boolean
   },
 
   computed: {
@@ -130,6 +135,10 @@ export default {
           this.seeMoreCourses.splice(i, 1);
         }
       }
+    },
+
+    toggleFromTab() {
+      this.$emit('toggleFromTab');
     }
 
   }

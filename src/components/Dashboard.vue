@@ -43,6 +43,7 @@
       v-if="bottomCourses.length > 0"
       :bottomCourses="bottomCourses"
       :seeMoreCourses="seeMoreCourses"
+      :isExpanded="this.bottomBar.isExpanded"
       @close-bar="closeBar"
       @open-bar="openBar"
       />
@@ -294,10 +295,14 @@ export default {
         difficulty: 0,
         workload: 0,
         prerequisites: this.noneIfEmpty(course.prereqs),
-        description: course.description,
-        isPreview: true,
-        isExpanded: true
+        description: course.description
       };
+
+      // expand bottombar if first course added
+      if (this.bottomCourses.length === 0) {
+        this.bottomBar.isExpanded = true;
+      }
+
       // if course already exists in bottomCourses, first remove course
       for (let i = 0; i < this.bottomCourses.length; i += 1) {
         // if colorJustChanged and course already exists, just update course color

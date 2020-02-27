@@ -1,15 +1,5 @@
 <template>
-    <div class="bottombarcourse" :class="{ hide: !courseObj.isPreview }">
-      <!-- have course square with just course subject and course code -->
-      <div class="bottombarcourse-tabs">
-        <!-- Add tabs -->
-      </div>
-
-      <!-- <div class="bottombar-title" :style="{ background: `#${color}` }" @click="toggle">
-        <span class="bottombar-square-title">{{ name }}</span>
-      </div> -->
-
-      <!-- v-if: isPreview. have course bar -->
+    <div class="bottombarcourse">
       <div>
         <!-- <div :class="{ hide: !isExpanded }" class="bottombar-bar-info"> -->
         <div class="bottombarcourse-bar-info">
@@ -80,7 +70,6 @@
         </div>
       </div>
 
-      <!-- v-if: isExpanded have course expanded view -->
     </div>
 </template>
 

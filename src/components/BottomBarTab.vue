@@ -1,7 +1,8 @@
 <template>
-  <div class="bottombartab" :style="{ background: `#${color}` }" @click="bottomBarTabToggle(courseObj)">
+  <div class="bottombartab" :style="{ background: `#${color}` }" v-on="isFirstTab ? { click: () => toggleFromTab() } : {click: () => bottomBarTabToggle(courseObj) }">
     <div class="bottombartab-wrapper">
-      <img v-if="isFirstTab" class="bottombartab-arrow" src="@/assets/images/downarrow-white.svg" />
+      <img v-if="isFirstTab && !isExpanded" class="bottombartab-arrow" src="@/assets/images/downarrow-white.svg"/>
+      <img v-if="isFirstTab && isExpanded" class="bottombartab-arrow" src="@/assets/images/uparrow-white.svg"/>
       <div class="bottombartab-name">{{subject}} {{number}}</div>
     </div>
     <img class="bottombartab-delete" src="@/assets/images/x-white.svg" @click="deleteBottomTab(subject, number)"/>
@@ -17,7 +18,8 @@ export default {
     color: String,
     id: Number,
     courseObj: Object,
-    isFirstTab: Boolean
+    isFirstTab: Boolean,
+    isExpanded: Boolean
   },
 
   methods: {
@@ -27,6 +29,10 @@ export default {
 
     deleteBottomTab(subject, number) {
       this.$emit('deleteBottomTab', subject, number);
+    },
+
+    toggleFromTab() {
+      this.$emit('toggleFromTab');
     }
 
   }
