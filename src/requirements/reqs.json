@@ -1076,10 +1076,12 @@
                     "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
                     "search": ["code"],
                     "includes": [
-                        "BIOMG 1350",
-                        "BIOG 1440", 
-                        "BIOG 1445", 
-                        "BIOEE/BIOSM 1610"
+                        [
+                            "BIOMG 1350",
+                            "BIOG 1440", 
+                            "BIOG 1445", 
+                            "BIOEE/BIOSM 1610"
+                        ]
                     ], 
                     "fulfilledBy": "courses", 
                     "minCount": 2
@@ -1286,7 +1288,7 @@
         },
         "ECON": {
             "name": "Economics",
-            "schools": "AS",
+            "schools": ["AS"],
             "requirements": [
                 {
                     "name": "Admission to the Major",
@@ -1434,7 +1436,7 @@
         },
         "GOVT": {
             "name": "Government",
-            "schools": "AS",
+            "schools": ["AS"],
             "requirements": [
                 {
                     "name": "Introductory Government Courses",
@@ -1712,7 +1714,7 @@
                     "source": "https://history.cornell.edu/undergraduate",
                     "search": ["catalogCourseSubfield"],
                     "includes": [
-                        "HPE"
+                        ["HPE"]
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 3
@@ -1942,7 +1944,7 @@
                     "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
                     "search": ["code"],
                     "includes": [
-                        "ENGRD 2020"
+                        ["ENGRD 2020"]
                     ],
                     "fulfilledBy":"courses"
                 }, 
@@ -1985,7 +1987,7 @@
                             "MAE 4300"
                         ]
                     ], 
-                    "fulfilledby": "courses", 
+                    "fulfilledBy": "courses", 
                     "minCount": 10
                 }, 
                 {
@@ -2010,13 +2012,15 @@
                     "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
                     "search": ["code"],
                     "includes": [
-                        "MAE 3100", 
-                        "ENGRD 2700", 
-                        "CEE 3040", 
-                        "ENGRD 3200", 
-                        "ENGRD 3100", 
-                        "BTRY 3010", 
-                        "CS 2800"
+                        [
+                            "MAE 3100", 
+                            "ENGRD 2700", 
+                            "CEE 3040", 
+                            "ENGRD 3200", 
+                            "ENGRD 3100", 
+                            "BTRY 3010", 
+                            "CS 2800"
+                        ]
                     ],
                     "fulfilledBy":"credits", 
                     "minCount": 3
