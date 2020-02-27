@@ -87,6 +87,7 @@ export default {
         lastName: names[1],
         middleName: ''
       },
+      subjectColors: {},
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
@@ -98,10 +99,15 @@ export default {
     this.getInformationFromUser();
   },
   methods: {
-    getInformationFromUser() {
+    getDocRef() {
       const user = auth.currentUser;
       const userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);
+      return docRef;
+    },
+
+    getInformationFromUser() {
+      const docRef = this.getDocRef();
 
       // TODO: error handling for firebase errors
       docRef.get()
@@ -110,6 +116,7 @@ export default {
             this.semesters = this.convertSemesters(doc.data().semesters);
             this.firebaseSems = doc.data().semesters;
             this.user = this.parseUserData(doc.data().userData, doc.data().name);
+            this.subjectColors = doc.data().subjectColors;
             this.loaded = true;
           } else {
             this.startOnboarding();
@@ -204,7 +211,8 @@ export default {
       // Get last semester of available course. TODO: Remove when no longer firebase data dependant
       const lastRoster = course.lastRoster || course.roster;
 
-      const color = course.color || 'C4C4C4';
+      // Create course from saved color. Otherwise, create course from subject color group
+      const color = course.color || this.addColor(subject);
 
       const alerts = { requirement: null, caution: null };
 
@@ -232,6 +240,75 @@ export default {
 
       return newCourse;
     },
+
+    addColor(subject) {
+      if (this.subjectColors && this.subjectColors[subject]) return this.subjectColors[subject];
+
+      const colors = [
+        {
+          text: 'Red',
+          hex: 'DA4A4A'
+        },
+        {
+          text: 'Orange',
+          hex: 'FFA53C'
+        },
+        {
+          text: 'Yellow',
+          hex: 'FFE142'
+        },
+        {
+          text: 'Green',
+          hex: '58C913'
+        },
+        {
+          text: 'Blue',
+          hex: '139DC9'
+        },
+        {
+          text: 'Purple',
+          hex: 'C478FF'
+        },
+        {
+          text: 'Pink',
+          hex: 'F296D3'
+        }
+      ];
+
+      // If subjectColor attribute does not exist, make it an empty object
+      if (this.subjectColors === undefined) this.subjectColors = {};
+
+      // Create list of used colors
+      const colorsUsedMap = {};
+      for (const subjectKey of Object.keys(this.subjectColors)) {
+        const subjectColor = this.subjectColors[subjectKey];
+        colorsUsedMap[subjectColor] = true;
+      }
+
+      // Filter out used colors
+      const unusedColors = colors.filter(color => !colorsUsedMap[color.hex]);
+
+      let randomColor;
+
+      // pick a color from unusedColors if there are any
+      if (unusedColors.length !== 0) {
+        randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
+      // otherwise pick a color following the random order set by the first 7 subjects
+      } else {
+        const colorIndex = Object.keys(this.subjectColors).length;
+        const key = Object.keys(this.subjectColors)[colorIndex % colors.length];
+        randomColor = this.subjectColors[key];
+      }
+
+      // Update subjectColors on Firebase with new subject color group
+      const docRef = this.getDocRef();
+      this.subjectColors[subject] = randomColor;
+      docRef.update({ subjectColors: this.subjectColors });
+
+      // Return randomly generated color
+      return randomColor;
+    },
+
     createSemester(courses, type, year) {
       const semester = {
         courses,
@@ -329,13 +406,13 @@ export default {
       this.user = user;
       this.loaded = true;
 
-      const userEmail = auth.currentUser.email;
-      const docRef = userDataCollection.doc(userEmail);
+      const docRef = this.getDocRef();
 
       const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,
-        semesters: this.firebaseSems
+        semesters: this.firebaseSems,
+        subjectColors: this.subjectColors
       };
 
       // set the new name and userData, along with either an empty list of semesters or preserve the old list
