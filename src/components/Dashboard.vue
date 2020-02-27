@@ -235,7 +235,6 @@ export default {
     },
 
     addColor(subject) {
-
       if (this.subjectColors && this.subjectColors[subject]) return this.subjectColors[subject];
 
       const colors = [
@@ -277,30 +276,30 @@ export default {
       if (this.subjectColors === undefined) this.subjectColors = {};
 
       // Create list of used colors
-      let colorsUsedMap = {};
-      for (let subjectKey of Object.keys(this.subjectColors)) {
+      const colorsUsedMap = {};
+      for (const subjectKey of Object.keys(this.subjectColors)) {
         const subjectColor = this.subjectColors[subjectKey];
         colorsUsedMap[subjectColor] = true;
       }
 
       // Filter out used colors
-      let unusedColors = colors.filter((color) => !colorsUsedMap[color.hex]);
+      let unusedColors = colors.filter(color => !colorsUsedMap[color.hex]);
       if (unusedColors.length === 0) unusedColors = colors;
 
-      let randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
-      
+      const randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
+
       // Update subjectColors on Firebase with new subject color group
       const user = auth.currentUser;
       const userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);
 
       this.subjectColors[subject] = randomColor;
-      docRef.update({subjectColors: this.subjectColors});
+      docRef.update({ subjectColors: this.subjectColors });
 
       // Return randomly generated color
       return randomColor;
     },
-    
+
     createSemester(courses, type, year) {
       const semester = {
         courses,
