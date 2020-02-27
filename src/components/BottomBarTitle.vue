@@ -32,6 +32,9 @@ export default {
   bottom: 0px;
   width: 100%;
 
+  left: 29.5rem;
+  width: calc(100vw - 29.5rem);
+
   &:hover {
     filter: brightness(95%);
     transition: all 0.2s ease;

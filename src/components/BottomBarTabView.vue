@@ -154,6 +154,8 @@ export default {
   margin-bottom: -0.2%;
   align-items: flex-end;
 
+  justify-content: space-between;
+
 
   &-bottomCourseWrapper {
     display: flex;

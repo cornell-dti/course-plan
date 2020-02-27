@@ -154,6 +154,9 @@ export default {
     width: 100%;
     background-color: #FFF;
 
+    left: 29.5rem;
+    width: calc(100vw - 29.5rem);
+
     &-tabs {
       height: 0px;
     }

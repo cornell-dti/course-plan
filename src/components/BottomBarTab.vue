@@ -32,7 +32,9 @@ export default {
     },
 
     toggleFromTab() {
-      this.$emit('toggleFromTab');
+      if ((!this.isFirstTab && !this.isExpanded) || this.isFirstTab) {
+        this.$emit('toggleFromTab');
+      }
     }
 
   }
@@ -60,7 +62,7 @@ export default {
     &-wrapper {
       display: flex;
       flex-direction: row;
-      width: 100%;
+      width: 75%;
     }
 
     &-arrow {

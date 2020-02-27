@@ -72,9 +72,10 @@ export default {
   width: 100%;
 
   &-tabview {
-    width: 100%;
     position:fixed;
     bottom: 40px;
+    left: 29.5rem;
+    width: calc(100vw - 29.5rem);
   }
 
 }
