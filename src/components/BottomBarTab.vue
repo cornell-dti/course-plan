@@ -1,6 +1,6 @@
 <template>
-  <div class="bottombartab" :style="{ background: `#${color}` }">
-    <div class="bottombartab-wrapper" v-on="isFirstTab ? { click: () => toggleFromTab() } : {click: () => bottomBarTabToggle(courseObj) }">
+  <div class="bottombartab" :style="{ background: `#${color}` }" @click="bottomBarTabToggle(courseObj)">
+    <div class="bottombartab-wrapper" @click="toggleFromTab">
       <img v-if="isFirstTab && !isExpanded" class="bottombartab-arrow" src="@/assets/images/uparrow-white.svg"/>
       <img v-if="isFirstTab && isExpanded" class="bottombartab-arrow" src="@/assets/images/downarrow-white.svg"/>
       <div class="bottombartab-name">{{subject}} {{number}}</div>
