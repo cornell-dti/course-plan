@@ -98,6 +98,19 @@ const clickOutside = {
 
 export default {
   data() {
+    // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
+    let currentSeason;
+    const currentMonth = new Date().getMonth();
+    if (currentMonth === 0) {
+      currentSeason = '❄️ Winter';
+    } else if (currentMonth <= 4) {
+      currentSeason = '🌸 Spring';
+    } else if (currentMonth <= 7) {
+      currentSeason = '☀️ Summer';
+    } else {
+      currentSeason = '🍂 Fall';
+    }
+
     // years
     const currentYear = new Date().getFullYear();
     const seasons = ['🍂 Fall', '🌸 Spring', '☀️ Summer', '❄️ Winter'];
@@ -110,8 +123,8 @@ export default {
     years.map(String);
 
     return {
-      seasonPlaceholder: 'Select One',
-      yearPlaceholder: new Date().getFullYear(),
+      seasonPlaceholder: currentSeason,
+      yearPlaceholder: currentYear,
       seasons,
       years,
       displayOptions: {
