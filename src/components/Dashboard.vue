@@ -99,10 +99,15 @@ export default {
     this.getInformationFromUser();
   },
   methods: {
-    getInformationFromUser() {
+    getDocRef() {
       const user = auth.currentUser;
       const userEmail = user.email;
       const docRef = userDataCollection.doc(userEmail);
+      return docRef;
+    },
+
+    getInformationFromUser() {
+      const docRef = this.getDocRef();
 
       // TODO: error handling for firebase errors
       docRef.get()
@@ -294,10 +299,7 @@ export default {
       }
 
       // Update subjectColors on Firebase with new subject color group
-      const user = auth.currentUser;
-      const userEmail = user.email;
-      const docRef = userDataCollection.doc(userEmail);
-
+      const docRef = this.getDocRef();
       this.subjectColors[subject] = randomColor;
       docRef.update({ subjectColors: this.subjectColors });
 
@@ -402,8 +404,7 @@ export default {
       this.user = user;
       this.loaded = true;
 
-      const userEmail = auth.currentUser.email;
-      const docRef = userDataCollection.doc(userEmail);
+      const docRef = this.getDocRef();
 
       const data = {
         name: onboardingData.name,
