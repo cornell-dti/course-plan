@@ -239,10 +239,6 @@ export default {
 
       const colors = [
         {
-          text: 'Gray',
-          hex: 'C4C4C4'
-        },
-        {
           text: 'Red',
           hex: 'DA4A4A'
         },
@@ -283,10 +279,19 @@ export default {
       }
 
       // Filter out used colors
-      let unusedColors = colors.filter(color => !colorsUsedMap[color.hex]);
-      if (unusedColors.length === 0) unusedColors = colors;
+      const unusedColors = colors.filter(color => !colorsUsedMap[color.hex]);
 
-      const randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
+      let randomColor;
+
+      // pick a color from unusedColors if there are any
+      if (unusedColors.length !== 0) {
+        randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
+      // otherwise pick a color following the random order set by the first 7 subjects
+      } else {
+        const colorIndex = Object.keys(this.subjectColors).length;
+        const key = Object.keys(this.subjectColors)[colorIndex % colors.length];
+        randomColor = this.subjectColors[key];
+      }
 
       // Update subjectColors on Firebase with new subject color group
       const user = auth.currentUser;
