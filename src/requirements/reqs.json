@@ -1049,6 +1049,117 @@
                 }
             ]
         },
+        "BE": {
+            "name": "Biological Engineering", 
+            "schools": ["EN"], 
+            "requirements": [
+                {
+                    "name":"Engineering Distriubtions", 
+                    "description": "ENGRD 2020 and ENGRD 2600 or ENGRD 2510", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"],
+                    "includes": [
+                        [
+                            "ENGRD 2020"
+                        ], 
+                        [
+                            "ENGRD 2600", 
+                            "ENGRD 2510"
+                        ]
+                    ],
+                    "fulfilledBy":"courses", 
+                    "minCount": 2
+                }, 
+                {
+                    "name": "Intro Bio", 
+                    "description": "Choose 2 of the following 4: BIOMG 1350, BIOG 1440, BIOG 1445, and BIOEE/BIOSM 1610", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"],
+                    "includes": [
+                        [
+                            "BIOMG 1350",
+                            "BIOG 1440", 
+                            "BIOG 1445", 
+                            "BIOEE/BIOSM 1610"
+                        ]
+                    ], 
+                    "fulfilledBy": "courses", 
+                    "minCount": 2
+                }, 
+                {
+                    "name": "Required Major Courses", 
+                    "description": "Major requirements for BE: BIOG/BIOSM 1500, BEE 3500, BEE 3310, BEE 3400, BEE 3600, and BEE 4500", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"], 
+                    "includes": [
+                        ["BIOG/BIOSM 1500"], 
+                        ["BEE 3500"], 
+                        ["BEE 3310"], 
+                        ["BEE 3400"], 
+                        ["BEE 3600"], 
+                        ["BEE 4500"]
+                    ], 
+                    "fulfilledBy": "courses", 
+                    "minCount": 6
+                }, 
+                {
+                    "name": "Biochemistry", 
+                    "description": "BIOMG 3300, BIOMG 3330, BIOMG 3350, or BIOMG 3310 and BIOMG 3320", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"], 
+                    "includes": [
+                        [
+                            "BIOMG 3300", 
+                            "BIOMG 3330", 
+                            "BIOMG 3350", 
+                            "BIOMG 3310"
+                        ], 
+                        [
+                            "BIOMG 3320"
+                        ]
+                    ], 
+                    "fulfilledBy": "courses", 
+                    "minCount": 2
+                }, 
+                {
+                    "name": "Upper-level Biology", 
+                    "description": "Any biology course at the 2000-level or above which has a biology prerequisite and is taken for a letter grade. This requirement may also be satisfied by an upper-level course in a science department (excluding engineering, liberal studies, social sciences, and mathematics) which has a biology (not social science) content of 95% or greater and a biology prerequisite. Students must receive approval for these alternative courses by consulting their BE faculty advisor or the main BE Advising Office, 207 Riley-Robb Hall. One credit seminars and BIOG 2990/4990 credits may not be used to meet this requirement.", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"], 
+                    "includes": [], 
+                    "fulfilledBy": "self-check"
+                }, 
+                {
+                    "name": "Engineering Statistics", 
+                    "description": "BEE 2220 or ENGRD 2210 or CHEME 3130 or MSE 3030 and engineering statistics preferably before semester 6. CEE 3040 is the preferred version of statistics.", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"], 
+                    "includes": [
+                        [
+                            "BEE 2220", 
+                            "ENGRD 2210", 
+                            "CHEME 3130", 
+                            "MSE 3030"
+                        ],
+                        [
+                            "CEE 3040", 
+                            "ENGRD 2700"
+                        ]
+                    ], 
+                    "fulfilledBy": "courses",
+                    "minCount": 2
+                }, 
+                {
+                    "name": "BE Focus Area Elective", 
+                    "description": "BE Focus Area Electives must include a BEE capstone design course. See beadvised.bee.cornell.edu for a current list of approved courses. In place of one focus area course, students may use up to 4 credits of research, project team, teaching, or independent study taken in an engineering department towards the engineering credits in category 8.", 
+                    "source": "beadvised.bee.cornell.edu", 
+                    "search": ["all-eligible"], 
+                    "includes": [],
+                    "fulfilledBy": "courses", 
+                    "minCount": 4
+                }
+            ]
+        },
         "CS": {
             "name": "Computer Science",
             "schools": [
@@ -1177,7 +1288,7 @@
         },
         "ECON": {
             "name": "Economics",
-            "schools": "AS",
+            "schools": ["AS"],
             "requirements": [
                 {
                     "name": "Admission to the Major",
@@ -1325,7 +1436,7 @@
         },
         "GOVT": {
             "name": "Government",
-            "schools": "AS",
+            "schools": ["AS"],
             "requirements": [
                 {
                     "name": "Introductory Government Courses",
@@ -1603,7 +1714,7 @@
                     "source": "https://history.cornell.edu/undergraduate",
                     "search": ["catalogCourseSubfield"],
                     "includes": [
-                        "HPE"
+                        ["HPE"]
                     ],
                     "fulfilledBy": "courses",
                     "minCount": 3
@@ -1823,6 +1934,115 @@
                 }
             ]
         },
+        "ME": {
+            "name": "Mechanical Engineering", 
+            "schools": ["EN"], 
+            "requirements": [
+                {
+                    "name":"Engineering Distriubtions", 
+                    "description": "ENGRD 2020", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"],
+                    "includes": [
+                        ["ENGRD 2020"]
+                    ],
+                    "fulfilledBy":"courses"
+                }, 
+                {
+                    "name": "Required Major Courses", 
+                    "description": "MAE 2210, MAE 2030, MAE 2250, MAE 3230, MAE 3240, MAE 3260, MAE 3270, (MAE 3780, ENGRD 2100, or PHYS 3360), MAE 4272, and MAE 4300", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"], 
+                    "includes": [
+                        [
+                            "MAE 2210"
+                        ],
+                        [
+                            "MAE 2030"
+                        ], 
+                        [
+                            "MAE 2250"
+                        ], 
+                        [
+                            "MAE 3230"
+                        ], 
+                        [
+                            "MAE 3240"
+                        ],
+                        [
+                            "MAE 3260"
+                        ],
+                        [
+                            "MAE 3270"
+                        ],
+                        [
+                            "MAE 3780", 
+                            "ENGRD 2100", 
+                            "PHYS 3360"
+                        ], 
+                        [
+                            "MAE 4272"
+                        ], 
+                        [
+                            "MAE 4300"
+                        ]
+                    ], 
+                    "fulfilledBy": "courses", 
+                    "minCount": 10
+                }, 
+                {
+                    "name":"M.E. Major Electives", 
+                    "description": "A list of approved Major-approved Electives is available online at www.mae.cornell.edu", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"],
+                    "includes": [],
+                    "fulfilledBy":"self-check"
+                }, 
+                {
+                    "name":"MAE 4xx1: Supervised Senior Design Experience", 
+                    "description": "Can be satisfied by independent research, project team, or by designated senior design formal course, MAE 4xx1.", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"],
+                    "includes": [],
+                    "fulfilledBy":"self-check"
+                }, 
+                {
+                    "name":"Mathematics Elective:", 
+                    "description": "Must be an upper-level mathematics course, which includes statistics, taken after Math 2940. A list of approved math electives is available online at www.mae.cornell.edu", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"],
+                    "includes": [
+                        [
+                            "MAE 3100", 
+                            "ENGRD 2700", 
+                            "CEE 3040", 
+                            "ENGRD 3200", 
+                            "ENGRD 3100", 
+                            "BTRY 3010", 
+                            "CS 2800"
+                        ]
+                    ],
+                    "fulfilledBy":"credits", 
+                    "minCount": 3
+                }, 
+                {
+                    "name":"Technical Elective", 
+                    "description": "A Technical Elective includes technical courses at an appropriate level, chosen from engineering (2000+), mathematics (beyond 2940), science (beyond Physics 2214), chemistry (2080, or beyond 2090), or biological sciences. Most 2000+ technical level courses in engineering will be accepted. (Note: Engineering economic, business, management, financial, or organization courses will not be accepted, with the exception of MAE 4610.). The following 1000-level courses in biology are accepted: BIOG 1440; BIOG 1445; BIOMG 1350; BIOEE 1610; and BIOSM 1610. In addition, credit for advanced placement biology and technical courses at the 2000+ level in biological sciences are accepted.", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"],
+                    "includes": [],
+                    "fulfilledBy":"self-check"
+                }, 
+                {
+                    "name":"Major-approved Elective", 
+                    "description": "A list of approved Major-approved Electives is available online at www.mae.cornell.edu", 
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "search": ["code"],
+                    "includes": [],
+                    "fulfilledBy":"self-check"
+                }
+            ]
+        }, 
         "ORIE": {
             "name": "Operations Research and Engineering",
             "schools": [
