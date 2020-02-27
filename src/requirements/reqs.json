@@ -1946,7 +1946,8 @@
                     "includes": [
                         ["ENGRD 2020"]
                     ],
-                    "fulfilledBy":"courses"
+                    "fulfilledBy":"courses",
+                    "minCount": 1
                 }, 
                 {
                     "name": "Required Major Courses", 
