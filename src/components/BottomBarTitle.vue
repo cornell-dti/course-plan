@@ -1,5 +1,5 @@
 <template>
-  <div class="bottombartitle" :style="{ background: `#${color}` }">
+  <div class="bottombartitle" :style="{ background: `#${color}` }" v-bind:class="{ expandedBottomBarTitle: isExpanded }">
     <div class="bottombar-square-title">{{ name }}</div>
   </div>
 </template>
@@ -9,7 +9,8 @@
 export default {
   props: {
     color: String,
-    name: String
+    name: String,
+    isExpanded: Boolean
   }
 };
 
@@ -28,13 +29,18 @@ export default {
 
   // TODO: change to rem
   position: fixed;
-  bottom: 260px;
+  bottom: 0px;
   width: 100%;
 
   &:hover {
     filter: brightness(95%);
     transition: all 0.2s ease;
   }
+}
+
+.expandedBottomBarTitle{
+    position: fixed;
+    bottom: 260px;
 }
 
 </style>

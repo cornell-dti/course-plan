@@ -1,19 +1,22 @@
 <template>
     <div class="bottombar">
-      <div class="bottombar-tabview">
-          <bottombartabview
-          :bottomCourses="bottomCourses"
-          :seeMoreCourses="seeMoreCourses"
+      <div class="bottombar-tabviewTitleWrapper">
+        <div class="bottombar-tabview" v-bind:class="{ expandedTabView: isExpanded }">
+            <bottombartabview
+            :bottomCourses="bottomCourses"
+            :seeMoreCourses="seeMoreCourses"
+            :isExpanded="isExpanded"
+            @bottomBarTabToggle="bottomBarTabToggle"
+            @toggleFromTab="toggleFromTab"
+            />
+        </div>
+        <div class="bottombar-title" @click="toggle()">
+          <bottombartitle
+          :color="bottomCourses[0].color"
+          :name="bottomCourses[0].name"
           :isExpanded="isExpanded"
-          @bottomBarTabToggle="bottomBarTabToggle"
-          @toggleFromTab="toggleFromTab"
           />
-      </div>
-      <div class="bottombar-title" @click="toggle()">
-        <bottombartitle
-        :color="bottomCourses[0].color"
-        :name="bottomCourses[0].name"
-        />
+        </div>
       </div>
       <div v-if="this.isExpanded" class="bottombar-course">
         <bottombarcourse
@@ -70,13 +73,14 @@ export default {
 
   &-tabview {
     width: 100%;
-    position: fixed;
-    bottom: 300px;
+    position:fixed;
+    bottom: 40px;
   }
 
 }
-.hide {
-    height: 0;
+.expandedTabView{
+    position: fixed;
+    bottom: 300px;
 }
 
 </style>
