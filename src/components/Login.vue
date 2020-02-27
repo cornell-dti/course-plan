@@ -25,7 +25,7 @@
                     <div class="row no-gutters top-section"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
                     <div class="row justify-content-center">
                         <div class="col top-section" >
-                            <button  @click="socialLogin"  class="email-button email-button--top" variant= "primary"> ACCESS ALPHA </button>
+                            <button  @click="socialLogin"  class="email-button email-button--top" variant= "primary"> ACCESS BETA </button>
                         </div>
                     </div>
                 </div>
