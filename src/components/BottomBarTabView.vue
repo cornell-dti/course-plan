@@ -143,6 +143,7 @@ export default {
   display: flex;
   flex-direction: row;
   margin-bottom: -0.2%;
+  align-items: flex-end;
 
 
   &-bottomCourseWrapper {
