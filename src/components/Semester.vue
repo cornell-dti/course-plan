@@ -226,8 +226,8 @@ export default {
         }
       }
     },
-    updateBar(course) {
-      this.$emit('updateBar', course);
+    updateBar(course, colorJustChanged, color) {
+      this.$emit('updateBar', course, colorJustChanged, color);
     },
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();

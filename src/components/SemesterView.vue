@@ -199,10 +199,10 @@ export default {
       this.openSemesterConfirmationModal(type, year, false);
     },
 
-    updateBar(course) {
+    updateBar(course, colorJustChanged, color) {
       this.activatedCourse = course;
       this.key += 1;
-      this.$emit('updateBar', course);
+      this.$emit('updateBar', course, colorJustChanged, color);
       this.isCourseClicked = true;
     },
 

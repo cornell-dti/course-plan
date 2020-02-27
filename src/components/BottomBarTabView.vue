@@ -102,7 +102,6 @@ export default {
 
     bottomBarSeeMoreToggle() {
       this.seeMoreOpen = !this.seeMoreOpen;
-      console.log(this.seeMoreOpen);
     },
 
     moveToBottomBar(course) {
