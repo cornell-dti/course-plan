@@ -35,8 +35,8 @@
           <img v-if="seeMoreOpen" class="bottombarSeeMoreTab-arrow" src="@/assets/images/downarrow-white.svg" />
       </div>
 
-      <div class="bottombarSeeMoreOptions">
-        <div v-if="seeMoreOpen" class="seeMoreCourse-content">
+      <div v-if="seeMoreOpen" class="bottombarSeeMoreOptions">
+        <div class="seeMoreCourse-content">
             <div
               v-for="seeMoreCourse in seeMoreCourses"
               :key="seeMoreCourse.id"
@@ -87,6 +87,16 @@ export default {
           this.bottomCourses.splice(i, 1);
           break;
         }
+      }
+
+      // if any See More courses exist, move first See More Course to end of tab
+      if (this.seeMoreCourses.length > 0) {
+        const seeMoreCourseToMove = this.seeMoreCourses[0];
+        // remove course from See More Courses
+        this.seeMoreCourses.splice(0, 1);
+
+        // add course to end of bottomCourses
+        this.bottomCourses.push(seeMoreCourseToMove);
       }
     },
 
@@ -175,9 +185,8 @@ export default {
     width: 7.375rem;
     background-color: #FFFFFF;;
     border: 1px solid rgba(218, 218, 218, 0.2);
-    // height: 6.81rem;
-    overflow: scroll;
-
+    max-height:6.81rem;
+    overflow-y:scroll;
     .seeMoreCourse {
       &-option {
         border: 1px solid rgba(218, 218, 218, 0.2);
@@ -195,7 +204,6 @@ export default {
         justify-content: space-between;
         padding-left: 8px;
         padding-right: 8px;
-
         cursor: pointer;
 
         &-delete {

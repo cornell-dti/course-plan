@@ -39,11 +39,8 @@
       />
     </div>
     <div id="dashboard-bottomView">
-      <!-- <bottombar
-      :data="bottomBar"
-      @close-bar="closeBar"
-      @open-bar="openBar"/> -->
       <bottombar
+      v-if="bottomCourses.length > 0"
       :bottomCourses="bottomCourses"
       :seeMoreCourses="seeMoreCourses"
       @close-bar="closeBar"
