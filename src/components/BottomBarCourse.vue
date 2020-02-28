@@ -1,67 +1,70 @@
 <template>
     <div class="bottombarcourse">
       <div>
-        <!-- <div :class="{ hide: !isExpanded }" class="bottombar-bar-info"> -->
         <div class="bottombarcourse-bar-info">
           <div class="info">
-          <div>
-            <div class="section">
-              <h1 class="info-head">Credits</h1>
-              <p class="info-fact">{{ courseObj.credits }}</p>
+            <div class="info-section-wrapper">
+              <div>
+                <div class="section">
+                  <h1 class="info-head">Credits</h1>
+                  <p class="info-fact">{{ courseObj.credits }}</p>
+                </div>
+                <div class="section">
+                  <h1 class="info-head">Offered</h1>
+                  <p class="info-fact">{{ courseObj.semesters }}</p>
+                </div>
+              </div>
+              <div>
+                <div class="section">
+                  <h1 class="info-head">Instructors</h1>
+                  <p class="info-fact">{{ courseObj.instructors }}</p>
+                </div>
+                <div class="section">
+                  <h1 class="info-head">Enrollment Information</h1>
+                  <p class="info-fact">{{ courseObj.enrollmentInfo }}</p>
+                </div>
+              </div>
+              <div>
+                <div class="section">
+                  <h1 class="info-head">Distribution Category</h1>
+                  <p class="info-fact">{{ courseObj.distributionCategories }}</p>
+                </div>
+                <div class="section">
+                  <h1 class="info-head">{{ courseObj.latestSem }} Lecture Information</h1>
+                  <p class="info-fact" v-for="latestLecInfo in courseObj.latestLecInfo" :key="latestLecInfo">{{ latestLecInfo }}</p>
+                </div>
+              </div>
             </div>
-            <div class="section">
-              <h1 class="info-head">Offered</h1>
-              <p class="info-fact">{{ courseObj.semesters }}</p>
+            <div class="info-link">
+              <a :href="`https://classes.cornell.edu/browse/roster/${ courseObj.latestSem }/class/${ courseObj.subject }/${ courseObj.number }`" class="info-link-blue" target="_blank">View Course Information on Roster <span class="info-link-blue-img"><img src="@/assets/images/link-blue.svg" /></span></a>
             </div>
-          </div>
-          <div>
-            <div class="section">
-              <h1 class="info-head">Instructors</h1>
-              <p class="info-fact">{{ courseObj.instructors }}</p>
-            </div>
-            <div class="section">
-              <h1 class="info-head">Enrollment Information</h1>
-              <p class="info-fact">{{ courseObj.enrollmentInfo }}</p>
-            </div>
-          </div>
-          <div>
-            <div class="section">
-              <h1 class="info-head">Distribution Category</h1>
-              <p class="info-fact">{{ courseObj.distributionCategories }}</p>
-            </div>
-            <div class="section">
-              <h1 class="info-head">{{ courseObj.latestSem }} Lecture Info</h1>
-              <p class="info-fact">{{ courseObj.latestLecInfo }}</p>
-            </div>
-          </div>
-          <div class="info-link">
-            <a :href="`https://classes.cornell.edu/browse/roster/${ courseObj.latestSem }/class/${ courseObj.subject }/${ courseObj.number }`" class="info-link-blue" target="_blank">View Course Information on Roster</a>
-          </div>
           </div>
         </div>
-        <!-- <div :class="{ hide: !isExpanded }" class="bottombar-bar-details"> -->
         <div class="bottombarcourse-bar-details">
           <div class="details">
-            <div class="details-head">Class Ratings</div>
-            <div class="details-ratings">
-              <p class="details-ratings-title"><span class="details-ratings-title-strong">Overall Rating: </span> {{ CUROverallRating }}</p>
-              <div class="progress rating">
-                <div class="progress-bar" role="progressbar" :style="{ width: `${(courseObj.overallRating/5)*100}%`, background: reviewsColor(courseObj.overallRating) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="details-ratings-link-wrapper">
+              <a :href="`https://www.cureviews.org/course/${ courseObj.subject }/${ courseObj.number }`" class="details-ratings-link" target="_blank">See All Reviews</a>
+            </div>
+            <div class="details-ratings-wrapper">
+              <div class="details-ratings">
+                <p class="details-ratings-title"><span class="details-ratings-title-strong">Overall Rating: </span> <span class="details-ratings-strong">{{ CUROverallRating }}</span></p>
+                <div class="progress rating">
+                  <div class="progress-bar" role="progressbar" :style="{ width: `${(courseObj.overallRating/5)*100}%`, background: reviewsColor(courseObj.overallRating) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <div class="details-ratings">
+                <p class="details-ratings-title"><span class="details-ratings-title-strong">Difficulty:</span><span class="details-ratings-strong"> {{ CURDifficulty }}</span></p>
+                <div class="progress rating">
+                  <div class="progress-bar" role="progressbar" :style="{ width: `${(courseObj.difficulty/5)*100}%`, background: reviewsColor(courseObj.difficulty, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <div class="details-ratings">
+                <p class="details-ratings-title"><span class="details-ratings-title-strong">Workload:</span> <span class="details-ratings-strong">{{ CURWorkload }}</span></p>
+                <div class="progress rating">
+                  <div class="progress-bar" role="progressbar" :style="{ width: `${(courseObj.workload/5)*100}%`, background: reviewsColor(courseObj.workload, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
               </div>
             </div>
-            <div class="details-ratings">
-              <p class="details-ratings-title"><span class="details-ratings-title-strong">Difficulty:</span> {{ CURDifficulty }}</p>
-              <div class="progress rating">
-                <div class="progress-bar" role="progressbar" :style="{ width: `${(courseObj.difficulty/5)*100}%`, background: reviewsColor(courseObj.difficulty, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-            <div class="details-ratings">
-              <p class="details-ratings-title"><span class="details-ratings-title-strong">Workload:</span> {{ CURWorkload }}</p>
-              <div class="progress rating">
-                <div class="progress-bar" role="progressbar" :style="{ width: `${(courseObj.workload/5)*100}%`, background: reviewsColor(courseObj.workload, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-            <a :href="`https://www.cureviews.org/course/${ courseObj.subject }/${ courseObj.number }`" class="details-ratings-link" target="_blank">View All Reviews</a>
             <div class="details-head">Prerequisites</div>
             <p>{{ courseObj.prerequisites }}</p>
             <div class="details-head">Description</div>
@@ -77,26 +80,7 @@
 export default {
   props: {
     courseObj: Object,
-    // subject: String,
-    // number: String,
-    // name: String,
-    // credits: Number,
-    // semesters: String,
-    // color: String,
-    // requirementsMap: Map,
     id: Number
-    // instructors: String,
-    // distributionCategories: String,
-    // enrollmentInfo: String,
-    // latestSem: String,
-    // latestLecInfo: String,
-    // overallRating: Number,
-    // difficulty: Number,
-    // workload: Number,
-    // prerequisites: String,
-    // description: String,
-    // isPreview: Boolean,
-    // isExpanded: Boolean
   },
 
   methods: {
@@ -127,19 +111,19 @@ export default {
   computed: {
     CUROverallRating() {
       if (this.courseObj.overallRating === 0) return '';
-      if (!this.courseObj.overallRating) return 'No Reviews';
+      if (!this.courseObj.overallRating) return 'N/A';
       return this.courseObj.overallRating;
     },
 
     CURDifficulty() {
       if (this.courseObj.difficulty === 0) return '';
-      if (!this.courseObj.difficulty) return 'No Reviews';
+      if (!this.courseObj.difficulty) return 'N/A';
       return this.courseObj.difficulty;
     },
 
     CURWorkload() {
       if (this.courseObj.workload === 0) return '';
-      if (!this.courseObj.workload) return 'No Reviews';
+      if (!this.courseObj.workload) return 'N/A';
       return this.courseObj.workload;
     }
   }
@@ -161,37 +145,21 @@ export default {
       height: 0px;
     }
 
-    // &-title {
-    //   padding-left: 24px;
-    //   height: 40px;
-    //   line-height: 40px;
-    //   background: #25A2AA;
-    //   color: #FFF;
-    //   font-size: 16px;
-    //   cursor: pointer;
-    //   filter: brightness(100%);
-
-    //   &:hover {
-    //     filter: brightness(95%);
-    //     transition: all 0.2s ease;
-    //   }
-    // }
-
     &-bar {
       width: 100%;
 
       &-info {
         float: left;
-        height: 261px;
-        width: 35%;
+        height: 313px;
+        width: 45%;
         background: #F8F8F8;
         overflow: scroll;
       }
 
       &-details {
         float: right;
-        height: 261px;
-        width: 65%;
+        height: 313px;
+        width: 55%;
         background: #FFF;
         overflow: scroll;
       }
@@ -201,28 +169,40 @@ export default {
 
   .info {
     margin: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    justify-content: space-between;
+    margin-bottom: 0rem;
 
     &-head {
       margin-top: 5px;
       font-weight: 500;
       font-size: 12px;
       color: #9D9D9D;
+      margin-bottom: 0rem;
     }
 
     &-fact {
       padding-right: 10px;
       font-size: 16px;
       color: #3D3D3D;
+      margin-bottom: 0rem;
     }
 
     &-link {
       font-size: 16px;
       line-height: 16px;
       text-decoration-line: underline;
+      margin-top: inherit;
 
       &-blue {
         color: #4181FF;
         font-weight: 500;
+
+        &-img {
+          margin-left: 0.2rem;
+        }
       }
     }
   }
@@ -243,12 +223,15 @@ export default {
       font-weight: 500;
       font-size: 12px;
       color: #9D9D9D;
+      margin-bottom: 0rem;
     }
 
     &-ratings {
       margin-right: 3%;
       width: 30%;
       float: left;
+      margin-bottom: 1rem;
+
 
       &-title {
         font-size: 16px;
@@ -260,10 +243,23 @@ export default {
         }
       }
 
+      &-strong {
+        font-weight: 2000;
+        color: black;
+      }
+
       &-link {
         font-size: 12px;
         text-decoration-line: underline;
         color: #4181FF;
+        &-wrapper {
+          display: flex;
+          flex-direction: row-reverse;
+          width: 100%;
+          margin-top: -1rem;
+          margin-bottom: 1rem;
+          margin-left: 1rem;
+        }
       }
     }
   }
@@ -280,4 +276,5 @@ export default {
   .hide {
     height: 0;
   }
+
 </style>

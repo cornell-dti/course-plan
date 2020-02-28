@@ -289,7 +289,7 @@ export default {
         instructors: this.joinOrNAString(course.instructors),
         distributionCategories: this.joinOrNAString(course.distributions),
         enrollmentInfo: this.joinOrNAString(course.enrollment),
-        latestLecInfo: this.joinOrNAString(course.lectureTimes),
+        latestLecInfo: course.lectureTimes,
         // TODO: CUReviews data
         overallRating: 0,
         difficulty: 0,
