@@ -287,9 +287,9 @@ export default {
         latestSem: course.lastRoster,
         // Array data
         instructors: this.joinOrNAString(course.instructors),
-        distributionCategories: this.joinOrNAString(course.distributions),
+        distributionCategories: this.cleanCourseDistributionsArray(course.distributions),
         enrollmentInfo: this.joinOrNAString(course.enrollment),
-        latestLecInfo: course.lectureTimes,
+        latestLecInfo: this.naIfEmptyStringArray(course.lectureTimes),
         // TODO: CUReviews data
         overallRating: 0,
         difficulty: 0,
@@ -408,12 +408,33 @@ export default {
       this.isEditingProfile = true;
     },
 
+    cleanCourseDistributionsArray(distributions) {
+      // Iterates over distributions array and cleans every entry
+      // Removes stray parentheses, spaces, and commas
+      let matches = [];
+      if (distributions[0] === "") {
+        matches = ["N/A"];
+      } else {
+        for (let i = 0; i < distributions.length; i += 1) {
+          distributions[i].replace((/[A-Za-z0-9-]+/g), d => {
+            matches.push(d);
+          });
+        }
+      }
+
+      return matches;
+    },
+
     joinOrNAString(arr) {
       return (arr.length !== 0 && arr[0] !== '') ? arr.join(', ') : 'N/A';
     },
 
     noneIfEmpty(str) {
       return (str && str.length !== 0) ? str : 'None';
+    },
+
+    naIfEmptyStringArray(arr) {
+      return (arr && arr.length !== 0 && arr[0] !== "") ? arr : ['N/A'];
     }
   }
 };

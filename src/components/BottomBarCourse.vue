@@ -27,7 +27,7 @@
               <div>
                 <div class="section">
                   <h1 class="info-head">Distribution Category</h1>
-                  <p class="info-fact">{{ courseObj.distributionCategories }}</p>
+                  <p class="info-fact" v-for="distributionCategory in courseObj.distributionCategories" :key="distributionCategory">{{ distributionCategory }}</p>
                 </div>
                 <div class="section">
                   <h1 class="info-head">{{ courseObj.latestSem }} Lecture Information</h1>
