@@ -53,7 +53,6 @@
 
 <script>
 import Vue from 'vue';
-// import firebase from 'firebase';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
@@ -197,6 +196,9 @@ export default {
         }
       }
       this.openSemesterConfirmationModal(type, year, false);
+
+      // Update requirements menu from dashboard
+      this.$emit('updateRequirementsMenu');
     },
 
     updateBar(course, colorJustChanged, color) {

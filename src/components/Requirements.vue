@@ -266,10 +266,18 @@ export default {
   },
 
   methods: {
+    /**
+     * @param {number} index
+     */
     toggleDetails(index) {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
 
+    /**
+     * @param {number} index
+     * @param {'ongoing' | 'completed'} type
+     * @param {number} id
+     */
     toggleDescription(index, type, id) {
       if (type === 'ongoing') {
         const currentBool = this.reqs[index].ongoing[id].displayDescription;
@@ -280,10 +288,17 @@ export default {
       }
     },
 
+    /**
+     * @param {number} index
+     * @param {boolean} bool
+     */
     turnCompleted(index, bool) {
       this.reqs[index].displayCompleted = bool;
     },
 
+    /**
+     * @returns {Array<{code: string, roster: string}>}
+     */
     getCourseCodesArray() {
       const courses = [];
       this.semesters.forEach(semester => {
@@ -295,6 +310,11 @@ export default {
       return courses;
     },
 
+    /**
+     * @param {Array<{code: string, roster: string}>} coursesTaken
+     * @param {string} college
+     * @param {string} major
+     */
     async getReqs(coursesTaken, college, major) {
       // TODO: Hacky and temporary solution to add data to requirementsMap
       const that = this;
@@ -345,15 +365,43 @@ export default {
       return finalRequirementJSONs;
 
       /**
+       * @typedef {Object} Requirement
+       * @property {string} name
+       * @property {string} description
+       * @property {string} source
+       * @property {string} search
+       * @property {string[][]} includes
+       * @property {string} fulfilledBy
+       * @property {number} minCount
+       * @property {string} applies
+       * @property {boolean} progressBar
+       */
+
+      /**
+       * @typedef {Object} RequirementFulfillment
+       * @property {string} name
+       * @property {string} type
+       * @property {string[]} courses
+       * @property {number} required
+       * @property {string} description
+       * @property {string} source
+       * @property {number | null | undefined} fulfilled
+       * @property {boolean} progressBar
+       * @property {boolean} displayDescription
+       */
+
+      /**
        * Loops through requirement data and compare all courses on (to identify whether they satisfy the requirement)
-       * @param {*} allCoursesTakenWithInfo : object of courses taken with API information (CS 2110: {info})
-       * @param {*} allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
-       * @param {*} requirementType : type of requirement being checked (college, major, or university)
+       * @param {Object.<string, Object>} allCoursesTakenWithInfo : object of courses taken with API information (CS 2110: {info})
+       * @param {Requirement[]} allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
+       * @returns {Promise<RequirementFulfillment[]>}
        */
       async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequirements) {
         // array of requirement status information to be returned
+        /** @type {RequirementFulfillment[]} */
         const requirementJSONs = [];
         // Dictionary for generating information on course alerts
+        /** @type {Object.<string, string[]>} */
         const satisfiedRequirementMap = {};
 
         for (const requirement of allRequirements) {
@@ -365,6 +413,7 @@ export default {
 
           let totalRequirementCredits = 0;
           let totalRequirementCount = 0;
+          /** @type {string[]} */
           const coursesThatFulilledRequirement = [];
 
           // check each course to see if it fulfilled that requirement
@@ -373,7 +422,7 @@ export default {
           for (const code of codes) {
             const courseInfo = coursesTakenWithInfo[code];
 
-            const indexIsFulfilled = checkIfCourseFulfilled(courseInfo, requirement.search, requirement.includes);
+            const indexIsFulfilled = checkIfCourseFulfilled(courseInfo, requirement.search, requirement.includes, requirement.excludes);
 
             if (indexIsFulfilled) {
               // depending on what it is fulfilled by, either increase the count or credits you took
@@ -411,10 +460,11 @@ export default {
 
       /**
        * Creates results in object format from information
-       * @param {*} requirement : the requirement information as object
-       * @param {*} totalRequirementCredits : total credits of courses that satisfied requirement
-       * @param {*} totalRequirementCount : total number of courses that satisfied requirement
-       * @param {*} coursesThatFulilledRequirement : courses that satisfied requirement
+       * @param {Requirement} requirement : the requirement information as object
+       * @param {number} totalRequirementCredits : total credits of courses that satisfied requirement
+       * @param {number} totalRequirementCount : total number of courses that satisfied requirement
+       * @param {string[]} coursesThatFulilledRequirement : courses that satisfied requirement
+       * @returns {RequirementFulfillment}
        */
       function createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement) {
         const requirementFulfillmentData = {
@@ -423,7 +473,10 @@ export default {
           courses: coursesThatFulilledRequirement,
           required: requirement.minCount,
           description: requirement.description,
-          source: requirement.source
+          source: requirement.source,
+          fulfilled: null,
+          progressBar: false,
+          displayDescription: false
         };
         let fulfilled;
         switch (requirement.fulfilledBy) {
@@ -451,7 +504,8 @@ export default {
        * Given a course code (i.e. INFO 1300), it will split it up into the subject and number, returned as a dictionary
        * (i.e. INFO 1300 => {"subject" : INFO, "courseNumber" : 1300})
        *
-       * @return the number of credits the course is worth
+       * @param {string} courseCode
+       * @return {{subject: string, courseNumber: string}} the number of credits the course is worth
        */
       function parseCourseCode(courseCode) {
         const regex = /([a-zA-Z]+) ([0-9][0-9][0-9][0-9]$)?/g;
@@ -462,20 +516,24 @@ export default {
 
       /**
        * Given a course code and a roster, get all course info from Cornell API
-       * @param {*} code : code name of the course to search (CS 2110)
-       * @param {*} code : roster name of the course to search (FA19)
-       * @param {*} semester : the roster name to search from (FA19)
+       * @param {string} code : code name of the course to search (CS 2110)
+       * @param {string} roster : roster name of the course to search (FA19)
+       * @returns {Promise<any>}
        */
       function getCourseInfo(code, roster) {
         const courseCodeObj = parseCourseCode(code);
         const subject = courseCodeObj.subject.toUpperCase();
+        const catalogNbr = courseCodeObj.courseNumber;
 
         return new Promise(resolve => {
           fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${code}`)
             .then(res => res.json())
             .then(resultJSON => {
-              const courseResult = resultJSON.data.classes[0];
-              resolve(courseResult);
+              const { classes } = resultJSON.data;
+              // Check that course code matches with api result. Example: MATH 1110 returns MATH 1011 because both matches
+              for (const singleClass of classes) {
+                if (singleClass.subject === subject && singleClass.catalogNbr === catalogNbr) resolve(singleClass);
+              }
             });
         });
       }
@@ -484,6 +542,7 @@ export default {
        * Check if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
        * @param {string} courseName : name of the course (as a code)
        * @param {string} code : code to check courseName (can contain * to denote any value)
+       * @returns {boolean}
        */
       function ifCodeMatch(courseName, code) {
         for (let i = 0; i < courseName.length; i += 1) {
@@ -497,6 +556,7 @@ export default {
        * Check if the course satisfies all-eligible query (not PE or 10XX course)
        * @param {string} subject : subject of course to check
        * @param {string} number : number of course to check
+       * @returns {boolean}
        */
       function ifAllEligible(subject, number) {
         return !ifCodeMatch(subject, 'PE') && !ifCodeMatch(number, '10**');
@@ -506,27 +566,57 @@ export default {
        * Check if the course fullfills the given requirement. Returns true if fulfills requirement. False otherswise
        * @param {*} courseInfo : information of the course from API data
        * @param {*} search : the scope of search for the requirement (e.g all-eligible, code, catalogDistr)
-       * @param {*} includes : the query for the search (e.g (MQR-AS), CS 2***)
+       * @param {*} includes : the query for the search to satisfy requirement (e.g (MQR-AS), CS 2***)
+       * @param {*} excludes : the query for the search that does not satisfy requirement (e.g (MQR-AS), CS 2***)
+       * @returns {boolean}
        */
-      function checkIfCourseFulfilled(courseInfo, search, includes) {
-        // Special search: if search code is all or self-check. Anything would work
-        if (search === 'all' || search === 'self-check') return true;
-        // Special search: if search code is not PE or 10XX course
-        if (search === 'all-eligible') return ifAllEligible(courseInfo.subject, courseInfo.catalogNbr.toString());
-        for (const include of includes) {
-          for (const option of include) {
-            // Special search: if course code matches code
-            if (search === 'code') {
-              if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, option)) {
-                return true;
+      function checkIfCourseFulfilled(courseInfo, search, includes, excludes) {
+        // Check if search exists. False if not
+        if (search !== undefined) {
+          // Special search: if search code is all or self-check. Anything would work
+          if (search.includes('all') || search.includes('self-check')) return true;
+          // Special search: if search code is not PE or 10XX course
+          if (search.includes('all-eligible')) return ifAllEligible(courseInfo.subject, courseInfo.catalogNbr.toString());
+
+          // Excludes is optional. If it exists, a match with search command returns false
+          if (excludes) {
+            for (const exclude of excludes) {
+              for (const excludeOption of exclude) {
+                // Special search: if course code matches code
+                if (search.includes('code')) {
+                  if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, excludeOption)) return false;
+                // Make sure courseInfo[search] is not null
+                } else {
+                  // Loop through search (for search commands with multiple options)
+                  for (const singleSearch of search) {
+                    if (courseInfo[singleSearch] && courseInfo[singleSearch].includes(excludeOption)) return false;
+                  }
+                }
               }
-            } else if (courseInfo[search].includes(option)) return true;
+            }
+          }
+
+          // Includes is mandatory. Function will check for include match with search command
+          for (const include of includes) {
+            for (const includeOption of include) {
+              // Special search: if course code matches code
+              if (search.includes('code')) {
+                if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, includeOption)) return true;
+              // Make sure courseInfo[search] is not null
+              } else {
+                // Loop through search (for search commands with multiple options)
+                for (const singleSearch of search) {
+                  if (courseInfo[singleSearch] && courseInfo[singleSearch].includes(includeOption)) return true;
+                }
+              }
+            }
           }
         }
 
         return false;
       }
     },
+    /** @param {Object.<string, string[]>} satisfiedMap */
     mergerequirementsMap(satisfiedMap) {
       Object.keys(satisfiedMap).forEach(course => {
         if (course in this.requirementsMap) this.requirementsMap[course] = this.requirementsMap[course].concat(satisfiedMap[course]);

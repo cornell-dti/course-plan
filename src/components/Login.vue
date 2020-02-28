@@ -25,7 +25,7 @@
                     <div class="row no-gutters top-section"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
                     <div class="row justify-content-center">
                         <div class="col top-section" >
-                            <button  @click="socialLogin"  class="email-button email-button--top" variant= "primary"> ACCESS ALPHA </button>
+                            <button  @click="socialLogin"  class="email-button email-button--top" variant= "primary"> ACCESS BETA </button>
                         </div>
                     </div>
                 </div>
@@ -42,19 +42,19 @@
                 <div class="col-12 col-md-6 tasks-wrapper">
                     <div class="row tasks">
                         <div class="col-1 tasks"><img src="@/assets/images/Task1.svg" alt = "checklist"/></div>
-                        <div class="col-11"><p class= "sub">Fully personalized to track your requirements</p></div>
+                        <div class="col-11"><p class= "sub sub--task">Fully personalized to track your requirements</p></div>
                     </div>
                     <div class="row tasks">
                         <div class="col-1 tasks"><img  src="@/assets/images/Task2.svg" alt = "browser" /></div>
-                        <div class="col-11"><p class= "sub">Customizable interface to view your courses</p>  </div>
+                        <div class="col-11"><p class= "sub sub--task">Customizable interface to view your courses</p>  </div>
                     </div>
                     <div class="row tasks">
                         <div class="col-1 tasks"><img  src="@/assets/images/Task3.svg" alt = "Network" /></div>
-                        <div class="col-11"><p class= "sub">Built-in system to check your progress</p></div>
+                        <div class="col-11"><p class= "sub sub--task">Built-in system to check your progress</p></div>
                     </div>
                     <div class="row tasks">
                         <div class="col-1 tasks"><img  src="@/assets/images/Task4.svg" alt = "Starred comment" /></div>
-                        <div class="col-11"><p class= "sub">Recommends courses based on your needs</p> </div>
+                        <div class="col-11"><p class= "sub sub--task">Recommends courses based on your needs</p> </div>
                     </div>
                 </div>
                 <div class="col-6 col-md-6 image-wrapper women-wrapper">
@@ -101,11 +101,14 @@
                 </div>
               </div>
               <div class="row justify-content-center">
-                  <div class="col-8 col-md-7 email m-0">
-                      <input type="text" placeholder="Your Email Address" v-model="newUser.email" >
+                  <div class="col-12 col-md-12 email m-0 pb-0">
+                      <input class="waitlist-info" type="text" placeholder="Your Email Address" v-model="waitlist.email" >
                   </div>
-                  <div class="col-8 col-md-5 email ">
-                      <button class="email-button" variant= "primary"  v-on:click="addUser(newUser.email)"> Add email </button>
+                  <div class="col-12 col-md-12 email m-0">
+                      <input class="waitlist-info" type="text" placeholder="Your Major" v-model="waitlist.major" >
+                  </div>
+                  <div class="col-12 col-md-12 email">
+                      <button class="email-button" variant= "primary"  v-on:click="addUser()"> Join Waitlist </button>
                   </div>
               </div>
             </div>
@@ -122,7 +125,7 @@
                     <p class= "footer">Built with ❤️</p>
                 </div>
                 <div class="col-3 footer">
-                    <a  class="footer" href=" https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
+                    <a  class="footer" href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
                 </div>
 
             </div>
@@ -132,11 +135,11 @@
 </template>
 
 <script>
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
 const fb = require('../firebaseConfig.js');
 
-const { alphaWhitelistCollection, landingEmailsCollection } = fb;
+const { whitelistCollection, landingEmailsCollection } = fb;
 
 export default {
   data() {
@@ -145,42 +148,14 @@ export default {
         email: '',
         password: ''
       },
-      newUser: {
-        email: ''
+      waitlist: {
+        email: '',
+        major: ''
       },
       performingRequest: false
     };
   },
   methods: {
-    login() {
-      this.performingRequest = true;
-      fb.auth
-        .signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password)
-        .then(user => {
-          alphaWhitelistCollection.get().then(querySnapshot => {
-            let isAlphaEmail = false;
-            querySnapshot.forEach(doc => {
-              if (doc.data().email === this.loginForm.email) {
-                isAlphaEmail = true;
-              }
-            });
-            this.performingRequest = false;
-            if (!isAlphaEmail) {
-              fb.auth.signOut();
-              return;
-            }
-
-            this.$store.commit('setCurrentUser', user);
-            this.$store.dispatch('fetchUserProfile');
-            this.$router.push(`${process.env.BASE_URL}/`);
-          });
-        })
-        .catch(err => {
-          console.log(err);
-          this.performingRequest = false;
-          this.errorMsg = err.message;
-        });
-    },
     socialLogin() {
       this.performingRequest = true;
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -188,23 +163,7 @@ export default {
         .signInWithPopup(provider)
         .then(user => {
           // Check whitelist emails to ensure user can log in
-          alphaWhitelistCollection.get().then(querySnapshot => {
-            let isAlphaEmail = false;
-            querySnapshot.forEach(doc => {
-              if (doc.data().email === user.user.email) {
-                isAlphaEmail = true;
-              }
-            });
-            this.performingRequest = false;
-            if (!isAlphaEmail) {
-              fb.auth.signOut();
-              return;
-            }
-
-            this.$store.commit('setCurrentUser', user.user);
-            this.$store.dispatch('fetchUserProfile');
-            this.$router.push(`${process.env.BASE_URL}/`);
-          });
+          this.checkEmailAccess(user);
         })
         .catch(err => {
           console.log(err);
@@ -212,17 +171,48 @@ export default {
           this.errorMsg = err.message;
         });
     },
+    checkEmailAccess(user) {
+      const docRef = whitelistCollection.doc(user.user.email);
+      docRef.get().then(doc => {
+        if (doc.exists) {
+          this.performingRequest = false;
+          this.$store.commit('setCurrentUser', user.user);
+          this.$store.dispatch('fetchUserProfile');
+          this.$router.push(`${process.env.BASE_URL}/`);
+        } else {
+          this.handleUserWithoutAccess();
+        }
+      }).catch(error => {
+        console.log(error);
+        this.handleUserWithoutAccess();
+      });
+    },
+
+    handleUserWithoutAccess() {
+      this.performingRequest = false;
+      fb.auth.signOut();
+      alert('Sorry, but you do not have access currently.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
+    },
+
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
     },
+    validateMajor(major) {
+      return major.trim().length > 0;
+    },
     addUser() {
-      if (this.validateEmail(this.newUser.email)) {
-        alert('Your email has been added to the waitlist. We\'ll be in touch shortly!');
-        landingEmailsCollection.add(this.newUser);
-      } else {
+      if (this.validateEmail(this.waitlist.email) && this.validateMajor(this.waitlist.major)) {
+        alert('You have been added to the waitlist. We\'ll be in touch shortly!');
+        landingEmailsCollection.add(this.waitlist);
+
+        // Clear fields
+        this.waitlist.email = '';
+        this.waitlist.major = '';
+      } else if (!this.validateEmail(this.waitlist.email)) {
         alert('You have entered an invalid email address!');
+      } else {
+        alert('You have not entered a major!');
       }
-      this.newUser.email = '';
     },
     getYear() {
       const today = new Date();
@@ -292,6 +282,11 @@ export default {
     }
     .email{
       padding: 20px;
+      @media (max-width: 767px) {
+        width: 350px;
+        max-width: 350px;
+        flex: unset;
+      }
     }
     .email-button{
       border: 0;
@@ -376,6 +371,10 @@ export default {
         font-size: 24px;
         color: #FFFFFF;
         margin: 0;
+
+        &--task {
+          margin-left: 2rem;
+        }
     }
     .head{
         font-weight: 600;
@@ -407,7 +406,7 @@ export default {
       position: relative;
 
       @media (max-width: 1274px) {
-        width: 70vw;
+        width: 62vw;
       }
     }
     .schedule{
@@ -415,7 +414,7 @@ export default {
       width: 650px;
 
       @media (max-width: 1274px) {
-        width: 72vw;
+        width: 50vw;
       }
     }
     .comment{
@@ -446,6 +445,9 @@ export default {
       @media (max-width: 720px) {
         padding: 40px 30px 40px 30px;
       }
+    }
+    input:focus::placeholder {
+      color: transparent;
     }
     button{
       outline: none;
