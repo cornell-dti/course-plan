@@ -1,3 +1,4 @@
+/*
 const functions = require('firebase-functions');
 const admin = require('firebase-admin'); 
 const firebase = require('firebase/app');
@@ -20,7 +21,14 @@ const developmentConfig = {
 // firebase utils
 const db = firebase.firestore();
 const auth = firebase.auth();
+*/
+// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
+const functions = require('firebase-functions');
 
+// The Firebase Admin SDK to access the Firebase Realtime Database.
+const admin = require('firebase-admin');
+admin.initializeApp();
+const db = admin.firestore();
 const userDataCollection = db.collection('userData');
 
 let average = (array) => array.reduce((a, b) => a + b) / array.length;
@@ -43,6 +51,7 @@ function isOld (semester){
     }
   }   
 }
+
 exports.TrackUsers = functions.https.onRequest(async (req, res) => {
   var arr = []; 
   var count = 0; 
