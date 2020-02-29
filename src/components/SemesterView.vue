@@ -357,15 +357,13 @@ export default {
   }
 }
 
-.expandedBottomBarSemesterView {
-  height: calc((20.56 - 100vh)*-1);
-  overflow-y: scroll;
-}
+// .expandedBottomBarSemesterView {
+//   height: calc((20.56 - 100vh) * -1);
+// }
 
-.collapsedBottomBarSemesterView {
-  height: calc((4.25 - 100vh)*-1);
-  overflow-y: scroll;
-}
+// .collapsedBottomBarSemesterView {
+//   height: calc((4.25 - 100vh) * -1);
+// }
 
 /* The Modal (background) */
 .semester-modal {

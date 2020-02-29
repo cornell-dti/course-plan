@@ -1,5 +1,5 @@
 <template>
-  <div class="bottombartab" :style="{ background: `#${color}` }" @click="bottomBarTabToggle(courseObj)">
+  <div class="bottombartab" :style="{ background: `#${color}` }" :class="{ inactive: !isFirstTab}" @click="bottomBarTabToggle(courseObj)">
     <div class="bottombartab-wrapper" @click="toggleFromTab">
       <img v-if="isFirstTab && !isExpanded" class="bottombartab-arrow" src="@/assets/images/uparrow-white.svg"/>
       <img v-if="isFirstTab && isExpanded" class="bottombartab-arrow" src="@/assets/images/downarrow-white.svg"/>
@@ -59,6 +59,10 @@ export default {
 
     cursor: pointer;
 
+    &:hover {
+      opacity: 1.0;
+    }
+
     &-wrapper {
       display: flex;
       flex-direction: row;
@@ -83,6 +87,11 @@ export default {
       height: 50%;
       cursor:pointer;
     }
+  }
+
+  .inactive {
+    mix-blend-mode: multiply;
+    opacity: 0.8;
   }
 
 </style>

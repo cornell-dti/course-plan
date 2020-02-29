@@ -32,7 +32,7 @@
         />
       </div>
     </div>
-    <div class="bottombartabview-seeMoreWrapper">
+    <div v-if="seeMoreCourses.length > 0" class="bottombartabview-seeMoreWrapper">
       <div class="bottombarSeeMoreTab" @click="bottomBarSeeMoreToggle">
           <div class="bottombarSeeMoreTab-name">{{seeMoreString}}</div>
           <img v-if="!seeMoreOpen" class="bottombarSeeMoreTab-arrow" src="@/assets/images/uparrow-white.svg" />
