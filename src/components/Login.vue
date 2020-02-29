@@ -25,7 +25,7 @@
                     <div class="row no-gutters top-section"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
                     <div class="row justify-content-center">
                         <div class="col top-section" >
-                            <button  @click="socialLogin"  class="email-button email-button--top" variant= "primary"> ACCESS ALPHA </button>
+                            <button  @click="socialLogin"  class="email-button email-button--top" variant= "primary"> ACCESS BETA </button>
                         </div>
                     </div>
                 </div>
@@ -101,11 +101,14 @@
                 </div>
               </div>
               <div class="row justify-content-center">
-                  <div class="col-8 col-md-7 email m-0">
-                      <input type="text" placeholder="Your Email Address" v-model="newUser.email" >
+                  <div class="col-12 col-md-12 email m-0 pb-0">
+                      <input class="waitlist-info" type="text" placeholder="Your Email Address" v-model="waitlist.email" >
                   </div>
-                  <div class="col-8 col-md-5 email ">
-                      <button class="email-button" variant= "primary"  v-on:click="addUser(newUser.email)"> Add email </button>
+                  <div class="col-12 col-md-12 email m-0">
+                      <input class="waitlist-info" type="text" placeholder="Your Major" v-model="waitlist.major" >
+                  </div>
+                  <div class="col-12 col-md-12 email">
+                      <button class="email-button" variant= "primary"  v-on:click="addUser()"> Join Waitlist </button>
                   </div>
               </div>
             </div>
@@ -122,7 +125,7 @@
                     <p class= "footer">Built with ❤️</p>
                 </div>
                 <div class="col-3 footer">
-                    <a  class="footer" href=" https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
+                    <a  class="footer" href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
                 </div>
 
             </div>
@@ -136,7 +139,7 @@ import firebase from 'firebase/app';
 
 const fb = require('../firebaseConfig.js');
 
-const { alphaWhitelistCollection, landingEmailsCollection } = fb;
+const { whitelistCollection, landingEmailsCollection } = fb;
 
 export default {
   data() {
@@ -145,8 +148,9 @@ export default {
         email: '',
         password: ''
       },
-      newUser: {
-        email: ''
+      waitlist: {
+        email: '',
+        major: ''
       },
       performingRequest: false
     };
@@ -168,7 +172,7 @@ export default {
         });
     },
     checkEmailAccess(user) {
-      const docRef = alphaWhitelistCollection.doc(user.user.email);
+      const docRef = whitelistCollection.doc(user.user.email);
       docRef.get().then(doc => {
         if (doc.exists) {
           this.performingRequest = false;
@@ -187,20 +191,28 @@ export default {
     handleUserWithoutAccess() {
       this.performingRequest = false;
       fb.auth.signOut();
-      alert('Sorry, but you do not have alpha access.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
+      alert('Sorry, but you do not have access currently.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
     },
 
     validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
     },
+    validateMajor(major) {
+      return major.trim().length > 0;
+    },
     addUser() {
-      if (this.validateEmail(this.newUser.email)) {
-        alert('Your email has been added to the waitlist. We\'ll be in touch shortly!');
-        landingEmailsCollection.add(this.newUser);
-      } else {
+      if (this.validateEmail(this.waitlist.email) && this.validateMajor(this.waitlist.major)) {
+        alert('You have been added to the waitlist. We\'ll be in touch shortly!');
+        landingEmailsCollection.add(this.waitlist);
+
+        // Clear fields
+        this.waitlist.email = '';
+        this.waitlist.major = '';
+      } else if (!this.validateEmail(this.waitlist.email)) {
         alert('You have entered an invalid email address!');
+      } else {
+        alert('You have not entered a major!');
       }
-      this.newUser.email = '';
     },
     getYear() {
       const today = new Date();
@@ -433,6 +445,9 @@ export default {
       @media (max-width: 720px) {
         padding: 40px 30px 40px 30px;
       }
+    }
+    input:focus::placeholder {
+      color: transparent;
     }
     button{
       outline: none;

@@ -196,12 +196,15 @@ export default {
         }
       }
       this.openSemesterConfirmationModal(type, year, false);
+
+      // Update requirements menu from dashboard
+      this.$emit('updateRequirementsMenu');
     },
 
     updateBar(course) {
       this.activatedCourse = course;
       this.key += 1;
-      this.$emit('updateBar', course);
+      this.$emit('update-bar', course);
       this.isCourseClicked = true;
     },
 
