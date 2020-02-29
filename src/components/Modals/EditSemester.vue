@@ -8,12 +8,21 @@
       <div class="deleteSemesterModal-body">
         <div class="deleteSemesterModal-body-text">{{ text }}</div>
       </div>
+      <div class="deleteSemesterModal-body">
+        <newSemester
+            class="modal-body"
+            :currentSemesters="semesters"
+            :id="deleteSemID"
+            :isEdit=true
+            ref="modalBodyComponent">
+        </newSemester>
+      </div>
       <div class="deleteSemesterModal-buttonWrapper">
         <button class="deleteSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
-        <div class="deleteSemesterModal-button deleteSemesterModal-button--delete" @click="deleteSemester">
+        <div class="deleteSemesterModal-button deleteSemesterModal-button--delete" @click="editSemester">
             <div class="deleteSemesterModal-button-left">
                 <img class="deleteSemesterModal-button-left-icon" src="@/assets/images/trash-white.svg" />
-                <span class="deleteSemesterModal-button-left-text">Delete</span>
+                <span class="deleteSemesterModal-button-left-text">Edit</span>
             </div>
         </div>
       </div>
@@ -31,9 +40,18 @@ Vue.component('newCourse', NewCourse);
 Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 
-
 export default {
+  data() {
+    return {
+      seasonInput: 'winter',
+      yearInput: 2020
+    };
+  },
+  mounted() {
+    this.update();
+  },
   props: {
+    semesters: Array,
     deleteSemID: Number,
     deleteSemType: String,
     deleteSemYear: Number
@@ -41,24 +59,32 @@ export default {
 
   computed: {
     text() {
-      return 'Are you sure you want to delete this semester?.';
+      return 'Are you sure you want to edit this semester?.';
     },
     cancel() {
       return 'Cancel';
     },
     title() {
-      return 'Delete Semester';
+      return 'Edit Semester';
     }
   },
   methods: {
     closeCurrentModal() {
-      const modal = document.getElementById(`deleteSemesterModal-${this.deleteSemID}`);
+      const modal = document.getElementById(`editSemesterModal-${this.deleteSemID}`);
       modal.style.display = 'none';
     },
-    deleteSemester() {
-      this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);
+    update() {
+      const season = document.getElementById('season-placeholder').innerHTML.trim(' ').split(' ')[1];
+      this.seasonInput = season;
+      this.yearInput = parseInt(document.getElementById('year-placeholder').innerHTML, 10);
+    },
+    editSemester() {
+      this.$parent.editSemester(this.deleteSemID);
+
+      // this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
       this.closeCurrentModal();
     }
+
   }
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
-    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
+    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" :currentSemesters="semesters" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
       <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
@@ -22,8 +22,10 @@
           v-bind="sem"
           :isNotSemesterButton="true"
           :activatedCourse="activatedCourse"
+          :semesters="semesters"
           @updateBar="updateBar"
           @delete-semester="deleteSemester"
+          @edit-semester="editSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
         />
       </div>
@@ -38,7 +40,7 @@
         v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" />
+        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" @edit-semester="editSemester" />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
@@ -58,6 +60,7 @@ import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
 import Caution from '@/components/Caution';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
+import EditSemester from '@/components/Modals/EditSemester';
 
 const clone = require('clone');
 
@@ -66,6 +69,7 @@ Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
 Vue.component('caution', Caution);
 Vue.component('deletesemester', DeleteSemester);
+Vue.component('editsemester', EditSemester);
 
 const firebaseConfig = require('@/firebaseConfig.js');
 
@@ -197,14 +201,28 @@ export default {
       }
       this.openSemesterConfirmationModal(type, year, false);
     },
+    compare(a, b) {
+      if (a.type === b.type && a.year === b.year) { return 0; }
+      if (a.year > b.year) { return 1; }
+      if (a.year < b.year) { return -1; }
 
+      if (SeasonsEnum[a.type.toLowerCase()] > SeasonsEnum[b.type.toLowerCase()]) {
+        return 1;
+      }
+      return -1;
+    },
+    editSemester(id, type, year) {
+      this.semesters[id - 1].type = type;
+      this.semesters[id - 1].year = year;
+      // sort the semesters witht the new date
+      this.semesters.sort(this.compare);
+    },
     updateBar(course) {
       this.activatedCourse = course;
       this.key += 1;
       this.$emit('updateBar', course);
       this.isCourseClicked = true;
     },
-
     closeBar() {
       if (!this.isCourseClicked) {
         this.$emit('close-bar');

@@ -1,15 +1,24 @@
 <template>
+  <div>
   <div class="newSemester">
     <div class="newSemester-section newSemester-type">
       <label class="newSemester-label" for="type">{{ typeText }}</label>
       <div
-        class="newSemester-select"
+        v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="season"
-        :style="{ borderColor: displayOptions.season.boxBorder }"
         v-click-outside="closeSeasonDropdownIfOpen"
       >
         <div class="newSemester-dropdown-placeholder season-wrapper" @click="showHideSeasonContent">
           <div
+            v-if= "isEdit"
+            class="newSemester-dropdown-placeholder season-placeholder"
+            :id="'season-placeholder-' + id"
+            :style="{ color: displayOptions.season.placeholderColor }"
+          >
+            {{ seasonPlaceholder }}
+          </div>
+          <div
+            v-else
             class="newSemester-dropdown-placeholder season-placeholder"
             id="season-placeholder"
             :style="{ color: displayOptions.season.placeholderColor }"
@@ -28,6 +37,7 @@
           v-if="displayOptions.season.shown"
         >
           <div
+            v-bind:class="{ warning: isDuplicate}"
             v-for="season in seasons"
             :key="season"
             :id="season"
@@ -42,13 +52,22 @@
     <div class="newSemester-section newSemester-year">
       <label class="newSemester-label" for="year">{{ yearText }}</label>
       <div
-        class="newSemester-select"
+        v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="year"
-        :style="{ borderColor: displayOptions.year.boxBorder }"
+
         v-click-outside="closeYearDropdownIfOpen"
       >
         <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
           <div
+            v-if="isEdit"
+            class="newSemester-dropdown-placeholder year-placeholder"
+            :id="'year-placeholder-' + id"
+            :style="{ color: displayOptions.year.placeholderColor }"
+          >
+            {{ yearPlaceholder }}
+          </div>
+          <div
+            v-else
             class="newSemester-dropdown-placeholder year-placeholder"
             id="year-placeholder"
             :style="{ color: displayOptions.year.placeholderColor }"
@@ -79,6 +98,9 @@
       </div>
     </div>
   </div>
+  <div v-if="isDuplicate() === true" class= "newSemester-duplicate" > <p> Duplicate Semester</p> </div>
+  </div>
+
 </template>
 
 <script>
@@ -97,6 +119,12 @@ const clickOutside = {
 };
 
 export default {
+  props: {
+    currentSemesters: Array,
+    id: Number,
+    isEdit: Boolean
+
+  },
   data() {
     // years
     const currentYear = new Date().getFullYear();
@@ -218,16 +246,34 @@ export default {
 
       // reset year dropdown
       this.resetDropdown('year');
+    },
+    isDuplicate() {
+      let isDup = false;
+      this.currentSemesters.forEach(semester => {
+        if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder.substring(3)) {
+          isDup = true;
+        }
+        return semester;
+      });
+      return isDup;
     }
   }
 };
 </script>
 
 <style lang="scss">
+.duplicate-p {
+  color : red;
+}
+.duplicate {
+  border: 1px solid red;
+}
 .newSemester {
   display: flex;
   flex-direction: row;
-
+  &-duplicate {
+    color: red;
+  }
   &-section {
     font-size: 14px;
     line-height: 15px;

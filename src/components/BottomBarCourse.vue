@@ -177,7 +177,7 @@ export default {
 
     &-cancel{
       float:right;
-      padding: 5px 25px 0px 10px;
+      padding: 0.3125rem 1.5625rem 0rem 0.625rem
 
     }
 

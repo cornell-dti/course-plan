@@ -9,6 +9,7 @@
         class="modal-body"
         :is="body"
         :semesterID="semesterID"
+        :currentSemesters="currentSemesters"
         ref="modalBodyComponent"
       ></component>
       <div class="modal-buttonWrapper">
@@ -24,10 +25,12 @@ import Vue from 'vue';
 import NewCourse from '@/components/Modals/NewCourse';
 import NewCustomCourse from '@/components/Modals/NewCustomCourse';
 import NewSemester from '@/components/Modals/NewSemester';
+import EditSemester from '@/components/Modals/EditSemester';
 
 Vue.component('newCourse', NewCourse);
 Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
+Vue.component('editSemester', EditSemester);
 
 export default {
   data() {
@@ -37,7 +40,8 @@ export default {
   },
   props: {
     type: String,
-    semesterID: Number
+    semesterID: Number,
+    currentSemesters: Array
   },
   computed: {
     contentId() {
@@ -146,6 +150,7 @@ export default {
     addSemester() {
       const seasonInput = document.getElementById(`season-placeholder`);
       const yearInput = document.getElementById(`year-placeholder`);
+      console.log('hello', seasonInput);
 
       this.$parent.addSemester(
         seasonInput.innerHTML.trim(' ').split(' ')[1],

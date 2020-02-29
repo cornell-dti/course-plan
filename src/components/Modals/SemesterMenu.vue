@@ -1,14 +1,26 @@
 <template>
-  <div class="semesterMenu" id="semesterMenu" :class="{ 'd-none': isOpenModal }">
-    <div class="semesterMenu-content">
-      <div class="semesterMenu-section" @click="openDeleteSemesterModal">
-        <div class="semesterMenu-left">
-          <img class="semesterMenu-icon" src="@/assets/images/trash.svg" />
-          <span class="semesterMenu-text">Delete Semester</span>
+  <div class="semesterMenu">
+    <div class="semesterMenu-section" :class="{ 'd-none': isOpenModal }">
+      <div class="semesterMenu-content">
+        <div class="semesterMenu-content" @click="openEditSemesterModal">
+          <div class="semesterMenu-left">
+            <img class="semesterMenu-icon" src="@/assets/images/edit.svg" />
+            <span class="semesterMenu-edit">Edit Semester</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+    <div class="semesterMenu-section" :class="{ 'd-none': isOpenModal }">
+      <div class="semesterMenu-content">
+        <div class="semesterMenu-content" @click="openDeleteSemesterModal">
+          <div class="semesterMenu-left">
+            <img class="semesterMenu-icon" src="@/assets/images/trash.svg" />
+            <span class="semesterMenu-delete">Delete Semester</span>
+          </div>
+        </div>
+      </div>
+    </div>
+ </div>
 </template>
 
 <script>
@@ -22,6 +34,10 @@ export default {
     openDeleteSemesterModal() {
       this.$emit('open-delete-semester-modal');
       this.isOpenModal = true;
+    },
+    openEditSemesterModal() {
+      this.$emit('open-edit-semester-modal');
+      this.isOpenModal = true;
     }
   }
 };
@@ -29,14 +45,17 @@ export default {
 
 <style scoped lang="scss">
 .semesterMenu {
+  background: #ffffff;
+  border: 1px solid #acacac;
+  box-sizing: border-box;
+  border-radius: 9px;
+
   &-content {
-    background: #ffffff;
-    border: 1px solid #acacac;
-    box-sizing: border-box;
-    border-radius: 9px;
+    display: flex;
+    flex-direction: row;
     font-size: 14px;
     color: #404040;
-    width: 12rem;
+    width: 12;
     cursor: pointer;
   }
   &-section {
@@ -71,8 +90,12 @@ export default {
       height: 16px;
     }
   }
-  &-text {
+  &-delete{
       color: #EB6D6D;
   }
+  &-edit{
+    color: black;
+  }
+
 }
 </style>

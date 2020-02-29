@@ -125,9 +125,15 @@ export default {
       this.semesters.forEach(semester => {
         semesterString += `${semester}, `;
       });
+      if (semesterString.length > 32) {
+        semesterString = semesterString.substring(0, 32);
+        semesterString += '...';
+        return semesterString;
+      }
       if (semesterString.length > 0) {
         return semesterString.substring(0, semesterString.length - 2);
       }
+
       return semesterString;
     },
 
@@ -173,8 +179,6 @@ export default {
       if (!this.menuOpen) {
         this.$emit('updateBar', this.courseObj);
       }
-    },
-    whichSide() {
     }
   },
   directives: {

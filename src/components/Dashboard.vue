@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div id= "dashboard" class="dashboard">
     <onboarding class="dashboard-onboarding" v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
       :user="user"

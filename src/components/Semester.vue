@@ -12,12 +12,22 @@
     />
     <deletesemester
       :id="'deleteSemesterModal-' + id"
-      class="semester-modal-delete"
+      class="semester-modal"
       @delete-semester="deleteSemester"
       :deleteSemID="deleteSemID"
       :deleteSemType="deleteSemType"
       :deleteSemYear="deleteSemYear"
       ref="deletesemester"
+    />
+    <editsemester
+      :id="'editSemesterModal-' + id"
+      class="semester-modal"
+      @edit-semester="editSemester"
+      :semesters="semesters"
+      :deleteSemID="deleteSemID"
+      :deleteSemType="deleteSemType"
+      :deleteSemYear="deleteSemYear"
+      ref="modalBodyComponent"
     />
     <div v-if="isNotSemesterButton" class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
@@ -75,6 +85,7 @@
       v-if="semesterMenuOpen"
       class="semester-menu"
       @open-delete-semester-modal="openDeleteSemesterModal"
+      @open-edit-semester-modal="openEditSemesterModal"
       v-click-outside="closeSemesterMenuIfOpen" />
   </div>
 </template>
@@ -86,12 +97,14 @@ import Modal from '@/components/Modals/Modal';
 import Confirmation from '@/components/Confirmation';
 import SemesterMenu from '@/components/Modals/SemesterMenu';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
+import EditSemester from '@/components/Modals/EditSemester';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
 Vue.component('semestermenu', SemesterMenu);
 Vue.component('deletesemester', DeleteSemester);
+Vue.component('editsemester', EditSemester);
 
 const clickOutside = {
   bind(el, binding, vnode) {
@@ -128,16 +141,15 @@ export default {
     courses: Array,
     isNotSemesterButton: Boolean,
     compact: Boolean,
-    activatedCourse: Object
+    activatedCourse: Object,
+    semesters: Array
   },
 
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
-
     const service = Vue.$dragula.$service;
-
-    service.eventBus.$on('drag', () => {
-      this.scrollable = false;
+    service.eventBus.$on('drag', data => {
+      this.scrollable = true;
     });
     service.eventBus.$on('drop', () => {
       this.scrollable = true;
@@ -166,7 +178,6 @@ export default {
         if (uniqueCoursesNames.indexOf(course.name) === -1) {
           uniqueCourses.push(course);
           uniqueCoursesNames.push(course.name);
-          console.log(course.name);
         }
       });
       return uniqueCourses;
@@ -175,7 +186,7 @@ export default {
       return '+ COURSE';
     },
     semesterString() {
-      return `HIII${this.id}+ SEMESTER`;
+      return `+ SEMESTER`;
     }
 
   },
@@ -291,6 +302,19 @@ export default {
     deleteSemester(type, year) {
       this.$emit('delete-semester', type, year);
       this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
+    },
+    openEditSemesterModal() {
+      this.deleteSemType = this.type;
+      this.deleteSemYear = this.year;
+      this.deleteSemID = this.id;
+      const modal = document.getElementById(`editSemesterModal-${this.id}`);
+      modal.style.display = 'block';
+    },
+    editSemester(id) {
+      const seasonInput = document.getElementById(`season-placeholder-${this.id}`).innerHTML.trim(' ').split(' ')[1];
+      const yearInput = parseInt(document.getElementById(`year-placeholder-${this.id}`).innerHTML, 10);
+      this.$parent.editSemester(id, seasonInput, yearInput);
+      // this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
     }
   },
   directives: {
@@ -518,7 +542,7 @@ export default {
     filter: alpha(opacity=20);
   }
 
-.semester-modal-delete {
+.semester-modal{
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
