@@ -33,6 +33,10 @@ const router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: `${baseURL}/*`,
+      redirect: `${baseURL}/`
     }
   ]
 });

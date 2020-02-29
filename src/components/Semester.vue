@@ -148,7 +148,7 @@ export default {
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
     const service = Vue.$dragula.$service;
-    service.eventBus.$on('drag', data => {
+    service.eventBus.$on('drag', () => {
       this.scrollable = true;
     });
     service.eventBus.$on('drop', () => {
@@ -468,7 +468,7 @@ export default {
   }
 
   &-addWrapper {
-    width: 21.25rem;
+    width: 21.375rem;
     height: 4.625rem;
     border-radius: 0.5rem;
     display: flex;
