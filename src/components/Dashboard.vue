@@ -15,8 +15,6 @@
         <requirements class="dashboard-reqs" v-if="loaded"
           :semesters="semesters"
           :user="user"
-          :isBottomPreview="bottomBar.isPreview"
-          :isBottomBar="bottomBar.isExpanded"
           :key="requirementsKey"
           @requirementsMap="loadRequirementsMap"
          />
