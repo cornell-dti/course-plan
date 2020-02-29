@@ -170,6 +170,7 @@ export default {
     display:flex;
     flex-direction: column;
     margin-left: auto;
+    margin-right: 1%;
     .bottombarSeeMoreTab {
       color: white;
       // position: absolute;
