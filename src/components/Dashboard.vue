@@ -33,6 +33,9 @@
       <semesterview v-if="loaded"
         :semesters="semesters"
         :compact="compactVal"
+        :isBottomBarExpanded="bottomBar.isExpanded"
+        :isBottomBar="bottomCourses.length > 0"
+
         @compact-updated="compactVal = $event"
         @updateBar="updateBar"
         @close-bar="closeBar"

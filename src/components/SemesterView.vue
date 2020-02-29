@@ -1,5 +1,5 @@
 <template>
-  <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
+  <div class="semesterView" :class="{ bottomBar: isBottomBar, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded,}" @click="closeBar" :key="key">
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
@@ -83,7 +83,8 @@ export default {
   props: {
     semesters: Array,
     compact: Boolean,
-    isBottomBar: Boolean
+    isBottomBar: Boolean,
+    isBottomBarExpanded: Boolean
   },
   data() {
     return {
@@ -355,6 +356,17 @@ export default {
     }
   }
 }
+
+.expandedBottomBarSemesterView {
+  height: calc((20.56 - 100vh)*-1);
+  overflow-y: scroll;
+}
+
+.collapsedBottomBarSemesterView {
+  height: calc((4.25 - 100vh)*-1);
+  overflow-y: scroll;
+}
+
 /* The Modal (background) */
 .semester-modal {
   display: none; /* Hidden by default */
