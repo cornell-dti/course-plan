@@ -1,28 +1,3 @@
-/*
-const functions = require('firebase-functions');
-const admin = require('firebase-admin'); 
-const firebase = require('firebase/app');
-
-require('firebase/auth');
-require('firebase/firestore');
-
-// Development config
-const developmentConfig = {
-  apiKey: 'AIzaSyAfePy1Tbrqm55bYR7BHHl50r-9NTVj0Rs',
-  authDomain: 'cornelldti-courseplan-dev.firebaseapp.com',
-  databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
-  projectId: 'cornelldti-courseplan-dev',
-  storageBucket: '',
-  messagingSenderId: '321304703190',
-  appId: '1:321304703190:web:2f2fefb4a0284465b99977',
-};
- firebase.initializeApp(developmentConfig);
-
-// firebase utils
-const db = firebase.firestore();
-const auth = firebase.auth();
-*/
-// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 const functions = require('firebase-functions');
 
 // The Firebase Admin SDK to access the Firebase Realtime Database.
