@@ -18,8 +18,8 @@ export default {
 
 <style scoped lang="scss">
 .bottombartitle {
-  padding-left: 24px;
-  height: 40px;
+  padding-left: 1.5rem;
+  height: 2.5rem;
   line-height: 40px;
   background-color: #25A2AA;
   color: #FFF;
@@ -29,7 +29,7 @@ export default {
 
   // TODO: change to rem
   position: fixed;
-  bottom: 0px;
+  bottom: 0rem;
   width: 100%;
 
   left: 29.5rem;
@@ -43,8 +43,7 @@ export default {
 
 .expandedBottomBarTitle{
     position: fixed;
-    // bottom: 260px;
-    bottom: 313px;
+    bottom: 16.31rem;
 }
 
 </style>

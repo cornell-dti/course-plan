@@ -73,7 +73,7 @@ export default {
 
   &-tabview {
     position:fixed;
-    bottom: 40px;
+    bottom: 2.5rem;
     left: 29.5rem;
     width: calc(100vw - 29.5rem);
   }
@@ -81,8 +81,7 @@ export default {
 }
 .expandedTabView{
     position: fixed;
-    // bottom: 300px;
-    bottom: 355px;
+    bottom: 18.81rem;
 }
 
 </style>

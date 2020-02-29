@@ -150,7 +150,7 @@ export default {
 
       &-info {
         float: left;
-        height: 313px;
+        height: 16.31rem;
         width: 45%;
         background: #F8F8F8;
         overflow: scroll;
@@ -158,7 +158,7 @@ export default {
 
       &-details {
         float: right;
-        height: 313px;
+        height: 16.31rem;
         width: 55%;
         background: #FFF;
         overflow: scroll;
