@@ -173,7 +173,6 @@ export default {
     margin-right: 1%;
     .bottombarSeeMoreTab {
       color: white;
-      // position: absolute;
       width: 7.38rem;
       height: 1.75rem;
       background-color: #508197;

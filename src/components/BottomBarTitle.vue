@@ -27,7 +27,6 @@ export default {
   cursor: pointer;
   filter: brightness(100%);
 
-  // TODO: change to rem
   position: fixed;
   bottom: 0rem;
   width: 100%;
