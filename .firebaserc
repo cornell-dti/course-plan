@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "cornelldti-courseplan-dev",
+    "default": "cornell-courseplan",
     "staging": "cornelldti-courseplan-dev",
     "production": "cornell-courseplan"
   }
