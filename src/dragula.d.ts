@@ -1,1 +1,1 @@
-declare module 'vue-dragula';
+declare module 'vue-dragula';

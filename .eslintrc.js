@@ -2,9 +2,14 @@
 
 module.exports = {
   root: true,
-  extends: ['plugin:vue/essential', '@vue/airbnb'],
+  extends: ['plugin:vue/essential', '@vue/airbnb', '@vue/typescript', 'plugin:import/typescript'],
+  plugins: ['@typescript-eslint'],
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: '@typescript-eslint/parser',
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    extraFileExtensions: ['.vue'],
+    project: ['./tsconfig.json']
   },
   env: {
     browser: true,
@@ -66,5 +71,20 @@ module.exports = {
     'max-len': ['warn', { code: 200 }],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
-  }
+  },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        'import/extensions': [
+          'error',
+          'always',
+          {
+            js: 'never',
+            vue: 'always'
+          }
+        ]
+      }
+    }
+  ]
 };
