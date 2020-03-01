@@ -42,9 +42,13 @@
             :key="season"
             :id="season"
             class="newSemester-dropdown-content-item"
-            @click="selectSeason(season)"
+            @click="selectSeason(season[1])"
           >
-            {{ season }}
+          <img
+            v-bind:src='season[0]'
+            class= "newSemester-dropdown-content-season"
+          />
+            {{ season[1] }}
           </div>
         </div>
       </div>
@@ -118,6 +122,11 @@ const clickOutside = {
   }
 };
 
+const fall = require('../../assets/images/fallEmoji.png');
+const spring = require('../../assets/images/springEmoji.png');
+const winter = require('../../assets/images/winterEmoji.png');
+const summer = require('../../assets/images/summerEmoji.png');
+
 export default {
   props: {
     currentSemesters: Array,
@@ -131,7 +140,7 @@ export default {
 
     // years
     const currentYear = new Date().getFullYear();
-    const seasons = ['🍂 Fall', '🌸 Spring', '☀️ Summer', '❄️ Winter'];
+    const seasons = [[fall, 'Fall'], [spring, 'Spring'], [summer, 'Summer'], [winter, 'Winter']];
     const years = [];
     let startYear = currentYear - 10;
     while (startYear <= currentYear + 10) {
@@ -179,13 +188,13 @@ export default {
       let currentSeason;
       const currentMonth = new Date().getMonth();
       if (currentMonth === 0) {
-        currentSeason = '❄️ Winter';
+        currentSeason = 'Winter';
       } else if (currentMonth <= 4) {
-        currentSeason = '🌸 Spring';
+        currentSeason = 'Spring';
       } else if (currentMonth <= 7) {
-        currentSeason = '☀️ Summer';
+        currentSeason = 'Summer';
       } else {
-        currentSeason = '🍂 Fall';
+        currentSeason = 'Fall';
       }
       return currentSeason;
     },
@@ -267,7 +276,7 @@ export default {
     isDuplicate() {
       let isDup = false;
       this.currentSemesters.forEach(semester => {
-        if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder.substring(3)) {
+        if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder) {
           isDup = true;
         }
         return semester;
@@ -422,7 +431,7 @@ export default {
     margin-top: 3px;
 
     &.year-content {
-      width: 114px;
+      width: 100%;
       height: 223px;
       left: 574px;
       top: 209px;
@@ -433,7 +442,10 @@ export default {
 
       overflow: scroll;
     }
-
+    &-season {
+      padding: 10px;
+      padding-left: 0px;
+    }
     &-item {
       width: 106px;
       height: 31px;

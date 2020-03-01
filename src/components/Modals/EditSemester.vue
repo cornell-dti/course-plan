@@ -1,14 +1,11 @@
 <template>
-  <div class="deleteSemesterModal">
-    <div class="deleteSemesterModal-content" id="deleteSemester">
-      <div class="deleteSemesterModal-top">
-        <span class="deleteSemesterModal-title">{{ title }}</span>
-        <img class="deleteSemesterModal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
+  <div class="editSemesterModal">
+    <div class="editSemesterModal-content" id="deleteSemester">
+      <div class="editSemesterModal-top">
+        <span class="editSemesterModal-title">{{ title }}</span>
+        <img class="editSemesterModal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
       </div>
-      <div class="deleteSemesterModal-body">
-        <div class="deleteSemesterModal-body-text">{{ text }}</div>
-      </div>
-      <div class="deleteSemesterModal-body">
+      <div class="editSemesterModal-body">
         <newSemester
             class="modal-body"
             :currentSemesters="semesters"
@@ -17,12 +14,11 @@
             ref="modalBodyComponent">
         </newSemester>
       </div>
-      <div class="deleteSemesterModal-buttonWrapper">
-        <button class="deleteSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
-        <div class="deleteSemesterModal-button deleteSemesterModal-button--delete" @click="editSemester">
-            <div class="deleteSemesterModal-button-left">
-                <img class="deleteSemesterModal-button-left-icon" src="@/assets/images/trash-white.svg" />
-                <span class="deleteSemesterModal-button-left-text">Edit</span>
+      <div class="editSemesterModal-buttonWrapper">
+        <button class="editSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
+        <div class="editSemesterModal-button editSemesterModal-button--delete" @click="editSemester">
+            <div class="editSemesterModal-button-left">
+                <span class="editSemesterModal-button-left-text">Edit</span>
             </div>
         </div>
       </div>
@@ -47,9 +43,6 @@ export default {
       yearInput: 2020
     };
   },
-  mounted() {
-    this.update();
-  },
   props: {
     semesters: Array,
     deleteSemID: Number,
@@ -59,7 +52,7 @@ export default {
 
   computed: {
     text() {
-      return 'Are you sure you want to edit this semester?.';
+      return 'Are you sure you want to edit this semester?';
     },
     cancel() {
       return 'Cancel';
@@ -73,15 +66,8 @@ export default {
       const modal = document.getElementById(`editSemesterModal-${this.deleteSemID}`);
       modal.style.display = 'none';
     },
-    update() {
-      const season = document.getElementById('season-placeholder').innerHTML.trim(' ').split(' ')[1];
-      this.seasonInput = season;
-      this.yearInput = parseInt(document.getElementById('year-placeholder').innerHTML, 10);
-    },
     editSemester() {
       this.$parent.editSemester(this.deleteSemID);
-
-      // this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
       this.closeCurrentModal();
     }
 
@@ -90,7 +76,65 @@ export default {
 </script>
 
 <style lang="scss">
-.deleteSemesterModal {
+
+.modal {
+  padding: 1rem;
+
+  &-content {
+    background: #ffffff;
+    border-radius: 9px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem;
+  }
+
+  &-body {
+    padding: 0;
+  }
+
+  &-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  &-exit {
+    width: 10.5px;
+    height: 10.5px;
+  }
+
+  &-title {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    color: #3d3d3d;
+  }
+
+  &-buttonWrapper {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &-button {
+    width: 4.75rem;
+    height: 2rem;
+    color: #5b676d;
+    border-radius: 3px;
+    border: 1px solid #3d3d3d;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+
+    &--add {
+      color: #ffffff;
+      background-color: #508197;
+      margin-left: 0.5rem;
+      border: none;
+    }
+  }
+}
+.editSemesterModal {
   padding: 1rem;
 
   &-content {
@@ -99,7 +143,7 @@ export default {
     margin-left: auto;
     margin-right: auto;
     padding: 1.2rem;
-    width: 24rem;
+    width: 15.5rem;
     top: 4.75rem;
   }
 

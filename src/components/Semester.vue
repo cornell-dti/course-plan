@@ -311,7 +311,7 @@ export default {
       modal.style.display = 'block';
     },
     editSemester(id) {
-      const seasonInput = document.getElementById(`season-placeholder-${this.id}`).innerHTML.trim(' ').split(' ')[1];
+      const seasonInput = document.getElementById(`season-placeholder-${this.id}`).innerHTML.trim(' ').split(' ')[0];
       const yearInput = parseInt(document.getElementById(`year-placeholder-${this.id}`).innerHTML, 10);
       this.$parent.editSemester(id, seasonInput, yearInput);
       // this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
