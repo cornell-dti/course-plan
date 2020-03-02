@@ -146,6 +146,8 @@ import { Vue } from 'vue-property-decorator';
 import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
+/** @typedef { import('../requirements/types').StrictFulfilledByType } StrictFulfilledByType */
+/** @typedef { import('../requirements/types').BaseRequirement<StrictFulfilledByType> } Requirement */
 
 import reqsData from '../requirements/reqs.json';
 
@@ -363,19 +365,6 @@ export default {
       this.emitRequirementsMap();
 
       return finalRequirementJSONs;
-
-      /**
-       * @typedef {Object} Requirement
-       * @property {string} name
-       * @property {string} description
-       * @property {string} source
-       * @property {string} search
-       * @property {string[][]} includes
-       * @property {string} fulfilledBy
-       * @property {number} minCount
-       * @property {string} applies
-       * @property {boolean} progressBar
-       */
 
       /**
        * @typedef {Object} RequirementFulfillment
