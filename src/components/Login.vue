@@ -205,7 +205,7 @@ export default {
       if (this.validateEmail(this.waitlist.email) && this.validateMajor(this.waitlist.major)) {
         alert('You have been added to the waitlist. We\'ll be in touch shortly!');
 
-        // Add timestamp to data
+        // Add timestamp to data in YYYY-MM-DD hh:mm:ss
         const dt = new Date();
         this.waitlist.time = `${
           (dt.getMonth() + 1).toString().padStart(2, '0')}/${
