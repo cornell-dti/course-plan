@@ -144,7 +144,6 @@ export default {
      * Creates a course on frontend with either user or API data
      */
     createCourse(course) {
-      // TODO: id?
       const randomId = Math.floor(Math.random() * Math.floor(1000));
 
       const subject = (course.code && course.code.split(' ')[0]) || course.subject;
