@@ -368,10 +368,11 @@
                     "name": "First-Year Writing Seminars",
                     "description": "2 writing classes. Any two writing classes from the following: First-Year Writing Seminars (FWS), ENGL 2880, ENGL 2890",
                     "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
-                    "search": ["titleLong"],
+                    "search": ["titleLong", "catalogSatisfiesReq"],
                     "includes": [
                         [
-                            "FWS:"
+                            "FWS:",
+                            "First-Year Writing Seminar"
                         ]
                     ],
                     "fulfilledBy": "credits",
@@ -408,10 +409,11 @@
                     "name": "First-Year Writing Seminars (FWS)",
                     "description": "A 5 on either the AP English Composition or Literature exam, or a 7 on the IB HL English Literature or Language exam will count towards one of these seminars. First-year students should plan to take an FWS during their first semester at Cornell.",
                     "source": "https://as.cornell.edu/degree-requirements",
-                    "search": ["titleLong"],
+                    "search": ["titleLong", "catalogSatisfiesReq"],
                     "includes": [
                         [
-                            "FWS:"
+                            "FWS:",
+                            "First-Year Writing Seminar"
                         ]
                     ],
                     "fulfilledBy": "credits",
@@ -654,10 +656,11 @@
                     "name": "First-Year Writing Seminars",
                     "description": "All students are required to take two first-year writing seminars.",
                     "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
-                    "search": ["titleLong"],
+                    "search": ["titleLong", "catalogSatisfiesReq"],
                     "includes": [
                         [
-                            "FWS:"
+                            "FWS:",
+                            "First-Year Writing Seminar"
                         ]
                     ],
                     "fulfilledBy": "credits",
@@ -829,10 +832,11 @@
                     "name": "First-Year Writing Seminars",
                     "description": "Students are required to fulfill the following writing requirements for a letter grade:",
                     "source": "https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements",
-                    "search": ["titleLong"],
+                    "search": ["titleLong", "catalogSatisfiesReq"],
                     "includes": [
                         [
-                            "FWS:"
+                            "FWS:",
+                            "First-Year Writing Seminar"
                         ]
                     ],
                     "fulfilledBy": "credits",
@@ -1675,10 +1679,11 @@
                     "name": "First-Year Writing Seminars",
                     "description": "A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.",
                     "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
-                    "search": ["titleLong"],
+                    "search": ["titleLong", "catalogSatisfiesReq"],
                     "includes": [
                         [
-                            "FWS:"
+                            "FWS:",
+                            "First-Year Writing Seminar"
                         ]
                     ],
                     "fulfilledBy": "credits",
