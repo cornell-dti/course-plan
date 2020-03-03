@@ -1,0 +1,24 @@
+name: CI Policies
+on: pull_request
+
+jobs:
+  enforce-release-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Print base ref and head ref
+        run: |
+          echo "Your head ref is ${{ github.head_ref }}."
+          echo "Your base ref is ${{ github.base_ref }}."
+      - name: Fail if try to push release from non-master branch
+        if: github.base_ref != 'beta-release' && github.head_ref == 'master'
+        run: |
+          echo "Head ref must be master for release. Everything should go through staging first!"
+          exit 1
+  warn-big-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: cornell-dti/big-diff-warning@master
+        env:
+          BOT_TOKEN: '${{ secrets.BOT_TOKEN }}'

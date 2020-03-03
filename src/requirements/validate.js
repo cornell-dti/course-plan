@@ -22,6 +22,28 @@ const requirementSchema = {
   required: ['name', 'description', 'source', 'fulfilledBy']
 };
 
+/**
+ * @param {string} schemaName
+ * @param {{name: string, error: string}[]} errors
+ */
+const checkValidation = (schemaName, errors) => {
+  if (errors.length === 0) {
+    // eslint-disable-next-line no-console
+    console.log(`Passed ${schemaName} schema validator!`);
+  } else {
+    // eslint-disable-next-line no-console
+    console.log(`Error with ${schemaName} schema`);
+    // eslint-disable-next-line no-console
+    console.log({
+      name: `Schema error with ${schemaName}`,
+      error: errors
+    });
+    // eslint-disable-next-line no-console
+    console.log('Please run node src/requirements/validate.js before push.');
+    process.exit(1);
+  }
+};
+
 // Validate University from JSON
 
 // Check with json schema if university attribute exist
@@ -52,15 +74,7 @@ if (json.university) {
   const { university } = json;
   const universityResult = universityValidator.validate(university, universitySchema);
 
-  if (universityResult.errors.length === 0) {
-    console.log('Passed university schema validator!');
-  } else {
-    console.log('Error with university schema');
-    console.log({
-      name: 'Schema error with University',
-      error: universityResult.errors
-    });
-  }
+  checkValidation('university', universityResult.errors);
 }
 
 // Validate Colleges from JSON
@@ -102,12 +116,7 @@ if (json.college) {
     }
   }
 
-  if (collegeErrors.length === 0) {
-    console.log('Passed college schema validator!');
-  } else {
-    console.log('Error with college schema');
-    console.log(collegeErrors);
-  }
+  checkValidation('college', collegeErrors);
 }
 
 // Validate Majors from JSON
@@ -155,10 +164,5 @@ if (json.major) {
     }
   }
 
-  if (majorErrors.length === 0) {
-    console.log('Passed major schema validator!');
-  } else {
-    console.log('Error with major schema');
-    console.log(majorErrors);
-  }
+  checkValidation('major', majorErrors);
 }

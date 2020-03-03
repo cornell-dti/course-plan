@@ -14,3 +14,5 @@ jobs:
         run: npm install
       - name: Run Linter
         run: npm run lint
+      - name: Run requirement schema check
+        run: node src/requirements/validate.js
