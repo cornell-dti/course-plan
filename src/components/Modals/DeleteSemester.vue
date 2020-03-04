@@ -41,7 +41,7 @@ export default {
 
   computed: {
     text() {
-      return 'Are you sure you want to delete this semester?.';
+      return 'Are you sure you want to delete this semester?';
     },
     cancel() {
       return 'Cancel';

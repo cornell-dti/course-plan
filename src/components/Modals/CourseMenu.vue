@@ -104,12 +104,12 @@ export default {
 <style scoped lang="scss">
 .courseMenu {
   &-movedNotCompact{
-  top: 20px; /* your required value */
+  top: 20px;
   left: -50px;
   position: fixed;
   }
   &-movedCompact{
-    top: 20px; /* your required value */
+    top: 20px;
     left: -50px;;
     position: fixed;
   }

@@ -155,8 +155,6 @@ export default {
     addSemester() {
       const seasonInput = document.getElementById(`season-placeholder`);
       const yearInput = document.getElementById(`year-placeholder`);
-      console.log('hello', seasonInput);
-
       this.$parent.addSemester(
         seasonInput.innerHTML.trim(' ').split(' ')[1],
         parseInt(yearInput.innerHTML, 10)

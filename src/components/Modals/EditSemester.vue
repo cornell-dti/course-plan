@@ -37,12 +37,6 @@ Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 
 export default {
-  data() {
-    return {
-      seasonInput: 'winter',
-      yearInput: 2020
-    };
-  },
   props: {
     semesters: Array,
     deleteSemID: Number,
