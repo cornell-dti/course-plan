@@ -81,7 +81,7 @@ export default {
 }
 .expandedTabView{
     position: fixed;
-    bottom: 18.81rem;
+    bottom: 18.75rem;
 }
 
 </style>

@@ -42,7 +42,7 @@ export default {
 
 .expandedBottomBarTitle{
     position: fixed;
-    bottom: 16.31rem;
+    bottom: 16.25rem;
 }
 
 </style>
