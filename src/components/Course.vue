@@ -125,11 +125,6 @@ export default {
       this.semesters.forEach(semester => {
         semesterString += `${semester}, `;
       });
-      if (semesterString.length > 32) {
-        semesterString = semesterString.substring(0, 32);
-        semesterString += '...';
-        return semesterString;
-      }
       if (semesterString.length > 0) {
         return semesterString.substring(0, semesterString.length - 2);
       }
@@ -336,6 +331,7 @@ export default {
 
   &-semesters {
     margin-left: 0.2rem;
+    text-overflow: ellipsis;
 
     &:before {
       margin-right: 0.2rem;
