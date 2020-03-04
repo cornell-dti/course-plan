@@ -38,7 +38,6 @@
           <img v-if="!seeMoreOpen" class="bottombarSeeMoreTab-arrow" src="@/assets/images/uparrow-white.svg" />
           <img v-if="seeMoreOpen" class="bottombarSeeMoreTab-arrow" src="@/assets/images/downarrow-white.svg" />
       </div>
-
       <div v-if="seeMoreOpen" class="bottombarSeeMoreOptions">
         <div class="seeMoreCourse-content">
             <div
@@ -51,9 +50,7 @@
             </div>
         </div>
       </div>
-
     </div>
-
   </div>
 </template>
 
