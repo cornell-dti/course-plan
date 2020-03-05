@@ -19,15 +19,6 @@
           @requirementsMap="loadRequirementsMap"
          />
       </div>
-      <!-- TODO: isBottomBar fix -->
-      <!-- <semesterview v-if="loaded"
-        :semesters="semesters"
-        :compact="compactVal"
-        :isBottomBar="bottomBar.isExpanded"
-        @compact-updated="compactVal = $event"
-        @update-bar="updateBar"
-        @close-bar="closeBar"
-      /> -->
       <semesterview v-if="loaded"
         :semesters="semesters"
         :compact="compactVal"

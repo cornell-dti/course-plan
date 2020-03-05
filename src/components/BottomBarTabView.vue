@@ -170,7 +170,7 @@ export default {
     margin-right: 1%;
     .bottombarSeeMoreTab {
       color: white;
-      width: 7.38rem;
+      width: 8rem;
       height: 1.75rem;
       background-color: #508197;
       border-top-left-radius: 5px;
@@ -190,7 +190,7 @@ export default {
   }
 
   .bottombarSeeMoreOptions {
-    width: 7.375rem;
+    width: 8rem;
     background-color: #FFFFFF;;
     border: 1px solid rgba(218, 218, 218, 0.2);
     max-height:6.81rem;
@@ -218,6 +218,7 @@ export default {
           display: none;
           width: 0.625rem;
           height: 0.55rem;
+          margin-right: 7%;
         }
       }
 
