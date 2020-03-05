@@ -81,6 +81,7 @@ module.exports = {
           'always',
           {
             js: 'never',
+            ts: 'never',
             vue: 'always'
           }
         ]

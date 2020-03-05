@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
+    "tsc": "tsc",
     "build:staging": "vue-cli-service build --mode staging",
     "format": "prettier --write '**/*.{js,vue,scss,css,html}'",
     "format:check": "prettier --check '**/*.{js,vue,scss,css,html}'"
