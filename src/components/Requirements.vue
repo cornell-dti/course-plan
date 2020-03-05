@@ -149,7 +149,7 @@ import Modal from '@/components/Modals/Modal';
 /** @typedef { import('../requirements/types').StrictFulfilledByType } StrictFulfilledByType */
 /** @typedef { import('../requirements/types').BaseRequirement<StrictFulfilledByType> } Requirement */
 
-import reqsData from '../requirements/reqs.json';
+import reqsFunctions from '@/requirements/reqs-functions';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -167,7 +167,10 @@ export default {
     // Get array of courses from semesters data
     const courses = this.getCourseCodesArray();
 
-    this.getReqs(courses, this.user.college, this.user.major).then(groups => {
+    reqsFunctions.getReqs(courses, this.user.college, this.user.major, this.requirementsMap).then(groups => {
+      // Send satisfied credits data back to dashboard to build alerts
+      this.emitRequirementsMap();
+
       // Turn result into data readable by requirements menu
       groups.forEach(group => {
         const singleMenuRequirement = {
@@ -216,7 +219,6 @@ export default {
 
   data() {
     return {
-      reqsData,
       actives: [false],
       modalShow: false,
       reqs: [

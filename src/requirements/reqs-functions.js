@@ -1,3 +1,5 @@
+import reqsData from '@/requirements/reqs.json';
+
 /**
  * Check if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
  * @param {string} courseName : name of the course (as a code)
@@ -132,10 +134,10 @@ function createRequirementJSON(requirement, totalRequirementCredits, totalRequir
  */
 
 /** @param {Object.<string, string[]>} satisfiedMap */
-function mergerequirementsMap(satisfiedMap) {
+function mergeRequirementsMap(requirementsMap, satisfiedMap) {
   Object.keys(satisfiedMap).forEach(course => {
-    if (course in this.requirementsMap) this.requirementsMap[course] = this.requirementsMap[course].concat(satisfiedMap[course]);
-    else this.requirementsMap[course] = satisfiedMap[course];
+    if (course in requirementsMap) requirementsMap[course] = requirementsMap[course].concat(satisfiedMap[course]);
+    else requirementsMap[course] = satisfiedMap[course];
   });
 }
 
@@ -145,7 +147,7 @@ function mergerequirementsMap(satisfiedMap) {
  * @param {Requirement[]} allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
  * @returns {Promise<RequirementFulfillment[]>}
  */
-async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequirements) {
+async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequirements, requirementsMap) {
   // array of requirement status information to be returned
   /** @type {RequirementFulfillment[]} */
   const requirementJSONs = [];
@@ -202,7 +204,7 @@ async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequiremen
   }
 
   // Merge satisfied credits into satisfiedCourseCredits (for alerts)
-  mergerequirementsMap(satisfiedRequirementMap);
+  mergeRequirementsMap(requirementsMap, satisfiedRequirementMap);
 
   return requirementJSONs;
 }
@@ -251,7 +253,7 @@ function getCourseInfo(code, roster) {
  * @param {string} college
  * @param {string} major
  */
-async function getReqs(coursesTaken, college, major) {
+async function getReqs(coursesTaken, college, major, requirementsMap) {
   // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
   const coursesTakenWithInfo = {};
   const courseData = await Promise.all(
@@ -266,19 +268,21 @@ async function getReqs(coursesTaken, college, major) {
   // PART 1: check university requirements
   if (!reqsData.university) throw new Error('University requirements not found.');
   const universityReqs = reqsData.university;
+
   finalRequirementJSONs.push({
     groupName: 'University',
     specific: null,
-    reqs: await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements)
+    reqs: await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements, requirementsMap)
   });
 
   // PART 2: check college requirements
   if (!(college in reqsData.college)) throw new Error('College not found.');
   const collegeReqs = reqsData.college[college];
+
   finalRequirementJSONs.push({
     groupName: 'College',
     specific: college,
-    reqs: await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements)
+    reqs: await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements, requirementsMap)
   });
 
   // PART 3: check major reqs
@@ -288,12 +292,11 @@ async function getReqs(coursesTaken, college, major) {
     finalRequirementJSONs.push({
       groupName: 'Major',
       specific: major,
-      reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements)
+      reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, requirementsMap)
     });
   }
 
-  // Send satisfied credits data back to dashboard to build alerts
-  this.emitRequirementsMap();
-
   return finalRequirementJSONs;
 }
+
+export default { getReqs };
