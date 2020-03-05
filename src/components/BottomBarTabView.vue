@@ -185,6 +185,7 @@ export default {
       &-arrow {
         width: 14px;
         height: 50%;
+        margin-right: 7%;
       }
     }
   }
