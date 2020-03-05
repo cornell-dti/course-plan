@@ -120,6 +120,15 @@ function createRequirementJSON(requirement, totalRequirementCredits, totalRequir
   return requirementFulfillmentData;
 }
 
+/** @param {Object.<string, string[]>} requirementsMap */
+/** @param {Object.<string, string[]>} satisfiedMap */
+function mergeRequirementsMap(requirementsMap, satisfiedMap) {
+  Object.keys(satisfiedMap).forEach(course => {
+    if (course in requirementsMap) requirementsMap[course] = requirementsMap[course].concat(satisfiedMap[course]);
+    else requirementsMap[course] = satisfiedMap[course];
+  });
+}
+
 /**
  * @typedef {Object} RequirementFulfillment
  * @property {string} name
@@ -133,18 +142,11 @@ function createRequirementJSON(requirement, totalRequirementCredits, totalRequir
  * @property {boolean} displayDescription
  */
 
-/** @param {Object.<string, string[]>} satisfiedMap */
-function mergeRequirementsMap(requirementsMap, satisfiedMap) {
-  Object.keys(satisfiedMap).forEach(course => {
-    if (course in requirementsMap) requirementsMap[course] = requirementsMap[course].concat(satisfiedMap[course]);
-    else requirementsMap[course] = satisfiedMap[course];
-  });
-}
-
 /**
  * Loops through requirement data and compare all courses on (to identify whether they satisfy the requirement)
  * @param {Object.<string, Object>} allCoursesTakenWithInfo : object of courses taken with API information (CS 2110: {info})
  * @param {Requirement[]} allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
+ * @param {Object.<string, string[]>} requirementsMap : object of courses taken with requirements they fulfill
  * @returns {Promise<RequirementFulfillment[]>}
  */
 async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequirements, requirementsMap) {
@@ -252,6 +254,7 @@ function getCourseInfo(code, roster) {
  * @param {Array<{code: string, roster: string}>} coursesTaken
  * @param {string} college
  * @param {string} major
+ * @param {Object.<string, string[]>} requirementsMap
  */
 async function getReqs(coursesTaken, college, major, requirementsMap) {
   // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
