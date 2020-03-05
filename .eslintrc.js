@@ -86,6 +86,20 @@ module.exports = {
           }
         ]
       }
+    },
+    {
+      files: ['*.js'],
+      rules: {
+        'import/extensions': [
+          'error',
+          'always',
+          {
+            js: 'never',
+            ts: 'never',
+            vue: 'never'
+          }
+        ]
+      }
     }
   ]
 };
