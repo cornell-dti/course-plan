@@ -79,8 +79,8 @@ export default {
       firebaseSems: [],
       currentClasses: [],
       user: {
-        major: '',
-        majorFN: '',
+        major: [],
+        majorFN: [],
         college: '',
         collegeFN: '',
         firstName: names[0],
@@ -435,11 +435,18 @@ export default {
         middleName: name.middleName,
         lastName: name.lastName
       };
-      if ('majors' in data && data.majors.length > 0) {
-        user.major = data.majors[0].acronym;
-        user.majorFN = data.majors[0].fullName;
-      }
 
+      if ('majors' in data && data.majors.length > 0) {
+        const majors = [];
+        const majorsFN = [];
+        data.majors.forEach(major => {
+          majors.push(major.acronym);
+          majorsFN.push(major.fullName);
+        });
+        user.major = majors;
+        user.majorFN = majorsFN;
+      }
+      console.log(user);
       return user;
     },
 
