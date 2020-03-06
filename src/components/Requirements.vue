@@ -14,7 +14,7 @@
       <div class="progress">
         <div
           class="progress-bar"
-          :style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
+          :style="{ 'background-color': `#${reqGroupColorMap[req.group][0]}`, width: `${(req.fulfilled/req.required)*100}%`}"
           role="progressbar"
         ></div>
       </div>
@@ -27,24 +27,24 @@
       <!--View more college requirements -->
       <div class="row top">
         <div class="col-1 p-0" >
-          <button :style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
+          <button :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" class="btn" @click="toggleDetails(index)">
             <!-- svg for dropdown icon -->
             <img
               v-if="req.displayDetails"
               class="arrow arrow-up"
-              src="@/assets/images/dropup-blue.svg"
-              alt="dropdown"
+              :src="require(`@/assets/images/dropup-${reqGroupColorMap[req.group][1]}.svg`)"
+              alt="dropup"
             />
             <img
               v-else
               class="arrow"
-              src="@/assets/images/dropdown-blue.svg"
+              :src="require(`@/assets/images/dropdown-${reqGroupColorMap[req.group][1]}.svg`)"
               alt="dropdown"
             />
           </button>
         </div>
          <div class="col p-0">
-          <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements</button>
+          <button class="btn req-name" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements</button>
         </div>
       </div>
 
@@ -63,7 +63,7 @@
                   v-if="subReq.displayDescription"
                   class="arrow arrow-up"
                   src="@/assets/images/dropup.svg"
-                  alt="dropdown"
+                  alt="dropup"
                 />
                 <img
                   v-else
@@ -111,7 +111,7 @@
                   v-if="subReq.displayDescription"
                   class="arrow arrow-up completed-arrow"
                   src="@/assets/images/dropup-lightgray.svg"
-                  alt="dropdown"
+                  alt="dropup"
                 />
                 <img
                   v-else
@@ -266,6 +266,12 @@ export default {
       ],
       requirementsMap: {
         // CS 1110: 'MQR-AS'
+      },
+      // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
+      reqGroupColorMap: {
+        UNIVERSITY: ['92C3E6', 'lightblue'],
+        COLLEGE: ['1AA9A5', 'blue'],
+        MAJOR: ['105351', 'green'],
       }
     };
   },
@@ -419,7 +425,7 @@ h1.title {
   margin-top: auto;
   margin-bottom: auto;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 600;
   font-size: 16px;
   line-height: 16px;
 
@@ -437,21 +443,6 @@ h1.title {
   font-size: 14px;
   line-height: 14px;
   color: #757575
-}
-
-.completed {
-  margin-top: 1rem;
-  &-ptext {
-    font-size: 12px;
-    opacity: 0.8;
-    font-weight: normal;
-  }
-}
-
-.incomplete {
-  &-ptext {
-    font-size: 14px;
-  }
 }
 
 .major {
@@ -629,6 +620,21 @@ button.view {
   &-progress {
     font-size: 12px;
     line-height: 12px;
+  }
+}
+
+.completed {
+  margin-top: 1rem;
+  &-ptext {
+    font-size: 12px;
+    opacity: 0.8;
+    font-weight: normal;
+  }
+}
+
+.incomplete {
+  &-ptext {
+    font-size: 14px;
   }
 }
 
