@@ -19,8 +19,8 @@
       </div>
 
       <p class="progress-text">
-        <strong>{{ req.fulfilled }}/{{ req.required }}</strong>
-        Total {{ req.type }} Inputted on Schedule
+        <span class="progress-text-credits">{{ req.fulfilled }}/{{ req.required }}</span>
+        <span class="progress-text-text"> Total {{ req.type }} Inputted on Schedule</span>
       </p>
 
       <!--View more college requirements -->
@@ -30,20 +30,20 @@
             <!-- svg for dropdown icon -->
             <img
               v-if="req.displayDetails"
-              class="arrow arrow-down"
-              src="@/assets/images/dropdown-blue.svg"
+              class="arrow arrow-up"
+              src="@/assets/images/dropup-blue.svg"
               alt="dropdown"
             />
             <img
               v-else
               class="arrow"
-              src="@/assets/images/dropright-blue.svg"
+              src="@/assets/images/dropdown-blue.svg"
               alt="dropdown"
             />
           </button>
         </div>
-         <div class="col p-0 ">
-          <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
+         <div class="col p-0">
+          <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements</button>
         </div>
       </div>
 
@@ -60,23 +60,23 @@
                 <!-- svg for dropdown icon -->
                 <img
                   v-if="subReq.displayDescription"
-                  class="arrow arrow-down"
-                  src="@/assets/images/dropdown.svg"
+                  class="arrow arrow-up"
+                  src="@/assets/images/dropup.svg"
                   alt="dropdown"
                 />
                 <img
                   v-else
                   class="arrow"
-                  src="@/assets/images/dropright.svg"
+                  src="@/assets/images/dropdown.svg"
                   alt="dropdown"
                 />
               </button>
             </div>
             <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-              <p class="sup-req pointer">{{subReq.name}}</p>
+              <p class="sup-req pointer incomplete-ptext">{{subReq.name}}</p>
             </div>
             <div class="col">
-              <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
+              <p class="sup-req-progress text-right incomplete-ptext">{{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type === 'Credits' ? 'cr.' : subReq.type}` : 'Self-Check' }}</p>
             </div>
           </div>
           <div v-if="subReq.displayDescription" class="description">
@@ -86,7 +86,7 @@
         </div>
 
         <div v-if="req.completed.length > 0" class="row completed">
-          <p class="col sub-title">Completed Requirements</p>
+          <p class="col sub-title">Filled Requirements</p>
           <div class="col-1 text-right">
             <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
               <!-- Toggle to display completed reqs -->
@@ -108,23 +108,23 @@
                   <!-- svg for dropdown icon -->
                 <img
                   v-if="subReq.displayDescription"
-                  class="arrow arrow-down"
-                  src="@/assets/images/dropdown.svg"
+                  class="arrow arrow-up completed-arrow"
+                  src="@/assets/images/dropup-lightgray.svg"
                   alt="dropdown"
                 />
                 <img
                   v-else
-                  class="arrow"
-                  src="@/assets/images/dropright.svg"
+                  class="arrow completed-arrow"
+                  src="@/assets/images/dropdown-lightgray.svg"
                   alt="dropdown"
                 />
                 </button>
               </div>
               <div class="col-7" @click="toggleDescription(index, 'completed', id)">
-                <p class="sup-req pointer">{{subReq.name}}</p>
+                <p class="sup-req pointer completed-ptext">{{subReq.name}}</p>
               </div>
               <div class="col">
-                <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
+                <p class="sup-req-progress text-right completed-ptext">{{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type === 'Credits' ? 'cr.' : subReq.type }}</p>
               </div>
             </div>
             <div v-if="subReq.displayDescription" class="description">
@@ -176,7 +176,7 @@ export default {
         const singleMenuRequirement = {
           ongoing: [],
           completed: [],
-          name: `${group.groupName.toUpperCase()} REQUIREMENT`,
+          name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
           group: group.groupName.toUpperCase(),
           specific: (group.specific) ? group.specific : null,
           color: '105351',
@@ -429,10 +429,22 @@ h1.title {
   font-weight: bold;
   font-size: 14px;
   line-height: 14px;
+  color: #757575
 }
 
 .completed {
   margin-top: 1rem;
+  &-ptext {
+    font-size: 12px;
+    opacity: 0.8;
+    font-weight: normal;
+  }
+}
+
+.incomplete {
+  &-ptext {
+    font-size: 14px;
+  }
 }
 
 .major {
@@ -475,8 +487,12 @@ p.active {
   fill: #1AA9A5;
   color:#1AA9A5;
 
+  margin-top: -4px;
   &-down {
     margin-top: -4px;
+  }
+  &-up {
+    margin-top: 4px;
   }
 }
 
@@ -484,6 +500,14 @@ p.active {
   margin: 0.3125rem 0 0 0;
   font-size: 12px;
   line-height: 12px;
+  color: #3C3C3C;
+
+  &-credits {
+    font-weight: bold;
+  }
+  &-text {
+    font-weight: normal;
+  }
 }
 
 ul.striped-list > li {
@@ -575,7 +599,7 @@ button.view {
 
   &-name {
     margin-left: 0.5rem;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 14px;
     line-height: 14px;
     align-self: center;
@@ -596,9 +620,14 @@ button.view {
   color: #757575;
 
   &-progress {
-    font-weight: bold;
     font-size: 12px;
     line-height: 12px;
+  }
+}
+
+.text {
+  &-right {
+    color: #757575;
   }
 }
 
