@@ -5,10 +5,18 @@
 
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
-      <div class="row top">
-        <p class="name col p-0">{{ req.name }} <span class="specific" v-if="req.specific">({{ req.specific }})</span></p>
-      </div>
 
+      <!-- TODO change for multiple colleges -->
+      <div v-if="index<=2" class="row top">
+        <p class="name col p-0">{{ req.name }} <!-- <span class="specific" v-if="req.specific">({{ req.specific }})</span> --></p>
+        <img class="confirmation-icon" src="../assets/images/gear.svg" />
+      </div>
+      <div v-if="isFirstMajor(index, req.group)" class="major">
+        <div @click="activate(id)" class="major-title" v-for="(major, id) in user.majorFN" :key="major.id">
+          <p v-bind:class="{'active': display[id]}"  class="major-title-top">{{major}} {{display[id]}}</p>
+          <p v-bind:class="{'active': display[id]}" class="major-title-bottom">{{user.collegeFN}}</p>
+        </div>
+      </div>
       <!-- progress bar settings -->
       <div class="progress">
         <div
@@ -136,8 +144,8 @@
 
       <!-- Add separator if additional completed requirements -->
       <div class="separator" v-if="req.completed.length > 0"></div>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -164,6 +172,8 @@ export default {
     isBottomBar: Boolean
   },
   mounted() {
+    this.getDisplays();
+    console.log('USER', this.user);
     // Get array of courses from semesters data
     const courses = this.getCourseCodesArray();
 
@@ -219,8 +229,10 @@ export default {
 
   data() {
     return {
+      display: [],
       actives: [false],
       modalShow: false,
+      majors: [],
       reqs: [
         // Data structure for menu
         // {
@@ -316,13 +328,83 @@ export default {
 
     emitRequirementsMap() {
       this.$emit('requirementsMap', this.requirementsMap);
+    },
+    isFirstMajor(id, group) {
+      return id <= 2 && group === 'MAJOR';
+    },
+    activate(id) {
+      console.log("A", this.display, id);
+      this.display.forEach((dis, i) => {
+        if (dis) {
+          this.display[i] = false;
+        }
+      });
+      this.display[id] = true;
+    },
+    getDisplays() {
+      const display = [];
+      this.user.major.forEach((major, i) => {
+        if (i === 0) {
+          display.push(true);
+        } else {
+          display.push(false);
+        }
+      });
+      this.display = display;
+      console.log('displaye', this.display);
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
+.major {
+  display: flex;
+  padding-top: 10px;
+  padding-bottom: 25px;
+  &-title {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+      padding-top: 10px;
+      border-bottom: 2px solid #508197;
+      &--active {
+          color: #508197;
+          font-weight: bold;
+      }
 
+      &-top {
+        text-align: center;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 17px;
+        color: #000000;
+          &--active {
+          color: #508197;
+          font-weight: bold;
+        }
+      }
+
+      &-bottom {
+        text-align: center;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 15px;
+        color: #000000;
+          &--active {
+            color: #508197;
+            font-weight: bold;
+        }
+      }
+    }
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+}
 .btn {
   padding: 0;
   display: flex;
