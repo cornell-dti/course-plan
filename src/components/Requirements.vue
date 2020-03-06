@@ -7,6 +7,7 @@
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
       <div class="row top">
         <p class="name col p-0">{{ req.name }} <span class="specific" v-if="req.specific">({{ req.specific }})</span></p>
+        <img class="pointer" src="@/assets/images/gear.svg" alt="settings gear" />
       </div>
 
       <!-- progress bar settings -->
