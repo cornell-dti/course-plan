@@ -348,6 +348,12 @@ export default {
   padding: 0;
 }
 
+.col {
+  &-1 {
+    margin-right: -10px;
+  }
+}
+
 .requirements, .fixed {
   height: 100vh;
   width: 25rem;
