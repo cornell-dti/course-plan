@@ -11,139 +11,142 @@
         <p class="name col p-0">{{ req.name }} <!-- <span class="specific" v-if="req.specific">({{ req.specific }})</span> --></p>
         <img class="confirmation-icon" src="../assets/images/gear.svg" />
       </div>
-      <div v-if="isFirstMajor(index, req.group)" class="major">
-        <div @click="activate(id)" class="major-title" v-for="(major, id) in user.majorFN" :key="major.id">
-          <p v-bind:class="{'active': display[id]}"  class="major-title-top">{{major}} {{display[id]}}</p>
-          <p v-bind:class="{'active': display[id]}" class="major-title-bottom">{{user.collegeFN}}</p>
+      <!-- TODO change for multiple colleges -->
+      <div v-if="index==2" class="major">
+        <div v-bind:class="{'active': major.display}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
+          <p v-bind:class="{'active': major.display}"  class="major-title-top">{{major.majorFN}}</p>
+          <p v-bind:class="{'active': major.display}" class="major-title-bottom">{{user.collegeFN}}</p>
         </div>
       </div>
       <!-- progress bar settings -->
-      <div class="progress">
-        <div
-          class="progress-bar"
-          :style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
-          role="progressbar"
-        ></div>
-      </div>
-
-      <p class="progress-text">
-        <strong>{{ req.fulfilled }}/{{ req.required }}</strong>
-        Total {{ req.type }} Inputted on Schedule
-      </p>
-
-      <!--View more college requirements -->
-      <div class="row top">
-        <div class="col-1 p-0" >
-          <button :style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
-            <!-- svg for dropdown icon -->
-            <img
-              v-if="req.displayDetails"
-              class="arrow arrow-down"
-              src="@/assets/images/dropdown-blue.svg"
-              alt="dropdown"
-            />
-            <img
-              v-else
-              class="arrow"
-              src="@/assets/images/dropright-blue.svg"
-              alt="dropdown"
-            />
-          </button>
-        </div>
-         <div class="col p-0 ">
-          <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
-        </div>
-      </div>
-
-      <!--Show more of completed requirements -->
-      <div v-if="req.displayDetails">
-        <p class="sub-title">On-Going Requirements</p>
-        <div class="separator"></div>
-        <div
-          v-for="(subReq, id) in req.ongoing"
-          :key="subReq.id">
-          <div class="row depth-req">
-            <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
-              <button class="btn">
-                <!-- svg for dropdown icon -->
-                <img
-                  v-if="subReq.displayDescription"
-                  class="arrow arrow-down"
-                  src="@/assets/images/dropdown.svg"
-                  alt="dropdown"
-                />
-                <img
-                  v-else
-                  class="arrow"
-                  src="@/assets/images/dropright.svg"
-                  alt="dropdown"
-                />
-              </button>
-            </div>
-            <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-              <p class="sup-req pointer">{{subReq.name}}</p>
-            </div>
-            <div class="col">
-              <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
-            </div>
-          </div>
-          <div v-if="subReq.displayDescription" class="description">
-            {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
-          </div>
-          <div class="separator"></div>
+      <div v-if="showMajorRequirements(index, req.group)" >
+        <div class="progress">
+          <div
+            class="progress-bar"
+            :style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
+            role="progressbar"
+          ></div>
         </div>
 
-        <div v-if="req.completed.length > 0" class="row completed">
-          <p class="col sub-title">Completed Requirements</p>
-          <div class="col-1 text-right">
-            <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
-              <!-- Toggle to display completed reqs -->
-              <p
-                class="toggle"
-                v-if="req.displayCompleted"
-                v-on:click="turnCompleted(index, false)">HIDE</p>
-              <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
+        <p class="progress-text">
+          <strong>{{ req.fulfilled }}/{{ req.required }}</strong>
+          Total {{ req.type }} Inputted on Schedule
+        </p>
+
+        <!--View more college requirements -->
+        <div class="row top">
+          <div class="col-1 p-0" >
+            <button :style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
+              <!-- svg for dropdown icon -->
+              <img
+                v-if="req.displayDetails"
+                class="arrow arrow-down"
+                src="@/assets/images/dropdown-blue.svg"
+                alt="dropdown"
+              />
+              <img
+                v-else
+                class="arrow"
+                src="@/assets/images/dropright-blue.svg"
+                alt="dropdown"
+              />
             </button>
           </div>
+          <div class="col p-0 ">
+            <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
+          </div>
         </div>
 
-        <div v-if="req.displayCompleted">
-          <div v-for="(subReq, id) in req.completed" :key="subReq.id">
-            <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+        <!--Show more of completed requirements -->
+        <div v-if="req.displayDetails">
+          <p class="sub-title">On-Going Requirements</p>
+          <div class="separator"></div>
+          <div
+            v-for="(subReq, id) in req.ongoing"
+            :key="subReq.id">
             <div class="row depth-req">
-              <div class="col-1" @click="toggleDescription(index, 'completed', id)">
+              <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
                 <button class="btn">
                   <!-- svg for dropdown icon -->
-                <img
-                  v-if="subReq.displayDescription"
-                  class="arrow arrow-down"
-                  src="@/assets/images/dropdown.svg"
-                  alt="dropdown"
-                />
-                <img
-                  v-else
-                  class="arrow"
-                  src="@/assets/images/dropright.svg"
-                  alt="dropdown"
-                />
+                  <img
+                    v-if="subReq.displayDescription"
+                    class="arrow arrow-down"
+                    src="@/assets/images/dropdown.svg"
+                    alt="dropdown"
+                  />
+                  <img
+                    v-else
+                    class="arrow"
+                    src="@/assets/images/dropright.svg"
+                    alt="dropdown"
+                  />
                 </button>
               </div>
-              <div class="col-7" @click="toggleDescription(index, 'completed', id)">
+              <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
                 <p class="sup-req pointer">{{subReq.name}}</p>
               </div>
               <div class="col">
-                <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
+                <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
               </div>
             </div>
             <div v-if="subReq.displayDescription" class="description">
               {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
             </div>
+            <div class="separator"></div>
+          </div>
+
+          <div v-if="req.completed.length > 0" class="row completed">
+            <p class="col sub-title">Completed Requirements</p>
+            <div class="col-1 text-right">
+              <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
+                <!-- Toggle to display completed reqs -->
+                <p
+                  class="toggle"
+                  v-if="req.displayCompleted"
+                  v-on:click="turnCompleted(index, false)">HIDE</p>
+                <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
+              </button>
+            </div>
+          </div>
+
+          <div v-if="req.displayCompleted">
+            <div v-for="(subReq, id) in req.completed" :key="subReq.id">
+              <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+              <div class="row depth-req">
+                <div class="col-1" @click="toggleDescription(index, 'completed', id)">
+                  <button class="btn">
+                    <!-- svg for dropdown icon -->
+                  <img
+                    v-if="subReq.displayDescription"
+                    class="arrow arrow-down"
+                    src="@/assets/images/dropdown.svg"
+                    alt="dropdown"
+                  />
+                  <img
+                    v-else
+                    class="arrow"
+                    src="@/assets/images/dropright.svg"
+                    alt="dropdown"
+                  />
+                  </button>
+                </div>
+                <div class="col-7" @click="toggleDescription(index, 'completed', id)">
+                  <p class="sup-req pointer">{{subReq.name}}</p>
+                </div>
+                <div class="col">
+                  <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
+                </div>
+              </div>
+              <div v-if="subReq.displayDescription" class="description">
+                {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Add separator if additional completed requirements -->
-      <div class="separator" v-if="req.completed.length > 0"></div>
+        <!-- Add separator if additional completed requirements -->
+        <div class="separator" v-if="req.completed.length > 0"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -173,7 +176,6 @@ export default {
   },
   mounted() {
     this.getDisplays();
-    console.log('USER', this.user);
     // Get array of courses from semesters data
     const courses = this.getCourseCodesArray();
 
@@ -329,39 +331,52 @@ export default {
     emitRequirementsMap() {
       this.$emit('requirementsMap', this.requirementsMap);
     },
-    isFirstMajor(id, group) {
-      return id <= 2 && group === 'MAJOR';
+    showMajorRequirements(id, group) {
+      let currentDisplay = 0;
+      this.majors.forEach((major, i) => {
+        if (major.display) {
+          currentDisplay = i + 2; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+        }
+      });
+      console.log(currentDisplay);
+      return (id < 2 || id === currentDisplay);
     },
     activate(id) {
-      console.log("A", this.display, id);
-      this.display.forEach((dis, i) => {
-        if (dis) {
-          this.display[i] = false;
+      this.majors.forEach((major, i) => {
+        if (major.display) {
+          major.display = false;
         }
       });
-      this.display[id] = true;
+      this.majors[id].display = true;
     },
     getDisplays() {
-      const display = [];
-      this.user.major.forEach((major, i) => {
+      const majors = [];
+      for (let i = 0; i < this.user.major.length; i += 1) {
+        const userMajor = {};
         if (i === 0) {
-          display.push(true);
+          userMajor.display = true;
         } else {
-          display.push(false);
+          userMajor.display = false;
         }
-      });
-      this.display = display;
-      console.log('displaye', this.display);
+        userMajor.major = this.user.major[i];
+        userMajor.majorFN = this.user.majorFN[i];
+        majors.push(userMajor);
+      }
+      this.majors = majors;
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
+.major-title.active {
+  border-bottom: 2px solid #508197;
+}
 .major {
   display: flex;
   padding-top: 10px;
   padding-bottom: 25px;
+
   &-title {
       width: 100%;
       display: flex;
@@ -369,11 +384,6 @@ export default {
       text-align: center;
       padding: 20px;
       padding-top: 10px;
-      border-bottom: 2px solid #508197;
-      &--active {
-          color: #508197;
-          font-weight: bold;
-      }
 
       &-top {
         text-align: center;
@@ -401,7 +411,7 @@ export default {
         }
       }
     }
-    &:hover {
+        &:hover {
       background: rgba(255, 255, 255, 0.15);
     }
 }
@@ -529,8 +539,6 @@ h1.title {
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
-    /* identical to box height */
-
     color: #000000;
   }
 }
