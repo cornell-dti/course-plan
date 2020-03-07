@@ -1,148 +1,182 @@
 <template v-if="semesters">
-  <div class="requirements">
+  <div class= "section">
+  <div v-if="isEditing" class= "editing">
+    <div class="row">
+      <h1 class="title col p-0">School Requirements</h1>
+      <img  @click="closeEditMenu()" class="confirmation-icon" src="../assets/images/x.svg" />
+    </div>
+    <div class= "editing-title">
+      <p class="name col p-0">{{reqs[currentEditID].name}} </p>
+    </div>
+    <div class="progress">
+      <div
+        class="progress-bar"
+        :style="{ 'background-color': `#${reqs[currentEditID].color}`, width: `${(reqs[currentEditID].fulfilled/reqs[currentEditID].required)*100}%`}"
+        role="progressbar"
+      ></div>
+    </div>
+    <p class="progress-text">
+      <strong>{{ reqs[currentEditID].fulfilled }}/{{ reqs[currentEditID].required }}</strong>
+      Total {{ reqs[currentEditID].type }} Inputted on Schedule
+    </p>
+    <div class= "editing-title">
+      <p class="name col p-0">In-Depth Requirements </p>
+    </div>
+    <div class= "editing-row" v-for="(req) in reqs[currentEditID].ongoing" :key="req.id">
+      <p class= "editing-inputs"> {{req.name}} </p>
+        <input class= "editing-inputs-field-left"  placeholder="edit me">
+        <p class= "editing-inputs"> / </p>
+        <input class= "editing-inputs-field-left" placeholder="edit me">
+    </div>
+    <div class= "editing-row-space">
+      <button class="editing-button">Submit changes</button>
+      <button class="editing-button">Cancel</button>
+    </div>
+
+  </div>
+  <div v-else class="requirements">
     <div class="fixed" :class="{ bottomPreview: isBottomPreview && !isBottomBar, bottomBar: isBottomBar }">
     <h1 class="title">School Requirements</h1>
-
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
 
       <!-- TODO change for multiple colleges -->
       <div v-if="index<=2" class="row top">
         <p class="name col p-0">{{ req.name }} <!-- <span class="specific" v-if="req.specific">({{ req.specific }})</span> --></p>
-        <img class="confirmation-icon" src="../assets/images/gear.svg" />
+        <img  @click="openEditMenu(index)" class="confirmation-icon" src="../assets/images/gear.svg" />
       </div>
-      <!-- TODO change for multiple colleges -->
-      <div v-if="index==2" class="major">
-        <div v-bind:class="{'active': major.display}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
-          <p v-bind:class="{'active': major.display}"  class="major-title-top">{{major.majorFN}}</p>
-          <p v-bind:class="{'active': major.display}" class="major-title-bottom">{{user.collegeFN}}</p>
-        </div>
-      </div>
-      <!-- progress bar settings -->
-      <div v-if="showMajorRequirements(index, req.group)" >
-        <div class="progress">
-          <div
-            class="progress-bar"
-            :style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
-            role="progressbar"
-          ></div>
-        </div>
-
-        <p class="progress-text">
-          <strong>{{ req.fulfilled }}/{{ req.required }}</strong>
-          Total {{ req.type }} Inputted on Schedule
-        </p>
-
-        <!--View more college requirements -->
-        <div class="row top">
-          <div class="col-1 p-0" >
-            <button :style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
-              <!-- svg for dropdown icon -->
-              <img
-                v-if="req.displayDetails"
-                class="arrow arrow-down"
-                src="@/assets/images/dropdown-blue.svg"
-                alt="dropdown"
-              />
-              <img
-                v-else
-                class="arrow"
-                src="@/assets/images/dropright-blue.svg"
-                alt="dropdown"
-              />
-            </button>
-          </div>
-          <div class="col p-0 ">
-            <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
+        <!-- TODO change for multiple colleges -->
+        <div v-if="index==2" class="major">
+          <div v-bind:class="{'active': major.display}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
+            <p v-bind:class="{'active': major.display}"  class="major-title-top">{{major.majorFN}}</p>
+            <p v-bind:class="{'active': major.display}" class="major-title-bottom">{{user.collegeFN}}</p>
           </div>
         </div>
-
-        <!--Show more of completed requirements -->
-        <div v-if="req.displayDetails">
-          <p class="sub-title">On-Going Requirements</p>
-          <div class="separator"></div>
-          <div
-            v-for="(subReq, id) in req.ongoing"
-            :key="subReq.id">
-            <div class="row depth-req">
-              <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
-                <button class="btn">
-                  <!-- svg for dropdown icon -->
-                  <img
-                    v-if="subReq.displayDescription"
-                    class="arrow arrow-down"
-                    src="@/assets/images/dropdown.svg"
-                    alt="dropdown"
-                  />
-                  <img
-                    v-else
-                    class="arrow"
-                    src="@/assets/images/dropright.svg"
-                    alt="dropdown"
-                  />
-                </button>
-              </div>
-              <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-                <p class="sup-req pointer">{{subReq.name}}</p>
-              </div>
-              <div class="col">
-                <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
-              </div>
-            </div>
-            <div v-if="subReq.displayDescription" class="description">
-              {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
-            </div>
-            <div class="separator"></div>
+        <!-- progress bar settings -->
+        <div v-if="showMajorRequirements(index, req.group)" >
+          <div class="progress">
+            <div
+              class="progress-bar"
+              :style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
+              role="progressbar"
+            ></div>
           </div>
 
-          <div v-if="req.completed.length > 0" class="row completed">
-            <p class="col sub-title">Completed Requirements</p>
-            <div class="col-1 text-right">
-              <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
-                <!-- Toggle to display completed reqs -->
-                <p
-                  class="toggle"
-                  v-if="req.displayCompleted"
-                  v-on:click="turnCompleted(index, false)">HIDE</p>
-                <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
+          <p class="progress-text">
+            <strong>{{ req.fulfilled }}/{{ req.required }}</strong>
+            Total {{ req.type }} Inputted on Schedule
+          </p>
+
+          <!--View more college requirements -->
+          <div class="row top">
+            <div class="col-1 p-0" >
+              <button :style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
+                <!-- svg for dropdown icon -->
+                <img
+                  v-if="req.displayDetails"
+                  class="arrow arrow-down"
+                  src="@/assets/images/dropdown-blue.svg"
+                  alt="dropdown"
+                />
+                <img
+                  v-else
+                  class="arrow"
+                  src="@/assets/images/dropright-blue.svg"
+                  alt="dropdown"
+                />
               </button>
             </div>
+            <div class="col p-0 ">
+              <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
+            </div>
           </div>
 
-          <div v-if="req.displayCompleted">
-            <div v-for="(subReq, id) in req.completed" :key="subReq.id">
-              <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+          <!--Show more of completed requirements -->
+          <div v-if="req.displayDetails">
+            <p class="sub-title">On-Going Requirements</p>
+            <div class="separator"></div>
+            <div
+              v-for="(subReq, id) in req.ongoing"
+              :key="subReq.id">
               <div class="row depth-req">
-                <div class="col-1" @click="toggleDescription(index, 'completed', id)">
+                <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
                   <button class="btn">
                     <!-- svg for dropdown icon -->
-                  <img
-                    v-if="subReq.displayDescription"
-                    class="arrow arrow-down"
-                    src="@/assets/images/dropdown.svg"
-                    alt="dropdown"
-                  />
-                  <img
-                    v-else
-                    class="arrow"
-                    src="@/assets/images/dropright.svg"
-                    alt="dropdown"
-                  />
+                    <img
+                      v-if="subReq.displayDescription"
+                      class="arrow arrow-down"
+                      src="@/assets/images/dropdown.svg"
+                      alt="dropdown"
+                    />
+                    <img
+                      v-else
+                      class="arrow"
+                      src="@/assets/images/dropright.svg"
+                      alt="dropdown"
+                    />
                   </button>
                 </div>
-                <div class="col-7" @click="toggleDescription(index, 'completed', id)">
+                <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
                   <p class="sup-req pointer">{{subReq.name}}</p>
                 </div>
                 <div class="col">
-                  <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
+                  <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
                 </div>
               </div>
               <div v-if="subReq.displayDescription" class="description">
                 {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
               </div>
+              <div class="separator"></div>
+            </div>
+
+            <div v-if="req.completed.length > 0" class="row completed">
+              <p class="col sub-title">Completed Requirements</p>
+              <div class="col-1 text-right">
+                <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
+                  <!-- Toggle to display completed reqs -->
+                  <p
+                    class="toggle"
+                    v-if="req.displayCompleted"
+                    v-on:click="turnCompleted(index, false)">HIDE</p>
+                  <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
+                </button>
+              </div>
+            </div>
+
+            <div v-if="req.displayCompleted">
+              <div v-for="(subReq, id) in req.completed" :key="subReq.id">
+                <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+                <div class="row depth-req">
+                  <div class="col-1" @click="toggleDescription(index, 'completed', id)">
+                    <button class="btn">
+                      <!-- svg for dropdown icon -->
+                    <img
+                      v-if="subReq.displayDescription"
+                      class="arrow arrow-down"
+                      src="@/assets/images/dropdown.svg"
+                      alt="dropdown"
+                    />
+                    <img
+                      v-else
+                      class="arrow"
+                      src="@/assets/images/dropright.svg"
+                      alt="dropdown"
+                    />
+                    </button>
+                  </div>
+                  <div class="col-7" @click="toggleDescription(index, 'completed', id)">
+                    <p class="sup-req pointer">{{subReq.name}}</p>
+                  </div>
+                  <div class="col">
+                    <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
+                  </div>
+                </div>
+                <div v-if="subReq.displayDescription" class="description">
+                  {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
         <!-- Add separator if additional completed requirements -->
         <div class="separator" v-if="req.completed.length > 0"></div>
@@ -150,6 +184,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -231,6 +266,8 @@ export default {
 
   data() {
     return {
+      currentEditID: 0,
+      isEditing: false,
       display: [],
       actives: [false],
       modalShow: false,
@@ -363,12 +400,66 @@ export default {
         majors.push(userMajor);
       }
       this.majors = majors;
+    },
+    openEditMenu(id) {
+      this.isEditing = true;
+      this.currentEditID = id;
+    },
+    closeEditMenu() {
+      this.isEditing = false;
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
+input{
+  width: 40px;
+}
+.editing{
+
+  &-title{
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+
+  &-button{
+    margin-top: 20px;
+    background: #B1B1B1;
+    border-radius: 4px;
+    font-size: 10px;
+    line-height: 12px;
+    text-align: center;
+    text-align: center;
+    color: #FFFFFF;
+    padding: 10px;
+  }
+
+  &-row{
+    display: flex;
+    flex-direction: row;
+    &-space{
+      justify-content: space-between;
+    }
+    &-inputs{
+      margin-left: 0;
+      margin-right: 0;
+      flex-direction: column;
+    }
+
+    &-field{
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+input.editing-inputs-field {
+        display: flex;
+      flex-direction: column;
+}
+p.editing-inputs {
+  margin: 10px;
+}
 .major-title.active {
   border-bottom: 2px solid #508197;
 }
@@ -393,9 +484,9 @@ export default {
         line-height: 17px;
         color: #000000;
           &--active {
-          color: #508197;
-          font-weight: bold;
-        }
+            color: #508197;
+            font-weight: bold;
+          }
       }
 
       &-bottom {
@@ -411,7 +502,7 @@ export default {
         }
       }
     }
-        &:hover {
+      &:hover {
       background: rgba(255, 255, 255, 0.15);
     }
 }
@@ -444,6 +535,12 @@ export default {
   width: 25rem;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: white;
+}
+.section{
+  height: 100vh;
+  width: 25rem;
+  padding: 1.625rem 1.5rem 1.625rem 1.5rem;
+  background-color: #F7F7F7;
 }
 
 .fixed {
