@@ -9,7 +9,7 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
     extraFileExtensions: ['.vue'],
-    project: ['./tsconfig.json']
+    project: ['./tsconfig.json', './tsconfig.node.json']
   },
   env: {
     browser: true,
@@ -35,7 +35,7 @@ module.exports = {
     ],
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
-    'no-param-reassign': [2, { "props": false }],
+    'no-param-reassign': [2, { props: false }],
     // allow optionalDependencies
     'import/no-extraneous-dependencies': [
       'error',
