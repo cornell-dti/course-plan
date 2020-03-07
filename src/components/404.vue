@@ -23,20 +23,20 @@
       <a class = "back_to_home_link" href = "/login">Back to home</a>
     </div>
     <div class = "footer-container">
-      <div class="container-fluid footer p-0 page_404">
-          <div class= "row footer justify-content-center m-0">
-              <div class="col-3 footer">
-                <!-- <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ </a> -->
-                <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ {{getYear()}}</a>
-              </div>
-              <div class="col-3">
-                  <p class= "footer">Built with ❤️</p>
-              </div>
-              <div class="col-3 footer">
-                  <a  class="footer" href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
-              </div>
-          </div>
-      </div>
+    </div>
+    <div class="container-fluid footer p-0 page_404">
+        <div class= "row footer justify-content-center m-0">
+            <div class="col-3 footer">
+              <!-- <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ </a> -->
+              <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ {{getYear()}}</a>
+            </div>
+            <div class="col-3">
+                <p class= "footer">Built with ❤️</p>
+            </div>
+            <div class="col-3 footer">
+                <a  class="footer" href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
+            </div>
+        </div>
     </div>
   </div>
 </div>
@@ -65,6 +65,11 @@ export default {
   vertical-align: top;
   @media(max-width: 1154px){
     margin-top: 8%;
+    font-size: 7vw;
+  }
+  @media(max-width: 800px){
+    margin-top: 8%;
+    font-size: 9vw;
   }
 }
 .back_to_home {
@@ -76,6 +81,10 @@ export default {
   margin-bottom: 6vh;
   margin-top: 6vh;
   height: 100px;
+  @media(max-width: 800px){
+    margin-top: 8%;
+    font-size: 8vw;
+  }
 
 }
 
@@ -84,6 +93,11 @@ export default {
 }
 .page_404{
   bottom: 0;
+  // position:absolute;
+  @media(max-height: 600px){
+    position: relative;
+    bottom: 0;
+  }
   // margin-top: -50px;
 }
 .top-bar{
@@ -99,13 +113,13 @@ a.back_to_home_link{
   color: #7b7d7e;
 }
 p.footer{
-      text-align: center;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 24px;
-      line-height: 28px;
-      color: #757575;
-    }
+  text-align: center;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 28px;
+  color: #757575;
+}
 a.footer {
   text-align: center;
   font-style: normal;
@@ -120,16 +134,21 @@ a.footer {
 }
 .col-3.footer{
   text-align: center;
+  padding-right: 0px;
+  padding-left: 0px;
 }
 .row.footer{
   padding : 40px;
 }
 .img-404{
-  min-width: 15vw;
+  // min-width: 15vw;
   vertical-align: top;
   display: inline-block;
-  @media(max-width: 1154){
-    display:block;
+  @media(max-width: 1154px){
+    width: 60%;
+  }
+  @media(max-width: 800px){
+    width: 80%;
   }
 }
 .oops-wrapper{
@@ -143,9 +162,13 @@ a.footer {
   margin-top: 5%;
   justify-content: center;
   @media(max-width: 1154px){
+    margin-top: 8vh;
     flex-direction: column;
     align-items: center;
   }
+}
+.footer-container{
+  height: 100%;
 }
 .thinking-face{
   margin-bottom: 1vw;
