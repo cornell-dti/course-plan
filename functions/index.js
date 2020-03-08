@@ -7,8 +7,21 @@ const db = admin.firestore();
 const userDataCollection = db.collection('userData');
 
 let average = (array) => array.reduce((a, b) => a + b) / array.length;
-
+function typeToMonth(type){
+  switch(type) {
+    case 'Spring':
+      return 1;
+    case 'Summer':
+      return 6;
+    case 'Fall':
+      return 8;
+    case 'Winter':
+      return 12;
+    default:
+  }
+}
 function isOld (semester){
+  console.log(semester);
   var currentTime = new Date();
   var month = currentTime.getMonth() + 1;
   var year = currentTime.getFullYear();
@@ -19,7 +32,7 @@ function isOld (semester){
     return true;
   }
   else{
-    if(semester.month <= month){
+    if(typeToMonth(semester.type) <= month){
       return true;
     }else{
       return false;
@@ -33,11 +46,12 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
   var semester = [];
   var oldSemester = [];
   var newSemester = [];
+  var semesterCount = 0; 
     userDataCollection.get().then(function(querySnapshot) {
      
         querySnapshot.forEach(function(doc) {
 
-            arr.push( doc.data().name.firstName);
+            arr.push(doc.data().name.firstName);
             console.log(doc.id, " => ", doc.data().name.firstName);
 
             var oldCount = 0;
@@ -47,8 +61,9 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
                 if(isOld(semester)){
                   oldCount++;
                 }else{
-                  newCount;
+                  newCount++;
                 }
+                semesterCount++;
               }
             )
             semester.push(doc.data().semesters.length);
@@ -60,6 +75,7 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
         const response = {
           "people": arr,
           "total-users": count,
+          "total-semesters": semesterCount,
           "avg-semester" : average(semester),
           "avg-old-semester" : average(oldSemester),
           "avg-new-semster" : average(newSemester)
