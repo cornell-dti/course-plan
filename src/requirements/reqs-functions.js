@@ -1,4 +1,9 @@
-import reqsData from '@/requirements/reqs.json';
+// @ts-check
+
+/** @typedef { import('../requirements/types').StrictFulfilledByType } StrictFulfilledByType */
+/** @typedef { import('../requirements/types').BaseRequirement<StrictFulfilledByType> } Requirement */
+/** @type {Requirement} */
+import reqsData from '@/requirements/typed-requirement-json';
 
 /**
  * Check if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
@@ -87,6 +92,7 @@ function checkIfCourseFulfilled(courseInfo, search, includes, excludes) {
  * @returns {RequirementFulfillment}
  */
 function createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement) {
+  /** @type {RequirementFulfillment} */
   const requirementFulfillmentData = {
     name: requirement.name,
     type: requirement.fulfilledBy,
@@ -120,8 +126,10 @@ function createRequirementJSON(requirement, totalRequirementCredits, totalRequir
   return requirementFulfillmentData;
 }
 
-/** @param {Object.<string, string[]>} requirementsMap */
-/** @param {Object.<string, string[]>} satisfiedMap */
+/**
+ * @param {Object.<string, string[]>} requirementsMap
+ * @param {Object.<string, string[]>} satisfiedMap
+ */
 function mergeRequirementsMap(requirementsMap, satisfiedMap) {
   Object.keys(satisfiedMap).forEach(course => {
     if (course in requirementsMap) requirementsMap[course] = requirementsMap[course].concat(satisfiedMap[course]);
@@ -134,7 +142,7 @@ function mergeRequirementsMap(requirementsMap, satisfiedMap) {
  * @property {string} name
  * @property {string} type
  * @property {string[]} courses
- * @property {number} required
+ * @property {number | undefined} required
  * @property {string} description
  * @property {string} source
  * @property {number | null | undefined} fulfilled
@@ -144,8 +152,8 @@ function mergeRequirementsMap(requirementsMap, satisfiedMap) {
 
 /**
  * Loops through requirement data and compare all courses on (to identify whether they satisfy the requirement)
- * @param {Object.<string, Object>} allCoursesTakenWithInfo : object of courses taken with API information (CS 2110: {info})
- * @param {Requirement[]} allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
+ * @param {Object.<string, any>} allCoursesTakenWithInfo : object of courses taken with API information (CS 2110: {info})
+ * @param {readonly Requirement[]} allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
  * @param {Object.<string, string[]>} requirementsMap : object of courses taken with requirements they fulfill
  * @returns {Promise<RequirementFulfillment[]>}
  */
@@ -258,6 +266,7 @@ function getCourseInfo(code, roster) {
  */
 async function getReqs(coursesTaken, college, major, requirementsMap) {
   // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
+  /** @type {Object.<string, any>} */
   const coursesTakenWithInfo = {};
   const courseData = await Promise.all(
     coursesTaken.map(courseTaken => getCourseInfo(courseTaken.code, courseTaken.roster))
