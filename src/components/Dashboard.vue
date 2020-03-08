@@ -141,9 +141,23 @@ export default {
     },
 
     /**
+     * Creates credit range based on course
+     * Example: [1, 4] is the credit range for the given course
+     */
+    createCourseCreditRange(course) {
+      const courseCreditRange = [];
+      course.enrollGroups.forEach(enrollGroup => {
+        courseCreditRange.push(enrollGroup.unitsMinimum);
+        courseCreditRange.push(enrollGroup.unitsMaximum);
+      });
+      return [Math.min(courseCreditRange), Math.max(courseCreditRange)];
+    },
+
+    /**
      * Creates a course on frontend with either user or API data
      */
     createCourse(course) {
+      console.log("createCourse course", course);
       // TODO: id?
       const randomId = Math.floor(Math.random() * Math.floor(1000));
 
@@ -158,6 +172,11 @@ export default {
 
       // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
+
+      // TODO Fix Credit range
+      // console.log("course", course);
+      // const creditRange = course.creditRange || this.createCourseCreditRange(course) || [credits, credits];
+      // console.log("creditRange", creditRange);
 
       // Semesters: remove periods and split on ', '
       // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
