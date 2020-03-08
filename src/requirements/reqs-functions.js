@@ -256,7 +256,7 @@ function getCourseInfo(code, roster) {
  * @param {string} major
  * @param {Object.<string, string[]>} requirementsMap
  */
-async function getReqs(coursesTaken, college, major, requirementsMap) {
+async function getReqs(coursesTaken, college, major, minors, requirementsMap) {
   // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
   const coursesTakenWithInfo = {};
   const courseData = await Promise.all(
@@ -303,18 +303,17 @@ async function getReqs(coursesTaken, college, major, requirementsMap) {
 
   // PART 4: Check minor reqs
   // Minor is optional TODO
-  /*
+
   for (const minor of minors) {
-    if (maj in reqsData.major) {
-      const majorReqs = reqsData.major[maj];
+    if (minor in reqsData.minor) {
+      const minorReqs = reqsData.minor[minor];
       finalRequirementJSONs.push({
-        groupName: 'Major',
-        specific: maj,
-        reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, requirementsMap)
+        groupName: 'Minor',
+        specific: minor,
+        reqs: await iterateThroughRequirements(coursesTakenWithInfo, minorReqs.requirements, requirementsMap)
       });
     }
-    */
-
+  }
 
   return finalRequirementJSONs;
 }

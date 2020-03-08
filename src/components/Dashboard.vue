@@ -85,7 +85,9 @@ export default {
         collegeFN: '',
         firstName: names[0],
         lastName: names[1],
-        middleName: ''
+        middleName: '',
+        minor: [],
+        minorFN: []
       },
       subjectColors: {},
       // Default bottombar info without info
@@ -446,7 +448,17 @@ export default {
         user.major = majors;
         user.majorFN = majorsFN;
       }
-      console.log(user);
+
+      if ('majors' in data && data.majors.length > 0) {
+        const minors = [];
+        const minorsFN = [];
+        data.minors.forEach(minor => {
+          minors.push(minor.acronym);
+          minorsFN.push(minor.fullName);
+        });
+        user.minor = minors;
+        user.minorFN = minorsFN;
+      }
       return user;
     },
 

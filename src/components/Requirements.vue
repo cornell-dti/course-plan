@@ -27,6 +27,7 @@
         <input class= "editing-inputs-field-left"  placeholder="edit me">
         <p class= "editing-inputs"> / </p>
         <input class= "editing-inputs-field-left" placeholder="edit me">
+        <p class= "editing-inputs">Remove</p>
     </div>
     <div class= "editing-row-space">
       <button class="editing-button">Submit changes</button>
@@ -41,8 +42,8 @@
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
 
       <!-- TODO change for multiple colleges -->
-      <div v-if="index<=2" class="row top">
-        <p class="name col p-0">{{ req.name }} <!-- <span class="specific" v-if="req.specific">({{ req.specific }})</span> --></p>
+      <div v-if="index<=2 || index == 2 + majors.length" class="row top">
+        <p class="name col p-0">{{ req.name }} {{index}}<!-- <span class="specific" v-if="req.specific">({{ req.specific }})</span> --></p>
         <img  @click="openEditMenu(index)" class="confirmation-icon" src="../assets/images/gear.svg" />
       </div>
         <!-- TODO change for multiple colleges -->
@@ -52,8 +53,15 @@
             <p v-bind:class="{'active': major.display}" class="major-title-bottom">{{user.collegeFN}}</p>
           </div>
         </div>
+        <div v-if="index==2+majors.length" class="minor">
+          <div v-bind:class="{'active': minor.display}"  @click="activate(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
+            <p v-bind:class="{'active': minor.display}"  class="minor-title-top">{{minor.minorFN}}</p>
+            <p v-bind:class="{'active': minor.display}" class="minor-title-bottom">{{user.collegeFN}}</p> <!-- Change for multiple colleges -->
+          </div>
+        </div>
+
         <!-- progress bar settings -->
-        <div v-if="showMajorRequirements(index, req.group)" >
+        <div v-if="showMajorOrMinorRequirements(index, req.group)" >
           <div class="progress">
             <div
               class="progress-bar"
@@ -214,7 +222,7 @@ export default {
     // Get array of courses from semesters data
     const courses = this.getCourseCodesArray();
 
-    reqsFunctions.getReqs(courses, this.user.college, this.user.major, this.requirementsMap).then(groups => {
+    reqsFunctions.getReqs(courses, this.user.college, this.user.major, this.user.minor, this.requirementsMap).then(groups => {
       // Send satisfied credits data back to dashboard to build alerts
       this.emitRequirementsMap();
 
@@ -272,6 +280,7 @@ export default {
       actives: [false],
       modalShow: false,
       majors: [],
+      minors: [],
       reqs: [
         // Data structure for menu
         // {
@@ -368,14 +377,22 @@ export default {
     emitRequirementsMap() {
       this.$emit('requirementsMap', this.requirementsMap);
     },
-    showMajorRequirements(id, group) {
+    showMajorOrMinorRequirements(id, group) {
       let currentDisplay = 0;
-      this.majors.forEach((major, i) => {
-        if (major.display) {
-          currentDisplay = i + 2; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+      if (group === 'MAJOR') {
+        this.majors.forEach((major, i) => {
+          if (major.display) {
+            currentDisplay = i + 2; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+          }
+        });
+        return (id < 2 || id === currentDisplay);
+      }
+
+      this.minors.forEach((minor, i) => {
+        if (minor.display) {
+          currentDisplay = i + 2 + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
         }
       });
-      console.log(currentDisplay);
       return (id < 2 || id === currentDisplay);
     },
     activate(id) {
@@ -400,6 +417,20 @@ export default {
         majors.push(userMajor);
       }
       this.majors = majors;
+
+      const minors = [];
+      for (let i = 0; i < this.user.minor.length; i += 1) {
+        const userMinor = {};
+        if (i === 0) {
+          userMinor.display = true;
+        } else {
+          userMinor.display = false;
+        }
+        userMinor.minor = this.user.minor[i];
+        userMinor.minorFN = this.user.minorFN[i];
+        minors.push(userMinor);
+      }
+      this.minors = minors;
     },
     openEditMenu(id) {
       this.isEditing = true;
@@ -463,7 +494,7 @@ p.editing-inputs {
 .major-title.active {
   border-bottom: 2px solid #508197;
 }
-.major {
+.major, .minor{
   display: flex;
   padding-top: 10px;
   padding-bottom: 25px;

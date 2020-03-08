@@ -133,7 +133,6 @@
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
-                  :class="{ 'onboarding-select--disabled': Object.keys(minors).length <= 0 }"
                   id="minor"
                   v-for="(options, index) in displayOptions.minor"
                   :key = index
@@ -324,7 +323,22 @@ export default {
     },
     // TODO: add minors when the list exists
     setMinorsList() {
-      this.minors = {};
+      const minors = {};
+      const minorJSON = reqsData.minor;
+      for (const key in minorJSON) {
+        // make sure name defined
+        if ('name' in minorJSON[key]) {
+          // only show majors for schools the user is in
+          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+            const college = this.displayOptions.college[i];
+            if (minorJSON[key].schools.includes(college.acronym)) {
+              minors[key] = minorJSON[key].name;
+              continue;
+            }
+          }
+        }
+      }
+      this.minors = minors;
     },
     // Clear a major if a new college is selected and the major is not in it
     clearMajorIfNotInCollege() {
@@ -367,7 +381,7 @@ export default {
             minors: this.notPlaceholderOptions(this.displayOptions.minor)
           }
         };
-
+        console.log(onboardingData.userData.minors);
         this.$emit('onboard', onboardingData);
       }
     },
