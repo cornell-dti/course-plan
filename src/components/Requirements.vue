@@ -87,7 +87,7 @@
         </div>
 
         <div v-if="req.completed.length > 0" class="row completed">
-          <p class="col sub-title">Filled Requirements</p>
+          <p class="col sub-title specific">Filled Requirements</p>
           <div class="col-1 text-right">
             <button class="btn float-right" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }">
               <!-- Toggle to display completed reqs -->
@@ -430,17 +430,17 @@ h1.title {
   color: #000000;
 }
 
-.specific {
-  color: #757575;
-}
-
 .sub-title {
   padding: 0;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 14px;
-  color: #757575
+  color: #3C3C3C;
+}
+
+.specific {
+  color: #757575;
 }
 
 .major {
