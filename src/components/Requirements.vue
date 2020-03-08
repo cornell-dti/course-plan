@@ -50,7 +50,7 @@
 
       <!--Show more of completed requirements -->
       <div v-if="req.displayDetails">
-        <p class="sub-title">On-Going Requirements</p>
+        <p class="sub-title">In-Depth College Requirements</p>
         <div class="separator"></div>
         <div
           v-for="(subReq, id) in req.ongoing"
@@ -81,7 +81,7 @@
             </div>
           </div>
           <div v-if="subReq.displayDescription" class="description">
-            {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+            {{ subReq.description }} <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
           </div>
           <div class="separator"></div>
         </div>
@@ -89,7 +89,7 @@
         <div v-if="req.completed.length > 0" class="row completed">
           <p class="col sub-title">Filled Requirements</p>
           <div class="col-1 text-right">
-            <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
+            <button class="btn float-right" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }">
               <!-- Toggle to display completed reqs -->
               <p
                 class="toggle"
@@ -129,7 +129,7 @@
               </div>
             </div>
             <div v-if="subReq.displayDescription" class="description">
-              {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+              {{ subReq.description }} <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
             </div>
           </div>
         </div>
@@ -180,7 +180,6 @@ export default {
           name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
           group: group.groupName.toUpperCase(),
           specific: (group.specific) ? group.specific : null,
-          color: '105351',
           displayDetails: false,
           displayCompleted: false
         };
@@ -231,7 +230,6 @@ export default {
         //   specific: 'AS',
         //   fulfilled: 46,
         //   required: 120,
-        //   color: '105351',
         //   displayDetails: false,
         //   displayCompleted: true,
         //   ongoing: [
