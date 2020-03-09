@@ -1,5 +1,12 @@
 import { writeFileSync } from 'fs';
-import { Course, CollegeOrMajorRequirement, DecoratedRequirementsJson } from './types';
+import {
+  Course,
+  CollegeOrMajorRequirement,
+  DecoratedRequirementsJson,
+  UniversityRequirements,
+  DecoratedCollegeOrMajorRequirement,
+  EligibleCourses
+} from './types';
 import { filteredAllCourses, requirementJson } from './requirement-sources-jsons';
 import checkIfCourseFulfilled from './requirement-checker';
 
@@ -17,25 +24,52 @@ function courseCanSatisfyCollegeOrMajorRequirement(
 
 const getSatisfiableCourses = (
   collegeRequirement: CollegeOrMajorRequirement
-): readonly string[] => {
-  const set = new Set<string>();
+): EligibleCourses => {
+  // eligibleCoursesMap[semester][subject]
+  // gives you all courses number of the courses eligible for the given requirements.
+  const eligibleCoursesMap: { [semester: string]: { [subject: string]: string[] } } = {};
   Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
+    const semesterMap: { [subject: string]: string[] } = {};
     courses
       .filter(course => courseCanSatisfyCollegeOrMajorRequirement(course, collegeRequirement))
-      .forEach(it => set.add(`${semester}: ${it.subject} ${it.catalogNbr}`));
+      .forEach(course => {
+        let subjectSet = semesterMap[course.subject];
+        if (subjectSet == null) {
+          subjectSet = [];
+        }
+        subjectSet.push(course.catalogNbr);
+        semesterMap[course.subject] = subjectSet;
+      });
+    eligibleCoursesMap[semester] = semesterMap;
   });
-  return Array.from(set.values());
+  return eligibleCoursesMap;
 };
 
 // TODO: give a better type.
 const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequirementsJson => {
   const { university, college, major } = requirementJson;
-  const decoratedJson: any = { university, college: {}, major: {} };
+  type MutableDecoratedJson = {
+    university: UniversityRequirements;
+    college: {
+      [key: string]: {
+        readonly name: string;
+        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+      };
+    };
+    major: {
+      [key: string]: {
+        readonly name: string;
+        readonly schools: readonly string[];
+        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+      };
+    };
+  };
+  const decoratedJson: MutableDecoratedJson = { university, college: {}, major: {} };
   Object.entries(college).forEach(([collegeName, collegeRequirement]) => {
     const { requirements, ...rest } = collegeRequirement;
     const decoratedRequirements = collegeRequirement.requirements.map(requirement => {
       const { search } = requirement;
-      const courses: 'all-eligible' | readonly string[] = (search != null && search.includes('all-eligible'))
+      const courses: EligibleCourses = search != null && search.includes('all-eligible')
         ? 'all-eligible'
         : getSatisfiableCourses(requirement);
       return { ...requirement, courses };
@@ -46,7 +80,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     const { requirements, ...rest } = majorRequirement;
     const decoratedRequirements = majorRequirement.requirements.map(requirement => {
       const { search } = requirement;
-      const courses: 'all-eligible' | readonly string[] = (search != null && search.includes('all-eligible'))
+      const courses: EligibleCourses = search != null && search.includes('all-eligible')
         ? 'all-eligible'
         : getSatisfiableCourses(requirement);
       return { ...requirement, courses };
