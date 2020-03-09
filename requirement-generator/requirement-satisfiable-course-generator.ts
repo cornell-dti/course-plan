@@ -15,7 +15,7 @@ function courseCanSatisfyCollegeOrMajorRequirement(
   );
 }
 
-const produceSatisfiableCourseIdForCollegeOrMajorRequirement = (
+const getSatisfiableCourses = (
   collegeRequirement: CollegeOrMajorRequirement
 ): readonly string[] => {
   const set = new Set<string>();
@@ -35,7 +35,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     const { requirements, ...rest } = collegeRequirement;
     const decoratedRequirements = collegeRequirement.requirements.map(requirement => ({
       ...requirement,
-      courses: produceSatisfiableCourseIdForCollegeOrMajorRequirement(requirement)
+      courses: getSatisfiableCourses(requirement)
     }));
     decoratedJson.college[collegeName] = { ...rest, requirements: decoratedRequirements };
   });
@@ -43,7 +43,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     const { requirements, ...rest } = majorRequirement;
     const decoratedRequirements = majorRequirement.requirements.map(requirement => ({
       ...requirement,
-      courses: produceSatisfiableCourseIdForCollegeOrMajorRequirement(requirement)
+      courses: getSatisfiableCourses(requirement)
     }));
     decoratedJson.major[majorName] = { ...rest, requirements: decoratedRequirements };
   });
