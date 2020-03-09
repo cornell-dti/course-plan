@@ -25,7 +25,9 @@ function courseCanSatisfyCollegeOrMajorRequirement(
 const getSatisfiableCourses = (
   collegeRequirement: CollegeOrMajorRequirement
 ): EligibleCourses => {
-  const allMap: { [semester: string]: { [subject: string]: string[] } } = {};
+  // eligibleCoursesMap[semester][subject]
+  // gives you all courses number of the courses eligible for the given requirements.
+  const eligibleCoursesMap: { [semester: string]: { [subject: string]: string[] } } = {};
   Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
     const semesterMap: { [subject: string]: string[] } = {};
     courses
@@ -38,9 +40,9 @@ const getSatisfiableCourses = (
         subjectSet.push(course.catalogNbr);
         semesterMap[course.subject] = subjectSet;
       });
-    allMap[semester] = semesterMap;
+    eligibleCoursesMap[semester] = semesterMap;
   });
-  return allMap;
+  return eligibleCoursesMap;
 };
 
 // TODO: give a better type.
