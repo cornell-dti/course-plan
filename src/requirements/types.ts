@@ -34,19 +34,14 @@ export interface BaseRequirement {
   readonly progressBar?: boolean;
 }
 
-export interface UniversityRequirement extends BaseRequirement {
-  readonly includes: readonly string[][];
-  readonly minCount: number;
-}
-
 export type UniversityRequirements = {
   readonly value: string;
   readonly name: string;
-  readonly requirements: readonly UniversityRequirement[];
+  readonly requirements: readonly BaseRequirement[];
 };
 
 export interface CollegeOrMajorRequirement extends BaseRequirement {
-  readonly courses: readonly string[];
+  readonly courses: 'all-eligible' | readonly string[];
 }
 
 export type CollegeRequirements = {
