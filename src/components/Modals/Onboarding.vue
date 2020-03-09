@@ -192,13 +192,13 @@
 </template>
 
 <script>
-import reqsData from '@/requirements/reqs.json';
+import reqsData from '@/requirements/typed-requirement-json.ts';
 
 const placeholderText = 'Select one';
 
 const clickOutside = {
   bind(el, binding, vnode) {
-    el.event = function (event) {
+    el.event = event => {
       if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event, binding.arg);
       }
@@ -236,7 +236,6 @@ export default {
     }
 
     return {
-      reqsData,
       // TODO: Get real college, major, and minor lists
       colleges: {},
       majors: {},
@@ -293,33 +292,30 @@ export default {
   methods: {
     // Set the colleges map to with acronym keys and full name values
     setCollegesMap() {
+      /** @type {Object.<string, string>} */
       const colleges = {};
       const collegeJSON = reqsData.college;
-      for (const key in collegeJSON) {
-        if ('name' in collegeJSON[key]) {
-          colleges[key] = collegeJSON[key].name;
-        }
-      }
-
+      Object.keys(collegeJSON).forEach(key => {
+        colleges[key] = collegeJSON[key].name;
+      });
       this.colleges = colleges;
     },
     // Set the majors map to with acronym keys and full name values
     setMajorsList() {
+      /** @type {Object.<string, string>} */
       const majors = {};
       const majorJSON = reqsData.major;
-      for (const key in majorJSON) {
+      Object.keys(majorJSON).forEach(key => {
         // make sure name defined
-        if ('name' in majorJSON[key]) {
-          // only show majors for schools the user is in
-          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            const college = this.displayOptions.college[i];
-            if (majorJSON[key].schools.includes(college.acronym)) {
-              majors[key] = majorJSON[key].name;
-              continue;
-            }
+        // only show majors for schools the user is in
+        for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+          const college = this.displayOptions.college[i];
+          if (majorJSON[key].schools.includes(college.acronym)) {
+            majors[key] = majorJSON[key].name;
+            continue;
           }
         }
-      }
+      });
       this.majors = majors;
     },
     // TODO: add minors when the list exists
