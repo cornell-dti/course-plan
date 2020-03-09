@@ -13,5 +13,5 @@
     "strict": true,
     "target": "es2015"
   },
-  "include": ["requirement-generator/", "src/requirements/types.ts"]
+  "include": ["requirement-generator/"]
 }
