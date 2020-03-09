@@ -33,18 +33,24 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
   const decoratedJson: any = { university, college: {}, major: {} };
   Object.entries(college).forEach(([collegeName, collegeRequirement]) => {
     const { requirements, ...rest } = collegeRequirement;
-    const decoratedRequirements = collegeRequirement.requirements.map(requirement => ({
-      ...requirement,
-      courses: getSatisfiableCourses(requirement)
-    }));
+    const decoratedRequirements = collegeRequirement.requirements.map(requirement => {
+      const { search } = requirement;
+      const courses: 'all-eligible' | readonly string[] = (search != null && search.includes('all-eligible'))
+        ? 'all-eligible'
+        : getSatisfiableCourses(requirement);
+      return { ...requirement, courses };
+    });
     decoratedJson.college[collegeName] = { ...rest, requirements: decoratedRequirements };
   });
   Object.entries(major).forEach(([majorName, majorRequirement]) => {
     const { requirements, ...rest } = majorRequirement;
-    const decoratedRequirements = majorRequirement.requirements.map(requirement => ({
-      ...requirement,
-      courses: getSatisfiableCourses(requirement)
-    }));
+    const decoratedRequirements = majorRequirement.requirements.map(requirement => {
+      const { search } = requirement;
+      const courses: 'all-eligible' | readonly string[] = (search != null && search.includes('all-eligible'))
+        ? 'all-eligible'
+        : getSatisfiableCourses(requirement);
+      return { ...requirement, courses };
+    });
     decoratedJson.major[majorName] = { ...rest, requirements: decoratedRequirements };
   });
   return decoratedJson;

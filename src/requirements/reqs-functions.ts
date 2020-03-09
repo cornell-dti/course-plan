@@ -206,7 +206,7 @@ function iterateThroughCollegeOrMajorRequirements(
     // if(!isTransfer && requirement.applies === "transfers") continue;
     // temporarily skip these until we can implement them later
 
-    const requirementName = requirement.name;
+    const { name: requirementName, courses } = requirement;
 
     let totalRequirementCredits = 0;
     let totalRequirementCount = 0;
@@ -215,7 +215,7 @@ function iterateThroughCollegeOrMajorRequirements(
     // eslint-disable-next-line no-loop-func
     coursesTaken.forEach(courseTaken => {
       const { code, credits } = courseTaken;
-      if (requirement.courses.includes(code)) {
+      if (courses === 'all-eligible' || courses.includes(code)) {
         // depending on what it is fulfilled by, either increase the count or credits you took
         switch (requirement.fulfilledBy) {
           case 'courses':
