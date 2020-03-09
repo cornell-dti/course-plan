@@ -149,7 +149,7 @@ import Modal from '@/components/Modals/Modal';
 /** @typedef { import('../requirements/types').StrictFulfilledByType } StrictFulfilledByType */
 /** @typedef { import('../requirements/types').BaseRequirement<StrictFulfilledByType> } Requirement */
 
-import reqsFunctions from '@/requirements/reqs-functions';
+import getReqs from '@/requirements/reqs-functions.ts';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -167,53 +167,53 @@ export default {
     // Get array of courses from semesters data
     const courses = this.getCourseCodesArray();
 
-    reqsFunctions.getReqs(courses, this.user.college, this.user.major, this.requirementsMap).then(groups => {
-      // Send satisfied credits data back to dashboard to build alerts
-      this.emitRequirementsMap();
+    const groups = getReqs(courses, this.user.college, this.user.major, this.requirementsMap);
 
-      // Turn result into data readable by requirements menu
-      groups.forEach(group => {
-        const singleMenuRequirement = {
-          ongoing: [],
-          completed: [],
-          name: `${group.groupName.toUpperCase()} REQUIREMENT`,
-          group: group.groupName.toUpperCase(),
-          specific: (group.specific) ? group.specific : null,
-          color: '105351',
-          displayDetails: false,
-          displayCompleted: false
-        };
+    // Send satisfied credits data back to dashboard to build alerts
+    this.emitRequirementsMap();
 
-        group.reqs.forEach(req => {
-          // Account for progress type
-          if (req.type) req.type = req.type.charAt(0).toUpperCase() + req.type.substring(1);
+    // Turn result into data readable by requirements menu
+    groups.forEach(group => {
+      const singleMenuRequirement = {
+        ongoing: [],
+        completed: [],
+        name: `${group.groupName.toUpperCase()} REQUIREMENT`,
+        group: group.groupName.toUpperCase(),
+        specific: (group.specific) ? group.specific : null,
+        color: '105351',
+        displayDetails: false,
+        displayCompleted: false
+      };
 
-          // Create progress bar with requirement with progressBar = true
-          if (req.progressBar) {
-            singleMenuRequirement.type = req.type;
-            singleMenuRequirement.fulfilled = req.fulfilled;
-            singleMenuRequirement.required = req.required;
-          }
+      group.reqs.forEach(req => {
+        // Account for progress type
+        if (req.type) req.type = req.type.charAt(0).toUpperCase() + req.type.substring(1);
 
-          // Default display value of false for all requirement lists
-          req.displayDescription = false;
-
-          if (!req.fulfilled || req.fulfilled < req.required) {
-            singleMenuRequirement.ongoing.push(req);
-          } else {
-            singleMenuRequirement.completed.push(req);
-          }
-        });
-
-        // Make number of requirements items progress bar in absense of identified progress metric
-        if (!singleMenuRequirement.type) {
-          singleMenuRequirement.type = 'Requirements';
-          singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
-          singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+        // Create progress bar with requirement with progressBar = true
+        if (req.progressBar) {
+          singleMenuRequirement.type = req.type;
+          singleMenuRequirement.fulfilled = req.fulfilled;
+          singleMenuRequirement.required = req.required;
         }
 
-        this.reqs.push(singleMenuRequirement);
+        // Default display value of false for all requirement lists
+        req.displayDescription = false;
+
+        if (!req.fulfilled || req.fulfilled < req.required) {
+          singleMenuRequirement.ongoing.push(req);
+        } else {
+          singleMenuRequirement.completed.push(req);
+        }
       });
+
+      // Make number of requirements items progress bar in absense of identified progress metric
+      if (!singleMenuRequirement.type) {
+        singleMenuRequirement.type = 'Requirements';
+        singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
+        singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+      }
+
+      this.reqs.push(singleMenuRequirement);
     });
   },
 
@@ -307,7 +307,13 @@ export default {
       const courses = [];
       this.semesters.forEach(semester => {
         semester.courses.forEach(course => {
-          courses.push({ code: `${course.subject} ${course.number}`, roster: course.lastRoster });
+          courses.push({
+            code: `${course.lastRoster}: ${course.subject} ${course.number}`,
+            subject: course.subject,
+            number: course.number,
+            credits: course.credits,
+            roster: course.lastRoster
+          });
         });
       });
 

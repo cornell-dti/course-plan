@@ -85,13 +85,15 @@ const getAllCoursesInSemester = async <T extends keyof Course>(
   return courses;
 };
 
+type AllCourses<T extends keyof Course> = { [semester: string]: readonly Pick<Course, T>[] };
+
 const getAllCourses = async <T extends keyof Course>(
   courseFieldFilter: CourseFieldFilter<T>,
   coolingTimeMs: number = 50,
   doPrintDebuggingInfo: boolean = true
-): Promise<readonly Pick<Course, T>[]> => {
+): Promise<AllCourses<T>> => {
   const startTime = new Date().getTime();
-  const courses: Pick<Course, T>[] = [];
+  const courses: AllCourses<T> = {};
   const semesters = await getSemesters();
   if (doPrintDebuggingInfo) {
     console.log(`We have ${semesters.length} semesters in total.`);
@@ -104,7 +106,7 @@ const getAllCourses = async <T extends keyof Course>(
       coolingTimeMs,
       doPrintDebuggingInfo
     );
-    courses.push(...semesterCourses);
+    courses[semester] = semesterCourses;
     semesterCount += 1;
     if (doPrintDebuggingInfo) {
       console.log(`We fetched ${semesterCount} out of ${semesters.length} semesters.`);
@@ -116,7 +118,21 @@ const getAllCourses = async <T extends keyof Course>(
   return courses;
 };
 
-const courseFieldFilter = getCourseFieldFilter(['subject', 'catalogNbr']);
+const courseFieldFilter = getCourseFieldFilter([
+  'subject',
+  'catalogNbr',
+  'titleLong',
+  'description',
+  'catalogBreadth',
+  'catalogDistr',
+  'catalogLang',
+  'catalogAttribute',
+  'catalogComments',
+  'catalogSatisfiesReq',
+  'catalogWhenOffered',
+  'acadCareer',
+  'acadGroup'
+]);
 
 getAllCourses(courseFieldFilter).then(allCourses => {
   writeFileSync('requirement-generator/filtered-all-courses.json', JSON.stringify(allCourses));

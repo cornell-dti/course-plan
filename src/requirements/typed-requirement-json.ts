@@ -1,5 +1,5 @@
-import reqsData from '@/requirements/reqs.json';
-import { StrictFulfilledByType, RequirementsJson } from './types';
+import decoratedReqsData from '@/requirements/decorated-requirements.json';
+import { RequirementsJson } from './types';
 
 // Cast the json to a stricter type of requirement with an enum `fulfilled` field for all requirements.
-export default (reqsData as RequirementsJson<StrictFulfilledByType>);
+export default decoratedReqsData as RequirementsJson;
