@@ -55,6 +55,7 @@
                             "BU"
                         ]
                     ],
+                    "checkerName": "calsCredits",
                     "fulfilledBy": "credits",
                     "minCount": 55,
                     "progressBar": true
@@ -139,6 +140,7 @@
                             "VIEN 2204"
                         ]
                     ],
+                    "checkerName": "calsIntroductoryLifeSciencesOrBiology",
                     "fulfilledBy": "credits",
                     "minCount": 6
                 },
@@ -147,6 +149,7 @@
                     "description": "18 credits in at least three disciplines of which six credits must be introductory life sciences/biology and three credits in chemistry or physics and a quantitative literacy course.",
                     "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 },
                 {
@@ -160,6 +163,7 @@
                             "PHYS"
                         ]
                     ],
+                    "checkerName": "calsChemistryOrPhysics",
                     "fulfilledBy": "credits",
                     "minCount": 3
                 },
@@ -174,6 +178,7 @@
                             "STSCI"
                         ]
                     ],
+                    "checkerName": "calsQuantitativeLiteracy",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -193,6 +198,7 @@
                             "(SBA-"
                         ]
                     ],
+                    "checkerName": "calsSocialSciencesAndHumanities",
                     "fulfilledBy": "courses",
                     "minCount": 4,
                     "uniqueIncludes": 3
@@ -207,6 +213,7 @@
                             "(D-"
                         ]
                     ],
+                    "checkerName": "calsHumanDiversity",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -222,6 +229,7 @@
                             "First-Year Writing Seminar"
                         ]
                     ],
+                    "checkerName": "calsWrittenAndOralExpression",
                     "fulfilledBy": "credits",
                     "minCount": 9
                 },
@@ -236,6 +244,7 @@
                             "First-Year Writing Seminar"
                         ]
                     ],
+                    "checkerName": "calsWrittenExpression",
                     "fulfilledBy": "credits",
                     "minCount": 6
                 }
@@ -269,6 +278,7 @@
                             "ART 2701"
                         ]
                     ],
+                    "checkerName": "aapIntroductoryStudioPractice",
                     "fulfilledBy": "courses",
                     "minCount": 6
                 },
@@ -289,6 +299,7 @@
                             "ART 3003"
                         ]
                     ],
+                    "checkerName": "aapElectiveStudioPractice",
                     "fulfilledBy": "courses",
                     "minCount": 4
                 },
@@ -302,6 +313,7 @@
                             "ART 3006"
                         ]
                     ],
+                    "checkerName": "aapPreThesisStudioPractice",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -318,6 +330,7 @@
                             "ART 4004"
                         ]
                     ],
+                    "checkerName": "aapThesisStudioPractice",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -331,6 +344,7 @@
                             "ART 2900"
                         ]
                     ],
+                    "checkerName": "aapShopInstruction",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -347,6 +361,7 @@
                             "ART 4100"
                         ]
                     ],
+                    "checkerName": "aapTheoryAndCriticism",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -355,6 +370,7 @@
                     "description": "One additional theory and criticism elective.",
                     "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 },
                 {
@@ -362,6 +378,7 @@
                     "description": "3 classes of art history. One modern/contemporary art history class, one global art history class, and one additional art history elective.",
                     "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 },
                 {
@@ -375,6 +392,7 @@
                             "First-Year Writing Seminar"
                         ]
                     ],
+                    "checkerName": "aapFWS",
                     "fulfilledBy": "credits",
                     "minCount": 6
                 },
@@ -383,6 +401,7 @@
                     "description": "Any academic class at Cornell chosen in consultation with faculty advisor.",
                     "source": "https://aap.cornell.edu/academics/art/undergraduate/curriculum",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 37
                 }
@@ -401,6 +420,7 @@
                             "AS"
                         ]
                     ],
+                    "checkerName": "casCredits",
                     "fulfilledBy": "credits",
                     "minCount": 100,
                     "progressBar": true
@@ -416,6 +436,7 @@
                             "First-Year Writing Seminar"
                         ]
                     ],
+                    "checkerName": "casFWS",
                     "fulfilledBy": "credits",
                     "minCount": 6
                 },
@@ -424,6 +445,7 @@
                     "description": "A student must either pass an intermediate Cornell language course at the 2000-level or above or complete at least 11 credits in a single foreign language at Cornell. AP and IB credits cannot complete this requirement, but usually indicate that you place into a higher level course. Note: Native speakers of a foreign language may be exempted from this requirement.",
                     "source": "https://as.cornell.edu/degree-requirements",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 },
                 {
@@ -465,6 +487,7 @@
                             "ZULU 2***"
                         ]
                     ],
+                    "checkerName": "casIntermediateLanguageCourse",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -507,6 +530,7 @@
                             "ZULU"
                         ]
                     ],
+                    "checkerName": "casLanguageCourseCredits",
                     "fulfilledBy": "credits",
                     "minCount": 11
                 },
@@ -522,6 +546,7 @@
                             "(MQR-AS)"
                         ]
                     ],
+                    "checkerName": "casPBSOrMQR",
                     "fulfilledBy": "courses",
                     "minCount": 4
                 },
@@ -536,6 +561,7 @@
                             "(PBSS-AS)"
                         ]
                     ],
+                    "checkerName": "casPhysicalAndBiologicalSciences",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -549,6 +575,7 @@
                             "(MQR-AS)"
                         ]
                     ],
+                    "checkerName": "casMathematicsAndQuantitativeAndReasoning",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -566,6 +593,7 @@
                             "(SBA-AS)"
                         ]
                     ],
+                    "checkerName": "casLiberalArts",
                     "fulfilledBy": "courses",
                     "minCount": 5,
                     "uniqueIncludes": 4
@@ -581,6 +609,7 @@
                             "GHB"
                         ]
                     ],
+                    "checkerName": "casGeographicBreadthRequirement",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -595,6 +624,7 @@
                             "GHB"
                         ]
                     ],
+                    "checkerName": "casHistoricBreadthRequirement",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 }
@@ -620,6 +650,7 @@
                             "MATH 2940"
                         ]
                     ],
+                    "checkerName": "engineeringMathematics",
                     "fulfilledBy": "credits",
                     "minCount": 14
                 },
@@ -636,6 +667,7 @@
                             "PHYS 2213"
                         ]
                     ],
+                    "checkerName": "engineeringPhysics",
                     "fulfilledBy": "credits",
                     "minCount": 8
                 },
@@ -649,6 +681,7 @@
                             "CHEM 2090"
                         ]
                     ],
+                    "checkerName": "engineeringChemistry",
                     "fulfilledBy": "credits",
                     "minCount": 4
                 },
@@ -663,6 +696,7 @@
                             "First-Year Writing Seminar"
                         ]
                     ],
+                    "checkerName": "engineeringFWS",
                     "fulfilledBy": "credits",
                     "minCount": 6
                 },
@@ -679,6 +713,7 @@
                             "CS 1115"
                         ]
                     ],
+                    "checkerName": "engineeringComputing",
                     "fulfilledBy": "credits",
                     "minCount": 4
                 },
@@ -692,6 +727,7 @@
                             "ENGRI"
                         ]
                     ],
+                    "checkerName": "engineeringENGRI",
                     "fulfilledBy": "credits",
                     "minCount": 4
                 },
@@ -705,6 +741,7 @@
                             "ENGRD"
                         ]
                     ],
+                    "checkerName": "engineeringDistribution",
                     "fulfilledBy": "credits",
                     "minCount": 6
                 },
@@ -724,6 +761,7 @@
                             "CE"
                         ]
                     ],
+                    "checkerName": "engineeringLiberalArts",
                     "fulfilledBy": "credits",
                     "minCount": 18,
                     "uniqueIncludes": 3
@@ -733,6 +771,7 @@
                     "description": "'Advisor-Approved' means that you have justified your selection to your advisor and that your advisor has approved the selection. It makes good sense to use these electives for lower-level introductory courses that may be required prerequisites for the 3000+ technical elective courses and the courses used to satisfy the Specialization. Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS. Up to 6 credits of advisor approved electives may be allowed for ROTC courses at the 3000-level or above.",
                     "source": "https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives#adv_elective",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 6
                 },
@@ -741,6 +780,7 @@
                     "description": "Major-required courses, major-approved electives, and courses outside the major.",
                     "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 3
                 },
@@ -749,6 +789,7 @@
                     "description": "In addition to the first-year writing seminars, a technical writing course must be taken as an engineering distribution, liberal studies, Advisor-approved electives, or Major course.",
                     "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 3
                 }
@@ -767,6 +808,7 @@
                             "HE"
                         ]
                     ],
+                    "checkerName": "humanEcologyCredits",
                     "fulfilledBy": "credits",
                     "minCount": 43,
                     "progressBar": true
@@ -776,6 +818,7 @@
                     "description": "In addition to the first-year writing seminars, a technical writing course must be taken as an engineering distribution, liberal studies, Advisor-approved electives, or Major course.",
                     "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 },
                 {
@@ -783,6 +826,7 @@
                     "description": "Students must earn 9 credits in Human Ecology departments outside their major department with rules:",
                     "source": "https://www.human.cornell.edu/academics/policies/requirements",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 9
                 }
@@ -825,6 +869,7 @@
                             "ILRLE 2400"
                         ]
                     ],
+                    "checkerName": "ilrCoreRequirements",
                     "fulfilledBy": "courses",
                     "minCount": 9
                 },
@@ -839,6 +884,7 @@
                             "First-Year Writing Seminar"
                         ]
                     ],
+                    "checkerName": "ilrFWS",
                     "fulfilledBy": "credits",
                     "minCount": 3
                 },
@@ -860,6 +906,7 @@
                             "ENGL 2890"
                         ]
                     ],
+                    "checkerName": "ilrAdvanceWriting",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -868,6 +915,7 @@
                     "description": "Students are required to complete one course from each of the following lists to fulfill the distribution requirements. All courses must be taken for a letter grade.",
                     "source": "https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 3
                 }
@@ -881,6 +929,7 @@
                     "description": "Graduation requirements depend on major. For undergraduates, it is either Dyson or SHA requirements.",
                     "source": "https://business.cornell.edu/programs/undergraduate/",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 }
             ]
@@ -899,6 +948,7 @@
                     "description": "AEM majors must choose at least one of the following eleven concentrations by the beginning of their junior year, and may choose no more than two. No more than one course may fulfill the elective credits of two concentrations. Courses used to fulfill a core Applied Economics or Quantitative Methods requirement cannot also count towards a concentration requirement except in EERE. One class from the core requirements may be taken for a S/U grade. NO S/U grades will be accepted in a declared concentration, unless a class is offered S/U only. All course petitions or substitutions are managed through the Dyson Office of Student Services in consultation with a committee of faculty from each concentration",
                     "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 },
                 {
@@ -929,6 +979,7 @@
                             "AEM 3230"
                         ]
                     ],
+                    "checkerName": "aemManagementRequirements",
                     "fulfilledBy": "courses",
                     "minCount": 7
                 },
@@ -949,6 +1000,7 @@
                             "ECON 3030"
                         ]
                     ],
+                    "checkerName": "aemEconomicsRequirements",
                     "fulfilledBy": "courses",
                     "minCount": 3
                 },
@@ -969,6 +1021,7 @@
                             "AEM 2010"
                         ]
                     ],
+                    "checkerName": "aemQuantitativeMethodsRequirements",
                     "fulfilledBy": "courses",
                     "minCount": 3
                 },
@@ -998,6 +1051,7 @@
                             "ILRST 3110"
                         ]
                     ],
+                    "checkerName": "aemQuantitativeMethodsElectivesRequirements",
                     "fulfilledBy": "credits",
                     "minCount": 3
                 },
@@ -1006,6 +1060,7 @@
                     "description": "At least 6 credits; must come from two of the four categories below. Courses used to fulfill a quantitative methods requirement or a concentration requirement or elective cannot also be counted toward a core applied economics requirement, unless that concentration is environmental, energy, and resource economics.",
                     "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 },
                 {
@@ -1022,6 +1077,7 @@
                             "AEM 4940"
                         ]
                     ],
+                    "checkerName": "aemGradChallengeRequirementPart1",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -1035,6 +1091,7 @@
                             "AEM 3000"
                         ]
                     ],
+                    "checkerName": "aemGradChallengeRequirementPart2",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -1048,118 +1105,126 @@
                             "AEM 4000"
                         ]
                     ],
+                    "checkerName": "aemGradChallengeRequirementPart3",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 }
             ]
         },
         "BE": {
-            "name": "Biological Engineering", 
-            "schools": ["EN"], 
+            "name": "Biological Engineering",
+            "schools": ["EN"],
             "requirements": [
                 {
-                    "name":"Engineering Distriubtions", 
-                    "description": "ENGRD 2020 and ENGRD 2600 or ENGRD 2510", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "name":"Engineering Distriubtions",
+                    "description": "ENGRD 2020 and ENGRD 2600 or ENGRD 2510",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
                     "search": ["code"],
                     "includes": [
                         [
                             "ENGRD 2020"
-                        ], 
+                        ],
                         [
-                            "ENGRD 2600", 
+                            "ENGRD 2600",
                             "ENGRD 2510"
                         ]
                     ],
-                    "fulfilledBy":"courses", 
+                    "fulfilledBy":"courses",
+                    "checkerName": "bioEngineeringEngineeringDistributions",
                     "minCount": 2
-                }, 
+                },
                 {
-                    "name": "Intro Bio", 
-                    "description": "Choose 2 of the following 4: BIOMG 1350, BIOG 1440, BIOG 1445, and BIOEE/BIOSM 1610", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "name": "Intro Bio",
+                    "description": "Choose 2 of the following 4: BIOMG 1350, BIOG 1440, BIOG 1445, and BIOEE/BIOSM 1610",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
                     "search": ["code"],
                     "includes": [
                         [
                             "BIOMG 1350",
-                            "BIOG 1440", 
-                            "BIOG 1445", 
+                            "BIOG 1440",
+                            "BIOG 1445",
                             "BIOEE/BIOSM 1610"
                         ]
-                    ], 
-                    "fulfilledBy": "courses", 
+                    ],
+                    "fulfilledBy": "courses",
+                    "checkerName": "bioEngineeringIntroBio",
                     "minCount": 2
-                }, 
+                },
                 {
-                    "name": "Required Major Courses", 
-                    "description": "Major requirements for BE: BIOG/BIOSM 1500, BEE 3500, BEE 3310, BEE 3400, BEE 3600, and BEE 4500", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
-                    "search": ["code"], 
+                    "name": "Required Major Courses",
+                    "description": "Major requirements for BE: BIOG/BIOSM 1500, BEE 3500, BEE 3310, BEE 3400, BEE 3600, and BEE 4500",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
+                    "search": ["code"],
                     "includes": [
-                        ["BIOG/BIOSM 1500"], 
-                        ["BEE 3500"], 
-                        ["BEE 3310"], 
-                        ["BEE 3400"], 
-                        ["BEE 3600"], 
+                        ["BIOG/BIOSM 1500"],
+                        ["BEE 3500"],
+                        ["BEE 3310"],
+                        ["BEE 3400"],
+                        ["BEE 3600"],
                         ["BEE 4500"]
-                    ], 
-                    "fulfilledBy": "courses", 
+                    ],
+                    "fulfilledBy": "courses",
+                    "checkerName": "bioEngineeringRequiredMajorCourses",
                     "minCount": 6
-                }, 
+                },
                 {
-                    "name": "Biochemistry", 
-                    "description": "BIOMG 3300, BIOMG 3330, BIOMG 3350, or BIOMG 3310 and BIOMG 3320", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
-                    "search": ["code"], 
+                    "name": "Biochemistry",
+                    "description": "BIOMG 3300, BIOMG 3330, BIOMG 3350, or BIOMG 3310 and BIOMG 3320",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
+                    "search": ["code"],
                     "includes": [
                         [
-                            "BIOMG 3300", 
-                            "BIOMG 3330", 
-                            "BIOMG 3350", 
+                            "BIOMG 3300",
+                            "BIOMG 3330",
+                            "BIOMG 3350",
                             "BIOMG 3310"
-                        ], 
+                        ],
                         [
                             "BIOMG 3320"
                         ]
-                    ], 
-                    "fulfilledBy": "courses", 
+                    ],
+                    "fulfilledBy": "courses",
+                    "checkerName": "bioEngineeringBioChemistry",
                     "minCount": 2
-                }, 
+                },
                 {
-                    "name": "Upper-level Biology", 
-                    "description": "Any biology course at the 2000-level or above which has a biology prerequisite and is taken for a letter grade. This requirement may also be satisfied by an upper-level course in a science department (excluding engineering, liberal studies, social sciences, and mathematics) which has a biology (not social science) content of 95% or greater and a biology prerequisite. Students must receive approval for these alternative courses by consulting their BE faculty advisor or the main BE Advising Office, 207 Riley-Robb Hall. One credit seminars and BIOG 2990/4990 credits may not be used to meet this requirement.", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
-                    "search": ["code"], 
-                    "includes": [], 
+                    "name": "Upper-level Biology",
+                    "description": "Any biology course at the 2000-level or above which has a biology prerequisite and is taken for a letter grade. This requirement may also be satisfied by an upper-level course in a science department (excluding engineering, liberal studies, social sciences, and mathematics) which has a biology (not social science) content of 95% or greater and a biology prerequisite. Students must receive approval for these alternative courses by consulting their BE faculty advisor or the main BE Advising Office, 207 Riley-Robb Hall. One credit seminars and BIOG 2990/4990 credits may not be used to meet this requirement.",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
+                    "search": ["code"],
+                    "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
-                }, 
+                },
                 {
-                    "name": "Engineering Statistics", 
-                    "description": "BEE 2220 or ENGRD 2210 or CHEME 3130 or MSE 3030 and engineering statistics preferably before semester 6. CEE 3040 is the preferred version of statistics.", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
-                    "search": ["code"], 
+                    "name": "Engineering Statistics",
+                    "description": "BEE 2220 or ENGRD 2210 or CHEME 3130 or MSE 3030 and engineering statistics preferably before semester 6. CEE 3040 is the preferred version of statistics.",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
+                    "search": ["code"],
                     "includes": [
                         [
-                            "BEE 2220", 
-                            "ENGRD 2210", 
-                            "CHEME 3130", 
+                            "BEE 2220",
+                            "ENGRD 2210",
+                            "CHEME 3130",
                             "MSE 3030"
                         ],
                         [
-                            "CEE 3040", 
+                            "CEE 3040",
                             "ENGRD 2700"
                         ]
-                    ], 
+                    ],
+                    "checkerName": "bioEngineeringEngineeringStatistics",
                     "fulfilledBy": "courses",
                     "minCount": 2
-                }, 
+                },
                 {
-                    "name": "BE Focus Area Elective", 
-                    "description": "BE Focus Area Electives must include a BEE capstone design course. See beadvised.bee.cornell.edu for a current list of approved courses. In place of one focus area course, students may use up to 4 credits of research, project team, teaching, or independent study taken in an engineering department towards the engineering credits in category 8.", 
-                    "source": "beadvised.bee.cornell.edu", 
-                    "search": ["all-eligible"], 
+                    "name": "BE Focus Area Elective",
+                    "description": "BE Focus Area Electives must include a BEE capstone design course. See beadvised.bee.cornell.edu for a current list of approved courses. In place of one focus area course, students may use up to 4 credits of research, project team, teaching, or independent study taken in an engineering department towards the engineering credits in category 8.",
+                    "source": "beadvised.bee.cornell.edu",
+                    "search": ["all-eligible"],
                     "includes": [],
-                    "fulfilledBy": "courses", 
+                    "fulfilledBy": "courses",
+                    "checkerName": "bioEngineeringFocusAreaElective",
                     "minCount": 4
                 }
             ]
@@ -1188,6 +1253,7 @@
                             "CS 2112"
                         ]
                     ],
+                    "checkerName": "csIntroProgramming",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -1215,6 +1281,7 @@
                             "CS 4410"
                         ]
                     ],
+                    "checkerName": "csCore",
                     "fulfilledBy": "courses",
                     "minCount": 5
                 },
@@ -1264,6 +1331,7 @@
                             "CS 5643"
                         ]
                     ],
+                    "checkerName": "csPracticumOrProject",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -1272,6 +1340,7 @@
                     "description": "The Technical Electives must be made up of three 3000+ level courses.  These courses must be taken for a letter grade, and each must earn three or more credit hours.",
                     "source": "https://www.cs.cornell.edu/undergrad/csmajor/technicalelectives",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 },
                 {
@@ -1279,6 +1348,7 @@
                     "description": "The External Specialization involves nine or more credit hours at the 3000+ level. Absolutely no CS courses are allowed. The three courses must be related to each other. Frequently, the three courses are from the same department, e.g., OR&IE 3300 (Optimization I), OR&IE 3310 (Optimization II), and OR&IE 4330 (Discrete Models). However, a great strength of Cornell is the multitude of interdisciplinary threads that cut across departmental boundaries. Thus, Psychology 4150 (Concepts, Categories, and Word Meanings), Philosophy 3320 (Philosophy of Language), and Linguistics 5530 (Representation of Structure in Vision and Language) define an acceptable Specialization.",
                     "source": "https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 },
                 {
@@ -1286,6 +1356,7 @@
                     "description": "The major elective is any course or courses approved by your CS major advisor. This elective requirement can be met by multiple courses totalling 3 credits, or one course of 3+ credit hours. Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS.",
                     "source": "https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 }
             ]
@@ -1310,6 +1381,7 @@
                             "MATH 1110"
                         ]
                     ],
+                    "checkerName": "economicsAdmissionToTheMajor",
                     "fulfilledBy": "courses",
                     "minCount": 3
                 },
@@ -1334,6 +1406,7 @@
                             "ECON 3140"
                         ]
                     ],
+                    "checkerName": "economicsCoreEconomics",
                     "fulfilledBy": "courses",
                     "minCount": 4
                 },
@@ -1347,6 +1420,7 @@
                             "ECON 4***"
                         ]
                     ],
+                    "checkerName": "economics4000LevelCourses",
                     "fulfilledBy": "courses",
                     "minCount": 3
                 },
@@ -1363,6 +1437,7 @@
                             "ECON 4***"
                         ]
                     ],
+                    "checkerName": "econimicsBasicRequirements",
                     "fulfilledBy": "courses",
                     "minCount": 12
                 }
@@ -1398,6 +1473,7 @@
                             "ENGL 2890"
                         ]
                     ],
+                    "checkerName": "englishTotalCredits",
                     "fulfilledBy": "credits",
                     "minCount": 40
                 },
@@ -1411,6 +1487,7 @@
                             "pre-1800"
                         ]
                     ],
+                    "checkerName": "englishPre1800",
                     "fulfilledBy": "credits",
                     "minCount": 12
                 },
@@ -1424,6 +1501,7 @@
                             "ENGL 4***"
                         ]
                     ],
+                    "checkerName": "english4000OrAbove",
                     "fulfilledBy": "credits",
                     "minCount": 8
                 },
@@ -1433,6 +1511,7 @@
                     "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
                     "search": ["catalogSatisfiesReq"],
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 12
                 }
@@ -1457,6 +1536,7 @@
                             "GOVT 1827"
                         ]
                     ],
+                    "checkerName": "governmentIntroductoryGovernmentCourses",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -1470,6 +1550,7 @@
                             "GOVT 2***"
                         ]
                     ],
+                    "checkerName": "governmentCourseWork",
                     "fulfilledBy": "credits",
                     "minCount": 28
                 },
@@ -1483,6 +1564,7 @@
                             "GOVT ****"
                         ]
                     ],
+                    "checkerName": "governmentTenthGovernmentCourse",
                     "fulfilledBy": "credits",
                     "minCount": 3
                 },
@@ -1491,6 +1573,7 @@
                     "description": "At least one of the GOVT courses listed in items II or III above must be a 4000-level seminar (i.e. a course with 15 or fewer students, taught by a GOVT professor, and typically requiring a research paper).",
                     "source": "https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 }
             ]
@@ -1520,6 +1603,7 @@
                             "HADM 3210"
                         ]
                     ],
+                    "checkerName": "hotelAdminAccounting",
                     "fulfilledBy": "courses",
                     "minCount": 4
                 },
@@ -1539,6 +1623,7 @@
                             "HADM 3870"
                         ]
                     ],
+                    "checkerName": "hotelAdminEmploymentRelationsHRLaw",
                     "fulfilledBy": "courses",
                     "minCount": 3
                 },
@@ -1555,6 +1640,7 @@
                             "HADM 3350"
                         ]
                     ],
+                    "checkerName": "hotelAdminFoodAndBeverageManagement",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -1568,6 +1654,7 @@
                             "HADM 1740"
                         ]
                     ],
+                    "checkerName": "hotelAdminInformationSystems",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -1584,6 +1671,7 @@
                             "HADM 3650"
                         ]
                     ],
+                    "checkerName": "hotelAdminManagementCommunication",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -1606,6 +1694,7 @@
                             "HADM 3010"
                         ]
                     ],
+                    "checkerName": "hotelAdminOperations",
                     "fulfilledBy": "courses",
                     "minCount": 4
                 },
@@ -1622,6 +1711,7 @@
                             "HADM 3550"
                         ]
                     ],
+                    "checkerName": "hotelAdminPropertiesDevelopmentAndManagement",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -1638,6 +1728,7 @@
                             "HADM 2430"
                         ]
                     ],
+                    "checkerName": "hotelAdminServicesMarketing",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -1651,6 +1742,7 @@
                             "HADM 4410"
                         ]
                     ],
+                    "checkerName": "hotelAdminStrategy",
                     "fulfilledBy": "courses",
                     "minCount": 1
                 },
@@ -1664,6 +1756,7 @@
                             "HADM 3***"
                         ]
                     ],
+                    "checkerName": "hotelAdminSHAElectives",
                     "fulfilledBy": "credits",
                     "minCount": 14
                 },
@@ -1672,6 +1765,7 @@
                     "description": "A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.",
                     "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 15
                 },
@@ -1686,6 +1780,7 @@
                             "First-Year Writing Seminar"
                         ]
                     ],
+                    "checkerName": "hotelAdminFWS",
                     "fulfilledBy": "credits",
                     "minCount": 3
                 },
@@ -1694,6 +1789,7 @@
                     "description": "A minimum of 24 credits, to be taken either in or outside SHA.",
                     "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 24
                 }
@@ -1710,6 +1806,7 @@
                     "description": "9 history courses (with a grade of “C” or better). 4 of the nine courses must be taken from one each of the following five categories: Asian, North America, European, Global South (Africa/Caribbean/Latin American and Middle East), and Transregional (Transregional, Comparative, and Methodological). Note: a single course may fulfill more than one requirement as long as the total number of history courses is nine. For example, a course in medieval European history that is also a seminar would count for that requirement, as well as both a course in history before 1800 and as a course in European History.",
                     "source": "https://history.cornell.edu/undergraduate",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 9
                 },
@@ -1721,6 +1818,7 @@
                     "includes": [
                         ["HPE"]
                     ],
+                    "checkerName": "historyPre1800Classes",
                     "fulfilledBy": "courses",
                     "minCount": 3
                 },
@@ -1729,6 +1827,7 @@
                     "description": "2 of the nine courses must be seminars, and one of these seminars must be a 4000-level seminar.  Service-learning 4000-level courses, HIST 4001, HIST 4002, may not be used to fulfill the 4000-level seminar requirement.",
                     "source": "https://history.cornell.edu/undergraduate",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 2
                 }
@@ -1763,6 +1862,7 @@
                             "INFO 2950"
                         ]
                     ],
+                    "checkerName": "infoCoreCourses",
                     "fulfilledBy": "courses",
                     "minCount": 5
                 },
@@ -1797,6 +1897,7 @@
                             "STSCI 2200"
                         ]
                     ],
+                    "checkerName": "infoProgrammingAndMathRequirements",
                     "fulfilledBy": "courses",
                     "minCount": 3
                 },
@@ -1805,6 +1906,7 @@
                     "description": "Students are required to complete AT LEAST one concentration from the seven concentrations available",
                     "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-0",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check",
                     "minCount": 1
                 },
@@ -1833,6 +1935,7 @@
                             "INFO 6***"
                         ]
                     ],
+                    "checkerName": "infoElectives",
                     "fulfilledBy": "courses",
                     "minCount": 3
                 }
@@ -1857,6 +1960,7 @@
                             "ORIE 3500"
                         ]
                     ],
+                    "checkerName": "isstProbabilityStatisticsAndOptimization",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -1877,6 +1981,7 @@
                             "INFO 4300"
                         ]
                     ],
+                    "checkerName": "isstInformationSystems",
                     "fulfilledBy": "courses",
                     "minCount": 3
                 },
@@ -1894,6 +1999,7 @@
                             "ENGRC 3350"
                         ]
                     ],
+                    "checkerName": "isstEconomicOrganizationAndSocialContext",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 },
@@ -1918,6 +2024,7 @@
                             "CS 2800"
                         ]
                     ],
+                    "checkerName": "isstEngineeringMathematics",
                     "fulfilledBy": "courses",
                     "minCount": 4
                 },
@@ -1934,44 +2041,46 @@
                             "ENGRD 2700"
                         ]
                     ],
+                    "checkerName": "isstEngineeringDistributions",
                     "fulfilledBy": "courses",
                     "minCount": 2
                 }
             ]
         },
         "ME": {
-            "name": "Mechanical Engineering", 
-            "schools": ["EN"], 
+            "name": "Mechanical Engineering",
+            "schools": ["EN"],
             "requirements": [
                 {
-                    "name":"Engineering Distriubtions", 
-                    "description": "ENGRD 2020", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "name":"Engineering Distriubtions",
+                    "description": "ENGRD 2020",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
                     "search": ["code"],
                     "includes": [
                         ["ENGRD 2020"]
                     ],
+                    "checkerName": "mechanicalEngineeringEngineeringDistribution",
                     "fulfilledBy":"courses",
                     "minCount": 1
-                }, 
+                },
                 {
-                    "name": "Required Major Courses", 
-                    "description": "MAE 2210, MAE 2030, MAE 2250, MAE 3230, MAE 3240, MAE 3260, MAE 3270, (MAE 3780, ENGRD 2100, or PHYS 3360), MAE 4272, and MAE 4300", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
-                    "search": ["code"], 
+                    "name": "Required Major Courses",
+                    "description": "MAE 2210, MAE 2030, MAE 2250, MAE 3230, MAE 3240, MAE 3260, MAE 3270, (MAE 3780, ENGRD 2100, or PHYS 3360), MAE 4272, and MAE 4300",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
+                    "search": ["code"],
                     "includes": [
                         [
                             "MAE 2210"
                         ],
                         [
                             "MAE 2030"
-                        ], 
+                        ],
                         [
                             "MAE 2250"
-                        ], 
+                        ],
                         [
                             "MAE 3230"
-                        ], 
+                        ],
                         [
                             "MAE 3240"
                         ],
@@ -1982,73 +2091,79 @@
                             "MAE 3270"
                         ],
                         [
-                            "MAE 3780", 
-                            "ENGRD 2100", 
+                            "MAE 3780",
+                            "ENGRD 2100",
                             "PHYS 3360"
-                        ], 
+                        ],
                         [
                             "MAE 4272"
-                        ], 
+                        ],
                         [
                             "MAE 4300"
                         ]
-                    ], 
-                    "fulfilledBy": "courses", 
+                    ],
+                    "fulfilledBy": "courses",
+                    "checkerName": "mechanicalEngineeringRequiredMajorCourses",
                     "minCount": 10
-                }, 
+                },
                 {
-                    "name":"M.E. Major Electives", 
-                    "description": "A list of approved Major-approved Electives is available online at www.mae.cornell.edu", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "name":"M.E. Major Electives",
+                    "description": "A list of approved Major-approved Electives is available online at www.mae.cornell.edu",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
                     "search": ["code"],
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy":"self-check"
-                }, 
+                },
                 {
-                    "name":"MAE 4xx1: Supervised Senior Design Experience", 
-                    "description": "Can be satisfied by independent research, project team, or by designated senior design formal course, MAE 4xx1.", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "name":"MAE 4xx1: Supervised Senior Design Experience",
+                    "description": "Can be satisfied by independent research, project team, or by designated senior design formal course, MAE 4xx1.",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
                     "search": ["code"],
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy":"self-check"
-                }, 
+                },
                 {
-                    "name":"Mathematics Elective:", 
-                    "description": "Must be an upper-level mathematics course, which includes statistics, taken after Math 2940. A list of approved math electives is available online at www.mae.cornell.edu", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "name":"Mathematics Elective:",
+                    "description": "Must be an upper-level mathematics course, which includes statistics, taken after Math 2940. A list of approved math electives is available online at www.mae.cornell.edu",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
                     "search": ["code"],
                     "includes": [
                         [
-                            "MAE 3100", 
-                            "ENGRD 2700", 
-                            "CEE 3040", 
-                            "ENGRD 3200", 
-                            "ENGRD 3100", 
-                            "BTRY 3010", 
+                            "MAE 3100",
+                            "ENGRD 2700",
+                            "CEE 3040",
+                            "ENGRD 3200",
+                            "ENGRD 3100",
+                            "BTRY 3010",
                             "CS 2800"
                         ]
                     ],
-                    "fulfilledBy":"credits", 
+                    "fulfilledBy":"credits",
+                    "checkerName": "mechanicalEngineeringMathematicsElective",
                     "minCount": 3
-                }, 
+                },
                 {
-                    "name":"Technical Elective", 
-                    "description": "A Technical Elective includes technical courses at an appropriate level, chosen from engineering (2000+), mathematics (beyond 2940), science (beyond Physics 2214), chemistry (2080, or beyond 2090), or biological sciences. Most 2000+ technical level courses in engineering will be accepted. (Note: Engineering economic, business, management, financial, or organization courses will not be accepted, with the exception of MAE 4610.). The following 1000-level courses in biology are accepted: BIOG 1440; BIOG 1445; BIOMG 1350; BIOEE 1610; and BIOSM 1610. In addition, credit for advanced placement biology and technical courses at the 2000+ level in biological sciences are accepted.", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "name":"Technical Elective",
+                    "description": "A Technical Elective includes technical courses at an appropriate level, chosen from engineering (2000+), mathematics (beyond 2940), science (beyond Physics 2214), chemistry (2080, or beyond 2090), or biological sciences. Most 2000+ technical level courses in engineering will be accepted. (Note: Engineering economic, business, management, financial, or organization courses will not be accepted, with the exception of MAE 4610.). The following 1000-level courses in biology are accepted: BIOG 1440; BIOG 1445; BIOMG 1350; BIOEE 1610; and BIOSM 1610. In addition, credit for advanced placement biology and technical courses at the 2000+ level in biological sciences are accepted.",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
                     "search": ["code"],
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy":"self-check"
-                }, 
+                },
                 {
-                    "name":"Major-approved Elective", 
-                    "description": "A list of approved Major-approved Electives is available online at www.mae.cornell.edu", 
-                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14", 
+                    "name":"Major-approved Elective",
+                    "description": "A list of approved Major-approved Electives is available online at www.mae.cornell.edu",
+                    "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
                     "search": ["code"],
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy":"self-check"
                 }
             ]
-        }, 
+        },
         "ORIE": {
             "name": "Operations Research and Engineering",
             "schools": [
@@ -2083,6 +2198,7 @@
                             "ORIE 4580"
                         ]
                     ],
+                    "checkerName": "orieMajorRequiredClasses",
                     "fulfilledBy": "courses",
                     "minCount": 7
                 },
@@ -2098,6 +2214,7 @@
                             "ORIE 6***"
                         ]
                     ],
+                    "checkerName": "orieElectives",
                     "fulfilledBy": "credits",
                     "minCount": 9
                 },
@@ -2118,6 +2235,7 @@
                             "ENGRI 1***"
                         ]
                     ],
+                    "checkerName": "orieEngineeringDistributionCourses",
                     "fulfilledBy": "courses",
                     "minCount": 3
                 },
@@ -2126,6 +2244,7 @@
                     "description": "Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. Technical courses in Engineering at the 2000 level or above.",
                     "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 },
                 {
@@ -2133,6 +2252,7 @@
                     "description": "Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. Technical courses in Engineering at the 2000 level or above.",
                     "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
                     "includes": [],
+                    "checkerName": null,
                     "fulfilledBy": "self-check"
                 }
             ]
