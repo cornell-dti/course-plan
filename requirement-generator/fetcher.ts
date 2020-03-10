@@ -125,11 +125,9 @@ const courseFieldFilter = getCourseFieldFilter([
   'description',
   'catalogBreadth',
   'catalogDistr',
-  'catalogLang',
   'catalogAttribute',
   'catalogComments',
   'catalogSatisfiesReq',
-  'catalogWhenOffered',
   'acadCareer',
   'acadGroup'
 ]);

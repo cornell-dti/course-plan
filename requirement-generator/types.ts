@@ -3,13 +3,11 @@ export type Course = {
   readonly catalogNbr: string;
   readonly titleLong: string;
   readonly description: string;
-  readonly catalogBreadth: string;
-  readonly catalogDistr: string;
-  readonly catalogLang: string;
+  readonly catalogBreadth?: string;
+  readonly catalogDistr?: string;
   readonly catalogAttribute: string;
-  readonly catalogWhenOffered: string;
-  readonly catalogComments: string;
-  readonly catalogSatisfiesReq: string;
+  readonly catalogComments?: string;
+  readonly catalogSatisfiesReq?: string;
   readonly acadCareer: string;
   readonly acadGroup: string;
 };
@@ -20,9 +18,6 @@ export interface BaseRequirement {
   readonly name: string;
   readonly description: string;
   readonly source: string;
-  readonly search?: readonly RequirementSearch[];
-  readonly includes?: readonly string[][];
-  readonly excludes?: readonly string[][];
   readonly fulfilledBy: 'credits' | 'courses' | 'self-check';
   readonly applies?: string;
   readonly minCount?: number;
@@ -30,7 +25,6 @@ export interface BaseRequirement {
 }
 
 export interface UniversityRequirement extends BaseRequirement {
-  readonly includes: readonly string[][];
   readonly minCount: number;
 }
 
@@ -41,7 +35,7 @@ export type UniversityRequirements = {
 };
 
 export interface CollegeOrMajorRequirement extends BaseRequirement {
-  readonly includes: readonly string[][];
+  readonly checkerName: string | null;
 }
 
 export type EligibleCourses =
