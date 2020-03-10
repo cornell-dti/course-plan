@@ -1,5 +1,5 @@
-import { Course } from '../types';
-import { courseMatchesCode, courseMatchesCodeOptions } from './checkers-common';
+import { Course } from '../../types';
+import { courseMatchesCode, courseMatchesCodeOptions } from '../checkers-common';
 
 const economicsAdmissionToTheMajor = (course: Course): boolean => (
   courseMatchesCode(course, 'ECON 1110')

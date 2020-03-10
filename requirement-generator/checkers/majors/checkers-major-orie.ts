@@ -1,5 +1,5 @@
-import { Course } from '../types';
-import { courseMatchesCode, courseMatchesCodeOptions } from './checkers-common';
+import { Course } from '../../types';
+import { courseMatchesCode, courseMatchesCodeOptions } from '../checkers-common';
 
 const orieMajorRequiredClasses = (course: Course): boolean => (
   courseMatchesCode(course, 'ORIE 3120')

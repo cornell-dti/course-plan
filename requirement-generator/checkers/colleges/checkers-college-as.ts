@@ -1,5 +1,5 @@
-import { Course } from '../types';
-import { courseMatchesCodeOptions, courseIsFWS } from './checkers-common';
+import { Course } from '../../types';
+import { courseMatchesCodeOptions, courseIsFWS } from '../checkers-common';
 
 const casCredits = (course: Course): boolean => course.acadGroup.includes('AS');
 

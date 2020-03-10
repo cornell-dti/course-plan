@@ -1,5 +1,5 @@
-import { Course } from '../types';
-import { courseMatchesCodeOptions } from './checkers-common';
+import { Course } from '../../types';
+import { courseMatchesCodeOptions } from '../checkers-common';
 
 const calsCredits = (course: Course): boolean => ['AG', 'BU'].includes(course.acadGroup);
 

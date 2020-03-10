@@ -1,5 +1,5 @@
-import { Course } from '../types';
-import { courseMatchesCode, courseIsFWS } from './checkers-common';
+import { Course } from '../../types';
+import { courseMatchesCode, courseIsFWS } from '../checkers-common';
 
 const hotelAdminAccounting = (course: Course): boolean => (
   courseMatchesCode(course, 'HADM 1210')

@@ -1,4 +1,4 @@
-import { Course } from '../types';
+import { Course } from '../../types';
 
 const historyPre1800Classes = (course: Course): boolean => (
   // REQ_TODO: investigate whether course data has this field (catalogCourseSubfield)

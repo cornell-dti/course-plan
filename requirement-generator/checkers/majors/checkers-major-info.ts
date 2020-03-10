@@ -1,5 +1,5 @@
-import { Course } from '../types';
-import { courseMatchesCode, courseMatchesCodeOptions } from './checkers-common';
+import { Course } from '../../types';
+import { courseMatchesCode, courseMatchesCodeOptions } from '../checkers-common';
 
 const infoCoreCourses = (course: Course): boolean => (
   courseMatchesCode(course, 'INFO 1200')

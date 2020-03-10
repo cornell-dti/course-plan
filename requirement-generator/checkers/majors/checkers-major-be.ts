@@ -1,5 +1,5 @@
-import { Course } from '../types';
-import { courseMatchesCode, courseMatchesCodeOptions } from './checkers-common';
+import { Course } from '../../types';
+import { courseMatchesCode, courseMatchesCodeOptions } from '../checkers-common';
 
 const bioEngineeringEngineeringDistributions = (course: Course): boolean => (
   courseMatchesCodeOptions(course, ['ENGRD 2020'])

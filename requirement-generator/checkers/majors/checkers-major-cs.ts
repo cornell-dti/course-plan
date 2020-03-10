@@ -1,5 +1,5 @@
-import { Course } from '../types';
-import { courseMatchesCode, courseMatchesCodeOptions } from './checkers-common';
+import { Course } from '../../types';
+import { courseMatchesCode, courseMatchesCodeOptions } from '../checkers-common';
 
 const csIntroProgramming = (course: Course): boolean => (
   courseMatchesCodeOptions(course, ['CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'])

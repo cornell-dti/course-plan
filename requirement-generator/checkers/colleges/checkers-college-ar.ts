@@ -1,5 +1,5 @@
-import { Course } from '../types';
-import { courseMatchesCode, courseMatchesCodeOptions, courseIsFWS } from './checkers-common';
+import { Course } from '../../types';
+import { courseMatchesCode, courseMatchesCodeOptions, courseIsFWS } from '../checkers-common';
 
 const aapIntroductoryStudioPractice = (course: Course): boolean => (
   courseMatchesCode(course, 'ART 2201')
