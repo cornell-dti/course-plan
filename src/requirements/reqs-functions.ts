@@ -217,8 +217,7 @@ function iterateThroughCollegeOrMajorRequirements(
       const {
         code, roster, subject, number, credits
       } = courseTaken;
-      if (courses === 'all-eligible'
-        || (courses[roster] && courses[roster][subject] && courses[roster][subject].includes(number))) {
+      if (courses[roster] && courses[roster][subject] && courses[roster][subject].includes(number)) {
         // depending on what it is fulfilled by, either increase the count or credits you took
         switch (requirement.fulfilledBy) {
           case 'courses':
