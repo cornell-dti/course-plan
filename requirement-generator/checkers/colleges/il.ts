@@ -1,17 +1,17 @@
 import { Course } from '../../types';
 import { courseMatchesCode, courseMatchesCodeOptions, courseIsFWS } from '../checkers-common';
 
-const ilrCoreRequirements = (course: Course): boolean => (
-  courseMatchesCode(course, 'ILROB 1220')
-  || courseMatchesCode(course, 'ILRLR 1100')
-  || courseMatchesCode(course, 'ECON 1110')
-  || courseMatchesCode(course, 'ECON 1120')
-  || courseMatchesCode(course, 'ILRST 2100')
-  || courseMatchesCode(course, 'ILRLR 2010')
-  || courseMatchesCode(course, 'ILRHR 2600')
-  || courseMatchesCode(course, 'ILRLR 2050')
-  || courseMatchesCode(course, 'ILRLE 2400')
-);
+const ilrCoreRequirements = [
+  (course: Course): boolean => courseMatchesCode(course, 'ILROB 1220'),
+  (course: Course): boolean => courseMatchesCode(course, 'ILRLR 1100'),
+  (course: Course): boolean => courseMatchesCode(course, 'ECON 1110'),
+  (course: Course): boolean => courseMatchesCode(course, 'ECON 1120'),
+  (course: Course): boolean => courseMatchesCode(course, 'ILRST 2100'),
+  (course: Course): boolean => courseMatchesCode(course, 'ILRLR 2010'),
+  (course: Course): boolean => courseMatchesCode(course, 'ILRHR 2600'),
+  (course: Course): boolean => courseMatchesCode(course, 'ILRLR 2050'),
+  (course: Course): boolean => courseMatchesCode(course, 'ILRLE 2400')
+];
 
 const ilrFWS = courseIsFWS;
 

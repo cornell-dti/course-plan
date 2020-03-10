@@ -5,18 +5,18 @@ const mechanicalEngineeringEngineeringDistribution = (course: Course): boolean =
   courseMatchesCode(course, 'ENGRD 2020')
 );
 
-const mechanicalEngineeringRequiredMajorCourses = (course: Course): boolean => (
-  courseMatchesCodeOptions(course, ['MAE 2210'])
-  || courseMatchesCodeOptions(course, ['MAE 2030'])
-  || courseMatchesCodeOptions(course, ['MAE 2250'])
-  || courseMatchesCodeOptions(course, ['MAE 3230'])
-  || courseMatchesCodeOptions(course, ['MAE 3240'])
-  || courseMatchesCodeOptions(course, ['MAE 3260'])
-  || courseMatchesCodeOptions(course, ['MAE 3270'])
-  || courseMatchesCodeOptions(course, ['MAE 3780', 'ENGRD 2100', 'PHYS 3360'])
-  || courseMatchesCodeOptions(course, ['MAE 4272'])
-  || courseMatchesCodeOptions(course, ['MAE 4300'])
-);
+const mechanicalEngineeringRequiredMajorCourses = [
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MAE 2210']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MAE 2030']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MAE 2250']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MAE 3230']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MAE 3240']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MAE 3260']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MAE 3270']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MAE 3780', 'ENGRD 2100', 'PHYS 3360']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MAE 4272']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MAE 4300'])
+];
 
 const mechanicalEngineeringMathematicsElective = (course: Course): boolean => courseMatchesCodeOptions(
   course,

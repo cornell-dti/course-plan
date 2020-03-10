@@ -2,7 +2,8 @@ import requirementJson from '@/requirements/typed-requirement-json';
 import {
   CourseTaken,
   BaseRequirement,
-  CollegeOrMajorRequirement
+  CollegeOrMajorRequirement,
+  Course
 } from '@/requirements/types';
 
 type RequirementMap = { readonly [code: string]: readonly string[] };
@@ -206,46 +207,57 @@ function iterateThroughCollegeOrMajorRequirements(
     // if(!isTransfer && requirement.applies === "transfers") continue;
     // temporarily skip these until we can implement them later
 
-    const { name: requirementName, courses } = requirement;
+    const { name: requirementName, courses: requirementCourses } = requirement;
 
     let totalRequirementCredits = 0;
     let totalRequirementCount = 0;
-    const coursesThatFulilledRequirement: string[] = [];
+    const coursesThatFulfilledRequirement: CourseTaken[][] = requirementCourses.map(() => []);
+    const courseCodesThatFulfilledRequirement = new Set<string>();
 
     // eslint-disable-next-line no-loop-func
     coursesTaken.forEach(courseTaken => {
-      const {
-        code, roster, subject, number, credits
-      } = courseTaken;
-      if (courses[roster] && courses[roster][subject] && courses[roster][subject].includes(number)) {
-        // depending on what it is fulfilled by, either increase the count or credits you took
-        switch (requirement.fulfilledBy) {
-          case 'courses':
-            totalRequirementCount += 1;
-            break;
-          case 'credits':
-            totalRequirementCredits += credits;
-            break;
-          case 'self-check':
-            return;
-          default:
-            throw new Error('Fulfillment type unknown.');
+      const { roster, subject, number } = courseTaken;
+      requirementCourses.forEach((subRequirementCourses, subRequirementIndex) => {
+        if (subRequirementCourses[roster] && subRequirementCourses[roster][subject] && subRequirementCourses[roster][subject].includes(number)) {
+          // add the course to the list of courses used to fulfill that one sub-requirement
+          coursesThatFulfilledRequirement[subRequirementIndex].push(courseTaken);
         }
+      });
+    });
+    // eslint-disable-next-line no-loop-func
+    coursesThatFulfilledRequirement.forEach((coursesThatFulfilledSubRequirement, subRequirementIndex) => {
+      if (coursesThatFulfilledSubRequirement.length === 0) {
+        return;
+      }
+      // depending on what it is fulfilled by, either increase the count or credits you took
+      switch (requirement.fulfilledBy) {
+        case 'courses':
+          totalRequirementCount += 1;
+          break;
+        case 'credits':
+          totalRequirementCredits += coursesThatFulfilledSubRequirement
+            .map(course => course.credits)
+            .reduce((a, b) => Math.max(a, b), 0);
+          break;
+        case 'self-check':
+          return;
+        default:
+          throw new Error('Fulfillment type unknown.');
+      }
 
-        // add the course to the list of courses used to fulfill that one requirement
-        coursesThatFulilledRequirement.push(code);
-
+      coursesThatFulfilledSubRequirement.forEach(({ code }) => {
         // Add course to dictionary with name
         if (code in satisfiedRequirementMap) satisfiedRequirementMap[code].push(requirementName);
         else satisfiedRequirementMap[code] = [requirementName];
-      }
+        courseCodesThatFulfilledRequirement.add(code);
+      });
     });
 
     const generatedResults = createRequirementJSON(
       requirement,
       totalRequirementCredits,
       totalRequirementCount,
-      coursesThatFulilledRequirement
+      Array.from(courseCodesThatFulfilledRequirement.values())
     );
     requirementJSONs.push(generatedResults);
   }

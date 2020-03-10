@@ -1,15 +1,16 @@
 import { Course } from '../../types';
 import { courseMatchesCode, courseMatchesCodeOptions, courseIsFWS } from '../checkers-common';
 
-const engineeringMathematics = (course: Course): boolean => (
-  courseMatchesCode(course, 'MATH 1910')
-  || courseMatchesCode(course, 'MATH 1920')
-  || courseMatchesCodeOptions(course, ['MATH 2930', 'MATH 2940'])
-);
+const engineeringMathematics = [
+  (course: Course): boolean => courseMatchesCode(course, 'MATH 1910'),
+  (course: Course): boolean => courseMatchesCode(course, 'MATH 1920'),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MATH 2930', 'MATH 2940'])
+];
 
-const engineeringPhysics = (course: Course): boolean => (
-  courseMatchesCode(course, 'PHYS 1112') || courseMatchesCode(course, 'PHYS 2213')
-);
+const engineeringPhysics = [
+  (course: Course): boolean => courseMatchesCode(course, 'PHYS 1112'),
+  (course: Course): boolean => courseMatchesCode(course, 'PHYS 2213')
+];
 
 const engineeringChemistry = (course: Course): boolean => courseMatchesCode(course, 'CHEM 2090');
 
