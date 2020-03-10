@@ -19,7 +19,21 @@ import checkersMajorISST from './majors/isst';
 import checkersMajorME from './majors/me';
 import checkersMajorORIE from './majors/orie';
 
-const checkers: Checkers = {
+/**
+ * A object that contains all checkers for requirements.
+ * To get a checker, do:
+ *
+ * ```typescript
+ * import checkers from './all-requirements-checkers';
+ *
+ * const checker = checkers['name-of-your-checker'];
+ * if (checker(course)) {
+ *   // Course satisfies the requirement.
+ *   // ...
+ * }
+ * ```
+ */
+const requirementCheckers: Checkers = {
   ...checkersCollegeAG,
   ...checkersCollegeAR,
   ...checkersCollegeAS,
@@ -41,4 +55,4 @@ const checkers: Checkers = {
   ...checkersMajorORIE
 };
 
-export default checkers;
+export default requirementCheckers;

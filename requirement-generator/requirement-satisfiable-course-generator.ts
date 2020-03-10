@@ -7,7 +7,7 @@ import {
   EligibleCourses
 } from './types';
 import { filteredAllCourses, requirementJson } from './requirement-sources-jsons';
-import requirementCheckers from './checkers';
+import requirementCheckers from './checkers/all-requirements-checkers';
 
 const getEligibleCourses = (requirement: CollegeOrMajorRequirement): EligibleCourses => {
   // eligibleCoursesMap[semester][subject]
@@ -42,7 +42,6 @@ const getEligibleCourses = (requirement: CollegeOrMajorRequirement): EligibleCou
   return eligibleCoursesMap;
 };
 
-// TODO: give a better type.
 const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequirementsJson => {
   const { university, college, major } = requirementJson;
   type MutableDecoratedJson = {
