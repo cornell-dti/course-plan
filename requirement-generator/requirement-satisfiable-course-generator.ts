@@ -16,15 +16,9 @@ const getEligibleCourses = (requirement: CollegeOrMajorRequirement): EligibleCou
   const { checkerName } = requirement;
   if (checkerName === null) {
     // Self check courses have zero satisfiable course.
-    Object.keys(filteredAllCourses).forEach(semester => {
-      eligibleCoursesMap[semester] = {};
-    });
-    return eligibleCoursesMap;
+    return {};
   }
   const requirementChecker = requirementCheckers[checkerName];
-  if (requirementChecker === 'all-eligible') {
-    return 'all-eligible';
-  }
   Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
     const semesterMap: { [subject: string]: string[] } = {};
     courses
@@ -37,7 +31,10 @@ const getEligibleCourses = (requirement: CollegeOrMajorRequirement): EligibleCou
         subjectSet.push(course.catalogNbr);
         semesterMap[course.subject] = subjectSet;
       });
-    eligibleCoursesMap[semester] = semesterMap;
+    if (Object.keys(semesterMap).length > 0) {
+      // Do not include empty semesters.
+      eligibleCoursesMap[semester] = semesterMap;
+    }
   });
   return eligibleCoursesMap;
 };
