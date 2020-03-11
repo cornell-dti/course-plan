@@ -1,27 +1,27 @@
 import { Course } from '../../types';
 import { courseMatchesCode, courseMatchesCodeOptions } from '../checkers-common';
 
-const aemManagementRequirements = (course: Course): boolean => (
-  courseMatchesCode(course, 'AEM 2200')
-  || courseMatchesCode(course, 'AEM 2225')
-  || courseMatchesCode(course, 'AEM 2240')
-  || courseMatchesCode(course, 'AEM 2420')
-  || courseMatchesCode(course, 'AEM 2601')
-  || courseMatchesCode(course, 'AEM 3200')
-  || courseMatchesCode(course, 'AEM 3230')
-);
+const aemManagementRequirements = [
+  (course: Course): boolean => courseMatchesCode(course, 'AEM 2200'),
+  (course: Course): boolean => courseMatchesCode(course, 'AEM 2225'),
+  (course: Course): boolean => courseMatchesCode(course, 'AEM 2240'),
+  (course: Course): boolean => courseMatchesCode(course, 'AEM 2420'),
+  (course: Course): boolean => courseMatchesCode(course, 'AEM 2601'),
+  (course: Course): boolean => courseMatchesCode(course, 'AEM 3200'),
+  (course: Course): boolean => courseMatchesCode(course, 'AEM 3230')
+];
 
-const aemEconomicsRequirements = (course: Course): boolean => (
-  courseMatchesCodeOptions(course, ['ECON 1110'])
-  || courseMatchesCodeOptions(course, ['ECON 1120'])
-  || courseMatchesCodeOptions(course, ['AEM 2600', 'ECON 3030'])
-);
+const aemEconomicsRequirements = [
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['ECON 1110']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['ECON 1120']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['AEM 2600', 'ECON 3030'])
+];
 
-const aemQuantitativeMethodsRequirements = (course: Course): boolean => (
-  courseMatchesCodeOptions(course, ['AEM 2100'])
-  || courseMatchesCodeOptions(course, ['MATH 1110', 'MATH 1120'])
-  || courseMatchesCodeOptions(course, ['AEM 2010'])
-);
+const aemQuantitativeMethodsRequirements = [
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['AEM 2100']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['MATH 1110', 'MATH 1120']),
+  (course: Course): boolean => courseMatchesCodeOptions(course, ['AEM 2010'])
+];
 
 const aemQuantitativeMethodsElectivesRequirements = (course: Course): boolean => courseMatchesCodeOptions(
   course,

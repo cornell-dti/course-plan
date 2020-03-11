@@ -48,7 +48,7 @@ export type EligibleCourses = {
 };
 
 export interface CollegeOrMajorRequirement extends BaseRequirement {
-  readonly courses: EligibleCourses;
+  readonly courses: readonly EligibleCourses[];
 }
 
 export type CollegeRequirements = {

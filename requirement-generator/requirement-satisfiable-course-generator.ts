@@ -9,34 +9,39 @@ import {
 import { filteredAllCourses, requirementJson } from './requirement-sources-jsons';
 import requirementCheckers from './checkers/all-requirements-checkers';
 
-const getEligibleCourses = (requirement: CollegeOrMajorRequirement): EligibleCourses => {
+const getEligibleCourses = (requirement: CollegeOrMajorRequirement): readonly EligibleCourses[] => {
   // eligibleCoursesMap[semester][subject]
   // gives you all courses number of the courses eligible for the given requirements.
-  const eligibleCoursesMap: { [semester: string]: { [subject: string]: string[] } } = {};
   const { checkerName } = requirement;
   if (checkerName === null) {
     // Self check courses have zero satisfiable course.
-    return {};
+    return [];
   }
   const requirementChecker = requirementCheckers[checkerName];
-  Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
-    const semesterMap: { [subject: string]: string[] } = {};
-    courses
-      .filter(course => requirementChecker(course))
-      .forEach(course => {
-        let subjectSet = semesterMap[course.subject];
-        if (subjectSet == null) {
-          subjectSet = [];
-        }
-        subjectSet.push(course.catalogNbr);
-        semesterMap[course.subject] = subjectSet;
-      });
-    if (Object.keys(semesterMap).length > 0) {
-      // Do not include empty semesters.
-      eligibleCoursesMap[semester] = semesterMap;
-    }
+  const subRequirementCheckers = typeof requirementChecker === 'function'
+    ? [requirementChecker]
+    : requirementChecker;
+  return subRequirementCheckers.map(oneRequirementChecker => {
+    const eligibleCoursesMap: { [semester: string]: { [subject: string]: string[] } } = {};
+    Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
+      const semesterMap: { [subject: string]: string[] } = {};
+      courses
+        .filter(course => oneRequirementChecker(course))
+        .forEach(course => {
+          let subjectSet = semesterMap[course.subject];
+          if (subjectSet == null) {
+            subjectSet = [];
+          }
+          subjectSet.push(course.catalogNbr);
+          semesterMap[course.subject] = subjectSet;
+        });
+      if (Object.keys(semesterMap).length > 0) {
+        // Do not include empty semesters.
+        eligibleCoursesMap[semester] = semesterMap;
+      }
+    });
+    return eligibleCoursesMap;
   });
-  return eligibleCoursesMap;
 };
 
 const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequirementsJson => {
