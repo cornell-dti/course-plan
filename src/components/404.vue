@@ -172,6 +172,9 @@ a.footer {
 }
 .thinking-face{
   margin-bottom: 1vw;
+  @media(max-width:1154px){
+    width: 10vw;
+  }
 }
 .body-container{
   min-height: 100vh;
