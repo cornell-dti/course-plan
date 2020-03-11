@@ -5,7 +5,8 @@ import {
   DecoratedCollegeOrMajorRequirement,
   MutableRequirementFulfillment,
   RequirementFulfillment,
-  GroupedRequirementFulfillmentReport
+  GroupedRequirementFulfillmentReport,
+  SingleMenuRequirement
 } from './types';
 
 type RequirementMap = { readonly [code: string]: readonly string[] };
@@ -257,13 +258,23 @@ function iterateThroughCollegeOrMajorRequirements(
   return requirementJSONs;
 }
 
-export default function getReqs(
+/**
+ * @param coursesTaken a list of classes taken by the user, with some metadata (e.g. no. of credits)
+ * helping to compute requirement progress.
+ * @param college user's college.
+ * @param major user's major.
+ * @returns a tuple with the format:
+ * [
+ *   a requirement map that maps course code to a list of satisfying courses,
+ * ]
+ */
+export default function computeRequirements(
   coursesTaken: readonly CourseTaken[],
   college: string,
-  major: string,
-  requirementsMap: MutableRequirementMap
-): readonly GroupedRequirementFulfillmentReport[] {
-  // prepare final output JSONs
+  major: string
+): [RequirementMap, readonly GroupedRequirementFulfillmentReport[]] {
+  const requirementsMap: MutableRequirementMap = {};
+  // prepare grouped fulfillment summary
   const groups: GroupedRequirementFulfillmentReport[] = [];
 
   // PART 1: check university requirements
@@ -305,5 +316,5 @@ export default function getReqs(
     });
   }
 
-  return groups;
+  return [requirementsMap, groups];
 }
