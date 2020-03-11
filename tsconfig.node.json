@@ -8,10 +8,10 @@
     "lib": ["dom", "esnext"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "requirement-generator/dist",
+    "outDir": "requirement-generator-dist",
     "resolveJsonModule": true,
     "strict": true,
     "target": "es2015"
   },
-  "include": ["requirement-generator/"]
+  "include": ["src/requirements/"]
 }
