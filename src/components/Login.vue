@@ -138,7 +138,7 @@
 import Vue from 'vue';
 import firebase, { User } from 'firebase/app';
 
-import * as fb from '@/firebaseConfig.ts';
+import * as fb from '@/firebaseConfig';
 
 const { whitelistCollection, landingEmailsCollection } = fb;
 

@@ -150,9 +150,9 @@ import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course.vue';
 // eslint-disable-next-line import/extensions
 import Modal from '@/components/Modals/Modal.vue';
-import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types.ts';
+import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 
-import computeRequirements from '@/requirements/reqs-functions.ts';
+import computeRequirements from '@/requirements/reqs-functions';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);

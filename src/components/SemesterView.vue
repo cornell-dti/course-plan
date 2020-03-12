@@ -60,7 +60,7 @@ import Confirmation from '@/components/Confirmation';
 import Caution from '@/components/Caution';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
 
-import { auth, userDataCollection } from '@/firebaseConfig.ts';
+import { auth, userDataCollection } from '@/firebaseConfig';
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);

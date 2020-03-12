@@ -50,8 +50,8 @@ import BottomBar from '@/components/BottomBar';
 import NavBar from '@/components/NavBar';
 import Onboarding from '@/components/Modals/Onboarding';
 
-import '@/vueDragulaConfig.ts';
-import { auth, userDataCollection } from '@/firebaseConfig.ts';
+import '@/vueDragulaConfig';
+import { auth, userDataCollection } from '@/firebaseConfig';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
