@@ -22,7 +22,7 @@ function createRequirementJSON(
   requirement: BaseRequirement,
   totalRequirementCredits: number,
   totalRequirementCount: number,
-  coursesThatFulilledRequirement: readonly string[]
+  coursesThatFulilledRequirement: readonly CourseTaken[][]
 ): RequirementFulfillment {
   let fulfilled: number | undefined;
   switch (requirement.fulfilledBy) {
@@ -133,7 +133,7 @@ function iterateThroughUniversityRequirements(
       academicCreditsRequirements,
       coursesThatCountTowardsAcademicCredits.reduce((accumulator, course) => accumulator + course.credits, 0),
       0,
-      coursesThatCountTowardsAcademicCredits.map(course => course.code)
+      [coursesThatCountTowardsAcademicCredits]
     )
   );
 
@@ -144,7 +144,7 @@ function iterateThroughUniversityRequirements(
       PERequirement,
       0,
       coursesThatCountTowardsPE.length,
-      coursesThatCountTowardsPE.map(course => course.code)
+      [coursesThatCountTowardsPE]
     )
   );
 
@@ -184,7 +184,6 @@ function iterateThroughCollegeOrMajorRequirements(
     let totalRequirementCredits = 0;
     let totalRequirementCount = 0;
     const coursesThatFulfilledRequirement: CourseTaken[][] = requirementCourses.map(() => []);
-    const courseCodesThatFulfilledRequirement = new Set<string>();
 
     // eslint-disable-next-line no-loop-func
     coursesTaken.forEach(courseTaken => {
@@ -221,7 +220,6 @@ function iterateThroughCollegeOrMajorRequirements(
         // Add course to dictionary with name
         if (code in satisfiedRequirementMap) satisfiedRequirementMap[code].push(requirementName);
         else satisfiedRequirementMap[code] = [requirementName];
-        courseCodesThatFulfilledRequirement.add(code);
       });
     });
 
@@ -229,7 +227,7 @@ function iterateThroughCollegeOrMajorRequirements(
       requirement,
       totalRequirementCredits,
       totalRequirementCount,
-      Array.from(courseCodesThatFulfilledRequirement.values())
+      coursesThatFulfilledRequirement
     );
     requirementJSONs.push(generatedResults);
   }

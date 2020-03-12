@@ -83,8 +83,8 @@ export type DecoratedRequirementsJson = {
 export type RequirementFulfillment = {
   /** The original requirement object. */
   readonly requirement: BaseRequirement;
-  /** A list of course codes that satisfy this requirement. */
-  readonly courses: readonly string[];
+  /** A list of courses that satisfy this requirement. */
+  readonly courses: readonly CourseTaken[][];
   /**
    * Current fulfillment progress.
    * When it's a number, it's either number of courses or number of credits.
