@@ -50,8 +50,8 @@ import BottomBar from '@/components/BottomBar';
 import NavBar from '@/components/NavBar';
 import Onboarding from '@/components/Modals/Onboarding';
 
-
-import '@/vueDragulaConfig';
+import '@/vueDragulaConfig.ts';
+import { auth, userDataCollection } from '@/firebaseConfig.ts';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
@@ -59,10 +59,6 @@ Vue.component('requirements', Requirements);
 Vue.component('bottombar', BottomBar);
 Vue.component('navbar', NavBar);
 Vue.component('onboarding', Onboarding);
-
-const firebaseConfig = require('@/firebaseConfig.js');
-
-const { auth, userDataCollection } = firebaseConfig;
 
 export default {
   props: {

@@ -53,23 +53,20 @@
 
 <script>
 import Vue from 'vue';
+import clone from 'clone';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
 import Caution from '@/components/Caution';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
 
-const clone = require('clone');
+import { auth, userDataCollection } from '@/firebaseConfig.ts';
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
 Vue.component('caution', Caution);
 Vue.component('deletesemester', DeleteSemester);
-
-const firebaseConfig = require('@/firebaseConfig.js');
-
-const { auth, userDataCollection } = firebaseConfig;
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
