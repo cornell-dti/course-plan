@@ -1,22 +1,16 @@
 import requirementJson from './typed-requirement-json';
-import { CourseTaken, BaseRequirement, DecoratedCollegeOrMajorRequirement } from './types';
+import {
+  CourseTaken,
+  BaseRequirement,
+  DecoratedCollegeOrMajorRequirement,
+  MutableRequirementFulfillment,
+  RequirementFulfillment,
+  GroupedRequirementFulfillmentReport
+} from './types';
 
 type RequirementMap = { readonly [code: string]: readonly string[] };
 type MutableRequirementMap = { [code: string]: readonly string[] };
 type MutableRequirementMapWithMutableChildren = { [code: string]: string[] };
-
-type MutableRequirementFulfillment = {
-  name: string;
-  type: string;
-  courses: readonly string[];
-  required?: number;
-  description: string;
-  source: string;
-  fulfilled: number | null | undefined;
-  progressBar: boolean;
-  displayDescription: boolean;
-};
-type RequirementFulfillment = Readonly<MutableRequirementFulfillment>;
 
 /**
  * @param requirement : the requirement information as object
@@ -38,11 +32,11 @@ function createRequirementJSON(
     required: requirement.minCount,
     description: requirement.description,
     source: requirement.source,
-    fulfilled: null,
+    fulfilled: undefined,
     progressBar: false,
     displayDescription: false
   };
-  let fulfilled: number | null;
+  let fulfilled: number | undefined;
   switch (requirement.fulfilledBy) {
     case 'courses':
       fulfilled = totalRequirementCount;
@@ -51,7 +45,7 @@ function createRequirementJSON(
       fulfilled = totalRequirementCredits;
       break;
     case 'self-check':
-      fulfilled = null;
+      fulfilled = undefined;
       break;
     default:
       throw new Error('Fulfillment type unknown.');
@@ -267,13 +261,13 @@ export default function getReqs(
   coursesTaken: readonly CourseTaken[],
   college: string,
   major: string,
-  requirementsMap: RequirementMap
-) {
+  requirementsMap: MutableRequirementMap
+): readonly GroupedRequirementFulfillmentReport[] {
   // prepare final output JSONs
-  const finalRequirementJSONs = [];
+  const groups: GroupedRequirementFulfillmentReport[] = [];
 
   // PART 1: check university requirements
-  finalRequirementJSONs.push({
+  groups.push({
     groupName: 'University',
     specific: null,
     reqs: iterateThroughUniversityRequirements(
@@ -286,7 +280,7 @@ export default function getReqs(
   if (!(college in requirementJson.college)) throw new Error('College not found.');
   const collegeReqs = requirementJson.college[college];
 
-  finalRequirementJSONs.push({
+  groups.push({
     groupName: 'College',
     specific: college,
     reqs: iterateThroughCollegeOrMajorRequirements(
@@ -300,7 +294,7 @@ export default function getReqs(
   // Major is optional
   if (major in requirementJson.major) {
     const majorReqs = requirementJson.major[major];
-    finalRequirementJSONs.push({
+    groups.push({
       groupName: 'Major',
       specific: major,
       reqs: iterateThroughCollegeOrMajorRequirements(
@@ -311,5 +305,5 @@ export default function getReqs(
     });
   }
 
-  return finalRequirementJSONs;
+  return groups;
 }

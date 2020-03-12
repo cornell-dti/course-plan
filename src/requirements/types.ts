@@ -79,3 +79,36 @@ export type DecoratedRequirementsJson = {
   readonly college: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };
+
+export type MutableRequirementFulfillment = {
+  name: string;
+  type: string;
+  courses: readonly string[];
+  required?: number;
+  description: string;
+  source: string;
+  fulfilled?: number;
+  progressBar: boolean;
+  displayDescription: boolean;
+};
+export type RequirementFulfillment = Readonly<MutableRequirementFulfillment>;
+
+export type GroupedRequirementFulfillmentReport = {
+  readonly groupName: 'University' | 'College' | 'Major';
+  readonly specific: string | null;
+  readonly reqs: readonly MutableRequirementFulfillment[];
+};
+
+export type SingleMenuRequirement = {
+  readonly ongoing: MutableRequirementFulfillment[];
+  readonly completed: MutableRequirementFulfillment[];
+  readonly name: string;
+  readonly group: string;
+  readonly specific: string | null;
+  readonly color: string;
+  displayDetails: boolean;
+  displayCompleted: boolean;
+  type?: string;
+  fulfilled?: number;
+  required?: number;
+};

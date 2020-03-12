@@ -141,13 +141,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Vue } from 'vue-property-decorator';
+// @ts-ignore
 import VueCollapse from 'vue2-collapse';
-import Course from '@/components/Course';
-import Modal from '@/components/Modals/Modal';
-/** @typedef { import('../requirements/types').StrictFulfilledByType } StrictFulfilledByType */
-/** @typedef { import('../requirements/types').BaseRequirement<StrictFulfilledByType> } Requirement */
+// Disable import extension check because TS module resolution depends on it.
+// eslint-disable-next-line import/extensions
+import Course from '@/components/Course.vue';
+// eslint-disable-next-line import/extensions
+import Modal from '@/components/Modals/Modal.vue';
+import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types.ts';
 
 import getReqs from '@/requirements/reqs-functions.ts';
 
@@ -155,7 +158,14 @@ Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.use(VueCollapse);
 
-export default {
+type Data = {
+  actives: boolean[];
+  modalShow: boolean;
+  reqs: SingleMenuRequirement[];
+  requirementsMap: { [courseCode: string]: string[] }
+}
+
+export default Vue.extend({
   props: {
     semesters: Array,
     user: Object,
@@ -169,12 +179,9 @@ export default {
 
     const groups = getReqs(courses, this.user.college, this.user.major, this.requirementsMap);
 
-    // Send satisfied credits data back to dashboard to build alerts
-    this.emitRequirementsMap();
-
     // Turn result into data readable by requirements menu
     groups.forEach(group => {
-      const singleMenuRequirement = {
+      const singleMenuRequirement: SingleMenuRequirement = {
         ongoing: [],
         completed: [],
         name: `${group.groupName.toUpperCase()} REQUIREMENT`,
@@ -199,7 +206,7 @@ export default {
         // Default display value of false for all requirement lists
         req.displayDescription = false;
 
-        if (!req.fulfilled || req.fulfilled < req.required) {
+        if (!req.fulfilled || req.fulfilled < (req.required || 0)) {
           singleMenuRequirement.ongoing.push(req);
         } else {
           singleMenuRequirement.completed.push(req);
@@ -215,9 +222,12 @@ export default {
 
       this.reqs.push(singleMenuRequirement);
     });
+
+    // Send satisfied credits data back to dashboard to build alerts
+    this.emitRequirementsMap();
   },
 
-  data() {
+  data() : Data {
     return {
       actives: [false],
       modalShow: false,
@@ -264,25 +274,17 @@ export default {
         // }
       ],
       requirementsMap: {
-        // CS 1110: 'MQR-AS'
+        // CS 1110: ['MQR-AS']
       }
     };
   },
 
   methods: {
-    /**
-     * @param {number} index
-     */
-    toggleDetails(index) {
+    toggleDetails(index: number): void {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
 
-    /**
-     * @param {number} index
-     * @param {'ongoing' | 'completed'} type
-     * @param {number} id
-     */
-    toggleDescription(index, type, id) {
+    toggleDescription(index: number, type: 'ongoing' | 'completed', id: number): void {
       if (type === 'ongoing') {
         const currentBool = this.reqs[index].ongoing[id].displayDescription;
         this.reqs[index].ongoing[id].displayDescription = !currentBool;
@@ -292,20 +294,14 @@ export default {
       }
     },
 
-    /**
-     * @param {number} index
-     * @param {boolean} bool
-     */
-    turnCompleted(index, bool) {
+    turnCompleted(index: number, bool: boolean): void {
       this.reqs[index].displayCompleted = bool;
     },
 
-    /**
-     * @returns {Array<{code: string, roster: string}>}
-     */
-    getCourseCodesArray() {
-      const courses = [];
+    getCourseCodesArray(): readonly CourseTaken[] {
+      const courses: CourseTaken[] = [];
       this.semesters.forEach(semester => {
+        // @ts-ignore
         semester.courses.forEach(course => {
           courses.push({
             code: `${course.lastRoster}: ${course.subject} ${course.number}`,
@@ -320,11 +316,11 @@ export default {
       return courses;
     },
 
-    emitRequirementsMap() {
+    emitRequirementsMap(): void {
       this.$emit('requirementsMap', this.requirementsMap);
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">
