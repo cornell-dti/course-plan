@@ -152,7 +152,7 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 
-import computeRequirements from '@/requirements/reqs-functions';
+import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -173,14 +173,10 @@ export default Vue.extend({
     isBottomBar: Boolean
   },
   mounted() {
-    const [builtRequirementMap, groups] = computeRequirements(
-      this.getCourseCodesArray(),
-      this.user.college,
-      this.user.major
-    );
+    const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major);
 
     // Send satisfied credits data back to dashboard to build alerts
-    this.$emit('requirementsMap', builtRequirementMap);
+    this.$emit('requirementsMap', computeRequirementMap(groups));
 
     // Turn result into data readable by requirements menu
     const singleMenuRequirements = groups.map(group => {
