@@ -3,10 +3,8 @@ import {
   CourseTaken,
   BaseRequirement,
   DecoratedCollegeOrMajorRequirement,
-  MutableRequirementFulfillment,
   RequirementFulfillment,
-  GroupedRequirementFulfillmentReport,
-  SingleMenuRequirement
+  GroupedRequirementFulfillmentReport
 } from './types';
 
 type RequirementMap = { readonly [code: string]: readonly string[] };
@@ -26,17 +24,6 @@ function createRequirementJSON(
   totalRequirementCount: number,
   coursesThatFulilledRequirement: readonly string[]
 ): RequirementFulfillment {
-  const requirementFulfillmentData: MutableRequirementFulfillment = {
-    name: requirement.name,
-    type: requirement.fulfilledBy,
-    courses: coursesThatFulilledRequirement,
-    required: requirement.minCount,
-    description: requirement.description,
-    source: requirement.source,
-    fulfilled: undefined,
-    progressBar: false,
-    displayDescription: false
-  };
   let fulfilled: number | undefined;
   switch (requirement.fulfilledBy) {
     case 'courses':
@@ -51,12 +38,7 @@ function createRequirementJSON(
     default:
       throw new Error('Fulfillment type unknown.');
   }
-
-  requirementFulfillmentData.fulfilled = fulfilled;
-
-  // Make requirement use for progressbar if progressbar attr is true
-  if (requirement.progressBar) requirementFulfillmentData.progressBar = true;
-  return requirementFulfillmentData;
+  return { requirement, courses: coursesThatFulilledRequirement, fulfilled };
 }
 
 function mergeRequirementsMap(

@@ -80,28 +80,32 @@ export type DecoratedRequirementsJson = {
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };
 
-export type MutableRequirementFulfillment = {
-  name: string;
-  type: string;
-  courses: readonly string[];
-  required?: number;
-  description: string;
-  source: string;
-  fulfilled?: number;
-  progressBar: boolean;
-  displayDescription: boolean;
+export type RequirementFulfillment = {
+  /** The original requirement object. */
+  readonly requirement: BaseRequirement;
+  /** A list of course codes that satisfy this requirement. */
+  readonly courses: readonly string[];
+  /**
+   * Current fulfillment progress.
+   * When it's a number, it's either number of courses or number of credits.
+   * When it's undefined, it means that the requirement is self-check.
+   */
+  readonly fulfilled?: number;
 };
-export type RequirementFulfillment = Readonly<MutableRequirementFulfillment>;
 
 export type GroupedRequirementFulfillmentReport = {
   readonly groupName: 'University' | 'College' | 'Major';
   readonly specific: string | null;
-  readonly reqs: readonly MutableRequirementFulfillment[];
+  readonly reqs: readonly RequirementFulfillment[];
 };
 
+export type DisplayableRequirementFulfillment = RequirementFulfillment & {
+  displayDescription: boolean;
+}
+
 export type SingleMenuRequirement = {
-  readonly ongoing: MutableRequirementFulfillment[];
-  readonly completed: MutableRequirementFulfillment[];
+  readonly ongoing: DisplayableRequirementFulfillment[];
+  readonly completed: DisplayableRequirementFulfillment[];
   readonly name: string;
   readonly group: string;
   readonly specific: string | null;
