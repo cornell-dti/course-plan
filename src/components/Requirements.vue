@@ -152,7 +152,7 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types.ts';
 
-import getReqs from '@/requirements/reqs-functions.ts';
+import computeRequirements from '@/requirements/reqs-functions.ts';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -162,7 +162,6 @@ type Data = {
   actives: boolean[];
   modalShow: boolean;
   reqs: SingleMenuRequirement[];
-  requirementsMap: { [courseCode: string]: string[] }
 }
 
 export default Vue.extend({
@@ -174,13 +173,17 @@ export default Vue.extend({
     isBottomBar: Boolean
   },
   mounted() {
-    // Get array of courses from semesters data
-    const courses = this.getCourseCodesArray();
+    const [builtRequirementMap, groups] = computeRequirements(
+      this.getCourseCodesArray(),
+      this.user.college,
+      this.user.major
+    );
 
-    const groups = getReqs(courses, this.user.college, this.user.major, this.requirementsMap);
+    // Send satisfied credits data back to dashboard to build alerts
+    this.$emit('requirementsMap', builtRequirementMap);
 
     // Turn result into data readable by requirements menu
-    groups.forEach(group => {
+    const singleMenuRequirements = groups.map(group => {
       const singleMenuRequirement: SingleMenuRequirement = {
         ongoing: [],
         completed: [],
@@ -220,11 +223,9 @@ export default Vue.extend({
         singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
       }
 
-      this.reqs.push(singleMenuRequirement);
+      return singleMenuRequirement;
     });
-
-    // Send satisfied credits data back to dashboard to build alerts
-    this.emitRequirementsMap();
+    this.reqs.push(...singleMenuRequirements);
   },
 
   data() : Data {
@@ -272,10 +273,7 @@ export default Vue.extend({
         //     }
         //   ]
         // }
-      ],
-      requirementsMap: {
-        // CS 1110: ['MQR-AS']
-      }
+      ]
     };
   },
 
@@ -314,10 +312,6 @@ export default Vue.extend({
       });
 
       return courses;
-    },
-
-    emitRequirementsMap(): void {
-      this.$emit('requirementsMap', this.requirementsMap);
     }
   }
 });
