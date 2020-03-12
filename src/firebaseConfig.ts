@@ -1,7 +1,7 @@
-const firebase = require('firebase/app');
+import firebase from 'firebase/app';
 
-require('firebase/auth');
-require('firebase/firestore');
+import 'firebase/auth';
+import 'firebase/firestore';
 
 let config;
 
@@ -32,9 +32,9 @@ if (process.env.VUE_APP_FIREBASE_MODE === 'prod') {
 firebase.initializeApp(config);
 
 // firebase utils
-const db = firebase.firestore();
-const auth = firebase.auth();
-const { currentUser } = auth;
+export const db = firebase.firestore();
+export const auth = firebase.auth();
+export const { currentUser } = auth;
 
 // // date issue fix according to firebase
 // const settings = {
@@ -43,13 +43,7 @@ const { currentUser } = auth;
 // db.settings(settings)
 
 // firebase collections
-const usersCollection = db.collection('users');
 // const coursesCollection = db.collection('courses');
-const userDataCollection = db.collection('userData');
-const whitelistCollection = db.collection('betaWhitelist');
-const landingEmailsCollection = db.collection('landingEmails');
-
-module.exports = {
-  // Temp: removed coursesCollection
-  db, auth, currentUser, usersCollection, userDataCollection, landingEmailsCollection, whitelistCollection
-};
+export const userDataCollection = db.collection('userData');
+export const whitelistCollection = db.collection('betaWhitelist');
+export const landingEmailsCollection = db.collection('landingEmails');

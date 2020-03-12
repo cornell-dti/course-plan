@@ -30,6 +30,7 @@ module.exports = {
       'always',
       {
         js: 'never',
+        ts: 'never',
         vue: 'never'
       }
     ],

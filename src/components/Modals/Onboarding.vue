@@ -192,7 +192,7 @@
 </template>
 
 <script>
-import reqsData from '@/requirements/typed-requirement-json.ts';
+import reqsData from '@/requirements/typed-requirement-json';
 
 const placeholderText = 'Select one';
 
