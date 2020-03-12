@@ -1,10 +1,5 @@
-import requirementJson from '@/requirements/typed-requirement-json';
-import {
-  CourseTaken,
-  BaseRequirement,
-  CollegeOrMajorRequirement,
-  Course
-} from '@/requirements/types';
+import requirementJson from './typed-requirement-json';
+import { CourseTaken, BaseRequirement, DecoratedCollegeOrMajorRequirement } from './types';
 
 type RequirementMap = { readonly [code: string]: readonly string[] };
 type MutableRequirementMap = { [code: string]: readonly string[] };
@@ -194,7 +189,7 @@ function iterateThroughUniversityRequirements(
  */
 function iterateThroughCollegeOrMajorRequirements(
   coursesTaken: readonly CourseTaken[],
-  allRequirements: readonly CollegeOrMajorRequirement[],
+  allRequirements: readonly DecoratedCollegeOrMajorRequirement[],
   requirementsMap: MutableRequirementMap
 ): readonly RequirementFulfillment[] {
   // array of requirement status information to be returned

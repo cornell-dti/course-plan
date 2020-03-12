@@ -3,9 +3,7 @@ node_modules
 dist
 .vscode
 .firebase
-
-# Big Generated Requirement JSON
-requirement-generator/*.json
+requirement-generator-dist/
 
 # local env files
 .env.local
