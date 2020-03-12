@@ -73,14 +73,14 @@
               </button>
             </div>
             <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-              <p class="sup-req pointer">{{subReq.name}}</p>
+              <p class="sup-req pointer">{{subReq.requirement.name}}</p>
             </div>
             <div class="col">
-              <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
+              <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}` : 'Self-Check' }}  )</p>
             </div>
           </div>
           <div v-if="subReq.displayDescription" class="description">
-            {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+            {{ subReq.requirement.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
           </div>
           <div class="separator"></div>
         </div>
@@ -121,14 +121,14 @@
                 </button>
               </div>
               <div class="col-7" @click="toggleDescription(index, 'completed', id)">
-                <p class="sup-req pointer">{{subReq.name}}</p>
+                <p class="sup-req pointer">{{subReq.requirement.name}}</p>
               </div>
               <div class="col">
-                <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
+                <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }} )</p>
               </div>
             </div>
             <div v-if="subReq.displayDescription" class="description">
-              {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+              {{ subReq.requirement.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
             </div>
           </div>
         </div>
@@ -196,23 +196,20 @@ export default Vue.extend({
       };
 
       group.reqs.forEach(req => {
-        // Account for progress type
-        if (req.type) req.type = req.type.charAt(0).toUpperCase() + req.type.substring(1);
-
         // Create progress bar with requirement with progressBar = true
-        if (req.progressBar) {
-          singleMenuRequirement.type = req.type;
+        if (req.requirement.progressBar) {
+          singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
           singleMenuRequirement.fulfilled = req.fulfilled;
-          singleMenuRequirement.required = req.required;
+          singleMenuRequirement.required = req.requirement.minCount;
         }
 
         // Default display value of false for all requirement lists
-        req.displayDescription = false;
+        const displayableRequirementFulfillment = { ...req, displayDescription: false };
 
-        if (!req.fulfilled || req.fulfilled < (req.required || 0)) {
-          singleMenuRequirement.ongoing.push(req);
+        if (!req.fulfilled || req.fulfilled < (req.requirement.minCount || 0)) {
+          singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
         } else {
-          singleMenuRequirement.completed.push(req);
+          singleMenuRequirement.completed.push(displayableRequirementFulfillment);
         }
       });
 
@@ -278,6 +275,10 @@ export default Vue.extend({
   },
 
   methods: {
+    getRequirementTypeDisplayName(type: string): string {
+      return type.charAt(0).toUpperCase() + type.substring(1);
+    },
+
     toggleDetails(index: number): void {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
