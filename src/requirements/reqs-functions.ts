@@ -1,7 +1,6 @@
 import requirementJson from './typed-requirement-json';
 import {
   CourseTaken,
-  BaseRequirement,
   DecoratedCollegeOrMajorRequirement,
   RequirementFulfillment,
   RequirementFulfillmentStatistics,
@@ -9,21 +8,7 @@ import {
 } from './types';
 
 type RequirementMap = { readonly [code: string]: readonly string[] };
-type MutableRequirementMap = { [code: string]: readonly string[] };
 type MutableRequirementMapWithMutableChildren = { [code: string]: string[] };
-
-function mergeRequirementsMap(
-  requirementsMap: MutableRequirementMap,
-  satisfiedMap: RequirementMap
-) {
-  Object.keys(satisfiedMap).forEach(course => {
-    if (course in requirementsMap) {
-      requirementsMap[course] = requirementsMap[course].concat(satisfiedMap[course]);
-    } else {
-      requirementsMap[course] = satisfiedMap[course];
-    }
-  });
-}
 
 /**
  * @param courseName : name of the course (as a code)
@@ -47,18 +32,12 @@ function ifAllEligible(subject: string, number: string): boolean {
 }
 
 /**
- * Loops through requirement data and compare all courses on (to identify whether they satisfy the requirement)
- * @param coursesTaken : object of courses taken with API information (CS 2110: {info})
- * @param allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
- * @param requirementsMap : object of courses taken with requirements they fulfill
- * @returns a promise of requirement fulfillment
+ * @param coursesTaken : object of courses taken with API information (CS 2110: {info}).
+ * @returns a list of university requirement filfillment status.
  */
-function iterateThroughUniversityRequirements(
-  coursesTaken: readonly CourseTaken[],
-  requirementsMap: MutableRequirementMap
+function computeUniversityRequirementFulfillments(
+  coursesTaken: readonly CourseTaken[]
 ): readonly RequirementFulfillment<RequirementFulfillmentStatistics>[] {
-  // array of requirement status information to be returned
-  const requirementJSONs: RequirementFulfillment<RequirementFulfillmentStatistics>[] = [];
   const academicCreditsRequirements = {
     name: 'Academic Credits',
     description: 'To graduate, a student must earn a minimum of 120 academic credits. Physical education credits and “10XX” courses do not count toward the 120 required credits.',
@@ -94,32 +73,27 @@ function iterateThroughUniversityRequirements(
     minCount: 0,
     applies: 'all'
   } as const;
-  // Dictionary for generating information on course alerts
-  const satisfiedRequirementMap: MutableRequirementMapWithMutableChildren = {};
 
-  // Academic Credits Check
+
   const coursesThatCountTowardsAcademicCredits = coursesTaken.filter(course => ifAllEligible(course.subject, course.number));
-  requirementJSONs.push({
-    requirement: academicCreditsRequirements,
-    courses: [coursesThatCountTowardsAcademicCredits],
-    fulfilled: coursesThatCountTowardsAcademicCredits.reduce((accumulator, course) => accumulator + course.credits, 0)
-  });
-
-  // PE Credits Check
   const coursesThatCountTowardsPE = coursesTaken.filter(course => course.subject === 'PE');
-  requirementJSONs.push({
-    requirement: PERequirement,
-    courses: [coursesThatCountTowardsPE],
-    fulfilled: coursesThatCountTowardsPE.length
-  });
 
-  // Swim Test Check
-  requirementJSONs.push({ requirement: swimmingTestRequirement, courses: [] });
-
-  // Merge satisfied credits into satisfiedCourseCredits (for alerts)
-  mergeRequirementsMap(requirementsMap, satisfiedRequirementMap);
-
-  return requirementJSONs;
+  return [
+    // Academic Credits
+    {
+      requirement: academicCreditsRequirements,
+      courses: [coursesThatCountTowardsAcademicCredits],
+      fulfilled: coursesThatCountTowardsAcademicCredits.reduce((accumulator, course) => accumulator + course.credits, 0)
+    },
+    // PE Credits
+    {
+      requirement: PERequirement,
+      courses: [coursesThatCountTowardsPE],
+      fulfilled: coursesThatCountTowardsPE.length
+    },
+    // Swim Test
+    { requirement: swimmingTestRequirement, courses: [] }
+  ];
 }
 
 /**
@@ -222,16 +196,13 @@ function computeFulfillmentStatistics<T extends {}>({ requirement, courses: cour
 }
 
 /**
- * Loops through requirement data and compare all courses on (to identify whether they satisfy the requirement)
  * @param allCoursesTakenWithInfo : object of courses taken with API information (CS 2110: {info})
  * @param allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
- * @param requirementsMap : object of courses taken with requirements they fulfill
- * @returns a promise of requirement fulfillment
+ * @returns a list of university requirement filfillment status.
  */
-function iterateThroughCollegeOrMajorRequirements(
+function computeCollegeOrMajorRequirementFulfillments(
   coursesTaken: readonly CourseTaken[],
-  allRequirements: readonly DecoratedCollegeOrMajorRequirement[],
-  requirementsMap: MutableRequirementMap
+  allRequirements: readonly DecoratedCollegeOrMajorRequirement[]
 ): readonly RequirementFulfillment<RequirementFulfillmentStatistics>[] {
   // Phase 1: Compute raw requirement fulfillment locally for each requirement.
   const rawRequirementFulfillment = computeRawRequirementFulfillment(coursesTaken, allRequirements);
@@ -242,21 +213,6 @@ function iterateThroughCollegeOrMajorRequirements(
     computeFulfillmentStatistics
   );
 
-  // Phase 3: compute requirement map
-  // Dictionary for generating information on course alerts
-  const satisfiedRequirementMap: MutableRequirementMapWithMutableChildren = {};
-  requirementFulfillmentWithStatistics.forEach(({ requirement: { name: requirementName }, courses: coursesThatFulfilledRequirement }) => {
-    coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
-      coursesThatFulfilledSubRequirement.forEach(({ code }) => {
-        // Add course to dictionary with name
-        if (code in satisfiedRequirementMap) satisfiedRequirementMap[code].push(requirementName);
-        else satisfiedRequirementMap[code] = [requirementName];
-      });
-    });
-  });
-  // Merge satisfied credits into satisfiedCourseCredits (for alerts)
-  mergeRequirementsMap(requirementsMap, satisfiedRequirementMap);
-
   return requirementFulfillmentWithStatistics;
 }
 
@@ -265,17 +221,13 @@ function iterateThroughCollegeOrMajorRequirements(
  * helping to compute requirement progress.
  * @param college user's college.
  * @param major user's major.
- * @returns a tuple with the format:
- * [
- *   a requirement map that maps course code to a list of satisfying courses,
- * ]
+ * @returns all requirements fulfillments, grouped by University, College, Major.
  */
-export default function computeRequirements(
+export function computeRequirements(
   coursesTaken: readonly CourseTaken[],
   college: string,
   major: string
-): [RequirementMap, readonly GroupedRequirementFulfillmentReport[]] {
-  const requirementsMap: MutableRequirementMap = {};
+): readonly GroupedRequirementFulfillmentReport[] {
   // prepare grouped fulfillment summary
   const groups: GroupedRequirementFulfillmentReport[] = [];
 
@@ -283,10 +235,7 @@ export default function computeRequirements(
   groups.push({
     groupName: 'University',
     specific: null,
-    reqs: iterateThroughUniversityRequirements(
-      coursesTaken,
-      requirementsMap
-    )
+    reqs: computeUniversityRequirementFulfillments(coursesTaken)
   });
 
   // PART 2: check college requirements
@@ -296,11 +245,7 @@ export default function computeRequirements(
   groups.push({
     groupName: 'College',
     specific: college,
-    reqs: iterateThroughCollegeOrMajorRequirements(
-      coursesTaken,
-      collegeReqs.requirements,
-      requirementsMap
-    )
+    reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, collegeReqs.requirements)
   });
 
   // PART 3: check major reqs
@@ -310,13 +255,29 @@ export default function computeRequirements(
     groups.push({
       groupName: 'Major',
       specific: major,
-      reqs: iterateThroughCollegeOrMajorRequirements(
-        coursesTaken,
-        majorReqs.requirements,
-        requirementsMap
-      )
+      reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, majorReqs.requirements)
     });
   }
 
-  return [requirementsMap, groups];
+  return groups;
+}
+
+/**
+ * @param groups all requirements fulfillments, grouped by University, College, Major.
+ * @returns a object where keys are course code and values are a list of requirement a class fulfills.
+ */
+export function computeRequirementMap(groups: readonly GroupedRequirementFulfillmentReport[]): RequirementMap {
+  const requirementsMap: MutableRequirementMapWithMutableChildren = {};
+  groups.forEach(group => {
+    group.reqs.forEach(({ requirement: { name: requirementName }, courses: coursesThatFulfilledRequirement }) => {
+      coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
+        coursesThatFulfilledSubRequirement.forEach(({ code }) => {
+          // Add course to dictionary with name
+          if (code in requirementsMap) requirementsMap[code].push(requirementName);
+          else requirementsMap[code] = [requirementName];
+        });
+      });
+    });
+  });
+  return requirementsMap;
 }
