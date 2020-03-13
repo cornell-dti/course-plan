@@ -80,11 +80,14 @@ export type DecoratedRequirementsJson = {
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };
 
-export type RequirementFulfillment = {
+export type RequirementFulfillment<M extends {}> = {
   /** The original requirement object. */
   readonly requirement: BaseRequirement;
   /** A list of courses that satisfy this requirement. */
   readonly courses: readonly CourseTaken[][];
+} & M;
+
+export type RequirementFulfillmentStatistics = {
   /**
    * Current fulfillment progress.
    * When it's a number, it's either number of courses or number of credits.
@@ -96,12 +99,12 @@ export type RequirementFulfillment = {
 export type GroupedRequirementFulfillmentReport = {
   readonly groupName: 'University' | 'College' | 'Major';
   readonly specific: string | null;
-  readonly reqs: readonly RequirementFulfillment[];
+  readonly reqs: readonly RequirementFulfillment<RequirementFulfillmentStatistics>[];
 };
 
-export type DisplayableRequirementFulfillment = RequirementFulfillment & {
-  displayDescription: boolean;
-}
+export type DisplayableRequirementFulfillment = RequirementFulfillment<
+  RequirementFulfillmentStatistics & { displayDescription: boolean }
+>;
 
 export type SingleMenuRequirement = {
   readonly ongoing: DisplayableRequirementFulfillment[];

@@ -4,42 +4,13 @@ import {
   BaseRequirement,
   DecoratedCollegeOrMajorRequirement,
   RequirementFulfillment,
+  RequirementFulfillmentStatistics,
   GroupedRequirementFulfillmentReport
 } from './types';
 
 type RequirementMap = { readonly [code: string]: readonly string[] };
 type MutableRequirementMap = { [code: string]: readonly string[] };
 type MutableRequirementMapWithMutableChildren = { [code: string]: string[] };
-
-/**
- * @param requirement : the requirement information as object
- * @param totalRequirementCredits : total credits of courses that satisfied requirement
- * @param totalRequirementCount : total number of courses that satisfied requirement
- * @param coursesThatFulilledRequirement : courses that satisfied requirement
- * @returns {RequirementFulfillment}
- */
-function createRequirementJSON(
-  requirement: BaseRequirement,
-  totalRequirementCredits: number,
-  totalRequirementCount: number,
-  coursesThatFulilledRequirement: readonly CourseTaken[][]
-): RequirementFulfillment {
-  let fulfilled: number | undefined;
-  switch (requirement.fulfilledBy) {
-    case 'courses':
-      fulfilled = totalRequirementCount;
-      break;
-    case 'credits':
-      fulfilled = totalRequirementCredits;
-      break;
-    case 'self-check':
-      fulfilled = undefined;
-      break;
-    default:
-      throw new Error('Fulfillment type unknown.');
-  }
-  return { requirement, courses: coursesThatFulilledRequirement, fulfilled };
-}
 
 function mergeRequirementsMap(
   requirementsMap: MutableRequirementMap,
@@ -85,9 +56,9 @@ function ifAllEligible(subject: string, number: string): boolean {
 function iterateThroughUniversityRequirements(
   coursesTaken: readonly CourseTaken[],
   requirementsMap: MutableRequirementMap
-): readonly RequirementFulfillment[] {
+): readonly RequirementFulfillment<RequirementFulfillmentStatistics>[] {
   // array of requirement status information to be returned
-  const requirementJSONs: RequirementFulfillment[] = [];
+  const requirementJSONs: RequirementFulfillment<RequirementFulfillmentStatistics>[] = [];
   const academicCreditsRequirements = {
     name: 'Academic Credits',
     description: 'To graduate, a student must earn a minimum of 120 academic credits. Physical education credits and “10XX” courses do not count toward the 120 required credits.',
@@ -128,33 +99,126 @@ function iterateThroughUniversityRequirements(
 
   // Academic Credits Check
   const coursesThatCountTowardsAcademicCredits = coursesTaken.filter(course => ifAllEligible(course.subject, course.number));
-  requirementJSONs.push(
-    createRequirementJSON(
-      academicCreditsRequirements,
-      coursesThatCountTowardsAcademicCredits.reduce((accumulator, course) => accumulator + course.credits, 0),
-      0,
-      [coursesThatCountTowardsAcademicCredits]
-    )
-  );
+  requirementJSONs.push({
+    requirement: academicCreditsRequirements,
+    courses: [coursesThatCountTowardsAcademicCredits],
+    fulfilled: coursesThatCountTowardsAcademicCredits.reduce((accumulator, course) => accumulator + course.credits, 0)
+  });
 
   // PE Credits Check
   const coursesThatCountTowardsPE = coursesTaken.filter(course => course.subject === 'PE');
-  requirementJSONs.push(
-    createRequirementJSON(
-      PERequirement,
-      0,
-      coursesThatCountTowardsPE.length,
-      [coursesThatCountTowardsPE]
-    )
-  );
+  requirementJSONs.push({
+    requirement: PERequirement,
+    courses: [coursesThatCountTowardsPE],
+    fulfilled: coursesThatCountTowardsPE.length
+  });
 
   // Swim Test Check
-  requirementJSONs.push(createRequirementJSON(swimmingTestRequirement, 0, 0, []));
+  requirementJSONs.push({ requirement: swimmingTestRequirement, courses: [] });
 
   // Merge satisfied credits into satisfiedCourseCredits (for alerts)
   mergeRequirementsMap(requirementsMap, satisfiedRequirementMap);
 
   return requirementJSONs;
+}
+
+/**
+ * @param coursesTaken a list of all taken courses.
+ * @param requirement the requirement to compute course fulfillment.
+ * @returns a naively computed list of courses that fulfill the requirement, partitioned into sub-requirement filfillment.
+ */
+function filterAndPartitionCoursesThatFulfillRequirement(
+  coursesTaken: readonly CourseTaken[],
+  requirement: DecoratedCollegeOrMajorRequirement
+): CourseTaken[][] {
+  const { courses: requirementCourses } = requirement;
+  const coursesThatFulfilledRequirement: CourseTaken[][] = requirementCourses.map(() => []);
+  coursesTaken.forEach(courseTaken => {
+    const { roster, subject, number } = courseTaken;
+    requirementCourses.forEach((subRequirementCourses, subRequirementIndex) => {
+      if (subRequirementCourses[roster] && subRequirementCourses[roster][subject] && subRequirementCourses[roster][subject].includes(number)) {
+        // add the course to the list of courses used to fulfill that one sub-requirement
+        coursesThatFulfilledRequirement[subRequirementIndex].push(courseTaken);
+      }
+    });
+  });
+  return coursesThatFulfilledRequirement;
+}
+
+/**
+ * @param coursesTaken a list of all taken courses.
+ * @param allRequirements a list of all requirements to check.
+ * @returns a naively computed list of requirement fulfillment, without any filtering and post-processing.
+ */
+function computeRawRequirementFulfillment(
+  coursesTaken: readonly CourseTaken[],
+  allRequirements: readonly DecoratedCollegeOrMajorRequirement[]
+): readonly RequirementFulfillment<{}>[] {
+  return allRequirements.map(requirement => ({
+    requirement,
+    courses: filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, requirement)
+  }));
+}
+
+/**
+ * A monad that provides a post-processing framework for requirement fulfillment.
+ *
+ * Usage:
+ * ```typescript
+ * const filfillments = [
+ *   { requirement: req1, courses: [c1, c2, c3], foo: 1 },
+ *   { requirement: req2, courses: [c1, c3], foo: 2 },
+ * ];
+ * const processedFilfillments = postProcessRequirementsFulfillments(
+ *   filfillments,
+ *   ({ courses, foo }) => ({ bar: courses.length + foo })
+ * );
+ * // Will produce:
+ * [
+ *   { requirement: req1, courses: [c1, c2, c3], bar: 4 }, // bar = 3 + 1 = 4
+ *   { requirement: req2, courses: [c1, c3], bar: 4 }, // bar = 2 + 2 = 4
+ * ]
+ * ```
+ *
+ * @param fulfillments a list of requirement fulfillment to post-process.
+ * @param transformer the transformer that computes the new metadata.
+ * @returns the post-processed requirement filfillments.
+ */
+function postProcessRequirementsFulfillments<T extends {}, R extends {}>(
+  fulfillments: readonly RequirementFulfillment<T>[],
+  transformer: (currentFulfillmentWithMetadata: RequirementFulfillment<T>) => R
+): readonly RequirementFulfillment<R>[] {
+  return fulfillments.map(requirementFulfillment => {
+    const { requirement, courses } = requirementFulfillment;
+    const newMetadata = transformer(requirementFulfillment);
+    return { requirement, courses, ...newMetadata };
+  });
+}
+
+function computeFulfillmentStatistics<T extends {}>({ requirement, courses: coursesThatFulfilledRequirement }: RequirementFulfillment<T>): RequirementFulfillmentStatistics {
+  let fulfilled = 0;
+
+  coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
+    if (coursesThatFulfilledSubRequirement.length === 0) {
+      return;
+    }
+    // depending on what it is fulfilled by, either increase the count or credits you took
+    switch (requirement.fulfilledBy) {
+      case 'courses':
+        fulfilled += 1;
+        break;
+      case 'credits':
+        fulfilled += coursesThatFulfilledSubRequirement
+          .map(course => course.credits)
+          .reduce((a, b) => Math.max(a, b), 0);
+        break;
+      case 'self-check':
+        return;
+      default:
+        throw new Error('Fulfillment type unknown.');
+    }
+  });
+  return { fulfilled };
 }
 
 /**
@@ -168,74 +232,32 @@ function iterateThroughCollegeOrMajorRequirements(
   coursesTaken: readonly CourseTaken[],
   allRequirements: readonly DecoratedCollegeOrMajorRequirement[],
   requirementsMap: MutableRequirementMap
-): readonly RequirementFulfillment[] {
-  // array of requirement status information to be returned
-  const requirementJSONs: RequirementFulfillment[] = [];
+): readonly RequirementFulfillment<RequirementFulfillmentStatistics>[] {
+  // Phase 1: Compute raw requirement fulfillment locally for each requirement.
+  const rawRequirementFulfillment = computeRawRequirementFulfillment(coursesTaken, allRequirements);
+
+  // Phase 2: Compute fulfillment statistics for each requirement.
+  const requirementFulfillmentWithStatistics = postProcessRequirementsFulfillments(
+    rawRequirementFulfillment,
+    computeFulfillmentStatistics
+  );
+
+  // Phase 3: compute requirement map
   // Dictionary for generating information on course alerts
   const satisfiedRequirementMap: MutableRequirementMapWithMutableChildren = {};
-
-  for (const requirement of allRequirements) {
-    // TODO: For different groups of students (e.g. transfers, FYSAs, etc...)
-    // if(!isTransfer && requirement.applies === "transfers") continue;
-    // temporarily skip these until we can implement them later
-
-    const { name: requirementName, courses: requirementCourses } = requirement;
-
-    let totalRequirementCredits = 0;
-    let totalRequirementCount = 0;
-    const coursesThatFulfilledRequirement: CourseTaken[][] = requirementCourses.map(() => []);
-
-    // eslint-disable-next-line no-loop-func
-    coursesTaken.forEach(courseTaken => {
-      const { roster, subject, number } = courseTaken;
-      requirementCourses.forEach((subRequirementCourses, subRequirementIndex) => {
-        if (subRequirementCourses[roster] && subRequirementCourses[roster][subject] && subRequirementCourses[roster][subject].includes(number)) {
-          // add the course to the list of courses used to fulfill that one sub-requirement
-          coursesThatFulfilledRequirement[subRequirementIndex].push(courseTaken);
-        }
-      });
-    });
-    // eslint-disable-next-line no-loop-func
-    coursesThatFulfilledRequirement.forEach((coursesThatFulfilledSubRequirement, subRequirementIndex) => {
-      if (coursesThatFulfilledSubRequirement.length === 0) {
-        return;
-      }
-      // depending on what it is fulfilled by, either increase the count or credits you took
-      switch (requirement.fulfilledBy) {
-        case 'courses':
-          totalRequirementCount += 1;
-          break;
-        case 'credits':
-          totalRequirementCredits += coursesThatFulfilledSubRequirement
-            .map(course => course.credits)
-            .reduce((a, b) => Math.max(a, b), 0);
-          break;
-        case 'self-check':
-          return;
-        default:
-          throw new Error('Fulfillment type unknown.');
-      }
-
+  requirementFulfillmentWithStatistics.forEach(({ requirement: { name: requirementName }, courses: coursesThatFulfilledRequirement }) => {
+    coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
       coursesThatFulfilledSubRequirement.forEach(({ code }) => {
         // Add course to dictionary with name
         if (code in satisfiedRequirementMap) satisfiedRequirementMap[code].push(requirementName);
         else satisfiedRequirementMap[code] = [requirementName];
       });
     });
-
-    const generatedResults = createRequirementJSON(
-      requirement,
-      totalRequirementCredits,
-      totalRequirementCount,
-      coursesThatFulfilledRequirement
-    );
-    requirementJSONs.push(generatedResults);
-  }
-
+  });
   // Merge satisfied credits into satisfiedCourseCredits (for alerts)
   mergeRequirementsMap(requirementsMap, satisfiedRequirementMap);
 
-  return requirementJSONs;
+  return requirementFulfillmentWithStatistics;
 }
 
 /**
