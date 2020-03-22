@@ -1,6 +1,6 @@
 <template v-if="semesters">
   <div class="requirements">
-    <div class="fixed" :class="{ bottomPreview: isBottomPreview && !isBottomBar, bottomBar: isBottomBar }">
+    <div class="fixed">
     <h1 class="title">School Requirements</h1>
 
     <!-- loop through reqs array of req objects -->
@@ -168,9 +168,7 @@ export default Vue.extend({
   props: {
     semesters: Array,
     user: Object,
-    compact: Boolean,
-    isBottomPreview: Boolean,
-    isBottomBar: Boolean
+    compact: Boolean
   },
   mounted() {
     const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major);
@@ -604,13 +602,5 @@ button.view {
   height: 1px;
   width: 100%;
   background-color: #d7d7d7;
-}
-
-.bottomBar {
-  padding-bottom: 300px;
-}
-
-.bottomPreview {
-  padding-bottom: 40px;
 }
 </style>

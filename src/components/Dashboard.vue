@@ -15,8 +15,6 @@
         <requirements class="dashboard-reqs" v-if="loaded"
           :semesters="semesters"
           :user="user"
-          :isBottomPreview="bottomBar.isPreview"
-          :isBottomBar="bottomBar.isExpanded"
           :key="requirementsKey"
           @requirementsMap="loadRequirementsMap"
          />
@@ -24,18 +22,24 @@
       <semesterview v-if="loaded"
         :semesters="semesters"
         :compact="compactVal"
-        :isBottomBar="bottomBar.isExpanded"
+        :isBottomBarExpanded="bottomBar.isExpanded"
+        :isBottomBar="bottomCourses.length > 0"
+
         @compact-updated="compactVal = $event"
-        @update-bar="updateBar"
+        @updateBar="updateBar"
         @close-bar="closeBar"
         @updateRequirementsMenu="updateRequirementsMenu"
       />
     </div>
     <div id="dashboard-bottomView">
       <bottombar
-      :data="bottomBar"
+      v-if="bottomCourses.length > 0"
+      :bottomCourses="bottomCourses"
+      :seeMoreCourses="seeMoreCourses"
+      :isExpanded="this.bottomBar.isExpanded"
       @close-bar="closeBar"
-      @open-bar="openBar"/>
+      @open-bar="openBar"
+      />
     </div>
   </div>
 </template>
@@ -61,9 +65,6 @@ Vue.component('navbar', NavBar);
 Vue.component('onboarding', Onboarding);
 
 export default {
-  props: {
-    bottomCourses: Array
-  },
   data() {
     const user = auth.currentUser;
     const names = user.displayName.split(' ');
@@ -83,6 +84,8 @@ export default {
         lastName: names[1],
         middleName: ''
       },
+      bottomCourses: [],
+      seeMoreCourses: [],
       subjectColors: {},
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
@@ -344,9 +347,9 @@ export default {
       });
     },
 
-    updateBar(course) {
+    updateBar(course, colorJustChanged, color) {
       // Update Bar Information
-      this.bottomBar = {
+      const courseToAdd = {
         subject: course.subject,
         number: course.number,
         name: course.name,
@@ -356,23 +359,56 @@ export default {
         latestSem: course.lastRoster,
         // Array data
         instructors: this.joinOrNAString(course.instructors),
-        distributionCategories: this.joinOrNAString(course.distributions),
+        distributionCategories: this.cleanCourseDistributionsArray(course.distributions),
         enrollmentInfo: this.joinOrNAString(course.enrollment),
-        latestLecInfo: this.joinOrNAString(course.lectureTimes),
+        latestLecInfo: this.naIfEmptyStringArray(course.lectureTimes),
         // TODO: CUReviews data
         overallRating: 0,
         difficulty: 0,
         workload: 0,
         prerequisites: this.noneIfEmpty(course.prereqs),
-        description: course.description,
-        isPreview: true,
-        isExpanded: true
+        description: course.description
       };
 
+      // expand bottombar if first course added
+      if (this.bottomCourses.length === 0) {
+        this.bottomBar.isExpanded = true;
+      }
+
+      // if course already exists in bottomCourses, first remove course
+      for (let i = 0; i < this.bottomCourses.length; i += 1) {
+        // if colorJustChanged and course already exists, just update course color
+        if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number && colorJustChanged) {
+          this.bottomCourses[i].color = color;
+        } else if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number && !colorJustChanged) {
+          this.bottomCourses.splice(i, 1);
+        }
+      }
+
+      // Prepending bottomCourse to front of bottom courses array if bottomCourses < 4
+      // Do not add course to bottomCourses if color was only changed
+      if (this.bottomCourses.length < 4 && !colorJustChanged) {
+        this.bottomCourses.unshift(courseToAdd);
+      } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
+        for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
+          // if colorJustChanged and course already exists in seeMoreCourses, just update course color
+          if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number && colorJustChanged) {
+            this.seeMoreCourses[i].color = color;
+          } else if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number && !colorJustChanged) {
+            this.seeMoreCourses.splice(i, 1);
+          }
+        }
+        // Do not move courses around from bottomCourses to seeMoreCourses if only color changed
+        if (!colorJustChanged) {
+          this.bottomCourses.unshift(courseToAdd);
+          this.seeMoreCourses.unshift(this.bottomCourses[this.bottomCourses.length - 1]);
+          this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
+        }
+      }
       this.getReviews(course.subject, course.number, review => {
-        this.bottomBar.overallRating = review.classRating;
-        this.bottomBar.difficulty = review.classDifficulty;
-        this.bottomBar.workload = review.classWorkload;
+        this.bottomCourses[0].overallRating = review.classRating;
+        this.bottomCourses[0].difficulty = review.classDifficulty;
+        this.bottomCourses[0].workload = review.classWorkload;
       });
     },
 
@@ -444,12 +480,33 @@ export default {
       this.isEditingProfile = true;
     },
 
+    cleanCourseDistributionsArray(distributions) {
+      // Iterates over distributions array and cleans every entry
+      // Removes stray parentheses, spaces, and commas
+      let matches = [];
+      if (distributions[0] === "") {
+        matches = ["N/A"];
+      } else {
+        for (let i = 0; i < distributions.length; i += 1) {
+          distributions[i].replace((/[A-Za-z0-9-]+/g), d => {
+            matches.push(d);
+          });
+        }
+      }
+
+      return matches;
+    },
+
     joinOrNAString(arr) {
       return (arr.length !== 0 && arr[0] !== '') ? arr.join(', ') : 'N/A';
     },
 
     noneIfEmpty(str) {
       return (str && str.length !== 0) ? str : 'None';
+    },
+
+    naIfEmptyStringArray(arr) {
+      return (arr && arr.length !== 0 && arr[0] !== "") ? arr : ['N/A'];
     }
   }
 };
