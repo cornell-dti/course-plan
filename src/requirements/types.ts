@@ -38,6 +38,15 @@ export type UniversityRequirements = {
 
 export interface CollegeOrMajorRequirement extends BaseRequirement {
   readonly checkerName: string | null;
+  /**
+   * TODO:
+   *  - This field is currently unused but has to be declared here to avoid TS error.
+   *  - I choose not to remove it in the json because it serves to remind us that we don't have a
+   *    solution to purge double-counted courses yet.
+   *  - Once we know how to handle double counted courses, we should remove this field as soon as
+   *    possible.
+   */
+  readonly uniqueIncludes?: number;
 }
 
 export type EligibleCourses = {
