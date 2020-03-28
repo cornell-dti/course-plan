@@ -76,7 +76,9 @@
               <p class="sup-req pointer">{{subReq.requirement.name}}</p>
             </div>
             <div class="col">
-              <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}` : 'Self-Check' }}  )</p>
+              <p class="sup-req-progress text-right">
+                ( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}` : 'Self-Check' }}  )
+              </p>
             </div>
           </div>
           <div v-if="subReq.displayDescription" class="description">

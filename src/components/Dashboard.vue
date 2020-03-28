@@ -484,8 +484,8 @@ export default {
       // Iterates over distributions array and cleans every entry
       // Removes stray parentheses, spaces, and commas
       let matches = [];
-      if (distributions[0] === "") {
-        matches = ["N/A"];
+      if (distributions[0] === '') {
+        matches = ['N/A'];
       } else {
         for (let i = 0; i < distributions.length; i += 1) {
           distributions[i].replace((/[A-Za-z0-9-]+/g), d => {
@@ -506,7 +506,7 @@ export default {
     },
 
     naIfEmptyStringArray(arr) {
-      return (arr && arr.length !== 0 && arr[0] !== "") ? arr : ['N/A'];
+      return (arr && arr.length !== 0 && arr[0] !== '') ? arr : ['N/A'];
     }
   }
 };

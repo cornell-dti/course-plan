@@ -69,7 +69,7 @@ Vue.component('coursemenu', CourseMenu);
 
 const clickOutside = {
   bind(el, binding, vnode) {
-    el.event = function (event) {
+    el.event = event => {
       if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event);
       }

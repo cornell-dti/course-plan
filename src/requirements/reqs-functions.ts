@@ -66,7 +66,8 @@ function computeUniversityRequirementFulfillments(
   } as const;
   const swimmingTestRequirement = {
     name: 'Swimming Test',
-    description: 'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming and water safety competency requirement for all entering first-year undergraduate students.',
+    description: 'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming and water safety competency requirement '
+      + 'for all entering first-year undergraduate students.',
     source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
     fulfilledBy: 'self-check',
     includes: [],
