@@ -2,7 +2,7 @@
 
 module.exports = {
   root: true,
-  extends: ['plugin:vue/essential', '@vue/airbnb', '@vue/typescript', 'plugin:import/typescript'],
+  extends: ['eslint:recommended', 'plugin:vue/essential', '@vue/airbnb', '@vue/typescript', 'plugin:import/typescript'],
   plugins: ['@typescript-eslint'],
   parserOptions: {
     parser: '@typescript-eslint/parser',
@@ -23,7 +23,7 @@ module.exports = {
     'no-use-before-define': ['warn'],
     'linebreak-style': 0,
     //TODO: make requests asynchronous
-    'no-await-in-loop': ['warn'],
+    'no-await-in-loop': ['error'],
     // don't require .vue extension when importing
     'import/extensions': [
       'error',
@@ -45,10 +45,9 @@ module.exports = {
       }
     ],
     'no-mixed-operators': ['off'],
-    'arrow-parens': ['warn', 'as-needed'],
-    'comma-dangle': ['warn', 'never'],
-    'no-underscore-dangle': ['off'],
-    'no-continue': ['off'],
+    'arrow-parens': ['error', 'as-needed'],
+    'comma-dangle': ['error', 'never'],
+    'no-continue': ['error'],
     'no-restricted-syntax': [
       'error',
       {
@@ -63,13 +62,13 @@ module.exports = {
       }
     ],
     quotes: [
-      'warn',
+      'error',
       'single',
       {
         allowTemplateLiterals: true
       }
     ],
-    'max-len': ['warn', { code: 200 }],
+    'max-len': ['error', { code: 200 }],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },

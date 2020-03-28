@@ -1,5 +1,10 @@
 <template>
-  <div class="semesterView" :class="{ bottomBar: isBottomBar, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}" @click="closeBar" :key="key">
+  <div
+    class="semesterView"
+    :class="{ bottomBar: isBottomBar, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}"
+    @click="closeBar"
+    :key="key"
+  >
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>

@@ -36,7 +36,13 @@
               </div>
             </div>
             <div class="info-link">
-              <a :href="`https://classes.cornell.edu/browse/roster/${ courseObj.latestSem }/class/${ courseObj.subject }/${ courseObj.number }`" class="info-link-blue" target="_blank">View Course Information on Roster <span class="info-link-blue-img"><img src="@/assets/images/link-blue.svg" /></span></a>
+              <a
+                :href="`https://classes.cornell.edu/browse/roster/${ courseObj.latestSem }/class/${ courseObj.subject }/${ courseObj.number }`"
+                class="info-link-blue"
+                target="_blank"
+              >
+                View Course Information on Roster <span class="info-link-blue-img"><img src="@/assets/images/link-blue.svg" /></span>
+              </a>
             </div>
           </div>
         </div>
@@ -49,19 +55,40 @@
               <div class="details-ratings">
                 <p class="details-ratings-title"><span class="details-ratings-title-strong">Overall Rating: </span> <span class="details-ratings-strong">{{ CUROverallRating }}</span></p>
                 <div class="progress rating">
-                  <div class="progress-bar" role="progressbar" :style="{ width: `${(courseObj.overallRating/5)*100}%`, background: reviewsColor(courseObj.overallRating) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    :style="{ width: `${(courseObj.overallRating/5)*100}%`, background: reviewsColor(courseObj.overallRating) }"
+                    aria-valuenow="25"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
                 </div>
               </div>
               <div class="details-ratings">
                 <p class="details-ratings-title"><span class="details-ratings-title-strong">Difficulty:</span><span class="details-ratings-strong"> {{ CURDifficulty }}</span></p>
                 <div class="progress rating">
-                  <div class="progress-bar" role="progressbar" :style="{ width: `${(courseObj.difficulty/5)*100}%`, background: reviewsColor(courseObj.difficulty, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    :style="{ width: `${(courseObj.difficulty/5)*100}%`, background: reviewsColor(courseObj.difficulty, true) }"
+                    aria-valuenow="25"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
                 </div>
               </div>
               <div class="details-ratings">
                 <p class="details-ratings-title"><span class="details-ratings-title-strong">Workload:</span> <span class="details-ratings-strong">{{ CURWorkload }}</span></p>
                 <div class="progress rating">
-                  <div class="progress-bar" role="progressbar" :style="{ width: `${(courseObj.workload/5)*100}%`, background: reviewsColor(courseObj.workload, true) }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    :style="{ width: `${(courseObj.workload/5)*100}%`, background: reviewsColor(courseObj.workload, true) }"
+                    aria-valuenow="25"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
                 </div>
               </div>
             </div>

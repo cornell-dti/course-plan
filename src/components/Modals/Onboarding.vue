@@ -312,7 +312,6 @@ export default {
           const college = this.displayOptions.college[i];
           if (majorJSON[key].schools.includes(college.acronym)) {
             majors[key] = majorJSON[key].name;
-            continue;
           }
         }
       });
