@@ -303,4 +303,11 @@ export default {
     height: 0;
   }
 
+@media only screen and (max-width: 1347px) {
+  .bottombarcourse {
+    left: 0rem;
+    width: 100vw;
+  }
+}
+
 </style>

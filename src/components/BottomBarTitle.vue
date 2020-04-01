@@ -45,4 +45,11 @@ export default {
     bottom: 16.25rem;
 }
 
+@media only screen and (max-width: 1347px) {
+  .bottombartitle {
+    left: 0rem;
+    width: 100vw;
+  }
+}
+
 </style>

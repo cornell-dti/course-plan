@@ -532,7 +532,7 @@ export default {
   /* The Modal (background) */
   &-onboarding {
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 2; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -547,5 +547,27 @@ export default {
   margin: 1rem;
   padding: 1rem;
   height: 12.12rem;
+}
+
+
+@media only screen and (max-width: 1347px) {
+  .dashboard {
+    &-reqs {
+      display: none;
+    }
+
+    &-nav {
+      width: 100%;
+      flex-direction: row;
+      height: 4.5rem;
+      padding-top: 0rem;
+      padding-bottom: 0rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      position: fixed;
+      z-index: 1;
+    }
+  }
 }
 </style>

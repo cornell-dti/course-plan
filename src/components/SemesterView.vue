@@ -376,4 +376,11 @@ export default {
 .bottomBar {
   margin-bottom: 300px;
 }
+
+@media only screen and (max-width: 1347px) {
+  .semesterView {
+    margin-top: 4.5rem;
+  }
+}
+
 </style>

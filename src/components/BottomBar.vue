@@ -84,4 +84,13 @@ export default {
     bottom: 18.75rem;
 }
 
+@media only screen and (max-width: 1347px) {
+  .bottombar {
+    &-tabview {
+      left: 0rem;
+      width: 100vw;
+    }
+  }
+}
+
 </style>

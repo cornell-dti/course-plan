@@ -1,10 +1,15 @@
 <template>
   <div class="navbar" :class="{ bottomPreview: isBottomPreview }">
     <div class="navbar-top">
-      <div class="navbar-iconWrapper">
+      <div class="navbar-iconWrapper desktop">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
       </div>
       <div class="navbar-iconWrapper" id="profileIcon" @click="editProfile"></div>
+    </div>
+    <div class="navbar-middle mobile">
+      <div class="navbar-iconWrapper">
+        <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
+      </div>
     </div>
     <div class="navbar-bottom">
       <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
@@ -60,7 +65,6 @@ export default {
       margin-top: 2.25rem;
     }
   }
-}
 
 #profileIcon {
   background-image: url('~@/assets/images/navbar/profileIcon.svg');
@@ -94,5 +98,33 @@ export default {
 
 .bottomPreview {
   padding-bottom: calc(2.25rem + 15px);
+}
+
+.mobile {
+  display: none;
+}
+
+@media only screen and (max-width: 1347px) {
+  .navbar {
+    &-top {
+      display: flex;
+      flex-direction: row;
+    }
+
+    &-iconWrapper {
+      &:not(:first-child) {
+        margin-top: 0rem;
+      }
+    }
+  }
+
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: flex;
+  }
+}
 }
 </style>
