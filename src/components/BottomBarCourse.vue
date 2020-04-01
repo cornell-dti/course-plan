@@ -306,7 +306,20 @@ export default {
 @media only screen and (max-width: 1347px) {
   .bottombarcourse {
     left: 0rem;
-    width: 100vw;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 878px) {
+  .details {
+    &-ratings {
+      width: 60%;
+      &-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+    }
   }
 }
 

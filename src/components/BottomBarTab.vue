@@ -94,4 +94,19 @@ export default {
     opacity: 0.8;
   }
 
+@media only screen and (max-width: 878px) {
+  .bottombartab {
+    width: 100%;
+    height: 100%;
+
+    &-arrow {
+      margin-top: auto;
+      margin-bottom: auto;
+      margin-right: 10%;
+      width: 1.56rem;
+      height: 50%;
+    }
+  }
+}
+
 </style>

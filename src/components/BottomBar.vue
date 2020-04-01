@@ -88,7 +88,7 @@ export default {
   .bottombar {
     &-tabview {
       left: 0rem;
-      width: 100vw;
+      width: 100%;
     }
   }
 }

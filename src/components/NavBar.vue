@@ -5,6 +5,7 @@
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
       </div>
       <div class="navbar-iconWrapper" id="profileIcon" @click="editProfile"></div>
+      <div class="navbar-iconWrapper mobile" id="requirementsBar"></div>
     </div>
     <div class="navbar-middle mobile">
       <div class="navbar-iconWrapper">
@@ -76,6 +77,16 @@ export default {
   }
 }
 
+#requirementsBar {
+  background-image: url('~@/assets/images/navbar/info-gray.svg');
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-image: url('~@/assets/images/info.svg');
+  }
+}
+
 #star {
   background-image: url('~@/assets/images/navbar/star.svg');
 
@@ -109,6 +120,7 @@ export default {
     &-top {
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
     }
 
     &-iconWrapper {
