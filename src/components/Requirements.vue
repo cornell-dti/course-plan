@@ -77,7 +77,10 @@
             </div>
             <div class="col">
               <p class="sup-req-progress text-right">
-                ( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}` : 'Self-Check' }}  )
+                ( {{
+                  (subReq.requirement.fulfilledBy !== 'self-check')
+                  ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
+                  : 'Self-Check' }}  )
               </p>
             </div>
           </div>
@@ -195,14 +198,14 @@ export default Vue.extend({
         // Create progress bar with requirement with progressBar = true
         if (req.requirement.progressBar) {
           singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
-          singleMenuRequirement.fulfilled = req.fulfilled;
-          singleMenuRequirement.required = req.requirement.minCount;
+          singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
+          singleMenuRequirement.required = req.requirement.totalCount || req.requirement.minCount;
         }
 
         // Default display value of false for all requirement lists
         const displayableRequirementFulfillment = { ...req, displayDescription: false };
 
-        if (!req.fulfilled || req.fulfilled < (req.requirement.minCount || 0)) {
+        if (!req.minCountFulfilled || req.minCountFulfilled < (req.requirement.minCount || 0)) {
           singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
         } else {
           singleMenuRequirement.completed.push(displayableRequirementFulfillment);

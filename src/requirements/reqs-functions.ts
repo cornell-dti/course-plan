@@ -84,13 +84,13 @@ function computeUniversityRequirementFulfillments(
     {
       requirement: academicCreditsRequirements,
       courses: [coursesThatCountTowardsAcademicCredits],
-      fulfilled: coursesThatCountTowardsAcademicCredits.reduce((accumulator, course) => accumulator + course.credits, 0)
+      minCountFulfilled: coursesThatCountTowardsAcademicCredits.reduce((accumulator, course) => accumulator + course.credits, 0)
     },
     // PE Credits
     {
       requirement: PERequirement,
       courses: [coursesThatCountTowardsPE],
-      fulfilled: coursesThatCountTowardsPE.length
+      minCountFulfilled: coursesThatCountTowardsPE.length
     },
     // Swim Test
     { requirement: swimmingTestRequirement, courses: [] }
@@ -171,7 +171,7 @@ function postProcessRequirementsFulfillments<T extends {}, R extends {}>(
 }
 
 function computeFulfillmentStatistics<T extends {}>({ requirement, courses: coursesThatFulfilledRequirement }: RequirementFulfillment<T>): RequirementFulfillmentStatistics {
-  let fulfilled = 0;
+  let minCountFulfilled = 0;
 
   coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
     if (coursesThatFulfilledSubRequirement.length === 0) {
@@ -180,10 +180,10 @@ function computeFulfillmentStatistics<T extends {}>({ requirement, courses: cour
     // depending on what it is fulfilled by, either increase the count or credits you took
     switch (requirement.fulfilledBy) {
       case 'courses':
-        fulfilled += 1;
+        minCountFulfilled += 1;
         break;
       case 'credits':
-        fulfilled += coursesThatFulfilledSubRequirement
+        minCountFulfilled += coursesThatFulfilledSubRequirement
           .map(course => course.credits)
           .reduce((a, b) => Math.max(a, b), 0);
         break;
@@ -193,7 +193,29 @@ function computeFulfillmentStatistics<T extends {}>({ requirement, courses: cour
         throw new Error('Fulfillment type unknown.');
     }
   });
-  return { fulfilled };
+
+  if (requirement.totalCount === undefined) {
+    return { minCountFulfilled };
+  }
+
+  let totalCountFulfilled = 0;
+  Array.from(new Set(coursesThatFulfilledRequirement.flat()).values()).forEach(courseThatFulfilledRequirement => {
+    // depending on what it is fulfilled by, either increase the count or credits you took
+    switch (requirement.fulfilledBy) {
+      case 'courses':
+        totalCountFulfilled += 1;
+        return;
+      case 'credits':
+        totalCountFulfilled += courseThatFulfilledRequirement.credits;
+        return;
+      case 'self-check':
+        return;
+      default:
+        throw new Error('Fulfillment type unknown.');
+    }
+  });
+
+  return { minCountFulfilled, totalCountFulfilled };
 }
 
 /**

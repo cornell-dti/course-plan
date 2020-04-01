@@ -83,8 +83,8 @@ const json: RequirementsJson = {
           source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
           checkerName: 'calsSocialSciencesAndHumanities',
           fulfilledBy: 'courses',
-          minCount: 4,
-          uniqueIncludes: 3
+          minCount: 3,
+          totalCount: 4
         },
         {
           name: 'Human Diversity (D)',
@@ -268,8 +268,8 @@ const json: RequirementsJson = {
           source: 'https://as.cornell.edu/degree-requirements',
           checkerName: 'casLiberalArts',
           fulfilledBy: 'courses',
-          minCount: 5,
-          uniqueIncludes: 4
+          minCount: 4,
+          totalCount: 5
         },
         {
           name: 'Geographic Breadth Requirement (GB)',
@@ -353,9 +353,9 @@ const json: RequirementsJson = {
           description: 'Liberal Studies Distribution (six courses)',
           source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
           checkerName: 'engineeringLiberalArts',
-          fulfilledBy: 'credits',
-          minCount: 18,
-          uniqueIncludes: 3
+          fulfilledBy: 'courses',
+          minCount: 3,
+          totalCount: 6
         },
         {
           name: 'Advisor-Approved Electives',
