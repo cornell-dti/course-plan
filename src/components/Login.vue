@@ -134,15 +134,23 @@
   </div>
 </template>
 
-<script>
-import firebase from 'firebase/app';
+<script lang="ts">
+import Vue from 'vue';
+import firebase, { User } from 'firebase/app';
 
-const fb = require('../firebaseConfig.js');
+import * as fb from '@/firebaseConfig';
 
 const { whitelistCollection, landingEmailsCollection } = fb;
 
-export default {
-  data() {
+type Data = {
+  loginForm: { email: string; password: string };
+  waitlist: { email: string; major: string; time: string };
+  performingRequest: boolean;
+  errorMsg?: string;
+};
+
+export default Vue.extend({
+  data(): Data {
     return {
       loginForm: {
         email: '',
@@ -150,9 +158,11 @@ export default {
       },
       waitlist: {
         email: '',
-        major: ''
+        major: '',
+        time: ''
       },
-      performingRequest: false
+      performingRequest: false,
+      errorMsg: undefined
     };
   },
   methods: {
@@ -163,27 +173,31 @@ export default {
         .signInWithPopup(provider)
         .then(user => {
           // Check whitelist emails to ensure user can log in
+          if (user == null) {
+            return;
+          }
           this.checkEmailAccess(user);
         })
         .catch(err => {
-          console.log(err);
           this.performingRequest = false;
           this.errorMsg = err.message;
         });
     },
-    checkEmailAccess(user) {
-      const docRef = whitelistCollection.doc(user.user.email);
+    checkEmailAccess({ user }: { user: User | null }) {
+      if (user == null) {
+        return;
+      }
+      const docRef = whitelistCollection.doc(user.email || '');
       docRef.get().then(doc => {
         if (doc.exists) {
           this.performingRequest = false;
-          this.$store.commit('setCurrentUser', user.user);
+          this.$store.commit('setCurrentUser', user);
           this.$store.dispatch('fetchUserProfile');
           this.$router.push(`${process.env.BASE_URL}/`);
         } else {
           this.handleUserWithoutAccess();
         }
       }).catch(error => {
-        console.log(error);
         this.handleUserWithoutAccess();
       });
     },
@@ -191,36 +205,52 @@ export default {
     handleUserWithoutAccess() {
       this.performingRequest = false;
       fb.auth.signOut();
+      // eslint-disable-next-line no-alert
       alert('Sorry, but you do not have access currently.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
     },
 
-    validateEmail(email) {
+    validateEmail(email: string): boolean {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
     },
-    validateMajor(major) {
+    validateMajor(major: string): boolean {
       return major.trim().length > 0;
     },
     addUser() {
       if (this.validateEmail(this.waitlist.email) && this.validateMajor(this.waitlist.major)) {
+        // eslint-disable-next-line no-alert
         alert('You have been added to the waitlist. We\'ll be in touch shortly!');
+
+        // Add timestamp to data in YYYY-MM-DD hh:mm:ss
+        const dt = new Date();
+        this.waitlist.time = `${
+          (dt.getMonth() + 1).toString().padStart(2, '0')}/${
+          dt.getDate().toString().padStart(2, '0')}/${
+          dt.getFullYear().toString().padStart(4, '0')} ${
+          dt.getHours().toString().padStart(2, '0')}:${
+          dt.getMinutes().toString().padStart(2, '0')}:${
+          dt.getSeconds().toString().padStart(2, '0')}`;
+
+        // Add landing page data to Firebase
         landingEmailsCollection.add(this.waitlist);
 
         // Clear fields
         this.waitlist.email = '';
         this.waitlist.major = '';
       } else if (!this.validateEmail(this.waitlist.email)) {
+        // eslint-disable-next-line no-alert
         alert('You have entered an invalid email address!');
       } else {
+        // eslint-disable-next-line no-alert
         alert('You have not entered a major!');
       }
     },
-    getYear() {
+    getYear(): number {
       const today = new Date();
       return today.getFullYear();
     }
 
   }
-};
+});
 </script>
 
 <style scoped lang="scss">

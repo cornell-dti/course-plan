@@ -69,7 +69,7 @@ Vue.component('coursemenu', CourseMenu);
 
 const clickOutside = {
   bind(el, binding, vnode) {
-    el.event = function (event) {
+    el.event = event => {
       if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event);
       }
@@ -99,7 +99,8 @@ export default {
   data() {
     return {
       menuOpen: false,
-      stopCloseFlag: false
+      stopCloseFlag: false,
+      colorJustChanged: false
     };
   },
   computed: {
@@ -165,11 +166,13 @@ export default {
     colorCourse(color) {
       this.$emit('color-course', color, `${this.subject} ${this.number}`);
       this.closeMenuIfOpen();
+      this.colorJustChanged = true;
     },
     updateBar() {
       if (!this.menuOpen) {
-        this.$emit('updateBar', this.courseObj);
+        this.$emit('updateBar', this.courseObj, this.colorJustChanged, this.color);
       }
+      this.colorJustChanged = false;
     }
 
   },
