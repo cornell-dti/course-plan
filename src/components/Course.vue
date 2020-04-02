@@ -464,4 +464,12 @@ export default {
 .course-tooltip .course-tooltiptext--info::before {
   right: 8px;
 }
+
+@media only screen and (max-width: 878px) {
+  .course {
+    &-menu {
+      right: -1rem;
+    }
+  }
+}
 </style>

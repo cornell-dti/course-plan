@@ -150,4 +150,16 @@ export default {
     right: -9rem;
   }
 }
+
+@media only screen and (max-width: 878px) {
+  .courseMenu {
+    &-arrow {
+      display: none;
+    }
+    &-colors {
+      right: 0rem;
+      left: -9rem;
+    }
+  }
+}
 </style>

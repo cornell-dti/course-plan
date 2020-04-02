@@ -230,4 +230,11 @@ export default {
 #content-semester {
   width: 15.5rem;
 }
+
+@media only screen and (max-width: 878px) {
+  #content-course {
+    width: 100%;
+  }
+}
+
 </style>
