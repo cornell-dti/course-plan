@@ -792,4 +792,27 @@ select option[disabled]:first-child {
   display: none;
 }
 
+@media only screen and (max-width: 878px) {
+  .onboarding {
+    &-main {
+      width: 100%;
+    }
+    &-inputs {
+      &--name {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+    }
+    &-inputWrapper {
+      &--name {
+        width: 100%;
+      }
+      &--college {
+        width: 100%;
+      }
+    }
+  }
+}
+
 </style>

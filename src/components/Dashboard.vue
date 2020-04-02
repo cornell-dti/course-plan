@@ -136,7 +136,6 @@ export default {
     },
 
     isMobileEventHandler(e) {
-      console.log(window.innerWidth <= 1347);
       this.isMobile = window.innerWidth <= 1347;
     },
 
@@ -571,10 +570,6 @@ export default {
 
 @media only screen and (max-width: 1347px) {
   .dashboard {
-    // &-reqs {
-    //   display: none;
-    // }
-
     &-nav {
       width: 100%;
       flex-direction: row;
