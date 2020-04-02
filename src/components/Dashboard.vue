@@ -10,16 +10,17 @@
       <div class="dashboard-menus">
         <navbar class="dashboard-nav"
         @editProfile="editProfile"
+        @toggleRequirementsBar="toggleRequirementsBar"
         :isBottomPreview="bottomBar.isPreview"
         />
-        <requirements class="dashboard-reqs" v-if="loaded"
+        <requirements class="dashboard-reqs" v-if="loaded && (!isMobile || (isOpeningRequirements && isMobile))"
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
           @requirementsMap="loadRequirementsMap"
          />
       </div>
-      <semesterview v-if="loaded"
+      <semesterview v-if="loaded && ((!isOpeningRequirements && isMobile) || !isMobile)"
         :semesters="semesters"
         :compact="compactVal"
         :isBottomBarExpanded="bottomBar.isExpanded"
@@ -33,7 +34,7 @@
     </div>
     <div id="dashboard-bottomView">
       <bottombar
-      v-if="bottomCourses.length > 0"
+      v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isMobile) || !isMobile)"
       :bottomCourses="bottomCourses"
       :seeMoreCourses="seeMoreCourses"
       :isExpanded="this.bottomBar.isExpanded"
@@ -91,11 +92,19 @@ export default {
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
       isOnboarding: false,
-      isEditingProfile: false
+      isEditingProfile: false,
+      isOpeningRequirements: false,
+      isMobile: window.innerWidth <= 1347
     };
+  },
+  created() {
+    window.addEventListener('resize', this.isMobileEventHandler);
   },
   mounted() {
     this.getInformationFromUser();
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.isMobileEventHandler);
   },
   methods: {
     getDocRef() {
@@ -125,6 +134,16 @@ export default {
           console.log('Error getting document:', error);
         });
     },
+
+    isMobileEventHandler(e) {
+      console.log(window.innerWidth <= 1347);
+      this.isMobile = window.innerWidth <= 1347;
+    },
+
+    toggleRequirementsBar() {
+      this.isOpeningRequirements = !this.isOpeningRequirements;
+    },
+
     convertSemesters(firebaseSems) {
       const semesters = [];
 
@@ -552,9 +571,9 @@ export default {
 
 @media only screen and (max-width: 1347px) {
   .dashboard {
-    &-reqs {
-      display: none;
-    }
+    // &-reqs {
+    //   display: none;
+    // }
 
     &-nav {
       width: 100%;

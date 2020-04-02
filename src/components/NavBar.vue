@@ -5,7 +5,7 @@
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
       </div>
       <div class="navbar-iconWrapper" id="profileIcon" @click="editProfile"></div>
-      <div class="navbar-iconWrapper mobile" id="requirementsBar"></div>
+      <div class="navbar-iconWrapper mobile" id="requirementsBar" @click="toggleRequirementsBar"></div>
     </div>
     <div class="navbar-middle mobile">
       <div class="navbar-iconWrapper">
@@ -37,6 +37,9 @@ export default {
     },
     editProfile() {
       this.$emit('editProfile');
+    },
+    toggleRequirementsBar() {
+      this.$emit('toggleRequirementsBar');
     }
   }
 };

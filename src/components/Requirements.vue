@@ -605,4 +605,18 @@ button.view {
   width: 100%;
   background-color: #d7d7d7;
 }
+
+@media only screen and (max-width: 1347px) {
+  .requirements {
+    width: 100%;
+    padding-left: 0.5rem;
+  }
+
+  .fixed {
+    top: 4.5rem;
+    left: 0rem;
+    width: 100%;
+    height: calc(100vh - 4.5rem);
+  }
+}
 </style>
