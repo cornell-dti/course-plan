@@ -21,7 +21,6 @@ function typeToMonth(type){
   }
 }
 function isOld (semester){
-  console.log(semester);
   var currentTime = new Date();
   var month = currentTime.getMonth() + 1;
   var year = currentTime.getFullYear();
@@ -52,7 +51,6 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
         querySnapshot.forEach(function(doc) {
 
             arr.push(doc.data().name.firstName);
-            console.log(doc.id, " => ", doc.data().name.firstName);
 
             var oldCount = 0;
             var newCount = 0; 
@@ -80,7 +78,6 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
           "avg-old-semester" : average(oldSemester),
           "avg-new-semster" : average(newSemester)
       }
-        console.log(arr + "arr");
         return response
     }).then(function(response) {  
       console.log(response);
