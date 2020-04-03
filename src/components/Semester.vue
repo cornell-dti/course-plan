@@ -514,8 +514,11 @@ export default {
 }
 }
 
+
 @media only screen and (max-width: 878px) {
   .semester {
+    padding-left: 0.56rem;
+    padding-right: 0.56rem;
     &-menu {
       right: 0rem;
     }
