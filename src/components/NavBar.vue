@@ -13,6 +13,7 @@
       </div>
     </div>
     <div class="navbar-bottom">
+      <div class="navbar-iconWrapper mobile" id="filler"></div>
       <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
     </div>
   </div>
@@ -129,11 +130,12 @@ export default {
       flex-direction: row;
       justify-content: space-between;
     }
-
-    &-middle {
-      margin-left: 1.25rem;
-      margin-right: 1.25rem;
+    &-bottom {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
+
 
     &-iconWrapper {
       &:not(:first-child) {
@@ -150,6 +152,10 @@ export default {
     display: flex;
   }
 
+  #filler {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 }
 </style>
