@@ -137,7 +137,7 @@
 <script>
 import firebase from 'firebase/app';
 
-const fb = require('../firebaseConfig.js');
+import * as fb from '@/firebaseConfig';
 
 const { whitelistCollection, landingEmailsCollection } = fb;
 

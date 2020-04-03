@@ -52,6 +52,7 @@ import Onboarding from '@/components/Modals/Onboarding';
 
 
 import '@/vueDragulaConfig';
+import { auth, userDataCollection } from '@/firebaseConfig';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
@@ -61,8 +62,6 @@ Vue.component('navbar', NavBar);
 Vue.component('onboarding', Onboarding);
 
 const firebaseConfig = require('@/firebaseConfig.js');
-
-const { auth, userDataCollection } = firebaseConfig;
 
 export default {
   props: {
