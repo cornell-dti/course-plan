@@ -130,6 +130,11 @@ export default {
       justify-content: space-between;
     }
 
+    &-middle {
+      margin-left: 1.25rem;
+      margin-right: 1.25rem;
+    }
+
     &-iconWrapper {
       &:not(:first-child) {
         margin-top: 0rem;
@@ -145,9 +150,6 @@ export default {
     display: flex;
   }
 
-  #logout {
-    margin-left: 2.5rem;
-  }
 }
 }
 </style>
