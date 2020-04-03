@@ -388,14 +388,15 @@ export default {
     margin-left: 0rem;
     margin-right: 0rem;
     &-switch {
-      padding-right: 0.56rem;
+      padding-right: 0.75rem;
     }
     &-content {
       width: 100%;
       margin: 0 0rem;
     }
     &-wrapper {
-      padding: 0 0rem;
+      padding-left: 0.56rem;
+      padding-right: 0.56rem;
     }
   }
 }
