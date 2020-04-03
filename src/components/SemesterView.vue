@@ -393,6 +393,7 @@ export default {
     &-content {
       width: 100%;
       margin: 0 0rem;
+      justify-content: center;
     }
     &-wrapper {
       padding-left: 0.56rem;

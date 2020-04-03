@@ -522,6 +522,9 @@ export default {
     &-menu {
       right: 0rem;
     }
+    &--min {
+      width: 21.75rem;
+    }
   }
 }
 </style>
