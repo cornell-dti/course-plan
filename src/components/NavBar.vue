@@ -71,6 +71,7 @@ export default {
   }
 
 #profileIcon {
+  cursor: pointer;
   background-image: url('~@/assets/images/navbar/profileIcon.svg');
 
   &:hover,
@@ -81,16 +82,18 @@ export default {
 }
 
 #requirementsBar {
-  background-image: url('~@/assets/images/navbar/hamburger.svg');
+  cursor: pointer;
+  background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
 
   &:hover,
   &:focus,
   &:active {
-    background-image: url('~@/assets/images/navbar/hamburger.svg');
+    background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
   }
 }
 
 #star {
+  cursor: pointer;
   background-image: url('~@/assets/images/navbar/star.svg');
 
   &:hover,
@@ -101,6 +104,7 @@ export default {
 }
 
 #logout {
+  cursor: pointer;
   background-image: url('~@/assets/images/navbar/logout.svg');
 
   &:hover,
@@ -139,6 +143,10 @@ export default {
 
   .mobile {
     display: flex;
+  }
+
+  #logout {
+    margin-left: 2.5rem;
   }
 }
 }
