@@ -233,6 +233,24 @@ export default {
       display:block;
     }
   }
-
+}
+@media only screen and (max-width: 878px) {
+  .bottombartabview {
+    &-seeMoreWrapper {
+      .bottombarSeeMoreTab {
+        width: 100%;
+        height: fit-content;
+      }
+    }
+    .bottombarSeeMoreOptions {
+      width: 100%;
+      .seeMoreCourse {
+        &-option {
+          width: 100%;
+          height: fit-content;
+        }
+      }
+    }
+  }
 }
 </style>

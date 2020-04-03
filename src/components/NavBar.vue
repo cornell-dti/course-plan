@@ -158,9 +158,4 @@ export default {
   }
 }
 }
-@media only screen and (max-width: 878px) {
-  #logout {
-    margin-right: 0.75rem;
-  }
-}
 </style>
