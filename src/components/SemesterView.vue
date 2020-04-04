@@ -385,19 +385,12 @@ export default {
 @media only screen and (max-width: 878px) {
   .semesterView {
     margin-top: 5.5rem;
-    margin-left: 0rem;
-    margin-right: 0rem;
     &-switch {
       padding-right: 0.75rem;
     }
     &-content {
       width: 100%;
-      margin: 0 0rem;
       justify-content: center;
-    }
-    &-wrapper {
-      padding-left: 0.56rem;
-      padding-right: 0.56rem;
     }
   }
 }

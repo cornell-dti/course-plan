@@ -1,19 +1,14 @@
 <template>
   <div class="navbar" :class="{ bottomPreview: isBottomPreview }">
     <div class="navbar-top">
-      <div class="navbar-iconWrapper desktop">
-        <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
-      </div>
-      <div class="navbar-iconWrapper mobile" id="requirementsBar" @click="toggleRequirementsBar"></div>
-      <div class="navbar-iconWrapper" id="profileIcon" @click="editProfile"></div>
-    </div>
-    <div class="navbar-middle mobile">
       <div class="navbar-iconWrapper">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
       </div>
+      <div class="navbar-iconWrapper desktop" id="profileIcon" @click="editProfile"></div>
     </div>
     <div class="navbar-bottom">
-      <div class="navbar-iconWrapper mobile" id="filler"></div>
+      <div class="navbar-iconWrapper mobile" id="requirementsBar" @click="toggleRequirementsBar"></div>
+      <div class="navbar-iconWrapper mobile" id="profileIcon" @click="editProfile"></div>
       <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
     </div>
   </div>
@@ -134,6 +129,7 @@ export default {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      min-width: 15%;
     }
 
 
@@ -151,11 +147,16 @@ export default {
   .mobile {
     display: flex;
   }
-
-  #filler {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
 }
+}
+
+@media only screen and (max-width: 878px) {
+  .navbar {
+    .navbar {
+      &-bottom {
+        min-width: 35%;
+      }
+    }
+  }
 }
 </style>
