@@ -6,7 +6,8 @@ import {
   DecoratedCollegeOrMajorRequirement,
   EligibleCourses
 } from './types';
-import { filteredAllCourses, sourceRequirements } from './source-requirement-json';
+import sourceRequirements from './source-requirements-json';
+import filteredAllCourses from './filtered-all-courses';
 import requirementCheckers from './checkers/all-requirements-checkers';
 
 const getEligibleCourses = (requirement: CollegeOrMajorRequirement): readonly EligibleCourses[] => {
