@@ -467,8 +467,77 @@ export default {
 
 @media only screen and (max-width: 878px) {
   .course {
+    width: 17rem;
+    &--min {
+      width: 10.5rem;
+      height: 2.125rem;
+    }
+    &-main {
+      &--min {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+    &-color {
+      width: 1.25rem;
+      height: 5.625rem;
+      border-radius: 0.42rem 0 0 0.42rem;
+      background-color: var(--bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &--active {
+        width: 19px;
+        height: 5.5rem;
+      }
+
+      &--min {
+        height: 2.125rem;
+
+        &.course-color--active {
+          height: 2rem;
+        }
+      }
+    }
+
+    &-content {
+      width: 17rem;
+      &--min {
+        width: 9.25rem;
+        margin-bottom: 0;
+        margin-top: 0;
+        margin-right: .5rem;
+      }
+    }
+
+    &-top {
+      width: 14rem;
+      &--min {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+
+    &-name {
+      width: 14rem;
+    }
+
     &-menu {
       right: -1rem;
+    }
+  }
+  .active {
+    border: 1px solid #2b6693;
+    height: 5.625rem;
+    width: 17rem;
+
+    &.course--min {
+      height: 2.125rem;
+      width: 10.5rem;
     }
   }
 }

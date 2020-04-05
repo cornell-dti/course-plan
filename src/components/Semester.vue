@@ -520,8 +520,15 @@ export default {
     &-menu {
       right: 0rem;
     }
+    &-addWrapper {
+      width: 15rem;
+      &--compact {
+        width: 10.5rem;
+        height: 2rem;
+      }
+    }
     &--min {
-      width: 21.75rem;
+      width: 17.75rem;
     }
   }
 }
