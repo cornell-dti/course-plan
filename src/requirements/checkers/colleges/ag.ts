@@ -84,18 +84,15 @@ const calsChemistryOrPhysics = (course: Course): boolean => ['CHEM', 'CHEME', 'P
 
 const calsQuantitativeLiteracy = (course: Course): boolean => ['MATH', 'STSCI'].includes(course.subject);
 
-const calsSocialSciencesAndHumanities = (course: Course): boolean => [
-  '(CA-',
-  '(D-',
-  '(FL-',
-  '(HA-',
-  '(KCM-',
-  '(LA-',
-  '(SBA-'
-  // REQ_TODO: has uniqueIncludes
-  // REQ_TODO: the original reqs.json is probably wrong!
-  // @ts-ignore
-].some(code => course.code && course.code.includes(code));
+const calsSocialSciencesAndHumanities = [
+  (course: Course): boolean => course.catalogDistr?.includes('(CA-') ?? false,
+  (course: Course): boolean => course.catalogDistr?.includes('(D-') ?? false,
+  (course: Course): boolean => course.catalogDistr?.includes('(FL-') ?? false,
+  (course: Course): boolean => course.catalogDistr?.includes('(HA-') ?? false,
+  (course: Course): boolean => course.catalogDistr?.includes('(KCM-') ?? false,
+  (course: Course): boolean => course.catalogDistr?.includes('(LA-') ?? false,
+  (course: Course): boolean => course.catalogDistr?.includes('(SBA-') ?? false
+];
 
 const calsHumanDiversity = (course: Course): boolean => course.catalogDistr?.includes('(D-') ?? false;
 

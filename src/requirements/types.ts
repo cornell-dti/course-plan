@@ -27,6 +27,13 @@ export interface BaseRequirement {
   readonly fulfilledBy: 'credits' | 'courses' | 'self-check';
   readonly applies?: string;
   readonly minCount?: number;
+  /**
+   * Some requirements have sub-requirements.
+   *
+   * - `minCount` specifies how many types of sub-requirements needs to be satisfied.
+   * - `totalCount` specifies how many courses/credits need to be earned in total.
+   */
+  readonly totalCount?: number;
   readonly progressBar?: boolean;
 }
 
@@ -38,15 +45,6 @@ export type UniversityRequirements = {
 
 export interface CollegeOrMajorRequirement extends BaseRequirement {
   readonly checkerName: string | null;
-  /**
-   * TODO:
-   *  - This field is currently unused but has to be declared here to avoid TS error.
-   *  - I choose not to remove it in the json because it serves to remind us that we don't have a
-   *    solution to purge double-counted courses yet.
-   *  - Once we know how to handle double counted courses, we should remove this field as soon as
-   *    possible.
-   */
-  readonly uniqueIncludes?: number;
 }
 
 export type EligibleCourses = {
@@ -102,7 +100,8 @@ export type RequirementFulfillmentStatistics = {
    * When it's a number, it's either number of courses or number of credits.
    * When it's undefined, it means that the requirement is self-check.
    */
-  readonly fulfilled?: number;
+  readonly minCountFulfilled?: number;
+  readonly totalCountFulfilled?: number;
 };
 
 export type GroupedRequirementFulfillmentReport = {

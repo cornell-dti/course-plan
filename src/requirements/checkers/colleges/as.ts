@@ -86,13 +86,13 @@ const casMathematicsAndQuantitativeAndReasoning = (course: Course): boolean => (
   course.catalogDistr?.includes('(MQR-AS)') ?? false
 );
 
-const casLiberalArts = (course: Course): boolean => [
-  '(CA-AS)',
-  '(HA-AS)',
-  '(KCM-AS)',
-  '(LA-AS)',
-  '(SBA-AS)'
-].some(distribution => course.catalogDistr?.includes(distribution) ?? false);
+const casLiberalArts = [
+  (course: Course): boolean => course.catalogDistr?.includes('(CA-AS)') ?? false,
+  (course: Course): boolean => course.catalogDistr?.includes('(HA-AS)') ?? false,
+  (course: Course): boolean => course.catalogDistr?.includes('(KCM-AS)') ?? false,
+  (course: Course): boolean => course.catalogDistr?.includes('(LA-AS)') ?? false,
+  (course: Course): boolean => course.catalogDistr?.includes('(SBA-AS)') ?? false
+];
 
 const casGeographicBreadthRequirement = (course: Course): boolean => ['GB', 'GHB'].some(
   breadth => course.catalogBreadth?.includes(breadth) ?? false
