@@ -521,14 +521,14 @@ export default {
       right: 0rem;
     }
     &-addWrapper {
-      width: 15rem;
+      width: 17rem;
       &--compact {
         width: 10.5rem;
         height: 2rem;
       }
     }
     &--min {
-      width: 17.75rem;
+      width: 18.75rem;
     }
   }
 }
