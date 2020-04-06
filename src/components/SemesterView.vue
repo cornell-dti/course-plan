@@ -385,6 +385,8 @@ export default {
 @media only screen and (max-width: 878px) {
   .semesterView {
     margin-top: 5.5rem;
+    margin-left: 2.5rem;
+    margin-right: 1rem;
     &-switch {
       padding-right: 0.75rem;
     }

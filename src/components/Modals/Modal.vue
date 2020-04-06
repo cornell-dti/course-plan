@@ -231,7 +231,7 @@ export default {
   width: 15.5rem;
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: 600px) {
   #content-course {
     width: 100%;
   }

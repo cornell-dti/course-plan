@@ -159,4 +159,22 @@ export default {
     }
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .navbar {
+    #requirementsBar {
+      cursor: pointer;
+      background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
+
+      &:hover {
+        background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
+      }
+
+      &:focus,
+      &:active {
+        background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
+      }
+    }
+  }
+}
 </style>

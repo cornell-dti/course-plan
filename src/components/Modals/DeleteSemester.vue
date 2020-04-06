@@ -147,7 +147,7 @@ export default {
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: 600px) {
   .deleteSemesterModal {
     &-content {
       width: 100%;
