@@ -36,7 +36,8 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.DEPLOY_GH_PAGE_TOKEN }}
         with:
           keepFiles: true
-      - uses: cornell-dti/dti-repo-tools@master
+      - name: Comment on pull request
+        uses: cornell-dti/dti-repo-tools@master
         env:
           BOT_TOKEN: '${{ secrets.BOT_TOKEN }}'
         with:
