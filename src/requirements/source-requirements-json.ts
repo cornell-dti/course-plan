@@ -338,7 +338,7 @@ const json: RequirementsJson = {
           source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
           checkerName: 'engineeringENGRI',
           fulfilledBy: 'credits',
-          minCount: 4
+          minCount: 3
         },
         {
           name: 'Engineering Distribution',
@@ -359,27 +359,19 @@ const json: RequirementsJson = {
         },
         {
           name: 'Advisor-Approved Electives',
-          description: '\'Advisor-Approved\' means that you have justified your selection to your advisor and that your advisor has approved the selection. It makes good sense to use these electives for lower-level introductory courses that may be required prerequisites for the 3000+ technical elective courses and the courses used to satisfy the Specialization. Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS. Up to 6 credits of advisor approved electives may be allowed for ROTC courses at the 3000-level or above.',
+          description: 'Six credits of electives are required and must be approved by the student’s faculty advisor.',
           source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives#adv_elective',
           checkerName: null,
           fulfilledBy: 'self-check',
           minCount: 6
         },
         {
-          name: 'Major Program',
-          description: 'Major-required courses, major-approved electives, and courses outside the major.',
-          source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-          checkerName: null,
-          fulfilledBy: 'self-check',
-          minCount: 3
-        },
-        {
           name: 'Technical Communication',
-          description: 'In addition to the first-year writing seminars, a technical writing course must be taken as an engineering distribution, liberal studies, Advisor-approved electives, or Major course.',
-          source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-          checkerName: null,
-          fulfilledBy: 'self-check',
-          minCount: 3
+          description: 'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
+          source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/engineering-communications-program/technical',
+          checkerName: 'engineeringTechnicalCommunication',
+          fulfilledBy: 'courses',
+          minCount: 1
         }
       ]
     },
@@ -654,6 +646,14 @@ const json: RequirementsJson = {
           source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
           checkerName: null,
           fulfilledBy: 'self-check'
+        },
+        {
+          name: 'Probability Requirement',
+          description: 'Must take BTRY 3080, CS 4850, ECE 3100, ECON 3130, ENGRD 2700, or MATH 4710.',
+          source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/engineeringchecklist',
+          checkerName: 'csProbability',
+          fulfilledBy: 'courses',
+          minCount: 1
         }
       ]
     },

@@ -33,6 +33,34 @@ const engineeringLiberalArts = (course: Course): boolean => (
   )
 );
 
+const engineeringTechnicalCommunication = (course: Course): boolean => courseMatchesCodeOptions(course, [
+  'ENGRC 3500',
+  'ENGRC 3020',
+  'ENGRC 3350',
+  'ENGRC 3340',
+  'ENGRD 2640',
+  'AEP 2640',
+  'CHEME 4320',
+  'MAE 4272',
+  'BEE 4730',
+  'BEE 4890',
+  'BEE 4530',
+  'BEE 4590',
+  'CIS 3000',
+  'INFO 1200',
+  'COMM 3030',
+  'COMM 3020',
+  'ENGRC 3023',
+  'ENGRC 2640',
+  'ENGRC 3152',
+  'ENGRC 3160',
+  'ENGRC 4152',
+  'ENGRC 4530',
+  'ENGRC 4890'
+]) || (courseMatchesCode(course, 'MSE 4030') && courseMatchesCode(course, 'MSE 4040'))
+|| (courseMatchesCode(course, 'MSE 4050') && courseMatchesCode(course, 'MSE 4060'));
+
+
 export default {
   engineeringMathematics,
   engineeringPhysics,
@@ -41,5 +69,6 @@ export default {
   engineeringComputing,
   engineeringENGRI,
   engineeringDistribution,
-  engineeringLiberalArts
+  engineeringLiberalArts,
+  engineeringTechnicalCommunication
 };
