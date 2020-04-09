@@ -44,7 +44,13 @@
           </button>
         </div>
          <div class="col p-0">
-          <button class="btn req-name" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements</button>
+          <button 
+            class="btn req-name" 
+            :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" 
+            @click="toggleDetails(index)"
+          >
+            {{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements
+          </button>
         </div>
       </div>
 
@@ -77,7 +83,9 @@
               <p class="sup-req pointer incomplete-ptext">{{subReq.name}}</p>
             </div>
             <div class="col">
-              <p class="sup-req-progress text-right incomplete-ptext">{{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type === 'Credits' ? 'cr.' : subReq.type}` : 'Self-Check' }}</p>
+              <p class="sup-req-progress text-right incomplete-ptext">
+                {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type === 'Credits' ? 'cr.' : subReq.type}` : 'Self-Check' }}
+              </p>
             </div>
           </div>
           <div v-if="subReq.displayDescription" class="description">
@@ -269,7 +277,7 @@ export default {
       reqGroupColorMap: {
         UNIVERSITY: ['92C3E6', 'lightblue'],
         COLLEGE: ['1AA9A5', 'blue'],
-        MAJOR: ['105351', 'green'],
+        MAJOR: ['105351', 'green']
       }
     };
   },
