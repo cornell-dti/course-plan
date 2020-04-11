@@ -359,14 +359,11 @@ export default {
   }
 }
 
-// @media only screen and (max-width: 1347px) {
-//   .bottombarcourse {
-//     left: 0rem;
-//     width: 100%;
-//   }
-// }
-
 @media only screen and (max-width: 878px) {
+  .bottombarcourse {
+    left: 0rem;
+    width: 100%;
+  }
   .details {
     &-ratings {
       width: 60%;
@@ -375,6 +372,14 @@ export default {
         flex-direction: column;
         width: 100%;
       }
+    }
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .bottombarcourse {
+    &-wrapper {
+      height: 14.25rem;
     }
   }
 }

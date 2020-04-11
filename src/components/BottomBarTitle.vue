@@ -52,11 +52,17 @@ export default {
   }
 }
 
-// @media only screen and (max-width: 1347px) {
-//   .bottombartitle {
-//     left: 0rem;
-//     width: 100%;
-//   }
-// }
+@media only screen and (max-width: 878px) {
+  .bottombartitle {
+    left: 0rem;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .expandedBottomBarTitle {
+    bottom: 14.25rem;
+  }
+}
 
 </style>

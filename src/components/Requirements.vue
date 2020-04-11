@@ -612,17 +612,17 @@ button.view {
   }
 }
 
-// @media only screen and (max-width: 1347px) {
-//   .requirements {
-//     width: 100%;
-//     padding-left: 0.5rem;
-//   }
+@media only screen and (max-width: 878px) {
+  .requirements {
+    width: 100%;
+    padding-left: 0.5rem;
+  }
 
-//   .fixed {
-//     top: 4.5rem;
-//     left: 0rem;
-//     width: 100%;
-//     height: calc(100vh - 4.5rem);
-//   }
-// }
+  .fixed {
+    top: 4.5rem;
+    left: 0rem;
+    width: 100%;
+    height: calc(100vh - 4.5rem);
+  }
+}
 </style>

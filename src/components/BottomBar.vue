@@ -94,13 +94,19 @@ export default {
     }
   }
 }
-// @media only screen and (max-width: 1347px) {
-//   .bottombar {
-//     &-tabview {
-//       left: 0rem;
-//       width: 100%;
-//     }
-//   }
-// }
+@media only screen and (max-width: 878px) {
+  .bottombar {
+    &-tabview {
+      left: 0rem;
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .expandedTabView {
+    bottom: 16.75rem;
+  }
+}
 
 </style>

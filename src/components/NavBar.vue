@@ -119,47 +119,48 @@ export default {
   display: none;
 }
 
-// @media only screen and (max-width: 1347px) {
-//   .navbar {
-//     &-top {
-//       display: flex;
-//       flex-direction: row;
-//       justify-content: space-between;
-//     }
-//     &-bottom {
-//       display: flex;
-//       flex-direction: row;
-//       justify-content: space-between;
-//       min-width: 15%;
-//     }
-
-
-//     &-iconWrapper {
-//       &:not(:first-child) {
-//         margin-top: 0rem;
-//       }
-//     }
-//   }
-
-//   .desktop {
-//     display: none;
-//   }
-
-//   .mobile {
-//     display: flex;
-//   }
-// }
-
-
 @media only screen and (max-width: 878px) {
   .navbar {
-    .navbar {
-      &-bottom {
-        min-width: 35%;
+    &-top {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    &-bottom {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      // min-width: 15%;
+      min-width: 35%;
+    }
+
+
+    &-iconWrapper {
+      &:not(:first-child) {
+        margin-top: 0rem;
       }
     }
   }
+
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: flex;
+  }
 }
+
+
+// @media only screen and (max-width: 878px) {
+//   .navbar {
+//     .navbar {
+//       &-bottom {
+//         min-width: 35%;
+//       }
+//     }
+//   }
+// }
 
 @media only screen and (max-width: 600px) {
   .navbar {

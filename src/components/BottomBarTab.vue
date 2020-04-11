@@ -101,7 +101,7 @@ export default {
 }
 
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: 440px) {
   .bottombartab {
     width: 100%;
     height: 100%;
