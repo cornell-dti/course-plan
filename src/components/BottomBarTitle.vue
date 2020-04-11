@@ -45,11 +45,18 @@ export default {
     bottom: 16.25rem;
 }
 
-@media only screen and (max-width: 1347px) {
+@media only screen and (max-width: 976px) {
   .bottombartitle {
-    left: 0rem;
-    width: 100%;
+    left: 25.5rem;
+    width: calc(100vw - 25.5rem);
   }
 }
+
+// @media only screen and (max-width: 1347px) {
+//   .bottombartitle {
+//     left: 0rem;
+//     width: 100%;
+//   }
+// }
 
 </style>

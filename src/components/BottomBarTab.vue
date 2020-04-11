@@ -94,6 +94,13 @@ export default {
     opacity: 0.8;
   }
 
+@media only screen and (max-width: 976px) {
+  .bottombartab {
+    width: 10.5rem;
+  }
+}
+
+
 @media only screen and (max-width: 878px) {
   .bottombartab {
     width: 100%;

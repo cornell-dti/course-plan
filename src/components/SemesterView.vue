@@ -377,11 +377,11 @@ export default {
   margin-bottom: 300px;
 }
 
-@media only screen and (max-width: 1347px) {
-  .semesterView {
-    margin-top: 5.5rem;
-  }
-}
+// @media only screen and (max-width: 1347px) {
+//   .semesterView {
+//     margin-top: 5.5rem;
+//   }
+// }
 @media only screen and (max-width: 878px) {
   .semesterView {
     margin-top: 5.5rem;

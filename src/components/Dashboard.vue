@@ -95,7 +95,8 @@ export default {
       isOnboarding: false,
       isEditingProfile: false,
       isOpeningRequirements: false,
-      isMobile: window.innerWidth <= 1347,
+      // isMobile: window.innerWidth <= 1347,
+      isMobile: window.innerWidth <= 350,
       maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4
     };
   },
@@ -138,7 +139,8 @@ export default {
     },
 
     isMobileEventHandler(e) {
-      this.isMobile = window.innerWidth <= 1347;
+      // this.isMobile = window.innerWidth <= 1347;
+      this.isMobile = window.innerWidth <= 350;
       this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
       this.updateBarTabs();
       console.log(this.maxBottomBarTabs);
@@ -596,20 +598,20 @@ export default {
 }
 
 
-@media only screen and (max-width: 1347px) {
-  .dashboard {
-    &-nav {
-      width: 100%;
-      flex-direction: row;
-      height: 4.5rem;
-      padding-top: 0rem;
-      padding-bottom: 0rem;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      position: fixed;
-      z-index: 1;
-    }
-  }
-}
+// @media only screen and (max-width: 1347px) {
+//   .dashboard {
+//     &-nav {
+//       width: 100%;
+//       flex-direction: row;
+//       height: 4.5rem;
+//       padding-top: 0rem;
+//       padding-bottom: 0rem;
+//       display: flex;
+//       flex-direction: row;
+//       justify-content: space-between;
+//       position: fixed;
+//       z-index: 1;
+//     }
+//   }
+// }
 </style>

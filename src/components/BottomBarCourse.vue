@@ -1,7 +1,7 @@
 <template>
     <div class="bottombarcourse">
-      <div>
-        <div class="bottombarcourse-bar-info">
+      <div class="bottombarcourse-wrapper">
+        <div v-bind:class="isSmallerWidth ? 'bottombarcourse-bar-info-noOverflow' : 'bottombarcourse-bar-info-overflow'">
           <div class="info">
             <div class="info-section-wrapper">
               <div>
@@ -46,14 +46,14 @@
             </div>
           </div>
         </div>
-        <div class="bottombarcourse-bar-details">
+        <div v-bind:class="isSmallerWidth ? 'bottombarcourse-bar-details-noOverflow' : 'bottombarcourse-bar-details-overflow'">
           <div class="details">
             <div class="details-ratings-link-wrapper">
               <a :href="`https://www.cureviews.org/course/${ courseObj.subject }/${ courseObj.number }`" class="details-ratings-link" target="_blank">See All Reviews</a>
             </div>
             <div class="details-ratings-wrapper">
               <div class="details-ratings">
-                <p class="details-ratings-title"><span class="details-ratings-title-strong">Overall Rating: </span> <span class="details-ratings-strong">{{ CUROverallRating }}</span></p>
+                <p class="details-ratings-title"><span class="details-ratings-title-strong">Overall: </span> <span class="details-ratings-strong">{{ CUROverallRating }}</span></p>
                 <div class="progress rating">
                   <div
                     class="progress-bar"
@@ -104,12 +104,27 @@
 
 <script>
 export default {
+  data() {
+    return {
+      isSmallerWidth: window.innerWidth <= 976
+    };
+  },
   props: {
     courseObj: Object,
     id: Number
   },
+  created() {
+    window.addEventListener('resize', this.isSmallerWidthEventHandler);
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.isSmallerWidthEventHandler);
+  },
 
   methods: {
+    isSmallerWidthEventHandler(e) {
+      this.isSmallerWidth = window.innerWidth <= 976;
+    },
+
     toggle() {
       this.$emit('toggle', this.isExpanded);
     },
@@ -175,22 +190,25 @@ export default {
       width: 100%;
 
       &-info {
-        float: left;
-        height: 16.25rem;
-        width: 45%;
-        background: #F8F8F8;
-        overflow: scroll;
+        &-overflow {
+          float: left;
+          height: 16.25rem;
+          width: 40%;
+          background: #F8F8F8;
+          overflow: auto;
+        }
       }
 
       &-details {
-        float: right;
-        height: 16.25rem;
-        width: 55%;
-        background: #FFF;
-        overflow: scroll;
+        &-overflow {
+          float: right;
+          height: 16.25rem;
+          width: 60%;
+          background: #FFF;
+          overflow: auto;
+        }
       }
     }
-
   }
 
   .info {
@@ -303,12 +321,50 @@ export default {
     height: 0;
   }
 
-@media only screen and (max-width: 1347px) {
+@media only screen and (max-width: 976px) {
   .bottombarcourse {
-    left: 0rem;
-    width: 100%;
+    left: 25.5rem;
+    width: calc(100vw - 25.5rem);
+
+    &-wrapper {
+      display: flex;
+      flex-direction: column-reverse;
+      height: 16.25rem;
+      overflow: auto;
+    }
+
+    &-bar {
+      &-info{
+        &-noOverflow {
+          width: 100%;
+          height: auto;
+          float: none;
+          overflow: none !important;
+          display: flex;
+          .info {
+            width: 100%;
+          }
+        }
+      }
+      &-details {
+        &-noOverflow {
+          width: 100%;
+          height: auto;
+          float: none;
+          display: flex;
+          overflow: none !important;
+        }
+      }
+    }
   }
 }
+
+// @media only screen and (max-width: 1347px) {
+//   .bottombarcourse {
+//     left: 0rem;
+//     width: 100%;
+//   }
+// }
 
 @media only screen and (max-width: 878px) {
   .details {
