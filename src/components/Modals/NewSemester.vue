@@ -275,12 +275,14 @@ export default {
     },
     isDuplicate() {
       let isDup = false;
-      this.currentSemesters.forEach(semester => {
-        if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder) {
-          isDup = true;
-        }
-        return semester;
-      });
+      if (this.currentSemesters != null) {
+        this.currentSemesters.forEach(semester => {
+          if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder) {
+            isDup = true;
+          }
+          return semester;
+        });
+      }
       return isDup;
     }
   }

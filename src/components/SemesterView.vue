@@ -205,43 +205,23 @@ export default {
       this.$emit('updateRequirementsMenu');
     },
     compare(a, b) {
-      console.log(a.year, a.courses);
-      console.log(b.year, b.courses);
       if (a.type === b.type && a.year === b.year) { return 0; }
       if (a.year > b.year) { return 1; }
       if (a.year < b.year) { return -1; }
-
       if (SeasonsEnum[a.type.toLowerCase()] > SeasonsEnum[b.type.toLowerCase()]) {
         return 1;
       }
       return -1;
     },
     editSemester(id, type, year) {
-      console.log(this.semesters);
       this.semesters[id - 1].type = type;
       this.semesters[id - 1].year = year;
-      const newSem = this.semesters[id - 1];
-      // sort the semesters witht the new date
-      // this.semesters = this.semesters.sort(this.compare);
-      for (let i = 0; i < this.semesters.length; i += 1) {
-        if (this.semesters[i].type === type && this.semesters[i].year === year) {
-          this.semesters.splice(i, 1);
-          break;
-        }
-      }
-      // find the index in which the semester should be added to maintain chronological order
-      let i;
-      for (i = 0; i < this.semesters.length; i += 1) {
-        const oldSem = this.semesters[i];
-        if (oldSem.year > year) {
-          break;
-        } else if (oldSem.year === year && SeasonsEnum[oldSem.type.toLowerCase()] > SeasonsEnum[type.toLowerCase()]) {
-          break;
-        }
-      }
-      this.semesters.splice(i, 0, newSem);
-
-      console.log(this.semesters);
+      this.semesters = this.semesters.sort(this.compare);
+      let count = 1;
+      this.semesters.forEach(sem => {
+        sem.id = count;
+        count += 1;
+      });
     },
     updateBar(course) {
       this.activatedCourse = course;
