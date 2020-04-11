@@ -21,11 +21,21 @@ export type CourseTaken = {
 };
 
 export interface BaseRequirement {
+  /** Full name of the requirement. */
   readonly name: string;
+  /** Description of the requirement. */
   readonly description: string;
+  /** The source with more information on the requirement. (This should be a URL string.) */
   readonly source: string;
   readonly fulfilledBy: 'credits' | 'courses' | 'self-check';
   readonly applies?: string;
+  /**
+   * The minimum count required to fulfill this requirement.
+   *
+   * - When fulfilledBy === 'credits', this field stores the min number of credits.
+   * - When fulfilledBy === 'courses', this field stores the min number of courses.
+   * - When fulfilledBy === 'self-check', this field should not exist.
+   */
   readonly minCount?: number;
   /**
    * Some requirements have sub-requirements.
