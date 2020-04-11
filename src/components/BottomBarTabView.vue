@@ -69,7 +69,8 @@ export default {
   props: {
     bottomCourses: Array,
     seeMoreCourses: Array,
-    isExpanded: Boolean
+    isExpanded: Boolean,
+    maxBottomBarTabs: Number
   },
 
   computed: {
@@ -107,7 +108,7 @@ export default {
     },
 
     moveToBottomBar(course) {
-      if (this.bottomCourses.length >= 4) {
+      if (this.bottomCourses.length >= this.maxBottomBarTabs) {
         const bottomCourseToMove = this.bottomCourses[this.bottomCourses.length - 1];
         // remove bottomCourseToMove from bottomCourses
         this.bottomCourses.splice(this.bottomCourses.length - 1, 1);

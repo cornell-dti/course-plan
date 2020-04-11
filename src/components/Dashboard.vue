@@ -38,6 +38,7 @@
       :bottomCourses="bottomCourses"
       :seeMoreCourses="seeMoreCourses"
       :isExpanded="this.bottomBar.isExpanded"
+      :maxBottomBarTabs="maxBottomBarTabs"
       @close-bar="closeBar"
       @open-bar="openBar"
       />
@@ -94,7 +95,8 @@ export default {
       isOnboarding: false,
       isEditingProfile: false,
       isOpeningRequirements: false,
-      isMobile: window.innerWidth <= 1347
+      isMobile: window.innerWidth <= 1347,
+      maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4
     };
   },
   created() {
@@ -137,6 +139,9 @@ export default {
 
     isMobileEventHandler(e) {
       this.isMobile = window.innerWidth <= 1347;
+      this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
+      this.updateBarTabs();
+      console.log(this.maxBottomBarTabs);
     },
 
     toggleRequirementsBar() {
@@ -403,9 +408,9 @@ export default {
         }
       }
 
-      // Prepending bottomCourse to front of bottom courses array if bottomCourses < 4
+      // Prepending bottomCourse to front of bottom courses array if bottomCourses < this.maxBottomBarTabs
       // Do not add course to bottomCourses if color was only changed
-      if (this.bottomCourses.length < 4 && !colorJustChanged) {
+      if (this.bottomCourses.length < this.maxBottomBarTabs && !colorJustChanged) {
         this.bottomCourses.unshift(courseToAdd);
       } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
         for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
@@ -436,6 +441,29 @@ export default {
           callback(reviews.classes[0]);
         });
       });
+    },
+
+    updateBarTabs() {
+      // Move courses from see more to bottom tab to fulfill increased bottom tab capacity
+      if (this.maxBottomBarTabs === 4 && this.bottomCourses.length < 4 && this.seeMoreCourses.length > 0) {
+        while (this.bottomCourses.length < 4) {
+          // if any See More courses exist, move first See More Course to end of tab
+          if (this.seeMoreCourses.length > 0) {
+            const seeMoreCourseToMove = this.seeMoreCourses[0];
+            // remove course from See More Courses
+            this.seeMoreCourses.splice(0, 1);
+
+            // add course to end of bottomCourses
+            this.bottomCourses.push(seeMoreCourseToMove);
+          }
+        }
+      } else if (this.maxBottomBarTabs === 2 && this.bottomCourses.length > 2) {
+        // Move courses from bottom tab to see more for decreased max of 2
+        while (this.bottomCourses.length > 2) {
+          const bottomCourseToMove = this.bottomCourses.pop();
+          this.seeMoreCourses.unshift(bottomCourseToMove);
+        }
+      }
     },
 
     openBar() {

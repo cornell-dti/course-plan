@@ -6,6 +6,7 @@
             :bottomCourses="bottomCourses"
             :seeMoreCourses="seeMoreCourses"
             :isExpanded="isExpanded"
+            :maxBottomBarTabs="maxBottomBarTabs"
             @bottomBarTabToggle="bottomBarTabToggle"
             @toggleFromTab="toggleFromTab"
             />
@@ -41,7 +42,8 @@ export default {
   props: {
     bottomCourses: Array,
     seeMoreCourses: Array,
-    isExpanded: Boolean
+    isExpanded: Boolean,
+    maxBottomBarTabs: Number
   },
 
   methods: {
