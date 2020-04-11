@@ -94,7 +94,7 @@
                       id="major-placeholder"
                       :style="{ color: options.placeholderColor }"
                     >
-                      {{ options.placeholder }}
+                      {{options.placeholder}}
                     </div>
                     <div
                       class="onboarding-dropdown-placeholder major-arrow"
@@ -193,7 +193,7 @@
 <script>
 import reqsData from '@/requirements/reqs.json';
 
-const placeholderText = 'Select one';
+const placeholderText = ['Select one'];
 
 const clickOutside = {
   bind(el, binding, vnode) {
@@ -288,8 +288,40 @@ export default {
     this.setCollegesMap();
     this.setMajorsList();
     this.setMinorsList();
+    this.flattenDisplayMajors();
   },
   methods: {
+    flattenDisplayMajors() {
+      const majors = [];
+      this.displayOptions.major.forEach(major => {
+        if (Array.isArray(major.acronym)) {
+          major.acronym.flat(Infinity);
+          for (let i = 0; i < major.acronym.length; i += 1) {
+            const newMajor = {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: '',
+              placeholder: major.placeholder[i],
+              acronym: major.acronym[i]
+            };
+            majors.push(newMajor);
+          }
+        } else {
+          majors.push({
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            placeholder: major.placeholder,
+            acronym: major.acronym
+          });
+        }
+      });
+      this.displayOptions.major = majors;
+    },
     // Set the colleges map to with acronym keys and full name values
     setCollegesMap() {
       const colleges = {};
@@ -381,7 +413,6 @@ export default {
             minors: this.notPlaceholderOptions(this.displayOptions.minor)
           }
         };
-        console.log(onboardingData.userData.minors);
         this.$emit('onboard', onboardingData);
       }
     },
@@ -408,7 +439,6 @@ export default {
           list.push(obj);
         }
       });
-
       return list;
     },
     showHideContent(type, i) {
@@ -484,8 +514,20 @@ export default {
         arrowColor: '',
         placeholderColor: '',
         placeholder: placeholderText,
+        // fixxxxx
         acronym: ''
       };
+      const majors = [];
+      this.displayOptions.major.forEach(maj => {
+        if (maj.length > 0) {
+          maj.forEach(subMaj => {
+            majors.push(subMaj);
+          });
+        } else {
+          majors.push(maj);
+        }
+      });
+      this.displayOptions.major = majors;
       this.displayOptions.major.push(newMajor);
     },
     removeMajor() {
