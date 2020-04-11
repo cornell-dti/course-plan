@@ -3,7 +3,7 @@
   <div v-if="isEditing" class= "editing">
     <div class="row">
       <h1 class="title col p-0">School Requirements</h1>
-      <img  @click="closeEditMenu()" class="confirmation-icon" src="../assets/images/x.svg" />
+      <img  @click="closeEditMenu()" class="gear" src="../assets/images/x.svg" />
     </div>
     <div class= "editing-title">
       <p class="name col p-0">{{reqs[currentEditID].name}} </p>
@@ -44,7 +44,7 @@
       <!-- TODO change for multiple colleges -->
       <div v-if="index<=2 || index == 2 + majors.length" class="row top">
         <p class="name col p-0">{{ req.name }} {{index}}<!-- <span class="specific" v-if="req.specific">({{ req.specific }})</span> --></p>
-        <img  @click="openEditMenu(index)" class="confirmation-icon" src="../assets/images/gear.svg" />
+        <img  @click="openEditMenu(index)" class="gear--disabled" src="../assets/images/gear.svg" />
       </div>
         <!-- TODO change for multiple colleges -->
         <div v-if="index==2" class="major">
@@ -834,8 +834,14 @@ button.view {
 .bottomBar {
   padding-bottom: 300px;
 }
-
 .bottomPreview {
   padding-bottom: 40px;
 }
+.gear{
+    &--disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+}
+
 </style>
