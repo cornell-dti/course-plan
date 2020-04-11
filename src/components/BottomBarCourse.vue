@@ -1,7 +1,7 @@
 <template>
     <div class="bottombarcourse">
       <div class="bottombarcourse-wrapper">
-        <div v-bind:class="isSmallerWidth ? 'bottombarcourse-bar-info-noOverflow' : 'bottombarcourse-bar-info-overflow'">
+        <div class="bottombarcourse-bar-info-overflow" v-if="!isSmallerWidth">
           <div class="info">
             <div class="info-section-wrapper">
               <div>
@@ -46,7 +46,7 @@
             </div>
           </div>
         </div>
-        <div v-bind:class="isSmallerWidth ? 'bottombarcourse-bar-details-noOverflow' : 'bottombarcourse-bar-details-overflow'">
+        <div class="bottombarcourse-bar-details-overflow" v-if="!isSmallerWidth">
           <div class="details">
             <div class="details-ratings-link-wrapper">
               <a :href="`https://www.cureviews.org/course/${ courseObj.subject }/${ courseObj.number }`" class="details-ratings-link" target="_blank">See All Reviews</a>
@@ -96,6 +96,103 @@
             <p>{{ courseObj.prerequisites }}</p>
             <div class="details-head">Description</div>
             <p>{{ courseObj.description }}</p>
+          </div>
+        </div>
+        <div class="bottombarcourse-bar-details-noOverflow" v-if="isSmallerWidth">
+          <div class="details">
+            <div class="details-ratings-link-wrapper">
+              <a :href="`https://www.cureviews.org/course/${ courseObj.subject }/${ courseObj.number }`" class="details-ratings-link" target="_blank">See All Reviews</a>
+            </div>
+            <div class="details-ratings-wrapper">
+              <div class="details-ratings">
+                <p class="details-ratings-title"><span class="details-ratings-title-strong">Overall: </span> <span class="details-ratings-strong">{{ CUROverallRating }}</span></p>
+                <div class="progress rating">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    :style="{ width: `${(courseObj.overallRating/5)*100}%`, background: reviewsColor(courseObj.overallRating) }"
+                    aria-valuenow="25"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+              <div class="details-ratings">
+                <p class="details-ratings-title"><span class="details-ratings-title-strong">Difficulty:</span><span class="details-ratings-strong"> {{ CURDifficulty }}</span></p>
+                <div class="progress rating">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    :style="{ width: `${(courseObj.difficulty/5)*100}%`, background: reviewsColor(courseObj.difficulty, true) }"
+                    aria-valuenow="25"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+              <div class="details-ratings">
+                <p class="details-ratings-title"><span class="details-ratings-title-strong">Workload:</span> <span class="details-ratings-strong">{{ CURWorkload }}</span></p>
+                <div class="progress rating">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    :style="{ width: `${(courseObj.workload/5)*100}%`, background: reviewsColor(courseObj.workload, true) }"
+                    aria-valuenow="25"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div class="details-head">Prerequisites</div>
+            <p>{{ courseObj.prerequisites }}</p>
+            <div class="details-head">Description</div>
+            <p>{{ courseObj.description }}</p>
+          </div>
+        </div>
+        <div class="bottombarcourse-bar-info-noOverflow" v-if="isSmallerWidth">
+          <div class="info">
+            <div class="info-section-wrapper">
+              <div>
+                <div class="section">
+                  <h1 class="info-head">Credits</h1>
+                  <p class="info-fact">{{ courseObj.credits }}</p>
+                </div>
+                <div class="section">
+                  <h1 class="info-head">Offered</h1>
+                  <p class="info-fact">{{ courseObj.semesters }}</p>
+                </div>
+              </div>
+              <div>
+                <div class="section">
+                  <h1 class="info-head">Instructors</h1>
+                  <p class="info-fact">{{ courseObj.instructors }}</p>
+                </div>
+                <div class="section">
+                  <h1 class="info-head">Enrollment Information</h1>
+                  <p class="info-fact">{{ courseObj.enrollmentInfo }}</p>
+                </div>
+              </div>
+              <div>
+                <div class="section">
+                  <h1 class="info-head">Distribution Category</h1>
+                  <p class="info-fact" v-for="distributionCategory in courseObj.distributionCategories" :key="distributionCategory">{{ distributionCategory }}</p>
+                </div>
+                <div class="section">
+                  <h1 class="info-head">{{ courseObj.latestSem }} Lecture Information</h1>
+                  <p class="info-fact" v-for="latestLecInfo in courseObj.latestLecInfo" :key="latestLecInfo">{{ latestLecInfo }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="info-link">
+              <a
+                :href="`https://classes.cornell.edu/browse/roster/${ courseObj.latestSem }/class/${ courseObj.subject }/${ courseObj.number }`"
+                class="info-link-blue"
+                target="_blank"
+              >
+                View Course Information on Roster <span class="info-link-blue-img"><img src="@/assets/images/link-blue.svg" /></span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -328,7 +425,7 @@ export default {
 
     &-wrapper {
       display: flex;
-      flex-direction: column-reverse;
+      flex-direction: column;
       height: 16.25rem;
       overflow: auto;
     }
