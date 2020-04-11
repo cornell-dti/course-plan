@@ -38,6 +38,12 @@ export default {
     filter: brightness(95%);
     transition: all 0.2s ease;
   }
+
+  .bottombar-square-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .expandedBottomBarTitle{
@@ -61,7 +67,7 @@ export default {
 
 @media only screen and (max-width: 440px) {
   .expandedBottomBarTitle {
-    bottom: 14.25rem;
+    bottom: 9.25rem;
   }
 }
 

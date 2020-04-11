@@ -105,7 +105,7 @@ export default {
 
 @media only screen and (max-width: 440px) {
   .expandedTabView {
-    bottom: 16.75rem;
+    bottom: 11.75rem;
   }
 }
 

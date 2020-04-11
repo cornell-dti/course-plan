@@ -341,6 +341,7 @@ export default {
           float: none;
           overflow: none !important;
           display: flex;
+          background: #F8F8F8;
           .info {
             width: 100%;
           }
@@ -352,6 +353,7 @@ export default {
           height: auto;
           float: none;
           display: flex;
+          background: #FFF;
           overflow: none !important;
         }
       }
@@ -379,7 +381,7 @@ export default {
 @media only screen and (max-width: 440px) {
   .bottombarcourse {
     &-wrapper {
-      height: 14.25rem;
+      height: 9.25rem;
     }
   }
 }
