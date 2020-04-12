@@ -428,6 +428,7 @@ export default {
       flex-direction: column;
       height: 16.25rem;
       overflow: auto;
+      padding: 0.5rem;
     }
 
     &-bar {
@@ -439,6 +440,7 @@ export default {
           overflow: none !important;
           display: flex;
           background: #F8F8F8;
+          flex-shrink: 0;
           .info {
             width: 100%;
           }
@@ -452,6 +454,7 @@ export default {
           display: flex;
           background: #FFF;
           overflow: none !important;
+          flex-shrink: 0;
         }
       }
     }

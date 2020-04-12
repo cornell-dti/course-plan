@@ -73,6 +73,7 @@ export default {
       width: 14px;
       height: 50%;
       margin-right: 4%;
+      margin-top: 5%;
     }
 
     &-name {
@@ -107,6 +108,7 @@ export default {
     height: 100%;
 
     &-arrow {
+      // margin-top: 0%;
       margin-top: auto;
       margin-bottom: auto;
       margin-right: 10%;
