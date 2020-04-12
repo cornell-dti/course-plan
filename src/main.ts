@@ -10,7 +10,7 @@ import router from './router/index';
 import store from './store';
 import './assets/scss/app.scss';
 
-const fb = require('./firebaseConfig.js');
+import * as fb from './firebaseConfig';
 
 Vue.config.productionTip = false;
 

@@ -16,5 +16,3 @@ jobs:
         run: npm run lint
       - name: Type Check
         run: npm run tsc
-      - name: Run requirement schema check
-        run: node src/requirements/validate.js

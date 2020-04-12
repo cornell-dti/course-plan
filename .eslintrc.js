@@ -2,14 +2,14 @@
 
 module.exports = {
   root: true,
-  extends: ['plugin:vue/essential', '@vue/airbnb', '@vue/typescript', 'plugin:import/typescript'],
+  extends: ['eslint:recommended', 'plugin:vue/essential', '@vue/airbnb', '@vue/typescript', 'plugin:import/typescript'],
   plugins: ['@typescript-eslint'],
   parserOptions: {
     parser: '@typescript-eslint/parser',
     ecmaVersion: 2020,
     sourceType: 'module',
     extraFileExtensions: ['.vue'],
-    project: ['./tsconfig.json']
+    project: ['./tsconfig.json', './tsconfig.node.json']
   },
   env: {
     browser: true,
@@ -23,19 +23,20 @@ module.exports = {
     'no-use-before-define': ['warn'],
     'linebreak-style': 0,
     //TODO: make requests asynchronous
-    'no-await-in-loop': ['warn'],
+    'no-await-in-loop': ['error'],
     // don't require .vue extension when importing
     'import/extensions': [
       'error',
       'always',
       {
         js: 'never',
+        ts: 'never',
         vue: 'never'
       }
     ],
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
-    'no-param-reassign': [2, { "props": false }],
+    'no-param-reassign': [2, { props: false }],
     // allow optionalDependencies
     'import/no-extraneous-dependencies': [
       'error',
@@ -44,10 +45,9 @@ module.exports = {
       }
     ],
     'no-mixed-operators': ['off'],
-    'arrow-parens': ['warn', 'as-needed'],
-    'comma-dangle': ['warn', 'never'],
-    'no-underscore-dangle': ['off'],
-    'no-continue': ['off'],
+    'arrow-parens': ['error', 'as-needed'],
+    'comma-dangle': ['error', 'never'],
+    'no-continue': ['error'],
     'no-restricted-syntax': [
       'error',
       {
@@ -62,13 +62,13 @@ module.exports = {
       }
     ],
     quotes: [
-      'warn',
+      'error',
       'single',
       {
         allowTemplateLiterals: true
       }
     ],
-    'max-len': ['warn', { code: 200 }],
+    'max-len': ['error', { code: 200 }],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
@@ -83,6 +83,20 @@ module.exports = {
             js: 'never',
             ts: 'never',
             vue: 'always'
+          }
+        ]
+      }
+    },
+    {
+      files: ['*.js'],
+      rules: {
+        'import/extensions': [
+          'error',
+          'always',
+          {
+            js: 'never',
+            ts: 'never',
+            vue: 'never'
           }
         ]
       }
