@@ -1,6 +1,11 @@
 <template>
-  <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
-    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" :currentSemesters="semesters" />
+  <div
+    class="semesterView"
+    :class="{ bottomBar: isBottomBar, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}"
+    @click="closeBar"
+    :key="key"
+  >
+    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
       <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
@@ -40,7 +45,8 @@
         v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" @edit-semester="editSemester" />
+        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar"
+        :activatedCourse="activatedCourse" @delete-semester="deleteSemester" @edit-semester="editSemester" />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
@@ -55,6 +61,7 @@
 
 <script>
 import Vue from 'vue';
+import clone from 'clone';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
@@ -62,7 +69,7 @@ import Caution from '@/components/Caution';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
 import EditSemester from '@/components/Modals/EditSemester';
 
-const clone = require('clone');
+import { auth, userDataCollection } from '@/firebaseConfig';
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
@@ -70,10 +77,6 @@ Vue.component('confirmation', Confirmation);
 Vue.component('caution', Caution);
 Vue.component('deletesemester', DeleteSemester);
 Vue.component('editsemester', EditSemester);
-
-const firebaseConfig = require('@/firebaseConfig.js');
-
-const { auth, userDataCollection } = firebaseConfig;
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -87,7 +90,8 @@ export default {
   props: {
     semesters: Array,
     compact: Boolean,
-    isBottomBar: Boolean
+    isBottomBar: Boolean,
+    isBottomBarExpanded: Boolean
   },
   data() {
     return {
@@ -226,7 +230,7 @@ export default {
     updateBar(course) {
       this.activatedCourse = course;
       this.key += 1;
-      this.$emit('update-bar', course);
+      this.$emit('updateBar', course, colorJustChanged, color);
       this.isCourseClicked = true;
     },
     closeBar() {
@@ -380,6 +384,7 @@ export default {
     }
   }
 }
+
 /* The Modal (background) */
 .semester-modal {
   display: none; /* Hidden by default */

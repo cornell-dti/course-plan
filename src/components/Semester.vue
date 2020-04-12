@@ -108,7 +108,7 @@ Vue.component('editsemester', EditSemester);
 
 const clickOutside = {
   bind(el, binding, vnode) {
-    el.event = function (event) {
+    el.event = event => {
       if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event);
       }
@@ -250,8 +250,8 @@ export default {
         }
       }
     },
-    updateBar(course) {
-      this.$emit('updateBar', course);
+    updateBar(course, colorJustChanged, color) {
+      this.$emit('updateBar', course, colorJustChanged, color);
     },
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
