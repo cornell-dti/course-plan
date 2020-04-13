@@ -130,7 +130,6 @@ export default {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      // min-width: 15%;
       min-width: 35%;
     }
 
@@ -150,17 +149,6 @@ export default {
     display: flex;
   }
 }
-
-
-// @media only screen and (max-width: 878px) {
-//   .navbar {
-//     .navbar {
-//       &-bottom {
-//         min-width: 35%;
-//       }
-//     }
-//   }
-// }
 
 @media only screen and (max-width: 600px) {
   .navbar {

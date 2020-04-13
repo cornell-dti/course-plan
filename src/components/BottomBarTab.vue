@@ -108,7 +108,6 @@ export default {
     height: 100%;
 
     &-arrow {
-      // margin-top: 0%;
       margin-top: auto;
       margin-bottom: auto;
       margin-right: 10%;

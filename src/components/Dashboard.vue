@@ -13,18 +13,19 @@
         @toggleRequirementsBar="toggleRequirementsBar"
         :isBottomPreview="bottomBar.isPreview"
         />
-        <requirements class="dashboard-reqs" v-if="loaded && (!isMobile || (isOpeningRequirements && isMobile))"
+        <requirements class="dashboard-reqs" v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
           @requirementsMap="loadRequirementsMap"
          />
       </div>
-      <semesterview v-if="loaded && ((!isOpeningRequirements && isMobile) || !isMobile)"
+      <semesterview v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
         :semesters="semesters"
         :compact="compactVal"
         :isBottomBarExpanded="bottomBar.isExpanded"
         :isBottomBar="bottomCourses.length > 0"
+        :isMobile="isMobile"
 
         @compact-updated="compactVal = $event"
         @updateBar="updateBar"
@@ -34,7 +35,7 @@
     </div>
     <div id="dashboard-bottomView">
       <bottombar
-      v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isMobile) || !isMobile)"
+      v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
       :bottomCourses="bottomCourses"
       :seeMoreCourses="seeMoreCourses"
       :isExpanded="this.bottomBar.isExpanded"
@@ -95,19 +96,19 @@ export default {
       isOnboarding: false,
       isEditingProfile: false,
       isOpeningRequirements: false,
-      // isMobile: window.innerWidth <= 1347,
-      isMobile: window.innerWidth <= 878,
+      isTablet: window.innerWidth <= 878,
+      isMobile: window.innerWidth <= 440,
       maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4
     };
   },
   created() {
-    window.addEventListener('resize', this.isMobileEventHandler);
+    window.addEventListener('resize', this.resizeEventHandler);
   },
   mounted() {
     this.getInformationFromUser();
   },
   destroyed() {
-    window.removeEventListener('resize', this.isMobileEventHandler);
+    window.removeEventListener('resize', this.resizeEventHandler);
   },
   methods: {
     getDocRef() {
@@ -138,12 +139,12 @@ export default {
         });
     },
 
-    isMobileEventHandler(e) {
-      // this.isMobile = window.innerWidth <= 1347;
-      this.isMobile = window.innerWidth <= 878;
+    resizeEventHandler(e) {
+      this.isMobile = window.innerWidth <= 440;
+      this.isTablet = window.innerWidth <= 878;
       this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
       this.updateBarTabs();
-      console.log(this.maxBottomBarTabs);
+      this.updateSemesterView();
     },
 
     toggleRequirementsBar() {
@@ -162,6 +163,13 @@ export default {
         semesters.push(this.createSemester(courses, firebaseSem.type, firebaseSem.year));
       });
       return semesters;
+    },
+
+    updateSemesterView() {
+      if (this.isMobile) {
+        // Make sure semesterView is not compact by default on mobile
+        this.compactVal = false;
+      }
     },
 
     /**
