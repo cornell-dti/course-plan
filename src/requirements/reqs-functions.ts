@@ -273,16 +273,19 @@ export function computeRequirements(
 
   // PART 3: check major reqs
   // Major is optional
-  for (const maj of major) {
-    if (maj in requirementJson.major) {
-      const majorReqs = requirementJson.major[maj];
-      groups.push({
-        groupName: 'Major',
-        specific: maj,
-        reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, majorReqs.requirements)
-      });
+  if (major != null) {
+    for (const maj of major) {
+      if (maj in requirementJson.major) {
+        const majorReqs = requirementJson.major[maj];
+        groups.push({
+          groupName: 'Major',
+          specific: maj,
+          reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, majorReqs.requirements)
+        });
+      }
     }
   }
+
   return groups;
 }
 

@@ -408,30 +408,34 @@ export default Vue.extend({
     },
     getDisplays() {
       const majors = [];
-      for (let i = 0; i < this.user.major.length; i += 1) {
-        const userMajor = { display: true, major: '', majorFN: '' };
-        if (i === 0) {
-          userMajor.display = true;
-        } else {
-          userMajor.display = false;
+      if (this.user.major != null) {
+        for (let i = 0; i < this.user.major.length; i += 1) {
+          const userMajor = { display: true, major: '', majorFN: '' };
+          if (i === 0) {
+            userMajor.display = true;
+          } else {
+            userMajor.display = false;
+          }
+          userMajor.major = this.user.major[i];
+          userMajor.majorFN = this.user.majorFN[i];
+          majors.push(userMajor);
         }
-        userMajor.major = this.user.major[i];
-        userMajor.majorFN = this.user.majorFN[i];
-        majors.push(userMajor);
       }
       this.majors = majors;
 
       const minors = [];
-      for (let i = 0; i < this.user.minor.length; i += 1) {
-        const userMinor = { display: true, minor: '', minorFN: '' };
-        if (i === 0) {
-          userMinor.display = true;
-        } else {
-          userMinor.display = false;
+      if (this.user.minor != null) {
+        for (let i = 0; i < this.user.minor.length; i += 1) {
+          const userMinor = { display: true, minor: '', minorFN: '' };
+          if (i === 0) {
+            userMinor.display = true;
+          } else {
+            userMinor.display = false;
+          }
+          userMinor.minor = this.user.minor[i];
+          userMinor.minorFN = this.user.minorFN[i];
+          minors.push(userMinor);
         }
-        userMinor.minor = this.user.minor[i];
-        userMinor.minorFN = this.user.minorFN[i];
-        minors.push(userMinor);
       }
       this.minors = minors;
     }
