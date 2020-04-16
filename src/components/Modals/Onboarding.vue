@@ -193,7 +193,7 @@
 <script>
 import reqsData from '@/requirements/typed-requirement-json';
 
-const placeholderText = ['Select one'];
+const placeholderText = 'Select one';
 
 const clickOutside = {
   bind(el, binding, vnode) {
@@ -301,7 +301,7 @@ export default {
               stopClose: false,
               boxBorder: '',
               arrowColor: '',
-              placeholderColor: '',
+              placeholderColor: '#757575',
               placeholder: major.placeholder[i],
               acronym: major.acronym[i]
             };
@@ -360,7 +360,6 @@ export default {
             const college = this.displayOptions.college[i];
             if (minorJSON[key].schools.includes(college.acronym)) {
               minors[key] = minorJSON[key].name;
-              // continue;
             }
           }
         }
@@ -509,7 +508,6 @@ export default {
         arrowColor: '',
         placeholderColor: '',
         placeholder: placeholderText,
-        // fixxxxx
         acronym: ''
       };
       const majors = [];

@@ -1,41 +1,6 @@
 <template v-if="semesters">
   <div class= "section">
-  <div v-if="isEditing" class= "editing">
-    <div class="row">
-      <h1 class="title col p-0">School Requirements</h1>
-      <img  @click="closeEditMenu()" class="gear" src="../assets/images/x.svg" />
-    </div>
-    <div class= "editing-title">
-      <p class="name col p-0">{{reqs[currentEditID].name}} </p>
-    </div>
-    <div class="progress">
-      <div
-        class="progress-bar"
-        :style="{ 'background-color': `#${reqs[currentEditID].color}`, width: `${(reqs[currentEditID].fulfilled/reqs[currentEditID].required)*100}%`}"
-        role="progressbar"
-      ></div>
-    </div>
-    <p class="progress-text">
-      <strong>{{ reqs[currentEditID].fulfilled }}/{{ reqs[currentEditID].required }}</strong>
-      Total {{ reqs[currentEditID].type }} Inputted on Schedule
-    </p>
-    <div class= "editing-title">
-      <p class="name col p-0">In-Depth Requirements </p>
-    </div>
-    <div class= "editing-row" v-for="(req) in reqs[currentEditID].ongoing" :key="req.id">
-      <p class= "editing-inputs"> {{req.name}} </p>
-        <input class= "editing-inputs-field-left"  placeholder="edit me">
-        <p class= "editing-inputs"> / </p>
-        <input class= "editing-inputs-field-left" placeholder="edit me">
-        <p class= "editing-inputs">Remove</p>
-    </div>
-    <div class= "editing-row-space">
-      <button class="editing-button">Submit changes</button>
-      <button class="editing-button">Cancel</button>
-    </div>
-
-  </div>
-  <div v-else class="requirements">
+  <div class="requirements">
     <div class="fixed" :class="{ bottomPreview: isBottomPreview && !isBottomBar, bottomBar: isBottomBar }">
     <h1 class="title">School Requirements</h1>
     <!-- loop through reqs array of req objects -->
@@ -44,7 +9,6 @@
       <!-- TODO change for multiple colleges -->
       <div v-if="index<=2 || index == 2 + majors.length" class="row top">
         <p class="name col p-0">{{ req.name }} <span class="specific" v-if="req.specific">({{ req.specific }})</span> </p>
-        <img  @click="openEditMenu(index)" class="gear--disabled" src="../assets/images/gear.svg" />
       </div>
         <!-- TODO change for multiple colleges -->
         <div v-if="index==2" class="major">
@@ -240,7 +204,7 @@ export default Vue.extend({
   },
   mounted() {
     this.getDisplays();
-    const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major);
+    const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major, this.user.minor);
     // Send satisfied credits data back to dashboard to build alerts
     this.$emit('requirementsMap', computeRequirementMap(groups));
 
