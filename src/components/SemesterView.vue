@@ -227,7 +227,7 @@ export default {
         count += 1;
       });
     },
-    updateBar(course) {
+    updateBar(course, colorJustChanged, color) {
       this.activatedCourse = course;
       this.key += 1;
       this.$emit('updateBar', course, colorJustChanged, color);

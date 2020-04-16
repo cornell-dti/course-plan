@@ -45,7 +45,7 @@
       </div>
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-          <div v-for="course in deleteDupilcateCourses" :key="course.id" class="semester-courseWrapper">
+          <div v-for="course in deleteDuplicateCourses" :key="course.id" class="semester-courseWrapper">
             <course
               v-bind="course"
               :courseObj="course"
@@ -163,15 +163,17 @@ export default {
   },
 
   computed: {
-    // TODO: calculate credits from all classes
     creditString() {
       let credits = 0;
       this.courses.forEach(course => {
         credits += course.credits;
       });
+      if (credits === 1) {
+        return `${credits.toString()} credit`;
+      }
       return `${credits.toString()} credits`;
     },
-    deleteDupilcateCourses() {
+    deleteDuplicateCourses() {
       const uniqueCoursesNames = [];
       const uniqueCourses = [];
       this.courses.forEach(course => {

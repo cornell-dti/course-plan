@@ -134,6 +134,9 @@ export default {
     },
 
     creditString() {
+      if (this.credits === 1) {
+        return `${this.credits} credit`;
+      }
       return `${this.credits} credits`;
     },
     review() {
@@ -332,9 +335,16 @@ export default {
     align-items: center;
   }
 
+  &-credits {
+    white-space: nowrap;
+  }
+
   &-semesters {
     margin-left: 0.2rem;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 14rem;
 
     &:before {
       margin-right: 0.2rem;
