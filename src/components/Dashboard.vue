@@ -146,11 +146,29 @@ export default {
      */
     createCourseCreditRange(course) {
       const courseCreditRange = [];
+<<<<<<< HEAD
       course.enrollGroups.forEach(enrollGroup => {
         courseCreditRange.push(enrollGroup.unitsMinimum);
         courseCreditRange.push(enrollGroup.unitsMaximum);
       });
       return [Math.min(courseCreditRange), Math.max(courseCreditRange)];
+=======
+      console.log("cccr", course.enrollGroups);
+      if (typeof course.creditRange !== 'undefined') {
+        const ccr = course.creditRange; // the linter won't let me return with course.creditRange so im just doing this
+      } else if (typeof course.enrollGroups !== 'undefined') {
+        course.enrollGroups.forEach(enrollGroup => {
+          courseCreditRange.push(enrollGroup.unitsMinimum);
+          courseCreditRange.push(enrollGroup.unitsMaximum);
+        });
+        return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
+      } else {
+        console.log("else reached", [course.credits, course.credits]);
+        return [course.credits, course.credits];
+      }
+      console.log("if reached", [Math.min(...courseCreditRange), Math.max(...courseCreditRange)]);
+      return course.creditRange;
+>>>>>>> 68c62c8... worked on editable credits, almost functional except for page refresh, likely due to firebase mistake
     },
 
     /**
@@ -172,12 +190,16 @@ export default {
 
       // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
+<<<<<<< HEAD
 
       // TODO Fix Credit range
       // console.log("course", course);
       // const creditRange = course.creditRange || this.createCourseCreditRange(course) || [credits, credits];
       // console.log("creditRange", creditRange);
 
+=======
+      const creditRange = course.creditRange || this.createCourseCreditRange(course);
+>>>>>>> 68c62c8... worked on editable credits, almost functional except for page refresh, likely due to firebase mistake
       // Semesters: remove periods and split on ', '
       // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
       const catalogWhenOfferedDoesNotExist = (!course.catalogWhenOffered) || course.catalogWhenOffered === '';

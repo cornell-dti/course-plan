@@ -35,12 +35,44 @@
           <span class="courseMenu-text">Delete</span>
         </div>
       </div>
+<<<<<<< HEAD
+=======
+      <div
+        class="courseMenu-section"
+        @mouseover="setDisplayEditCourseCredits(true)"
+        @mouseleave="setDisplayEditCourseCredits(false)"
+        > <!-- change -->
+        <div class="courseMenu-left">
+          <img class="courseMenu-icon" src="../../assets/images/trash.svg" />
+          <span class="courseMenu-text">Edit Credits</span>
+        </div>
+        <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
+        <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-colors">
+          <div
+            v-for="credit in this.getCreditRange[1]"
+            :key="credit"
+            class="courseMenu-section"
+            @click="editCourseCredit(getCreditRange[0] + credit - 1)"
+          >
+            <div class="courseMenu-left">
+              <span class="courseMenu-text">{{ getCreditRange[0] + credit - 1}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+>>>>>>> 68c62c8... worked on editable credits, almost functional except for page refresh, likely due to firebase mistake
     </div>
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import Course from '@/components/Course';
+
 export default {
+  props: {
+    getCreditRange: Array
+  },
   data() {
     return {
       colors: [
@@ -89,6 +121,18 @@ export default {
     },
     setDisplayColors(bool) {
       this.displayColors = bool;
+<<<<<<< HEAD
+=======
+    },
+    setDisplayEditCourseCredits(bool) {
+      this.displayEditCourseCredits = bool;
+    },
+    editCourseCredit(credit) {
+      this.$emit('edit-course-credit', credit);
+    },
+    addMinCredit(credit) {
+      return getCreditRange[0] + credit;
+>>>>>>> 68c62c8... worked on editable credits, almost functional except for page refresh, likely due to firebase mistake
     }
   }
 };

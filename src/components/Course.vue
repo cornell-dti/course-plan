@@ -56,6 +56,11 @@
       class="course-menu"
       @delete-course="deleteCourse"
       @color-course="colorCourse"
+<<<<<<< HEAD
+=======
+      @edit-course-credit="editCourseCredit"
+      :getCreditRange="getCreditRange"
+>>>>>>> 68c62c8... worked on editable credits, almost functional except for page refresh, likely due to firebase mistake
       v-click-outside="closeMenuIfOpen"
     />
   </div>
@@ -99,7 +104,8 @@ export default {
   data() {
     return {
       menuOpen: false,
-      stopCloseFlag: false
+      stopCloseFlag: false,
+      getCreditRange: this.creditRange
     };
   },
   computed: {
