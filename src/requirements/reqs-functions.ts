@@ -244,12 +244,14 @@ function computeCollegeOrMajorRequirementFulfillments(
  * helping to compute requirement progress.
  * @param college user's college.
  * @param major user's major.
+ * @param minor user's minor.
  * @returns all requirements fulfillments, grouped by University, College, Major.
  */
 export function computeRequirements(
   coursesTaken: readonly CourseTaken[],
   college: string,
-  major: string
+  major: string,
+  minor: string
 ): readonly GroupedRequirementFulfillmentReport[] {
   // prepare grouped fulfillment summary
   const groups: GroupedRequirementFulfillmentReport[] = [];
@@ -285,6 +287,22 @@ export function computeRequirements(
       }
     }
   }
+  /*
+  // PART 4: check minor reqs
+  // Major is optional
+  if (minor != null) {
+    for (const min of minor) {
+      if (min in requirementJson.minor) {
+        const majorReqs = requirementJson.major[min];
+        groups.push({
+          groupName: 'Minor',
+          specific: min,
+          reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, majorReqs.requirements)
+        });
+      }
+    }
+  }
+   */
 
   return groups;
 }
