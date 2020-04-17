@@ -1,6 +1,6 @@
 <template v-if="semesters">
-  <div class= "section">
   <div class="requirements">
+    <div class="fixed">
     <h1 class="title">School Requirements</h1>
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
@@ -157,8 +157,7 @@
         </div>
       </div>
     </div>
-
-</div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -511,12 +510,6 @@ p.editing-inputs {
   width: 25rem;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: white;
-}
-.section{
-  height: 100vh;
-  width: 25rem;
-  padding: 1.625rem 1.5rem 1.625rem 1.5rem;
-  background-color: #F7F7F7;
 }
 .fixed {
   position: fixed;
