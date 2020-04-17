@@ -1,7 +1,6 @@
 <template v-if="semesters">
   <div class= "section">
   <div class="requirements">
-    <div class="fixed" :class="{ bottomPreview: isBottomPreview && !isBottomBar, bottomBar: isBottomBar }">
     <h1 class="title">School Requirements</h1>
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
@@ -92,8 +91,10 @@
                   <p class="sup-req pointer">{{subReq.requirement.name}}</p>
                 </div>
                 <div class="col">
-                  <p class="sup-req-progress text-right">( {{ (subReq.requirement.fulfilled !== null && subReq.requirement.fulfilled !== undefined)
-                    ? `${subReq.requirement.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
+                  <p class="sup-req-progress text-right">( {{
+                   (subReq.requirement.fulfilledBy !== 'self-check')
+                   ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
+                   : 'Self-Check' }}  )</p>
                 </div>
               </div>
               <div v-if="subReq.displayDescription" class="description">
@@ -138,10 +139,10 @@
                     </button>
                   </div>
                   <div class="col-7" @click="toggleDescription(index, 'completed', id)">
-                    <p class="sup-req pointer">{{subReq.name}}</p>
+                    <p class="sup-req pointer">{{subReq.requirement.name}}</p>
                   </div>
                   <div class="col">
-                    <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
+                    <p class="sup-req-progress text-right">( {{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }} )</p>
                   </div>
                 </div>
                 <div v-if="subReq.displayDescription" class="description">
@@ -156,7 +157,7 @@
         </div>
       </div>
     </div>
-  </div>
+
 </div>
 </template>
 
@@ -170,13 +171,11 @@ import Course from '@/components/Course.vue';
 // eslint-disable-next-line import/extensions
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
-
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.use(VueCollapse);
-
 type major = {
   display: boolean;
   major: string;
@@ -194,8 +193,6 @@ type Data = {
   majors: major[];
   minors: minor[];
 }
-
-
 export default Vue.extend({
   props: {
     semesters: Array,
@@ -207,7 +204,6 @@ export default Vue.extend({
     const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major, this.user.minor);
     // Send satisfied credits data back to dashboard to build alerts
     this.$emit('requirementsMap', computeRequirementMap(groups));
-
     // Turn result into data readable by requirements menu
     const singleMenuRequirements = groups.map(group => {
       const singleMenuRequirement: SingleMenuRequirement = {
@@ -220,7 +216,6 @@ export default Vue.extend({
         displayDetails: false,
         displayCompleted: false
       };
-
       group.reqs.forEach(req => {
         // Create progress bar with requirement with progressBar = true
         if (req.requirement.progressBar) {
@@ -228,29 +223,25 @@ export default Vue.extend({
           singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
           singleMenuRequirement.required = req.requirement.totalCount || req.requirement.minCount;
         }
-
         // Default display value of false for all requirement lists
         const displayableRequirementFulfillment = { ...req, displayDescription: false };
-
         if (!req.minCountFulfilled || req.minCountFulfilled < (req.requirement.minCount || 0)) {
           singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
         } else {
           singleMenuRequirement.completed.push(displayableRequirementFulfillment);
         }
       });
-
       // Make number of requirements items progress bar in absense of identified progress metric
       if (!singleMenuRequirement.type) {
         singleMenuRequirement.type = 'Requirements';
         singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
         singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
       }
-
       return singleMenuRequirement;
     });
     this.reqs.push(...singleMenuRequirements);
+    console.log(this.reqs);
   },
-
   data() : Data {
     return {
       // currentEditID: 0,
@@ -308,11 +299,9 @@ export default Vue.extend({
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
     },
-
     toggleDetails(index: number): void {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
-
     toggleDescription(index: number, type: 'ongoing' | 'completed', id: number): void {
       if (type === 'ongoing') {
         const currentBool = this.reqs[index].ongoing[id].displayDescription;
@@ -322,11 +311,9 @@ export default Vue.extend({
         this.reqs[index].completed[id].displayDescription = !currentBool;
       }
     },
-
     turnCompleted(index: number, bool: boolean): void {
       this.reqs[index].displayCompleted = bool;
     },
-
     getCourseCodesArray(): readonly CourseTaken[] {
       const courses: CourseTaken[] = [];
       this.semesters.forEach(semester => {
@@ -341,7 +328,6 @@ export default Vue.extend({
           });
         });
       });
-
       return courses;
     },
     showMajorOrMinorRequirements(id: number, group: string) {
@@ -354,7 +340,6 @@ export default Vue.extend({
         });
         return (id < 2 || id === currentDisplay);
       }
-
       this.minors.forEach((minor, i:number) => {
         if (minor.display) {
           currentDisplay = i + 2 + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
@@ -386,7 +371,6 @@ export default Vue.extend({
         }
       }
       this.majors = majors;
-
       const minors = [];
       if (this.user.minor != null) {
         for (let i = 0; i < this.user.minor.length; i += 1) {
@@ -421,12 +405,10 @@ input{
   width: 40px;
 }
 .editing{
-
   &-title{
     padding-bottom: 20px;
     padding-top: 20px;
   }
-
   &-button{
     margin-top: 20px;
     background: #B1B1B1;
@@ -438,7 +420,6 @@ input{
     color: #FFFFFF;
     padding: 10px;
   }
-
   &-row{
     display: flex;
     flex-direction: row;
@@ -450,7 +431,6 @@ input{
       margin-right: 0;
       flex-direction: column;
     }
-
     &-field{
       display: flex;
       flex-direction: column;
@@ -471,7 +451,6 @@ p.editing-inputs {
   display: flex;
   padding-top: 10px;
   padding-bottom: 25px;
-
   &-title {
       width: 100%;
       display: flex;
@@ -479,7 +458,6 @@ p.editing-inputs {
       text-align: center;
       padding: 20px;
       padding-top: 10px;
-
       &-top {
         text-align: center;
         font-style: normal;
@@ -492,7 +470,6 @@ p.editing-inputs {
             font-weight: bold;
           }
       }
-
       &-bottom {
         text-align: center;
         font-style: normal;
@@ -520,20 +497,16 @@ p.editing-inputs {
     margin:0px
   }
 }
-
 .btn:focus,.btn:active {
    outline: none !important;
    box-shadow: none;
 }
-
 .row {
   margin: 0;
 }
-
 .row > div {
   padding: 0;
 }
-
 .requirements, .fixed {
   height: 100vh;
   width: 25rem;
@@ -546,7 +519,6 @@ p.editing-inputs {
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: #F7F7F7;
 }
-
 .fixed {
   position: fixed;
   top: 0;
@@ -554,27 +526,22 @@ p.editing-inputs {
   overflow-y: scroll;
   overflow-x: hidden;
 }
-
 .depth-req {
   margin: 0.5rem 0 0.1rem 0;
   min-height: 14px;
 }
-
 .sub-req-div {
   padding-left: 30px;
   margin: 0px;
 }
-
 .description {
   margin: 0 0 0.5rem 1.8rem;
   color: #353535;
   font-size: 15px;
 }
-
 .pointer {
   cursor: pointer;
 }
-
 h1.title {
   font-style: normal;
   font-weight: 550;
@@ -582,25 +549,21 @@ h1.title {
   line-height: 29px;
   color: #000000;
 }
-
 .progress {
   border-radius: 1rem;
   height: 10px;
 }
-
 .top {
   margin: 1.5rem 0 1rem 0;
   &-small{
     margin: 0px;
   }
 }
-
 .middle {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .name {
   margin-top: auto;
   margin-bottom: auto;
@@ -608,14 +571,11 @@ h1.title {
   font-weight: normal;
   font-size: 16px;
   line-height: 16px;
-
   color: #000000;
 }
-
 .specific {
   color: #757575;
 }
-
 .sub-title {
   padding: 0;
   font-style: normal;
@@ -623,18 +583,15 @@ h1.title {
   font-size: 14px;
   line-height: 14px;
 }
-
 .completed {
   margin-top: 1rem;
 }
-
 .major {
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 17px;
   color: #000000;
-
   &-college {
     font-style: normal;
     font-weight: normal;
@@ -656,30 +613,24 @@ p.active {
   color: #508197;
   font-weight: bold;
 }
-
 .settings, .arrow {
   height: 14px;
   width: 14px;
 }
-
 .arrow {
   fill: #1AA9A5;
   color:#1AA9A5;
-
   &-down {
     margin-top: -4px;
   }
 }
-
 .progress-text {
   margin: 0.3125rem 0 0 0;
   font-size: 12px;
   line-height: 12px;
 }
-
 ul.striped-list > li {
   padding: 2px;
-
   border-bottom-style: rgba(196, 196, 196, 0.4);
   border-block-color: rgba(196, 196, 196, 0.4);
   color: #757575;
@@ -688,7 +639,6 @@ ul.striped-list > li {
   padding: 20px;
   padding-left: 0px;
 }
-
 button.view {
   margin: 0.7rem 0 2rem 0;
   min-height: 40px;
@@ -700,18 +650,15 @@ button.view {
   color: white;
   text-transform: uppercase;
 }
-
 .detail-bar {
   margin: 1.625rem 0 0.8125rem 0;
   width: 100%;
 }
-
 .x {
   padding-left: 0px;
   padding-right: 15px;
   max-width: 25px;
 }
-
 .detail-text {
   margin-top: auto;
   margin-bottom: auto;
@@ -719,7 +666,6 @@ button.view {
   font-size: 14px;
   line-height: 14px;
 }
-
 .seeMore {
   width: 44px;
   height: 15px;
@@ -728,10 +674,8 @@ button.view {
   font-size: 12px;
   line-height: 14px;
   /* identical to box height */
-
   color: #2bbcc6;
 }
-
 .cancel {
   height: 10px;
   width: 10px;
@@ -740,13 +684,11 @@ button.view {
   height: 5px;
   width: 5px;
 }
-
 .button-dropdown {
   background-color: transparent;
   color: transparent;
   outline-style: transparent;
 }
-
 .toggle {
   margin-top: auto;
   margin-bottom: auto;
@@ -754,16 +696,13 @@ button.view {
   font-size: 12px;
   line-height: 12px;
 }
-
 .req {
   margin-top: auto;
   margin-bottom: auto;
   font-style: normal;
   font-weight: normal;
-
   font-size: 16px;
   line-height: 19px;
-
   &-name {
     margin-left: 0.5rem;
     font-weight: 500;
@@ -771,7 +710,6 @@ button.view {
     line-height: 14px;
     align-self: center;
   }
-
   &-progress {
     font-weight: bold;
     font-size: 12px;
@@ -783,27 +721,22 @@ button.view {
   font-weight: normal;
   font-size: 14px;
   line-height: 14px;
-
   color: #757575;
-
   &-progress {
     font-weight: bold;
     font-size: 12px;
     line-height: 12px;
   }
 }
-
 .semester-req {
   border: none;
   max-width: 350px;
 }
-
 .separator {
   height: 1px;
   width: 100%;
   background-color: #d7d7d7;
 }
-
 .bottomBar {
   padding-bottom: 300px;
 }
@@ -816,5 +749,4 @@ button.view {
       pointer-events: none;
     }
 }
-
 </style>
