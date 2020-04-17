@@ -368,19 +368,20 @@ export default {
     },
     // Clear a major if a new college is selected and the major is not in it
     clearMajorIfNotInCollege() {
-      // Do nothing if no major set
-      if (this.displayOptions.major.length === 1 && this.displayOptions.major[0].acronym === '') {
-        return;
-      }
       const majorJSON = reqsData.major;
       for (let x = 0; x < this.displayOptions.major.length; x += 1) {
         const major = this.displayOptions.major[x];
         let foundCollege = false;
-        for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-          const college = this.displayOptions.college[i];
-          if (majorJSON[major.acronym].schools.includes(college.acronym)) {
-            foundCollege = true;
-            break;
+        // Do nothing if no major set
+        if (major.acronym !== '') {
+          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+            const college = this.displayOptions.college[i];
+            console.log(major.acronym);
+            console.log(majorJSON);
+            if (majorJSON[major.acronym].schools.includes(college.acronym)) {
+              foundCollege = true;
+              break;
+            }
           }
         }
         if (!foundCollege) {
