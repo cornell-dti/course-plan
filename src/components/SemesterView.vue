@@ -27,8 +27,10 @@
           v-bind="sem"
           :isNotSemesterButton="true"
           :activatedCourse="activatedCourse"
+          :semesters="semesters"
           @updateBar="updateBar"
           @delete-semester="deleteSemester"
+          @edit-semester="editSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
         />
       </div>
@@ -43,7 +45,8 @@
         v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" />
+        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar"
+        :activatedCourse="activatedCourse" @delete-semester="deleteSemester" @edit-semester="editSemester" />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
@@ -64,6 +67,7 @@ import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
 import Caution from '@/components/Caution';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
+import EditSemester from '@/components/Modals/EditSemester';
 
 import { auth, userDataCollection } from '@/firebaseConfig';
 
@@ -72,6 +76,7 @@ Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
 Vue.component('caution', Caution);
 Vue.component('deletesemester', DeleteSemester);
+Vue.component('editsemester', EditSemester);
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -203,14 +208,31 @@ export default {
       // Update requirements menu from dashboard
       this.$emit('updateRequirementsMenu');
     },
-
+    compare(a, b) {
+      if (a.type === b.type && a.year === b.year) { return 0; }
+      if (a.year > b.year) { return 1; }
+      if (a.year < b.year) { return -1; }
+      if (SeasonsEnum[a.type.toLowerCase()] > SeasonsEnum[b.type.toLowerCase()]) {
+        return 1;
+      }
+      return -1;
+    },
+    editSemester(id, type, year) {
+      this.semesters[id - 1].type = type;
+      this.semesters[id - 1].year = year;
+      this.semesters = this.semesters.sort(this.compare);
+      let count = 1;
+      this.semesters.forEach(sem => {
+        sem.id = count;
+        count += 1;
+      });
+    },
     updateBar(course, colorJustChanged, color) {
       this.activatedCourse = course;
       this.key += 1;
       this.$emit('updateBar', course, colorJustChanged, color);
       this.isCourseClicked = true;
     },
-
     closeBar() {
       if (!this.isCourseClicked) {
         this.$emit('close-bar');
@@ -308,6 +330,7 @@ export default {
     }
   }
 
+
   &-twoColumn {
     background-image: url('~@/assets/images/views/twoColumn.svg');
 
@@ -315,7 +338,9 @@ export default {
     &:focus,
     &:active,
     &--active {
+      cursor: pointer;
       background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+
     }
   }
 
@@ -326,6 +351,7 @@ export default {
     &:focus,
     &:active,
     &--active {
+      cursor: pointer;
       background-image: url('~@/assets/images/views/fourColumnSelected.svg');
     }
   }
