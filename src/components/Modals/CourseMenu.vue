@@ -42,7 +42,7 @@
         <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
         <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits">
           <div
-            v-for="credit in this.getCreditRange[1]"
+            v-for="credit in (this.getCreditRange[1] - this.getCreditRange[0] + 1)"
             :key="credit"
             class="courseMenu-section"
             @click="editCourseCredit(getCreditRange[0] + credit - 1)"
