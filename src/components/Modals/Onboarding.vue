@@ -79,7 +79,7 @@
 
 
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major</label>
+              <label class="onboarding-label">Your Major!</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -96,7 +96,7 @@
                       id="major-placeholder"
                       :style="{ color: options.placeholderColor }"
                     >
-                      {{ options.placeholder }}
+                      {{options.placeholder}}
                     </div>
                     <div
                       class="onboarding-dropdown-placeholder major-arrow"
@@ -138,7 +138,6 @@
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
-                  :class="{ 'onboarding-select--disabled': Object.keys(minors).length <= 0 }"
                   id="minor"
                   v-for="(options, index) in displayOptions.minor"
                   :key = index
@@ -294,8 +293,40 @@ export default {
     this.setCollegesMap();
     this.setMajorsList();
     this.setMinorsList();
+    this.flattenDisplayMajors();
   },
   methods: {
+    flattenDisplayMajors() {
+      const majors = [];
+      this.displayOptions.major.forEach(major => {
+        if (Array.isArray(major.acronym)) {
+          major.acronym.flat(Infinity);
+          for (let i = 0; i < major.acronym.length; i += 1) {
+            const newMajor = {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: '#757575',
+              placeholder: major.placeholder[i],
+              acronym: major.acronym[i]
+            };
+            majors.push(newMajor);
+          }
+        } else {
+          majors.push({
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            placeholder: major.placeholder,
+            acronym: major.acronym
+          });
+        }
+      });
+      this.displayOptions.major = majors;
+    },
     // Set the colleges map to with acronym keys and full name values
     setCollegesMap() {
       /** @type {Object.<string, string>} */
@@ -325,23 +356,36 @@ export default {
     },
     // TODO: add minors when the list exists
     setMinorsList() {
-      this.minors = {};
+      const minors = {};
+      const minorJSON = reqsData.minor;
+      for (const key in minorJSON) {
+        // make sure name defined
+        if ('name' in minorJSON[key]) {
+          // only show majors for schools the user is in
+          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+            const college = this.displayOptions.college[i];
+            if (minorJSON[key].schools.includes(college.acronym)) {
+              minors[key] = minorJSON[key].name;
+            }
+          }
+        }
+      }
+      this.minors = minors;
     },
     // Clear a major if a new college is selected and the major is not in it
     clearMajorIfNotInCollege() {
-      // Do nothing if no major set
-      if (this.displayOptions.major.length === 1 && this.displayOptions.major[0].acronym === '') {
-        return;
-      }
       const majorJSON = reqsData.major;
       for (let x = 0; x < this.displayOptions.major.length; x += 1) {
         const major = this.displayOptions.major[x];
         let foundCollege = false;
-        for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-          const college = this.displayOptions.college[i];
-          if (majorJSON[major.acronym].schools.includes(college.acronym)) {
-            foundCollege = true;
-            break;
+        // Do nothing if no major set
+        if (major.acronym !== '') {
+          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+            const college = this.displayOptions.college[i];
+            if (majorJSON[major.acronym].schools.includes(college.acronym)) {
+              foundCollege = true;
+              break;
+            }
           }
         }
         if (!foundCollege) {
@@ -368,7 +412,6 @@ export default {
             minors: this.notPlaceholderOptions(this.displayOptions.minor)
           }
         };
-
         this.$emit('onboard', onboardingData);
       }
     },
@@ -395,7 +438,6 @@ export default {
           list.push(obj);
         }
       });
-
       return list;
     },
     showHideContent(type, i) {
@@ -473,6 +515,17 @@ export default {
         placeholder: placeholderText,
         acronym: ''
       };
+      const majors = [];
+      this.displayOptions.major.forEach(maj => {
+        if (maj.length > 0) {
+          maj.forEach(subMaj => {
+            majors.push(subMaj);
+          });
+        } else {
+          majors.push(maj);
+        }
+      });
+      this.displayOptions.major = majors;
       this.displayOptions.major.push(newMajor);
     },
     removeMajor() {
