@@ -9,7 +9,6 @@
               </div>
         </div>
     </div>
-    <!-- <img data-v-ef68022e="" src="img/logo.4d084161.svg" alt="logo" class="logo"> -->
     <div class = "message-container">
       <img class = "img-404" src="@/assets/images/404.svg" alt = "404">
       <div class = "oops-wrapper">
@@ -27,7 +26,6 @@
     <div class="container-fluid footer p-0 page_404">
         <div class= "row footer justify-content-center m-0">
             <div class="col-3 footer">
-              <!-- <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ </a> -->
               <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ {{getYear()}}</a>
             </div>
             <div class="col-3">
@@ -93,12 +91,10 @@ export default {
 }
 .page_404{
   bottom: 0;
-  // position:absolute;
   @media(max-height: 600px){
     position: relative;
     bottom: 0;
   }
-  // margin-top: -50px;
 }
 .top-bar{
   padding:59px 0px 0px 104px;
@@ -141,7 +137,6 @@ a.footer {
   padding : 40px;
 }
 .img-404{
-  // min-width: 15vw;
   vertical-align: top;
   display: inline-block;
   @media(max-width: 1154px){

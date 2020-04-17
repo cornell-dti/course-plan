@@ -2137,31 +2137,5 @@
                 }
             ]
         }
-    },
-    "minor": {
-        "MATH": {
-          "name": "Math",
-          "schools": ["AG", "BU"],
-          "requirements": [
-            {
-              "name": "Four 3000 or 4000-level MATH courses",
-              "description": "Students must complete four 3000- or 4000-level MATH courses.",
-              "source": "https://math.cornell.edu/minor",
-              "search": ["code"],
-              "includes": [["MATH 3***", "MATH 4***"]],
-              "fulfilledBy": "courses",
-              "minCount": 4
-            },
-            {
-              "name": "One 4000-level MATH course",
-              "description": "At least one of the four courses must be at the 4000 level or above.",
-              "source": "https://math.cornell.edu/minor",
-              "search": ["code"],
-              "includes": [["MATH 4***"]],
-              "fulfilledBy": "courses",
-              "minCount": 1
-            }
-          ]
-        }
-      }
+    }
 }
