@@ -376,8 +376,6 @@ export default {
         if (major.acronym !== '') {
           for (let i = 0; i < this.displayOptions.college.length; i += 1) {
             const college = this.displayOptions.college[i];
-            console.log(major.acronym);
-            console.log(majorJSON);
             if (majorJSON[major.acronym].schools.includes(college.acronym)) {
               foundCollege = true;
               break;
