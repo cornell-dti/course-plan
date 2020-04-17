@@ -202,7 +202,6 @@ export default {
       confirmationModal.style.display = 'none';
     },
     addCourse(data) {
-      console.log("addCourse data from Semester.vue", data);
       const newCourse = this.$parent.$parent.createCourse(data);
       this.courses.push(newCourse);
       const courseCode = `${data.subject} ${data.catalogNbr}`;

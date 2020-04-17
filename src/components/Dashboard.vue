@@ -147,7 +147,6 @@ export default {
      */
     createCourseCreditRange(course) {
       const courseCreditRange = [];
-      // console.log("cccr", course.enrollGroups);
       if (typeof course.creditRange !== 'undefined') {
         const ccr = course.creditRange; // the linter won't let me return with course.creditRange so im just doing this
       } else if (typeof course.enrollGroups !== 'undefined') {
@@ -157,10 +156,8 @@ export default {
         });
         return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
       } else {
-        console.log("else reached", [course.credits, course.credits]);
         return [course.credits, course.credits];
       }
-      console.log("if reached", [Math.min(...courseCreditRange), Math.max(...courseCreditRange)]);
       return course.creditRange;
     },
 
@@ -168,7 +165,6 @@ export default {
      * Creates a course on frontend with either user or API data
      */
     createCourse(course) {
-      console.log("createCourse course", course);
       const randomId = Math.floor(Math.random() * Math.floor(1000));
 
       const subject = (course.code && course.code.split(' ')[0]) || course.subject;

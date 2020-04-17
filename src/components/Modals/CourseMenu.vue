@@ -36,7 +36,7 @@
         v-if="this.getCreditRange[0] != this.getCreditRange[1]"
         >
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/trash.svg" />
+          <img class="courseMenu-icon" src="../../assets/images/edit-credits.svg" />
           <span class="courseMenu-text">Edit Credits</span>
         </div>
         <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
