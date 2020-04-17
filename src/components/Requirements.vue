@@ -146,7 +146,7 @@
                   </div>
                 </div>
                 <div v-if="subReq.displayDescription" class="description">
-                  {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+                  {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
                 </div>
               </div>
             </div>
@@ -240,7 +240,6 @@ export default Vue.extend({
       return singleMenuRequirement;
     });
     this.reqs.push(...singleMenuRequirements);
-    console.log(this.reqs);
   },
   data() : Data {
     return {
