@@ -46,15 +46,15 @@
           <span class="courseMenu-text">Edit Credits</span>
         </div>
         <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
-        <div v-if="displayEditCourseCredits" class="courseMenu-content">
+        <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-colors">
           <div
-            v-for=" i in (this.$parent.creditRange[1] - this.$parent.creditRange[0])"
-            :key="i + this.$parent.creditRange[0]"
+            v-for="credit in this.getCreditRange[1]"
+            :key="credit"
             class="courseMenu-section"
-            @click="editCourseCredit(credit)"
+            @click="editCourseCredit(getCreditRange[0] + credit - 1)"
           >
             <div class="courseMenu-left">
-              <span class="courseMenu-text">{{ i + this.$parent.creditRange[0]}}</span>
+              <span class="courseMenu-text">{{ getCreditRange[0] + credit - 1}}</span>
             </div>
           </div>
         </div>
@@ -120,7 +120,6 @@ export default {
     },
     setDisplayColors(bool) {
       this.displayColors = bool;
-
     },
     setDisplayEditCourseCredits(bool) {
       this.displayEditCourseCredits = bool;

@@ -140,23 +140,7 @@ export default {
       });
       return semesters;
     },
-    /**
-     * Creates credit range based on course
-     * Example: [1, 4] is the credit range for the given course
-     */
-    createCourseCreditRange(course) {
-      const courseCreditRange = [];
-      console.log(course.enrollGroups);
-      if (typeof course.enrollGroups !== 'undefined') {
-        course.enrollGroups.forEach(enrollGroup => {
-          courseCreditRange.push(enrollGroup.unitsMinimum);
-          courseCreditRange.push(enrollGroup.unitsMaximum);
-        });
-      } else {
-        return [course.credits, course.credits];
-      }
-      return [Math.min(courseCreditRange), Math.max(courseCreditRange)];
-    },
+
     /**
      * Creates credit range based on course
      * Example: [1, 4] is the credit range for the given course
@@ -200,14 +184,7 @@ export default {
 
       // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
-
-      // TODO Fix Credit range
-      // console.log("course", course);
-      // const creditRange = course.creditRange || this.createCourseCreditRange(course) || [credits, credits];
-      // console.log("creditRange", creditRange);
-
-      const creditRange = this.createCourseCreditRange(course) || [0, 1];
-      console.log(creditRange);
+      const creditRange = course.creditRange || this.createCourseCreditRange(course);
       // Semesters: remove periods and split on ', '
       // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
       const catalogWhenOfferedDoesNotExist = (!course.catalogWhenOffered) || course.catalogWhenOffered === '';
