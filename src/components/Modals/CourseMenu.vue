@@ -29,24 +29,18 @@
           </div>
         </div>
       </div>
-      <div class="courseMenu-section" @click="deleteCourse">
-        <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/trash.svg" />
-          <span class="courseMenu-text">Delete</span>
-        </div>
-      </div>
-
       <div
         class="courseMenu-section"
         @mouseover="setDisplayEditCourseCredits(true)"
         @mouseleave="setDisplayEditCourseCredits(false)"
-        > <!-- change -->
+        v-if="this.getCreditRange[0] != this.getCreditRange[1]"
+        >
         <div class="courseMenu-left">
           <img class="courseMenu-icon" src="../../assets/images/trash.svg" />
           <span class="courseMenu-text">Edit Credits</span>
         </div>
         <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
-        <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-colors">
+        <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits">
           <div
             v-for="credit in this.getCreditRange[1]"
             :key="credit"
@@ -57,6 +51,12 @@
               <span class="courseMenu-text">{{ getCreditRange[0] + credit - 1}}</span>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="courseMenu-section" @click="deleteCourse">
+        <div class="courseMenu-left">
+          <img class="courseMenu-icon" src="../../assets/images/trash.svg" />
+          <span class="courseMenu-text">Delete</span>
         </div>
       </div>
     </div>
@@ -184,10 +184,14 @@ export default {
       height: 16px;
     }
   }
-
   &-colors {
     position: absolute;
     right: -9rem;
+  }
+  &-editCredits {
+    position: absolute;
+    width: 2.7rem;
+    right: -2.7rem;
   }
 }
 </style>

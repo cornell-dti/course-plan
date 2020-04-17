@@ -225,6 +225,7 @@ export default {
         name: course.name,
         description: course.description,
         credits: course.credits,
+        creditRange: course.creditRange,
         semesters: course.semesters,
         prereqs: course.prereqs,
         enrollment: course.enrollment,
