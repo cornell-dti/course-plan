@@ -56,11 +56,8 @@
       class="course-menu"
       @delete-course="deleteCourse"
       @color-course="colorCourse"
-<<<<<<< HEAD
-=======
       @edit-course-credit="editCourseCredit"
       :getCreditRange="getCreditRange"
->>>>>>> 68c62c8... worked on editable credits, almost functional except for page refresh, likely due to firebase mistake
       v-click-outside="closeMenuIfOpen"
     />
   </div>
@@ -93,6 +90,7 @@ export default {
     number: String,
     name: String,
     credits: Number,
+    creditRange: Array,
     prereqs: String,
     semesters: Array,
     color: String,
@@ -176,6 +174,10 @@ export default {
       if (!this.menuOpen) {
         this.$emit('updateBar', this.courseObj);
       }
+    },
+    editCourseCredit(credit) {
+      this.$emit('edit-course-credit', credit, `${this.subject} ${this.number}`);
+      this.closeMenuIfOpen();
     }
 
   },

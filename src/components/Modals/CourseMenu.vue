@@ -35,8 +35,7 @@
           <span class="courseMenu-text">Delete</span>
         </div>
       </div>
-<<<<<<< HEAD
-=======
+
       <div
         class="courseMenu-section"
         @mouseover="setDisplayEditCourseCredits(true)"
@@ -47,20 +46,19 @@
           <span class="courseMenu-text">Edit Credits</span>
         </div>
         <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
-        <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-colors">
+        <div v-if="displayEditCourseCredits" class="courseMenu-content">
           <div
-            v-for="credit in this.getCreditRange[1]"
-            :key="credit"
+            v-for=" i in (this.$parent.creditRange[1] - this.$parent.creditRange[0])"
+            :key="i + this.$parent.creditRange[0]"
             class="courseMenu-section"
-            @click="editCourseCredit(getCreditRange[0] + credit - 1)"
+            @click="editCourseCredit(credit)"
           >
             <div class="courseMenu-left">
-              <span class="courseMenu-text">{{ getCreditRange[0] + credit - 1}}</span>
+              <span class="courseMenu-text">{{ i + this.$parent.creditRange[0]}}</span>
             </div>
           </div>
         </div>
       </div>
->>>>>>> 68c62c8... worked on editable credits, almost functional except for page refresh, likely due to firebase mistake
     </div>
   </div>
 </template>
@@ -109,7 +107,8 @@ export default {
           hex: '#F296D3'
         }
       ],
-      displayColors: false
+      displayColors: false,
+      displayEditCourseCredits: false
     };
   },
   methods: {
@@ -121,8 +120,7 @@ export default {
     },
     setDisplayColors(bool) {
       this.displayColors = bool;
-<<<<<<< HEAD
-=======
+
     },
     setDisplayEditCourseCredits(bool) {
       this.displayEditCourseCredits = bool;
@@ -132,7 +130,6 @@ export default {
     },
     addMinCredit(credit) {
       return getCreditRange[0] + credit;
->>>>>>> 68c62c8... worked on editable credits, almost functional except for page refresh, likely due to firebase mistake
     }
   }
 };

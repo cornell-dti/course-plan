@@ -46,6 +46,7 @@
               @delete-course="deleteCourse"
               @color-course="colorCourse"
               @updateBar="updateBar"
+              @edit-course-credit="editCourseCredit"
             />
           </div>
         </div>
@@ -229,6 +230,14 @@ export default {
     },
     updateBar(course) {
       this.$emit('updateBar', course);
+    },
+    editCourseCredit(credit, courseCode) {
+      for (let i = 0; i < this.courses.length; i += 1) {
+        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
+          this.courses[i].credits = credit;
+          break;
+        }
+      }
     },
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();

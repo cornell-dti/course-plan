@@ -43,6 +43,7 @@
 <script>
 import Vue from 'vue';
 
+// import undefined from 'firebase/empty-import';
 import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
@@ -139,20 +140,29 @@ export default {
       });
       return semesters;
     },
-
     /**
      * Creates credit range based on course
      * Example: [1, 4] is the credit range for the given course
      */
     createCourseCreditRange(course) {
       const courseCreditRange = [];
-<<<<<<< HEAD
-      course.enrollGroups.forEach(enrollGroup => {
-        courseCreditRange.push(enrollGroup.unitsMinimum);
-        courseCreditRange.push(enrollGroup.unitsMaximum);
-      });
+      console.log(course.enrollGroups);
+      if (typeof course.enrollGroups !== 'undefined') {
+        course.enrollGroups.forEach(enrollGroup => {
+          courseCreditRange.push(enrollGroup.unitsMinimum);
+          courseCreditRange.push(enrollGroup.unitsMaximum);
+        });
+      } else {
+        return [course.credits, course.credits];
+      }
       return [Math.min(courseCreditRange), Math.max(courseCreditRange)];
-=======
+    },
+    /**
+     * Creates credit range based on course
+     * Example: [1, 4] is the credit range for the given course
+     */
+    createCourseCreditRange(course) {
+      const courseCreditRange = [];
       console.log("cccr", course.enrollGroups);
       if (typeof course.creditRange !== 'undefined') {
         const ccr = course.creditRange; // the linter won't let me return with course.creditRange so im just doing this
@@ -168,7 +178,6 @@ export default {
       }
       console.log("if reached", [Math.min(...courseCreditRange), Math.max(...courseCreditRange)]);
       return course.creditRange;
->>>>>>> 68c62c8... worked on editable credits, almost functional except for page refresh, likely due to firebase mistake
     },
 
     /**
@@ -177,6 +186,7 @@ export default {
     createCourse(course) {
       console.log("createCourse course", course);
       // TODO: id?
+      console.log("createCourse course", course);
       const randomId = Math.floor(Math.random() * Math.floor(1000));
 
       const subject = (course.code && course.code.split(' ')[0]) || course.subject;
@@ -190,16 +200,14 @@ export default {
 
       // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
-<<<<<<< HEAD
 
       // TODO Fix Credit range
       // console.log("course", course);
       // const creditRange = course.creditRange || this.createCourseCreditRange(course) || [credits, credits];
       // console.log("creditRange", creditRange);
 
-=======
-      const creditRange = course.creditRange || this.createCourseCreditRange(course);
->>>>>>> 68c62c8... worked on editable credits, almost functional except for page refresh, likely due to firebase mistake
+      const creditRange = this.createCourseCreditRange(course) || [0, 1];
+      console.log(creditRange);
       // Semesters: remove periods and split on ', '
       // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
       const catalogWhenOfferedDoesNotExist = (!course.catalogWhenOffered) || course.catalogWhenOffered === '';
@@ -264,6 +272,7 @@ export default {
         name,
         description,
         credits,
+        creditRange,
         semesters,
         prereqs,
         enrollment,
