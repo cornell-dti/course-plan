@@ -1,24 +1,21 @@
-import { Course } from '../../types';
-import { courseMatchesCode, courseMatchesCodeOptions } from '../checkers-common';
+import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
 
-const orieMajorRequiredClasses = [
-  (course: Course): boolean => courseMatchesCode(course, 'ORIE 3120'),
-  (course: Course): boolean => courseMatchesCode(course, 'ORIE 3150'),
-  (course: Course): boolean => courseMatchesCode(course, 'ORIE 3300'),
-  (course: Course): boolean => courseMatchesCode(course, 'ORIE 3310'),
-  (course: Course): boolean => courseMatchesCode(course, 'ORIE 3500'),
-  (course: Course): boolean => courseMatchesCode(course, 'ORIE 3510'),
-  (course: Course): boolean => courseMatchesCode(course, 'ORIE 4580')
-];
-
-const orieElectives = (course: Course): boolean => courseMatchesCodeOptions(
-  course, ['ORIE 4***', 'ORIE 5***', 'ORIE 6***']
+const orieMajorRequiredClasses = includesWithSubRequirements(
+  ['ORIE 3120'],
+  ['ORIE 3150'],
+  ['ORIE 3300'],
+  ['ORIE 3310'],
+  ['ORIE 3500'],
+  ['ORIE 3510'],
+  ['ORIE 4580']
 );
 
-const orieEngineeringDistributionCourses = [
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['ENGRD 2700']),
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['ENGRD 2***', 'ENGRD 3***']),
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['ENGRI 1***'])
-];
+const orieElectives = includesWithSingleRequirement('ORIE 4***', 'ORIE 5***', 'ORIE 6***');
+
+const orieEngineeringDistributionCourses = includesWithSubRequirements(
+  ['ENGRD 2700'],
+  ['ENGRD 2***', 'ENGRD 3***'],
+  ['ENGRI 1***']
+);
 
 export default { orieMajorRequiredClasses, orieElectives, orieEngineeringDistributionCourses };
