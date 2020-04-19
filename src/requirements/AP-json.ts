@@ -1,72 +1,72 @@
 /* eslint-disable max-len */
 import { ExamData } from './types';
 
-const json: ExamData= {
-    AP: 
+const json: ExamData = {
+  AP:
     [
-        {
-            subject: "Chemistry",
-            credits: 
+      {
+        subject: 'Chemistry',
+        credits:
             [
-                {
-                    collegesApplied: ['EN', 'AS', 'AR'],
-                    majorExcluded: ['CHEM'],
-                    mininmumScore: 5,
-                    courseEquivalents: [['CHEM 2070', 'CHEM 2090']],
-                    requirementEquivalents: [],
-                    credits: 4
-                }
+              {
+                collegesApplied: ['EN', 'AS', 'AR'],
+                majorExcluded: ['CHEM'],
+                mininmumScore: 5,
+                courseEquivalents: [['CHEM 2070', 'CHEM 2090']],
+                requirementEquivalents: [],
+                credits: 4
+              }
             ]
-        },
-        {
-            subject: "Computer Science A",
-            credits: 
+      },
+      {
+        subject: 'Computer Science A',
+        credits:
             [
-                {
-                    collegesApplied: ["EN", "AS"],
-                    majorExcluded: [],
-                    mininmumScore: 5,
-                    courseEquivalents: [['CS 1110']],
-                    requirementEquivalents: [],
-                    credits: 4
-                }
+              {
+                collegesApplied: ['EN', 'AS'],
+                majorExcluded: [],
+                mininmumScore: 5,
+                courseEquivalents: [['CS 1110']],
+                requirementEquivalents: [],
+                credits: 4
+              }
             ]
-        },
-        {
-            subject: "Microeconomics",
-            credits: 
+      },
+      {
+        subject: 'Microeconomics',
+        credits:
             [
-                {
-                    collegesApplied: ["EN", "AS"],
-                    majorExcluded: [],
-                    mininmumScore: 4,
-                    courseEquivalents: [['ECON 1110'], ['HADM 1410']], // and?
-                    requirementEquivalents: [],
-                    credits: 4
+              {
+                collegesApplied: ['EN', 'AS'],
+                majorExcluded: [],
+                mininmumScore: 4,
+                courseEquivalents: [['ECON 1110'], ['HADM 1410']], // and?
+                requirementEquivalents: [],
+                credits: 4
 
-                }
+              }
             ]
-        },
-        {
-            subject: "Macroeconomics",
-            credits: 
+      },
+      {
+        subject: 'Macroeconomics',
+        credits:
             [
-                {
-                    collegesApplied: ["EN", "AS"],
-                    majorExcluded: [],
-                    mininmumScore: 4,
-                    courseEquivalents: [['ECON 1120']],
-                    requirementEquivalents: [],
-                    credits: 4
-                }
+              {
+                collegesApplied: ['EN', 'AS'],
+                majorExcluded: [],
+                mininmumScore: 4,
+                courseEquivalents: [['ECON 1120']],
+                requirementEquivalents: [],
+                credits: 4
+              }
             ]
-        } /*,
+      } /* ,
         {
             /*
             // TODO
             subject: "English Literature and Composition",
             credits: [4],
-            collegesApplied: ["EN", "AS"], 
+            collegesApplied: ["EN", "AS"],
             majorExcluded: [],
             mininmumScore: 5,
             courseEquivalents: [],
@@ -145,7 +145,7 @@ const json: ExamData= {
             collegesApplied: [],
             majorExcluded: [],
             mininmumScore: 4,
-            courseEquivalents: [['MATH 1106', 'MATH 1110'], 
+            courseEquivalents: [['MATH 1106', 'MATH 1110'],
                                 ['MATH 1210', 'MATH 1220', 'Math 1910']],
             requirementEquivalents: []
         },
@@ -168,7 +168,7 @@ const json: ExamData= {
             courseEquivalents: [['PHYS 1101']],
             requirementEquivalents: [],
             compositeRequirement: [
-                {   
+                {
                     subject: 'Mathematics BC',
                     score: 5,
                     classEquivalent: [['PHYS 2207']]
@@ -185,7 +185,7 @@ const json: ExamData= {
             courseEquivalents: [['PHYS 1102']],
             requirementEquivalents: [],
             compositeRequirement: [
-                {   
+                {
                     subject: 'Mathematics BC',
                     score: 5,
                     classEquivalent: [['PHYS 2208']]
@@ -249,15 +249,15 @@ const json: ExamData= {
             collegesApplied: [],
             majorExcluded: [],
             mininmumScore: 4,
-            courseEquivalents: [[ 'AEM 2100', 'BTRY 3010', 'BTRY 6010', 
-            'ILRST 2100', 'ILRST 6100', 'MATH 1710', 'PAM 2100', 
+            courseEquivalents: [[ 'AEM 2100', 'BTRY 3010', 'BTRY 6010',
+            'ILRST 2100', 'ILRST 6100', 'MATH 1710', 'PAM 2100',
             'PAM 2101', 'PSYCH 2500', 'SOC 3010', 'STSCI 2100', 'STSCI 2150', 'STSCI 2200']],
             requirementEquivalents: [],
         }
         */
     ],
 
-    IB: 
+  IB:
     [/*
         {
             subject: "Chemical And Physical Systems",
@@ -305,11 +305,11 @@ const json: ExamData= {
             mininmumScore: 6,
             courseEquivalents: [['CS 1110']],
             requirementEquivalents: []
-            // varies   
+            // varies
         },
         */
     ]
-    
-}
+
+};
 
 export default json;
