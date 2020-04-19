@@ -1,5 +1,4 @@
-import { Course } from '../../types';
-import { courseMatchesCodeOptions, includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
 
 const bioEngineeringEngineeringDistributions = includesWithSubRequirements(
   ['ENGRD 2020'],
@@ -22,9 +21,9 @@ const bioEngineeringBioChemistry = includesWithSubRequirements(
   ['BIOMG 3320']
 );
 
-const bioEngineeringEngineeringStatistics = (course: Course): boolean => (
-  courseMatchesCodeOptions(course, ['BEE 2220', 'ENGRD 2210', 'CHEME 3130', 'MSE 3030'])
-  || courseMatchesCodeOptions(course, ['CEE 3040', 'ENGRD 2700'])
+const bioEngineeringEngineeringStatistics = includesWithSubRequirements(
+  ['BEE 2220', 'ENGRD 2210', 'CHEME 3130', 'MSE 3030'],
+  ['CEE 3040', 'ENGRD 2700']
 );
 
 const bioEngineeringFocusAreaElective = includesWithSingleRequirement(
