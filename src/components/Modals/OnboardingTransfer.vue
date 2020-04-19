@@ -20,34 +20,34 @@
           <div class="onboarding-inputs">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <div class="onboarding-subHeader2">Test Credits</div>
-              <label class="onboarding-label">Source/Type</label>
-              <div class="onboarding-selectWrapper">
-                <div
-                  class="onboarding-select onboarding-input"
+              <div
+                  class= "onboarding-section"
                   id="college"
                   v-for="(options, index) in displayOptions.exam"
                   :key = index
-                  :style="{ borderColor: options.boxBorder }"
+                  :style="{ borderColor: options.type.boxBorder }"
                   v-click-outside:[index]="closeCollegeDropdownIfOpen"
                 >
+               <label class="onboarding-label">Source/Type</label>
+              <div class="onboarding-select onboarding-input">
                   <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideExamContent(index)">
                     <div
                       class="onboarding-dropdown-placeholder college-placeholder"
                       id="college-placeholder"
-                      :style="{ color: options.placeholderColor }"
+                      :style="{ color: options.type.placeholderColor }"
                     >
-                      {{ options.placeholder }}
+                      {{ options.type.placeholder }}
                     </div>
                     <div
                       class="onboarding-dropdown-placeholder college-arrow"
                       id="college-arrow"
-                      :style="{ borderTopColor: options.arrowColor }"
+                      :style="{ borderTopColor: options.type.arrowColor }"
                     ></div>
                   </div>
                   <div
                     class="onboarding-dropdown-content college-content"
                     id="college-content"
-                    v-if="options.shown"
+                    v-if="options.type.shown"
                   >
                     <div
                       v-for="(exam, acronym) in exams"
@@ -59,91 +59,77 @@
                       {{ exam }}
                     </div>
                   </div>
-                </div>
               </div>
               <div class="onboarding-selectWrapperRow">
-                <div class="onboarding-select--columnWide" >
+                <div class="onboarding-select--columnWide " >
                   <label class="onboarding-label">Subject</label>
-                  <div
-                  class="onboarding-select onboarding-input"
-                  id="college"
-                  v-for="(options, index) in displayOptions.subject"
-                  :key = index
-                  :style="{ borderColor: options.boxBorder }"
-                  v-click-outside:[index]="closeCollegeDropdownIfOpen"
-                >
+                  <div class="onboarding-select onboarding-input">
                   <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideSubjectContent(index)">
                     <div
                       class="onboarding-dropdown-placeholder college-placeholder"
                       id="college-placeholder"
-                      :style="{ color: options.placeholderColor }"
+                      :style="{ color: options.subject.placeholderColor }"
                     >
-                      {{ options.placeholder }}
+                      {{ options.subject.placeholder }}
                     </div>
                     <div
                       class="onboarding-dropdown-placeholder college-arrow"
                       id="college-arrow"
-                      :style="{ borderTopColor: options.arrowColor }"
+                      :style="{ borderTopColor: options.subject.arrowColor }"
                     ></div>
                   </div>
                   <div
                     class="onboarding-dropdown-content college-content"
                     id="college-content"
-                    v-if="options.shown"
+                    v-if="options.subject.shown"
                   >
                     <div
                       v-for="(subject, acronym) in subjects"
                       :key="acronym"
                       :id="college"
                       class="onboarding-dropdown-content-item"
-                      @click="selectCollege(college, acronym, index)"
+                      @click="selectSubject(subject, acronym, index)"
                     >
                       {{ subject }}
                     </div>
                   </div>
-                </div>
+                  </div>
                 </div>
                 <div class="onboarding-select--column" >
                   <label class="onboarding-label">Score</label>
-                  <div
-                  class="onboarding-select onboarding-input"
-                  id="college"
-                  v-for="(options, index) in displayOptions.score"
-                  :key = index
-                  :style="{ borderColor: options.boxBorder }"
-                  v-click-outside:[index]="closeCollegeDropdownIfOpen"
-                >
+                  <div class="onboarding-select onboarding-input">
                   <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideScoreContent(index)">
                     <div
                       class="onboarding-dropdown-placeholder college-placeholder"
                       id="college-placeholder"
-                      :style="{ color: options.placeholderColor }"
+                      :style="{ color: options.score.placeholderColor }"
                     >
-                      {{ options.placeholder }}
+                      {{ options.score.placeholder }}
                     </div>
                     <div
                       class="onboarding-dropdown-placeholder college-arrow"
                       id="college-arrow"
-                      :style="{ borderTopColor: options.arrowColor }"
+                      :style="{ borderTopColor: options.score.arrowColor }"
                     ></div>
                   </div>
                   <div
                     class="onboarding-dropdown-content college-content"
                     id="college-content"
-                    v-if="options.shown"
+                    v-if="options.score.shown"
                   >
                     <div
                       v-for="(score, acronym) in scores"
                       :key="acronym"
-                      :id="college"
+                      :id="score"
                       class="onboarding-dropdown-content-item"
-                      @click="selectScore(college, acronym, index)"
+                      @click="selectScore(score, acronym, index)"
                     >
                       {{ score }}
                     </div>
                   </div>
                 </div>
                 </div>
+                 </div>
               </div>
               <div class="onboarding-addRemoveWrapper">
                 <div class="onboarding-add" @click="addExam">
@@ -282,35 +268,34 @@ export default {
       displayOptions: {
         exam: [
           {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: collegePlaceholderColor,
-            placeholder: 'AP',
-            acronym: collegeAcronym
-          }
-        ],
-        subject: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: collegePlaceholderColor,
-            placeholder: 'Chemistry',
-            acronym: collegeAcronym
-          }
-        ],
-        score: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: collegePlaceholderColor,
-            placeholder: '5',
-            acronym: collegeAcronym
+            type: {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: majorPlaceholderColor,
+              placeholder: 'AP',
+              acronym: majorAcronym
+            },
+            subject: {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: majorPlaceholderColor,
+              placeholder: 'Chemistry',
+              acronym: majorAcronym
+
+            },
+            score: {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: majorPlaceholderColor,
+              placeholder: '5',
+              acronym: majorAcronym
+            }
           }
         ],
         class: [
@@ -322,17 +307,6 @@ export default {
             placeholderColor: majorPlaceholderColor,
             placeholder: majorText,
             acronym: majorAcronym
-          }
-        ],
-        minor: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: '',
-            placeholder: placeholderText,
-            acronym: ''
           }
         ]
       },
@@ -348,58 +322,18 @@ export default {
     // this.setMinorsList();
   },
   methods: {
-    submitOnboarding() {
-      // Display error if a required field is empty, otherwise submit
-      if (this.firstName === '' || this.lastName === '' || this.noOptionSelected(this.displayOptions.college)) {
-        this.isError = true;
-      } else {
-        const onboardingData = {
-          name: {
-            firstName: this.firstName,
-            middleName: this.middleName,
-            lastName: this.lastName
-          },
-          userData: {
-            colleges: this.notPlaceholderOptions(this.displayOptions.college),
-            majors: this.notPlaceholderOptions(this.displayOptions.major),
-            minors: this.notPlaceholderOptions(this.displayOptions.minor)
-          }
-        };
-
-        this.$emit('onboard', onboardingData);
-      }
-    },
-    // check to see if a set of options (college, major, minor) only has placeholder texts (so no options selected)
-    noOptionSelected(options) {
-      let bool = true;
-      options.forEach(option => {
-        if (option.placeholder !== placeholderText) {
-          bool = false;
-        }
-      });
-
-      return bool;
-    },
-    notPlaceholderOptions(options) {
-      const list = [];
-      options.forEach(option => {
-        if (option.placeholder !== placeholderText) {
-          const obj = {
-            acronym: option.acronym,
-            fullName: option.placeholder
-          };
-
-          list.push(obj);
-        }
-      });
-
-      return list;
-    },
-    showHideContent(type, i) {
+    showHideContent(type, section, i) {
       let displayOptions = this.displayOptions[type];
       displayOptions = displayOptions[i];
-      const contentShown = displayOptions.shown;
-      displayOptions.shown = !contentShown;
+      let contentShown;
+      if (type === 'exam') {
+        contentShown = displayOptions[section].shown;
+        displayOptions[section].shown = !contentShown;
+      } else {
+        contentShown = displayOptions.shown;
+        displayOptions.shown = !contentShown;
+      }
+
 
       if (contentShown) {
         // clicked box when content shown. So then hide content
@@ -411,16 +345,16 @@ export default {
       }
     },
     showHideExamContent(i) {
-      this.showHideContent('exam', i);
+      this.showHideContent('exam', 'type', i);
     },
     showHideSubjectContent(i) {
-      this.showHideContent('subject', i);
+      this.showHideContent('exam', 'subject', i);
     },
     showHideScoreContent(i) {
-      this.showHideContent('score', i);
+      this.showHideContent('exam', 'score', i);
     },
     showHideClassContent(i) {
-      this.showHideContent('class', i);
+      this.showHideContent('class', '', i);
     },
     closeDropdownIfOpen(type, i) {
       let displayOptions = this.displayOptions[type];
@@ -442,26 +376,29 @@ export default {
     closeMinorDropdownIfOpen(event, i) {
       this.closeDropdownIfOpen('minor', i);
     },
-    selectOption(type, text, acronym, i) {
+    selectOption(type, section, text, acronym, i) {
       let displayOptions = this.displayOptions[type];
       displayOptions = displayOptions[i];
+      if (type === 'exam') {
+        displayOptions = displayOptions[section];
+      }
       displayOptions.placeholder = text;
-      // displayOptions.acronym = acronym;
       displayOptions.shown = false;
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.boxBorder = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
     },
     selectExam(text, acronym, i) {
-      this.selectOption('exam', text, acronym, i);
-      // this.setMajorsList();
-      // this.clearMajorIfNotInCollege();
+      this.selectOption('exam', 'type', text, acronym, i);
     },
     selectScore(text, acronym, i) {
-      this.selectOption('score', text, acronym, i);
+      this.selectOption('exam', 'score', text, acronym, i);
+    },
+    selectSubject(text, acronym, i) {
+      this.selectOption('exam', 'subject', text, acronym, i);
     },
     selectClass(text, acronym, i) {
-      this.selectOption('class', text, acronym, i);
+      this.selectOption('class', 'placholder', text, acronym, i);
     },
     addMajor() {
       const newMajor = {
