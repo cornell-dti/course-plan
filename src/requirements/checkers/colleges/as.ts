@@ -1,44 +1,41 @@
 import { Course } from '../../types';
-import { courseMatchesCodeOptions, courseIsFWS } from '../checkers-common';
+import { courseIsFWS, includesWithSingleRequirement } from '../checkers-common';
 
 const casCredits = (course: Course): boolean => course.acadGroup.includes('AS');
 
 const casFWS = courseIsFWS;
 
-const casIntermediateLanguageCourse = (course: Course): boolean => courseMatchesCodeOptions(
-  course,
-  [
-    'ARAB 2***',
-    'BENGL 2***',
-    'BURM 2***',
-    'CHIN 2***',
-    'FREN 2***',
-    'GERST 2***',
-    'GREEK 2***',
-    'HEBRW 2***',
-    'HINDI 2***',
-    'INDO 2***',
-    'ITAL 2***',
-    'JAPAN 2***',
-    'KHMER 2***',
-    'KOREA 2***',
-    'LATIN 2***',
-    'NEPAL 2***',
-    'PERSN 2***',
-    'POLSH 2***',
-    'PORT 2***',
-    'RUSSA 2***',
-    'SANSK 2***',
-    'SINHA 2***',
-    'SPAN 2***',
-    'SWAHL 2***',
-    'TAG 2***',
-    'THAI 2***',
-    'TURK 2***',
-    'VIET 2***',
-    'YORUB 2***',
-    'ZULU 2***'
-  ]
+const casIntermediateLanguageCourse = includesWithSingleRequirement(
+  'ARAB 2***',
+  'BENGL 2***',
+  'BURM 2***',
+  'CHIN 2***',
+  'FREN 2***',
+  'GERST 2***',
+  'GREEK 2***',
+  'HEBRW 2***',
+  'HINDI 2***',
+  'INDO 2***',
+  'ITAL 2***',
+  'JAPAN 2***',
+  'KHMER 2***',
+  'KOREA 2***',
+  'LATIN 2***',
+  'NEPAL 2***',
+  'PERSN 2***',
+  'POLSH 2***',
+  'PORT 2***',
+  'RUSSA 2***',
+  'SANSK 2***',
+  'SINHA 2***',
+  'SPAN 2***',
+  'SWAHL 2***',
+  'TAG 2***',
+  'THAI 2***',
+  'TURK 2***',
+  'VIET 2***',
+  'YORUB 2***',
+  'ZULU 2***'
 );
 
 const casLanguageCourseCredits = (course: Course): boolean => [

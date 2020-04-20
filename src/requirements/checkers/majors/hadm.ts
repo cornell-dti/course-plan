@@ -1,51 +1,50 @@
-import { Course } from '../../types';
-import { courseMatchesCode, courseIsFWS } from '../checkers-common';
+import { courseIsFWS, includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
 
-const hotelAdminAccounting = [
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 1210'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 2210'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 2220'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 3210')
-];
+const hotelAdminAccounting = includesWithSubRequirements(
+  ['HADM 1210'],
+  ['HADM 2210'],
+  ['HADM 2220'],
+  ['HADM 3210']
+);
 
-const hotelAdminEmploymentRelationsHRLaw = [
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 1150'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 2810'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 3870')
-];
+const hotelAdminEmploymentRelationsHRLaw = includesWithSubRequirements(
+  ['HADM 1150'],
+  ['HADM 2810'],
+  ['HADM 3870']
+);
 
-const hotelAdminFoodAndBeverageManagement = [
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 2360'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 3350')
-];
+const hotelAdminFoodAndBeverageManagement = includesWithSubRequirements(
+  ['HADM 2360'],
+  ['HADM 3350']
+);
 
-const hotelAdminInformationSystems = (course: Course): boolean => courseMatchesCode(course, 'HADM 1740');
+const hotelAdminInformationSystems = includesWithSingleRequirement('HADM 1740');
 
-const hotelAdminManagementCommunication = [
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 1650'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 3650')
-];
+const hotelAdminManagementCommunication = includesWithSubRequirements(
+  ['HADM 1650'],
+  ['HADM 3650']
+);
 
-const hotelAdminOperations = [
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 1350'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 1360'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 2010'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 3010')
-];
+const hotelAdminOperations = includesWithSubRequirements(
+  ['HADM 1350'],
+  ['HADM 1360'],
+  ['HADM 2010'],
+  ['HADM 3010']
+);
 
-const hotelAdminPropertiesDevelopmentAndManagement = [
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 2550'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 3550')
-];
+const hotelAdminPropertiesDevelopmentAndManagement = includesWithSubRequirements(
+  ['HADM 2550'],
+  ['HADM 3550']
+);
 
-const hotelAdminServicesMarketing = [
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 1410'),
-  (course: Course): boolean => courseMatchesCode(course, 'HADM 2430')
-];
+const hotelAdminServicesMarketing = includesWithSubRequirements(
+  ['HADM 1410'],
+  ['HADM 2430']
+);
 
-const hotelAdminStrategy = (course: Course): boolean => courseMatchesCode(course, 'HADM 4410');
+const hotelAdminStrategy = includesWithSingleRequirement('HADM 4410');
 
-const hotelAdminSHAElectives = (course: Course) => courseMatchesCode(course, 'HADM 3***');
+const hotelAdminSHAElectives = includesWithSingleRequirement('HADM 3***');
 
 const hotelAdminFWS = courseIsFWS;
 

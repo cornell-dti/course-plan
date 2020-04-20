@@ -1,33 +1,32 @@
-import { Course } from '../../types';
-import { courseMatchesCode, courseMatchesCodeOptions } from '../checkers-common';
+import { includesWithSubRequirements } from '../checkers-common';
 
-const isstProbabilityStatisticsAndOptimization = [
-  (course: Course): boolean => courseMatchesCode(course, 'ORIE 3300'),
-  (course: Course): boolean => courseMatchesCode(course, 'ORIE 3500')
-];
+const isstProbabilityStatisticsAndOptimization = includesWithSubRequirements(
+  ['ORIE 3300'],
+  ['ORIE 3500']
+);
 
-const isstInformationSystems = [
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['INFO 2300']),
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['ORIE 3800']),
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['INFO 3300', 'INFO 4300'])
-];
+const isstInformationSystems = includesWithSubRequirements(
+  ['INFO 2300'],
+  ['ORIE 3800'],
+  ['INFO 3300', 'INFO 4300']
+);
 
-const isstEconomicOrganizationAndSocialContext = [
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['INFO 2040']),
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['INFO 2450', 'ENGRC 3350'])
-];
+const isstEconomicOrganizationAndSocialContext = includesWithSubRequirements(
+  ['INFO 2040'],
+  ['INFO 2450', 'ENGRC 3350']
+);
 
-const isstEngineeringMathematics = [
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['MATH 1910']),
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['MATH 1920']),
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['MATH 2940']),
-  (course: Course): boolean => courseMatchesCodeOptions(course, ['MATH 2930', 'MATH 3040', 'CS 2800'])
-];
+const isstEngineeringMathematics = includesWithSubRequirements(
+  ['MATH 1910'],
+  ['MATH 1920'],
+  ['MATH 2940'],
+  ['MATH 2930', 'MATH 3040', 'CS 2800']
+);
 
-const isstEngineeringDistributions = [
-  (course: Course): boolean => courseMatchesCode(course, 'ENGRD 2110'),
-  (course: Course): boolean => courseMatchesCode(course, 'ENGRD 2700')
-];
+const isstEngineeringDistributions = includesWithSubRequirements(
+  ['ENGRD 2110'],
+  ['ENGRD 2700']
+);
 
 export default {
   isstProbabilityStatisticsAndOptimization,

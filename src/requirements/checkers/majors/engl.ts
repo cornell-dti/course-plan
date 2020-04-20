@@ -1,5 +1,5 @@
 import { Course } from '../../types';
-import { courseMatchesCode, courseMatchesCodeOptions } from '../checkers-common';
+import { courseMatchesCodeOptions, includesWithSingleRequirement } from '../checkers-common';
 
 const englishTotalCredits = (course: Course): boolean => {
   if (courseMatchesCodeOptions(course, ['ENGL 2800', 'ENGL 2810', 'ENGL 2880', 'ENGL 2890'])) {
@@ -16,6 +16,6 @@ const englishPre1800 = (course: Course): boolean => (
   || (course.catalogSatisfiesReq?.includes('pre-1800') ?? false)
 );
 
-const english4000OrAbove = (course: Course): boolean => courseMatchesCode(course, 'ENGL 4***');
+const english4000OrAbove = includesWithSingleRequirement('ENGL 4***');
 
 export default { englishTotalCredits, englishPre1800, english4000OrAbove };
