@@ -268,7 +268,6 @@ async function getReqs(coursesTaken, college, major, requirementsMap) {
     // add credits field to accomodate edited credits
     coursesTakenWithInfo[coursesTaken[i].code].credits = coursesTaken[i].credits;
   }
-  console.log(coursesTakenWithInfo);
   // prepare final output JSONs
   const finalRequirementJSONs = [];
 
@@ -302,7 +301,6 @@ async function getReqs(coursesTaken, college, major, requirementsMap) {
       reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, requirementsMap)
     });
   }
-  console.log('finalrequirementsjson', finalRequirementJSONs);
   return finalRequirementJSONs;
 }
 

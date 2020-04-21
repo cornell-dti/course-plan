@@ -166,7 +166,6 @@ export default {
   mounted() {
     // Get array of courses from semesters data
     const courses = this.getCourseCodesArray();
-    console.log(courses);
 
     reqsFunctions.getReqs(courses, this.user.college, this.user.major, this.requirementsMap).then(groups => {
       // Send satisfied credits data back to dashboard to build alerts
