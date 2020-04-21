@@ -6,19 +6,17 @@ import {
   DecoratedCollegeOrMajorRequirement,
   EligibleCourses
 } from './types';
-import sourceRequirements from './source-requirements-json';
+import sourceRequirements from './data';
 import filteredAllCourses from './filtered-all-courses';
-import requirementCheckers from './checkers/all-requirements-checkers';
 
 const getEligibleCourses = (requirement: CollegeOrMajorRequirement): readonly EligibleCourses[] => {
   // eligibleCoursesMap[semester][subject]
   // gives you all courses number of the courses eligible for the given requirements.
-  const { checkerName } = requirement;
-  if (checkerName === null) {
+  const { checker: requirementChecker } = requirement;
+  if (requirementChecker === null) {
     // Self check courses have zero satisfiable course.
     return [];
   }
-  const requirementChecker = requirementCheckers[checkerName];
   const subRequirementCheckers = typeof requirementChecker === 'function'
     ? [requirementChecker]
     : requirementChecker;
@@ -66,7 +64,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
   const decoratedJson: MutableDecoratedJson = { university, college: {}, major: {} };
   const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) => (
     requirements.map(requirement => {
-      const { checkerName, ...rest } = requirement;
+      const { checker, ...rest } = requirement;
       return {
         ...rest, courses: getEligibleCourses(requirement)
       };
