@@ -53,8 +53,9 @@ export type UniversityRequirements = {
   readonly requirements: readonly BaseRequirement[];
 };
 
+type Checker = (course: Course) => boolean;
 export interface CollegeOrMajorRequirement extends BaseRequirement {
-  readonly checkerName: string | null;
+  readonly checker: Checker | readonly Checker[] | null;
 }
 
 export type EligibleCourses = {
