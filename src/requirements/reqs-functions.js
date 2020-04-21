@@ -184,7 +184,7 @@ async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequiremen
             totalRequirementCount += 1;
             break;
           case 'credits':
-            totalRequirementCredits += courseInfo.enrollGroups[0].unitsMaximum;
+            totalRequirementCredits += courseInfo.credits || courseInfo.enrollGroups[0].unitsMaximum;
             break;
           case 'self-check':
             continue;
@@ -263,8 +263,12 @@ async function getReqs(coursesTaken, college, major, requirementsMap) {
     coursesTaken.map(courseTaken => getCourseInfo(courseTaken.code, courseTaken.roster))
   );
 
-  for (let i = 0; i < coursesTaken.length; i += 1) { coursesTakenWithInfo[coursesTaken[i].code] = courseData[i]; }
-
+  for (let i = 0; i < coursesTaken.length; i += 1) {
+    coursesTakenWithInfo[coursesTaken[i].code] = courseData[i];
+    // add credits field to accomodate edited credits
+    coursesTakenWithInfo[coursesTaken[i].code].credits = coursesTaken[i].credits;
+  }
+  console.log(coursesTakenWithInfo);
   // prepare final output JSONs
   const finalRequirementJSONs = [];
 
@@ -298,7 +302,7 @@ async function getReqs(coursesTaken, college, major, requirementsMap) {
       reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements, requirementsMap)
     });
   }
-
+  console.log('finalrequirementsjson', finalRequirementJSONs);
   return finalRequirementJSONs;
 }
 

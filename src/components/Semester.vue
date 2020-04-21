@@ -237,6 +237,7 @@ export default {
           break;
         }
       }
+      this.$parent.$parent.updateRequirementsMenu();
     },
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
