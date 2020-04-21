@@ -437,7 +437,7 @@ export default {
           width: 100%;
           height: auto;
           float: none;
-          overflow: none !important;
+          overflow: none;
           display: flex;
           background: #F8F8F8;
           flex-shrink: 0;
@@ -453,7 +453,7 @@ export default {
           float: none;
           display: flex;
           background: #FFF;
-          overflow: none !important;
+          overflow: none;
           flex-shrink: 0;
         }
       }
