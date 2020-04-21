@@ -21,12 +21,29 @@ export type CourseTaken = {
 };
 
 export interface BaseRequirement {
+  /** Full name of the requirement. */
   readonly name: string;
+  /** Description of the requirement. */
   readonly description: string;
+  /** The source with more information on the requirement. (This should be a URL string.) */
   readonly source: string;
   readonly fulfilledBy: 'credits' | 'courses' | 'self-check';
   readonly applies?: string;
+  /**
+   * The minimum count required to fulfill this requirement.
+   *
+   * - When fulfilledBy === 'credits', this field stores the min number of credits.
+   * - When fulfilledBy === 'courses', this field stores the min number of courses.
+   * - When fulfilledBy === 'self-check', this field should not exist.
+   */
   readonly minCount?: number;
+  /**
+   * Some requirements have sub-requirements.
+   *
+   * - `minCount` specifies how many types of sub-requirements needs to be satisfied.
+   * - `totalCount` specifies how many courses/credits need to be earned in total.
+   */
+  readonly totalCount?: number;
   readonly progressBar?: boolean;
 }
 
@@ -36,8 +53,9 @@ export type UniversityRequirements = {
   readonly requirements: readonly BaseRequirement[];
 };
 
+type Checker = (course: Course) => boolean;
 export interface CollegeOrMajorRequirement extends BaseRequirement {
-  readonly checkerName: string | null;
+  readonly checker: Checker | readonly Checker[] | null;
 }
 
 export type EligibleCourses = {
@@ -93,7 +111,8 @@ export type RequirementFulfillmentStatistics = {
    * When it's a number, it's either number of courses or number of credits.
    * When it's undefined, it means that the requirement is self-check.
    */
-  readonly fulfilled?: number;
+  readonly minCountFulfilled?: number;
+  readonly totalCountFulfilled?: number;
 };
 
 export type GroupedRequirementFulfillmentReport = {

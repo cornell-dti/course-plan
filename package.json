@@ -7,6 +7,7 @@
     "build": "vue-cli-service build --mode production",
     "build:req-gen": "tsc -p tsconfig.node.json",
     "fetch-courses": "node requirement-generator-dist/fetcher.js",
+    "prereq-gen": "npm run build:req-gen",
     "req-gen": "node requirement-generator-dist/generator.js",
     "lint": "vue-cli-service lint",
     "tsc": "tsc",

@@ -67,6 +67,9 @@ export default {
   }
 }
 
+.pointer{
+  cursor: pointer;
+}
 #profileIcon {
   cursor: pointer;
   background-image: url('~@/assets/images/navbar/profileIcon.svg');
@@ -97,6 +100,7 @@ export default {
   &:focus,
   &:active {
     background-image: url('~@/assets/images/navbar/starBlue.svg');
+
   }
 }
 
