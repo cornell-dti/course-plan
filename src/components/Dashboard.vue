@@ -147,17 +147,16 @@ export default {
     createCourseCreditRange(course) {
       const courseCreditRange = [];
       if (typeof course.creditRange !== 'undefined') {
-        const ccr = course.creditRange; // the linter won't let me return with course.creditRange so im just doing this
-      } else if (typeof course.enrollGroups !== 'undefined') {
+        return course.creditRange;
+      }
+      if (typeof course.enrollGroups !== 'undefined') {
         course.enrollGroups.forEach(enrollGroup => {
           courseCreditRange.push(enrollGroup.unitsMinimum);
           courseCreditRange.push(enrollGroup.unitsMaximum);
         });
         return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
-      } else {
-        return [course.credits, course.credits];
       }
-      return course.creditRange;
+      return [course.credits, course.credits];
     },
 
     /**

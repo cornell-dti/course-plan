@@ -44,7 +44,7 @@
           <div
             v-for="credit in makeCreditArary()"
             :key="credit"
-            class="courseMenu-section"
+            class="courseMenu-section courseMenu-section--credits"
             @click="editCourseCredit(credit)"
           >
             <div class="courseMenu-left">
@@ -181,6 +181,14 @@ export default {
       padding-bottom: 1rem;
       border-bottom-left-radius: 9px;
       border-bottom-right-radius: 9px;
+    }
+
+    &--credits {
+      padding-left: 0;
+      padding-right: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
     }
   }
 
