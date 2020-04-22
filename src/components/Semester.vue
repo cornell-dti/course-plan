@@ -566,4 +566,23 @@ export default {
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 }
+
+
+@media only screen and (max-width: 878px) {
+  .semester {
+    &-menu {
+      right: 0rem;
+    }
+    &-addWrapper {
+      width: 17rem;
+      &--compact {
+        width: 10.5rem;
+        height: 2rem;
+      }
+    }
+    &--min {
+      width: 18.75rem;
+    }
+  }
+}
 </style>

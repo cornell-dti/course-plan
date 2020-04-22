@@ -6,6 +6,7 @@
             :bottomCourses="bottomCourses"
             :seeMoreCourses="seeMoreCourses"
             :isExpanded="isExpanded"
+            :maxBottomBarTabs="maxBottomBarTabs"
             @bottomBarTabToggle="bottomBarTabToggle"
             @toggleFromTab="toggleFromTab"
             />
@@ -41,7 +42,8 @@ export default {
   props: {
     bottomCourses: Array,
     seeMoreCourses: Array,
-    isExpanded: Boolean
+    isExpanded: Boolean,
+    maxBottomBarTabs: Number
   },
 
   methods: {
@@ -82,6 +84,29 @@ export default {
 .expandedTabView{
     position: fixed;
     bottom: 18.75rem;
+}
+
+@media only screen and (max-width: 976px) {
+  .bottombar {
+    &-tabview {
+      left: 25.5rem;
+      width: calc(100vw - 25.5rem);
+    }
+  }
+}
+@media only screen and (max-width: 878px) {
+  .bottombar {
+    &-tabview {
+      left: 0rem;
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .expandedTabView {
+    bottom: 11.75rem;
+  }
 }
 
 </style>

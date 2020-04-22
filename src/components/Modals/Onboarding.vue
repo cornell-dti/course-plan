@@ -851,4 +851,42 @@ select option[disabled]:first-child {
   display: none;
 }
 
+@media only screen and (max-width: 600px) {
+  .onboarding {
+    &-main {
+      width: 100%;
+    }
+    &-content {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+    &-inputs {
+      &--name {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+    }
+    &-inputWrapper {
+      &--name {
+        width: 100%;
+      }
+      &--college {
+        width: 100%;
+      }
+    }
+    &-dropdown {
+      &-placeholder {
+        &.college-placeholder,
+        &.major-placeholder,
+        &.minor-placeholder {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}
+
 </style>

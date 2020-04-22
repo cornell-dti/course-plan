@@ -235,4 +235,16 @@ export default {
     flex-direction: column;
   }
 }
+
+@media only screen and (max-width: 878px) {
+  .courseMenu {
+    &-arrow {
+      display: none;
+    }
+    &-colors {
+      right: 0rem;
+      left: -9rem;
+    }
+  }
+}
 </style>

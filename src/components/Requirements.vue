@@ -729,16 +729,23 @@ button.view {
   width: 100%;
   background-color: #d7d7d7;
 }
-.bottomBar {
-  padding-bottom: 300px;
+@media only screen and (max-width: 976px) {
+  .requirements, .fixed {
+    width: 21rem;
+  }
 }
-.bottomPreview {
-  padding-bottom: 40px;
-}
-.gear{
-    &--disabled {
-      opacity: 0.3;
-      pointer-events: none;
-    }
+
+@media only screen and (max-width: 878px) {
+  .requirements {
+    width: 100%;
+    padding-left: 0.5rem;
+  }
+
+  .fixed {
+    top: 4.5rem;
+    left: 0rem;
+    width: 100%;
+    height: calc(100vh - 4.5rem);
+  }
 }
 </style>

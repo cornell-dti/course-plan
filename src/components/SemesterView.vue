@@ -8,8 +8,18 @@
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
-      <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
-      <div class="semesterView-switchImage semesterView-fourColumn" @click="setCompact" :class="{ 'semesterView-fourColumn--active': compact }"></div>
+      <div class="semesterView-switchImage semesterView-twoColumn"
+        @click="setNotCompact"
+        :class="{ 'semesterView-twoColumn--active': !compact }"
+      >
+      </div>
+      <div
+        class="semesterView-switchImage semesterView-fourColumn"
+        v-if="!isMobile"
+        @click="setCompact"
+        :class="{ 'semesterView-fourColumn--active': compact }"
+      >
+      </div>
     </div>
     <confirmation
       :id="'semesterConfirmation'"
@@ -92,7 +102,8 @@ export default {
     semesters: Array,
     compact: Boolean,
     isBottomBar: Boolean,
-    isBottomBarExpanded: Boolean
+    isBottomBarExpanded: Boolean,
+    isMobile: Boolean
   },
   data() {
     return {
@@ -407,4 +418,20 @@ export default {
 .bottomBar {
   margin-bottom: 300px;
 }
+
+@media only screen and (max-width: 878px) {
+  .semesterView {
+    margin-top: 5.5rem;
+    margin-left: 2.5rem;
+    margin-right: 1rem;
+    &-switch {
+      padding-right: 0.75rem;
+    }
+    &-content {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
 </style>
