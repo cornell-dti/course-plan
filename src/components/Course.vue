@@ -58,6 +58,8 @@
       class="course-menu"
       @delete-course="deleteCourse"
       @color-course="colorCourse"
+      @edit-course-credit="editCourseCredit"
+      :getCreditRange="getCreditRange"
       v-click-outside="closeMenuIfOpen"
     />
   </div>
@@ -90,6 +92,7 @@ export default {
     number: String,
     name: String,
     credits: Number,
+    creditRange: Array,
     prereqs: String,
     semesters: Array,
     color: String,
@@ -103,6 +106,7 @@ export default {
     return {
       menuOpen: false,
       stopCloseFlag: false,
+      getCreditRange: this.creditRange,
       colorJustChanged: false
     };
   },
@@ -180,6 +184,10 @@ export default {
         this.$emit('updateBar', this.courseObj, this.colorJustChanged, this.color);
       }
       this.colorJustChanged = false;
+    },
+    editCourseCredit(credit) {
+      this.$emit('edit-course-credit', credit, `${this.subject} ${this.number}`);
+      this.closeMenuIfOpen();
     }
   },
   directives: {

@@ -32,6 +32,7 @@
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
+          @update-requirements-menu="updateRequirementsMenu"
         />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
@@ -208,6 +209,9 @@ export default {
       // Update requirements menu from dashboard
       this.$emit('updateRequirementsMenu');
     },
+    updateRequirementsMenu() {
+      this.$emit('updateRequirementsMenu');
+    },
     compare(a, b) {
       if (a.type === b.type && a.year === b.year) { return 0; }
       if (a.year > b.year) { return 1; }
@@ -250,6 +254,7 @@ export default {
         name: course.name,
         description: course.description,
         credits: course.credits,
+        creditRange: course.creditRange,
         semesters: course.semesters,
         prereqs: course.prereqs,
         enrollment: course.enrollment,

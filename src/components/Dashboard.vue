@@ -142,6 +142,25 @@ export default {
     },
 
     /**
+     * Creates credit range based on course
+     * Example: [1, 4] is the credit range for the given course
+     */
+    createCourseCreditRange(course) {
+      const courseCreditRange = [];
+      if (typeof course.creditRange !== 'undefined') {
+        return course.creditRange;
+      }
+      if (typeof course.enrollGroups !== 'undefined') {
+        course.enrollGroups.forEach(enrollGroup => {
+          courseCreditRange.push(enrollGroup.unitsMinimum);
+          courseCreditRange.push(enrollGroup.unitsMaximum);
+        });
+        return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
+      }
+      return [course.credits, course.credits];
+    },
+
+    /**
      * Creates a course on frontend with either user or API data
      */
     createCourse(course) {
@@ -159,7 +178,7 @@ export default {
 
       // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
-
+      const creditRange = course.creditRange || this.createCourseCreditRange(course);
       // Semesters: remove periods and split on ', '
       // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
       const catalogWhenOfferedDoesNotExist = (!course.catalogWhenOffered) || course.catalogWhenOffered === '';
@@ -224,6 +243,7 @@ export default {
         name,
         description,
         credits,
+        creditRange,
         semesters,
         prereqs,
         enrollment,
@@ -235,7 +255,6 @@ export default {
         alerts,
         check: true
       };
-
       // Update requirements menu
       this.updateRequirementsMenu();
 
