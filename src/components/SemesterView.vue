@@ -25,6 +25,7 @@
           @updateBar="updateBar"
           @delete-semester="deleteSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
+          @update-requirements-menu="updateRequirementsMenu"
         />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
@@ -200,7 +201,9 @@ export default {
       // Update requirements menu from dashboard
       this.$emit('updateRequirementsMenu');
     },
-
+    updateRequirementsMenu() {
+      this.$emit('updateRequirementsMenu');
+    },
     updateBar(course) {
       this.activatedCourse = course;
       this.key += 1;
