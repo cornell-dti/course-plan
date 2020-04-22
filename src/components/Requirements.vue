@@ -1,6 +1,6 @@
 <template v-if="semesters">
   <div class="requirements">
-    <div class="fixed" :class="{ bottomPreview: isBottomPreview && !isBottomBar, bottomBar: isBottomBar }">
+    <div class="fixed">
     <h1 class="title">School Requirements</h1>
 
     <!-- loop through reqs array of req objects -->
@@ -73,14 +73,19 @@
               </button>
             </div>
             <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-              <p class="sup-req pointer">{{subReq.name}}</p>
+              <p class="sup-req pointer">{{subReq.requirement.name}}</p>
             </div>
             <div class="col">
-              <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
+              <p class="sup-req-progress text-right">
+                ( {{
+                  (subReq.requirement.fulfilledBy !== 'self-check')
+                  ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
+                  : 'Self-Check' }}  )
+              </p>
             </div>
           </div>
           <div v-if="subReq.displayDescription" class="description">
-            {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+            {{ subReq.requirement.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
           </div>
           <div class="separator"></div>
         </div>
@@ -121,14 +126,14 @@
                 </button>
               </div>
               <div class="col-7" @click="toggleDescription(index, 'completed', id)">
-                <p class="sup-req pointer">{{subReq.name}}</p>
+                <p class="sup-req pointer">{{subReq.requirement.name}}</p>
               </div>
               <div class="col">
-                <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
+                <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }} )</p>
               </div>
             </div>
             <div v-if="subReq.displayDescription" class="description">
-              {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+              {{ subReq.requirement.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
             </div>
           </div>
         </div>
@@ -141,83 +146,85 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Vue } from 'vue-property-decorator';
+// @ts-ignore
 import VueCollapse from 'vue2-collapse';
-import Course from '@/components/Course';
-import Modal from '@/components/Modals/Modal';
-/** @typedef { import('../requirements/types').StrictFulfilledByType } StrictFulfilledByType */
-/** @typedef { import('../requirements/types').BaseRequirement<StrictFulfilledByType> } Requirement */
+// Disable import extension check because TS module resolution depends on it.
+// eslint-disable-next-line import/extensions
+import Course from '@/components/Course.vue';
+// eslint-disable-next-line import/extensions
+import Modal from '@/components/Modals/Modal.vue';
+import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 
-import reqsFunctions from '@/requirements/reqs-functions';
+import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.use(VueCollapse);
 
-export default {
+type Data = {
+  actives: boolean[];
+  modalShow: boolean;
+  reqs: SingleMenuRequirement[];
+}
+
+export default Vue.extend({
   props: {
     semesters: Array,
     user: Object,
-    compact: Boolean,
-    isBottomPreview: Boolean,
-    isBottomBar: Boolean
+    compact: Boolean
   },
   mounted() {
-    // Get array of courses from semesters data
-    const courses = this.getCourseCodesArray();
+    const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major);
 
-    reqsFunctions.getReqs(courses, this.user.college, this.user.major, this.requirementsMap).then(groups => {
-      // Send satisfied credits data back to dashboard to build alerts
-      this.emitRequirementsMap();
+    // Send satisfied credits data back to dashboard to build alerts
+    this.$emit('requirementsMap', computeRequirementMap(groups));
 
-      // Turn result into data readable by requirements menu
-      groups.forEach(group => {
-        const singleMenuRequirement = {
-          ongoing: [],
-          completed: [],
-          name: `${group.groupName.toUpperCase()} REQUIREMENT`,
-          group: group.groupName.toUpperCase(),
-          specific: (group.specific) ? group.specific : null,
-          color: '105351',
-          displayDetails: false,
-          displayCompleted: false
-        };
+    // Turn result into data readable by requirements menu
+    const singleMenuRequirements = groups.map(group => {
+      const singleMenuRequirement: SingleMenuRequirement = {
+        ongoing: [],
+        completed: [],
+        name: `${group.groupName.toUpperCase()} REQUIREMENT`,
+        group: group.groupName.toUpperCase(),
+        specific: (group.specific) ? group.specific : null,
+        color: '105351',
+        displayDetails: false,
+        displayCompleted: false
+      };
 
-        group.reqs.forEach(req => {
-          // Account for progress type
-          if (req.type) req.type = req.type.charAt(0).toUpperCase() + req.type.substring(1);
-
-          // Create progress bar with requirement with progressBar = true
-          if (req.progressBar) {
-            singleMenuRequirement.type = req.type;
-            singleMenuRequirement.fulfilled = req.fulfilled;
-            singleMenuRequirement.required = req.required;
-          }
-
-          // Default display value of false for all requirement lists
-          req.displayDescription = false;
-
-          if (!req.fulfilled || req.fulfilled < req.required) {
-            singleMenuRequirement.ongoing.push(req);
-          } else {
-            singleMenuRequirement.completed.push(req);
-          }
-        });
-
-        // Make number of requirements items progress bar in absense of identified progress metric
-        if (!singleMenuRequirement.type) {
-          singleMenuRequirement.type = 'Requirements';
-          singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
-          singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+      group.reqs.forEach(req => {
+        // Create progress bar with requirement with progressBar = true
+        if (req.requirement.progressBar) {
+          singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
+          singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
+          singleMenuRequirement.required = req.requirement.totalCount || req.requirement.minCount;
         }
 
-        this.reqs.push(singleMenuRequirement);
+        // Default display value of false for all requirement lists
+        const displayableRequirementFulfillment = { ...req, displayDescription: false };
+
+        if (!req.minCountFulfilled || req.minCountFulfilled < (req.requirement.minCount || 0)) {
+          singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
+        } else {
+          singleMenuRequirement.completed.push(displayableRequirementFulfillment);
+        }
       });
+
+      // Make number of requirements items progress bar in absense of identified progress metric
+      if (!singleMenuRequirement.type) {
+        singleMenuRequirement.type = 'Requirements';
+        singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
+        singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+      }
+
+      return singleMenuRequirement;
     });
+    this.reqs.push(...singleMenuRequirements);
   },
 
-  data() {
+  data() : Data {
     return {
       actives: [false],
       modalShow: false,
@@ -262,27 +269,20 @@ export default {
         //     }
         //   ]
         // }
-      ],
-      requirementsMap: {
-        // CS 1110: 'MQR-AS'
-      }
+      ]
     };
   },
 
   methods: {
-    /**
-     * @param {number} index
-     */
-    toggleDetails(index) {
+    getRequirementTypeDisplayName(type: string): string {
+      return type.charAt(0).toUpperCase() + type.substring(1);
+    },
+
+    toggleDetails(index: number): void {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
 
-    /**
-     * @param {number} index
-     * @param {'ongoing' | 'completed'} type
-     * @param {number} id
-     */
-    toggleDescription(index, type, id) {
+    toggleDescription(index: number, type: 'ongoing' | 'completed', id: number): void {
       if (type === 'ongoing') {
         const currentBool = this.reqs[index].ongoing[id].displayDescription;
         this.reqs[index].ongoing[id].displayDescription = !currentBool;
@@ -292,33 +292,29 @@ export default {
       }
     },
 
-    /**
-     * @param {number} index
-     * @param {boolean} bool
-     */
-    turnCompleted(index, bool) {
+    turnCompleted(index: number, bool: boolean): void {
       this.reqs[index].displayCompleted = bool;
     },
 
-    /**
-     * @returns {Array<{code: string, roster: string}>}
-     */
-    getCourseCodesArray() {
-      const courses = [];
+    getCourseCodesArray(): readonly CourseTaken[] {
+      const courses: CourseTaken[] = [];
       this.semesters.forEach(semester => {
+        // @ts-ignore
         semester.courses.forEach(course => {
-          courses.push({ code: `${course.subject} ${course.number}`, roster: course.lastRoster, credits: course.credits });
+          courses.push({
+            code: `${course.lastRoster}: ${course.subject} ${course.number}`,
+            subject: course.subject,
+            number: course.number,
+            credits: course.credits,
+            roster: course.lastRoster
+          });
         });
       });
 
       return courses;
-    },
-
-    emitRequirementsMap() {
-      this.$emit('requirementsMap', this.requirementsMap);
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">
@@ -611,13 +607,5 @@ button.view {
   height: 1px;
   width: 100%;
   background-color: #d7d7d7;
-}
-
-.bottomBar {
-  padding-bottom: 300px;
-}
-
-.bottomPreview {
-  padding-bottom: 40px;
 }
 </style>

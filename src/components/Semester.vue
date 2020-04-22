@@ -95,7 +95,7 @@ Vue.component('deletesemester', DeleteSemester);
 
 const clickOutside = {
   bind(el, binding, vnode) {
-    el.event = function (event) {
+    el.event = event => {
       if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event);
       }
@@ -227,8 +227,8 @@ export default {
         }
       }
     },
-    updateBar(course) {
-      this.$emit('updateBar', course);
+    updateBar(course, colorJustChanged, color) {
+      this.$emit('updateBar', course, colorJustChanged, color);
     },
     editCourseCredit(credit, courseCode) {
       for (let i = 0; i < this.courses.length; i += 1) {

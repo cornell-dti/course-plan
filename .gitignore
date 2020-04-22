@@ -1,8 +1,9 @@
 .DS_Store
 node_modules
-/dist
+dist
 .vscode
 .firebase
+requirement-generator-dist/
 
 # local env files
 .env.local

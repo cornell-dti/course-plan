@@ -71,7 +71,7 @@ Vue.component('coursemenu', CourseMenu);
 
 const clickOutside = {
   bind(el, binding, vnode) {
-    el.event = function (event) {
+    el.event = event => {
       if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event);
       }
@@ -103,7 +103,11 @@ export default {
     return {
       menuOpen: false,
       stopCloseFlag: false,
+<<<<<<< HEAD
       getCreditRange: this.creditRange
+=======
+      colorJustChanged: false
+>>>>>>> master
     };
   },
   computed: {
@@ -169,11 +173,13 @@ export default {
     colorCourse(color) {
       this.$emit('color-course', color, `${this.subject} ${this.number}`);
       this.closeMenuIfOpen();
+      this.colorJustChanged = true;
     },
     updateBar() {
       if (!this.menuOpen) {
-        this.$emit('updateBar', this.courseObj);
+        this.$emit('updateBar', this.courseObj, this.colorJustChanged, this.color);
       }
+      this.colorJustChanged = false;
     },
     editCourseCredit(credit) {
       this.$emit('edit-course-credit', credit, `${this.subject} ${this.number}`);

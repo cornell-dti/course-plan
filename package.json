@@ -5,6 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --mode production",
+    "build:req-gen": "tsc -p tsconfig.node.json",
+    "fetch-courses": "node requirement-generator-dist/fetcher.js",
+    "prereq-gen": "npm run build:req-gen",
+    "req-gen": "node requirement-generator-dist/generator.js",
     "lint": "vue-cli-service lint",
     "tsc": "tsc",
     "build:staging": "vue-cli-service build --mode staging",
@@ -19,6 +23,7 @@
     "dragula": "^3.7.2",
     "firebase": "^6.6.2",
     "jsonschema": "^1.2.5",
+    "node-fetch": "^2.6.0",
     "request": "^2.88.0",
     "vue": "^2.6.11",
     "vue-dragula": "^1.3.1",
@@ -29,6 +34,7 @@
     "vuex": "^3.1.2"
   },
   "devDependencies": {
+    "@types/node-fetch": "^2.5.5",
     "@typescript-eslint/eslint-plugin": "^2.21.0",
     "@typescript-eslint/parser": "^2.21.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
@@ -43,21 +49,6 @@
     "sass-loader": "^8.0.2",
     "typescript": "~3.7.5",
     "vue-template-compiler": "^2.6.11"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/typescript"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "@typescript-eslint/parser"
-    }
   },
   "postcss": {
     "plugins": {

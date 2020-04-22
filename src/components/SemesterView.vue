@@ -1,5 +1,10 @@
 <template>
-  <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
+  <div
+    class="semesterView"
+    :class="{ bottomBar: isBottomBar, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}"
+    @click="closeBar"
+    :key="key"
+  >
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
@@ -54,23 +59,20 @@
 
 <script>
 import Vue from 'vue';
+import clone from 'clone';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
 import Caution from '@/components/Caution';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
 
-const clone = require('clone');
+import { auth, userDataCollection } from '@/firebaseConfig';
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
 Vue.component('caution', Caution);
 Vue.component('deletesemester', DeleteSemester);
-
-const firebaseConfig = require('@/firebaseConfig.js');
-
-const { auth, userDataCollection } = firebaseConfig;
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -84,7 +86,8 @@ export default {
   props: {
     semesters: Array,
     compact: Boolean,
-    isBottomBar: Boolean
+    isBottomBar: Boolean,
+    isBottomBarExpanded: Boolean
   },
   data() {
     return {
@@ -205,9 +208,11 @@ export default {
       this.$emit('updateRequirementsMenu');
     },
     updateBar(course) {
+
+    updateBar(course, colorJustChanged, color) {
       this.activatedCourse = course;
       this.key += 1;
-      this.$emit('update-bar', course);
+      this.$emit('updateBar', course, colorJustChanged, color);
       this.isCourseClicked = true;
     },
 
@@ -359,6 +364,7 @@ export default {
     }
   }
 }
+
 /* The Modal (background) */
 .semester-modal {
   display: none; /* Hidden by default */
