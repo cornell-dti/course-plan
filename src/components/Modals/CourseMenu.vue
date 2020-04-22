@@ -40,7 +40,7 @@
           <span class="courseMenu-text">Edit Credits</span>
         </div>
         <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
-        <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits">
+        <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits">
           <div
             v-for="credit in makeCreditArary()"
             :key="credit"
@@ -206,6 +206,12 @@ export default {
     width: 2.75rem;
     right: -2.75rem;
     padding: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  &-centerCredits {
   }
 }
 </style>
