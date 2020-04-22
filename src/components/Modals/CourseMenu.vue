@@ -7,10 +7,10 @@
         @mouseleave="setDisplayColors(false)"
       >
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/paint.svg" />
+          <img class="courseMenu-icon" src="@/assets/images/paint.svg" />
           <span class="courseMenu-text">Edit Color</span>
         </div>
-        <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
+        <img class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
 
         <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
           <div
@@ -36,10 +36,10 @@
         v-if="this.getCreditRange[0] != this.getCreditRange[1]"
         >
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/edit-credits.svg" />
+          <img class="courseMenu-icon" src="@/assets/images/edit-credits.svg" />
           <span class="courseMenu-text">Edit Credits</span>
         </div>
-        <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
+        <img class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
         <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits">
           <div
             v-for="credit in makeCreditArary()"
@@ -55,7 +55,7 @@
       </div>
       <div class="courseMenu-section" @click="deleteCourse">
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/trash.svg" />
+          <img class="courseMenu-icon" src="@/assets/images/trash.svg" />
           <span class="courseMenu-text">Delete</span>
         </div>
       </div>
@@ -210,8 +210,6 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-  }
-  &-centerCredits {
   }
 }
 </style>
