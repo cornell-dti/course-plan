@@ -130,11 +130,9 @@ export default {
     makeCreditArary() {
       const creditArray = [];
       let accu = 0;
-      console.log((this.getCreditRange[1]));
       for (let i = 0; i < (this.getCreditRange[1]); i += 1) {
         if (this.getCreditRange[0] < 1) {
           accu += 0.5;
-          console.log(accu);
           creditArray.push(accu);
           accu += 0.5;
           creditArray.push(accu);
@@ -143,7 +141,6 @@ export default {
           creditArray.push(accu);
         }
       }
-      console.log();
       return creditArray;
     }
   }
