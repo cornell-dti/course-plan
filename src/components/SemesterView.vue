@@ -207,15 +207,12 @@ export default {
     updateRequirementsMenu() {
       this.$emit('updateRequirementsMenu');
     },
-    updateBar(course) {
-
     updateBar(course, colorJustChanged, color) {
       this.activatedCourse = course;
       this.key += 1;
       this.$emit('updateBar', course, colorJustChanged, color);
       this.isCourseClicked = true;
     },
-
     closeBar() {
       if (!this.isCourseClicked) {
         this.$emit('close-bar');

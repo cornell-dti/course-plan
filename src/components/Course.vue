@@ -103,11 +103,8 @@ export default {
     return {
       menuOpen: false,
       stopCloseFlag: false,
-<<<<<<< HEAD
-      getCreditRange: this.creditRange
-=======
+      getCreditRange: this.creditRange,
       colorJustChanged: false
->>>>>>> master
     };
   },
   computed: {
