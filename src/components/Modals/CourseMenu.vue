@@ -1,5 +1,5 @@
 <template>
-  <div class="courseMenu">
+  <div v-bind:class="{'courseMenu-movedNotCompact': isMovedNotCompact , 'courseMenu': isNormal, 'courseMenu-movedCompact':isMovedCompact}" class="courseMenu" >
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
@@ -69,10 +69,15 @@ import Course from '@/components/Course';
 
 export default {
   props: {
-    getCreditRange: Array
+    getCreditRange: Array,
+    semId: Number,
+    isCompact: Boolean
   },
   data() {
     return {
+      isMovedNotCompact: this.semId % 2 === 0 && !this.isCompact,
+      isNormal: this.semId % 2 === 1 && !this.isCompact,
+      isMovedCompact: this.semId % 3 === 0 && this.isCompact && this.semId !== 1,
       colors: [
         {
           text: 'Gray',
@@ -149,6 +154,16 @@ export default {
 
 <style scoped lang="scss">
 .courseMenu {
+  &-movedNotCompact{
+  top: 20px;
+  left: -50px;
+  position: fixed;
+  }
+  &-movedCompact{
+    top: 20px;
+    left: -50px;;
+    position: fixed;
+  }
   &-content {
     background: #ffffff;
     border: 1px solid #acacac;

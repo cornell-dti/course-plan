@@ -53,6 +53,8 @@
     </div>
     <coursemenu
       v-if="menuOpen"
+      :semId="semId"
+      :isCompact="compact"
       class="course-menu"
       @delete-course="deleteCourse"
       @color-course="colorCourse"
@@ -97,7 +99,8 @@ export default {
     alerts: Object,
     compact: Boolean,
     id: String,
-    active: Boolean
+    active: Boolean,
+    semId: Number
   },
   data() {
     return {
@@ -130,10 +133,14 @@ export default {
       if (semesterString.length > 0) {
         return semesterString.substring(0, semesterString.length - 2);
       }
+
       return semesterString;
     },
 
     creditString() {
+      if (this.credits === 1) {
+        return `${this.credits} credit`;
+      }
       return `${this.credits} credits`;
     },
     review() {
@@ -182,7 +189,6 @@ export default {
       this.$emit('edit-course-credit', credit, `${this.subject} ${this.number}`);
       this.closeMenuIfOpen();
     }
-
   },
   directives: {
     'click-outside': clickOutside
@@ -337,8 +343,16 @@ export default {
     align-items: center;
   }
 
+  &-credits {
+    white-space: nowrap;
+  }
+
   &-semesters {
     margin-left: 0.2rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 14rem;
 
     &:before {
       margin-right: 0.2rem;

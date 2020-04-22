@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div id= "dashboard" class="dashboard">
     <onboarding class="dashboard-onboarding" v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
       :user="user"
@@ -76,13 +76,15 @@ export default {
       firebaseSems: [],
       currentClasses: [],
       user: {
-        major: '',
-        majorFN: '',
+        major: [],
+        majorFN: [],
         college: '',
         collegeFN: '',
         firstName: names[0],
         lastName: names[1],
-        middleName: ''
+        middleName: '',
+        minor: [],
+        minorFN: []
       },
       bottomCourses: [],
       seeMoreCourses: [],
@@ -486,11 +488,28 @@ export default {
         middleName: name.middleName,
         lastName: name.lastName
       };
+
       if ('majors' in data && data.majors.length > 0) {
-        user.major = data.majors[0].acronym;
-        user.majorFN = data.majors[0].fullName;
+        const majors = [];
+        const majorsFN = [];
+        data.majors.forEach(major => {
+          majors.push(major.acronym);
+          majorsFN.push(major.fullName);
+        });
+        user.major = majors;
+        user.majorFN = majorsFN;
       }
 
+      if ('majors' in data && data.majors.length > 0) {
+        const minors = [];
+        const minorsFN = [];
+        data.minors.forEach(minor => {
+          minors.push(minor.acronym);
+          minorsFN.push(minor.fullName);
+        });
+        user.minor = minors;
+        user.minorFN = minorsFN;
+      }
       return user;
     },
 
