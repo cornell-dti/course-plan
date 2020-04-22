@@ -42,13 +42,13 @@
         <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
         <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits">
           <div
-            v-for="credit in (this.getCreditRange[1] - this.getCreditRange[0] + 1)"
+            v-for="credit in makeCreditArary()"
             :key="credit"
             class="courseMenu-section"
-            @click="editCourseCredit(getCreditRange[0] + credit - 1)"
+            @click="editCourseCredit(credit)"
           >
             <div class="courseMenu-left">
-              <span class="courseMenu-text">{{ getCreditRange[0] + credit - 1}}</span>
+              <span class="courseMenu-text">{{ credit }}</span>
             </div>
           </div>
         </div>
@@ -127,8 +127,24 @@ export default {
     editCourseCredit(credit) {
       this.$emit('edit-course-credit', credit);
     },
-    addMinCredit(credit) {
-      return getCreditRange[0] + credit;
+    makeCreditArary() {
+      const creditArray = [];
+      let accu = 0;
+      console.log((this.getCreditRange[1]));
+      for (let i = 0; i < (this.getCreditRange[1]); i += 1) {
+        if (this.getCreditRange[0] < 1) {
+          accu += 0.5;
+          console.log(accu);
+          creditArray.push(accu);
+          accu += 0.5;
+          creditArray.push(accu);
+        } else {
+          accu += 1;
+          creditArray.push(accu);
+        }
+      }
+      console.log();
+      return creditArray;
     }
   }
 };
@@ -190,8 +206,9 @@ export default {
   }
   &-editCredits {
     position: absolute;
-    width: 2.7rem;
-    right: -2.7rem;
+    width: 2.75rem;
+    right: -2.75rem;
+    padding: auto;
   }
 }
 </style>

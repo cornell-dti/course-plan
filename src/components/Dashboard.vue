@@ -43,7 +43,6 @@
 <script>
 import Vue from 'vue';
 
-// import undefined from 'firebase/empty-import';
 import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
@@ -165,6 +164,7 @@ export default {
      * Creates a course on frontend with either user or API data
      */
     createCourse(course) {
+      // TODO: id?
       const randomId = Math.floor(Math.random() * Math.floor(1000));
 
       const subject = (course.code && course.code.split(' ')[0]) || course.subject;
@@ -198,6 +198,7 @@ export default {
         const enrollmentMap = {};
         const lectureTimesMap = {};
         const instructorsMap = {};
+        console.log(course.enrollGroups);
         course.enrollGroups.forEach(group => {
           group.classSections.forEach(section => {
             // Add section
@@ -255,7 +256,6 @@ export default {
         alerts,
         check: true
       };
-
       // Update requirements menu
       this.updateRequirementsMenu();
 
