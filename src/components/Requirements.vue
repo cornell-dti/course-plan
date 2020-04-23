@@ -7,19 +7,19 @@
 
       <!-- TODO change for multiple colleges -->
       <div v-if="index<=2 || index == 2 + majors.length" class="row top">
-        <p class="name col p-0">{{ req.name }} <span class="specific" v-if="req.specific">({{ req.specific }})</span> </p>
+        <p class="name col p-0">{{ req.name }}</p>
       </div>
         <!-- TODO change for multiple colleges -->
         <div v-if="index==2" class="major">
           <div v-bind:class="{'active': major.display}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
             <p v-bind:class="{'active': major.display}"  class="major-title-top">{{major.majorFN}}</p>
-            <p v-bind:class="{'active': major.display}" class="major-title-bottom">{{user.collegeFN}}</p>
+            <p v-bind:class="{'active': major.display}" class="major-title-bottom">({{user.collegeFN}})</p>
           </div>
         </div>
         <div v-if="index==2+majors.length" class="minor">
           <div v-bind:class="{'active': minor.display}"  @click="activate(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
             <p v-bind:class="{'active': minor.display}"  class="minor-title-top">{{minor.minorFN}}</p>
-            <p v-bind:class="{'active': minor.display}" class="minor-title-bottom">{{user.collegeFN}}</p> <!-- Change for multiple colleges -->
+            <p v-bind:class="{'active': minor.display}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
           </div>
         </div>
 
@@ -96,11 +96,11 @@
                   <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
                 </div>
                 <div class="col">
-                  <p class="sup-req-progress text-right incomplete-ptext">( {{
+                  <p class="sup-req-progress text-right incomplete-ptext">{{
                    (subReq.requirement.fulfilledBy !== 'self-check')
                    ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
                     || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
-                   : 'Self-Check' }}  )</p>
+                   : 'self check' }}</p>
                 </div>
               </div>
               <div v-if="subReq.displayDescription" class="description">
@@ -151,7 +151,7 @@
                     <p class="sup-req pointer completed-ptext">{{subReq.requirement.name}}</p>
                   </div>
                   <div class="col">
-                    <p class="sup-req-progress text-right completed-ptext">( {{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }} )</p>
+                    <p class="sup-req-progress text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
                   </div>
                 </div>
                 <div v-if="subReq.displayDescription" class="description completed-ptext">
@@ -428,19 +428,14 @@ input{
       display: flex;
       flex-direction: column;
       text-align: center;
-      padding: 20px;
-      padding-top: 10px;
+      color: #757575;
+      padding-bottom: 6px;
       &-top {
         text-align: center;
         font-style: normal;
         font-weight: normal;
         font-size: 14px;
-        line-height: 17px;
-        color: #000000;
-          &--active {
-            color: #508197;
-            font-weight: bold;
-          }
+        margin: 0;
       }
       &-bottom {
         text-align: center;
@@ -448,11 +443,6 @@ input{
         font-weight: normal;
         font-size: 12px;
         line-height: 15px;
-        color: #000000;
-          &--active {
-            color: #508197;
-            font-weight: bold;
-        }
       }
     }
       &:hover {
@@ -478,11 +468,6 @@ input{
 }
 .row > div {
   padding: 0;
-}
-.col {
-  &-1 {
-    margin-right: -10px;
-  }
 }
 .requirements, .fixed {
   height: 100vh;
@@ -580,7 +565,9 @@ button.active {
 }
 p.active {
   color: #508197;
-  font-weight: bold;
+}
+p.major-title-top.active {
+  font-weight: 500;
 }
 .settings, .arrow {
   height: 14px;
@@ -589,9 +576,7 @@ p.active {
 .arrow {
   fill: #1AA9A5;
   color:#1AA9A5;
-  &-down {
-    margin-top: -4px;
-  }
+  margin-top: -2px;
     &-up {
      margin-top: 4px;
    }
@@ -684,7 +669,6 @@ button.view {
   font-size: 16px;
   line-height: 19px;
   &-name {
-    margin-left: 0.5rem;
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
@@ -722,9 +706,8 @@ button.view {
   line-height: 14px;
   color: #757575;
   &-progress {
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 12px;
+    font-size: 14px;
+    line-height: 14px;
   }
 }
 .semester-req {
