@@ -51,7 +51,7 @@
                 />
                 <img
                   v-else
-                  class="arrow"
+                  class="arrow arrow-down"
                   :src="require(`@/assets/images/dropdown-${reqGroupColorMap[req.group][1]}.svg`)"
                   alt="dropdown"
                 />
@@ -86,7 +86,7 @@
                     />
                     <img
                       v-else
-                      class="arrow"
+                      class="arrow arrow-down"
                       src="@/assets/images/dropdown.svg"
                       alt="dropdown"
                     />
@@ -141,7 +141,7 @@
                     />
                     <img
                       v-else
-                  class="arrow completed-arrow"
+                  class="arrow arrow-down completed-arrow"
                    src="@/assets/images/dropdown-lightgray.svg"
                    alt="dropdown"
                     />
