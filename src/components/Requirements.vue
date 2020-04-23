@@ -7,7 +7,7 @@
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
       <div class="row top">
         <p class="name col p-0">{{ req.name }} <span class="specific" v-if="req.specific">({{ req.specific }})</span></p>
-        <img class="pointer" src="@/assets/images/gear.svg" alt="settings gear" />
+        <!-- <img class="pointer" src="@/assets/images/gear.svg" alt="settings gear" /> -->
       </div>
 
       <!-- progress bar settings -->
@@ -275,7 +275,7 @@ export default {
       },
       // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
       reqGroupColorMap: {
-        UNIVERSITY: ['508197', 'lightblue'],
+        UNIVERSITY: ['508197', 'grayblue'],
         COLLEGE: ['1AA9A5', 'blue'],
         MAJOR: ['105351', 'green'],
         MINOR: ['92C3E6', 'lightblue']
