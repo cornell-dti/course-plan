@@ -136,7 +136,7 @@
                 <p class="sup-req-progress text-right completed-ptext">{{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type === 'Credits' ? 'cr.' : subReq.type }}</p>
               </div>
             </div>
-            <div v-if="subReq.displayDescription" class="description">
+            <div v-if="subReq.displayDescription" class="description completed-ptext">
               {{ subReq.description }} <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
             </div>
           </div>
@@ -275,9 +275,10 @@ export default {
       },
       // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
       reqGroupColorMap: {
-        UNIVERSITY: ['92C3E6', 'lightblue'],
+        UNIVERSITY: ['508197', 'lightblue'],
         COLLEGE: ['1AA9A5', 'blue'],
-        MAJOR: ['105351', 'green']
+        MAJOR: ['105351', 'green'],
+        MINOR: ['92C3E6', 'lightblue']
       }
     };
   },

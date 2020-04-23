@@ -1,0 +1,283 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const typed_requirement_json_1 = __importDefault(require("./typed-requirement-json"));
+/**
+ * @param courseName : name of the course (as a code)
+ * @param code : code to check courseName (can contain * to denote any value)
+ * @returns if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
+ */
+function ifCodeMatch(courseName, code) {
+    for (let i = 0; i < courseName.length; i += 1) {
+        if (code[i] !== '*' && courseName[i] !== code[i])
+            return false;
+    }
+    return true;
+}
+/**
+ * @param {string} subject : subject of course to check
+ * @param {string} number : number of course to check
+ * @returns if the course satisfies all-eligible query (not PE or 10XX course)
+ */
+function ifAllEligible(subject, number) {
+    return !ifCodeMatch(subject, 'PE') && !ifCodeMatch(number, '10**');
+}
+/**
+ * @param coursesTaken : object of courses taken with API information (CS 2110: {info}).
+ * @returns a list of university requirement filfillment status.
+ */
+function computeUniversityRequirementFulfillments(coursesTaken) {
+    const academicCreditsRequirements = {
+        name: 'Academic Credits',
+        description: 'To graduate, a student must earn a minimum of 120 academic credits. Physical education credits and “10XX” courses do not count toward the 120 required credits.',
+        source: 'http://courses.cornell.edu/content.php?catoid=31&navoid=7901',
+        search: ['all-eligible'],
+        includes: [],
+        fulfilledBy: 'credits',
+        minCount: 120,
+        applies: 'all',
+        progressBar: true
+    };
+    const PERequirement = {
+        name: 'Physical Education',
+        description: 'All incoming freshmen are required to take two credits (two courses) of Physical Education, one credit each semester of the first year on campus.',
+        source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
+        search: ['subject'],
+        includes: [
+            [
+                'PE'
+            ]
+        ],
+        fulfilledBy: 'courses',
+        minCount: 2,
+        maxCount: 2,
+        applies: 'all'
+    };
+    const swimmingTestRequirement = {
+        name: 'Swimming Test',
+        description: 'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming and water safety competency requirement '
+            + 'for all entering first-year undergraduate students.',
+        source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
+        fulfilledBy: 'self-check',
+        includes: [],
+        minCount: 0,
+        applies: 'all'
+    };
+    const coursesThatCountTowardsAcademicCredits = coursesTaken.filter(course => ifAllEligible(course.subject, course.number));
+    const coursesThatCountTowardsPE = coursesTaken.filter(course => course.subject === 'PE');
+    return [
+        // Academic Credits
+        {
+            requirement: academicCreditsRequirements,
+            courses: [coursesThatCountTowardsAcademicCredits],
+            minCountFulfilled: coursesThatCountTowardsAcademicCredits.reduce((accumulator, course) => accumulator + course.credits, 0)
+        },
+        // PE Credits
+        {
+            requirement: PERequirement,
+            courses: [coursesThatCountTowardsPE],
+            minCountFulfilled: coursesThatCountTowardsPE.length
+        },
+        // Swim Test
+        { requirement: swimmingTestRequirement, courses: [] }
+    ];
+}
+/**
+ * @param coursesTaken a list of all taken courses.
+ * @param requirement the requirement to compute course fulfillment.
+ * @returns a naively computed list of courses that fulfill the requirement, partitioned into sub-requirement filfillment.
+ */
+function filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, requirement) {
+    const { courses: requirementCourses } = requirement;
+    const coursesThatFulfilledRequirement = requirementCourses.map(() => []);
+    coursesTaken.forEach(courseTaken => {
+        const { roster, subject, number } = courseTaken;
+        requirementCourses.forEach((subRequirementCourses, subRequirementIndex) => {
+            if (subRequirementCourses[roster] && subRequirementCourses[roster][subject] && subRequirementCourses[roster][subject].includes(number)) {
+                // add the course to the list of courses used to fulfill that one sub-requirement
+                coursesThatFulfilledRequirement[subRequirementIndex].push(courseTaken);
+            }
+        });
+    });
+    return coursesThatFulfilledRequirement;
+}
+/**
+ * @param coursesTaken a list of all taken courses.
+ * @param allRequirements a list of all requirements to check.
+ * @returns a naively computed list of requirement fulfillment, without any filtering and post-processing.
+ */
+function computeRawRequirementFulfillment(coursesTaken, allRequirements) {
+    return allRequirements.map(requirement => ({
+        requirement,
+        courses: filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, requirement)
+    }));
+}
+/**
+ * A monad that provides a post-processing framework for requirement fulfillment.
+ *
+ * Usage:
+ * ```typescript
+ * const filfillments = [
+ *   { requirement: req1, courses: [c1, c2, c3], foo: 1 },
+ *   { requirement: req2, courses: [c1, c3], foo: 2 },
+ * ];
+ * const processedFilfillments = postProcessRequirementsFulfillments(
+ *   filfillments,
+ *   ({ courses, foo }) => ({ bar: courses.length + foo })
+ * );
+ * // Will produce:
+ * [
+ *   { requirement: req1, courses: [c1, c2, c3], bar: 4 }, // bar = 3 + 1 = 4
+ *   { requirement: req2, courses: [c1, c3], bar: 4 }, // bar = 2 + 2 = 4
+ * ]
+ * ```
+ *
+ * @param fulfillments a list of requirement fulfillment to post-process.
+ * @param transformer the transformer that computes the new metadata.
+ * @returns the post-processed requirement filfillments.
+ */
+function postProcessRequirementsFulfillments(fulfillments, transformer) {
+    return fulfillments.map(requirementFulfillment => {
+        const { requirement, courses } = requirementFulfillment;
+        const newMetadata = transformer(requirementFulfillment);
+        return Object.assign({ requirement, courses }, newMetadata);
+    });
+}
+function computeFulfillmentStatistics({ requirement, courses: coursesThatFulfilledRequirement }) {
+    let minCountFulfilled = 0;
+    coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
+        if (coursesThatFulfilledSubRequirement.length === 0) {
+            return;
+        }
+        // depending on what it is fulfilled by, either increase the count or credits you took
+        switch (requirement.fulfilledBy) {
+            case 'courses':
+                minCountFulfilled += 1;
+                break;
+            case 'credits':
+                minCountFulfilled += coursesThatFulfilledSubRequirement
+                    .map(course => course.credits)
+                    .reduce((a, b) => Math.max(a, b), 0);
+                break;
+            case 'self-check':
+                return;
+            default:
+                throw new Error('Fulfillment type unknown.');
+        }
+    });
+    if (requirement.totalCount === undefined) {
+        return { minCountFulfilled };
+    }
+    let totalCountFulfilled = 0;
+    Array.from(new Set(coursesThatFulfilledRequirement.flat()).values()).forEach(courseThatFulfilledRequirement => {
+        // depending on what it is fulfilled by, either increase the count or credits you took
+        switch (requirement.fulfilledBy) {
+            case 'courses':
+                totalCountFulfilled += 1;
+                return;
+            case 'credits':
+                totalCountFulfilled += courseThatFulfilledRequirement.credits;
+                return;
+            case 'self-check':
+                return;
+            default:
+                throw new Error('Fulfillment type unknown.');
+        }
+    });
+    return { minCountFulfilled, totalCountFulfilled };
+}
+/**
+ * @param allCoursesTakenWithInfo : object of courses taken with API information (CS 2110: {info})
+ * @param allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
+ * @returns a list of university requirement filfillment status.
+ */
+function computeCollegeOrMajorRequirementFulfillments(coursesTaken, allRequirements) {
+    // Phase 1: Compute raw requirement fulfillment locally for each requirement.
+    const rawRequirementFulfillment = computeRawRequirementFulfillment(coursesTaken, allRequirements);
+    // Phase 2: Compute fulfillment statistics for each requirement.
+    const requirementFulfillmentWithStatistics = postProcessRequirementsFulfillments(rawRequirementFulfillment, computeFulfillmentStatistics);
+    return requirementFulfillmentWithStatistics;
+}
+/**
+ * @param coursesTaken a list of classes taken by the user, with some metadata (e.g. no. of credits)
+ * helping to compute requirement progress.
+ * @param college user's college.
+ * @param major user's major.
+ * @param minor user's minor.
+ * @returns all requirements fulfillments, grouped by University, College, Major.
+ */
+function computeRequirements(coursesTaken, college, major, minor) {
+    // prepare grouped fulfillment summary
+    const groups = [];
+    // PART 1: check university requirements
+    groups.push({
+        groupName: 'University',
+        specific: null,
+        reqs: computeUniversityRequirementFulfillments(coursesTaken)
+    });
+    // PART 2: check college requirements
+    if (!(college in typed_requirement_json_1.default.college))
+        throw new Error('College not found.');
+    const collegeReqs = typed_requirement_json_1.default.college[college];
+    groups.push({
+        groupName: 'College',
+        specific: college,
+        reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, collegeReqs.requirements)
+    });
+    // PART 3: check major reqs
+    // Major is optional
+    if (major != null) {
+        for (const maj of major) {
+            if (maj in typed_requirement_json_1.default.major) {
+                const majorReqs = typed_requirement_json_1.default.major[maj];
+                groups.push({
+                    groupName: 'Major',
+                    specific: maj,
+                    reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, majorReqs.requirements)
+                });
+            }
+        }
+    }
+    /*
+    // PART 4: check minor reqs
+    // Major is optional
+    if (minor != null) {
+      for (const min of minor) {
+        if (min in requirementJson.minor) {
+          const majorReqs = requirementJson.major[min];
+          groups.push({
+            groupName: 'Minor',
+            specific: min,
+            reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, majorReqs.requirements)
+          });
+        }
+      }
+    }
+     */
+    return groups;
+}
+exports.computeRequirements = computeRequirements;
+/**
+ * @param groups all requirements fulfillments, grouped by University, College, Major.
+ * @returns a object where keys are course code and values are a list of requirement a class fulfills.
+ */
+function computeRequirementMap(groups) {
+    const requirementsMap = {};
+    groups.forEach(group => {
+        group.reqs.forEach(({ requirement: { name: requirementName }, courses: coursesThatFulfilledRequirement }) => {
+            coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
+                coursesThatFulfilledSubRequirement.forEach(({ code }) => {
+                    // Add course to dictionary with name
+                    if (code in requirementsMap)
+                        requirementsMap[code].push(requirementName);
+                    else
+                        requirementsMap[code] = [requirementName];
+                });
+            });
+        });
+    });
+    return requirementsMap;
+}
+exports.computeRequirementMap = computeRequirementMap;
