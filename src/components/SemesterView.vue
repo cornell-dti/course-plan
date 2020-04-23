@@ -1,10 +1,25 @@
 <template>
-  <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
+  <div
+    class="semesterView"
+    :class="{ bottomBar: isBottomBar, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}"
+    @click="closeBar"
+    :key="key"
+  >
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
-      <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
-      <div class="semesterView-switchImage semesterView-fourColumn" @click="setCompact" :class="{ 'semesterView-fourColumn--active': compact }"></div>
+      <div class="semesterView-switchImage semesterView-twoColumn"
+        @click="setNotCompact"
+        :class="{ 'semesterView-twoColumn--active': !compact }"
+      >
+      </div>
+      <div
+        class="semesterView-switchImage semesterView-fourColumn"
+        v-if="!isMobile"
+        @click="setCompact"
+        :class="{ 'semesterView-fourColumn--active': compact }"
+      >
+      </div>
     </div>
     <confirmation
       :id="'semesterConfirmation'"
@@ -22,9 +37,12 @@
           v-bind="sem"
           :isNotSemesterButton="true"
           :activatedCourse="activatedCourse"
+          :semesters="semesters"
           @updateBar="updateBar"
           @delete-semester="deleteSemester"
+          @edit-semester="editSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
+          @update-requirements-menu="updateRequirementsMenu"
         />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
@@ -38,7 +56,8 @@
         v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" />
+        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar"
+        :activatedCourse="activatedCourse" @delete-semester="deleteSemester" @edit-semester="editSemester" />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
@@ -53,23 +72,22 @@
 
 <script>
 import Vue from 'vue';
+import clone from 'clone';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
 import Caution from '@/components/Caution';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
+import EditSemester from '@/components/Modals/EditSemester';
 
-const clone = require('clone');
+import { auth, userDataCollection } from '@/firebaseConfig';
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
 Vue.component('caution', Caution);
 Vue.component('deletesemester', DeleteSemester);
-
-const firebaseConfig = require('@/firebaseConfig.js');
-
-const { auth, userDataCollection } = firebaseConfig;
+Vue.component('editsemester', EditSemester);
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -83,7 +101,9 @@ export default {
   props: {
     semesters: Array,
     compact: Boolean,
-    isBottomBar: Boolean
+    isBottomBar: Boolean,
+    isBottomBarExpanded: Boolean,
+    isMobile: Boolean
   },
   data() {
     return {
@@ -200,14 +220,34 @@ export default {
       // Update requirements menu from dashboard
       this.$emit('updateRequirementsMenu');
     },
-
-    updateBar(course) {
+    updateRequirementsMenu() {
+      this.$emit('updateRequirementsMenu');
+    },
+    compare(a, b) {
+      if (a.type === b.type && a.year === b.year) { return 0; }
+      if (a.year > b.year) { return 1; }
+      if (a.year < b.year) { return -1; }
+      if (SeasonsEnum[a.type.toLowerCase()] > SeasonsEnum[b.type.toLowerCase()]) {
+        return 1;
+      }
+      return -1;
+    },
+    editSemester(id, type, year) {
+      this.semesters[id - 1].type = type;
+      this.semesters[id - 1].year = year;
+      this.semesters = this.semesters.sort(this.compare);
+      let count = 1;
+      this.semesters.forEach(sem => {
+        sem.id = count;
+        count += 1;
+      });
+    },
+    updateBar(course, colorJustChanged, color) {
       this.activatedCourse = course;
       this.key += 1;
-      this.$emit('update-bar', course);
+      this.$emit('updateBar', course, colorJustChanged, color);
       this.isCourseClicked = true;
     },
-
     closeBar() {
       if (!this.isCourseClicked) {
         this.$emit('close-bar');
@@ -225,6 +265,7 @@ export default {
         name: course.name,
         description: course.description,
         credits: course.credits,
+        creditRange: course.creditRange,
         semesters: course.semesters,
         prereqs: course.prereqs,
         enrollment: course.enrollment,
@@ -305,6 +346,7 @@ export default {
     }
   }
 
+
   &-twoColumn {
     background-image: url('~@/assets/images/views/twoColumn.svg');
 
@@ -312,7 +354,9 @@ export default {
     &:focus,
     &:active,
     &--active {
+      cursor: pointer;
       background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+
     }
   }
 
@@ -323,6 +367,7 @@ export default {
     &:focus,
     &:active,
     &--active {
+      cursor: pointer;
       background-image: url('~@/assets/images/views/fourColumnSelected.svg');
     }
   }
@@ -355,6 +400,7 @@ export default {
     }
   }
 }
+
 /* The Modal (background) */
 .semester-modal {
   display: none; /* Hidden by default */
@@ -372,4 +418,20 @@ export default {
 .bottomBar {
   margin-bottom: 300px;
 }
+
+@media only screen and (max-width: 878px) {
+  .semesterView {
+    margin-top: 5.5rem;
+    margin-left: 2.5rem;
+    margin-right: 1rem;
+    &-switch {
+      padding-right: 0.75rem;
+    }
+    &-content {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
 </style>

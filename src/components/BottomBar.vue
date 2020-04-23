@@ -1,27 +1,29 @@
 <template>
     <div class="bottombar">
+      <div class="bottombar-tabviewTitleWrapper">
+        <div class="bottombar-tabview" v-bind:class="{ expandedTabView: isExpanded }">
+            <bottombartabview
+            :bottomCourses="bottomCourses"
+            :seeMoreCourses="seeMoreCourses"
+            :isExpanded="isExpanded"
+            :maxBottomBarTabs="maxBottomBarTabs"
+            @bottomBarTabToggle="bottomBarTabToggle"
+            @toggleFromTab="toggleFromTab"
+            />
+        </div>
+        <div class="bottombar-title" @click="toggle()">
+          <bottombartitle
+          :color="bottomCourses[0].color"
+          :name="bottomCourses[0].name"
+          :isExpanded="isExpanded"
+          />
+        </div>
+      </div>
+      <div v-if="this.isExpanded" class="bottombar-course">
         <bottombarcourse
-        :subject="data.subject"
-        :number="data.number"
-        :name="data.name"
-        :credits="data.credits"
-        :semesters="data.semesters"
-        :color="data.color"
-        :id="data.id"
-        :instructors="data.instructors"
-        :distributionCategories="data.distributionCategories"
-        :enrollmentInfo="data.enrollmentInfo"
-        :latestSem="data.latestSem"
-        :latestLecInfo="data.latestLecInfo"
-        :overallRating="data.overallRating"
-        :difficulty="data.difficulty"
-        :workload="data.workload"
-        :prerequisites="data.prerequisites"
-        :description="data.description"
-        :isPreview="data.isPreview"
-        :isExpanded="data.isExpanded"
-        @toggle="toggle"
+        :courseObj="bottomCourses[0]"
         />
+      </div>
     </div>
 </template>
 
@@ -29,22 +31,82 @@
 <script>
 import Vue from 'vue';
 import BottomBarCourse from '@/components/BottomBarCourse';
+import BottomBarTabView from '@/components/BottomBarTabView';
+import BottomBarTitle from '@/components/BottomBarTitle';
 
 Vue.component('bottombarcourse', BottomBarCourse);
+Vue.component('bottombartabview', BottomBarTabView);
+Vue.component('bottombartitle', BottomBarTitle);
+
 export default {
   props: {
     bottomCourses: Array,
-    data: Object
+    seeMoreCourses: Array,
+    isExpanded: Boolean,
+    maxBottomBarTabs: Number
   },
+
   methods: {
-    toggle(isExpanded) {
-      if (isExpanded) this.$emit('close-bar');
+    toggle() {
+      if (this.isExpanded) this.$emit('close-bar');
       else this.$emit('open-bar');
+    },
+    bottomBarTabToggle(courseObj) {
+      // Move courseObj to front of array
+      if (this.bottomCourses.indexOf(courseObj) > 0) { // not already in front
+        this.bottomCourses.splice(this.bottomCourses.indexOf(courseObj), 1);
+        this.bottomCourses.unshift(courseObj);
+      }
+    },
+    toggleFromTab() {
+      this.toggle();
     }
   }
 };
+
 </script>
 
 
 <style scoped lang="scss">
+.bottombar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &-tabview {
+    position:fixed;
+    bottom: 2.5rem;
+    left: 29.5rem;
+    width: calc(100vw - 29.5rem);
+  }
+
+}
+.expandedTabView{
+    position: fixed;
+    bottom: 18.75rem;
+}
+
+@media only screen and (max-width: 976px) {
+  .bottombar {
+    &-tabview {
+      left: 25.5rem;
+      width: calc(100vw - 25.5rem);
+    }
+  }
+}
+@media only screen and (max-width: 878px) {
+  .bottombar {
+    &-tabview {
+      left: 0rem;
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .expandedTabView {
+    bottom: 11.75rem;
+  }
+}
+
 </style>

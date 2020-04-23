@@ -95,4 +95,21 @@ export default {
     margin-bottom: 12px;
   }
 }
+
+@media only screen and (max-width: 440px) {
+  .caution {
+    width: 75%;
+    &-left {
+      width: 15%;
+    }
+    &-text {
+      width: 85%;
+    }
+    &-right {
+      width: 0%;
+      margin-left: 0rem;
+      margin-right: 0rem;
+    }
+  }
+}
 </style>

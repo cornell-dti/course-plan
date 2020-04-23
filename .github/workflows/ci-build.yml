@@ -29,21 +29,15 @@ jobs:
           name: built-assets
           path: ${{ github.event.number }}
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v2.5.0
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          keep_files: true
+          publish_dir: '.'
+          github_token: '${{ secrets.BOT_TOKEN }}'
+      - name: Comment on pull request
+        uses: cornell-dti/dti-repo-tools@master
         env:
-          PUBLISH_DIR: '.'
-          PUBLISH_BRANCH: gh-pages
-          PERSONAL_TOKEN: ${{ secrets.DEPLOY_GH_PAGE_TOKEN }}
+          BOT_TOKEN: '${{ secrets.BOT_TOKEN }}'
         with:
-          keepFiles: true
-      - name: Comment on Pull Request
-        uses: actions/github-script@0.2.0
-        with:
-          github-token: ${{ github.token }}
-          script: |
-            github.issues.createComment({
-              owner: 'cornell-dti',
-              repo: 'course-plan',
-              issue_number: ${{ github.event.number }},
-              body: 'Deployed to https://cornell-dti.github.io/course-plan/${{ github.event.number }}/index.html'
-            });
+          command: pr-comment
+          argument: '[deployment-bot] Deployed to https://cornell-dti.github.io/course-plan/${{ github.event.number }}/index.html'

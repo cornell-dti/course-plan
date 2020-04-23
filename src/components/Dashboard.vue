@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div id= "dashboard" class="dashboard">
     <onboarding class="dashboard-onboarding" v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
       :user="user"
@@ -10,32 +10,39 @@
       <div class="dashboard-menus">
         <navbar class="dashboard-nav"
         @editProfile="editProfile"
+        @toggleRequirementsBar="toggleRequirementsBar"
         :isBottomPreview="bottomBar.isPreview"
         />
-        <requirements class="dashboard-reqs" v-if="loaded"
+        <requirements class="dashboard-reqs" v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :semesters="semesters"
           :user="user"
-          :isBottomPreview="bottomBar.isPreview"
-          :isBottomBar="bottomBar.isExpanded"
           :key="requirementsKey"
           @requirementsMap="loadRequirementsMap"
          />
       </div>
-      <semesterview v-if="loaded"
+      <semesterview v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
         :semesters="semesters"
         :compact="compactVal"
-        :isBottomBar="bottomBar.isExpanded"
+        :isBottomBarExpanded="bottomBar.isExpanded"
+        :isBottomBar="bottomCourses.length > 0"
+        :isMobile="isMobile"
+
         @compact-updated="compactVal = $event"
-        @update-bar="updateBar"
+        @updateBar="updateBar"
         @close-bar="closeBar"
         @updateRequirementsMenu="updateRequirementsMenu"
       />
     </div>
     <div id="dashboard-bottomView">
       <bottombar
-      :data="bottomBar"
+      v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
+      :bottomCourses="bottomCourses"
+      :seeMoreCourses="seeMoreCourses"
+      :isExpanded="this.bottomBar.isExpanded"
+      :maxBottomBarTabs="maxBottomBarTabs"
       @close-bar="closeBar"
-      @open-bar="openBar"/>
+      @open-bar="openBar"
+      />
     </div>
   </div>
 </template>
@@ -50,8 +57,8 @@ import BottomBar from '@/components/BottomBar';
 import NavBar from '@/components/NavBar';
 import Onboarding from '@/components/Modals/Onboarding';
 
-
 import '@/vueDragulaConfig';
+import { auth, userDataCollection } from '@/firebaseConfig';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
@@ -60,14 +67,7 @@ Vue.component('bottombar', BottomBar);
 Vue.component('navbar', NavBar);
 Vue.component('onboarding', Onboarding);
 
-const firebaseConfig = require('@/firebaseConfig.js');
-
-const { auth, userDataCollection } = firebaseConfig;
-
 export default {
-  props: {
-    bottomCourses: Array
-  },
   data() {
     const user = auth.currentUser;
     const names = user.displayName.split(' ');
@@ -79,24 +79,38 @@ export default {
       firebaseSems: [],
       currentClasses: [],
       user: {
-        major: '',
-        majorFN: '',
+        major: [],
+        majorFN: [],
         college: '',
         collegeFN: '',
         firstName: names[0],
         lastName: names[1],
-        middleName: ''
+        middleName: '',
+        minor: [],
+        minorFN: []
       },
+      bottomCourses: [],
+      seeMoreCourses: [],
       subjectColors: {},
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
       isOnboarding: false,
-      isEditingProfile: false
+      isEditingProfile: false,
+      isOpeningRequirements: false,
+      isTablet: window.innerWidth <= 878,
+      isMobile: window.innerWidth <= 440,
+      maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4
     };
+  },
+  created() {
+    window.addEventListener('resize', this.resizeEventHandler);
   },
   mounted() {
     this.getInformationFromUser();
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.resizeEventHandler);
   },
   methods: {
     getDocRef() {
@@ -126,6 +140,19 @@ export default {
           console.log('Error getting document:', error);
         });
     },
+
+    resizeEventHandler(e) {
+      this.isMobile = window.innerWidth <= 440;
+      this.isTablet = window.innerWidth <= 878;
+      this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
+      this.updateBarTabs();
+      this.updateSemesterView();
+    },
+
+    toggleRequirementsBar() {
+      this.isOpeningRequirements = !this.isOpeningRequirements;
+    },
+
     convertSemesters(firebaseSems) {
       const semesters = [];
 
@@ -138,6 +165,32 @@ export default {
         semesters.push(this.createSemester(courses, firebaseSem.type, firebaseSem.year));
       });
       return semesters;
+    },
+
+    updateSemesterView() {
+      if (this.isMobile) {
+        // Make sure semesterView is not compact by default on mobile
+        this.compactVal = false;
+      }
+    },
+
+    /**
+     * Creates credit range based on course
+     * Example: [1, 4] is the credit range for the given course
+     */
+    createCourseCreditRange(course) {
+      const courseCreditRange = [];
+      if (typeof course.creditRange !== 'undefined') {
+        return course.creditRange;
+      }
+      if (typeof course.enrollGroups !== 'undefined') {
+        course.enrollGroups.forEach(enrollGroup => {
+          courseCreditRange.push(enrollGroup.unitsMinimum);
+          courseCreditRange.push(enrollGroup.unitsMaximum);
+        });
+        return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
+      }
+      return [course.credits, course.credits];
     },
 
     /**
@@ -158,7 +211,7 @@ export default {
 
       // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
-
+      const creditRange = course.creditRange || this.createCourseCreditRange(course);
       // Semesters: remove periods and split on ', '
       // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
       const catalogWhenOfferedDoesNotExist = (!course.catalogWhenOffered) || course.catalogWhenOffered === '';
@@ -223,6 +276,7 @@ export default {
         name,
         description,
         credits,
+        creditRange,
         semesters,
         prereqs,
         enrollment,
@@ -234,7 +288,6 @@ export default {
         alerts,
         check: true
       };
-
       // Update requirements menu
       this.updateRequirementsMenu();
 
@@ -348,9 +401,9 @@ export default {
       });
     },
 
-    updateBar(course) {
+    updateBar(course, colorJustChanged, color) {
       // Update Bar Information
-      this.bottomBar = {
+      const courseToAdd = {
         subject: course.subject,
         number: course.number,
         name: course.name,
@@ -360,23 +413,56 @@ export default {
         latestSem: course.lastRoster,
         // Array data
         instructors: this.joinOrNAString(course.instructors),
-        distributionCategories: this.joinOrNAString(course.distributions),
+        distributionCategories: this.cleanCourseDistributionsArray(course.distributions),
         enrollmentInfo: this.joinOrNAString(course.enrollment),
-        latestLecInfo: this.joinOrNAString(course.lectureTimes),
+        latestLecInfo: this.naIfEmptyStringArray(course.lectureTimes),
         // TODO: CUReviews data
         overallRating: 0,
         difficulty: 0,
         workload: 0,
         prerequisites: this.noneIfEmpty(course.prereqs),
-        description: course.description,
-        isPreview: true,
-        isExpanded: true
+        description: course.description
       };
 
+      // expand bottombar if first course added
+      if (this.bottomCourses.length === 0) {
+        this.bottomBar.isExpanded = true;
+      }
+
+      // if course already exists in bottomCourses, first remove course
+      for (let i = 0; i < this.bottomCourses.length; i += 1) {
+        // if colorJustChanged and course already exists, just update course color
+        if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number && colorJustChanged) {
+          this.bottomCourses[i].color = color;
+        } else if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number && !colorJustChanged) {
+          this.bottomCourses.splice(i, 1);
+        }
+      }
+
+      // Prepending bottomCourse to front of bottom courses array if bottomCourses < this.maxBottomBarTabs
+      // Do not add course to bottomCourses if color was only changed
+      if (this.bottomCourses.length < this.maxBottomBarTabs && !colorJustChanged) {
+        this.bottomCourses.unshift(courseToAdd);
+      } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
+        for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
+          // if colorJustChanged and course already exists in seeMoreCourses, just update course color
+          if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number && colorJustChanged) {
+            this.seeMoreCourses[i].color = color;
+          } else if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number && !colorJustChanged) {
+            this.seeMoreCourses.splice(i, 1);
+          }
+        }
+        // Do not move courses around from bottomCourses to seeMoreCourses if only color changed
+        if (!colorJustChanged) {
+          this.bottomCourses.unshift(courseToAdd);
+          this.seeMoreCourses.unshift(this.bottomCourses[this.bottomCourses.length - 1]);
+          this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
+        }
+      }
       this.getReviews(course.subject, course.number, review => {
-        this.bottomBar.overallRating = review.classRating;
-        this.bottomBar.difficulty = review.classDifficulty;
-        this.bottomBar.workload = review.classWorkload;
+        this.bottomCourses[0].overallRating = review.classRating;
+        this.bottomCourses[0].difficulty = review.classDifficulty;
+        this.bottomCourses[0].workload = review.classWorkload;
       });
     },
 
@@ -386,6 +472,29 @@ export default {
           callback(reviews.classes[0]);
         });
       });
+    },
+
+    updateBarTabs() {
+      // Move courses from see more to bottom tab to fulfill increased bottom tab capacity
+      if (this.maxBottomBarTabs === 4 && this.bottomCourses.length < 4 && this.seeMoreCourses.length > 0) {
+        while (this.bottomCourses.length < 4) {
+          // if any See More courses exist, move first See More Course to end of tab
+          if (this.seeMoreCourses.length > 0) {
+            const seeMoreCourseToMove = this.seeMoreCourses[0];
+            // remove course from See More Courses
+            this.seeMoreCourses.splice(0, 1);
+
+            // add course to end of bottomCourses
+            this.bottomCourses.push(seeMoreCourseToMove);
+          }
+        }
+      } else if (this.maxBottomBarTabs === 2 && this.bottomCourses.length > 2) {
+        // Move courses from bottom tab to see more for decreased max of 2
+        while (this.bottomCourses.length > 2) {
+          const bottomCourseToMove = this.bottomCourses.pop();
+          this.seeMoreCourses.unshift(bottomCourseToMove);
+        }
+      }
     },
 
     openBar() {
@@ -435,11 +544,28 @@ export default {
         middleName: name.middleName,
         lastName: name.lastName
       };
+
       if ('majors' in data && data.majors.length > 0) {
-        user.major = data.majors[0].acronym;
-        user.majorFN = data.majors[0].fullName;
+        const majors = [];
+        const majorsFN = [];
+        data.majors.forEach(major => {
+          majors.push(major.acronym);
+          majorsFN.push(major.fullName);
+        });
+        user.major = majors;
+        user.majorFN = majorsFN;
       }
 
+      if ('majors' in data && data.majors.length > 0) {
+        const minors = [];
+        const minorsFN = [];
+        data.minors.forEach(minor => {
+          minors.push(minor.acronym);
+          minorsFN.push(minor.fullName);
+        });
+        user.minor = minors;
+        user.minorFN = minorsFN;
+      }
       return user;
     },
 
@@ -448,12 +574,33 @@ export default {
       this.isEditingProfile = true;
     },
 
+    cleanCourseDistributionsArray(distributions) {
+      // Iterates over distributions array and cleans every entry
+      // Removes stray parentheses, spaces, and commas
+      let matches = [];
+      if (distributions[0] === '') {
+        matches = ['N/A'];
+      } else {
+        for (let i = 0; i < distributions.length; i += 1) {
+          distributions[i].replace((/[A-Za-z0-9-]+/g), d => {
+            matches.push(d);
+          });
+        }
+      }
+
+      return matches;
+    },
+
     joinOrNAString(arr) {
       return (arr.length !== 0 && arr[0] !== '') ? arr.join(', ') : 'N/A';
     },
 
     noneIfEmpty(str) {
       return (str && str.length !== 0) ? str : 'None';
+    },
+
+    naIfEmptyStringArray(arr) {
+      return (arr && arr.length !== 0 && arr[0] !== '') ? arr : ['N/A'];
     }
   }
 };
@@ -479,7 +626,7 @@ export default {
   /* The Modal (background) */
   &-onboarding {
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 2; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -494,5 +641,23 @@ export default {
   margin: 1rem;
   padding: 1rem;
   height: 12.12rem;
+}
+
+
+@media only screen and (max-width: 878px) {
+  .dashboard {
+    &-nav {
+      width: 100%;
+      flex-direction: row;
+      height: 4.5rem;
+      padding-top: 0rem;
+      padding-bottom: 0rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      position: fixed;
+      z-index: 1;
+    }
+  }
 }
 </style>

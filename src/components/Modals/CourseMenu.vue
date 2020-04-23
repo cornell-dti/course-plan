@@ -1,5 +1,5 @@
 <template>
-  <div class="courseMenu">
+  <div v-bind:class="{'courseMenu-movedNotCompact': isMovedNotCompact , 'courseMenu': isNormal, 'courseMenu-movedCompact':isMovedCompact}" class="courseMenu" >
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
@@ -7,10 +7,10 @@
         @mouseleave="setDisplayColors(false)"
       >
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/paint.svg" />
+          <img class="courseMenu-icon" src="@/assets/images/paint.svg" />
           <span class="courseMenu-text">Edit Color</span>
         </div>
-        <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
+        <img class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
 
         <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
           <div
@@ -29,9 +29,33 @@
           </div>
         </div>
       </div>
+      <div
+        class="courseMenu-section"
+        @mouseover="setDisplayEditCourseCredits(true)"
+        @mouseleave="setDisplayEditCourseCredits(false)"
+        v-if="this.getCreditRange[0] != this.getCreditRange[1]"
+        >
+        <div class="courseMenu-left">
+          <img class="courseMenu-icon" src="@/assets/images/edit-credits.svg" />
+          <span class="courseMenu-text">Edit Credits</span>
+        </div>
+        <img class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+        <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits">
+          <div
+            v-for="credit in makeCreditArary()"
+            :key="credit"
+            class="courseMenu-section courseMenu-section--credits"
+            @click="editCourseCredit(credit)"
+          >
+            <div class="courseMenu-left">
+              <span class="courseMenu-text">{{ credit }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="courseMenu-section" @click="deleteCourse">
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/trash.svg" />
+          <img class="courseMenu-icon" src="@/assets/images/trash.svg" />
           <span class="courseMenu-text">Delete</span>
         </div>
       </div>
@@ -40,9 +64,20 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import Course from '@/components/Course';
+
 export default {
+  props: {
+    getCreditRange: Array,
+    semId: Number,
+    isCompact: Boolean
+  },
   data() {
     return {
+      isMovedNotCompact: this.semId % 2 === 0 && !this.isCompact,
+      isNormal: this.semId % 2 === 1 && !this.isCompact,
+      isMovedCompact: this.semId % 3 === 0 && this.isCompact && this.semId !== 1,
       colors: [
         {
           text: 'Gray',
@@ -77,7 +112,8 @@ export default {
           hex: '#F296D3'
         }
       ],
-      displayColors: false
+      displayColors: false,
+      displayEditCourseCredits: false
     };
   },
   methods: {
@@ -89,6 +125,28 @@ export default {
     },
     setDisplayColors(bool) {
       this.displayColors = bool;
+    },
+    setDisplayEditCourseCredits(bool) {
+      this.displayEditCourseCredits = bool;
+    },
+    editCourseCredit(credit) {
+      this.$emit('edit-course-credit', credit);
+    },
+    makeCreditArary() {
+      const creditArray = [];
+      let accu = (this.getCreditRange[0] < 1) ? 0 : (this.getCreditRange[0] - 1);
+      for (let i = accu; i < (this.getCreditRange[1]); i += 1) {
+        if (this.getCreditRange[0] < 1) {
+          accu += 0.5;
+          creditArray.push(accu);
+          accu += 0.5;
+          creditArray.push(accu);
+        } else {
+          accu += 1;
+          creditArray.push(accu);
+        }
+      }
+      return creditArray;
     }
   }
 };
@@ -96,6 +154,16 @@ export default {
 
 <style scoped lang="scss">
 .courseMenu {
+  &-movedNotCompact{
+  top: 20px;
+  left: -50px;
+  position: fixed;
+  }
+  &-movedCompact{
+    top: 20px;
+    left: -50px;;
+    position: fixed;
+  }
   &-content {
     background: #ffffff;
     border: 1px solid #acacac;
@@ -129,6 +197,14 @@ export default {
       border-bottom-left-radius: 9px;
       border-bottom-right-radius: 9px;
     }
+
+    &--credits {
+      padding-left: 0;
+      padding-right: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
   }
 
   &-left {
@@ -144,10 +220,31 @@ export default {
       height: 16px;
     }
   }
-
   &-colors {
     position: absolute;
     right: -9rem;
+  }
+  &-editCredits {
+    position: absolute;
+    width: 2.75rem;
+    right: -2.75rem;
+    padding: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 878px) {
+  .courseMenu {
+    &-arrow {
+      display: none;
+    }
+    &-colors {
+      right: 0rem;
+      left: -9rem;
+    }
   }
 }
 </style>
