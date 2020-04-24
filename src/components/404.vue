@@ -1,14 +1,7 @@
 <template>
 <div>
   <div class = "body-container">
-    <!--TOP BAR-->
-    <div class="container p-0">
-        <div class="row top-bar justify-content-between no-gutters">
-            <div class="col-10">
-                <img class="logo" src="@/assets/images/branding/logoWithText.svg" alt = "logo" />
-              </div>
-        </div>
-    </div>
+    <topbar />
     <div class = "message-container">
       <img class = "img-404" src="@/assets/images/404.svg" alt = "404">
       <div class = "oops-wrapper">
@@ -21,34 +14,21 @@
     <div class="back_to_home">
       <a class = "back_to_home_link" href = "/login">Back to home</a>
     </div>
-    <div class = "footer-container">
-    </div>
-    <div class="container-fluid footer p-0 page_404">
-        <div class= "row footer justify-content-center m-0">
-            <div class="col-3 footer">
-              <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ {{getYear()}}</a>
-            </div>
-            <div class="col-3">
-                <p class= "footer">Built with ❤️</p>
-            </div>
-            <div class="col-3 footer">
-                <a  class="footer" href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
-            </div>
-        </div>
-    </div>
+    <custom-footer />
   </div>
 </div>
 </template>
 
 <script>
-export default {
-  methods: {
-    getYear() {
-      const today = new Date();
-      return today.getFullYear();
-    }
-  }
-};
+import Vue from 'vue';
+import Footer from '@/components/Footer';
+import TopBar from '@/components/TopBar';
+
+Vue.component('custom-footer', Footer);
+Vue.component('topbar', TopBar);
+
+export default {};
+
 </script>
 
 
@@ -88,9 +68,6 @@ export default {
 
 }
 
-.container {
-  max-width: 100%;
-}
 .page_404{
   bottom: 0;
   @media(max-height: 600px){
@@ -98,45 +75,8 @@ export default {
     bottom: 0;
   }
 }
-.top-bar{
-  padding:59px 0px 0px 104px;
-
-  @media (max-width: 1154px) {
-    padding: 59px 104px 0px 104px;
-    display: flex;
-    flex-direction: column;
-  }
-}
 a.back_to_home_link{
   color: #7b7d7e;
-}
-p.footer{
-  text-align: center;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 28px;
-  color: #757575;
-}
-a.footer {
-  text-align: center;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 28px;
-  color: #757575;
-}
-.col-3 {
-  margin-left: .5rem;
-  margin-right: .5rem;
-}
-.col-3.footer{
-  text-align: center;
-  padding-right: 0px;
-  padding-left: 0px;
-}
-.row.footer{
-  padding : 40px;
 }
 .img-404{
   vertical-align: top;
@@ -163,9 +103,6 @@ a.footer {
     flex-direction: column;
     align-items: center;
   }
-}
-.footer-container{
-  height: 100%;
 }
 .thinking-face{
   margin-bottom: 1vw;
