@@ -240,6 +240,15 @@ export default {
       majorPlaceholderColor = '#757575';
     }
 
+    let minorText = placeholderText;
+    let minorAcronym = '';
+    let minorPlaceholderColor = '';
+    if ('minor' in this.user && this.user.minor.length > 0) {
+      minorText = this.user.minorFN;
+      minorAcronym = this.user.minor;
+      minorPlaceholderColor = '#757575';
+    }
+
     return {
       // TODO: Get real college, major, and minor lists
       colleges: {},
@@ -277,9 +286,9 @@ export default {
             stopClose: false,
             boxBorder: '',
             arrowColor: '',
-            placeholderColor: '',
-            placeholder: placeholderText,
-            acronym: ''
+            placeholderColor: minorPlaceholderColor,
+            placeholder: minorText,
+            acronym: minorAcronym
           }
         ]
       },
