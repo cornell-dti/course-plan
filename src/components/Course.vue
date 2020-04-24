@@ -445,8 +445,7 @@ export default {
   z-index: 1;
 
   &--caution {
-    width: 180px;
-    text-align: left;
+    width: 7.5rem;
   }
 }
 
@@ -459,7 +458,7 @@ export default {
   content: ' ';
   position: absolute;
   bottom: 100%; /* At the top of the tooltip */
-  right: 82px;
+  right: 14px;
   margin-left: -10px;
   border-width: 5px;
   border-style: solid;
@@ -471,7 +470,7 @@ export default {
   content: ' ';
   position: absolute;
   bottom: 100%; /* At the top of the tooltip */
-  right: 80px;
+  right: 12px;
   margin-left: -2px;
   border-width: 7px;
   border-style: solid;
