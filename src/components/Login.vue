@@ -12,7 +12,7 @@
         <div class="container p-0">
             <div class="row top-bar justify-content-between no-gutters">
                 <div class="col-10">
-                    <img class="logo" src="@/assets/images/logo.svg" alt = "logo" />
+                    <img class="logo" src="@/assets/images/branding/logoWithText.svg" alt = "logo" />
                   </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
                 </div>
                 <div class = "col-12 col-md-6 comment" >
                     <h1  class="head">Drag Your Course In</h1>
-                    <p class= "sub"> Courseplan’s intuitive interface recommends courses based on unfulfilled
+                    <p class= "sub"> CoursePlan’s intuitive interface recommends courses based on unfulfilled
                         requirements and allows you to easily drag and drop them into your planner </p>
                 </div>
             </div>
@@ -83,7 +83,7 @@
             <div class="row semester phonepad m-0">
                 <div class = "col-12 col-md-5 comment" >
                     <h1 class= "head">Plan Your Semesters</h1>
-                    <p class= "sub">Use Courseplan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
+                    <p class= "sub">Use CoursePlan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
                 </div>
                 <div class = "col-md-7 image-wrapper image-wrapper--semester" >
                     <img id= "hide" class="schedule" src="@/assets/images/schedule.svg" alt = "Plan preview" />
@@ -254,6 +254,9 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+    .logo {
+      width: 12rem;
+    }
     .section{
       padding:0px;
       margin: 0px;
