@@ -11,15 +11,15 @@
       </div>
         <!-- TODO change for multiple colleges -->
         <div v-if="index==2" class="major">
-          <div v-bind:class="{'active': major.display}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
-            <p v-bind:class="{'active': major.display}"  class="major-title-top">{{major.majorFN}}</p>
-            <p v-bind:class="{'active': major.display}" class="major-title-bottom">({{user.collegeFN}})</p>
+          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
+            <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
+            <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
           </div>
         </div>
         <div v-if="index==2+majors.length" class="minor">
-          <div v-bind:class="{'active': minor.display}"  @click="activate(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
-            <p v-bind:class="{'active': minor.display}"  class="minor-title-top">{{minor.minorFN}}</p>
-            <p v-bind:class="{'active': minor.display}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
+          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"  @click="activate(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
+            <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
+            <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
           </div>
         </div>
 
@@ -126,6 +126,7 @@
               </div>
             </div>
 
+          <!-- Completed requirements -->
             <div v-if="req.displayCompleted">
               <div v-for="(subReq, id) in req.completed" :key="subReq.id">
                 <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
@@ -148,14 +149,15 @@
                     </button>
                   </div>
                   <div class="col-7" @click="toggleDescription(index, 'completed', id)">
-                    <p class="sup-req pointer completed-ptext">{{subReq.requirement.name}}</p>
+                    <p class="pointer completed-ptext">{{subReq.requirement.name}}</p>
                   </div>
                   <div class="col">
-                    <p class="sup-req-progress text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
+                    <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
                   </div>
                 </div>
                 <div v-if="subReq.displayDescription" class="description completed-ptext">
-                  {{ subReq.description }} <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
+                  {{ subReq.requirement.description }}
+                  <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
                 </div>
               </div>
             </div>
@@ -416,12 +418,8 @@ export default Vue.extend({
 input{
   width: 40px;
 }
-.major-title.active {
-  border-bottom: 2px solid #508197;
-}
 .major, .minor{
   display: flex;
-  padding-top: 10px;
   padding-bottom: 25px;
   &-title {
       width: 100%;
@@ -493,7 +491,7 @@ input{
 .description {
   margin: 0 0 0.5rem 1.8rem;
   color: #353535;
-  font-size: 15px;
+  font-size: 14px;
 }
 .pointer {
   cursor: pointer;
@@ -562,12 +560,6 @@ button.active {
   border-bottom: solid 10px #508197;
   padding-bottom: 2px;
   margin: 5px;
-}
-p.active {
-  color: #508197;
-}
-p.major-title-top.active {
-  font-weight: 500;
 }
 .settings, .arrow {
   height: 14px;
@@ -682,6 +674,7 @@ button.view {
 .completed {
    margin-top: 1rem;
    &-ptext {
+     color: #757575;
      font-size: 12px;
      opacity: 0.8;
      font-weight: normal;
