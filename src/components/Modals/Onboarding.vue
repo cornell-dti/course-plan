@@ -121,7 +121,7 @@
                   </div>
                 </div>
               </div>
-              <!--
+
               <div class="onboarding-addRemoveWrapper" :class="{ 'onboarding--hidden': Object.keys(majors).length <= 0}">
                 <div class="onboarding-add" @click="addMajor">
                   Add
@@ -130,9 +130,9 @@
                   Remove
                 </div>
               </div>
-              -->
+
             </div>
-            <!--
+
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <label class="onboarding-label">Your Minor (optional)</label>
               <div class="onboarding-selectWrapper">
@@ -184,7 +184,7 @@
                 </div>
               </div>
             </div>
-            -->
+
           </div>
         </div>
       </div>
@@ -363,10 +363,10 @@ export default {
         if ('name' in minorJSON[key]) {
           // only show majors for schools the user is in
           for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            const college = this.displayOptions.college[i];
-            if (minorJSON[key].schools.includes(college.acronym)) {
-              minors[key] = minorJSON[key].name;
-            }
+            // const college = this.displayOptions.college[i];
+            // if (minorJSON[key].schools.includes(college.acronym)) {
+            minors[key] = minorJSON[key].name;
+            // }
           }
         }
       }

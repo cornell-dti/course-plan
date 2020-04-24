@@ -44,7 +44,7 @@ const getEligibleCourses = (requirement: CollegeOrMajorRequirement): readonly El
 };
 
 const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequirementsJson => {
-  const { university, college, major } = sourceRequirements;
+  const { university, college, major, minor } = sourceRequirements;
   type MutableDecoratedJson = {
     university: UniversityRequirements;
     college: {
@@ -60,8 +60,14 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
         readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
       };
     };
+    minor: {
+      [key: string]: {
+        readonly name: string;
+        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+      };
+    };
   };
-  const decoratedJson: MutableDecoratedJson = { university, college: {}, major: {} };
+  const decoratedJson: MutableDecoratedJson = { university, college: {}, major: {}, minor: {} };
   const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) => (
     requirements.map(requirement => {
       const { checker, ...rest } = requirement;
@@ -77,6 +83,10 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
   Object.entries(major).forEach(([majorName, majorRequirement]) => {
     const { requirements, ...rest } = majorRequirement;
     decoratedJson.major[majorName] = { ...rest, requirements: decorateRequirements(requirements) };
+  });
+  Object.entries(minor).forEach(([minorName, minorRequirement]) => {
+    const { requirements, ...rest } = minorRequirement;
+    decoratedJson.minor[minorName] = { ...rest, requirements: decorateRequirements(requirements) };
   });
   return decoratedJson;
 };

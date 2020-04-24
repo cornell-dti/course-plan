@@ -37,14 +37,23 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 1
   },
-  // i think fufilledBy and minCount have to be arrays for requirements w options-fix this
+  // temp fix for reqs w options and diff minCount
   {
-    name: 'General Chemistry',
-    description: 'CHEM 2070 & CHEM 2080 OR CHEM 2150',
+    name: 'General Chemistry Part 1',
+    description: 'CHEM 2070 OR CHEM 2150',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
     checker: includesWithSubRequirements(
-      ['CHEM 2070', 'CHEM 2080'],
-      ['CHEM 2150']
+      ['CHEM 2070', 'CHEM 2150'],
+    ),
+    fulfilledBy: 'courses',
+    minCount: 1
+  },
+  {
+    name: 'General Chemistry Part 2',
+    description: 'CHEM 2080 OR CHEM 2150',
+    source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
+    checker: includesWithSubRequirements(
+      ['CHEM 2080', 'CHEM 2150'],
     ),
     fulfilledBy: 'courses',
     minCount: 1
@@ -63,7 +72,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 2
   },
-  // same problem
+  // same problem (didn't add temp fix bc too many parts then)
   {
     name: 'Organic Chemistry',
     description: 'CHEM 1570 OR CHEM 3570 & 3580 OR CHEM 3590 & 3600 OR CHEM 3530',
@@ -75,7 +84,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEM 3530'],
     ),
     fulfilledBy: 'courses',
-    minCount: 1
+    minCount: 2
   },
   {
     name: 'Physics',
@@ -100,16 +109,23 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 2
   },
-  // same problem
+  // temp fix
   {
-    name: 'Biochemistry and Molecular Biology',
-    description: 'BIOMG 3300 OR BIOMG 3330 OR BIOMG 3350 OR BIOMG 3310 & 3320',
+    name: 'Biochemistry and Molecular Biology Part 1',
+    description: 'BIOMG 3300 OR BIOMG 3350 OR BIOMG 3310',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
     checker: includesWithSubRequirements(
-      ['BIOMG 3300'],
-      ['BIOMG 3330'],
-      ['BIOMG 3350'],
-      ['BIOMG 3310', 'BIOMG 3320'],
+      ['BIOMG 3300', 'BIOMG 3350', 'BIOMG 3310'],
+    ),
+    fulfilledBy: 'courses',
+    minCount: 1
+  },
+  {
+    name: 'Biochemistry and Molecular Biology Part 2',
+    description: 'BIOMG 3300 OR BIOMG 3350 OR BIOMG 3320',
+    source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
+    checker: includesWithSubRequirements(
+      ['BIOMG 3300', 'BIOMG 3350', 'BIOMG 3320'],
     ),
     fulfilledBy: 'courses',
     minCount: 1
