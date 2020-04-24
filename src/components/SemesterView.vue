@@ -273,7 +273,8 @@ export default {
         instructors: course.instructors,
         distributions: course.distributions,
         lastRoster: course.lastRoster,
-        color: course.color
+        color: course.color,
+        uniqueID: course.uniqueID
       };
     },
     /**

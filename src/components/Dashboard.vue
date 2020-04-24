@@ -131,6 +131,7 @@ export default {
             this.firebaseSems = doc.data().semesters;
             this.user = this.parseUserData(doc.data().userData, doc.data().name);
             this.subjectColors = doc.data().subjectColors;
+            this.uniqueIncrementer = doc.data().uniqueIncrementer;
             this.loaded = true;
           } else {
             this.startOnboarding();
@@ -197,8 +198,7 @@ export default {
      * Creates a course on frontend with either user or API data
      */
     createCourse(course) {
-      // TODO: id?
-      const randomId = Math.floor(Math.random() * Math.floor(1000));
+      const uniqueID = course.uniqueID || this.incrementID();
 
       const subject = (course.code && course.code.split(' ')[0]) || course.subject;
       const number = (course.code && course.code.split(' ')[1]) || course.catalogNbr;
@@ -270,7 +270,6 @@ export default {
       const alerts = { requirement: null, caution: null };
 
       const newCourse = {
-        id: randomId,
         subject,
         number,
         name,
@@ -286,12 +285,32 @@ export default {
         lastRoster,
         color,
         alerts,
-        check: true
+        check: true,
+        uniqueID
       };
       // Update requirements menu
       this.updateRequirementsMenu();
 
       return newCourse;
+    },
+
+    incrementID() {
+      const docRef = this.getDocRef();
+
+      // If uniqueIncrementer attribute does not exist, initialize it to 0 and populate existing courses
+      if (this.uniqueIncrementer === undefined) {
+        this.uniqueIncrementer = 0;
+        this.semesters.forEach(semester => {
+          semester.courses.forEach(course => {
+            course.uniqueID = this.uniqueIncrementer;
+            this.uniqueIncrementer += 1;
+          });
+        });
+      } else {
+        this.uniqueIncrementer += 1;
+      }
+      docRef.update({ uniqueIncrementer: this.uniqueIncrementer });
+      return this.uniqueIncrementer;
     },
 
     addColor(subject) {
@@ -432,9 +451,9 @@ export default {
       // if course already exists in bottomCourses, first remove course
       for (let i = 0; i < this.bottomCourses.length; i += 1) {
         // if colorJustChanged and course already exists, just update course color
-        if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number && colorJustChanged) {
+        if (this.bottomCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
           this.bottomCourses[i].color = color;
-        } else if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number && !colorJustChanged) {
+        } else if (this.bottomCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
           this.bottomCourses.splice(i, 1);
         }
       }
@@ -446,9 +465,9 @@ export default {
       } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
         for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
           // if colorJustChanged and course already exists in seeMoreCourses, just update course color
-          if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number && colorJustChanged) {
+          if (this.seeMoreCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
             this.seeMoreCourses[i].color = color;
-          } else if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number && !colorJustChanged) {
+          } else if (this.seeMoreCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
             this.seeMoreCourses.splice(i, 1);
           }
         }
