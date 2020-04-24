@@ -37,9 +37,7 @@
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
           <div class="semester-dotRow" @click="openSemesterMenu">
-            <span class="semester-dot semester-dot--menu"></span>
-            <span class="semester-dot semester-dot--menu"></span>
-            <span class="semester-dot semester-dot--menu"></span>
+            <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
         </div>
       </div>
@@ -410,32 +408,13 @@ export default {
   }
 
   &-dotRow {
-    padding: 5px 0 8px 0;
+    padding: 8px 0;
     display: flex;
     position: relative;
     &:hover,
     &:active,
     &:focus {
       cursor: pointer;
-    }
-  }
-
-  &-dot {
-    opacity: 0.8;
-    height: 2px;
-    width: 2px;
-    background-color: white;
-    border-radius: 50%;
-    display: inline-block;
-    margin-bottom: 2px;
-    margin-top: 2px;
-
-    &--menu {
-      width: 5px;
-      height: 5px;
-      background-color: #c4c4c4;
-      opacity: 1;
-      margin: 0 2px;
     }
   }
 
