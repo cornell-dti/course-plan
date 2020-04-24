@@ -303,6 +303,7 @@ export default {
     this.setMajorsList();
     this.setMinorsList();
     this.flattenDisplayMajors();
+    this.flattenDisplayMinors();
   },
   methods: {
     flattenDisplayMajors() {
@@ -335,6 +336,37 @@ export default {
         }
       });
       this.displayOptions.major = majors;
+    },
+    flattenDisplayMinors() {
+      const minors = [];
+      this.displayOptions.minor.forEach(minor => {
+        if (Array.isArray(minor.acronym)) {
+          minor.acronym.flat(Infinity);
+          for (let i = 0; i < minor.acronym.length; i += 1) {
+            const newminor = {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: '#757575',
+              placeholder: minor.placeholder[i],
+              acronym: minor.acronym[i]
+            };
+            minors.push(newminor);
+          }
+        } else {
+          minors.push({
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            placeholder: minor.placeholder,
+            acronym: minor.acronym
+          });
+        }
+      });
+      this.displayOptions.minor = minors;
     },
     // Set the colleges map to with acronym keys and full name values
     setCollegesMap() {
