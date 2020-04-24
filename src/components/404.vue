@@ -5,7 +5,7 @@
     <div class="container p-0">
         <div class="row top-bar justify-content-between no-gutters">
             <div class="col-10">
-                <img class="logo" src="@/assets/images/logo.svg" alt = "logo" />
+                <img class="logo" src="@/assets/images/branding/logoWithText.svg" alt = "logo" />
               </div>
         </div>
     </div>
@@ -53,7 +53,9 @@ export default {
 
 
 <style scoped lang="scss">
-
+.logo {
+  width: 12rem;
+}
 #oops {
   text-align: left;
   display: inline-block;
