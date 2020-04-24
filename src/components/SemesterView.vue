@@ -198,9 +198,9 @@ export default {
       let i;
       for (i = 0; i < this.semesters.length; i += 1) {
         const oldSem = this.semesters[i];
-        if (oldSem.year > year) {
+        if (oldSem.year < year) {
           break;
-        } else if (oldSem.year === year && SeasonsEnum[oldSem.type.toLowerCase()] > SeasonsEnum[type.toLowerCase()]) {
+        } else if (oldSem.year === year && SeasonsEnum[oldSem.type.toLowerCase()] < SeasonsEnum[type.toLowerCase()]) {
           break;
         }
       }
@@ -225,9 +225,9 @@ export default {
     },
     compare(a, b) {
       if (a.type === b.type && a.year === b.year) { return 0; }
-      if (a.year > b.year) { return 1; }
-      if (a.year < b.year) { return -1; }
-      if (SeasonsEnum[a.type.toLowerCase()] > SeasonsEnum[b.type.toLowerCase()]) {
+      if (a.year > b.year) { return -1; }
+      if (a.year < b.year) { return 1; }
+      if (SeasonsEnum[a.type.toLowerCase()] < SeasonsEnum[b.type.toLowerCase()]) {
         return 1;
       }
       return -1;
