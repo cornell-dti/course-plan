@@ -99,6 +99,7 @@ export default {
     alerts: Object,
     compact: Boolean,
     id: String,
+    uniqueID: Number,
     active: Boolean,
     semId: Number
   },

@@ -131,6 +131,7 @@ export default {
             this.firebaseSems = doc.data().semesters;
             this.user = this.parseUserData(doc.data().userData, doc.data().name);
             this.subjectColors = doc.data().subjectColors;
+            this.uniqueIncrementer = doc.data().uniqueIncrementer;
             this.loaded = true;
           } else {
             this.startOnboarding();
@@ -197,8 +198,7 @@ export default {
      * Creates a course on frontend with either user or API data
      */
     createCourse(course) {
-      // TODO: id?
-      const randomId = Math.floor(Math.random() * Math.floor(1000));
+      const uniqueID = course.uniqueID || this.incrementID();
 
       const subject = (course.code && course.code.split(' ')[0]) || course.subject;
       const number = (course.code && course.code.split(' ')[1]) || course.catalogNbr;
@@ -270,7 +270,6 @@ export default {
       const alerts = { requirement: null, caution: null };
 
       const newCourse = {
-        id: randomId,
         subject,
         number,
         name,
@@ -286,12 +285,27 @@ export default {
         lastRoster,
         color,
         alerts,
-        check: true
+        check: true,
+        uniqueID
       };
       // Update requirements menu
       this.updateRequirementsMenu();
 
       return newCourse;
+    },
+
+    incrementID() {
+      const docRef = this.getDocRef();
+
+      // If uniqueIncrementer attribute does not exist, initialize it to 0
+      if (this.uniqueIncrementer === undefined) {
+        this.uniqueIncrementer = 0;
+        docRef.update({ uniqueIncrementer: this.uniqueIncrementer });
+        return 0;
+      }
+      this.uniqueIncrementer += 1;
+      docRef.update({ uniqueIncrementer: this.uniqueIncrementer });
+      return this.uniqueIncrementer;
     },
 
     addColor(subject) {

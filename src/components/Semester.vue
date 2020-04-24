@@ -50,6 +50,7 @@
               v-bind="course"
               :courseObj="course"
               :id="course.subject + course.number"
+              :uniqueID="course.uniqueID"
               :compact="compact"
               :active="activatedCourse.subject === course.subject && activatedCourse.number === course.number"
               class="semester-course"
