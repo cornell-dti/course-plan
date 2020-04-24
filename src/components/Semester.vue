@@ -45,14 +45,14 @@
       </div>
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-          <div v-for="course in deleteDuplicateCourses" :key="course.id" class="semester-courseWrapper">
+          <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
             <course
               v-bind="course"
               :courseObj="course"
               :id="course.subject + course.number"
               :uniqueID="course.uniqueID"
               :compact="compact"
-              :active="activatedCourse.subject === course.subject && activatedCourse.number === course.number"
+              :active="activatedCourse.uniqueID === course.uniqueID"
               class="semester-course"
               :semId="id"
               @delete-course="deleteCourse"
@@ -175,6 +175,7 @@ export default {
       }
       return `${credits.toString()} credits`;
     },
+    // Note: Currently not used
     deleteDuplicateCourses() {
       const uniqueCoursesNames = [];
       const uniqueCourses = [];
@@ -235,20 +236,21 @@ export default {
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
       this.buildCautions();
     },
-    deleteCourse(courseCode) {
+    deleteCourse(uniqueID) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
+        if (this.courses[i].uniqueID === uniqueID) {
           this.courses.splice(i, 1);
           break;
         }
       }
+      const courseCode = `${this.subject} ${this.number}`;
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
       // Update requirements menu
       this.$emit('update-requirements-menu');
     },
-    colorCourse(color, courseCode) {
+    colorCourse(color, uniqueID) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
+        if (this.courses[i].uniqueID === uniqueID) {
           this.courses[i].color = color;
           break;
         }
@@ -257,9 +259,9 @@ export default {
     updateBar(course, colorJustChanged, color) {
       this.$emit('updateBar', course, colorJustChanged, color);
     },
-    editCourseCredit(credit, courseCode) {
+    editCourseCredit(credit, uniqueID) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
+        if (this.courses[i].uniqueID === uniqueID) {
           this.courses[i].credits = credit;
           break;
         }

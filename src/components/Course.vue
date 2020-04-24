@@ -172,11 +172,11 @@ export default {
       }
     },
     deleteCourse() {
-      this.$emit('delete-course', `${this.subject} ${this.number}`);
+      this.$emit('delete-course', this.uniqueID);
       this.closeMenuIfOpen();
     },
     colorCourse(color) {
-      this.$emit('color-course', color, `${this.subject} ${this.number}`);
+      this.$emit('color-course', color, this.uniqueID);
       this.closeMenuIfOpen();
       this.colorJustChanged = true;
     },
@@ -187,7 +187,7 @@ export default {
       this.colorJustChanged = false;
     },
     editCourseCredit(credit) {
-      this.$emit('edit-course-credit', credit, `${this.subject} ${this.number}`);
+      this.$emit('edit-course-credit', credit, this.uniqueID);
       this.closeMenuIfOpen();
     }
   },

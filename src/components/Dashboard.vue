@@ -297,13 +297,18 @@ export default {
     incrementID() {
       const docRef = this.getDocRef();
 
-      // If uniqueIncrementer attribute does not exist, initialize it to 0
+      // If uniqueIncrementer attribute does not exist, initialize it to 0 and populate existing courses
       if (this.uniqueIncrementer === undefined) {
         this.uniqueIncrementer = 0;
-        docRef.update({ uniqueIncrementer: this.uniqueIncrementer });
-        return 0;
+        this.semesters.forEach(semester => {
+          semester.courses.forEach(course => {
+            course.uniqueID = this.uniqueIncrementer;
+            this.uniqueIncrementer += 1;
+          });
+        });
+      } else {
+        this.uniqueIncrementer += 1;
       }
-      this.uniqueIncrementer += 1;
       docRef.update({ uniqueIncrementer: this.uniqueIncrementer });
       return this.uniqueIncrementer;
     },
@@ -446,9 +451,9 @@ export default {
       // if course already exists in bottomCourses, first remove course
       for (let i = 0; i < this.bottomCourses.length; i += 1) {
         // if colorJustChanged and course already exists, just update course color
-        if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number && colorJustChanged) {
+        if (this.bottomCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
           this.bottomCourses[i].color = color;
-        } else if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number && !colorJustChanged) {
+        } else if (this.bottomCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
           this.bottomCourses.splice(i, 1);
         }
       }
@@ -460,9 +465,9 @@ export default {
       } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
         for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
           // if colorJustChanged and course already exists in seeMoreCourses, just update course color
-          if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number && colorJustChanged) {
+          if (this.seeMoreCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
             this.seeMoreCourses[i].color = color;
-          } else if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number && !colorJustChanged) {
+          } else if (this.seeMoreCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
             this.seeMoreCourses.splice(i, 1);
           }
         }

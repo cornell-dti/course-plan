@@ -118,7 +118,7 @@ export default {
       }
       // remove course from seeMoreCourses
       for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-        if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number) {
+        if (this.seeMoreCourses[i].uniqueID === course.uniqueID) {
           this.seeMoreCourses.splice(i, 1);
         }
       }
@@ -129,7 +129,7 @@ export default {
     deleteSeeMoreCourse(course) {
       // remove course from seeMoreCourses
       for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-        if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number) {
+        if (this.seeMoreCourses[i].uniqueID === course.uniqueID) {
           this.seeMoreCourses.splice(i, 1);
         }
       }
