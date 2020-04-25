@@ -20,8 +20,11 @@ import infoRequirements from './majors/info';
 import isstRequirements from './majors/isst';
 import mechnicalEngineeringRequirements from './majors/me';
 import orieRequirements from './majors/orie';
+import dbmeMinorRequirements from './minors/dbme';
 import csMinorRequirements from './minors/cs';
 import isstMinorRequirements from './minors/isst';
+import mathMinorRequirements from './minors/math';
+import ormsMinorRequirements from './minors/orms';
 
 const json: RequirementsJson = {
   university: {
@@ -127,15 +130,30 @@ const json: RequirementsJson = {
     }
   },
   minor: {
+    DBME: {
+      name: 'Dyson Business Minor for Engineers',
+      schools: ['BU'],
+      requirements: dbmeMinorRequirements
+    },
     CS: {
       name: 'Computer Science',
       schools: ['EN', 'AS'],
       requirements: csMinorRequirements
     },
     ISST: {
-      name: 'Industrial Systems and Information Technology ',
+      name: 'Industrial Systems and Information Technology',
       schools: ['EN'],
       requirements: isstMinorRequirements
+    },
+    ORMS: {
+      name: 'Operations Research and Management Science',
+      schools: ['EN'],
+      requirements: ormsMinorRequirements
+    },
+    MATH: {
+      name: 'Applied Mathematics',
+      schools: ['EN'],
+      requirements: mathMinorRequirements
     }
   }
 };

@@ -114,8 +114,10 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Biochemistry and Molecular Biology Part 1',
     description: 'BIOMG 3300 OR BIOMG 3350 OR BIOMG 3310',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
-    checker: includesWithSubRequirements(
-      ['BIOMG 3300', 'BIOMG 3350', 'BIOMG 3310'],
+    checker: includesWithSingleRequirement(
+      'BIOMG 3300',
+      'BIOMG 3350',
+      'BIOMG 3310'
     ),
     fulfilledBy: 'courses',
     minCount: 1
@@ -124,8 +126,10 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Biochemistry and Molecular Biology Part 2',
     description: 'BIOMG 3300 OR BIOMG 3350 OR BIOMG 3320',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
-    checker: includesWithSubRequirements(
-      ['BIOMG 3300', 'BIOMG 3350', 'BIOMG 3320'],
+    checker: includesWithSingleRequirement(
+      'BIOMG 3300',
+      'BIOMG 3350',
+      'BIOMG 3320'
     ),
     fulfilledBy: 'courses',
     minCount: 1

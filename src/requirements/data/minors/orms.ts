@@ -1,37 +1,34 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
 
-const isstMinorRequirements: readonly CollegeOrMajorRequirement[] = [
+const ormsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
-    name: 'Required Courses',
-    description: 'ENGRD 2700, ORIE 3120, ORIE 4800',
+    name: '3 courses from the following',
+    description: 'ENGRD 2700, ORIE 3300, ORIE 3310, ORIE 3500, ORIE 3510, ORIE 4580',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors',
     checker: includesWithSingleRequirement(
       'ENGRD 2700',
-      'ORIE 3120',
-      'ORIE 4800',
+      'ORIE 3300',
+      'ORIE 3310',
+      'ORIE 3500',
+      'ORIE 3510',
+      'ORIE 4580',
     ),
     fulfilledBy: 'courses',
     minCount: 3
   },
   {
-    name: '3 Courses from the following',
-    description: 'ORIE 3150, ORIE 3300, ORIE 4150, ORIE 4580, ORIE 4810, ORIE 4850, ORIE 5100, ORIE 5120, ORIE 5770',
+    name: 'Three 3000 level or higher ORIE courses',
+    description: 'Any ORIE courses at the 3000 level or higher.',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors',
     checker: includesWithSingleRequirement(
-      'ORIE 3150',
-      'ORIE 3300',
-      'ORIE 4150',
-      'ORIE 4580',
-      'ORIE 4810',
-      'ORIE 4850',
-      'ORIE 5100',
-      'ORIE 5120',
-      'ORIE 5770',
+      'ORIE 3***',
+      'ORIE 4***',
+      'ORIE 5***',
     ),
     fulfilledBy: 'courses',
     minCount: 3
   }
 ];
 
-export default isstMinorRequirements;
+export default ormsMinorRequirements;
