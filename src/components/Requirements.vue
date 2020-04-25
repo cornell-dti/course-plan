@@ -17,9 +17,10 @@
           </div>
         </div>
         <div v-if="index==2+majors.length" class="minor">
-          <div v-bind:class="{'active': minor.display}"  @click="activate(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
+          <div v-bind:class="{'active': minor.display}"  @click="activate(id)" class="minor-title" v-for="(minor, id) in minors" :key="minor.id">
             <p v-bind:class="{'active': minor.display}"  class="minor-title-top">{{minor.minorFN}}</p>
-            <p v-bind:class="{'active': minor.display}" class="minor-title-bottom">{{user.collegeFN}}</p> <!-- Change for multiple colleges -->
+            <!-- <p v-bind:class="{'active': minor.display}" class="minor-title-bottom">{{user.collegeFN}}</p>
+            Change for multiple colleges -->
           </div>
         </div>
 

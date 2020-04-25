@@ -44,7 +44,9 @@ const getEligibleCourses = (requirement: CollegeOrMajorRequirement): readonly El
 };
 
 const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequirementsJson => {
-  const { university, college, major, minor } = sourceRequirements;
+  const {
+    university, college, major, minor
+  } = sourceRequirements;
   type MutableDecoratedJson = {
     university: UniversityRequirements;
     college: {
@@ -67,7 +69,9 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
       };
     };
   };
-  const decoratedJson: MutableDecoratedJson = { university, college: {}, major: {}, minor: {} };
+  const decoratedJson: MutableDecoratedJson = {
+    university, college: {}, major: {}, minor: {}
+  };
   const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) => (
     requirements.map(requirement => {
       const { checker, ...rest } = requirement;

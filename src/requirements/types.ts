@@ -127,7 +127,7 @@ export type RequirementFulfillmentStatistics = {
 };
 
 export type GroupedRequirementFulfillmentReport = {
-  readonly groupName: 'University' | 'College' | 'Major';
+  readonly groupName: 'University' | 'College' | 'Major' | 'Minor';
   readonly specific: string | null;
   readonly reqs: readonly RequirementFulfillment<RequirementFulfillmentStatistics>[];
 };
