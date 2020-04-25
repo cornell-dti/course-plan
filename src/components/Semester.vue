@@ -349,11 +349,15 @@ export default {
 }
 
 .semester {
-  padding: 0.875rem 1.125rem;
-  border: 2px solid #d8d8d8;
-  border-radius: 11px;
   width: fit-content;
   position: relative;
+  border-radius: 11px;
+
+  &-content {
+    padding: 0.875rem 1.125rem;
+    border: 2px solid #d8d8d8;
+    border-radius: 11px;
+  }
 
   &--min {
     border: 2px dashed #d8d8d8;
