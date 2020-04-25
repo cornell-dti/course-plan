@@ -102,7 +102,7 @@
       </div>
     </div>
   </div>
-  <div v-if="isDuplicate()" class= "newSemester-duplicate" > <p> Duplicate Semester</p> </div>
+  <div v-if="isDuplicate()" class= "newSemester-duplicate" >Duplicate Semester</div>
   </div>
 
 </template>
@@ -304,6 +304,8 @@ export default {
   flex-direction: row;
   &-duplicate {
     color: red;
+    font-size: 14px;
+    margin-top: .5rem;
   }
   &-section {
     font-size: 14px;
