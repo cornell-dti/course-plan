@@ -42,7 +42,12 @@
         </div>
       </div>
       <div class="semester-courses">
-        <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
+        <div
+          class="draggable-semester-courses"
+          v-dragula="courses"
+          bag="first-bag"
+          :style="{height: courseContainerHeight + 'rem' }"
+          >
           <div v-for="course in deleteDuplicateCourses" :key="course.id" class="semester-courseWrapper">
             <course
               v-bind="course"
@@ -64,7 +69,7 @@
           :class="{ 'semester-addWrapper--compact': compact }"
           @click="openCourseModal"
         >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" v-dragula="courses" bag="first-bag" >{{
+          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" >{{
             buttonString
           }}</span>
         </div>
@@ -162,6 +167,9 @@ export default {
   },
 
   computed: {
+    courseContainerHeight() {
+      return (this.courses.length + 1) * 6.5;
+    },
     creditString() {
       let credits = 0;
       this.courses.forEach(course => {
@@ -458,6 +466,7 @@ export default {
   }
 
   &-addWrapper {
+    margin-top: -6rem;
     width: 21.375rem;
     height: 4.625rem;
     border-radius: 0.5rem;
