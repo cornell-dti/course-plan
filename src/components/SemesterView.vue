@@ -5,7 +5,7 @@
     @click="closeBar"
     :key="key"
   >
-    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
+    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" :currentSemesters="semesters" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
       <div class="semesterView-switchImage semesterView-twoColumn"
