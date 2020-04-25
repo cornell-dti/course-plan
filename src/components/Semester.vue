@@ -32,7 +32,7 @@
     <div v-if="isNotSemesterButton" class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
-          <span class="semester-name">{{ type }} {{ year }}</span>
+          <span class="semester-name"><img class="season-emoji" :src='seasonImg[type]' alt=""> {{ type }} {{ year }}</span>
           <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
@@ -108,6 +108,11 @@ Vue.component('semestermenu', SemesterMenu);
 Vue.component('deletesemester', DeleteSemester);
 Vue.component('editsemester', EditSemester);
 
+const fall = require('../assets/images/fallEmoji.svg');
+const spring = require('../assets/images/springEmoji.svg');
+const winter = require('../assets/images/winterEmoji.svg');
+const summer = require('../assets/images/summerEmoji.svg');
+
 const clickOutside = {
   bind(el, binding, vnode) {
     el.event = event => {
@@ -133,7 +138,14 @@ export default {
 
       deleteSemID: 0,
       deleteSemType: '',
-      deleteSemYear: 0
+      deleteSemYear: 0,
+
+      seasonImg: {
+        Fall: fall,
+        Spring: spring,
+        Winter: winter,
+        Summer: summer
+      }
     };
   },
   props: {
@@ -512,6 +524,11 @@ export default {
       font-size: 14px;
       line-height: 17px;
     }
+  }
+
+  .season-emoji {
+    height: 18px;
+    margin-top: -4px;
   }
 
   /* The Modal (background) */
