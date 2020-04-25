@@ -15,7 +15,6 @@
           </div>
         </div>
         <div class="onboarding-section">
-          <!-- TODO: Multiple colleges -->
           <div class="onboarding-subHeader">Transfer Credits (Optional)</div>
           <div class="onboarding-inputs">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
@@ -26,15 +25,16 @@
                   v-for="(options, index) in displayOptions.exam"
                   :key = index
                   :style="{ borderColor: options.type.boxBorder }"
-                  v-click-outside:[index]="closeCollegeDropdownIfOpen"
+                  v-click-outside:[index]="closeTypeDropdownIfOpen"
                 >
                <label class="onboarding-label">Source/Type</label>
-              <div class="onboarding-select onboarding-input">
+              <div class="onboarding-select onboarding-input"
+                    :style="{borderColor: options.type.boxBorder}" >
                   <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideExamContent(index)">
                     <div
                       class="onboarding-dropdown-placeholder college-placeholder"
                       id="college-placeholder"
-                      :style="{ color: options.type.placeholderColor }"
+                      :style="{ color: options.type.placeholderColor}"
                     >
                       {{ options.type.placeholder }}
                     </div>
@@ -86,7 +86,7 @@
                     <div
                       v-for="(subject, acronym) in subjects"
                       :key="acronym"
-                      :id="college"
+                      :id="subject"
                       class="onboarding-dropdown-content-item"
                       @click="selectSubject(subject, acronym, index)"
                     >
@@ -103,6 +103,7 @@
                       class="onboarding-dropdown-placeholder college-placeholder"
                       id="college-placeholder"
                       :style="{ color: options.score.placeholderColor }"
+
                     >
                       {{ options.score.placeholder }}
                     </div>
@@ -131,11 +132,11 @@
                 </div>
                  </div>
               </div>
-              <div class="onboarding-addRemoveWrapper">
+              <div class="onboarding-addRemoveWrapper" >
                 <div class="onboarding-add" @click="addExam">
                   Add
                 </div>
-                <div class="onboarding-remove" @click="removeMajor" >
+                <div class="onboarding-remove" @click="removeExam" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
                   Remove
                 </div>
               </div>
@@ -144,13 +145,26 @@
               <div class="onboarding-subHeader2">Credits From Other Instituions</div>
               <label class="onboarding-label">Equivalent Cornell Class</label>
               <div class="onboarding-selectWrapper">
+                <newCourse
+                :isOnboard="true"
+                > </newCourse>
+              </div>
+              <div class="onboarding-addRemoveWrapper">
+                <div class="onboarding-add" @click="addTransfer">
+                  Add
+                </div>
+                <div class="onboarding-remove" @click="removeTransfer">
+                  Remove
+                </div>
+              </div>
+              <div class="onboarding-selectWrapper">
                 <div
-                  class="onboarding-select onboarding-input"
+                  class="onboarding-select onboarding-input onboarding-selectWrapperRow"
                   id="major"
                   v-for="(options, index) in displayOptions.class"
                   :key = index
                   :style="{ borderColor: options.boxBorder }"
-                  v-click-outside:[index]="closeMajorDropdownIfOpen"
+                  v-click-outside:[index]="closeClassDropdownIfOpen"
                 >
                   <div class="onboarding-dropdown-placeholder major-wrapper" @click="showHideClassContent(index)">
                     <div
@@ -183,21 +197,13 @@
                   </div>
                 </div>
               </div>
-              <div class="onboarding-addRemoveWrapper">
-                <div class="onboarding-add" @click="addMajor">
-                  Add
-                </div>
-                <div class="onboarding-remove" @click="removeMajor">
-                  Remove
-                </div>
-              </div>
             </div>
             <div class="onboarding-bottomWrapper">
               <div class=" onboarding-label--bottom">
               <label class=" onboarding-label" >Total Non-Cornell Credits</label>
               </div>
               <div class="onboarding-label--bottom">
-                <label class=" onboarding-label onboarding-label--bottom---bold">4 </label>
+                <label class=" onboarding-label onboarding-label--bottom---bold">{{totalCredits}} </label>
                 <label class="onboarding-label"> Credits</label>
               </div>
             </div>
@@ -209,9 +215,14 @@
 <script>
 
 import reqsData from '@/requirements/typed-requirement-json';
+import coursesJSON from '../../assets/courses/courses.json';
+import transferJSON from '../../assets/Transfer/AP-json';
+import NewCourse from '@/components/Modals/NewCourse';
 
+Vue.component('newCourse', NewCourse);
 
 const placeholderText = 'Select one';
+const laceholderColor = '#757575';
 
 const clickOutside = {
   bind(el, binding, vnode) {
@@ -232,111 +243,108 @@ export default {
     user: Object
   },
   data() {
-    // Set dropdown colleges and majors if already filled out
-    let collegeText = placeholderText;
-    let collegeAcronym = '';
-    let collegePlaceholderColor = '';
-    if (this.user.college !== '') {
-      collegeText = this.user.collegeFN;
-      collegeAcronym = this.user.college;
-      collegePlaceholderColor = '#757575';
+    let credits = 0;
+    const exams = [];
+    const sections = ['type', 'subject', 'score'];
+    if ('exam' in this.user && this.user.exam.length > 0) {
+      for (let x = 0; x < this.user.exam.length; x += 1) {
+        const exam = {};
+        for (const sec of sections) {
+          exam[sec] = {
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '#757575',
+            placeholder: this.user.exam[x][sec],
+            acronym: ''
+          };
+        }
+        exams.push(exam);
+        credits += this.user.exam[x].credits;
+      }
     }
-
-    let majorText = placeholderText;
-    let majorAcronym = '';
-    let majorPlaceholderColor = '';
-    if ('major' in this.user && this.user.major.length > 0) {
-      majorText = this.user.majorFN;
-      majorAcronym = this.user.major;
-      majorPlaceholderColor = '#757575';
+    const exam = {};
+    for (const sect of sections) {
+      exam[sect] = {
+        shown: false,
+        stopClose: false,
+        boxBorder: '',
+        arrowColor: '',
+        placeholderColor: '',
+        placeholder: placeholderText,
+        acronym: ''
+      };
     }
+    exams.push(exam);
 
+
+    const classes = [];
+    if ('transferClass' in this.user && this.user.transferClass.length > 0) {
+      for (let x = 0; x < this.user.transferClass.length; x += 1) {
+        const Class = {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: this.user.transferClass[x].name,
+          acronym: ''
+        };
+        classes.push(Class);
+        credits += this.user.transferClass[x].credits;
+      }
+    }
+    const Class = {
+      shown: false,
+      stopClose: false,
+      boxBorder: '',
+      arrowColor: '',
+      placeholderColor: '',
+      placeholder: placeholderText,
+      acronym: ''
+    };
+    classes.push(Class);
+
+    console.log(exams);
     return {
       // TODO: Get real college, major, and minor lists
       // :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }"
       tookSwimTest: '',
-      colleges: {},
-      majors: {},
-      minors: {},
-      scores: ['0', '1', '2', '3', '4'], // for based on exam
-      classes: ['CS 1110: Introduction to Computing Using Python', 'CS 1110: Introduction to Computing Using Python'],
-      exams: ['AP', 'IB'],
+      scores: [], // for based on exam
+      classes: [],
+      exams: [],
       subjects: ['Chemistry', 'Physics I', 'Physics II', 'Calculas AB', 'Calculas BC', 'Biology', 'French'], // fix
       firstName: this.user.firstName,
       middleName: this.user.middleName,
       lastName: this.user.lastName,
       displayOptions: {
-        exam: [
-          {
-            type: {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: majorPlaceholderColor,
-              placeholder: 'AP',
-              acronym: majorAcronym
-            },
-            subject: {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: majorPlaceholderColor,
-              placeholder: 'Chemistry',
-              acronym: majorAcronym
-
-            },
-            score: {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: majorPlaceholderColor,
-              placeholder: '5',
-              acronym: majorAcronym
-            }
-          }
-        ],
-        class: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: majorPlaceholderColor,
-            placeholder: majorText,
-            acronym: majorAcronym
-          }
-        ]
+        exam: exams,
+        class: classes
       },
-      isError: false
+      isError: false,
+      totalCredits: credits
     };
   },
   directives: {
     'click-outside': clickOutside
   },
   mounted() {
-    // this.setCollegesMap();
-    // this.setMajorsList();
-    // this.setMinorsList();
+    this.getExams();
   },
   methods: {
+    getExams() {
+      // this.$emit('updateTransfer', this.displayOptions.exams, this.displayOptions.class);
+    },
     showHideContent(type, section, i) {
       let displayOptions = this.displayOptions[type];
       displayOptions = displayOptions[i];
-      let contentShown;
       if (type === 'exam') {
-        contentShown = displayOptions[section].shown;
-        displayOptions[section].shown = !contentShown;
-      } else {
-        contentShown = displayOptions.shown;
-        displayOptions.shown = !contentShown;
+        displayOptions = displayOptions[section];
       }
-
-
+      const contentShown = displayOptions.shown;
+      displayOptions.shown = !contentShown;
       if (contentShown) {
-        // clicked box when content shown. So then hide content
         displayOptions.boxBorder = '#C4C4C4';
         displayOptions.arrowColor = '#C4C4C4';
       } else {
@@ -356,10 +364,20 @@ export default {
     showHideClassContent(i) {
       this.showHideContent('class', '', i);
     },
-    closeDropdownIfOpen(type, i) {
-      let displayOptions = this.displayOptions[type];
+    closeDropdownIfOpen(section, i) {
+      let displayOptions = this.displayOptions[section];
       displayOptions = displayOptions[i];
-      if (displayOptions.stopClose) {
+      if (section === 'exam') {
+        Object.keys(displayOptions).forEach(key => {
+          if (displayOptions[key].stopClose) {
+            displayOptions[key].stopClose = false;
+          } else if (displayOptions[key].shown) {
+            displayOptions[key].shown = false;
+            displayOptions[key].boxBorder = '#C4C4C4';
+            displayOptions[key].arrowColor = '#C4C4C4';
+          }
+        });
+      } else if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
         displayOptions.shown = false;
@@ -367,14 +385,11 @@ export default {
         displayOptions.arrowColor = '#C4C4C4';
       }
     },
-    closeCollegeDropdownIfOpen(event, i) {
-      this.closeDropdownIfOpen('college', i);
+    closeTypeDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('exam', i);
     },
-    closeMajorDropdownIfOpen(event, i) {
-      this.closeDropdownIfOpen('major', i);
-    },
-    closeMinorDropdownIfOpen(event, i) {
-      this.closeDropdownIfOpen('minor', i);
+    closeClassDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('class', i);
     },
     selectOption(type, section, text, acronym, i) {
       let displayOptions = this.displayOptions[type];
@@ -400,8 +415,46 @@ export default {
     selectClass(text, acronym, i) {
       this.selectOption('class', 'placholder', text, acronym, i);
     },
-    addMajor() {
-      const newMajor = {
+    addExam() {
+      const exam = {
+        type: {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: placeholderText,
+          acronym: ''
+        },
+        subject: {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: placeholderText,
+          placeholder: placeholderText,
+          acronym: ''
+        },
+        score: {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: placeholderText,
+          acronym: ''
+        }
+      };
+      this.displayOptions.exams = this.displayOptions.exam.push(exam);
+    },
+    removeExam() {
+      this.displayOptions.exam.pop();
+    },
+    removeTransfer() {
+      this.displayOptions.class.pop();
+    },
+    addTransfer() {
+      const newTransfer = {
         shown: false,
         stopClose: false,
         boxBorder: '',
@@ -410,27 +463,7 @@ export default {
         placeholder: placeholderText,
         acronym: ''
       };
-      this.displayOptions.major.push(newMajor);
-    },
-    removeMajor() {
-      this.displayOptions.major.pop();
-    },
-    addExam() {
-      console.log(placeholderText);
-      const exam = {
-        shown: false,
-        stopClose: false,
-        boxBorder: '',
-        arrowColor: '',
-        placeholderColor: '',
-        placeholder: placeholderText
-      };
-
-      this.displayOptions.exam.push(exam);
-      console.log(this.displayOptions.exam);
-    },
-    removeMinor() {
-      this.displayOptions.minor.pop();
+      this.displayOptions.class.push(newTransfer);
     }
   }
 };

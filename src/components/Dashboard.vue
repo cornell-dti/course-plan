@@ -82,7 +82,21 @@ export default {
         collegeFN: '',
         firstName: names[0],
         lastName: names[1],
-        middleName: ''
+        middleName: '',
+        exam: [{
+          type: 'AP',
+          subject: 'Chemistry',
+          score: 5,
+          credits: 4
+        },
+        {
+          type: 'AP2',
+          subject: 'Chemistry3',
+          score: 5,
+          credits: 4
+        }
+        ],
+        transferClass: [{ name: 'CS 1110', credits: 4 }, { name: 'CS 3110', credits: 4 }]
       },
       bottomCourses: [],
       seeMoreCourses: [],
@@ -465,7 +479,22 @@ export default {
         collegeFN: data.colleges[0].fullName,
         firstName: name.firstName,
         middleName: name.middleName,
-        lastName: name.lastName
+        lastName: name.lastName,
+        exam: [{
+          type: 'AP',
+          subject: 'Chemistry',
+          score: 5,
+          credits: 4
+        },
+        {
+          type: 'AP2',
+          subject: 'Chemistry2',
+          score: 5,
+          credits: 4
+        }
+        ],
+        transferClass: [{ name: 'CS 1110', credits: 4 }, { name: 'CS 3110', credits: 4 }],
+        tookSwim: 'false'
       };
       if ('majors' in data && data.majors.length > 0) {
         user.major = data.majors[0].acronym;

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
-import { ExamData } from './types';
+import { ExamData } from '../../requirements/types';
 
-const json: ExamData = {
+const transferJSON: ExamData = {
   AP:
     [
       {
@@ -312,4 +312,4 @@ const json: ExamData = {
 
 };
 
-export default json;
+export default transferJSON;

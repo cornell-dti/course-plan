@@ -1,6 +1,6 @@
 <template>
   <div class="newCourse">
-    <div class="newCourse-text">{{ text }}</div>
+    <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
     <div class="autocomplete">
       <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
@@ -12,6 +12,7 @@ import coursesJSON from '../../assets/courses/courses.json';
 
 export default {
   props: {
+    isOnboard: Boolean,
     semesterID: Number
   },
   computed: {

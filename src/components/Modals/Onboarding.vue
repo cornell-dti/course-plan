@@ -12,10 +12,10 @@
           <div v-if="isEditingProfile" class="onboarding-description">Let's edit your profile!</div>
           <onboardingBasic v-if="currentPage == 1"
             :user="user"
-            @update="updateBasic"/>
+            @updateBasic="updateBasic"/>
           <onboardingTransfer v-if="currentPage == 2"
             :user="user"
-            @update="updateTransfer"
+            @updateTransfer="updateTransfer"
             />
         </div>
       </div>
@@ -135,7 +135,51 @@ export default {
             placeholder: placeholderText,
             acronym: ''
           }
+        ],
+        exam: [
+          {
+            type: {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: majorPlaceholderColor,
+              placeholder: 'AP',
+              acronym: majorAcronym
+            },
+            subject: {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: majorPlaceholderColor,
+              placeholder: 'Chemistry',
+              acronym: majorAcronym
+
+            },
+            score: {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: majorPlaceholderColor,
+              placeholder: '5',
+              acronym: majorAcronym
+            }
+          }
+        ],
+        class: [
+          {
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: majorPlaceholderColor,
+            placeholder: majorText,
+            acronym: majorAcronym
+          }
         ]
+
       },
       isError: false
     };
@@ -158,7 +202,9 @@ export default {
           userData: {
             colleges: this.notPlaceholderOptions(this.displayOptions.college),
             majors: this.notPlaceholderOptions(this.displayOptions.major),
-            minors: this.notPlaceholderOptions(this.displayOptions.minor)
+            minors: this.notPlaceholderOptions(this.displayOptions.minor),
+            exam: this.notPlaceholderOptions(this.displayOptions.exam),
+            class: this.notPlaceholderOptions(this.displayOptions.class)
           }
         };
 
@@ -198,9 +244,15 @@ export default {
       this.currentPage = (this.currentPage + 1 === 4) ? 3 : this.currentPage + 1;
       console.log(this.currentPage);
     },
-    updateBasic(newMajor) {
-      console.log('hi');
+    updateBasic(newMajor, newMinor, newCollege) {
       this.displayOptions.major = newMajor;
+      this.displayOptions.minor = newMinor;
+      this.displayOptions.college = newCollege;
+    },
+    updateTransfer(newMajor, newMinor, newCollege) {
+      this.displayOptions.major = newMajor;
+      this.displayOptions.minor = newMinor;
+      this.displayOptions.college = newCollege;
     }
 
   }

@@ -282,6 +282,7 @@ export default {
         colleges[key] = collegeJSON[key].name;
       });
       this.colleges = colleges;
+      this.$emit('updateBasic', this.displayOptions.major, this.displayOptions.minor, this.displayOptions.college);
     },
     // Set the majors map to with acronym keys and full name values
     setMajorsList() {
@@ -299,10 +300,12 @@ export default {
         }
       });
       this.majors = majors;
+      this.$emit('updateBasic', this.displayOptions.major, this.displayOptions.minor, this.displayOptions.college);
     },
     // TODO: add minors when the list exists
     setMinorsList() {
       this.minors = {};
+      this.$emit('updateBasic', this.displayOptions.major, this.displayOptions.minor, this.displayOptions.college);
     },
     // Clear a major if a new college is selected and the major is not in it
     clearMajorIfNotInCollege() {
@@ -326,27 +329,6 @@ export default {
           major.placeholder = placeholderText;
           major.acronym = '';
         }
-      }
-    },
-    submitOnboarding() {
-      // Display error if a required field is empty, otherwise submit
-      if (this.firstName === '' || this.lastName === '' || this.noOptionSelected(this.displayOptions.college)) {
-        this.isError = true;
-      } else {
-        const onboardingData = {
-          name: {
-            firstName: this.firstName,
-            middleName: this.middleName,
-            lastName: this.lastName
-          },
-          userData: {
-            colleges: this.notPlaceholderOptions(this.displayOptions.college),
-            majors: this.notPlaceholderOptions(this.displayOptions.major),
-            minors: this.notPlaceholderOptions(this.displayOptions.minor)
-          }
-        };
-
-        this.$emit('onboard', onboardingData);
       }
     },
     // check to see if a set of options (college, major, minor) only has placeholder texts (so no options selected)
@@ -451,7 +433,6 @@ export default {
         acronym: ''
       };
       this.displayOptions.major.push(newMajor);
-      this.$emit('update', this.displayOptions.major);
     },
     removeMajor() {
       this.displayOptions.major.pop();

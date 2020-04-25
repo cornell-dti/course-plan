@@ -8,6 +8,7 @@
       <component
         class="modal-body"
         :is="body"
+        :isOnboard="isOnboard"
         :semesterID="semesterID"
         ref="modalBodyComponent"
       ></component>
@@ -32,6 +33,7 @@ Vue.component('newSemester', NewSemester);
 export default {
   data() {
     return {
+      isOnboard: false,
       courseIsAddable: true
     };
   },
