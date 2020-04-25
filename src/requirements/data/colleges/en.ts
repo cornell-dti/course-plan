@@ -89,14 +89,6 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     minCount: 6
   },
   {
-    name: 'Major Program',
-    description: 'Major-required courses, major-approved electives, and courses outside the major.',
-    source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: null,
-    fulfilledBy: 'self-check',
-    minCount: 3
-  },
-  {
     name: 'Technical Communication',
     description: 'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/engineering-communications-program/technical',
