@@ -30,14 +30,17 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 1
   },
-  // Fix: Add excludes
+  // TODO: Add excludes
   {
     name: '4 CS courses numbered 3000 or higher',
     description: 'CS 4090, CS 4997, CS 4998, CS 4999 and seminars are excluded. CS 2800 is allowed',
     source: 'https://www.cs.cornell.edu/undergrad/csminor',
-    checker: includesWithSingleRequirement(
-      'CS 3***',
-      'CS 2800'
+    checker: includesWithSubRequirements(
+      ['CS 2800'],
+      ['CS 3***'],
+      ['CS 4***'],
+      ['CS 5***'],
+      ['CS 6***'],
     ),
     fulfilledBy: 'courses',
     minCount: 4
