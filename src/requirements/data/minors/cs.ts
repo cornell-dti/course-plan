@@ -22,7 +22,7 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'CS 3110 or CS 3410 or CS 3420/ECE 3140',
     source: 'https://www.cs.cornell.edu/undergrad/csminor',
     checker: includesWithSingleRequirement(
-      'CS 3119',
+      'CS 3110',
       'CS 3410',
       'CS 3420',
       'ECE 3140'

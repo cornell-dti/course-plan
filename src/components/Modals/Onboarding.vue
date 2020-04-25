@@ -79,7 +79,7 @@
 
 
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major!</label>
+              <label class="onboarding-label">Your Major (optional)</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -179,7 +179,9 @@
                 <div class="onboarding-add" @click="addMinor">
                   Add
                 </div>
-                <div class="onboarding-remove" @click="removeMinor" :class="{ 'onboarding--hidden': displayOptions.minor.length <= 1 }">
+                <!-- :class=“{‘name1’: expression === true, ‘name2’: expression === false}” -->
+
+                <div class="onboarding-remove" @click="removeMinor" :class="{'onboarding--hidden': displayOptions.minor.length === 1 && displayOptions.minor[0].placeholder == placeholderText}">
                   Remove
                 </div>
               </div>
@@ -257,6 +259,7 @@ export default {
       firstName: this.user.firstName,
       middleName: this.user.middleName,
       lastName: this.user.lastName,
+      placeholderText,
       displayOptions: {
         college: [
           {
@@ -585,6 +588,9 @@ export default {
     },
     removeMinor() {
       this.displayOptions.minor.pop();
+      if (this.displayOptions.minor.length === 0) {
+        this.addMinor();
+      }
     }
   }
 };
