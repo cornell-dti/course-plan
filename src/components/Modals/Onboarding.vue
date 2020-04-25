@@ -126,7 +126,7 @@
                 <div class="onboarding-add" @click="addMajor">
                   Add
                 </div>
-                <div class="onboarding-remove" @click="removeMajor" :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }">
+                <div class="onboarding-remove" @click="removeMajor" :class="{'onboarding--hidden': displayOptions.major.length === 1 && displayOptions.major[0].placeholder == placeholderText}">
                   Remove
                 </div>
               </div>
@@ -179,8 +179,6 @@
                 <div class="onboarding-add" @click="addMinor">
                   Add
                 </div>
-                <!-- :class=“{‘name1’: expression === true, ‘name2’: expression === false}” -->
-
                 <div class="onboarding-remove" @click="removeMinor" :class="{'onboarding--hidden': displayOptions.minor.length === 1 && displayOptions.minor[0].placeholder == placeholderText}">
                   Remove
                 </div>
@@ -574,6 +572,9 @@ export default {
     },
     removeMajor() {
       this.displayOptions.major.pop();
+      if (this.displayOptions.major.length === 0) {
+        this.addMajor();
+      }
     },
     addMinor() {
       const minor = {
