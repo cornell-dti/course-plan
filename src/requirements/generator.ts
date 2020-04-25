@@ -65,6 +65,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     minor: {
       [key: string]: {
         readonly name: string;
+        readonly schools: readonly string[];
         readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
       };
     };

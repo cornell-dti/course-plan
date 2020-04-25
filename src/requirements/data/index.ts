@@ -21,6 +21,7 @@ import isstRequirements from './majors/isst';
 import mechnicalEngineeringRequirements from './majors/me';
 import orieRequirements from './majors/orie';
 import csMinorRequirements from './minors/cs';
+import isstMinorRequirements from './minors/isst';
 
 const json: RequirementsJson = {
   university: {
@@ -128,7 +129,13 @@ const json: RequirementsJson = {
   minor: {
     CS: {
       name: 'Computer Science',
+      schools: ['EN', 'AS'],
       requirements: csMinorRequirements
+    },
+    ISST: {
+      name: 'Industrial Systems and Information Technology ',
+      schools: ['EN'],
+      requirements: isstMinorRequirements
     }
   }
 };

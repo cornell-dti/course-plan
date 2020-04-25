@@ -84,20 +84,11 @@ export type MajorRequirements<R> = {
   };
 };
 
-export type MinorRequirements<R> = {
-  readonly [collegeCode: string]: {
-    readonly name: string;
-    // readonly schools: readonly string[];
-    readonly requirements: readonly R[];
-  };
-};
-
 type GenericRequirementsJson<R> = {
   readonly university: UniversityRequirements;
   readonly college: CollegeRequirements<R>;
   readonly major: MajorRequirements<R>;
-  readonly minor: MinorRequirements<R>;
-
+  readonly minor: MajorRequirements<R>;
 };
 
 export type RequirementsJson = GenericRequirementsJson<CollegeOrMajorRequirement>;
@@ -106,7 +97,7 @@ export type DecoratedRequirementsJson = {
   readonly university: UniversityRequirements;
   readonly college: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
-  readonly minor: MinorRequirements<DecoratedCollegeOrMajorRequirement>;
+  readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };
 
 export type RequirementFulfillment<M extends {}> = {
