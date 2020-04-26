@@ -10,6 +10,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'],
       ['CS 2110', 'CS 2112']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
