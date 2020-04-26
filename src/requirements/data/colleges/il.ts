@@ -17,6 +17,7 @@ const irlRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ILRLR 2050'],
       ['ILRLE 2400']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 9
   },
@@ -25,6 +26,7 @@ const irlRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Students are required to fulfill the following writing requirements for a letter grade:',
     source: 'https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements',
     checker: courseIsFWS,
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 3
   },
@@ -43,6 +45,7 @@ const irlRequirements: readonly CollegeOrMajorRequirement[] = [
       'ENGL 2880',
       'ENGL 2890'
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -51,6 +54,7 @@ const irlRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Students are required to complete one course from each of the following lists to fulfill the distribution requirements. All courses must be taken for a letter grade.',
     source: 'https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 3
   }

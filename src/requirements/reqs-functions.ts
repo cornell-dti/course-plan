@@ -44,6 +44,7 @@ function computeUniversityRequirementFulfillments(
     source: 'http://courses.cornell.edu/content.php?catoid=31&navoid=7901',
     search: ['all-eligible'],
     includes: [],
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 120,
     applies: 'all',
@@ -59,6 +60,7 @@ function computeUniversityRequirementFulfillments(
         'PE'
       ]
     ],
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 2,
     maxCount: 2,
@@ -69,6 +71,7 @@ function computeUniversityRequirementFulfillments(
     description: 'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming and water safety competency requirement '
       + 'for all entering first-year undergraduate students.',
     source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
+    operator: null,
     fulfilledBy: 'self-check',
     includes: [],
     minCount: 0,
@@ -166,13 +169,13 @@ function postProcessRequirementsFulfillments<T extends {}, R extends {}>(
   return fulfillments.map(requirementFulfillment => {
     const { requirement, courses } = requirementFulfillment;
     const newMetadata = transformer(requirementFulfillment);
+    // console.log(newMetadata);
     return { requirement, courses, ...newMetadata };
   });
 }
 
 function computeFulfillmentStatistics<T extends {}>({ requirement, courses: coursesThatFulfilledRequirement }: RequirementFulfillment<T>): RequirementFulfillmentStatistics {
   let minCountFulfilled = 0;
-
   coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
     if (coursesThatFulfilledSubRequirement.length === 0) {
       return;
@@ -228,13 +231,21 @@ function computeCollegeOrMajorRequirementFulfillments(
   allRequirements: readonly DecoratedCollegeOrMajorRequirement[]
 ): readonly RequirementFulfillment<RequirementFulfillmentStatistics>[] {
   // Phase 1: Compute raw requirement fulfillment locally for each requirement.
+  // console.log('Courses');
+  // console.log(coursesTaken);
+  // console.log('Requirements');
+  // console.log(allRequirements);
   const rawRequirementFulfillment = computeRawRequirementFulfillment(coursesTaken, allRequirements);
+  // console.log('Fullfilled');
+  // console.log(rawRequirementFulfillment);
 
   // Phase 2: Compute fulfillment statistics for each requirement.
   const requirementFulfillmentWithStatistics = postProcessRequirementsFulfillments(
     rawRequirementFulfillment,
     computeFulfillmentStatistics
   );
+  // console.log('Statistics');
+  // console.log(requirementFulfillmentWithStatistics);
 
   return requirementFulfillmentWithStatistics;
 }

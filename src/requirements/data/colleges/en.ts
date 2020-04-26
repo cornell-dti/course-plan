@@ -11,6 +11,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 1920'],
       ['MATH 2930', 'MATH 2940']
     ),
+    operator: 'and',
     fulfilledBy: 'credits',
     minCount: 14
   },
@@ -22,6 +23,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['PHYS 1112'],
       ['PHYS 2213']
     ),
+    operator: 'and',
     fulfilledBy: 'credits',
     minCount: 8
   },
@@ -32,6 +34,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Earth and Atmospheric Sciences majors should take CHEM 2090 and then 2080/1570.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CHEM 2090'),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 4
   },
@@ -40,6 +43,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'All students are required to take two first-year writing seminars.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: courseIsFWS,
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 6
   },
@@ -48,6 +52,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: '(CS 1110, 1112, 1114, or 1115)',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 4
   },
@@ -56,6 +61,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'One introduction to engineering (ENGRI) course.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: (course: Course): boolean => course.subject === 'ENGRI',
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 4
   },
@@ -64,6 +70,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Two different category distribution courses (ENGRD), one of which may be required by the Major.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: (course: Course): boolean => course.subject === 'ENGRD',
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 6
   },
@@ -76,6 +83,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
         distribution => course.catalogDistr?.includes(distribution) ?? false
       )
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 3,
     totalCount: 6
@@ -89,6 +97,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Up to 6 credits of advisor approved electives may be allowed for ROTC courses at the 3000-level or above.',
     source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives#adv_elective',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 6
   },
@@ -97,6 +106,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Major-required courses, major-approved electives, and courses outside the major.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 3
   },
@@ -106,6 +116,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'an engineering distribution, liberal studies, Advisor-approved electives, or Major course.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 3
   }
