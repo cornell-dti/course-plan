@@ -13,6 +13,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       ['INFO 2450'],
       ['INFO 2950']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 5
   },
@@ -45,6 +46,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
         'STSCI 2200'
       ]
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 3
   },
@@ -53,6 +55,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Students are required to complete AT LEAST one concentration from the seven concentrations available',
     source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-0',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 1
   },
@@ -70,6 +73,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 3410'],
       ['INFO 3***', 'INFO 4***', 'INFO 5***', 'INFO 6***']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 3
   }

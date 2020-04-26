@@ -7,6 +7,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'ENGRD 2020',
     source: 'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
     checker: includesWithSingleRequirement('ENGRD 2020'),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -26,6 +27,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MAE 4272'],
       ['MAE 4300']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 10
   },
@@ -34,6 +36,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'A list of approved Major-approved Electives is available online at www.mae.cornell.edu',
     source: 'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -41,6 +44,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Can be satisfied by independent research, project team, or by designated senior design formal course, MAE 4xx1.',
     source: 'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -56,6 +60,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'BTRY 3010',
       'CS 2800'
     ),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 3
   },
@@ -69,6 +74,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'In addition, credit for advanced placement biology and technical courses at the 2000+ level in biological sciences are accepted.',
     source: 'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -76,6 +82,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'A list of approved Major-approved Electives is available online at www.mae.cornell.edu',
     source: 'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   }
 ];
