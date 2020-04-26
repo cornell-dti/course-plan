@@ -5,7 +5,7 @@
         <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ {{getYear()}}</a>
       </div>
       <div class="col-3">
-        <p class= "footer">Built with ❤️</p>
+        <p class= "footer">Built with LOVE</p>
       </div>
       <div class="col-3 footer">
         <a  class="footer" href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>

@@ -40,7 +40,7 @@ export default {};
   text-align: left;
   display: inline-block;
   font-weight: bold;
-  font-size: 55px;
+  font-size: 72px;
   color: #0a2327;
   vertical-align: top;
   @media(max-width: 1154px){
@@ -53,17 +53,20 @@ export default {};
   }
 }
 .back_to_home {
-
-  font-size: 35px;
+  font-size: 32px;
   vertical-align: middle;
   text-align: center;
   color: #7b7d7e;
-  margin-bottom: 6vh;
-  margin-top: 6vh;
+  margin-bottom: 13.75rem;
+  margin-top: 6rem;
   height: 100px;
+  @media(max-width: 1154px) {
+    margin-bottom: 3rem;
+  }
   @media(max-width: 800px){
     margin-top: 8%;
     font-size: 8vw;
+    margin-bottom: 0;
   }
 
 }
