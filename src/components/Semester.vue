@@ -194,7 +194,7 @@ export default {
       if (this.isDraggedFrom) {
         extraIncrementer -= 1;
       }
-      return (this.courses.length + 2 + extraIncrementer) * 6.5;
+      return (this.courses.length + 1 + extraIncrementer) * 6.5;
     },
     creditString() {
       let credits = 0;
@@ -496,7 +496,7 @@ export default {
   }
 
   &-addWrapper {
-    margin-top: -12rem;
+    margin-top: -6rem;
     width: 21.375rem;
     height: 4.625rem;
     border-radius: 0.5rem;
