@@ -187,6 +187,7 @@ export default {
   computed: {
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
     courseContainerHeight() {
+      let factor = 6.1;
       let extraIncrementer = 0;
       if (this.isShadow) {
         extraIncrementer += 1;
@@ -194,7 +195,10 @@ export default {
       if (this.isDraggedFrom) {
         extraIncrementer -= 1;
       }
-      return (this.courses.length + 1 + extraIncrementer) * 6.5;
+      if (this.compact) {
+        factor = 2.6;
+      }
+      return (this.courses.length + 1 + extraIncrementer) * factor;
     },
     creditString() {
       let credits = 0;
@@ -402,6 +406,7 @@ export default {
     &.semester--compact {
       width: 13rem;
       height: 3.5rem;
+      margin-top: .875rem;
     }
   }
 
@@ -426,10 +431,6 @@ export default {
     color: #858585;
     margin-left: 1.125rem;
     margin-right: 1.125rem;
-
-    &--compact {
-      flex-direction: column;
-    }
   }
 
   &-left {
@@ -498,7 +499,7 @@ export default {
   }
 
   &-addWrapper {
-    margin-top: -6rem;
+    margin-top: -5rem;
     width: 21.375rem;
     height: 4.625rem;
     border-radius: 0.5rem;
@@ -511,6 +512,7 @@ export default {
     margin-right: 1.125rem;
 
     &--compact {
+      margin-top: -1.2rem;
       width: 10.5rem;
       height: 2rem;
     }
