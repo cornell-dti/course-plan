@@ -46,6 +46,7 @@
           class="draggable-semester-courses"
           v-dragula="courses"
           bag="first-bag"
+          :semId="id"
           :style="{height: courseContainerHeight + 'rem' }"
           >
           <div v-for="course in deleteDuplicateCourses" :key="course.id" class="semester-courseWrapper">
@@ -135,7 +136,9 @@ export default {
 
       deleteSemID: 0,
       deleteSemType: '',
-      deleteSemYear: 0
+      deleteSemYear: 0,
+      isShadow: false,
+      isDraggedFrom: false
     };
   },
   props: {
@@ -152,11 +155,26 @@ export default {
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
     const service = Vue.$dragula.$service;
-    service.eventBus.$on('drag', () => {
+    service.eventBus.$on('drag', data => {
+      if (parseInt(data.container.getAttribute('semId'), 10) === this.id) {
+        this.isDraggedFrom = true;
+      }
       this.scrollable = true;
+      this.isShadow = false;
     });
     service.eventBus.$on('drop', () => {
       this.scrollable = true;
+    });
+    service.eventBus.$on('shadow', data => {
+      if (parseInt(data.container.getAttribute('semId'), 10) === this.id) {
+        this.isShadow = true;
+      } else {
+        this.isShadow = false;
+      }
+    });
+    service.eventBus.$on('dragend', () => {
+      this.isShadow = false;
+      this.isDraggedFrom = false;
     });
 
     this.buildCautions();
@@ -167,8 +185,16 @@ export default {
   },
 
   computed: {
+    // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
     courseContainerHeight() {
-      return (this.courses.length + 1) * 6.5;
+      let extraIncrementer = 0;
+      if (this.isShadow) {
+        extraIncrementer += 1;
+      }
+      if (this.isDraggedFrom) {
+        extraIncrementer -= 1;
+      }
+      return (this.courses.length + 2 + extraIncrementer) * 6.5;
     },
     creditString() {
       let credits = 0;
@@ -470,7 +496,7 @@ export default {
   }
 
   &-addWrapper {
-    margin-top: -6rem;
+    margin-top: -12rem;
     width: 21.375rem;
     height: 4.625rem;
     border-radius: 0.5rem;
