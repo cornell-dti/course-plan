@@ -107,8 +107,10 @@ export default {
     addCourse() {
       const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
       const title = dropdown.value;
+      console.log(title);
       // name used to transmit roster information
       const roster = dropdown.name;
+      console.log(roster);
 
       // TODO: can I make the valid assumption that the course code is up to the colon in the title?
       const courseCode = title.substring(0, title.indexOf(':'));
@@ -116,7 +118,8 @@ export default {
       const number = courseCode.split(' ')[1];
 
       const parent = this.$parent;
-
+      console.log('roster for add modal in modal.vue');
+      console.log(roster);
       // To use for retrieve course data from Firebase
       // // TODO: error handling if course not found or some firebase error
       // docRef

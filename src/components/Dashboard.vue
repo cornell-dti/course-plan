@@ -197,7 +197,7 @@ export default {
     /**
      * Creates a course on frontend with either user or API data
      */
-    createCourse(course) {
+    createCourse(course, isRequirementsCourse) {
       const uniqueID = course.uniqueID || this.incrementID();
 
       const subject = (course.code && course.code.split(' ')[0]) || course.subject;
@@ -288,8 +288,11 @@ export default {
         check: true,
         uniqueID
       };
-      // Update requirements menu
-      this.updateRequirementsMenu();
+
+      if (!isRequirementsCourse) {
+        // Update requirements menu
+        this.updateRequirementsMenu();
+      }
 
       return newCourse;
     },

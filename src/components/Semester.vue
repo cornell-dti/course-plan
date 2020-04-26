@@ -242,7 +242,7 @@ export default {
       confirmationModal.style.display = 'none';
     },
     addCourse(data) {
-      const newCourse = this.$parent.$parent.createCourse(data);
+      const newCourse = this.$parent.$parent.createCourse(data, false);
       this.courses.push(newCourse);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);

@@ -109,6 +109,19 @@
                 :href="subReq.requirement.source" target="_blank">
                 <strong>Learn More</strong></a>
               </div>
+              <div class="draggable-requirements-courses" v-dragula="subReqsCourseMapList[req.group][subReq.requirement.name]" bag="first-bag">
+                <div v-for="course in subReqsCourseMapList[req.group][subReq.requirement.name]" :key="course.uniqueID" class="requirements-courseWrapper">
+                  <course
+                    v-bind="course"
+                    :courseObj="course"
+                    :id="course.subject + course.number"
+                    :uniqueID="course.uniqueID"
+                    :compact="course.compact"
+                    :active="false"
+                    class="requirements-course"
+                  />
+                </div>
+              </div>
               <div class="separator"></div>
             </div>
 
@@ -182,6 +195,7 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
+import coursesJSON from '@/assets/courses/courses.json';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -204,6 +218,8 @@ type Data = {
   minors: minor[];
   requirementsMap: {};
   reqGroupColorMap: {};
+  subReqsCourseMapList: {};
+  scrollable: boolean;
 
 }
 export default Vue.extend({
@@ -213,6 +229,8 @@ export default Vue.extend({
     compact: Boolean
   },
   mounted() {
+    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+
     this.getDisplays();
     const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major, this.user.minor);
     // Send satisfied credits data back to dashboard to build alerts
@@ -250,6 +268,16 @@ export default Vue.extend({
         singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
         singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
       }
+      console.log('Single Menu Req');
+      console.log(singleMenuRequirement);
+
+      if (singleMenuRequirement.group === 'MAJOR') {
+        this.subReqsCourseMapList[singleMenuRequirement.group] = {};
+        singleMenuRequirement.ongoing.forEach(ongoingReq => {
+          this.addRequirementsCourse(ongoingReq.requirement, singleMenuRequirement.group);
+        });
+      }
+
       return singleMenuRequirement;
     });
     this.reqs.push(...singleMenuRequirements);
@@ -315,10 +343,20 @@ export default Vue.extend({
         COLLEGE: ['1AA9A5', 'blue'],
         MAJOR: ['105351', 'green'],
         MINOR: ['92C3E6', 'lightblue']
-      }
+      },
+      // subReqCourseMap maps the subReq name to a course object array
+      // Each item has key <subReq name>: <course object>
+      subReqsCourseMapList: {},
+      scrollable: false
     };
   },
+  beforeDestroy() {
+    this.$el.removeEventListener('touchmove', this.dragListener);
+  },
   methods: {
+    dragListener(event) {
+      if (!this.$data.scrollable) event.preventDefault();
+    },
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
     },
@@ -409,6 +447,53 @@ export default Vue.extend({
         }
       }
       this.minors = minors;
+    },
+    addRequirementsCourse(ongoingSubReq, reqGroup) {
+      console.log(reqGroup);
+      const ongoingSubReqName = ongoingSubReq.name;
+      if (ongoingSubReq.fulfilledBy !== 'self-check') {
+        ongoingSubReq.courses.forEach(subReqCourseObject => {
+          const subReqCourseObjectRosters = Object.keys(subReqCourseObject);
+          const roster = subReqCourseObjectRosters[subReqCourseObjectRosters.length - 1];
+          const courseRosterObject = subReqCourseObject[roster];
+          const courseRosterObjectSubjects = Object.keys(courseRosterObject);
+
+          courseRosterObjectSubjects.forEach(subjectKey => {
+            const subject = subjectKey;
+            const courseRosterObjectSubjectCourses = courseRosterObject[subjectKey];
+
+            courseRosterObjectSubjectCourses.forEach(subjectNumber => {
+              const number = subjectNumber;
+              const courseCode = `${subject} ${number}`;
+              console.log(courseCode);
+              console.log(roster);
+
+              fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
+                .then(res => res.json())
+                .then(resultJSON => {
+                  // check catalogNbr of resultJSON class matches number of course to add
+                  resultJSON.data.classes.forEach(resultJSONclass => {
+                    if (resultJSONclass.catalogNbr === number) {
+                      const course = resultJSONclass;
+                      course.roster = roster;
+
+                      const newCourse = this.$parent.createCourse(course, true);
+                      newCourse.compact = true;
+                      console.log(newCourse);
+                      if (this.subReqsCourseMapList[reqGroup] && this.subReqsCourseMapList[reqGroup][ongoingSubReqName]) {
+                        this.subReqsCourseMapList[reqGroup][ongoingSubReqName].push(newCourse);
+                      } else {
+                        this.subReqsCourseMapList[reqGroup][ongoingSubReqName] = [newCourse];
+                      }
+                    }
+                  });
+                });
+            });
+          });
+        });
+      }
+      console.log('subReqsCourseMapList');
+      console.log(this.subReqsCourseMapList);
     }
   }
 });
@@ -712,6 +797,18 @@ button.view {
   width: 100%;
   background-color: #d7d7d7;
 }
+
+.requirements {
+  &-course {
+    touch-action: none;
+    cursor: grab;
+  }
+  &-course:active:hover {
+    touch-action: none;
+    cursor: grabbing;
+  }
+}
+
 @media only screen and (max-width: 976px) {
   .requirements, .fixed {
     width: 21rem;
