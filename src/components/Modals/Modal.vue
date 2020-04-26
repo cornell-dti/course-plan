@@ -91,6 +91,7 @@ export default {
       }
       modal.style.display = 'none';
     },
+    // Note: Currently not used
     checkCourseDuplicate(key) {
       this.$emit('check-course-duplicate', key);
     },
@@ -101,10 +102,7 @@ export default {
 
         // TODO: can I make the valid assumption that the course code is up to the colon in the title?
         const key = title.substring(0, title.indexOf(':'));
-        this.checkCourseDuplicate(key);
-        if (this.courseIsAddable) {
-          this.addCourse();
-        }
+        this.addCourse();
       } else if (this.type === 'semester') {
         this.addSemester();
       } else {

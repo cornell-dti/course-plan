@@ -88,6 +88,7 @@ export default {
     alerts: Object,
     compact: Boolean,
     id: String,
+    uniqueID: Number,
     active: Boolean,
     semId: Number
   },
@@ -160,11 +161,11 @@ export default {
       }
     },
     deleteCourse() {
-      this.$emit('delete-course', `${this.subject} ${this.number}`);
+      this.$emit('delete-course', this.uniqueID);
       this.closeMenuIfOpen();
     },
     colorCourse(color) {
-      this.$emit('color-course', color, `${this.subject} ${this.number}`);
+      this.$emit('color-course', color, this.uniqueID);
       this.closeMenuIfOpen();
       this.colorJustChanged = true;
     },
@@ -175,7 +176,7 @@ export default {
       this.colorJustChanged = false;
     },
     editCourseCredit(credit) {
-      this.$emit('edit-course-credit', credit, `${this.subject} ${this.number}`);
+      this.$emit('edit-course-credit', credit, this.uniqueID);
       this.closeMenuIfOpen();
     }
   },
@@ -410,8 +411,7 @@ export default {
   z-index: 1;
 
   &--caution {
-    width: 180px;
-    text-align: left;
+    width: 7.5rem;
   }
 }
 
@@ -424,7 +424,7 @@ export default {
   content: ' ';
   position: absolute;
   bottom: 100%; /* At the top of the tooltip */
-  right: 82px;
+  right: 14px;
   margin-left: -10px;
   border-width: 5px;
   border-style: solid;
@@ -436,7 +436,7 @@ export default {
   content: ' ';
   position: absolute;
   bottom: 100%; /* At the top of the tooltip */
-  right: 80px;
+  right: 12px;
   margin-left: -2px;
   border-width: 7px;
   border-style: solid;

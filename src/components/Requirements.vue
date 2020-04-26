@@ -7,19 +7,19 @@
 
       <!-- TODO change for multiple colleges -->
       <div v-if="index<=2 || index == 2 + majors.length" class="row top">
-        <p class="name col p-0">{{ req.name }} <span class="specific" v-if="req.specific">({{ req.specific }})</span> </p>
+        <p class="name col p-0">{{ req.name }}</p>
       </div>
         <!-- TODO change for multiple colleges -->
         <div v-if="index==2" class="major">
-          <div v-bind:class="{'active': major.display}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
-            <p v-bind:class="{'active': major.display}"  class="major-title-top">{{major.majorFN}}</p>
-            <p v-bind:class="{'active': major.display}" class="major-title-bottom">{{user.collegeFN}}</p>
+          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
+            <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
+            <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
           </div>
         </div>
         <div v-if="index==2+majors.length" class="minor">
-          <div v-bind:class="{'active': minor.display}"  @click="activate(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
-            <p v-bind:class="{'active': minor.display}"  class="minor-title-top">{{minor.minorFN}}</p>
-            <p v-bind:class="{'active': minor.display}" class="minor-title-bottom">{{user.collegeFN}}</p> <!-- Change for multiple colleges -->
+          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"  @click="activate(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
+            <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
+            <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
           </div>
         </div>
 
@@ -28,43 +28,48 @@
           <div class="progress">
             <div
               class="progress-bar"
-              :style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
+              :style="{ 'background-color': `#${reqGroupColorMap[req.group][0]}`, width: `${(req.fulfilled/req.required)*100}%`}"
               role="progressbar"
             ></div>
           </div>
 
           <p class="progress-text">
-            <strong>{{ req.fulfilled }}/{{ req.required }}</strong>
-            Total {{ req.type }} Inputted on Schedule
+            <span class="progress-text-credits">{{ req.fulfilled }}/{{ req.required }}</span>
+            <span class="progress-text-text"> Total {{ req.type }} Inputted on Schedule</span>
           </p>
 
           <!--View more college requirements -->
           <div class="row top">
             <div class="col-1 p-0" >
-              <button :style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
+              <button :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" class="btn" @click="toggleDetails(index)">
                 <!-- svg for dropdown icon -->
                 <img
                   v-if="req.displayDetails"
-                  class="arrow arrow-down"
-                  src="@/assets/images/dropdown-blue.svg"
-                  alt="dropdown"
+                  class="arrow arrow-up"
+                  :src="require(`@/assets/images/dropup-${reqGroupColorMap[req.group][1]}.svg`)"
+                  alt="dropup"
                 />
                 <img
                   v-else
-                  class="arrow"
-                  src="@/assets/images/dropright-blue.svg"
+                  class="arrow arrow-down"
+                  :src="require(`@/assets/images/dropdown-${reqGroupColorMap[req.group][1]}.svg`)"
                   alt="dropdown"
                 />
               </button>
             </div>
             <div class="col p-0 ">
-              <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
+                <button
+                    class="btn req-name"
+                    :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                    @click="toggleDetails(index)">
+                    {{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements
+                </button>
             </div>
           </div>
 
           <!--Show more of completed requirements -->
           <div v-if="req.displayDetails">
-            <p class="sub-title">On-Going Requirements</p>
+            <p class="sub-title">In-Depth College Requirements</p>
             <div class="separator"></div>
             <div
               v-for="(subReq, id) in req.ongoing"
@@ -75,38 +80,42 @@
                     <!-- svg for dropdown icon -->
                     <img
                       v-if="subReq.displayDescription"
-                      class="arrow arrow-down"
-                      src="@/assets/images/dropdown.svg"
-                      alt="dropdown"
+                  class="arrow arrow-up"
+                   src="@/assets/images/dropup.svg"
+                   alt="dropup"
                     />
                     <img
                       v-else
-                      class="arrow"
-                      src="@/assets/images/dropright.svg"
+                      class="arrow arrow-down"
+                      src="@/assets/images/dropdown.svg"
                       alt="dropdown"
                     />
                   </button>
                 </div>
                 <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-                  <p class="sup-req pointer">{{subReq.requirement.name}}</p>
+                  <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
                 </div>
                 <div class="col">
-                  <p class="sup-req-progress text-right">( {{
+                  <p class="sup-req-progress text-right incomplete-ptext">{{
                    (subReq.requirement.fulfilledBy !== 'self-check')
-                   ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
-                   : 'Self-Check' }}  )</p>
+                   ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
+                    || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
+                   : 'self check' }}</p>
                 </div>
               </div>
               <div v-if="subReq.displayDescription" class="description">
-                {{ subReq.requirement.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
+                {{ subReq.requirement.description }} <a class="more"
+                :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                :href="subReq.requirement.source" target="_blank">
+                <strong>Learn More</strong></a>
               </div>
               <div class="separator"></div>
             </div>
 
             <div v-if="req.completed.length > 0" class="row completed">
-              <p class="col sub-title">Completed Requirements</p>
+              <p class="col sub-title specific">Filled Requirements</p>
               <div class="col-1 text-right">
-                <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
+                <button class="btn float-right" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }">
                   <!-- Toggle to display completed reqs -->
                   <p
                     class="toggle"
@@ -117,6 +126,7 @@
               </div>
             </div>
 
+          <!-- Completed requirements -->
             <div v-if="req.displayCompleted">
               <div v-for="(subReq, id) in req.completed" :key="subReq.id">
                 <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
@@ -126,27 +136,28 @@
                       <!-- svg for dropdown icon -->
                     <img
                       v-if="subReq.displayDescription"
-                      class="arrow arrow-down"
-                      src="@/assets/images/dropdown.svg"
-                      alt="dropdown"
+                  class="arrow arrow-up completed-arrow"
+                   src="@/assets/images/dropup-lightgray.svg"
+                   alt="dropup"
                     />
                     <img
                       v-else
-                      class="arrow"
-                      src="@/assets/images/dropright.svg"
-                      alt="dropdown"
+                  class="arrow arrow-down completed-arrow"
+                   src="@/assets/images/dropdown-lightgray.svg"
+                   alt="dropdown"
                     />
                     </button>
                   </div>
                   <div class="col-7" @click="toggleDescription(index, 'completed', id)">
-                    <p class="sup-req pointer">{{subReq.requirement.name}}</p>
+                    <p class="pointer completed-ptext">{{subReq.requirement.name}}</p>
                   </div>
                   <div class="col">
-                    <p class="sup-req-progress text-right">( {{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }} )</p>
+                    <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
                   </div>
                 </div>
-                <div v-if="subReq.displayDescription" class="description">
-                  {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
+                <div v-if="subReq.displayDescription" class="description completed-ptext">
+                  {{ subReq.requirement.description }}
+                  <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
                 </div>
               </div>
             </div>
@@ -191,6 +202,9 @@ type Data = {
   reqs: SingleMenuRequirement[];
   majors: major[];
   minors: minor[];
+  requirementsMap: {};
+  reqGroupColorMap: {};
+
 }
 export default Vue.extend({
   props: {
@@ -208,7 +222,7 @@ export default Vue.extend({
       const singleMenuRequirement: SingleMenuRequirement = {
         ongoing: [],
         completed: [],
-        name: `${group.groupName.toUpperCase()} REQUIREMENT`,
+        name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
         group: group.groupName.toUpperCase(),
         specific: (group.specific) ? group.specific : null,
         color: '105351',
@@ -249,6 +263,7 @@ export default Vue.extend({
       modalShow: false,
       majors: [],
       minors: [],
+
       reqs: [
         // Data structure for menu
         // {
@@ -290,7 +305,17 @@ export default Vue.extend({
         //     }
         //   ]
         // }
-      ]
+      ],
+      requirementsMap: {
+        // CS 1110: 'MQR-AS'
+      },
+      // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
+      reqGroupColorMap: {
+        UNIVERSITY: ['508197', 'grayblue'],
+        COLLEGE: ['1AA9A5', 'blue'],
+        MAJOR: ['105351', 'green'],
+        MINOR: ['92C3E6', 'lightblue']
+      }
     };
   },
   methods: {
@@ -385,15 +410,6 @@ export default Vue.extend({
       }
       this.minors = minors;
     }
-    /*
-    openEditMenu(id: number) {
-      this.isEditing = true;
-      this.currentEditID = id;
-    },
-    closeEditMenu() {
-      this.isEditing = false;
-    }
-    */
   }
 });
 </script>
@@ -402,71 +418,22 @@ export default Vue.extend({
 input{
   width: 40px;
 }
-.editing{
-  &-title{
-    padding-bottom: 20px;
-    padding-top: 20px;
-  }
-  &-button{
-    margin-top: 20px;
-    background: #B1B1B1;
-    border-radius: 4px;
-    font-size: 10px;
-    line-height: 12px;
-    text-align: center;
-    text-align: center;
-    color: #FFFFFF;
-    padding: 10px;
-  }
-  &-row{
-    display: flex;
-    flex-direction: row;
-    &-space{
-      justify-content: space-between;
-    }
-    &-inputs{
-      margin-left: 0;
-      margin-right: 0;
-      flex-direction: column;
-    }
-    &-field{
-      display: flex;
-      flex-direction: column;
-    }
-  }
-}
-input.editing-inputs-field {
-        display: flex;
-      flex-direction: column;
-}
-p.editing-inputs {
-  margin: 10px;
-}
-.major-title.active {
-  border-bottom: 2px solid #508197;
-}
 .major, .minor{
   display: flex;
-  padding-top: 10px;
   padding-bottom: 25px;
   &-title {
       width: 100%;
       display: flex;
       flex-direction: column;
       text-align: center;
-      padding: 20px;
-      padding-top: 10px;
+      color: #757575;
+      padding-bottom: 6px;
       &-top {
         text-align: center;
         font-style: normal;
         font-weight: normal;
         font-size: 14px;
-        line-height: 17px;
-        color: #000000;
-          &--active {
-            color: #508197;
-            font-weight: bold;
-          }
+        margin: 0;
       }
       &-bottom {
         text-align: center;
@@ -474,11 +441,6 @@ p.editing-inputs {
         font-weight: normal;
         font-size: 12px;
         line-height: 15px;
-        color: #000000;
-          &--active {
-            color: #508197;
-            font-weight: bold;
-        }
       }
     }
       &:hover {
@@ -529,7 +491,7 @@ p.editing-inputs {
 .description {
   margin: 0 0 0.5rem 1.8rem;
   color: #353535;
-  font-size: 15px;
+  font-size: 14px;
 }
 .pointer {
   cursor: pointer;
@@ -560,7 +522,7 @@ h1.title {
   margin-top: auto;
   margin-bottom: auto;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 600;
   font-size: 16px;
   line-height: 16px;
   color: #000000;
@@ -574,9 +536,7 @@ h1.title {
   font-weight: bold;
   font-size: 14px;
   line-height: 14px;
-}
-.completed {
-  margin-top: 1rem;
+  color: #3C3C3C;
 }
 .major {
   font-style: normal;
@@ -601,10 +561,6 @@ button.active {
   padding-bottom: 2px;
   margin: 5px;
 }
-p.active {
-  color: #508197;
-  font-weight: bold;
-}
 .settings, .arrow {
   height: 14px;
   width: 14px;
@@ -612,14 +568,23 @@ p.active {
 .arrow {
   fill: #1AA9A5;
   color:#1AA9A5;
-  &-down {
-    margin-top: -4px;
-  }
+  margin-top: -2px;
+    &-up {
+     margin-top: 4px;
+   }
 }
 .progress-text {
   margin: 0.3125rem 0 0 0;
   font-size: 12px;
   line-height: 12px;
+  color: #3C3C3C;
+
+   &-credits {
+     font-weight: bold;
+   }
+   &-text {
+     font-weight: normal;
+   }
 }
 ul.striped-list > li {
   padding: 2px;
@@ -696,18 +661,37 @@ button.view {
   font-size: 16px;
   line-height: 19px;
   &-name {
-    margin-left: 0.5rem;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 14px;
     line-height: 14px;
     align-self: center;
   }
   &-progress {
-    font-weight: bold;
     font-size: 12px;
     line-height: 12px;
   }
 }
+.completed {
+   margin-top: 1rem;
+   &-ptext {
+     color: #757575;
+     font-size: 12px;
+     opacity: 0.8;
+     font-weight: normal;
+   }
+ }
+
+ .incomplete {
+   &-ptext {
+     font-size: 14px;
+   }
+ }
+
+ .text {
+   &-right {
+     color: #757575;
+   }
+ }
 .sup-req {
   font-style: normal;
   font-weight: normal;
@@ -715,9 +699,8 @@ button.view {
   line-height: 14px;
   color: #757575;
   &-progress {
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 12px;
+    font-size: 14px;
+    line-height: 14px;
   }
 }
 .semester-req {
