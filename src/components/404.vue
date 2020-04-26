@@ -57,7 +57,7 @@ export default {};
   vertical-align: middle;
   text-align: center;
   color: #7b7d7e;
-  margin-bottom: 13.75rem;
+  margin-bottom: 10rem;
   margin-top: 6rem;
   height: 100px;
   @media(max-width: 1154px) {
@@ -99,7 +99,7 @@ a.back_to_home_link{
 .message-container{
   display: flex;
   margin-bottom: 3%;
-  margin-top: 5%;
+  margin-top: 10%;
   justify-content: center;
   @media(max-width: 1154px){
     margin-top: 8vh;
