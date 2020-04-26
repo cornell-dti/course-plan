@@ -380,7 +380,7 @@ export default {
   border-radius: 11px;
 
   &-content {
-    padding: 0.875rem 1.125rem;
+    padding: 0.875rem 0;
     border: 2px solid #d8d8d8;
     border-radius: 11px;
   }
@@ -424,6 +424,8 @@ export default {
     display: flex;
     justify-content: space-between;
     color: #858585;
+    margin-left: 1.125rem;
+    margin-right: 1.125rem;
 
     &--compact {
       flex-direction: column;
@@ -505,6 +507,8 @@ export default {
     align-items: center;
     border: 2px dashed #d8d8d8;
     color: #d8d8d8;
+    margin-left: 1.125rem;
+    margin-right: 1.125rem;
 
     &--compact {
       width: 10.5rem;
@@ -545,6 +549,8 @@ export default {
 
   .draggable-semester-courses {
     padding-top: 5px;
+    padding-left: 1.125rem;
+    padding-right: 1.125rem;
   }
 
   //Styling for drag and drop components and movement
