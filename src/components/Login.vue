@@ -119,7 +119,10 @@
 import Vue from 'vue';
 import firebase, { User } from 'firebase/app';
 
+// @ts-ignore
 import Footer from '@/components/Footer';
+
+// @ts-ignore
 import TopBar from '@/components/TopBar';
 
 import * as fb from '@/firebaseConfig';
