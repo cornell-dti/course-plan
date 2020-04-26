@@ -11,6 +11,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'All course petitions or substitutions are managed through the Dyson Office of Student Services in consultation with a committee of faculty from each concentration',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -27,6 +28,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       ['AEM 3200'],
       ['AEM 3230']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 7
   },
@@ -39,6 +41,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ECON 1120'],
       ['AEM 2600', 'ECON 3030']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 3
   },
@@ -51,6 +54,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 1110', 'MATH 1120'],
       ['AEM 2010']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 3
   },
@@ -77,6 +81,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       'ILRST 2110',
       'ILRST 3110'
     ),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 3
   },
@@ -87,6 +92,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'cannot also be counted toward a core applied economics requirement, unless that concentration is environmental, energy, and resource economics.',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -96,6 +102,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Available courses may vary per semester. You’ll choose one of the following:',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: includesWithSingleRequirement('AEM 2000', 'AEM 2555', 'AEM 2800', 'AEM 2805', 'AEM 4940'),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -104,6 +111,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Junior year: 1.5 credits. Focus: Working as part of a team',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: includesWithSingleRequirement('AEM 3000'),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -112,6 +120,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Senior year, 3 credits. Focus: Local and global community involvement',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: includesWithSingleRequirement('AEM 4000'),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   }

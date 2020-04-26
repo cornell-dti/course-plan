@@ -180,6 +180,8 @@ function computeFulfillmentStatistics<T extends {}>({ requirement, courses: cour
     if (coursesThatFulfilledSubRequirement.length === 0) {
       return;
     }
+
+    console.log(requirement);
     // depending on what it is fulfilled by, either increase the count or credits you took
     switch (requirement.fulfilledBy) {
       case 'courses':

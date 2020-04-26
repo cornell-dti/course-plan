@@ -10,6 +10,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ENGRD 2020'],
       ['ENGRD 2600', 'ENGRD 2510']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -18,6 +19,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Choose 2 of the following 4: BIOMG 1350, BIOG 1440, BIOG 1445, and BIOEE/BIOSM 1610',
     source: 'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
     checker: includesWithSingleRequirement('BIOMG 1350', 'BIOG 1440', 'BIOG 1445', 'BIOEE/BIOSM 1610'),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -33,6 +35,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BEE 3600'],
       ['BEE 4500']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 6
   },
@@ -44,6 +47,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BIOMG 3300', 'BIOMG 3330', 'BIOMG 3350', 'BIOMG 3310'],
       ['BIOMG 3320']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -56,6 +60,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'One credit seminars and BIOG 2990/4990 credits may not be used to meet this requirement.',
     source: 'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -67,6 +72,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BEE 2220', 'ENGRD 2210', 'CHEME 3130', 'MSE 3030'],
       ['CEE 3040', 'ENGRD 2700']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -86,6 +92,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'BEE 4530', 'BEE 4590', 'BEE 4600', 'BEE 4810', 'BME 5200', 'BME 5390', 'BME 5710', 'MSE 4610', 'MSE 5130', 'MSE 5620',
       'BEE 3299', 'BEE 4010', 'BEE 4350', 'BEE 4740', 'BEE 4760', 'BEE 4810', 'BEE 4870', 'BEE 4880', 'BEE 7540'
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 4
   }

@@ -24,6 +24,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 4820'],
       ['CS 4410']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 5
   },
@@ -46,6 +47,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'CS 5625',
       'CS 5643'
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -55,6 +57,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'These courses must be taken for a letter grade, and each must earn three or more credit hours.',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor/technicalelectives',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -67,6 +70,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'and Linguistics 5530 (Representation of Structure in Vision and Language) define an acceptable Specialization.',
     source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -76,6 +80,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS.',
     source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   }
 ];
