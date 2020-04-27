@@ -11,7 +11,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BIOG 1440', 'BIOG 1445'],
       ['BIOEE 1610', 'BIOSM 1610']
     ),
-    operator: 'or',
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
