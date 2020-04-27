@@ -161,7 +161,7 @@ export default {
       }
     },
     deleteCourse() {
-      this.$emit('delete-course', this.uniqueID);
+      this.$emit('delete-course', this.subject, this.number, this.uniqueID);
       this.closeMenuIfOpen();
     },
     colorCourse(color) {

@@ -284,14 +284,14 @@ export default {
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
       this.buildCautions();
     },
-    deleteCourse(uniqueID) {
+    deleteCourse(subject, number, uniqueID) {
       for (let i = 0; i < this.courses.length; i += 1) {
         if (this.courses[i].uniqueID === uniqueID) {
           this.courses.splice(i, 1);
           break;
         }
       }
-      const courseCode = `${this.subject} ${this.number}`;
+      const courseCode = `${subject} ${number}`;
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
       // Update requirements menu
       this.$emit('update-requirements-menu');
