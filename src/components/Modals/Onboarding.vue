@@ -121,7 +121,6 @@
                   </div>
                 </div>
               </div>
-              <!--
               <div class="onboarding-addRemoveWrapper" :class="{ 'onboarding--hidden': Object.keys(majors).length <= 0}">
                 <div class="onboarding-add" @click="addMajor">
                   Add
@@ -130,7 +129,6 @@
                   Remove
                 </div>
               </div>
-              -->
             </div>
             <!--
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">

@@ -10,11 +10,12 @@
         :is="body"
         :semesterID="semesterID"
         :currentSemesters="currentSemesters"
+        @duplicateSemester="disableButton"
         ref="modalBodyComponent"
       ></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" @click="closeCurrentModal">{{ cancel }}</button>
-        <button class="modal-button modal-button--add" @click="addItem">{{ add }}</button>
+        <button class="modal-button modal-button--add" :class='{"modal-button--disabled": isDisabled }' @click="addItem">{{ add }}</button>
       </div>
     </div>
   </div>
@@ -35,7 +36,8 @@ Vue.component('editSemester', EditSemester);
 export default {
   data() {
     return {
-      courseIsAddable: true
+      courseIsAddable: true,
+      isDisabled: false
     };
   },
   props: {
@@ -74,6 +76,9 @@ export default {
     }
   },
   methods: {
+    disableButton(bool) {
+      this.isDisabled = bool;
+    },
     closeCurrentModal() {
       let modal;
       if (this.type === 'course') {
@@ -151,14 +156,16 @@ export default {
       this.closeCurrentModal();
     },
     addSemester() {
-      const seasonInput = document.getElementById(`season-placeholder`);
-      const yearInput = document.getElementById(`year-placeholder`);
-      this.$parent.addSemester(
-        seasonInput.innerHTML.trim(' ').split(' ')[0],
-        parseInt(yearInput.innerHTML, 10)
-      );
+      if (!this.isDisabled) {
+        const seasonInput = document.getElementById(`season-placeholder`);
+        const yearInput = document.getElementById(`year-placeholder`);
+        this.$parent.addSemester(
+          seasonInput.innerHTML.trim(' ').split(' ')[0],
+          parseInt(yearInput.innerHTML, 10)
+        );
 
-      this.closeCurrentModal();
+        this.closeCurrentModal();
+      }
     }
   }
 };
@@ -220,6 +227,12 @@ export default {
       background-color: #508197;
       margin-left: 0.5rem;
       border: none;
+    }
+
+    &--disabled {
+      opacity: .3;
+      border: 1px solid #508197;
+      background-color: #CCCCCC;
     }
   }
 }

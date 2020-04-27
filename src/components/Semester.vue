@@ -37,14 +37,18 @@
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
           <div class="semester-dotRow" @click="openSemesterMenu">
-            <span class="semester-dot semester-dot--menu"></span>
-            <span class="semester-dot semester-dot--menu"></span>
-            <span class="semester-dot semester-dot--menu"></span>
+            <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
         </div>
       </div>
       <div class="semester-courses">
-        <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
+        <div
+          class="draggable-semester-courses"
+          v-dragula="courses"
+          bag="first-bag"
+          :semId="id"
+          :style="{height: courseContainerHeight + 'rem' }"
+          >
           <div v-for="course in courses" :key="course.uniqueID" class="semester-courseWrapper">
             <course
               v-bind="course"
@@ -67,7 +71,7 @@
           :class="{ 'semester-addWrapper--compact': compact }"
           @click="openCourseModal"
         >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" v-dragula="courses" bag="first-bag" >{{
+          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" >{{
             buttonString
           }}</span>
         </div>
@@ -139,6 +143,8 @@ export default {
       deleteSemID: 0,
       deleteSemType: '',
       deleteSemYear: 0,
+      isShadow: false,
+      isDraggedFrom: false,
 
       seasonImg: {
         Fall: fall,
@@ -162,11 +168,26 @@ export default {
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
     const service = Vue.$dragula.$service;
-    service.eventBus.$on('drag', () => {
+    service.eventBus.$on('drag', data => {
+      if (parseInt(data.container.getAttribute('semId'), 10) === this.id) {
+        this.isDraggedFrom = true;
+      }
       this.scrollable = true;
+      this.isShadow = false;
     });
     service.eventBus.$on('drop', () => {
       this.scrollable = true;
+    });
+    service.eventBus.$on('shadow', data => {
+      if (parseInt(data.container.getAttribute('semId'), 10) === this.id) {
+        this.isShadow = true;
+      } else {
+        this.isShadow = false;
+      }
+    });
+    service.eventBus.$on('dragend', () => {
+      this.isShadow = false;
+      this.isDraggedFrom = false;
     });
 
     this.buildCautions();
@@ -177,6 +198,21 @@ export default {
   },
 
   computed: {
+    // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
+    courseContainerHeight() {
+      let factor = 6.1;
+      let extraIncrementer = 0;
+      if (this.isShadow) {
+        extraIncrementer += 1;
+      }
+      if (this.isDraggedFrom) {
+        extraIncrementer -= 1;
+      }
+      if (this.compact) {
+        factor = 2.6;
+      }
+      return (this.courses.length + 1 + extraIncrementer) * factor;
+    },
     creditString() {
       let credits = 0;
       this.courses.forEach(course => {
@@ -358,11 +394,15 @@ export default {
 }
 
 .semester {
-  padding: 0.875rem 1.125rem;
-  border: 2px solid #d8d8d8;
-  border-radius: 11px;
   width: fit-content;
   position: relative;
+  border-radius: 11px;
+
+  &-content {
+    padding: 0.875rem 0;
+    border: 2px solid #d8d8d8;
+    border-radius: 11px;
+  }
 
   &--min {
     border: 2px dashed #d8d8d8;
@@ -381,6 +421,7 @@ export default {
     &.semester--compact {
       width: 13rem;
       height: 3.5rem;
+      margin-top: .875rem;
     }
   }
 
@@ -403,10 +444,8 @@ export default {
     display: flex;
     justify-content: space-between;
     color: #858585;
-
-    &--compact {
-      flex-direction: column;
-    }
+    margin-left: 1.125rem;
+    margin-right: 1.125rem;
   }
 
   &-left {
@@ -425,32 +464,13 @@ export default {
   }
 
   &-dotRow {
-    padding: 5px 0 8px 0;
+    padding: 8px 0;
     display: flex;
     position: relative;
     &:hover,
     &:active,
     &:focus {
       cursor: pointer;
-    }
-  }
-
-  &-dot {
-    opacity: 0.8;
-    height: 2px;
-    width: 2px;
-    background-color: white;
-    border-radius: 50%;
-    display: inline-block;
-    margin-bottom: 2px;
-    margin-top: 2px;
-
-    &--menu {
-      width: 5px;
-      height: 5px;
-      background-color: #c4c4c4;
-      opacity: 1;
-      margin: 0 2px;
     }
   }
 
@@ -494,6 +514,7 @@ export default {
   }
 
   &-addWrapper {
+    margin-top: -5rem;
     width: 21.375rem;
     height: 4.625rem;
     border-radius: 0.5rem;
@@ -502,8 +523,11 @@ export default {
     align-items: center;
     border: 2px dashed #d8d8d8;
     color: #d8d8d8;
+    margin-left: 1.125rem;
+    margin-right: 1.125rem;
 
     &--compact {
+      margin-top: -1.2rem;
       width: 10.5rem;
       height: 2rem;
     }
@@ -547,6 +571,8 @@ export default {
 
   .draggable-semester-courses {
     padding-top: 5px;
+    padding-left: 1.125rem;
+    padding-right: 1.125rem;
   }
 
   //Styling for drag and drop components and movement
