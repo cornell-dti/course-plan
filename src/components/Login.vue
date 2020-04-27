@@ -119,11 +119,11 @@
 import Vue from 'vue';
 import firebase, { User } from 'firebase/app';
 
-// @ts-ignore
-import Footer from '@/components/Footer';
+// eslint-disable-next-line import/extensions
+import Footer from '@/components/Footer.vue';
 
-// @ts-ignore
-import TopBar from '@/components/TopBar';
+// eslint-disable-next-line import/extensions
+import TopBar from '@/components/TopBar.vue';
 
 import * as fb from '@/firebaseConfig';
 
