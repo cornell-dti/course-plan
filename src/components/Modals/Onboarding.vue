@@ -79,7 +79,7 @@
 
 
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major!</label>
+              <label class="onboarding-label">Your Major (optional)</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -125,12 +125,12 @@
                 <div class="onboarding-add" @click="addMajor">
                   Add
                 </div>
-                <div class="onboarding-remove" @click="removeMajor" :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }">
+                <div class="onboarding-remove" @click="removeMajor" :class="{'onboarding--hidden': displayOptions.major.length === 1 && displayOptions.major[0].placeholder == placeholderText}">
                   Remove
                 </div>
               </div>
             </div>
-            <!--
+
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <label class="onboarding-label">Your Minor (optional)</label>
               <div class="onboarding-selectWrapper">
@@ -177,12 +177,12 @@
                 <div class="onboarding-add" @click="addMinor">
                   Add
                 </div>
-                <div class="onboarding-remove" @click="removeMinor" :class="{ 'onboarding--hidden': displayOptions.minor.length <= 1 }">
+                <div class="onboarding-remove" @click="removeMinor" :class="{'onboarding--hidden': displayOptions.minor.length === 1 && displayOptions.minor[0].placeholder == placeholderText}">
                   Remove
                 </div>
               </div>
             </div>
-            -->
+
           </div>
         </div>
       </div>
@@ -238,6 +238,15 @@ export default {
       majorPlaceholderColor = '#757575';
     }
 
+    let minorText = placeholderText;
+    let minorAcronym = '';
+    let minorPlaceholderColor = '';
+    if ('minor' in this.user && this.user.minor.length > 0) {
+      minorText = this.user.minorFN;
+      minorAcronym = this.user.minor;
+      minorPlaceholderColor = '#757575';
+    }
+
     return {
       // TODO: Get real college, major, and minor lists
       colleges: {},
@@ -246,6 +255,7 @@ export default {
       firstName: this.user.firstName,
       middleName: this.user.middleName,
       lastName: this.user.lastName,
+      placeholderText,
       displayOptions: {
         college: [
           {
@@ -275,9 +285,9 @@ export default {
             stopClose: false,
             boxBorder: '',
             arrowColor: '',
-            placeholderColor: '',
-            placeholder: placeholderText,
-            acronym: ''
+            placeholderColor: minorPlaceholderColor,
+            placeholder: minorText,
+            acronym: minorAcronym
           }
         ]
       },
@@ -292,6 +302,7 @@ export default {
     this.setMajorsList();
     this.setMinorsList();
     this.flattenDisplayMajors();
+    this.flattenDisplayMinors();
   },
   methods: {
     flattenDisplayMajors() {
@@ -324,6 +335,37 @@ export default {
         }
       });
       this.displayOptions.major = majors;
+    },
+    flattenDisplayMinors() {
+      const minors = [];
+      this.displayOptions.minor.forEach(minor => {
+        if (Array.isArray(minor.acronym)) {
+          minor.acronym.flat(Infinity);
+          for (let i = 0; i < minor.acronym.length; i += 1) {
+            const newminor = {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: '#757575',
+              placeholder: minor.placeholder[i],
+              acronym: minor.acronym[i]
+            };
+            minors.push(newminor);
+          }
+        } else {
+          minors.push({
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            placeholder: minor.placeholder,
+            acronym: minor.acronym
+          });
+        }
+      });
+      this.displayOptions.minor = minors;
     },
     // Set the colleges map to with acronym keys and full name values
     setCollegesMap() {
@@ -361,10 +403,7 @@ export default {
         if ('name' in minorJSON[key]) {
           // only show majors for schools the user is in
           for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            const college = this.displayOptions.college[i];
-            if (minorJSON[key].schools.includes(college.acronym)) {
-              minors[key] = minorJSON[key].name;
-            }
+            minors[key] = minorJSON[key].name;
           }
         }
       }
@@ -528,6 +567,9 @@ export default {
     },
     removeMajor() {
       this.displayOptions.major.pop();
+      if (this.displayOptions.major.length === 0) {
+        this.addMajor();
+      }
     },
     addMinor() {
       const minor = {
@@ -542,6 +584,9 @@ export default {
     },
     removeMinor() {
       this.displayOptions.minor.pop();
+      if (this.displayOptions.minor.length === 0) {
+        this.addMinor();
+      }
     }
   }
 };

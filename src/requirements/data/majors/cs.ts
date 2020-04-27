@@ -65,10 +65,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'External Specialization',
     description: 'The External Specialization involves nine or more credit hours at the 3000+ level. '
       + 'Absolutely no CS courses are allowed. The three courses must be related to each other. '
-      + 'Frequently, the three courses are from the same department, e.g., OR&IE 3300 (Optimization I), OR&IE 3310 (Optimization II), and OR&IE 4330 (Discrete Models). '
-      + 'However, a great strength of Cornell is the multitude of interdisciplinary threads that cut across departmental boundaries. '
-      + 'Thus, Psychology 4150 (Concepts, Categories, and Word Meanings), Philosophy 3320 (Philosophy of Language), '
-      + 'and Linguistics 5530 (Representation of Structure in Vision and Language) define an acceptable Specialization.',
+      + 'Frequently, the three courses are from the same department.',
     source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: null,
     operator: null,
@@ -83,6 +80,23 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: null,
     operator: null,
     fulfilledBy: 'self-check'
+  },
+  // TODO: Requirement whose classes can be double counted
+  {
+    name: 'Probability',
+    description: 'Must take BTRY 3080, CS 4850, ECE 3100, ECON 3130, ENGRD 2700, or MATH 4710.',
+    source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/engineeringchecklist',
+    checker: includesWithSubRequirements(
+      ['BTRY 3080',
+        'CS 4850',
+        'ECE 3100',
+        'ECON 3130',
+        'ENGRD 2700',
+        'MATH 4710']
+    ),
+    operator: 'and',
+    fulfilledBy: 'courses',
+    minCount: 1
   }
 ];
 

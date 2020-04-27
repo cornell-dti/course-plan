@@ -308,22 +308,22 @@ export function computeRequirements(
       }
     }
   }
-  /*
+
   // PART 4: check minor reqs
   // Major is optional
   if (minor != null) {
     for (const min of minor) {
       if (min in requirementJson.minor) {
-        const majorReqs = requirementJson.major[min];
+        const minorReqs = requirementJson.minor[min];
         groups.push({
           groupName: 'Minor',
           specific: min,
-          reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, majorReqs.requirements)
+          reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, minorReqs.requirements)
         });
       }
     }
   }
-   */
+
 
   return groups;
 }

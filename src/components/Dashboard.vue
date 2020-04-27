@@ -574,8 +574,7 @@ export default {
         user.major = majors;
         user.majorFN = majorsFN;
       }
-
-      if ('majors' in data && data.majors.length > 0) {
+      if ('minors' in data && data.minors.length > 0) {
         const minors = [];
         const minorsFN = [];
         data.minors.forEach(minor => {
