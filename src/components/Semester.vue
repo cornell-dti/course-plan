@@ -410,7 +410,6 @@ export default {
     width: 23.75rem;
     height: 9.38rem;
     color: #d8d8d8;
-
     &:hover,
     &:active,
     &:focus {
@@ -422,6 +421,8 @@ export default {
       width: 13rem;
       height: 3.5rem;
       margin-top: .875rem;
+      margin-left: 1.125rem;
+      margin-right: 1.125rem;
     }
   }
 
