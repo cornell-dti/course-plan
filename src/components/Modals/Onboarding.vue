@@ -403,10 +403,7 @@ export default {
         if ('name' in minorJSON[key]) {
           // only show majors for schools the user is in
           for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            // const college = this.displayOptions.college[i];
-            // if (minorJSON[key].schools.includes(college.acronym)) {
             minors[key] = minorJSON[key].name;
-            // }
           }
         }
       }
