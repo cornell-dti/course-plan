@@ -31,7 +31,7 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Engineering Distribution Courses',
-    description: 'ENGRI 1xxx, ENGRD 2700, and ENGRD xxxx. ENGRD 2110 is recommended',
+    description: 'ENGRI 1xxx, ENGRD 2700, and ENGRD 2xxx. ENGRD 2110 is recommended',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
     checker: includesWithSubRequirements(
       ['ENGRD 2700'],

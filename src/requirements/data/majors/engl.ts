@@ -1,5 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { courseMatchesCodeOptions, includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { courseMatchesCodeOptions, includesWithSingleRequirement } from '../checkers-common';
 
 const englishRequirements: readonly CollegeOrMajorRequirement[] = [
   {
