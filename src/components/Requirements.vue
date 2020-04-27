@@ -166,7 +166,7 @@
           </div>
 
         <!-- Add separator if additional completed requirements -->
-        <div class="separator" v-if="req.completed.length > 0"></div>
+        <div class="separator"></div>
         </div>
       </div>
     </div>
