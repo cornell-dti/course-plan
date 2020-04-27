@@ -9,6 +9,7 @@ const calsCreditsRequirement: CollegeOrMajorRequirement = {
     + 'and The Department of Statistics and Data Science.',
   source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements',
   checker: (course: Course): boolean => ['AG', 'BU'].includes(course.acadGroup),
+  operator: 'or',
   fulfilledBy: 'credits',
   minCount: 55,
   progressBar: true
@@ -91,6 +92,7 @@ const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequiremen
     'STS 2871',
     'VIEN 2204'
   ),
+  operator: 'or',
   fulfilledBy: 'credits',
   minCount: 6
 };
@@ -100,6 +102,7 @@ const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
   description: '18 credits in at least three disciplines of which six credits must be introductory life sciences/biology and three credits in chemistry or physics and a quantitative literacy course.',
   source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: null,
+  operator: null,
   fulfilledBy: 'self-check'
 };
 
@@ -109,6 +112,7 @@ const calsChemistryOrPhysicsRequiement: CollegeOrMajorRequirement = {
     + 'Includes all Cornell courses with the CHEM or PHYS prefix at Cornell (excluding courses that are supplemental, independent study, research, TA, internship, and First-Year Writing Seminar).',
   source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: (course: Course): boolean => ['CHEM', 'CHEME', 'PHYS'].includes(course.subject),
+  operator: 'or',
   fulfilledBy: 'credits',
   minCount: 3
 };
@@ -120,6 +124,7 @@ const calsQuantitativeLiteracyRequirement: CollegeOrMajorRequirement = {
     + 'or transfer an approved calculus or statistics course with a minimum letter grade of “C” or better; or take an approved calculus or statistics course at Cornell.',
   source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: (course: Course): boolean => ['MATH', 'STSCI'].includes(course.subject),
+  operator: 'or',
   fulfilledBy: 'courses',
   minCount: 1
 };
@@ -140,6 +145,7 @@ const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
     (course: Course): boolean => course.catalogDistr?.includes('(LA-') ?? false,
     (course: Course): boolean => course.catalogDistr?.includes('(SBA-') ?? false
   ],
+  operator: 'and',
   fulfilledBy: 'courses',
   minCount: 3,
   totalCount: 4
@@ -150,6 +156,7 @@ const calsHumanDiversityRequirement: CollegeOrMajorRequirement = {
   description: 'At least one course category MUST be completed in three different categories. Human Diversity (D) is a required category and MUST be completed.',
   source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: (course: Course): boolean => course.catalogDistr?.includes('(D-') ?? false,
+  operator: 'or',
   fulfilledBy: 'courses',
   minCount: 1
 };
@@ -165,6 +172,7 @@ const calsWrittenAndOralExpressionRequirement: CollegeOrMajorRequirement = {
     'oral expression',
     'First-Year Writing Seminar'
   ].some(keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false),
+  operator: 'or',
   fulfilledBy: 'credits',
   minCount: 9
 };
@@ -177,6 +185,7 @@ const calsWrittenExpressionRequirement: CollegeOrMajorRequirement = {
     'written expression',
     'First-Year Writing Seminar'
   ].some(keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false),
+  operator: 'or',
   fulfilledBy: 'credits',
   minCount: 6
 };

@@ -72,6 +72,11 @@ This is how you should use your checkers:
 - Case 1: the requirement contains no sub-requirement. Use option 1. Example: CS major practicum.
 - Case 2: the requirement contains sub-requirements. Use option 2. Example: CS Core requirement.
 
+Also consider the cases of double counting with `operator`:
+
+- Operator type 'and' indicates that all instances of a sub-requirement is necessary. Example: CS Introductory Programming
+- Operator type 'or' indicates that only one instance of a sub-requirement can be used. Example: ENGL Four 4000 Levels
+
 ### Frontend Computation Phase
 
 #### University Requirements

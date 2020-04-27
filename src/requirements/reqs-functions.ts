@@ -44,6 +44,7 @@ function computeUniversityRequirementFulfillments(
     source: 'http://courses.cornell.edu/content.php?catoid=31&navoid=7901',
     search: ['all-eligible'],
     includes: [],
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 120,
     applies: 'all',
@@ -59,6 +60,7 @@ function computeUniversityRequirementFulfillments(
         'PE'
       ]
     ],
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 2,
     maxCount: 2,
@@ -69,6 +71,7 @@ function computeUniversityRequirementFulfillments(
     description: 'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming and water safety competency requirement '
       + 'for all entering first-year undergraduate students.',
     source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
+    operator: null,
     fulfilledBy: 'self-check',
     includes: [],
     minCount: 0,
@@ -172,25 +175,43 @@ function postProcessRequirementsFulfillments<T extends {}, R extends {}>(
 
 function computeFulfillmentStatistics<T extends {}>({ requirement, courses: coursesThatFulfilledRequirement }: RequirementFulfillment<T>): RequirementFulfillmentStatistics {
   let minCountFulfilled = 0;
-
   coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
     if (coursesThatFulfilledSubRequirement.length === 0) {
       return;
     }
-    // depending on what it is fulfilled by, either increase the count or credits you took
-    switch (requirement.fulfilledBy) {
-      case 'courses':
-        minCountFulfilled += 1;
-        break;
-      case 'credits':
-        minCountFulfilled += coursesThatFulfilledSubRequirement
-          .map(course => course.credits)
-          .reduce((a, b) => Math.max(a, b), 0);
-        break;
-      case 'self-check':
-        return;
-      default:
-        throw new Error('Fulfillment type unknown.');
+
+    if (requirement.operator === 'or') {
+      // Accumulating requirements with double counting with 'or/ operator
+      switch (requirement.fulfilledBy) {
+        case 'courses':
+          minCountFulfilled += coursesThatFulfilledSubRequirement.length;
+          break;
+        case 'credits':
+          minCountFulfilled += coursesThatFulfilledSubRequirement
+            .map(course => course.credits)
+            .reduce((a, b) => a + b);
+          break;
+        case 'self-check':
+          return;
+        default:
+          throw new Error('Fulfillment type unknown.');
+      }
+    } else if (requirement.operator === 'and') {
+      // Accumulating requirements without double counting with 'and' operator
+      switch (requirement.fulfilledBy) {
+        case 'courses':
+          minCountFulfilled += 1;
+          break;
+        case 'credits':
+          minCountFulfilled += coursesThatFulfilledSubRequirement
+            .map(course => course.credits)
+            .reduce((a, b) => Math.max(a, b), 0);
+          break;
+        case 'self-check':
+          return;
+        default:
+          throw new Error('Fulfillment type unknown.');
+      }
     }
   });
 

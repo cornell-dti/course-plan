@@ -73,6 +73,7 @@ export default {
       width: 14px;
       height: 50%;
       margin-right: 4%;
+      margin-top: 5%;
     }
 
     &-name {
@@ -93,5 +94,27 @@ export default {
     mix-blend-mode: multiply;
     opacity: 0.8;
   }
+
+@media only screen and (max-width: 976px) {
+  .bottombartab {
+    width: 10.5rem;
+  }
+}
+
+
+@media only screen and (max-width: 440px) {
+  .bottombartab {
+    width: 100%;
+    height: 100%;
+
+    &-arrow {
+      margin-top: auto;
+      margin-bottom: auto;
+      margin-right: 10%;
+      width: 1.56rem;
+      height: 50%;
+    }
+  }
+}
 
 </style>

@@ -7,6 +7,7 @@ const businessRequirements: readonly CollegeOrMajorRequirement[] = [
       'Graduation requirements depend on major. For undergraduates, it is either Dyson or SHA requirements.',
     source: 'https://business.cornell.edu/programs/undergraduate/',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   }
 ];

@@ -11,6 +11,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BIOG 1440', 'BIOG 1445'],
       ['BIOEE 1610', 'BIOSM 1610']
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -18,10 +19,10 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Investigative Laboratory',
     description: 'BIOG 1500 OR BIOSM 1500',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
-    checker: includesWithSingleRequirement(
-      'BIOG 1500',
-      'BIOSM 1500'
+    checker: includesWithSubRequirements(
+      ['BIOG 1500', 'BIOSM 1500']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -29,15 +30,14 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Evolutionary Biology and Diversity',
     description: 'BIOEE 1780 OR BIOEE 1781 OR BIOSM 1780',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
-    checker: includesWithSingleRequirement(
-      'BIOEE 1780',
-      'BIOEE 1781',
-      'BIOSM 1780'
+    checker: includesWithSubRequirements(
+      ['BIOEE 1780', 'BIOEE 1781', 'BIOSM 1780']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1
   },
-  // temp fix for reqs w options and diff minCount
+  // TODO: temp fix for reqs w options and diff minCount
   {
     name: 'General Chemistry Part 1',
     description: 'CHEM 2070 OR CHEM 2150',
@@ -45,6 +45,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(
       ['CHEM 2070', 'CHEM 2150'],
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -55,6 +56,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(
       ['CHEM 2080', 'CHEM 2150'],
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -69,10 +71,11 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 1120', 'MATH 1910', 'MATH 1105', 'STSCI 2150', 'BTRY 3010',
         'MATH 1710', 'AEM 2100', 'PSYCH 2500', 'ECON 3130', 'SOC 3010'],
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
-  // same problem (didn't add temp fix bc too many parts then)
+  // TODO: problem for reqs w options and diff minCount
   {
     name: 'Organic Chemistry',
     description: 'CHEM 1570 OR CHEM 3570 & 3580 OR CHEM 3590 & 3600 OR CHEM 3530',
@@ -83,6 +86,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEM 3590', 'CHEM 3600'],
       ['CHEM 3530'],
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -95,6 +99,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
       ['PHYS 2207', 'PHYS 2208'],
       ['PHYS 1112', 'PHYS 2213'],
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -102,23 +107,23 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Genetics and Genomics',
     description: 'Lecture must be taken either concurrently or before the laboratory',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
-    checker: includesWithSingleRequirement(
-      'BIOMG 2800',
-      'BIOMG 2801'
+    checker: includesWithSubRequirements(
+      ['BIOMG 2800'],
+      ['BIOMG 2801']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
-  // temp fix
+  // TODO: temp fix for reqs w options and diff minCount
   {
     name: 'Biochemistry and Molecular Biology Part 1',
     description: 'BIOMG 3300 OR BIOMG 3350 OR BIOMG 3310',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
-    checker: includesWithSingleRequirement(
-      'BIOMG 3300',
-      'BIOMG 3350',
-      'BIOMG 3310'
+    checker: includesWithSubRequirements(
+      ['BIOMG 3300', 'BIOMG 3350', 'BIOMG 3310']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -126,11 +131,10 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Biochemistry and Molecular Biology Part 2',
     description: 'BIOMG 3300 OR BIOMG 3350 OR BIOMG 3320',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
-    checker: includesWithSingleRequirement(
-      'BIOMG 3300',
-      'BIOMG 3350',
-      'BIOMG 3320'
+    checker: includesWithSubRequirements(
+      ['BIOMG 3300', 'BIOMG 3350', 'BIOMG 3320']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -139,6 +143,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Requires a minimum of 13 additional credits, which must include (1) one course from each of three different concentrations in biology '
     + ' (2) a course with a laboratory, (3) a minimum of two 3000-level or above courses of 2+ credits each.',
     source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9186',
+    operator: null,
     checker: null,
     fulfilledBy: 'self-check'
   }

@@ -8,8 +8,18 @@
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
     <div class="semesterView-switch">
       <span class="semesterView-switchText">View:</span>
-      <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
-      <div class="semesterView-switchImage semesterView-fourColumn" @click="setCompact" :class="{ 'semesterView-fourColumn--active': compact }"></div>
+      <div class="semesterView-switchImage semesterView-twoColumn"
+        @click="setNotCompact"
+        :class="{ 'semesterView-twoColumn--active': !compact }"
+      >
+      </div>
+      <div
+        class="semesterView-switchImage semesterView-fourColumn"
+        v-if="!isMobile"
+        @click="setCompact"
+        :class="{ 'semesterView-fourColumn--active': compact }"
+      >
+      </div>
     </div>
     <confirmation
       :id="'semesterConfirmation'"
@@ -32,6 +42,7 @@
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
+          @update-requirements-menu="updateRequirementsMenu"
         />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
@@ -91,7 +102,8 @@ export default {
     semesters: Array,
     compact: Boolean,
     isBottomBar: Boolean,
-    isBottomBarExpanded: Boolean
+    isBottomBarExpanded: Boolean,
+    isMobile: Boolean
   },
   data() {
     return {
@@ -208,6 +220,9 @@ export default {
       // Update requirements menu from dashboard
       this.$emit('updateRequirementsMenu');
     },
+    updateRequirementsMenu() {
+      this.$emit('updateRequirementsMenu');
+    },
     compare(a, b) {
       if (a.type === b.type && a.year === b.year) { return 0; }
       if (a.year > b.year) { return 1; }
@@ -250,6 +265,7 @@ export default {
         name: course.name,
         description: course.description,
         credits: course.credits,
+        creditRange: course.creditRange,
         semesters: course.semesters,
         prereqs: course.prereqs,
         enrollment: course.enrollment,
@@ -257,7 +273,8 @@ export default {
         instructors: course.instructors,
         distributions: course.distributions,
         lastRoster: course.lastRoster,
-        color: course.color
+        color: course.color,
+        uniqueID: course.uniqueID
       };
     },
     /**
@@ -402,4 +419,20 @@ export default {
 .bottomBar {
   margin-bottom: 300px;
 }
+
+@media only screen and (max-width: 878px) {
+  .semesterView {
+    margin-top: 5.5rem;
+    margin-left: 2.5rem;
+    margin-right: 1rem;
+    &-switch {
+      padding-right: 0.75rem;
+    }
+    &-content {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
 </style>

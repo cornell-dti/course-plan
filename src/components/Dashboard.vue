@@ -10,20 +10,22 @@
       <div class="dashboard-menus">
         <navbar class="dashboard-nav"
         @editProfile="editProfile"
+        @toggleRequirementsBar="toggleRequirementsBar"
         :isBottomPreview="bottomBar.isPreview"
         />
-        <requirements class="dashboard-reqs" v-if="loaded"
+        <requirements class="dashboard-reqs" v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
           @requirementsMap="loadRequirementsMap"
          />
       </div>
-      <semesterview v-if="loaded"
+      <semesterview v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
         :semesters="semesters"
         :compact="compactVal"
         :isBottomBarExpanded="bottomBar.isExpanded"
         :isBottomBar="bottomCourses.length > 0"
+        :isMobile="isMobile"
 
         @compact-updated="compactVal = $event"
         @updateBar="updateBar"
@@ -33,10 +35,11 @@
     </div>
     <div id="dashboard-bottomView">
       <bottombar
-      v-if="bottomCourses.length > 0"
+      v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
       :bottomCourses="bottomCourses"
       :seeMoreCourses="seeMoreCourses"
       :isExpanded="this.bottomBar.isExpanded"
+      :maxBottomBarTabs="maxBottomBarTabs"
       @close-bar="closeBar"
       @open-bar="openBar"
       />
@@ -93,11 +96,21 @@ export default {
       bottomBar: { isPreview: false, isExpanded: false },
       requirementsKey: 0,
       isOnboarding: false,
-      isEditingProfile: false
+      isEditingProfile: false,
+      isOpeningRequirements: false,
+      isTablet: window.innerWidth <= 878,
+      isMobile: window.innerWidth <= 440,
+      maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4
     };
+  },
+  created() {
+    window.addEventListener('resize', this.resizeEventHandler);
   },
   mounted() {
     this.getInformationFromUser();
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.resizeEventHandler);
   },
   methods: {
     getDocRef() {
@@ -118,6 +131,7 @@ export default {
             this.firebaseSems = doc.data().semesters;
             this.user = this.parseUserData(doc.data().userData, doc.data().name);
             this.subjectColors = doc.data().subjectColors;
+            this.uniqueIncrementer = doc.data().uniqueIncrementer;
             this.loaded = true;
           } else {
             this.startOnboarding();
@@ -127,6 +141,19 @@ export default {
           console.log('Error getting document:', error);
         });
     },
+
+    resizeEventHandler(e) {
+      this.isMobile = window.innerWidth <= 440;
+      this.isTablet = window.innerWidth <= 878;
+      this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
+      this.updateBarTabs();
+      this.updateSemesterView();
+    },
+
+    toggleRequirementsBar() {
+      this.isOpeningRequirements = !this.isOpeningRequirements;
+    },
+
     convertSemesters(firebaseSems) {
       const semesters = [];
 
@@ -141,12 +168,37 @@ export default {
       return semesters;
     },
 
+    updateSemesterView() {
+      if (this.isMobile) {
+        // Make sure semesterView is not compact by default on mobile
+        this.compactVal = false;
+      }
+    },
+
+    /**
+     * Creates credit range based on course
+     * Example: [1, 4] is the credit range for the given course
+     */
+    createCourseCreditRange(course) {
+      const courseCreditRange = [];
+      if (typeof course.creditRange !== 'undefined') {
+        return course.creditRange;
+      }
+      if (typeof course.enrollGroups !== 'undefined') {
+        course.enrollGroups.forEach(enrollGroup => {
+          courseCreditRange.push(enrollGroup.unitsMinimum);
+          courseCreditRange.push(enrollGroup.unitsMaximum);
+        });
+        return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
+      }
+      return [course.credits, course.credits];
+    },
+
     /**
      * Creates a course on frontend with either user or API data
      */
     createCourse(course) {
-      // TODO: id?
-      const randomId = Math.floor(Math.random() * Math.floor(1000));
+      const uniqueID = course.uniqueID || this.incrementID();
 
       const subject = (course.code && course.code.split(' ')[0]) || course.subject;
       const number = (course.code && course.code.split(' ')[1]) || course.catalogNbr;
@@ -159,7 +211,7 @@ export default {
 
       // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
       const credits = course.credits || course.enrollGroups[0].unitsMaximum;
-
+      const creditRange = course.creditRange || this.createCourseCreditRange(course);
       // Semesters: remove periods and split on ', '
       // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
       const catalogWhenOfferedDoesNotExist = (!course.catalogWhenOffered) || course.catalogWhenOffered === '';
@@ -218,12 +270,12 @@ export default {
       const alerts = { requirement: null, caution: null };
 
       const newCourse = {
-        id: randomId,
         subject,
         number,
         name,
         description,
         credits,
+        creditRange,
         semesters,
         prereqs,
         enrollment,
@@ -233,13 +285,32 @@ export default {
         lastRoster,
         color,
         alerts,
-        check: true
+        check: true,
+        uniqueID
       };
-
       // Update requirements menu
       this.updateRequirementsMenu();
 
       return newCourse;
+    },
+
+    incrementID() {
+      const docRef = this.getDocRef();
+
+      // If uniqueIncrementer attribute does not exist, initialize it to 0 and populate existing courses
+      if (this.uniqueIncrementer === undefined) {
+        this.uniqueIncrementer = 0;
+        this.semesters.forEach(semester => {
+          semester.courses.forEach(course => {
+            course.uniqueID = this.uniqueIncrementer;
+            this.uniqueIncrementer += 1;
+          });
+        });
+      } else {
+        this.uniqueIncrementer += 1;
+      }
+      docRef.update({ uniqueIncrementer: this.uniqueIncrementer });
+      return this.uniqueIncrementer;
     },
 
     addColor(subject) {
@@ -380,23 +451,23 @@ export default {
       // if course already exists in bottomCourses, first remove course
       for (let i = 0; i < this.bottomCourses.length; i += 1) {
         // if colorJustChanged and course already exists, just update course color
-        if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number && colorJustChanged) {
+        if (this.bottomCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
           this.bottomCourses[i].color = color;
-        } else if (this.bottomCourses[i].subject === course.subject && this.bottomCourses[i].number === course.number && !colorJustChanged) {
+        } else if (this.bottomCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
           this.bottomCourses.splice(i, 1);
         }
       }
 
-      // Prepending bottomCourse to front of bottom courses array if bottomCourses < 4
+      // Prepending bottomCourse to front of bottom courses array if bottomCourses < this.maxBottomBarTabs
       // Do not add course to bottomCourses if color was only changed
-      if (this.bottomCourses.length < 4 && !colorJustChanged) {
+      if (this.bottomCourses.length < this.maxBottomBarTabs && !colorJustChanged) {
         this.bottomCourses.unshift(courseToAdd);
       } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
         for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
           // if colorJustChanged and course already exists in seeMoreCourses, just update course color
-          if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number && colorJustChanged) {
+          if (this.seeMoreCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
             this.seeMoreCourses[i].color = color;
-          } else if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number && !colorJustChanged) {
+          } else if (this.seeMoreCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
             this.seeMoreCourses.splice(i, 1);
           }
         }
@@ -420,6 +491,29 @@ export default {
           callback(reviews.classes[0]);
         });
       });
+    },
+
+    updateBarTabs() {
+      // Move courses from see more to bottom tab to fulfill increased bottom tab capacity
+      if (this.maxBottomBarTabs === 4 && this.bottomCourses.length < 4 && this.seeMoreCourses.length > 0) {
+        while (this.bottomCourses.length < 4) {
+          // if any See More courses exist, move first See More Course to end of tab
+          if (this.seeMoreCourses.length > 0) {
+            const seeMoreCourseToMove = this.seeMoreCourses[0];
+            // remove course from See More Courses
+            this.seeMoreCourses.splice(0, 1);
+
+            // add course to end of bottomCourses
+            this.bottomCourses.push(seeMoreCourseToMove);
+          }
+        }
+      } else if (this.maxBottomBarTabs === 2 && this.bottomCourses.length > 2) {
+        // Move courses from bottom tab to see more for decreased max of 2
+        while (this.bottomCourses.length > 2) {
+          const bottomCourseToMove = this.bottomCourses.pop();
+          this.seeMoreCourses.unshift(bottomCourseToMove);
+        }
+      }
     },
 
     openBar() {
@@ -550,7 +644,7 @@ export default {
   /* The Modal (background) */
   &-onboarding {
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 2; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -565,5 +659,23 @@ export default {
   margin: 1rem;
   padding: 1rem;
   height: 12.12rem;
+}
+
+
+@media only screen and (max-width: 878px) {
+  .dashboard {
+    &-nav {
+      width: 100%;
+      flex-direction: row;
+      height: 4.5rem;
+      padding-top: 0rem;
+      padding-bottom: 0rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      position: fixed;
+      z-index: 1;
+    }
+  }
 }
 </style>

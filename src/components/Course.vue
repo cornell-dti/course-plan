@@ -58,6 +58,8 @@
       class="course-menu"
       @delete-course="deleteCourse"
       @color-course="colorCourse"
+      @edit-course-credit="editCourseCredit"
+      :getCreditRange="getCreditRange"
       v-click-outside="closeMenuIfOpen"
     />
   </div>
@@ -90,12 +92,14 @@ export default {
     number: String,
     name: String,
     credits: Number,
+    creditRange: Array,
     prereqs: String,
     semesters: Array,
     color: String,
     alerts: Object,
     compact: Boolean,
     id: String,
+    uniqueID: Number,
     active: Boolean,
     semId: Number
   },
@@ -103,6 +107,7 @@ export default {
     return {
       menuOpen: false,
       stopCloseFlag: false,
+      getCreditRange: this.creditRange,
       colorJustChanged: false
     };
   },
@@ -167,11 +172,11 @@ export default {
       }
     },
     deleteCourse() {
-      this.$emit('delete-course', `${this.subject} ${this.number}`);
+      this.$emit('delete-course', this.uniqueID);
       this.closeMenuIfOpen();
     },
     colorCourse(color) {
-      this.$emit('color-course', color, `${this.subject} ${this.number}`);
+      this.$emit('color-course', color, this.uniqueID);
       this.closeMenuIfOpen();
       this.colorJustChanged = true;
     },
@@ -180,6 +185,10 @@ export default {
         this.$emit('updateBar', this.courseObj, this.colorJustChanged, this.color);
       }
       this.colorJustChanged = false;
+    },
+    editCourseCredit(credit) {
+      this.$emit('edit-course-credit', credit, this.uniqueID);
+      this.closeMenuIfOpen();
     }
   },
   directives: {
@@ -436,8 +445,7 @@ export default {
   z-index: 1;
 
   &--caution {
-    width: 180px;
-    text-align: left;
+    width: 7.5rem;
   }
 }
 
@@ -450,7 +458,7 @@ export default {
   content: ' ';
   position: absolute;
   bottom: 100%; /* At the top of the tooltip */
-  right: 82px;
+  right: 14px;
   margin-left: -10px;
   border-width: 5px;
   border-style: solid;
@@ -462,7 +470,7 @@ export default {
   content: ' ';
   position: absolute;
   bottom: 100%; /* At the top of the tooltip */
-  right: 80px;
+  right: 12px;
   margin-left: -2px;
   border-width: 7px;
   border-style: solid;
@@ -477,5 +485,82 @@ export default {
 
 .course-tooltip .course-tooltiptext--info::before {
   right: 8px;
+}
+
+@media only screen and (max-width: 878px) {
+  .course {
+    width: 17rem;
+    &--min {
+      width: 10.5rem;
+      height: 2.125rem;
+    }
+    &-main {
+      &--min {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+    &-color {
+      width: 1.25rem;
+      height: 5.625rem;
+      border-radius: 0.42rem 0 0 0.42rem;
+      background-color: var(--bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &--active {
+        width: 19px;
+        height: 5.5rem;
+      }
+
+      &--min {
+        height: 2.125rem;
+
+        &.course-color--active {
+          height: 2rem;
+        }
+      }
+    }
+
+    &-content {
+      width: 17rem;
+      &--min {
+        width: 9.25rem;
+        margin-bottom: 0;
+        margin-top: 0;
+        margin-right: .5rem;
+      }
+    }
+
+    &-top {
+      width: 14rem;
+      &--min {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+
+    &-name {
+      width: 14rem;
+    }
+
+    &-menu {
+      right: -1rem;
+    }
+  }
+  .active {
+    border: 1px solid #2b6693;
+    height: 5.625rem;
+    width: 17rem;
+
+    &.course--min {
+      height: 2.125rem;
+      width: 10.5rem;
+    }
+  }
 }
 </style>

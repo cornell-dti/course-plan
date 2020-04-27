@@ -38,11 +38,37 @@ export default {
     filter: brightness(95%);
     transition: all 0.2s ease;
   }
+
+  .bottombar-square-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .expandedBottomBarTitle{
     position: fixed;
     bottom: 16.25rem;
+}
+
+@media only screen and (max-width: 976px) {
+  .bottombartitle {
+    left: 25.5rem;
+    width: calc(100vw - 25.5rem);
+  }
+}
+
+@media only screen and (max-width: 878px) {
+  .bottombartitle {
+    left: 0rem;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .expandedBottomBarTitle {
+    bottom: 9.25rem;
+  }
 }
 
 </style>

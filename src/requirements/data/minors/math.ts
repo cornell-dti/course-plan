@@ -6,10 +6,11 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'MATH 2930 and MATH 2940',
     description: 'MATH 2930 and 2940',
     source: 'https://www.mae.cornell.edu/mae/programs/undergraduate-programs/minors',
-    checker: includesWithSingleRequirement(
-      'MATH 2930',
-      'MATH 2940',
+    checker: includesWithSubRequirements(
+      ['MATH 2930'],
+      ['MATH 2940']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -21,6 +22,7 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     + 'At most one 2000-level course may be chosen',
     source: 'https://www.mae.cornell.edu/sites/default/files/departments/MAE/MAE%20pdfs/Applied%20Math%20Minor%20Application%20Form%201-25-19-VD.pdf',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   }
 ];

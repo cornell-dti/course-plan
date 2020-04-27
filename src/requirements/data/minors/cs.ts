@@ -1,5 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { includesWithSingleRequirement } from '../checkers-common';
 
 const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -14,6 +14,7 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ENGRD 2140',
       'ECE 2400'
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -27,21 +28,23 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'CS 3420',
       'ECE 3140'
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   },
-  // TODO: Add excludes
+  // TODO: Needs excludes for certain classes
   {
     name: '4 CS courses numbered 3000 or higher',
     description: 'CS 4090, CS 4997, CS 4998, CS 4999 and seminars are excluded. CS 2800 is allowed',
     source: 'https://www.cs.cornell.edu/undergrad/csminor',
-    checker: includesWithSubRequirements(
-      ['CS 2800'],
-      ['CS 3***'],
-      ['CS 4***'],
-      ['CS 5***'],
-      ['CS 6***'],
+    checker: includesWithSingleRequirement(
+      'CS 2800',
+      'CS 3***',
+      'CS 4***',
+      'CS 5***',
+      'CS 6***',
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 4
   }

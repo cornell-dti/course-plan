@@ -1,5 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { includesWithSingleRequirement } from '../checkers-common';
 
 const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -10,14 +10,15 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ECON 1100',
       'ECON 3030',
       'HADM 1410',
-      'PAM 2000',
+      'PAM 2000'
     ),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 3
   },
   {
     name: 'Introduction to basic business concepts',
-    description: 'AEM 1200, AEM 2400, HADM 2410, ENGRI 1270, ILRD 1700, NCC 5530, NCC 5580'
+    description: 'Choose one: AEM 1200, AEM 2400, HADM 2410, ENGRI 1270, ILRD 1700, NCC 5530, NCC 5580'
     + 'ORIE 4152, ENGRG 4610, MAE 4610',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
     checker: includesWithSingleRequirement(
@@ -30,8 +31,9 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'NCC 5580',
       'ORIE 4152',
       'ENGRG 4610',
-      'MAE 4610',
+      'MAE 4610'
     ),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 3
   },
@@ -44,8 +46,9 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'AEM 2210',
       'HADM 2230',
       'NCC 5500',
-      'ORIE 3150',
+      'ORIE 3150'
     ),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 3
   },
@@ -59,6 +62,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'HADM 2250',
       'NCC 5560',
     ),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 3
   },
@@ -69,6 +73,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement(
       'AEM 4660'
     ),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 1.5
   },
@@ -119,6 +124,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'AEM 4300',
       'AEM 4550'
     ),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 3
   }

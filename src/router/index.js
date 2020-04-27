@@ -5,6 +5,8 @@ import firebase from 'firebase/app';
 import Login from '@/components/Login';
 import Dashboard from '@/components/Dashboard';
 import Settings from '@/components/Settings';
+import Page404 from '@/components/404';
+
 
 Vue.use(Router);
 
@@ -36,7 +38,8 @@ const router = new Router({
     },
     {
       path: `${baseURL}/*`,
-      redirect: `${baseURL}/`
+      name: '404',
+      component: Page404
     }
   ]
 });

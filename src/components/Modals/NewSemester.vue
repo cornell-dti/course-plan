@@ -122,10 +122,10 @@ const clickOutside = {
   }
 };
 
-const fall = require('../../assets/images/fallEmoji.png');
-const spring = require('../../assets/images/springEmoji.png');
-const winter = require('../../assets/images/winterEmoji.png');
-const summer = require('../../assets/images/summerEmoji.png');
+const fall = require('../../assets/images/fallEmoji.svg');
+const spring = require('../../assets/images/springEmoji.svg');
+const winter = require('../../assets/images/winterEmoji.svg');
+const summer = require('../../assets/images/summerEmoji.svg');
 
 export default {
   props: {
@@ -445,8 +445,9 @@ export default {
       overflow: scroll;
     }
     &-season {
-      padding: 10px;
       padding-left: 0px;
+      padding-right: 10px;
+      height: 14px;
     }
     &-item {
       width: 106px;

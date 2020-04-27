@@ -1,5 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { includesWithSingleRequirement } from '../checkers-common';
 
 const isstMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -11,6 +11,7 @@ const isstMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ORIE 3120',
       'ORIE 4800',
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 3
   },
@@ -29,6 +30,7 @@ const isstMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ORIE 5120',
       'ORIE 5770',
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 3
   }

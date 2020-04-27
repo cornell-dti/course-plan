@@ -10,6 +10,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Note: AP, IB, and A-Level credits count toward the 120 total credits but not toward the 100 A&S credits.',
     source: 'https://as.cornell.edu/degree-requirements',
     checker: (course: Course): boolean => course.acadGroup.includes('AS'),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 100,
     progressBar: true
@@ -20,6 +21,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'First-year students should plan to take an FWS during their first semester at Cornell.',
     source: 'https://as.cornell.edu/degree-requirements',
     checker: courseIsFWS,
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 6
   },
@@ -29,6 +31,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'AP and IB credits cannot complete this requirement, but usually indicate that you place into a higher level course. '
       + 'Note: Native speakers of a foreign language may be exempted from this requirement.',
     source: 'https://as.cornell.edu/degree-requirements',
+    operator: null,
     checker: null,
     fulfilledBy: 'self-check'
   },
@@ -68,6 +71,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       'YORUB 2***',
       'ZULU 2***'
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -107,16 +111,18 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       'YORUB',
       'ZULU'
     ].includes(course.subject),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 11
   },
   {
     name: '(PBS-AS) or (MQR-AS)',
-    description: 'Four courses in Physical & Biological Sciences (PBS-AS/PBSS-AS),  and Mathematics & Quantitative Reasoning (MQR-AS).',
+    description: 'Four courses in Physical & Biological Sciences (PBS-AS/PBSS-AS), and Mathematics & Quantitative Reasoning (MQR-AS).',
     source: 'https://as.cornell.edu/degree-requirements',
     checker: (course: Course): boolean => ['(PBS-AS)', '(PBSS-AS)', '(MQR-AS)'].some(
       distribution => course.catalogDistr?.includes(distribution) ?? false
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 4
   },
@@ -125,6 +131,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Students must take 2 courses in Physical & Biological Sciences (PBS).',
     source: 'https://as.cornell.edu/degree-requirements',
     checker: (course: Course): boolean => ['(PBS-AS)', '(PBSS-AS)'].some(distribution => course.catalogDistr?.includes(distribution) ?? false),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -133,6 +140,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Students must take 1 in Mathematics & Quantitative Reasoning (MQR).',
     source: 'https://as.cornell.edu/degree-requirements',
     checker: (course: Course): boolean => course.catalogDistr?.includes('(MQR-AS)') ?? false,
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -147,6 +155,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean => course.catalogDistr?.includes('(LA-AS)') ?? false,
       (course: Course): boolean => course.catalogDistr?.includes('(SBA-AS)') ?? false
     ],
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 4,
     totalCount: 5
@@ -157,6 +166,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Courses fulfilling this requirement are marked with a GB in the Class Roster.',
     source: 'https://as.cornell.edu/degree-requirements',
     checker: (course: Course): boolean => ['GB', 'GHB'].some(breadth => course.catalogBreadth?.includes(breadth) ?? false),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -166,6 +176,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Courses fulfilling this requirement are marked with an HB in the Class Roster.',
     source: 'https://as.cornell.edu/degree-requirements',
     checker: (course: Course): boolean => ['HB', 'GHB'].some(breadth => course.catalogBreadth?.includes(breadth) ?? false),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   }
