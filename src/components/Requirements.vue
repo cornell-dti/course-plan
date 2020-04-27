@@ -11,15 +11,17 @@
       </div>
         <!-- TODO change for multiple colleges -->
         <div v-if="index==2" class="major">
-          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
+          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
+            @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
             <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
             <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
           </div>
         </div>
         <div v-if="index==2+majors.length" class="minor">
-          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"  @click="activate(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
-            <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
-            <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
+          <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
+            @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
+            <p :style="{'font-weight': minor.display ? '500' : '', 'color' : minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
+            <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
           </div>
         </div>
 
@@ -370,13 +372,21 @@ export default Vue.extend({
       });
       return (id < 2 || id === currentDisplay);
     },
-    activate(id: number) {
+    activateMajor(id: number) {
       this.majors.forEach((major, i: number) => {
         if (major.display) {
           major.display = false;
         }
       });
       this.majors[id].display = true;
+    },
+    activateMinor(id: number) {
+      this.minors.forEach((minor, i: number) => {
+        if (minor.display) {
+          minor.display = false;
+        }
+      });
+      this.minors[id].display = true;
     },
     getDisplays() {
       const majors = [];
