@@ -2,7 +2,7 @@
   <div>
   <div class="newSemester">
     <div class="newSemester-section newSemester-type">
-      <label class="newSemester-label" for="type">{{ typeText }}</label>
+      <label class="newSemester-label" for="type">Type</label>
       <div
         v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="season"
@@ -54,7 +54,7 @@
       </div>
     </div>
     <div class="newSemester-section newSemester-year">
-      <label class="newSemester-label" for="year">{{ yearText }}</label>
+      <label class="newSemester-label" for="year">Year</label>
       <div
         v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="year"
@@ -102,7 +102,7 @@
       </div>
     </div>
   </div>
-  <div v-if="isDuplicate() === true" class= "newSemester-duplicate" > <p> Duplicate Semester</p> </div>
+  <div v-if="isDuplicate()" class= "newSemester-duplicate" >Duplicate Semester</div>
   </div>
 
 </template>
@@ -131,13 +131,11 @@ export default {
   props: {
     currentSemesters: Array,
     id: Number,
-    isEdit: Boolean
-
+    isEdit: Boolean,
+    year: Number,
+    type: String
   },
   data() {
-    // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
-    const currentSeason = this.getCurrentSeason();
-
     // years
     const currentYear = new Date().getFullYear();
     const seasons = [[fall, 'Fall'], [spring, 'Spring'], [summer, 'Summer'], [winter, 'Winter']];
@@ -150,10 +148,10 @@ export default {
     years.map(String);
 
     return {
-      seasonPlaceholder: currentSeason,
-      yearPlaceholder: currentYear,
       seasons,
       years,
+      seasonText: '',
+      yearText: '',
       displayOptions: {
         season: {
           shown: false,
@@ -172,16 +170,19 @@ export default {
       }
     };
   },
+  computed: {
+    seasonPlaceholder() {
+      // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
+      const currentSeason = this.getCurrentSeason();
+      return this.seasonText || this.type || currentSeason;
+    },
+    yearPlaceholder() {
+      const currentYear = new Date().getFullYear();
+      return this.yearText || this.year || currentYear;
+    }
+  },
   directives: {
     'click-outside': clickOutside
-  },
-  computed: {
-    typeText() {
-      return 'Type';
-    },
-    yearText() {
-      return 'Year';
-    }
   },
   methods: {
     getCurrentSeason() {
@@ -236,9 +237,9 @@ export default {
     },
     selectOption(type, text) {
       if (type === 'season') {
-        this.seasonPlaceholder = text;
+        this.seasonText = text;
       } else {
-        this.yearPlaceholder = text;
+        this.yearText = text;
       }
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
@@ -261,9 +262,9 @@ export default {
       displayOptions.placeholderColor = '#B6B6B6';
 
       if (type === 'season') {
-        this.seasonPlaceholder = this.getCurrentSeason();
+        this.seasonText = '';
       } else {
-        this.yearPlaceholder = new Date().getFullYear();
+        this.yearText = '';
       }
     },
     resetDropdowns() {
@@ -278,11 +279,13 @@ export default {
       if (this.currentSemesters != null) {
         this.currentSemesters.forEach(semester => {
           if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder) {
-            isDup = true;
+            if (!this.isEdit || (this.isEdit && this.id !== semester.id)) {
+              isDup = true;
+            }
           }
-          return semester;
         });
       }
+      this.$emit('duplicateSemester', isDup);
       return isDup;
     }
   }
@@ -301,6 +304,8 @@ export default {
   flex-direction: row;
   &-duplicate {
     color: red;
+    font-size: 14px;
+    margin-top: .5rem;
   }
   &-section {
     font-size: 14px;
