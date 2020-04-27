@@ -11,6 +11,7 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'as well as both a course in history before 1800 and as a course in European History.',
     source: 'https://history.cornell.edu/undergraduate',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 9
   },
@@ -24,6 +25,7 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
       // @ts-ignore
       course.catalogCourseSubfield && course.catalogCourseSubfield.includes('HPE')
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 3
   },
@@ -33,6 +35,7 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Service-learning 4000-level courses, HIST 4001, HIST 4002, may not be used to fulfill the 4000-level seminar requirement.',
     source: 'https://history.cornell.edu/undergraduate',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 2
   }

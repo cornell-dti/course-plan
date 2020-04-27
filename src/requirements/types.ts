@@ -27,6 +27,8 @@ export interface BaseRequirement {
   readonly description: string;
   /** The source with more information on the requirement. (This should be a URL string.) */
   readonly source: string;
+  /** Defines whether courses are 'double counted': and for no double counting and or for double counting */
+  readonly operator: 'and' | 'or' | null;
   readonly fulfilledBy: 'credits' | 'courses' | 'self-check';
   readonly applies?: string;
   /**

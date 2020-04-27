@@ -1,5 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSubRequirements } from '../checkers-common';
+import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
 
 const infoRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -13,6 +13,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       ['INFO 2450'],
       ['INFO 2950']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 5
   },
@@ -45,6 +46,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
         'STSCI 2200'
       ]
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 3
   },
@@ -53,6 +55,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Students are required to complete AT LEAST one concentration from the seven concentrations available',
     source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-0',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 1
   },
@@ -63,13 +66,17 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'These courses must be taken for a letter grade, each must earn three or more credit hours, and all must be completed with a grade of C- or higher.'
       + 'Students may only fulfill one of their electives with INFO 4900 (3 credits or more).',
     source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
-    checker: includesWithSubRequirements(
-      ['INFO 2300'],
-      ['CS 2110'],
-      ['CS 3110'],
-      ['CS 3410'],
-      ['INFO 3***', 'INFO 4***', 'INFO 5***', 'INFO 6***']
+    checker: includesWithSingleRequirement(
+      'INFO 2300',
+      'CS 2110',
+      'CS 3110',
+      'CS 3410',
+      'INFO 3***',
+      'INFO 4***',
+      'INFO 5***',
+      'INFO 6***'
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 3
   }

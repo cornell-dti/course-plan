@@ -12,6 +12,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 2220'],
       ['HADM 3210']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 4
   },
@@ -24,6 +25,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 2810'],
       ['HADM 3870']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 3
   },
@@ -35,6 +37,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 2360'],
       ['HADM 3350']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -43,6 +46,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'HADM 1740',
     source: 'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSingleRequirement('HADM 1740'),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -54,6 +58,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 1650'],
       ['HADM 3650']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -67,6 +72,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 2010'],
       ['HADM 3010']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 4
   },
@@ -78,6 +84,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 2550'],
       ['HADM 3550']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -89,6 +96,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 1410'],
       ['HADM 2430']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -97,6 +105,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'HADM 4410',
     source: 'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSingleRequirement('HADM 4410'),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -105,6 +114,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'A minimum of 14 credits, 3000-level or higher, in SHA.',
     source: 'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSingleRequirement('HADM 3***'),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 14
   },
@@ -113,6 +123,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.',
     source: 'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 15
   },
@@ -121,6 +132,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.',
     source: 'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: courseIsFWS,
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 3
   },
@@ -129,6 +141,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'A minimum of 24 credits, to be taken either in or outside SHA.',
     source: 'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 24
   }

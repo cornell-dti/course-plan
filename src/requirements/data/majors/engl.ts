@@ -16,6 +16,7 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
         ['ENGL 2***', 'ENGL 3***', 'ENGL 4***', 'ENGL 5***', 'ENGL 6***']
       );
     },
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 40
   },
@@ -28,6 +29,7 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
       (course.catalogComments?.includes('pre-1800') ?? false)
       || (course.catalogSatisfiesReq?.includes('pre-1800') ?? false)
     ),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 12
   },
@@ -36,6 +38,7 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
     description: '8 credits (2 courses) must be at the 4000 level or above',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('ENGL 4***'),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 8
   },
@@ -44,6 +47,7 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
     description: '12 credits (3 courses) must form an intellectually coherent concentration (see below).',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 12
   }

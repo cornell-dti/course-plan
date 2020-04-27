@@ -10,6 +10,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ORIE 3300'],
       ['ORIE 3500']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -24,6 +25,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ORIE 3800'],
       ['INFO 3300', 'INFO 4300']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 3
   },
@@ -35,6 +37,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       ['INFO 2040'],
       ['INFO 2450', 'ENGRC 3350']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -48,6 +51,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 2940'],
       ['MATH 2930', 'MATH 3040', 'CS 2800']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 4
   },
@@ -60,6 +64,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ENGRD 2110'],
       ['ENGRD 2700']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   }

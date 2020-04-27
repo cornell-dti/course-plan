@@ -11,6 +11,7 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ECON 1120'],
       ['MATH 1110']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 3
   },
@@ -24,6 +25,7 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ECON 3110', 'ECON 3130'],
       ['ECON 3120', 'ECON 3140']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 4
   },
@@ -32,6 +34,7 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'All students must take at least three courses at the 4000-level or higher.',
     source: 'https://economics.cornell.edu/major',
     checker: includesWithSingleRequirement('ECON 4***'),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 3
   },
@@ -40,6 +43,7 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Twelve courses listed by the Department of Economics, or approved by the student’s major advisor',
     source: 'https://economics.cornell.edu/major',
     checker: includesWithSingleRequirement('ECON 1110', 'ECON 1120', 'ECON 3***', 'ECON 4***'),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 12
   }

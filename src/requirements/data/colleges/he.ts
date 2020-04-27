@@ -6,6 +6,7 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Students must complete a minimum of 43 Human Ecology credits from College Distribution, Major Requirements and electives.',
     source: 'https://www.human.cornell.edu/academics/policies/requirements',
     checker: (course: Course): boolean => course.acadGroup.includes('HE'),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 43,
     progressBar: true
@@ -16,6 +17,7 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'a technical writing course must be taken as an engineering distribution, liberal studies, Advisor-approved electives, or Major course.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -23,6 +25,7 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Students must earn 9 credits in Human Ecology departments outside their major department with rules:',
     source: 'https://www.human.cornell.edu/academics/policies/requirements',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 9
   }
