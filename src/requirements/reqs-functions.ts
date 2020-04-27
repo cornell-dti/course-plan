@@ -181,21 +181,38 @@ function computeFulfillmentStatistics<T extends {}>({ requirement, courses: cour
       return;
     }
 
-    console.log(requirement);
-    // depending on what it is fulfilled by, either increase the count or credits you took
-    switch (requirement.fulfilledBy) {
-      case 'courses':
-        minCountFulfilled += 1;
-        break;
-      case 'credits':
-        minCountFulfilled += coursesThatFulfilledSubRequirement
-          .map(course => course.credits)
-          .reduce((a, b) => Math.max(a, b), 0);
-        break;
-      case 'self-check':
-        return;
-      default:
-        throw new Error('Fulfillment type unknown.');
+    if (requirement.operator === 'or') {
+      // Accumulating requirements with double counting with 'or/ operator
+      switch (requirement.fulfilledBy) {
+        case 'courses':
+          minCountFulfilled += coursesThatFulfilledSubRequirement.length;
+          break;
+        case 'credits':
+          minCountFulfilled += coursesThatFulfilledSubRequirement
+            .map(course => course.credits)
+            .reduce((a, b) => a + b);
+          break;
+        case 'self-check':
+          return;
+        default:
+          throw new Error('Fulfillment type unknown.');
+      }
+    } else if (requirement.operator === 'and') {
+      // Accumulating requirements without double counting with 'and' operator
+      switch (requirement.fulfilledBy) {
+        case 'courses':
+          minCountFulfilled += 1;
+          break;
+        case 'credits':
+          minCountFulfilled += coursesThatFulfilledSubRequirement
+            .map(course => course.credits)
+            .reduce((a, b) => Math.max(a, b), 0);
+          break;
+        case 'self-check':
+          return;
+        default:
+          throw new Error('Fulfillment type unknown.');
+      }
     }
   });
 

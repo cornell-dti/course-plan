@@ -37,8 +37,8 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
     name: '4000 or Above',
     description: '8 credits (2 courses) must be at the 4000 level or above',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: includesWithSubRequirements(['ENGL 4***'], ['ENGL 4***']),
-    operator: 'and',
+    checker: includesWithSingleRequirement('ENGL 4***'),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 8
   },
