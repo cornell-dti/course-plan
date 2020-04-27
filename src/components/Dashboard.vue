@@ -440,7 +440,8 @@ export default {
         difficulty: 0,
         workload: 0,
         prerequisites: this.noneIfEmpty(course.prereqs),
-        description: course.description
+        description: course.description,
+        uniqueID: course.uniqueID
       };
 
       // expand bottombar if first course added
