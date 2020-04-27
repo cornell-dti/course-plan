@@ -169,7 +169,6 @@ function postProcessRequirementsFulfillments<T extends {}, R extends {}>(
   return fulfillments.map(requirementFulfillment => {
     const { requirement, courses } = requirementFulfillment;
     const newMetadata = transformer(requirementFulfillment);
-    // console.log(newMetadata);
     return { requirement, courses, ...newMetadata };
   });
 }
@@ -250,21 +249,13 @@ function computeCollegeOrMajorRequirementFulfillments(
   allRequirements: readonly DecoratedCollegeOrMajorRequirement[]
 ): readonly RequirementFulfillment<RequirementFulfillmentStatistics>[] {
   // Phase 1: Compute raw requirement fulfillment locally for each requirement.
-  // console.log('Courses');
-  // console.log(coursesTaken);
-  // console.log('Requirements');
-  // console.log(allRequirements);
   const rawRequirementFulfillment = computeRawRequirementFulfillment(coursesTaken, allRequirements);
-  // console.log('Fullfilled');
-  // console.log(rawRequirementFulfillment);
 
   // Phase 2: Compute fulfillment statistics for each requirement.
   const requirementFulfillmentWithStatistics = postProcessRequirementsFulfillments(
     rawRequirementFulfillment,
     computeFulfillmentStatistics
   );
-  // console.log('Statistics');
-  // console.log(requirementFulfillmentWithStatistics);
 
   return requirementFulfillmentWithStatistics;
 }
