@@ -51,15 +51,12 @@ They are organized by colleges and majors. All of those checkers are aggregated 
 
 To reiterate, this phase computes a list of satisfying courses for each requirement.
 
-1. Setup:
-   a. Each college or major requirement in
-   [`source-requirements-json.ts`](./source-requirements-json.ts) has a field called `checkerName`.
-   b. Each checker in
-   [`checkers/all-requirements.checker.ts`](./checkers/all-requirements-checkers.ts) is assigned
-   a checker name as its key.
-2. During pre-computation, we use the `checkerName` value in `source-requirements-json.ts` to find
-   a correct checker, and then run the checker. From that, we get a list of courses.
-3. We attach a list of courses to the requirement metadata in [`generator.ts`](./generator.ts).
+1. Setup: each college or major requirement has a field called `checker`. This is a function or
+   an array of function that can be used to check whether a course satisfy a requirement or
+   sub-requirements.
+2. During pre-computation, we run the `checker` against every possible course, to get a list of
+   courses that can satisfy this requirement.
+3. We attach this list to the requirement metadata in [`generator.ts`](./generator.ts).
 4. Now we created [`decorated-requirements.json`](./decorated-requirements.json).
    Pre-computation is done.
 
@@ -96,27 +93,24 @@ inside [`reqs-functions.ts`](./reqs-functions.ts).
 
 ## Contributing
 
-### Modifying Requirement Checker
+### Modifying Requirements
 
-If you want to change a requirement checker, edit relevant files in `checkers` folder.
+If you want to change a requirement, edit relevant files in `data` folder.
 
-### Add Requirement Checker
+### Add A New Requirement
 
-If you want to add a support for new major or college, add relevant files in `checkers` folder.
+If you want to add a support for new major or college, add relevant files in `data` folder.
 For example, if you want to add support for `CSGO` major, create a file called `csgo.ts` in
-`checkers/majors`. Mimic the examples in neighboring files.
+`data/majors`. Mimic the examples in neighboring files.
 
-Then, import and link your new checkers in
-[`checkers/all-requirements-checkers.ts`](./checkers/all-requirements-checkers.ts).
+Then, import and link your new checkers in [`data/index.ts`](./data/index.ts).
 For example, if you want to add support for `CSGO` major, add
 
 ```typescript
-import checkersMajorCSGO from './majors/csgo';
+import csgoRequirements from './majors/csgo';
 ```
 
-to `checkers/all-requirements-checkers.ts`'s import list,
-
-and add the line `...checkersMajorCSGO,` to the object below.
+to `data/index.ts`'s import list, and follow the existing examples to add a new requirement object.
 
 To keep the file clean, you should keep the names alphabetically sorted.
 

@@ -12,17 +12,27 @@
     />
     <deletesemester
       :id="'deleteSemesterModal-' + id"
-      class="semester-modal-delete"
+      class="semester-modal"
       @delete-semester="deleteSemester"
       :deleteSemID="deleteSemID"
       :deleteSemType="deleteSemType"
       :deleteSemYear="deleteSemYear"
       ref="deletesemester"
     />
+    <editsemester
+      :id="'editSemesterModal-' + id"
+      class="semester-modal"
+      @edit-semester="editSemester"
+      :semesters="semesters"
+      :deleteSemID="deleteSemID"
+      :deleteSemType="deleteSemType"
+      :deleteSemYear="deleteSemYear"
+      ref="modalBodyComponent"
+    />
     <div v-if="isNotSemesterButton" class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
-          <span class="semester-name">{{ type }} {{ year }}</span>
+          <span class="semester-name"><img class="season-emoji" :src='seasonImg[type]' alt=""> {{ type }} {{ year }}</span>
           <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
@@ -35,17 +45,20 @@
       </div>
       <div class="semester-courses">
         <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-          <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
+          <div v-for="course in courses" :key="course.uniqueID" class="semester-courseWrapper">
             <course
               v-bind="course"
               :courseObj="course"
               :id="course.subject + course.number"
+              :uniqueID="course.uniqueID"
               :compact="compact"
-              :active="activatedCourse.subject === course.subject && activatedCourse.number === course.number"
+              :active="activatedCourse.uniqueID === course.uniqueID"
               class="semester-course"
+              :semId="id"
               @delete-course="deleteCourse"
               @color-course="colorCourse"
               @updateBar="updateBar"
+              @edit-course-credit="editCourseCredit"
             />
           </div>
         </div>
@@ -54,7 +67,7 @@
           :class="{ 'semester-addWrapper--compact': compact }"
           @click="openCourseModal"
         >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
+          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" v-dragula="courses" bag="first-bag" >{{
             buttonString
           }}</span>
         </div>
@@ -74,6 +87,7 @@
       v-if="semesterMenuOpen"
       class="semester-menu"
       @open-delete-semester-modal="openDeleteSemesterModal"
+      @open-edit-semester-modal="openEditSemesterModal"
       v-click-outside="closeSemesterMenuIfOpen" />
   </div>
 </template>
@@ -85,12 +99,19 @@ import Modal from '@/components/Modals/Modal';
 import Confirmation from '@/components/Confirmation';
 import SemesterMenu from '@/components/Modals/SemesterMenu';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
+import EditSemester from '@/components/Modals/EditSemester';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
 Vue.component('semestermenu', SemesterMenu);
 Vue.component('deletesemester', DeleteSemester);
+Vue.component('editsemester', EditSemester);
+
+const fall = require('../assets/images/fallEmoji.svg');
+const spring = require('../assets/images/springEmoji.svg');
+const winter = require('../assets/images/winterEmoji.svg');
+const summer = require('../assets/images/summerEmoji.svg');
 
 const clickOutside = {
   bind(el, binding, vnode) {
@@ -112,13 +133,19 @@ export default {
     return {
       confirmationText: '',
       scrollable: true,
-
       semesterMenuOpen: false,
       stopCloseFlag: false,
 
       deleteSemID: 0,
       deleteSemType: '',
-      deleteSemYear: 0
+      deleteSemYear: 0,
+
+      seasonImg: {
+        Fall: fall,
+        Spring: spring,
+        Winter: winter,
+        Summer: summer
+      }
     };
   },
   props: {
@@ -128,16 +155,15 @@ export default {
     courses: Array,
     isNotSemesterButton: Boolean,
     compact: Boolean,
-    activatedCourse: Object
+    activatedCourse: Object,
+    semesters: Array
   },
 
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
-
     const service = Vue.$dragula.$service;
-
     service.eventBus.$on('drag', () => {
-      this.scrollable = false;
+      this.scrollable = true;
     });
     service.eventBus.$on('drop', () => {
       this.scrollable = true;
@@ -151,20 +177,35 @@ export default {
   },
 
   computed: {
-    // TODO: calculate credits from all classes
     creditString() {
       let credits = 0;
       this.courses.forEach(course => {
         credits += course.credits;
       });
+      if (credits === 1) {
+        return `${credits.toString()} credit`;
+      }
       return `${credits.toString()} credits`;
+    },
+    // Note: Currently not used
+    deleteDuplicateCourses() {
+      const uniqueCoursesNames = [];
+      const uniqueCourses = [];
+      this.courses.forEach(course => {
+        if (uniqueCoursesNames.indexOf(course.name) === -1) {
+          uniqueCourses.push(course);
+          uniqueCoursesNames.push(course.name);
+        }
+      });
+      return uniqueCourses;
     },
     buttonString() {
       return '+ COURSE';
     },
     semesterString() {
-      return '+ SEMESTER';
+      return `+ SEMESTER`;
     }
+
   },
   methods: {
     openCourseModal() {
@@ -207,20 +248,21 @@ export default {
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
       this.buildCautions();
     },
-    deleteCourse(courseCode) {
+    deleteCourse(uniqueID) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
+        if (this.courses[i].uniqueID === uniqueID) {
           this.courses.splice(i, 1);
           break;
         }
       }
+      const courseCode = `${this.subject} ${this.number}`;
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
       // Update requirements menu
-      this.$parent.$parent.updateRequirementsMenu();
+      this.$emit('update-requirements-menu');
     },
-    colorCourse(color, courseCode) {
+    colorCourse(color, uniqueID) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
+        if (this.courses[i].uniqueID === uniqueID) {
           this.courses[i].color = color;
           break;
         }
@@ -228,6 +270,15 @@ export default {
     },
     updateBar(course, colorJustChanged, color) {
       this.$emit('updateBar', course, colorJustChanged, color);
+    },
+    editCourseCredit(credit, uniqueID) {
+      for (let i = 0; i < this.courses.length; i += 1) {
+        if (this.courses[i].uniqueID === uniqueID) {
+          this.courses[i].credits = credit;
+          break;
+        }
+      }
+      this.$emit('update-requirements-menu');
     },
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
@@ -278,6 +329,18 @@ export default {
     deleteSemester(type, year) {
       this.$emit('delete-semester', type, year);
       this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
+    },
+    openEditSemesterModal() {
+      this.deleteSemType = this.type;
+      this.deleteSemYear = this.year;
+      this.deleteSemID = this.id;
+      const modal = document.getElementById(`editSemesterModal-${this.id}`);
+      modal.style.display = 'block';
+    },
+    editSemester(id) {
+      const seasonInput = document.getElementById(`season-placeholder-${this.id}`).innerHTML.trim(' ').split(' ')[0];
+      const yearInput = parseInt(document.getElementById(`year-placeholder-${this.id}`).innerHTML, 10);
+      this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
     }
   },
   directives: {
@@ -291,6 +354,7 @@ export default {
   border-color: #15a6cf;
   background: rgba(0, 0, 0, 0.03);
   color: #15a6cf;
+  cursor: pointer;
 }
 
 .semester {
@@ -364,7 +428,11 @@ export default {
     padding: 5px 0 8px 0;
     display: flex;
     position: relative;
-    cursor: pointer;
+    &:hover,
+    &:active,
+    &:focus {
+      cursor: pointer;
+    }
   }
 
   &-dot {
@@ -458,6 +526,11 @@ export default {
     }
   }
 
+  .season-emoji {
+    height: 18px;
+    margin-top: -4px;
+  }
+
   /* The Modal (background) */
   .semester-modal {
     display: none; /* Hidden by default */
@@ -500,7 +573,7 @@ export default {
     filter: alpha(opacity=20);
   }
 
-.semester-modal-delete {
+.semester-modal{
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -512,5 +585,24 @@ export default {
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
+}
+
+
+@media only screen and (max-width: 878px) {
+  .semester {
+    &-menu {
+      right: 0rem;
+    }
+    &-addWrapper {
+      width: 17rem;
+      &--compact {
+        width: 10.5rem;
+        height: 2rem;
+      }
+    }
+    &--min {
+      width: 18.75rem;
+    }
+  }
 }
 </style>

@@ -1,15 +1,24 @@
 <template>
+  <div>
   <div class="newSemester">
     <div class="newSemester-section newSemester-type">
       <label class="newSemester-label" for="type">{{ typeText }}</label>
       <div
-        class="newSemester-select"
+        v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="season"
-        :style="{ borderColor: displayOptions.season.boxBorder }"
         v-click-outside="closeSeasonDropdownIfOpen"
       >
         <div class="newSemester-dropdown-placeholder season-wrapper" @click="showHideSeasonContent">
           <div
+            v-if= "isEdit"
+            class="newSemester-dropdown-placeholder season-placeholder"
+            :id="'season-placeholder-' + id"
+            :style="{ color: displayOptions.season.placeholderColor }"
+          >
+            {{ seasonPlaceholder }}
+          </div>
+          <div
+            v-else
             class="newSemester-dropdown-placeholder season-placeholder"
             id="season-placeholder"
             :style="{ color: displayOptions.season.placeholderColor }"
@@ -28,13 +37,18 @@
           v-if="displayOptions.season.shown"
         >
           <div
+            v-bind:class="{ warning: isDuplicate}"
             v-for="season in seasons"
             :key="season"
             :id="season"
             class="newSemester-dropdown-content-item"
-            @click="selectSeason(season)"
+            @click="selectSeason(season[1])"
           >
-            {{ season }}
+          <img
+            v-bind:src='season[0]'
+            class= "newSemester-dropdown-content-season"
+          />
+            {{ season[1] }}
           </div>
         </div>
       </div>
@@ -42,13 +56,22 @@
     <div class="newSemester-section newSemester-year">
       <label class="newSemester-label" for="year">{{ yearText }}</label>
       <div
-        class="newSemester-select"
+        v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="year"
-        :style="{ borderColor: displayOptions.year.boxBorder }"
+
         v-click-outside="closeYearDropdownIfOpen"
       >
         <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
           <div
+            v-if="isEdit"
+            class="newSemester-dropdown-placeholder year-placeholder"
+            :id="'year-placeholder-' + id"
+            :style="{ color: displayOptions.year.placeholderColor }"
+          >
+            {{ yearPlaceholder }}
+          </div>
+          <div
+            v-else
             class="newSemester-dropdown-placeholder year-placeholder"
             id="year-placeholder"
             :style="{ color: displayOptions.year.placeholderColor }"
@@ -79,6 +102,9 @@
       </div>
     </div>
   </div>
+  <div v-if="isDuplicate() === true" class= "newSemester-duplicate" > <p> Duplicate Semester</p> </div>
+  </div>
+
 </template>
 
 <script>
@@ -96,14 +122,25 @@ const clickOutside = {
   }
 };
 
+const fall = require('../../assets/images/fallEmoji.svg');
+const spring = require('../../assets/images/springEmoji.svg');
+const winter = require('../../assets/images/winterEmoji.svg');
+const summer = require('../../assets/images/summerEmoji.svg');
+
 export default {
+  props: {
+    currentSemesters: Array,
+    id: Number,
+    isEdit: Boolean
+
+  },
   data() {
     // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
     const currentSeason = this.getCurrentSeason();
 
     // years
     const currentYear = new Date().getFullYear();
-    const seasons = ['🍂 Fall', '🌸 Spring', '☀️ Summer', '❄️ Winter'];
+    const seasons = [[fall, 'Fall'], [spring, 'Spring'], [summer, 'Summer'], [winter, 'Winter']];
     const years = [];
     let startYear = currentYear - 10;
     while (startYear <= currentYear + 10) {
@@ -151,13 +188,13 @@ export default {
       let currentSeason;
       const currentMonth = new Date().getMonth();
       if (currentMonth === 0) {
-        currentSeason = '❄️ Winter';
+        currentSeason = 'Winter';
       } else if (currentMonth <= 4) {
-        currentSeason = '🌸 Spring';
+        currentSeason = 'Spring';
       } else if (currentMonth <= 7) {
-        currentSeason = '☀️ Summer';
+        currentSeason = 'Summer';
       } else {
-        currentSeason = '🍂 Fall';
+        currentSeason = 'Fall';
       }
       return currentSeason;
     },
@@ -235,16 +272,36 @@ export default {
 
       // reset year dropdown
       this.resetDropdown('year');
+    },
+    isDuplicate() {
+      let isDup = false;
+      if (this.currentSemesters != null) {
+        this.currentSemesters.forEach(semester => {
+          if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder) {
+            isDup = true;
+          }
+          return semester;
+        });
+      }
+      return isDup;
     }
   }
 };
 </script>
 
 <style lang="scss">
+.duplicate-p {
+  color : red;
+}
+.duplicate {
+  border: 1px solid red;
+}
 .newSemester {
   display: flex;
   flex-direction: row;
-
+  &-duplicate {
+    color: red;
+  }
   &-section {
     font-size: 14px;
     line-height: 15px;
@@ -376,7 +433,7 @@ export default {
     margin-top: 3px;
 
     &.year-content {
-      width: 114px;
+      width: 100%;
       height: 223px;
       left: 574px;
       top: 209px;
@@ -387,7 +444,11 @@ export default {
 
       overflow: scroll;
     }
-
+    &-season {
+      padding-left: 0px;
+      padding-right: 10px;
+      height: 14px;
+    }
     &-item {
       width: 106px;
       height: 31px;

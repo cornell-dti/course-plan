@@ -4,9 +4,11 @@
       <div class="navbar-iconWrapper">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
       </div>
-      <div class="navbar-iconWrapper" id="profileIcon" @click="editProfile"></div>
+      <div class="navbar-iconWrapper desktop" id="profileIcon" @click="editProfile"></div>
     </div>
     <div class="navbar-bottom">
+      <div class="navbar-iconWrapper mobile" id="requirementsBar" @click="toggleRequirementsBar"></div>
+      <div class="navbar-iconWrapper mobile" id="profileIcon" @click="editProfile"></div>
       <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
     </div>
   </div>
@@ -31,6 +33,9 @@ export default {
     },
     editProfile() {
       this.$emit('editProfile');
+    },
+    toggleRequirementsBar() {
+      this.$emit('toggleRequirementsBar');
     }
   }
 };
@@ -62,7 +67,11 @@ export default {
   }
 }
 
+.pointer{
+  cursor: pointer;
+}
 #profileIcon {
+  cursor: pointer;
   background-image: url('~@/assets/images/navbar/profileIcon.svg');
 
   &:hover,
@@ -72,17 +81,31 @@ export default {
   }
 }
 
+#requirementsBar {
+  cursor: pointer;
+  background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
+  }
+}
+
 #star {
+  cursor: pointer;
   background-image: url('~@/assets/images/navbar/star.svg');
 
   &:hover,
   &:focus,
   &:active {
     background-image: url('~@/assets/images/navbar/starBlue.svg');
+
   }
 }
 
 #logout {
+  cursor: pointer;
   background-image: url('~@/assets/images/navbar/logout.svg');
 
   &:hover,
@@ -94,5 +117,58 @@ export default {
 
 .bottomPreview {
   padding-bottom: calc(2.25rem + 15px);
+}
+
+.mobile {
+  display: none;
+}
+
+@media only screen and (max-width: 878px) {
+  .navbar {
+    &-top {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    &-bottom {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      min-width: 35%;
+    }
+
+
+    &-iconWrapper {
+      &:not(:first-child) {
+        margin-top: 0rem;
+      }
+    }
+  }
+
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: flex;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .navbar {
+    #requirementsBar {
+      cursor: pointer;
+      background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
+
+      &:hover {
+        background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
+      }
+
+      &:focus,
+      &:active {
+        background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
+      }
+    }
+  }
 }
 </style>

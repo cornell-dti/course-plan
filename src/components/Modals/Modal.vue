@@ -10,6 +10,7 @@
         :is="body"
         :isOnboard="isOnboard"
         :semesterID="semesterID"
+        :currentSemesters="currentSemesters"
         ref="modalBodyComponent"
       ></component>
       <div class="modal-buttonWrapper">
@@ -25,10 +26,12 @@ import Vue from 'vue';
 import NewCourse from '@/components/Modals/NewCourse';
 import NewCustomCourse from '@/components/Modals/NewCustomCourse';
 import NewSemester from '@/components/Modals/NewSemester';
+import EditSemester from '@/components/Modals/EditSemester';
 
 Vue.component('newCourse', NewCourse);
 Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
+Vue.component('editSemester', EditSemester);
 
 export default {
   data() {
@@ -39,7 +42,8 @@ export default {
   },
   props: {
     type: String,
-    semesterID: Number
+    semesterID: Number,
+    currentSemesters: Array
   },
   computed: {
     contentId() {
@@ -84,6 +88,7 @@ export default {
       }
       modal.style.display = 'none';
     },
+    // Note: Currently not used
     checkCourseDuplicate(key) {
       this.$emit('check-course-duplicate', key);
     },
@@ -94,10 +99,7 @@ export default {
 
         // TODO: can I make the valid assumption that the course code is up to the colon in the title?
         const key = title.substring(0, title.indexOf(':'));
-        this.checkCourseDuplicate(key);
-        if (this.courseIsAddable) {
-          this.addCourse();
-        }
+        this.addCourse();
       } else if (this.type === 'semester') {
         this.addSemester();
       } else {
@@ -153,9 +155,8 @@ export default {
     addSemester() {
       const seasonInput = document.getElementById(`season-placeholder`);
       const yearInput = document.getElementById(`year-placeholder`);
-
       this.$parent.addSemester(
-        seasonInput.innerHTML.trim(' ').split(' ')[1],
+        seasonInput.innerHTML.trim(' ').split(' ')[0],
         parseInt(yearInput.innerHTML, 10)
       );
 
@@ -232,4 +233,11 @@ export default {
 #content-semester {
   width: 15.5rem;
 }
+
+@media only screen and (max-width: 600px) {
+  #content-course {
+    width: 100%;
+  }
+}
+
 </style>

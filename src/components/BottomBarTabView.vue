@@ -69,7 +69,8 @@ export default {
   props: {
     bottomCourses: Array,
     seeMoreCourses: Array,
-    isExpanded: Boolean
+    isExpanded: Boolean,
+    maxBottomBarTabs: Number
   },
 
   computed: {
@@ -107,7 +108,7 @@ export default {
     },
 
     moveToBottomBar(course) {
-      if (this.bottomCourses.length >= 4) {
+      if (this.bottomCourses.length >= this.maxBottomBarTabs) {
         const bottomCourseToMove = this.bottomCourses[this.bottomCourses.length - 1];
         // remove bottomCourseToMove from bottomCourses
         this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
@@ -117,7 +118,7 @@ export default {
       }
       // remove course from seeMoreCourses
       for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-        if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number) {
+        if (this.seeMoreCourses[i].uniqueID === course.uniqueID) {
           this.seeMoreCourses.splice(i, 1);
         }
       }
@@ -128,7 +129,7 @@ export default {
     deleteSeeMoreCourse(course) {
       // remove course from seeMoreCourses
       for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-        if (this.seeMoreCourses[i].subject === course.subject && this.seeMoreCourses[i].number === course.number) {
+        if (this.seeMoreCourses[i].uniqueID === course.uniqueID) {
           this.seeMoreCourses.splice(i, 1);
         }
       }
@@ -233,6 +234,24 @@ export default {
       display:block;
     }
   }
-
+}
+@media only screen and (max-width: 600px) {
+  .bottombartabview {
+    &-seeMoreWrapper {
+      .bottombarSeeMoreTab {
+        width: 100%;
+        height: fit-content;
+      }
+    }
+    .bottombarSeeMoreOptions {
+      width: 100%;
+      .seeMoreCourse {
+        &-option {
+          width: 100%;
+          height: fit-content;
+        }
+      }
+    }
+  }
 }
 </style>

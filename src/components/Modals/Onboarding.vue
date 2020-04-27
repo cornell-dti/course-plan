@@ -33,11 +33,11 @@
           <div class="onboarding-bottom--contents">
             <button class="onboarding-button" @click="goBack"> Prev </button>
             <button class="onboarding-button" @click="goNext">Next</button>
-          </div>
         </div>
-        <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">Please fill out all required fields and try again.</div>
-      </div>
     </div>
+    <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">Please fill out all required fields and try again.</div>
+  </div>
+  </div>
   </div>
 </template>
 
@@ -207,7 +207,9 @@ export default {
             class: this.notPlaceholderOptions(this.displayOptions.class)
           }
         };
-
+        console.log(this.displayOptions.major);
+        console.log(onboardingData.userData.majors);
+        console.log(onboardingData.userData.colleges);
         this.$emit('onboard', onboardingData);
       }
     },
@@ -234,7 +236,6 @@ export default {
           list.push(obj);
         }
       });
-
       return list;
     },
     goBack() {
@@ -244,7 +245,7 @@ export default {
       this.currentPage = (this.currentPage + 1 === 4) ? 3 : this.currentPage + 1;
       console.log(this.currentPage);
     },
-    updateBasic(newMajor, newMinor, newCollege) {
+    updateBasic(newMajor, newCollege, newMinor) {
       this.displayOptions.major = newMajor;
       this.displayOptions.minor = newMinor;
       this.displayOptions.college = newCollege;
@@ -257,9 +258,7 @@ export default {
 
   }
 };
-
 </script>
-
 <style scoped lang="scss">
   @import '@/components/Modals/Onboarding.scss';
 </style>

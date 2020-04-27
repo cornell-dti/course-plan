@@ -41,7 +41,7 @@ export default {
 
   computed: {
     text() {
-      return 'Are you sure you want to delete this semester? You cannot undo this action.';
+      return 'Are you sure you want to delete this semester?';
     },
     cancel() {
       return 'Cancel';
@@ -143,6 +143,14 @@ export default {
       display: flex;
       justify-content: center;
       cursor: pointer;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .deleteSemesterModal {
+    &-content {
+      width: 100%;
     }
   }
 }
