@@ -56,7 +56,7 @@
         v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar"
+        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :semesters="semesters"
         :activatedCourse="activatedCourse" @delete-semester="deleteSemester" @edit-semester="editSemester" />
       </div>
       <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
