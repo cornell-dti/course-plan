@@ -29,6 +29,7 @@
       :deleteSemYear="deleteSemYear"
       ref="modalBodyComponent"
     />
+    <button v-if="isFirstSem" class="semester-addSemesterButton" @click="openSemesterModal">+ New Semester</button>
     <div class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
@@ -151,7 +152,8 @@ export default {
     courses: Array,
     compact: Boolean,
     activatedCourse: Object,
-    semesters: Array
+    semesters: Array,
+    isFirstSem: Boolean
   },
 
   mounted() {
@@ -240,6 +242,12 @@ export default {
       const input = document.getElementById(`dropdown-${this.id}`);
       input.value = '';
       input.focus();
+    },
+    openSemesterModal() {
+      // Delete confirmation for the use case of adding multiple semesters consecutively
+      this.closeConfirmationModal();
+
+      this.$emit('new-semester');
     },
     openConfirmationModal(msg) {
       // Set text and display confirmation modal, then have it disappear after 5 seconds
@@ -376,6 +384,17 @@ export default {
   width: fit-content;
   position: relative;
   border-radius: 11px;
+
+  &-addSemesterButton {
+    background: #508197;
+    border-radius: 8px;
+    height: 2.5rem;
+    width: 9rem;
+    color: #ffffff;
+    border: none;
+    position: absolute;
+    top: -3.5rem;
+  }
 
   &-content {
     padding: 0.875rem 0;

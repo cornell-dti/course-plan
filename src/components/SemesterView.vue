@@ -6,11 +6,12 @@
     :key="key"
   >
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" :currentSemesters="semesters" />
-    <div class="semesterView-settings">
-      <button class="semesterView-button" @click="openSemesterModal">+ New Semester</button>
+    <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
+      <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">+ New Semester</button>
       <div class="semesterView-switch">
-        <span class="semesterView-switchText">View:</span>
+        <span v-if="!isMobile" class="semesterView-switchText">View:</span>
         <div class="semesterView-switchImage semesterView-twoColumn"
+          v-if="!isMobile"
           @click="setNotCompact"
           :class="{ 'semesterView-twoColumn--active': !compact }"
         >
@@ -40,7 +41,9 @@
           v-bind="sem"
           :activatedCourse="activatedCourse"
           :semesters="semesters"
+          :isFirstSem="checkIfFirstSem(sem.id)"
           @updateBar="updateBar"
+          @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
@@ -55,8 +58,18 @@
         v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :compact="compact" @updateBar="updateBar" :semesters="semesters"
-        :activatedCourse="activatedCourse" @delete-semester="deleteSemester" @edit-semester="editSemester" />
+        <semester
+          v-bind="sem"
+          :compact="compact"
+          :activatedCourse="activatedCourse"
+          :semesters="semesters"
+          :isFirstSem="checkIfFirstSem(sem.id)"
+          @updateBar="updateBar"
+          @new-semester="openSemesterModal"
+          @delete-semester="deleteSemester"
+          @edit-semester="editSemester"
+          @update-requirements-menu="updateRequirementsMenu"
+        />
       </div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
@@ -125,7 +138,15 @@ export default {
   beforeDestroy() {
     this.$el.removeEventListener('click', this.closeAllModals);
   },
+  computed: {
+    noSemesters() {
+      return this.semesters.length === 0;
+    }
+  },
   methods: {
+    checkIfFirstSem(id) {
+      return this.semesters[0].id === id;
+    },
     setCompact() {
       if (!this.compact) {
         this.$emit('compact-updated', !this.compact);
@@ -322,7 +343,7 @@ export default {
     margin: 0 -0.75rem;
   }
 
-  &-button {
+  &-addSemesterButton {
     background: #508197;
     border-radius: 8px;
     height: 2.5rem;
@@ -333,8 +354,13 @@ export default {
 
   &-settings {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin-bottom: 1rem;
+    min-height: 2.25rem;
+
+    &--two {
+      justify-content: space-between;
+    }
   }
 
   &-switch {
