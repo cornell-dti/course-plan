@@ -39,7 +39,7 @@
           <div
             v-bind:class="{ warning: isDuplicate}"
             v-for="season in seasons"
-            :key="season"
+            :key="seasonValue(season)"
             :id="season"
             class="newSemester-dropdown-content-item"
             @click="selectSeason(season[1])"
@@ -127,6 +127,14 @@ const spring = require('../../assets/images/springEmoji.svg');
 const winter = require('../../assets/images/winterEmoji.svg');
 const summer = require('../../assets/images/summerEmoji.svg');
 
+// enum to define seasons as integers in season order
+const SeasonsEnum = Object.freeze({
+  winter: 0,
+  spring: 1,
+  summer: 2,
+  fall: 3
+});
+
 export default {
   props: {
     currentSemesters: Array,
@@ -185,6 +193,9 @@ export default {
     'click-outside': clickOutside
   },
   methods: {
+    seasonValue(season) {
+      return SeasonsEnum[season[1].toLowerCase()];
+    },
     getCurrentSeason() {
       let currentSeason;
       const currentMonth = new Date().getMonth();

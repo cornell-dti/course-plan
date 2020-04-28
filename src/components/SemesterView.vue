@@ -233,10 +233,15 @@ export default {
       return -1;
     },
     editSemester(id, type, year) {
-      this.semesters[id - 1].type = type;
-      this.semesters[id - 1].year = year;
-      this.semesters = this.semesters.sort(this.compare);
       let count = 1;
+      for (let i = 0; i < this.semesters.length; i += 1) {
+        if (this.semesters[i].id === id) {
+          const currSemester = this.semesters[i];
+          currSemester.type = type;
+          currSemester.year = year;
+        }
+      }
+      this.semesters = this.semesters.sort(this.compare);
       this.semesters.forEach(sem => {
         sem.id = count;
         count += 1;
