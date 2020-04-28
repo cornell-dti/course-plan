@@ -1,7 +1,7 @@
 <template>
   <div
     class="semester"
-    :class="{ 'semester--min': !isNotSemesterButton, 'semester--compact': compact }"
+    :class="{ 'semester--compact': compact }"
     :id="id"
   >
     <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" ref="modal" />
@@ -29,7 +29,7 @@
       :deleteSemYear="deleteSemYear"
       ref="modalBodyComponent"
     />
-    <div v-if="isNotSemesterButton" class="semester-content">
+    <div class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
           <span class="semester-name"><img class="season-emoji" :src='seasonImg[type]' alt=""> {{ type }} {{ year }}</span>
@@ -75,16 +75,6 @@
             buttonString
           }}</span>
         </div>
-      </div>
-    </div>
-    <div v-if="!isNotSemesterButton" class="semester-empty" @click="openSemesterModal">
-      <div
-        class="semester-semesterWrapper"
-        :class="{ 'semester-semesterWrapper--compact': compact }"
-      >
-        <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
-          semesterString
-        }}</span>
       </div>
     </div>
     <semestermenu
@@ -159,7 +149,6 @@ export default {
     type: String,
     year: Number,
     courses: Array,
-    isNotSemesterButton: Boolean,
     compact: Boolean,
     activatedCourse: Object,
     semesters: Array
@@ -236,12 +225,8 @@ export default {
       return uniqueCourses;
     },
     buttonString() {
-      return '+ COURSE';
-    },
-    semesterString() {
-      return `+ SEMESTER`;
+      return '+ Course';
     }
-
   },
   methods: {
     openCourseModal() {
@@ -255,12 +240,6 @@ export default {
       const input = document.getElementById(`dropdown-${this.id}`);
       input.value = '';
       input.focus();
-    },
-    openSemesterModal() {
-      // Delete confirmation for the use case of adding multiple semesters consecutively
-      this.closeConfirmationModal();
-
-      this.$parent.openSemesterModal();
     },
     openConfirmationModal(msg) {
       // Set text and display confirmation modal, then have it disappear after 5 seconds
@@ -404,41 +383,12 @@ export default {
     border-radius: 11px;
   }
 
-  &--min {
-    border: 2px dashed #d8d8d8;
-    padding: 0;
-    width: 23.75rem;
-    height: 9.38rem;
-    color: #d8d8d8;
-    &:hover,
-    &:active,
-    &:focus {
-      @include hover-button();
-    }
-
-    // specific dimensions for min compact semester
-    &.semester--compact {
-      width: 13rem;
-      height: 3.5rem;
-      margin-top: .875rem;
-      margin-left: 1.125rem;
-      margin-right: 1.125rem;
-    }
-  }
-
   &--compact {
     padding: 0.875rem 1.125rem;
   }
 
   &-confirmation {
     display: none;
-  }
-
-  &-empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
   }
 
   &-top {
@@ -626,9 +576,6 @@ export default {
         width: 10.5rem;
         height: 2rem;
       }
-    }
-    &--min {
-      width: 18.75rem;
     }
   }
 }

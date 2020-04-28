@@ -6,19 +6,22 @@
     :key="key"
   >
     <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" :currentSemesters="semesters" />
-    <div class="semesterView-switch">
-      <span class="semesterView-switchText">View:</span>
-      <div class="semesterView-switchImage semesterView-twoColumn"
-        @click="setNotCompact"
-        :class="{ 'semesterView-twoColumn--active': !compact }"
-      >
-      </div>
-      <div
-        class="semesterView-switchImage semesterView-fourColumn"
-        v-if="!isMobile"
-        @click="setCompact"
-        :class="{ 'semesterView-fourColumn--active': compact }"
-      >
+    <div class="semesterView-settings">
+      <button class="semesterView-button" @click="openSemesterModal">+ New Semester</button>
+      <div class="semesterView-switch">
+        <span class="semesterView-switchText">View:</span>
+        <div class="semesterView-switchImage semesterView-twoColumn"
+          @click="setNotCompact"
+          :class="{ 'semesterView-twoColumn--active': !compact }"
+        >
+        </div>
+        <div
+          class="semesterView-switchImage semesterView-fourColumn"
+          v-if="!isMobile"
+          @click="setCompact"
+          :class="{ 'semesterView-fourColumn--active': compact }"
+        >
+        </div>
       </div>
     </div>
     <confirmation
@@ -35,7 +38,6 @@
       <div v-for="sem in semesters" :key="sem.id" class="semesterView-wrapper">
         <semester
           v-bind="sem"
-          :isNotSemesterButton="true"
           :activatedCourse="activatedCourse"
           :semesters="semesters"
           @updateBar="updateBar"
@@ -45,9 +47,6 @@
           @update-requirements-menu="updateRequirementsMenu"
         />
       </div>
-      <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
-      </div>
       <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
     <!-- TODO: investigate if there needs to be two different content divs with two sets of semesters -->
@@ -56,11 +55,8 @@
         v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :semesters="semesters"
+        <semester v-bind="sem" :compact="compact" @updateBar="updateBar" :semesters="semesters"
         :activatedCourse="activatedCourse" @delete-semester="deleteSemester" @edit-semester="editSemester" />
-      </div>
-      <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
       </div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
@@ -326,12 +322,25 @@ export default {
     margin: 0 -0.75rem;
   }
 
+  &-button {
+    background: #508197;
+    border-radius: 8px;
+    height: 2.5rem;
+    width: 9rem;
+    color: #ffffff;
+    border: none;
+  }
+
+  &-settings {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
   &-switch {
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 1rem;
     color: #858585;
+    align-items: center;
   }
 
   &-switchText {
