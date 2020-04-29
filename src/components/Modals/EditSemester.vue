@@ -106,6 +106,7 @@ export default {
   &-exit {
     width: 10.5px;
     height: 10.5px;
+    cursor: pointer;
   }
 
   &-title {
