@@ -15,7 +15,7 @@
         <div class="container p-0 m-0">
             <div class="row top-bar phonepad no-gutters">
                 <div class="col">
-                    <div class="row no-gutters top-section"><h1 class="plan-head mt-5">Plan Your Courses Ahead</h1></div>
+                    <div class="row no-gutters top-section"><h1 class="plan-head mt-5" data-intro='Hello step one!'>Plan Your Courses Ahead</h1></div>
                     <div class="row no-gutters top-section"><p class="plan-subhead">Introducing the new and easiest way to plan courses at Cornell</p></div>
                     <div class="row justify-content-center">
                         <div class="col top-section" >
@@ -23,7 +23,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 top-section image-wrapper image-wrapper--laptop">
+                <div class="col-12 col-md-6 top-section image-wrapper image-wrapper--laptop" data-intro='Hello step one!'>
                     <img style="position:relative" class="laptop" src="@/assets/images/laptop.png" alt = "laptop preview" />
                 </div>
             </div>
@@ -118,6 +118,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import firebase, { User } from 'firebase/app';
+// @ts-ignore
+import introJs from 'intro.js';
 
 // eslint-disable-next-line import/extensions
 import Footer from '@/components/Footer.vue';
@@ -154,6 +156,9 @@ export default Vue.extend({
       performingRequest: false,
       errorMsg: undefined
     };
+  },
+  mounted() {
+    introJs().start();
   },
   methods: {
     socialLogin() {
