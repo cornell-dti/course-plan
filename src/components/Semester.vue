@@ -270,6 +270,11 @@ export default {
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
       this.buildCautions();
+      this.$gtag.event('add-course', {
+        event_category: 'course',
+        event_label: 'add',
+        value: 1
+      });
     },
     deleteCourse(subject, number, uniqueID) {
       for (let i = 0; i < this.courses.length; i += 1) {
@@ -280,6 +285,11 @@ export default {
       }
       const courseCode = `${subject} ${number}`;
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
+      this.$gtag.event('delete-course', {
+        event_category: 'course',
+        event_label: 'delete',
+        value: 1
+      });
       // Update requirements menu
       this.$emit('update-requirements-menu');
     },
