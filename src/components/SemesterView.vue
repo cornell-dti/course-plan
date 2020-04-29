@@ -150,11 +150,21 @@ export default {
     setCompact() {
       if (!this.compact) {
         this.$emit('compact-updated', !this.compact);
+        this.$gtag.event('to-compact', {
+          event_category: 'views',
+          event_label: 'compact',
+          value: 1
+        });
       }
     },
     setNotCompact() {
       if (this.compact) {
         this.$emit('compact-updated', !this.compact);
+        this.$gtag.event('to-not-compact', {
+          event_category: 'views',
+          event_label: 'not-compact',
+          value: 1
+        });
       }
     },
     buildDuplicateCautions() {
@@ -223,6 +233,12 @@ export default {
       }
       this.semesters.splice(i, 0, newSem);
 
+      this.$gtag.event('add-semester', {
+        event_category: 'semester',
+        event_label: 'add',
+        value: 1
+      });
+
       this.openSemesterConfirmationModal(type, year, true);
     },
     deleteSemester(type, year) {
@@ -232,6 +248,13 @@ export default {
           break;
         }
       }
+      this.$gtag.event('delete-semester', {
+        event_category: 'semester',
+        event_label: 'delete',
+        value: 1
+      });
+
+      // Confirm success with alert
       this.openSemesterConfirmationModal(type, year, false);
 
       // Update requirements menu from dashboard
@@ -346,8 +369,8 @@ export default {
   &-addSemesterButton {
     background: #508197;
     border-radius: 8px;
-    height: 2.5rem;
-    width: 9rem;
+    min-height: 2.5rem;
+    min-width: 9rem;
     color: #ffffff;
     border: none;
   }
