@@ -17,6 +17,7 @@ Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
 
+// Enable Google analytics with custom events
 Vue.use(VueGtag, {
   config: { id: 'UA-124837875-2' }
 });
