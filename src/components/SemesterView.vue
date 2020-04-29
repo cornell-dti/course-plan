@@ -346,8 +346,8 @@ export default {
   &-addSemesterButton {
     background: #508197;
     border-radius: 8px;
-    height: 2.5rem;
-    width: 9rem;
+    min-height: 2.5rem;
+    min-width: 9rem;
     color: #ffffff;
     border: none;
   }
