@@ -1,7 +1,7 @@
 <template>
   <div
     class="semester"
-    :class="{ 'semester--min': !isNotSemesterButton, 'semester--compact': compact }"
+    :class="{ 'semester--compact': compact }"
     :id="id"
   >
     <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" ref="modal" />
@@ -12,40 +12,58 @@
     />
     <deletesemester
       :id="'deleteSemesterModal-' + id"
-      class="semester-modal-delete"
+      class="semester-modal"
       @delete-semester="deleteSemester"
       :deleteSemID="deleteSemID"
       :deleteSemType="deleteSemType"
       :deleteSemYear="deleteSemYear"
       ref="deletesemester"
     />
-    <div v-if="isNotSemesterButton" class="semester-content">
+    <editsemester
+      :id="'editSemesterModal-' + id"
+      class="semester-modal"
+      @edit-semester="editSemester"
+      :semesters="semesters"
+      :deleteSemID="deleteSemID"
+      :deleteSemType="deleteSemType"
+      :deleteSemYear="deleteSemYear"
+      ref="modalBodyComponent"
+    />
+    <button v-if="isFirstSem" class="semester-addSemesterButton" @click="openSemesterModal">+ New Semester</button>
+    <div class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
-          <span class="semester-name">{{ type }} {{ year }}</span>
+          <span class="semester-name"><img class="season-emoji" :src='seasonImg[type]' alt=""> {{ type }} {{ year }}</span>
           <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
           <div class="semester-dotRow" @click="openSemesterMenu">
-            <span class="semester-dot semester-dot--menu"></span>
-            <span class="semester-dot semester-dot--menu"></span>
-            <span class="semester-dot semester-dot--menu"></span>
+            <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
         </div>
       </div>
       <div class="semester-courses">
-        <div class="draggable-semester-courses" v-dragula="courses" bag="first-bag">
-          <div v-for="course in courses" :key="course.id" class="semester-courseWrapper">
+        <div
+          class="draggable-semester-courses"
+          v-dragula="courses"
+          bag="first-bag"
+          :semId="id"
+          :style="{height: courseContainerHeight + 'rem' }"
+          >
+          <div v-for="course in courses" :key="course.uniqueID" class="semester-courseWrapper">
             <course
               v-bind="course"
               :courseObj="course"
               :id="course.subject + course.number"
+              :uniqueID="course.uniqueID"
               :compact="compact"
-              :active="activatedCourse.subject === course.subject && activatedCourse.number === course.number"
+              :active="activatedCourse.uniqueID === course.uniqueID"
               class="semester-course"
+              :semId="id"
               @delete-course="deleteCourse"
               @color-course="colorCourse"
               @updateBar="updateBar"
+              @edit-course-credit="editCourseCredit"
             />
           </div>
         </div>
@@ -54,26 +72,17 @@
           :class="{ 'semester-addWrapper--compact': compact }"
           @click="openCourseModal"
         >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
+          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" >{{
             buttonString
           }}</span>
         </div>
-      </div>
-    </div>
-    <div v-if="!isNotSemesterButton" class="semester-empty" @click="openSemesterModal">
-      <div
-        class="semester-semesterWrapper"
-        :class="{ 'semester-semesterWrapper--compact': compact }"
-      >
-        <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
-          semesterString
-        }}</span>
       </div>
     </div>
     <semestermenu
       v-if="semesterMenuOpen"
       class="semester-menu"
       @open-delete-semester-modal="openDeleteSemesterModal"
+      @open-edit-semester-modal="openEditSemesterModal"
       v-click-outside="closeSemesterMenuIfOpen" />
   </div>
 </template>
@@ -85,16 +94,23 @@ import Modal from '@/components/Modals/Modal';
 import Confirmation from '@/components/Confirmation';
 import SemesterMenu from '@/components/Modals/SemesterMenu';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
+import EditSemester from '@/components/Modals/EditSemester';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
 Vue.component('semestermenu', SemesterMenu);
 Vue.component('deletesemester', DeleteSemester);
+Vue.component('editsemester', EditSemester);
+
+const fall = require('../assets/images/fallEmoji.svg');
+const spring = require('../assets/images/springEmoji.svg');
+const winter = require('../assets/images/winterEmoji.svg');
+const summer = require('../assets/images/summerEmoji.svg');
 
 const clickOutside = {
   bind(el, binding, vnode) {
-    el.event = function (event) {
+    el.event = event => {
       if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event);
       }
@@ -112,13 +128,21 @@ export default {
     return {
       confirmationText: '',
       scrollable: true,
-
       semesterMenuOpen: false,
       stopCloseFlag: false,
 
       deleteSemID: 0,
       deleteSemType: '',
-      deleteSemYear: 0
+      deleteSemYear: 0,
+      isShadow: false,
+      isDraggedFrom: false,
+
+      seasonImg: {
+        Fall: fall,
+        Spring: spring,
+        Winter: winter,
+        Summer: summer
+      }
     };
   },
   props: {
@@ -126,21 +150,35 @@ export default {
     type: String,
     year: Number,
     courses: Array,
-    isNotSemesterButton: Boolean,
     compact: Boolean,
-    activatedCourse: Object
+    activatedCourse: Object,
+    semesters: Array,
+    isFirstSem: Boolean
   },
 
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
-
     const service = Vue.$dragula.$service;
-
-    service.eventBus.$on('drag', () => {
-      this.scrollable = false;
+    service.eventBus.$on('drag', data => {
+      if (parseInt(data.container.getAttribute('semId'), 10) === this.id) {
+        this.isDraggedFrom = true;
+      }
+      this.scrollable = true;
+      this.isShadow = false;
     });
     service.eventBus.$on('drop', () => {
       this.scrollable = true;
+    });
+    service.eventBus.$on('shadow', data => {
+      if (parseInt(data.container.getAttribute('semId'), 10) === this.id) {
+        this.isShadow = true;
+      } else {
+        this.isShadow = false;
+      }
+    });
+    service.eventBus.$on('dragend', () => {
+      this.isShadow = false;
+      this.isDraggedFrom = false;
     });
 
     this.buildCautions();
@@ -151,19 +189,45 @@ export default {
   },
 
   computed: {
-    // TODO: calculate credits from all classes
+    // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
+    courseContainerHeight() {
+      let factor = 6.1;
+      let extraIncrementer = 0;
+      if (this.isShadow) {
+        extraIncrementer += 1;
+      }
+      if (this.isDraggedFrom) {
+        extraIncrementer -= 1;
+      }
+      if (this.compact) {
+        factor = 2.6;
+      }
+      return (this.courses.length + 1 + extraIncrementer) * factor;
+    },
     creditString() {
       let credits = 0;
       this.courses.forEach(course => {
         credits += course.credits;
       });
+      if (credits === 1) {
+        return `${credits.toString()} credit`;
+      }
       return `${credits.toString()} credits`;
     },
-    buttonString() {
-      return '+ COURSE';
+    // Note: Currently not used
+    deleteDuplicateCourses() {
+      const uniqueCoursesNames = [];
+      const uniqueCourses = [];
+      this.courses.forEach(course => {
+        if (uniqueCoursesNames.indexOf(course.name) === -1) {
+          uniqueCourses.push(course);
+          uniqueCoursesNames.push(course.name);
+        }
+      });
+      return uniqueCourses;
     },
-    semesterString() {
-      return '+ SEMESTER';
+    buttonString() {
+      return '+ Course';
     }
   },
   methods: {
@@ -183,7 +247,7 @@ export default {
       // Delete confirmation for the use case of adding multiple semesters consecutively
       this.closeConfirmationModal();
 
-      this.$parent.openSemesterModal();
+      this.$emit('new-semester');
     },
     openConfirmationModal(msg) {
       // Set text and display confirmation modal, then have it disappear after 5 seconds
@@ -207,27 +271,37 @@ export default {
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
       this.buildCautions();
     },
-    deleteCourse(courseCode) {
+    deleteCourse(subject, number, uniqueID) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
+        if (this.courses[i].uniqueID === uniqueID) {
           this.courses.splice(i, 1);
           break;
         }
       }
+      const courseCode = `${subject} ${number}`;
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
       // Update requirements menu
-      this.$parent.$parent.updateRequirementsMenu();
+      this.$emit('update-requirements-menu');
     },
-    colorCourse(color, courseCode) {
+    colorCourse(color, uniqueID) {
       for (let i = 0; i < this.courses.length; i += 1) {
-        if (`${this.courses[i].subject} ${this.courses[i].number}` === courseCode) {
+        if (this.courses[i].uniqueID === uniqueID) {
           this.courses[i].color = color;
           break;
         }
       }
     },
-    updateBar(course) {
-      this.$emit('updateBar', course);
+    updateBar(course, colorJustChanged, color) {
+      this.$emit('updateBar', course, colorJustChanged, color);
+    },
+    editCourseCredit(credit, uniqueID) {
+      for (let i = 0; i < this.courses.length; i += 1) {
+        if (this.courses[i].uniqueID === uniqueID) {
+          this.courses[i].credits = credit;
+          break;
+        }
+      }
+      this.$emit('update-requirements-menu');
     },
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
@@ -278,6 +352,18 @@ export default {
     deleteSemester(type, year) {
       this.$emit('delete-semester', type, year);
       this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
+    },
+    openEditSemesterModal() {
+      this.deleteSemType = this.type;
+      this.deleteSemYear = this.year;
+      this.deleteSemID = this.id;
+      const modal = document.getElementById(`editSemesterModal-${this.id}`);
+      modal.style.display = 'block';
+    },
+    editSemester(id) {
+      const seasonInput = document.getElementById(`season-placeholder-${this.id}`).innerHTML.trim(' ').split(' ')[0];
+      const yearInput = parseInt(document.getElementById(`year-placeholder-${this.id}`).innerHTML, 10);
+      this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
     }
   },
   directives: {
@@ -291,33 +377,29 @@ export default {
   border-color: #15a6cf;
   background: rgba(0, 0, 0, 0.03);
   color: #15a6cf;
+  cursor: pointer;
 }
 
 .semester {
-  padding: 0.875rem 1.125rem;
-  border: 2px solid #d8d8d8;
-  border-radius: 11px;
   width: fit-content;
   position: relative;
+  border-radius: 11px;
 
-  &--min {
-    border: 2px dashed #d8d8d8;
-    padding: 0;
-    width: 23.75rem;
-    height: 9.38rem;
-    color: #d8d8d8;
+  &-addSemesterButton {
+    background: #508197;
+    border-radius: 8px;
+    height: 2.5rem;
+    width: 9rem;
+    color: #ffffff;
+    border: none;
+    position: absolute;
+    top: -3.5rem;
+  }
 
-    &:hover,
-    &:active,
-    &:focus {
-      @include hover-button();
-    }
-
-    // specific dimensions for min compact semester
-    &.semester--compact {
-      width: 13rem;
-      height: 3.5rem;
-    }
+  &-content {
+    padding: 0.875rem 0;
+    border: 2px solid #d8d8d8;
+    border-radius: 11px;
   }
 
   &--compact {
@@ -328,21 +410,12 @@ export default {
     display: none;
   }
 
-  &-empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-
   &-top {
     display: flex;
     justify-content: space-between;
     color: #858585;
-
-    &--compact {
-      flex-direction: column;
-    }
+    margin-left: 1.125rem;
+    margin-right: 1.125rem;
   }
 
   &-left {
@@ -361,28 +434,13 @@ export default {
   }
 
   &-dotRow {
-    padding: 5px 0 8px 0;
+    padding: 8px 0;
     display: flex;
     position: relative;
-    cursor: pointer;
-  }
-
-  &-dot {
-    opacity: 0.8;
-    height: 2px;
-    width: 2px;
-    background-color: white;
-    border-radius: 50%;
-    display: inline-block;
-    margin-bottom: 2px;
-    margin-top: 2px;
-
-    &--menu {
-      width: 5px;
-      height: 5px;
-      background-color: #c4c4c4;
-      opacity: 1;
-      margin: 0 2px;
+    &:hover,
+    &:active,
+    &:focus {
+      cursor: pointer;
     }
   }
 
@@ -426,6 +484,7 @@ export default {
   }
 
   &-addWrapper {
+    margin-top: -5rem;
     width: 21.375rem;
     height: 4.625rem;
     border-radius: 0.5rem;
@@ -434,8 +493,11 @@ export default {
     align-items: center;
     border: 2px dashed #d8d8d8;
     color: #d8d8d8;
+    margin-left: 1.125rem;
+    margin-right: 1.125rem;
 
     &--compact {
+      margin-top: -1.2rem;
       width: 10.5rem;
       height: 2rem;
     }
@@ -458,6 +520,11 @@ export default {
     }
   }
 
+  .season-emoji {
+    height: 18px;
+    margin-top: -4px;
+  }
+
   /* The Modal (background) */
   .semester-modal {
     display: none; /* Hidden by default */
@@ -474,6 +541,8 @@ export default {
 
   .draggable-semester-courses {
     padding-top: 5px;
+    padding-left: 1.125rem;
+    padding-right: 1.125rem;
   }
 
   //Styling for drag and drop components and movement
@@ -500,7 +569,7 @@ export default {
     filter: alpha(opacity=20);
   }
 
-.semester-modal-delete {
+.semester-modal{
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -512,5 +581,21 @@ export default {
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
+}
+
+
+@media only screen and (max-width: 878px) {
+  .semester {
+    &-menu {
+      right: 0rem;
+    }
+    &-addWrapper {
+      width: 17rem;
+      &--compact {
+        width: 10.5rem;
+        height: 2rem;
+      }
+    }
+  }
 }
 </style>

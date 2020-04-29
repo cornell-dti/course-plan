@@ -1,222 +1,271 @@
 <template v-if="semesters">
   <div class="requirements">
-    <div class="fixed" :class="{ bottomPreview: isBottomPreview && !isBottomBar, bottomBar: isBottomBar }">
+    <div class="fixed">
     <h1 class="title">School Requirements</h1>
-
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
-      <div class="row top">
-        <p class="name col p-0">{{ req.name }} <span class="specific" v-if="req.specific">({{ req.specific }})</span></p>
+
+      <!-- TODO change for multiple colleges -->
+      <div v-if="index<=2 || index == 2 + majors.length" class="row top">
+        <p class="name col p-0">{{ req.name }}</p>
       </div>
-
-      <!-- progress bar settings -->
-      <div class="progress">
-        <div
-          class="progress-bar"
-          :style="{ 'background-color': `#${req.color}`, width: `${(req.fulfilled/req.required)*100}%`}"
-          role="progressbar"
-        ></div>
-      </div>
-
-      <p class="progress-text">
-        <strong>{{ req.fulfilled }}/{{ req.required }}</strong>
-        Total {{ req.type }} Inputted on Schedule
-      </p>
-
-      <!--View more college requirements -->
-      <div class="row top">
-        <div class="col-1 p-0" >
-          <button :style="{ 'color': `#${req.color}` }" class="btn" @click="toggleDetails(index)" style="color:#1AA9A5;">
-            <!-- svg for dropdown icon -->
-            <img
-              v-if="req.displayDetails"
-              class="arrow arrow-down"
-              src="@/assets/images/dropdown-blue.svg"
-              alt="dropdown"
-            />
-            <img
-              v-else
-              class="arrow"
-              src="@/assets/images/dropright-blue.svg"
-              alt="dropdown"
-            />
-          </button>
+        <!-- TODO change for multiple colleges -->
+        <div v-if="index==2" class="major">
+          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
+            @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
+            <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
+            <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
+          </div>
         </div>
-         <div class="col p-0 ">
-          <button class="btn req-name" :style="{ 'color': `#${req.color}` }" @click="toggleDetails(index)">{{ (req.displayDetails) ? "HIDE" : "VIEW" }} ALL {{ req.group }} REQUIREMENTS</button>
+        <div v-if="index==2+majors.length" class="minor">
+          <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
+            @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
+            <p :style="{'font-weight': minor.display ? '500' : '', 'color' : minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
+            <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
+          </div>
         </div>
-      </div>
 
-      <!--Show more of completed requirements -->
-      <div v-if="req.displayDetails">
-        <p class="sub-title">On-Going Requirements</p>
-        <div class="separator"></div>
-        <div
-          v-for="(subReq, id) in req.ongoing"
-          :key="subReq.id">
-          <div class="row depth-req">
-            <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
-              <button class="btn">
+        <!-- progress bar settings -->
+        <div v-if="showMajorOrMinorRequirements(index, req.group)" >
+          <div class="progress">
+            <div
+              class="progress-bar"
+              :style="{ 'background-color': `#${reqGroupColorMap[req.group][0]}`, width: `${(req.fulfilled/req.required)*100}%`}"
+              role="progressbar"
+            ></div>
+          </div>
+
+          <p class="progress-text">
+            <span class="progress-text-credits">{{ req.fulfilled }}/{{ req.required }}</span>
+            <span class="progress-text-text"> Total {{ req.type }} Inputted on Schedule</span>
+          </p>
+
+          <!--View more college requirements -->
+          <div class="row top">
+            <div class="col-1 p-0" >
+              <button :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" class="btn" @click="toggleDetails(index)">
                 <!-- svg for dropdown icon -->
                 <img
-                  v-if="subReq.displayDescription"
-                  class="arrow arrow-down"
-                  src="@/assets/images/dropdown.svg"
-                  alt="dropdown"
+                  v-if="req.displayDetails"
+                  class="arrow arrow-up"
+                  :src="require(`@/assets/images/dropup-${reqGroupColorMap[req.group][1]}.svg`)"
+                  alt="dropup"
                 />
                 <img
                   v-else
-                  class="arrow"
-                  src="@/assets/images/dropright.svg"
+                  class="arrow arrow-down"
+                  :src="require(`@/assets/images/dropdown-${reqGroupColorMap[req.group][1]}.svg`)"
                   alt="dropdown"
                 />
               </button>
             </div>
-            <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-              <p class="sup-req pointer">{{subReq.name}}</p>
+            <div class="col p-0 ">
+                <button
+                    class="btn req-name"
+                    :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                    @click="toggleDetails(index)">
+                    {{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements
+                </button>
             </div>
-            <div class="col">
-              <p class="sup-req-progress text-right">( {{ (subReq.fulfilled !== null && subReq.fulfilled !== undefined) ? `${subReq.fulfilled}/${subReq.required} ${subReq.type}` : 'Self-Check' }}  )</p>
+          </div>
+
+          <!--Show more of completed requirements -->
+          <div v-if="req.displayDetails">
+            <p class="sub-title">In-Depth College Requirements</p>
+            <div class="separator"></div>
+            <div
+              v-for="(subReq, id) in req.ongoing"
+              :key="subReq.id">
+              <div class="row depth-req">
+                <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
+                  <button class="btn">
+                    <!-- svg for dropdown icon -->
+                    <img
+                      v-if="subReq.displayDescription"
+                  class="arrow arrow-up"
+                   src="@/assets/images/dropup.svg"
+                   alt="dropup"
+                    />
+                    <img
+                      v-else
+                      class="arrow arrow-down"
+                      src="@/assets/images/dropdown.svg"
+                      alt="dropdown"
+                    />
+                  </button>
+                </div>
+                <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
+                  <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
+                </div>
+                <div class="col">
+                  <p class="sup-req-progress text-right incomplete-ptext">{{
+                   (subReq.requirement.fulfilledBy !== 'self-check')
+                   ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
+                    || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
+                   : 'self check' }}</p>
+                </div>
+              </div>
+              <div v-if="subReq.displayDescription" class="description">
+                {{ subReq.requirement.description }} <a class="more"
+                :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                :href="subReq.requirement.source" target="_blank">
+                <strong>Learn More</strong></a>
+              </div>
+              <div class="separator"></div>
             </div>
-          </div>
-          <div v-if="subReq.displayDescription" class="description">
-            {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
-          </div>
-          <div class="separator"></div>
-        </div>
 
-        <div v-if="req.completed.length > 0" class="row completed">
-          <p class="col sub-title">Completed Requirements</p>
-          <div class="col-1 text-right">
-            <button class="btn float-right" :style="{ 'color': `#${req.color}` }">
-              <!-- Toggle to display completed reqs -->
-              <p
-                class="toggle"
-                v-if="req.displayCompleted"
-                v-on:click="turnCompleted(index, false)">HIDE</p>
-              <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
-            </button>
-          </div>
-        </div>
-
-        <div v-if="req.displayCompleted">
-          <div v-for="(subReq, id) in req.completed" :key="subReq.id">
-            <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
-            <div class="row depth-req">
-              <div class="col-1" @click="toggleDescription(index, 'completed', id)">
-                <button class="btn">
-                  <!-- svg for dropdown icon -->
-                <img
-                  v-if="subReq.displayDescription"
-                  class="arrow arrow-down"
-                  src="@/assets/images/dropdown.svg"
-                  alt="dropdown"
-                />
-                <img
-                  v-else
-                  class="arrow"
-                  src="@/assets/images/dropright.svg"
-                  alt="dropdown"
-                />
+            <div v-if="req.completed.length > 0" class="row completed">
+              <p class="col sub-title specific">Filled Requirements</p>
+              <div class="col-1 text-right">
+                <button class="btn float-right" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }">
+                  <!-- Toggle to display completed reqs -->
+                  <p
+                    class="toggle"
+                    v-if="req.displayCompleted"
+                    v-on:click="turnCompleted(index, false)">HIDE</p>
+                  <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
                 </button>
               </div>
-              <div class="col-7" @click="toggleDescription(index, 'completed', id)">
-                <p class="sup-req pointer">{{subReq.name}}</p>
-              </div>
-              <div class="col">
-                <p class="sup-req-progress text-right">( {{subReq.fulfilled}}/{{subReq.required}} {{ subReq.type }} )</p>
-              </div>
             </div>
-            <div v-if="subReq.displayDescription" class="description">
-              {{ subReq.description }} <a class="more" :style="{ 'color': `#${req.color}` }" :href="subReq.source" target="_blank"><strong>Learn More</strong></a>
+
+          <!-- Completed requirements -->
+            <div v-if="req.displayCompleted">
+              <div v-for="(subReq, id) in req.completed" :key="subReq.id">
+                <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+                <div class="row depth-req">
+                  <div class="col-1" @click="toggleDescription(index, 'completed', id)">
+                    <button class="btn">
+                      <!-- svg for dropdown icon -->
+                    <img
+                      v-if="subReq.displayDescription"
+                  class="arrow arrow-up completed-arrow"
+                   src="@/assets/images/dropup-lightgray.svg"
+                   alt="dropup"
+                    />
+                    <img
+                      v-else
+                  class="arrow arrow-down completed-arrow"
+                   src="@/assets/images/dropdown-lightgray.svg"
+                   alt="dropdown"
+                    />
+                    </button>
+                  </div>
+                  <div class="col-7" @click="toggleDescription(index, 'completed', id)">
+                    <p class="pointer completed-ptext">{{subReq.requirement.name}}</p>
+                  </div>
+                  <div class="col">
+                    <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
+                  </div>
+                </div>
+                <div v-if="subReq.displayDescription" class="description completed-ptext">
+                  {{ subReq.requirement.description }}
+                  <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
+                </div>
+              </div>
             </div>
           </div>
+
+        <!-- Add separator if additional completed requirements -->
+        <div class="separator"></div>
         </div>
       </div>
-
-      <!-- Add separator if additional completed requirements -->
-      <div class="separator" v-if="req.completed.length > 0"></div>
     </div>
-  </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Vue } from 'vue-property-decorator';
+// @ts-ignore
 import VueCollapse from 'vue2-collapse';
-import Course from '@/components/Course';
-import Modal from '@/components/Modals/Modal';
-
-import reqsData from '../requirements/reqs.json';
+// Disable import extension check because TS module resolution depends on it.
+// eslint-disable-next-line import/extensions
+import Course from '@/components/Course.vue';
+// eslint-disable-next-line import/extensions
+import Modal from '@/components/Modals/Modal.vue';
+import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
+import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.use(VueCollapse);
+type major = {
+  display: boolean;
+  major: string;
+  majorFN: string;
+}
+type minor = {
+  display: boolean;
+  minor: string;
+  minorFN: string;
+}
+type Data = {
+  actives: boolean[];
+  modalShow: boolean;
+  reqs: SingleMenuRequirement[];
+  majors: major[];
+  minors: minor[];
+  requirementsMap: {};
+  reqGroupColorMap: {};
 
-export default {
+}
+export default Vue.extend({
   props: {
     semesters: Array,
     user: Object,
-    compact: Boolean,
-    isBottomPreview: Boolean,
-    isBottomBar: Boolean
+    compact: Boolean
   },
   mounted() {
-    // Get array of courses from semesters data
-    const courses = this.getCourseCodesArray();
-
-    this.getReqs(courses, this.user.college, this.user.major).then(groups => {
-      // Turn result into data readable by requirements menu
-      groups.forEach(group => {
-        const singleMenuRequirement = {
-          ongoing: [],
-          completed: [],
-          name: `${group.groupName.toUpperCase()} REQUIREMENT`,
-          group: group.groupName.toUpperCase(),
-          specific: (group.specific) ? group.specific : null,
-          color: '105351',
-          displayDetails: false,
-          displayCompleted: false
-        };
-
-        group.reqs.forEach(req => {
-          // Account for progress type
-          if (req.type) req.type = req.type.charAt(0).toUpperCase() + req.type.substring(1);
-
-          // Create progress bar with requirement with progressBar = true
-          if (req.progressBar) {
-            singleMenuRequirement.type = req.type;
-            singleMenuRequirement.fulfilled = req.fulfilled;
-            singleMenuRequirement.required = req.required;
-          }
-
-          // Default display value of false for all requirement lists
-          req.displayDescription = false;
-
-          if (!req.fulfilled || req.fulfilled < req.required) {
-            singleMenuRequirement.ongoing.push(req);
-          } else {
-            singleMenuRequirement.completed.push(req);
-          }
-        });
-
-        // Make number of requirements items progress bar in absense of identified progress metric
-        if (!singleMenuRequirement.type) {
-          singleMenuRequirement.type = 'Requirements';
-          singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
-          singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+    this.getDisplays();
+    const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major, this.user.minor);
+    // Send satisfied credits data back to dashboard to build alerts
+    this.$emit('requirementsMap', computeRequirementMap(groups));
+    // Turn result into data readable by requirements menu
+    const singleMenuRequirements = groups.map(group => {
+      const singleMenuRequirement: SingleMenuRequirement = {
+        ongoing: [],
+        completed: [],
+        name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
+        group: group.groupName.toUpperCase(),
+        specific: (group.specific) ? group.specific : null,
+        color: '105351',
+        displayDetails: false,
+        displayCompleted: false
+      };
+      group.reqs.forEach(req => {
+        // Create progress bar with requirement with progressBar = true
+        if (req.requirement.progressBar) {
+          singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
+          singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
+          singleMenuRequirement.required = req.requirement.totalCount || req.requirement.minCount;
         }
-
-        this.reqs.push(singleMenuRequirement);
+        // Default display value of false for all requirement lists
+        const displayableRequirementFulfillment = { ...req, displayDescription: false };
+        if (!req.minCountFulfilled || req.minCountFulfilled < (req.requirement.minCount || 0)) {
+          singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
+        } else {
+          singleMenuRequirement.completed.push(displayableRequirementFulfillment);
+        }
       });
+      // Make number of requirements items progress bar in absense of identified progress metric
+      if (!singleMenuRequirement.type) {
+        singleMenuRequirement.type = 'Requirements';
+        singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
+        singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+      }
+      return singleMenuRequirement;
     });
+    this.reqs.push(...singleMenuRequirements);
   },
-
-  data() {
+  data() : Data {
     return {
-      reqsData,
+      // currentEditID: 0,
+      // isEditing: false,
+      // display: [],
       actives: [false],
       modalShow: false,
+      majors: [],
+      minors: [],
+
       reqs: [
         // Data structure for menu
         // {
@@ -261,24 +310,24 @@ export default {
       ],
       requirementsMap: {
         // CS 1110: 'MQR-AS'
+      },
+      // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
+      reqGroupColorMap: {
+        UNIVERSITY: ['508197', 'grayblue'],
+        COLLEGE: ['1AA9A5', 'blue'],
+        MAJOR: ['105351', 'green'],
+        MINOR: ['92C3E6', 'lightblue']
       }
     };
   },
-
   methods: {
-    /**
-     * @param {number} index
-     */
-    toggleDetails(index) {
+    getRequirementTypeDisplayName(type: string): string {
+      return type.charAt(0).toUpperCase() + type.substring(1);
+    },
+    toggleDetails(index: number): void {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
-
-    /**
-     * @param {number} index
-     * @param {'ongoing' | 'completed'} type
-     * @param {number} id
-     */
-    toggleDescription(index, type, id) {
+    toggleDescription(index: number, type: 'ongoing' | 'completed', id: number): void {
       if (type === 'ongoing') {
         const currentBool = this.reqs[index].ongoing[id].displayDescription;
         this.reqs[index].ongoing[id].displayDescription = !currentBool;
@@ -287,352 +336,127 @@ export default {
         this.reqs[index].completed[id].displayDescription = !currentBool;
       }
     },
-
-    /**
-     * @param {number} index
-     * @param {boolean} bool
-     */
-    turnCompleted(index, bool) {
+    turnCompleted(index: number, bool: boolean): void {
       this.reqs[index].displayCompleted = bool;
     },
-
-    /**
-     * @returns {Array<{code: string, roster: string}>}
-     */
-    getCourseCodesArray() {
-      const courses = [];
+    getCourseCodesArray(): readonly CourseTaken[] {
+      const courses: CourseTaken[] = [];
       this.semesters.forEach(semester => {
+        // @ts-ignore
         semester.courses.forEach(course => {
-          courses.push({ code: `${course.subject} ${course.number}`, roster: course.lastRoster });
+          courses.push({
+            code: `${course.lastRoster}: ${course.subject} ${course.number}`,
+            subject: course.subject,
+            number: course.number,
+            credits: course.credits,
+            roster: course.lastRoster
+          });
         });
       });
-
       return courses;
     },
-
-    /**
-     * @param {Array<{code: string, roster: string}>} coursesTaken
-     * @param {string} college
-     * @param {string} major
-     */
-    async getReqs(coursesTaken, college, major) {
-      // TODO: Hacky and temporary solution to add data to requirementsMap
-      const that = this;
-
-      // TODO: make it so that it takes in classes corresponding with years/semesters for most accurate information
-      const coursesTakenWithInfo = {};
-      const courseData = await Promise.all(
-        coursesTaken.map(courseTaken => getCourseInfo(courseTaken.code, courseTaken.roster))
-      );
-
-      for (let i = 0; i < coursesTaken.length; i += 1) { coursesTakenWithInfo[coursesTaken[i].code] = courseData[i]; }
-
-      // prepare final output JSONs
-      const finalRequirementJSONs = [];
-
-      // PART 1: check university requirements
-      if (!reqsData.university) throw new Error('University requirements not found.');
-      const universityReqs = reqsData.university;
-      finalRequirementJSONs.push({
-        groupName: 'University',
-        specific: null,
-        reqs: await iterateThroughRequirements(coursesTakenWithInfo, universityReqs.requirements)
-      });
-
-      // PART 2: check college requirements
-      if (!(college in reqsData.college)) throw new Error('College not found.');
-      const collegeReqs = reqsData.college[college];
-      finalRequirementJSONs.push({
-        groupName: 'College',
-        specific: college,
-        reqs: await iterateThroughRequirements(coursesTakenWithInfo, collegeReqs.requirements)
-      });
-
-      // PART 3: check major reqs
-      // Major is optional
-      if (major in reqsData.major) {
-        const majorReqs = reqsData.major[major];
-        finalRequirementJSONs.push({
-          groupName: 'Major',
-          specific: major,
-          reqs: await iterateThroughRequirements(coursesTakenWithInfo, majorReqs.requirements)
+    showMajorOrMinorRequirements(id: number, group: string) {
+      let currentDisplay = 0;
+      if (group === 'MAJOR') {
+        this.majors.forEach((major, i:number) => {
+          if (major.display) {
+            currentDisplay = i + 2; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+          }
         });
+        return (id < 2 || id === currentDisplay);
       }
-
-      // Send satisfied credits data back to dashboard to build alerts
-      this.emitRequirementsMap();
-
-      return finalRequirementJSONs;
-
-      /**
-       * @typedef {Object} Requirement
-       * @property {string} name
-       * @property {string} description
-       * @property {string} source
-       * @property {string} search
-       * @property {string[][]} includes
-       * @property {string} fulfilledBy
-       * @property {number} minCount
-       * @property {string} applies
-       * @property {boolean} progressBar
-       */
-
-      /**
-       * @typedef {Object} RequirementFulfillment
-       * @property {string} name
-       * @property {string} type
-       * @property {string[]} courses
-       * @property {number} required
-       * @property {string} description
-       * @property {string} source
-       * @property {number | null | undefined} fulfilled
-       * @property {boolean} progressBar
-       * @property {boolean} displayDescription
-       */
-
-      /**
-       * Loops through requirement data and compare all courses on (to identify whether they satisfy the requirement)
-       * @param {Object.<string, Object>} allCoursesTakenWithInfo : object of courses taken with API information (CS 2110: {info})
-       * @param {Requirement[]} allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
-       * @returns {Promise<RequirementFulfillment[]>}
-       */
-      async function iterateThroughRequirements(allCoursesTakenWithInfo, allRequirements) {
-        // array of requirement status information to be returned
-        /** @type {RequirementFulfillment[]} */
-        const requirementJSONs = [];
-        // Dictionary for generating information on course alerts
-        /** @type {Object.<string, string[]>} */
-        const satisfiedRequirementMap = {};
-
-        for (const requirement of allRequirements) {
-          // TODO: For different groups of students (e.g. transfers, FYSAs, etc...)
-          // if(!isTransfer && requirement.applies === "transfers") continue;
-          // temporarily skip these until we can implement them later
-
-          const requirementName = requirement.name;
-
-          let totalRequirementCredits = 0;
-          let totalRequirementCount = 0;
-          /** @type {string[]} */
-          const coursesThatFulilledRequirement = [];
-
-          // check each course to see if it fulfilled that requirement
-          const codes = Object.keys(coursesTakenWithInfo);
-
-          for (const code of codes) {
-            const courseInfo = coursesTakenWithInfo[code];
-
-            const indexIsFulfilled = checkIfCourseFulfilled(courseInfo, requirement.search, requirement.includes, requirement.excludes);
-
-            if (indexIsFulfilled) {
-              // depending on what it is fulfilled by, either increase the count or credits you took
-              switch (requirement.fulfilledBy) {
-                case 'courses':
-                  totalRequirementCount += 1;
-                  break;
-                case 'credits':
-                  totalRequirementCredits += courseInfo.enrollGroups[0].unitsMaximum;
-                  break;
-                case 'self-check':
-                  continue;
-                default:
-                  throw new Error('Fulfillment type unknown.');
-              }
-
-              // add the course to the list of courses used to fulfill that one requirement
-              coursesThatFulilledRequirement.push(code);
-
-              // Add course to dictionary with name
-              if (code in satisfiedRequirementMap) satisfiedRequirementMap[code].push(requirementName);
-              else satisfiedRequirementMap[code] = [requirementName];
-            }
-          }
-
-          const generatedResults = createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement);
-          requirementJSONs.push(generatedResults);
+      this.minors.forEach((minor, i:number) => {
+        if (minor.display) {
+          currentDisplay = i + 2 + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
         }
-
-        // Merge satisfied credits into satisfiedCourseCredits (for alerts)
-        that.mergerequirementsMap(satisfiedRequirementMap);
-
-        return requirementJSONs;
-      }
-
-      /**
-       * Creates results in object format from information
-       * @param {Requirement} requirement : the requirement information as object
-       * @param {number} totalRequirementCredits : total credits of courses that satisfied requirement
-       * @param {number} totalRequirementCount : total number of courses that satisfied requirement
-       * @param {string[]} coursesThatFulilledRequirement : courses that satisfied requirement
-       * @returns {RequirementFulfillment}
-       */
-      function createRequirementJSON(requirement, totalRequirementCredits, totalRequirementCount, coursesThatFulilledRequirement) {
-        const requirementFulfillmentData = {
-          name: requirement.name,
-          type: requirement.fulfilledBy,
-          courses: coursesThatFulilledRequirement,
-          required: requirement.minCount,
-          description: requirement.description,
-          source: requirement.source,
-          fulfilled: null,
-          progressBar: false,
-          displayDescription: false
-        };
-        let fulfilled;
-        switch (requirement.fulfilledBy) {
-          case 'courses':
-            fulfilled = totalRequirementCount;
-            break;
-          case 'credits':
-            fulfilled = totalRequirementCredits;
-            break;
-          case 'self-check':
-            fulfilled = null;
-            break;
-          default:
-            throw new Error('Fulfillment type unknown.');
-        }
-
-        requirementFulfillmentData.fulfilled = fulfilled;
-
-        // Make requirement use for progressbar if progressbar attr is true
-        if (requirement.progressBar) requirementFulfillmentData.progressBar = true;
-        return requirementFulfillmentData;
-      }
-
-      /**
-       * Given a course code (i.e. INFO 1300), it will split it up into the subject and number, returned as a dictionary
-       * (i.e. INFO 1300 => {"subject" : INFO, "courseNumber" : 1300})
-       *
-       * @param {string} courseCode
-       * @return {{subject: string, courseNumber: string}} the number of credits the course is worth
-       */
-      function parseCourseCode(courseCode) {
-        const regex = /([a-zA-Z]+) ([0-9][0-9][0-9][0-9]$)?/g;
-        const matches = regex.exec(courseCode);
-        if (matches === null) throw new Error('Invalid course code');
-        return { subject: matches[1].toUpperCase(), courseNumber: matches[2] };
-      }
-
-      /**
-       * Given a course code and a roster, get all course info from Cornell API
-       * @param {string} code : code name of the course to search (CS 2110)
-       * @param {string} roster : roster name of the course to search (FA19)
-       * @returns {Promise<any>}
-       */
-      function getCourseInfo(code, roster) {
-        const courseCodeObj = parseCourseCode(code);
-        const subject = courseCodeObj.subject.toUpperCase();
-        const catalogNbr = courseCodeObj.courseNumber;
-
-        return new Promise(resolve => {
-          fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${code}`)
-            .then(res => res.json())
-            .then(resultJSON => {
-              const { classes } = resultJSON.data;
-              // Check that course code matches with api result. Example: MATH 1110 returns MATH 1011 because both matches
-              for (const singleClass of classes) {
-                if (singleClass.subject === subject && singleClass.catalogNbr === catalogNbr) resolve(singleClass);
-              }
-            });
-        });
-      }
-
-      /**
-       * Check if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
-       * @param {string} courseName : name of the course (as a code)
-       * @param {string} code : code to check courseName (can contain * to denote any value)
-       * @returns {boolean}
-       */
-      function ifCodeMatch(courseName, code) {
-        for (let i = 0; i < courseName.length; i += 1) {
-          if (code[i] !== '*' && courseName[i] !== code[i]) return false;
-        }
-
-        return true;
-      }
-
-      /**
-       * Check if the course satisfies all-eligible query (not PE or 10XX course)
-       * @param {string} subject : subject of course to check
-       * @param {string} number : number of course to check
-       * @returns {boolean}
-       */
-      function ifAllEligible(subject, number) {
-        return !ifCodeMatch(subject, 'PE') && !ifCodeMatch(number, '10**');
-      }
-
-      /**
-       * Check if the course fullfills the given requirement. Returns true if fulfills requirement. False otherswise
-       * @param {*} courseInfo : information of the course from API data
-       * @param {*} search : the scope of search for the requirement (e.g all-eligible, code, catalogDistr)
-       * @param {*} includes : the query for the search to satisfy requirement (e.g (MQR-AS), CS 2***)
-       * @param {*} excludes : the query for the search that does not satisfy requirement (e.g (MQR-AS), CS 2***)
-       * @returns {boolean}
-       */
-      function checkIfCourseFulfilled(courseInfo, search, includes, excludes) {
-        // Check if search exists. False if not
-        if (search !== undefined) {
-          // Special search: if search code is all or self-check. Anything would work
-          if (search.includes('all') || search.includes('self-check')) return true;
-          // Special search: if search code is not PE or 10XX course
-          if (search.includes('all-eligible')) return ifAllEligible(courseInfo.subject, courseInfo.catalogNbr.toString());
-
-          // Excludes is optional. If it exists, a match with search command returns false
-          if (excludes) {
-            for (const exclude of excludes) {
-              for (const excludeOption of exclude) {
-                // Special search: if course code matches code
-                if (search.includes('code')) {
-                  if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, excludeOption)) return false;
-                // Make sure courseInfo[search] is not null
-                } else {
-                  // Loop through search (for search commands with multiple options)
-                  for (const singleSearch of search) {
-                    if (courseInfo[singleSearch] && courseInfo[singleSearch].includes(excludeOption)) return false;
-                  }
-                }
-              }
-            }
-          }
-
-          // Includes is mandatory. Function will check for include match with search command
-          for (const include of includes) {
-            for (const includeOption of include) {
-              // Special search: if course code matches code
-              if (search.includes('code')) {
-                if (ifCodeMatch(`${courseInfo.subject} ${courseInfo.catalogNbr}`, includeOption)) return true;
-              // Make sure courseInfo[search] is not null
-              } else {
-                // Loop through search (for search commands with multiple options)
-                for (const singleSearch of search) {
-                  if (courseInfo[singleSearch] && courseInfo[singleSearch].includes(includeOption)) return true;
-                }
-              }
-            }
-          }
-        }
-
-        return false;
-      }
-    },
-    /** @param {Object.<string, string[]>} satisfiedMap */
-    mergerequirementsMap(satisfiedMap) {
-      Object.keys(satisfiedMap).forEach(course => {
-        if (course in this.requirementsMap) this.requirementsMap[course] = this.requirementsMap[course].concat(satisfiedMap[course]);
-        else this.requirementsMap[course] = satisfiedMap[course];
       });
+      return (id < 2 || id === currentDisplay);
     },
-
-    emitRequirementsMap() {
-      this.$emit('requirementsMap', this.requirementsMap);
+    activateMajor(id: number) {
+      this.majors.forEach((major, i: number) => {
+        if (major.display) {
+          major.display = false;
+        }
+      });
+      this.majors[id].display = true;
+    },
+    activateMinor(id: number) {
+      this.minors.forEach((minor, i: number) => {
+        if (minor.display) {
+          minor.display = false;
+        }
+      });
+      this.minors[id].display = true;
+    },
+    getDisplays() {
+      const majors = [];
+      if (this.user.major != null) {
+        for (let i = 0; i < this.user.major.length; i += 1) {
+          const userMajor = { display: true, major: '', majorFN: '' };
+          if (i === 0) {
+            userMajor.display = true;
+          } else {
+            userMajor.display = false;
+          }
+          userMajor.major = this.user.major[i];
+          userMajor.majorFN = this.user.majorFN[i];
+          majors.push(userMajor);
+        }
+      }
+      this.majors = majors;
+      const minors = [];
+      if (this.user.minor != null) {
+        for (let i = 0; i < this.user.minor.length; i += 1) {
+          const userMinor = { display: true, minor: '', minorFN: '' };
+          if (i === 0) {
+            userMinor.display = true;
+          } else {
+            userMinor.display = false;
+          }
+          userMinor.minor = this.user.minor[i];
+          userMinor.minorFN = this.user.minorFN[i];
+          minors.push(userMinor);
+        }
+      }
+      this.minors = minors;
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">
-
+input{
+  width: 40px;
+}
+.major, .minor{
+  display: flex;
+  padding-bottom: 25px;
+  &-title {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      color: #757575;
+      padding-bottom: 6px;
+      &-top {
+        text-align: center;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        margin: 0;
+      }
+      &-bottom {
+        text-align: center;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 15px;
+      }
+    }
+      &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+}
 .btn {
   padding: 0;
   display: flex;
@@ -643,27 +467,22 @@ export default {
     margin:0px
   }
 }
-
 .btn:focus,.btn:active {
    outline: none !important;
    box-shadow: none;
 }
-
 .row {
   margin: 0;
 }
-
 .row > div {
   padding: 0;
 }
-
 .requirements, .fixed {
   height: 100vh;
   width: 25rem;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: white;
 }
-
 .fixed {
   position: fixed;
   top: 0;
@@ -671,27 +490,22 @@ export default {
   overflow-y: scroll;
   overflow-x: hidden;
 }
-
 .depth-req {
   margin: 0.5rem 0 0.1rem 0;
   min-height: 14px;
 }
-
 .sub-req-div {
   padding-left: 30px;
   margin: 0px;
 }
-
 .description {
   margin: 0 0 0.5rem 1.8rem;
   color: #353535;
-  font-size: 15px;
+  font-size: 14px;
 }
-
 .pointer {
   cursor: pointer;
 }
-
 h1.title {
   font-style: normal;
   font-weight: 550;
@@ -699,66 +513,52 @@ h1.title {
   line-height: 29px;
   color: #000000;
 }
-
 .progress {
   border-radius: 1rem;
   height: 10px;
 }
-
 .top {
   margin: 1.5rem 0 1rem 0;
   &-small{
     margin: 0px;
   }
 }
-
 .middle {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .name {
   margin-top: auto;
   margin-bottom: auto;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 600;
   font-size: 16px;
   line-height: 16px;
-
   color: #000000;
 }
-
 .specific {
   color: #757575;
 }
-
 .sub-title {
   padding: 0;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 14px;
+  color: #3C3C3C;
 }
-
-.completed {
-  margin-top: 1rem;
-}
-
 .major {
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 17px;
   color: #000000;
-
   &-college {
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
-    /* identical to box height */
-
     color: #000000;
   }
 }
@@ -771,34 +571,33 @@ button.active {
   padding-bottom: 2px;
   margin: 5px;
 }
-p.active {
-  color: #508197;
-  font-weight: bold;
-}
-
 .settings, .arrow {
   height: 14px;
   width: 14px;
 }
-
 .arrow {
   fill: #1AA9A5;
   color:#1AA9A5;
-
-  &-down {
-    margin-top: -4px;
-  }
+  margin-top: -2px;
+    &-up {
+     margin-top: 4px;
+   }
 }
-
 .progress-text {
   margin: 0.3125rem 0 0 0;
   font-size: 12px;
   line-height: 12px;
-}
+  color: #3C3C3C;
 
+   &-credits {
+     font-weight: bold;
+   }
+   &-text {
+     font-weight: normal;
+   }
+}
 ul.striped-list > li {
   padding: 2px;
-
   border-bottom-style: rgba(196, 196, 196, 0.4);
   border-block-color: rgba(196, 196, 196, 0.4);
   color: #757575;
@@ -807,7 +606,6 @@ ul.striped-list > li {
   padding: 20px;
   padding-left: 0px;
 }
-
 button.view {
   margin: 0.7rem 0 2rem 0;
   min-height: 40px;
@@ -819,18 +617,15 @@ button.view {
   color: white;
   text-transform: uppercase;
 }
-
 .detail-bar {
   margin: 1.625rem 0 0.8125rem 0;
   width: 100%;
 }
-
 .x {
   padding-left: 0px;
   padding-right: 15px;
   max-width: 25px;
 }
-
 .detail-text {
   margin-top: auto;
   margin-bottom: auto;
@@ -838,7 +633,6 @@ button.view {
   font-size: 14px;
   line-height: 14px;
 }
-
 .seeMore {
   width: 44px;
   height: 15px;
@@ -847,10 +641,8 @@ button.view {
   font-size: 12px;
   line-height: 14px;
   /* identical to box height */
-
   color: #2bbcc6;
 }
-
 .cancel {
   height: 10px;
   width: 10px;
@@ -859,13 +651,11 @@ button.view {
   height: 5px;
   width: 5px;
 }
-
 .button-dropdown {
   background-color: transparent;
   color: transparent;
   outline-style: transparent;
 }
-
 .toggle {
   margin-top: auto;
   margin-bottom: auto;
@@ -873,61 +663,82 @@ button.view {
   font-size: 12px;
   line-height: 12px;
 }
-
 .req {
   margin-top: auto;
   margin-bottom: auto;
   font-style: normal;
   font-weight: normal;
-
   font-size: 16px;
   line-height: 19px;
-
   &-name {
-    margin-left: 0.5rem;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 14px;
     line-height: 14px;
     align-self: center;
   }
-
   &-progress {
-    font-weight: bold;
     font-size: 12px;
     line-height: 12px;
   }
 }
+.completed {
+   margin-top: 1rem;
+   &-ptext {
+     color: #757575;
+     font-size: 12px;
+     opacity: 0.8;
+     font-weight: normal;
+   }
+ }
+
+ .incomplete {
+   &-ptext {
+     font-size: 14px;
+   }
+ }
+
+ .text {
+   &-right {
+     color: #757575;
+   }
+ }
 .sup-req {
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
   line-height: 14px;
-
   color: #757575;
-
   &-progress {
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 12px;
+    font-size: 14px;
+    line-height: 14px;
   }
 }
-
 .semester-req {
   border: none;
   max-width: 350px;
 }
-
 .separator {
   height: 1px;
   width: 100%;
   background-color: #d7d7d7;
 }
-
-.bottomBar {
-  padding-bottom: 300px;
+@media only screen and (max-width: 976px) {
+  .requirements, .fixed {
+    width: 21rem;
+  }
 }
 
-.bottomPreview {
-  padding-bottom: 40px;
+@media only screen and (max-width: 878px) {
+  .requirements {
+    width: 100%;
+    padding-left: 0.5rem;
+  }
+
+  .fixed {
+    top: 4.5rem;
+    left: 0rem;
+    width: 100%;
+    height: calc(100vh - 4.5rem);
+  }
 }
 </style>

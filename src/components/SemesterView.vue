@@ -1,10 +1,29 @@
 <template>
-  <div class="semesterView" :class="{ bottomBar: isBottomBar }" @click="closeBar" :key="key">
-    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
-    <div class="semesterView-switch">
-      <span class="semesterView-switchText">View:</span>
-      <div class="semesterView-switchImage semesterView-twoColumn" @click="setNotCompact" :class="{ 'semesterView-twoColumn--active': !compact }"></div>
-      <div class="semesterView-switchImage semesterView-fourColumn" @click="setCompact" :class="{ 'semesterView-fourColumn--active': compact }"></div>
+  <div
+    class="semesterView"
+    :class="{ bottomBar: isBottomBar, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}"
+    @click="closeBar"
+    :key="key"
+  >
+    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" :currentSemesters="semesters" />
+    <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
+      <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">+ New Semester</button>
+      <div class="semesterView-switch">
+        <span v-if="!isMobile" class="semesterView-switchText">View:</span>
+        <div class="semesterView-switchImage semesterView-twoColumn"
+          v-if="!isMobile"
+          @click="setNotCompact"
+          :class="{ 'semesterView-twoColumn--active': !compact }"
+        >
+        </div>
+        <div
+          class="semesterView-switchImage semesterView-fourColumn"
+          v-if="!isMobile"
+          @click="setCompact"
+          :class="{ 'semesterView-fourColumn--active': compact }"
+        >
+        </div>
+      </div>
     </div>
     <confirmation
       :id="'semesterConfirmation'"
@@ -20,15 +39,16 @@
       <div v-for="sem in semesters" :key="sem.id" class="semesterView-wrapper">
         <semester
           v-bind="sem"
-          :isNotSemesterButton="true"
           :activatedCourse="activatedCourse"
+          :semesters="semesters"
+          :isFirstSem="checkIfFirstSem(sem.id)"
           @updateBar="updateBar"
+          @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
+          @edit-semester="editSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
+          @update-requirements-menu="updateRequirementsMenu"
         />
-      </div>
-      <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
       <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
@@ -38,10 +58,18 @@
         v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" @delete-semester="deleteSemester" />
-      </div>
-      <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
+        <semester
+          v-bind="sem"
+          :compact="compact"
+          :activatedCourse="activatedCourse"
+          :semesters="semesters"
+          :isFirstSem="checkIfFirstSem(sem.id)"
+          @updateBar="updateBar"
+          @new-semester="openSemesterModal"
+          @delete-semester="deleteSemester"
+          @edit-semester="editSemester"
+          @update-requirements-menu="updateRequirementsMenu"
+        />
       </div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
@@ -53,23 +81,22 @@
 
 <script>
 import Vue from 'vue';
+import clone from 'clone';
 import Course from '@/components/Course';
 import Semester from '@/components/Semester';
 import Confirmation from '@/components/Confirmation';
 import Caution from '@/components/Caution';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
+import EditSemester from '@/components/Modals/EditSemester';
 
-const clone = require('clone');
+import { auth, userDataCollection } from '@/firebaseConfig';
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
 Vue.component('caution', Caution);
 Vue.component('deletesemester', DeleteSemester);
-
-const firebaseConfig = require('@/firebaseConfig.js');
-
-const { auth, userDataCollection } = firebaseConfig;
+Vue.component('editsemester', EditSemester);
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -83,7 +110,9 @@ export default {
   props: {
     semesters: Array,
     compact: Boolean,
-    isBottomBar: Boolean
+    isBottomBar: Boolean,
+    isBottomBarExpanded: Boolean,
+    isMobile: Boolean
   },
   data() {
     return {
@@ -109,7 +138,15 @@ export default {
   beforeDestroy() {
     this.$el.removeEventListener('click', this.closeAllModals);
   },
+  computed: {
+    noSemesters() {
+      return this.semesters.length === 0;
+    }
+  },
   methods: {
+    checkIfFirstSem(id) {
+      return this.semesters[0].id === id;
+    },
     setCompact() {
       if (!this.compact) {
         this.$emit('compact-updated', !this.compact);
@@ -178,9 +215,9 @@ export default {
       let i;
       for (i = 0; i < this.semesters.length; i += 1) {
         const oldSem = this.semesters[i];
-        if (oldSem.year > year) {
+        if (oldSem.year < year) {
           break;
-        } else if (oldSem.year === year && SeasonsEnum[oldSem.type.toLowerCase()] > SeasonsEnum[type.toLowerCase()]) {
+        } else if (oldSem.year === year && SeasonsEnum[oldSem.type.toLowerCase()] < SeasonsEnum[type.toLowerCase()]) {
           break;
         }
       }
@@ -200,14 +237,39 @@ export default {
       // Update requirements menu from dashboard
       this.$emit('updateRequirementsMenu');
     },
-
-    updateBar(course) {
+    updateRequirementsMenu() {
+      this.$emit('updateRequirementsMenu');
+    },
+    compare(a, b) {
+      if (a.type === b.type && a.year === b.year) { return 0; }
+      if (a.year > b.year) { return -1; }
+      if (a.year < b.year) { return 1; }
+      if (SeasonsEnum[a.type.toLowerCase()] < SeasonsEnum[b.type.toLowerCase()]) {
+        return 1;
+      }
+      return -1;
+    },
+    editSemester(id, type, year) {
+      let count = 1;
+      for (let i = 0; i < this.semesters.length; i += 1) {
+        if (this.semesters[i].id === id) {
+          const currSemester = this.semesters[i];
+          currSemester.type = type;
+          currSemester.year = year;
+        }
+      }
+      this.semesters = this.semesters.sort(this.compare);
+      this.semesters.forEach(sem => {
+        sem.id = count;
+        count += 1;
+      });
+    },
+    updateBar(course, colorJustChanged, color) {
       this.activatedCourse = course;
       this.key += 1;
-      this.$emit('update-bar', course);
+      this.$emit('updateBar', course, colorJustChanged, color);
       this.isCourseClicked = true;
     },
-
     closeBar() {
       if (!this.isCourseClicked) {
         this.$emit('close-bar');
@@ -225,6 +287,7 @@ export default {
         name: course.name,
         description: course.description,
         credits: course.credits,
+        creditRange: course.creditRange,
         semesters: course.semesters,
         prereqs: course.prereqs,
         enrollment: course.enrollment,
@@ -232,7 +295,8 @@ export default {
         instructors: course.instructors,
         distributions: course.distributions,
         lastRoster: course.lastRoster,
-        color: course.color
+        color: course.color,
+        uniqueID: course.uniqueID
       };
     },
     /**
@@ -279,12 +343,30 @@ export default {
     margin: 0 -0.75rem;
   }
 
-  &-switch {
+  &-addSemesterButton {
+    background: #508197;
+    border-radius: 8px;
+    height: 2.5rem;
+    width: 9rem;
+    color: #ffffff;
+    border: none;
+  }
+
+  &-settings {
     display: flex;
     justify-content: flex-end;
-    align-items: center;
     margin-bottom: 1rem;
+    min-height: 2.25rem;
+
+    &--two {
+      justify-content: space-between;
+    }
+  }
+
+  &-switch {
+    display: flex;
     color: #858585;
+    align-items: center;
   }
 
   &-switchText {
@@ -305,6 +387,7 @@ export default {
     }
   }
 
+
   &-twoColumn {
     background-image: url('~@/assets/images/views/twoColumn.svg');
 
@@ -312,7 +395,9 @@ export default {
     &:focus,
     &:active,
     &--active {
+      cursor: pointer;
       background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+
     }
   }
 
@@ -323,6 +408,7 @@ export default {
     &:focus,
     &:active,
     &--active {
+      cursor: pointer;
       background-image: url('~@/assets/images/views/fourColumnSelected.svg');
     }
   }
@@ -355,6 +441,7 @@ export default {
     }
   }
 }
+
 /* The Modal (background) */
 .semester-modal {
   display: none; /* Hidden by default */
@@ -372,4 +459,20 @@ export default {
 .bottomBar {
   margin-bottom: 300px;
 }
+
+@media only screen and (max-width: 878px) {
+  .semesterView {
+    margin-top: 5.5rem;
+    margin-left: 2.5rem;
+    margin-right: 1rem;
+    &-switch {
+      padding-right: 0.75rem;
+    }
+    &-content {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
 </style>

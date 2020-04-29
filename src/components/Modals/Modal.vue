@@ -9,11 +9,13 @@
         class="modal-body"
         :is="body"
         :semesterID="semesterID"
+        :currentSemesters="currentSemesters"
+        @duplicateSemester="disableButton"
         ref="modalBodyComponent"
       ></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" @click="closeCurrentModal">{{ cancel }}</button>
-        <button class="modal-button modal-button--add" @click="addItem">{{ add }}</button>
+        <button class="modal-button modal-button--add" :class='{"modal-button--disabled": isDisabled }' @click="addItem">{{ add }}</button>
       </div>
     </div>
   </div>
@@ -24,20 +26,24 @@ import Vue from 'vue';
 import NewCourse from '@/components/Modals/NewCourse';
 import NewCustomCourse from '@/components/Modals/NewCustomCourse';
 import NewSemester from '@/components/Modals/NewSemester';
+import EditSemester from '@/components/Modals/EditSemester';
 
 Vue.component('newCourse', NewCourse);
 Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
+Vue.component('editSemester', EditSemester);
 
 export default {
   data() {
     return {
-      courseIsAddable: true
+      courseIsAddable: true,
+      isDisabled: false
     };
   },
   props: {
     type: String,
-    semesterID: Number
+    semesterID: Number,
+    currentSemesters: Array
   },
   computed: {
     contentId() {
@@ -70,6 +76,9 @@ export default {
     }
   },
   methods: {
+    disableButton(bool) {
+      this.isDisabled = bool;
+    },
     closeCurrentModal() {
       let modal;
       if (this.type === 'course') {
@@ -82,6 +91,7 @@ export default {
       }
       modal.style.display = 'none';
     },
+    // Note: Currently not used
     checkCourseDuplicate(key) {
       this.$emit('check-course-duplicate', key);
     },
@@ -92,10 +102,7 @@ export default {
 
         // TODO: can I make the valid assumption that the course code is up to the colon in the title?
         const key = title.substring(0, title.indexOf(':'));
-        this.checkCourseDuplicate(key);
-        if (this.courseIsAddable) {
-          this.addCourse();
-        }
+        this.addCourse();
       } else if (this.type === 'semester') {
         this.addSemester();
       } else {
@@ -149,15 +156,16 @@ export default {
       this.closeCurrentModal();
     },
     addSemester() {
-      const seasonInput = document.getElementById(`season-placeholder`);
-      const yearInput = document.getElementById(`year-placeholder`);
+      if (!this.isDisabled) {
+        const seasonInput = document.getElementById(`season-placeholder`);
+        const yearInput = document.getElementById(`year-placeholder`);
+        this.$parent.addSemester(
+          seasonInput.innerHTML.trim(' ').split(' ')[0],
+          parseInt(yearInput.innerHTML, 10)
+        );
 
-      this.$parent.addSemester(
-        seasonInput.innerHTML.trim(' ').split(' ')[1],
-        parseInt(yearInput.innerHTML, 10)
-      );
-
-      this.closeCurrentModal();
+        this.closeCurrentModal();
+      }
     }
   }
 };
@@ -220,6 +228,12 @@ export default {
       margin-left: 0.5rem;
       border: none;
     }
+
+    &--disabled {
+      opacity: .3;
+      border: 1px solid #508197;
+      background-color: #CCCCCC;
+    }
   }
 }
 
@@ -230,4 +244,11 @@ export default {
 #content-semester {
   width: 15.5rem;
 }
+
+@media only screen and (max-width: 600px) {
+  #content-course {
+    width: 100%;
+  }
+}
+
 </style>

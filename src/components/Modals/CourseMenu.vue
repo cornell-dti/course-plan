@@ -1,18 +1,19 @@
 <template>
-  <div class="courseMenu">
+  <div class="courseMenu" >
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
         @mouseover="setDisplayColors(true)"
         @mouseleave="setDisplayColors(false)"
       >
+        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/paint.svg" />
+          <img class="courseMenu-icon" src="@/assets/images/paint.svg" />
           <span class="courseMenu-text">Edit Color</span>
         </div>
-        <img class="courseMenu-arrow" src="../../assets/images/sidearrow.svg" />
+        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
 
-        <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
+        <div v-if="displayColors" class="courseMenu-content courseMenu-colors" :class="{'courseMenu-colors--left': isLeft }">
           <div
             v-for="color in colors"
             :key="color.id"
@@ -29,9 +30,35 @@
           </div>
         </div>
       </div>
-      <div class="courseMenu-section" @click="deleteCourse">
+      <div
+        class="courseMenu-section"
+        @mouseover="setDisplayEditCourseCredits(true)"
+        @mouseleave="setDisplayEditCourseCredits(false)"
+        v-if="this.getCreditRange[0] != this.getCreditRange[1]"
+        >
+        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="../../assets/images/trash.svg" />
+          <img class="courseMenu-icon" :class="{'courseMenu-icon--left': isLeft }" src="@/assets/images/edit-credits.svg" />
+          <span class="courseMenu-text">Edit Credits</span>
+        </div>
+        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+         <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
+         :class="{'courseMenu-editCredits--left': isLeft }">
+          <div
+            v-for="credit in makeCreditArary()"
+            :key="credit"
+            class="courseMenu-section courseMenu-section--credits"
+            @click="editCourseCredit(credit)"
+          >
+            <div class="courseMenu-left">
+              <span class="courseMenu-text">{{ credit }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="courseMenu-section" :class="{'courseMenu-section--left': isLeft }" @click="deleteCourse">
+        <div class="courseMenu-left">
+          <img class="courseMenu-icon" src="@/assets/images/trash.svg" />
           <span class="courseMenu-text">Delete</span>
         </div>
       </div>
@@ -40,9 +67,20 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import Course from '@/components/Course';
+
 export default {
+  props: {
+    getCreditRange: Array,
+    semId: Number,
+    isCompact: Boolean
+  },
   data() {
     return {
+      isLeft: (this.semId % 2 === 0 && !this.isCompact) || (this.semId % 4 === 0 && this.isCompact),
+      // TODO: better version for all breakpoints
+      // isLeft: this.semId % numPerRow() === 0,
       colors: [
         {
           text: 'Gray',
@@ -77,8 +115,28 @@ export default {
           hex: '#F296D3'
         }
       ],
-      displayColors: false
+      displayColors: false,
+      displayEditCourseCredits: false
     };
+  },
+  computed: {
+    // TODO: implement this without DOM manipulation and with semID changing (right now, stays the same if a sem is added)
+    numPerRow() {
+      const itemWidth = 406; // width of a semester div
+      const itemWidthCompact = 232; // width of a compact semester div in px
+
+      const grid = document.getElementsByClassName('semesterView-content')[0];
+      const gridStyle = grid.currentStyle || window.getComputedStyle(grid);
+      const gridWidth = grid.clientWidth - (parseFloat(gridStyle.paddingLeft) + parseFloat(gridStyle.paddingRight));
+
+      let numPerRow = 0;
+      if (this.isCompact) {
+        numPerRow = Math.min(Math.floor(gridWidth / itemWidthCompact), 4);
+      } else {
+        numPerRow = Math.min(Math.floor(gridWidth / itemWidth), 2);
+      }
+      return numPerRow;
+    }
   },
   methods: {
     deleteCourse() {
@@ -89,6 +147,28 @@ export default {
     },
     setDisplayColors(bool) {
       this.displayColors = bool;
+    },
+    setDisplayEditCourseCredits(bool) {
+      this.displayEditCourseCredits = bool;
+    },
+    editCourseCredit(credit) {
+      this.$emit('edit-course-credit', credit);
+    },
+    makeCreditArary() {
+      const creditArray = [];
+      let accu = (this.getCreditRange[0] < 1) ? 0 : (this.getCreditRange[0] - 1);
+      for (let i = accu; i < (this.getCreditRange[1]); i += 1) {
+        if (this.getCreditRange[0] < 1) {
+          accu += 0.5;
+          creditArray.push(accu);
+          accu += 0.5;
+          creditArray.push(accu);
+        } else {
+          accu += 1;
+          creditArray.push(accu);
+        }
+      }
+      return creditArray;
     }
   }
 };
@@ -129,6 +209,18 @@ export default {
       border-bottom-left-radius: 9px;
       border-bottom-right-radius: 9px;
     }
+
+    &--credits {
+      padding-left: 0;
+      padding-right: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    &--left {
+      padding-left: 2.25rem;
+    }
   }
 
   &-left {
@@ -143,11 +235,44 @@ export default {
       width: 16px;
       height: 16px;
     }
-  }
 
+    &--left {
+      margin-right: .25rem;
+    }
+  }
   &-colors {
     position: absolute;
     right: -9rem;
+
+    &--left {
+      right: 8.87rem;
+    }
+  }
+  &-editCredits {
+    position: absolute;
+    width: 2.75rem;
+    right: -2.75rem;
+    padding: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    &--left {
+      right: 8.87rem;
+    }
+  }
+}
+
+@media only screen and (max-width: 878px) {
+  .courseMenu {
+    &-arrow {
+      display: none;
+    }
+    &-colors {
+      right: 0rem;
+      left: -9rem;
+    }
   }
 }
 </style>

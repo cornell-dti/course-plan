@@ -1,16 +1,7 @@
 <template>
   <div :class="{ 'course--min': compact, 'active': active }" class="course" @click="updateBar()">
     <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active, 'course-color--min': compact }">
-      <div class="course-dotColumn">
-        <span class="course-dot"></span>
-        <span class="course-dot"></span>
-        <span class="course-dot"></span>
-      </div>
-      <div class="course-dotColumn">
-        <span class="course-dot"></span>
-        <span class="course-dot"></span>
-        <span class="course-dot"></span>
-      </div>
+      <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
     </div>
     <div :class="{ 'course-content--min': compact }" class="course-content">
       <div :class="{ 'course-main--min': compact }" class="course-main">
@@ -19,9 +10,7 @@
             {{ subject }} {{ number }}
           </div>
           <div class="course-dotRow" @click="openMenu">
-            <span class="course-dot course-dot--menu"></span>
-            <span class="course-dot course-dot--menu"></span>
-            <span class="course-dot course-dot--menu"></span>
+            <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
         </div>
         <div v-if="!compact" class="course-name">{{ name }}</div>
@@ -53,9 +42,13 @@
     </div>
     <coursemenu
       v-if="menuOpen"
+      :semId="semId"
+      :isCompact="compact"
       class="course-menu"
       @delete-course="deleteCourse"
       @color-course="colorCourse"
+      @edit-course-credit="editCourseCredit"
+      :getCreditRange="getCreditRange"
       v-click-outside="closeMenuIfOpen"
     />
   </div>
@@ -69,7 +62,7 @@ Vue.component('coursemenu', CourseMenu);
 
 const clickOutside = {
   bind(el, binding, vnode) {
-    el.event = function (event) {
+    el.event = event => {
       if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event);
       }
@@ -88,18 +81,23 @@ export default {
     number: String,
     name: String,
     credits: Number,
+    creditRange: Array,
     prereqs: String,
     semesters: Array,
     color: String,
     alerts: Object,
     compact: Boolean,
     id: String,
-    active: Boolean
+    uniqueID: Number,
+    active: Boolean,
+    semId: Number
   },
   data() {
     return {
       menuOpen: false,
-      stopCloseFlag: false
+      stopCloseFlag: false,
+      getCreditRange: this.creditRange,
+      colorJustChanged: false
     };
   },
   computed: {
@@ -125,10 +123,14 @@ export default {
       if (semesterString.length > 0) {
         return semesterString.substring(0, semesterString.length - 2);
       }
+
       return semesterString;
     },
 
     creditString() {
+      if (this.credits === 1) {
+        return `${this.credits} credit`;
+      }
       return `${this.credits} credits`;
     },
     review() {
@@ -159,19 +161,24 @@ export default {
       }
     },
     deleteCourse() {
-      this.$emit('delete-course', `${this.subject} ${this.number}`);
+      this.$emit('delete-course', this.subject, this.number, this.uniqueID);
       this.closeMenuIfOpen();
     },
     colorCourse(color) {
-      this.$emit('color-course', color, `${this.subject} ${this.number}`);
+      this.$emit('color-course', color, this.uniqueID);
       this.closeMenuIfOpen();
+      this.colorJustChanged = true;
     },
     updateBar() {
       if (!this.menuOpen) {
-        this.$emit('updateBar', this.courseObj);
+        this.$emit('updateBar', this.courseObj, this.colorJustChanged, this.color);
       }
+      this.colorJustChanged = false;
+    },
+    editCourseCredit(credit) {
+      this.$emit('edit-course-credit', credit, this.uniqueID);
+      this.closeMenuIfOpen();
     }
-
   },
   directives: {
     'click-outside': clickOutside
@@ -233,37 +240,14 @@ export default {
     }
   }
 
-  &-dotColumn {
-    display: flex;
-    flex-direction: column;
-
-    &:first-child {
-      margin-right: 5px;
-    }
-  }
-
   &-dotRow {
-    padding: 8px 0 8px 0;
+    padding: 8px 0;
     display: flex;
     position: relative;
-  }
-
-  &-dot {
-    opacity: 0.8;
-    height: 2px;
-    width: 2px;
-    background-color: white;
-    border-radius: 50%;
-    display: inline-block;
-    margin-bottom: 2px;
-    margin-top: 2px;
-
-    &--menu {
-      width: 5px;
-      height: 5px;
-      background-color: #c4c4c4;
-      opacity: 1;
-      margin: 0 2px;
+    &:hover,
+    &:active,
+    &:focus {
+      cursor: pointer;
     }
   }
 
@@ -326,8 +310,16 @@ export default {
     align-items: center;
   }
 
+  &-credits {
+    white-space: nowrap;
+  }
+
   &-semesters {
     margin-left: 0.2rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 14rem;
 
     &:before {
       margin-right: 0.2rem;
@@ -419,8 +411,7 @@ export default {
   z-index: 1;
 
   &--caution {
-    width: 180px;
-    text-align: left;
+    width: 7.5rem;
   }
 }
 
@@ -433,7 +424,7 @@ export default {
   content: ' ';
   position: absolute;
   bottom: 100%; /* At the top of the tooltip */
-  right: 82px;
+  right: 14px;
   margin-left: -10px;
   border-width: 5px;
   border-style: solid;
@@ -445,7 +436,7 @@ export default {
   content: ' ';
   position: absolute;
   bottom: 100%; /* At the top of the tooltip */
-  right: 80px;
+  right: 12px;
   margin-left: -2px;
   border-width: 7px;
   border-style: solid;
@@ -460,5 +451,82 @@ export default {
 
 .course-tooltip .course-tooltiptext--info::before {
   right: 8px;
+}
+
+@media only screen and (max-width: 878px) {
+  .course {
+    width: 17rem;
+    &--min {
+      width: 10.5rem;
+      height: 2.125rem;
+    }
+    &-main {
+      &--min {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+    &-color {
+      width: 1.25rem;
+      height: 5.625rem;
+      border-radius: 0.42rem 0 0 0.42rem;
+      background-color: var(--bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &--active {
+        width: 19px;
+        height: 5.5rem;
+      }
+
+      &--min {
+        height: 2.125rem;
+
+        &.course-color--active {
+          height: 2rem;
+        }
+      }
+    }
+
+    &-content {
+      width: 17rem;
+      &--min {
+        width: 9.25rem;
+        margin-bottom: 0;
+        margin-top: 0;
+        margin-right: .5rem;
+      }
+    }
+
+    &-top {
+      width: 14rem;
+      &--min {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+
+    &-name {
+      width: 14rem;
+    }
+
+    &-menu {
+      right: -1rem;
+    }
+  }
+  .active {
+    border: 1px solid #2b6693;
+    height: 5.625rem;
+    width: 17rem;
+
+    &.course--min {
+      height: 2.125rem;
+      width: 10.5rem;
+    }
+  }
 }
 </style>

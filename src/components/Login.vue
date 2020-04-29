@@ -9,13 +9,7 @@
 
       <div class="landing">
         <!--TOP BAR-->
-        <div class="container p-0">
-            <div class="row top-bar justify-content-between no-gutters">
-                <div class="col-10">
-                    <img class="logo" src="@/assets/images/logo.svg" alt = "logo" />
-                  </div>
-            </div>
-        </div>
+        <topbar/>
 
         <!--PLAN AHEAD-->
         <div class="container p-0 m-0">
@@ -71,7 +65,7 @@
                 </div>
                 <div class = "col-12 col-md-6 comment" >
                     <h1  class="head">Drag Your Course In</h1>
-                    <p class= "sub"> Courseplan’s intuitive interface recommends courses based on unfulfilled
+                    <p class= "sub"> CoursePlan’s intuitive interface recommends courses based on unfulfilled
                         requirements and allows you to easily drag and drop them into your planner </p>
                 </div>
             </div>
@@ -83,7 +77,7 @@
             <div class="row semester phonepad m-0">
                 <div class = "col-12 col-md-5 comment" >
                     <h1 class= "head">Plan Your Semesters</h1>
-                    <p class= "sub">Use Courseplan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
+                    <p class= "sub">Use CoursePlan’s semesterly planner to choose courses well in advance and ensure that you never miss a requirement</p>
                 </div>
                 <div class = "col-md-7 image-wrapper image-wrapper--semester" >
                     <img id= "hide" class="schedule" src="@/assets/images/schedule.svg" alt = "Plan preview" />
@@ -116,33 +110,37 @@
 
 
         <!--FOOTER-->
-        <div class="container-fluid footer p-0">
-            <div class= "row footer justify-content-center m-0">
-                <div class="col-3 footer">
-                    <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ {{getYear()}}</a>
-                </div>
-                <div class="col-3">
-                    <p class= "footer">Built with ❤️</p>
-                </div>
-                <div class="col-3 footer">
-                    <a  class="footer" href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
-                </div>
-
-            </div>
-        </div>
+        <custom-footer />
     </div>
   </div>
 </template>
 
-<script>
-import firebase from 'firebase/app';
+<script lang="ts">
+import Vue from 'vue';
+import firebase, { User } from 'firebase/app';
 
-const fb = require('../firebaseConfig.js');
+// eslint-disable-next-line import/extensions
+import Footer from '@/components/Footer.vue';
+
+// eslint-disable-next-line import/extensions
+import TopBar from '@/components/TopBar.vue';
+
+import * as fb from '@/firebaseConfig';
+
+Vue.component('custom-footer', Footer);
+Vue.component('topbar', TopBar);
 
 const { whitelistCollection, landingEmailsCollection } = fb;
 
-export default {
-  data() {
+type Data = {
+  loginForm: { email: string; password: string };
+  waitlist: { email: string; major: string; time: string };
+  performingRequest: boolean;
+  errorMsg?: string;
+};
+
+export default Vue.extend({
+  data(): Data {
     return {
       loginForm: {
         email: '',
@@ -150,9 +148,11 @@ export default {
       },
       waitlist: {
         email: '',
-        major: ''
+        major: '',
+        time: ''
       },
-      performingRequest: false
+      performingRequest: false,
+      errorMsg: undefined
     };
   },
   methods: {
@@ -163,27 +163,31 @@ export default {
         .signInWithPopup(provider)
         .then(user => {
           // Check whitelist emails to ensure user can log in
+          if (user == null) {
+            return;
+          }
           this.checkEmailAccess(user);
         })
         .catch(err => {
-          console.log(err);
           this.performingRequest = false;
           this.errorMsg = err.message;
         });
     },
-    checkEmailAccess(user) {
-      const docRef = whitelistCollection.doc(user.user.email);
+    checkEmailAccess({ user }: { user: User | null }) {
+      if (user == null) {
+        return;
+      }
+      const docRef = whitelistCollection.doc(user.email || '');
       docRef.get().then(doc => {
         if (doc.exists) {
           this.performingRequest = false;
-          this.$store.commit('setCurrentUser', user.user);
+          this.$store.commit('setCurrentUser', user);
           this.$store.dispatch('fetchUserProfile');
           this.$router.push(`${process.env.BASE_URL}/`);
         } else {
           this.handleUserWithoutAccess();
         }
       }).catch(error => {
-        console.log(error);
         this.handleUserWithoutAccess();
       });
     },
@@ -191,39 +195,58 @@ export default {
     handleUserWithoutAccess() {
       this.performingRequest = false;
       fb.auth.signOut();
+      // eslint-disable-next-line no-alert
       alert('Sorry, but you do not have access currently.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.');
     },
 
-    validateEmail(email) {
+    validateEmail(email: string): boolean {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email));
     },
-    validateMajor(major) {
+    validateMajor(major: string): boolean {
       return major.trim().length > 0;
     },
     addUser() {
       if (this.validateEmail(this.waitlist.email) && this.validateMajor(this.waitlist.major)) {
+        // eslint-disable-next-line no-alert
         alert('You have been added to the waitlist. We\'ll be in touch shortly!');
+
+        // Add timestamp to data in YYYY-MM-DD hh:mm:ss
+        const dt = new Date();
+        this.waitlist.time = `${
+          (dt.getMonth() + 1).toString().padStart(2, '0')}/${
+          dt.getDate().toString().padStart(2, '0')}/${
+          dt.getFullYear().toString().padStart(4, '0')} ${
+          dt.getHours().toString().padStart(2, '0')}:${
+          dt.getMinutes().toString().padStart(2, '0')}:${
+          dt.getSeconds().toString().padStart(2, '0')}`;
+
+        // Add landing page data to Firebase
         landingEmailsCollection.add(this.waitlist);
 
         // Clear fields
         this.waitlist.email = '';
         this.waitlist.major = '';
       } else if (!this.validateEmail(this.waitlist.email)) {
+        // eslint-disable-next-line no-alert
         alert('You have entered an invalid email address!');
       } else {
+        // eslint-disable-next-line no-alert
         alert('You have not entered a major!');
       }
     },
-    getYear() {
+    getYear(): number {
       const today = new Date();
       return today.getFullYear();
     }
 
   }
-};
+});
 </script>
 
 <style scoped lang="scss">
+    .logo {
+      width: 12rem;
+    }
     .section{
       padding:0px;
       margin: 0px;
@@ -455,37 +478,8 @@ export default {
     p {
       padding: 0;
     }
-    p.footer{
-      text-align: center;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 24px;
-      line-height: 28px;
-      color: #757575;
-    }
-    a.footer {
-      text-align: center;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 24px;
-      line-height: 28px;
-      color: #757575;
-    }
-    .col-3 {
-      margin-left: .5rem;
-      margin-right: .5rem;
-    }
-    .col-3.footer{
-      text-align: center;
-    }
-    .row.footer{
-      padding : 40px;
-    }
     .container.inside{
       max-width: 600px;
-    }
-    @media (max-width: 1335px) {
-
     }
     @media (max-width:1154px) {
       img#hide{

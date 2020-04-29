@@ -76,8 +76,10 @@
                 </div>
               </div>
             </div>
+
+
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major</label>
+              <label class="onboarding-label">Your Major (optional)</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -94,7 +96,7 @@
                       id="major-placeholder"
                       :style="{ color: options.placeholderColor }"
                     >
-                      {{ options.placeholder }}
+                      {{options.placeholder}}
                     </div>
                     <div
                       class="onboarding-dropdown-placeholder major-arrow"
@@ -123,17 +125,17 @@
                 <div class="onboarding-add" @click="addMajor">
                   Add
                 </div>
-                <div class="onboarding-remove" @click="removeMajor" :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }">
+                <div class="onboarding-remove" @click="removeMajor" :class="{'onboarding--hidden': displayOptions.major.length === 1 && displayOptions.major[0].placeholder == placeholderText}">
                   Remove
                 </div>
               </div>
             </div>
+
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <label class="onboarding-label">Your Minor (optional)</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
-                  :class="{ 'onboarding-select--disabled': Object.keys(minors).length <= 0 }"
                   id="minor"
                   v-for="(options, index) in displayOptions.minor"
                   :key = index
@@ -175,11 +177,12 @@
                 <div class="onboarding-add" @click="addMinor">
                   Add
                 </div>
-                <div class="onboarding-remove" @click="removeMinor" :class="{ 'onboarding--hidden': displayOptions.minor.length <= 1 }">
+                <div class="onboarding-remove" @click="removeMinor" :class="{'onboarding--hidden': displayOptions.minor.length === 1 && displayOptions.minor[0].placeholder == placeholderText}">
                   Remove
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -192,13 +195,13 @@
 </template>
 
 <script>
-import reqsData from '@/requirements/reqs.json';
+import reqsData from '@/requirements/typed-requirement-json';
 
 const placeholderText = 'Select one';
 
 const clickOutside = {
   bind(el, binding, vnode) {
-    el.event = function (event) {
+    el.event = event => {
       if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event, binding.arg);
       }
@@ -235,8 +238,16 @@ export default {
       majorPlaceholderColor = '#757575';
     }
 
+    let minorText = placeholderText;
+    let minorAcronym = '';
+    let minorPlaceholderColor = '';
+    if ('minor' in this.user && this.user.minor.length > 0) {
+      minorText = this.user.minorFN;
+      minorAcronym = this.user.minor;
+      minorPlaceholderColor = '#757575';
+    }
+
     return {
-      reqsData,
       // TODO: Get real college, major, and minor lists
       colleges: {},
       majors: {},
@@ -244,6 +255,7 @@ export default {
       firstName: this.user.firstName,
       middleName: this.user.middleName,
       lastName: this.user.lastName,
+      placeholderText,
       displayOptions: {
         college: [
           {
@@ -273,9 +285,9 @@ export default {
             stopClose: false,
             boxBorder: '',
             arrowColor: '',
-            placeholderColor: '',
-            placeholder: placeholderText,
-            acronym: ''
+            placeholderColor: minorPlaceholderColor,
+            placeholder: minorText,
+            acronym: minorAcronym
           }
         ]
       },
@@ -289,58 +301,128 @@ export default {
     this.setCollegesMap();
     this.setMajorsList();
     this.setMinorsList();
+    this.flattenDisplayMajors();
+    this.flattenDisplayMinors();
   },
   methods: {
+    flattenDisplayMajors() {
+      const majors = [];
+      this.displayOptions.major.forEach(major => {
+        if (Array.isArray(major.acronym)) {
+          major.acronym.flat(Infinity);
+          for (let i = 0; i < major.acronym.length; i += 1) {
+            const newMajor = {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: '#757575',
+              placeholder: major.placeholder[i],
+              acronym: major.acronym[i]
+            };
+            majors.push(newMajor);
+          }
+        } else {
+          majors.push({
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            placeholder: major.placeholder,
+            acronym: major.acronym
+          });
+        }
+      });
+      this.displayOptions.major = majors;
+    },
+    flattenDisplayMinors() {
+      const minors = [];
+      this.displayOptions.minor.forEach(minor => {
+        if (Array.isArray(minor.acronym)) {
+          minor.acronym.flat(Infinity);
+          for (let i = 0; i < minor.acronym.length; i += 1) {
+            const newminor = {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: '#757575',
+              placeholder: minor.placeholder[i],
+              acronym: minor.acronym[i]
+            };
+            minors.push(newminor);
+          }
+        } else {
+          minors.push({
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            placeholder: minor.placeholder,
+            acronym: minor.acronym
+          });
+        }
+      });
+      this.displayOptions.minor = minors;
+    },
     // Set the colleges map to with acronym keys and full name values
     setCollegesMap() {
+      /** @type {Object.<string, string>} */
       const colleges = {};
       const collegeJSON = reqsData.college;
-      for (const key in collegeJSON) {
-        if ('name' in collegeJSON[key]) {
-          colleges[key] = collegeJSON[key].name;
-        }
-      }
-
+      Object.keys(collegeJSON).forEach(key => {
+        colleges[key] = collegeJSON[key].name;
+      });
       this.colleges = colleges;
     },
     // Set the majors map to with acronym keys and full name values
     setMajorsList() {
+      /** @type {Object.<string, string>} */
       const majors = {};
       const majorJSON = reqsData.major;
-      for (const key in majorJSON) {
+      Object.keys(majorJSON).forEach(key => {
         // make sure name defined
-        if ('name' in majorJSON[key]) {
-          // only show majors for schools the user is in
-          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            const college = this.displayOptions.college[i];
-            if (majorJSON[key].schools.includes(college.acronym)) {
-              majors[key] = majorJSON[key].name;
-              continue;
-            }
+        // only show majors for schools the user is in
+        for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+          const college = this.displayOptions.college[i];
+          if (majorJSON[key].schools.includes(college.acronym)) {
+            majors[key] = majorJSON[key].name;
           }
         }
-      }
+      });
       this.majors = majors;
     },
     // TODO: add minors when the list exists
     setMinorsList() {
-      this.minors = {};
+      const minors = {};
+      const minorJSON = reqsData.minor;
+      for (const key in minorJSON) {
+        // make sure name defined
+        if ('name' in minorJSON[key]) {
+          // only show majors for schools the user is in
+          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+            minors[key] = minorJSON[key].name;
+          }
+        }
+      }
+      this.minors = minors;
     },
     // Clear a major if a new college is selected and the major is not in it
     clearMajorIfNotInCollege() {
-      // Do nothing if no major set
-      if (this.displayOptions.major.length === 1 && this.displayOptions.major[0].acronym === '') {
-        return;
-      }
       const majorJSON = reqsData.major;
       for (let x = 0; x < this.displayOptions.major.length; x += 1) {
         const major = this.displayOptions.major[x];
         let foundCollege = false;
-        for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-          const college = this.displayOptions.college[i];
-          if (majorJSON[major.acronym].schools.includes(college.acronym)) {
-            foundCollege = true;
-            break;
+        // Do nothing if no major set
+        if (major.acronym !== '') {
+          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+            const college = this.displayOptions.college[i];
+            if (majorJSON[major.acronym].schools.includes(college.acronym)) {
+              foundCollege = true;
+              break;
+            }
           }
         }
         if (!foundCollege) {
@@ -367,7 +449,6 @@ export default {
             minors: this.notPlaceholderOptions(this.displayOptions.minor)
           }
         };
-
         this.$emit('onboard', onboardingData);
       }
     },
@@ -394,7 +475,6 @@ export default {
           list.push(obj);
         }
       });
-
       return list;
     },
     showHideContent(type, i) {
@@ -472,10 +552,24 @@ export default {
         placeholder: placeholderText,
         acronym: ''
       };
+      const majors = [];
+      this.displayOptions.major.forEach(maj => {
+        if (maj.length > 0) {
+          maj.forEach(subMaj => {
+            majors.push(subMaj);
+          });
+        } else {
+          majors.push(maj);
+        }
+      });
+      this.displayOptions.major = majors;
       this.displayOptions.major.push(newMajor);
     },
     removeMajor() {
       this.displayOptions.major.pop();
+      if (this.displayOptions.major.length === 0) {
+        this.addMajor();
+      }
     },
     addMinor() {
       const minor = {
@@ -490,6 +584,9 @@ export default {
     },
     removeMinor() {
       this.displayOptions.minor.pop();
+      if (this.displayOptions.minor.length === 0) {
+        this.addMinor();
+      }
     }
   }
 };
@@ -795,6 +892,44 @@ select.empty {
 /* Hidden placeholder */
 select option[disabled]:first-child {
   display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .onboarding {
+    &-main {
+      width: 100%;
+    }
+    &-content {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+    &-inputs {
+      &--name {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+    }
+    &-inputWrapper {
+      &--name {
+        width: 100%;
+      }
+      &--college {
+        width: 100%;
+      }
+    }
+    &-dropdown {
+      &-placeholder {
+        &.college-placeholder,
+        &.major-placeholder,
+        &.minor-placeholder {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
 }
 
 </style>
