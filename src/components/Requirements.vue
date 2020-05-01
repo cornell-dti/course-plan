@@ -108,18 +108,22 @@
                 :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
                 :href="subReq.requirement.source" target="_blank">
                 <strong>Learn More</strong></a>
-              </div>
-              <div class="draggable-requirements-courses" v-dragula="subReqsCourseMapList[req.group][subReq.requirement.name]" bag="first-bag">
-                <div v-for="course in subReqsCourseMapList[req.group][subReq.requirement.name]" :key="course.uniqueID" class="requirements-courseWrapper">
-                  <course
-                    v-bind="course"
-                    :courseObj="course"
-                    :id="course.subject + course.number"
-                    :uniqueID="course.uniqueID"
-                    :compact="course.compact"
-                    :active="false"
-                    class="requirements-course"
-                  />
+                <div
+                  v-if="false"
+                  class="draggable-requirements-courses"
+                  v-dragula="subReqsCourseMapList[req.group][subReq.requirement.name]"
+                  bag="first-bag">
+                  <div v-for="course in subReqsCourseMapList[req.group][subReq.requirement.name]" :key="course.uniqueID" class="requirements-courseWrapper">
+                    <course
+                      v-bind="course"
+                      :courseObj="course"
+                      :id="course.subject + course.number"
+                      :uniqueID="course.uniqueID"
+                      :compact="course.compact"
+                      :active="false"
+                      class="requirements-course"
+                    />
+                  </div>
                 </div>
               </div>
               <div class="separator"></div>
@@ -195,7 +199,8 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
-import coursesJSON from '@/assets/courses/courses.json';
+import filteredAllCourses from '@/requirements/filtered-all-courses';
+import decoratedRequirementsJSON from '@/requirements/decorated-requirements.json';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -270,12 +275,15 @@ export default Vue.extend({
       }
       console.log('Single Menu Req');
       console.log(singleMenuRequirement);
-
       if (singleMenuRequirement.group === 'MAJOR') {
         this.subReqsCourseMapList[singleMenuRequirement.group] = {};
-        singleMenuRequirement.ongoing.forEach(ongoingReq => {
-          this.addRequirementsCourse(ongoingReq.requirement, singleMenuRequirement.group);
-        });
+
+        this.addRequirementsCourse(singleMenuRequirement.group, singleMenuRequirement.specific);
+
+        // TODO: Remove once adding req courses works
+        // singleMenuRequirement.ongoing.forEach(ongoingReq => {
+        //   this.addRequirementsCourse(ongoingReq.requirement, singleMenuRequirement.group);
+        // });
       }
 
       return singleMenuRequirement;
@@ -344,8 +352,8 @@ export default Vue.extend({
         MAJOR: ['105351', 'green'],
         MINOR: ['92C3E6', 'lightblue']
       },
-      // subReqCourseMap maps the subReq name to a course object array
-      // Each item has key <subReq name>: <course object>
+      // subReqCourseMap maps from the group name to the subreq to a Course[]
+      // Each item has key <group name>: <subreq name>: list of courses that fulfill the subreq
       subReqsCourseMapList: {},
       scrollable: false
     };
@@ -448,52 +456,83 @@ export default Vue.extend({
       }
       this.minors = minors;
     },
-    addRequirementsCourse(ongoingSubReq, reqGroup) {
-      console.log(reqGroup);
-      const ongoingSubReqName = ongoingSubReq.name;
-      if (ongoingSubReq.fulfilledBy !== 'self-check') {
-        ongoingSubReq.courses.forEach(subReqCourseObject => {
-          const subReqCourseObjectRosters = Object.keys(subReqCourseObject);
-          const roster = subReqCourseObjectRosters[subReqCourseObjectRosters.length - 1];
-          const courseRosterObject = subReqCourseObject[roster];
-          const courseRosterObjectSubjects = Object.keys(courseRosterObject);
+    // TODO: Remove eventually once adding req courses works
+    // OLD VERSION OF ADDING REQ COURSES
+    // addRequirementsCourse(ongoingSubReq, reqGroup) {
+    //   console.log(reqGroup);
+    //   const ongoingSubReqName = ongoingSubReq.name;
+    //   if (ongoingSubReq.fulfilledBy !== 'self-check') {
+    //     ongoingSubReq.courses.forEach(subReqCourseObject => {
+    //       const subReqCourseObjectRosters = Object.keys(subReqCourseObject);
+    //       const roster = subReqCourseObjectRosters[subReqCourseObjectRosters.length - 1];
+    //       const courseRosterObject = subReqCourseObject[roster];
+    //       const courseRosterObjectSubjects = Object.keys(courseRosterObject);
 
-          courseRosterObjectSubjects.forEach(subjectKey => {
-            const subject = subjectKey;
-            const courseRosterObjectSubjectCourses = courseRosterObject[subjectKey];
+    //       courseRosterObjectSubjects.forEach(subjectKey => {
+    //         const subject = subjectKey;
+    //         const courseRosterObjectSubjectCourses = courseRosterObject[subjectKey];
 
-            courseRosterObjectSubjectCourses.forEach(subjectNumber => {
-              const number = subjectNumber;
-              const courseCode = `${subject} ${number}`;
-              console.log(courseCode);
-              console.log(roster);
+    //         courseRosterObjectSubjectCourses.forEach(subjectNumber => {
+    //           const number = subjectNumber;
+    //           const courseCode = `${subject} ${number}`;
+    //           console.log(courseCode);
+    //           console.log(roster);
 
-              fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
-                .then(res => res.json())
-                .then(resultJSON => {
-                  // check catalogNbr of resultJSON class matches number of course to add
-                  resultJSON.data.classes.forEach(resultJSONclass => {
-                    if (resultJSONclass.catalogNbr === number) {
-                      const course = resultJSONclass;
-                      course.roster = roster;
+    //           fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
+    //             .then(res => res.json())
+    //             .then(resultJSON => {
+    //               // check catalogNbr of resultJSON class matches number of course to add
+    //               resultJSON.data.classes.forEach(resultJSONclass => {
+    //                 if (resultJSONclass.catalogNbr === number) {
+    //                   const course = resultJSONclass;
+    //                   course.roster = roster;
 
-                      const newCourse = this.$parent.createCourse(course, true);
-                      newCourse.compact = true;
-                      console.log(newCourse);
-                      if (this.subReqsCourseMapList[reqGroup] && this.subReqsCourseMapList[reqGroup][ongoingSubReqName]) {
-                        this.subReqsCourseMapList[reqGroup][ongoingSubReqName].push(newCourse);
-                      } else {
-                        this.subReqsCourseMapList[reqGroup][ongoingSubReqName] = [newCourse];
-                      }
-                    }
-                  });
-                });
-            });
+    //                   const newCourse = this.$parent.createCourse(course, true);
+    //                   newCourse.compact = true;
+    //                   console.log(newCourse);
+    //                   if (this.subReqsCourseMapList[reqGroup] && this.subReqsCourseMapList[reqGroup][ongoingSubReqName]) {
+    //                     this.subReqsCourseMapList[reqGroup][ongoingSubReqName].push(newCourse);
+    //                   } else {
+    //                     this.subReqsCourseMapList[reqGroup][ongoingSubReqName] = [newCourse];
+    //                   }
+    //                 }
+    //               });
+    //             });
+    //         });
+    //       });
+    //     });
+    //   }
+    //   console.log('subReqsCourseMapList');
+    //   console.log(this.subReqsCourseMapList);
+    // }
+    addRequirementsCourse(group, specific) {
+      // "university", "college", "major", or "minor"
+      const groupName = group.toLowerCase();
+
+      console.log(decoratedRequirementsJSON[groupName][specific]);
+
+      // List of requirements given the group and the specific (college/major/minor)
+      const requirementsList = decoratedRequirementsJSON[groupName][specific].requirements;
+
+      requirementsList.forEach(requirement => {
+        if (requirement.fulfilledBy !== 'self-check') {
+          requirement.courses.forEach(reqCourseObj => {
+            // get roster keys for reqCourseObj, that is all rosters for a specific course
+            const reqCourseObjRosters = Object.keys(reqCourseObj);
+
+            // get last element of reqCourseObjRosters for most recent roster
+            const roster = reqCourseObjRosters[reqCourseObjRosters.length - 1];
+            const subject = Object.keys(reqCourseObj[roster])[0];
+            const number = reqCourseObj[roster][subject][0];
+
+            console.log('roster');
+            console.log(roster);
+
+            // Seems to be causing a TypeError
+            // console.log(filteredAllCourses);
           });
-        });
-      }
-      console.log('subReqsCourseMapList');
-      console.log(this.subReqsCourseMapList);
+        }
+      });
     }
   }
 });
