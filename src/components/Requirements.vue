@@ -125,16 +125,16 @@
                 <div class="draggable-requirements-wrapper" v-if="subReq.displayDescription">
                   <div
                     class="draggable-requirements-seeAll-wrapper"
-                    v-if="subReqsCourseMapList[req.group] !== undefined && subReqsCourseMapList[req.group][subReq.requirement.name] !== undefined"
+                    v-if="subReqsCoursesMap[req.group] !== undefined && subReqsCoursesMap[req.group][subReq.requirement.name] !== undefined"
                   >
                     <div class="draggable-requirements-seeAll-button" v-on:click="showSeeAll(req.group, req.specific, subReq.requirement.name)">{{ seeAll }}</div>
                   </div>
                     <div
-                      v-if="subReqsCourseMapList[req.group] !== undefined && subReqsCourseMapList[req.group][subReq.requirement.name] !== undefined"
+                      v-if="subReqsCoursesMap[req.group] !== undefined && subReqsCoursesMap[req.group][subReq.requirement.name] !== undefined"
                       class="draggable-requirements-courses"
-                      v-dragula="subReqsCourseMapList[req.group][subReq.requirement.name]"
+                      v-dragula="subReqsCoursesMap[req.group][subReq.requirement.name]"
                       bag="first-bag">
-                      <div v-for="course in subReqsCourseMapList[req.group][subReq.requirement.name]" :key="course.uniqueID" class="requirements-courseWrapper">
+                      <div v-for="course in subReqsCoursesMap[req.group][subReq.requirement.name]" :key="course.uniqueID" class="requirements-courseWrapper">
                         <course
                           v-bind="course"
                           :courseObj="course"
@@ -210,11 +210,11 @@
         <!-- loop through reqs array of req objects -->
         <div
           class="req"
-          v-for="reqGroup in Object.keys(subReqsCourseMapList)"
+          v-for="reqGroup in Object.keys(subReqsCoursesMap)"
           :key="reqGroup.id"
         >
           <div
-            v-for="subReqName in Object.keys(subReqsCourseMapList[reqGroup])"
+            v-for="subReqName in Object.keys(subReqsCoursesMap[reqGroup])"
             :key="subReqName.id"
           >
             <div class="row top">
@@ -239,11 +239,11 @@
             <h1 class="title">All {{subReqName}} Courses</h1>
             <div class="draggable-requirements-wrapper">
                 <div
-                  v-if="subReqsCourseMapList[reqGroup] !== undefined && subReqsCourseMapList[reqGroup][subReqName] !== undefined"
+                  v-if="subReqsCoursesMap[reqGroup] !== undefined && subReqsCoursesMap[reqGroup][subReqName] !== undefined"
                   class="draggable-requirements-courses"
-                  v-dragula="subReqsCourseMapList[reqGroup][subReqName]"
+                  v-dragula="subReqsCoursesMap[reqGroup][subReqName]"
                   bag="first-bag">
-                  <div v-for="course in subReqsCourseMapList[reqGroup][subReqName]" :key="course.uniqueID" class="requirements-courseWrapper">
+                  <div v-for="course in subReqsCoursesMap[reqGroup][subReqName]" :key="course.uniqueID" class="requirements-courseWrapper">
                     <course
                       v-bind="course"
                       :courseObj="course"
@@ -297,7 +297,7 @@ type Data = {
   minors: minor[];
   requirementsMap: {};
   reqGroupColorMap: {};
-  subReqsCourseMapList: {};
+  subReqsCoursesMap: {};
   scrollable: boolean;
   isSeeAll: boolean;
 
@@ -355,7 +355,7 @@ export default Vue.extend({
       }
       console.log('in singleMenuReq');
       if (singleMenuRequirement.group !== 'UNIVERSITY') {
-        this.subReqsCourseMapList[singleMenuRequirement.group] = {};
+        this.subReqsCoursesMap[singleMenuRequirement.group] = {};
 
         // isSeeAll param is false because only show first 4
         this.addRequirementsCourse(singleMenuRequirement.group, singleMenuRequirement.specific, this.isSeeAll);
@@ -429,7 +429,7 @@ export default Vue.extend({
       },
       // subReqCourseMap maps from the group name to the subreq to a Course[]
       // Each item has key <group name>: <subreq name>: list of courses that fulfill the subreq
-      subReqsCourseMapList: {},
+      subReqsCoursesMap: {},
       scrollable: false,
       isSeeAll: false
     };
@@ -532,8 +532,8 @@ export default Vue.extend({
       }
       this.minors = minors;
     },
-    // Fetches course data and updates the subReqsCourseMapList with the course
-    updateSubReqsCourseMapList(roster, subject, number, courseCode, group, subReqName, isSeeAll) {
+    // Fetches course data and updates the subReqsCoursesMap with the course
+    updatesubReqsCoursesMap(roster, subject, number, courseCode, group, subReqName, isSeeAll) {
       fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
         .then(res => res.json())
         .then(resultJSON => {
@@ -547,10 +547,10 @@ export default Vue.extend({
                 const newCourse = this.$parent.createCourse(course, true);
                 newCourse.compact = !isSeeAll;
                 // console.log(newCourse);
-                if (this.subReqsCourseMapList[group] && this.subReqsCourseMapList[group][subReqName]) {
-                  this.subReqsCourseMapList[group][subReqName].push(newCourse);
+                if (this.subReqsCoursesMap[group] && this.subReqsCoursesMap[group][subReqName]) {
+                  this.subReqsCoursesMap[group][subReqName].push(newCourse);
                 } else {
-                  this.subReqsCourseMapList[group][subReqName] = [newCourse];
+                  this.subReqsCoursesMap[group][subReqName] = [newCourse];
                 }
               }
             });
@@ -602,7 +602,7 @@ export default Vue.extend({
                   const courseSubjectToAdd = courseCodeToAdd.split(' ')[0];
                   const courseNumberToAdd = courseCodeToAdd.split(' ')[1];
                   console.log(courseCodeToAdd);
-                  this.updateSubReqsCourseMapList(roster, courseSubjectToAdd, courseNumberToAdd, courseCodeToAdd, group, subReqName, isSeeAll);
+                  this.updatesubReqsCoursesMap(roster, courseSubjectToAdd, courseNumberToAdd, courseCodeToAdd, group, subReqName, isSeeAll);
                 });
               }
             }
@@ -624,26 +624,26 @@ export default Vue.extend({
                   const courseNumberList = entry[1];
                   courseNumberList.forEach(number => {
                     const courseCode = `${subject} ${number}`;
-                    this.updateSubReqsCourseMapList(roster, subject, number, courseCode, group, subReqName, isSeeAll);
+                    this.updatesubReqsCoursesMap(roster, subject, number, courseCode, group, subReqName, isSeeAll);
                   });
                 });
               }
             }
           }
-          console.log('subReqsCourseMapList');
-          console.log(this.subReqsCourseMapList);
+          console.log('subReqsCoursesMap');
+          console.log(this.subReqsCoursesMap);
         }
       });
     },
     showSeeAll(group, specific, subReqName) {
-      this.subReqsCourseMapList = {};
-      this.subReqsCourseMapList[group] = {};
+      this.subReqsCoursesMap = {};
+      this.subReqsCoursesMap[group] = {};
       this.addRequirementsCourse(group, specific, subReqName, true);
       this.isSeeAll = !this.isSeeAll;
     },
     backtoRequirements() {
       this.isSeeAll = !this.isSeeAll;
-      this.subReqsCourseMapList = {};
+      this.subReqsCoursesMap = {};
     }
   }
 });
