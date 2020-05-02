@@ -1,119 +1,249 @@
 <template v-if="semesters">
   <div class="requirements">
     <div class="fixed">
-    <h1 class="title">School Requirements</h1>
-    <!-- loop through reqs array of req objects -->
-    <div class="req" v-for="(req, index) in reqs" :key="req.id">
+    <div class="requirements-regularView" v-if="!this.isSeeAll">
+      <h1 class="title">School Requirements</h1>
+      <!-- loop through reqs array of req objects -->
+      <div class="req" v-for="(req, index) in reqs" :key="req.id">
 
-      <!-- TODO change for multiple colleges -->
-      <div v-if="index<=2 || index == 2 + majors.length" class="row top">
-        <p class="name col p-0">{{ req.name }}</p>
-      </div>
         <!-- TODO change for multiple colleges -->
-        <div v-if="index==2" class="major">
-          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
-            <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
-            <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
-          </div>
+        <div v-if="index<=2 || index == 2 + majors.length" class="row top">
+          <p class="name col p-0">{{ req.name }}</p>
         </div>
-        <div v-if="index==2+majors.length" class="minor">
-          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"  @click="activate(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
-            <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
-            <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
-          </div>
-        </div>
-
-        <!-- progress bar settings -->
-        <div v-if="showMajorOrMinorRequirements(index, req.group)" >
-          <div class="progress">
+          <!-- TODO change for multiple colleges -->
+          <div v-if="index==2" class="major">
             <div
-              class="progress-bar"
-              :style="{ 'background-color': `#${reqGroupColorMap[req.group][0]}`, width: `${(req.fulfilled/req.required)*100}%`}"
-              role="progressbar"
-            ></div>
+              :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
+              @click="activate(id)"
+              class="major-title"
+              v-for="(major, id) in majors"
+              :key="major.id"
+            >
+              <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
+              <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
+            </div>
+          </div>
+          <div v-if="index==2+majors.length" class="minor">
+            <div
+              :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
+              @click="activate(id)" class="major-title"
+              v-for="(minor, id) in minors"
+              :key="minor.id"
+            >
+              <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
+              <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
+            </div>
           </div>
 
-          <p class="progress-text">
-            <span class="progress-text-credits">{{ req.fulfilled }}/{{ req.required }}</span>
-            <span class="progress-text-text"> Total {{ req.type }} Inputted on Schedule</span>
-          </p>
-
-          <!--View more college requirements -->
-          <div class="row top">
-            <div class="col-1 p-0" >
-              <button :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" class="btn" @click="toggleDetails(index)">
-                <!-- svg for dropdown icon -->
-                <img
-                  v-if="req.displayDetails"
-                  class="arrow arrow-up"
-                  :src="require(`@/assets/images/dropup-${reqGroupColorMap[req.group][1]}.svg`)"
-                  alt="dropup"
-                />
-                <img
-                  v-else
-                  class="arrow arrow-down"
-                  :src="require(`@/assets/images/dropdown-${reqGroupColorMap[req.group][1]}.svg`)"
-                  alt="dropdown"
-                />
-              </button>
+          <!-- progress bar settings -->
+          <div v-if="showMajorOrMinorRequirements(index, req.group)" >
+            <div class="progress">
+              <div
+                class="progress-bar"
+                :style="{ 'background-color': `#${reqGroupColorMap[req.group][0]}`, width: `${(req.fulfilled/req.required)*100}%`}"
+                role="progressbar"
+              ></div>
             </div>
-            <div class="col p-0 ">
-                <button
-                    class="btn req-name"
-                    :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
-                    @click="toggleDetails(index)">
-                    {{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements
+
+            <p class="progress-text">
+              <span class="progress-text-credits">{{ req.fulfilled }}/{{ req.required }}</span>
+              <span class="progress-text-text"> Total {{ req.type }} Inputted on Schedule</span>
+            </p>
+
+            <!--View more college requirements -->
+            <div class="row top">
+              <div class="col-1 p-0" >
+                <button :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" class="btn" @click="toggleDetails(index)">
+                  <!-- svg for dropdown icon -->
+                  <img
+                    v-if="req.displayDetails"
+                    class="arrow arrow-up"
+                    :src="require(`@/assets/images/dropup-${reqGroupColorMap[req.group][1]}.svg`)"
+                    alt="dropup"
+                  />
+                  <img
+                    v-else
+                    class="arrow arrow-down"
+                    :src="require(`@/assets/images/dropdown-${reqGroupColorMap[req.group][1]}.svg`)"
+                    alt="dropdown"
+                  />
                 </button>
-            </div>
-          </div>
-
-          <!--Show more of completed requirements -->
-          <div v-if="req.displayDetails">
-            <p class="sub-title">In-Depth College Requirements</p>
-            <div class="separator"></div>
-            <div
-              v-for="(subReq, id) in req.ongoing"
-              :key="subReq.id">
-              <div class="row depth-req">
-                <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
-                  <button class="btn">
-                    <!-- svg for dropdown icon -->
-                    <img
-                      v-if="subReq.displayDescription"
-                  class="arrow arrow-up"
-                   src="@/assets/images/dropup.svg"
-                   alt="dropup"
-                    />
-                    <img
-                      v-else
-                      class="arrow arrow-down"
-                      src="@/assets/images/dropdown.svg"
-                      alt="dropdown"
-                    />
+              </div>
+              <div class="col p-0 ">
+                  <button
+                      class="btn req-name"
+                      :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                      @click="toggleDetails(index)">
+                      {{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements
                   </button>
+              </div>
+            </div>
+
+            <!--Show more of completed requirements -->
+            <div v-if="req.displayDetails">
+              <p class="sub-title">In-Depth College Requirements</p>
+              <div class="separator"></div>
+              <div
+                v-for="(subReq, id) in req.ongoing"
+                :key="subReq.id">
+                <div class="row depth-req">
+                  <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
+                    <button class="btn">
+                      <!-- svg for dropdown icon -->
+                      <img
+                        v-if="subReq.displayDescription"
+                    class="arrow arrow-up"
+                    src="@/assets/images/dropup.svg"
+                    alt="dropup"
+                      />
+                      <img
+                        v-else
+                        class="arrow arrow-down"
+                        src="@/assets/images/dropdown.svg"
+                        alt="dropdown"
+                      />
+                    </button>
+                  </div>
+                  <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
+                    <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
+                  </div>
+                  <div class="col">
+                    <p class="sup-req-progress text-right incomplete-ptext">{{
+                    (subReq.requirement.fulfilledBy !== 'self-check')
+                    ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
+                      || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
+                    : 'self check' }}</p>
+                  </div>
                 </div>
-                <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-                  <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
+                <div v-if="subReq.displayDescription" class="description">
+                  {{ subReq.requirement.description }} <a class="more"
+                  :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                  :href="subReq.requirement.source" target="_blank">
+                  <strong>Learn More</strong></a>
                 </div>
-                <div class="col">
-                  <p class="sup-req-progress text-right incomplete-ptext">{{
-                   (subReq.requirement.fulfilledBy !== 'self-check')
-                   ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
-                    || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
-                   : 'self check' }}</p>
+                <div class="separator"></div>
+                <div class="draggable-requirements-wrapper" v-if="subReq.displayDescription">
+                  <div
+                    class="draggable-requirements-seeAll-wrapper"
+                    v-if="subReqsCourseMapList[req.group] !== undefined && subReqsCourseMapList[req.group][subReq.requirement.name] !== undefined"
+                  >
+                    <div class="draggable-requirements-seeAll-button" v-on:click="showSeeAll(req.group, req.specific, subReq.requirement.name)">{{ seeAll }}</div>
+                  </div>
+                    <div
+                      v-if="subReqsCourseMapList[req.group] !== undefined && subReqsCourseMapList[req.group][subReq.requirement.name] !== undefined"
+                      class="draggable-requirements-courses"
+                      v-dragula="subReqsCourseMapList[req.group][subReq.requirement.name]"
+                      bag="first-bag">
+                      <div v-for="course in subReqsCourseMapList[req.group][subReq.requirement.name]" :key="course.uniqueID" class="requirements-courseWrapper">
+                        <course
+                          v-bind="course"
+                          :courseObj="course"
+                          :id="course.subject + course.number"
+                          :uniqueID="course.uniqueID"
+                          :compact="course.compact"
+                          :active="false"
+                          class="requirements-course"
+                        />
+                      </div>
+                    </div>
+                  <div class="separator"></div>
                 </div>
               </div>
-              <div v-if="subReq.displayDescription" class="description">
-                {{ subReq.requirement.description }} <a class="more"
-                :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
-                :href="subReq.requirement.source" target="_blank">
-                <strong>Learn More</strong></a>
+
+              <div v-if="req.completed.length > 0" class="row completed">
+                <p class="col sub-title specific">Filled Requirements</p>
+                <div class="col-1 text-right">
+                  <button class="btn float-right" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }">
+                    <!-- Toggle to display completed reqs -->
+                    <p
+                      class="toggle"
+                      v-if="req.displayCompleted"
+                      v-on:click="turnCompleted(index, false)">HIDE</p>
+                    <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
+                  </button>
+                </div>
+              </div>
+
+            <!-- Completed requirements -->
+              <div v-if="req.displayCompleted">
+                <div v-for="(subReq, id) in req.completed" :key="subReq.id">
+                  <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+                  <div class="row depth-req">
+                    <div class="col-1" @click="toggleDescription(index, 'completed', id)">
+                      <button class="btn">
+                        <!-- svg for dropdown icon -->
+                      <img
+                        v-if="subReq.displayDescription"
+                    class="arrow arrow-up completed-arrow"
+                    src="@/assets/images/dropup-lightgray.svg"
+                    alt="dropup"
+                      />
+                      <img
+                        v-else
+                    class="arrow arrow-down completed-arrow"
+                    src="@/assets/images/dropdown-lightgray.svg"
+                    alt="dropdown"
+                      />
+                      </button>
+                    </div>
+                    <div class="col-7" @click="toggleDescription(index, 'completed', id)">
+                      <p class="pointer completed-ptext">{{subReq.requirement.name}}</p>
+                    </div>
+                    <div class="col">
+                      <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
+                    </div>
+                  </div>
+                  <div v-if="subReq.displayDescription" class="description completed-ptext">
+                    {{ subReq.requirement.description }}
+                    <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          <!-- Add separator if additional completed requirements -->
+          <div class="separator" v-if="req.completed.length > 0"></div>
+          </div>
+        </div>
+      </div>
+      <div class="requirements-seeAllView" v-if="this.isSeeAll">
+        <!-- loop through reqs array of req objects -->
+        <div
+          class="req"
+          v-for="reqGroup in Object.keys(subReqsCourseMapList)"
+          :key="reqGroup.id"
+        >
+          <div
+            v-for="subReqName in Object.keys(subReqsCourseMapList[reqGroup])"
+            :key="subReqName.id"
+          >
+            <div class="row top">
+              <div class="col-1 p-0" >
+                <button :style="{ 'color': `#${reqGroupColorMap[reqGroup][0]}` }" class="btn" v-on:click="backToRequirements()">
+                  <img
+                    class="arrow arrow-left"
+                    :src="require(`@/assets/images/dropleft-${reqGroupColorMap[reqGroup][1]}.svg`)"
+                    alt="dropleft"
+                  />
+                </button>
+              </div>
+              <div class="col p-0 ">
+                  <button
+                      class="btn requirements-seeAllView-backButton"
+                      :style="{ 'color': `#${reqGroupColorMap[reqGroup][0]}` }"
+                      v-on:click="backToRequirements()">
+                      Back to All Requirements
+                  </button>
+              </div>
+            </div>
+            <h1 class="title">All {{subReqName}} Courses</h1>
+            <div class="draggable-requirements-wrapper">
                 <div
-                  v-if="subReqsCourseMapList[req.group] !== undefined && subReqsCourseMapList[req.group][subReq.requirement.name] !== undefined"
+                  v-if="subReqsCourseMapList[reqGroup] !== undefined && subReqsCourseMapList[reqGroup][subReqName] !== undefined"
                   class="draggable-requirements-courses"
-                  v-dragula="subReqsCourseMapList[req.group][subReq.requirement.name]"
+                  v-dragula="subReqsCourseMapList[reqGroup][subReqName]"
                   bag="first-bag">
-                  <div v-for="course in subReqsCourseMapList[req.group][subReq.requirement.name]" :key="course.uniqueID" class="requirements-courseWrapper">
+                  <div v-for="course in subReqsCourseMapList[reqGroup][subReqName]" :key="course.uniqueID" class="requirements-courseWrapper">
                     <course
                       v-bind="course"
                       :courseObj="course"
@@ -125,63 +255,8 @@
                     />
                   </div>
                 </div>
-              </div>
-              <div class="separator"></div>
-            </div>
-
-            <div v-if="req.completed.length > 0" class="row completed">
-              <p class="col sub-title specific">Filled Requirements</p>
-              <div class="col-1 text-right">
-                <button class="btn float-right" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }">
-                  <!-- Toggle to display completed reqs -->
-                  <p
-                    class="toggle"
-                    v-if="req.displayCompleted"
-                    v-on:click="turnCompleted(index, false)">HIDE</p>
-                  <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
-                </button>
-              </div>
-            </div>
-
-          <!-- Completed requirements -->
-            <div v-if="req.displayCompleted">
-              <div v-for="(subReq, id) in req.completed" :key="subReq.id">
-                <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
-                <div class="row depth-req">
-                  <div class="col-1" @click="toggleDescription(index, 'completed', id)">
-                    <button class="btn">
-                      <!-- svg for dropdown icon -->
-                    <img
-                      v-if="subReq.displayDescription"
-                  class="arrow arrow-up completed-arrow"
-                   src="@/assets/images/dropup-lightgray.svg"
-                   alt="dropup"
-                    />
-                    <img
-                      v-else
-                  class="arrow arrow-down completed-arrow"
-                   src="@/assets/images/dropdown-lightgray.svg"
-                   alt="dropdown"
-                    />
-                    </button>
-                  </div>
-                  <div class="col-7" @click="toggleDescription(index, 'completed', id)">
-                    <p class="pointer completed-ptext">{{subReq.requirement.name}}</p>
-                  </div>
-                  <div class="col">
-                    <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
-                  </div>
-                </div>
-                <div v-if="subReq.displayDescription" class="description completed-ptext">
-                  {{ subReq.requirement.description }}
-                  <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
-                </div>
-              </div>
             </div>
           </div>
-
-        <!-- Add separator if additional completed requirements -->
-        <div class="separator" v-if="req.completed.length > 0"></div>
         </div>
       </div>
     </div>
@@ -224,6 +299,7 @@ type Data = {
   reqGroupColorMap: {};
   subReqsCourseMapList: {};
   scrollable: boolean;
+  isSeeAll: boolean;
 
 }
 export default Vue.extend({
@@ -231,6 +307,11 @@ export default Vue.extend({
     semesters: Array,
     user: Object,
     compact: Boolean
+  },
+  computed: {
+    seeAll() {
+      return 'See all >';
+    }
   },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
@@ -272,16 +353,12 @@ export default Vue.extend({
         singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
         singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
       }
+      console.log('in singleMenuReq');
       if (singleMenuRequirement.group !== 'UNIVERSITY') {
         this.subReqsCourseMapList[singleMenuRequirement.group] = {};
 
-        // isPreview param is true because only show first 4
-        this.addRequirementsCourse(singleMenuRequirement.group, singleMenuRequirement.specific, true);
-
-        // TODO: Remove once adding req courses works
-        // singleMenuRequirement.ongoing.forEach(ongoingReq => {
-        //   this.addRequirementsCourse(ongoingReq.requirement, singleMenuRequirement.group);
-        // });
+        // isSeeAll param is false because only show first 4
+        this.addRequirementsCourse(singleMenuRequirement.group, singleMenuRequirement.specific, this.isSeeAll);
       }
 
       return singleMenuRequirement;
@@ -353,7 +430,8 @@ export default Vue.extend({
       // subReqCourseMap maps from the group name to the subreq to a Course[]
       // Each item has key <group name>: <subreq name>: list of courses that fulfill the subreq
       subReqsCourseMapList: {},
-      scrollable: false
+      scrollable: false,
+      isSeeAll: false
     };
   },
   beforeDestroy() {
@@ -454,56 +532,32 @@ export default Vue.extend({
       }
       this.minors = minors;
     },
-    // TODO: Remove eventually once adding req courses works
-    // OLD VERSION OF ADDING REQ COURSES
-    // addRequirementsCourse(ongoingSubReq, reqGroup) {
-    //   console.log(reqGroup);
-    //   const ongoingSubReqName = ongoingSubReq.name;
-    //   if (ongoingSubReq.fulfilledBy !== 'self-check') {
-    //     ongoingSubReq.courses.forEach(subReqCourseObject => {
-    //       const subReqCourseObjectRosters = Object.keys(subReqCourseObject);
-    //       const roster = subReqCourseObjectRosters[subReqCourseObjectRosters.length - 1];
-    //       const courseRosterObject = subReqCourseObject[roster];
-    //       const courseRosterObjectSubjects = Object.keys(courseRosterObject);
+    // Fetches course data and updates the subReqsCourseMapList with the course
+    updateSubReqsCourseMapList(roster, subject, number, courseCode, group, subReqName, isSeeAll) {
+      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
+        .then(res => res.json())
+        .then(resultJSON => {
+          if (resultJSON.data !== null) {
+            // check catalogNbr of resultJSON class matches number of course to add
+            resultJSON.data.classes.forEach(resultJSONclass => {
+              if (resultJSONclass.catalogNbr === number) {
+                const course = resultJSONclass;
+                course.roster = roster;
 
-    //       courseRosterObjectSubjects.forEach(subjectKey => {
-    //         const subject = subjectKey;
-    //         const courseRosterObjectSubjectCourses = courseRosterObject[subjectKey];
-
-    //         courseRosterObjectSubjectCourses.forEach(subjectNumber => {
-    //           const number = subjectNumber;
-    //           const courseCode = `${subject} ${number}`;
-    //           console.log(courseCode);
-    //           console.log(roster);
-
-    //           fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
-    //             .then(res => res.json())
-    //             .then(resultJSON => {
-    //               // check catalogNbr of resultJSON class matches number of course to add
-    //               resultJSON.data.classes.forEach(resultJSONclass => {
-    //                 if (resultJSONclass.catalogNbr === number) {
-    //                   const course = resultJSONclass;
-    //                   course.roster = roster;
-
-    //                   const newCourse = this.$parent.createCourse(course, true);
-    //                   newCourse.compact = true;
-    //                   console.log(newCourse);
-    //                   if (this.subReqsCourseMapList[reqGroup] && this.subReqsCourseMapList[reqGroup][ongoingSubReqName]) {
-    //                     this.subReqsCourseMapList[reqGroup][ongoingSubReqName].push(newCourse);
-    //                   } else {
-    //                     this.subReqsCourseMapList[reqGroup][ongoingSubReqName] = [newCourse];
-    //                   }
-    //                 }
-    //               });
-    //             });
-    //         });
-    //       });
-    //     });
-    //   }
-    //   console.log('subReqsCourseMapList');
-    //   console.log(this.subReqsCourseMapList);
-    // }
-    addRequirementsCourse(group, specific, isPreview) {
+                const newCourse = this.$parent.createCourse(course, true);
+                newCourse.compact = !isSeeAll;
+                // console.log(newCourse);
+                if (this.subReqsCourseMapList[group] && this.subReqsCourseMapList[group][subReqName]) {
+                  this.subReqsCourseMapList[group][subReqName].push(newCourse);
+                } else {
+                  this.subReqsCourseMapList[group][subReqName] = [newCourse];
+                }
+              }
+            });
+          }
+        });
+    },
+    addRequirementsCourse(group, specific, seeAllSubReqName = null, isSeeAll) {
       // "university", "college", "major", or "minor"
       const groupName = group.toLowerCase();
 
@@ -513,13 +567,13 @@ export default Vue.extend({
       const requirementsList = decoratedRequirementsJSON[groupName][specific].requirements;
 
       requirementsList.forEach(requirement => {
-        const reqName = requirement.name;
+        const subReqName = requirement.name;
 
         if (requirement.fulfilledBy !== 'self-check') {
           // console.log(requirement);
           // Only list first four courses that fulfill the requirement
-          if (isPreview) {
-            for (let i = 0; i < requirement.courses.length; i += 1) {
+          if (!isSeeAll) {
+            for (let i = 0; i < 4 && i < requirement.courses.length; i += 1) {
               // console.log(requirement.courses);
               const reqCourseObj = requirement.courses[i];
               // get roster keys for reqCourseObj, that is all rosters for a specific course
@@ -530,6 +584,7 @@ export default Vue.extend({
                 const roster = reqCourseObjRosters[reqCourseObjRosters.length - 1];
                 // console.log(roster);
 
+                // Get a list of the course codes for the 4 courses to add
                 const courseCodesToAdd = [];
                 const reqCourseRosterObjEntriesList = Object.entries(reqCourseObj[roster]);
                 for (let j = 0; courseCodesToAdd.length < 4 && j < reqCourseRosterObjEntriesList.length; j += 1) {
@@ -546,32 +601,12 @@ export default Vue.extend({
                 courseCodesToAdd.forEach(courseCodeToAdd => {
                   const courseSubjectToAdd = courseCodeToAdd.split(' ')[0];
                   const courseNumberToAdd = courseCodeToAdd.split(' ')[1];
-                  fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${courseSubjectToAdd}&q=${courseCodeToAdd}`)
-                    .then(res => res.json())
-                    .then(resultJSON => {
-                      if (resultJSON.data !== null) {
-                        // check catalogNbr of resultJSON class matches number of course to add
-                        resultJSON.data.classes.forEach(resultJSONclass => {
-                          if (resultJSONclass.catalogNbr === courseNumberToAdd) {
-                            const course = resultJSONclass;
-                            course.roster = roster;
-
-                            const newCourse = this.$parent.createCourse(course, true);
-                            newCourse.compact = isPreview;
-                            // console.log(newCourse);
-                            if (this.subReqsCourseMapList[group] && this.subReqsCourseMapList[group][reqName]) {
-                              this.subReqsCourseMapList[group][reqName].push(newCourse);
-                            } else {
-                              this.subReqsCourseMapList[group][reqName] = [newCourse];
-                            }
-                          }
-                        });
-                      }
-                    });
+                  console.log(courseCodeToAdd);
+                  this.updateSubReqsCourseMapList(roster, courseSubjectToAdd, courseNumberToAdd, courseCodeToAdd, group, subReqName, isSeeAll);
                 });
               }
             }
-          } else {
+          } else if (subReqName === seeAllSubReqName) { // add all courses for a specific subReq
             for (let i = 0; i < requirement.courses.length; i += 1) {
               // console.log(requirement.courses);
               const reqCourseObj = requirement.courses[i];
@@ -583,37 +618,13 @@ export default Vue.extend({
                 const roster = reqCourseObjRosters[reqCourseObjRosters.length - 1];
                 // console.log(roster);
 
-
                 const reqCourseRosterObjEntriesList = Object.entries(reqCourseObj[roster]);
-                let addedCoursesCount = 0;
                 reqCourseRosterObjEntriesList.forEach(entry => {
                   const subject = entry[0];
                   const courseNumberList = entry[1];
                   courseNumberList.forEach(number => {
                     const courseCode = `${subject} ${number}`;
-                    fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
-                      .then(res => res.json())
-                      .then(resultJSON => {
-                        if (resultJSON.data !== null) {
-                          // check catalogNbr of resultJSON class matches number of course to add
-                          resultJSON.data.classes.forEach(resultJSONclass => {
-                            if (resultJSONclass.catalogNbr === number) {
-                              const course = resultJSONclass;
-                              course.roster = roster;
-
-                              const newCourse = this.$parent.createCourse(course, true);
-                              newCourse.compact = isPreview;
-                              // console.log(newCourse);
-                              if (this.subReqsCourseMapList[group] && this.subReqsCourseMapList[group][reqName]) {
-                                this.subReqsCourseMapList[group][reqName].push(newCourse);
-                              } else {
-                                this.subReqsCourseMapList[group][reqName] = [newCourse];
-                              }
-                              addedCoursesCount += 1;
-                            }
-                          });
-                        }
-                      });
+                    this.updateSubReqsCourseMapList(roster, subject, number, courseCode, group, subReqName, isSeeAll);
                   });
                 });
               }
@@ -623,6 +634,16 @@ export default Vue.extend({
           console.log(this.subReqsCourseMapList);
         }
       });
+    },
+    showSeeAll(group, specific, subReqName) {
+      this.subReqsCourseMapList = {};
+      this.subReqsCourseMapList[group] = {};
+      this.addRequirementsCourse(group, specific, subReqName, true);
+      this.isSeeAll = !this.isSeeAll;
+    },
+    backtoRequirements() {
+      this.isSeeAll = !this.isSeeAll;
+      this.subReqsCourseMapList = {};
     }
   }
 });
@@ -927,7 +948,38 @@ button.view {
   background-color: #d7d7d7;
 }
 
+.draggable-requirements {
+  &-wrapper {
+    margin-top: 2%;
+    margin-bottom: 2%;
+  }
+  &-seeAll {
+    &-wrapper {
+      display: flex;
+      justify-content: flex-end;
+    }
+    &-button {
+      font-size: 12px;
+      line-height: 15px;
+      color: #32A0F2;
+      padding: 1%;
+    }
+  }
+  &-courses{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: -1%;
+    margin-bottom: 2%;
+    width: 100%;
+  }
+
+}
+
 .requirements {
+  &-courseWrapper {
+    padding: 1%;
+  }
   &-course {
     touch-action: none;
     cursor: grab;
