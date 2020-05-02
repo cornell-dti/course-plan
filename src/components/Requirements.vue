@@ -109,7 +109,7 @@
                 :href="subReq.requirement.source" target="_blank">
                 <strong>Learn More</strong></a>
                 <div
-                  v-if="false"
+                  v-if="subReqsCourseMapList[req.group] !== undefined && subReqsCourseMapList[req.group][subReq.requirement.name] !== undefined"
                   class="draggable-requirements-courses"
                   v-dragula="subReqsCourseMapList[req.group][subReq.requirement.name]"
                   bag="first-bag">
@@ -199,7 +199,6 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
-import filteredAllCourses from '@/requirements/filtered-all-courses';
 import decoratedRequirementsJSON from '@/requirements/decorated-requirements.json';
 
 Vue.component('course', Course);
@@ -273,12 +272,11 @@ export default Vue.extend({
         singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
         singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
       }
-      console.log('Single Menu Req');
-      console.log(singleMenuRequirement);
-      if (singleMenuRequirement.group === 'MAJOR') {
+      if (singleMenuRequirement.group !== 'UNIVERSITY') {
         this.subReqsCourseMapList[singleMenuRequirement.group] = {};
 
-        this.addRequirementsCourse(singleMenuRequirement.group, singleMenuRequirement.specific);
+        // isPreview param is true because only show first 4
+        this.addRequirementsCourse(singleMenuRequirement.group, singleMenuRequirement.specific, true);
 
         // TODO: Remove once adding req courses works
         // singleMenuRequirement.ongoing.forEach(ongoingReq => {
@@ -505,32 +503,124 @@ export default Vue.extend({
     //   console.log('subReqsCourseMapList');
     //   console.log(this.subReqsCourseMapList);
     // }
-    addRequirementsCourse(group, specific) {
+    addRequirementsCourse(group, specific, isPreview) {
       // "university", "college", "major", or "minor"
       const groupName = group.toLowerCase();
 
-      console.log(decoratedRequirementsJSON[groupName][specific]);
+      // console.log(decoratedRequirementsJSON[groupName][specific]);
 
       // List of requirements given the group and the specific (college/major/minor)
       const requirementsList = decoratedRequirementsJSON[groupName][specific].requirements;
 
       requirementsList.forEach(requirement => {
+        const reqName = requirement.name;
+
         if (requirement.fulfilledBy !== 'self-check') {
-          requirement.courses.forEach(reqCourseObj => {
-            // get roster keys for reqCourseObj, that is all rosters for a specific course
-            const reqCourseObjRosters = Object.keys(reqCourseObj);
+          // console.log(requirement);
+          // Only list first four courses that fulfill the requirement
+          if (isPreview) {
+            for (let i = 0; i < requirement.courses.length; i += 1) {
+              // console.log(requirement.courses);
+              const reqCourseObj = requirement.courses[i];
+              // get roster keys for reqCourseObj, that is all rosters for a specific course
+              const reqCourseObjRosters = Object.keys(reqCourseObj);
 
-            // get last element of reqCourseObjRosters for most recent roster
-            const roster = reqCourseObjRosters[reqCourseObjRosters.length - 1];
-            const subject = Object.keys(reqCourseObj[roster])[0];
-            const number = reqCourseObj[roster][subject][0];
+              if (reqCourseObjRosters.length !== 0) {
+                // get last element of reqCourseObjRosters for most recent roster
+                const roster = reqCourseObjRosters[reqCourseObjRosters.length - 1];
+                // console.log(roster);
 
-            console.log('roster');
-            console.log(roster);
+                const courseCodesToAdd = [];
+                const reqCourseRosterObjEntriesList = Object.entries(reqCourseObj[roster]);
+                for (let j = 0; courseCodesToAdd.length < 4 && j < reqCourseRosterObjEntriesList.length; j += 1) {
+                  const entry = reqCourseRosterObjEntriesList[j];
+                  const subject = reqCourseRosterObjEntriesList[j][0];
+                  const courseNumberList = reqCourseRosterObjEntriesList[j][1];
+                  // Get as many as four courses
+                  for (let k = 0; courseCodesToAdd.length < 4 && k < courseNumberList.length; k += 1) {
+                    const number = courseNumberList[k];
+                    const courseCode = `${subject} ${number}`;
+                    courseCodesToAdd.push(courseCode);
+                  }
+                }
+                courseCodesToAdd.forEach(courseCodeToAdd => {
+                  const courseSubjectToAdd = courseCodeToAdd.split(' ')[0];
+                  const courseNumberToAdd = courseCodeToAdd.split(' ')[1];
+                  fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${courseSubjectToAdd}&q=${courseCodeToAdd}`)
+                    .then(res => res.json())
+                    .then(resultJSON => {
+                      if (resultJSON.data !== null) {
+                        // check catalogNbr of resultJSON class matches number of course to add
+                        resultJSON.data.classes.forEach(resultJSONclass => {
+                          if (resultJSONclass.catalogNbr === courseNumberToAdd) {
+                            const course = resultJSONclass;
+                            course.roster = roster;
 
-            // Seems to be causing a TypeError
-            // console.log(filteredAllCourses);
-          });
+                            const newCourse = this.$parent.createCourse(course, true);
+                            newCourse.compact = isPreview;
+                            // console.log(newCourse);
+                            if (this.subReqsCourseMapList[group] && this.subReqsCourseMapList[group][reqName]) {
+                              this.subReqsCourseMapList[group][reqName].push(newCourse);
+                            } else {
+                              this.subReqsCourseMapList[group][reqName] = [newCourse];
+                            }
+                          }
+                        });
+                      }
+                    });
+                });
+              }
+            }
+          } else {
+            for (let i = 0; i < requirement.courses.length; i += 1) {
+              // console.log(requirement.courses);
+              const reqCourseObj = requirement.courses[i];
+              // get roster keys for reqCourseObj, that is all rosters for a specific course
+              const reqCourseObjRosters = Object.keys(reqCourseObj);
+
+              if (reqCourseObjRosters.length !== 0) {
+                // get last element of reqCourseObjRosters for most recent roster
+                const roster = reqCourseObjRosters[reqCourseObjRosters.length - 1];
+                // console.log(roster);
+
+
+                const reqCourseRosterObjEntriesList = Object.entries(reqCourseObj[roster]);
+                let addedCoursesCount = 0;
+                reqCourseRosterObjEntriesList.forEach(entry => {
+                  const subject = entry[0];
+                  const courseNumberList = entry[1];
+                  courseNumberList.forEach(number => {
+                    const courseCode = `${subject} ${number}`;
+                    fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
+                      .then(res => res.json())
+                      .then(resultJSON => {
+                        if (resultJSON.data !== null) {
+                          // check catalogNbr of resultJSON class matches number of course to add
+                          resultJSON.data.classes.forEach(resultJSONclass => {
+                            if (resultJSONclass.catalogNbr === number) {
+                              const course = resultJSONclass;
+                              course.roster = roster;
+
+                              const newCourse = this.$parent.createCourse(course, true);
+                              newCourse.compact = isPreview;
+                              // console.log(newCourse);
+                              if (this.subReqsCourseMapList[group] && this.subReqsCourseMapList[group][reqName]) {
+                                this.subReqsCourseMapList[group][reqName].push(newCourse);
+                              } else {
+                                this.subReqsCourseMapList[group][reqName] = [newCourse];
+                              }
+                              addedCoursesCount += 1;
+                            }
+                          });
+                        }
+                      });
+                  });
+                });
+              }
+            }
+          }
+          console.log('subReqsCourseMapList');
+          console.log(this.subReqsCourseMapList);
         }
       });
     }
