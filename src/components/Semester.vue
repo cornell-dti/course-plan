@@ -55,6 +55,7 @@
               :active="activatedCourse.uniqueID === course.uniqueID"
               class="semester-course"
               :semId="id"
+              :isReqCourse="course.isReqCourse"
               @delete-course="deleteCourse"
               @color-course="colorCourse"
               @updateBar="updateBar"
@@ -165,8 +166,9 @@ export default {
     service.eventBus.$on('drag', () => {
       this.scrollable = true;
     });
-    service.eventBus.$on('drop', () => {
+    service.eventBus.$on('drop', e => {
       this.scrollable = true;
+      console.log(e.el);
     });
 
     this.buildCautions();

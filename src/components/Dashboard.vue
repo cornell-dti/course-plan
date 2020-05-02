@@ -269,6 +269,8 @@ export default {
 
       const alerts = { requirement: null, caution: null };
 
+      const isReqCourse = isRequirementsCourse;
+
       const newCourse = {
         subject,
         number,
@@ -286,7 +288,8 @@ export default {
         color,
         alerts,
         check: true,
-        uniqueID
+        uniqueID,
+        isReqCourse
       };
 
       if (!isRequirementsCourse) {

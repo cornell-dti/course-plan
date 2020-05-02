@@ -208,11 +208,13 @@
       </div>
       <div class="requirements-seeAllView" v-if="this.isSeeAll">
         <!-- loop through reqs array of req objects -->
+        {{Object.keys(subReqsCoursesMap)}}
         <div
           class="req"
           v-for="reqGroup in Object.keys(subReqsCoursesMap)"
           :key="reqGroup.id"
         >
+          {{Object.keys(subReqsCoursesMap[reqGroup])}}
           <div
             v-for="subReqName in Object.keys(subReqsCoursesMap[reqGroup])"
             :key="subReqName.id"
@@ -546,7 +548,8 @@ export default Vue.extend({
 
                 const newCourse = this.$parent.createCourse(course, true);
                 newCourse.compact = !isSeeAll;
-                // console.log(newCourse);
+                newCourse.isReqCourse = true;
+                console.log(newCourse);
                 if (this.subReqsCoursesMap[group] && this.subReqsCoursesMap[group][subReqName]) {
                   this.subReqsCoursesMap[group][subReqName].push(newCourse);
                 } else {

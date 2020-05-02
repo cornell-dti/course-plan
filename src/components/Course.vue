@@ -18,7 +18,7 @@
           <div :class="{ 'course-code--min': compact }" class="course-code">
             {{ subject }} {{ number }}
           </div>
-          <div class="course-dotRow" @click="openMenu">
+          <div v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <span class="course-dot course-dot--menu"></span>
             <span class="course-dot course-dot--menu"></span>
             <span class="course-dot course-dot--menu"></span>
@@ -101,7 +101,8 @@ export default {
     id: String,
     uniqueID: Number,
     active: Boolean,
-    semId: Number
+    semId: Number,
+    isReqCourse: Boolean
   },
   data() {
     return {
