@@ -10,6 +10,7 @@ import irlRequirements from './colleges/il';
 import aemRequirements from './majors/aem';
 import bioRequirements from './majors/bio';
 import bioEngineeringRequirements from './majors/be';
+import crpRequirements from './majors/crp';
 import csRequirements from './majors/cs';
 import economicsRequirements from './majors/econ';
 import englishRequirements from './majors/engl';
@@ -77,6 +78,11 @@ const json: RequirementsJson = {
       name: 'Biological Engineering',
       schools: ['EN'],
       requirements: bioEngineeringRequirements
+    },
+    CRP: {
+      name: 'City and Regional Planning',
+      schools: ['AR'],
+      requirements: crpRequirements
     },
     CS: {
       name: 'Computer Science',
