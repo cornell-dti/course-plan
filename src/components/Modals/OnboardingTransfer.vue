@@ -84,7 +84,7 @@
                     v-if="options.subject.shown"
                   >
                     <div
-                      v-for="(subject, acronym) in subjects"
+                      v-for="(subject, acronym) in subjects[index]"
                       :key="acronym"
                       :id="subject"
                       class="onboarding-dropdown-content-item"
@@ -144,59 +144,28 @@
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <div class="onboarding-subHeader2">Credits From Other Instituions</div>
               <label class="onboarding-label">Equivalent Cornell Class</label>
-              <div class="onboarding-selectWrapper">
+              <div
+                v-for="(options, index) in displayOptions.class"
+                :key= index
+                class="onboarding-selectWrapper">
                 <newCourse
+                :semesterID= index
                 :isOnboard="true"
+                :placeholderText= options.class
                 > </newCourse>
-              </div>
               <div class="onboarding-addRemoveWrapper">
-                <div class="onboarding-add" @click="addTransfer">
-                  Add
-                </div>
                 <div class="onboarding-remove" @click="removeTransfer">
                   Remove
                 </div>
               </div>
-              <div class="onboarding-selectWrapper">
-                <div
-                  class="onboarding-select onboarding-input onboarding-selectWrapperRow"
-                  id="major"
-                  v-for="(options, index) in displayOptions.class"
-                  :key = index
-                  :style="{ borderColor: options.boxBorder }"
-                  v-click-outside:[index]="closeClassDropdownIfOpen"
-                >
-                  <div class="onboarding-dropdown-placeholder major-wrapper" @click="showHideClassContent(index)">
-                    <div
-                      class="onboarding-dropdown-placeholder major-placeholder"
-                      id="major-placeholder"
-                      :style="{ color: options.placeholderColor }"
-                    >
-                      {{ options.placeholder }}
-                    </div>
-                    <div
-                      class="onboarding-dropdown-placeholder major-arrow"
-                      id="major-arrow"
-                      :style="{ borderTopColor: options.arrowColor }"
-                    ></div>
-                  </div>
-                  <div
-                    class="onboarding-dropdown-content major-content"
-                    id="major-content"
-                    v-if="options.shown"
-                  >
-                    <div
-                      v-for="(major, acronym) in classes"
-                      :key="acronym"
-                      :id="major"
-                      class="onboarding-dropdown-content-item"
-                      @click="selectClass(major, acronym, index)"
-                    >
-                      {{ major }}
-                    </div>
-                  </div>
+
+            </div>
+                <div class="onboarding-addRemoveWrapper">
+                <div class="onboarding-add" @click="addTransfer">
+                  Add
                 </div>
               </div>
+
             </div>
             <div class="onboarding-bottomWrapper">
               <div class=" onboarding-label--bottom">
@@ -214,7 +183,7 @@
 
 <script>
 
-import reqsData from '@/requirements/typed-requirement-json';
+import reqsData from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
 import transferJSON from '../../assets/Transfer/AP-json';
 import NewCourse from '@/components/Modals/NewCourse';
@@ -243,70 +212,6 @@ export default {
     user: Object
   },
   data() {
-    let credits = 0;
-    const exams = [];
-    const sections = ['type', 'subject', 'score'];
-    if ('exam' in this.user && this.user.exam.length > 0) {
-      for (let x = 0; x < this.user.exam.length; x += 1) {
-        const exam = {};
-        for (const sec of sections) {
-          exam[sec] = {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: '#757575',
-            placeholder: this.user.exam[x][sec],
-            acronym: ''
-          };
-        }
-        exams.push(exam);
-        credits += this.user.exam[x].credits;
-      }
-    }
-    const exam = {};
-    for (const sect of sections) {
-      exam[sect] = {
-        shown: false,
-        stopClose: false,
-        boxBorder: '',
-        arrowColor: '',
-        placeholderColor: '',
-        placeholder: placeholderText,
-        acronym: ''
-      };
-    }
-    exams.push(exam);
-
-
-    const classes = [];
-    if ('transferClass' in this.user && this.user.transferClass.length > 0) {
-      for (let x = 0; x < this.user.transferClass.length; x += 1) {
-        const Class = {
-          shown: false,
-          stopClose: false,
-          boxBorder: '',
-          arrowColor: '',
-          placeholderColor: '',
-          placeholder: this.user.transferClass[x].name,
-          acronym: ''
-        };
-        classes.push(Class);
-        credits += this.user.transferClass[x].credits;
-      }
-    }
-    const Class = {
-      shown: false,
-      stopClose: false,
-      boxBorder: '',
-      arrowColor: '',
-      placeholderColor: '',
-      placeholder: placeholderText,
-      acronym: ''
-    };
-    classes.push(Class);
-
-    console.log(exams);
     return {
       // TODO: Get real college, major, and minor lists
       // :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }"
@@ -314,27 +219,111 @@ export default {
       scores: [], // for based on exam
       classes: [],
       exams: [],
-      subjects: ['Chemistry', 'Physics I', 'Physics II', 'Calculas AB', 'Calculas BC', 'Biology', 'French'], // fix
+      subjects: [[]], // fix
       firstName: this.user.firstName,
       middleName: this.user.middleName,
       lastName: this.user.lastName,
       displayOptions: {
-        exam: exams,
-        class: classes
+        exam: [],
+        class: []
       },
+      transferJSON: {},
       isError: false,
-      totalCredits: credits
+      totalCredits: 0
     };
   },
   directives: {
     'click-outside': clickOutside
   },
   mounted() {
-    this.getExams();
+    this.getClasses();
+    this.getTransferMap();
+    this.setExamsMap();
+    this.setSubjectList();
+    this.getCredits();
   },
   methods: {
-    getExams() {
-      // this.$emit('updateTransfer', this.displayOptions.exams, this.displayOptions.class);
+    getClasses() {
+      let credits = 0;
+      const exams = [];
+      const sections = ['type', 'subject', 'score'];
+      if ('exam' in this.user && this.user.exam.length > 0) {
+        for (let x = 0; x < this.user.exam.length; x += 1) {
+          const exam = {};
+          for (const sec of sections) {
+            exam[sec] = {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: '#757575',
+              placeholder: this.user.exam[x][sec],
+              acronym: ''
+            };
+          }
+          if (typeof this.user.exam[x].subject !== 'undefined') {
+            exams.push(exam);
+            credits += this.user.exam[x].credits;
+            exam.equivCourse = this.user.equivCourse;
+          }
+        }
+      }
+      const exam = {};
+      for (const sect of sections) {
+        exam[sect] = {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: placeholderText,
+          acronym: ''
+        };
+      }
+      exams.push(exam);
+      this.displayOptions.exam = exams;
+      const swim = (this.user.tookSwim !== null) ? this.user.tookSwim : '';
+      this.tookSwimTest = swim;
+      const transferClass = [];
+      this.user.transferCourse.forEach(course => {
+        transferClass.push(course);
+      });
+      transferClass.push({ class: placeholderText, credits: 0 });
+      this.displayOptions.class = transferClass;
+    },
+    getCredits() {
+      let count = 0;
+      this.displayOptions.exam.forEach(exam => {
+        if (this.transferJSON !== null) {
+          const name = exam.subject.placeholder;
+          if (name in this.transferJSON) {
+            count += this.transferJSON[name].credits[0].credits;
+          }
+        }
+      });
+      this.displayOptions.class.forEach(clas => {
+        count += clas.credits;
+      });
+      this.totalCredits = count;
+    },
+    getTransferMap() {
+      const TransferJSON = {};
+      reqsData.AP.forEach(sub => {
+        TransferJSON[sub.subject] = {
+          credits: sub.credits,
+          type: 'AP'
+        };
+      });
+      reqsData.IB.forEach(sub => {
+        TransferJSON[sub.subject] = {
+          credits: sub.credits,
+          type: 'IB'
+        };
+      });
+      this.transferJSON = TransferJSON;
+      if (typeof this.displayOptions !== 'undefined') {
+        this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+      }
     },
     showHideContent(type, section, i) {
       let displayOptions = this.displayOptions[type];
@@ -369,9 +358,9 @@ export default {
       displayOptions = displayOptions[i];
       if (section === 'exam') {
         Object.keys(displayOptions).forEach(key => {
-          if (displayOptions[key].stopClose) {
+          if (key !== 'equivCourse' && displayOptions[key].stopClose) {
             displayOptions[key].stopClose = false;
-          } else if (displayOptions[key].shown) {
+          } else if (key !== 'equivCourse' && displayOptions[key].shown) {
             displayOptions[key].shown = false;
             displayOptions[key].boxBorder = '#C4C4C4';
             displayOptions[key].arrowColor = '#C4C4C4';
@@ -379,7 +368,7 @@ export default {
         });
       } else if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
-      } else if (displayOptions.shown) {
+      } else if ('equivCourse' && displayOptions.shown) {
         displayOptions.shown = false;
         displayOptions.boxBorder = '#C4C4C4';
         displayOptions.arrowColor = '#C4C4C4';
@@ -390,6 +379,38 @@ export default {
     },
     closeClassDropdownIfOpen(event, i) {
       this.closeDropdownIfOpen('class', i);
+    },
+    // Set the colleges map to with acronym keys and full name values
+    setExamsMap() {
+      /** @type {Object.<string, string>} */
+      const exams = [];
+      Object.keys(reqsData).forEach(key => {
+        exams.push(key);
+      });
+      this.exams = exams;
+    },
+    // Set the majors map to with acronym keys and full name values
+    setSubjectList() {
+      /** @type {Object.<string, string>} */
+      const totalSubjects = [];
+      this.displayOptions.exam.forEach(exam => {
+        if (exam.type.placeholder !== placeholderText) {
+          const examType = exam.type.placeholder;
+          const subjects = [];
+          if (examType in reqsData && examType !== null) {
+            reqsData[examType].forEach(sub => {
+              subjects.push(sub.subject);
+            });
+            totalSubjects.push(subjects);
+            if (examType === 'AP') {
+              this.scores = [1, 2, 3, 4, 5];
+            } else {
+              this.scores = [1, 2, 3, 4, 5, 6, 7];
+            }
+          }
+        }
+      });
+      this.subjects = totalSubjects;
     },
     selectOption(type, section, text, acronym, i) {
       let displayOptions = this.displayOptions[type];
@@ -402,14 +423,43 @@ export default {
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.boxBorder = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
+      this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+    },
+    // Clear a major if a new college is selected and the major is not in it
+    clearSubjectAndScoreIfNotInCollege() {
+      const majorJSON = reqsData.major;
+      for (let x = 0; x < this.displayOptions.major.length; x += 1) {
+        const major = this.displayOptions.major[x];
+        let foundCollege = false;
+        // Do nothing if no major set
+        if (major.acronym !== '') {
+          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+            const college = this.displayOptions.college[i];
+            if (majorJSON[major.acronym].schools.includes(college.acronym)) {
+              foundCollege = true;
+              break;
+            }
+          }
+        }
+        if (!foundCollege) {
+          major.placeholderColor = '';
+          major.placeholder = placeholderText;
+          major.acronym = '';
+        }
+      }
     },
     selectExam(text, acronym, i) {
       this.selectOption('exam', 'type', text, acronym, i);
+      this.setSubjectList();
+      // this.clearMajorIfNotInCollege();
     },
     selectScore(text, acronym, i) {
       this.selectOption('exam', 'score', text, acronym, i);
     },
     selectSubject(text, acronym, i) {
+      const type = this.displayOptions.exam[i].type.placeholder;
+      const course = this.getCourseFromExam(type, text);
+      this.displayOptions.exam[i].equivCourse = course;
       this.selectOption('exam', 'subject', text, acronym, i);
     },
     selectClass(text, acronym, i) {
@@ -447,6 +497,19 @@ export default {
       };
       this.displayOptions.exams = this.displayOptions.exam.push(exam);
     },
+    getCourseFromExam(type, subject) {
+      let count = 0;
+      let courses;
+      for (const sub of reqsData[type]) {
+        if (sub.subject === subject) {
+          courses = reqsData[type][count].credits[0].courseEquivalents;
+          // as a default takes the first equivalent course
+          // TODO will need to add requirements menu if editiable.
+        }
+        count += 1;
+      }
+      return courses;
+    },
     removeExam() {
       this.displayOptions.exam.pop();
     },
@@ -454,16 +517,32 @@ export default {
       this.displayOptions.class.pop();
     },
     addTransfer() {
-      const newTransfer = {
-        shown: false,
-        stopClose: false,
-        boxBorder: '',
-        arrowColor: '',
-        placeholderColor: '',
-        placeholder: placeholderText,
-        acronym: ''
-      };
-      this.displayOptions.class.push(newTransfer);
+      this.displayOptions.class.push(placeholderText);
+    },
+    addItem(id) {
+      const dropdown = document.getElementById(`dropdown-${id}`);
+      const title = dropdown.value;
+      const courseCode = title.substring(0, title.indexOf(':'));
+      const subject = courseCode.split(' ')[0];
+      const number = courseCode.split(' ')[1];
+      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=FA14&subject=${subject}&q=${courseCode}`)
+        .then(res => res.json())
+        .then(resultJSON => {
+          // check catalogNbr of resultJSON class matches number of course to add
+          resultJSON.data.classes.forEach(resultJSONclass => {
+            if (resultJSONclass.catalogNbr === number) {
+              const course = resultJSONclass;
+              const creditsC = course.credits || course.enrollGroups[0].unitsMaximum;
+              this.displayOptions.class[id] = {
+                class: courseCode,
+                course,
+                credits: creditsC
+              };
+              this.getCredits();
+              this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+            }
+          });
+        });
     }
   }
 };

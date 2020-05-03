@@ -86,20 +86,8 @@ export default {
         firstName: names[0],
         lastName: names[1],
         middleName: '',
-        exam: [{
-          type: 'AP',
-          subject: 'Chemistry',
-          score: 5,
-          credits: 4
-        },
-        {
-          type: 'AP2',
-          subject: 'Chemistry3',
-          score: 5,
-          credits: 4
-        }
-        ],
-        transferClass: [{ name: 'CS 1110', credits: 4 }, { name: 'CS 3110', credits: 4 }]
+        exam: [],
+        transferCourse: []
       },
       bottomCourses: [],
       seeMoreCourses: [],
@@ -161,7 +149,6 @@ export default {
       this.updateBarTabs();
       this.updateSemesterView();
     },
-
     toggleRequirementsBar() {
       this.isOpeningRequirements = !this.isOpeningRequirements;
     },
@@ -308,7 +295,6 @@ export default {
 
     incrementID() {
       const docRef = this.getDocRef();
-
       // If uniqueIncrementer attribute does not exist, initialize it to 0 and populate existing courses
       if (this.uniqueIncrementer === undefined) {
         this.uniqueIncrementer = 0;
@@ -541,23 +527,21 @@ export default {
     },
 
     endOnboarding(onboardingData) {
+      console.log(onboardingData);
       const user = this.parseUserData(onboardingData.userData, onboardingData.name);
 
       this.user = user;
       this.loaded = true;
 
       const docRef = this.getDocRef();
-
       const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,
         semesters: this.firebaseSems,
         subjectColors: this.subjectColors
       };
-
       // set the new name and userData, along with either an empty list of semesters or preserve the old list
       docRef.set(data);
-
       this.cancelOnboarding();
       this.updateRequirementsMenu();
     },
@@ -565,7 +549,6 @@ export default {
     cancelOnboarding() {
       this.isOnboarding = false;
     },
-
     parseUserData(data, name) {
       const user = {
         // TODO: take into account multiple majors and colleges
@@ -574,22 +557,34 @@ export default {
         firstName: name.firstName,
         middleName: name.middleName,
         lastName: name.lastName,
-        exam: [{
-          type: 'AP',
-          subject: 'Chemistry',
-          score: 5,
-          credits: 4
-        },
-        {
-          type: 'AP',
-          subject: 'Physics I ',
-          score: 5,
-          credits: 4
-        }
-        ],
-        transferClass: [{ name: 'CS 1110', credits: 4 }, { name: 'CS 3110', credits: 4 }],
-        tookSwim: 'false'
+        exam: [],
+        transferCourse: [],
+        tookSwim: data.tookSwim
       };
+      const transferClasses = [];
+      if ('exam' in data && data.exam.length > 0) {
+        const exams = [];
+        data.exam.forEach(exam => {
+          exams.push(exam);
+          // console.log(exam.);
+        });
+        user.exam = exams;
+      }
+      if ('class' in data && data.class.length > 0) {
+        const classes = [];
+        for (const course of data.class) {
+          classes.push(course);
+          const courseInfo = this.createCourse(course.course);
+          transferClasses.push(courseInfo);
+          console.log(course.class);
+
+          // ; // TODO for user to pick which classes it goes for
+          // console.log('E', crs);
+        }
+        user.transferCourse = classes;
+        this.currentClasses = transferClasses;
+        console.log(this.currentClasses);
+      }
 
       if ('majors' in data && data.majors.length > 0) {
         const majors = [];

@@ -111,6 +111,7 @@ export default {
       const title = dropdown.value;
       // name used to transmit roster information
       const roster = dropdown.name;
+      console.log(roster);
 
       // TODO: can I make the valid assumption that the course code is up to the colon in the title?
       const courseCode = title.substring(0, title.indexOf(':'));

@@ -275,6 +275,7 @@ export default {
     this.setMajorsList();
     this.setMinorsList();
     this.flattenDisplayMajors();
+    this.$emit('updateBasic', this.displayOptions.major, this.displayOptions.college, this.displayOptions.minor);
   },
   methods: {
     flattenDisplayMajors() {

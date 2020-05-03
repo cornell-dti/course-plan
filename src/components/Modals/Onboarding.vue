@@ -1,3 +1,7 @@
+<!--
+ONBOARDING Structure
+-- components
+ -->
 <template>
   <div class="onboarding">
     <div class="onboarding-main">
@@ -24,7 +28,13 @@
           <img class="timeline" :src="require(`@/assets/images/timeline${currentPage}.svg`)" alt="X">
         </div>
         <div v-if="currentPage==3" class="onboarding-bottom--section onboarding-bottom--section---center">
-          <button class="onboarding-button" @click="submitOnboarding">Finish</button>
+          <div class="onboarding-bottom--contents" @click="$emit('cancelOnboarding')">
+            <label class="onboarding-bottom--text">Skip for now</label>
+          </div>
+          <div class="onboarding-bottom--contents">
+            <button class="onboarding-button" @click="goBack"> Prev </button>
+            <button class="onboarding-button" @click="submitOnboarding">Finish</button>
+         </div>
         </div>
         <div v-else class="onboarding-bottom--section">
           <div class="onboarding-bottom--contents" @click="$emit('cancelOnboarding')">
@@ -53,7 +63,7 @@ Vue.component('onboardingBasic', OnboardingBasic);
 Vue.component('onboardingTransfer', OnboardingTransfer);
 
 const placeholderText = 'Select one';
-
+const FINAL_PAGE = 3;
 const clickOutside = {
   bind(el, binding, vnode) {
     el.event = event => {
@@ -102,84 +112,13 @@ export default {
       firstName: this.user.firstName,
       middleName: this.user.middleName,
       lastName: this.user.lastName,
+      tookSwim: '',
       displayOptions: {
-        college: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: collegePlaceholderColor,
-            placeholder: collegeText,
-            acronym: collegeAcronym
-          }
-        ],
-        major: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: majorPlaceholderColor,
-            placeholder: majorText,
-            acronym: majorAcronym
-          }
-        ],
-        minor: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: '',
-            placeholder: placeholderText,
-            acronym: ''
-          }
-        ],
-        exam: [
-          {
-            type: {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: majorPlaceholderColor,
-              placeholder: 'AP',
-              acronym: majorAcronym
-            },
-            subject: {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: majorPlaceholderColor,
-              placeholder: 'Chemistry',
-              acronym: majorAcronym
-
-            },
-            score: {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: majorPlaceholderColor,
-              placeholder: '5',
-              acronym: majorAcronym
-            }
-          }
-        ],
-        class: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: majorPlaceholderColor,
-            placeholder: majorText,
-            acronym: majorAcronym
-          }
-        ]
-
+        college: [],
+        major: [],
+        minor: [],
+        exam: [],
+        class: []
       },
       isError: false
     };
@@ -203,13 +142,11 @@ export default {
             colleges: this.notPlaceholderOptions(this.displayOptions.college),
             majors: this.notPlaceholderOptions(this.displayOptions.major),
             minors: this.notPlaceholderOptions(this.displayOptions.minor),
-            exam: this.notPlaceholderOptions(this.displayOptions.exam),
-            class: this.notPlaceholderOptions(this.displayOptions.class)
+            exam: this.notPlaceholderOptions2(this.displayOptions.exam),
+            class: this.notPlaceholderOptions3(this.displayOptions.class),
+            tookSwim: this.tookSwim
           }
         };
-        console.log(this.displayOptions.major);
-        console.log(onboardingData.userData.majors);
-        console.log(onboardingData.userData.colleges);
         this.$emit('onboard', onboardingData);
       }
     },
@@ -223,6 +160,33 @@ export default {
       });
 
       return bool;
+    },
+    notPlaceholderOptions3(options) {
+      const list = [];
+      options.forEach(option => {
+        console.log(option);
+        if (option.class !== placeholderText && option.class !== null) {
+          list.push(option);
+        }
+      });
+      return list;
+    },
+    notPlaceholderOptions2(options) {
+      const list = [];
+      const sections = ['type', 'subject', 'score'];
+      options.forEach(option => {
+        const exam = {};
+        for (const sec of sections) {
+          if (option[sec].placeholder !== placeholderText && option[sec].placeholder !== null) {
+            exam[sec] = option[sec].placeholder;
+          }
+        }
+        if (option.equivCourse !== null) {
+          // exam.equivCourse = option.equivCourse;
+        }
+        list.push(exam);
+      });
+      return list;
     },
     notPlaceholderOptions(options) {
       const list = [];
@@ -242,20 +206,21 @@ export default {
       this.currentPage = (this.currentPage - 1 === 0) ? 0 : this.currentPage - 1;
     },
     goNext() {
-      this.currentPage = (this.currentPage + 1 === 4) ? 3 : this.currentPage + 1;
-      console.log(this.currentPage);
+      this.currentPage = (this.currentPage === FINAL_PAGE) ? FINAL_PAGE : this.currentPage + 1;
     },
     updateBasic(newMajor, newCollege, newMinor) {
       this.displayOptions.major = newMajor;
       this.displayOptions.minor = newMinor;
       this.displayOptions.college = newCollege;
     },
-    updateTransfer(newMajor, newMinor, newCollege) {
-      this.displayOptions.major = newMajor;
-      this.displayOptions.minor = newMinor;
-      this.displayOptions.college = newCollege;
+    updateTransfer(exam, classes, tookSwim) {
+      // console.log(classes);
+      // console.log(tookSwim);
+      // console.log(exam);
+      this.displayOptions.exam = exam;
+      this.displayOptions.class = classes;
+      this.tookSwim = tookSwim;
     }
-
   }
 };
 </script>

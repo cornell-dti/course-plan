@@ -13,14 +13,15 @@ import coursesJSON from '../../assets/courses/courses.json';
 export default {
   props: {
     isOnboard: Boolean,
-    semesterID: Number
+    semesterID: Number,
+    placeholderText: String
   },
   computed: {
     text() {
       return 'Search or Create New Course';
     },
     placeholder() {
-      return '"CS 1110", "Multivariable Calculus", etc.';
+      return this.placeholderText;
     }
   },
   mounted() {
@@ -168,7 +169,7 @@ export default {
     },
 
     addCourse() {
-      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$parent.addItem();
+      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$parent.addItem(this.semesterID);
     }
   }
 };
