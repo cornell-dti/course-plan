@@ -8,7 +8,8 @@ const calsCreditsRequirement: CollegeOrMajorRequirement = {
     + 'Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Information Science, Nutritional Science, '
     + 'and The Department of Statistics and Data Science.',
   source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements',
-  checker: (course: Course): boolean => ['AG', 'BU'].includes(course.acadGroup),
+  checker: (course: Course): boolean => ['AG'].includes(course.acadGroup)
+  || ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(course.subject),
   operator: 'or',
   fulfilledBy: 'credits',
   minCount: 55,

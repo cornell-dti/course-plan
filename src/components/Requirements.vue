@@ -21,7 +21,7 @@
           <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
             @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
             <p :style="{'font-weight': minor.display ? '500' : '', 'color' : minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
-            <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
+            <!-- <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> Change for multiple colleges -->
           </div>
         </div>
 
