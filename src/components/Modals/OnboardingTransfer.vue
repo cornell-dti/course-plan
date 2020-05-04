@@ -1,7 +1,7 @@
 <template>
     <div class="onboarding">
         <div class="onboarding-section">
-          <div class="onboarding-subHeader">Cornell Swimming Test</div>
+          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font">Cornell Swimming Test </span> </div>
           <div class="onboarding-inputs onboarding-inputs--name">
             <div class="onboarding-inputWrapper">
               <label class="onboarding-label">Have you taken or planning on taking the Swim Test?</label>
@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="onboarding-section">
-          <div class="onboarding-subHeader">Transfer Credits (Optional)</div>
+          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Transfer Credits (Optional)</span></div>
           <div class="onboarding-inputs">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <div class="onboarding-subHeader2">Test Credits</div>

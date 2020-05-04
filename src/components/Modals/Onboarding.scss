@@ -3,7 +3,6 @@ input {
 }
 .onboarding {
   padding: 1rem;
-  
 
   &-selectWrapperRow {
     margin-top: 15px;
@@ -96,11 +95,25 @@ input {
     }
   }
   &-subHeader {
-    font-size: 24px;
-    line-height: 29px;
-
-    color: #757575;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 22px;
+    position:relative; 
+    top: 23px;
+    padding-left:15px;
+    /* identical to box height */
+    
+    display: flex;
+    align-items: center;
+    text-align: center;
+   
+    color: #404040;
     margin-bottom: .75rem;
+    &--font{
+      padding:5px;
+      margin-left:10px;
+      background-color: white;
+    }
   }
   &-subHeader2 {
     font-style: normal;
