@@ -566,7 +566,9 @@ export default {
         const exams = [];
         data.exam.forEach(exam => {
           exams.push(exam);
-          // console.log(exam.);
+          if ('equivCourse' in exam) {
+            transferClasses.push(exam.equivCourse[0]);
+          }
         });
         user.exam = exams;
       }
@@ -576,14 +578,12 @@ export default {
           classes.push(course);
           const courseInfo = this.createCourse(course.course);
           transferClasses.push(courseInfo);
-          console.log(course.class);
-
           // ; // TODO for user to pick which classes it goes for
           // console.log('E', crs);
         }
         user.transferCourse = classes;
         this.currentClasses = transferClasses;
-        console.log(this.currentClasses);
+        console.log('Users current Classes', this.currentClasses);
       }
 
       if ('majors' in data && data.majors.length > 0) {

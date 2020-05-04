@@ -151,6 +151,7 @@ export default {
       }
     },
     // check to see if a set of options (college, major, minor) only has placeholder texts (so no options selected)
+    // TODO check if all fields in a exam (subject, score, type) are filled
     noOptionSelected(options) {
       let bool = true;
       options.forEach(option => {
@@ -158,6 +159,7 @@ export default {
           bool = false;
         }
       });
+
 
       return bool;
     },
@@ -176,15 +178,18 @@ export default {
       const sections = ['type', 'subject', 'score'];
       options.forEach(option => {
         const exam = {};
+        let isValidExam = true;
         for (const sec of sections) {
           if (option[sec].placeholder !== placeholderText && option[sec].placeholder !== null) {
             exam[sec] = option[sec].placeholder;
+          } else {
+            isValidExam = false;
           }
         }
-        if (option.equivCourse !== null) {
-          // exam.equivCourse = option.equivCourse;
+        if (typeof option.equivCourse !== 'undefined') {
+          exam.equivCourse = option.equivCourse;
         }
-        list.push(exam);
+        if (isValidExam) list.push(exam);
       });
       return list;
     },

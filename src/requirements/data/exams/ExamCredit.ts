@@ -9,10 +9,11 @@ const transferJSON: ExamData = {
         credits:
             [
               {
+                operator: 'or',
                 collegesApplied: ['EN', 'AS'],
                 majorExcluded: [],
                 mininmumScore: 5,
-                courseEquivalents: [['CS 1110']],
+                courseEquivalents: ['CS 1110'],
                 requirementEquivalents: [],
                 credits: 4
               }
@@ -23,10 +24,11 @@ const transferJSON: ExamData = {
         credits:
             [
               {
+                operator: 'or',
                 collegesApplied: ['EN', 'AS', 'AR'],
                 majorExcluded: ['CHEM'],
                 mininmumScore: 5,
-                courseEquivalents: [['CHEM 2070', 'CHEM 2090']],
+                courseEquivalents: ['CHEM 2070', 'CHEM 2090'],
                 requirementEquivalents: [],
                 credits: 4
               }
@@ -40,7 +42,8 @@ const transferJSON: ExamData = {
                 collegesApplied: ['EN', 'AS'],
                 majorExcluded: [],
                 mininmumScore: 4,
-                courseEquivalents: [['ECON 1110'], ['HADM 1410']], // and?
+                operator: 'and',
+                courseEquivalents: ['ECON 1110', 'HADM 1410'], // and?
                 requirementEquivalents: [],
                 credits: 4
 
@@ -52,10 +55,11 @@ const transferJSON: ExamData = {
         credits:
             [
               {
+                operator: 'and',
                 collegesApplied: ['EN', 'AS'],
                 majorExcluded: [],
                 mininmumScore: 4,
-                courseEquivalents: [['ECON 1120']],
+                courseEquivalents: ['ECON 1120'],
                 requirementEquivalents: [],
                 credits: 4
               }
@@ -264,10 +268,11 @@ const transferJSON: ExamData = {
       credits:
             [
               {
+                operator: 'or',
                 collegesApplied: ['EN', 'AS', 'AR'],
                 majorExcluded: ['CHEM'],
                 mininmumScore: 5,
-                courseEquivalents: [['CHEM 2070', 'CHEM 2090']],
+                courseEquivalents: ['CHEM 2070', 'CHEM 2090'],
                 requirementEquivalents: [],
                 credits: 4
               }

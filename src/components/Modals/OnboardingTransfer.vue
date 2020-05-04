@@ -6,9 +6,9 @@
             <div class="onboarding-inputWrapper">
               <label class="onboarding-label">Have you taken or planning on taking the Swim Test?</label>
               <div class="onboarding-inputs--radioWrapper">
-                <input class="onboarding-inputs--radio" type="radio" v-model="tookSwimTest" value="yes">
+                <input class="onboarding-inputs--radio" type="radio" v-on:click="updateSwimYes" v-model="tookSwimTest" value="yes">
                 <label class="onboarding-inputs--radio--radioText" for="yes">Yes</label>
-                <input class="onboarding-inputs--radio" type="radio" v-model="tookSwimTest" value="no">
+                <input class="onboarding-inputs--radio" type="radio" v-on:click="updateSwimNo" v-model="tookSwimTest" value="no">
                 <label class="onboarding-inputs--radio--radioText" for="no">No</label>
               </div>
             </div>
@@ -185,7 +185,6 @@
 
 import reqsData from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
-import transferJSON from '../../assets/Transfer/AP-json';
 import NewCourse from '@/components/Modals/NewCourse';
 
 Vue.component('newCourse', NewCourse);
@@ -264,7 +263,7 @@ export default {
           if (typeof this.user.exam[x].subject !== 'undefined') {
             exams.push(exam);
             credits += this.user.exam[x].credits;
-            exam.equivCourse = this.user.equivCourse;
+            exam.equivCourse = this.user.exam[x].equivCourse;
           }
         }
       }
@@ -282,7 +281,7 @@ export default {
       }
       exams.push(exam);
       this.displayOptions.exam = exams;
-      const swim = (this.user.tookSwim !== null) ? this.user.tookSwim : '';
+      const swim = (typeof this.user.tookSwim !== 'undefined') ? this.user.tookSwim : 'no';
       this.tookSwimTest = swim;
       const transferClass = [];
       this.user.transferCourse.forEach(course => {
@@ -411,6 +410,15 @@ export default {
         }
       });
       this.subjects = totalSubjects;
+    },
+    // Didn't want to seperate into two functions but v-model wouldn't work unless clicked twice?
+    updateSwimYes() {
+      this.tookSwimTest = 'yes';
+      this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+    },
+    updateSwimNo() {
+      this.tookSwimTest = 'no';
+      this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
     },
     selectOption(type, section, text, acronym, i) {
       let displayOptions = this.displayOptions[type];
