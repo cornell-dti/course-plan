@@ -1,3 +1,103 @@
 .introjs-tooltip {
-    background-color: black;
+    background-color: white;
+    border-radius: 9px;
+}
+.introjs-helperNumberLayer{
+    display: none;
+}
+.introjs-helperLayer{
+    border-radius: 9px;
+}
+.introjs-donebutton{
+    color: white !important;
+    background-image: none !important;
+    background-color: #508197 !important;
+    text-shadow: none;
+    border: none;
+    border-radius: 3px;
+    float: right !important;
+    font-family: "ProximaNova";
+    padding: .5em .7em .5em !important;
+}
+.introjs-donebutton:hover{
+    color: white !important;
+    background-color: #508197;
+    background-image: none;
+}
+.introjs-donebutton:focus{
+    color: white !important;
+    background-color: #508197;
+    background-image: none;
+}
+.introjs-skipbutton{
+    float:left;
+    border:none;
+    background-image: none;
+    font-family:"ProximaNova"; 
+    padding-left: 0px;
+    background-color: white;
+    color: #508197;
+}
+.introjs-skipbutton:active{
+    background-image: none;
+    background-color:transparent;
+    font-family:"ProximaNova"; 
+    padding-left: 0px;
+    color: #508197;
+    background-color: white;
+}
+.introjs-skipbutton:focus{
+    background-image: none;
+    background-color:transparent;
+    font-family:"ProximaNova"; 
+    padding-left: 0px;
+    color: #508197;
+    background-color: white;
+}
+.introjs-skipbutton:hover{
+    box-shadow:none;
+}
+.introjs-nextbutton{
+    // display: none;
+    color: white !important;
+    background-image: none;
+    background-color: #508197;
+    text-shadow: none;
+    border: none;
+    border-radius: 3px;
+    font-family: "ProximaNova"
+}
+.introjs-nextbutton:hover{
+    // display: none;
+    color: white !important;
+    background-color: #508197;
+    background-image: none;
+}
+.introjs-nextbutton:focus{
+    // display: none;
+    color: white !important;
+    background-color: #508197;
+    background-image: none;
+}
+.introjs-prevbutton{
+    display:none !important;
+}
+a:not([href]) {
+    color: #508197;
+}
+.introjs-bullets {
+    display:none;
+}
+.introjs-bodytext{
+    color:#757575;
+}
+.introjs-disabled {
+    display: none !important;
+}
+.tooltipCenter{
+    align-self: center;
+    width: 20vw;
+}
+.introjs-tooltipReferenceLayer{
+    display: flex;
 }

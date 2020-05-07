@@ -17,7 +17,9 @@
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
+          :startTour="startTour"
           @requirementsMap="loadRequirementsMap"
+          @showTourEndWindow="showTourEnd"
          />
       </div>
       <semesterview v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
@@ -33,6 +35,24 @@
         @updateRequirementsMenu="updateRequirementsMenu"
       />
     </div>
+    <tourwindow
+      :title="welcome"
+      :text="welcomeBodytext"
+      :exit="welcomeExit"
+      :buttonText="welcomeButtonText"
+      v-on:hide = "welcomeHidden = false; if(startTour==false) startTour = true"
+      v-if="welcomeHidden"
+    >
+    </tourwindow>
+    <tourwindow
+      :title="congrats"
+      :text="congratsBodytext"
+      :exit="congratsExit"
+      :buttonText="congratsButtonText"
+      v-on:hide = "showTourEndWindow = false;"
+      v-if="showTourEndWindow"
+    >
+    </tourwindow>
     <div id="dashboard-bottomView">
       <bottombar
       v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
@@ -50,12 +70,14 @@
 <script>
 import Vue from 'vue';
 
+import introJs from 'intro.js';
 import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
 import BottomBar from '@/components/BottomBar';
 import NavBar from '@/components/NavBar';
 import Onboarding from '@/components/Modals/Onboarding';
+import TourWindow from '@/components/Modals/TourWindow';
 
 import '@/vueDragulaConfig';
 import { auth, userDataCollection } from '@/firebaseConfig';
@@ -66,6 +88,13 @@ Vue.component('requirements', Requirements);
 Vue.component('bottombar', BottomBar);
 Vue.component('navbar', NavBar);
 Vue.component('onboarding', Onboarding);
+Vue.component('tourwindow', TourWindow);
+
+const tour = introJs();
+tour.setOption('exitOnEsc', 'false');
+tour.setOption('doneLabel', 'Finish');
+tour.setOption('skipLabel', 'Skip This Tutorial');
+tour.setOption('nextLabel', 'Next');
 
 export default {
   data() {
@@ -100,7 +129,18 @@ export default {
       isOpeningRequirements: false,
       isTablet: window.innerWidth <= 878,
       isMobile: window.innerWidth <= 440,
-      maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4
+      maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4,
+      welcome: 'Welcome Cornellian!',
+      welcomeBodytext: 'View your college requirements, plan your semesters and courses, and more.',
+      welcomeExit: 'No, I want to skip this',
+      welcomeButtonText: 'Start Tutorial',
+      welcomeHidden: false,
+      startTour: false,
+      showTourEndWindow: false,
+      congrats: 'Congratulations! That’s a wrap',
+      congratsBodytext: 'Other than this, there is more you can explore, so feel free to surf through CoursePlan 🏄',
+      congratsExit: '',
+      congratsButtonText: 'Start Planning'
     };
   },
   created() {
@@ -174,7 +214,6 @@ export default {
         this.compactVal = false;
       }
     },
-
     /**
      * Creates credit range based on course
      * Example: [1, 4] is the credit range for the given course
@@ -400,7 +439,10 @@ export default {
       // Get map of requirements
       this.buildRequirementsAlert(requirementsMap);
     },
-
+    showTourEnd() {
+      this.showTourEndWindow = true;
+      console.log('asdfasdf');
+    },
     buildRequirementsAlert(requirementsMap) {
       // Update semesters with alerts
       this.semesters.forEach(semester => {
@@ -549,6 +591,7 @@ export default {
 
       this.cancelOnboarding();
       this.updateRequirementsMenu();
+      this.welcomeHidden = true;
     },
 
     cancelOnboarding() {

@@ -1,6 +1,13 @@
 <template v-if="semesters">
   <div class="requirements">
-    <div class="fixed">
+    <div class="fixed"
+      data-intro='<b>This is your Requirements Bar 📋</b><br>
+        <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
+          requirements based on your college and major :)</div>'
+      data-step ='1'
+      data-disable-interaction = '1'
+      data-tooltipClass = 'tooltipCenter'
+    >
     <h1 class="title">School Requirements</h1>
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
@@ -177,6 +184,9 @@
 import { Vue } from 'vue-property-decorator';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
+// @ts-ignore
+import introJs from 'intro.js';
+
 // Disable import extension check because TS module resolution depends on it.
 // eslint-disable-next-line import/extensions
 import Course from '@/components/Course.vue';
@@ -208,11 +218,18 @@ type Data = {
   reqGroupColorMap: {};
 
 }
+
+const tour = introJs();
+tour.setOption('exitOnEsc', 'false');
+tour.setOption('doneLabel', 'Finish');
+tour.setOption('skipLabel', 'Skip This Tutorial');
+tour.setOption('nextLabel', 'Next');
 export default Vue.extend({
   props: {
     semesters: Array,
     user: Object,
-    compact: Boolean
+    compact: Boolean,
+    startTour: Boolean
   },
   mounted() {
     this.getDisplays();
@@ -319,6 +336,12 @@ export default Vue.extend({
         MINOR: ['92C3E6', 'lightblue']
       }
     };
+  },
+  watch: {
+    startTour() {
+      tour.start();
+      tour.oncomplete(() => { this.$emit('showTourEndWindow'); });
+    }
   },
   methods: {
     getRequirementTypeDisplayName(type: string): string {
