@@ -18,9 +18,11 @@
           :user="user"
           :key="requirementsKey"
           @requirementsMap="loadRequirementsMap"
+          @reqCourseDropHandler="reqCourseDropHandler"
          />
       </div>
       <semesterview v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
+        ref="semesterView"
         :semesters="semesters"
         :compact="compactVal"
         :isBottomBarExpanded="bottomBar.isExpanded"
@@ -528,6 +530,12 @@ export default {
 
     closeBar() {
       this.bottomBar.isExpanded = false;
+    },
+
+    reqCourseDropHandler() {
+      // Prevents dupe with dragged and dropped req course and the new Course
+      // component that appears in semesterView
+      this.$refs.semesterView.$data.key += 1;
     },
 
     startOnboarding() {

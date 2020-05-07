@@ -311,6 +311,14 @@ export default Vue.extend({
   },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+    const service = Vue.$dragula.$service;
+    service.eventBus.$on('drag', () => {
+      this.scrollable = true;
+    });
+    service.eventBus.$on('drop', e => {
+      this.scrollable = true;
+      this.reqCourseDropHandler();
+    });
 
     this.getDisplays();
     const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major, this.user.minor);
@@ -349,7 +357,6 @@ export default Vue.extend({
         singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
         singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
       }
-      console.log('in singleMenuReq');
       if (singleMenuRequirement.group !== 'UNIVERSITY') {
         this.subReqsCoursesMap[singleMenuRequirement.group] = {};
 
@@ -544,7 +551,6 @@ export default Vue.extend({
                   const newCourse = this.$parent.createCourse(course, true);
                   newCourse.compact = !isSeeAll;
                   newCourse.isReqCourse = true;
-                  console.log(newCourse);
                   if (this.subReqsCoursesMap[group] && this.subReqsCoursesMap[group][subReqName]) {
                     this.subReqsCoursesMap[group][subReqName].push(newCourse);
                   } else {
@@ -642,8 +648,6 @@ export default Vue.extend({
                 }
               }
             }
-            console.log('subReqsCoursesMap');
-            console.log(this.subReqsCoursesMap);
           }
         });
         Promise.all(courseAddPromises)
@@ -667,6 +671,9 @@ export default Vue.extend({
         .then(res => {
           this.isSeeAll = !this.isSeeAll;
         });
+    },
+    reqCourseDropHandler() {
+      this.$emit('reqCourseDropHandler');
     }
   }
 });
