@@ -194,6 +194,7 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
+import undefined from 'firebase/empty-import';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -335,12 +336,22 @@ export default Vue.extend({
     };
   },
   methods: {
+    changeRequirementOption(title:string, index:number):void{
+      // total length is
+      const subReqs = this.reqs[index];
+      console.log(`subReqs is ${subReqs}`);
+    },
     toggleRequirementDefault(index: number, type: 'ongoing' | 'completed', id: number): void {
       if (type === 'ongoing') {
         const currentBool = this.reqs[index].ongoing[id].displayOption;
         console.log(`req name: ${this.reqs[index].ongoing[id].requirement.name}`);
         console.log(`currentBool: ${currentBool}`);
         this.reqs[index].ongoing[id].displayOption = !currentBool;
+        const pairReqTitle = this.reqs[index].ongoing[id].requirement.pairedReqName;
+        if (pairReqTitle !== undefined) {
+          console.log(`pairReqTitle: ${pairReqTitle}`);
+          this.changeRequirementOption(pairReqTitle, index);
+        }
         // need to change corresponding requirement to the opposite--how to get it?
         // can't guarantee that they will always be next to each other tho
         // given title of req name, change displayOption to give boolean
