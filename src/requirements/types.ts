@@ -47,6 +47,8 @@ export interface BaseRequirement {
    */
   readonly totalCount?: number;
   readonly progressBar?: boolean;
+  readonly isDefaultOption?: boolean;
+  readonly pairedReqName?: string;
 }
 
 export type UniversityRequirements = {
@@ -126,7 +128,7 @@ export type GroupedRequirementFulfillmentReport = {
 };
 
 export type DisplayableRequirementFulfillment = RequirementFulfillment<
-  RequirementFulfillmentStatistics & { displayDescription: boolean }
+  RequirementFulfillmentStatistics & { displayDescription: boolean } & { displayOption: boolean }
 >;
 
 export type SingleMenuRequirement = {

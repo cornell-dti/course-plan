@@ -39,26 +39,31 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   // TODO: temp fix for reqs w options and diff minCount
   {
-    name: 'General Chemistry Part 1',
-    description: 'CHEM 2070 OR CHEM 2150',
+    name: 'General Chemistry Option 1',
+    description: 'CHEM 2070 AND CHEM 2080',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
     checker: includesWithSubRequirements(
-      ['CHEM 2070', 'CHEM 2150'],
+      ['CHEM 2070', 'CHEM 2080'],
     ),
     operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 1
+    minCount: 2,
+    isDefaultOption: true,
+    pairedReqName: 'General Chemistry Option 2'
   },
   {
-    name: 'General Chemistry Part 2',
-    description: 'CHEM 2080 OR CHEM 2150',
+    name: 'General Chemistry Option 2',
+    description: 'CHEM 2150',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
-    checker: includesWithSubRequirements(
-      ['CHEM 2080', 'CHEM 2150'],
+    checker: includesWithSingleRequirement(
+      'CHEM 2150'
     ),
     operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 1
+    minCount: 1,
+    isDefaultOption: false,
+    pairedReqName: 'General Chemistry Option 1'
+
   },
   {
     name: 'College Mathematics',

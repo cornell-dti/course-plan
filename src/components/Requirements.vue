@@ -76,7 +76,8 @@
             <div
               v-for="(subReq, id) in req.ongoing"
               :key="subReq.id">
-              <div class="row depth-req">
+              <!-- hide if v-if="subReq.displayOption" still need the index number-->
+              <div class="row depth-req" v-show="subReq.displayOption">
                 <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
                   <button class="btn">
                     <!-- svg for dropdown icon -->
@@ -96,6 +97,15 @@
                 </div>
                 <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
                   <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
+                </div>
+
+                <div v-if="subReq.requirement.pairedReqName" class="description">
+                  <button
+                      class="btn req-name"
+                      @click="toggleRequirementDefault(index, 'ongoing', id)">
+                      Change Req Option
+                  </button>
+                  {{ subReq.requirement.pairedReqName }}
                 </div>
                 <div class="col">
                   <p class="sup-req-progress text-right incomplete-ptext">{{
@@ -239,7 +249,11 @@ export default Vue.extend({
           singleMenuRequirement.required = req.requirement.totalCount || req.requirement.minCount;
         }
         // Default display value of false for all requirement lists
-        const displayableRequirementFulfillment = { ...req, displayDescription: false };
+        let displayOptionValue = true;
+        if (req.requirement.isDefaultOption === false) {
+          displayOptionValue = false;
+        }
+        const displayableRequirementFulfillment = { ...req, displayDescription: false, displayOption: displayOptionValue };
         if (!req.minCountFulfilled || req.minCountFulfilled < (req.requirement.minCount || 0)) {
           singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
         } else {
@@ -321,6 +335,21 @@ export default Vue.extend({
     };
   },
   methods: {
+    toggleRequirementDefault(index: number, type: 'ongoing' | 'completed', id: number): void {
+      if (type === 'ongoing') {
+        const currentBool = this.reqs[index].ongoing[id].displayOption;
+        console.log(`req name: ${this.reqs[index].ongoing[id].requirement.name}`);
+        console.log(`currentBool: ${currentBool}`);
+        this.reqs[index].ongoing[id].displayOption = !currentBool;
+        // need to change corresponding requirement to the opposite--how to get it?
+        // can't guarantee that they will always be next to each other tho
+        // given title of req name, change displayOption to give boolean
+      // haven't added anything for completed yet
+      } else if (type === 'completed') {
+        const currentBool = this.reqs[index].completed[id].displayOption;
+        this.reqs[index].completed[id].displayOption = !currentBool;
+      }
+    },
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
     },
