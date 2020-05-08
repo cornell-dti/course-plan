@@ -43,7 +43,8 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'CHEM 2070 AND CHEM 2080',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
     checker: includesWithSubRequirements(
-      ['CHEM 2070', 'CHEM 2080'],
+      ['CHEM 2070'],
+      ['CHEM 2080']
     ),
     operator: 'and',
     fulfilledBy: 'courses',

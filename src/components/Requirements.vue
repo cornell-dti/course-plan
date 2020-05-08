@@ -76,7 +76,7 @@
             <div
               v-for="(subReq, id) in req.ongoing"
               :key="subReq.id">
-              <!-- hide if v-if="subReq.displayOption" still need the index number-->
+              <!-- v-show="subReq.displayOption" -->
               <div class="row depth-req" v-show="subReq.displayOption">
                 <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
                   <button class="btn">
@@ -96,6 +96,7 @@
                   </button>
                 </div>
                 <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
+                  <!-- <span> index is: {{index}} id is: {{id}}</span> -->
                   <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
                 </div>
 
@@ -194,7 +195,7 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
-import undefined from 'firebase/empty-import';
+// import undefined from 'firebase/empty-import';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -336,10 +337,17 @@ export default Vue.extend({
     };
   },
   methods: {
-    changeRequirementOption(title:string, index:number):void{
+    changeRequirementOption(title:string | undefined, index:number):void{
       // total length is
-      const subReqs = this.reqs[index];
-      console.log(`subReqs is ${subReqs}`);
+      const subReqs = this.reqs[index].ongoing;
+      subReqs.forEach(id => {
+        if (id.requirement.pairedReqName === title) {
+          console.log(`pair: displayOption hasn't been changed ${id.displayOption}`);
+          const currentBool = id.displayOption;
+          id.displayOption = !currentBool;
+          console.log(`pair: displayOption is now ${id.displayOption}`);
+        }
+      });
     },
     toggleRequirementDefault(index: number, type: 'ongoing' | 'completed', id: number): void {
       if (type === 'ongoing') {
@@ -347,19 +355,18 @@ export default Vue.extend({
         console.log(`req name: ${this.reqs[index].ongoing[id].requirement.name}`);
         console.log(`currentBool: ${currentBool}`);
         this.reqs[index].ongoing[id].displayOption = !currentBool;
+        console.log(`after currentBool: ${this.reqs[index].ongoing[id].displayOption}`);
         const pairReqTitle = this.reqs[index].ongoing[id].requirement.pairedReqName;
-        if (pairReqTitle !== undefined) {
-          console.log(`pairReqTitle: ${pairReqTitle}`);
-          this.changeRequirementOption(pairReqTitle, index);
-        }
-        // need to change corresponding requirement to the opposite--how to get it?
-        // can't guarantee that they will always be next to each other tho
-        // given title of req name, change displayOption to give boolean
-      // haven't added anything for completed yet
-      } else if (type === 'completed') {
-        const currentBool = this.reqs[index].completed[id].displayOption;
-        this.reqs[index].completed[id].displayOption = !currentBool;
+        this.changeRequirementOption(pairReqTitle, index);
       }
+      // need to change corresponding requirement to the opposite--how to get it?
+      // can't guarantee that they will always be next to each other tho
+      // given title of req name, change displayOption to give boolean
+      // haven't added anything for completed yet
+      // } else if (type === 'completed') {
+      //   const currentBool = this.reqs[index].completed[id].displayOption;
+      //   this.reqs[index].completed[id].displayOption = !currentBool;
+      // }
     },
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
