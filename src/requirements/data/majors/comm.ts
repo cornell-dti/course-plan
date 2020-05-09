@@ -60,6 +60,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     + 'A maximum of 3 credits in either 4970 or 4990 (combined) can be counted toward the upper level major requirements. Refer to the Course and Time Roster for the most up-to-date offerings. ',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSubRequirements(
+      ['COMM 2179'],
       ['ANTHR 4330', 'COGST 4330', 'STS 4330'],
       ['COML 2703', 'ENG 2703', 'MUSIC 2703', 'PMA 2703'],
       ['COMM 2179'],
