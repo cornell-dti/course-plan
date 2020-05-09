@@ -119,15 +119,6 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     minCount: 3
   },
   {
-    name: 'First-Year Writing Workshop (FWS)',
-    description: 'One First-Year Writing Workshop (FWS). (A score of 5 on the AP English Language exam is accepted.)',
-    source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
-    checker: courseIsFWS,
-    operator: 'or',
-    fulfilledBy: 'courses',
-    minCount: 1
-  },
-  {
     name: 'Introductory Statistics Class',
     description: 'Students must take an introductory statistics class, such as PAM 2100, AEM 2100, ILRST 2100, etc. or a score of 5 in AP statistics',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
