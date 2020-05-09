@@ -7,9 +7,11 @@ import businessRequirements from './colleges/bu';
 import engineeringRequirements from './colleges/en';
 import humanEcologyRequirements from './colleges/he';
 import irlRequirements from './colleges/il';
+
 import aemRequirements from './majors/aem';
 import bioRequirements from './majors/bio';
 import bioEngineeringRequirements from './majors/be';
+import commRequirements from './majors/comm';
 import crpRequirements from './majors/crp';
 import csRequirements from './majors/cs';
 import economicsRequirements from './majors/econ';
@@ -21,6 +23,7 @@ import infoRequirements from './majors/info';
 import isstRequirements from './majors/isst';
 import mechnicalEngineeringRequirements from './majors/me';
 import orieRequirements from './majors/orie';
+
 import buMinorRequirements from './minors/bu';
 import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
@@ -82,6 +85,11 @@ const json: RequirementsJson = {
       name: 'Biological Engineering',
       schools: ['EN'],
       requirements: bioEngineeringRequirements
+    },
+    COMM: {
+      name: 'Communications',
+      schools: ['AG'],
+      requirements: commRequirements
     },
     CRP: {
       name: 'City and Regional Planning',
