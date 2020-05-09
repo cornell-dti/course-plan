@@ -6,6 +6,8 @@ admin.initializeApp();
 const db = admin.firestore();
 const userDataCollection = db.collection('userData');
 
+const cors = require('cors')({origin: true});
+
 let average = (array) => array.reduce((a, b) => a + b) / array.length;
 function typeToMonth(type){
   switch(type) {
@@ -90,4 +92,24 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
       });
       
 });
+// TODO: Re-deploy fetchCourses firebase function
+// // fetch by list of course codes (codes="CS1110,CS2110,...")
+// exports.fetchCourses = functions.https.onRequest(async (req, res) => {
+//   res.set('Access-Control-Allow-Origin', '*');
+//   // assuming this is a list for now
+//   console.log("hello from will & theresa");
+//   let codes = req.query.codes;
+//   console.log(codes);
+  
+//   // let arr = codes.split(',');
 
+//   // access the filtered-all-courses.json
+  
+//   // loop thru rosters (starting from most recent) until finding the course
+  
+//   // append data to something
+
+//   // return the something after looping through all courses
+//   // want an array of courses
+//   res.send(codes);
+// });

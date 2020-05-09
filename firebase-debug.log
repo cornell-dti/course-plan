@@ -1,0 +1,42 @@
+[debug] [2020-05-08T01:54:28.403Z] ----------------------------------------------------------------------
+[debug] [2020-05-08T01:54:28.407Z] Command:       /usr/local/bin/node /usr/local/bin/firebase emulators:start --only functions
+[debug] [2020-05-08T01:54:28.407Z] CLI Version:   7.6.1
+[debug] [2020-05-08T01:54:28.407Z] Platform:      darwin
+[debug] [2020-05-08T01:54:28.407Z] Node Version:  v10.16.3
+[debug] [2020-05-08T01:54:28.408Z] Time:          Thu May 07 2020 21:54:28 GMT-0400 (Eastern Daylight Time)
+[debug] [2020-05-08T01:54:28.409Z] ----------------------------------------------------------------------
+[debug] [2020-05-08T01:54:28.409Z] 
+[info] i  Starting emulators: ["functions"]
+[warn] ⚠  Your requested "node" version "8" doesn't match your global version "10"
+[info] ✔  functions: Emulator started at http://localhost:5001
+[info] i  functions: Watching "/Users/theresacho/Desktop/course-plan/functions" for Cloud Functions...
+[debug] [2020-05-08T01:54:29.307Z] [runtime-status] Functions runtime initialized. {"cwd":"/Users/theresacho/Desktop/course-plan/functions","node_version":"10.16.3"}
+[debug] [2020-05-08T01:54:29.309Z] [runtime-status] Disabled runtime features: undefined {}
+[debug] [2020-05-08T01:54:29.316Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-05-08T01:54:29.319Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-05-08T01:54:29.914Z] [runtime-status] Found google-gax at /Users/theresacho/Desktop/course-plan/functions/node_modules/google-gax/build/src/index.js {}
+[debug] [2020-05-08T01:54:29.915Z] [runtime-status] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"},{"name":"google-gax","status":"mocked"}]
+[debug] [2020-05-08T01:54:30.010Z] [runtime-status] Checked functions.config() {"config":{}}
+[debug] [2020-05-08T01:54:30.012Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-05-08T01:54:30.013Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-05-08T01:54:30.013Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-05-08T01:54:30.136Z] [runtime-status] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}}
+[debug] [2020-05-08T01:54:30.141Z] [runtime-status] initializeApp(DEFAULT) {"databaseURL":"https://cornelldti-courseplan-dev.firebaseio.com","storageBucket":"cornelldti-courseplan-dev.appspot.com","projectId":"cornelldti-courseplan-dev"}
+[warn] ⚠  functions: The Cloud Firestore emulator is not running, so calls to Firestore will affect production.
+[info] ✔  functions[TrackUsers]: http function initialized (http://localhost:5001/cornelldti-courseplan-dev/us-central1/TrackUsers).
+[info] ✔  functions[fetchCourses]: http function initialized (http://localhost:5001/cornelldti-courseplan-dev/us-central1/fetchCourses).
+[info] ✔  All emulators started, it is now safe to connect.
+[debug] [2020-05-08T02:02:50.993Z] File /Users/theresacho/Desktop/course-plan/functions/index.js changed, reloading triggers
+[debug] [2020-05-08T02:02:53.848Z] [runtime-status] Functions runtime initialized. {"cwd":"/Users/theresacho/Desktop/course-plan/functions","node_version":"10.16.3"}
+[debug] [2020-05-08T02:02:53.849Z] [runtime-status] Disabled runtime features: undefined {}
+[debug] [2020-05-08T02:02:53.861Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-05-08T02:02:53.868Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-05-08T02:02:55.704Z] [runtime-status] Found google-gax at /Users/theresacho/Desktop/course-plan/functions/node_modules/google-gax/build/src/index.js {}
+[debug] [2020-05-08T02:02:55.712Z] [runtime-status] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"},{"name":"google-gax","status":"mocked"}]
+[debug] [2020-05-08T02:02:56.029Z] [runtime-status] Checked functions.config() {"config":{}}
+[debug] [2020-05-08T02:02:56.031Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-05-08T02:02:56.033Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2020-05-08T02:02:56.034Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2020-05-08T02:02:56.682Z] [runtime-status] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.9.2","resolution":"/Users/theresacho/Desktop/course-plan/functions/node_modules/firebase-admin/lib/index.js"}}
+[debug] [2020-05-08T02:02:56.688Z] [runtime-status] initializeApp(DEFAULT) {"databaseURL":"https://cornelldti-courseplan-dev.firebaseio.com","storageBucket":"cornelldti-courseplan-dev.appspot.com","projectId":"cornelldti-courseplan-dev"}
+[warn] ⚠  functions: The Cloud Firestore emulator is not running, so calls to Firestore will affect production.

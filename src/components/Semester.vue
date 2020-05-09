@@ -168,7 +168,6 @@ export default {
     });
     service.eventBus.$on('drop', e => {
       this.scrollable = true;
-      console.log(e.el);
     });
 
     this.buildCautions();

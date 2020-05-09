@@ -129,14 +129,14 @@
                     class="draggable-requirements-seeAll-wrapper"
                     v-if="subReqsCoursesMap[req.group] !== undefined && subReqsCoursesMap[req.group][subReq.requirement.name] !== undefined"
                   >
-                    <div class="draggable-requirements-seeAll-button" v-on:click="showSeeAll(req.group, req.specific, subReq.requirement.name)">{{ seeAll }}</div>
+                    <div class="draggable-requirements-seeAll-button" v-on:click="showSeeAll(req.group, subReq.requirement.name)">{{ seeAll }}</div>
                   </div>
                     <div
                       v-if="subReqsCoursesMap[req.group] !== undefined && subReqsCoursesMap[req.group][subReq.requirement.name] !== undefined"
                       class="draggable-requirements-courses"
-                      v-dragula="subReqsCoursesMap[req.group][subReq.requirement.name]"
+                      v-dragula="subReqsCoursesMap[req.group][subReq.requirement.name].courseObjects"
                       bag="first-bag">
-                      <div v-for="course in subReqsCoursesMap[req.group][subReq.requirement.name]" :key="course.uniqueID" class="requirements-courseWrapper">
+                      <div v-for="course in subReqsCoursesMap[req.group][subReq.requirement.name].courseObjects" :key="course.uniqueID" class="requirements-courseWrapper">
                         <course
                           v-bind="course"
                           :courseObj="course"
@@ -212,31 +212,26 @@
         <!-- loop through reqs array of req objects -->
         <div
           class="req"
-          v-for="reqGroup in Object.keys(subReqsCoursesMap)"
-          :key="reqGroup.id"
         >
-          <div
-            v-for="subReqName in Object.keys(subReqsCoursesMap[reqGroup])"
-            :key="subReqName.id"
-          >
-            <div class="row top backButton" :style="{ 'color': `#${reqGroupColorMap[reqGroup][0]}` }" v-on:click="backToRequirements(reqGroup, reqs.find(req => req.group === reqGroup).specific)">
+          <div>
+            <div class="row top backButton" :style="{ 'color': `#${reqGroupColorMap[this.seeAllGroup][0]}` }" v-on:click="backToRequirements(seeAllGroup, seeAllSubReqName)">
               <div class="backButton-arrow">
                 <img
                   class="arrow arrow-left"
-                  :src="require(`@/assets/images/dropleft-${reqGroupColorMap[reqGroup][1]}.svg`)"
+                  :src="require(`@/assets/images/dropleft-${reqGroupColorMap[this.seeAllGroup][1]}.svg`)"
                   alt="dropleft"
                 />
               </div>
               <div class="backButton-text">{{backButtonText}}</div>
             </div>
-            <h1 class="title">All {{subReqName}} Courses</h1>
+            <h1 class="title">All {{this.seeAllSubReqName}} Courses</h1>
             <div class="draggable-requirements-wrapper">
                 <div
-                  v-if="subReqsCoursesMap[reqGroup] !== undefined && subReqsCoursesMap[reqGroup][subReqName] !== undefined"
+                  v-if="subReqsCoursesMap[this.seeAllGroup] !== undefined && subReqsCoursesMap[this.seeAllGroup][this.seeAllSubReqName] !== undefined"
                   class="draggable-requirements-courses"
-                  v-dragula="subReqsCoursesMap[reqGroup][subReqName]"
+                  v-dragula="subReqsCoursesMap[this.seeAllGroup][this.seeAllSubReqName].courseObjects"
                   bag="first-bag">
-                  <div v-for="course in subReqsCoursesMap[reqGroup][subReqName]" :key="course.uniqueID" class="requirements-courseWrapper">
+                  <div v-for="course in subReqsCoursesMap[this.seeAllGroup][this.seeAllSubReqName].courseObjects" :key="course.uniqueID" class="requirements-courseWrapper">
                     <course
                       v-bind="course"
                       :courseObj="course"
@@ -258,6 +253,9 @@
 
 <script lang="ts">
 import { Vue } from 'vue-property-decorator';
+import firebase from 'firebase/app';
+// import functions from "firebase/functions";
+
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
 // Disable import extension check because TS module resolution depends on it.
@@ -268,6 +266,10 @@ import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
 import decoratedRequirementsJSON from '@/requirements/decorated-requirements.json';
+
+require('firebase/functions');
+
+const functions = firebase.functions();
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -290,9 +292,11 @@ type Data = {
   minors: minor[];
   requirementsMap: {};
   reqGroupColorMap: {};
-  subReqsCoursesMap: {};
   scrollable: boolean;
+  subReqsCoursesMap: {};
   isSeeAll: boolean;
+  seeAllGroup: string;
+  seeAllSubReqName: string;
 
 }
 export default Vue.extend({
@@ -358,12 +362,8 @@ export default Vue.extend({
         singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
       }
       if (singleMenuRequirement.group !== 'UNIVERSITY') {
-        this.subReqsCoursesMap[singleMenuRequirement.group] = {};
-
-        // isSeeAll param is false because only show first 4
-        this.addRequirementsCourse(singleMenuRequirement.group, singleMenuRequirement.specific, this.isSeeAll);
+        this.updatesubReqsCoursesMap(singleMenuRequirement.group, singleMenuRequirement.specific, this.isSeeAll);
       }
-
       return singleMenuRequirement;
     });
     this.reqs.push(...singleMenuRequirements);
@@ -430,11 +430,15 @@ export default Vue.extend({
         MAJOR: ['105351', 'green'],
         MINOR: ['92C3E6', 'lightblue']
       },
-      // subReqCourseMap maps from the group name to the subreq to a Course[]
-      // Each item has key <group name>: <subreq name>: list of courses that fulfill the subreq
+      // subReqsCoursesMap maps from the group name to the subreq to a Course[]
+      // Each item is {<group name>: <subreq name>: courseCodes : {<roster>: course code []}, courseObjects : Course[]}
       subReqsCoursesMap: {},
       scrollable: false,
-      isSeeAll: false
+      isSeeAll: false,
+      // Name of the group for the see all option
+      seeAllGroup: '',
+      // Name of the sub req for the see all option
+      seeAllSubReqName: ''
     };
   },
   beforeDestroy() {
@@ -535,9 +539,28 @@ export default Vue.extend({
       }
       this.minors = minors;
     },
+    // Update subReqsCoursesMap to have course codes
+    addRequirementCourseCodes(group, subReqName, reqCourseObj, roster) {
+      const reqCourseRosterObjEntriesList = Object.entries(reqCourseObj[roster]);
+      reqCourseRosterObjEntriesList.forEach(entry => {
+        const subject = entry[0];
+        const courseNumberList = entry[1];
+
+        courseNumberList.forEach(number => {
+          const courseCode = `${subject} ${number}`;
+          if (this.subReqsCoursesMap[group] && this.subReqsCoursesMap[group][subReqName] && this.subReqsCoursesMap[group][subReqName].courseCodes[roster]) {
+            this.subReqsCoursesMap[group][subReqName].courseCodes[roster].push(courseCode);
+          } else {
+            this.subReqsCoursesMap[group][subReqName].courseCodes[roster] = [courseCode];
+          }
+        });
+      });
+    },
     // Fetches course data and updates the subReqsCoursesMap with the course
-    updatesubReqsCoursesMap(roster, subject, number, courseCode, group, subReqName, isSeeAll) {
+    fetchCoursePromise(roster, courseCode, isSeeAll) {
       return new Promise((resolve, reject) => {
+        const subject = courseCode.split(' ')[0];
+        const number = courseCode.split(' ')[1];
         fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
           .then(res => res.json())
           .then(resultJSON => {
@@ -551,12 +574,8 @@ export default Vue.extend({
                   const newCourse = this.$parent.createCourse(course, true);
                   newCourse.compact = !isSeeAll;
                   newCourse.isReqCourse = true;
-                  if (this.subReqsCoursesMap[group] && this.subReqsCoursesMap[group][subReqName]) {
-                    this.subReqsCoursesMap[group][subReqName].push(newCourse);
-                  } else {
-                    this.subReqsCoursesMap[group][subReqName] = [newCourse];
-                  }
-                  resolve('Success');
+                  // return newCourse;
+                  resolve(newCourse);
                 }
               });
             }
@@ -566,109 +585,91 @@ export default Vue.extend({
           });
       });
     },
-    addRequirementsCourse(group, specific, seeAllSubReqName = null, isSeeAll) {
+    // Update subReqsCoursesMap to have course objects
+    addRequirementCourseObjects(group, subReqName, isSeeAll) {
       return new Promise((resolve, reject) => {
-        // "university", "college", "major", or "minor"
-        const groupName = group.toLowerCase();
+        const subReqRosterCourseCodesMapping = this.subReqsCoursesMap[group][subReqName].courseCodes;
 
-        // console.log(decoratedRequirementsJSON[groupName][specific]);
-
-        // List of requirements given the group and the specific (college/major/minor)
-        const requirementsList = decoratedRequirementsJSON[groupName][specific].requirements;
-
-        const courseAddPromises = [];
-        requirementsList.forEach(requirement => {
-          const subReqName = requirement.name;
-
-          if (requirement.fulfilledBy !== 'self-check') {
-            // console.log(requirement);
-            // Only list first four courses that fulfill the requirement
-            if (!isSeeAll) {
-              for (let i = 0; i < 4 && i < requirement.courses.length; i += 1) {
-                // console.log(requirement.courses);
-                const reqCourseObj = requirement.courses[i];
-                // get roster keys for reqCourseObj, that is all rosters for a specific course
-                const reqCourseObjRosters = Object.keys(reqCourseObj);
-
-                if (reqCourseObjRosters.length !== 0) {
-                  // get last element of reqCourseObjRosters for most recent roster
-                  const roster = reqCourseObjRosters[reqCourseObjRosters.length - 1];
-                  // console.log(roster);
-
-                  // Get a list of the course codes for the 4 courses to add
-                  const courseCodesToAdd = [];
-                  const reqCourseRosterObjEntriesList = Object.entries(reqCourseObj[roster]);
-                  for (let j = 0; courseCodesToAdd.length < 4 && j < reqCourseRosterObjEntriesList.length; j += 1) {
-                    const entry = reqCourseRosterObjEntriesList[j];
-                    const subject = reqCourseRosterObjEntriesList[j][0];
-                    const courseNumberList = reqCourseRosterObjEntriesList[j][1];
-                    // Get as many as four courses
-                    for (let k = 0; courseCodesToAdd.length < 4 && k < courseNumberList.length; k += 1) {
-                      const number = courseNumberList[k];
-                      const courseCode = `${subject} ${number}`;
-                      courseCodesToAdd.push(courseCode);
-                    }
-                  }
-
-                  courseCodesToAdd.forEach(courseCodeToAdd => {
-                    const courseSubjectToAdd = courseCodeToAdd.split(' ')[0];
-                    const courseNumberToAdd = courseCodeToAdd.split(' ')[1];
-                    courseAddPromises.push(this.updatesubReqsCoursesMap(roster, courseSubjectToAdd, courseNumberToAdd, courseCodeToAdd, group, subReqName, isSeeAll));
-                  });
-                  Promise.all(courseAddPromises)
-                    .then(res => {
-                      resolve('Success');
-                    }).catch(err => {
-                      reject(err);
-                    });
-                }
-              }
-            } else if (subReqName === seeAllSubReqName) { // add all courses for a specific subReq
-              for (let i = 0; i < requirement.courses.length; i += 1) {
-                // console.log(requirement.courses);
-                const reqCourseObj = requirement.courses[i];
-                // get roster keys for reqCourseObj, that is all rosters for a specific course
-                const reqCourseObjRosters = Object.keys(reqCourseObj);
-
-                if (reqCourseObjRosters.length !== 0) {
-                  // get last element of reqCourseObjRosters for most recent roster
-                  const roster = reqCourseObjRosters[reqCourseObjRosters.length - 1];
-                  // console.log(roster);
-
-                  const reqCourseRosterObjEntriesList = Object.entries(reqCourseObj[roster]);
-                  reqCourseRosterObjEntriesList.forEach(entry => {
-                    const subject = entry[0];
-                    const courseNumberList = entry[1];
-
-                    courseNumberList.forEach(number => {
-                      const courseCode = `${subject} ${number}`;
-                      courseAddPromises.push(this.updatesubReqsCoursesMap(roster, subject, number, courseCode, group, subReqName, isSeeAll));
-                    });
-                  });
-                }
-              }
-            }
-          }
+        let subReqAllCourseCodes = [];
+        Object.values(subReqRosterCourseCodesMapping).forEach(courseCodeList => {
+          subReqAllCourseCodes = subReqAllCourseCodes.concat(courseCodeList);
         });
+
+        const maxCourses = isSeeAll ? subReqAllCourseCodes.length : 4;
+        const courseAddPromises = [];
+
+        for (const [roster, courseCodes] of Object.entries(subReqRosterCourseCodesMapping)) {
+          if (courseAddPromises.length >= maxCourses) {
+            break;
+          }
+          for (const [i, courseCode] of Object.entries(subReqRosterCourseCodesMapping[roster])) {
+            if (courseAddPromises.length >= maxCourses) {
+              break;
+            }
+            courseAddPromises.push(this.fetchCoursePromise(roster, courseCode, isSeeAll));
+          }
+        }
         Promise.all(courseAddPromises)
           .then(res => {
+            this.subReqsCoursesMap[group][subReqName].courseObjects = res;
             resolve('Success');
           }).catch(err => {
             reject(err);
           });
       });
     },
-    showSeeAll(group, specific, subReqName) {
+    // Updates subReqsCoursesMap overall
+    updatesubReqsCoursesMap(group, specific, isSeeAll) {
       this.subReqsCoursesMap[group] = {};
-      this.addRequirementsCourse(group, specific, subReqName, true)
+      // "university", "college", "major", or "minor"
+      const groupName = group.toLowerCase();
+
+      // List of requirements given the group and the specific (college/major/minor)
+      const requirementsList = decoratedRequirementsJSON[groupName][specific].requirements;
+
+      requirementsList.forEach(requirement => {
+        const subReqName = requirement.name;
+        if (requirement.fulfilledBy !== 'self-check') {
+          this.subReqsCoursesMap[group][subReqName] = { courseCodes: {}, courseObjects: [] };
+          requirement.courses.forEach(reqCourseObj => {
+            // get roster keys for reqCourseObj, that is all rosters for a specific course
+            const reqCourseObjRosters = Object.keys(reqCourseObj);
+
+            if (reqCourseObjRosters.length !== 0) {
+              // get last element of reqCourseObjRosters for most recent roster
+              const roster = reqCourseObjRosters[reqCourseObjRosters.length - 1];
+              this.addRequirementCourseCodes(group, subReqName, reqCourseObj, roster);
+            }
+          });
+          this.addRequirementCourseObjects(group, subReqName, isSeeAll);
+        }
+      });
+    },
+    showSeeAll(group, subReqName) {
+      // TODO: Test out fetchCourses firebase function here
+      // const addMessage = functions.httpsCallable('fetchCourses');
+      // addMessage({ codes: ['CS1110', 'CS2110'] }).then(result => {
+      //   // Read result of the Cloud Function.
+      //   // var sanitizedMessage = result.data.text;
+      //   console.log(result);
+      // }).catch(error => {
+      //   // Getting the Error details.
+      //   console.log(error);
+      // });
+      this.subReqsCoursesMap[group][subReqName].courseObjects = [];
+      this.addRequirementCourseObjects(group, subReqName, true)
         .then(res => {
+          this.seeAllGroup = group;
+          this.seeAllSubReqName = subReqName;
           this.isSeeAll = !this.isSeeAll;
         });
     },
-    backToRequirements(group, specific) {
-      this.subReqsCoursesMap[group] = {};
-      this.addRequirementsCourse(group, specific, null, false)
+    backToRequirements(group, subReqName) {
+      this.subReqsCoursesMap[group][subReqName].courseObjects = [];
+      this.addRequirementCourseObjects(group, subReqName, false)
         .then(res => {
+          this.seeAllGroup = '';
+          this.seeAllSubReqName = '';
           this.isSeeAll = !this.isSeeAll;
         });
     },
