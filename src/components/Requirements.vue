@@ -95,7 +95,6 @@
                   </button>
                 </div>
                 <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-                  <!-- <span> index is: {{index}} id is: {{id}}</span> -->
                   <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
                 </div>
                 <div class="col">
@@ -201,7 +200,6 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
-// import undefined from 'firebase/empty-import';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);

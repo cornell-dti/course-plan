@@ -25,6 +25,8 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'credits',
     minCount: 6
   },
+  // TODO: add classLevels from courses api
+  // TODO: change to course.catalogDistr?.includes('FL') + classLevels > 2000
   {
     name: 'Intermediate Language Course',
     description: 'Option 1 - Successfully complete one intermediate course of 3 or more credits at Cornell at the 2000 level or above.',
@@ -63,7 +65,9 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     operator: 'or',
     fulfilledBy: 'courses',
-    minCount: 1
+    minCount: 1,
+    isDefaultOption: true,
+    pairedReqName: 'Language Course Credits'
   },
   {
     name: 'Language Course Credits',
@@ -103,7 +107,9 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     ].includes(course.subject),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 11
+    minCount: 11,
+    isDefaultOption: false,
+    pairedReqName: 'Intermediate Language Course'
   },
   {
     name: '(PBS-AS) or (MQR-AS)',
