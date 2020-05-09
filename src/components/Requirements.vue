@@ -75,9 +75,8 @@
             <div class="separator"></div>
             <div
               v-for="(subReq, id) in req.ongoing"
-              :key="subReq.id">
-              <!-- v-show="subReq.displayOption" -->
-              <div class="row depth-req" v-show="subReq.displayOption">
+              :key="subReq.id" v-show="subReq.displayOption">
+              <div class="row depth-req">
                 <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
                   <button class="btn">
                     <!-- svg for dropdown icon -->
@@ -99,21 +98,20 @@
                   <!-- <span> index is: {{index}} id is: {{id}}</span> -->
                   <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
                 </div>
-
-                <div v-if="subReq.requirement.pairedReqName" class="description">
-                  <button
-                      class="btn req-name"
-                      @click="toggleRequirementDefault(index, 'ongoing', id)">
-                      Change Req Option
-                  </button>
-                  {{ subReq.requirement.pairedReqName }}
-                </div>
                 <div class="col">
                   <p class="sup-req-progress text-right incomplete-ptext">{{
                    (subReq.requirement.fulfilledBy !== 'self-check')
                    ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
                     || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
                    : 'self check' }}</p>
+                </div>
+                <div v-if="subReq.requirement.pairedReqName" class="description">
+                  <button
+                      class="btn req-name"
+                      :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                      @click="toggleRequirementDefault(index, 'ongoing', id)">
+                      Switch to {{subReq.requirement.pairedReqName}}
+                  </button>
                 </div>
               </div>
               <div v-if="subReq.displayDescription" class="description">
@@ -141,7 +139,7 @@
 
           <!-- Completed requirements -->
             <div v-if="req.displayCompleted">
-              <div v-for="(subReq, id) in req.completed" :key="subReq.id">
+              <div v-for="(subReq, id) in req.completed" :key="subReq.id" v-show="subReq.displayOption">
                 <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
                 <div class="row depth-req">
                   <div class="col-1" @click="toggleDescription(index, 'completed', id)">
@@ -166,6 +164,14 @@
                   </div>
                   <div class="col">
                     <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
+                  </div>
+                  <div v-if="subReq.requirement.pairedReqName" class="description">
+                    <button
+                        class="btn req-name"
+                        :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                        @click="toggleRequirementDefault(index, 'completed', id)">
+                        Switch to {{subReq.requirement.pairedReqName}}
+                    </button>
                   </div>
                 </div>
                 <div v-if="subReq.displayDescription" class="description completed-ptext">
@@ -338,35 +344,33 @@ export default Vue.extend({
   },
   methods: {
     changeRequirementOption(title:string | undefined, index:number):void{
-      // total length is
-      const subReqs = this.reqs[index].ongoing;
-      subReqs.forEach(id => {
-        if (id.requirement.pairedReqName === title) {
-          console.log(`pair: displayOption hasn't been changed ${id.displayOption}`);
+      const ongoingSubReqs = this.reqs[index].ongoing;
+      const completedSubReqs = this.reqs[index].completed;
+      ongoingSubReqs.forEach(id => {
+        if (id.requirement.name === title) {
           const currentBool = id.displayOption;
           id.displayOption = !currentBool;
-          console.log(`pair: displayOption is now ${id.displayOption}`);
+        }
+      });
+      completedSubReqs.forEach(id => {
+        if (id.requirement.name === title) {
+          const currentBool = id.displayOption;
+          id.displayOption = !currentBool;
         }
       });
     },
     toggleRequirementDefault(index: number, type: 'ongoing' | 'completed', id: number): void {
       if (type === 'ongoing') {
         const currentBool = this.reqs[index].ongoing[id].displayOption;
-        console.log(`req name: ${this.reqs[index].ongoing[id].requirement.name}`);
-        console.log(`currentBool: ${currentBool}`);
         this.reqs[index].ongoing[id].displayOption = !currentBool;
-        console.log(`after currentBool: ${this.reqs[index].ongoing[id].displayOption}`);
         const pairReqTitle = this.reqs[index].ongoing[id].requirement.pairedReqName;
         this.changeRequirementOption(pairReqTitle, index);
+      } else if (type === 'completed') {
+        const currentBool = this.reqs[index].completed[id].displayOption;
+        this.reqs[index].completed[id].displayOption = !currentBool;
+        const pairReqTitle = this.reqs[index].completed[id].requirement.pairedReqName;
+        this.changeRequirementOption(pairReqTitle, index);
       }
-      // need to change corresponding requirement to the opposite--how to get it?
-      // can't guarantee that they will always be next to each other tho
-      // given title of req name, change displayOption to give boolean
-      // haven't added anything for completed yet
-      // } else if (type === 'completed') {
-      //   const currentBool = this.reqs[index].completed[id].displayOption;
-      //   this.reqs[index].completed[id].displayOption = !currentBool;
-      // }
     },
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
