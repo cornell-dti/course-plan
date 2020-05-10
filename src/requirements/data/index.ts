@@ -7,9 +7,12 @@ import businessRequirements from './colleges/bu';
 import engineeringRequirements from './colleges/en';
 import humanEcologyRequirements from './colleges/he';
 import irlRequirements from './colleges/il';
+
 import aemRequirements from './majors/aem';
 import bioRequirements from './majors/bio';
 import bioEngineeringRequirements from './majors/be';
+import commRequirements from './majors/comm';
+import crpRequirements from './majors/crp';
 import csRequirements from './majors/cs';
 import economicsRequirements from './majors/econ';
 import englishRequirements from './majors/engl';
@@ -20,11 +23,16 @@ import infoRequirements from './majors/info';
 import isstRequirements from './majors/isst';
 import mechnicalEngineeringRequirements from './majors/me';
 import orieRequirements from './majors/orie';
-import dbmeMinorRequirements from './minors/dbme';
+
+import buMinorRequirements from './minors/bu';
+import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
+import dbmeMinorRequirements from './minors/dbme';
 import isstMinorRequirements from './minors/isst';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
+import psychMinorRequirements from './minors/psych';
+
 
 const json: RequirementsJson = {
   university: {
@@ -78,6 +86,16 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: bioEngineeringRequirements
     },
+    COMM: {
+      name: 'Communications',
+      schools: ['AG'],
+      requirements: commRequirements
+    },
+    CRP: {
+      name: 'City and Regional Planning',
+      schools: ['AR'],
+      requirements: crpRequirements
+    },
     CS: {
       name: 'Computer Science',
       schools: ['EN', 'AS'],
@@ -130,30 +148,45 @@ const json: RequirementsJson = {
     }
   },
   minor: {
-    DBME: {
-      name: 'Dyson Business Minor for Engineers',
+    BU: {
+      name: 'Business',
       schools: ['BU'],
-      requirements: dbmeMinorRequirements
+      requirements: buMinorRequirements
+    },
+    COGSCI: {
+      name: 'Cognitive Science',
+      schools: ['AS'],
+      requirements: cogsciMinorRequirements
     },
     CS: {
       name: 'Computer Science',
       schools: ['EN', 'AS'],
       requirements: csMinorRequirements
     },
+    DBME: {
+      name: 'Dyson Business Minor for Engineers',
+      schools: ['BU'],
+      requirements: dbmeMinorRequirements
+    },
     ISST: {
       name: 'Industrial Systems and Information Technology',
       schools: ['EN'],
       requirements: isstMinorRequirements
+    },
+    MATH: {
+      name: 'Applied Mathematics',
+      schools: ['EN'],
+      requirements: mathMinorRequirements
     },
     ORMS: {
       name: 'Operations Research and Management Science',
       schools: ['EN'],
       requirements: ormsMinorRequirements
     },
-    MATH: {
-      name: 'Applied Mathematics',
-      schools: ['EN'],
-      requirements: mathMinorRequirements
+    PSYCH: {
+      name: 'Psychology',
+      schools: ['AS'],
+      requirements: psychMinorRequirements
     }
   }
 };
