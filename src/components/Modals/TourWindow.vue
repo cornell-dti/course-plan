@@ -15,7 +15,7 @@
           <button v-on:click = "$emit('hide'); $emit('startTour')">
             {{ buttonText }}
           </button>
-          <a v-on:click = "$emit('hide')">
+          <a v-on:click = "$emit('skip')">
             {{ exit }}
           </a>
         </div>
@@ -53,13 +53,6 @@ export default {
   },
   directives: {
     'click-outside': clickOutside
-  },
-  mounted() {
-  },
-  methods: {
-    startWalkthrough() {
-      // add stuff for starting tour
-    }
   }
 };
 

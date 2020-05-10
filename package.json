@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@firebase/analytics": "^0.2.13",
+    "@types/intro.js": "^2.4.6",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.6.0",
     "clone": "^2.1.2",

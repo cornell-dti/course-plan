@@ -184,7 +184,6 @@
 import { Vue } from 'vue-property-decorator';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
-// @ts-ignore
 import introJs from 'intro.js';
 
 // Disable import extension check because TS module resolution depends on it.

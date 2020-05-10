@@ -104,7 +104,6 @@
 
 <script>
 import Vue from 'vue';
-// @ts-ignore
 import introJs from 'intro.js';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
@@ -124,9 +123,6 @@ const fall = require('../assets/images/fallEmoji.svg');
 const spring = require('../assets/images/springEmoji.svg');
 const winter = require('../assets/images/winterEmoji.svg');
 const summer = require('../assets/images/summerEmoji.svg');
-
-// testing walkthrough using init
-let init = true;
 
 const clickOutside = {
   bind(el, binding, vnode) {

@@ -40,7 +40,8 @@
       :text="welcomeBodytext"
       :exit="welcomeExit"
       :buttonText="welcomeButtonText"
-      v-on:hide = "welcomeHidden = false; if(startTour==false) startTour = true"
+      @hide = "welcomeHidden = false; if(startTour==false) startTour = true"
+      @skip = "welcomeHidden = false;"
       v-if="welcomeHidden"
     >
     </tourwindow>
@@ -49,7 +50,7 @@
       :text="congratsBodytext"
       :exit="congratsExit"
       :buttonText="congratsButtonText"
-      v-on:hide = "showTourEndWindow = false;"
+      @hide = "showTourEndWindow = false;"
       v-if="showTourEndWindow"
     >
     </tourwindow>
@@ -174,6 +175,8 @@ export default {
             this.uniqueIncrementer = doc.data().uniqueIncrementer;
             this.loaded = true;
           } else {
+            this.semesters.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
+            this.firebaseSems.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
             this.startOnboarding();
           }
         })
@@ -207,7 +210,24 @@ export default {
       });
       return semesters;
     },
-
+    getCurrentSeason() {
+      let currentSeason;
+      const currentMonth = new Date().getMonth();
+      if (currentMonth === 0) {
+        currentSeason = 'Winter';
+      } else if (currentMonth <= 4) {
+        currentSeason = 'Spring';
+      } else if (currentMonth <= 7) {
+        currentSeason = 'Summer';
+      } else {
+        currentSeason = 'Fall';
+      }
+      return currentSeason;
+    },
+    getCurrentYear() {
+      const currentYear = new Date().getFullYear();
+      return this.yearText || this.year || currentYear;
+    },
     updateSemesterView() {
       if (this.isMobile) {
         // Make sure semesterView is not compact by default on mobile
@@ -578,7 +598,6 @@ export default {
       this.loaded = true;
 
       const docRef = this.getDocRef();
-
       const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,

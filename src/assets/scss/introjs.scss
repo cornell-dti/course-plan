@@ -1,6 +1,7 @@
 .introjs-tooltip {
     background-color: white;
     border-radius: 9px;
+    font-family: "ProximaNova";
 }
 .introjs-helperNumberLayer{
     display: none;
@@ -16,65 +17,46 @@
     border: none;
     border-radius: 3px;
     float: right !important;
-    font-family: "ProximaNova";
     padding: .5em .7em .5em !important;
-}
-.introjs-donebutton:hover{
-    color: white !important;
-    background-color: #508197;
-    background-image: none;
-}
-.introjs-donebutton:focus{
-    color: white !important;
-    background-color: #508197;
-    background-image: none;
+    &:hover,
+    &:focus {
+      color: white !important;
+      background-color: #508197;
+      background-image: none;
+    }
 }
 .introjs-skipbutton{
     float:left;
     border:none;
     background-image: none;
-    font-family:"ProximaNova"; 
     padding-left: 0px;
     background-color: white;
     color: #508197;
-}
-.introjs-skipbutton:active{
-    background-image: none;
-    background-color:transparent;
-    font-family:"ProximaNova"; 
-    padding-left: 0px;
-    color: #508197;
-    background-color: white;
-}
-.introjs-skipbutton:focus{
-    background-image: none;
-    background-color:transparent;
-    font-family:"ProximaNova"; 
-    padding-left: 0px;
-    color: #508197;
-    background-color: white;
-}
-.introjs-skipbutton:hover{
-    box-shadow:none;
+    &:active,
+    &:focus,
+    &:hover {
+      background-image: none;
+      background-color:transparent; 
+      padding-left: 0px;
+      color: #508197;
+      background-color: white;
+      box-shadow:none;
+    }
 }
 .introjs-nextbutton{
-    // display: none;
     color: white !important;
     background-image: none;
     background-color: #508197;
     text-shadow: none;
     border: none;
     border-radius: 3px;
-    font-family: "ProximaNova"
 }
 .introjs-nextbutton:hover{
-    // display: none;
     color: white !important;
     background-color: #508197;
     background-image: none;
 }
 .introjs-nextbutton:focus{
-    // display: none;
     color: white !important;
     background-color: #508197;
     background-image: none;
