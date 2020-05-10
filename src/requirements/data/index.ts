@@ -87,7 +87,7 @@ const json: RequirementsJson = {
       requirements: bioEngineeringRequirements
     },
     COMM: {
-      name: 'Communications',
+      name: 'Communication',
       schools: ['AG'],
       requirements: commRequirements
     },
