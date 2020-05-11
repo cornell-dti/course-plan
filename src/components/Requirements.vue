@@ -105,12 +105,15 @@
                    : 'self check' }}</p>
                 </div>
                 <div v-if="subReq.requirement.pairedReqName" class="description">
-                  <button
-                      class="btn req-name"
-                      :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
-                      @click="toggleRequirementDefault(index, 'ongoing', id)">
-                      Switch to {{subReq.requirement.pairedReqName}}
-                  </button>
+                  <!-- idk if key should be option/index -->
+                  <div v-for="(option, optionId) in subReq.requirement.pairedReqName" :key="optionId">
+                    <button
+                        class="btn req-name"
+                        :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                        @click="toggleRequirementDefault(index, 'ongoing', id, option)">
+                        Switch to {{option}}
+                    </button>
+                  </div>
                 </div>
               </div>
               <div v-if="subReq.displayDescription" class="description">
@@ -165,12 +168,14 @@
                     <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
                   </div>
                   <div v-if="subReq.requirement.pairedReqName" class="description">
-                    <button
-                        class="btn req-name"
-                        :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
-                        @click="toggleRequirementDefault(index, 'completed', id)">
-                        Switch to {{subReq.requirement.pairedReqName}}
-                    </button>
+                    <div v-for="(option, optionId) in subReq.requirement.pairedReqName" :key="optionId">
+                      <button
+                          class="btn req-name"
+                          :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                          @click="toggleRequirementDefault(index, 'completed', id, option)">
+                          Switch to {{option}}
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div v-if="subReq.displayDescription" class="description completed-ptext">
@@ -344,6 +349,9 @@ export default Vue.extend({
     changeRequirementOption(title:string | undefined, index:number):void{
       const ongoingSubReqs = this.reqs[index].ongoing;
       const completedSubReqs = this.reqs[index].completed;
+
+      // if (typeof (titles) !== 'undefined') {
+      // titles.forEach(title => {
       ongoingSubReqs.forEach(id => {
         if (id.requirement.name === title) {
           const currentBool = id.displayOption;
@@ -356,18 +364,34 @@ export default Vue.extend({
           id.displayOption = !currentBool;
         }
       });
+      // });
+      // }
     },
-    toggleRequirementDefault(index: number, type: 'ongoing' | 'completed', id: number): void {
+    // removeOptionId
+    toggleRequirementDefault(index: number, type: 'ongoing' | 'completed', id: number, option: string | undefined): void {
       if (type === 'ongoing') {
         const currentBool = this.reqs[index].ongoing[id].displayOption;
         this.reqs[index].ongoing[id].displayOption = !currentBool;
-        const pairReqTitle = this.reqs[index].ongoing[id].requirement.pairedReqName;
-        this.changeRequirementOption(pairReqTitle, index);
+        // const pairReqTitles = this.reqs[index].ongoing[id].requirement.pairedReqName;
+        if (typeof (option) !== 'undefined') {
+          this.changeRequirementOption(option, index);
+        }
+        // if (typeof (pairReqTitles) !== 'undefined') {
+        //   const pairReqTitle = pairReqTitles[optionId];
+        //   this.changeRequirementOption(pairReqTitle, index);
+        // }
       } else if (type === 'completed') {
         const currentBool = this.reqs[index].completed[id].displayOption;
         this.reqs[index].completed[id].displayOption = !currentBool;
-        const pairReqTitle = this.reqs[index].completed[id].requirement.pairedReqName;
-        this.changeRequirementOption(pairReqTitle, index);
+        if (typeof (option) !== 'undefined') {
+          this.changeRequirementOption(option, index);
+        }
+        // const pairReqTitles = this.reqs[index].completed[id].requirement.pairedReqName;
+        // this.changeRequirementOption(pairReqTitles, index);
+        // if (typeof (pairReqTitles) !== 'undefined') {
+        //   const pairReqTitle = pairReqTitles[optionId];
+        //   this.changeRequirementOption(pairReqTitle, index);
+        // }
       }
     },
     getRequirementTypeDisplayName(type: string): string {

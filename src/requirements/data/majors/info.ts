@@ -79,6 +79,77 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     operator: 'or',
     fulfilledBy: 'courses',
     minCount: 3
+  },
+  {
+    name: 'Info Concentration Placeholder',
+    description: 'Please select one of the 7 concentration',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    checker: null,
+    operator: null,
+    fulfilledBy: 'self-check',
+    minCount: 1,
+    isDefaultOption: true,
+    pairedReqName: ['Behavioral Sciences', 'Data Science', 'Digital Culture and Production']
+  },
+  {
+    name: 'Behavioral Sciences',
+    description: 'concentration #1 lol change all this',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    checker: includesWithSingleRequirement(
+      'INFO 2300',
+      'CS 2110',
+      'CS 3110',
+      'CS 3410',
+      'INFO 3***',
+      'INFO 4***',
+      'INFO 5***',
+      'INFO 6***'
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
+    minCount: 3,
+    isDefaultOption: false,
+    pairedReqName: ['Data Science', 'Digital Culture and Production']
+  },
+  {
+    name: 'Data Science',
+    description: 'concentration #2 lol change all this',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    checker: includesWithSingleRequirement(
+      'INFO 2300',
+      'CS 2110',
+      'CS 3110',
+      'CS 3410',
+      'INFO 3***',
+      'INFO 4***',
+      'INFO 5***',
+      'INFO 6***'
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
+    minCount: 3,
+    isDefaultOption: false,
+    pairedReqName: ['Behavioral Sciences', 'Digital Culture and Production']
+  },
+  {
+    name: 'Digital Culture and Production',
+    description: 'concentration #3 lol change all this',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    checker: includesWithSingleRequirement(
+      'INFO 2300',
+      'CS 2110',
+      'CS 3110',
+      'CS 3410',
+      'INFO 3***',
+      'INFO 4***',
+      'INFO 5***',
+      'INFO 6***'
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
+    minCount: 3,
+    isDefaultOption: false,
+    pairedReqName: ['Data Science', 'Behavioral Sciences']
   }
 ];
 

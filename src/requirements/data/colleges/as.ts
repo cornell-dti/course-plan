@@ -67,7 +67,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 1,
     isDefaultOption: true,
-    pairedReqName: 'Language Course Credits'
+    pairedReqName: ['Language Course Credits']
   },
   {
     name: 'Language Course Credits',
@@ -109,7 +109,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'credits',
     minCount: 11,
     isDefaultOption: false,
-    pairedReqName: 'Intermediate Language Course'
+    pairedReqName: ['Intermediate Language Course']
   },
   {
     name: '(PBS-AS) or (MQR-AS)',

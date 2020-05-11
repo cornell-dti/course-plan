@@ -50,7 +50,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 2,
     isDefaultOption: true,
-    pairedReqName: 'General Chemistry Option 2'
+    pairedReqName: ['General Chemistry Option 2']
   },
   {
     name: 'General Chemistry Option 2',
@@ -63,7 +63,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 1,
     isDefaultOption: false,
-    pairedReqName: 'General Chemistry Option 1'
+    pairedReqName: ['General Chemistry Option 1']
 
   },
   {
