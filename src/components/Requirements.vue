@@ -73,6 +73,7 @@
           <div v-if="req.displayDetails">
             <p class="sub-title">In-Depth College Requirements</p>
             <div class="separator"></div>
+            <!-- v-show="subReq.displayOption" -->
             <div
               v-for="(subReq, id) in req.ongoing"
               :key="subReq.id" v-show="subReq.displayOption">
@@ -346,52 +347,70 @@ export default Vue.extend({
     };
   },
   methods: {
+    changeSubRequirementOption(subReqs:string[], index:number):void{
+      const ongoingSubReqs = this.reqs[index].ongoing;
+      const completedSubReqs = this.reqs[index].completed;
+      // console.log(`subReqs is ${subReqs}`);
+      ongoingSubReqs.forEach(id => {
+        // console.log(`id name is ${id.requirement.name}`);
+        if (subReqs.includes(id.requirement.name)) {
+          // console.log(`requirementName is ${id.requirement.name}`);
+          const currentBool = id.displayOption;
+          id.displayOption = !currentBool;
+        }
+      });
+      completedSubReqs.forEach(id => {
+        if (subReqs.includes(id.requirement.name)) {
+          const currentBool = id.displayOption;
+          id.displayOption = !currentBool;
+        }
+      });
+    },
     changeRequirementOption(title:string | undefined, index:number):void{
       const ongoingSubReqs = this.reqs[index].ongoing;
       const completedSubReqs = this.reqs[index].completed;
-
-      // if (typeof (titles) !== 'undefined') {
-      // titles.forEach(title => {
       ongoingSubReqs.forEach(id => {
         if (id.requirement.name === title) {
           const currentBool = id.displayOption;
           id.displayOption = !currentBool;
+          const subReqs = id.requirement.subRequirements;
+          if (typeof (subReqs) !== 'undefined') {
+            this.changeSubRequirementOption(subReqs, index);
+          }
         }
       });
       completedSubReqs.forEach(id => {
         if (id.requirement.name === title) {
           const currentBool = id.displayOption;
           id.displayOption = !currentBool;
+          const subReqs = id.requirement.subRequirements;
+          if (typeof (subReqs) !== 'undefined') {
+            this.changeSubRequirementOption(subReqs, index);
+          }
         }
       });
-      // });
-      // }
     },
-    // removeOptionId
     toggleRequirementDefault(index: number, type: 'ongoing' | 'completed', id: number, option: string | undefined): void {
       if (type === 'ongoing') {
         const currentBool = this.reqs[index].ongoing[id].displayOption;
         this.reqs[index].ongoing[id].displayOption = !currentBool;
-        // const pairReqTitles = this.reqs[index].ongoing[id].requirement.pairedReqName;
+        const subReqs = this.reqs[index].ongoing[id].requirement.subRequirements;
+        if (typeof (subReqs) !== 'undefined') {
+          this.changeSubRequirementOption(subReqs, index);
+        }
         if (typeof (option) !== 'undefined') {
           this.changeRequirementOption(option, index);
         }
-        // if (typeof (pairReqTitles) !== 'undefined') {
-        //   const pairReqTitle = pairReqTitles[optionId];
-        //   this.changeRequirementOption(pairReqTitle, index);
-        // }
       } else if (type === 'completed') {
         const currentBool = this.reqs[index].completed[id].displayOption;
         this.reqs[index].completed[id].displayOption = !currentBool;
+        const subReqs = this.reqs[index].ongoing[id].requirement.subRequirements;
+        if (typeof (subReqs) !== 'undefined') {
+          this.changeSubRequirementOption(subReqs, index);
+        }
         if (typeof (option) !== 'undefined') {
           this.changeRequirementOption(option, index);
         }
-        // const pairReqTitles = this.reqs[index].completed[id].requirement.pairedReqName;
-        // this.changeRequirementOption(pairReqTitles, index);
-        // if (typeof (pairReqTitles) !== 'undefined') {
-        //   const pairReqTitle = pairReqTitles[optionId];
-        //   this.changeRequirementOption(pairReqTitle, index);
-        // }
       }
     },
     getRequirementTypeDisplayName(type: string): string {

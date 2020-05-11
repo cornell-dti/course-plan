@@ -109,7 +109,28 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 3,
     isDefaultOption: false,
-    pairedReqName: ['Data Science', 'Digital Culture and Production']
+    pairedReqName: ['Data Science', 'Digital Culture and Production'],
+    subRequirements: ['Behavioral Sciences Req 1', 'Behavioral Sciences Req 2']
+  },
+  {
+    name: 'Behavioral Sciences Req 1',
+    description: 'lol change all this',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    checker: null,
+    operator: null,
+    fulfilledBy: 'self-check',
+    minCount: 1,
+    isDefaultOption: false
+  },
+  {
+    name: 'Behavioral Sciences Req 2',
+    description: 'lol change all this',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    checker: null,
+    operator: null,
+    fulfilledBy: 'self-check',
+    minCount: 1,
+    isDefaultOption: false
   },
   {
     name: 'Data Science',
@@ -129,7 +150,28 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 3,
     isDefaultOption: false,
-    pairedReqName: ['Behavioral Sciences', 'Digital Culture and Production']
+    pairedReqName: ['Behavioral Sciences', 'Digital Culture and Production'],
+    subRequirements: ['Data Science Req 1', 'Data Science Req 2']
+  },
+  {
+    name: 'Data Science Req 1',
+    description: 'lol change all this',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    checker: null,
+    operator: null,
+    fulfilledBy: 'self-check',
+    minCount: 1,
+    isDefaultOption: false
+  },
+  {
+    name: 'Data Science Req 2',
+    description: 'lol change all this',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    checker: null,
+    operator: null,
+    fulfilledBy: 'self-check',
+    minCount: 1,
+    isDefaultOption: false
   },
   {
     name: 'Digital Culture and Production',

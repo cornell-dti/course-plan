@@ -49,6 +49,8 @@ export interface BaseRequirement {
   readonly progressBar?: boolean;
   readonly isDefaultOption?: boolean;
   readonly pairedReqName?: string[];
+  readonly subRequirements?: string[];
+
 }
 
 export type UniversityRequirements = {
