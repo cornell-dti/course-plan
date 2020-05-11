@@ -125,7 +125,8 @@
               </div>
               <div class="separator"></div>
             </div>
-
+            <!-- TODO:need to change to displayOption == true.length > 0 -->
+            <!-- if there's one completed (but displayOption is false) this will show even tho nothing to show -->
             <div v-if="req.completed.length > 0" class="row completed">
               <p class="col sub-title specific">Filled Requirements</p>
               <div class="col-1 text-right">

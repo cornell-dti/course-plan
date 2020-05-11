@@ -50,15 +50,15 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 3
   },
-  {
-    name: 'Concentration',
-    description: 'Students are required to complete AT LEAST one concentration from the seven concentrations available',
-    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-0',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check',
-    minCount: 1
-  },
+  // {
+  //   name: 'Concentration',
+  //   description: 'Students are required to complete AT LEAST one concentration from the seven concentrations available',
+  //   source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-0',
+  //   checker: null,
+  //   operator: null,
+  //   fulfilledBy: 'self-check',
+  //   minCount: 1
+  // },
   {
     name: 'Electives',
     description: 'All students are required to complete three electives that are chosen from the following options: '
@@ -81,95 +81,168 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     minCount: 3
   },
   {
-    name: 'Info Concentration Placeholder',
-    description: 'Please select one of the 7 concentration',
-    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    name: 'Choose a Concentration',
+    description: 'Students are required to complete AT LEAST one concentration from the seven concentrations available.'
+    + ' You can currently only choose one concentration on CoursePlan',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-0',
     checker: null,
     operator: null,
     fulfilledBy: 'self-check',
-    minCount: 1,
     isDefaultOption: true,
     pairedReqName: ['Behavioral Sciences', 'Data Science', 'Digital Culture and Production']
   },
   {
     name: 'Behavioral Sciences',
-    description: 'concentration #1 lol change all this',
-    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
-    checker: includesWithSingleRequirement(
-      'INFO 2300',
-      'CS 2110',
-      'CS 3110',
-      'CS 3410',
-      'INFO 3***',
-      'INFO 4***',
-      'INFO 5***',
-      'INFO 6***'
-    ),
-    operator: 'or',
-    fulfilledBy: 'courses',
-    minCount: 3,
-    isDefaultOption: false,
-    pairedReqName: ['Data Science', 'Digital Culture and Production'],
-    subRequirements: ['Behavioral Sciences Req 1', 'Behavioral Sciences Req 2']
-  },
-  {
-    name: 'Behavioral Sciences Req 1',
-    description: 'lol change all this',
-    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    description: 'This concentration provides students with an in-depth understanding of the behavioral and social aspects of interacting with and through information technology.'
+    + 'Requirements for this concentration are found below.',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/concentrations-0',
     checker: null,
     operator: null,
     fulfilledBy: 'self-check',
+    isDefaultOption: false,
+    pairedReqName: ['Data Science', 'Digital Culture and Production'],
+    subRequirements: ['Understanding Social Behavior', 'Social Data Analytics', 'Behavior in Sociological, Network, and Design Contexts']
+  },
+  {
+    name: 'Understanding Social Behavior',
+    description: 'Choose two of: INFO 3400, INFO 3460, INFO 4430, INFO 4450, INFO 4500, INFO 4800, INFO 4940, COMM 4380, PSYCH 3800',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/concentrations-0',
+    checker: includesWithSingleRequirement(
+      'INFO 3400',
+      'INFO 3460',
+      'INFO 4430',
+      'INFO 4450',
+      'INFO 4500',
+      'INFO 4800',
+      'INFO 4940',
+      'COMM 4380',
+      'PSYCH 3800'
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
+    minCount: 2,
+    isDefaultOption: false
+  },
+  {
+    name: 'Social Data Analytics',
+    description: 'Choose one: INFO 3300, INFO 4100, INFO 4300, INFO 5200, COMM 4940, CS 4740, CS 4780',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/concentrations-0',
+    checker: includesWithSingleRequirement(
+      'INFO 3300',
+      'INFO 4100',
+      'INFO 4300',
+      'INFO 5200',
+      'COMM 4940',
+      'CS 4740',
+      'CS 4780'
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
     minCount: 1,
     isDefaultOption: false
   },
   {
-    name: 'Behavioral Sciences Req 2',
-    description: 'lol change all this',
-    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check',
+    name: 'Behavior in Sociological, Network, and Design Contexts',
+    description: 'Choose one: INFO 3200, INFO 3561, INFO 4650, COMM 4410, STS 3400, INFO 4360, SOC 3350, SOC 4390, INFO 3450, INFO 4240, INFO 4400',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/concentrations-0',
+    checker: includesWithSingleRequirement(
+      'INFO 3200',
+      'INFO 3561',
+      'INFO 4650',
+      'COMM 4410',
+      'STS 3400',
+      'INFO 4360',
+      'SOC 3350',
+      'SOC 4390',
+      'INFO 3450',
+      'INFO 4240',
+      'INFO 4400'
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
     minCount: 1,
     isDefaultOption: false
   },
   {
     name: 'Data Science',
-    description: 'concentration #2 lol change all this',
-    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
-    checker: includesWithSingleRequirement(
-      'INFO 2300',
-      'CS 2110',
-      'CS 3110',
-      'CS 3410',
-      'INFO 3***',
-      'INFO 4***',
-      'INFO 5***',
-      'INFO 6***'
-    ),
-    operator: 'or',
-    fulfilledBy: 'courses',
-    minCount: 3,
-    isDefaultOption: false,
-    pairedReqName: ['Behavioral Sciences', 'Digital Culture and Production'],
-    subRequirements: ['Data Science Req 1', 'Data Science Req 2']
-  },
-  {
-    name: 'Data Science Req 1',
-    description: 'lol change all this',
-    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
+    description: 'This concentration will equip students to learn about the world through data analytics.',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/concentrations/data',
     checker: null,
     operator: null,
     fulfilledBy: 'self-check',
+    isDefaultOption: false,
+    pairedReqName: ['Behavioral Sciences', 'Digital Culture and Production'],
+    subRequirements: ['Data Analysis', 'Domain Expertise', 'Big Data Ethics, Policy and Society', 'Data Communication']
+  },
+  {
+    name: 'Data Analysis',
+    description: 'Choose one: INFO 3300, INFO 3950, CS 4780, CS 4786, ORIE 3120, ORIE 4740, STSCI 4740',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/concentrations/data',
+    checker: includesWithSingleRequirement(
+      'INFO 3300',
+      'INFO 3950',
+      'CS 4780',
+      'CS 4786',
+      'ORIE 3120',
+      'ORIE 4740',
+      'STSCI 4740'
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
     minCount: 1,
     isDefaultOption: false
   },
   {
-    name: 'Data Science Req 2',
-    description: 'lol change all this',
-    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check',
+    name: 'Domain Expertise',
+    description: 'Choose one: INFO 2770, INFO 3350, INFO 4100, INFO 4120, INFO 4130, INFO 4300, CS 4740',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/concentrations/data',
+    checker: includesWithSingleRequirement(
+      'INFO 2770',
+      'INFO 3350',
+      'INFO 4100',
+      'INFO 4120',
+      'INFO 4130',
+      'INFO 4300',
+      'CS 4740'
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
+    minCount: 1,
+    isDefaultOption: false
+  },
+  {
+    name: 'Big Data Ethics, Policy and Society',
+    description: 'Choose one: INFO 3200, INFO 3561, INFO 4200, INFO 4240, INFO 4250, INFO 4270, INFO 4561, INFO 4940, COMM 4940, STS 3440',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/concentrations/data',
+    checker: includesWithSingleRequirement(
+      'INFO 3200',
+      'INFO 3561',
+      'INFO 4200',
+      'INFO 4240',
+      'INFO 4250',
+      'INFO 4270',
+      'INFO 4561',
+      'INFO 4940',
+      'COMM 4940',
+      'STS 3440'
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
+    minCount: 1,
+    isDefaultOption: false
+  },
+  {
+    name: 'Data Communication',
+    description: 'Choose one: INFO 4310, COMM 3189, COMM 4200, COMM 4860',
+    source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/concentrations/data',
+    checker: includesWithSingleRequirement(
+      'INFO 4310',
+      'COMM 3189',
+      'COMM 4200',
+      'COMM 4860'
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
     minCount: 1,
     isDefaultOption: false
   },
