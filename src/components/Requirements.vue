@@ -73,7 +73,6 @@
           <div v-if="req.displayDetails">
             <p class="sub-title">In-Depth College Requirements</p>
             <div class="separator"></div>
-            <!-- v-show="subReq.displayOption" -->
             <div
               v-for="(subReq, id) in req.ongoing"
               :key="subReq.id" v-show="subReq.displayOption">
@@ -105,23 +104,57 @@
                     || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
                    : 'self check' }}</p>
                 </div>
-                <div v-if="subReq.requirement.pairedReqName" class="description">
-                  <!-- idk if key should be option/index -->
-                  <div v-for="(option, optionId) in subReq.requirement.pairedReqName" :key="optionId">
-                    <button
-                        class="btn req-name"
-                        :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
-                        @click="toggleRequirementDefault(index, 'ongoing', id, option)">
-                        Switch to {{option}}
-                    </button>
-                  </div>
-                </div>
               </div>
               <div v-if="subReq.displayDescription" class="description">
                 {{ subReq.requirement.description }} <a class="more"
                 :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
                 :href="subReq.requirement.source" target="_blank">
                 <strong>Learn More</strong></a>
+                <!-- TODO: change class from description to smthn else -->
+                <div v-if="subReq.requirement.pairedReqName" class="description">
+                  <!-- idk if key should be option/index -->
+                  <!-- <div v-for="(option, optionId) in subReq.requirement.pairedReqName" :key="optionId">
+                    <button
+                        class="btn req-name"
+                        :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
+                        @click="toggleRequirementDefault(index, 'ongoing', id, option)">
+                        Switch to {{option}}
+                    </button>
+                  </div> -->
+                  <div class="requirements-selectWrapper">
+                    <div
+                      class="requirements-select requirements-input"
+                      :style="{ borderColor: displayOptions[getIndex(subReq.requirement.name)].boxBorder }"
+                      v-click-outside:[subReq.requirement.name]="closeDropdownIfOpen"
+                    >
+                      <div class="requirements-dropdown-placeholder requirements-dropdown-wrapper" @click="showHideContent(subReq.requirement.name)">
+                        <div
+                          class="requirements-dropdown-placeholder requirements-dropdown-innerPlaceholder"
+                          :style="{ color: displayOptions[getIndex(subReq.requirement.name)].placeholderColor }"
+                        >
+                          {{ displayOptions[getIndex(subReq.requirement.name)].placeholder }}
+                        </div>
+                        <div
+                          class="requirements-dropdown-placeholder requirements-dropdown-arrow"
+                          :style="{ borderTopColor: displayOptions[getIndex(subReq.requirement.name)].arrowColor }"
+                        ></div>
+                      </div>
+                      <div
+                        class="requirements-dropdown-content"
+                        v-if="displayOptions[getIndex(subReq.requirement.name)].shown"
+                      >
+                        <div
+                          v-for="(option, optionId) in subReq.requirement.pairedReqName"
+                          :key="optionId"
+                          class="requirements-dropdown-content-item"
+                          @click="toggleRequirementDefault(index, 'ongoing', id, option)"
+                        >
+                          Switch to {{option}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="separator"></div>
             </div>
@@ -221,6 +254,14 @@ type minor = {
   minor: string;
   minorFN: string;
 }
+type displayOption = {
+  shown: boolean,
+  stopClose: boolean,
+  boxBorder: string,
+  arrowColor: string,
+  placeholderColor: string,
+  placeholder: string
+}
 type Data = {
   actives: boolean[];
   modalShow: boolean;
@@ -229,17 +270,53 @@ type Data = {
   minors: minor[];
   requirementsMap: {};
   reqGroupColorMap: {};
-
+  displayOptions: displayOption[];
+  toggableReqs: string[];
 }
+
+const clickOutside = {
+  bind(el:any, binding:any, vnode:any) {
+    el.event = (event:any) => {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event, binding.arg);
+      }
+    };
+    document.body.addEventListener('click', el.event);
+  },
+  unbind(el:any) {
+    document.body.removeEventListener('click', el.event);
+  }
+};
+
 export default Vue.extend({
   props: {
     semesters: Array,
     user: Object,
     compact: Boolean
   },
+  directives: {
+    'click-outside': clickOutside
+  },
   mounted() {
     this.getDisplays();
+    this.setDropdowns();
     const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major, this.user.minor);
+    // toggles?
+    // const toggles:string[] = [];
+
+    // Get list of toggable requirements (such as foreign language)
+    const toggles:string[][] = groups.map(group => {
+      const toggle:string[] = [];
+      group.reqs.forEach(req => {
+        if (req.requirement.pairedReqName) {
+          toggle.push(req.requirement.name);
+        }
+      });
+      return toggle;
+    });
+    this.toggableReqs = toggles.flat();
+    this.setDropdowns();
+
     // Send satisfied credits data back to dashboard to build alerts
     this.$emit('requirementsMap', computeRequirementMap(groups));
     // Turn result into data readable by requirements menu
@@ -344,10 +421,42 @@ export default Vue.extend({
         COLLEGE: ['1AA9A5', 'blue'],
         MAJOR: ['105351', 'green'],
         MINOR: ['92C3E6', 'lightblue']
-      }
+      },
+      displayOptions: [],
+      toggableReqs: []
     };
   },
   methods: {
+    showHideContent(reqName:string) {
+      const index = this.getIndex(reqName);
+      const displayOptions = this.displayOptions[index];
+      const contentShown = displayOptions.shown;
+      displayOptions.shown = !contentShown;
+
+      if (contentShown) {
+        // clicked box when content shown. So then hide content
+        displayOptions.boxBorder = '#C4C4C4';
+        displayOptions.arrowColor = '#C4C4C4';
+      } else {
+        displayOptions.boxBorder = '#32A0F2';
+        displayOptions.arrowColor = '#32A0F2';
+      }
+      console.log(displayOptions.shown);
+    },
+    closeDropdownIfOpen(event:any, reqName:string) {
+      const index = this.getIndex(reqName);
+      const displayOptions = this.displayOptions[index];
+      if (displayOptions.stopClose) {
+        displayOptions.stopClose = false;
+      } else if (displayOptions.shown) {
+        displayOptions.shown = false;
+        displayOptions.boxBorder = '#C4C4C4';
+        displayOptions.arrowColor = '#C4C4C4';
+      }
+    },
+    getIndex(reqName:string) {
+      return this.toggableReqs.indexOf(reqName);
+    },
     changeSubRequirementOption(subReqs:string[], index:number):void{
       const ongoingSubReqs = this.reqs[index].ongoing;
       const completedSubReqs = this.reqs[index].completed;
@@ -512,6 +621,22 @@ export default Vue.extend({
         }
       }
       this.minors = minors;
+    },
+    setDropdowns() {
+      const numOfDropdowns = this.toggableReqs.length;
+      const dropdowns = [];
+      for (let i = 0; i < numOfDropdowns; i += 1) {
+        const dropdown = {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '#000000',
+          placeholder: 'placeholder'
+        };
+        dropdowns.push(dropdown);
+      }
+      this.displayOptions = dropdowns;
     }
   }
 });
@@ -834,4 +959,101 @@ button.view {
     height: calc(100vh - 4.5rem);
   }
 }
+
+// TODO: delete styling that is not used in requirements or is only relevent to onboarding.
+.requirements {
+  &-select {
+    background: #ffffff;
+    border: 1px solid #c4c4c4;
+
+    box-sizing: border-box;
+    border-radius: 1px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 17px;
+
+    color: #b6b6b6;
+    position: relative;
+
+    &:not(:first-child) {
+      margin-top: .5rem;
+    }
+
+    &--disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+
+  &-dropdown {
+    &-placeholder {
+      height: 100%;
+      font-size: 14px;
+      line-height: 17px;
+      margin-left: .25rem;
+      display: flex;
+      align-items: center;
+
+      color: #b6b6b6;
+
+      background: transparent;
+    }
+
+    &-wrapper {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+    }
+
+    &-innerPlaceholder {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      width: 100%;
+    }
+
+    &-arrow {
+      border-left: 6.24px solid transparent;
+      border-right: 6.24px solid transparent;
+
+      border-top: 6.24px solid #c4c4c4;
+      background: transparent;
+
+      margin-top: 30px;
+      margin-bottom: 10.17px;
+
+      margin-right: 8.7px;
+      margin-left: 5px;
+    }
+
+    &-content {
+      z-index: 2;
+      position: absolute;
+      width: inherit;
+      background: #ffffff;
+      box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
+      border-radius: 7px;
+
+      margin-top: 3px;
+
+      &-item {
+        height: 2.25rem;
+        font-size: 14px;
+        line-height: 17px;
+        display: flex;
+        align-items: center;
+
+        color: #757575;
+
+        padding-left: 10px;
+      }
+    }
+  }
+
+  &-dropdown-content div:hover {
+    background: rgba(50, 160, 242, 0.15);
+    width: 100%;
+  }
+}
+
 </style>
