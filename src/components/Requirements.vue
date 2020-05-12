@@ -34,7 +34,7 @@
               role="progressbar"
             ></div>
           </div>
-
+          <!-- TODO: hidden classes count towards total requirements and fulfilled requirements -->
           <p class="progress-text">
             <span class="progress-text-credits">{{ req.fulfilled }}/{{ req.required }}</span>
             <span class="progress-text-text"> Total {{ req.type }} Inputted on Schedule</span>
@@ -149,7 +149,7 @@
                           class="requirements-dropdown-content-item"
                           @click="toggleRequirementDefault(index, 'ongoing', id, option)"
                         >
-                          Switch to {{option}}
+                          {{option}}
                         </div>
                       </div>
                     </div>
@@ -203,14 +203,47 @@
                     <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
                   </div>
                   <div v-if="subReq.requirement.pairedReqName" class="description">
-                    <div v-for="(option, optionId) in subReq.requirement.pairedReqName" :key="optionId">
+                                      <div class="requirements-selectWrapper">
+                    <div
+                      class="requirements-select requirements-input"
+                      :style="{ borderColor: displayOptions[getIndex(subReq.requirement.name)].boxBorder }"
+                      v-click-outside:[subReq.requirement.name]="closeDropdownIfOpen"
+                    >
+                      <div class="requirements-dropdown-placeholder requirements-dropdown-wrapper" @click="showHideContent(subReq.requirement.name)">
+                        <div
+                          class="requirements-dropdown-placeholder requirements-dropdown-innerPlaceholder"
+                          :style="{ color: displayOptions[getIndex(subReq.requirement.name)].placeholderColor }"
+                        >
+                          {{ displayOptions[getIndex(subReq.requirement.name)].placeholder }}
+                        </div>
+                        <div
+                          class="requirements-dropdown-placeholder requirements-dropdown-arrow"
+                          :style="{ borderTopColor: displayOptions[getIndex(subReq.requirement.name)].arrowColor }"
+                        ></div>
+                      </div>
+                      <div
+                        class="requirements-dropdown-content"
+                        v-if="displayOptions[getIndex(subReq.requirement.name)].shown"
+                      >
+                        <div
+                          v-for="(option, optionId) in subReq.requirement.pairedReqName"
+                          :key="optionId"
+                          class="requirements-dropdown-content-item"
+                          @click="toggleRequirementDefault(index, 'completed', id, option)"
+                        >
+                          {{option}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                    <!-- <div v-for="(option, optionId) in subReq.requirement.pairedReqName" :key="optionId">
                       <button
                           class="btn req-name"
                           :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
                           @click="toggleRequirementDefault(index, 'completed', id, option)">
                           Switch to {{option}}
                       </button>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <div v-if="subReq.displayDescription" class="description completed-ptext">
@@ -238,7 +271,9 @@ import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course.vue';
 // eslint-disable-next-line import/extensions
 import Modal from '@/components/Modals/Modal.vue';
-import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
+import {
+  BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement, GroupedRequirementFulfillmentReport
+} from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
 
 Vue.component('course', Course);
@@ -299,24 +334,8 @@ export default Vue.extend({
   },
   mounted() {
     this.getDisplays();
-    this.setDropdowns();
     const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major, this.user.minor);
-    // toggles?
-    // const toggles:string[] = [];
-
-    // Get list of toggable requirements (such as foreign language)
-    const toggles:string[][] = groups.map(group => {
-      const toggle:string[] = [];
-      group.reqs.forEach(req => {
-        if (req.requirement.pairedReqName) {
-          toggle.push(req.requirement.name);
-        }
-      });
-      return toggle;
-    });
-    this.toggableReqs = toggles.flat();
-    this.setDropdowns();
-
+    this.setDropdowns(groups);
     // Send satisfied credits data back to dashboard to build alerts
     this.$emit('requirementsMap', computeRequirementMap(groups));
     // Turn result into data readable by requirements menu
@@ -362,9 +381,6 @@ export default Vue.extend({
   },
   data() : Data {
     return {
-      // currentEditID: 0,
-      // isEditing: false,
-      // display: [],
       actives: [false],
       modalShow: false,
       majors: [],
@@ -622,7 +638,19 @@ export default Vue.extend({
       }
       this.minors = minors;
     },
-    setDropdowns() {
+    setDropdowns(groups: readonly GroupedRequirementFulfillmentReport[]) {
+      // Get list of 'toggable' requirements (reqs with options like FL for A&S)
+      const toggles:string[][] = groups.map(group => {
+        const toggle:string[] = [];
+        group.reqs.forEach(req => {
+          if (req.requirement.pairedReqName) {
+            toggle.push(req.requirement.name);
+          }
+        });
+        return toggle;
+      });
+      this.toggableReqs = toggles.flat();
+
       const numOfDropdowns = this.toggableReqs.length;
       const dropdowns = [];
       for (let i = 0; i < numOfDropdowns; i += 1) {
@@ -632,7 +660,7 @@ export default Vue.extend({
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '#000000',
-          placeholder: 'placeholder'
+          placeholder: 'Select different option'
         };
         dropdowns.push(dropdown);
       }
