@@ -110,17 +110,7 @@
                 :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
                 :href="subReq.requirement.source" target="_blank">
                 <strong>Learn More</strong></a>
-                <!-- TODO: change class from description to smthn else -->
-                <div v-if="subReq.requirement.pairedReqName" class="description">
-                  <!-- idk if key should be option/index -->
-                  <!-- <div v-for="(option, optionId) in subReq.requirement.pairedReqName" :key="optionId">
-                    <button
-                        class="btn req-name"
-                        :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
-                        @click="toggleRequirementDefault(index, 'ongoing', id, option)">
-                        Switch to {{option}}
-                    </button>
-                  </div> -->
+                <div v-if="subReq.requirement.pairedReqName">
                   <div class="requirements-selectWrapper">
                     <div
                       class="requirements-select requirements-input"
@@ -202,53 +192,46 @@
                   <div class="col">
                     <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
                   </div>
-                  <div v-if="subReq.requirement.pairedReqName" class="description">
-                                      <div class="requirements-selectWrapper">
-                    <div
-                      class="requirements-select requirements-input"
-                      :style="{ borderColor: displayOptions[getIndex(subReq.requirement.name)].boxBorder }"
-                      v-click-outside:[subReq.requirement.name]="closeDropdownIfOpen"
-                    >
-                      <div class="requirements-dropdown-placeholder requirements-dropdown-wrapper" @click="showHideContent(subReq.requirement.name)">
+                  <div v-if="subReq.displayDescription" class="description completed-ptext">
+                    {{ subReq.requirement.description }}
+                    <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
+                    <div v-if="subReq.requirement.pairedReqName">
+                      <!-- TODO: this is the same length as the descriptions but idk how to make it fixed length -->
+                      <div class="requirements-selectWrapper">
                         <div
-                          class="requirements-dropdown-placeholder requirements-dropdown-innerPlaceholder"
-                          :style="{ color: displayOptions[getIndex(subReq.requirement.name)].placeholderColor }"
+                          class="requirements-select requirements-input"
+                          :style="{ borderColor: displayOptions[getIndex(subReq.requirement.name)].boxBorder }"
+                          v-click-outside:[subReq.requirement.name]="closeDropdownIfOpen"
                         >
-                          {{ displayOptions[getIndex(subReq.requirement.name)].placeholder }}
-                        </div>
-                        <div
-                          class="requirements-dropdown-placeholder requirements-dropdown-arrow"
-                          :style="{ borderTopColor: displayOptions[getIndex(subReq.requirement.name)].arrowColor }"
-                        ></div>
-                      </div>
-                      <div
-                        class="requirements-dropdown-content"
-                        v-if="displayOptions[getIndex(subReq.requirement.name)].shown"
-                      >
-                        <div
-                          v-for="(option, optionId) in subReq.requirement.pairedReqName"
-                          :key="optionId"
-                          class="requirements-dropdown-content-item"
-                          @click="toggleRequirementDefault(index, 'completed', id, option)"
-                        >
-                          {{option}}
+                          <div class="requirements-dropdown-placeholder requirements-dropdown-wrapper" @click="showHideContent(subReq.requirement.name)">
+                            <div
+                              class="requirements-dropdown-placeholder requirements-dropdown-innerPlaceholder"
+                              :style="{ color: displayOptions[getIndex(subReq.requirement.name)].placeholderColor }"
+                            >
+                              {{ displayOptions[getIndex(subReq.requirement.name)].placeholder }}
+                            </div>
+                            <div
+                              class="requirements-dropdown-placeholder requirements-dropdown-arrow"
+                              :style="{ borderTopColor: displayOptions[getIndex(subReq.requirement.name)].arrowColor }"
+                            ></div>
+                          </div>
+                          <div
+                            class="requirements-dropdown-content"
+                            v-if="displayOptions[getIndex(subReq.requirement.name)].shown"
+                          >
+                            <div
+                              v-for="(option, optionId) in subReq.requirement.pairedReqName"
+                              :key="optionId"
+                              class="requirements-dropdown-content-item"
+                              @click="toggleRequirementDefault(index, 'completed', id, option)"
+                            >
+                              {{option}}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                    <!-- <div v-for="(option, optionId) in subReq.requirement.pairedReqName" :key="optionId">
-                      <button
-                          class="btn req-name"
-                          :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
-                          @click="toggleRequirementDefault(index, 'completed', id, option)">
-                          Switch to {{option}}
-                      </button>
-                    </div> -->
-                  </div>
-                </div>
-                <div v-if="subReq.displayDescription" class="description completed-ptext">
-                  {{ subReq.requirement.description }}
-                  <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
                 </div>
               </div>
             </div>
@@ -448,16 +431,13 @@ export default Vue.extend({
       const displayOptions = this.displayOptions[index];
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
-
       if (contentShown) {
-        // clicked box when content shown. So then hide content
         displayOptions.boxBorder = '#C4C4C4';
         displayOptions.arrowColor = '#C4C4C4';
       } else {
         displayOptions.boxBorder = '#32A0F2';
         displayOptions.arrowColor = '#32A0F2';
       }
-      console.log(displayOptions.shown);
     },
     closeDropdownIfOpen(event:any, reqName:string) {
       const index = this.getIndex(reqName);
@@ -476,11 +456,8 @@ export default Vue.extend({
     changeSubRequirementOption(subReqs:string[], index:number):void{
       const ongoingSubReqs = this.reqs[index].ongoing;
       const completedSubReqs = this.reqs[index].completed;
-      // console.log(`subReqs is ${subReqs}`);
       ongoingSubReqs.forEach(id => {
-        // console.log(`id name is ${id.requirement.name}`);
         if (subReqs.includes(id.requirement.name)) {
-          // console.log(`requirementName is ${id.requirement.name}`);
           const currentBool = id.displayOption;
           id.displayOption = !currentBool;
         }
@@ -660,7 +637,7 @@ export default Vue.extend({
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '#000000',
-          placeholder: 'Select different option'
+          placeholder: 'Select option'
         };
         dropdowns.push(dropdown);
       }
@@ -992,7 +969,7 @@ button.view {
 .requirements {
   &-select {
     background: #ffffff;
-    border: 1px solid #c4c4c4;
+    border: .5px solid #c4c4c4;
 
     box-sizing: border-box;
     border-radius: 1px;
@@ -1047,8 +1024,8 @@ button.view {
       border-top: 6.24px solid #c4c4c4;
       background: transparent;
 
-      margin-top: 30px;
-      margin-bottom: 10.17px;
+      // margin-top: 30px;
+      // margin-bottom: 10.17px;
 
       margin-right: 8.7px;
       margin-left: 5px;
