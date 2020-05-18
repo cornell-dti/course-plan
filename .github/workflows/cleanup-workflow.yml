@@ -13,7 +13,7 @@ jobs:
           ref: gh-pages
       - name: Purge Static Assets
         env:
-          ACCESS_TOKEN: ${{ secrets.DEPLOY_GH_PAGE_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           git rm -rf ${{ github.event.number }} || echo "Nothing to remove"
           git config user.name "deployment-bot"
