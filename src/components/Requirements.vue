@@ -338,7 +338,13 @@ export default Vue.extend({
         if (req.requirement.progressBar) {
           singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
           singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
+          // console.log('Fullfilled:', singleMenuRequirement.fulfilled);
+          // console.log('total:', req.totalCountFulfilled);
+          // console.log('min:', req.minCountFulfilled);
           singleMenuRequirement.required = req.requirement.totalCount || req.requirement.minCount;
+          // console.log('Required:', singleMenuRequirement.required);
+          // console.log('total:', req.requirement.totalCount);
+          // console.log('min:', req.requirement.minCount);
         }
         // Default display value of false for all requirement lists
         let displayOptionValue = true;
@@ -355,8 +361,26 @@ export default Vue.extend({
       // Make number of requirements items progress bar in absense of identified progress metric
       if (!singleMenuRequirement.type) {
         singleMenuRequirement.type = 'Requirements';
-        singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
-        singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+
+        let numOngoingHidden = 0;
+        singleMenuRequirement.ongoing.forEach(req => {
+          if (req.requirement.isDefaultOption === false) {
+            numOngoingHidden += 1;
+          }
+        });
+
+        let numCompletedHidden = 0;
+        singleMenuRequirement.completed.forEach(req => {
+          if (req.requirement.isDefaultOption === false) {
+            numCompletedHidden += 1;
+          }
+        });
+        // console.log('ongoing hidden:', numOngoingHidden);
+        // console.log('completed hidden:', numCompletedHidden);
+        // console.log('1:', singleMenuRequirement.ongoing);
+
+        singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length - numCompletedHidden;
+        singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length - numOngoingHidden - numCompletedHidden;
       }
       return singleMenuRequirement;
     });

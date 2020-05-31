@@ -166,6 +166,12 @@ function postProcessRequirementsFulfillments<T extends {}, R extends {}>(
   fulfillments: readonly RequirementFulfillment<T>[],
   transformer: (currentFulfillmentWithMetadata: RequirementFulfillment<T>) => R
 ): readonly RequirementFulfillment<R>[] {
+  // fulfillments.forEach(requirementFulfillment => {
+  //   if (requirementFulfillment.requirement.isDefaultOption !== false) {
+  //     const { requirement, courses } = requirementFulfillment;
+  //     const newMetadata = transformer(requirementFulfillment);
+  //     reqs.push({ requirement, courses, ...newMetadata });
+  //   }
   return fulfillments.map(requirementFulfillment => {
     const { requirement, courses } = requirementFulfillment;
     const newMetadata = transformer(requirementFulfillment);
@@ -179,7 +185,9 @@ function computeFulfillmentStatistics<T extends {}>({ requirement, courses: cour
     if (coursesThatFulfilledSubRequirement.length === 0) {
       return;
     }
-    // only count requirements that are not hidden-lol idk if this is right
+    // only count requirements that are not hidden --idk if this is helping
+    // console.log(requirement.name);
+    // console.log(requirement.isDefaultOption);
     if (requirement.isDefaultOption !== false) {
       if (requirement.operator === 'or') {
         // Accumulating requirements with double counting with 'or/ operator
@@ -240,6 +248,9 @@ function computeFulfillmentStatistics<T extends {}>({ requirement, courses: cour
       }
     }
   });
+
+  // console.log(minCountFulfilled);
+  // console.log(totalCountFulfilled);
 
   return { minCountFulfilled, totalCountFulfilled };
 }

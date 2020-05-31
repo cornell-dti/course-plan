@@ -49,7 +49,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2,
-    isDefaultOption: true,
+    isDefaultOption: false,
     pairedReqName: ['General Chemistry Option 2']
   },
   {
@@ -62,7 +62,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1,
-    isDefaultOption: false,
+    isDefaultOption: true,
     pairedReqName: ['General Chemistry Option 1']
 
   },
@@ -121,28 +121,32 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 2
   },
-  // TODO: temp fix for reqs w options and diff minCount
   {
     name: 'Biochemistry and Molecular Biology Part 1',
-    description: 'BIOMG 3300 OR BIOMG 3350 OR BIOMG 3310',
+    description: 'BIOMG 3300 OR BIOMG 3310 AND BIOMG 3320',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
     checker: includesWithSubRequirements(
-      ['BIOMG 3300', 'BIOMG 3350', 'BIOMG 3310']
+      ['BIOMG 3300', 'BIOMG 3310'],
+      ['BIOMG 3320']
     ),
     operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 1
+    minCount: 2,
+    isDefaultOption: true,
+    pairedReqName: ['Biochemistry and Molecular Biology Part 2']
   },
   {
     name: 'Biochemistry and Molecular Biology Part 2',
-    description: 'BIOMG 3300 OR BIOMG 3350 OR BIOMG 3320',
+    description: 'BIOMG 3300 OR BIOMG 3350',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535',
     checker: includesWithSubRequirements(
-      ['BIOMG 3300', 'BIOMG 3350', 'BIOMG 3320']
+      ['BIOMG 3300', 'BIOMG 3350']
     ),
     operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 1
+    minCount: 1,
+    isDefaultOption: false,
+    pairedReqName: ['Biochemistry and Molecular Biology Part 1']
   },
   {
     name: 'Concentration',
