@@ -359,6 +359,7 @@ export default Vue.extend({
         }
       });
       // Make number of requirements items progress bar in absense of identified progress metric
+      console.log('singleMenuRequirement.type:', singleMenuRequirement.type);
       if (!singleMenuRequirement.type) {
         singleMenuRequirement.type = 'Requirements';
 
