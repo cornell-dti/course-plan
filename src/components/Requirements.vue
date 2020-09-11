@@ -2,6 +2,7 @@
   <div class="requirements">
     <div class="fixed">
     <h1 class="title">School Requirements</h1>
+    <h1 class="red" @click="toggleReturnText">Toggle Return Text</h1>
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
 
@@ -174,6 +175,7 @@
 </template>
 
 <script lang="ts">
+import firebase from 'firebase/app';
 import { Vue } from 'vue-property-decorator';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
@@ -184,6 +186,10 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
+
+require('firebase/functions');
+
+const functions = firebase.functions();
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -419,6 +425,15 @@ export default Vue.extend({
         }
       }
       this.minors = minors;
+    },
+    toggleReturnText() {
+      const returnText = firebase.functions().httpsCallable('returnText');
+      returnText({ text: 'Hi' }).then(result => {
+        // Read result of the Cloud Function.
+        const resultText = result.data.returnText;
+        console.log(resultText);
+        console.log(result.data.courses);
+      });
     }
   }
 });
@@ -740,5 +755,9 @@ button.view {
     width: 100%;
     height: calc(100vh - 4.5rem);
   }
+}
+
+.red{
+  background-color:red;
 }
 </style>

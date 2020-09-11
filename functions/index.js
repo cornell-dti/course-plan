@@ -6,6 +6,8 @@ admin.initializeApp();
 const db = admin.firestore();
 const userDataCollection = db.collection('userData');
 
+const filteredAllCourses = require('./filtered-all-courses.json');
+
 let average = (array) => array.reduce((a, b) => a + b) / array.length;
 function typeToMonth(type){
   switch(type) {
@@ -90,4 +92,13 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
       });
       
 });
+
+exports.returnText = functions.https.onCall(data => {
+  return {
+    returnText: data.text,
+    courses: filteredAllCourses['FA14'][0]
+  };
+});
+
+
 
