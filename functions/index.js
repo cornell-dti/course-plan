@@ -97,7 +97,7 @@ function logUnfetchedCourseCode(courseCode) {
   console.log("Unable to fetch course data for course code: ", courseCode);
 }
 
-exports.returnText = functions.https.onCall(data => {
+exports.FetchCourses = functions.https.onCall(data => {
   let courseCodes = data.courseCodes.map(a => a.toUpperCase());
   let courses = [];
 

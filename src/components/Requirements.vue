@@ -2,7 +2,7 @@
   <div class="requirements">
     <div class="fixed">
     <h1 class="title">School Requirements</h1>
-    <h1 class="red" @click="toggleReturnText">Toggle Return Text</h1>
+    <h1 class="red" @click="triggerFetchCourses">Trigger FetchCourses</h1>
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
 
@@ -426,9 +426,9 @@ export default Vue.extend({
       }
       this.minors = minors;
     },
-    toggleReturnText() {
-      const returnText = firebase.functions().httpsCallable('returnText');
-      returnText({ courseCodes: ['CS 1110', 'INFO 2300'] }).then(result => {
+    triggerFetchCourses() {
+      const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
+      FetchCourses({ courseCodes: ['CS 1110', 'INFO 2300'] }).then(result => {
         // Read result of the Cloud Function.
         console.log(result.data);
       });
