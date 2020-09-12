@@ -428,11 +428,9 @@ export default Vue.extend({
     },
     toggleReturnText() {
       const returnText = firebase.functions().httpsCallable('returnText');
-      returnText({ text: 'Hi' }).then(result => {
+      returnText({ courseCodes: ['CS 1110', 'INFO 2300'] }).then(result => {
         // Read result of the Cloud Function.
-        const resultText = result.data.returnText;
-        console.log(resultText);
-        console.log(result.data.courses);
+        console.log(result.data);
       });
     }
   }

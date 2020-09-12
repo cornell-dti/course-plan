@@ -93,12 +93,38 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
       
 });
 
+function logUnfetchedCourseCode(courseCode) {
+  console.log("Unable to fetch course data for course code: ", courseCode);
+}
+
 exports.returnText = functions.https.onCall(data => {
+  let courseCodes = data.courseCodes.map(a => a.toUpperCase());
+  let courses = [];
+
+  // Assume rosters is sorted from least recent to most recent semester
+  let rosters = Object.keys(filteredAllCourses);
+  // Iterate over rosters starting from most recent semester
+  for (let i = rosters.length - 1; i >= 0 && courseCodes.length > 0; i -= 1) {
+    let rosterCourses = filteredAllCourses[rosters[i]];
+    // Fetch course objects whose code is in courseCodes
+    let fetchedCourses = rosterCourses.filter(rosterCourse =>
+      courseCodes.indexOf(rosterCourse.subject.concat(' ', rosterCourse.catalogNbr))!= -1);
+    
+    // Delete course codes of fetchedCourses from courseCodes
+    // Update courses with fetchedCourses
+    fetchedCourses.forEach((fetchedCourse) => {
+      let fetchedCourseCode = fetchedCourse.subject.concat(' ', fetchedCourse.catalogNbr);
+      courseCodes = courseCodes.filter(courseCode => courseCode != fetchedCourseCode);
+
+      courses.push(fetchedCourse);
+    });
+
+  }
+  // Log courses that could not be fetched
+  courseCodes.map(a => logUnfetchedCourseCode(a));
+  
   return {
-    returnText: data.text,
-    courses: filteredAllCourses['FA14'][0]
+    courses: courses
   };
 });
-
-
 
