@@ -35,10 +35,15 @@
       class="semesterView-caution"
       :text="cautionText"
     />
-    <div v-if="!compact" class="semesterView-content">
-      <div v-for="sem in semesters" :key="sem.id" class="semesterView-wrapper">
+    <!-- TODO: investigate if there needs to be two different content divs with two sets of semesters -->
+    <div class="semesterView-content">
+      <div
+        v-for="sem in semesters"
+        :key="sem.id"
+        class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester
           v-bind="sem"
+          :compact="compact"
           :activatedCourse="activatedCourse"
           :semesters="semesters"
           :isFirstSem="checkIfFirstSem(sem.id)"
@@ -53,34 +58,11 @@
           @open-course-modal="openCourseModal"
         />
       </div>
-      <div class="semesterView-empty" aria-hidden="true"></div>
-    </div>
-    <!-- TODO: investigate if there needs to be two different content divs with two sets of semesters -->
-    <div v-if="compact" class="semesterView-content">
-      <div
-        v-for="sem in semesters"
-        :key="sem.id"
-        class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester
-          v-bind="sem"
-          :compact="compact"
-          :activatedCourse="activatedCourse"
-          :semesters="semesters"
-          :isFirstSem="checkIfFirstSem(sem.id)"
-          :isCourseModalOpen="modalOpen"
-          @updateBar="updateBar"
-          @new-semester="openSemesterModal"
-          @delete-semester="deleteSemester"
-          @edit-semester="editSemester"
-          @update-requirements-menu="updateRequirementsMenu"
-          @close-course-modal="closeCourseModal"
-          @open-course-modal="openCourseModal"
-        />
-      </div>
-      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div><div></div></div>
+      <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
+      <div v-if="compact" class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div v-if="compact" class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div v-if="compact" class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div v-if="compact"><div v-if="compact"></div></div>
     </div>
   </div>
 </template>
