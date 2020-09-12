@@ -4,7 +4,15 @@
     :class="{ 'semester--compact': compact }"
     :id="id"
   >
-    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" ref="modal" />
+    <modal
+      :id="'courseModal-' + id"
+      class="semester-modal"
+      type="course"
+      :class="{ 'semester-modal--block':  isCourseModalOpen }"
+      :semesterID="id"
+      @check-course-duplicate="checkCourseDuplicate"
+      @close-course-modal="closeCourseModal"
+      ref="modal" />
     <confirmation
       :id="'confirmation-' + id"
       class="semester-confirmation"
@@ -153,7 +161,8 @@ export default {
     compact: Boolean,
     activatedCourse: Object,
     semesters: Array,
-    isFirstSem: Boolean
+    isFirstSem: Boolean,
+    isCourseModalOpen: Boolean
   },
 
   mounted() {
@@ -234,14 +243,15 @@ export default {
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
-
-      const modal = document.getElementById(`courseModal-${this.id}`);
-      modal.style.display = 'block';
+      this.$emit('open-course-modal');
 
       // Activate focus
       const input = document.getElementById(`dropdown-${this.id}`);
       input.value = '';
       input.focus();
+    },
+    closeCourseModal() {
+      this.$emit('close-course-modal');
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
@@ -537,7 +547,7 @@ export default {
 
   /* The Modal (background) */
   .semester-modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
@@ -590,6 +600,10 @@ export default {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+
+  &--block {
+    display: block;
+  }
 }
 }
 

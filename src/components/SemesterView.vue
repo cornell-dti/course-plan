@@ -42,12 +42,15 @@
           :activatedCourse="activatedCourse"
           :semesters="semesters"
           :isFirstSem="checkIfFirstSem(sem.id)"
+          :isCourseModalOpen="modalOpen"
           @updateBar="updateBar"
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
           @update-requirements-menu="updateRequirementsMenu"
+          @close-course-modal="closeCourseModal"
+          @open-course-modal="openCourseModal"
         />
       </div>
       <div class="semesterView-empty" aria-hidden="true"></div>
@@ -64,11 +67,14 @@
           :activatedCourse="activatedCourse"
           :semesters="semesters"
           :isFirstSem="checkIfFirstSem(sem.id)"
+          :isCourseModalOpen="modalOpen"
           @updateBar="updateBar"
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
           @update-requirements-menu="updateRequirementsMenu"
+          @close-course-modal="closeCourseModal"
+          @open-course-modal="openCourseModal"
         />
       </div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
@@ -120,7 +126,8 @@ export default {
       cautionText: '',
       key: 0,
       activatedCourse: {},
-      isCourseClicked: false
+      isCourseClicked: false,
+      modalOpen: false
     };
   },
   watch: {
@@ -132,11 +139,10 @@ export default {
     }
   },
   mounted() {
-    this.$el.addEventListener('click', this.closeAllModals);
+    // this.$el.addEventListener('click', this.closeAllModals);
   },
-
   beforeDestroy() {
-    this.$el.removeEventListener('click', this.closeAllModals);
+    // this.$el.removeEventListener('click', this.closeAllModals);
   },
   computed: {
     noSemesters() {
@@ -205,7 +211,14 @@ export default {
       const modal = document.getElementById('semesterModal');
       modal.style.display = 'block';
     },
+    openCourseModal() {
+      this.modalOpen = true;
+    },
+    closeCourseModal() {
+      this.modalOpen = false;
+    },
     closeAllModals(event) {
+      // TODO: not sure how to avoid DOM Manipulation here
       const modals = document.getElementsByClassName('semester-modal');
       for (let i = 0; i < modals.length; i += 1) {
         if (event.target === modals[i]) {
@@ -213,6 +226,7 @@ export default {
           this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns();
         }
       }
+
       const deleteSemesterModal = document.getElementById('deleteSemester');
       if (event.target === deleteSemesterModal) {
         deleteSemesterModal.style.display = 'none';

@@ -30,8 +30,7 @@ export default {
   },
   methods: {
     closeCourseModal() {
-      const modal = document.getElementById(`courseModal-${this.semesterID}`);
-      modal.style.display = 'none';
+      this.$emit('close-course-modal');
     },
     autocomplete(inp, courses) {
       /* the autocomplete function takes two arguments,

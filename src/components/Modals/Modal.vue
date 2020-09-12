@@ -11,6 +11,7 @@
         :semesterID="semesterID"
         :currentSemesters="currentSemesters"
         @duplicateSemester="disableButton"
+        @close-current-model="closeCourseModal"
         ref="modalBodyComponent"
       ></component>
       <div class="modal-buttonWrapper">
@@ -79,17 +80,19 @@ export default {
     disableButton(bool) {
       this.isDisabled = bool;
     },
+    closeCourseModal() {
+      this.$emit('close-course-modal');
+    },
     closeCurrentModal() {
-      let modal;
       if (this.type === 'course') {
-        modal = document.getElementById(`${this.type}Modal-${this.semesterID}`);
-      } else {
-        modal = document.getElementById(`${this.type}Modal`);
+        this.$emit('close-course-modal');
+        return;
       }
+      const modal = document.getElementById(`${this.type}Modal`);
       if (this.type === 'semester') {
         this.$refs.modalBodyComponent.resetDropdowns();
       }
-      modal.style.display = 'none';
+      // modal.style.display = 'none';
     },
     // Note: Currently not used
     checkCourseDuplicate(key) {
