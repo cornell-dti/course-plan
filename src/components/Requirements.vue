@@ -1,12 +1,14 @@
 <template v-if="semesters">
   <div class="requirements">
-    <div class="fixed"
+    <div id="req-tooltip" class="fixed"
+      data-intro-group="req-tooltip"
       data-intro='<b>This is your Requirements Bar 📋</b><br>
         <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>'
-      data-step ='1'
       data-disable-interaction = '1'
+      data-step = '0'
       data-tooltipClass = 'tooltipCenter'
+      @mouseover="showReqTooltip()"
     >
     <h1 class="title">School Requirements</h1>
     <!-- loop through reqs array of req objects -->
@@ -217,18 +219,20 @@ type Data = {
   reqGroupColorMap: {};
 
 }
-
-const tour = introJs();
+// This section will be revisited when we try to make first-time tooltips
+const tour = introJs().start();
 tour.setOption('exitOnEsc', 'false');
 tour.setOption('doneLabel', 'Finish');
 tour.setOption('skipLabel', 'Skip This Tutorial');
 tour.setOption('nextLabel', 'Next');
+
 export default Vue.extend({
   props: {
     semesters: Array,
     user: Object,
     compact: Boolean,
-    startTour: Boolean
+    startTour: Boolean,
+    req_tooltip_seen: Boolean
   },
   mounted() {
     this.getDisplays();
@@ -393,6 +397,13 @@ export default Vue.extend({
         }
       });
       return (id < 2 || id === currentDisplay);
+    },
+    showReqTooltip() {
+      /* Revisit this when implementing tooltips appearing for first time
+      if (this.req_tooltip_seen === false) {
+        tour.start();
+        // add update req tooltip seen
+      } */
     },
     activateMajor(id: number) {
       this.majors.forEach((major, i: number) => {

@@ -447,7 +447,8 @@ export default {
             colleges: this.notPlaceholderOptions(this.displayOptions.college),
             majors: this.notPlaceholderOptions(this.displayOptions.major),
             minors: this.notPlaceholderOptions(this.displayOptions.minor)
-          }
+          },
+          requirements_tooltip_seen: false
         };
         this.$emit('onboard', onboardingData);
       }

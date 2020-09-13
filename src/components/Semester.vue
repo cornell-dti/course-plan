@@ -31,16 +31,17 @@
     />
     <button
     v-if="isFirstSem" class="semester-addSemesterButton" @click="openSemesterModal"
+    data-intro-group="pageTour"
     data-intro='<b>Add your past and future Semester Cards</b><br>
       <div class = "introjs-bodytext">Once you’re done setting up your current semester,
       feel free to add both past and future semesters. Try to utilize your requirements bar</div>'
     data-step ='4'
     data-disable-interaction = '1'
     >+ New Semester</button>
-    <div class="semester-content"
-      data-step = '2'
-      data-intro = '<b>This is a Semester Card of your current semester! 🍂❄️🌸☀️</b><br><div class = "introjs-bodytext">
-      You can add all courses here in the following semester.</div>'
+    <div id = "tour" class="semester-content"
+      data-intro-group="pageTour"
+      data-step = '1'
+      :data-intro = seasonMessage()
       data-disable-interaction = '1'>
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
@@ -82,6 +83,7 @@
           class="semester-courseWrapper semester-addWrapper"
           :class="{ 'semester-addWrapper--compact': compact }"
           @click="openCourseModal"
+          data-intro-group="pageTour"
           data-step = '3'
           data-intro = '<b>Add your course in this semseter!</b><br>
             <div class = "introjs-bodytext">To start planning your college career, you should try adding a course in your current semester.</div>'
@@ -123,6 +125,12 @@ const fall = require('../assets/images/fallEmoji.svg');
 const spring = require('../assets/images/springEmoji.svg');
 const winter = require('../assets/images/winterEmoji.svg');
 const summer = require('../assets/images/summerEmoji.svg');
+
+const pageTour = introJs();
+pageTour.setOption('exitOnEsc', 'false');
+pageTour.setOption('doneLabel', 'Finish');
+pageTour.setOption('skipLabel', 'Skip This Tutorial');
+pageTour.setOption('nextLabel', 'Next');
 
 const clickOutside = {
   bind(el, binding, vnode) {
@@ -199,7 +207,6 @@ export default {
     init = false;
     this.buildCautions();
   },
-
   beforeDestroy() {
     this.$el.removeEventListener('touchmove', this.dragListener);
   },
@@ -355,6 +362,15 @@ export default {
           }
         });
       }
+    },
+    seasonMessage() {
+      return `<b>This is a Semester Card of your current semester! 
+      <img src="${fall}"class = "newSemester-emoji-text">
+      <img src="${spring}"class = "newSemester-emoji-text">
+      <img src="${summer}"class = "newSemester-emoji-text">
+      <img src="${winter}"class = "newSemester-emoji-text">
+      </b><div 
+      class = "introjs-bodytext"> You can add all courses here in the following semester.</div>`;
     },
     openSemesterMenu() {
       this.stopCloseFlag = true;

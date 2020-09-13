@@ -18,6 +18,7 @@
           :user="user"
           :key="requirementsKey"
           :startTour="startTour"
+          :req_tooltip_seen="requirements_tooltip_seen"
           @requirementsMap="loadRequirementsMap"
           @showTourEndWindow="showTourEnd"
          />
@@ -25,6 +26,7 @@
       <semesterview v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
         :semesters="semesters"
         :compact="compactVal"
+        :startTour="startTour"
         :isBottomBarExpanded="bottomBar.isExpanded"
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
@@ -97,6 +99,8 @@ tour.setOption('doneLabel', 'Finish');
 tour.setOption('skipLabel', 'Skip This Tutorial');
 tour.setOption('nextLabel', 'Next');
 
+const surfing = require('../assets/images/surfing.svg');
+
 export default {
   data() {
     const user = auth.currentUser;
@@ -139,9 +143,12 @@ export default {
       startTour: false,
       showTourEndWindow: false,
       congrats: 'Congratulations! That’s a wrap',
-      congratsBodytext: 'Other than this, there is more you can explore, so feel free to surf through CoursePlan 🏄',
+      congratsBodytext: `Other than this, there is more you can explore, 
+        so feel free to surf through CoursePlan <img src = "${surfing}" 
+        class = "emoji-text" alt = "surf">`,
       congratsExit: '',
-      congratsButtonText: 'Start Planning'
+      congratsButtonText: 'Start Planning',
+      requirements_tooltip_seen: false
     };
   },
   created() {
@@ -174,9 +181,11 @@ export default {
             this.subjectColors = doc.data().subjectColors;
             this.uniqueIncrementer = doc.data().uniqueIncrementer;
             this.loaded = true;
+            this.requirements_tooltip_seen = doc.data().requirements_tooltip_seen;
           } else {
             this.semesters.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
             this.firebaseSems.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
+            this.requirements_tooltip_seen = false;
             this.startOnboarding();
           }
         })
@@ -598,19 +607,28 @@ export default {
       this.loaded = true;
 
       const docRef = this.getDocRef();
+      const reqBarSeen = this.requirements_tooltip_seen || false;
       const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,
         semesters: this.firebaseSems,
-        subjectColors: this.subjectColors
+        subjectColors: this.subjectColors,
+        requirements_tooltip_seen: reqBarSeen
       };
-
+      docRef.get()
+        .then(doc => {
+          if (doc.exists) {
+            this.welcomeHidden = false;
+          } else {
+            this.welcomeHidden = true;
+          }
+          docRef.set(data);
+          this.cancelOnboarding();
+          this.updateRequirementsMenu();
+        }).catch(error => {
+          console.log('Error getting document:', error);
+        });
       // set the new name and userData, along with either an empty list of semesters or preserve the old list
-      docRef.set(data);
-
-      this.cancelOnboarding();
-      this.updateRequirementsMenu();
-      this.welcomeHidden = true;
     },
 
     cancelOnboarding() {
@@ -715,6 +733,9 @@ export default {
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  }
+  .emoji-text {
+    height: 14px;
   }
 }
 

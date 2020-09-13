@@ -9,8 +9,7 @@
           <div class = "title">
             {{ title }}
           </div>
-          <div class = "body">
-            {{ text }}
+          <div class = "body" v-html = text>
           </div>
           <button v-on:click = "$emit('hide'); $emit('startTour')">
             {{ buttonText }}
