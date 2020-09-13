@@ -506,7 +506,6 @@ export default {
         distributionCategories: this.cleanCourseDistributionsArray(course.distributions),
         enrollmentInfo: this.joinOrNAString(course.enrollment),
         latestLecInfo: this.naIfEmptyStringArray(course.lectureTimes),
-        // TODO: CUReviews data
         overallRating: 0,
         difficulty: 0,
         workload: 0,
@@ -560,7 +559,7 @@ export default {
     getReviews(subject, number, callback) {
       fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(res => {
         res.json().then(reviews => {
-          callback(reviews.classes[0]);
+          callback(reviews[0]);
         });
       });
     },

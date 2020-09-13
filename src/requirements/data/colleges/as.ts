@@ -26,16 +26,6 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     minCount: 6
   },
   {
-    name: 'Foreign Language Requirement',
-    description: 'A student must either pass an intermediate Cornell language course at the 2000-level or above or complete at least 11 credits in a single foreign language at Cornell. '
-      + 'AP and IB credits cannot complete this requirement, but usually indicate that you place into a higher level course. '
-      + 'Note: Native speakers of a foreign language may be exempted from this requirement.',
-    source: 'https://as.cornell.edu/degree-requirements',
-    operator: null,
-    checker: null,
-    fulfilledBy: 'self-check'
-  },
-  {
     name: 'Intermediate Language Course',
     description: 'Option 1 - Successfully complete one intermediate course of 3 or more credits at Cornell at the 2000 level or above.',
     source: 'https://as.cornell.edu/Foreign-Language',
