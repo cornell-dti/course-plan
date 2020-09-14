@@ -75,7 +75,7 @@
             <div class="separator"></div>
             <div
               v-for="(subReq, id) in req.ongoing"
-              :key="subReq.id">
+              :key="subReq.id" v-show="subReq.displayOption">
               <div class="row depth-req">
                 <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
                   <button class="btn">
@@ -111,6 +111,41 @@
                 :href="subReq.requirement.source" target="_blank">
                 <strong>Learn More</strong></a>
               </div>
+                <div v-if="subReq.requirement.pairedReqName">
+                  <div class="requirements-selectWrapper">
+                    <div
+                      class="requirements-select requirements-input"
+                      :style="{ borderColor: displayOptions[getIndex(subReq.requirement.name)].boxBorder }"
+                      v-click-outside:[subReq.requirement.name]="closeDropdownIfOpen"
+                    >
+                      <div class="requirements-dropdown-placeholder requirements-dropdown-wrapper" @click="showHideContent(subReq.requirement.name)">
+                        <div
+                          class="requirements-dropdown-placeholder requirements-dropdown-innerPlaceholder"
+                          :style="{ color: displayOptions[getIndex(subReq.requirement.name)].placeholderColor }"
+                        >
+                          {{ displayOptions[getIndex(subReq.requirement.name)].placeholder }}
+                        </div>
+                        <div
+                          class="requirements-dropdown-placeholder requirements-dropdown-arrow"
+                          :style="{ borderTopColor: displayOptions[getIndex(subReq.requirement.name)].arrowColor }"
+                        ></div>
+                      </div>
+                      <div
+                        class="requirements-dropdown-content"
+                        v-if="displayOptions[getIndex(subReq.requirement.name)].shown"
+                      >
+                        <div
+                          v-for="(option, optionId) in subReq.requirement.pairedReqName"
+                          :key="optionId"
+                          class="requirements-dropdown-content-item"
+                          @click="toggleRequirementDefault(index, 'ongoing', id, option)"
+                        >
+                          {{option}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               <div class="separator"></div>
             </div>
 
@@ -130,7 +165,7 @@
 
           <!-- Completed requirements -->
             <div v-if="req.displayCompleted">
-              <div v-for="(subReq, id) in req.completed" :key="subReq.id">
+              <div v-for="(subReq, id) in req.completed" :key="subReq.id" v-show="subReq.displayOption">
                 <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
                 <div class="row depth-req">
                   <div class="col-1" @click="toggleDescription(index, 'completed', id)">
@@ -157,10 +192,46 @@
                     <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
                   </div>
                 </div>
-                <div v-if="subReq.displayDescription" class="description completed-ptext">
-                  {{ subReq.requirement.description }}
-                  <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
-                </div>
+                  <div v-if="subReq.displayDescription" class="description completed-ptext">
+                    {{ subReq.requirement.description }}
+                    <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
+                    <div v-if="subReq.requirement.pairedReqName">
+                      <!-- TODO: this is the same length as the descriptions but idk how to make it fixed length -->
+                      <div class="requirements-selectWrapper">
+                        <div
+                          class="requirements-select requirements-input"
+                          :style="{ borderColor: displayOptions[getIndex(subReq.requirement.name)].boxBorder }"
+                          v-click-outside:[subReq.requirement.name]="closeDropdownIfOpen"
+                        >
+                          <div class="requirements-dropdown-placeholder requirements-dropdown-wrapper" @click="showHideContent(subReq.requirement.name)">
+                            <div
+                              class="requirements-dropdown-placeholder requirements-dropdown-innerPlaceholder"
+                              :style="{ color: displayOptions[getIndex(subReq.requirement.name)].placeholderColor }"
+                            >
+                              {{ displayOptions[getIndex(subReq.requirement.name)].placeholder }}
+                            </div>
+                            <div
+                              class="requirements-dropdown-placeholder requirements-dropdown-arrow"
+                              :style="{ borderTopColor: displayOptions[getIndex(subReq.requirement.name)].arrowColor }"
+                            ></div>
+                          </div>
+                          <div
+                            class="requirements-dropdown-content"
+                            v-if="displayOptions[getIndex(subReq.requirement.name)].shown"
+                          >
+                            <div
+                              v-for="(option, optionId) in subReq.requirement.pairedReqName"
+                              :key="optionId"
+                              class="requirements-dropdown-content-item"
+                              @click="toggleRequirementDefault(index, 'completed', id, option)"
+                            >
+                              {{option}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
               </div>
             </div>
           </div>
@@ -182,7 +253,9 @@ import VueCollapse from 'vue2-collapse';
 import Course from '@/components/Course.vue';
 // eslint-disable-next-line import/extensions
 import Modal from '@/components/Modals/Modal.vue';
-import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
+import {
+  BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement, GroupedRequirementFulfillmentReport
+} from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
 
 Vue.component('course', Course);
@@ -198,6 +271,16 @@ type minor = {
   minor: string;
   minorFN: string;
 }
+// Some requirements have multiple options to fulfill them. We only want to show one option for each requirement at a time.
+type displayOption = {
+  shown: boolean,
+  stopClose: boolean,
+  boxBorder: string,
+  arrowColor: string,
+  placeholderColor: string,
+  placeholder: string
+
+}
 type Data = {
   actives: boolean[];
   modalShow: boolean;
@@ -206,17 +289,38 @@ type Data = {
   minors: minor[];
   requirementsMap: {};
   reqGroupColorMap: {};
-
+  displayOptions: displayOption[];
+  toggleableReqs: string[];
 }
+
+const clickOutside = {
+  bind(el:any, binding:any, vnode:any) {
+    el.event = (event:any) => {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event, binding.arg);
+      }
+    };
+    document.body.addEventListener('click', el.event);
+  },
+  unbind(el:any) {
+    document.body.removeEventListener('click', el.event);
+  }
+};
+
 export default Vue.extend({
   props: {
     semesters: Array,
     user: Object,
     compact: Boolean
   },
+  directives: {
+    'click-outside': clickOutside
+  },
   mounted() {
     this.getDisplays();
     const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major, this.user.minor);
+    // EIN: ADD COMMENT HERE
+    this.setDropdowns(groups);
     // Send satisfied credits data back to dashboard to build alerts
     this.$emit('requirementsMap', computeRequirementMap(groups));
     // Turn result into data readable by requirements menu
@@ -238,8 +342,14 @@ export default Vue.extend({
           singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
           singleMenuRequirement.required = req.requirement.totalCount || req.requirement.minCount;
         }
-        // Default display value of false for all requirement lists
-        const displayableRequirementFulfillment = { ...req, displayDescription: false };
+        // Set default display options for toggleable requirements to make sure each only one option is shown for each requirement
+        let displayOptionValue = true;
+        if (req.requirement.isDefaultOption === false) {
+          displayOptionValue = false;
+        }
+        // Default display value of false for all descriptions of requirements
+        const displayableRequirementFulfillment = { ...req, displayDescription: false, displayOption: displayOptionValue };
+
         if (!req.minCountFulfilled || req.minCountFulfilled < (req.requirement.minCount || 0)) {
           singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
         } else {
@@ -249,8 +359,14 @@ export default Vue.extend({
       // Make number of requirements items progress bar in absense of identified progress metric
       if (!singleMenuRequirement.type) {
         singleMenuRequirement.type = 'Requirements';
-        singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
-        singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+        // Hidden requirements options for toggleable requirements should not be included
+        const numOfHiddenOngoingReqs = singleMenuRequirement.ongoing.filter(req => req.displayOption === false).length;
+        const numOfHiddenCompletedReqs = singleMenuRequirement.completed.filter(req => req.displayOption === false).length;
+        // console.log(`numOfHiddenOngoingReqs: ${numOfHiddenOngoingReqs}`);
+        // console.log(`numOfHiddenCompletedReqs: ${numOfHiddenCompletedReqs}`);
+        // console.log(`completed: ${singleMenuRequirement.completed[0].requirement.name}`);
+        singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length - numOfHiddenCompletedReqs;
+        singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length - numOfHiddenOngoingReqs - numOfHiddenCompletedReqs;
       }
       return singleMenuRequirement;
     });
@@ -317,10 +433,129 @@ export default Vue.extend({
         COLLEGE: ['1AA9A5', 'blue'],
         MAJOR: ['105351', 'green'],
         MINOR: ['92C3E6', 'lightblue']
-      }
+      },
+      displayOptions: [],
+      toggleableReqs: []
     };
   },
   methods: {
+    showHideContent(reqName:string) {
+      const index = this.getIndex(reqName);
+      const displayOptions = this.displayOptions[index];
+      const contentShown = displayOptions.shown;
+      displayOptions.shown = !contentShown;
+      if (contentShown) {
+        displayOptions.boxBorder = '#C4C4C4';
+        displayOptions.arrowColor = '#C4C4C4';
+      } else {
+        displayOptions.boxBorder = '#32A0F2';
+        displayOptions.arrowColor = '#32A0F2';
+      }
+    },
+    closeDropdownIfOpen(event:any, reqName:string) {
+      const index = this.getIndex(reqName);
+      const displayOptions = this.displayOptions[index];
+      if (displayOptions.stopClose) {
+        displayOptions.stopClose = false;
+      } else if (displayOptions.shown) {
+        displayOptions.shown = false;
+        displayOptions.boxBorder = '#C4C4C4';
+        displayOptions.arrowColor = '#C4C4C4';
+      }
+    },
+    getIndex(reqName:string) {
+      return this.toggleableReqs.indexOf(reqName);
+    },
+    changeSubRequirementOption(subReqs:string[], index:number):void{
+      const ongoingSubReqs = this.reqs[index].ongoing;
+      const completedSubReqs = this.reqs[index].completed;
+      ongoingSubReqs.forEach(id => {
+        if (subReqs.includes(id.requirement.name)) {
+          const currentBool = id.displayOption;
+          id.displayOption = !currentBool;
+        }
+      });
+      completedSubReqs.forEach(id => {
+        if (subReqs.includes(id.requirement.name)) {
+          const currentBool = id.displayOption;
+          id.displayOption = !currentBool;
+        }
+      });
+    },
+    changeRequirementOption(title:string | undefined, index:number):void{
+      const ongoingSubReqs = this.reqs[index].ongoing;
+      const completedSubReqs = this.reqs[index].completed;
+      ongoingSubReqs.forEach(id => {
+        if (id.requirement.name === title) {
+          const currentBool = id.displayOption;
+          id.displayOption = !currentBool;
+          const subReqs = id.requirement.subRequirements;
+          if (typeof (subReqs) !== 'undefined') {
+            this.changeSubRequirementOption(subReqs, index);
+          }
+        }
+      });
+      completedSubReqs.forEach(id => {
+        if (id.requirement.name === title) {
+          const currentBool = id.displayOption;
+          id.displayOption = !currentBool;
+          const subReqs = id.requirement.subRequirements;
+          if (typeof (subReqs) !== 'undefined') {
+            this.changeSubRequirementOption(subReqs, index);
+          }
+        }
+      });
+    },
+    toggleRequirementDefault(index: number, type: 'ongoing' | 'completed', id: number, option: string | undefined): void {
+      if (type === 'ongoing') {
+        const currentBool = this.reqs[index].ongoing[id].displayOption;
+        this.reqs[index].ongoing[id].displayOption = !currentBool;
+        const subReqs = this.reqs[index].ongoing[id].requirement.subRequirements;
+        if (typeof (subReqs) !== 'undefined') {
+          this.changeSubRequirementOption(subReqs, index);
+        }
+        if (typeof (option) !== 'undefined') {
+          this.changeRequirementOption(option, index);
+        }
+      } else if (type === 'completed') {
+        const currentBool = this.reqs[index].completed[id].displayOption;
+        this.reqs[index].completed[id].displayOption = !currentBool;
+        const subReqs = this.reqs[index].ongoing[id].requirement.subRequirements;
+        if (typeof (subReqs) !== 'undefined') {
+          this.changeSubRequirementOption(subReqs, index);
+        }
+        if (typeof (option) !== 'undefined') {
+          this.changeRequirementOption(option, index);
+        }
+      }
+    },
+    setDropdowns(groups: readonly GroupedRequirementFulfillmentReport[]) {
+      // Get list of 'toggable' requirements (reqs with options like FL for A&S)
+      const toggles:string[][] = groups.map(group => {
+        const toggle:string[] = [];
+        group.reqs.forEach(req => {
+          if (req.requirement.pairedReqName) {
+            toggle.push(req.requirement.name);
+          }
+        });
+        return toggle;
+      });
+      this.toggleableReqs = toggles.flat();
+      const numOfDropdowns = this.toggleableReqs.length;
+      const dropdowns = [];
+      for (let i = 0; i < numOfDropdowns; i += 1) {
+        const dropdown = {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '#000000',
+          placeholder: 'Select option'
+        };
+        dropdowns.push(dropdown);
+      }
+      this.displayOptions = dropdowns;
+    },
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
     },
@@ -739,6 +974,82 @@ button.view {
     left: 0rem;
     width: 100%;
     height: calc(100vh - 4.5rem);
+  }
+}
+// TODO: delete styling that is not used in requirements or is only relevent to onboarding.
+.requirements {
+  &-select {
+    background: #ffffff;
+    border: .5px solid #c4c4c4;
+    box-sizing: border-box;
+    border-radius: 1px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 17px;
+    color: #b6b6b6;
+    position: relative;
+    &:not(:first-child) {
+      margin-top: .5rem;
+    }
+    &--disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+  &-dropdown {
+    &-placeholder {
+      height: 100%;
+      font-size: 14px;
+      line-height: 17px;
+      margin-left: .25rem;
+      display: flex;
+      align-items: center;
+      color: #b6b6b6;
+      background: transparent;
+    }
+    &-wrapper {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+    }
+    &-innerPlaceholder {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      width: 100%;
+    }
+    &-arrow {
+      border-left: 6.24px solid transparent;
+      border-right: 6.24px solid transparent;
+      border-top: 6.24px solid #c4c4c4;
+      background: transparent;
+      // margin-top: 30px;
+      // margin-bottom: 10.17px;
+      margin-right: 8.7px;
+      margin-left: 5px;
+    }
+    &-content {
+      z-index: 2;
+      position: absolute;
+      width: inherit;
+      background: #ffffff;
+      box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
+      border-radius: 7px;
+      margin-top: 3px;
+      &-item {
+        height: 2.25rem;
+        font-size: 14px;
+        line-height: 17px;
+        display: flex;
+        align-items: center;
+        color: #757575;
+        padding-left: 10px;
+      }
+    }
+  }
+  &-dropdown-content div:hover {
+    background: rgba(50, 160, 242, 0.15);
+    width: 100%;
   }
 }
 </style>

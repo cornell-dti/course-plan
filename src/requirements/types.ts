@@ -47,6 +47,16 @@ export interface BaseRequirement {
    */
   readonly totalCount?: number;
   readonly progressBar?: boolean;
+  /**
+   * Some requirements have multiple option fulfillments. We call these 'toggleable requirements'.
+   * Example: the FL req for A&S. Students can either take one certain class or take at least 11 credits.
+   */
+  /** Defines which option should be shown first for toggleable requirements. */
+  readonly isDefaultOption?: boolean;
+  /** Name of the other requirement option(s) for toggleable requirements. */
+  readonly pairedReqName?: string[];
+  // EIN ADD COMMENT
+  readonly subRequirements?: string[];
 }
 
 export type UniversityRequirements = {
@@ -126,7 +136,7 @@ export type GroupedRequirementFulfillmentReport = {
 };
 
 export type DisplayableRequirementFulfillment = RequirementFulfillment<
-  RequirementFulfillmentStatistics & { displayDescription: boolean }
+  RequirementFulfillmentStatistics & { displayDescription: boolean } & { displayOption: boolean }
 >;
 
 export type SingleMenuRequirement = {
