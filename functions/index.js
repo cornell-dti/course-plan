@@ -139,6 +139,12 @@ function sortByMostRecentRosters(rosters) {
   return rosters.sort(compareRosters);
 }
 
+/** FetchCourses fetches the most recent course objects for the list of 
+ * courseCodes in its input data object. 
+ * 
+ * In order to be a valid request, there must be a courseCodes property that is 
+ * a list of course code strings (e.g. 'CS 1110').
+ */
 exports.FetchCourses = functions.https.onCall(data => {
   let courseCodes = data.courseCodes.map(a => a.toUpperCase());
   let fetchedCourses = [];

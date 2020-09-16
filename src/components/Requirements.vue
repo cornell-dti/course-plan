@@ -424,14 +424,6 @@ export default Vue.extend({
       }
       this.minors = minors;
     }
-    // // Example of triggering FetchCourses Firebase function
-    // triggerFetchCourses() {
-    //   const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
-    //   FetchCourses({ courseCodes: ['CS 1110', 'INFO 2300'] }).then(result => {
-    //     // Read result of the Cloud Function.
-    //     console.log(result.data);
-    //   });
-    // }
   }
 });
 </script>
