@@ -97,26 +97,67 @@ function logUnfetchedCourseCode(courseCode) {
   console.log("Unable to fetch course data for course code: ", courseCode);
 }
 
+function typeToOrderedNumber(type){
+  switch(type) {
+    case 'WI':
+      return 0;
+    case 'SP':
+      return 1;
+    case 'SU':
+      return 2;
+    case 'FA':
+      return 3;
+    default:
+  }
+}
+
+function compareRosters(roster1, roster2) {
+  let type1 = roster1.slice(0,2);
+  let year1 = roster1.slice(2);
+  let type2 = roster2.slice(0, 2);
+  let year2 = roster2.slice(2);
+
+  if (year2 > year1) {
+    // roster2 has more recent year than roster1
+    return 1;
+  } else if (year1 > year2) {
+    // roster1 has more recent year than roster2
+    return -1;
+  } else if (typeToOrderedNumber(type2) > typeToOrderedNumber(type1)) {
+    // roster2 has more recent semester type than roster1
+    return 1;
+  } else if (typeToOrderedNumber(type1) > typeToOrderedNumber(type2)) {
+    // roster1 has more recent semester type than roster2
+    return -1;
+  } else {
+    return 0;
+  }
+}
+
+function sortByMostRecentRosters(rosters) {
+  // Sorts from most recent roster
+  return rosters.sort(compareRosters);
+}
+
 exports.FetchCourses = functions.https.onCall(data => {
   let courseCodes = data.courseCodes.map(a => a.toUpperCase());
-  let courses = [];
+  let fetchedCourses = [];
 
-  // Assume rosters is sorted from least recent to most recent semester
-  let rosters = Object.keys(filteredAllCourses);
-  // Iterate over rosters starting from most recent semester
-  for (let i = rosters.length - 1; i >= 0 && courseCodes.length > 0; i -= 1) {
-    let rosterCourses = filteredAllCourses[rosters[i]];
-    // Fetch course objects whose code is in courseCodes
-    let fetchedCourses = rosterCourses.filter(rosterCourse =>
+  // Sort rosters from most recent to least recent
+  let rosters = sortByMostRecentRosters(Object.keys(filteredAllCourses));
+  for (let i = 0; i < rosters.length && courseCodes.length > 0; i += 1) {
+    let allRosterCourses = filteredAllCourses[rosters[i]];
+    // Filter for course objects whose code is in courseCodes
+    let filteredCourses = allRosterCourses.filter(rosterCourse =>
       courseCodes.indexOf(rosterCourse.subject.concat(' ', rosterCourse.catalogNbr))!= -1);
     
-    // Delete course codes of fetchedCourses from courseCodes
-    // Update courses with fetchedCourses
-    fetchedCourses.forEach((fetchedCourse) => {
-      let fetchedCourseCode = fetchedCourse.subject.concat(' ', fetchedCourse.catalogNbr);
-      courseCodes = courseCodes.filter(courseCode => courseCode != fetchedCourseCode);
+    // Delete course codes of filteredCourses from courseCodes
+    // Update fetchedCourses with filteredCourses
+    filteredCourses.forEach((filteredCourse) => {
+      let filteredCourseCode = filteredCourse.subject.concat(' ', filteredCourse.catalogNbr);
+      courseCodes = courseCodes.filter(courseCode => courseCode != filteredCourseCode);
 
-      courses.push(fetchedCourse);
+      fetchedCourses.push(filteredCourse);
     });
 
   }
@@ -124,7 +165,7 @@ exports.FetchCourses = functions.https.onCall(data => {
   courseCodes.map(a => logUnfetchedCourseCode(a));
   
   return {
-    courses: courses
+    courses: fetchedCourses
   };
 });
 
