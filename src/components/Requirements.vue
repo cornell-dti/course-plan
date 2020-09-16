@@ -2,7 +2,6 @@
   <div class="requirements">
     <div class="fixed">
     <h1 class="title">School Requirements</h1>
-    <h1 class="red" @click="triggerFetchCourses">Trigger FetchCourses</h1>
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
 
@@ -424,14 +423,15 @@ export default Vue.extend({
         }
       }
       this.minors = minors;
-    },
-    triggerFetchCourses() {
-      const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
-      FetchCourses({ courseCodes: ['CS 1110', 'INFO 2300'] }).then(result => {
-        // Read result of the Cloud Function.
-        console.log(result.data);
-      });
     }
+    // // Example of triggering FetchCourses Firebase function
+    // triggerFetchCourses() {
+    //   const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
+    //   FetchCourses({ courseCodes: ['CS 1110', 'INFO 2300'] }).then(result => {
+    //     // Read result of the Cloud Function.
+    //     console.log(result.data);
+    //   });
+    // }
   }
 });
 </script>
@@ -752,9 +752,5 @@ button.view {
     width: 100%;
     height: calc(100vh - 4.5rem);
   }
-}
-
-.red{
-  background-color:red;
 }
 </style>
