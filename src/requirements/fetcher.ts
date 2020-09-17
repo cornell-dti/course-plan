@@ -134,4 +134,5 @@ const courseFieldFilter = getCourseFieldFilter([
 
 getAllCourses(courseFieldFilter).then(allCourses => {
   writeFileSync('src/requirements/filtered-all-courses.json', JSON.stringify(allCourses));
+  writeFileSync('functions/filtered-all-courses.json', JSON.stringify(allCourses));
 });
