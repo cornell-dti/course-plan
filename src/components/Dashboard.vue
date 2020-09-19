@@ -469,8 +469,9 @@ export default {
       this.buildRequirementsAlert(requirementsMap);
     },
     showTourEnd() {
-      this.showTourEndWindow = true;
-      console.log('asdfasdf');
+      if (!this.isMobile) {
+        this.showTourEndWindow = true;
+      }
     },
     buildRequirementsAlert(requirementsMap) {
       // Update semesters with alerts
@@ -618,7 +619,7 @@ export default {
         .then(doc => {
           if (doc.exists) {
             this.welcomeHidden = false;
-          } else {
+          } else if (!this.isMobile) {
             this.welcomeHidden = true;
           }
           docRef.set(data);
