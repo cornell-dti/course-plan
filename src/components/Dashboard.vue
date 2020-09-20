@@ -98,6 +98,7 @@ tour.setOption('exitOnEsc', 'false');
 tour.setOption('doneLabel', 'Finish');
 tour.setOption('skipLabel', 'Skip This Tutorial');
 tour.setOption('nextLabel', 'Next');
+tour.setOption('exitOnOverlayClick', 'false');
 
 const surfing = require('../assets/images/surfing.svg');
 

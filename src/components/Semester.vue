@@ -40,7 +40,7 @@
     >+ New Semester</button>
     <div id = "tour" class="semester-content"
       data-intro-group="pageTour"
-      data-step = '1'
+      data-step = '2'
       :data-intro = seasonMessage()
       data-disable-interaction = '1'>
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
@@ -131,6 +131,7 @@ pageTour.setOption('exitOnEsc', 'false');
 pageTour.setOption('doneLabel', 'Finish');
 pageTour.setOption('skipLabel', 'Skip This Tutorial');
 pageTour.setOption('nextLabel', 'Next');
+pageTour.setOption('exitOnOverlayClick', 'false');
 
 const clickOutside = {
   bind(el, binding, vnode) {

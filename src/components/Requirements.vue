@@ -6,7 +6,7 @@
         <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>'
       data-disable-interaction = '1'
-      data-step = '0'
+      data-step = '1'
       data-tooltipClass = 'tooltipCenter'
       @mouseover="showReqTooltip()"
     >
@@ -225,6 +225,7 @@ tour.setOption('exitOnEsc', 'false');
 tour.setOption('doneLabel', 'Finish');
 tour.setOption('skipLabel', 'Skip This Tutorial');
 tour.setOption('nextLabel', 'Next');
+tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
   props: {
