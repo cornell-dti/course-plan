@@ -16,3 +16,5 @@ jobs:
         run: npm run lint
       - name: Type Check
         run: npm run tsc
+      - name: Test
+        run: npm run test
