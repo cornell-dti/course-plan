@@ -136,7 +136,7 @@ export type GroupedRequirementFulfillmentReport = {
 };
 
 export type DisplayableRequirementFulfillment = RequirementFulfillment<
-  RequirementFulfillmentStatistics & { displayDescription: boolean } & { displayOption: boolean }
+  RequirementFulfillmentStatistics & { displayDescription: boolean }
 >;
 
 export type SingleMenuRequirement = {
