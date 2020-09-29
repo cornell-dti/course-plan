@@ -340,14 +340,8 @@ export default Vue.extend({
         .get()
         .then(doc => {
           if (doc.exists) {
+            const toggleableReqs = doc?.data()?.toggleableReqs;
 
-            let toggleableReqs;
-            if (doc) {
-              if (doc.data() && doc.data().toggleableReqs) {
-                toggleableReqs = doc.data().toggleableReqs;
-              }
-            }
-            
             const dropdowns = [];
             if (toggleableReqs !== undefined) {
               // update from firebase
