@@ -82,6 +82,8 @@ import NavBar from '@/components/NavBar';
 import Onboarding from '@/components/Modals/Onboarding';
 import TourWindow from '@/components/Modals/TourWindow';
 
+import surfing from '@/assets/images/surfing.svg';
+
 import '@/vueDragulaConfig';
 import { auth, userDataCollection } from '@/firebaseConfig';
 
@@ -100,7 +102,6 @@ tour.setOption('skipLabel', 'Skip This Tutorial');
 tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
-const surfing = require('../assets/images/surfing.svg');
 
 export default {
   data() {

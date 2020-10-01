@@ -108,6 +108,12 @@
 </template>
 
 <script>
+
+import fall from '../../assets/images/fallEmoji.svg';
+import spring from '../../assets/images/springEmoji.svg';
+import winter from '../../assets/images/winterEmoji.svg';
+import summer from '../../assets/images/summerEmoji.svg';
+
 const clickOutside = {
   bind(el, binding, vnode) {
     el.event = event => {
@@ -122,10 +128,6 @@ const clickOutside = {
   }
 };
 
-const fall = require('../../assets/images/fallEmoji.svg');
-const spring = require('../../assets/images/springEmoji.svg');
-const winter = require('../../assets/images/winterEmoji.svg');
-const summer = require('../../assets/images/summerEmoji.svg');
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({

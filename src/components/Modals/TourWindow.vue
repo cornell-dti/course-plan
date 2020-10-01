@@ -11,10 +11,10 @@
           </div>
           <div class = "body" v-html = text>
           </div>
-          <button v-on:click = "$emit('hide'); $emit('startTour')">
+          <button @click = "$emit('hide'); $emit('startTour')">
             {{ buttonText }}
           </button>
-          <a v-on:click = "$emit('skip')">
+          <a @click = "$emit('skip')">
             {{ exit }}
           </a>
         </div>
