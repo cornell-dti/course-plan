@@ -2,9 +2,7 @@
   <div class="requirements">
     <div id="req-tooltip" class="fixed"
       data-intro-group="req-tooltip"
-      data-intro='<b>This is your Requirements Bar 📋</b><br>
-        <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
-          requirements based on your college and major :)</div>'
+      :data-intro = getRequirementsTooltipText()
       data-disable-interaction = '1'
       data-step = '1'
       data-tooltipClass = 'tooltipCenter'
@@ -219,6 +217,9 @@ type Data = {
   reqGroupColorMap: {};
 
 }
+// emoji for clipboard
+const clipboard = require('../assets/images/clipboard.svg');
+
 // This section will be revisited when we try to make first-time tooltips
 const tour = introJs().start();
 tour.setOption('exitOnEsc', 'false');
@@ -453,6 +454,11 @@ export default Vue.extend({
         }
       }
       this.minors = minors;
+    },
+    getRequirementsTooltipText() {
+      return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
+          <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
+          requirements based on your college and major :)</div>`;
     }
   }
 });
