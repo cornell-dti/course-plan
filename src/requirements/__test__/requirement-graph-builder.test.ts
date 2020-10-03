@@ -99,7 +99,7 @@ it('buildRequirementFulfillmentGraph phase 2-2 test', () => {
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy
   });
 
-  // In this case, 3410 is removed since user chooses strategy 1.
+  // In this case, 3410 is removed since user chooses strategy 2.
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual(['CS3420']);
   expect(graph.getConnectedCoursesFromRequirement('Probability')).toEqual(['MATH4710']);
   expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([

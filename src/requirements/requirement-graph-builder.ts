@@ -33,7 +33,7 @@ type BuildRequirementFulfillmentGraphParameters<
   /** See RequirementFulfillmentGraph for its usage. */
   readonly getCourseUniqueID: (c: Course) => string;
   /**
-   * Aaively give a list of courses that can satisfy a requirement. Most of the time this function
+   * Naively give a list of courses that can satisfy a requirement. Most of the time this function
    * should just return the pre-computed course list. For requirements have multiple fulfillment
    * strategies, it will return the union of all pre-computed course list.
    */
