@@ -18,7 +18,6 @@
           :user="user"
           :key="requirementsKey"
           :startTour="startTour"
-          :req_tooltip_seen="requirements_tooltip_seen"
           @requirementsMap="loadRequirementsMap"
           @showTourEndWindow="showTourEnd"
          />
