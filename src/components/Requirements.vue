@@ -6,7 +6,6 @@
       data-disable-interaction = '1'
       data-step = '1'
       data-tooltipClass = 'tooltipCenter'
-      @mouseover="showReqTooltip()"
     >
     <h1 class="title">School Requirements</h1>
     <!-- loop through reqs array of req objects -->
@@ -233,8 +232,7 @@ export default Vue.extend({
     semesters: Array,
     user: Object,
     compact: Boolean,
-    startTour: Boolean,
-    req_tooltip_seen: Boolean
+    startTour: Boolean
   },
   mounted() {
     this.getDisplays();
@@ -399,13 +397,6 @@ export default Vue.extend({
         }
       });
       return (id < 2 || id === currentDisplay);
-    },
-    showReqTooltip() {
-      /* Revisit this when implementing tooltips appearing for first time
-      if (this.req_tooltip_seen === false) {
-        tour.start();
-        // add update req tooltip seen
-      } */
     },
     activateMajor(id: number) {
       this.majors.forEach((major, i: number) => {
