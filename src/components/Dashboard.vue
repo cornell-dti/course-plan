@@ -148,8 +148,7 @@ export default {
         so feel free to surf through CoursePlan <img src = "${surfing}" 
         class = "emoji-text" alt = "surf">`,
       congratsExit: '',
-      congratsButtonText: 'Start Planning',
-      requirements_tooltip_seen: false
+      congratsButtonText: 'Start Planning'
     };
   },
   created() {
@@ -182,11 +181,9 @@ export default {
             this.subjectColors = doc.data().subjectColors;
             this.uniqueIncrementer = doc.data().uniqueIncrementer;
             this.loaded = true;
-            this.requirements_tooltip_seen = doc.data().requirements_tooltip_seen;
           } else {
             this.semesters.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
             this.firebaseSems.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
-            this.requirements_tooltip_seen = false;
             this.startOnboarding();
           }
         })
@@ -608,13 +605,11 @@ export default {
       this.loaded = true;
 
       const docRef = this.getDocRef();
-      const reqBarSeen = this.requirements_tooltip_seen || false;
       const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,
         semesters: this.firebaseSems,
-        subjectColors: this.subjectColors,
-        requirements_tooltip_seen: reqBarSeen
+        subjectColors: this.subjectColors
       };
       docRef.get()
         .then(doc => {
