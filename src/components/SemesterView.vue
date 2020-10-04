@@ -112,7 +112,8 @@ export default {
     compact: Boolean,
     isBottomBar: Boolean,
     isBottomBarExpanded: Boolean,
-    isMobile: Boolean
+    isMobile: Boolean,
+    startTour: Boolean
   },
   data() {
     return {
