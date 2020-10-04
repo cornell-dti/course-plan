@@ -180,6 +180,8 @@
 </template>
 
 <script lang="ts">
+import firebase from 'firebase/app';
+import 'firebase/functions';
 import { Vue } from 'vue-property-decorator';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
@@ -192,6 +194,8 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
+
+const functions = firebase.functions();
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
