@@ -61,3 +61,17 @@ it('RequirementFulfillmentGraph works.', () => {
   expect(graph.existsEdge('Probability', 'MATH 4710')).toBeFalsy();
   expect(graph.existsEdge('Elective', 'MATH 4710')).toBeTruthy();
 });
+
+it('RequirementFulfillmentGraph.addRequirementNode() works', () => {
+  const graph = new RequirementFulfillmentGraph<string, string>(
+    s => s,
+    s => s
+  );
+  graph.addRequirementNode('foo');
+  expect(graph.getAllRequirements()).toEqual(['foo']);
+
+  // Test that adding node already exist doesn't erase edges connection.
+  graph.addEdge('foo', 'bar');
+  graph.addRequirementNode('foo');
+  expect(graph.getConnectedCoursesFromRequirement('foo')).toEqual(['bar']);
+});
