@@ -214,15 +214,15 @@ export function computeRequirements(
     reqs: computeUniversityRequirementFulfillments(coursesTaken)
   });
 
-  // PART 2: check college & major requirements
+  // PART 2: check college & major & minor requirements
   if (!(college in requirementJson.college)) throw new Error('College not found.');
   const collegeReqs = requirementJson.college[college];
 
-  type DecoratedCollegeOrMajorRequirementWithSourceType = DecoratedCollegeOrMajorRequirement & {
+  type RequirementWithSourceType = DecoratedCollegeOrMajorRequirement & {
     readonly sourceType: 'College' | 'Major' | 'Minor';
     readonly sourceSpecificName: string;
   };
-  const requirementsToBeConsideredInGraph: readonly DecoratedCollegeOrMajorRequirementWithSourceType[] = [
+  const requirementsToBeConsideredInGraph: readonly RequirementWithSourceType[] = [
     ...collegeReqs.requirements.map(
       it => ({ ...it, sourceType: 'College', sourceSpecificName: college } as const)
     ),
@@ -247,7 +247,7 @@ export function computeRequirements(
   ];
 
   const requirementFulfillmentGraph = buildRequirementFulfillmentGraph<
-    DecoratedCollegeOrMajorRequirementWithSourceType,
+    RequirementWithSourceType,
     CourseTaken,
     undefined
   >({
@@ -288,7 +288,7 @@ export function computeRequirements(
   });
 
   type FulfillmentStatistics = {
-    readonly requirement: DecoratedCollegeOrMajorRequirementWithSourceType;
+    readonly requirement: RequirementWithSourceType;
     readonly courses: readonly (readonly CourseTaken[])[];
   } & RequirementFulfillmentStatistics;
   const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];
