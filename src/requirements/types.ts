@@ -106,7 +106,7 @@ export type RequirementFulfillment<M extends {}> = {
   /** The original requirement object. */
   readonly requirement: BaseRequirement;
   /** A list of courses that satisfy this requirement. */
-  readonly courses: readonly CourseTaken[][];
+  readonly courses: readonly (readonly CourseTaken[])[];
 } & M;
 
 export type RequirementFulfillmentStatistics = {

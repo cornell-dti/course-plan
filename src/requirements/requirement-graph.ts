@@ -42,6 +42,12 @@ export default class RequirementFulfillmentGraph<Requirement, Course> {
     return edges;
   }
 
+  public addRequirementNode(requirement: Requirement): void {
+    if (!this.requirementToCoursesMap.has(requirement)) {
+      this.requirementToCoursesMap.set(requirement, new HashSet(this.getCourseUniqueID));
+    }
+  }
+
   public addEdge(requirement: Requirement, course: Course): void {
     let existingCoursesLinkedToRequirement = this.requirementToCoursesMap.get(requirement);
     if (existingCoursesLinkedToRequirement == null) {

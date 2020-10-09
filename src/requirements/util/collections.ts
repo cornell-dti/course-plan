@@ -19,7 +19,8 @@ export class HashMap<K, V> {
   }
 
   get(key: K): V | undefined {
-    return this.backingMap.get(this.getUniqueHash(key))?.[1];
+    const entry = this.backingMap.get(this.getUniqueHash(key));
+    return entry == null ? undefined : entry[1];
   }
 
   has(key: K): boolean {
