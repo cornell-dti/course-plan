@@ -1,6 +1,12 @@
 <template v-if="semesters">
   <div class="requirements">
-    <div class="fixed">
+    <div id="req-tooltip" class="fixed"
+      data-intro-group="req-tooltip"
+      :data-intro = getRequirementsTooltipText()
+      data-disable-interaction = '1'
+      data-step = '1'
+      data-tooltipClass = 'tooltipCenter'
+    >
     <h1 class="title">School Requirements</h1>
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
@@ -11,15 +17,17 @@
       </div>
         <!-- TODO change for multiple colleges -->
         <div v-if="index==2" class="major">
-          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"  @click="activate(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
+          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
+            @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
             <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
             <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
           </div>
         </div>
         <div v-if="index==2+majors.length" class="minor">
-          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"  @click="activate(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
-            <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
-            <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> <!-- Change for multiple colleges -->
+          <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
+            @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
+            <p :style="{'font-weight': minor.display ? '500' : '', 'color' : minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
+            <!-- <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> Change for multiple colleges -->
           </div>
         </div>
 
@@ -164,7 +172,7 @@
           </div>
 
         <!-- Add separator if additional completed requirements -->
-        <div class="separator" v-if="req.completed.length > 0"></div>
+        <div class="separator"></div>
         </div>
       </div>
     </div>
@@ -172,9 +180,13 @@
 </template>
 
 <script lang="ts">
+import firebase from 'firebase/app';
+import 'firebase/functions';
 import { Vue } from 'vue-property-decorator';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
+import introJs from 'intro.js';
+
 // Disable import extension check because TS module resolution depends on it.
 // eslint-disable-next-line import/extensions
 import Course from '@/components/Course.vue';
@@ -182,6 +194,8 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
+
+const functions = firebase.functions();
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -206,11 +220,23 @@ type Data = {
   reqGroupColorMap: {};
 
 }
+// emoji for clipboard
+const clipboard = require('../assets/images/clipboard.svg');
+
+// This section will be revisited when we try to make first-time tooltips
+const tour = introJs().start();
+tour.setOption('exitOnEsc', 'false');
+tour.setOption('doneLabel', 'Finish');
+tour.setOption('skipLabel', 'Skip This Tutorial');
+tour.setOption('nextLabel', 'Next');
+tour.setOption('exitOnOverlayClick', 'false');
+
 export default Vue.extend({
   props: {
     semesters: Array,
     user: Object,
-    compact: Boolean
+    compact: Boolean,
+    startTour: Boolean
   },
   mounted() {
     this.getDisplays();
@@ -318,6 +344,12 @@ export default Vue.extend({
       }
     };
   },
+  watch: {
+    startTour() {
+      tour.start();
+      tour.oncomplete(() => { this.$emit('showTourEndWindow'); });
+    }
+  },
   methods: {
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
@@ -370,13 +402,21 @@ export default Vue.extend({
       });
       return (id < 2 || id === currentDisplay);
     },
-    activate(id: number) {
+    activateMajor(id: number) {
       this.majors.forEach((major, i: number) => {
         if (major.display) {
           major.display = false;
         }
       });
       this.majors[id].display = true;
+    },
+    activateMinor(id: number) {
+      this.minors.forEach((minor, i: number) => {
+        if (minor.display) {
+          minor.display = false;
+        }
+      });
+      this.minors[id].display = true;
     },
     getDisplays() {
       const majors = [];
@@ -409,6 +449,11 @@ export default Vue.extend({
         }
       }
       this.minors = minors;
+    },
+    getRequirementsTooltipText() {
+      return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
+          <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
+          requirements based on your college and major :)</div>`;
     }
   }
 });

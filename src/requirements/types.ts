@@ -27,6 +27,8 @@ export interface BaseRequirement {
   readonly description: string;
   /** The source with more information on the requirement. (This should be a URL string.) */
   readonly source: string;
+  /** Defines whether courses are 'double counted': and for no double counting and or for double counting */
+  readonly operator: 'and' | 'or' | null;
   readonly fulfilledBy: 'credits' | 'courses' | 'self-check';
   readonly applies?: string;
   /**
@@ -88,6 +90,7 @@ type GenericRequirementsJson<R> = {
   readonly university: UniversityRequirements;
   readonly college: CollegeRequirements<R>;
   readonly major: MajorRequirements<R>;
+  readonly minor: MajorRequirements<R>;
 };
 
 export type RequirementsJson = GenericRequirementsJson<CollegeOrMajorRequirement>;
@@ -96,13 +99,14 @@ export type DecoratedRequirementsJson = {
   readonly university: UniversityRequirements;
   readonly college: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
+  readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };
 
 export type RequirementFulfillment<M extends {}> = {
   /** The original requirement object. */
   readonly requirement: BaseRequirement;
   /** A list of courses that satisfy this requirement. */
-  readonly courses: readonly CourseTaken[][];
+  readonly courses: readonly (readonly CourseTaken[])[];
 } & M;
 
 export type RequirementFulfillmentStatistics = {
@@ -116,7 +120,7 @@ export type RequirementFulfillmentStatistics = {
 };
 
 export type GroupedRequirementFulfillmentReport = {
-  readonly groupName: 'University' | 'College' | 'Major';
+  readonly groupName: 'University' | 'College' | 'Major' | 'Minor';
   readonly specific: string | null;
   readonly reqs: readonly RequirementFulfillment<RequirementFulfillmentStatistics>[];
 };

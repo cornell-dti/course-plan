@@ -10,13 +10,16 @@
             class="modal-body"
             :currentSemesters="semesters"
             :id="deleteSemID"
-            :isEdit=true
+            :isEdit="true"
+            :year="deleteSemYear"
+            :type="deleteSemType"
+            @duplicateSemester="disableButton"
             ref="modalBodyComponent">
         </newSemester>
       </div>
       <div class="editSemesterModal-buttonWrapper">
         <button class="editSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
-        <div class="editSemesterModal-button editSemesterModal-button--delete" @click="editSemester">
+        <div class="editSemesterModal-button editSemesterModal-button--delete" :class='{"editSemesterModal-button--disabled": isDisabled }' @click="editSemester">
             <div class="editSemesterModal-button-left">
                 <span class="editSemesterModal-button-left-text">Edit</span>
             </div>
@@ -43,7 +46,11 @@ export default {
     deleteSemType: String,
     deleteSemYear: Number
   },
-
+  data() {
+    return {
+      isDisabled: false
+    };
+  },
   computed: {
     text() {
       return 'Are you sure you want to edit this semester?';
@@ -61,10 +68,14 @@ export default {
       modal.style.display = 'none';
     },
     editSemester() {
-      this.$parent.editSemester(this.deleteSemID);
-      this.closeCurrentModal();
+      if (!this.isDisabled) {
+        this.$parent.editSemester(this.deleteSemID);
+        this.closeCurrentModal();
+      }
+    },
+    disableButton(bool) {
+      this.isDisabled = bool;
     }
-
   }
 };
 </script>
@@ -95,6 +106,7 @@ export default {
   &-exit {
     width: 10.5px;
     height: 10.5px;
+    cursor: pointer;
   }
 
   &-title {
@@ -207,6 +219,12 @@ export default {
       display: flex;
       justify-content: center;
       cursor: pointer;
+    }
+
+    &--disabled {
+      opacity: .3;
+      border: 1px solid #508197;
+      background-color: #CCCCCC;
     }
   }
 }

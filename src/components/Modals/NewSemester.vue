@@ -2,7 +2,7 @@
   <div>
   <div class="newSemester">
     <div class="newSemester-section newSemester-type">
-      <label class="newSemester-label" for="type">{{ typeText }}</label>
+      <label class="newSemester-label" for="type">Type</label>
       <div
         v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="season"
@@ -39,7 +39,7 @@
           <div
             v-bind:class="{ warning: isDuplicate}"
             v-for="season in seasons"
-            :key="season"
+            :key="seasonValue(season)"
             :id="season"
             class="newSemester-dropdown-content-item"
             @click="selectSeason(season[1])"
@@ -54,7 +54,7 @@
       </div>
     </div>
     <div class="newSemester-section newSemester-year">
-      <label class="newSemester-label" for="year">{{ yearText }}</label>
+      <label class="newSemester-label" for="year">Year</label>
       <div
         v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="year"
@@ -102,12 +102,18 @@
       </div>
     </div>
   </div>
-  <div v-if="isDuplicate() === true" class= "newSemester-duplicate" > <p> Duplicate Semester</p> </div>
+  <div v-if="isDuplicate()" class= "newSemester-duplicate" >Duplicate Semester</div>
   </div>
 
 </template>
 
 <script>
+
+import fall from '../../assets/images/fallEmoji.svg';
+import spring from '../../assets/images/springEmoji.svg';
+import winter from '../../assets/images/winterEmoji.svg';
+import summer from '../../assets/images/summerEmoji.svg';
+
 const clickOutside = {
   bind(el, binding, vnode) {
     el.event = event => {
@@ -122,22 +128,24 @@ const clickOutside = {
   }
 };
 
-const fall = require('../../assets/images/fallEmoji.svg');
-const spring = require('../../assets/images/springEmoji.svg');
-const winter = require('../../assets/images/winterEmoji.svg');
-const summer = require('../../assets/images/summerEmoji.svg');
+
+// enum to define seasons as integers in season order
+const SeasonsEnum = Object.freeze({
+  winter: 0,
+  spring: 1,
+  summer: 2,
+  fall: 3
+});
 
 export default {
   props: {
     currentSemesters: Array,
     id: Number,
-    isEdit: Boolean
-
+    isEdit: Boolean,
+    year: Number,
+    type: String
   },
   data() {
-    // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
-    const currentSeason = this.getCurrentSeason();
-
     // years
     const currentYear = new Date().getFullYear();
     const seasons = [[fall, 'Fall'], [spring, 'Spring'], [summer, 'Summer'], [winter, 'Winter']];
@@ -150,10 +158,10 @@ export default {
     years.map(String);
 
     return {
-      seasonPlaceholder: currentSeason,
-      yearPlaceholder: currentYear,
       seasons,
       years,
+      seasonText: '',
+      yearText: '',
       displayOptions: {
         season: {
           shown: false,
@@ -172,18 +180,24 @@ export default {
       }
     };
   },
+  computed: {
+    seasonPlaceholder() {
+      // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
+      const currentSeason = this.getCurrentSeason();
+      return this.seasonText || this.type || currentSeason;
+    },
+    yearPlaceholder() {
+      const currentYear = new Date().getFullYear();
+      return this.yearText || this.year || currentYear;
+    }
+  },
   directives: {
     'click-outside': clickOutside
   },
-  computed: {
-    typeText() {
-      return 'Type';
-    },
-    yearText() {
-      return 'Year';
-    }
-  },
   methods: {
+    seasonValue(season) {
+      return SeasonsEnum[season[1].toLowerCase()];
+    },
     getCurrentSeason() {
       let currentSeason;
       const currentMonth = new Date().getMonth();
@@ -236,9 +250,9 @@ export default {
     },
     selectOption(type, text) {
       if (type === 'season') {
-        this.seasonPlaceholder = text;
+        this.seasonText = text;
       } else {
-        this.yearPlaceholder = text;
+        this.yearText = text;
       }
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
@@ -261,9 +275,9 @@ export default {
       displayOptions.placeholderColor = '#B6B6B6';
 
       if (type === 'season') {
-        this.seasonPlaceholder = this.getCurrentSeason();
+        this.seasonText = '';
       } else {
-        this.yearPlaceholder = new Date().getFullYear();
+        this.yearText = '';
       }
     },
     resetDropdowns() {
@@ -278,11 +292,13 @@ export default {
       if (this.currentSemesters != null) {
         this.currentSemesters.forEach(semester => {
           if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder) {
-            isDup = true;
+            if (!this.isEdit || (this.isEdit && this.id !== semester.id)) {
+              isDup = true;
+            }
           }
-          return semester;
         });
       }
+      this.$emit('duplicateSemester', isDup);
       return isDup;
     }
   }
@@ -301,6 +317,8 @@ export default {
   flex-direction: row;
   &-duplicate {
     color: red;
+    font-size: 14px;
+    margin-top: .5rem;
   }
   &-section {
     font-size: 14px;
@@ -351,7 +369,10 @@ export default {
     width: 12px;
     height: 12px;
   }
-
+  &-emoji-text{
+    height: 14px;
+    padding: 0px;
+  }
   &-dropdown {
     &-placeholder {
       font-style: normal;

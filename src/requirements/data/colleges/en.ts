@@ -11,6 +11,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 1920'],
       ['MATH 2930', 'MATH 2940']
     ),
+    operator: 'and',
     fulfilledBy: 'credits',
     minCount: 14
   },
@@ -22,6 +23,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['PHYS 1112'],
       ['PHYS 2213']
     ),
+    operator: 'and',
     fulfilledBy: 'credits',
     minCount: 8
   },
@@ -32,6 +34,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Earth and Atmospheric Sciences majors should take CHEM 2090 and then 2080/1570.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CHEM 2090'),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 4
   },
@@ -40,6 +43,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'All students are required to take two first-year writing seminars.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: courseIsFWS,
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 6
   },
@@ -48,6 +52,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: '(CS 1110, 1112, 1114, or 1115)',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'),
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 4
   },
@@ -56,14 +61,16 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'One introduction to engineering (ENGRI) course.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: (course: Course): boolean => course.subject === 'ENGRI',
+    operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 4
+    minCount: 3
   },
   {
     name: 'Engineering Distribution',
     description: 'Two different category distribution courses (ENGRD), one of which may be required by the Major.',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: (course: Course): boolean => course.subject === 'ENGRD',
+    operator: 'or',
     fulfilledBy: 'credits',
     minCount: 6
   },
@@ -76,38 +83,54 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
         distribution => course.catalogDistr?.includes(distribution) ?? false
       )
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 3,
     totalCount: 6
   },
   {
     name: 'Advisor-Approved Electives',
-    description: '\'Advisor-Approved\' means that you have justified your selection to your advisor and that your advisor has approved the selection. '
-      + 'It makes good sense to use these electives for lower-level introductory courses '
-      + 'that may be required prerequisites for the 3000+ technical elective courses and the courses used to satisfy the Specialization. '
-      + 'Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS. '
-      + 'Up to 6 credits of advisor approved electives may be allowed for ROTC courses at the 3000-level or above.',
+    description: 'Six credits of electives are required and must be approved by the student’s faculty advisor.',
     source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives#adv_elective',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check',
     minCount: 6
   },
   {
-    name: 'Major Program',
-    description: 'Major-required courses, major-approved electives, and courses outside the major.',
-    source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: null,
-    fulfilledBy: 'self-check',
-    minCount: 3
-  },
-  {
     name: 'Technical Communication',
-    description: 'In addition to the first-year writing seminars, a technical writing course must be taken as '
-      + 'an engineering distribution, liberal studies, Advisor-approved electives, or Major course.',
-    source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: null,
-    fulfilledBy: 'self-check',
-    minCount: 3
+    description: 'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
+    source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/engineering-communications-program/technical',
+    checker: includesWithSubRequirements(
+      ['ENGRC 3500'],
+      ['ENGRC 3020'],
+      ['ENGRC 3350'],
+      ['ENGRC 3340'],
+      ['ENGRD 2640'],
+      ['AEP 2640'],
+      ['CHEME 4320'],
+      ['MAE 4272'],
+      ['BEE 4730'],
+      ['BEE 4890'],
+      ['BEE 4530'],
+      ['BEE 4590'],
+      ['CIS 3000'],
+      ['INFO 1200'],
+      ['COMM 3030'],
+      ['COMM 3020'],
+      ['ENGRC 3023'],
+      ['ENGRC 2640'],
+      ['ENGRC 3152'],
+      ['ENGRC 3160'],
+      ['ENGRC 4152'],
+      ['ENGRC 4530'],
+      ['ENGRC 4890'],
+      ['MSE 4030', 'MSE 4040'],
+      ['MSE 4050', 'MSE 4060'],
+    ),
+    operator: 'or',
+    fulfilledBy: 'courses',
+    minCount: 1
   }
 ];
 

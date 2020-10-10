@@ -5,20 +5,24 @@
     @click="closeBar"
     :key="key"
   >
-    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" />
-    <div class="semesterView-switch">
-      <span class="semesterView-switchText">View:</span>
-      <div class="semesterView-switchImage semesterView-twoColumn"
-        @click="setNotCompact"
-        :class="{ 'semesterView-twoColumn--active': !compact }"
-      >
-      </div>
-      <div
-        class="semesterView-switchImage semesterView-fourColumn"
-        v-if="!isMobile"
-        @click="setCompact"
-        :class="{ 'semesterView-fourColumn--active': compact }"
-      >
+    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" :currentSemesters="semesters" />
+    <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
+      <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">+ New Semester</button>
+      <div class="semesterView-switch">
+        <span v-if="!isMobile" class="semesterView-switchText">View:</span>
+        <div class="semesterView-switchImage semesterView-twoColumn"
+          v-if="!isMobile"
+          @click="setNotCompact"
+          :class="{ 'semesterView-twoColumn--active': !compact }"
+        >
+        </div>
+        <div
+          class="semesterView-switchImage semesterView-fourColumn"
+          v-if="!isMobile"
+          @click="setCompact"
+          :class="{ 'semesterView-fourColumn--active': compact }"
+        >
+        </div>
       </div>
     </div>
     <confirmation
@@ -35,18 +39,16 @@
       <div v-for="sem in semesters" :key="sem.id" class="semesterView-wrapper">
         <semester
           v-bind="sem"
-          :isNotSemesterButton="true"
           :activatedCourse="activatedCourse"
           :semesters="semesters"
+          :isFirstSem="checkIfFirstSem(sem.id)"
           @updateBar="updateBar"
+          @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
           @update-requirements-menu="updateRequirementsMenu"
         />
-      </div>
-      <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" @updateBar="updateBar" :activatedCourse="activatedCourse"/>
       </div>
       <div class="semesterView-empty" aria-hidden="true"></div>
     </div>
@@ -56,11 +58,18 @@
         v-for="sem in semesters"
         :key="sem.id"
         class="semesterView-wrapper semesterView-wrapper--compact">
-        <semester v-bind="sem" :isNotSemesterButton="true" :compact="compact" @updateBar="updateBar"
-        :activatedCourse="activatedCourse" @delete-semester="deleteSemester" @edit-semester="editSemester" />
-      </div>
-      <div class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
-        <semester :isNotSemesterButton="false" :compact="compact" @updateBar="updateBar" :activatedCourse="activatedCourse" />
+        <semester
+          v-bind="sem"
+          :compact="compact"
+          :activatedCourse="activatedCourse"
+          :semesters="semesters"
+          :isFirstSem="checkIfFirstSem(sem.id)"
+          @updateBar="updateBar"
+          @new-semester="openSemesterModal"
+          @delete-semester="deleteSemester"
+          @edit-semester="editSemester"
+          @update-requirements-menu="updateRequirementsMenu"
+        />
       </div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
       <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
@@ -103,7 +112,8 @@ export default {
     compact: Boolean,
     isBottomBar: Boolean,
     isBottomBarExpanded: Boolean,
-    isMobile: Boolean
+    isMobile: Boolean,
+    startTour: Boolean
   },
   data() {
     return {
@@ -129,15 +139,33 @@ export default {
   beforeDestroy() {
     this.$el.removeEventListener('click', this.closeAllModals);
   },
+  computed: {
+    noSemesters() {
+      return this.semesters.length === 0;
+    }
+  },
   methods: {
+    checkIfFirstSem(id) {
+      return this.semesters[0].id === id;
+    },
     setCompact() {
       if (!this.compact) {
         this.$emit('compact-updated', !this.compact);
+        this.$gtag.event('to-compact', {
+          event_category: 'views',
+          event_label: 'compact',
+          value: 1
+        });
       }
     },
     setNotCompact() {
       if (this.compact) {
         this.$emit('compact-updated', !this.compact);
+        this.$gtag.event('to-not-compact', {
+          event_category: 'views',
+          event_label: 'not-compact',
+          value: 1
+        });
       }
     },
     buildDuplicateCautions() {
@@ -198,13 +226,19 @@ export default {
       let i;
       for (i = 0; i < this.semesters.length; i += 1) {
         const oldSem = this.semesters[i];
-        if (oldSem.year > year) {
+        if (oldSem.year < year) {
           break;
-        } else if (oldSem.year === year && SeasonsEnum[oldSem.type.toLowerCase()] > SeasonsEnum[type.toLowerCase()]) {
+        } else if (oldSem.year === year && SeasonsEnum[oldSem.type.toLowerCase()] < SeasonsEnum[type.toLowerCase()]) {
           break;
         }
       }
       this.semesters.splice(i, 0, newSem);
+
+      this.$gtag.event('add-semester', {
+        event_category: 'semester',
+        event_label: 'add',
+        value: 1
+      });
 
       this.openSemesterConfirmationModal(type, year, true);
     },
@@ -215,6 +249,13 @@ export default {
           break;
         }
       }
+      this.$gtag.event('delete-semester', {
+        event_category: 'semester',
+        event_label: 'delete',
+        value: 1
+      });
+
+      // Confirm success with alert
       this.openSemesterConfirmationModal(type, year, false);
 
       // Update requirements menu from dashboard
@@ -225,18 +266,23 @@ export default {
     },
     compare(a, b) {
       if (a.type === b.type && a.year === b.year) { return 0; }
-      if (a.year > b.year) { return 1; }
-      if (a.year < b.year) { return -1; }
-      if (SeasonsEnum[a.type.toLowerCase()] > SeasonsEnum[b.type.toLowerCase()]) {
+      if (a.year > b.year) { return -1; }
+      if (a.year < b.year) { return 1; }
+      if (SeasonsEnum[a.type.toLowerCase()] < SeasonsEnum[b.type.toLowerCase()]) {
         return 1;
       }
       return -1;
     },
     editSemester(id, type, year) {
-      this.semesters[id - 1].type = type;
-      this.semesters[id - 1].year = year;
-      this.semesters = this.semesters.sort(this.compare);
       let count = 1;
+      for (let i = 0; i < this.semesters.length; i += 1) {
+        if (this.semesters[i].id === id) {
+          const currSemester = this.semesters[i];
+          currSemester.type = type;
+          currSemester.year = year;
+        }
+      }
+      this.semesters = this.semesters.sort(this.compare);
       this.semesters.forEach(sem => {
         sem.id = count;
         count += 1;
@@ -321,12 +367,30 @@ export default {
     margin: 0 -0.75rem;
   }
 
-  &-switch {
+  &-addSemesterButton {
+    background: #508197;
+    border-radius: 8px;
+    min-height: 2.5rem;
+    min-width: 9rem;
+    color: #ffffff;
+    border: none;
+  }
+
+  &-settings {
     display: flex;
     justify-content: flex-end;
-    align-items: center;
     margin-bottom: 1rem;
+    min-height: 2.25rem;
+
+    &--two {
+      justify-content: space-between;
+    }
+  }
+
+  &-switch {
+    display: flex;
     color: #858585;
+    align-items: center;
   }
 
   &-switchText {

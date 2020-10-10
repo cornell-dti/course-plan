@@ -10,6 +10,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'],
       ['CS 2110', 'CS 2112']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 2
   },
@@ -24,6 +25,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 4820'],
       ['CS 4410']
     ),
+    operator: 'and',
     fulfilledBy: 'courses',
     minCount: 5
   },
@@ -46,6 +48,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'CS 5625',
       'CS 5643'
     ),
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 1
   },
@@ -55,18 +58,17 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'These courses must be taken for a letter grade, and each must earn three or more credit hours.',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor/technicalelectives',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
     name: 'External Specialization',
     description: 'The External Specialization involves nine or more credit hours at the 3000+ level. '
       + 'Absolutely no CS courses are allowed. The three courses must be related to each other. '
-      + 'Frequently, the three courses are from the same department, e.g., OR&IE 3300 (Optimization I), OR&IE 3310 (Optimization II), and OR&IE 4330 (Discrete Models). '
-      + 'However, a great strength of Cornell is the multitude of interdisciplinary threads that cut across departmental boundaries. '
-      + 'Thus, Psychology 4150 (Concepts, Categories, and Word Meanings), Philosophy 3320 (Philosophy of Language), '
-      + 'and Linguistics 5530 (Representation of Structure in Vision and Language) define an acceptable Specialization.',
+      + 'Frequently, the three courses are from the same department.',
     source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -76,7 +78,25 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS.',
     source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: null,
+    operator: null,
     fulfilledBy: 'self-check'
+  },
+  // TODO: Requirement whose classes can be double counted
+  {
+    name: 'Probability',
+    description: 'Must take BTRY 3080, CS 4850, ECE 3100, ECON 3130, ENGRD 2700, or MATH 4710.',
+    source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/engineeringchecklist',
+    checker: includesWithSubRequirements(
+      ['BTRY 3080',
+        'CS 4850',
+        'ECE 3100',
+        'ECON 3130',
+        'ENGRD 2700',
+        'MATH 4710']
+    ),
+    operator: 'and',
+    fulfilledBy: 'courses',
+    minCount: 1
   }
 ];
 

@@ -1,16 +1,7 @@
 <template>
   <div :class="{ 'course--min': compact, 'active': active }" class="course" @click="updateBar()">
     <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active, 'course-color--min': compact }">
-      <div class="course-dotColumn">
-        <span class="course-dot"></span>
-        <span class="course-dot"></span>
-        <span class="course-dot"></span>
-      </div>
-      <div class="course-dotColumn">
-        <span class="course-dot"></span>
-        <span class="course-dot"></span>
-        <span class="course-dot"></span>
-      </div>
+      <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
     </div>
     <div :class="{ 'course-content--min': compact }" class="course-content">
       <div :class="{ 'course-main--min': compact }" class="course-main">
@@ -19,9 +10,7 @@
             {{ subject }} {{ number }}
           </div>
           <div class="course-dotRow" @click="openMenu">
-            <span class="course-dot course-dot--menu"></span>
-            <span class="course-dot course-dot--menu"></span>
-            <span class="course-dot course-dot--menu"></span>
+            <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
         </div>
         <div v-if="!compact" class="course-name">{{ name }}</div>
@@ -172,7 +161,7 @@ export default {
       }
     },
     deleteCourse() {
-      this.$emit('delete-course', this.uniqueID);
+      this.$emit('delete-course', this.subject, this.number, this.uniqueID);
       this.closeMenuIfOpen();
     },
     colorCourse(color) {
@@ -251,37 +240,14 @@ export default {
     }
   }
 
-  &-dotColumn {
-    display: flex;
-    flex-direction: column;
-
-    &:first-child {
-      margin-right: 5px;
-    }
-  }
-
   &-dotRow {
-    padding: 8px 0 8px 0;
+    padding: 8px 0;
     display: flex;
     position: relative;
-  }
-
-  &-dot {
-    opacity: 0.8;
-    height: 2px;
-    width: 2px;
-    background-color: white;
-    border-radius: 50%;
-    display: inline-block;
-    margin-bottom: 2px;
-    margin-top: 2px;
-
-    &--menu {
-      width: 5px;
-      height: 5px;
-      background-color: #c4c4c4;
-      opacity: 1;
-      margin: 0 2px;
+    &:hover,
+    &:active,
+    &:focus {
+      cursor: pointer;
     }
   }
 

@@ -1,18 +1,19 @@
 <template>
-  <div v-bind:class="{'courseMenu-movedNotCompact': isMovedNotCompact , 'courseMenu': isNormal, 'courseMenu-movedCompact':isMovedCompact}" class="courseMenu" >
+  <div class="courseMenu" >
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
         @mouseover="setDisplayColors(true)"
         @mouseleave="setDisplayColors(false)"
       >
+        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
         <div class="courseMenu-left">
           <img class="courseMenu-icon" src="@/assets/images/paint.svg" />
           <span class="courseMenu-text">Edit Color</span>
         </div>
-        <img class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
 
-        <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
+        <div v-if="displayColors" class="courseMenu-content courseMenu-colors" :class="{'courseMenu-colors--left': isLeft }">
           <div
             v-for="color in colors"
             :key="color.id"
@@ -35,12 +36,14 @@
         @mouseleave="setDisplayEditCourseCredits(false)"
         v-if="this.getCreditRange[0] != this.getCreditRange[1]"
         >
+        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="@/assets/images/edit-credits.svg" />
+          <img class="courseMenu-icon" :class="{'courseMenu-icon--left': isLeft }" src="@/assets/images/edit-credits.svg" />
           <span class="courseMenu-text">Edit Credits</span>
         </div>
-        <img class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
-        <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits">
+        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+         <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
+         :class="{'courseMenu-editCredits--left': isLeft }">
           <div
             v-for="credit in makeCreditArary()"
             :key="credit"
@@ -53,7 +56,7 @@
           </div>
         </div>
       </div>
-      <div class="courseMenu-section" @click="deleteCourse">
+      <div class="courseMenu-section" :class="{'courseMenu-section--left': isLeft }" @click="deleteCourse">
         <div class="courseMenu-left">
           <img class="courseMenu-icon" src="@/assets/images/trash.svg" />
           <span class="courseMenu-text">Delete</span>
@@ -75,9 +78,9 @@ export default {
   },
   data() {
     return {
-      isMovedNotCompact: this.semId % 2 === 0 && !this.isCompact,
-      isNormal: this.semId % 2 === 1 && !this.isCompact,
-      isMovedCompact: this.semId % 3 === 0 && this.isCompact && this.semId !== 1,
+      isLeft: (this.semId % 2 === 0 && !this.isCompact) || (this.semId % 4 === 0 && this.isCompact),
+      // TODO: better version for all breakpoints
+      // isLeft: this.semId % numPerRow() === 0,
       colors: [
         {
           text: 'Gray',
@@ -115,6 +118,25 @@ export default {
       displayColors: false,
       displayEditCourseCredits: false
     };
+  },
+  computed: {
+    // TODO: implement this without DOM manipulation and with semID changing (right now, stays the same if a sem is added)
+    numPerRow() {
+      const itemWidth = 406; // width of a semester div
+      const itemWidthCompact = 232; // width of a compact semester div in px
+
+      const grid = document.getElementsByClassName('semesterView-content')[0];
+      const gridStyle = grid.currentStyle || window.getComputedStyle(grid);
+      const gridWidth = grid.clientWidth - (parseFloat(gridStyle.paddingLeft) + parseFloat(gridStyle.paddingRight));
+
+      let numPerRow = 0;
+      if (this.isCompact) {
+        numPerRow = Math.min(Math.floor(gridWidth / itemWidthCompact), 4);
+      } else {
+        numPerRow = Math.min(Math.floor(gridWidth / itemWidth), 2);
+      }
+      return numPerRow;
+    }
   },
   methods: {
     deleteCourse() {
@@ -154,16 +176,6 @@ export default {
 
 <style scoped lang="scss">
 .courseMenu {
-  &-movedNotCompact{
-  top: 20px;
-  left: -50px;
-  position: fixed;
-  }
-  &-movedCompact{
-    top: 20px;
-    left: -50px;;
-    position: fixed;
-  }
   &-content {
     background: #ffffff;
     border: 1px solid #acacac;
@@ -205,6 +217,10 @@ export default {
       display: flex;
       justify-content: center;
     }
+
+    &--left {
+      padding-left: 2.25rem;
+    }
   }
 
   &-left {
@@ -219,10 +235,18 @@ export default {
       width: 16px;
       height: 16px;
     }
+
+    &--left {
+      margin-right: .25rem;
+    }
   }
   &-colors {
     position: absolute;
     right: -9rem;
+
+    &--left {
+      right: 8.87rem;
+    }
   }
   &-editCredits {
     position: absolute;
@@ -233,6 +257,10 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+
+    &--left {
+      right: 8.87rem;
+    }
   }
 }
 
