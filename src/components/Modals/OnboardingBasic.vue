@@ -537,6 +537,17 @@ export default {
       });
       this.displayOptions.major = majors;
       this.displayOptions.major.push(newMajor);
+    },
+    addMinor() {
+      const minor = {
+        shown: false,
+        stopClose: false,
+        boxBorder: '',
+        arrowColor: '',
+        placeholderColor: '',
+        placeholder: placeholderText
+      };
+      this.displayOptions.minor.push(minor);
     }
   }
 };
