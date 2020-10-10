@@ -82,42 +82,14 @@
             <div
               v-for="(subReq, id) in req.ongoing"
               :key="subReq.id">
-              <div class="row depth-req">
-                <div class="col-1" @click="toggleDescription(index, 'ongoing', id)">
-                  <button class="btn">
-                    <!-- svg for dropdown icon -->
-                    <img
-                      v-if="subReq.displayDescription"
-                  class="arrow arrow-up"
-                   src="@/assets/images/dropup.svg"
-                   alt="dropup"
-                    />
-                    <img
-                      v-else
-                      class="arrow arrow-down"
-                      src="@/assets/images/dropdown.svg"
-                      alt="dropdown"
-                    />
-                  </button>
-                </div>
-                <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-                  <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
-                </div>
-                <div class="col">
-                  <p class="sup-req-progress text-right incomplete-ptext">{{
-                   (subReq.requirement.fulfilledBy !== 'self-check')
-                   ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
-                    || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
-                   : 'self check' }}</p>
-                </div>
-              </div>
-              <div v-if="subReq.displayDescription" class="description">
-                {{ subReq.requirement.description }} <a class="more"
-                :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
-                :href="subReq.requirement.source" target="_blank">
-                <strong>Learn More</strong></a>
-              </div>
-              <div class="separator"></div>
+              <subrequirement
+                :id="id"
+                :subReq="subReq"
+                :index="index"
+                :color="reqGroupColorMap[req.group][0]"
+                :isCompleted="false"
+                @toggleDescription="toggleDescription"
+              />
             </div>
 
             <div v-if="req.completed.length > 0" class="row completed">
@@ -138,35 +110,14 @@
             <div v-if="req.displayCompleted">
               <div v-for="(subReq, id) in req.completed" :key="subReq.id">
                 <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
-                <div class="row depth-req">
-                  <div class="col-1" @click="toggleDescription(index, 'completed', id)">
-                    <button class="btn">
-                      <!-- svg for dropdown icon -->
-                    <img
-                      v-if="subReq.displayDescription"
-                  class="arrow arrow-up completed-arrow"
-                   src="@/assets/images/dropup-lightgray.svg"
-                   alt="dropup"
-                    />
-                    <img
-                      v-else
-                  class="arrow arrow-down completed-arrow"
-                   src="@/assets/images/dropdown-lightgray.svg"
-                   alt="dropdown"
-                    />
-                    </button>
-                  </div>
-                  <div class="col-7" @click="toggleDescription(index, 'completed', id)">
-                    <p class="pointer completed-ptext">{{subReq.requirement.name}}</p>
-                  </div>
-                  <div class="col">
-                    <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
-                  </div>
-                </div>
-                <div v-if="subReq.displayDescription" class="description completed-ptext">
-                  {{ subReq.requirement.description }}
-                  <a class="more" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" :href="subReq.requirement.source" target="_blank"><strong>Learn More</strong></a>
-                </div>
+                <subrequirement
+                  :id="id"
+                  :subReq="subReq"
+                  :index="index"
+                  :color="reqGroupColorMap[req.group][0]"
+                  :isCompleted="true"
+                  @toggleDescription="toggleDescription"
+                />
               </div>
             </div>
           </div>
@@ -192,6 +143,8 @@ import introJs from 'intro.js';
 import Course from '@/components/Course.vue';
 // eslint-disable-next-line import/extensions
 import Modal from '@/components/Modals/Modal.vue';
+// eslint-disable-next-line import/extensions
+import SubRequirement from '@/components/SubRequirement.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
 
@@ -199,6 +152,7 @@ const functions = firebase.functions();
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
+Vue.component('subrequirement', SubRequirement);
 Vue.use(VueCollapse);
 type major = {
   display: boolean;

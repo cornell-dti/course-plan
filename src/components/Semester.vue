@@ -205,7 +205,7 @@ export default {
       this.isShadow = false;
       this.isDraggedFrom = false;
     });
-    init = false;
+    const init = false;
     this.buildCautions();
   },
   beforeDestroy() {
