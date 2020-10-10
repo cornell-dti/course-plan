@@ -54,7 +54,8 @@ Then access http://localhost:8080/
 - **Theresa Cho** - Developer
 - **Ayesha Gagguturi** - Developer
 - **Bryant Lee** - Developer
-- **Ein Chang** - Developer/Designer
+- **Will Spencer** - Developer
+- **Ein Chang** - Designer
 - **Emily Chan** - Designer
 - **Shane Yun** - Designer
 - **Chris Lee** - Designer
