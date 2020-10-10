@@ -86,6 +86,8 @@ export default {
         firstName: names[0],
         lastName: names[1],
         middleName: '',
+        minor: [],
+        minorFN: [],
         exam: [],
         transferCourse: []
       },
@@ -527,7 +529,6 @@ export default {
     },
 
     endOnboarding(onboardingData) {
-      console.log(onboardingData);
       const user = this.parseUserData(onboardingData.userData, onboardingData.name);
 
       this.user = user;
@@ -565,6 +566,7 @@ export default {
       if ('exam' in data && data.exam.length > 0) {
         const exams = [];
         data.exam.forEach(exam => {
+          // TODO: add a course to chosen requirement or multiple fulfilling requirements
           exams.push(exam);
           if ('equivCourse' in exam) {
             transferClasses.push(exam.equivCourse[0]);
@@ -578,12 +580,10 @@ export default {
           classes.push(course);
           const courseInfo = this.createCourse(course.course);
           transferClasses.push(courseInfo);
-          // ; // TODO for user to pick which classes it goes for
-          // console.log('E', crs);
+          // ; // TODO for user to pick which req a class goes for
         }
         user.transferCourse = classes;
         this.currentClasses = transferClasses;
-        console.log('Users current Classes', this.currentClasses);
       }
 
       if ('majors' in data && data.majors.length > 0) {

@@ -3,7 +3,6 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 
-// let config;
 // if (process.env.VUE_APP_FIREBASE_MODE === 'prod') {
 //   // Production config
 //   config = {

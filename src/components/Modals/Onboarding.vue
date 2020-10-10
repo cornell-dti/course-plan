@@ -1,11 +1,7 @@
-<!--
-ONBOARDING Structure
--- components
- -->
 <template>
   <div class="onboarding">
     <div class="onboarding-main">
-      <div v-if="isEditingProfile" class="onboarding-cancel" @click="$emit('cancelOnboarding')">
+      <div v-if="isEditingProfile" class="onboarding-cancel" @click="cancel">
         <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="X">
       </div>
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
@@ -28,7 +24,7 @@ ONBOARDING Structure
           <img class="timeline" :src="require(`@/assets/images/timeline${currentPage}.svg`)" alt="X">
         </div>
         <div v-if="currentPage==3" class="onboarding-bottom--section onboarding-bottom--section---center">
-          <div class="onboarding-bottom--contents" @click="$emit('cancelOnboarding')">
+          <div class="onboarding-bottom--contents" @click="cancel">
             <label class="onboarding-bottom--text">Skip for now</label>
           </div>
           <div class="onboarding-bottom--contents">
@@ -37,7 +33,7 @@ ONBOARDING Structure
          </div>
         </div>
         <div v-else class="onboarding-bottom--section">
-          <div class="onboarding-bottom--contents" @click="$emit('cancelOnboarding')">
+          <div class="onboarding-bottom--contents" @click="cancel">
             <label class="onboarding-bottom--text">Skip for now</label>
           </div>
           <div class="onboarding-bottom--contents">
@@ -142,8 +138,8 @@ export default {
             colleges: this.notPlaceholderOptions(this.displayOptions.college),
             majors: this.notPlaceholderOptions(this.displayOptions.major),
             minors: this.notPlaceholderOptions(this.displayOptions.minor),
-            exam: this.notPlaceholderOptions2(this.displayOptions.exam),
-            class: this.notPlaceholderOptions3(this.displayOptions.class),
+            exam: this.notPlaceholderOptionsExam(this.displayOptions.exam),
+            class: this.notPlaceholderOptionsClass(this.displayOptions.class),
             tookSwim: this.tookSwim
           }
         };
@@ -163,17 +159,16 @@ export default {
 
       return bool;
     },
-    notPlaceholderOptions3(options) {
+    notPlaceholderOptionsClass(options) {
       const list = [];
       options.forEach(option => {
-        console.log(option);
         if (option.class !== placeholderText && option.class !== null) {
           list.push(option);
         }
       });
       return list;
     },
-    notPlaceholderOptions2(options) {
+    notPlaceholderOptionsExam(options) {
       const list = [];
       const sections = ['type', 'subject', 'score'];
       options.forEach(option => {
@@ -219,12 +214,12 @@ export default {
       this.displayOptions.college = newCollege;
     },
     updateTransfer(exam, classes, tookSwim) {
-      // console.log(classes);
-      // console.log(tookSwim);
-      // console.log(exam);
       this.displayOptions.exam = exam;
       this.displayOptions.class = classes;
       this.tookSwim = tookSwim;
+    },
+    cancel() {
+      this.$emit('cancelOnboarding');
     }
   }
 };

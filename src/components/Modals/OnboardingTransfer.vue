@@ -152,6 +152,7 @@
                 :semesterID= index
                 :isOnboard="true"
                 :placeholderText= options.class
+                @addItem="addItem"
                 > </newCourse>
               <div class="onboarding-addRemoveWrapper">
                 <div class="onboarding-remove" @click="removeTransfer">
@@ -190,7 +191,7 @@ import NewCourse from '@/components/Modals/NewCourse';
 Vue.component('newCourse', NewCourse);
 
 const placeholderText = 'Select one';
-const laceholderColor = '#757575';
+const placeholderColor = '#757575';
 
 const clickOutside = {
   bind(el, binding, vnode) {
@@ -212,13 +213,11 @@ export default {
   },
   data() {
     return {
-      // TODO: Get real college, major, and minor lists
-      // :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }"
       tookSwimTest: '',
-      scores: [], // for based on exam
+      scores: [],
       classes: [],
       exams: [],
-      subjects: [[]], // fix
+      subjects: [[]],
       firstName: this.user.firstName,
       middleName: this.user.middleName,
       lastName: this.user.lastName,
@@ -459,7 +458,6 @@ export default {
     selectExam(text, acronym, i) {
       this.selectOption('exam', 'type', text, acronym, i);
       this.setSubjectList();
-      // this.clearMajorIfNotInCollege();
     },
     selectScore(text, acronym, i) {
       this.selectOption('exam', 'score', text, acronym, i);
@@ -533,7 +531,7 @@ export default {
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
       const number = courseCode.split(' ')[1];
-      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=FA14&subject=${subject}&q=${courseCode}`)
+      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=FA14&subject=${subject}&q=${courseCode}`) // should be removed later
         .then(res => res.json())
         .then(resultJSON => {
           // check catalogNbr of resultJSON class matches number of course to add

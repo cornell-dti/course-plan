@@ -11,6 +11,7 @@
         :isOnboard="isOnboard"
         :semesterID="semesterID"
         :currentSemesters="currentSemesters"
+        placeholderText = 'CS 1110", "Multivariable Calculus", etc.'
         ref="modalBodyComponent"
       ></component>
       <div class="modal-buttonWrapper">
@@ -111,7 +112,6 @@ export default {
       const title = dropdown.value;
       // name used to transmit roster information
       const roster = dropdown.name;
-      console.log(roster);
 
       // TODO: can I make the valid assumption that the course code is up to the colon in the title?
       const courseCode = title.substring(0, title.indexOf(':'));

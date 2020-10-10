@@ -169,7 +169,7 @@ export default {
     },
 
     addCourse() {
-      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$parent.addItem(this.semesterID);
+      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     }
   }
 };
