@@ -246,7 +246,7 @@ export function computeRequirements(
       .flat()
   ];
 
-  const requirementFulfillmentGraph = buildRequirementFulfillmentGraph<
+  const { requirementFulfillmentGraph } = buildRequirementFulfillmentGraph<
     RequirementWithSourceType,
     CourseTaken,
     undefined
@@ -284,7 +284,10 @@ export function computeRequirements(
       // userChoiceOnFulfillmentStrategy
       correspondingRequirement: requirementsToBeConsideredInGraph[0],
       coursesOfChosenFulfillmentStrategy: []
-    })
+    }),
+    // TODO: Replace this dummy implementation once we decided how to determine if a requirement is
+    // double-countable. Meanwhile, make it always return true to match the old behavior.
+    allowDoubleCounting: () => true
   });
 
   type FulfillmentStatistics = {

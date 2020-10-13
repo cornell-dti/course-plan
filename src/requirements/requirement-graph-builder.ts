@@ -50,6 +50,11 @@ type BuildRequirementFulfillmentGraphParameters<
     readonly correspondingRequirement: Requirement;
     readonly coursesOfChosenFulfillmentStrategy: Course[];
   };
+  /**
+   * Report whether a requirement allows a course connected to it to also be used to fulfill some
+   * other requirement.
+   */
+  readonly allowDoubleCounting: (requirement: Requirement) => boolean;
 };
 
 const buildRequirementFulfillmentGraph = <Requirement, Course, UserChoiceOnFulfillmentStrategy>({
@@ -60,12 +65,16 @@ const buildRequirementFulfillmentGraph = <Requirement, Course, UserChoiceOnFulfi
   getRequirementUniqueID,
   getCourseUniqueID,
   getAllCoursesThatCanPotentiallySatisfyRequirement,
-  getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy
+  getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
+  allowDoubleCounting
 }: BuildRequirementFulfillmentGraphParameters<
   Requirement,
   Course,
   UserChoiceOnFulfillmentStrategy
->): RequirementFulfillmentGraph<Requirement, Course> => {
+>): {
+  readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<Requirement, Course>;
+  readonly illegallyDoubleCountedCourses: readonly Course[];
+} => {
   const graph = new RequirementFulfillmentGraph(getRequirementUniqueID, getCourseUniqueID);
   const userCourseSet = new HashMap<Course, Course>(getCourseUniqueID);
   userCourses.forEach(course => userCourseSet.set(course, course));
@@ -81,7 +90,7 @@ const buildRequirementFulfillmentGraph = <Requirement, Course, UserChoiceOnFulfi
     });
   });
 
-  // Phase 2-1: Respect user's choices on fulfillment strategies.
+  // Phase 2: Respect user's choices on fulfillment strategies.
   userChoiceOnFulfillmentStrategy.forEach(choice => {
     const {
       correspondingRequirement,
@@ -97,28 +106,30 @@ const buildRequirementFulfillmentGraph = <Requirement, Course, UserChoiceOnFulfi
     });
   });
 
-  // Phase 2-2:
-  //   Auto-select fulfillment for requirements with multiple fulfillment strategies
-  //   but without user choice.
-  // TODO: not implemented.
-
-  // Phase 3-1: Respect user's choices on double-counted courses.
+  // Phase 3: Respect user's choices on double-counted courses.
   userChoiceOnDoubleCountingElimiation.forEach(([chosenRequirement, course]) => {
     const chosenRequirementUniqueID = getRequirementUniqueID(chosenRequirement);
 
     graph.getConnectedRequirementsFromCourse(course).forEach(connectedRequirement => {
+      if (allowDoubleCounting(connectedRequirement)) return;
       if (getRequirementUniqueID(connectedRequirement) !== chosenRequirementUniqueID) {
         graph.removeEdge(connectedRequirement, course);
       }
     });
   });
 
-  // Phase 3-2: Auto-choose a requirement-course pair for double counted courses without user choice.
-  // TODO: not implemented.
-  // Important note for this phase: We need to support requirements that allow double counting.
+  // Phase 4: Detect illegally double counted courses.
+  const illegallyDoubleCountedCourses = graph
+    .getAllCourses()
+    .filter(
+      course => (
+        graph.getConnectedRequirementsFromCourse(course).filter(it => !allowDoubleCounting(it))
+          .length > 1
+      )
+    );
 
   // Phase MAX_INT: PROFIT!
-  return graph;
+  return { requirementFulfillmentGraph: graph, illegallyDoubleCountedCourses };
 };
 
 export default buildRequirementFulfillmentGraph;
