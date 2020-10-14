@@ -67,15 +67,17 @@ const buildRequirementFulfillmentGraph = <Requirement, Course, UserChoiceOnFulfi
   UserChoiceOnFulfillmentStrategy
 >): RequirementFulfillmentGraph<Requirement, Course> => {
   const graph = new RequirementFulfillmentGraph(getRequirementUniqueID, getCourseUniqueID);
-  const userCourseSet = new HashMap<Course, null>(getCourseUniqueID);
-  userCourses.forEach(course => userCourseSet.set(course, null));
+  const userCourseSet = new HashMap<Course, Course>(getCourseUniqueID);
+  userCourses.forEach(course => userCourseSet.set(course, course));
 
   // Phase 1:
   //   Building a rough graph by naively connecting requirements and courses based on
   //   `getAllCoursesThatCanPotentiallySatisfyRequirement`.
   requirements.forEach(requirement => {
+    graph.addRequirementNode(requirement);
     getAllCoursesThatCanPotentiallySatisfyRequirement(requirement).forEach(course => {
-      if (userCourseSet.has(course)) graph.addEdge(requirement, course);
+      const userCourse = userCourseSet.get(course);
+      if (userCourse != null) graph.addEdge(requirement, userCourse);
     });
   });
 

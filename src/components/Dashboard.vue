@@ -17,12 +17,15 @@
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
+          :startTour="startTour"
           @requirementsMap="loadRequirementsMap"
-          />
+          @showTourEndWindow="showTourEnd"
+         />
       </div>
       <semesterview v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
         :semesters="semesters"
         :compact="compactVal"
+        :startTour="startTour"
         :isBottomBarExpanded="bottomBar.isExpanded"
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
@@ -33,6 +36,25 @@
         @updateRequirementsMenu="updateRequirementsMenu"
       />
     </div>
+    <tourwindow
+      :title="welcome"
+      :text="welcomeBodytext"
+      :exit="welcomeExit"
+      :buttonText="welcomeButtonText"
+      @hide = "welcomeHidden = false; if(startTour==false) startTour = true"
+      @skip = "welcomeHidden = false;"
+      v-if="welcomeHidden"
+    >
+    </tourwindow>
+    <tourwindow
+      :title="congrats"
+      :text="congratsBodytext"
+      :exit="congratsExit"
+      :buttonText="congratsButtonText"
+      @hide = "showTourEndWindow = false;"
+      v-if="showTourEndWindow"
+    >
+    </tourwindow>
     <div id="dashboard-bottomView">
       <bottombar
       v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
@@ -50,12 +72,16 @@
 <script>
 import Vue from 'vue';
 
+import introJs from 'intro.js';
 import Course from '@/components/Course';
 import SemesterView from '@/components/SemesterView';
 import Requirements from '@/components/Requirements';
 import BottomBar from '@/components/BottomBar';
 import NavBar from '@/components/NavBar';
 import Onboarding from '@/components/Modals/Onboarding';
+import TourWindow from '@/components/Modals/TourWindow';
+
+import surfing from '@/assets/images/surfing.svg';
 
 import '@/vueDragulaConfig';
 import { auth, userDataCollection } from '@/firebaseConfig';
@@ -66,6 +92,15 @@ Vue.component('requirements', Requirements);
 Vue.component('bottombar', BottomBar);
 Vue.component('navbar', NavBar);
 Vue.component('onboarding', Onboarding);
+Vue.component('tourwindow', TourWindow);
+
+const tour = introJs();
+tour.setOption('exitOnEsc', 'false');
+tour.setOption('doneLabel', 'Finish');
+tour.setOption('skipLabel', 'Skip This Tutorial');
+tour.setOption('nextLabel', 'Next');
+tour.setOption('exitOnOverlayClick', 'false');
+
 
 export default {
   data() {
@@ -100,7 +135,20 @@ export default {
       isOpeningRequirements: false,
       isTablet: window.innerWidth <= 878,
       isMobile: window.innerWidth <= 440,
-      maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4
+      maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4,
+      welcome: 'Welcome Cornellian!',
+      welcomeBodytext: 'View your college requirements, plan your semesters and courses, and more.',
+      welcomeExit: 'No, I want to skip this',
+      welcomeButtonText: 'Start Tutorial',
+      welcomeHidden: false,
+      startTour: false,
+      showTourEndWindow: false,
+      congrats: 'Congratulations! That’s a wrap',
+      congratsBodytext: `Other than this, there is more you can explore, 
+        so feel free to surf through CoursePlan <img src = "${surfing}" 
+        class = "emoji-text" alt = "surf">`,
+      congratsExit: '',
+      congratsButtonText: 'Start Planning'
     };
   },
   created() {
@@ -134,6 +182,8 @@ export default {
             this.uniqueIncrementer = doc.data().uniqueIncrementer;
             this.loaded = true;
           } else {
+            this.semesters.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
+            this.firebaseSems.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
             this.startOnboarding();
           }
         })
@@ -167,14 +217,30 @@ export default {
       });
       return semesters;
     },
-
+    getCurrentSeason() {
+      let currentSeason;
+      const currentMonth = new Date().getMonth();
+      if (currentMonth === 0) {
+        currentSeason = 'Winter';
+      } else if (currentMonth <= 4) {
+        currentSeason = 'Spring';
+      } else if (currentMonth <= 7) {
+        currentSeason = 'Summer';
+      } else {
+        currentSeason = 'Fall';
+      }
+      return currentSeason;
+    },
+    getCurrentYear() {
+      const currentYear = new Date().getFullYear();
+      return this.yearText || this.year || currentYear;
+    },
     updateSemesterView() {
       if (this.isMobile) {
         // Make sure semesterView is not compact by default on mobile
         this.compactVal = false;
       }
     },
-
     /**
      * Creates credit range based on course
      * Example: [1, 4] is the credit range for the given course
@@ -400,7 +466,11 @@ export default {
       // Get map of requirements
       this.buildRequirementsAlert(requirementsMap);
     },
-
+    showTourEnd() {
+      if (!this.isMobile) {
+        this.showTourEndWindow = true;
+      }
+    },
     buildRequirementsAlert(requirementsMap) {
       // Update semesters with alerts
       this.semesters.forEach(semester => {
@@ -535,19 +605,26 @@ export default {
       this.loaded = true;
 
       const docRef = this.getDocRef();
-
       const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,
         semesters: this.firebaseSems,
         subjectColors: this.subjectColors
       };
-
+      docRef.get()
+        .then(doc => {
+          if (doc.exists) {
+            this.welcomeHidden = false;
+          } else if (!this.isMobile) {
+            this.welcomeHidden = true;
+          }
+          docRef.set(data);
+          this.cancelOnboarding();
+          this.updateRequirementsMenu();
+        }).catch(error => {
+          console.log('Error getting document:', error);
+        });
       // set the new name and userData, along with either an empty list of semesters or preserve the old list
-      docRef.set(data);
-
-      this.cancelOnboarding();
-      this.updateRequirementsMenu();
     },
 
     cancelOnboarding() {
@@ -652,6 +729,9 @@ export default {
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  }
+  .emoji-text {
+    height: 14px;
   }
 }
 

@@ -1,3 +1,4 @@
+import buildRequirementFulfillmentGraph from './requirement-graph-builder';
 import requirementJson from './typed-requirement-json';
 import {
   CourseTaken,
@@ -123,56 +124,6 @@ function filterAndPartitionCoursesThatFulfillRequirement(
   return coursesThatFulfilledRequirement;
 }
 
-/**
- * @param coursesTaken a list of all taken courses.
- * @param allRequirements a list of all requirements to check.
- * @returns a naively computed list of requirement fulfillment, without any filtering and post-processing.
- */
-function computeRawRequirementFulfillment(
-  coursesTaken: readonly CourseTaken[],
-  allRequirements: readonly DecoratedCollegeOrMajorRequirement[]
-): readonly RequirementFulfillment<{}>[] {
-  return allRequirements.map(requirement => ({
-    requirement,
-    courses: filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, requirement)
-  }));
-}
-
-/**
- * A monad that provides a post-processing framework for requirement fulfillment.
- *
- * Usage:
- * ```typescript
- * const filfillments = [
- *   { requirement: req1, courses: [c1, c2, c3], foo: 1 },
- *   { requirement: req2, courses: [c1, c3], foo: 2 },
- * ];
- * const processedFilfillments = postProcessRequirementsFulfillments(
- *   filfillments,
- *   ({ courses, foo }) => ({ bar: courses.length + foo })
- * );
- * // Will produce:
- * [
- *   { requirement: req1, courses: [c1, c2, c3], bar: 4 }, // bar = 3 + 1 = 4
- *   { requirement: req2, courses: [c1, c3], bar: 4 }, // bar = 2 + 2 = 4
- * ]
- * ```
- *
- * @param fulfillments a list of requirement fulfillment to post-process.
- * @param transformer the transformer that computes the new metadata.
- * @returns the post-processed requirement filfillments.
- */
-function postProcessRequirementsFulfillments<T extends {}, R extends {}>(
-  fulfillments: readonly RequirementFulfillment<T>[],
-  transformer: (currentFulfillmentWithMetadata: RequirementFulfillment<T>) => R
-): readonly RequirementFulfillment<R>[] {
-  return fulfillments.map(requirementFulfillment => {
-    const { requirement, courses } = requirementFulfillment;
-    const newMetadata = transformer(requirementFulfillment);
-    return { requirement, courses, ...newMetadata };
-  });
-}
-
 function computeFulfillmentStatistics<T extends {}>({ requirement, courses: coursesThatFulfilledRequirement }: RequirementFulfillment<T>): RequirementFulfillmentStatistics {
   let minCountFulfilled = 0;
   coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
@@ -240,39 +191,18 @@ function computeFulfillmentStatistics<T extends {}>({ requirement, courses: cour
 }
 
 /**
- * @param allCoursesTakenWithInfo : object of courses taken with API information (CS 2110: {info})
- * @param allRequirements : requirements in requirements format from reqs.json (college, major, or university requirements)
- * @returns a list of university requirement filfillment status.
- */
-function computeCollegeOrMajorRequirementFulfillments(
-  coursesTaken: readonly CourseTaken[],
-  allRequirements: readonly DecoratedCollegeOrMajorRequirement[]
-): readonly RequirementFulfillment<RequirementFulfillmentStatistics>[] {
-  // Phase 1: Compute raw requirement fulfillment locally for each requirement.
-  const rawRequirementFulfillment = computeRawRequirementFulfillment(coursesTaken, allRequirements);
-
-  // Phase 2: Compute fulfillment statistics for each requirement.
-  const requirementFulfillmentWithStatistics = postProcessRequirementsFulfillments(
-    rawRequirementFulfillment,
-    computeFulfillmentStatistics
-  );
-
-  return requirementFulfillmentWithStatistics;
-}
-
-/**
  * @param coursesTaken a list of classes taken by the user, with some metadata (e.g. no. of credits)
  * helping to compute requirement progress.
  * @param college user's college.
- * @param major user's major.
- * @param minor user's minor.
+ * @param majors user's list of majors.
+ * @param minors user's list of minors.
  * @returns all requirements fulfillments, grouped by University, College, Major.
  */
 export function computeRequirements(
   coursesTaken: readonly CourseTaken[],
   college: string,
-  major: string,
-  minor: string
+  majors: readonly string[] | null,
+  minors: readonly string[] | null
 ): readonly GroupedRequirementFulfillmentReport[] {
   // prepare grouped fulfillment summary
   const groups: GroupedRequirementFulfillmentReport[] = [];
@@ -284,46 +214,135 @@ export function computeRequirements(
     reqs: computeUniversityRequirementFulfillments(coursesTaken)
   });
 
-  // PART 2: check college requirements
+  // PART 2: check college & major & minor requirements
   if (!(college in requirementJson.college)) throw new Error('College not found.');
   const collegeReqs = requirementJson.college[college];
+
+  type RequirementWithSourceType = DecoratedCollegeOrMajorRequirement & {
+    readonly sourceType: 'College' | 'Major' | 'Minor';
+    readonly sourceSpecificName: string;
+  };
+  const requirementsToBeConsideredInGraph: readonly RequirementWithSourceType[] = [
+    ...collegeReqs.requirements.map(
+      it => ({ ...it, sourceType: 'College', sourceSpecificName: college } as const)
+    ),
+    ...(majors || [])
+      .map(major => {
+        const majorRequirement = requirementJson.major[major];
+        if (majorRequirement == null) return [];
+        return majorRequirement.requirements.map(
+          it => ({ ...it, sourceType: 'Major', sourceSpecificName: major } as const)
+        );
+      })
+      .flat(),
+    ...(minors || [])
+      .map(minor => {
+        const minorRequirement = requirementJson.minor[minor];
+        if (minorRequirement == null) return [];
+        return minorRequirement.requirements.map(
+          it => ({ ...it, sourceType: 'Minor', sourceSpecificName: minor } as const)
+        );
+      })
+      .flat()
+  ];
+
+  const requirementFulfillmentGraph = buildRequirementFulfillmentGraph<
+    RequirementWithSourceType,
+    CourseTaken,
+    undefined
+  >({
+    requirements: requirementsToBeConsideredInGraph,
+    userCourses: coursesTaken,
+    userChoiceOnFulfillmentStrategy: [],
+    userChoiceOnDoubleCountingElimiation: [],
+    // TODO assign an unique ID to each requirement entry.
+    getRequirementUniqueID: requirement => `${requirement.name} ${requirement.description}`,
+    getCourseUniqueID: course => course.code,
+    getAllCoursesThatCanPotentiallySatisfyRequirement: requirement => (
+      requirement.courses
+        .map((eligibleCourses): readonly CourseTaken[] => {
+          const courses: CourseTaken[] = [];
+          Object.entries(eligibleCourses).forEach(([roster, mapping]) => {
+            Object.entries(mapping).forEach(([subject, numbers]) => {
+              numbers.forEach(number => {
+                courses.push({
+                  roster,
+                  subject,
+                  code: `${roster}: ${subject} ${number}`,
+                  number,
+                  credits: 0
+                });
+              });
+            });
+          });
+          return courses;
+        })
+        .flat()
+    ),
+    getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy: () => ({
+      // Give back dummy value for now. Give it a real strategy when we have non-empty
+      // userChoiceOnFulfillmentStrategy
+      correspondingRequirement: requirementsToBeConsideredInGraph[0],
+      coursesOfChosenFulfillmentStrategy: []
+    })
+  });
+
+  type FulfillmentStatistics = {
+    readonly requirement: RequirementWithSourceType;
+    readonly courses: readonly (readonly CourseTaken[])[];
+  } & RequirementFulfillmentStatistics;
+  const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];
+  const majorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
+  const minorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
+  requirementFulfillmentGraph.getAllRequirements().forEach(requirement => {
+    const courses = requirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement);
+    const requirementAndCourses = {
+      requirement,
+      courses: filterAndPartitionCoursesThatFulfillRequirement(courses, requirement)
+    };
+    const fulfillmentStatistics = {
+      ...requirementAndCourses, ...computeFulfillmentStatistics(requirementAndCourses)
+    };
+
+    switch (requirement.sourceType) {
+      case 'College':
+        collegeFulfillmentStatistics.push(fulfillmentStatistics);
+        break;
+      case 'Major': {
+        const existingArray = majorFulfillmentStatisticsMap.get(requirement.sourceSpecificName);
+        if (existingArray != null) {
+          existingArray.push(fulfillmentStatistics);
+        } else {
+          majorFulfillmentStatisticsMap.set(requirement.sourceSpecificName, [fulfillmentStatistics]);
+        }
+        break;
+      }
+      case 'Minor': {
+        const existingArray = minorFulfillmentStatisticsMap.get(requirement.sourceSpecificName);
+        if (existingArray != null) {
+          existingArray.push(fulfillmentStatistics);
+        } else {
+          minorFulfillmentStatisticsMap.set(requirement.sourceSpecificName, [fulfillmentStatistics]);
+        }
+        break;
+      }
+      default:
+        throw new Error();
+    }
+  });
 
   groups.push({
     groupName: 'College',
     specific: college,
-    reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, collegeReqs.requirements)
+    reqs: collegeFulfillmentStatistics
   });
 
-  // PART 3: check major reqs
-  // Major is optional
-  if (major != null) {
-    for (const maj of major) {
-      if (maj in requirementJson.major) {
-        const majorReqs = requirementJson.major[maj];
-        groups.push({
-          groupName: 'Major',
-          specific: maj,
-          reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, majorReqs.requirements)
-        });
-      }
-    }
-  }
-
-  // PART 4: check minor reqs
-  // Major is optional
-  if (minor != null) {
-    for (const min of minor) {
-      if (min in requirementJson.minor) {
-        const minorReqs = requirementJson.minor[min];
-        groups.push({
-          groupName: 'Minor',
-          specific: min,
-          reqs: computeCollegeOrMajorRequirementFulfillments(coursesTaken, minorReqs.requirements)
-        });
-      }
-    }
-  }
-
+  majorFulfillmentStatisticsMap.forEach((fulfillmentStatistics, majorName) => {
+    groups.push({ groupName: 'Major', specific: majorName, reqs: fulfillmentStatistics });
+  });
+  minorFulfillmentStatisticsMap.forEach((fulfillmentStatistics, minorName) => {
+    groups.push({ groupName: 'Minor', specific: minorName, reqs: fulfillmentStatistics });
+  });
 
   return groups;
 }

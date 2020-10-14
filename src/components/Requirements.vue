@@ -1,6 +1,12 @@
 <template v-if="semesters">
   <div class="requirements">
-    <div class="fixed">
+    <div id="req-tooltip" class="fixed"
+      data-intro-group="req-tooltip"
+      :data-intro = getRequirementsTooltipText()
+      data-disable-interaction = '1'
+      data-step = '1'
+      data-tooltipClass = 'tooltipCenter'
+    >
     <h1 class="title">School Requirements</h1>
     <!-- loop through reqs array of req objects -->
     <div class="req" v-for="(req, index) in reqs" :key="req.id">
@@ -179,6 +185,8 @@ import 'firebase/functions';
 import { Vue } from 'vue-property-decorator';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
+import introJs from 'intro.js';
+
 // Disable import extension check because TS module resolution depends on it.
 // eslint-disable-next-line import/extensions
 import Course from '@/components/Course.vue';
@@ -212,11 +220,23 @@ type Data = {
   reqGroupColorMap: {};
 
 }
+// emoji for clipboard
+const clipboard = require('../assets/images/clipboard.svg');
+
+// This section will be revisited when we try to make first-time tooltips
+const tour = introJs().start();
+tour.setOption('exitOnEsc', 'false');
+tour.setOption('doneLabel', 'Finish');
+tour.setOption('skipLabel', 'Skip This Tutorial');
+tour.setOption('nextLabel', 'Next');
+tour.setOption('exitOnOverlayClick', 'false');
+
 export default Vue.extend({
   props: {
     semesters: Array,
     user: Object,
-    compact: Boolean
+    compact: Boolean,
+    startTour: Boolean
   },
   mounted() {
     this.getDisplays();
@@ -324,6 +344,12 @@ export default Vue.extend({
       }
     };
   },
+  watch: {
+    startTour() {
+      tour.start();
+      tour.oncomplete(() => { this.$emit('showTourEndWindow'); });
+    }
+  },
   methods: {
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
@@ -423,6 +449,11 @@ export default Vue.extend({
         }
       }
       this.minors = minors;
+    },
+    getRequirementsTooltipText() {
+      return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
+          <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
+          requirements based on your college and major :)</div>`;
     }
   }
 });
