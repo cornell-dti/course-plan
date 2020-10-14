@@ -118,6 +118,7 @@ export default {
       middleName: this.user.middleName,
       lastName: this.user.lastName,
       tookSwim: '',
+      placeholderText,
       displayOptions: {
         college: [],
         major: [],

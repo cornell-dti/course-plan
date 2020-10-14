@@ -234,6 +234,7 @@ export default {
       firstName: this.user.firstName,
       middleName: this.user.middleName,
       lastName: this.user.lastName,
+      placeholderText,
       displayOptions: {
         college: [
           {
