@@ -798,7 +798,7 @@ export default {
       color: #b6b6b6;
 
       background: transparent;
-
+      cursor: pointer;
       &.college-wrapper,
       &.major-wrapper,
       &.minor-wrapper {
@@ -863,6 +863,7 @@ export default {
       color: #757575;
 
       padding-left: 10px;
+      cursor: pointer;
     }
   }
 

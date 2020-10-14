@@ -18,7 +18,7 @@
           :user="user"
           :key="requirementsKey"
           @requirementsMap="loadRequirementsMap"
-         />
+          />
       </div>
       <semesterview v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
         :semesters="semesters"

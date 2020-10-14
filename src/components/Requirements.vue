@@ -12,7 +12,7 @@
         <!-- TODO change for multiple colleges -->
         <div v-if="index==2" class="major">
           <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
-            @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
+            @click="activateMajor(id)" class="major-title pointer" v-for="(major, id) in majors" :key="major.id">
             <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
             <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
           </div>
@@ -82,9 +82,9 @@
                     <!-- svg for dropdown icon -->
                     <img
                       v-if="subReq.displayDescription"
-                  class="arrow arrow-up"
-                   src="@/assets/images/dropup.svg"
-                   alt="dropup"
+                      class="arrow arrow-up"
+                      src="@/assets/images/dropup.svg"
+                      alt="dropup"
                     />
                     <img
                       v-else
@@ -99,10 +99,10 @@
                 </div>
                 <div class="col">
                   <p class="sup-req-progress text-right incomplete-ptext">{{
-                   (subReq.requirement.fulfilledBy !== 'self-check')
-                   ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
-                    || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
-                   : 'self check' }}</p>
+                    (subReq.requirement.fulfilledBy !== 'self-check')
+                    ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
+                      || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
+                    : 'self check' }}</p>
                 </div>
               </div>
               <div v-if="subReq.displayDescription" class="description">
@@ -138,15 +138,15 @@
                       <!-- svg for dropdown icon -->
                     <img
                       v-if="subReq.displayDescription"
-                  class="arrow arrow-up completed-arrow"
-                   src="@/assets/images/dropup-lightgray.svg"
-                   alt="dropup"
+                      class="arrow arrow-up completed-arrow"
+                      src="@/assets/images/dropup-lightgray.svg"
+                      alt="dropup"
                     />
                     <img
                       v-else
-                  class="arrow arrow-down completed-arrow"
-                   src="@/assets/images/dropdown-lightgray.svg"
-                   alt="dropdown"
+                      class="arrow arrow-down completed-arrow"
+                      src="@/assets/images/dropdown-lightgray.svg"
+                      alt="dropdown"
                     />
                     </button>
                   </div>
