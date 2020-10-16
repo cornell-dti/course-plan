@@ -102,7 +102,7 @@
                     />
                   </button>
                 </div>
-                <div class="col-7 depth-req-name" @click="toggleDescription(index, 'ongoing', id)">
+                <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
                   <p class="sup-req incomplete-ptext">{{subReq.requirement.name}}</p>
                 </div>
                 <div class="col">
@@ -530,9 +530,9 @@ input{
 .depth-req {
   margin: 0.5rem 0 0.1rem 0;
   min-height: 14px;
-  &-name {
-    cursor: pointer;
-  }
+}
+.col-7 {
+  cursor: pointer;
 }
 .sub-req-div {
   padding-left: 30px;
