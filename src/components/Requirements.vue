@@ -17,10 +17,12 @@
       </div>
         <!-- TODO change for multiple colleges -->
         <div v-if="index==2" class="major">
-          <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
-            @click="activateMajor(id)" class="major-title pointer" v-for="(major, id) in majors" :key="major.id">
-            <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
-            <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
+          <div :style="{
+            'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '', 'cursor': majors.length > 1 ? 'pointer' : '' }"
+            @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
+              <p :style="{
+                'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-top">{{major.majorFN}}</p>
+              <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
           </div>
         </div>
         <div v-if="index==2+majors.length" class="minor">
@@ -100,8 +102,8 @@
                     />
                   </button>
                 </div>
-                <div class="col-7" @click="toggleDescription(index, 'ongoing', id)">
-                  <p class="sup-req pointer incomplete-ptext">{{subReq.requirement.name}}</p>
+                <div class="col-7 depth-req-name" @click="toggleDescription(index, 'ongoing', id)">
+                  <p class="sup-req incomplete-ptext">{{subReq.requirement.name}}</p>
                 </div>
                 <div class="col">
                   <p class="sup-req-progress text-right incomplete-ptext">{{
@@ -157,7 +159,7 @@
                     </button>
                   </div>
                   <div class="col-7" @click="toggleDescription(index, 'completed', id)">
-                    <p class="pointer completed-ptext">{{subReq.requirement.name}}</p>
+                    <p class="completed-ptext">{{subReq.requirement.name}}</p>
                   </div>
                   <div class="col">
                     <p class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
@@ -528,6 +530,9 @@ input{
 .depth-req {
   margin: 0.5rem 0 0.1rem 0;
   min-height: 14px;
+  &-name {
+    cursor: pointer;
+  }
 }
 .sub-req-div {
   padding-left: 30px;
@@ -537,9 +542,6 @@ input{
   margin: 0 0 0.5rem 1.8rem;
   color: #353535;
   font-size: 14px;
-}
-.pointer {
-  cursor: pointer;
 }
 h1.title {
   font-style: normal;
