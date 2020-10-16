@@ -3,29 +3,16 @@
   <div class="row depth-req">
     <div class="col-1" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
       <button class="btn">
-        <!-- svg for dropdown icon -->
         <img
-          v-if="subReq.displayDescription && !isCompleted"
+          v-if="subReq.displayDescription"
           class="arrow arrow-up"
-          src="@/assets/images/dropup.svg"
+          :src="getSrc()"
           alt="dropup"
         />
         <img
-          v-if="subReq.displayDescription && isCompleted"
-          class="arrow arrow-up"
-          src="@/assets/images/dropup-lightgray.svg"
-          alt="dropup"
-        />
-        <img
-          v-if="!subReq.displayDescription && !isCompleted"
+          v-else
           class="arrow arrow-down"
-          src="@/assets/images/dropdown.svg"
-          alt="dropdown"
-        />
-        <img
-          v-if="!subReq.displayDescription && isCompleted"
-          class="arrow arrow-down"
-          src="@/assets/images/dropdown-lightgray.svg"
+          :src="getSrc()"
           alt="dropdown"
         />
       </button>
@@ -61,6 +48,13 @@ import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse';
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
 
+// Arrows for dropup and dropdown
+const dropupIncompleteSrc = require('@/assets/images/dropup.svg');
+const dropupCompletedSrc = require('@/assets/images/dropup-lightgray.svg');
+const dropdownIncompleteSrc = require('@/assets/images/dropdown.svg');
+const dropdownCompletedSrc = require('@/assets/images/dropdown-lightgray.svg');
+
+
 export default {
   props: {
     subReq: Object,
@@ -70,6 +64,17 @@ export default {
     isCompleted: Boolean
   },
   methods: {
+    getSrc() {
+      let src = dropdownCompletedSrc;
+      if (this.subReq.displayDescription && !this.isCompleted) {
+        src = dropupIncompleteSrc;
+      } else if (this.subReq.displayDescription && this.isCompleted) {
+        src = dropupCompletedSrc;
+      } else if (!this.subReq.displayDescription && !this.isCompleted) {
+        src = dropdownIncompleteSrc;
+      }
+      return src;
+    },
     toggleDescription(reqIndex, isCompleted, subReqIndex) {
       const type = isCompleted ? 'completed' : 'ongoing';
       this.$emit('toggleDescription', reqIndex, type, subReqIndex);
