@@ -120,6 +120,7 @@ const getAllCourses = async <T extends keyof Course>(
 
 const courseFieldFilter = getCourseFieldFilter([
   'subject',
+  'crseId',
   'catalogNbr',
   'titleLong',
   'description',
