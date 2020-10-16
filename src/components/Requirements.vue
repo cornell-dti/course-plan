@@ -18,6 +18,7 @@
         :minors="minors"
         :reqGroupColorMap="reqGroupColorMap"
         :user="user"
+        :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
         @activateMajor="activateMajor"
         @activateMinor="activateMinor"
         @toggleDetails="toggleDetails"
@@ -208,6 +209,23 @@ export default Vue.extend({
   methods: {
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
+    },
+    showMajorOrMinorRequirements(id: number, group: string) {
+      let currentDisplay = 0;
+      if (group === 'MAJOR') {
+        this.majors.forEach((major, i: number) => {
+          if (major.display) {
+            currentDisplay = i + 2; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+          }
+        });
+        return (id < 2 || id === currentDisplay);
+      }
+      this.minors.forEach((minor, i: number) => {
+        if (minor.display) {
+          currentDisplay = i + 2 + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+        }
+      });
+      return (id < 2 || id === currentDisplay);
     },
     toggleDetails(index: number): void {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
