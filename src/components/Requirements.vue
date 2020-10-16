@@ -479,19 +479,6 @@ input{
   overflow-y: scroll;
   overflow-x: hidden;
 }
-.depth-req {
-  margin: 0.5rem 0 0.1rem 0;
-  min-height: 14px;
-}
-.sub-req-div {
-  padding-left: 30px;
-  margin: 0px;
-}
-.description {
-  margin: 0 0 0.5rem 1.8rem;
-  color: #353535;
-  font-size: 14px;
-}
 .pointer {
   cursor: pointer;
 }
@@ -560,7 +547,7 @@ button.active {
   padding-bottom: 2px;
   margin: 5px;
 }
-.settings, .arrow {
+.arrow {
   height: 14px;
   width: 14px;
 }
@@ -679,29 +666,6 @@ button.view {
      font-weight: normal;
    }
  }
-
- .incomplete {
-   &-ptext {
-     font-size: 14px;
-   }
- }
-
- .text {
-   &-right {
-     color: #757575;
-   }
- }
-.sup-req {
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 14px;
-  color: #757575;
-  &-progress {
-    font-size: 14px;
-    line-height: 14px;
-  }
-}
 .semester-req {
   border: none;
   max-width: 350px;

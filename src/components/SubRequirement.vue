@@ -124,11 +124,9 @@ button.active {
   padding-bottom: 2px;
   margin: 5px;
 }
-.settings, .arrow {
+.arrow {
   height: 14px;
   width: 14px;
-}
-.arrow {
   fill: #1AA9A5;
   color:#1AA9A5;
   margin-top: -2px;
