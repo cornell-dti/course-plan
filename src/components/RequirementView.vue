@@ -1,7 +1,7 @@
 <template>
   <div class="requirementview">
     <requirementheader
-      :index="index"
+      :reqIndex="reqIndex"
       :majors="majors"
       :minors="minors"
       :req="req"
@@ -21,9 +21,9 @@
           v-for="(subReq, id) in req.ongoing"
           :key="subReq.id">
           <subrequirement
-            :id="id"
+            :subReqIndex="id"
             :subReq="subReq"
-            :index="index"
+            :reqIndex="reqIndex"
             :color="reqGroupColorMap[req.group][0]"
             :isCompleted="false"
             @toggleDescription="toggleDescription"
@@ -38,8 +38,8 @@
               <p
                 class="toggle"
                 v-if="req.displayCompleted"
-                v-on:click="turnCompleted(index, false)">HIDE</p>
-              <p class="toggle" v-else v-on:click="turnCompleted(index, true)">SHOW</p>
+                v-on:click="turnCompleted(reqIndex, false)">HIDE</p>
+              <p class="toggle" v-else v-on:click="turnCompleted(reqIndex, true)">SHOW</p>
             </button>
           </div>
         </div>
@@ -47,11 +47,11 @@
       <!-- Completed requirements -->
         <div v-if="req.displayCompleted">
           <div v-for="(subReq, id) in req.completed" :key="subReq.id">
-            <div class="separator" v-if="index < reqs.length - 1 || req.displayDetails"></div>
+            <div class="separator" v-if="reqIndex < reqs.length - 1 || req.displayDetails"></div>
             <subrequirement
-              :id="id"
+              :subReqIndex="id"
               :subReq="subReq"
-              :index="index"
+              :reqIndex="reqIndex"
               :color="reqGroupColorMap[req.group][0]"
               :isCompleted="true"
               @toggleDescription="toggleDescription"
@@ -78,7 +78,7 @@ export default {
   props: {
     reqs: Array,
     req: Object,
-    index: Number,
+    reqIndex: Number, // Index of this req in reqs array
     majors: Array,
     minors: Array,
     reqGroupColorMap: Object,

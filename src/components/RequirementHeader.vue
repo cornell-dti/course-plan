@@ -1,18 +1,18 @@
 <template>
   <div class="requirementheader">
     <!-- TODO change for multiple colleges -->
-    <div v-if="index<=2 || index == 2 + majors.length" class="row top">
+    <div v-if="reqIndex<=2 || reqIndex == 2 + majors.length" class="row top">
       <p class="name col p-0">{{ req.name }}</p>
     </div>
       <!-- TODO change for multiple colleges -->
-      <div v-if="index==2" class="major">
+      <div v-if="reqIndex==2" class="major">
         <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
           @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
           <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
           <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
         </div>
       </div>
-      <div v-if="index==2+majors.length" class="minor">
+      <div v-if="reqIndex==2+majors.length" class="minor">
         <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
           @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
           <p :style="{'font-weight': minor.display ? '500' : '', 'color' : minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
@@ -38,7 +38,7 @@
         <!--View more college requirements -->
         <div class="row top">
           <div class="col-1 p-0" >
-            <button :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" class="btn" @click="toggleDetails(index)">
+            <button :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" class="btn" @click="toggleDetails(reqIndex)">
               <!-- svg for dropdown icon -->
               <img
                 v-if="req.displayDetails"
@@ -58,7 +58,7 @@
               <button
                   class="btn req-name"
                   :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
-                  @click="toggleDetails(index)">
+                  @click="toggleDetails(reqIndex)">
                   {{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements
               </button>
           </div>
@@ -70,7 +70,7 @@
 <script>
 export default {
   props: {
-    index: Number,
+    reqIndex: Number,
     majors: Array,
     minors: Array,
     req: Object,

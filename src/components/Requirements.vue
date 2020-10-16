@@ -13,7 +13,7 @@
       <requirementview
         :reqs="reqs"
         :req="req"
-        :index="index"
+        :reqIndex="index"
         :majors="majors"
         :minors="minors"
         :reqGroupColorMap="reqGroupColorMap"

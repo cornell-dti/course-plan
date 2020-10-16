@@ -1,7 +1,7 @@
 <template>
   <div class="subrequirement">
   <div class="row depth-req">
-    <div class="col-1" @click="toggleDescription(index, isCompleted, id)">
+    <div class="col-1" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
       <button class="btn">
         <!-- svg for dropdown icon -->
         <img
@@ -30,7 +30,7 @@
         />
       </button>
     </div>
-    <div class="col-7" @click="toggleDescription(index, isCompleted, id)">
+    <div class="col-7" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
       <p v-bind:class="[{'sup-req': !this.isCompleted}, 'pointer', this.isCompleted ? 'completed-ptext' : 'incomplete-ptext']">{{subReq.requirement.name}}</p>
     </div>
     <div class="col">
@@ -64,15 +64,15 @@ Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
 export default {
   props: {
     subReq: Object,
-    id: Number, // Subrequirement id
-    index: Number, // Requirement index
+    subReqIndex: Number, // Subrequirement index
+    reqIndex: Number, // Requirement index
     color: String,
     isCompleted: Boolean
   },
   methods: {
-    toggleDescription(index, isCompleted, id) {
+    toggleDescription(reqIndex, isCompleted, subReqIndex) {
       const type = isCompleted ? 'completed' : 'ongoing';
-      this.$emit('toggleDescription', index, type, id);
+      this.$emit('toggleDescription', reqIndex, type, subReqIndex);
     }
   }
 };
