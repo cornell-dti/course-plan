@@ -6,10 +6,10 @@
         @mouseover="setDisplayColors(true)"
         @mouseleave="setDisplayColors(false)"
       >
-        <img v-if="isLeft" class="courseMenu-arrow pointer" src="@/assets/images/sidearrowleft.svg" />
+        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
         <div class="courseMenu-left">
           <img class="courseMenu-icon" src="@/assets/images/paint.svg" />
-          <span class="courseMenu-text pointer">Edit Color</span>
+          <span class="courseMenu-text">Edit Color</span>
         </div>
         <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
 
@@ -17,7 +17,7 @@
           <div
             v-for="color in colors"
             :key="color.id"
-            class="courseMenu-section pointer"
+            class="courseMenu-section"
             @click="colorCourse(color)"
           >
             <div class="courseMenu-left">
@@ -42,8 +42,8 @@
           <span class="courseMenu-text">Edit Credits</span>
         </div>
         <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
-         <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
-         :class="{'courseMenu-editCredits--left': isLeft }">
+          <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
+          :class="{'courseMenu-editCredits--left': isLeft }">
           <div
             v-for="credit in makeCreditArary()"
             :key="credit"
@@ -56,7 +56,7 @@
           </div>
         </div>
       </div>
-      <div class="courseMenu-section pointer" :class="{'courseMenu-section--left': isLeft }" @click="deleteCourse">
+      <div class="courseMenu-section" :class="{'courseMenu-section--left': isLeft }" @click="deleteCourse">
         <div class="courseMenu-left">
           <img class="courseMenu-icon" src="@/assets/images/trash.svg" />
           <span class="courseMenu-text">Delete</span>
@@ -191,7 +191,7 @@ export default {
     justify-content: space-between;
     padding: 0.5rem 1rem;
     position: relative;
-
+    cursor: pointer;
     &:hover,
     &:active,
     &:focus {
@@ -261,9 +261,6 @@ export default {
     &--left {
       right: 8.87rem;
     }
-  }
-  .pointer {
-    cursor: pointer;
   }
 }
 
