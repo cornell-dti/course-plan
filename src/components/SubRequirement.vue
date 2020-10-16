@@ -44,9 +44,11 @@
 import Vue from 'vue';
 import CompletedSubReqCourse from '@/components/CompletedSubReqCourse';
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse';
+import IncompleteSelfCheckSubReqCourse from '@/components/IncompleteSelfCheckSubReqCourse';
 
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
+Vue.component('incompleteselfchecksubreqcourse', IncompleteSelfCheckSubReqCourse);
 
 // Arrows for dropup and dropdown
 const dropupIncompleteSrc = require('@/assets/images/dropup.svg');

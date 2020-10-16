@@ -45,8 +45,6 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 // eslint-disable-next-line import/extensions
 import RequirementView from '@/components/RequirementView.vue';
-// eslint-disable-next-line import/extensions
-import SubRequirement from '@/components/SubRequirement.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
 
