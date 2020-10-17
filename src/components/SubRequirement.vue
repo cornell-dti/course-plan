@@ -58,12 +58,52 @@ const dropdownCompletedSrc = require('@/assets/images/dropdown-lightgray.svg');
 
 
 export default {
+  mounted() {
+    if (!this.isUniversitySubReq) { // TODO: Change after removing University Reqs
+      const mostRecentRosters = this.rostersFromLastTwoYears;
+      let filteredSubReqRosters;
+      // Iterate over each course slot for the subReq
+      this.subReq.requirement.courses.forEach(subReqCourseRosterObject => {
+        // Filter subreq roster object keys with the mostRecentRosters
+        filteredSubReqRosters = Object.keys(subReqCourseRosterObject).filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1);
+
+        const courseCodesSet = new Set([]); // Maintain a set to remove dupes
+        filteredSubReqRosters.forEach(subReqRoster => {
+          // For each roster, create the course code and add to courseCodesSet
+          for (const [courseSubject, courseNumberArray] of Object.entries(subReqCourseRosterObject[subReqRoster])) {
+            const courseCodes = courseNumberArray.map(courseNumber => `${courseSubject} ${courseNumber}`);
+            courseCodes.forEach(code => courseCodesSet.add(code));
+          }
+        });
+        const courseCodesList = Array.from(courseCodesSet); // Change into list
+        // Push courseCodesList onto subReqCoursesNotTakenArray for the subReqCourse slot
+        this.subReqCoursesNotTakenArray.push(courseCodesList);
+      });
+    }
+  },
+  data() {
+    return {
+      subReqCoursesNotTakenArray: []
+      // subReqCoursesNotTakenArray = [
+      //   [
+      //     'CS 1110',
+      //     'INFO 1300'
+      //   ],
+      //   [
+      //     'INFO 1200',
+      //     'MATH 1710'
+      //   ]
+      // ]
+    };
+  },
   props: {
     subReq: Object,
     subReqIndex: Number, // Subrequirement index
     reqIndex: Number, // Requirement index
     color: String,
-    isCompleted: Boolean
+    isCompleted: Boolean,
+    isUniversitySubReq: Boolean, // TODO: Change after removing University Reqs
+    rostersFromLastTwoYears: Array
   },
   methods: {
     getSrc() {

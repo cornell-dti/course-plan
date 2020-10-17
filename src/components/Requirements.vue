@@ -19,6 +19,7 @@
         :reqGroupColorMap="reqGroupColorMap"
         :user="user"
         :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
+        :rostersFromLastTwoYears="rostersFromLastTwoYears"
         @activateMajor="activateMajor"
         @activateMinor="activateMinor"
         @toggleDetails="toggleDetails"
@@ -72,7 +73,7 @@ type Data = {
   minors: minor[];
   requirementsMap: {};
   reqGroupColorMap: {};
-
+  rostersFromLastTwoYears: string[];
 }
 // emoji for clipboard
 const clipboard = require('../assets/images/clipboard.svg');
@@ -133,6 +134,9 @@ export default Vue.extend({
       return singleMenuRequirement;
     });
     this.reqs.push(...singleMenuRequirements);
+
+    // Populate getRostersFromLastTwoYears
+    this.rostersFromLastTwoYears = this.getRostersFromLastTwoYears();
   },
   data() : Data {
     return {
@@ -195,7 +199,8 @@ export default Vue.extend({
         COLLEGE: ['1AA9A5', 'blue'],
         MAJOR: ['105351', 'green'],
         MINOR: ['92C3E6', 'lightblue']
-      }
+      },
+      rostersFromLastTwoYears: []
     };
   },
   watch: {
@@ -308,6 +313,53 @@ export default Vue.extend({
       return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>`;
+    },
+    getCurrentType() {
+      let currentType;
+      const currentMonth = new Date().getMonth();
+      if (currentMonth === 0) {
+        currentType = 'WI';
+      } else if (currentMonth <= 4) {
+        currentType = 'SP';
+      } else if (currentMonth <= 7) {
+        currentType = 'SU';
+      } else {
+        currentType = 'FA';
+      }
+      return currentType;
+    },
+    getCurrentYearSuffix() {
+      // If current year is 2020, get string '20'
+      const currentYear = new Date().getFullYear();
+      return currentYear.toString().substring(2);
+    },
+    getRostersFromLastTwoYears() {
+      // If current roster is FA20, get all rosters thru FA18
+      const currentType = this.getCurrentType();
+      const currentYearSuffix = this.getCurrentYearSuffix();
+
+      const currentRoster = currentType + currentYearSuffix;
+      const numRosters = 9; // Number of most recent rosters we want
+      const mostRecentRosters = [currentRoster];
+      let roster = currentRoster;
+      while (mostRecentRosters.length < numRosters) {
+        // Go backwards until we hit 2 years and add to list of rosters
+        let rosterType = roster.substring(0, 2);
+        let rosterYear = roster.substring(2);
+        if (rosterType === 'FA') {
+          rosterType = 'SU';
+        } else if (rosterType === 'SU') {
+          rosterType = 'SP';
+        } else if (rosterType === 'SP') {
+          rosterType = 'WI';
+        } else if (rosterType === 'WI') {
+          rosterType = 'FA';
+          rosterYear = (parseInt(rosterYear, 10) - 1).toString();
+        }
+        roster = rosterType + rosterYear;
+        mostRecentRosters.push(roster);
+      }
+      return mostRecentRosters;
     }
   }
 });

@@ -26,6 +26,8 @@
             :reqIndex="reqIndex"
             :color="reqGroupColorMap[req.group][0]"
             :isCompleted="false"
+            :isUniversitySubReq="req.group==='UNIVERSITY'"
+            :rostersFromLastTwoYears="rostersFromLastTwoYears"
             @toggleDescription="toggleDescription"
           />
         </div>
@@ -83,7 +85,8 @@ export default {
     minors: Array,
     reqGroupColorMap: Object,
     user: Object,
-    showMajorOrMinorRequirements: Boolean
+    showMajorOrMinorRequirements: Boolean,
+    rostersFromLastTwoYears: Array
   },
   methods: {
     activateMajor(id) {
