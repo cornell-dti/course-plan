@@ -5,6 +5,7 @@
             <bottombartabview
             :bottomCourses="bottomCourses"
             :seeMoreCourses="seeMoreCourses"
+            :bottomCourseFocus="bottomCourseFocus"
             :isExpanded="isExpanded"
             :maxBottomBarTabs="maxBottomBarTabs"
             @bottomBarTabToggle="bottomBarTabToggle"
@@ -13,15 +14,15 @@
         </div>
         <div class="bottombar-title" @click="toggle()">
           <bottombartitle
-          :color="bottomCourses[0].color"
-          :name="bottomCourses[0].name"
+          :color="bottomCourses[this.bottomCourseFocus].color"
+          :name="bottomCourses[this.bottomCourseFocus].name"
           :isExpanded="isExpanded"
           />
         </div>
       </div>
       <div v-if="this.isExpanded" class="bottombar-course">
         <bottombarcourse
-        :courseObj="bottomCourses[0]"
+        :courseObj="bottomCourses[this.bottomCourseFocus]"
         />
       </div>
     </div>
@@ -46,17 +47,19 @@ export default {
     maxBottomBarTabs: Number
   },
 
+  data() {
+    return {
+      bottomCourseFocus: 0
+    };
+  },
+
   methods: {
     toggle() {
       if (this.isExpanded) this.$emit('close-bar');
       else this.$emit('open-bar');
     },
     bottomBarTabToggle(courseObj) {
-      // Move courseObj to front of array
-      if (this.bottomCourses.indexOf(courseObj) > 0) { // not already in front
-        this.bottomCourses.splice(this.bottomCourses.indexOf(courseObj), 1);
-        this.bottomCourses.unshift(courseObj);
-      }
+      this.bottomCourseFocus = this.bottomCourses.indexOf(courseObj);
     },
     toggleFromTab() {
       this.toggle();

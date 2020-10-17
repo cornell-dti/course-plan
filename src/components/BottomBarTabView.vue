@@ -1,30 +1,16 @@
 <template>
   <div class="bottombartabview">
     <div class="bottombartabview-bottomCourseWrapper">
-      <div v-for="bottomCourse in bottomCourses.slice(0, 1)" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
+      <div v-for="(bottomCourse, index) in bottomCourses" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
         <bottombartab
           v-bind="bottomCourse"
           :id="bottomCourse.id"
           :subject="bottomCourse.subject"
           :number="bottomCourse.number"
           :color="bottomCourse.color"
-          :courseObj ="bottomCourse"
-          :isFirstTab = true
-          :isExpanded ="isExpanded"
-          @bottomBarTabToggle="bottomBarTabToggle"
-          @deleteBottomTab="deleteBottomTab"
-          @toggleFromTab="toggleFromTab"
-        />
-      </div>
-      <div v-for="bottomCourse in bottomCourses.slice(1)" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
-        <bottombartab
-          v-bind="bottomCourse"
-          :id="bottomCourse.id"
-          :subject="bottomCourse.subject"
-          :number="bottomCourse.number"
-          :color="bottomCourse.color"
-          :courseObj ="bottomCourse"
-          :isFirstTab = false
+          :courseObj="bottomCourse"
+          :tabIndex="index"
+          :bottomCourseFocus="bottomCourseFocus"
           :isExpanded ="isExpanded"
           @bottomBarTabToggle="bottomBarTabToggle"
           @deleteBottomTab="deleteBottomTab"
@@ -69,6 +55,7 @@ export default {
   props: {
     bottomCourses: Array,
     seeMoreCourses: Array,
+    bottomCourseFocus: Number,
     isExpanded: Boolean,
     maxBottomBarTabs: Number
   },
@@ -124,6 +111,7 @@ export default {
       }
       // add course to bottomCourses
       this.bottomCourses.unshift(course);
+      this.resetBottomCourseFocus();
     },
 
     deleteSeeMoreCourse(course) {
