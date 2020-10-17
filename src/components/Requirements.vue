@@ -20,15 +20,20 @@
           <div :style="{
             'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '', 'cursor': majors.length > 1 ? 'pointer' : '' }"
             @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
-              <p :style="{
-                'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-top">{{major.majorFN}}</p>
+              <p :style="{ 'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"
+                :class="{pointer: majors.length > 1}" class="major-title-top">
+                {{major.majorFN}}
+              </p>
               <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
           </div>
         </div>
         <div v-if="index==2+majors.length" class="minor">
-          <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : ''}"
+          <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '', 'cursor': minors.length > 1 ? 'pointer' : '' }"
             @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
-            <p :style="{'font-weight': minor.display ? '500' : '', 'color' : minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
+            <p :style="{'font-weight': minor.display ? '500' : '', 'color' : minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"
+            class="minor-title-top">
+              {{minor.minorFN}}
+            </p>
             <!-- <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> Change for multiple colleges -->
           </div>
         </div>
@@ -291,7 +296,6 @@ export default Vue.extend({
       modalShow: false,
       majors: [],
       minors: [],
-
       reqs: [
         // Data structure for menu
         // {
