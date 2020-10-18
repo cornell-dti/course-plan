@@ -1,5 +1,6 @@
 export type Course = {
   readonly subject: string;
+  readonly crseId: number;
   readonly catalogNbr: string;
   readonly titleLong: string;
   readonly description: string;
