@@ -6,15 +6,16 @@
     </div>
       <!-- TODO change for multiple colleges -->
       <div v-if="reqIndex==2" class="major">
-        <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '', 'cursor': majors.length > 1 ? 'pointer' : '' }"
-          @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id">
+        <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '' }"
+          @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id" :class="{ pointer: multipleMajors }">
           <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
           <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
         </div>
       </div>
       <div v-if="reqIndex==2+majors.length" class="minor">
-        <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '', 'cursor': minors.length > 1 ? 'pointer' : '' }"
-          @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id">
+        <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '' }"
+          @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id"
+          :class="{ pointer: multipleMinors }">
           <p :style="{'font-weight': minor.display ? '500' : '', 'color' : minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
           <!-- <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> Change for multiple colleges -->
         </div>
@@ -78,6 +79,12 @@ export default {
     user: Object,
     showMajorOrMinorRequirements: Boolean
   },
+  data() {
+    return {
+      multipleMajors: this.majors.length > 1,
+      multipleMinors: this.minors.length > 1
+    };
+  },
   methods: {
     toggleDetails(index) {
       this.$emit('toggleDetails', index);
@@ -97,30 +104,30 @@ export default {
   display: flex;
   padding-bottom: 25px;
   &-title {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    color: #757575;
+    padding-bottom: 6px;
+    &-top {
       text-align: center;
-      color: #757575;
-      padding-bottom: 6px;
-      &-top {
-        text-align: center;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 14px;
-        margin: 0;
-      }
-      &-bottom {
-        text-align: center;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 12px;
-        line-height: 15px;
-      }
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      margin: 0;
     }
-      &:hover {
-      background: rgba(255, 255, 255, 0.15);
+    &-bottom {
+      text-align: center;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 15px;
     }
+  }
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
 }
 .btn {
   padding: 0;
@@ -133,8 +140,8 @@ export default {
   }
 }
 .btn:focus,.btn:active {
-   outline: none !important;
-   box-shadow: none;
+  outline: none !important;
+  box-shadow: none;
 }
 .row {
   margin: 0;
@@ -233,5 +240,8 @@ button.view {
     line-height: 14px;
     align-self: center;
   }
+.pointer {
+  cursor: pointer;
+}
 }
 </style>
