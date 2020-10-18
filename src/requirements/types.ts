@@ -143,3 +143,28 @@ export type SingleMenuRequirement = {
   fulfilled?: number;
   required?: number;
 };
+
+
+export type ExamRequirements = {
+  readonly subject: string;
+  readonly credits: {
+    readonly operator: string,
+    readonly collegesApplied: string[];
+    readonly majorExcluded: string[];
+    readonly mininmumScore: number;
+    readonly courseEquivalents: string[];
+    readonly requirementEquivalents: string[];
+    readonly credits: number;
+    readonly compositeRequirement?: {
+      subject: string;
+      score: number;
+      classEquivalent: string[];
+    }[];
+  }[];
+}
+
+export type ExamData = {
+  readonly AP: ExamRequirements[] ;
+  readonly IB: ExamRequirements[];
+  // readonly transfer;
+}
