@@ -72,7 +72,8 @@ export default {
     },
 
     deleteBottomTab(subject, number) {
-      for (let i = 0; i < this.bottomCourses.length; i += 1) {
+      let i = 0;
+      for (; i < this.bottomCourses.length; i += 1) {
         if (this.bottomCourses[i].subject === subject && this.bottomCourses[i].number === number) {
           this.bottomCourses.splice(i, 1);
           break;
@@ -87,6 +88,11 @@ export default {
 
         // add course to end of bottomCourses
         this.bottomCourses.push(seeMoreCourseToMove);
+      }
+
+      // update focused course
+      if (i >= this.bottomCourses.length) {
+        this.bottomBarTabToggle(this.bottomCourses[i - 1]);
       }
     },
 
