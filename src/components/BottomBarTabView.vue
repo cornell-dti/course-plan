@@ -80,6 +80,7 @@ export default {
         if (this.bottomCourses[i].uniqueID === courseObj.uniqueID) {
           this.bottomCourses.splice(i, 1);
           if (i === this.bottomCourseFocus) focusedCourse = undefined;
+          break;
         }
       }
 
