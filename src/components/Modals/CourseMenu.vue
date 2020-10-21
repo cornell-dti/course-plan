@@ -42,8 +42,8 @@
           <span class="courseMenu-text">Edit Credits</span>
         </div>
         <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
-         <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
-         :class="{'courseMenu-editCredits--left': isLeft }">
+          <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
+          :class="{'courseMenu-editCredits--left': isLeft }">
           <div
             v-for="credit in makeCreditArary()"
             :key="credit"
@@ -191,7 +191,7 @@ export default {
     justify-content: space-between;
     padding: 0.5rem 1rem;
     position: relative;
-
+    cursor: pointer;
     &:hover,
     &:active,
     &:focus {

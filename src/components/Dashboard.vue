@@ -124,7 +124,9 @@ export default {
         lastName: names[1],
         middleName: '',
         minor: [],
-        minorFN: []
+        minorFN: [],
+        exam: [],
+        transferCourse: []
       },
       bottomCourses: [],
       seeMoreCourses: [],
@@ -204,7 +206,6 @@ export default {
       this.updateBarTabs();
       this.updateSemesterView();
     },
-
     toggleRequirementsBar() {
       this.isOpeningRequirements = !this.isOpeningRequirements;
     },
@@ -367,7 +368,6 @@ export default {
 
     incrementID() {
       const docRef = this.getDocRef();
-
       // If uniqueIncrementer attribute does not exist, initialize it to 0 and populate existing courses
       if (this.uniqueIncrementer === undefined) {
         this.uniqueIncrementer = 0;
@@ -648,7 +648,6 @@ export default {
     cancelOnboarding() {
       this.isOnboarding = false;
     },
-
     parseUserData(data, name) {
       const user = {
         // TODO: take into account multiple majors and colleges
@@ -656,8 +655,34 @@ export default {
         collegeFN: data.colleges[0].fullName,
         firstName: name.firstName,
         middleName: name.middleName,
-        lastName: name.lastName
+        lastName: name.lastName,
+        exam: [],
+        transferCourse: [],
+        tookSwim: data.tookSwim
       };
+      const transferClasses = [];
+      if ('exam' in data && data.exam.length > 0) {
+        const exams = [];
+        data.exam.forEach(exam => {
+          // TODO: add a course to chosen requirement or multiple fulfilling requirements
+          exams.push(exam);
+          if ('equivCourse' in exam) {
+            transferClasses.push(exam.equivCourse[0]);
+          }
+        });
+        user.exam = exams;
+      }
+      if ('class' in data && data.class.length > 0) {
+        const classes = [];
+        for (const course of data.class) {
+          classes.push(course);
+          const courseInfo = this.createCourse(course.course);
+          transferClasses.push(courseInfo);
+          // ; // TODO for user to pick which req a class goes for
+        }
+        user.transferCourse = classes;
+        this.currentClasses = transferClasses;
+      }
 
       if ('majors' in data && data.majors.length > 0) {
         const majors = [];

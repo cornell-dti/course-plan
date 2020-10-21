@@ -146,7 +146,6 @@ export default Vue.extend({
       modalShow: false,
       majors: [],
       minors: [],
-
       reqs: [
         // Data structure for menu
         // {

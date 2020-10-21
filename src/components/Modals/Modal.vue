@@ -8,8 +8,10 @@
       <component
         class="modal-body"
         :is="body"
+        :isOnboard="isOnboard"
         :semesterID="semesterID"
         :currentSemesters="currentSemesters"
+        placeholderText = 'CS 1110", "Multivariable Calculus", etc.'
         @duplicateSemester="disableButton"
         ref="modalBodyComponent"
       ></component>
@@ -36,6 +38,7 @@ Vue.component('editSemester', EditSemester);
 export default {
   data() {
     return {
+      isOnboard: false,
       courseIsAddable: true,
       isDisabled: false
     };

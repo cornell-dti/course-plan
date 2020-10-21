@@ -392,6 +392,7 @@ export default {
         // width: 121px;
         // height: 16px;
         width: 100%;
+        cursor: pointer;
       }
 
       &.season-placeholder,
@@ -474,10 +475,9 @@ export default {
       line-height: 15px;
       display: flex;
       align-items: center;
-
       color: #757575;
-
       padding-left: 10px;
+      cursor: pointer;
     }
   }
 
