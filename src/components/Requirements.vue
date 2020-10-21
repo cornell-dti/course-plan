@@ -249,6 +249,7 @@ export default Vue.extend({
           courses.push({
             code: `${course.lastRoster}: ${course.subject} ${course.number}`,
             subject: course.subject,
+            courseId: course.crseId,
             number: course.number,
             credits: course.credits,
             roster: course.lastRoster

@@ -337,6 +337,7 @@ export default {
       const alerts = { requirement: null, caution: null };
 
       const newCourse = {
+        crseId: course.crseId,
         subject,
         number,
         name,
