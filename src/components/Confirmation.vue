@@ -8,9 +8,9 @@ method - unsure what the right move is right now
       <img class="confirmation-icon" src="../assets/images/checkmark.svg" />
     </div>
     <div class="confirmation-text">{{ text }}</div>
-    <div class="confirmation-right">
-      <!-- <span class="undo-buttonText">{{ undo }}</span> -->
-    </div>
+    <!-- <div class="confirmation-right">
+      <span class="undo-buttonText">{{ undo }}</span>
+    </div> -->
   </div>
 </template>
 
@@ -30,9 +30,12 @@ export default {
 
 <style scoped lang="scss">
 .confirmation {
-  position: fixed;
+  position: absolute;
   z-index: 10;
-  top: 16px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: max-content;
   background: #ffffff;
   border-radius: 6px;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
@@ -73,10 +76,7 @@ export default {
 
     color: #7B7D7E;
 
-    margin-left: 8px;
-    margin-right: 16px;
-    margin-top: 13px;
-    margin-bottom: 12px;
+    margin: 14px 16px 12px 16px;
   }
 
   &-right {

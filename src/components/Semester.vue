@@ -106,6 +106,7 @@
 
 <script>
 import Vue from 'vue';
+// eslint-disable-next-line import/extensions
 import introJs from 'intro.js';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
