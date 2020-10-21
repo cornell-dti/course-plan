@@ -15,7 +15,7 @@
           @bottomBarTabToggle="bottomBarTabToggle"
           @deleteBottomTab="deleteBottomTab"
           @toggleFromTab="toggleFromTab"
-          @updateBar="updateBar"
+          @updateBarTabs="updateBarTabs"
         />
       </div>
     </div>
@@ -124,15 +124,15 @@ export default {
           this.seeMoreCourses.splice(i, 1);
         }
       }
-      this.updateBar();
+      this.updateBarTabs();
     },
 
     toggleFromTab() {
       this.$emit('toggleFromTab');
     },
 
-    updateBar() {
-      this.$emit('updateBar');
+    updateBarTabs() {
+      this.$emit('updateBarTabs');
     }
 
   }
