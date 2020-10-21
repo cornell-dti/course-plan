@@ -525,7 +525,7 @@ export default {
       // expand bottombar if first course added
       if (this.bottomCourses.length === 0) {
         this.bottomBar.bottomCourseFocus = 0;
-        this.bottomBar.isExpanded = true;
+        this.openBar();
       }
 
       let bottomCourseIndex = -1;

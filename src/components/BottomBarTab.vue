@@ -32,7 +32,7 @@ export default {
     },
 
     toggleFromTab() {
-      if (this.tabIndex === this.bottomCourseFocus) {
+      if (this.tabIndex === this.bottomCourseFocus || !this.isExpanded) {
         this.$emit('toggleFromTab');
       }
     }
