@@ -220,6 +220,7 @@ export default {
     background-color: #ffffff;
     display: flex;
     justify-content: center;
+    padding-top: 4px;
 
     &--add {
       color: #ffffff;
