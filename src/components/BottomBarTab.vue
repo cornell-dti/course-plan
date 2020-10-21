@@ -1,9 +1,9 @@
 <template>
   <div class="bottombartab" :style="{ background: `#${color}` }" :class="{ inactive: !isBottomCourseFocus}" @click="bottomBarTabToggle(courseObj)">
-    <div class="bottombartab-wrapper" @click="toggleFromTab">
+    <div class="bottombartab-wrapper">
       <div class="bottombartab-name">{{subject}} {{number}}</div>
     </div>
-    <img class="bottombartab-delete" src="@/assets/images/x-white.svg" @click.stop="deleteBottomTab(subject, number)"/>
+    <img class="bottombartab-delete" src="@/assets/images/x-white.svg" @click.stop="deleteBottomTab(courseObj)"/>
   </div>
 </template>
 
@@ -24,10 +24,11 @@ export default {
   methods: {
     bottomBarTabToggle(courseObj) {
       this.$emit('bottomBarTabToggle', courseObj);
+      this.toggleFromTab();
     },
 
-    deleteBottomTab(subject, number) {
-      this.$emit('deleteBottomTab', subject, number);
+    deleteBottomTab(courseObj) {
+      this.$emit('deleteBottomTab', courseObj);
     },
 
     toggleFromTab() {

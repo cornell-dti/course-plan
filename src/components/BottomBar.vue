@@ -55,7 +55,7 @@ export default {
     },
     bottomBarTabToggle(courseObj) {
       const newBottomCourseFocus = this.bottomCourses.indexOf(courseObj);
-      this.$emit('change-bottom-course-focus', newBottomCourseFocus);
+      this.$emit('change-focus', newBottomCourseFocus);
     },
     toggleFromTab() {
       this.toggle();

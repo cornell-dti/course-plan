@@ -65,7 +65,7 @@
       :maxBottomBarTabs="maxBottomBarTabs"
       @close-bar="closeBar"
       @open-bar="openBar"
-      @change-bottom-course-focus="changeBottomCourseFocus"
+      @change-focus="changeBottomCourseFocus"
       />
     </div>
   </div>
