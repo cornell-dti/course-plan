@@ -96,12 +96,10 @@ export default {
       // update focused course
       if (focusedCourse) {
         this.bottomBarTabToggle(focusedCourse);
+      } else if (i < this.bottomCourses.length) {
+        this.bottomBarTabToggle(this.bottomCourses[i]);
       } else {
-        if (i < this.bottomCourses.length) {
-          this.bottomBarTabToggle(this.bottomCourses[i]);
-        } else {
-          this.bottomBarTabToggle(this.bottomCourses[this.bottomCourses.length - 1]);
-        }
+        this.bottomBarTabToggle(this.bottomCourses[this.bottomCourses.length - 1]);
       }
     },
 
