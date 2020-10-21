@@ -392,14 +392,6 @@ export default {
         // width: 121px;
         // height: 16px;
         width: 100%;
-        height: 100%;
-      }
-
-      &.year-wrapper {
-        // width: 62px;
-        // height: 16px;
-        width: 100%;
-        height: 100%;
       }
 
       &.season-placeholder,
@@ -449,7 +441,7 @@ export default {
 
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-    border-radius: 7px;
+    border-radius: 0px 0px 7px 7px;
 
     margin-top: 3px;
 
@@ -461,9 +453,9 @@ export default {
 
       background: #ffffff;
       box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-      border-radius: 7px;
 
-      overflow: scroll;
+      overflow-y: scroll;
+      overflow-x: hidden,
     }
     &-season {
       padding-left: 0px;
