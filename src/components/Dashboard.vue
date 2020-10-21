@@ -198,6 +198,9 @@ export default {
       this.isMobile = window.innerWidth <= 440;
       this.isTablet = window.innerWidth <= 878;
       this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
+      if (this.bottomBar.bottomCourseFocus >= this.maxBottomBarTabs) {
+        this.changeBottomCourseFocus(this.maxBottomBarTabs - 1);
+      }
       this.updateBarTabs();
       this.updateSemesterView();
     },

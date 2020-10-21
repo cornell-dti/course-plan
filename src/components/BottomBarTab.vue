@@ -3,7 +3,7 @@
     <div class="bottombartab-wrapper" @click="toggleFromTab">
       <div class="bottombartab-name">{{subject}} {{number}}</div>
     </div>
-    <img class="bottombartab-delete" src="@/assets/images/x-white.svg" @click="deleteBottomTab(subject, number)"/>
+    <img class="bottombartab-delete" src="@/assets/images/x-white.svg" @click.stop="deleteBottomTab(subject, number)"/>
   </div>
 </template>
 
