@@ -450,6 +450,7 @@ export default {
   }
 
   &-confirmation {
+    top: 16px;
     display: none;
   }
 
