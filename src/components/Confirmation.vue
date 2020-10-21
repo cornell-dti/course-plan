@@ -30,9 +30,9 @@ export default {
 
 <style scoped lang="scss">
 .confirmation {
-  position: absolute;
+  position: fixed;
   z-index: 10;
-  left: 0;
+  left: 29.5rem;
   right: 0;
   margin: 0 auto;
   width: max-content;
@@ -95,6 +95,18 @@ export default {
     margin-right: 16px;
     margin-top: 13px;
     margin-bottom: 12px;
+  }
+}
+
+@media only screen and (max-width: 976px) {
+  .confirmation {
+    left: 25.5rem;
+  }
+}
+
+@media only screen and (max-width: 878px) {
+  .confirmation {
+    left: 0;
   }
 }
 

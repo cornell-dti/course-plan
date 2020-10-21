@@ -360,6 +360,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 1.5rem 3rem 3rem;
+  position: relative;
 
   &-content {
     display: flex;
