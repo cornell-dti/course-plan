@@ -32,6 +32,7 @@ export default {
 .confirmation {
   position: fixed;
   z-index: 10;
+  top: 16px;
   left: 29.5rem;
   right: 0;
   margin: 0 auto;
