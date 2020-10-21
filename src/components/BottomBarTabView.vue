@@ -15,6 +15,7 @@
           @bottomBarTabToggle="bottomBarTabToggle"
           @deleteBottomTab="deleteBottomTab"
           @toggleFromTab="toggleFromTab"
+          @updateBar="updateBar"
         />
       </div>
     </div>
@@ -109,15 +110,11 @@ export default {
         // add bottomCourseToMove to seeMoreCourses
         this.seeMoreCourses.unshift(bottomCourseToMove);
       }
-      // remove course from seeMoreCourses
-      for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-        if (this.seeMoreCourses[i].uniqueID === course.uniqueID) {
-          this.seeMoreCourses.splice(i, 1);
-        }
-      }
       // add course to bottomCourses
       this.bottomCourses.unshift(course);
-      this.resetBottomCourseFocus();
+      this.bottomBarTabToggle(this.bottomCourses[0]);
+      // remove course from seeMoreCourses
+      this.deleteSeeMoreCourse(course);
     },
 
     deleteSeeMoreCourse(course) {
@@ -127,10 +124,15 @@ export default {
           this.seeMoreCourses.splice(i, 1);
         }
       }
+      this.updateBar();
     },
 
     toggleFromTab() {
       this.$emit('toggleFromTab');
+    },
+
+    updateBar() {
+      this.$emit('updateBar');
     }
 
   }
