@@ -14,15 +14,15 @@
         </div>
         <div class="bottombar-title" @click="toggle()">
           <bottombartitle
-          :color="bottomCourses[this.bottomCourseFocus].color"
-          :name="bottomCourses[this.bottomCourseFocus].name"
+          :color="bottomCourses[bottomCourseFocus].color"
+          :name="bottomCourses[bottomCourseFocus].name"
           :isExpanded="isExpanded"
           />
         </div>
       </div>
-      <div v-if="this.isExpanded" class="bottombar-course">
+      <div v-if="isExpanded" class="bottombar-course">
         <bottombarcourse
-        :courseObj="bottomCourses[this.bottomCourseFocus]"
+        :courseObj="bottomCourses[bottomCourseFocus]"
         />
       </div>
     </div>
@@ -43,14 +43,9 @@ export default {
   props: {
     bottomCourses: Array,
     seeMoreCourses: Array,
+    bottomCourseFocus: Number,
     isExpanded: Boolean,
     maxBottomBarTabs: Number
-  },
-
-  data() {
-    return {
-      bottomCourseFocus: 0
-    };
   },
 
   methods: {
@@ -59,7 +54,8 @@ export default {
       else this.$emit('open-bar');
     },
     bottomBarTabToggle(courseObj) {
-      this.bottomCourseFocus = this.bottomCourses.indexOf(courseObj);
+      const newBottomCourseFocus = this.bottomCourses.indexOf(courseObj);
+      this.$emit('change-bottom-course-focus', newBottomCourseFocus);
     },
     toggleFromTab() {
       this.toggle();
