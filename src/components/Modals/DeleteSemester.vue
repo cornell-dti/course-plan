@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     closeCurrentModal() {
-      this.emit('close-delete-modal');
+      this.$emit('close-delete-modal');
     },
     deleteSemester() {
       this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);

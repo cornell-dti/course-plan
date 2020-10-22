@@ -8,6 +8,7 @@
     <modal
       id="semesterModal"
       class="semester-modal"
+      :class="{ 'modal--block': isSemesterModalOpen }"
       type="semester"
       ref="modalComponent"
       :currentSemesters="semesters"
@@ -35,11 +36,13 @@
     <confirmation
       :id="'semesterConfirmation'"
       class="semesterView-confirmation"
+      :class="{ 'modal--flex': isSemesterConfirmationOpen }"
       :text="confirmationText"
     />
     <caution
       :id="'semesterCaution'"
       class="semesterView-caution"
+      :class="{ 'modal--flex': isCautionModalOpen }"
       :text="cautionText"
     />
     <!-- TODO: investigate if there needs to be two different content divs with two sets of semesters -->
@@ -117,7 +120,10 @@ export default {
       key: 0,
       activatedCourse: {},
       isCourseClicked: false,
-      modalOpen: false
+      modalOpen: false,
+      isSemesterConfirmationOpen: false,
+      isSemesterModalOpen: false,
+      isCautionModalOpen: false
     };
   },
   watch: {
@@ -127,12 +133,6 @@ export default {
         this.updateFirebaseSemester();
       }
     }
-  },
-  mounted() {
-    // this.$el.addEventListener('click', this.closeAllModals);
-  },
-  beforeDestroy() {
-    // this.$el.removeEventListener('click', this.closeAllModals);
   },
   computed: {
     noSemesters() {
@@ -181,46 +181,28 @@ export default {
         this.confirmationText = `Deleted ${type} ${year} from plan`;
       }
 
-      const confirmationModal = document.getElementById(`semesterConfirmation`);
-      confirmationModal.style.display = 'flex';
+      this.isSemesterConfirmationOpen = true;
 
       setTimeout(() => {
-        confirmationModal.style.display = 'none';
+        this.isSemesterConfirmationOpen = false;
       }, 3000);
     },
     openCautionModal() {
       this.cautionText = `Unable to add course. Already in plan.`;
-      const cautionModal = document.getElementById(`semesterCaution`);
-      cautionModal.style.display = 'flex';
+      isCautionModalOpen = true;
 
       setTimeout(() => {
-        cautionModal.style.display = 'none';
+        isCautionModalOpen = false;
       }, 3000);
     },
     openSemesterModal() {
-      const modal = document.getElementById('semesterModal');
-      modal.style.display = 'block';
+      this.isSemesterModalOpen = true;
     },
     openCourseModal() {
       this.modalOpen = true;
     },
     closeCourseModal() {
       this.modalOpen = false;
-    },
-    closeAllModals(event) {
-      // TODO: not sure how to avoid DOM Manipulation here
-      const modals = document.getElementsByClassName('semester-modal');
-      for (let i = 0; i < modals.length; i += 1) {
-        if (event.target === modals[i]) {
-          modals[i].style.display = 'none';
-          this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns();
-        }
-      }
-
-      const deleteSemesterModal = document.getElementById('deleteSemester');
-      if (event.target === deleteSemesterModal) {
-        deleteSemesterModal.style.display = 'none';
-      }
     },
     addSemester(type, year) {
       const newSem = this.$parent.createSemester([], type, year);
@@ -485,6 +467,15 @@ export default {
 
 .bottomBar {
   margin-bottom: 300px;
+}
+
+.modal {
+  &--block {
+    display: block;
+  }
+  &--flex {
+    display: flex;
+  }
 }
 
 @media only screen and (max-width: 878px) {
