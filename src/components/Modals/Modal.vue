@@ -28,12 +28,10 @@
 <script>
 import Vue from 'vue';
 import NewCourse from '@/components/Modals/NewCourse';
-import NewCustomCourse from '@/components/Modals/NewCustomCourse';
 import NewSemester from '@/components/Modals/NewSemester';
 import EditSemester from '@/components/Modals/EditSemester';
 
 Vue.component('newCourse', NewCourse);
-Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 Vue.component('editSemester', EditSemester);
 
@@ -79,7 +77,7 @@ export default {
       if (this.type === 'course') {
         return 'newCourse';
       }
-      return 'newCustomCourse';
+      return '';
     }
   },
   methods: {
@@ -94,11 +92,9 @@ export default {
         this.$emit('close-course-modal');
         return;
       }
-      const modal = document.getElementById(`${this.type}Modal`);
       if (this.type === 'semester') {
         this.$refs.modalBodyComponent.resetDropdowns();
       }
-      // modal.style.display = 'none';
     },
     // Note: Currently not used
     checkCourseDuplicate(key) {
@@ -114,8 +110,6 @@ export default {
         this.addCourse();
       } else if (this.type === 'semester') {
         this.addSemester();
-      } else {
-        // TODO: add custom course
       }
     },
     addCourse() {
