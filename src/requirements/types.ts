@@ -1,5 +1,6 @@
 export type Course = {
   readonly subject: string;
+  readonly crseId: number;
   readonly catalogNbr: string;
   readonly titleLong: string;
   readonly description: string;
@@ -106,7 +107,7 @@ export type RequirementFulfillment<M extends {}> = {
   /** The original requirement object. */
   readonly requirement: BaseRequirement;
   /** A list of courses that satisfy this requirement. */
-  readonly courses: readonly CourseTaken[][];
+  readonly courses: readonly (readonly CourseTaken[])[];
 } & M;
 
 export type RequirementFulfillmentStatistics = {
@@ -142,3 +143,28 @@ export type SingleMenuRequirement = {
   fulfilled?: number;
   required?: number;
 };
+
+
+export type ExamRequirements = {
+  readonly subject: string;
+  readonly credits: {
+    readonly operator: string,
+    readonly collegesApplied: string[];
+    readonly majorExcluded: string[];
+    readonly mininmumScore: number;
+    readonly courseEquivalents: string[];
+    readonly requirementEquivalents: string[];
+    readonly credits: number;
+    readonly compositeRequirement?: {
+      subject: string;
+      score: number;
+      classEquivalent: string[];
+    }[];
+  }[];
+}
+
+export type ExamData = {
+  readonly AP: ExamRequirements[] ;
+  readonly IB: ExamRequirements[];
+  // readonly transfer;
+}

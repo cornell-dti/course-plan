@@ -108,6 +108,12 @@
 </template>
 
 <script>
+
+import fall from '../../assets/images/fallEmoji.svg';
+import spring from '../../assets/images/springEmoji.svg';
+import winter from '../../assets/images/winterEmoji.svg';
+import summer from '../../assets/images/summerEmoji.svg';
+
 const clickOutside = {
   bind(el, binding, vnode) {
     el.event = event => {
@@ -122,10 +128,6 @@ const clickOutside = {
   }
 };
 
-const fall = require('../../assets/images/fallEmoji.svg');
-const spring = require('../../assets/images/springEmoji.svg');
-const winter = require('../../assets/images/winterEmoji.svg');
-const summer = require('../../assets/images/summerEmoji.svg');
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -367,7 +369,10 @@ export default {
     width: 12px;
     height: 12px;
   }
-
+  &-emoji-text{
+    height: 14px;
+    padding: 0px;
+  }
   &-dropdown {
     &-placeholder {
       font-style: normal;
@@ -388,6 +393,7 @@ export default {
         // height: 16px;
         width: 100%;
         height: 100%;
+        cursor: pointer;
       }
 
       &.year-wrapper {
@@ -477,10 +483,9 @@ export default {
       line-height: 15px;
       display: flex;
       align-items: center;
-
       color: #757575;
-
       padding-left: 10px;
+      cursor: pointer;
     }
   }
 

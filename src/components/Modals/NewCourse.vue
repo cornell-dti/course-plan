@@ -1,6 +1,6 @@
 <template>
   <div class="newCourse">
-    <div class="newCourse-text">{{ text }}</div>
+    <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
     <div class="autocomplete">
       <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
@@ -12,14 +12,16 @@ import coursesJSON from '../../assets/courses/courses.json';
 
 export default {
   props: {
-    semesterID: Number
+    isOnboard: Boolean,
+    semesterID: Number,
+    placeholderText: String
   },
   computed: {
     text() {
       return 'Search or Create New Course';
     },
     placeholder() {
-      return '"CS 1110", "Multivariable Calculus", etc.';
+      return this.placeholderText;
     }
   },
   mounted() {
@@ -166,7 +168,7 @@ export default {
     },
 
     addCourse() {
-      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$parent.addItem();
+      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     }
   }
 };
