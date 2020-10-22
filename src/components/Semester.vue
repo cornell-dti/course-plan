@@ -412,9 +412,7 @@ export default {
       const modal = document.getElementById(`editSemesterModal-${this.id}`);
       modal.style.display = 'block';
     },
-    editSemester(id) {
-      const seasonInput = document.getElementById(`season-placeholder-${this.id}`).innerHTML.trim(' ').split(' ')[0];
-      const yearInput = parseInt(document.getElementById(`year-placeholder-${this.id}`).innerHTML, 10);
+    editSemester(seasonInput, yearInput) {
       this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
     }
   },

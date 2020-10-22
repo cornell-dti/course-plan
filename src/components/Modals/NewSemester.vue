@@ -194,6 +194,9 @@ export default {
   directives: {
     'click-outside': clickOutside
   },
+  mounted() {
+    this.$emit('updateSemProps', this.seasonPlaceholder, this.yearPlaceholder);
+  },
   methods: {
     seasonValue(season) {
       return SeasonsEnum[season[1].toLowerCase()];
@@ -259,6 +262,7 @@ export default {
       displayOptions.boxBorder = '#C4C4C4';
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
+      this.$emit('updateSemProps', this.seasonText || this.seasonPlaceholder, this.yearText || this.yearPlaceholder);
     },
     selectSeason(text) {
       this.selectOption('season', text);

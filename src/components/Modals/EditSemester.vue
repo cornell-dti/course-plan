@@ -14,6 +14,7 @@
             :year="deleteSemYear"
             :type="deleteSemType"
             @duplicateSemester="disableButton"
+            @updateSemProps="updateSemProps"
             ref="modalBodyComponent">
         </newSemester>
       </div>
@@ -48,7 +49,9 @@ export default {
   },
   data() {
     return {
-      isDisabled: false
+      isDisabled: false,
+      season: '',
+      year: ''
     };
   },
   computed: {
@@ -69,12 +72,16 @@ export default {
     },
     editSemester() {
       if (!this.isDisabled) {
-        this.$parent.editSemester(this.deleteSemID);
+        this.$emit('edit-semester', this.season, this.year);
         this.closeCurrentModal();
       }
     },
     disableButton(bool) {
       this.isDisabled = bool;
+    },
+    updateSemProps(season, year) {
+      this.season = season;
+      this.year = year;
     }
   }
 };
