@@ -52,8 +52,7 @@ export default {
   },
   methods: {
     closeCurrentModal() {
-      const modal = document.getElementById(`deleteSemesterModal-${this.deleteSemID}`);
-      modal.style.display = 'none';
+      this.emit('close-delete-modal');
     },
     deleteSemester() {
       this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);

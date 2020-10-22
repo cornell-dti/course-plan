@@ -67,8 +67,7 @@ export default {
   },
   methods: {
     closeCurrentModal() {
-      const modal = document.getElementById(`editSemesterModal-${this.deleteSemID}`);
-      modal.style.display = 'none';
+      this.$emit('close-edit-modal');
     },
     editSemester() {
       if (!this.isDisabled) {
