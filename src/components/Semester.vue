@@ -272,11 +272,6 @@ export default {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.$emit('open-course-modal');
-
-      // Activate focus
-      const input = document.getElementById(`dropdown-${this.id}`);
-      input.value = '';
-      input.focus();
     },
     closeCourseModal() {
       this.$emit('close-course-modal');

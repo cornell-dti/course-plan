@@ -25,6 +25,11 @@ export default {
     }
   },
   mounted() {
+    // Activate focus and set input to empty
+    const input = document.getElementById(`dropdown-${this.semesterID}`);
+    input.value = '';
+    input.focus();
+
     this.autocomplete(
       document.getElementById(`dropdown-${this.semesterID}`),
       coursesJSON
