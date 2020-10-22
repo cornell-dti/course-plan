@@ -5,7 +5,14 @@
     @click="closeBar"
     :key="key"
   >
-    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" :currentSemesters="semesters" />
+    <modal
+      id="semesterModal"
+      class="semester-modal"
+      type="semester"
+      ref="modalComponent"
+      :currentSemesters="semesters"
+      @add-semester="addSemester"
+    />
     <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
       <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">+ New Semester</button>
       <div class="semesterView-switch">

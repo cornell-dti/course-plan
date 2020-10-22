@@ -14,6 +14,7 @@
         placeholderText = 'CS 1110", "Multivariable Calculus", etc.'
         @duplicateSemester="disableButton"
         @close-current-model="closeCourseModal"
+        @updateSemProps="updateSemProps"
         ref="modalBodyComponent"
       ></component>
       <div class="modal-buttonWrapper">
@@ -41,7 +42,9 @@ export default {
     return {
       isOnboard: false,
       courseIsAddable: true,
-      isDisabled: false
+      isDisabled: false,
+      season: '',
+      year: ''
     };
   },
   props: {
@@ -163,15 +166,14 @@ export default {
     },
     addSemester() {
       if (!this.isDisabled) {
-        const seasonInput = document.getElementById(`season-placeholder`);
-        const yearInput = document.getElementById(`year-placeholder`);
-        this.$parent.addSemester(
-          seasonInput.innerHTML.trim(' ').split(' ')[0],
-          parseInt(yearInput.innerHTML, 10)
-        );
+        this.$emit('add-semester', this.season, this.year);
 
         this.closeCurrentModal();
       }
+    },
+    updateSemProps(season, year) {
+      this.season = season;
+      this.year = year;
     }
   }
 };
