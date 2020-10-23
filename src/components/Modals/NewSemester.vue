@@ -393,6 +393,7 @@ export default {
         // height: 16px;
         width: 100%;
         height: 100%;
+        cursor: pointer;
       }
 
       &.year-wrapper {
@@ -482,10 +483,9 @@ export default {
       line-height: 15px;
       display: flex;
       align-items: center;
-
       color: #757575;
-
       padding-left: 10px;
+      cursor: pointer;
     }
   }
 

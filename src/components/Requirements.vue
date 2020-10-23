@@ -145,7 +145,6 @@ export default Vue.extend({
       modalShow: false,
       majors: [],
       minors: [],
-
       reqs: [
         // Data structure for menu
         // {
@@ -250,6 +249,7 @@ export default Vue.extend({
           courses.push({
             code: `${course.lastRoster}: ${course.subject} ${course.number}`,
             subject: course.subject,
+            courseId: course.crseId,
             number: course.number,
             credits: course.credits,
             roster: course.lastRoster

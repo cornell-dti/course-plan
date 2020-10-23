@@ -18,6 +18,7 @@ export type Course = {
 
 export type CourseTaken = {
   readonly roster: string;
+  readonly courseId: number;
   readonly code: string;
   readonly subject: string;
   readonly number: string;
@@ -65,10 +66,8 @@ export interface CollegeOrMajorRequirement extends BaseRequirement {
 }
 
 export type EligibleCourses = {
-  readonly [semester: string]: {
-    // Subjects to course numbers
-    readonly [subject: string]: readonly string[];
-  };
+  // "FA20": [123456, 42, 65536, /* and another crseId */]
+  readonly [semester: string]: readonly number[];
 };
 
 export interface DecoratedCollegeOrMajorRequirement extends BaseRequirement {
@@ -146,3 +145,28 @@ export type SingleMenuRequirement = {
   fulfilled?: number;
   required?: number;
 };
+
+
+export type ExamRequirements = {
+  readonly subject: string;
+  readonly credits: {
+    readonly operator: string,
+    readonly collegesApplied: string[];
+    readonly majorExcluded: string[];
+    readonly mininmumScore: number;
+    readonly courseEquivalents: string[];
+    readonly requirementEquivalents: string[];
+    readonly credits: number;
+    readonly compositeRequirement?: {
+      subject: string;
+      score: number;
+      classEquivalent: string[];
+    }[];
+  }[];
+}
+
+export type ExamData = {
+  readonly AP: ExamRequirements[] ;
+  readonly IB: ExamRequirements[];
+  // readonly transfer;
+}
