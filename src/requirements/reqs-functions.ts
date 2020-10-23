@@ -113,9 +113,9 @@ function filterAndPartitionCoursesThatFulfillRequirement(
   const { courses: requirementCourses } = requirement;
   const coursesThatFulfilledRequirement: CourseTaken[][] = requirementCourses.map(() => []);
   coursesTaken.forEach(courseTaken => {
-    const { roster, subject, number } = courseTaken;
+    const { roster, courseId } = courseTaken;
     requirementCourses.forEach((subRequirementCourses, subRequirementIndex) => {
-      if (subRequirementCourses[roster] && subRequirementCourses[roster][subject] && subRequirementCourses[roster][subject].includes(number)) {
+      if (subRequirementCourses[roster] && subRequirementCourses[roster].includes(courseId)) {
         // add the course to the list of courses used to fulfill that one sub-requirement
         coursesThatFulfilledRequirement[subRequirementIndex].push(courseTaken);
       }
@@ -257,23 +257,22 @@ export function computeRequirements(
     userChoiceOnDoubleCountingElimiation: [],
     // TODO assign an unique ID to each requirement entry.
     getRequirementUniqueID: requirement => `${requirement.name} ${requirement.description}`,
-    getCourseUniqueID: course => course.code,
+    getCourseUniqueID: course => `${course.roster} ${course.courseId}`,
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirement => (
       requirement.courses
         .map((eligibleCourses): readonly CourseTaken[] => {
           const courses: CourseTaken[] = [];
-          Object.entries(eligibleCourses).forEach(([roster, mapping]) => {
-            Object.entries(mapping).forEach(([subject, numbers]) => {
-              numbers.forEach(number => {
-                courses.push({
-                  roster,
-                  subject,
-                  code: `${roster}: ${subject} ${number}`,
-                  number,
-                  credits: 0
-                });
-              });
-            });
+          Object.entries(eligibleCourses).forEach(([roster, courseIds]) => {
+            courseIds.forEach(courseId => courses.push({
+              roster,
+              courseId,
+              // Only roster and courseId are used for equality comparison,
+              // so other dummy values doesn't matter.
+              code: 'DUMMY',
+              subject: 'DUMMY',
+              number: 'DUMMY',
+              credits: 0
+            }));
           });
           return courses;
         })
