@@ -5,7 +5,7 @@
 import { readFileSync, readdirSync } from 'fs';
 import { Course } from './types';
 
-
+/** Returns the ordered number encoding for a given type */
 function typeToOrderedNumber(type: string): number {
   switch(type) {
     case 'WI':
@@ -20,7 +20,14 @@ function typeToOrderedNumber(type: string): number {
       return 4;
   }
 }
-
+/** Compares filteredCoursesPath1 and filteredCoursesPath2
+ * based on the semester rosters in the paths.
+ * filteredCoursesPath1, filteredCoursesPath2 follow the pattern
+ * 'src/requirements/filtered-<roster>-courses.json'
+ * where <roster> is i.e. 'FA14', 'SU20'.
+ * <roster1> of filteredCoursesPath1 is compared to
+ * <roster2> of filteredCoursesPath2
+ */
 function compareFilteredCoursesPaths(filteredCoursesPath1: string, filteredCoursesPath2: string): number {
   // Extract just the roster part in the filteredCoursesPath
   const roster1 = filteredCoursesPath1.split('-')[1];
@@ -46,7 +53,7 @@ function compareFilteredCoursesPaths(filteredCoursesPath1: string, filteredCours
     return 0;
   }
 }
-
+/** Returns filteredCoursesPaths sorted from least to most recent roster. */
 function sortByLeastRecentRosters(filteredCoursesPaths: string[]): string[] {
   // Sorts from least recent roster
   return filteredCoursesPaths.sort(compareFilteredCoursesPaths);
