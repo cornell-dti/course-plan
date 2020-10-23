@@ -66,12 +66,13 @@ const filteredCoursesPaths: string[] = sortByLeastRecentRosters(
 //   We need to use the type cast trick here,
 //   because TypeScript has limited capability to correctly infer types of deeply nested json with enums.
 
-/** All courses fetch from Cornell Class API, with only the fields we need. */
-const filteredAllCourses: { readonly [semester: string]: readonly Course[] } =
-  // Read and parse each JSON file using type cast trick.
-  // Reduce to one JSON object
+/** All courses fetch from Cornell Class API, with only the fields we need.
+ * First read and parse each JSON file using type cast trick.
+ * Then reduce to one JSON object
+*/
+const filteredAllCourses: { readonly [semester: string]: readonly Course[] } = (
   filteredCoursesPaths.map(path => JSON.parse(readFileSync('src/requirements/' + path).toString()))
-                      .reduce((accum, currentValue) => Object.assign(accum, currentValue));
-
+                      .reduce((accum, currentValue) => Object.assign(accum, currentValue))
+);
 
 export default filteredAllCourses;
