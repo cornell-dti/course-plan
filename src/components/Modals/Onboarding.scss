@@ -181,7 +181,7 @@ input {
   &-addRemoveWrapper {
     margin-top: .5rem;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
 
     font-size: 14px;
     line-height: 16px;
@@ -196,6 +196,7 @@ input {
     cursor: pointer;
     margin-left: .5rem;
     color: #FF7979
+
   }
 
   &-bottom {
@@ -300,6 +301,11 @@ input {
         flex-direction: column;
         // padding-right: 40px;
     }
+    &--column-remove {
+      display: flex;
+      flex-direction: column-reverse;
+      // padding-right: 40px;
+    }
     &--columnWide {
         display: flex;
         flex-direction: column;
@@ -328,6 +334,7 @@ input {
         flex-direction: row;
         width: 100%;
         height: 100%;
+
       }
 
       &.college-wrapper,

@@ -17,6 +17,9 @@
             :user="user"
             @updateTransfer="updateTransfer"
             />
+          <onboardingReview v-if="currentPage == 3"
+            :user="user"
+          />
         </div>
       </div>
       <div class="onboarding-bottom">
@@ -52,6 +55,7 @@ import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import OnboardingBasic from '@/components/Modals/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/OnboardingTransfer.vue';
+import OnboardingReview from '@/components/Modals/OnboardingReview.vue';
 import { clickOutside } from '@/utilities';
 import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
@@ -59,6 +63,7 @@ require('@/assets/images/timeline1.svg');
 
 Vue.component('onboardingBasic', OnboardingBasic);
 Vue.component('onboardingTransfer', OnboardingTransfer);
+Vue.component('onboardingReview', OnboardingReview);
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
