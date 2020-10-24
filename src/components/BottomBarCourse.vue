@@ -200,7 +200,7 @@
 </template>
 
 <script>
-import { reviewColors } from '../assets/constants/colors';
+import { reviewColors } from '@/assets/constants/colors';
 
 export default {
   data() {

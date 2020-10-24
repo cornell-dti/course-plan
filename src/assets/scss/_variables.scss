@@ -36,5 +36,8 @@ $darkPlaceholderGray: #B6B6B6;
   darkPlaceholderGray: $darkPlaceholderGray;
 }
 
-// To import SCSS variables
+// To import into <script>
+// import { inactiveBlue, ... } from '@/assets/scss/_variables.scss';
+
+// To import into <style>
 // @import "@/assets/scss/_variables.scss";
