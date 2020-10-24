@@ -1,3 +1,5 @@
+@import "@/assets/scss/_variables.scss";
+
 input {
   background-color: none;
 }
@@ -187,7 +189,7 @@ input {
 
   &-add {
     cursor: pointer;
-    color: #1AA9A5;
+    color: $emGreen;
   }
 
   &-remove {
@@ -245,7 +247,7 @@ input {
   }
 
   &-button {
-    background: #1AA9A5;
+    background: $emGreen;
     border: 0;
     box-sizing: border-box;
     border-radius: 1px;

@@ -246,273 +246,275 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-    .logo {
-      width: 12rem;
-    }
-    .section{
-      padding:0px;
-      margin: 0px;
-      max-width: 100%;
-    }
-    .container {
-      max-width: 100%;
-    }
-    .top-bar{
-      padding:59px 0px 0px 104px;
+  @import "@/assets/scss/_variables.scss";
 
-      @media (max-width: 1154px) {
-        padding: 59px 104px 0px 104px;
-        display: flex;
-        flex-direction: column;
-      }
-    }
-    .top-section {
-      @media (max-width: 1154px) {
-        display: flex;
-        justify-content: center;
-        text-align: center;
-        max-width: 100%;
-      }
-    }
-    .signin-button{
-      color: #1AA9A5;
-      font-weight: 550;
-      border-color: #1AA9A5;
-      padding: 10px 30px;
-      border-radius: 6px;
-    }
-    .plan{
-      padding:59px 0px 59px 104px;
-    }
-    .plan-head{
-      padding-bottom: 30px;
-      font-size: 60px;
-      line-height: 60px;
-      color: #4F4F4F;
-    }
-    .plan-subhead{
-      padding-bottom: 30px;
-      font-style: normal;
-      font-weight: 300;
-      font-size: 25px;
-      line-height: 35px;
-      color: #000000;
-    }
-    input{
-        width: 100%;
-        height: 100%;
-        border-radius: 6px;
-        border-color:#1AA9A5;
-        padding : 15px 30px;
-    }
-    .email{
-      padding: 20px;
-      @media (max-width: 767px) {
-        width: 350px;
-        max-width: 350px;
-        flex: unset;
-      }
-    }
-    .email-button{
-      border: 0;
-      background-color: #1AA9A5;
-      border-radius : 6px;
-      border-color: #1AA9A5;
-      width: 100%;
-      padding : 15px 30px;
-      color: white;
-      &:hover,
-      &:focus,
-      &:active {
-          border-color: #13807c;
-          background-color: #13807c;
-      }
+  .logo {
+    width: 12rem;
+  }
+  .section{
+    padding:0px;
+    margin: 0px;
+    max-width: 100%;
+  }
+  .container {
+    max-width: 100%;
+  }
+  .top-bar{
+    padding:59px 0px 0px 104px;
 
-      &--top {
-        width: 13.5rem;
-        @media (max-width: 1154px) {
-          margin-bottom: 1rem;
-        }
-      }
-    }
-    .email-top{
-      padding: 20px 20px 20px 20px;
-    }
-    .image-wrapper {
-      overflow: hidden;
-      @media (max-width: 1154px) {
-        display: none;
-      }
-      &--drag {
-        overflow: unset;
-      }
-      &--laptop {
-        display: block;
-      }
-      &--semester {
-        display: flex;
-        justify-content: flex-end;
-      }
-    }
-    .laptop{
-      position: relative;
-      width: 900px;
-      @media (max-width: 1154px) {
-        max-width: inherit;
-      }
-    }
-    .women{
-      position: relative;
-    }
-    .women-wrapper {
-      margin-top: -120px
-    }
-
-    .new{
-      background-color: #1AA9A5;
-      padding:50px 0px 96px 104px;
-      @media (min-width: 1155px) {
-        margin-bottom: -120px;
-      }
-    }
-    .new-1{
-      text-align: left;
-        padding: 120px 0px 59px 104px;
-    }
-    .tasks{
+    @media (max-width: 1154px) {
+      padding: 59px 104px 0px 104px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
+      flex-direction: column;
     }
-    .tasks-wrapper {
+  }
+  .top-section {
+    @media (max-width: 1154px) {
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      max-width: 100%;
+    }
+  }
+  .signin-button{
+    color: $emGreen;
+    font-weight: 550;
+    border-color: $emGreen;
+    padding: 10px 30px;
+    border-radius: 6px;
+  }
+  .plan{
+    padding:59px 0px 59px 104px;
+  }
+  .plan-head{
+    padding-bottom: 30px;
+    font-size: 60px;
+    line-height: 60px;
+    color: #4F4F4F;
+  }
+  .plan-subhead{
+    padding-bottom: 30px;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 25px;
+    line-height: 35px;
+    color: $black;
+  }
+  input{
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+      border-color:$emGreen;
+      padding : 15px 30px;
+  }
+  .email{
+    padding: 20px;
+    @media (max-width: 767px) {
+      width: 350px;
+      max-width: 350px;
+      flex: unset;
+    }
+  }
+  .email-button{
+    border: 0;
+    background-color: $emGreen;
+    border-radius : 6px;
+    border-color: $emGreen;
+    width: 100%;
+    padding : 15px 30px;
+    color: white;
+    &:hover,
+    &:focus,
+    &:active {
+        border-color: #13807c;
+        background-color: #13807c;
+    }
+
+    &--top {
+      width: 13.5rem;
       @media (max-width: 1154px) {
-        max-width: 100%;
-        flex: unset;
+        margin-bottom: 1rem;
       }
     }
-    .sub{
-        font-weight: normal;
-        font-size: 24px;
-        color: #FFFFFF;
-        margin: 0;
+  }
+  .email-top{
+    padding: 20px 20px 20px 20px;
+  }
+  .image-wrapper {
+    overflow: hidden;
+    @media (max-width: 1154px) {
+      display: none;
+    }
+    &--drag {
+      overflow: unset;
+    }
+    &--laptop {
+      display: block;
+    }
+    &--semester {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+  .laptop{
+    position: relative;
+    width: 900px;
+    @media (max-width: 1154px) {
+      max-width: inherit;
+    }
+  }
+  .women{
+    position: relative;
+  }
+  .women-wrapper {
+    margin-top: -120px
+  }
 
-        &--task {
-          margin-left: 2rem;
-        }
+  .new{
+    background-color: $emGreen;
+    padding:50px 0px 96px 104px;
+    @media (min-width: 1155px) {
+      margin-bottom: -120px;
     }
-    .head{
-        font-weight: 600;
-        font-size: 40px;
-        color: #FFFFFF;
-        padding-bottom: 0px;
+  }
+  .new-1{
+    text-align: left;
+      padding: 120px 0px 59px 104px;
+  }
+  .tasks{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
+  .tasks-wrapper {
+    @media (max-width: 1154px) {
+      max-width: 100%;
+      flex: unset;
     }
-    .head-center{
+  }
+  .sub{
+      font-weight: normal;
+      font-size: 24px;
+      color: #FFFFFF;
+      margin: 0;
+
+      &--task {
+        margin-left: 2rem;
+      }
+  }
+  .head{
       font-weight: 600;
       font-size: 40px;
       color: #FFFFFF;
       padding-bottom: 0px;
-    }
+  }
+  .head-center{
+    font-weight: 600;
+    font-size: 40px;
+    color: #FFFFFF;
+    padding-bottom: 0px;
+  }
 
-    .women {
-      @media (max-width: 1274px) {
-        width: 62vw;
-      }
+  .women {
+    @media (max-width: 1274px) {
+      width: 62vw;
     }
-    .drag{
-      background-color:  #105351;
-      padding:59px 104px 0px 104px;
-      @media (max-width: 1154px) {
-        display: flex;
-        justify-content: center;
-      }
+  }
+  .drag{
+    background-color: $chrisGreen;
+    padding:59px 104px 0px 104px;
+    @media (max-width: 1154px) {
+      display: flex;
+      justify-content: center;
     }
-    .preview{
-      position: relative;
+  }
+  .preview{
+    position: relative;
 
-      @media (max-width: 1274px) {
-        width: 62vw;
-      }
+    @media (max-width: 1274px) {
+      width: 62vw;
     }
-    .schedule{
-      margin-top: 16px;
-      width: 650px;
+  }
+  .schedule{
+    margin-top: 16px;
+    width: 650px;
 
-      @media (max-width: 1274px) {
-        width: 50vw;
-      }
+    @media (max-width: 1274px) {
+      width: 50vw;
+    }
+  }
+  .comment{
+    text-align: left;
+    padding: 170px 30px 250px 30px;
+    @media (max-width: 1154px) {
+      max-width: 100%;
+      flex: unset;
+    }
+  }
+  .semester{
+    background-color:  $einBlue;
+    padding:0px 0px 0px 104px;
+    @media (max-width: 1154px) {
+      display: flex;
+      justify-content: center;
+    }
+  }
+  .first{
+    background-color:  $sangBlue;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 180px 100px 104px 100px;
+
+    @media (max-width: 720px) {
+      padding: 40px 30px 40px 30px;
+    }
+  }
+  input:focus::placeholder {
+    color: transparent;
+  }
+  button{
+    outline: none;
+  }
+  p {
+    padding: 0;
+  }
+  .container.inside{
+    max-width: 600px;
+  }
+  @media (max-width:1154px) {
+    img#hide{
+      display: none;
+    }
+    .top-bar{
+      padding:50px;
+    }
+    .new{
+      padding:0px 50px 100px 50px;
+    }
+    .phonepad{
+      padding:50px;
+      text-align: center;
     }
     .comment{
-      text-align: left;
-      padding: 170px 30px 250px 30px;
-      @media (max-width: 1154px) {
-        max-width: 100%;
-        flex: unset;
-      }
+      text-align:center;
+      padding: 100px 30px 100px 30px;
     }
-    .semester{
-      background-color:  #92C3E6;
-      padding:0px 0px 0px 104px;
-      @media (max-width: 1154px) {
-        display: flex;
-        justify-content: center;
-      }
+    .input{
+      width:200px;
     }
-    .first{
-      background-color:  #508197;
-      display: flex;
-      flex-direction: column;
+    .center{
+      display:flex;
       justify-content: center;
       align-items: center;
-      text-align: center;
-      padding: 180px 100px 104px 100px;
+      margin: 0;
+    }
 
-      @media (max-width: 720px) {
-        padding: 40px 30px 40px 30px;
-      }
-    }
-    input:focus::placeholder {
-      color: transparent;
-    }
-    button{
-      outline: none;
-    }
-    p {
-      padding: 0;
-    }
-    .container.inside{
-      max-width: 600px;
-    }
-    @media (max-width:1154px) {
-      img#hide{
-        display: none;
-      }
-      .top-bar{
-        padding:50px;
-      }
-      .new{
-        padding:0px 50px 100px 50px;
-      }
-      .phonepad{
-        padding:50px;
-        text-align: center;
-      }
-      .comment{
-        text-align:center;
-        padding: 100px 30px 100px 30px;
-      }
-      .input{
-        width:200px;
-      }
-      .center{
-        display:flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-      }
-
-    }
-    *, html {padding:0; margin:0;}
+  }
+  *, html {padding:0; margin:0;}
 
 
 </style>

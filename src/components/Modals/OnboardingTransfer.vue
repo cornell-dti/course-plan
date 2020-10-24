@@ -187,7 +187,7 @@
 import reqsData from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse';
-import { passiveGray, activeBlue, lightPlaceholderGray } from '@/assets/constants/colors';
+import { inactiveGray, inactiveBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 Vue.component('newCourse', NewCourse);
 
@@ -333,11 +333,11 @@ export default {
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
       if (contentShown) {
-        displayOptions.boxBorder = passiveGray;
-        displayOptions.arrowColor = passiveGray;
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = activeBlue;
-        displayOptions.arrowColor = activeBlue;
+        displayOptions.boxBorder = inactiveBlue;
+        displayOptions.arrowColor = inactiveBlue;
       }
     },
     showHideExamContent(i) {
@@ -361,16 +361,16 @@ export default {
             displayOptions[key].stopClose = false;
           } else if (key !== 'equivCourse' && displayOptions[key].shown) {
             displayOptions[key].shown = false;
-            displayOptions[key].boxBorder = passiveGray;
-            displayOptions[key].arrowColor = passiveGray;
+            displayOptions[key].boxBorder = inactiveGray;
+            displayOptions[key].arrowColor = inactiveGray;
           }
         });
       } else if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
       } else if ('equivCourse' && displayOptions.shown) {
         displayOptions.shown = false;
-        displayOptions.boxBorder = passiveGray;
-        displayOptions.arrowColor = passiveGray;
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       }
     },
     closeTypeDropdownIfOpen(event, i) {
@@ -428,8 +428,8 @@ export default {
       }
       displayOptions.placeholder = text;
       displayOptions.shown = false;
-      displayOptions.arrowColor = passiveGray;
-      displayOptions.boxBorder = passiveGray;
+      displayOptions.arrowColor = inactiveGray;
+      displayOptions.boxBorder = inactiveGray;
       displayOptions.placeholderColor = lightPlaceholderGray;
       this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
     },

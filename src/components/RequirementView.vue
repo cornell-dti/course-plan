@@ -140,8 +140,8 @@ export default {
   color: $darkGray;
 }
 button.active {
-  color: #508197;
-  border-bottom: solid 10px #508197;
+  color: $sangBlue;
+  border-bottom: solid 10px $sangBlue;
   padding-bottom: 2px;
   margin: 5px;
 }

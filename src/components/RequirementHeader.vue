@@ -168,25 +168,25 @@ export default {
   font-weight: 600;
   font-size: 16px;
   line-height: 16px;
-  color: #000000;
+  color: $black;
 }
 .major {
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 17px;
-  color: #000000;
+  color: $black;
   &-college {
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
-    color: #000000;
+    color: $black;
   }
 }
 button.active {
-  color: #508197;
-  border-bottom: solid 10px #508197;
+  color: $sangBlue;
+  border-bottom: solid 10px $sangBlue;
   padding-bottom: 2px;
   margin: 5px;
 }
@@ -195,8 +195,8 @@ button.active {
   width: 14px;
 }
 .arrow {
-  fill: #1AA9A5;
-  color:#1AA9A5;
+  fill: $emGreen;
+  color:$emGreen;
   margin-top: -2px;
     &-up {
      margin-top: 4px;

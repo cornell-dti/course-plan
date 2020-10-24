@@ -52,7 +52,7 @@ import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import OnboardingBasic from '@/components/Modals/OnboardingBasic';
 import OnboardingTransfer from '@/components/Modals/OnboardingTransfer';
-import { lightPlaceholderGray } from '@/assets/constants/colors';
+import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 require('@/assets/images/timeline1.svg');
 

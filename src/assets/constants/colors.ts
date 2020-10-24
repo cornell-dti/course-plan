@@ -38,8 +38,3 @@ export const coursesColorSet = [
     hex: '#F296D3'
   }
 ];
-
-export const passiveGray = '#C4C4C4';
-export const activeBlue = '#32A0F2';
-export const lightPlaceholderGray = '#757575';
-export const darkPlaceholderGray = '#B6B6B6';

@@ -178,7 +178,7 @@
 <script>
 
 import reqsData from '@/requirements/typed-requirement-json';
-import { passiveGray, activeBlue, lightPlaceholderGray } from '@/assets/constants/colors';
+import { inactiveGray, inactiveBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 const placeholderText = 'Select one';
 
@@ -447,11 +447,11 @@ export default {
 
       if (contentShown) {
         // clicked box when content shown. So then hide content
-        displayOptions.boxBorder = passiveGray;
-        displayOptions.arrowColor = passiveGray;
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = activeBlue;
-        displayOptions.arrowColor = activeBlue;
+        displayOptions.boxBorder = inactiveBlue;
+        displayOptions.arrowColor = inactiveBlue;
       }
     },
     showHideCollegeContent(i) {
@@ -470,8 +470,8 @@ export default {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
         displayOptions.shown = false;
-        displayOptions.boxBorder = passiveGray;
-        displayOptions.arrowColor = passiveGray;
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       }
     },
     closeCollegeDropdownIfOpen(event, i) {
@@ -489,8 +489,8 @@ export default {
       displayOptions.placeholder = text;
       displayOptions.acronym = acronym;
       displayOptions.shown = false;
-      displayOptions.arrowColor = passiveGray;
-      displayOptions.boxBorder = passiveGray;
+      displayOptions.arrowColor = inactiveGray;
+      displayOptions.boxBorder = inactiveGray;
       displayOptions.placeholderColor = lightPlaceholderGray;
       this.$emit('updateBasic', this.displayOptions.major, this.displayOptions.college, this.displayOptions.minor);
     },

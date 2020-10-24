@@ -371,7 +371,7 @@ export default {
   }
 
   &-addSemesterButton {
-    background: #508197;
+    background: $sangBlue;
     border-radius: 8px;
     min-height: 2.5rem;
     min-width: 9rem;

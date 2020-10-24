@@ -114,8 +114,9 @@ import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import {
-  passiveGray, activeBlue, lightPlaceholderGray, darkPlaceholderGray
-} from '@/assets/constants/colors';
+  inactiveGray, inactiveBlue, lightPlaceholderGray, darkPlaceholderGray
+} from '@/assets/scss/_variables.scss';
+
 
 const clickOutside = {
   bind(el, binding, vnode) {
@@ -221,11 +222,11 @@ export default {
 
       if (contentShown) {
         // clicked box when content shown. So then hide content
-        displayOptions.boxBorder = passiveGray;
-        displayOptions.arrowColor = passiveGray;
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = activeBlue;
-        displayOptions.arrowColor = activeBlue;
+        displayOptions.boxBorder = inactiveBlue;
+        displayOptions.arrowColor = inactiveBlue;
       }
     },
     showHideSeasonContent() {
@@ -240,8 +241,8 @@ export default {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
         displayOptions.shown = false;
-        displayOptions.boxBorder = passiveGray;
-        displayOptions.arrowColor = passiveGray;
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       }
     },
     closeSeasonDropdownIfOpen() {
@@ -258,8 +259,8 @@ export default {
       }
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
-      displayOptions.boxBorder = passiveGray;
-      displayOptions.arrowColor = passiveGray;
+      displayOptions.boxBorder = inactiveGray;
+      displayOptions.arrowColor = inactiveGray;
       displayOptions.placeholderColor = lightPlaceholderGray;
     },
     selectSeason(text) {
@@ -272,8 +273,8 @@ export default {
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.stopClose = false;
-      displayOptions.boxBorder = passiveGray;
-      displayOptions.arrowColor = passiveGray;
+      displayOptions.boxBorder = inactiveGray;
+      displayOptions.arrowColor = inactiveGray;
       displayOptions.placeholderColor = darkPlaceholderGray;
 
       if (type === 'season') {
