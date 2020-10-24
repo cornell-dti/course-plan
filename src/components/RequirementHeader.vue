@@ -100,6 +100,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .major, .minor{
   display: flex;
   padding-bottom: 25px;
@@ -204,7 +206,7 @@ button.active {
   margin: 0.3125rem 0 0 0;
   font-size: 12px;
   line-height: 12px;
-  color: #3C3C3C;
+  color: $darkGray;
 
    &-credits {
      font-weight: bold;

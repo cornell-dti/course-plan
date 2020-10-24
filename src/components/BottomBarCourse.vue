@@ -270,12 +270,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  @import "@/assets/scss/_variables.scss";
+
   .bottombarcourse {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #FFF;
+    background-color: $white;
 
     left: 29.5rem;
     width: calc(100vw - 29.5rem);
@@ -292,7 +294,7 @@ export default {
           float: left;
           height: 16.25rem;
           width: 40%;
-          background: #F8F8F8;
+          background: $offWhite;
           overflow: auto;
         }
       }
@@ -302,7 +304,7 @@ export default {
           float: right;
           height: 16.25rem;
           width: 60%;
-          background: #FFF;
+          background: $white;
           overflow: auto;
         }
       }
@@ -440,7 +442,7 @@ export default {
           float: none;
           overflow: none;
           display: flex;
-          background: #F8F8F8;
+          background: $offWhite;
           flex-shrink: 0;
           .info {
             width: 100%;
@@ -453,7 +455,7 @@ export default {
           height: auto;
           float: none;
           display: flex;
-          background: #FFF;
+          background: $white;
           overflow: none;
           flex-shrink: 0;
         }

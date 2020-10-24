@@ -106,6 +106,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .btn {
   padding: 0;
   display: flex;
@@ -135,7 +137,7 @@ export default {
   font-weight: bold;
   font-size: 14px;
   line-height: 14px;
-  color: #3C3C3C;
+  color: $darkGray;
 }
 button.active {
   color: #508197;

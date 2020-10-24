@@ -143,9 +143,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .courseMenu {
   &-content {
-    background: #ffffff;
+    background: $white;
     border: 1px solid #acacac;
     box-sizing: border-box;
     border-radius: 9px;
