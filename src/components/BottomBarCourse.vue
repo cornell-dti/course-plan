@@ -200,6 +200,8 @@
 </template>
 
 <script>
+import { reviewColors } from '../assets/constants/colors';
+
 export default {
   data() {
     return {
@@ -231,9 +233,8 @@ export default {
     },
 
     reviewsColor(review, flip = false) {
-      const colors = ['#d9534f', '#f0ad4e', '#5cb85c'];
+      const colors = Object.values(reviewColors);
       let index;
-
       if (review < 2) {
         index = 0;
       } else if (review >= 2 && review < 4) {

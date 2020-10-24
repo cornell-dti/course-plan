@@ -178,6 +178,7 @@
 <script>
 
 import reqsData from '@/requirements/typed-requirement-json';
+import { passiveGray, activeBlue, lightPlaceholderGray } from '@/assets/constants/colors';
 
 const placeholderText = 'Select one';
 
@@ -207,7 +208,7 @@ export default {
     if (this.user.college !== '') {
       collegeText = this.user.collegeFN;
       collegeAcronym = this.user.college;
-      collegePlaceholderColor = '#757575';
+      collegePlaceholderColor = lightPlaceholderGray;
     }
 
     let majorText = placeholderText;
@@ -216,7 +217,7 @@ export default {
     if ('major' in this.user && this.user.major.length > 0) {
       majorText = this.user.majorFN;
       majorAcronym = this.user.major;
-      majorPlaceholderColor = '#757575';
+      majorPlaceholderColor = lightPlaceholderGray;
     }
     let minorText = placeholderText;
     let minorAcronym = '';
@@ -224,7 +225,7 @@ export default {
     if ('minor' in this.user && this.user.minor.length > 0) {
       minorText = this.user.minorFN;
       minorAcronym = this.user.minor;
-      minorPlaceholderColor = '#757575';
+      minorPlaceholderColor = lightPlaceholderGray;
     }
     return {
       // TODO: Get real college, major, and minor lists
@@ -296,7 +297,7 @@ export default {
               stopClose: false,
               boxBorder: '',
               arrowColor: '',
-              placeholderColor: '#757575',
+              placeholderColor: lightPlaceholderGray,
               placeholder: major.placeholder[i],
               acronym: major.acronym[i]
             };
@@ -327,7 +328,7 @@ export default {
               stopClose: false,
               boxBorder: '',
               arrowColor: '',
-              placeholderColor: '#757575',
+              placeholderColor: lightPlaceholderGray,
               placeholder: minor.placeholder[i],
               acronym: minor.acronym[i]
             };
@@ -446,11 +447,11 @@ export default {
 
       if (contentShown) {
         // clicked box when content shown. So then hide content
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = passiveGray;
+        displayOptions.arrowColor = passiveGray;
       } else {
-        displayOptions.boxBorder = '#32A0F2';
-        displayOptions.arrowColor = '#32A0F2';
+        displayOptions.boxBorder = activeBlue;
+        displayOptions.arrowColor = activeBlue;
       }
     },
     showHideCollegeContent(i) {
@@ -469,8 +470,8 @@ export default {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
         displayOptions.shown = false;
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = passiveGray;
+        displayOptions.arrowColor = passiveGray;
       }
     },
     closeCollegeDropdownIfOpen(event, i) {
@@ -488,9 +489,9 @@ export default {
       displayOptions.placeholder = text;
       displayOptions.acronym = acronym;
       displayOptions.shown = false;
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.placeholderColor = '#757575';
+      displayOptions.arrowColor = passiveGray;
+      displayOptions.boxBorder = passiveGray;
+      displayOptions.placeholderColor = lightPlaceholderGray;
       this.$emit('updateBasic', this.displayOptions.major, this.displayOptions.college, this.displayOptions.minor);
     },
     selectCollege(text, acronym, i) {

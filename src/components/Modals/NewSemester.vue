@@ -109,10 +109,13 @@
 
 <script>
 
-import fall from '../../assets/images/fallEmoji.svg';
-import spring from '../../assets/images/springEmoji.svg';
-import winter from '../../assets/images/winterEmoji.svg';
-import summer from '../../assets/images/summerEmoji.svg';
+import fall from '@/assets/images/fallEmoji.svg';
+import spring from '@/assets/images/springEmoji.svg';
+import winter from '@/assets/images/winterEmoji.svg';
+import summer from '@/assets/images/summerEmoji.svg';
+import {
+  passiveGray, activeBlue, lightPlaceholderGray, darkPlaceholderGray
+} from '@/assets/constants/colors';
 
 const clickOutside = {
   bind(el, binding, vnode) {
@@ -127,7 +130,6 @@ const clickOutside = {
     document.body.removeEventListener('click', el.event);
   }
 };
-
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -219,11 +221,11 @@ export default {
 
       if (contentShown) {
         // clicked box when content shown. So then hide content
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = passiveGray;
+        displayOptions.arrowColor = passiveGray;
       } else {
-        displayOptions.boxBorder = '#32A0F2';
-        displayOptions.arrowColor = '#32A0F2';
+        displayOptions.boxBorder = activeBlue;
+        displayOptions.arrowColor = activeBlue;
       }
     },
     showHideSeasonContent() {
@@ -238,8 +240,8 @@ export default {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
         displayOptions.shown = false;
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = passiveGray;
+        displayOptions.arrowColor = passiveGray;
       }
     },
     closeSeasonDropdownIfOpen() {
@@ -256,9 +258,9 @@ export default {
       }
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.placeholderColor = '#757575';
+      displayOptions.boxBorder = passiveGray;
+      displayOptions.arrowColor = passiveGray;
+      displayOptions.placeholderColor = lightPlaceholderGray;
     },
     selectSeason(text) {
       this.selectOption('season', text);
@@ -270,9 +272,9 @@ export default {
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.stopClose = false;
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.placeholderColor = '#B6B6B6';
+      displayOptions.boxBorder = passiveGray;
+      displayOptions.arrowColor = passiveGray;
+      displayOptions.placeholderColor = darkPlaceholderGray;
 
       if (type === 'season') {
         this.seasonText = '';
