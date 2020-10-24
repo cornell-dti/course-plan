@@ -1,47 +1,57 @@
 <template>
   <div class="subrequirement">
-  <div class="row depth-req">
-    <div class="col-1" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
-      <button class="btn">
-        <img
-          v-if="subReq.displayDescription"
-          class="arrow arrow-up"
-          :src="getSrc()"
-          alt="dropup"
-        />
-        <img
-          v-else
-          class="arrow arrow-down"
-          :src="getSrc()"
-          alt="dropdown"
-        />
-      </button>
+    <div class="row depth-req">
+      <div class="col-1" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
+        <button class="btn">
+          <img
+            v-if="subReq.displayDescription"
+            class="arrow arrow-up"
+            :src="getSrc()"
+            alt="dropup"
+          />
+          <img
+            v-else
+            class="arrow arrow-down"
+            :src="getSrc()"
+            alt="dropdown"
+          />
+        </button>
+      </div>
+      <div class="col-7" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
+        <p v-bind:class="[{'sup-req': !this.isCompleted}, 'pointer', this.isCompleted ? 'completed-ptext' : 'incomplete-ptext']">{{subReq.requirement.name}}</p>
+      </div>
+      <div class="col">
+        <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">{{
+          (subReq.requirement.fulfilledBy !== 'self-check')
+          ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
+          || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
+          : 'self check' }}</p>
+        <p v-if="this.isCompleted" class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
+      </div>
     </div>
-    <div class="col-7" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
-      <p v-bind:class="[{'sup-req': !this.isCompleted}, 'pointer', this.isCompleted ? 'completed-ptext' : 'incomplete-ptext']">{{subReq.requirement.name}}</p>
+    <div v-if="subReq.displayDescription" :class="[{'completed-ptext': this.isCompleted}, 'description']">
+      {{ subReq.requirement.description }} <a class="more"
+      :style="{ 'color': `#${color}` }"
+      :href="subReq.requirement.source" target="_blank">
+      <strong>Learn More</strong></a>
     </div>
-    <div class="col">
-      <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">{{
-        (subReq.requirement.fulfilledBy !== 'self-check')
-        ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
-        || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
-        : 'self check' }}</p>
-      <p v-if="this.isCompleted" class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
+    <div v-if="!this.isCompleted" class="separator"></div>
+    <div
+    v-for="(subReqCourseCodes, id) in subReqCoursesNotTakenArray"
+    :key="subReqCourseCodes.id">
+      <incompletesubreqcourse
+        :subReq="subReq"
+        :subReqCourseId="id"
+        :courseCodes="subReqCourseCodes"
+      />
     </div>
-  </div>
-  <div v-if="subReq.displayDescription" :class="[{'completed-ptext': this.isCompleted}, 'description']">
-    {{ subReq.requirement.description }} <a class="more"
-    :style="{ 'color': `#${color}` }"
-    :href="subReq.requirement.source" target="_blank">
-    <strong>Learn More</strong></a>
-  </div>
-  <div v-if="!this.isCompleted" class="separator"></div>
   </div>
 </template>
 
 
 <script>
 import Vue from 'vue';
+import firebase from 'firebase/app';
 import CompletedSubReqCourse from '@/components/CompletedSubReqCourse';
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse';
 import IncompleteSelfCheckSubReqCourse from '@/components/IncompleteSelfCheckSubReqCourse';
@@ -49,6 +59,10 @@ import IncompleteSelfCheckSubReqCourse from '@/components/IncompleteSelfCheckSub
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
 Vue.component('incompleteselfchecksubreqcourse', IncompleteSelfCheckSubReqCourse);
+
+require('firebase/functions');
+
+const functions = firebase.functions();
 
 // Arrows for dropup and dropdown
 const dropupIncompleteSrc = require('@/assets/images/dropup.svg');

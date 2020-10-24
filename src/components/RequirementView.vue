@@ -96,6 +96,7 @@ export default {
       this.$emit('activateMinor', id);
     },
     toggleDetails(index) {
+      console.log('toggleDetails from RequirementView');
       this.$emit('toggleDetails', index);
     },
     toggleDescription(index, type, id) {

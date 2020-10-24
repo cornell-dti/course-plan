@@ -1,1 +1,171 @@
-<!-- Component for Incomplete SubReq Course -->
+<template>
+  <div class="incompletesubreqcourse">
+    <div class="draggable-requirements-wrapper"
+      v-if="subReq.displayDescription && courseCodes.length > 0"
+    >
+      <div class="draggable-requirements-seeAll-wrapper">
+        <div class="draggable-requirements-seeAll-button reqCourse-button">See All</div>
+      </div>
+        <div
+          class="draggable-requirements-courses"
+          v-dragula="courseObjects"
+          bag="first-bag"
+        >
+          <div v-for="course in courseObjects" :key="course.uniqueID" class="requirements-courseWrapper">
+            <course
+              v-bind="course"
+              :courseObj="course"
+              :id="course.subject + course.number"
+              :uniqueID="course.uniqueID"
+              :compact="course.compact"
+              :active="false"
+              class="requirements-course"
+            />
+          </div>
+        </div>
+      <div class="separator"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Vue from 'vue';
+import firebase from 'firebase/app';
+// eslint-disable-next-line import/extensions
+import Course from '@/components/Course.vue';
+
+Vue.component('course', Course);
+
+require('firebase/functions');
+
+const functions = firebase.functions();
+
+const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
+
+export default {
+  // created() {
+  //   this.getFirstFourCourseObjects();
+  // },
+  mounted() {
+    this.getFirstFourCourseObjects();
+    console.log(this.courseObjects);
+    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+    const service = Vue.$dragula.$service;
+    service.eventBus.$on('drag', () => {
+      this.scrollable = true;
+    });
+    service.eventBus.$on('drop', e => {
+      this.scrollable = true;
+      // this.reqCourseDropHandler();
+    });
+  },
+  data() {
+    return {
+      courseObjects: [],
+      scrollable: false,
+      dataReady: false
+    };
+  },
+  beforeDestroy() {
+    this.$el.removeEventListener('touchmove', this.dragListener);
+  },
+  props: {
+    subReq: Object,
+    subReqCourseId: Number,
+    courseCodes: Array
+  },
+  methods: {
+    dragListener(event) {
+      if (!this.$data.scrollable) event.preventDefault();
+    },
+    getFirstFourCourseObjects() {
+      // const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
+
+      const firstFourCourseCodes = [];
+      for (let i = 0; i < 4 && i < this.courseCodes.length; i += 1) {
+        firstFourCourseCodes.push(this.courseCodes[i]);
+      }
+      let fetchedCourses;
+      // const firstFourCourseObjects = [];
+      FetchCourses({ courseCodes: firstFourCourseCodes }).then(result => {
+        fetchedCourses = result.data.courses;
+        fetchedCourses.forEach(course => {
+          console.log(course);
+          const createdCourse = this.$parent.$parent.$parent.$parent.createCourse(course);
+          createdCourse.compact = true;
+          this.courseObjects.push(createdCourse);
+          // firstFourCourseObjects.push(createdCourse);
+        });
+        // this.dataReady = true;
+      }).catch(error => {
+        console.log('FetchCourses() Error: ', error);
+      });
+      // console.log('courseObjects', this.courseObjects);
+    }
+    // reqCourseDropHandler() {
+    //   this.$emit('reqCourseDropHandler');
+    // }
+  }
+};
+</script>
+
+<style scoped lang="scss">
+.separator {
+  height: 1px;
+  width: 100%;
+  background-color: #d7d7d7;
+}
+
+.draggable-requirements {
+  &-wrapper {
+    margin-top: 2%;
+    margin-bottom: 2%;
+  }
+  &-seeAll {
+    &-wrapper {
+      display: flex;
+      justify-content: flex-end;
+    }
+    // &-button {
+    //   font-size: 12px;
+    //   line-height: 15px;
+    //   color: #32A0F2;
+    //   padding: 1%;
+    //   cursor: pointer;
+    // }
+  }
+  &-courses{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: -1%;
+    margin-bottom: 2%;
+    width: 100%;
+  }
+
+}
+
+.requirements {
+  &-courseWrapper {
+    padding: 1%;
+  }
+  &-course {
+    touch-action: none;
+    cursor: grab;
+  }
+  &-course:active:hover {
+    touch-action: none;
+    cursor: grabbing;
+  }
+}
+
+.reqCourse {
+  &-button {
+    font-size: 12px;
+    line-height: 15px;
+    color: #32A0F2;
+    padding: 1%;
+    cursor: pointer;
+  }
+}
+</style>

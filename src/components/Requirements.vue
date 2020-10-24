@@ -137,6 +137,8 @@ export default Vue.extend({
 
     // Populate getRostersFromLastTwoYears
     this.rostersFromLastTwoYears = this.getRostersFromLastTwoYears();
+
+    console.log('Requirements.vue computed');
   },
   data() : Data {
     return {
@@ -231,9 +233,11 @@ export default Vue.extend({
       return (id < 2 || id === currentDisplay);
     },
     toggleDetails(index: number): void {
+      console.log('toggleDetails');
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
     },
     toggleDescription(index: number, type: 'ongoing' | 'completed', id: number): void {
+      console.log('toggleDescription');
       if (type === 'ongoing') {
         const currentBool = this.reqs[index].ongoing[id].displayDescription;
         this.reqs[index].ongoing[id].displayDescription = !currentBool;

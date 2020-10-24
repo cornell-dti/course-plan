@@ -80,7 +80,10 @@ export default {
   },
   methods: {
     toggleDetails(index) {
+      console.log('req.displayDetails before: ', this.req.displayDetails);
+      console.log('toggleDetails from RequirementHeader');
       this.$emit('toggleDetails', index);
+      console.log('req.displayDetails after: ', this.req.displayDetails);
     },
     activateMajor(id) {
       this.$emit('activateMajor', id);
