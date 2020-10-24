@@ -2,7 +2,6 @@ import { writeFileSync } from 'fs';
 import {
   CollegeOrMajorRequirement,
   DecoratedRequirementsJson,
-  UniversityRequirements,
   DecoratedCollegeOrMajorRequirement,
   EligibleCourses
 } from './types';
@@ -42,7 +41,12 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     university, college, major, minor
   } = sourceRequirements;
   type MutableDecoratedJson = {
-    university: UniversityRequirements;
+    university: {
+      [key: string]: {
+        readonly name: string;
+        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+      };
+    };
     college: {
       [key: string]: {
         readonly name: string;
@@ -65,7 +69,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     };
   };
   const decoratedJson: MutableDecoratedJson = {
-    university, college: {}, major: {}, minor: {}
+    university: {}, college: {}, major: {}, minor: {}
   };
   const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) => (
     requirements.map(requirement => {
@@ -75,6 +79,10 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
       };
     })
   );
+  Object.entries(university).forEach(([universityName, universityRequirement]) => {
+    const { requirements, ...rest } = universityRequirement;
+    decoratedJson.university[universityName] = { ...rest, requirements: decorateRequirements(requirements) };
+  });
   Object.entries(college).forEach(([collegeName, collegeRequirement]) => {
     const { requirements, ...rest } = collegeRequirement;
     decoratedJson.college[collegeName] = { ...rest, requirements: decorateRequirements(requirements) };

@@ -39,18 +39,6 @@ function ifAllEligible(subject: string, number: string): boolean {
 function computeUniversityRequirementFulfillments(
   coursesTaken: readonly CourseTaken[]
 ): readonly RequirementFulfillment<RequirementFulfillmentStatistics>[] {
-  const academicCreditsRequirements = {
-    name: 'Academic Credits',
-    description: 'To graduate, a student must earn a minimum of 120 academic credits. Physical education credits and “10XX” courses do not count toward the 120 required credits.',
-    source: 'http://courses.cornell.edu/content.php?catoid=31&navoid=7901',
-    search: ['all-eligible'],
-    includes: [],
-    operator: 'or',
-    fulfilledBy: 'credits',
-    minCount: 120,
-    applies: 'all',
-    progressBar: true
-  } as const;
   const PERequirement = {
     name: 'Physical Education',
     description: 'All incoming freshmen are required to take two credits (two courses) of Physical Education, one credit each semester of the first year on campus.',
@@ -72,24 +60,17 @@ function computeUniversityRequirementFulfillments(
     description: 'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming and water safety competency requirement '
       + 'for all entering first-year undergraduate students.',
     source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
-    operator: null,
-    fulfilledBy: 'self-check',
-    includes: [],
-    minCount: 0,
+    operator: 'or',
+    fulfilledBy: 'courses',
+    includes: ['PE 1100'],
+    minCount: 1,
     applies: 'all'
   } as const;
 
-
-  const coursesThatCountTowardsAcademicCredits = coursesTaken.filter(course => ifAllEligible(course.subject, course.number));
   const coursesThatCountTowardsPE = coursesTaken.filter(course => course.subject === 'PE');
+  const coursesThatCountTowardsSwim = coursesTaken.filter(course => course.subject === 'PE' && course.number === '1100');
 
   return [
-    // Academic Credits
-    {
-      requirement: academicCreditsRequirements,
-      courses: [coursesThatCountTowardsAcademicCredits],
-      minCountFulfilled: coursesThatCountTowardsAcademicCredits.reduce((accumulator, course) => accumulator + course.credits, 0)
-    },
     // PE Credits
     {
       requirement: PERequirement,
@@ -207,15 +188,18 @@ export function computeRequirements(
   // prepare grouped fulfillment summary
   const groups: GroupedRequirementFulfillmentReport[] = [];
 
-  // PART 1: check university requirements
-  groups.push({
-    groupName: 'University',
-    specific: null,
-    reqs: computeUniversityRequirementFulfillments(coursesTaken)
-  });
+  // PART 1: check university requirements (grouped together under College requirements)
+  // groups.push({
+  //   groupName: 'College',
+  //   specific: college,
+  //   reqs: computeUniversityRequirementFulfillments(coursesTaken)
+  // });
 
   // PART 2: check college & major & minor requirements
   if (!(college in requirementJson.college)) throw new Error('College not found.');
+
+  const universityReqs = requirementJson.university.UNI;
+  console.log(universityReqs);
   const collegeReqs = requirementJson.college[college];
 
   type RequirementWithSourceType = DecoratedCollegeOrMajorRequirement & {
@@ -223,6 +207,9 @@ export function computeRequirements(
     readonly sourceSpecificName: string;
   };
   const requirementsToBeConsideredInGraph: readonly RequirementWithSourceType[] = [
+    ...universityReqs.requirements.map(
+      it => ({ ...it, sourceType: 'College', sourceSpecificName: college } as const)
+    ),
     ...collegeReqs.requirements.map(
       it => ({ ...it, sourceType: 'College', sourceSpecificName: college } as const)
     ),

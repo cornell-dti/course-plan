@@ -36,9 +36,10 @@ import psychMinorRequirements from './minors/psych';
 
 const json: RequirementsJson = {
   university: {
-    value: 'UNI',
-    name: 'University',
-    requirements: universityRequirements
+    UNI: {
+      name: 'University',
+      requirements: universityRequirements
+    }
   },
   college: {
     AG: {

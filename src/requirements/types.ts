@@ -51,11 +51,11 @@ export interface BaseRequirement {
   readonly progressBar?: boolean;
 }
 
-export type UniversityRequirements = {
-  readonly value: string;
-  readonly name: string;
-  readonly requirements: readonly BaseRequirement[];
-};
+// export type UniversityRequirements = {
+//   readonly value: string;
+//   readonly name: string;
+//   readonly requirements: readonly BaseRequirement[];
+// };
 
 type Checker = (course: Course) => boolean;
 export interface CollegeOrMajorRequirement extends BaseRequirement {
@@ -87,7 +87,7 @@ export type MajorRequirements<R> = {
 };
 
 type GenericRequirementsJson<R> = {
-  readonly university: UniversityRequirements;
+  readonly university: CollegeRequirements<R>;
   readonly college: CollegeRequirements<R>;
   readonly major: MajorRequirements<R>;
   readonly minor: MajorRequirements<R>;
@@ -96,7 +96,7 @@ type GenericRequirementsJson<R> = {
 export type RequirementsJson = GenericRequirementsJson<CollegeOrMajorRequirement>;
 
 export type DecoratedRequirementsJson = {
-  readonly university: UniversityRequirements;
+  readonly university: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly college: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
