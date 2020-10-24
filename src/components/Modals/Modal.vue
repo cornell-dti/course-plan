@@ -105,7 +105,6 @@ export default {
         const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
         const title = dropdown.value;
 
-        // TODO: can I make the valid assumption that the course code is up to the colon in the title?
         const key = title.substring(0, title.indexOf(':'));
         this.addCourse();
       } else if (this.type === 'semester') {
@@ -118,7 +117,6 @@ export default {
       // name used to transmit roster information
       const roster = dropdown.name;
 
-      // TODO: can I make the valid assumption that the course code is up to the colon in the title?
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
       const number = courseCode.split(' ')[1];
@@ -174,7 +172,6 @@ export default {
 </script>
 
 <style lang="scss">
-// TODO: font family
 .modal {
   padding: 1rem;
 
