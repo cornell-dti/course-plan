@@ -112,7 +112,7 @@
               </div>
               <div class="onboarding-addRemoveWrapper" :class="{ 'onboarding--hidden': displayOptions.major.length <= 0}">
                 <div class="onboarding-add" @click="addMajor">
-                  Add
+                  + add another major
                 </div>
                 <div class="onboarding-remove" @click="removeMajor" :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }">
                   Remove
@@ -163,7 +163,7 @@
               </div>
               <div class="onboarding-addRemoveWrapper" :class="{ 'onboarding--hidden': Object.keys(minors).length <= 0}">
                 <div class="onboarding-add" @click="addMinor">
-                  Add
+                  + add another minor
                 </div>
                 <div class="onboarding-remove" @click="removeMinor" :class="{'onboarding--hidden': displayOptions.minor.length === 1 && displayOptions.minor[0].placeholder == placeholderText}">
                   Remove

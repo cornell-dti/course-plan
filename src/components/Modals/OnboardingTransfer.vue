@@ -28,39 +28,6 @@
                     :style="{ borderColor: options.type.boxBorder }"
                     v-click-outside:[index]="closeTypeDropdownIfOpen"
                   >
-                  <label class="onboarding-label">Source/Type</label>
-                  <div class="onboarding-select onboarding-input"
-                      :style="{borderColor: options.type.boxBorder}" >
-                    <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideExamContent(index)">
-                      <div
-                        class="onboarding-dropdown-placeholder college-placeholder"
-                        id="college-placeholder"
-                        :style="{ color: options.type.placeholderColor}"
-                      >
-                        {{ options.type.placeholder }}
-                      </div>
-                      <div
-                        class="onboarding-dropdown-placeholder college-arrow"
-                        id="college-arrow"
-                        :style="{ borderTopColor: options.type.arrowColor }"
-                      ></div>
-                      </div>
-                    <div
-                      class="onboarding-dropdown-content college-content"
-                      id="college-content"
-                      v-if="options.type.shown"
-                    >
-                      <div
-                        v-for="(exam, acronym) in exams"
-                        :key="acronym"
-                        :id="exam"
-                        class="onboarding-dropdown-content-item"
-                        @click="selectExam(exam, acronym, index)"
-                      >
-                        {{ exam }}
-                      </div>
-                    </div>
-                  </div>
                   <div class="onboarding-selectWrapperRow">
                     <div class="onboarding-select--columnWide " >
                       <label class="onboarding-label">Subject</label>
@@ -131,48 +98,54 @@
                       </div>
                     </div>
                   </div>
+                  <div class="onboarding-select--column-remove" >
+                  <div class="onboarding-remove" @click="removeExam" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
+                    x
+                  </div>
+                  </div>
                 </div>
               </div>
               <div class="onboarding-addRemoveWrapper" >
                 <div class="onboarding-add" @click="addExam">
-                  Add
-                </div>
-                <div class="onboarding-remove" @click="removeExam" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
-                  Remove
+                  + add another subject
                 </div>
               </div>
             </div>
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <div class="onboarding-subHeader2">Credits From Other Instituions</div>
+              <div class="onboarding-subHeader"><span class="onboarding-subHeader--font">Transferred Course Credits</span></div>
+              <div class="onboarding-inputs">
               <label class="onboarding-label">Equivalent Cornell Class</label>
               <div
                 v-for="(options, index) in displayOptions.class"
                 :key= index
-                class="onboarding-selectWrapper">
-                <newCourse
-                :semesterID= index
-                :isOnboard="true"
-                :placeholderText= options.class
-                @addItem="addItem"
-                > </newCourse>
-              <div class="onboarding-addRemoveWrapper">
+                class="onboarding-selectWrapperRow">
+                <div class = "onboarding-select--columnWide">
+                  <newCourse
+                  :semesterID= index
+                  :isOnboard="true"
+                  :placeholderText= options.class
+                  @addItem="addItem"
+                  > </newCourse>
+                </div>
+              <div class="onboarding-select--column">
                 <div class="onboarding-remove" @click="removeTransfer">
-                  Remove
+                  x
                 </div>
               </div>
 
             </div>
                 <div class="onboarding-addRemoveWrapper">
                 <div class="onboarding-add" @click="addTransfer">
-                  Add
+                  + add another subject
                 </div>
               </div>
 
             </div>
+            </div>
             <div class="onboarding-bottomWrapper">
               <div class=" onboarding-label--bottom">
-              <label class=" onboarding-label" >Total Non-Cornell Credits</label>
+              <label class=" onboarding-label" >Total Transfer Credits</label>
               </div>
               <div class="onboarding-label--bottom">
                 <label class=" onboarding-label onboarding-label--bottom---bold">{{totalCredits}} </label>
