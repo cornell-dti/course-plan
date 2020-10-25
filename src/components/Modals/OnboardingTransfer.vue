@@ -187,7 +187,7 @@
 import reqsData from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse';
-import { inactiveGray, inactiveBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
+import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 Vue.component('newCourse', NewCourse);
 
@@ -336,8 +336,8 @@ export default {
         displayOptions.boxBorder = inactiveGray;
         displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = inactiveBlue;
-        displayOptions.arrowColor = inactiveBlue;
+        displayOptions.boxBorder = yuxuanBlue;
+        displayOptions.arrowColor = yuxuanBlue;
       }
     },
     showHideExamContent(i) {

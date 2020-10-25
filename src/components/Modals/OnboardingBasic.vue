@@ -178,7 +178,7 @@
 <script>
 
 import reqsData from '@/requirements/typed-requirement-json';
-import { inactiveGray, inactiveBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
+import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 const placeholderText = 'Select one';
 
@@ -450,8 +450,8 @@ export default {
         displayOptions.boxBorder = inactiveGray;
         displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = inactiveBlue;
-        displayOptions.arrowColor = inactiveBlue;
+        displayOptions.boxBorder = yuxuanBlue;
+        displayOptions.arrowColor = yuxuanBlue;
       }
     },
     showHideCollegeContent(i) {

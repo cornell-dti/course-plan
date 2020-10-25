@@ -114,7 +114,7 @@ import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import {
-  inactiveGray, inactiveBlue, lightPlaceholderGray, darkPlaceholderGray
+  inactiveGray, yuxuanBlue, lightPlaceholderGray, darkPlaceholderGray
 } from '@/assets/scss/_variables.scss';
 
 
@@ -225,8 +225,8 @@ export default {
         displayOptions.boxBorder = inactiveGray;
         displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = inactiveBlue;
-        displayOptions.arrowColor = inactiveBlue;
+        displayOptions.boxBorder = yuxuanBlue;
+        displayOptions.arrowColor = yuxuanBlue;
       }
     },
     showHideSeasonContent() {
