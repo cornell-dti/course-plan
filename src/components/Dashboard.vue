@@ -564,7 +564,9 @@ export default {
         }
         bottomCourseIndex = 0;
       }
-      this.bottomBar.bottomCourseFocus = bottomCourseIndex;
+      if (!colorJustChanged) {
+        this.bottomBar.bottomCourseFocus = bottomCourseIndex;
+      }
 
       this.getReviews(course.subject, course.number, review => {
         this.bottomCourses[bottomCourseIndex].overallRating = review.classRating;

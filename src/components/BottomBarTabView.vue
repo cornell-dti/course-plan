@@ -74,13 +74,15 @@ export default {
 
     deleteBottomTab(courseObj) {
       let focusedCourse = this.bottomCourses[this.bottomCourseFocus];
+      let focusedCourseIndex = 0;
 
-      let i = 0;
-      for (; i < this.bottomCourses.length; i += 1) {
+      for (let i = 0; i < this.bottomCourses.length; i += 1) {
         if (this.bottomCourses[i].uniqueID === courseObj.uniqueID) {
           this.bottomCourses.splice(i, 1);
-          if (i === this.bottomCourseFocus) focusedCourse = undefined;
-          break;
+          if (i === this.bottomCourseFocus) {
+            focusedCourse = undefined;
+            focusedCourseIndex = i;
+          }
         }
       }
 
@@ -97,8 +99,8 @@ export default {
       // update focused course
       if (focusedCourse) {
         this.bottomBarTabToggle(focusedCourse);
-      } else if (i < this.bottomCourses.length) {
-        this.bottomBarTabToggle(this.bottomCourses[i]);
+      } else if (focusedCourseIndex < this.bottomCourses.length) {
+        this.bottomBarTabToggle(this.bottomCourses[focusedCourseIndex]);
       } else {
         this.bottomBarTabToggle(this.bottomCourses[this.bottomCourses.length - 1]);
       }
