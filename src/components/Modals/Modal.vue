@@ -11,9 +11,13 @@
         :isOnboard="isOnboard"
         :semesterID="semesterID"
         :currentSemesters="currentSemesters"
-        placeholderText = 'CS 1110", "Multivariable Calculus", etc.'
+        placeholderText = '"CS 1110", "Multivariable Calculus", etc.'
         @duplicateSemester="disableButton"
         ref="modalBodyComponent"
+        :season="season"
+        :year="year"
+        :labels="true"
+        :courseSelected="courseSelected"
       ></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" @click="closeCurrentModal">{{ cancel }}</button>
@@ -40,13 +44,16 @@ export default {
     return {
       isOnboard: false,
       courseIsAddable: true,
-      isDisabled: false
+      isDisabled: false,
+      courseSelected: false
     };
   },
   props: {
     type: String,
     semesterID: Number,
-    currentSemesters: Array
+    currentSemesters: Array,
+    season: String,
+    year: Number
   },
   computed: {
     contentId() {
@@ -58,7 +65,7 @@ export default {
         return `${start}Semester`;
       }
       if (this.type === 'course') {
-        return `${start}Course`;
+        return `Add Course`;
       }
       return `${start}Custom Course`;
     },
@@ -84,6 +91,8 @@ export default {
     },
     closeCurrentModal() {
       let modal;
+      this.courseSelected = false;
+      console.log(this.courseSelected);
       if (this.type === 'course') {
         modal = document.getElementById(`${this.type}Modal-${this.semesterID}`);
       } else {

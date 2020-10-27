@@ -2,7 +2,7 @@
   <div>
   <div class="newSemester">
     <div class="newSemester-section newSemester-type">
-      <label class="newSemester-label" for="type">Type</label>
+      <label v-if="labels" class="newSemester-label" for="type">Type</label>
       <div
         v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="season"
@@ -54,7 +54,7 @@
       </div>
     </div>
     <div class="newSemester-section newSemester-year">
-      <label class="newSemester-label" for="year">Year</label>
+      <label v-if="labels" class="newSemester-label" for="year">Year</label>
       <div
         v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="year"
@@ -143,7 +143,8 @@ export default {
     id: Number,
     isEdit: Boolean,
     year: Number,
-    type: String
+    type: String,
+    labels: Boolean
   },
   data() {
     // years

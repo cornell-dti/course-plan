@@ -4,7 +4,7 @@
     :class="{ 'semester--compact': compact }"
     :id="id"
   >
-    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" ref="modal" />
+    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" ref="modal" :season="type" :year="year" />
     <confirmation
       :id="'confirmation-' + id"
       class="semester-confirmation"
@@ -89,9 +89,9 @@
             <div class = "introjs-bodytext">To start planning your college career, you should try adding a course in your current semester.</div>'
           data-disable-interaction = '1'
         >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" >{{
-            buttonString
-          }}</span>
+          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" :type="type">
+            {{ buttonString }}
+          </span>
         </div>
       </div>
     </div>

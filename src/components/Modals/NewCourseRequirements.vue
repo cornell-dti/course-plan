@@ -1,22 +1,8 @@
 <template>
   <div class="newCourse">
-    <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
-    <div class="autocomplete">
-      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
-    </div>
-    <div v-if="!isOnboard && selected">
-    <div class="newCourse-text">Selected Semester</div>
-      <div class="newCourse-semester">
-        <span class="newCourse-semester-name">
-          <img class="newCourse-season-emoji" :src='seasonImg[season]' alt=""> {{ season }} {{ year }}
-        </span>
-      </div>
-    </div>
-    <div v-else >
-      <div class="newCourse-semester-edit-title">Add this class to the following semester</div>
-      <div class="newCourse-semester-edit">
-        <newSemester :type="season" :year="year"></newSemester>
-      </div>
+    <div class="newCourse-semester-edit-title">Add this class to the following semester</div>
+    <div class="newCourse-semester-edit">
+      <newSemester :type="season" :year="year"></newSemester>
     </div>
   </div>
 </template>
@@ -24,10 +10,8 @@
 <script>
 import coursesJSON from '../../assets/courses/courses.json';
 import NewSemester from '@/components/Modals/NewSemester';
-import NewCourseRequirements from '@/components/Modals/NewCourseRequirements';
 
 Vue.component('newSemester', NewSemester);
-Vue.component('newCourseRequiremets', NewCourseRequirements);
 
 const fall = require('../../assets/images/fallEmoji.svg');
 const spring = require('../../assets/images/springEmoji.svg');
