@@ -29,6 +29,7 @@
           {{ checkIfLast(potreq, potentialReqs) ? potreq : `${potreq},`}}
         </div>
       </div>
+      <div class="newCourse-link">Add these Requirements</div>
     </div>
   </div>
 </template>
@@ -293,6 +294,15 @@ export default {
   }
   &-space {
     margin-right: 5px;
+  }
+  &-link {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    text-decoration-line: underline;
+    color: #32A0F2;
+    cursor: pointer;
   }
 }
 
