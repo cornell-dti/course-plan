@@ -8,9 +8,6 @@ method - unsure what the right move is right now
       <img class="confirmation-icon" src="../assets/images/checkmark.svg" />
     </div>
     <div class="confirmation-text">{{ text }}</div>
-    <!-- <div class="confirmation-right">
-      <span class="undo-buttonText">{{ undo }}</span>
-    </div> -->
   </div>
 </template>
 
@@ -18,12 +15,6 @@ method - unsure what the right move is right now
 export default {
   props: {
     text: String
-  },
-
-  computed: {
-    // undo() {
-    //   return 'UNDO';
-    // }
   }
 };
 </script>

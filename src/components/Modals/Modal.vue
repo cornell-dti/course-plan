@@ -217,12 +217,14 @@ export default {
 
   &-button {
     width: 4.75rem;
+    height: 1.8rem;
     color: #5b676d;
     border-radius: 3px;
     border: 1px solid #3d3d3d;
     background-color: #ffffff;
     display: flex;
     justify-content: center;
+    align-items: center;
 
     &--add {
       color: #ffffff;

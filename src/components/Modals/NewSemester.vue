@@ -342,15 +342,11 @@ export default {
   }
 
   &-select {
-    width: 114px;
-    height: 26px;
     left: 444px;
     top: 183px;
 
     background: #ffffff;
     // border: 1px solid #32A0F2;
-
-    border: 1px solid #c4c4c4;
 
     //when selected border-color: #32A0F2;
 
@@ -392,6 +388,7 @@ export default {
         // width: 121px;
         // height: 16px;
         width: 100%;
+        border: 1px solid #c4c4c4;
         cursor: pointer;
       }
 
@@ -436,19 +433,15 @@ export default {
   }
 
   &-dropdown-content {
-    width: 114px;
-    height: 134px;
+    max-height: 124px;
     left: 444px;
 
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 0px 0px 7px 7px;
 
-    margin-top: 3px;
-
     &.year-content {
       width: 100%;
-      height: 223px;
       left: 574px;
       top: 209px;
 
@@ -464,7 +457,6 @@ export default {
       height: 14px;
     }
     &-item {
-      width: 106px;
       height: 31px;
       left: 454px;
       top: 213px;
@@ -478,6 +470,10 @@ export default {
       color: #757575;
       padding-left: 10px;
       cursor: pointer;
+
+      &:last-child {
+        border-radius: 0px 0px 7px 7px;
+      }
     }
   }
 
