@@ -1,5 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement } from '../checkers-common';
+
 const universityRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Physical Education',
@@ -10,7 +11,7 @@ const universityRequirements: readonly CollegeOrMajorRequirement[] = [
     operator: 'or',
     fulfilledBy: 'courses',
     minCount: 2,
-    applies: 'all',
+    applies: 'all'
   },
   {
     name: 'Swim Test',

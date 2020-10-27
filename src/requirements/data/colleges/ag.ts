@@ -1,6 +1,19 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement } from '../checkers-common';
 
+const totalCreditsRequirement: CollegeOrMajorRequirement = {
+  name: 'Total Credits',
+  description: '120 academic credits are required for graduation. '
+    + 'A minimum of 100 credits must be in courses for which a letter grade was recieved. '
+    + 'PE courses do not count.',
+  source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11561',
+  checker: (course: Course): boolean => !['PE'].includes(course.subject),
+  operator: 'or',
+  fulfilledBy: 'credits',
+  minCount: 120,
+  progressBar: true
+};
+
 const calsCreditsRequirement: CollegeOrMajorRequirement = {
   name: 'CALS Credits',
   description: '55 CALS credits are required for graduation. '
@@ -12,8 +25,7 @@ const calsCreditsRequirement: CollegeOrMajorRequirement = {
   || ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(course.subject),
   operator: 'or',
   fulfilledBy: 'credits',
-  minCount: 55,
-  progressBar: true
+  minCount: 55
 };
 
 const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequirement = {
@@ -192,6 +204,7 @@ const calsWrittenExpressionRequirement: CollegeOrMajorRequirement = {
 };
 
 const calsRequirements: readonly CollegeOrMajorRequirement[] = [
+  totalCreditsRequirement,
   calsCreditsRequirement,
   calsIntroductoryLifeSciencesOrBiologyRequirement,
   calsPhysicalAndLifeSciencesRequirement,
