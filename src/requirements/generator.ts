@@ -21,22 +21,16 @@ const getEligibleCourses = (requirement: CollegeOrMajorRequirement): readonly El
     ? [requirementChecker]
     : requirementChecker;
   return subRequirementCheckers.map(oneRequirementChecker => {
-    const eligibleCoursesMap: { [semester: string]: { [subject: string]: string[] } } = {};
+    const eligibleCoursesMap: { [semester: string]: number[] } = {};
     Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
-      const semesterMap: { [subject: string]: string[] } = {};
-      courses
-        .filter(course => oneRequirementChecker(course))
-        .forEach(course => {
-          let subjectSet = semesterMap[course.subject];
-          if (subjectSet == null) {
-            subjectSet = [];
-          }
-          subjectSet.push(course.catalogNbr);
-          semesterMap[course.subject] = subjectSet;
-        });
-      if (Object.keys(semesterMap).length > 0) {
+      const courseIdSet = new Set(
+        courses
+          .filter(course => oneRequirementChecker(course))
+          .map(course => course.crseId)
+      );
+      if (courseIdSet.size > 0) {
         // Do not include empty semesters.
-        eligibleCoursesMap[semester] = semesterMap;
+        eligibleCoursesMap[semester] = Array.from(courseIdSet);
       }
     });
     return eligibleCoursesMap;

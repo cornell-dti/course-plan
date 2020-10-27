@@ -4,6 +4,9 @@ export type Course = {
   readonly catalogNbr: string;
   readonly titleLong: string;
   readonly description: string;
+  readonly enrollGroups: Object[];
+  readonly catalogWhenOffered?: string;
+  readonly catalogPrereqCoreq?: string;
   readonly catalogBreadth?: string;
   readonly catalogDistr?: string;
   readonly catalogAttribute: string;
@@ -15,6 +18,7 @@ export type Course = {
 
 export type CourseTaken = {
   readonly roster: string;
+  readonly courseId: number;
   readonly code: string;
   readonly subject: string;
   readonly number: string;
@@ -62,10 +66,8 @@ export interface CollegeOrMajorRequirement extends BaseRequirement {
 }
 
 export type EligibleCourses = {
-  readonly [semester: string]: {
-    // Subjects to course numbers
-    readonly [subject: string]: readonly string[];
-  };
+  // "FA20": [123456, 42, 65536, /* and another crseId */]
+  readonly [semester: string]: readonly number[];
 };
 
 export interface DecoratedCollegeOrMajorRequirement extends BaseRequirement {

@@ -307,6 +307,7 @@ export default {
      */
     toFirebaseCourse(course) {
       return {
+        crseId: course.crseId,
         code: `${course.subject} ${course.number}`,
         name: course.name,
         description: course.description,
