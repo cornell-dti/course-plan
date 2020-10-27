@@ -4,18 +4,18 @@
     <div class="autocomplete">
       <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
-    <div v-if="!isOnboard && selected">
-    <div class="newCourse-text">Selected Semester</div>
+    <div v-if="!isOnboard && !selected"> <!-- if a course is not selected -->
+      <div class="newCourse-semester-edit-title">Add this class to the following semester</div>
+      <div class="newCourse-semester-edit">
+        <newSemester :type="season" :year="year"></newSemester>
+      </div>
+    </div>
+    <div v-else > <!-- if a course is selected -->
+      <div class="newCourse-text">Selected Semester</div>
       <div class="newCourse-semester">
         <span class="newCourse-semester-name">
           <img class="newCourse-season-emoji" :src='seasonImg[season]' alt=""> {{ season }} {{ year }}
         </span>
-      </div>
-    </div>
-    <div v-else >
-      <div class="newCourse-semester-edit-title">Add this class to the following semester</div>
-      <div class="newCourse-semester-edit">
-        <newSemester :type="season" :year="year"></newSemester>
       </div>
     </div>
   </div>
