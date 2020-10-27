@@ -5,7 +5,7 @@
       <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
     <div v-if="!isOnboard && !selected"> <!-- if a course is not selected -->
-      <div class="newCourse-semester-edit-title">Add this class to the following semester</div>
+      <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
         <newSemester :type="season" :year="year"></newSemester>
       </div>
@@ -13,9 +13,21 @@
     <div v-else > <!-- if a course is selected -->
       <div class="newCourse-text">Selected Semester</div>
       <div class="newCourse-semester">
-        <span class="newCourse-semester-name">
+        <span class="newCourse-name">
           <img class="newCourse-season-emoji" :src='seasonImg[season]' alt=""> {{ season }} {{ year }}
         </span>
+      </div>
+      <div class="newCourse-title">This class fulfills the following requirement(s):</div>
+      <div class="newCourse-requirements-container">
+        <div class="newCourse-requirements" v-for="req in requirements" :key="req" :class="{'newCourse-space': !checkIfLast(req, requirements)}">
+          {{ checkIfLast(req, requirements) ? req : `${req},`}}
+        </div>
+      </div>
+      <div class="newCourse-title">This class could potentially fulfill the following requirement(s):</div>
+      <div class="newCourse-requirements-container">
+        <div class="newCourse-name" v-for="potreq in potentialReqs" :key="potreq" :class="{'newCourse-space': !checkIfLast(potreq, potentialReqs)}">
+          {{ checkIfLast(potreq, potentialReqs) ? potreq : `${potreq},`}}
+        </div>
       </div>
     </div>
   </div>
@@ -51,7 +63,9 @@ export default {
         Winter: winter,
         Summer: summer
       },
-      selected: this.courseSelected
+      selected: this.courseSelected,
+      requirements: ['DummyReq1', 'DummyReq2'],
+      potentialReqs: ['PotentialReq1', 'PotentialReq2']
     };
   },
   computed: {
@@ -210,6 +224,9 @@ export default {
 
     addCourse() {
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
+    },
+    checkIfLast(elem, list) {
+      return elem === list[list.length - 1];
     }
   }
 };
@@ -239,27 +256,43 @@ export default {
   }
   &-semester {
     margin-top: 8px;
-    &-name {
-      position: relative;
-      border-radius: 11px;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 14px;
-      color: #000000;
-    }
+    margin-bottom: 24px;
     &-edit {
       width: 50%;
-      &-title {
-        font-size: 14px;
-        line-height: 17px;
-        color: #000000;
-        margin-bottom: 6px;
-      }
     }
+  }
+  &-name {
+    position: relative;
+    border-radius: 11px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    color: #000000;
   }
   &-season-emoji {
     height: 18px;
     margin-top: -4px;
+  }
+  &-title {
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+    margin-bottom: 6px;
+  }
+  &-requirements {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    color: #148481;
+    &-container {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 13px;
+    }
+  }
+  &-space {
+    margin-right: 5px;
   }
 }
 
