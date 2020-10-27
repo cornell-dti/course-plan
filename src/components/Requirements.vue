@@ -214,17 +214,17 @@ export default Vue.extend({
       if (group === 'MAJOR') {
         this.majors.forEach((major, i: number) => {
           if (major.display) {
-            currentDisplay = i + 2; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+            currentDisplay = i + 1; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
           }
         });
-        return (id < 2 || id === currentDisplay);
+        return (id < 1 || id === currentDisplay);
       }
       this.minors.forEach((minor, i: number) => {
         if (minor.display) {
-          currentDisplay = i + 2 + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+          currentDisplay = i + 1 + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
         }
       });
-      return (id < 2 || id === currentDisplay);
+      return (id < 1 || id === currentDisplay);
     },
     toggleDetails(index: number): void {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
