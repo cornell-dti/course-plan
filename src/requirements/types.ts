@@ -51,12 +51,6 @@ export interface BaseRequirement {
   readonly progressBar?: boolean;
 }
 
-// export type UniversityRequirements = {
-//   readonly value: string;
-//   readonly name: string;
-//   readonly requirements: readonly BaseRequirement[];
-// };
-
 type Checker = (course: Course) => boolean;
 export interface CollegeOrMajorRequirement extends BaseRequirement {
   readonly checker: Checker | readonly Checker[] | null;

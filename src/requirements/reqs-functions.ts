@@ -11,28 +11,6 @@ import {
 type RequirementMap = { readonly [code: string]: readonly string[] };
 type MutableRequirementMapWithMutableChildren = { [code: string]: string[] };
 
-/** currently not being used but perhaps move to checkers-common
- * @param courseName : name of the course (as a code)
- * @param code : code to check courseName (can contain * to denote any value)
- * @returns if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
- */
-// function ifCodeMatch(courseName: string, code: string): boolean {
-//   for (let i = 0; i < courseName.length; i += 1) {
-//     if (code[i] !== '*' && courseName[i] !== code[i]) return false;
-//   }
-//   return true;
-// }
-
-/** currently not being used but perhaps move to checkers-common
- * @param {string} subject : subject of course to check
- * @param {string} number : number of course to check
- * @returns if the course satisfies all-eligible query (not PE or 10XX course)
- */
-// function ifAllEligible(subject: string, number: string): boolean {
-//   return !ifCodeMatch(subject, 'PE') && !ifCodeMatch(number, '10**');
-// }
-
-
 /**
  * @param coursesTaken a list of all taken courses.
  * @param requirement the requirement to compute course fulfillment.

@@ -45,6 +45,15 @@ export const courseIsFWS = (course: Course): boolean => (
 );
 
 /**
+ * Used for total academic credit requirements for some colleges
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @returns true if the course is not PE or 10** level
+ */
+export const courseIsAllEligible = (course: Course): boolean => (
+  !ifCodeMatch(course.subject, 'PE') && !ifCodeMatch(course.catalogNbr, '10**')
+);
+
+/**
  * This function returns a checker that checks whether a course satisfy a single requirement by
  * checking whether the course code appears in the includes array.
  *

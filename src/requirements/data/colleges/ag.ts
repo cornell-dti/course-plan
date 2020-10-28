@@ -1,8 +1,8 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement } from '../checkers-common';
 
-const totalCreditsRequirement: CollegeOrMajorRequirement = {
-  name: 'Total Credits',
+const totalAcademicCreditsRequirement: CollegeOrMajorRequirement = {
+  name: 'Total Academic Credits',
   description: '120 academic credits are required for graduation. '
     + 'A minimum of 100 credits must be in courses for which a letter grade was recieved. '
     + 'PE courses do not count.',
@@ -204,7 +204,7 @@ const calsWrittenExpressionRequirement: CollegeOrMajorRequirement = {
 };
 
 const calsRequirements: readonly CollegeOrMajorRequirement[] = [
-  totalCreditsRequirement,
+  totalAcademicCreditsRequirement,
   calsCreditsRequirement,
   calsIntroductoryLifeSciencesOrBiologyRequirement,
   calsPhysicalAndLifeSciencesRequirement,
