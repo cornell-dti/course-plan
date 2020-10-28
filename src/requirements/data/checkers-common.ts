@@ -45,7 +45,7 @@ export const courseIsFWS = (course: Course): boolean => (
 );
 
 /**
- * Used for total academic credit requirements for some colleges
+ * Used for total academic credit requirements for all colleges except EN and AR
  * @param course course object with useful information retrived from Cornell courses API.
  * @returns true if the course is not PE or 10** level
  */
