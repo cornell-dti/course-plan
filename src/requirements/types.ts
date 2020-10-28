@@ -4,6 +4,9 @@ export type Course = {
   readonly catalogNbr: string;
   readonly titleLong: string;
   readonly description: string;
+  readonly enrollGroups: Object[];
+  readonly catalogWhenOffered?: string;
+  readonly catalogPrereqCoreq?: string;
   readonly catalogBreadth?: string;
   readonly catalogDistr?: string;
   readonly catalogAttribute: string;
