@@ -1,6 +1,8 @@
 <template>
   <div class="bottombartitle" :style="{ background: `#${color}` }" v-bind:class="{ expandedBottomBarTitle: isExpanded }">
     <div class="bottombar-square-title">{{ name }}</div>
+    <img v-if="!isExpanded" class="bottombartitle-arrow" src="@/assets/images/uparrow-white.svg"/>
+    <img v-if="isExpanded" class="bottombartitle-arrow" src="@/assets/images/downarrow-white.svg"/>
   </div>
 </template>
 
@@ -44,6 +46,12 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+.bottombartitle-arrow {
+  position: absolute;
+  right: 2%;
+  top: 40%;
 }
 
 .expandedBottomBarTitle{

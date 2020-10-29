@@ -115,7 +115,6 @@ export default {
 
   &-button {
     width: 4.75rem;
-    height: 2rem;
     color: #508197;
     border-radius: 3px;
     border: 1px solid #508197;

@@ -69,12 +69,10 @@ export default {
       background-color: rgba(50, 160, 242, 0.15);
     }
     &:first-child {
-      padding-top: 1rem;
       border-top-left-radius: 9px;
       border-top-right-radius: 9px;
     }
     &:last-child {
-      padding-bottom: 1rem;
       border-bottom-left-radius: 9px;
       border-bottom-right-radius: 9px;
     }
