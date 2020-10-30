@@ -1,11 +1,9 @@
 <template>
-  <div class="bottombartab" :style="{ background: `#${color}` }" :class="{ inactive: !isFirstTab}" @click="bottomBarTabToggle(courseObj)">
-    <div class="bottombartab-wrapper" @click="toggleFromTab">
-      <img v-if="isFirstTab && !isExpanded" class="bottombartab-arrow" src="@/assets/images/uparrow-white.svg"/>
-      <img v-if="isFirstTab && isExpanded" class="bottombartab-arrow" src="@/assets/images/downarrow-white.svg"/>
+  <div class="bottombartab" :style="{ background: `#${color}` }" :class="{ inactive: !isBottomCourseFocus}" @click="bottomBarTabToggle(courseObj)">
+    <div class="bottombartab-wrapper">
       <div class="bottombartab-name">{{subject}} {{number}}</div>
     </div>
-    <img class="bottombartab-delete" src="@/assets/images/x-white.svg" @click="deleteBottomTab(subject, number)"/>
+    <img class="bottombartab-delete" src="@/assets/images/x-white.svg" @click.stop="deleteBottomTab(courseObj)"/>
   </div>
 </template>
 
@@ -18,25 +16,32 @@ export default {
     color: String,
     id: Number,
     courseObj: Object,
-    isFirstTab: Boolean,
+    tabIndex: Number,
+    bottomCourseFocus: Number,
     isExpanded: Boolean
   },
 
   methods: {
     bottomBarTabToggle(courseObj) {
       this.$emit('bottomBarTabToggle', courseObj);
+      this.toggleFromTab();
     },
 
-    deleteBottomTab(subject, number) {
-      this.$emit('deleteBottomTab', subject, number);
+    deleteBottomTab(courseObj) {
+      this.$emit('deleteBottomTab', courseObj);
     },
 
     toggleFromTab() {
-      if ((!this.isFirstTab && !this.isExpanded) || this.isFirstTab) {
+      if (this.tabIndex === this.bottomCourseFocus || !this.isExpanded) {
         this.$emit('toggleFromTab');
       }
     }
+  },
 
+  computed: {
+    isBottomCourseFocus() {
+      return this.tabIndex === this.bottomCourseFocus;
+    }
   }
 };
 </script>

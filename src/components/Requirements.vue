@@ -36,6 +36,7 @@ import 'firebase/functions';
 import { Vue } from 'vue-property-decorator';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
+// eslint-disable-next-line import/extensions
 import introJs from 'intro.js';
 
 // Disable import extension check because TS module resolution depends on it.

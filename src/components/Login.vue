@@ -118,6 +118,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import firebase, { User } from 'firebase/app';
+// eslint-disable-next-line import/extensions
 import introJs from 'intro.js';
 
 // eslint-disable-next-line import/extensions
