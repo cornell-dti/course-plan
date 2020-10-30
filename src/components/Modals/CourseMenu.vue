@@ -69,7 +69,7 @@
 <script>
 import Vue from 'vue';
 import Course from '@/components/Course';
-import coursesColorSet from '../../assets/constants/colors';
+import { coursesColorSet } from '../../assets/constants/colors';
 
 export default {
   props: {
