@@ -10,8 +10,7 @@ const totalAcademicCreditsRequirement: CollegeOrMajorRequirement = {
   checker: (course: Course): boolean => !['PE'].includes(course.subject),
   operator: 'or',
   fulfilledBy: 'credits',
-  minCount: 120,
-  progressBar: true
+  minCount: 120
 };
 
 const calsCreditsRequirement: CollegeOrMajorRequirement = {

@@ -10,8 +10,7 @@ const businessRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: courseIsAllEligible,
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 120,
-    progressBar: true
+    minCount: 120
   }
 ];
 

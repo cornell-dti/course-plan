@@ -1,18 +1,18 @@
 <template>
   <div class="requirementheader">
     <!-- TODO change for multiple colleges -->
-    <div v-if="reqIndex<=1 || reqIndex == 1 + majors.length" class="row top">
+    <div v-if="reqIndex<=numberOfColleges || reqIndex == numberOfColleges + majors.length" class="row top">
       <p class="name col p-0">{{ req.name }}</p>
     </div>
       <!-- TODO change for multiple colleges -->
-      <div v-if="reqIndex==1" class="major">
+      <div v-if="reqIndex==numberOfColleges" class="major">
         <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '' }"
           @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id" :class="{ pointer: multipleMajors }">
           <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
           <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
         </div>
       </div>
-      <div v-if="reqIndex==1+majors.length" class="minor">
+      <div v-if="reqIndex==numberOfColleges+majors.length" class="minor">
         <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '' }"
           @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id"
           :class="{ pointer: multipleMinors }">
@@ -82,7 +82,9 @@ export default {
   data() {
     return {
       multipleMajors: this.majors.length > 1,
-      multipleMinors: this.minors.length > 1
+      multipleMinors: this.minors.length > 1,
+      // Currently, users are only allowed to add one college
+      numberOfColleges: 1
     };
   },
   methods: {
