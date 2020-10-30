@@ -19,6 +19,7 @@
         :reqGroupColorMap="reqGroupColorMap"
         :user="user"
         :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
+        :numOfColleges="numOfColleges"
         @activateMajor="activateMajor"
         @activateMinor="activateMinor"
         @toggleDetails="toggleDetails"
@@ -74,7 +75,7 @@ type Data = {
   minors: minor[];
   requirementsMap: {};
   reqGroupColorMap: {};
-
+  numOfColleges: number
 }
 // emoji for clipboard
 const clipboard = require('../assets/images/clipboard.svg');
@@ -196,7 +197,8 @@ export default Vue.extend({
         COLLEGE: ['1AA9A5', 'blue'],
         MAJOR: ['105351', 'green'],
         MINOR: ['92C3E6', 'lightblue']
-      }
+      },
+      numOfColleges: 1
     };
   },
   watch: {
@@ -214,17 +216,17 @@ export default Vue.extend({
       if (group === 'MAJOR') {
         this.majors.forEach((major, i: number) => {
           if (major.display) {
-            currentDisplay = i + 1; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+            currentDisplay = i + this.numOfColleges; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
           }
         });
-        return (id < 1 || id === currentDisplay);
+        return (id < this.numOfColleges || id === currentDisplay);
       }
       this.minors.forEach((minor, i: number) => {
         if (minor.display) {
-          currentDisplay = i + 1 + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+          currentDisplay = i + this.numOfColleges + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
         }
       });
-      return (id < 1 || id === currentDisplay);
+      return (id < this.numOfColleges || id === currentDisplay);
     },
     toggleDetails(index: number): void {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
