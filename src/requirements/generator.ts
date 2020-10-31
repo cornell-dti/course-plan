@@ -10,13 +10,10 @@ import sourceRequirements from './data';
 import filteredAllCourses from './filtered-all-courses';
 
 const getEligibleCourses = (requirement: CollegeOrMajorRequirement): readonly EligibleCourses[] => {
+  if (requirement.fulfilledBy === 'self-check') return [];
   // eligibleCoursesMap[semester][subject]
   // gives you all courses number of the courses eligible for the given requirements.
   const { checker: requirementChecker } = requirement;
-  if (requirementChecker === null) {
-    // Self check courses have zero satisfiable course.
-    return [];
-  }
   const subRequirementCheckers = typeof requirementChecker === 'function'
     ? [requirementChecker]
     : requirementChecker;
@@ -69,6 +66,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
   };
   const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) => (
     requirements.map(requirement => {
+      if (requirement.fulfilledBy === 'self-check') return requirement;
       const { checker, ...rest } = requirement;
       return {
         ...rest, courses: getEligibleCourses(requirement)

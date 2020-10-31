@@ -59,8 +59,6 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Students must receive approval for these alternative courses by consulting their BE faculty advisor or the main BE Advising Office, 207 Riley-Robb Hall. '
       + 'One credit seminars and BIOG 2990/4990 credits may not be used to meet this requirement.',
     source: 'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check'
   },
   {

@@ -41,8 +41,6 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'At least one of the GOVT courses listed in items II or III above must be a 4000-level seminar '
       + '(i.e. a course with 15 or fewer students, taught by a GOVT professor, and typically requiring a research paper).',
     source: 'https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check'
   }
 ];

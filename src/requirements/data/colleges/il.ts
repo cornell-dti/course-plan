@@ -53,8 +53,6 @@ const irlRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Distribution Requirements',
     description: 'Students are required to complete one course from each of the following lists to fulfill the distribution requirements. All courses must be taken for a letter grade.',
     source: 'https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check',
     minCount: 3
   }
