@@ -18,18 +18,24 @@
         </span>
       </div>
       <div class="newCourse-title">This class fulfills the following requirement(s):</div>
-      <div class="newCourse-requirements-container">
-        <div class="newCourse-requirements" v-for="req in requirements" :key="req" :class="{'newCourse-space': !checkIfLast(req, requirements)}">
-          {{ checkIfLast(req, requirements) ? req : `${req},`}}
+      <div v-if="!editMode" class="newCourse-requirements-container">
+        <div  class="newCourse-requirements" v-for="req in requirements" :key="req" :class="{'newCourse-space': !checkIfLast(req, requirements)}">
+        {{ checkIfLast(req, requirements) ? req : `${req},`}}
         </div>
       </div>
+      <div v-else class="newCourse-requirements-edit">
+        <editRequirement v-for="req in requirements" :key="req" :name="req" :selected="true"/>
+      </div>
       <div class="newCourse-title">This class could potentially fulfill the following requirement(s):</div>
-      <div class="newCourse-requirements-container">
+      <div v-if="!editMode" class="newCourse-requirements-container">
         <div class="newCourse-name" v-for="potreq in potentialReqs" :key="potreq" :class="{'newCourse-space': !checkIfLast(potreq, potentialReqs)}">
           {{ checkIfLast(potreq, potentialReqs) ? potreq : `${potreq},`}}
         </div>
       </div>
-      <div class="newCourse-link">Add these Requirements</div>
+      <div v-else class="newCourse-requirements-edit">
+        <editRequirement v-for="potreq in potentialReqs" :key="potreq" :name="potreq" :isClickable="true"/>
+      </div>
+      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">Add these Requirements</div>
     </div>
   </div>
 </template>
@@ -38,9 +44,11 @@
 import coursesJSON from '../../assets/courses/courses.json';
 import NewSemester from '@/components/Modals/NewSemester';
 import NewCourseRequirements from '@/components/Modals/NewCourseRequirements';
+import EditRequirement from '@/components/EditRequirement';
 
 Vue.component('newSemester', NewSemester);
 Vue.component('newCourseRequiremets', NewCourseRequirements);
+Vue.component('editRequirement', EditRequirement);
 
 const fall = require('../../assets/images/fallEmoji.svg');
 const spring = require('../../assets/images/springEmoji.svg');
@@ -48,13 +56,15 @@ const winter = require('../../assets/images/winterEmoji.svg');
 const summer = require('../../assets/images/summerEmoji.svg');
 
 export default {
+  components: { EditRequirement },
   props: {
     isOnboard: Boolean,
     semesterID: Number,
     placeholderText: String,
     season: String,
     year: Number,
-    courseSelected: Boolean
+    courseSelected: Boolean,
+    editMode: Boolean
   },
   data() {
     return {
@@ -228,6 +238,9 @@ export default {
     },
     checkIfLast(elem, list) {
       return elem === list[list.length - 1];
+    },
+    toggleEditMode() {
+      this.editMode = !this.editMode;
     }
   }
 };
@@ -290,6 +303,11 @@ export default {
       display: flex;
       flex-direction: row;
       margin-bottom: 13px;
+    }
+    &-edit {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
   }
   &-space {
