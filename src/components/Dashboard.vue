@@ -263,7 +263,7 @@ export default {
     /**
      * Creates a course on frontend with either user or API data
      */
-    createCourse(course) {
+    createCourse(course, isRequirementsCourse) {
       const uniqueID = course.uniqueID || this.incrementID();
 
       const subject = (course.code && course.code.split(' ')[0]) || course.subject;
@@ -335,6 +335,8 @@ export default {
 
       const alerts = { requirement: null, caution: null };
 
+      const isReqCourse = isRequirementsCourse;
+
       const newCourse = {
         subject,
         number,
@@ -352,10 +354,14 @@ export default {
         color,
         alerts,
         check: true,
-        uniqueID
+        uniqueID,
+        isReqCourse
       };
-      // Update requirements menu
-      this.updateRequirementsMenu();
+
+      if (!isRequirementsCourse) {
+        // Update requirements menu
+        this.updateRequirementsMenu();
+      }
 
       return newCourse;
     },

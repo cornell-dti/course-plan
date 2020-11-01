@@ -1,9 +1,10 @@
 <template>
   <div class="incompletesubreqcourse">
     <div class="draggable-requirements-wrapper"
-      v-if="subReq.displayDescription && courseCodes.length > 0"
+      v-if="dataReady && subReq.displayDescription && courseCodes.length > 0"
     >
       <div class="draggable-requirements-seeAll-wrapper">
+        <!-- <div class="draggable-requirement-heading-course">Add Course {{subReqCourseId}}</div> -->
         <div class="draggable-requirements-seeAll-button reqCourse-button">See All</div>
       </div>
         <div
@@ -79,24 +80,20 @@ export default {
       if (!this.$data.scrollable) event.preventDefault();
     },
     getFirstFourCourseObjects() {
-      // const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
-
       const firstFourCourseCodes = [];
       for (let i = 0; i < 4 && i < this.courseCodes.length; i += 1) {
         firstFourCourseCodes.push(this.courseCodes[i]);
       }
       let fetchedCourses;
-      // const firstFourCourseObjects = [];
       FetchCourses({ courseCodes: firstFourCourseCodes }).then(result => {
         fetchedCourses = result.data.courses;
         fetchedCourses.forEach(course => {
           console.log(course);
-          const createdCourse = this.$parent.$parent.$parent.$parent.createCourse(course);
+          const createdCourse = this.$parent.$parent.$parent.$parent.createCourse(course, true);
           createdCourse.compact = true;
           this.courseObjects.push(createdCourse);
-          // firstFourCourseObjects.push(createdCourse);
         });
-        // this.dataReady = true;
+        this.dataReady = true;
       }).catch(error => {
         console.log('FetchCourses() Error: ', error);
       });

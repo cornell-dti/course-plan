@@ -9,7 +9,7 @@
           <div :class="{ 'course-code--min': compact }" class="course-code">
             {{ subject }} {{ number }}
           </div>
-          <div class="course-dotRow" @click="openMenu">
+          <div v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
         </div>
@@ -90,7 +90,8 @@ export default {
     id: String,
     uniqueID: Number,
     active: Boolean,
-    semId: Number
+    semId: Number,
+    isReqCourse: Boolean
   },
   data() {
     return {
