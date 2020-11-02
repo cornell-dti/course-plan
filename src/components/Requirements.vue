@@ -317,6 +317,7 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
 .requirements, .fixed {
   height: 100vh;
   width: 25rem;
@@ -335,7 +336,7 @@ h1.title {
   font-weight: 550;
   font-size: 22px;
   line-height: 29px;
-  color: #000000;
+  color: $black;
 }
 .req {
   margin-top: auto;

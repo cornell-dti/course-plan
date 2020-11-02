@@ -416,6 +416,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 @mixin hover-button {
   border-color: #15a6cf;
   background: rgba(0, 0, 0, 0.03);
@@ -429,7 +431,7 @@ export default {
   border-radius: 11px;
 
   &-addSemesterButton {
-    background: #508197;
+    background: $sangBlue;
     border-radius: 8px;
     min-height: 2.5rem;
     min-width: 9rem;
@@ -457,7 +459,7 @@ export default {
   &-top {
     display: flex;
     justify-content: space-between;
-    color: #858585;
+    color: $medGray;
     margin-left: 1.125rem;
     margin-right: 1.125rem;
   }
