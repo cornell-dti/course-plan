@@ -92,8 +92,6 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Advisor-Approved Electives',
     description: 'Six credits of electives are required and must be approved by the student’s faculty advisor.',
     source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives#adv_elective',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check',
     minCount: 6
   },
