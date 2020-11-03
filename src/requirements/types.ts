@@ -61,7 +61,18 @@ type RequirementFulfillmentInformation<T = {}> =
        * - `totalCount` specifies how many courses/credits need to be earned in total.
        */
       readonly totalCount?: number;
-    } & T);
+    } & T)
+  | {
+      readonly fulfilledBy: 'toggleable';
+      readonly fulfillmentOptions: {
+        readonly [optionName: string]: {
+          readonly minCount: number;
+          readonly totalCount?: number;
+          readonly counting: 'credits' | 'courses';
+          readonly operator: 'and' | 'or';
+        } & T;
+      };
+    };
 export type BaseRequirement = RequirementCommon & RequirementFulfillmentInformation;
 
 export type UniversityRequirements = {
@@ -70,9 +81,11 @@ export type UniversityRequirements = {
   readonly requirements: readonly BaseRequirement[];
 };
 
-type Checker = (course: Course) => boolean;
+export type RequirementChecker = (course: Course) => boolean;
 export type CollegeOrMajorRequirement = RequirementCommon &
-  RequirementFulfillmentInformation<{ readonly checker: Checker | readonly Checker[] }>;
+  RequirementFulfillmentInformation<{
+    readonly checker: RequirementChecker | readonly RequirementChecker[];
+  }>;
 
 export type EligibleCourses = {
   // "FA20": [123456, 42, 65536, /* and another crseId */]
@@ -126,8 +139,10 @@ export type RequirementFulfillmentStatistics = {
    * When it's a number, it's either number of courses or number of credits.
    * When it's undefined, it means that the requirement is self-check.
    */
-  readonly minCountFulfilled?: number;
+  readonly minCountFulfilled: number;
+  readonly minCountRequired: number;
   readonly totalCountFulfilled?: number;
+  readonly totalCountRequired?: number;
 };
 
 export type GroupedRequirementFulfillmentReport = {

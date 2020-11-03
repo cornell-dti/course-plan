@@ -4,20 +4,14 @@ import {
   DecoratedRequirementsJson,
   UniversityRequirements,
   DecoratedCollegeOrMajorRequirement,
-  EligibleCourses
+  EligibleCourses,
+  RequirementChecker
 } from './types';
 import sourceRequirements from './data';
 import filteredAllCourses from './filtered-all-courses';
 
-const getEligibleCourses = (requirement: CollegeOrMajorRequirement): readonly EligibleCourses[] => {
-  if (requirement.fulfilledBy === 'self-check') return [];
-  // eligibleCoursesMap[semester][subject]
-  // gives you all courses number of the courses eligible for the given requirements.
-  const { checker: requirementChecker } = requirement;
-  const subRequirementCheckers = typeof requirementChecker === 'function'
-    ? [requirementChecker]
-    : requirementChecker;
-  return subRequirementCheckers.map(oneRequirementChecker => {
+const getEligibleCoursesFromRequirementCheckers = (checkers: readonly RequirementChecker[]): readonly EligibleCourses[] => (
+  checkers.map(oneRequirementChecker => {
     const eligibleCoursesMap: { [semester: string]: number[] } = {};
     Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
       const courseIdSet = new Set(
@@ -31,7 +25,41 @@ const getEligibleCourses = (requirement: CollegeOrMajorRequirement): readonly El
       }
     });
     return eligibleCoursesMap;
-  });
+  })
+);
+
+const decorateRequirementWithCourses = (
+  requirement: CollegeOrMajorRequirement,
+): DecoratedCollegeOrMajorRequirement => {
+  switch (requirement.fulfilledBy) {
+    case 'self-check':
+      return requirement;
+    case 'courses':
+    case 'credits': {
+      const { checker, ...rest } = requirement;
+      return {
+        ...rest,
+        courses: getEligibleCoursesFromRequirementCheckers(typeof checker === 'function' ? [checker] : checker)
+      };
+    }
+    case 'toggleable': {
+      const { fulfillmentOptions } = requirement;
+      return {
+        ...requirement,
+        fulfillmentOptions: Object.fromEntries(
+          Object.entries(fulfillmentOptions).map(([optionName, option]) => {
+            const { checker, ...rest } = option;
+            const courses = getEligibleCoursesFromRequirementCheckers(
+              typeof checker === 'function' ? [checker] : checker
+            );
+            return [optionName, { ...rest, courses }];
+          })
+        )
+      };
+    }
+    default:
+      throw new Error();
+  }
 };
 
 const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequirementsJson => {
@@ -65,13 +93,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     university, college: {}, major: {}, minor: {}
   };
   const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) => (
-    requirements.map(requirement => {
-      if (requirement.fulfilledBy === 'self-check') return requirement;
-      const { checker, ...rest } = requirement;
-      return {
-        ...rest, courses: getEligibleCourses(requirement)
-      };
-    })
+    requirements.map(decorateRequirementWithCourses)
   );
   Object.entries(college).forEach(([collegeName, collegeRequirement]) => {
     const { requirements, ...rest } = collegeRequirement;
