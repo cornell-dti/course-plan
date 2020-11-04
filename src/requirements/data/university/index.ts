@@ -9,7 +9,6 @@ const universityRequirements: readonly BaseRequirement[] = [
     operator: 'or',
     fulfilledBy: 'credits',
     minCount: 120,
-    applies: 'all',
     progressBar: true
   },
   {
@@ -19,18 +18,15 @@ const universityRequirements: readonly BaseRequirement[] = [
     source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
     operator: 'or',
     fulfilledBy: 'courses',
-    minCount: 2,
-    applies: 'all'
+    minCount: 2
   },
   {
     name: 'Swimming Test',
     description: 'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming '
       + 'and water safety competency requirement for all entering first-year undergraduate students.',
     source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
-    operator: null,
     fulfilledBy: 'self-check',
-    minCount: 0,
-    applies: 'all'
+    minCount: 0
   }
 ];
 

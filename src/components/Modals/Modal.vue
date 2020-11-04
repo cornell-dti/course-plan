@@ -8,8 +8,10 @@
       <component
         class="modal-body"
         :is="body"
+        :isOnboard="isOnboard"
         :semesterID="semesterID"
         :currentSemesters="currentSemesters"
+        placeholderText = 'CS 1110", "Multivariable Calculus", etc.'
         @duplicateSemester="disableButton"
         ref="modalBodyComponent"
       ></component>
@@ -36,6 +38,7 @@ Vue.component('editSemester', EditSemester);
 export default {
   data() {
     return {
+      isOnboard: false,
       courseIsAddable: true,
       isDisabled: false
     };
@@ -172,12 +175,13 @@ export default {
 </script>
 
 <style lang="scss">
-// TODO: font family
+@import "@/assets/scss/_variables.scss";
+
 .modal {
   padding: 1rem;
 
   &-content {
-    background: #ffffff;
+    background: $white;
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
@@ -214,24 +218,25 @@ export default {
 
   &-button {
     width: 4.75rem;
-    height: 2rem;
+    height: 1.8rem;
     color: #5b676d;
     border-radius: 3px;
     border: 1px solid #3d3d3d;
-    background-color: #ffffff;
+    background-color: $white;
     display: flex;
     justify-content: center;
+    align-items: center;
 
     &--add {
-      color: #ffffff;
-      background-color: #508197;
+      color: $white;
+      background-color: $sangBlue;
       margin-left: 0.5rem;
       border: none;
     }
 
     &--disabled {
       opacity: .3;
-      border: 1px solid #508197;
+      border: 1px solid $sangBlue;
       background-color: #CCCCCC;
     }
   }

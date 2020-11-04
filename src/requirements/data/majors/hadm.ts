@@ -122,8 +122,6 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Non-HADM Electives',
     description: 'A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.',
     source: 'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check',
     minCount: 15
   },
@@ -140,8 +138,6 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Free Electives',
     description: 'A minimum of 24 credits, to be taken either in or outside SHA.',
     source: 'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check',
     minCount: 24
   }

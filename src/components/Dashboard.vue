@@ -60,10 +60,12 @@
       v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
       :bottomCourses="bottomCourses"
       :seeMoreCourses="seeMoreCourses"
-      :isExpanded="this.bottomBar.isExpanded"
+      :bottomCourseFocus="bottomBar.bottomCourseFocus"
+      :isExpanded="bottomBar.isExpanded"
       :maxBottomBarTabs="maxBottomBarTabs"
       @close-bar="closeBar"
       @open-bar="openBar"
+      @change-focus="changeBottomCourseFocus"
       />
     </div>
   </div>
@@ -122,13 +124,15 @@ export default {
         lastName: names[1],
         middleName: '',
         minor: [],
-        minorFN: []
+        minorFN: [],
+        exam: [],
+        transferCourse: []
       },
       bottomCourses: [],
       seeMoreCourses: [],
       subjectColors: {},
       // Default bottombar info without info
-      bottomBar: { isPreview: false, isExpanded: false },
+      bottomBar: { isPreview: false, isExpanded: false, bottomCourseFocus: 0 },
       requirementsKey: 0,
       isOnboarding: false,
       isEditingProfile: false,
@@ -196,10 +200,12 @@ export default {
       this.isMobile = window.innerWidth <= 440;
       this.isTablet = window.innerWidth <= 878;
       this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
+      if (this.bottomBar.bottomCourseFocus >= this.maxBottomBarTabs) {
+        this.changeBottomCourseFocus(this.maxBottomBarTabs - 1);
+      }
       this.updateBarTabs();
       this.updateSemesterView();
     },
-
     toggleRequirementsBar() {
       this.isOpeningRequirements = !this.isOpeningRequirements;
     },
@@ -338,6 +344,7 @@ export default {
       const isReqCourse = isRequirementsCourse;
 
       const newCourse = {
+        crseId: course.crseId,
         subject,
         number,
         name,
@@ -368,7 +375,6 @@ export default {
 
     incrementID() {
       const docRef = this.getDocRef();
-
       // If uniqueIncrementer attribute does not exist, initialize it to 0 and populate existing courses
       if (this.uniqueIncrementer === undefined) {
         this.uniqueIncrementer = 0;
@@ -496,6 +502,10 @@ export default {
       });
     },
 
+    changeBottomCourseFocus(newBottomCourseFocus) {
+      this.bottomBar.bottomCourseFocus = newBottomCourseFocus;
+    },
+
     updateBar(course, colorJustChanged, color) {
       // Update Bar Information
       const courseToAdd = {
@@ -521,43 +531,54 @@ export default {
 
       // expand bottombar if first course added
       if (this.bottomCourses.length === 0) {
-        this.bottomBar.isExpanded = true;
+        this.bottomBar.bottomCourseFocus = 0;
+        this.openBar();
       }
 
+      let bottomCourseIndex = -1;
       // if course already exists in bottomCourses, first remove course
       for (let i = 0; i < this.bottomCourses.length; i += 1) {
         // if colorJustChanged and course already exists, just update course color
-        if (this.bottomCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
-          this.bottomCourses[i].color = color;
-        } else if (this.bottomCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
-          this.bottomCourses.splice(i, 1);
+        if (this.bottomCourses[i].uniqueID === course.uniqueID) {
+          if (colorJustChanged) {
+            this.bottomCourses[i].color = color;
+          } else {
+            bottomCourseIndex = i;
+          }
         }
       }
 
-      // Prepending bottomCourse to front of bottom courses array if bottomCourses < this.maxBottomBarTabs
-      // Do not add course to bottomCourses if color was only changed
-      if (this.bottomCourses.length < this.maxBottomBarTabs && !colorJustChanged) {
-        this.bottomCourses.unshift(courseToAdd);
-      } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
-        for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-          // if colorJustChanged and course already exists in seeMoreCourses, just update course color
-          if (this.seeMoreCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
-            this.seeMoreCourses[i].color = color;
-          } else if (this.seeMoreCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
-            this.seeMoreCourses.splice(i, 1);
+      if (bottomCourseIndex < 0) {
+        // Prepending bottomCourse to front of bottom courses array if bottomCourses < this.maxBottomBarTabs
+        // Do not add course to bottomCourses if color was only changed
+        if (this.bottomCourses.length < this.maxBottomBarTabs && !colorJustChanged) {
+          this.bottomCourses.unshift(courseToAdd);
+        } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
+          for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
+            // if colorJustChanged and course already exists in seeMoreCourses, just update course color
+            if (this.seeMoreCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
+              this.seeMoreCourses[i].color = color;
+            } else if (this.seeMoreCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
+              this.seeMoreCourses.splice(i, 1);
+            }
+          }
+          // Do not move courses around from bottomCourses to seeMoreCourses if only color changed
+          if (!colorJustChanged) {
+            this.bottomCourses.unshift(courseToAdd);
+            this.seeMoreCourses.unshift(this.bottomCourses[this.bottomCourses.length - 1]);
+            this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
           }
         }
-        // Do not move courses around from bottomCourses to seeMoreCourses if only color changed
-        if (!colorJustChanged) {
-          this.bottomCourses.unshift(courseToAdd);
-          this.seeMoreCourses.unshift(this.bottomCourses[this.bottomCourses.length - 1]);
-          this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
-        }
+        bottomCourseIndex = 0;
       }
+      if (!colorJustChanged) {
+        this.bottomBar.bottomCourseFocus = bottomCourseIndex;
+      }
+
       this.getReviews(course.subject, course.number, review => {
-        this.bottomCourses[0].overallRating = review.classRating;
-        this.bottomCourses[0].difficulty = review.classDifficulty;
-        this.bottomCourses[0].workload = review.classWorkload;
+        this.bottomCourses[bottomCourseIndex].overallRating = review.classRating;
+        this.bottomCourses[bottomCourseIndex].difficulty = review.classDifficulty;
+        this.bottomCourses[bottomCourseIndex].workload = review.classWorkload;
       });
     },
 
@@ -636,7 +657,6 @@ export default {
     cancelOnboarding() {
       this.isOnboarding = false;
     },
-
     parseUserData(data, name) {
       const user = {
         // TODO: take into account multiple majors and colleges
@@ -644,8 +664,34 @@ export default {
         collegeFN: data.colleges[0].fullName,
         firstName: name.firstName,
         middleName: name.middleName,
-        lastName: name.lastName
+        lastName: name.lastName,
+        exam: [],
+        transferCourse: [],
+        tookSwim: data.tookSwim
       };
+      const transferClasses = [];
+      if ('exam' in data && data.exam.length > 0) {
+        const exams = [];
+        data.exam.forEach(exam => {
+          // TODO: add a course to chosen requirement or multiple fulfilling requirements
+          exams.push(exam);
+          if ('equivCourse' in exam) {
+            transferClasses.push(exam.equivCourse[0]);
+          }
+        });
+        user.exam = exams;
+      }
+      if ('class' in data && data.class.length > 0) {
+        const classes = [];
+        for (const course of data.class) {
+          classes.push(course);
+          const courseInfo = this.createCourse(course.course);
+          transferClasses.push(courseInfo);
+          // ; // TODO for user to pick which req a class goes for
+        }
+        user.transferCourse = classes;
+        this.currentClasses = transferClasses;
+      }
 
       if ('majors' in data && data.majors.length > 0) {
         const majors = [];

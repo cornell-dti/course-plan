@@ -37,6 +37,7 @@ import 'firebase/functions';
 import { Vue } from 'vue-property-decorator';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
+// eslint-disable-next-line import/extensions
 import introJs from 'intro.js';
 
 // Disable import extension check because TS module resolution depends on it.
@@ -115,7 +116,7 @@ export default Vue.extend({
         if (req.requirement.progressBar) {
           singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
           singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
-          singleMenuRequirement.required = req.requirement.totalCount || req.requirement.minCount;
+          singleMenuRequirement.required = (req.requirement.fulfilledBy !== 'self-check' && req.requirement.totalCount) || req.requirement.minCount;
         }
         // Default display value of false for all requirement lists
         const displayableRequirementFulfillment = { ...req, displayDescription: false };
@@ -150,7 +151,6 @@ export default Vue.extend({
       modalShow: false,
       majors: [],
       minors: [],
-
       reqs: [
         // Data structure for menu
         // {
@@ -258,6 +258,7 @@ export default Vue.extend({
           courses.push({
             code: `${course.lastRoster}: ${course.subject} ${course.number}`,
             subject: course.subject,
+            courseId: course.crseId,
             number: course.number,
             credits: course.credits,
             roster: course.lastRoster
@@ -371,6 +372,7 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
 .requirements, .fixed {
   height: 100vh;
   width: 25rem;
@@ -389,7 +391,7 @@ h1.title {
   font-weight: 550;
   font-size: 22px;
   line-height: 29px;
-  color: #000000;
+  color: $black;
 }
 .req {
   margin-top: auto;

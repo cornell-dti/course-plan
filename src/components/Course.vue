@@ -189,13 +189,14 @@ export default {
 
 <style scoped lang="scss">
 // TODO: font families
-// TODO: common variables (colors)
+@import "@/assets/scss/_variables.scss";
+
 .course {
   width: 21.375rem;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: row;
-  background-color: white;
+  background-color: $white;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
   position: relative;
   height: 5.625rem;
@@ -283,7 +284,7 @@ export default {
   &-code {
     font-size: 14px;
     line-height: 17px;
-    color: #858585;
+    color: $medGray;
 
     &--min {
       color: #3d3d3d;
@@ -398,8 +399,8 @@ export default {
 .course-tooltip .course-tooltiptext {
   visibility: hidden;
   width: 120px;
-  color: #858585;
-  background-color: #fff;
+  color: $medGray;
+  background-color: $white;
   text-align: center;
   padding: 0.5rem;
   border-radius: 6px;

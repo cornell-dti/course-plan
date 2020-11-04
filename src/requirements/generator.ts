@@ -10,33 +10,24 @@ import sourceRequirements from './data';
 import filteredAllCourses from './filtered-all-courses';
 
 const getEligibleCourses = (requirement: CollegeOrMajorRequirement): readonly EligibleCourses[] => {
+  if (requirement.fulfilledBy === 'self-check') return [];
   // eligibleCoursesMap[semester][subject]
   // gives you all courses number of the courses eligible for the given requirements.
   const { checker: requirementChecker } = requirement;
-  if (requirementChecker === null) {
-    // Self check courses have zero satisfiable course.
-    return [];
-  }
   const subRequirementCheckers = typeof requirementChecker === 'function'
     ? [requirementChecker]
     : requirementChecker;
   return subRequirementCheckers.map(oneRequirementChecker => {
-    const eligibleCoursesMap: { [semester: string]: { [subject: string]: string[] } } = {};
+    const eligibleCoursesMap: { [semester: string]: number[] } = {};
     Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
-      const semesterMap: { [subject: string]: string[] } = {};
-      courses
-        .filter(course => oneRequirementChecker(course))
-        .forEach(course => {
-          let subjectSet = semesterMap[course.subject];
-          if (subjectSet == null) {
-            subjectSet = [];
-          }
-          subjectSet.push(course.catalogNbr);
-          semesterMap[course.subject] = subjectSet;
-        });
-      if (Object.keys(semesterMap).length > 0) {
+      const courseIdSet = new Set(
+        courses
+          .filter(course => oneRequirementChecker(course))
+          .map(course => course.crseId)
+      );
+      if (courseIdSet.size > 0) {
         // Do not include empty semesters.
-        eligibleCoursesMap[semester] = semesterMap;
+        eligibleCoursesMap[semester] = Array.from(courseIdSet);
       }
     });
     return eligibleCoursesMap;
@@ -75,6 +66,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
   };
   const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) => (
     requirements.map(requirement => {
+      if (requirement.fulfilledBy === 'self-check') return requirement;
       const { checker, ...rest } = requirement;
       return {
         ...rest, courses: getEligibleCourses(requirement)

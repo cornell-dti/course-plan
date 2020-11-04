@@ -6,7 +6,12 @@ admin.initializeApp();
 const db = admin.firestore();
 const userDataCollection = db.collection('userData');
 
-const filteredAllCourses = require('./filtered-all-courses.json');
+const fs = require('fs'); 
+
+const filteredCoursesPaths = fs.readdirSync('./filtered_courses/');
+
+const filteredAllCourses = filteredCoursesPaths.map(path => require('./filtered_courses/' + path))
+                                               .reduce((accum, currentValue) => Object.assign(accum, currentValue));
 
 let average = (array) => array.reduce((a, b) => a + b) / array.length;
 function typeToMonth(type){
@@ -152,7 +157,8 @@ exports.FetchCourses = functions.https.onCall(data => {
   // Sort rosters from most recent to least recent
   let rosters = sortByMostRecentRosters(Object.keys(filteredAllCourses));
   for (let i = 0; i < rosters.length && courseCodes.length > 0; i += 1) {
-    let allRosterCourses = filteredAllCourses[rosters[i]];
+    const roster = rosters[i];
+    let allRosterCourses = filteredAllCourses[roster];
     // Filter for course objects whose code is in courseCodes
     let filteredCourses = allRosterCourses.filter(rosterCourse =>
       courseCodes.indexOf(rosterCourse.subject.concat(' ', rosterCourse.catalogNbr))!= -1);
@@ -160,6 +166,7 @@ exports.FetchCourses = functions.https.onCall(data => {
     // Delete course codes of filteredCourses from courseCodes
     // Update fetchedCourses with filteredCourses
     filteredCourses.forEach((filteredCourse) => {
+      filteredCourse.roster = roster; // Manually add roster field
       let filteredCourseCode = filteredCourse.subject.concat(' ', filteredCourse.catalogNbr);
       courseCodes = courseCodes.filter(courseCode => courseCode != filteredCourseCode);
 

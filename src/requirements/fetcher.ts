@@ -118,12 +118,47 @@ const getAllCourses = async <T extends keyof Course>(
   return courses;
 };
 
+const generateSemesterJSONs = async <T extends keyof Course>(
+  courseFieldFilter: CourseFieldFilter<T>,
+  coolingTimeMs: number = 50,
+  doPrintDebuggingInfo: boolean = true
+): Promise<void> => {
+  const startTime = new Date().getTime();
+  const semesters = await getSemesters();
+  if (doPrintDebuggingInfo) {
+    console.log(`We have ${semesters.length} semesters in total.`);
+  }
+  let semesterCount = 0;
+  for (const semester of semesters) {
+    const semesterCourses = await getAllCoursesInSemester(
+      semester,
+      courseFieldFilter,
+      coolingTimeMs,
+      doPrintDebuggingInfo
+    );
+    const courses: AllCourses<T> = {};
+    courses[semester] = semesterCourses;
+    const fileFunctionsSrc = 'functions/filtered_courses/filtered-' + semester + '-courses.json';
+    writeFileSync(fileFunctionsSrc, JSON.stringify(courses));
+    semesterCount += 1;
+    if (doPrintDebuggingInfo) {
+      console.log(`We fetched ${semesterCount} out of ${semesters.length} semesters.`);
+    }
+  }
+  if (doPrintDebuggingInfo) {
+    console.log(`Total Running Time: ${new Date().getTime() - startTime}ms.`);
+  }
+};
+
 const courseFieldFilter = getCourseFieldFilter([
   'subject',
   'crseId',
   'catalogNbr',
   'titleLong',
   'description',
+  'enrollGroups',
+  'catalogWhenOffered',
+  'catalogPrereqCoreq',
   'catalogBreadth',
   'catalogDistr',
   'catalogAttribute',
@@ -133,7 +168,6 @@ const courseFieldFilter = getCourseFieldFilter([
   'acadGroup'
 ]);
 
-getAllCourses(courseFieldFilter).then(allCourses => {
-  writeFileSync('src/requirements/filtered-all-courses.json', JSON.stringify(allCourses));
-  writeFileSync('functions/filtered-all-courses.json', JSON.stringify(allCourses));
+generateSemesterJSONs(courseFieldFilter).then(x => {
+  console.log('All semester JSONs generated.');
 });

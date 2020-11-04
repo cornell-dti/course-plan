@@ -79,16 +79,12 @@ const aapRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Theory and Criticism Elective',
     description: 'One additional theory and criticism elective.',
     source: 'https://aap.cornell.edu/academics/art/undergraduate/curriculum',
-    operator: null,
-    checker: null,
     fulfilledBy: 'self-check'
   },
   {
     name: 'Art History',
     description: '3 classes of art history. One modern/contemporary art history class, one global art history class, and one additional art history elective.',
     source: 'https://aap.cornell.edu/academics/art/undergraduate/curriculum',
-    operator: null,
-    checker: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -104,8 +100,6 @@ const aapRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Elective Plan',
     description: 'Any academic class at Cornell chosen in consultation with faculty advisor.',
     source: 'https://aap.cornell.edu/academics/art/undergraduate/curriculum',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check',
     minCount: 37
   }

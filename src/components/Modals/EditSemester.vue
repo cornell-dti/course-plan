@@ -81,12 +81,13 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/_variables.scss";
 
 .modal {
   padding: 1rem;
 
   &-content {
-    background: #ffffff;
+    background: $white;
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
@@ -124,17 +125,16 @@ export default {
 
   &-button {
     width: 4.75rem;
-    height: 2rem;
     color: #5b676d;
     border-radius: 3px;
     border: 1px solid #3d3d3d;
-    background-color: #ffffff;
+    background-color: $white;
     display: flex;
     justify-content: center;
 
     &--add {
-      color: #ffffff;
-      background-color: #508197;
+      color: $white;
+      background-color: $sangBlue;
       margin-left: 0.5rem;
       border: none;
     }
@@ -144,7 +144,7 @@ export default {
   padding: 1rem;
 
   &-content {
-    background: #ffffff;
+    background: $white;
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
@@ -192,10 +192,10 @@ export default {
   &-button {
     width: 4.75rem;
     height: 2rem;
-    color: #508197;
+    color: $sangBlue;
     border-radius: 3px;
-    border: 1px solid #508197;
-    background-color: #ffffff;
+    border: 1px solid $sangBlue;
+    background-color: $white;
     display: flex;
     justify-content: center;
 
@@ -212,8 +212,8 @@ export default {
     }
 
     &--delete {
-      color: #ffffff;
-      background-color: #508197;
+      color: $white;
+      background-color: $sangBlue;
       margin-left: 0.8rem;
       border: none;
       display: flex;
@@ -223,7 +223,7 @@ export default {
 
     &--disabled {
       opacity: .3;
-      border: 1px solid #508197;
+      border: 1px solid $sangBlue;
       background-color: #CCCCCC;
     }
   }
