@@ -43,6 +43,8 @@
         :subReq="subReq"
         :subReqCourseId="id"
         :courseCodes="subReqCourseCodes"
+        :dataReady="dataReady"
+        @isDataReady="isDataReady"
       />
     </div>
   </div>
@@ -97,7 +99,7 @@ export default {
   },
   data() {
     return {
-      subReqCoursesNotTakenArray: []
+      subReqCoursesNotTakenArray: [],
       // subReqCoursesNotTakenArray = [
       //   [
       //     'CS 1110',
@@ -108,6 +110,8 @@ export default {
       //     'MATH 1710'
       //   ]
       // ]
+      dataReady: false, // true if dataReady for all subReqCourses. false otherwise
+      dataReadyCounter: 0 // tracks dataReady status of all subReqCourses
     };
   },
   props: {
@@ -134,6 +138,12 @@ export default {
     toggleDescription(reqIndex, isCompleted, subReqIndex) {
       const type = isCompleted ? 'completed' : 'ongoing';
       this.$emit('toggleDescription', reqIndex, type, subReqIndex);
+    },
+    isDataReady() {
+      this.dataReadyCounter += 1;
+      if (this.dataReadyCounter === this.subReqCoursesNotTakenArray.length) {
+        this.dataReady = true;
+      }
     }
   }
 };

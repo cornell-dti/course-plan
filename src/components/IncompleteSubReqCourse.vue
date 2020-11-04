@@ -1,7 +1,7 @@
 <template>
   <div class="incompletesubreqcourse">
     <div class="draggable-requirements-wrapper"
-      v-if="dataReady && subReq.displayDescription && courseCodes.length > 0"
+      v-if="display && subReq.displayDescription && courseCodes.length > 0"
     >
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
@@ -59,7 +59,7 @@ export default {
     return {
       courseObjects: [],
       scrollable: false,
-      dataReady: false
+      display: false
     };
   },
   beforeDestroy() {
@@ -68,7 +68,8 @@ export default {
   props: {
     subReq: Object,
     subReqCourseId: Number,
-    courseCodes: Array
+    courseCodes: Array,
+    dataReady: Boolean
   },
   watch: {
     subReq: {
@@ -77,6 +78,14 @@ export default {
       handler(updatedSubReq) {
         if (updatedSubReq.displayDescription && this.courseObjects.length === 0) {
           this.getFirstFourCourseObjects();
+        }
+      }
+    },
+    dataReady: {
+      immediate: true,
+      handler(dataReady) {
+        if (dataReady) {
+          this.display = true;
         }
       }
     }
@@ -107,11 +116,13 @@ export default {
           createdCourse.compact = true;
           this.courseObjects.push(createdCourse);
         });
-        this.dataReady = true;
+        this.isDataReady();
       }).catch(error => {
         console.log('FetchCourses() Error: ', error);
       });
-      // console.log('courseObjects', this.courseObjects);
+    },
+    isDataReady() {
+      this.$emit('isDataReady');
     }
     // reqCourseDropHandler() {
     //   this.$emit('reqCourseDropHandler');
