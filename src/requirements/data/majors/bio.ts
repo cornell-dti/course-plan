@@ -143,8 +143,6 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Requires a minimum of 13 additional credits, which must include (1) one course from each of three different concentrations in biology '
     + ' (2) a course with a laboratory, (3) a minimum of two 3000-level or above courses of 2+ credits each.',
     source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9186',
-    operator: null,
-    checker: null,
     fulfilledBy: 'self-check'
   }
 ];

@@ -25,34 +25,44 @@ export type CourseTaken = {
   readonly credits: number;
 };
 
-export interface BaseRequirement {
+type RequirementCommon = {
   /** Full name of the requirement. */
   readonly name: string;
   /** Description of the requirement. */
   readonly description: string;
   /** The source with more information on the requirement. (This should be a URL string.) */
   readonly source: string;
-  /** Defines whether courses are 'double counted': and for no double counting and or for double counting */
-  readonly operator: 'and' | 'or' | null;
-  readonly fulfilledBy: 'credits' | 'courses' | 'self-check';
-  readonly applies?: string;
-  /**
-   * The minimum count required to fulfill this requirement.
-   *
-   * - When fulfilledBy === 'credits', this field stores the min number of credits.
-   * - When fulfilledBy === 'courses', this field stores the min number of courses.
-   * - When fulfilledBy === 'self-check', this field should not exist.
-   */
-  readonly minCount?: number;
-  /**
-   * Some requirements have sub-requirements.
-   *
-   * - `minCount` specifies how many types of sub-requirements needs to be satisfied.
-   * - `totalCount` specifies how many courses/credits need to be earned in total.
-   */
-  readonly totalCount?: number;
   readonly progressBar?: boolean;
-}
+};
+/**
+ * @param T additional information only attached to credits and courses type.
+ */
+type RequirementFulfillmentInformation<T = {}> =
+  | {
+      readonly fulfilledBy: 'self-check';
+      // Currently unused.
+      readonly minCount?: number;
+    }
+  | ({
+      /** Defines whether courses are 'double counted': and for no double counting and or for double counting */
+      readonly operator: 'and' | 'or';
+      readonly fulfilledBy: 'credits' | 'courses';
+      /**
+       * The minimum count required to fulfill this requirement.
+       *
+       * - When fulfilledBy === 'credits', this field stores the min number of credits.
+       * - When fulfilledBy === 'courses', this field stores the min number of courses.
+       */
+      readonly minCount: number;
+      /**
+       * Some requirements have sub-requirements.
+       *
+       * - `minCount` specifies how many types of sub-requirements needs to be satisfied.
+       * - `totalCount` specifies how many courses/credits need to be earned in total.
+       */
+      readonly totalCount?: number;
+    } & T);
+export type BaseRequirement = RequirementCommon & RequirementFulfillmentInformation;
 
 export type UniversityRequirements = {
   readonly value: string;
@@ -61,18 +71,16 @@ export type UniversityRequirements = {
 };
 
 type Checker = (course: Course) => boolean;
-export interface CollegeOrMajorRequirement extends BaseRequirement {
-  readonly checker: Checker | readonly Checker[] | null;
-}
+export type CollegeOrMajorRequirement = RequirementCommon &
+  RequirementFulfillmentInformation<{ readonly checker: Checker | readonly Checker[] }>;
 
 export type EligibleCourses = {
   // "FA20": [123456, 42, 65536, /* and another crseId */]
   readonly [semester: string]: readonly number[];
 };
 
-export interface DecoratedCollegeOrMajorRequirement extends BaseRequirement {
-  readonly courses: readonly EligibleCourses[];
-}
+export type DecoratedCollegeOrMajorRequirement = RequirementCommon &
+  RequirementFulfillmentInformation<{ readonly courses: readonly EligibleCourses[] }>;
 
 export type CollegeRequirements<R> = {
   readonly [collegeCode: string]: {
@@ -146,11 +154,10 @@ export type SingleMenuRequirement = {
   required?: number;
 };
 
-
 export type ExamRequirements = {
   readonly subject: string;
   readonly credits: {
-    readonly operator: string,
+    readonly operator: string;
     readonly collegesApplied: string[];
     readonly majorExcluded: string[];
     readonly mininmumScore: number;
@@ -163,10 +170,10 @@ export type ExamRequirements = {
       classEquivalent: string[];
     }[];
   }[];
-}
+};
 
 export type ExamData = {
-  readonly AP: ExamRequirements[] ;
+  readonly AP: ExamRequirements[];
   readonly IB: ExamRequirements[];
   // readonly transfer;
-}
+};

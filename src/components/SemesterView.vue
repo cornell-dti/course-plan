@@ -356,6 +356,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .semesterView {
   width: 100%;
   display: flex;
@@ -370,11 +372,11 @@ export default {
   }
 
   &-addSemesterButton {
-    background: #508197;
+    background: $sangBlue;
     border-radius: 8px;
     min-height: 2.5rem;
     min-width: 9rem;
-    color: #ffffff;
+    color: $white;
     border: none;
   }
 
@@ -391,7 +393,7 @@ export default {
 
   &-switch {
     display: flex;
-    color: #858585;
+    color: $medGray;
     align-items: center;
   }
 

@@ -64,6 +64,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .deleteSemesterModal {
   padding: 1rem;
 
@@ -115,9 +117,10 @@ export default {
 
   &-button {
     width: 4.75rem;
-    color: #508197;
+    height: 2rem;
+    color: $sangBlue;
     border-radius: 3px;
-    border: 1px solid #508197;
+    border: 1px solid $sangBlue;
     background-color: #ffffff;
     display: flex;
     justify-content: center;
@@ -136,7 +139,7 @@ export default {
 
     &--delete {
       color: #ffffff;
-      background-color: #508197;
+      background-color: $sangBlue;
       margin-left: 0.8rem;
       border: none;
       display: flex;

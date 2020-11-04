@@ -150,6 +150,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .bottombartabview {
   width: 100%;
   display: flex;
@@ -178,7 +180,7 @@ export default {
       color: white;
       width: 9rem;
       height: 1.75rem;
-      background-color: #508197;
+      background-color: $sangBlue;
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
       display: flex;

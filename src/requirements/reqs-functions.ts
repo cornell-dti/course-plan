@@ -48,7 +48,6 @@ function computeUniversityRequirementFulfillments(
     operator: 'or',
     fulfilledBy: 'credits',
     minCount: 120,
-    applies: 'all',
     progressBar: true
   } as const;
   const PERequirement = {
@@ -63,9 +62,7 @@ function computeUniversityRequirementFulfillments(
     ],
     operator: 'or',
     fulfilledBy: 'courses',
-    minCount: 2,
-    maxCount: 2,
-    applies: 'all'
+    minCount: 2
   } as const;
   const swimmingTestRequirement = {
     name: 'Swimming Test',
@@ -75,8 +72,7 @@ function computeUniversityRequirementFulfillments(
     operator: null,
     fulfilledBy: 'self-check',
     includes: [],
-    minCount: 0,
-    applies: 'all'
+    minCount: 0
   } as const;
 
 
@@ -110,6 +106,7 @@ function filterAndPartitionCoursesThatFulfillRequirement(
   coursesTaken: readonly CourseTaken[],
   requirement: DecoratedCollegeOrMajorRequirement
 ): CourseTaken[][] {
+  if (requirement.fulfilledBy === 'self-check') return [];
   const { courses: requirementCourses } = requirement;
   const coursesThatFulfilledRequirement: CourseTaken[][] = requirementCourses.map(() => []);
   coursesTaken.forEach(courseTaken => {
@@ -125,44 +122,33 @@ function filterAndPartitionCoursesThatFulfillRequirement(
 }
 
 function computeFulfillmentStatistics<T extends {}>({ requirement, courses: coursesThatFulfilledRequirement }: RequirementFulfillment<T>): RequirementFulfillmentStatistics {
+  if (requirement.fulfilledBy === 'self-check') {
+    return { minCountFulfilled: 0 };
+  }
+
   let minCountFulfilled = 0;
   coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
     if (coursesThatFulfilledSubRequirement.length === 0) {
       return;
     }
 
-    if (requirement.operator === 'or') {
-      // Accumulating requirements with double counting with 'or/ operator
-      switch (requirement.fulfilledBy) {
-        case 'courses':
-          minCountFulfilled += coursesThatFulfilledSubRequirement.length;
-          break;
-        case 'credits':
-          minCountFulfilled += coursesThatFulfilledSubRequirement
+    switch (requirement.fulfilledBy) {
+      case 'courses':
+        minCountFulfilled += requirement.operator === 'or'
+          ? coursesThatFulfilledSubRequirement.length
+          : 1;
+        break;
+      case 'credits':
+        minCountFulfilled += requirement.operator === 'or'
+          ? coursesThatFulfilledSubRequirement
+            .map(course => course.credits)
+            .reduce((a, b) => a + b, 0)
+          : coursesThatFulfilledSubRequirement
             .map(course => course.credits)
             .reduce((a, b) => a + b);
-          break;
-        case 'self-check':
-          return;
-        default:
-          throw new Error('Fulfillment type unknown.');
-      }
-    } else if (requirement.operator === 'and') {
-      // Accumulating requirements without double counting with 'and' operator
-      switch (requirement.fulfilledBy) {
-        case 'courses':
-          minCountFulfilled += 1;
-          break;
-        case 'credits':
-          minCountFulfilled += coursesThatFulfilledSubRequirement
-            .map(course => course.credits)
-            .reduce((a, b) => Math.max(a, b), 0);
-          break;
-        case 'self-check':
-          return;
-        default:
-          throw new Error('Fulfillment type unknown.');
-      }
+        break;
+      default:
+        throw new Error('Fulfillment type unknown.');
     }
   });
 
@@ -179,8 +165,6 @@ function computeFulfillmentStatistics<T extends {}>({ requirement, courses: cour
         return;
       case 'credits':
         totalCountFulfilled += courseThatFulfilledRequirement.credits;
-        return;
-      case 'self-check':
         return;
       default:
         throw new Error('Fulfillment type unknown.');
@@ -259,24 +243,26 @@ export function computeRequirements(
     getRequirementUniqueID: requirement => `${requirement.name} ${requirement.description}`,
     getCourseUniqueID: course => `${course.roster} ${course.courseId}`,
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirement => (
-      requirement.courses
-        .map((eligibleCourses): readonly CourseTaken[] => {
-          const courses: CourseTaken[] = [];
-          Object.entries(eligibleCourses).forEach(([roster, courseIds]) => {
-            courseIds.forEach(courseId => courses.push({
-              roster,
-              courseId,
-              // Only roster and courseId are used for equality comparison,
-              // so other dummy values doesn't matter.
-              code: 'DUMMY',
-              subject: 'DUMMY',
-              number: 'DUMMY',
-              credits: 0
-            }));
-          });
-          return courses;
-        })
-        .flat()
+      requirement.fulfilledBy === 'self-check'
+        ? []
+        : requirement.courses
+          .map((eligibleCourses): readonly CourseTaken[] => {
+            const courses: CourseTaken[] = [];
+            Object.entries(eligibleCourses).forEach(([roster, courseIds]) => {
+              courseIds.forEach(courseId => courses.push({
+                roster,
+                courseId,
+                // Only roster and courseId are used for equality comparison,
+                // so other dummy values doesn't matter.
+                code: 'DUMMY',
+                subject: 'DUMMY',
+                number: 'DUMMY',
+                credits: 0
+              }));
+            });
+            return courses;
+          })
+          .flat()
     ),
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy: () => ({
       // Give back dummy value for now. Give it a real strategy when we have non-empty

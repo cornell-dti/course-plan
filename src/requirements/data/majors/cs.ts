@@ -57,8 +57,6 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'The Technical Electives must be made up of three 3000+ level courses.  '
       + 'These courses must be taken for a letter grade, and each must earn three or more credit hours.',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor/technicalelectives',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -67,8 +65,6 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Absolutely no CS courses are allowed. The three courses must be related to each other. '
       + 'Frequently, the three courses are from the same department.',
     source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -77,8 +73,6 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'This elective requirement can be met by multiple courses totalling 3 credits, or one course of 3+ credit hours. '
       + 'Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS.',
     source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check'
   },
   // TODO: Requirement whose classes can be double counted

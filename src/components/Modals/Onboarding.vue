@@ -52,6 +52,7 @@ import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import OnboardingBasic from '@/components/Modals/OnboardingBasic';
 import OnboardingTransfer from '@/components/Modals/OnboardingTransfer';
+import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 require('@/assets/images/timeline1.svg');
 
@@ -87,7 +88,7 @@ export default {
     if (this.user.college !== '') {
       collegeText = this.user.collegeFN;
       collegeAcronym = this.user.college;
-      collegePlaceholderColor = '#757575';
+      collegePlaceholderColor = lightPlaceholderGray;
     }
 
     let majorText = placeholderText;
@@ -96,7 +97,7 @@ export default {
     if ('major' in this.user && this.user.major.length > 0) {
       majorText = this.user.majorFN;
       majorAcronym = this.user.major;
-      majorPlaceholderColor = '#757575';
+      majorPlaceholderColor = lightPlaceholderGray;
     }
 
     let minorText = placeholderText;
@@ -105,7 +106,7 @@ export default {
     if ('minor' in this.user && this.user.minor.length > 0) {
       minorText = this.user.minorFN;
       minorAcronym = this.user.minor;
-      minorPlaceholderColor = '#757575';
+      minorPlaceholderColor = lightPlaceholderGray;
     }
 
     return {
