@@ -3,9 +3,9 @@
     <div class="draggable-requirements-wrapper"
       v-if="dataReady && subReq.displayDescription && courseCodes.length > 0"
     >
-      <div class="draggable-requirements-seeAll-wrapper">
-        <!-- <div class="draggable-requirement-heading-course">Add Course {{subReqCourseId}}</div> -->
-        <div class="draggable-requirements-seeAll-button reqCourse-button">See All</div>
+      <div class="draggable-requirements-heading">
+        <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
+        <div class="draggable-requirements-heading-seeAll">{{ seeAll }}</div>
       </div>
         <div
           class="draggable-requirements-courses"
@@ -75,6 +75,14 @@ export default {
     subReqCourseId: Number,
     courseCodes: Array
   },
+  computed: {
+    addCourseLabel() {
+      return `Add Course ${this.subReqCourseId + 1}`;
+    },
+    seeAll() {
+      return 'See all >';
+    }
+  },
   methods: {
     dragListener(event) {
       if (!this.$data.scrollable) event.preventDefault();
@@ -118,19 +126,23 @@ export default {
     margin-top: 2%;
     margin-bottom: 2%;
   }
-  &-seeAll {
-    &-wrapper {
-      display: flex;
-      justify-content: flex-end;
+  &-heading {
+    display: flex;
+    justify-content: space-between;
+    &-label{
+      font-size: 14px;
+      line-height: 17px;
+      color: #9E9E9E;
     }
-    // &-button {
-    //   font-size: 12px;
-    //   line-height: 15px;
-    //   color: #32A0F2;
-    //   padding: 1%;
-    //   cursor: pointer;
-    // }
+    &-seeAll{
+      font-size: 12px;
+      line-height: 15px;
+      color: #32A0F2;
+      padding: 1%;
+      cursor: pointer;
+    }
   }
+
   &-courses{
     display: flex;
     flex-direction: row;
@@ -153,16 +165,6 @@ export default {
   &-course:active:hover {
     touch-action: none;
     cursor: grabbing;
-  }
-}
-
-.reqCourse {
-  &-button {
-    font-size: 12px;
-    line-height: 15px;
-    color: #32A0F2;
-    padding: 1%;
-    cursor: pointer;
   }
 }
 </style>

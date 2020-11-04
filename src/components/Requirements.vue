@@ -138,6 +138,7 @@ export default Vue.extend({
     // Populate getRostersFromLastTwoYears
     this.rostersFromLastTwoYears = this.getRostersFromLastTwoYears();
 
+    console.log(this.reqs);
     console.log('Requirements.vue computed');
   },
   data() : Data {
