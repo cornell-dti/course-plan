@@ -117,11 +117,11 @@ export default Vue.extend({
         if (req.requirement.progressBar) {
           singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
           singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
-          singleMenuRequirement.required = (req.requirement.fulfilledBy !== 'self-check' && req.requirement.totalCount) || req.requirement.minCount;
+          singleMenuRequirement.required = (req.requirement.fulfilledBy !== 'self-check' && req.totalCountRequired) || req.minCountRequired;
         }
         // Default display value of false for all requirement lists
         const displayableRequirementFulfillment = { ...req, displayDescription: false };
-        if (!req.minCountFulfilled || req.minCountFulfilled < (req.requirement.minCount || 0)) {
+        if (!req.minCountFulfilled || req.minCountFulfilled < req.minCountRequired) {
           singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
         } else {
           singleMenuRequirement.completed.push(displayableRequirementFulfillment);
