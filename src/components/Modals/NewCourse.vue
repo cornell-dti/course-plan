@@ -1,5 +1,6 @@
 <template>
   <div class="newCourse">
+    <binaryButton></binaryButton>
     <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
     <div class="autocomplete">
       <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
@@ -34,6 +35,7 @@
       </div>
       <div v-else class="newCourse-requirements-edit">
         <editRequirement v-for="potreq in potentialReqs" :key="potreq" :name="potreq" :isClickable="true"/>
+        <binaryButton  v-for="choice in binaryPotentialReqs" :key="choice[0]" :choices="choice"></binaryButton>
       </div>
       <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">Add these Requirements</div>
     </div>
@@ -45,10 +47,12 @@ import coursesJSON from '../../assets/courses/courses.json';
 import NewSemester from '@/components/Modals/NewSemester';
 import NewCourseRequirements from '@/components/Modals/NewCourseRequirements';
 import EditRequirement from '@/components/EditRequirement';
+import BinaryButton from '@/components/BinaryButton';
 
 Vue.component('newSemester', NewSemester);
 Vue.component('newCourseRequiremets', NewCourseRequirements);
 Vue.component('editRequirement', EditRequirement);
+Vue.component('binaryButton', BinaryButton);
 
 const fall = require('../../assets/images/fallEmoji.svg');
 const spring = require('../../assets/images/springEmoji.svg');
@@ -56,17 +60,17 @@ const winter = require('../../assets/images/winterEmoji.svg');
 const summer = require('../../assets/images/summerEmoji.svg');
 
 export default {
-  components: { EditRequirement },
+  components: { EditRequirement, BinaryButton },
   props: {
     isOnboard: Boolean,
     semesterID: Number,
     placeholderText: String,
     season: String,
     year: Number,
-    courseSelected: Boolean,
-    editMode: Boolean
+    courseSelected: Boolean
   },
   data() {
+    const binaryPotentialReqs = [['binarychoice1', 'binarychoice2']];
     return {
       seasonImg: {
         Fall: fall,
@@ -76,7 +80,9 @@ export default {
       },
       selected: this.courseSelected,
       requirements: ['DummyReq1', 'DummyReq2'],
-      potentialReqs: ['PotentialReq1', 'PotentialReq2']
+      potentialReqs: ['PotentialReq1', 'PotentialReq2'],
+      binaryPotentialReqs,
+      editMode: false
     };
   },
   computed: {
@@ -308,6 +314,7 @@ export default {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      flex-wrap: wrap;
     }
   }
   &-space {

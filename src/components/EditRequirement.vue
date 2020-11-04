@@ -2,12 +2,12 @@
   <div
     class="edit-requirement"
     :class="{'edit-requirement-selected': selected, 'edit-requirement-pointer': isClickable}"
+    v-on="isClickable ? { click: () => onClick() } : {click: ($event) => $event.preventDefault() }"
   >
     <img v-if="selected" class="confirmation-icon" src="../assets/images/check.svg" />
     <div
       class="edit-requirement-text"
       :class="{'edit-requirement-multiline': multiline}"
-      v-on="isClickable ? { click: () => onClick() } : {click: ($event) => $event.preventDefault() }"
     >
       {{ name }}
     </div>
@@ -42,6 +42,7 @@ export default {
     color: #2BBCC6;
     height: 36px;
     width: 196px;
+    margin-bottom: 20px;
     &-text{
       line-height: 36px;
       font-weight: 500;
