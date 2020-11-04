@@ -10,8 +10,6 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'For example, a course in medieval European history that is also a seminar would count for that requirement, '
       + 'as well as both a course in history before 1800 and as a course in European History.',
     source: 'https://history.cornell.edu/undergraduate',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check',
     minCount: 9
   },
@@ -34,8 +32,6 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
     description: '2 of the nine courses must be seminars, and one of these seminars must be a 4000-level seminar.  '
       + 'Service-learning 4000-level courses, HIST 4001, HIST 4002, may not be used to fulfill the 4000-level seminar requirement.',
     source: 'https://history.cornell.edu/undergraduate',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check',
     minCount: 2
   }

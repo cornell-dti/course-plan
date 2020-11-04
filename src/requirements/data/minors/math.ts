@@ -21,8 +21,6 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     + 'At least three courses must be chosen from groups 5 and 6'
     + 'At most one 2000-level course may be chosen',
     source: 'https://www.mae.cornell.edu/sites/default/files/departments/MAE/MAE%20pdfs/Applied%20Math%20Minor%20Application%20Form%201-25-19-VD.pdf',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check'
   }
 ];

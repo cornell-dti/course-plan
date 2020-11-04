@@ -69,6 +69,7 @@
 <script>
 import Vue from 'vue';
 import Course from '@/components/Course';
+import { coursesColorSet } from '../../assets/constants/colors';
 
 export default {
   props: {
@@ -81,40 +82,7 @@ export default {
       isLeft: (this.semId % 2 === 0 && !this.isCompact) || (this.semId % 4 === 0 && this.isCompact),
       // TODO: better version for all breakpoints
       // isLeft: this.semId % numPerRow() === 0,
-      colors: [
-        {
-          text: 'Gray',
-          hex: '#C4C4C4'
-        },
-        {
-          text: 'Red',
-          hex: '#DA4A4A'
-        },
-        {
-          text: 'Orange',
-          hex: '#FFA53C'
-        },
-        {
-          text: 'Yellow',
-          hex: '#FFE142'
-        },
-        {
-          text: 'Green',
-          hex: '#58C913'
-        },
-        {
-          text: 'Blue',
-          hex: '#139DC9'
-        },
-        {
-          text: 'Purple',
-          hex: '#C478FF'
-        },
-        {
-          text: 'Pink',
-          hex: '#F296D3'
-        }
-      ],
+      colors: coursesColorSet,
       displayColors: false,
       displayEditCourseCredits: false
     };
@@ -175,9 +143,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .courseMenu {
   &-content {
-    background: #ffffff;
+    background: $white;
     border: 1px solid #acacac;
     box-sizing: border-box;
     border-radius: 9px;
@@ -199,13 +169,11 @@ export default {
     }
 
     &:first-child {
-      padding-top: 1rem;
       border-top-left-radius: 9px;
       border-top-right-radius: 9px;
     }
 
     &:last-child {
-      padding-bottom: 1rem;
       border-bottom-left-radius: 9px;
       border-bottom-right-radius: 9px;
     }

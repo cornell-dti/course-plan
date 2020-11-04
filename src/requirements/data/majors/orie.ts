@@ -47,8 +47,6 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. '
       + 'Technical courses in Engineering at the 2000 level or above.',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -56,8 +54,6 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. '
       + 'Technical courses in Engineering at the 2000 level or above.',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check'
   }
 ];

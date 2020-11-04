@@ -8,9 +8,6 @@ method - unsure what the right move is right now
       <img class="confirmation-icon" src="../assets/images/checkmark.svg" />
     </div>
     <div class="confirmation-text">{{ text }}</div>
-    <div class="confirmation-right">
-      <!-- <span class="undo-buttonText">{{ undo }}</span> -->
-    </div>
   </div>
 </template>
 
@@ -18,12 +15,6 @@ method - unsure what the right move is right now
 export default {
   props: {
     text: String
-  },
-
-  computed: {
-    // undo() {
-    //   return 'UNDO';
-    // }
   }
 };
 </script>
@@ -33,6 +24,10 @@ export default {
   position: fixed;
   z-index: 10;
   top: 16px;
+  left: 29.5rem;
+  right: 0;
+  margin: 0 auto;
+  width: max-content;
   background: #ffffff;
   border-radius: 6px;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
@@ -73,10 +68,7 @@ export default {
 
     color: #7B7D7E;
 
-    margin-left: 8px;
-    margin-right: 16px;
-    margin-top: 13px;
-    margin-bottom: 12px;
+    margin: 14px 16px 12px 16px;
   }
 
   &-right {
@@ -95,6 +87,18 @@ export default {
     margin-right: 16px;
     margin-top: 13px;
     margin-bottom: 12px;
+  }
+}
+
+@media only screen and (max-width: 976px) {
+  .confirmation {
+    left: 25.5rem;
+  }
+}
+
+@media only screen and (max-width: 878px) {
+  .confirmation {
+    left: 0;
   }
 }
 

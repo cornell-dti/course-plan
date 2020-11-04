@@ -86,6 +86,8 @@ export default {
 
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .btn {
   padding: 0;
   display: flex;
@@ -124,16 +126,16 @@ export default {
   cursor: pointer;
 }
 button.active {
-  color: #508197;
-  border-bottom: solid 10px #508197;
+  color: $sangBlue;
+  border-bottom: solid 10px $sangBlue;
   padding-bottom: 2px;
   margin: 5px;
 }
 .arrow {
   height: 14px;
   width: 14px;
-  fill: #1AA9A5;
-  color:#1AA9A5;
+  fill: $emGreen;
+  color:$emGreen;
   margin-top: -2px;
     &-up {
      margin-top: 4px;
