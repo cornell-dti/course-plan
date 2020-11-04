@@ -6,16 +6,17 @@ admin.initializeApp();
 const db = admin.firestore();
 const userDataCollection = db.collection('userData');
 
-const fs = require('fs'); 
+const fs = require('fs');
 
 const filteredCoursesPaths = fs.readdirSync('./filtered_courses/');
 
-const filteredAllCourses = filteredCoursesPaths.map(path => require('./filtered_courses/' + path))
-                                               .reduce((accum, currentValue) => Object.assign(accum, currentValue));
+const filteredAllCourses = filteredCoursesPaths
+  .map(path => require('./filtered_courses/' + path))
+  .reduce((accum, currentValue) => Object.assign(accum, currentValue));
 
-let average = (array) => array.reduce((a, b) => a + b) / array.length;
-function typeToMonth(type){
-  switch(type) {
+let average = array => array.reduce((a, b) => a + b) / array.length;
+function typeToMonth(type) {
+  switch (type) {
     case 'Spring':
       return 1;
     case 'Summer':
@@ -27,83 +28,79 @@ function typeToMonth(type){
     default:
   }
 }
-function isOld (semester){
+function isOld(semester) {
   var currentTime = new Date();
   var month = currentTime.getMonth() + 1;
   var year = currentTime.getFullYear();
-  if(semester.year > year){
+  if (semester.year > year) {
     return false;
-  }
-  else if (semester.year < year){
+  } else if (semester.year < year) {
     return true;
-  }
-  else{
-    if(typeToMonth(semester.type) <= month){
+  } else {
+    if (typeToMonth(semester.type) <= month) {
       return true;
-    }else{
+    } else {
       return false;
     }
-  }   
+  }
 }
 
 exports.TrackUsers = functions.https.onRequest(async (req, res) => {
-  var arr = []; 
-  var count = 0; 
+  var arr = [];
+  var count = 0;
   var semester = [];
   var oldSemester = [];
   var newSemester = [];
-  var semesterCount = 0; 
-    userDataCollection.get().then(function(querySnapshot) {
-     
-        querySnapshot.forEach(function(doc) {
+  var semesterCount = 0;
+  userDataCollection
+    .get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        arr.push(doc.data().name.firstName);
 
-            arr.push(doc.data().name.firstName);
+        var oldCount = 0;
+        var newCount = 0;
+        doc.data().semesters.forEach(function (semester) {
+          if (isOld(semester)) {
+            oldCount++;
+          } else {
+            newCount++;
+          }
+          semesterCount++;
+        });
+        semester.push(doc.data().semesters.length);
+        oldSemester.push(oldCount);
+        newSemester.push(newCount);
+        count++;
+      });
 
-            var oldCount = 0;
-            var newCount = 0; 
-            doc.data().semesters.forEach(
-              function(semester) {
-                if(isOld(semester)){
-                  oldCount++;
-                }else{
-                  newCount++;
-                }
-                semesterCount++;
-              }
-            )
-            semester.push(doc.data().semesters.length);
-            oldSemester.push(oldCount);
-            newSemester.push(newCount);
-            count++;
-        })
-        
-        const response = {
-          "people": arr,
-          "total-users": count,
-          "total-semesters": semesterCount,
-          "avg-semester" : average(semester),
-          "avg-old-semester" : average(oldSemester),
-          "avg-new-semster" : average(newSemester)
-      }
-        return response
-    }).then(function(response) {  
+      const response = {
+        people: arr,
+        'total-users': count,
+        'total-semesters': semesterCount,
+        'avg-semester': average(semester),
+        'avg-old-semester': average(oldSemester),
+        'avg-new-semster': average(newSemester),
+      };
+      return response;
+    })
+    .then(function (response) {
       console.log(response);
       res.send(response);
-      return response
-     })
+      return response;
+    })
     .catch(error => {
-        console.log('Error getting document:', error);
-        throw new Error("Profile doesn't exist")
-      });
-      
+      console.log('Error getting document:', error);
+      throw new Error("Profile doesn't exist");
+    });
 });
 
 function logUnfetchedCourseCode(courseCode) {
-  console.log("Unable to fetch course data for course code: ", courseCode);
+  console.log('Unable to fetch course data for course code: ', courseCode);
 }
 
-function typeToOrderedNumber(type){
-  switch(type) {
+function typeToOrderedNumber(type) {
+  switch (type) {
     case 'WI':
       return 0;
     case 'SP':
@@ -117,7 +114,7 @@ function typeToOrderedNumber(type){
 }
 
 function compareRosters(roster1, roster2) {
-  let type1 = roster1.slice(0,2);
+  let type1 = roster1.slice(0, 2);
   let year1 = roster1.slice(2);
   let type2 = roster2.slice(0, 2);
   let year2 = roster2.slice(2);
@@ -144,10 +141,10 @@ function sortByMostRecentRosters(rosters) {
   return rosters.sort(compareRosters);
 }
 
-/** FetchCourses fetches the most recent course objects for the list of 
- * courseCodes in its input data object. 
- * 
- * In order to be a valid request, there must be a courseCodes property that is 
+/** FetchCourses fetches the most recent course objects for the list of
+ * courseCodes in its input data object.
+ *
+ * In order to be a valid request, there must be a courseCodes property that is
  * a list of course code strings (e.g. 'CS 1110').
  */
 exports.FetchCourses = functions.https.onCall(data => {
@@ -160,25 +157,25 @@ exports.FetchCourses = functions.https.onCall(data => {
     const roster = rosters[i];
     let allRosterCourses = filteredAllCourses[roster];
     // Filter for course objects whose code is in courseCodes
-    let filteredCourses = allRosterCourses.filter(rosterCourse =>
-      courseCodes.indexOf(rosterCourse.subject.concat(' ', rosterCourse.catalogNbr))!= -1);
-    
+    let filteredCourses = allRosterCourses.filter(
+      rosterCourse =>
+        courseCodes.indexOf(rosterCourse.subject.concat(' ', rosterCourse.catalogNbr)) != -1
+    );
+
     // Delete course codes of filteredCourses from courseCodes
     // Update fetchedCourses with filteredCourses
-    filteredCourses.forEach((filteredCourse) => {
+    filteredCourses.forEach(filteredCourse => {
       filteredCourse.roster = roster; // Manually add roster field
       let filteredCourseCode = filteredCourse.subject.concat(' ', filteredCourse.catalogNbr);
       courseCodes = courseCodes.filter(courseCode => courseCode != filteredCourseCode);
 
       fetchedCourses.push(filteredCourse);
     });
-
   }
   // Log courses that could not be fetched
   courseCodes.map(a => logUnfetchedCourseCode(a));
-  
+
   return {
-    courses: fetchedCourses
+    courses: fetchedCourses,
   };
 });
-

@@ -4,7 +4,7 @@ const filteredAllCourses = require('./filtered-all-courses.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com'
+  databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
 });
 
 const db = admin.firestore();
@@ -26,8 +26,8 @@ userDataCollection.get().then(userData => {
             ).crseId;
             if (crseId == null) throw new Error(`${lastRoster}, ${subject}, ${number}, ${crseId}`);
             return { ...course, crseId };
-          })
-        }))
+          }),
+        })),
       });
     })
   );
