@@ -17,7 +17,6 @@
         :season="season"
         :year="year"
         :labels="true"
-        :courseSelected="courseSelected"
       ></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" @click="closeCurrentModal">{{ cancel }}</button>
@@ -44,8 +43,7 @@ export default {
     return {
       isOnboard: false,
       courseIsAddable: true,
-      isDisabled: false,
-      courseSelected: false
+      isDisabled: false
     };
   },
   props: {

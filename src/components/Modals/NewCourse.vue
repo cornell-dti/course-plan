@@ -67,8 +67,7 @@ export default {
     semesterID: Number,
     placeholderText: String,
     season: String,
-    year: Number,
-    courseSelected: Boolean
+    year: Number
   },
   data() {
     return {
@@ -78,7 +77,7 @@ export default {
         Winter: winter,
         Summer: summer
       },
-      selected: this.courseSelected,
+      selected: false,
       requirements: ['DummyReq1', 'DummyReq2'],
       potentialReqs: ['PotentialReq1', 'PotentialReq2'],
       binaryPotentialReqs: [['binarychoice1', 'binarychoice2']],
@@ -104,7 +103,6 @@ export default {
     closeCourseModal() {
       const modal = document.getElementById(`courseModal-${this.semesterID}`);
       modal.style.display = 'none';
-      this.selected = false;
       this.editMode = false;
     },
     autocomplete(inp, courses) {
@@ -241,7 +239,6 @@ export default {
         closeAllLists(e.target);
       });
     },
-
     addCourse() {
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     },
@@ -254,6 +251,9 @@ export default {
     reset() {
       this.editMode = false;
       this.selected = false;
+    },
+    selectedToTrue() {
+      this.selected = true;
     }
   }
 };
