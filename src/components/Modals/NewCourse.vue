@@ -70,7 +70,6 @@ export default {
     courseSelected: Boolean
   },
   data() {
-    const binaryPotentialReqs = [['binarychoice1', 'binarychoice2']];
     return {
       seasonImg: {
         Fall: fall,
@@ -81,7 +80,7 @@ export default {
       selected: this.courseSelected,
       requirements: ['DummyReq1', 'DummyReq2'],
       potentialReqs: ['PotentialReq1', 'PotentialReq2'],
-      binaryPotentialReqs,
+      binaryPotentialReqs: [['binarychoice1', 'binarychoice2']],
       editMode: false
     };
   },
@@ -103,6 +102,8 @@ export default {
     closeCourseModal() {
       const modal = document.getElementById(`courseModal-${this.semesterID}`);
       modal.style.display = 'none';
+      this.selected = false;
+      this.editMode = false;
     },
     autocomplete(inp, courses) {
       /* the autocomplete function takes two arguments,
@@ -171,7 +172,6 @@ export default {
               inpCopy.value = newTitle.title;
               inpCopy.name = newTitle.roster;
               this.selected = true;
-              console.log(this.selected);
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
@@ -247,6 +247,10 @@ export default {
     },
     toggleEditMode() {
       this.editMode = !this.editMode;
+    },
+    reset() {
+      this.editMode = false;
+      this.selected = false;
     }
   }
 };

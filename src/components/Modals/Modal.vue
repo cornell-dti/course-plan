@@ -95,6 +95,7 @@ export default {
       console.log(this.courseSelected);
       if (this.type === 'course') {
         modal = document.getElementById(`${this.type}Modal-${this.semesterID}`);
+        this.$refs.modalBodyComponent.reset();
       } else {
         modal = document.getElementById(`${this.type}Modal`);
       }

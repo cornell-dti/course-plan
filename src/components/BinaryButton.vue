@@ -39,7 +39,7 @@ export default {
     div {
       text-align: center;
       font-weight: 500;
-      font-size: 12px;
+      font-size: 14px;
       line-height: 36px;
       width: 204px;
       &:first-of-type {
