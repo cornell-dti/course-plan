@@ -56,6 +56,8 @@
               :reqIndex="reqIndex"
               :color="reqGroupColorMap[req.group][0]"
               :isCompleted="true"
+              :isUniversitySubReq="req.group==='UNIVERSITY'"
+              :rostersFromLastTwoYears="rostersFromLastTwoYears"
               @toggleDescription="toggleDescription"
             />
           </div>
