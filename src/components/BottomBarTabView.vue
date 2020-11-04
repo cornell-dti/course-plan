@@ -1,34 +1,21 @@
 <template>
   <div class="bottombartabview">
     <div class="bottombartabview-bottomCourseWrapper">
-      <div v-for="bottomCourse in bottomCourses.slice(0, 1)" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
+      <div v-for="(bottomCourse, index) in bottomCourses" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
         <bottombartab
           v-bind="bottomCourse"
           :id="bottomCourse.id"
           :subject="bottomCourse.subject"
           :number="bottomCourse.number"
           :color="bottomCourse.color"
-          :courseObj ="bottomCourse"
-          :isFirstTab = true
+          :courseObj="bottomCourse"
+          :tabIndex="index"
+          :bottomCourseFocus="bottomCourseFocus"
           :isExpanded ="isExpanded"
           @bottomBarTabToggle="bottomBarTabToggle"
           @deleteBottomTab="deleteBottomTab"
           @toggleFromTab="toggleFromTab"
-        />
-      </div>
-      <div v-for="bottomCourse in bottomCourses.slice(1)" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
-        <bottombartab
-          v-bind="bottomCourse"
-          :id="bottomCourse.id"
-          :subject="bottomCourse.subject"
-          :number="bottomCourse.number"
-          :color="bottomCourse.color"
-          :courseObj ="bottomCourse"
-          :isFirstTab = false
-          :isExpanded ="isExpanded"
-          @bottomBarTabToggle="bottomBarTabToggle"
-          @deleteBottomTab="deleteBottomTab"
-          @toggleFromTab="toggleFromTab"
+          @updateBarTabs="updateBarTabs"
         />
       </div>
     </div>
@@ -69,6 +56,7 @@ export default {
   props: {
     bottomCourses: Array,
     seeMoreCourses: Array,
+    bottomCourseFocus: Number,
     isExpanded: Boolean,
     maxBottomBarTabs: Number
   },
@@ -84,11 +72,17 @@ export default {
       this.$emit('bottomBarTabToggle', courseObj);
     },
 
-    deleteBottomTab(subject, number) {
+    deleteBottomTab(courseObj) {
+      let focusedCourse = this.bottomCourses[this.bottomCourseFocus];
+      let focusedCourseIndex = 0;
+
       for (let i = 0; i < this.bottomCourses.length; i += 1) {
-        if (this.bottomCourses[i].subject === subject && this.bottomCourses[i].number === number) {
+        if (this.bottomCourses[i].uniqueID === courseObj.uniqueID) {
           this.bottomCourses.splice(i, 1);
-          break;
+          if (i === this.bottomCourseFocus) {
+            focusedCourse = undefined;
+            focusedCourseIndex = i;
+          }
         }
       }
 
@@ -100,6 +94,15 @@ export default {
 
         // add course to end of bottomCourses
         this.bottomCourses.push(seeMoreCourseToMove);
+      }
+
+      // update focused course
+      if (focusedCourse) {
+        this.bottomBarTabToggle(focusedCourse);
+      } else if (focusedCourseIndex < this.bottomCourses.length) {
+        this.bottomBarTabToggle(this.bottomCourses[focusedCourseIndex]);
+      } else {
+        this.bottomBarTabToggle(this.bottomCourses[this.bottomCourses.length - 1]);
       }
     },
 
@@ -116,14 +119,11 @@ export default {
         // add bottomCourseToMove to seeMoreCourses
         this.seeMoreCourses.unshift(bottomCourseToMove);
       }
-      // remove course from seeMoreCourses
-      for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-        if (this.seeMoreCourses[i].uniqueID === course.uniqueID) {
-          this.seeMoreCourses.splice(i, 1);
-        }
-      }
       // add course to bottomCourses
       this.bottomCourses.unshift(course);
+      this.bottomBarTabToggle(this.bottomCourses[0]);
+      // remove course from seeMoreCourses
+      this.deleteSeeMoreCourse(course);
     },
 
     deleteSeeMoreCourse(course) {
@@ -133,10 +133,15 @@ export default {
           this.seeMoreCourses.splice(i, 1);
         }
       }
+      this.updateBarTabs();
     },
 
     toggleFromTab() {
       this.$emit('toggleFromTab');
+    },
+
+    updateBarTabs() {
+      this.$emit('updateBarTabs');
     }
 
   }

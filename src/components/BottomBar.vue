@@ -5,23 +5,24 @@
             <bottombartabview
             :bottomCourses="bottomCourses"
             :seeMoreCourses="seeMoreCourses"
+            :bottomCourseFocus="bottomCourseFocus"
             :isExpanded="isExpanded"
             :maxBottomBarTabs="maxBottomBarTabs"
             @bottomBarTabToggle="bottomBarTabToggle"
-            @toggleFromTab="toggleFromTab"
+            @toggleFromTab="toggle"
             />
         </div>
         <div class="bottombar-title" @click="toggle()">
           <bottombartitle
-          :color="bottomCourses[0].color"
-          :name="bottomCourses[0].name"
+          :color="bottomCourses[bottomCourseFocus].color"
+          :name="bottomCourses[bottomCourseFocus].name"
           :isExpanded="isExpanded"
           />
         </div>
       </div>
-      <div v-if="this.isExpanded" class="bottombar-course">
+      <div v-if="isExpanded" class="bottombar-course">
         <bottombarcourse
-        :courseObj="bottomCourses[0]"
+        :courseObj="bottomCourses[bottomCourseFocus]"
         />
       </div>
     </div>
@@ -42,6 +43,7 @@ export default {
   props: {
     bottomCourses: Array,
     seeMoreCourses: Array,
+    bottomCourseFocus: Number,
     isExpanded: Boolean,
     maxBottomBarTabs: Number
   },
@@ -52,14 +54,8 @@ export default {
       else this.$emit('open-bar');
     },
     bottomBarTabToggle(courseObj) {
-      // Move courseObj to front of array
-      if (this.bottomCourses.indexOf(courseObj) > 0) { // not already in front
-        this.bottomCourses.splice(this.bottomCourses.indexOf(courseObj), 1);
-        this.bottomCourses.unshift(courseObj);
-      }
-    },
-    toggleFromTab() {
-      this.toggle();
+      const newBottomCourseFocus = this.bottomCourses.indexOf(courseObj);
+      this.$emit('change-focus', newBottomCourseFocus);
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div
     class="semesterView"
-    :class="{ bottomBar: isBottomBar, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}"
+    :class="{ bottomBar: isBottomBar && isBottomBarExpanded, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}"
     @click="closeBar"
     :key="key"
   >
@@ -361,6 +361,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 1.5rem 3rem 3rem;
+  position: relative;
 
   &-content {
     display: flex;
@@ -482,7 +483,7 @@ export default {
 }
 
 .bottomBar {
-  margin-bottom: 300px;
+  margin-bottom: 350px;
 }
 
 @media only screen and (max-width: 878px) {
