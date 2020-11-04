@@ -63,9 +63,7 @@ function sortByLeastRecentRosters(filteredCoursesPaths: string[]): string[] {
  * Sorted by least recent rosters
  */
 const filteredCoursesPaths: string[] = sortByLeastRecentRosters(
-  readdirSync('src/requirements/').filter(
-    path => path.includes('filtered') && path.includes('courses.json')
-  )
+  readdirSync('functions/filtered_courses/')
 );
 
 // NOTE:
@@ -77,8 +75,8 @@ const filteredCoursesPaths: string[] = sortByLeastRecentRosters(
  * Then reduce to one JSON object
 */
 const filteredAllCourses: { readonly [semester: string]: readonly Course[] } = (
-  filteredCoursesPaths.map(path => JSON.parse(readFileSync(`src/requirements/${path}`).toString()))
-    .reduce((accum, currentValue) => Object.assign(accum, currentValue))
+  filteredCoursesPaths.map(path => JSON.parse(readFileSync('functions/filtered_courses/' + path).toString()))
+                      .reduce((accum, currentValue) => Object.assign(accum, currentValue))
 );
 
 export default filteredAllCourses;

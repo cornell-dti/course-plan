@@ -8,11 +8,9 @@ const userDataCollection = db.collection('userData');
 
 const fs = require('fs'); 
 
-const filteredCoursesPaths = fs.readdirSync('./').filter(
-  path => path.includes('filtered') && path.includes('courses.json')
-);
+const filteredCoursesPaths = fs.readdirSync('./filtered_courses/');
 
-const filteredAllCourses = filteredCoursesPaths.map(path => require('./' + path))
+const filteredAllCourses = filteredCoursesPaths.map(path => require('./filtered_courses/' + path))
                                                .reduce((accum, currentValue) => Object.assign(accum, currentValue));
 
 let average = (array) => array.reduce((a, b) => a + b) / array.length;
