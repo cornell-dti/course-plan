@@ -45,7 +45,12 @@ function computeFulfillmentStatisticsFromCourses(
   });
 
   if (totalCountRequired === undefined) {
-    return { minCountFulfilled, minCountRequired, courses: coursesThatFulfilledRequirement };
+    return {
+      fulfilledBy: counting,
+      minCountFulfilled,
+      minCountRequired,
+      courses: coursesThatFulfilledRequirement,
+    };
   }
 
   let totalCountFulfilled = 0;
@@ -66,6 +71,7 @@ function computeFulfillmentStatisticsFromCourses(
   );
 
   return {
+    fulfilledBy: counting,
     minCountFulfilled,
     minCountRequired,
     totalCountFulfilled,
@@ -102,7 +108,7 @@ function computeFulfillmentCoursesAndStatistics(
 ): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
   switch (requirement.fulfilledBy) {
     case 'self-check':
-      return { minCountFulfilled: 0, minCountRequired: 0, courses: [] };
+      return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 0, courses: [] };
     case 'courses':
     case 'credits':
       return computeFulfillmentStatisticsFromCourses(

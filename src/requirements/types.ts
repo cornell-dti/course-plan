@@ -128,6 +128,7 @@ export type RequirementFulfillment<M extends {}> = {
 } & M;
 
 export type RequirementFulfillmentStatistics = {
+  readonly fulfilledBy: 'courses' | 'credits' | 'self-check';
   /**
    * Current fulfillment progress.
    * When it's a number, it's either number of courses or number of credits.
