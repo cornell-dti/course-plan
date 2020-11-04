@@ -3,7 +3,8 @@
     <binaryButton></binaryButton>
     <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
     <div class="autocomplete">
-      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
+      <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div>
+      <input v-else class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
     <div v-if="!isOnboard && !selected"> <!-- if a course is not selected -->
       <div class="newCourse-title">Add this class to the following semester</div>
@@ -81,7 +82,8 @@ export default {
       requirements: ['DummyReq1', 'DummyReq2'],
       potentialReqs: ['PotentialReq1', 'PotentialReq2'],
       binaryPotentialReqs: [['binarychoice1', 'binarychoice2']],
-      editMode: false
+      editMode: false,
+      selectedCourse: ''
     };
   },
   computed: {
@@ -171,6 +173,7 @@ export default {
               /* insert the value for the autocomplete text field: */
               inpCopy.value = newTitle.title;
               inpCopy.name = newTitle.roster;
+              this.selectedCourse = newTitle.title;
               this.selected = true;
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
@@ -280,7 +283,7 @@ export default {
   }
   &-semester {
     margin-top: 8px;
-    margin-bottom: 24px;
+    margin-bottom: 15px;
     &-edit {
       width: 50%;
     }
