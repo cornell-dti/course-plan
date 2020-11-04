@@ -44,12 +44,7 @@ const functions = firebase.functions();
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
 export default {
-  // created() {
-  //   this.getFirstFourCourseObjects();
-  // },
   mounted() {
-    this.getFirstFourCourseObjects();
-    console.log(this.courseObjects);
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
     const service = Vue.$dragula.$service;
     service.eventBus.$on('drag', () => {
@@ -74,6 +69,17 @@ export default {
     subReq: Object,
     subReqCourseId: Number,
     courseCodes: Array
+  },
+  watch: {
+    subReq: {
+      immediate: true,
+      deep: true,
+      handler(updatedSubReq) {
+        if (updatedSubReq.displayDescription && this.courseObjects.length === 0) {
+          this.getFirstFourCourseObjects();
+        }
+      }
+    }
   },
   computed: {
     addCourseLabel() {
