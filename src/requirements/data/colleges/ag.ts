@@ -113,8 +113,6 @@ const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
   name: 'Physical and Life Sciences',
   description: '18 credits in at least three disciplines of which six credits must be introductory life sciences/biology and three credits in chemistry or physics and a quantitative literacy course.',
   source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  checker: null,
-  operator: null,
   fulfilledBy: 'self-check'
 };
 

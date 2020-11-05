@@ -58,6 +58,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .blackout{
   z-index: 100;
   background-color:rgba(0,0,0,0.5);
@@ -85,7 +87,7 @@ export default {
   height: 66%;
   display: flex;
   justify-content: center;
-  background-color: #1AA9A5;
+  background-color: $emGreen;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
   img{
@@ -112,7 +114,7 @@ export default {
     width: 90%;
   }
   button{
-    background-color: #508197;
+    background-color: $sangBlue;
     color: white;
     border: none;
     padding-right: .7em;

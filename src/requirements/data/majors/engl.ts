@@ -46,8 +46,6 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Concentration',
     description: '12 credits (3 courses) must form an intellectually coherent concentration (see below).',
     source: 'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check',
     minCount: 12
   }

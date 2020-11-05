@@ -10,8 +10,7 @@ const universityRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: (course: Course): boolean => 'PE'.includes(course.subject),
     operator: 'or',
     fulfilledBy: 'courses',
-    minCount: 2,
-    applies: 'all'
+    minCount: 2
   },
   {
     name: 'Swim Test',
@@ -21,8 +20,7 @@ const universityRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('PE 1100'),
     operator: 'or',
     fulfilledBy: 'courses',
-    minCount: 1,
-    applies: 'all'
+    minCount: 1
   }
 ];
 

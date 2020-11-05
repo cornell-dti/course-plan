@@ -54,8 +54,6 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Concentration',
     description: 'Students are required to complete AT LEAST one concentration from the seven concentrations available',
     source: 'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-0',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check',
     minCount: 1
   },

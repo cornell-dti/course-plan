@@ -23,8 +23,6 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'One class from the core requirements may be taken for a S/U grade. NO S/U grades will be accepted in a declared concentration, unless a class is offered S/U only. '
       + 'All course petitions or substitutions are managed through the Dyson Office of Student Services in consultation with a committee of faculty from each concentration',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check'
   },
   {
@@ -104,8 +102,6 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       + 'Courses used to fulfill a quantitative methods requirement or a concentration requirement or elective '
       + 'cannot also be counted toward a core applied economics requirement, unless that concentration is environmental, energy, and resource economics.',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
-    checker: null,
-    operator: null,
     fulfilledBy: 'self-check'
   },
   {

@@ -7,7 +7,7 @@ import { Course } from './types';
 
 /** Returns the ordered number encoding for a given type */
 function typeToOrderedNumber(type: string): number {
-  switch(type) {
+  switch (type) {
     case 'WI':
       return 0;
     case 'SP':
@@ -32,26 +32,25 @@ function compareFilteredCoursesPaths(filteredCoursesPath1: string, filteredCours
   // Extract just the roster part in the filteredCoursesPath
   const roster1 = filteredCoursesPath1.split('-')[1];
   const roster2 = filteredCoursesPath2.split('-')[1];
-  let type1 = roster1.slice(0,2);
-  let year1 = roster1.slice(2);
-  let type2 = roster2.slice(0, 2);
-  let year2 = roster2.slice(2);
+  const type1 = roster1.slice(0, 2);
+  const year1 = roster1.slice(2);
+  const type2 = roster2.slice(0, 2);
+  const year2 = roster2.slice(2);
 
   if (year1 < year2) {
     // roster1 has less recent year than roster2
     return -1;
-  } else if (year2 < year1) {
+  } if (year2 < year1) {
     // roster2 has less recent year than roster1
     return 1;
-  } else if (typeToOrderedNumber(type1) < typeToOrderedNumber(type2)) {
+  } if (typeToOrderedNumber(type1) < typeToOrderedNumber(type2)) {
     // roster1 has less recent semester type than roster2
     return -1;
-  } else if (typeToOrderedNumber(type2) < typeToOrderedNumber(type1)) {
+  } if (typeToOrderedNumber(type2) < typeToOrderedNumber(type1)) {
     // roster2 has less recent semester type than roster1
     return 1;
-  } else {
-    return 0;
   }
+  return 0;
 }
 /** Returns filteredCoursesPaths sorted from least to most recent roster. */
 function sortByLeastRecentRosters(filteredCoursesPaths: string[]): string[] {
@@ -64,9 +63,7 @@ function sortByLeastRecentRosters(filteredCoursesPaths: string[]): string[] {
  * Sorted by least recent rosters
  */
 const filteredCoursesPaths: string[] = sortByLeastRecentRosters(
-  readdirSync('src/requirements/').filter(
-    path => path.includes('filtered') && path.includes('courses.json')
-  )
+  readdirSync('functions/filtered_courses/')
 );
 
 // NOTE:
@@ -78,7 +75,7 @@ const filteredCoursesPaths: string[] = sortByLeastRecentRosters(
  * Then reduce to one JSON object
 */
 const filteredAllCourses: { readonly [semester: string]: readonly Course[] } = (
-  filteredCoursesPaths.map(path => JSON.parse(readFileSync('src/requirements/' + path).toString()))
+  filteredCoursesPaths.map(path => JSON.parse(readFileSync('functions/filtered_courses/' + path).toString()))
                       .reduce((accum, currentValue) => Object.assign(accum, currentValue))
 );
 

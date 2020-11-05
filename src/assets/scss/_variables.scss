@@ -1,0 +1,43 @@
+$primary: #f15151;
+$error: #ef5777;
+$success: #1abc9c;
+$light: #f5f8fa;
+$medium: #657786;
+$dark: #34495e;
+$white: #fff;
+$black: #000;
+
+$offWhite: #f8f8f8;
+$medGray: #858585;
+$darkGray: #3C3C3C;
+
+$emGreen: #148481;
+$chrisGreen: #105351;
+$sangBlue: #4D7D92;
+$einBlue: #92C3E6;
+
+$yuxuanBlue: #32A0F2;
+$inactiveGray: #C4C4C4;
+$backgroundBlue: #F6FAFC;
+$primaryGray: #3D3D3D;
+$secondaryGray: #858585;
+
+$lightPlaceholderGray: #757575;
+$darkPlaceholderGray: #B6B6B6;
+
+// Export for javascript
+:export {
+  yuxuanBlue: $yuxuanBlue;
+  inactiveGray: $inactiveGray;
+  backgroundBlue: $backgroundBlue;
+  primaryGray: $primaryGray;
+  secondaryGray: $secondaryGray;
+  lightPlaceholderGray: $lightPlaceholderGray;
+  darkPlaceholderGray: $darkPlaceholderGray;
+}
+
+// To import into <script>
+// import { yuxuanBlue, ... } from '@/assets/scss/_variables.scss';
+
+// To import into <style>
+// @import "@/assets/scss/_variables.scss";

@@ -2,25 +2,86 @@ import buildRequirementFulfillmentGraph from './requirement-graph-builder';
 import requirementJson from './typed-requirement-json';
 import {
   CourseTaken,
+  EligibleCourses,
   DecoratedCollegeOrMajorRequirement,
-  RequirementFulfillment,
   RequirementFulfillmentStatistics,
-  GroupedRequirementFulfillmentReport
+  GroupedRequirementFulfillmentReport,
+  Course
 } from './types';
 
 type RequirementMap = { readonly [code: string]: readonly string[] };
 type MutableRequirementMapWithMutableChildren = { [code: string]: string[] };
 
+function computeFulfillmentStatisticsFromCourses(
+  coursesThatFulfilledRequirement: readonly (readonly CourseTaken[])[],
+  counting: 'courses' | 'credits',
+  operator: 'and' | 'or',
+  minCountRequired: number,
+  totalCountRequired?: number,
+): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
+  let minCountFulfilled = 0;
+  coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
+    if (coursesThatFulfilledSubRequirement.length === 0) {
+      return;
+    }
+
+    switch (counting) {
+      case 'courses':
+        minCountFulfilled += operator === 'or'
+          ? coursesThatFulfilledSubRequirement.length
+          : 1;
+        break;
+      case 'credits':
+        minCountFulfilled += operator === 'or'
+          ? coursesThatFulfilledSubRequirement
+            .map(course => course.credits)
+            .reduce((a, b) => a + b, 0)
+          : coursesThatFulfilledSubRequirement
+            .map(course => course.credits)
+            .reduce((a, b) => a + b);
+        break;
+      default:
+        throw new Error('Fulfillment type unknown.');
+    }
+  });
+
+  if (totalCountRequired === undefined) {
+    return { minCountFulfilled, minCountRequired, courses: coursesThatFulfilledRequirement };
+  }
+
+  let totalCountFulfilled = 0;
+  Array.from(new Set(coursesThatFulfilledRequirement.flat()).values()).forEach(courseThatFulfilledRequirement => {
+    // depending on what it is fulfilled by, either increase the count or credits you took
+    switch (counting) {
+      case 'courses':
+        totalCountFulfilled += 1;
+        return;
+      case 'credits':
+        totalCountFulfilled += courseThatFulfilledRequirement.credits;
+        return;
+      default:
+        throw new Error('Fulfillment type unknown.');
+    }
+  });
+
+  return {
+    minCountFulfilled,
+    minCountRequired,
+    totalCountFulfilled,
+    totalCountRequired,
+    courses: coursesThatFulfilledRequirement
+  };
+}
+
 /**
  * @param coursesTaken a list of all taken courses.
- * @param requirement the requirement to compute course fulfillment.
+ * @param requirementCourses a list of eligible courses from requirement data.
  * @returns a naively computed list of courses that fulfill the requirement, partitioned into sub-requirement filfillment.
  */
 function filterAndPartitionCoursesThatFulfillRequirement(
   coursesTaken: readonly CourseTaken[],
-  requirement: DecoratedCollegeOrMajorRequirement
+  requirementCourses: readonly EligibleCourses[],
 ): CourseTaken[][] {
-  const { courses: requirementCourses } = requirement;
   const coursesThatFulfilledRequirement: CourseTaken[][] = requirementCourses.map(() => []);
   coursesTaken.forEach(courseTaken => {
     const { roster, courseId } = courseTaken;
@@ -34,70 +95,43 @@ function filterAndPartitionCoursesThatFulfillRequirement(
   return coursesThatFulfilledRequirement;
 }
 
-function computeFulfillmentStatistics<T extends {}>({ requirement, courses: coursesThatFulfilledRequirement }: RequirementFulfillment<T>): RequirementFulfillmentStatistics {
-  let minCountFulfilled = 0;
-  coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
-    if (coursesThatFulfilledSubRequirement.length === 0) {
-      return;
+function computeFulfillmentCoursesAndStatistics(
+  requirement: DecoratedCollegeOrMajorRequirement,
+  coursesTaken: readonly CourseTaken[],
+): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
+  switch (requirement.fulfilledBy) {
+    case 'self-check':
+      return { minCountFulfilled: 0, minCountRequired: 0, courses: [] };
+    case 'courses':
+    case 'credits':
+      return computeFulfillmentStatisticsFromCourses(
+        filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, requirement.courses),
+        requirement.fulfilledBy,
+        requirement.operator,
+        requirement.minCount,
+        requirement.totalCount
+      );
+    case 'toggleable': {
+      // Choose the max fulfillment progress as the statistics
+      // TODO: take user choices into account when we are going to integrating that.
+      return Object.values(requirement.fulfillmentOptions).map(option => (
+        computeFulfillmentStatisticsFromCourses(
+          filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, option.courses),
+          option.counting,
+          option.operator,
+          option.minCount,
+          option.totalCount
+        )
+      )).reduce((max, current) => {
+        if (max.minCountFulfilled / max.minCountRequired < current.minCountFulfilled / current.minCountRequired) {
+          return current;
+        }
+        return max;
+      });
     }
-
-    if (requirement.operator === 'or') {
-      // Accumulating requirements with double counting with 'or/ operator
-      switch (requirement.fulfilledBy) {
-        case 'courses':
-          minCountFulfilled += coursesThatFulfilledSubRequirement.length;
-          break;
-        case 'credits':
-          minCountFulfilled += coursesThatFulfilledSubRequirement
-            .map(course => course.credits)
-            .reduce((a, b) => a + b);
-          break;
-        case 'self-check':
-          return;
-        default:
-          throw new Error('Fulfillment type unknown.');
-      }
-    } else if (requirement.operator === 'and') {
-      // Accumulating requirements without double counting with 'and' operator
-      switch (requirement.fulfilledBy) {
-        case 'courses':
-          minCountFulfilled += 1;
-          break;
-        case 'credits':
-          minCountFulfilled += coursesThatFulfilledSubRequirement
-            .map(course => course.credits)
-            .reduce((a, b) => Math.max(a, b), 0);
-          break;
-        case 'self-check':
-          return;
-        default:
-          throw new Error('Fulfillment type unknown.');
-      }
-    }
-  });
-
-  if (requirement.totalCount === undefined) {
-    return { minCountFulfilled };
+    default:
+      throw new Error();
   }
-
-  let totalCountFulfilled = 0;
-  Array.from(new Set(coursesThatFulfilledRequirement.flat()).values()).forEach(courseThatFulfilledRequirement => {
-    // depending on what it is fulfilled by, either increase the count or credits you took
-    switch (requirement.fulfilledBy) {
-      case 'courses':
-        totalCountFulfilled += 1;
-        return;
-      case 'credits':
-        totalCountFulfilled += courseThatFulfilledRequirement.credits;
-        return;
-      case 'self-check':
-        return;
-      default:
-        throw new Error('Fulfillment type unknown.');
-    }
-  });
-
-  return { minCountFulfilled, totalCountFulfilled };
 }
 
 /**
@@ -166,26 +200,39 @@ export function computeRequirements(
     // TODO assign an unique ID to each requirement entry.
     getRequirementUniqueID: requirement => `${requirement.name} ${requirement.description}`,
     getCourseUniqueID: course => `${course.roster} ${course.courseId}`,
-    getAllCoursesThatCanPotentiallySatisfyRequirement: requirement => (
-      requirement.courses
-        .map((eligibleCourses): readonly CourseTaken[] => {
-          const courses: CourseTaken[] = [];
-          Object.entries(eligibleCourses).forEach(([roster, courseIds]) => {
-            courseIds.forEach(courseId => courses.push({
-              roster,
-              courseId,
-              // Only roster and courseId are used for equality comparison,
-              // so other dummy values doesn't matter.
-              code: 'DUMMY',
-              subject: 'DUMMY',
-              number: 'DUMMY',
-              credits: 0
-            }));
-          });
-          return courses;
-        })
-        .flat()
-    ),
+    getAllCoursesThatCanPotentiallySatisfyRequirement: requirement => {
+      let eligibleCoursesList: readonly EligibleCourses[];
+      switch (requirement.fulfilledBy) {
+        case 'self-check':
+          return [];
+        case 'courses':
+        case 'credits':
+          eligibleCoursesList = requirement.courses;
+          break;
+        case 'toggleable':
+          eligibleCoursesList = Object.values(requirement.fulfillmentOptions).map(it => it.courses).flat();
+          break;
+        default:
+          throw new Error();
+      }
+      return eligibleCoursesList.map((eligibleCourses): readonly CourseTaken[] => {
+        const courses: CourseTaken[] = [];
+        Object.entries(eligibleCourses).forEach(([roster, courseIds]) => {
+          courseIds.forEach(courseId => courses.push({
+            roster,
+            courseId,
+            // Only roster and courseId are used for equality comparison,
+            // so other dummy values doesn't matter.
+            code: 'DUMMY',
+            subject: 'DUMMY',
+            number: 'DUMMY',
+            credits: 0
+          }));
+        });
+        return courses;
+      })
+        .flat();
+    },
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy: () => ({
       // Give back dummy value for now. Give it a real strategy when we have non-empty
       // userChoiceOnFulfillmentStrategy
@@ -206,12 +253,8 @@ export function computeRequirements(
   const minorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
   requirementFulfillmentGraph.getAllRequirements().forEach(requirement => {
     const courses = requirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement);
-    const requirementAndCourses = {
-      requirement,
-      courses: filterAndPartitionCoursesThatFulfillRequirement(courses, requirement)
-    };
     const fulfillmentStatistics = {
-      ...requirementAndCourses, ...computeFulfillmentStatistics(requirementAndCourses)
+      requirement, ...computeFulfillmentCoursesAndStatistics(requirement, courses)
     };
 
     switch (requirement.sourceType) {
