@@ -36,6 +36,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  @import "@/assets/scss/_variables.scss";
   .binary-button {
     display: flex;
     flex-direction: row;
@@ -60,7 +61,7 @@ export default {
     }
     &-selected {
       background: #2BBCC6;
-      color: #FFFFFF;
+      color: $white;
       display: flex;
       flex-direction: row;
       justify-content: space-between;

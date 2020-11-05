@@ -36,6 +36,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  @import "@/assets/scss/_variables.scss";
   .edit-requirement {
     border: 1px solid #2BBCC6;
     box-sizing: border-box;
@@ -53,7 +54,7 @@ export default {
     &-selected {
       @extend .edit-requirement, .edit-requirement-text;
       background: #2BBCC6;
-      color: #FFFFFF;
+      color: $white;
       display: flex;
       flex-direction: row;
       justify-content: space-between;

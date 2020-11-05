@@ -46,12 +46,10 @@
 <script>
 import coursesJSON from '../../assets/courses/courses.json';
 import NewSemester from '@/components/Modals/NewSemester';
-import NewCourseRequirements from '@/components/Modals/NewCourseRequirements';
 import EditRequirement from '@/components/EditRequirement';
 import BinaryButton from '@/components/BinaryButton';
 
 Vue.component('newSemester', NewSemester);
-Vue.component('newCourseRequiremets', NewCourseRequirements);
 Vue.component('editRequirement', EditRequirement);
 Vue.component('binaryButton', BinaryButton);
 
@@ -276,25 +274,26 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/_variables.scss";
 // TODO: font family
 .newCourse {
   &-text {
     font-size: 14px;
     line-height: 17px;
-    color: #757575;
+    color: $lightPlaceholderGray;
   }
 
   &-dropdown {
     font-size: 14px;
     line-height: 17px;
-    color: #757575;
+    color: $lightPlaceholderGray;
     width: 100%;
     border-radius: 3px;
     padding: 0.5rem;
-    border: 0.5px solid #c4c4c4;
+    border: 0.5px solid $inactiveGray;
     margin-bottom: 15px;
     &::placeholder {
-      color: #b6b6b6;
+      color: $darkPlaceholderGray;
     }
   }
   &-semester {
@@ -310,7 +309,7 @@ export default {
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
-    color: #000000;
+    color: $black;
   }
   &-season-emoji {
     height: 18px;
@@ -319,7 +318,7 @@ export default {
   &-title {
     font-size: 14px;
     line-height: 17px;
-    color: #000000;
+    color: $black;
     margin-bottom: 6px;
   }
   &-requirements {
@@ -327,7 +326,7 @@ export default {
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
-    color: #148481;
+    color: $emGreen;
     &-container {
       display: flex;
       flex-direction: row;
@@ -349,7 +348,7 @@ export default {
     font-size: 14px;
     line-height: 14px;
     text-decoration-line: underline;
-    color: #32A0F2;
+    color: $yuxuanBlue;
     cursor: pointer;
   }
 }
@@ -385,7 +384,7 @@ input {
 .autocomplete-items div {
   padding: 10px;
   cursor: pointer;
-  background-color: #fff;
+  background-color: $white;
 }
 .autocomplete-items div:hover {
   /*when hovering an item:*/
@@ -394,7 +393,7 @@ input {
 .autocomplete-active {
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;
-  color: #ffffff;
+  color: $white;
 }
 
 </style>
