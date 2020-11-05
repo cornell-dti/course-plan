@@ -89,7 +89,7 @@
             <div class = "introjs-bodytext">To start planning your college career, you should try adding a course in your current semester.</div>'
           data-disable-interaction = '1'
         >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" :type="type">
+          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">
             {{ buttonString }}
           </span>
         </div>

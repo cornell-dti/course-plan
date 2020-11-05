@@ -76,9 +76,6 @@ export default {
     add() {
       return 'ADD';
     },
-    cancel() {
-      return 'CANCEL';
-    },
     body() {
       if (this.type === 'semester') {
         return 'newSemester';
@@ -182,12 +179,6 @@ export default {
 
         this.closeCurrentModal();
       }
-    },
-    cancelMaybe() {
-      if (this.type === 'course' && this.$refs.modalBodyComponent.isBack()) {
-        return 'BACK';
-      }
-      return 'CANCEL';
     },
     toggleLeftButton() {
       if (this.leftButton === 'CANCEL') {

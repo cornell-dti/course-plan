@@ -1,8 +1,7 @@
 <template>
   <div class="newCourse">
-    <binaryButton></binaryButton>
     <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
-    <!-- <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div> -->
+    <!-- TODO: for some reason this breaks the dropdown <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div> -->
     <div class="autocomplete">
       <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
@@ -262,12 +261,6 @@ export default {
       this.editMode = false;
       this.selected = false;
       this.selectedCourse = '';
-    },
-    isBack() {
-      return this.selected || this.editMode;
-    },
-    isEditMode() {
-      return this.editMode;
     }
   }
 };
