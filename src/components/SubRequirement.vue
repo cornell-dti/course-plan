@@ -22,11 +22,11 @@
     </div>
     <div class="col">
       <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">{{
-        (subReq.requirement.fulfilledBy !== 'self-check')
-        ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
-        || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
+        (subReq.fulfilledBy !== 'self-check')
+        ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.totalCountRequired
+        || subReq.minCountRequired} ${subReq.fulfilledBy}`
         : 'self check' }}</p>
-      <p v-if="this.isCompleted" class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
+      <p v-if="this.isCompleted" class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.minCountRequired}} {{ subReq.fulfilledBy }}</p>
     </div>
   </div>
   <div v-if="subReq.displayDescription" :class="[{'completed-ptext': this.isCompleted}, 'description']">
