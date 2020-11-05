@@ -35,6 +35,7 @@
 import firebase from 'firebase/app';
 import 'firebase/functions';
 import { Vue } from 'vue-property-decorator';
+import { PropType } from 'vue';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
 // eslint-disable-next-line import/extensions
@@ -46,11 +47,12 @@ import Course from '@/components/Course.vue';
 // eslint-disable-next-line import/extensions
 import Modal from '@/components/Modals/Modal.vue';
 // eslint-disable-next-line import/extensions
-import RequirementView from '@/components/RequirementView.vue';
+import RequirementView, { Major, Minor } from '@/components/RequirementView.vue';
 // eslint-disable-next-line import/extensions
 import SubRequirement from '@/components/SubRequirement.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
-import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
+import { RequirementMap, computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
+import { AppUser, AppSemester } from '@/user-data';
 
 const functions = firebase.functions();
 
@@ -58,23 +60,14 @@ Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('requirementview', RequirementView);
 Vue.use(VueCollapse);
-type major = {
-  display: boolean;
-  major: string;
-  majorFN: string;
-}
-type minor = {
-  display: boolean;
-  minor: string;
-  minorFN: string;
-}
+
 type Data = {
-  actives: boolean[];
+  actives: readonly boolean[];
   modalShow: boolean;
   reqs: SingleMenuRequirement[];
-  majors: major[];
-  minors: minor[];
-  requirementsMap: {};
+  majors: readonly Major[];
+  minors: readonly Minor[];
+  requirementsMap: RequirementMap;
   reqGroupColorMap: {};
   numOfColleges: number
 }
@@ -91,8 +84,8 @@ tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
   props: {
-    semesters: Array,
-    user: Object,
+    semesters: Array as PropType<readonly AppSemester[]>,
+    user: Object as PropType<AppUser>,
     compact: Boolean,
     startTour: Boolean
   },
@@ -247,7 +240,6 @@ export default Vue.extend({
     getCourseCodesArray(): readonly CourseTaken[] {
       const courses: CourseTaken[] = [];
       this.semesters.forEach(semester => {
-        // @ts-ignore
         semester.courses.forEach(course => {
           courses.push({
             code: `${course.lastRoster}: ${course.subject} ${course.number}`,
