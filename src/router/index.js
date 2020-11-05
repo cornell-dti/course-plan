@@ -17,30 +17,30 @@ const router = new Router({
     {
       path: `${baseURL}/login`,
       name: 'Login',
-      component: Login
+      component: Login,
     },
     {
       path: `${baseURL}/`,
       name: 'Dashboard',
       component: Dashboard,
       meta: {
-        requiresAuth: true
-      }
+        requiresAuth: true,
+      },
     },
     {
       path: `${baseURL}/settings`,
       name: 'Settings',
       component: Settings,
       meta: {
-        requiresAuth: true
-      }
+        requiresAuth: true,
+      },
     },
     {
       path: `${baseURL}/*`,
       name: '404',
-      component: Page404
-    }
-  ]
+      component: Page404,
+    },
+  ],
 });
 
 router.beforeEach((to, from, next) => {
