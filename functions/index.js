@@ -104,12 +104,17 @@ function fetchCoursesWithCrseCodes(roster, crseCodes, fetchedCoursesSoFar) {
 
   // Filter for course objects whose crseCode is in crseCodes
   // and for course objects that are not in fetchedCoursesSoFar
-  const filteredCourses = filteredAllCourses[roster].filter(rosterCourse =>
-    crseCodes.includes(`${rosterCourse.subject} ${rosterCourse.catalogNbr}`)
-    && !fetchedCoursesSoFar.some(course => course.subject === rosterCourse.subject && course.catalogNbr === rosterCourse.catalogNbr));
+  const filteredCourses = filteredAllCourses[roster].filter(
+    rosterCourse =>
+      crseCodes.includes(`${rosterCourse.subject} ${rosterCourse.catalogNbr}`) &&
+      !fetchedCoursesSoFar.some(
+        course =>
+          course.subject === rosterCourse.subject && course.catalogNbr === rosterCourse.catalogNbr
+      )
+  );
 
   // Update fetchedCourses with filteredCourses
-  filteredCourses.forEach((filteredCourse) => {
+  filteredCourses.forEach(filteredCourse => {
     filteredCourse.roster = roster; // Manually add roster field
 
     let filteredCrseCode = `${filteredCourse.subject} ${filteredCourse.catalogNbr}`;
@@ -118,7 +123,7 @@ function fetchCoursesWithCrseCodes(roster, crseCodes, fetchedCoursesSoFar) {
 
     fetchedCourses.push(filteredCourse);
   });
-  
+
   // Log courses that could not be fetched
   crseCodes.map(a => logUnfetchedCourse(a, roster));
   return fetchedCourses;
@@ -129,16 +134,21 @@ function fetchCoursesWithCrseIds(roster, crseIds, fetchedCoursesSoFar) {
 
   // Filter for course objects whose crseId is in crseIds
   // and for course objects that are not in fetchedCoursesSoFar
-  const filteredCourses = filteredAllCourses[roster].filter(rosterCourse =>
-    crseIds.includes(rosterCourse.crseId)
-    && !fetchedCoursesSoFar.some(course => course.subject === rosterCourse.subject && course.catalogNbr === rosterCourse.catalogNbr));
+  const filteredCourses = filteredAllCourses[roster].filter(
+    rosterCourse =>
+      crseIds.includes(rosterCourse.crseId) &&
+      !fetchedCoursesSoFar.some(
+        course =>
+          course.subject === rosterCourse.subject && course.catalogNbr === rosterCourse.catalogNbr
+      )
+  );
 
   // Update fetchedCourses with filteredCourses
-  filteredCourses.forEach((filteredCourse) => {
+  filteredCourses.forEach(filteredCourse => {
     filteredCourse.roster = roster; // Manually add roster field
 
     let filteredCrseId = filteredCourse.crseId;
-    
+
     // Remove already fetched course ids
     crseIds = crseIds.filter(crseId => crseId != filteredCrseId);
 
@@ -151,20 +161,19 @@ function fetchCoursesWithCrseIds(roster, crseIds, fetchedCoursesSoFar) {
   return fetchedCourses;
 }
 
-
 /** FetchCourses fetches the course objects for the
- * crseInfo in its input data object. 
- * 
+ * crseInfo in its input data object.
+ *
  * An example of a data object:
- * {"data": {"crseInfo": [{"roster": "SP20", "crseCodes": ["CS 1110"], 
+ * {"data": {"crseInfo": [{"roster": "SP20", "crseCodes": ["CS 1110"],
  * "crseIds": [358578]}], "allowSameCourseForDifferentRosters": true}}
- * 
+ *
  * In this case we want to get the course objects that correspond to the "CS 1110"
- * crseCode for the "SP20" roster and all the course objects that correspond to the 
+ * crseCode for the "SP20" roster and all the course objects that correspond to the
  * crseId 358578 for the "SP20" roster. Since allowSameCourseForDifferentRosters
  * is set to true, we are allowing for the same courses in different rosters to be fetched.
- * 
- * In order to be a valid request, there must be a crseInfo property that is a 
+ *
+ * In order to be a valid request, there must be a crseInfo property that is a
  * list of objects with the roster prop. crseCodes and crseIds are optional.
  * Also, there must be an allowSameCourseForDifferentRosters property that is
  * a boolean.
@@ -193,7 +202,11 @@ exports.FetchCourses = functions.https.onCall(data => {
 
     // First fetch any course objects with the provided crseCodes for this roster
     crseCodes = crseCodes.map(a => a.toUpperCase());
-    const fetchedCoursesWithCrseCodes = fetchCoursesWithCrseCodes(roster, crseCodes, fetchedCoursesSoFar);
+    const fetchedCoursesWithCrseCodes = fetchCoursesWithCrseCodes(
+      roster,
+      crseCodes,
+      fetchedCoursesSoFar
+    );
     fetchedCourses = fetchedCourses.concat(fetchedCoursesWithCrseCodes);
 
     // Updating fetchedCoursesSoFar after fetchCoursesWithCrseCodes()
@@ -201,7 +214,9 @@ exports.FetchCourses = functions.https.onCall(data => {
     // courses that have already been fetched and added to fetchedCourses.
     // Else, we do not want to fetch courses for this roster that have already
     // been fetched with crseCodes.
-    fetchedCoursesSoFar = data.allowSameCourseForDifferentRosters ?  fetchedCoursesWithCrseCodes : fetchedCourses;
+    fetchedCoursesSoFar = data.allowSameCourseForDifferentRosters
+      ? fetchedCoursesWithCrseCodes
+      : fetchedCourses;
 
     // Fetch any course objects with the provided crseIds for this roster
     crseIds = crseIds.map(a => parseInt(a, 10));
