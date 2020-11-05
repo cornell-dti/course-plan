@@ -1,7 +1,19 @@
 <template>
   <div class="binary-button">
-    <div @click="onClick(true)" :class="{'binary-button-selected': leftChosen}">{{ choices[0] }}</div>
-    <div @click="onClick(false)" :class="{'binary-button-selected': !leftChosen}">{{ choices[1] }}</div>
+    <div @click="onClick(true)" :class="{'binary-button-selected': leftChosen}">
+      <img v-if="leftChosen" class="confirmation-icon" src="../assets/images/check.svg" />
+      <div>
+        {{ choices[0] }}
+      </div>
+      <img v-if="leftChosen" class="confirmation-icon hidden" src="../assets/images/check.svg" />
+    </div>
+    <div @click="onClick(false)" :class="{'binary-button-selected': !leftChosen}">
+      <img v-if="!leftChosen" class="confirmation-icon" src="../assets/images/check.svg" />
+      <div>
+        {{ choices[1] }}
+      </div>
+      <img v-if="!leftChosen" class="confirmation-icon hidden" src="../assets/images/check.svg" />
+    </div>
   </div>
 </template>
 
@@ -49,6 +61,15 @@ export default {
     &-selected {
       background: #2BBCC6;
       color: #FFFFFF;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      img {
+        padding-left: 7px;
+      }
+      .hidden {
+        visibility: hidden;
+      }
     }
   }
 </style>

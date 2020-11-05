@@ -11,6 +11,7 @@
     >
       {{ name }}
     </div>
+    <img v-if="selected" class="confirmation-icon hidden" src="../assets/images/check.svg" />
   </div>
 </template>
 
@@ -55,9 +56,12 @@ export default {
       color: #FFFFFF;
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
       img {
         padding-left: 7px;
-        padding-right: 10px;
+      }
+      .hidden {
+        visibility: hidden;
       }
     }
     &-multiline {
