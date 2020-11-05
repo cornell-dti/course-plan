@@ -6,16 +6,17 @@ admin.initializeApp();
 const db = admin.firestore();
 const userDataCollection = db.collection('userData');
 
-const fs = require('fs'); 
+const fs = require('fs');
 
 const filteredCoursesPaths = fs.readdirSync('./filtered_courses/');
 
-const filteredAllCourses = filteredCoursesPaths.map(path => require('./filtered_courses/' + path))
-                                               .reduce((accum, currentValue) => Object.assign(accum, currentValue));
+const filteredAllCourses = filteredCoursesPaths
+  .map(path => require('./filtered_courses/' + path))
+  .reduce((accum, currentValue) => Object.assign(accum, currentValue));
 
-let average = (array) => array.reduce((a, b) => a + b) / array.length;
-function typeToMonth(type){
-  switch(type) {
+let average = array => array.reduce((a, b) => a + b) / array.length;
+function typeToMonth(type) {
+  switch (type) {
     case 'Spring':
       return 1;
     case 'Summer':
@@ -27,75 +28,71 @@ function typeToMonth(type){
     default:
   }
 }
-function isOld (semester){
+function isOld(semester) {
   var currentTime = new Date();
   var month = currentTime.getMonth() + 1;
   var year = currentTime.getFullYear();
-  if(semester.year > year){
+  if (semester.year > year) {
     return false;
-  }
-  else if (semester.year < year){
+  } else if (semester.year < year) {
     return true;
-  }
-  else{
-    if(typeToMonth(semester.type) <= month){
+  } else {
+    if (typeToMonth(semester.type) <= month) {
       return true;
-    }else{
+    } else {
       return false;
     }
-  }   
+  }
 }
 
 exports.TrackUsers = functions.https.onRequest(async (req, res) => {
-  var arr = []; 
-  var count = 0; 
+  var arr = [];
+  var count = 0;
   var semester = [];
   var oldSemester = [];
   var newSemester = [];
-  var semesterCount = 0; 
-    userDataCollection.get().then(function(querySnapshot) {
-     
-        querySnapshot.forEach(function(doc) {
+  var semesterCount = 0;
+  userDataCollection
+    .get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        arr.push(doc.data().name.firstName);
 
-            arr.push(doc.data().name.firstName);
+        var oldCount = 0;
+        var newCount = 0;
+        doc.data().semesters.forEach(function (semester) {
+          if (isOld(semester)) {
+            oldCount++;
+          } else {
+            newCount++;
+          }
+          semesterCount++;
+        });
+        semester.push(doc.data().semesters.length);
+        oldSemester.push(oldCount);
+        newSemester.push(newCount);
+        count++;
+      });
 
-            var oldCount = 0;
-            var newCount = 0; 
-            doc.data().semesters.forEach(
-              function(semester) {
-                if(isOld(semester)){
-                  oldCount++;
-                }else{
-                  newCount++;
-                }
-                semesterCount++;
-              }
-            )
-            semester.push(doc.data().semesters.length);
-            oldSemester.push(oldCount);
-            newSemester.push(newCount);
-            count++;
-        })
-        
-        const response = {
-          "people": arr,
-          "total-users": count,
-          "total-semesters": semesterCount,
-          "avg-semester" : average(semester),
-          "avg-old-semester" : average(oldSemester),
-          "avg-new-semster" : average(newSemester)
-      }
-        return response
-    }).then(function(response) {  
+      const response = {
+        people: arr,
+        'total-users': count,
+        'total-semesters': semesterCount,
+        'avg-semester': average(semester),
+        'avg-old-semester': average(oldSemester),
+        'avg-new-semster': average(newSemester),
+      };
+      return response;
+    })
+    .then(function (response) {
       console.log(response);
       res.send(response);
-      return response
-     })
+      return response;
+    })
     .catch(error => {
-        console.log('Error getting document:', error);
-        throw new Error("Profile doesn't exist")
-      });
-      
+      console.log('Error getting document:', error);
+      throw new Error("Profile doesn't exist");
+    });
 });
 
 function logUnfetchedCourse(course, roster) {
@@ -213,7 +210,6 @@ exports.FetchCourses = functions.https.onCall(data => {
   });
 
   return {
-    courses: fetchedCourses
+    courses: fetchedCourses,
   };
 });
-

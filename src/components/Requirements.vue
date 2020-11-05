@@ -19,6 +19,7 @@
         :reqGroupColorMap="reqGroupColorMap"
         :user="user"
         :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
+        :numOfColleges="numOfColleges"
         @activateMajor="activateMajor"
         @activateMinor="activateMinor"
         @toggleDetails="toggleDetails"
@@ -75,7 +76,7 @@ type Data = {
   minors: minor[];
   requirementsMap: {};
   reqGroupColorMap: {};
-
+  numOfColleges: number
 }
 // emoji for clipboard
 const clipboard = require('../assets/images/clipboard.svg');
@@ -117,11 +118,11 @@ export default Vue.extend({
         if (req.requirement.progressBar) {
           singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
           singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
-          singleMenuRequirement.required = (req.requirement.fulfilledBy !== 'self-check' && req.requirement.totalCount) || req.requirement.minCount;
+          singleMenuRequirement.required = (req.requirement.fulfilledBy !== 'self-check' && req.totalCountRequired) || req.minCountRequired;
         }
         // Default display value of false for all requirement lists
         const displayableRequirementFulfillment = { ...req, displayDescription: false };
-        if (!req.minCountFulfilled || req.minCountFulfilled < (req.requirement.minCount || 0)) {
+        if (!req.minCountFulfilled || req.minCountFulfilled < req.minCountRequired) {
           singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
         } else {
           singleMenuRequirement.completed.push(displayableRequirementFulfillment);
@@ -197,7 +198,8 @@ export default Vue.extend({
         COLLEGE: ['1AA9A5', 'blue'],
         MAJOR: ['105351', 'green'],
         MINOR: ['92C3E6', 'lightblue']
-      }
+      },
+      numOfColleges: 1
     };
   },
   watch: {
@@ -215,17 +217,17 @@ export default Vue.extend({
       if (group === 'MAJOR') {
         this.majors.forEach((major, i: number) => {
           if (major.display) {
-            currentDisplay = i + 2; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+            currentDisplay = i + this.numOfColleges; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
           }
         });
-        return (id < 2 || id === currentDisplay);
+        return (id < this.numOfColleges || id === currentDisplay);
       }
       this.minors.forEach((minor, i: number) => {
         if (minor.display) {
-          currentDisplay = i + 2 + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+          currentDisplay = i + this.numOfColleges + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
         }
       });
-      return (id < 2 || id === currentDisplay);
+      return (id < this.numOfColleges || id === currentDisplay);
     },
     toggleDetails(index: number): void {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;

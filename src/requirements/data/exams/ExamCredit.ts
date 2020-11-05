@@ -2,69 +2,63 @@
 import { ExamData } from '../../types';
 
 const transferJSON: ExamData = {
-  AP:
-    [
-      {
-        subject: 'Computer Science A',
-        credits:
-            [
-              {
-                operator: 'or',
-                collegesApplied: ['EN', 'AS'],
-                majorExcluded: [],
-                mininmumScore: 5,
-                courseEquivalents: ['CS 1110'],
-                requirementEquivalents: [],
-                credits: 4
-              }
-            ]
-      },
-      {
-        subject: 'Chemistry',
-        credits:
-            [
-              {
-                operator: 'or',
-                collegesApplied: ['EN', 'AS', 'AR'],
-                majorExcluded: ['CHEM'],
-                mininmumScore: 5,
-                courseEquivalents: ['CHEM 2070', 'CHEM 2090'],
-                requirementEquivalents: [],
-                credits: 4
-              }
-            ]
-      },
-      {
-        subject: 'Microeconomics',
-        credits:
-            [
-              {
-                collegesApplied: ['EN', 'AS'],
-                majorExcluded: [],
-                mininmumScore: 4,
-                operator: 'and',
-                courseEquivalents: ['ECON 1110', 'HADM 1410'], // and?
-                requirementEquivalents: [],
-                credits: 4
-
-              }
-            ]
-      },
-      {
-        subject: 'Macroeconomics',
-        credits:
-            [
-              {
-                operator: 'and',
-                collegesApplied: ['EN', 'AS'],
-                majorExcluded: [],
-                mininmumScore: 4,
-                courseEquivalents: ['ECON 1120'],
-                requirementEquivalents: [],
-                credits: 4
-              }
-            ]
-      } /* ,
+  AP: [
+    {
+      subject: 'Computer Science A',
+      credits: [
+        {
+          operator: 'or',
+          collegesApplied: ['EN', 'AS'],
+          majorExcluded: [],
+          mininmumScore: 5,
+          courseEquivalents: ['CS 1110'],
+          requirementEquivalents: [],
+          credits: 4,
+        },
+      ],
+    },
+    {
+      subject: 'Chemistry',
+      credits: [
+        {
+          operator: 'or',
+          collegesApplied: ['EN', 'AS', 'AR'],
+          majorExcluded: ['CHEM'],
+          mininmumScore: 5,
+          courseEquivalents: ['CHEM 2070', 'CHEM 2090'],
+          requirementEquivalents: [],
+          credits: 4,
+        },
+      ],
+    },
+    {
+      subject: 'Microeconomics',
+      credits: [
+        {
+          collegesApplied: ['EN', 'AS'],
+          majorExcluded: [],
+          mininmumScore: 4,
+          operator: 'and',
+          courseEquivalents: ['ECON 1110', 'HADM 1410'], // and?
+          requirementEquivalents: [],
+          credits: 4,
+        },
+      ],
+    },
+    {
+      subject: 'Macroeconomics',
+      credits: [
+        {
+          operator: 'and',
+          collegesApplied: ['EN', 'AS'],
+          majorExcluded: [],
+          mininmumScore: 4,
+          courseEquivalents: ['ECON 1120'],
+          requirementEquivalents: [],
+          credits: 4,
+        },
+      ],
+    } /* ,
         {
             /*
             // TODO
@@ -258,26 +252,24 @@ const transferJSON: ExamData = {
             'PAM 2101', 'PSYCH 2500', 'SOC 3010', 'STSCI 2100', 'STSCI 2150', 'STSCI 2200']],
             requirementEquivalents: [],
         }
-        */
-    ],
+        */,
+  ],
 
   IB: [
-
     {
       subject: 'Chemical And Physical Systems',
-      credits:
-            [
-              {
-                operator: 'or',
-                collegesApplied: ['EN', 'AS', 'AR'],
-                majorExcluded: ['CHEM'],
-                mininmumScore: 5,
-                courseEquivalents: ['CHEM 2070', 'CHEM 2090'],
-                requirementEquivalents: [],
-                credits: 4
-              }
-            ]
-    }
+      credits: [
+        {
+          operator: 'or',
+          collegesApplied: ['EN', 'AS', 'AR'],
+          majorExcluded: ['CHEM'],
+          mininmumScore: 5,
+          courseEquivalents: ['CHEM 2070', 'CHEM 2090'],
+          requirementEquivalents: [],
+          credits: 4,
+        },
+      ],
+    },
     /*
         {
             subject: "Chemistry",
@@ -319,6 +311,6 @@ const transferJSON: ExamData = {
             // varies
         },
         */
-  ]
+  ],
 };
 export default transferJSON;
