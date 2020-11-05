@@ -138,7 +138,7 @@ const generateSemesterJSONs = async <T extends keyof Course>(
     );
     const courses: AllCourses<T> = {};
     courses[semester] = semesterCourses;
-    const fileFunctionsSrc = 'functions/filtered_courses/filtered-' + semester + '-courses.json';
+    const fileFunctionsSrc = `functions/filtered_courses/filtered-${semester}-courses.json`;
     writeFileSync(fileFunctionsSrc, JSON.stringify(courses));
     semesterCount += 1;
     if (doPrintDebuggingInfo) {

@@ -82,7 +82,7 @@ const filteredCoursesPaths: string[] = sortByLeastRecentRosters(
 const filteredAllCourses: {
   readonly [semester: string]: readonly Course[];
 } = filteredCoursesPaths
-  .map(path => JSON.parse(readFileSync('functions/filtered_courses/' + path).toString()))
+  .map(path => JSON.parse(readFileSync(`functions/filtered_courses/${path}`).toString()))
   .reduce((accum, currentValue) => Object.assign(accum, currentValue));
 
 export default filteredAllCourses;
