@@ -1,7 +1,20 @@
-import { CollegeOrMajorRequirement } from '../../types';
+import { Course, CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
 
 const aemRequirements: readonly CollegeOrMajorRequirement[] = [
+  {
+    name: 'CALS Credits',
+    description: '55 CALS credits are required for graduation. '
+      + 'CALS credits include all courses from departments within CALS and courses offered in Applied Economics and Management, '
+      + 'Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Information Science, Nutritional Science, '
+      + 'and The Department of Statistics and Data Science.',
+    source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/distribution/',
+    checker: (course: Course): boolean => ['AG'].includes(course.acadGroup)
+    || ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(course.subject),
+    operator: 'or',
+    fulfilledBy: 'credits',
+    minCount: 55
+  },
   {
     name: 'AEM Concentration Requirement',
     description: 'AEM majors must choose at least one of the following eleven concentrations by the beginning of their junior year, '

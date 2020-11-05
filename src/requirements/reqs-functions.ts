@@ -4,7 +4,6 @@ import {
   CourseTaken,
   EligibleCourses,
   DecoratedCollegeOrMajorRequirement,
-  RequirementFulfillment,
   RequirementFulfillmentStatistics,
   GroupedRequirementFulfillmentReport,
   Course
@@ -12,99 +11,6 @@ import {
 
 type RequirementMap = { readonly [code: string]: readonly string[] };
 type MutableRequirementMapWithMutableChildren = { [code: string]: string[] };
-
-/**
- * @param courseName : name of the course (as a code)
- * @param code : code to check courseName (can contain * to denote any value)
- * @returns if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
- */
-function ifCodeMatch(courseName: string, code: string): boolean {
-  for (let i = 0; i < courseName.length; i += 1) {
-    if (code[i] !== '*' && courseName[i] !== code[i]) return false;
-  }
-  return true;
-}
-
-/**
- * @param {string} subject : subject of course to check
- * @param {string} number : number of course to check
- * @returns if the course satisfies all-eligible query (not PE or 10XX course)
- */
-function ifAllEligible(subject: string, number: string): boolean {
-  return !ifCodeMatch(subject, 'PE') && !ifCodeMatch(number, '10**');
-}
-
-/**
- * @param coursesTaken : object of courses taken with API information (CS 2110: {info}).
- * @returns a list of university requirement filfillment status.
- */
-function computeUniversityRequirementFulfillments(
-  coursesTaken: readonly CourseTaken[]
-): readonly RequirementFulfillment<RequirementFulfillmentStatistics>[] {
-  const academicCreditsRequirements = {
-    name: 'Academic Credits',
-    description: 'To graduate, a student must earn a minimum of 120 academic credits. Physical education credits and “10XX” courses do not count toward the 120 required credits.',
-    source: 'http://courses.cornell.edu/content.php?catoid=31&navoid=7901',
-    search: ['all-eligible'],
-    includes: [],
-    operator: 'or',
-    fulfilledBy: 'credits',
-    minCount: 120,
-    progressBar: true
-  } as const;
-  const PERequirement = {
-    name: 'Physical Education',
-    description: 'All incoming freshmen are required to take two credits (two courses) of Physical Education, one credit each semester of the first year on campus.',
-    source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
-    search: ['subject'],
-    includes: [
-      [
-        'PE'
-      ]
-    ],
-    operator: 'or',
-    fulfilledBy: 'courses',
-    minCount: 2
-  } as const;
-  const swimmingTestRequirement = {
-    name: 'Swimming Test',
-    description: 'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming and water safety competency requirement '
-      + 'for all entering first-year undergraduate students.',
-    source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
-    operator: null,
-    fulfilledBy: 'self-check',
-    includes: [],
-    minCount: 0
-  } as const;
-
-
-  const coursesThatCountTowardsAcademicCredits = coursesTaken.filter(course => ifAllEligible(course.subject, course.number));
-  const coursesThatCountTowardsPE = coursesTaken.filter(course => course.subject === 'PE');
-
-  return [
-    // Academic Credits
-    {
-      requirement: academicCreditsRequirements,
-      courses: [coursesThatCountTowardsAcademicCredits],
-      minCountFulfilled: coursesThatCountTowardsAcademicCredits.reduce((accumulator, course) => accumulator + course.credits, 0),
-      minCountRequired: 120
-    },
-    // PE Credits
-    {
-      requirement: PERequirement,
-      courses: [coursesThatCountTowardsPE],
-      minCountFulfilled: coursesThatCountTowardsPE.length,
-      minCountRequired: 2
-    },
-    // Swim Test
-    {
-      requirement: swimmingTestRequirement,
-      courses: [],
-      minCountFulfilled: 0,
-      minCountRequired: 0
-    }
-  ];
-}
 
 function computeFulfillmentStatisticsFromCourses(
   coursesThatFulfilledRequirement: readonly (readonly CourseTaken[])[],
@@ -245,15 +151,10 @@ export function computeRequirements(
   // prepare grouped fulfillment summary
   const groups: GroupedRequirementFulfillmentReport[] = [];
 
-  // PART 1: check university requirements
-  groups.push({
-    groupName: 'University',
-    specific: null,
-    reqs: computeUniversityRequirementFulfillments(coursesTaken)
-  });
-
-  // PART 2: check college & major & minor requirements
+  // check university & college & major & minor requirements
   if (!(college in requirementJson.college)) throw new Error('College not found.');
+
+  const universityReqs = requirementJson.university.UNI;
   const collegeReqs = requirementJson.college[college];
 
   type RequirementWithSourceType = DecoratedCollegeOrMajorRequirement & {
@@ -261,6 +162,9 @@ export function computeRequirements(
     readonly sourceSpecificName: string;
   };
   const requirementsToBeConsideredInGraph: readonly RequirementWithSourceType[] = [
+    ...universityReqs.requirements.map(
+      it => ({ ...it, sourceType: 'College', sourceSpecificName: college } as const)
+    ),
     ...collegeReqs.requirements.map(
       it => ({ ...it, sourceType: 'College', sourceSpecificName: college } as const)
     ),

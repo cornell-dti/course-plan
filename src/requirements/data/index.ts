@@ -6,7 +6,7 @@ import casRequirements from './colleges/as';
 import businessRequirements from './colleges/bu';
 import engineeringRequirements from './colleges/en';
 import humanEcologyRequirements from './colleges/he';
-import irlRequirements from './colleges/il';
+import ilrRequirements from './colleges/il';
 
 import aemRequirements from './majors/aem';
 import bioRequirements from './majors/bio';
@@ -36,9 +36,10 @@ import psychMinorRequirements from './minors/psych';
 
 const json: RequirementsJson = {
   university: {
-    value: 'UNI',
-    name: 'University',
-    requirements: universityRequirements
+    UNI: {
+      name: 'University',
+      requirements: universityRequirements
+    }
   },
   college: {
     AG: {
@@ -63,7 +64,7 @@ const json: RequirementsJson = {
     },
     IL: {
       name: 'Industrial Labor Relations',
-      requirements: irlRequirements
+      requirements: ilrRequirements
     },
     BU: {
       name: 'SC Johnson College of Business',

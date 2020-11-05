@@ -1,7 +1,19 @@
 import { CollegeOrMajorRequirement } from '../../types';
-import { courseIsFWS, includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import {
+  courseIsFWS, includesWithSingleRequirement, includesWithSubRequirements, courseIsAllEligible
+} from '../checkers-common';
 
-const irlRequirements: readonly CollegeOrMajorRequirement[] = [
+const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
+  {
+    name: 'Total Academic Credits',
+    description: '120 academic credits are required'
+      + 'PE courses and courses numbered 1000-1099 do not count towards the 120 credits',
+    source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11587',
+    checker: courseIsAllEligible,
+    operator: 'or',
+    fulfilledBy: 'credits',
+    minCount: 120
+  },
   {
     name: 'Core Requirements',
     description: 'Students are required to fulfill the following core requirements for a letter grade:',
@@ -58,4 +70,4 @@ const irlRequirements: readonly CollegeOrMajorRequirement[] = [
   }
 ];
 
-export default irlRequirements;
+export default ilrRequirements;
