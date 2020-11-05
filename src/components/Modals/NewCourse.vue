@@ -251,9 +251,7 @@ export default {
     reset() {
       this.editMode = false;
       this.selected = false;
-    },
-    selectedToTrue() {
-      this.selected = true;
+      this.selectedCourse = '';
     }
   }
 };
