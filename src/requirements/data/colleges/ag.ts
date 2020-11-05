@@ -3,34 +3,42 @@ import { includesWithSingleRequirement } from '../checkers-common';
 
 const totalAcademicCreditsRequirement: CollegeOrMajorRequirement = {
   name: 'Total Academic Credits',
-  description: '120 academic credits are required for graduation. '
-    + 'A minimum of 100 credits must be in courses for which a letter grade was recieved. '
-    + 'PE courses do not count.',
+  description:
+    '120 academic credits are required for graduation. ' +
+    'A minimum of 100 credits must be in courses for which a letter grade was recieved. ' +
+    'PE courses do not count.',
   source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11561',
   checker: (course: Course): boolean => !['PE'].includes(course.subject),
   operator: 'or',
   fulfilledBy: 'credits',
-  minCount: 120
+  minCount: 120,
 };
 
 const calsCreditsRequirement: CollegeOrMajorRequirement = {
   name: 'CALS Credits',
-  description: '55 CALS credits are required for graduation. '
-    + 'CALS credits include all courses from departments within CALS and courses offered in Applied Economics and Management, '
-    + 'Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Information Science, Nutritional Science, '
-    + 'and The Department of Statistics and Data Science.',
-  source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements',
-  checker: (course: Course): boolean => ['AG'].includes(course.acadGroup)
-  || ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(course.subject),
+  description:
+    '55 CALS credits are required for graduation. ' +
+    'CALS credits include all courses from departments within CALS and courses offered in Applied Economics and Management, ' +
+    'Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Information Science, Nutritional Science, ' +
+    'and The Department of Statistics and Data Science.',
+  source:
+    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements',
+  checker: (course: Course): boolean =>
+    ['AG'].includes(course.acadGroup) ||
+    ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(
+      course.subject
+    ),
   operator: 'or',
   fulfilledBy: 'credits',
-  minCount: 55
+  minCount: 55,
 };
 
 const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequirement = {
   name: 'Introductory Life Sciences/Biology',
-  description: 'Students must complete at least six academic credits from the list of courses that fulfill distribution requirements.',
-  source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
+  description:
+    'Students must complete at least six academic credits from the list of courses that fulfill distribution requirements.',
+  source:
+    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: includesWithSingleRequirement(
     'ANSC 1100',
     'BIOAP 1100',
@@ -106,46 +114,54 @@ const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequiremen
   ),
   operator: 'or',
   fulfilledBy: 'credits',
-  minCount: 6
+  minCount: 6,
 };
 
 const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
   name: 'Physical and Life Sciences',
-  description: '18 credits in at least three disciplines of which six credits must be introductory life sciences/biology and three credits in chemistry or physics and a quantitative literacy course.',
-  source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  fulfilledBy: 'self-check'
+  description:
+    '18 credits in at least three disciplines of which six credits must be introductory life sciences/biology and three credits in chemistry or physics and a quantitative literacy course.',
+  source:
+    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
+  fulfilledBy: 'self-check',
 };
 
 const calsChemistryOrPhysicsRequiement: CollegeOrMajorRequirement = {
   name: 'Chemistry/Physics',
-  description: 'Complete a minimum of three academic credits of chemistry or physics. '
-    + 'Includes all Cornell courses with the CHEM or PHYS prefix at Cornell (excluding courses that are supplemental, independent study, research, TA, internship, and First-Year Writing Seminar).',
-  source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
+  description:
+    'Complete a minimum of three academic credits of chemistry or physics. ' +
+    'Includes all Cornell courses with the CHEM or PHYS prefix at Cornell (excluding courses that are supplemental, independent study, research, TA, internship, and First-Year Writing Seminar).',
+  source:
+    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: (course: Course): boolean => ['CHEM', 'CHEME', 'PHYS'].includes(course.subject),
   operator: 'or',
   fulfilledBy: 'credits',
-  minCount: 3
+  minCount: 3,
 };
 
 const calsQuantitativeLiteracyRequirement: CollegeOrMajorRequirement = {
   name: 'Quantitative Literacy',
-  description: 'Faculty legislation requires minimum competency in quantitative literacy. '
-    + 'This requirement can be satisfied by earning a score of 4 or 5 on the AP Calculus exam or a score of 5 on the AP Statistics exam, '
-    + 'or transfer an approved calculus or statistics course with a minimum letter grade of “C” or better; or take an approved calculus or statistics course at Cornell.',
-  source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
+  description:
+    'Faculty legislation requires minimum competency in quantitative literacy. ' +
+    'This requirement can be satisfied by earning a score of 4 or 5 on the AP Calculus exam or a score of 5 on the AP Statistics exam, ' +
+    'or transfer an approved calculus or statistics course with a minimum letter grade of “C” or better; or take an approved calculus or statistics course at Cornell.',
+  source:
+    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: (course: Course): boolean => ['MATH', 'STSCI'].includes(course.subject),
   operator: 'or',
   fulfilledBy: 'courses',
-  minCount: 1
+  minCount: 1,
 };
 
 const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
   name: 'Social Sciences and Humanities',
-  description: 'Students must complete four courses of 3 or more credits each from the following seven categories of courses in the humanities and social sciences. '
-    + 'At least one course category MUST be completed in three different categories. '
-    + 'No more than two courses in the same department will be counted toward the distribution requirement. '
-    + 'To view a searchable list of courses, please search for courses that fulfill distribution requirements.',
-  source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
+  description:
+    'Students must complete four courses of 3 or more credits each from the following seven categories of courses in the humanities and social sciences. ' +
+    'At least one course category MUST be completed in three different categories. ' +
+    'No more than two courses in the same department will be counted toward the distribution requirement. ' +
+    'To view a searchable list of courses, please search for courses that fulfill distribution requirements.',
+  source:
+    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: [
     (course: Course): boolean => course.catalogDistr?.includes('(CA-') ?? false,
     (course: Course): boolean => course.catalogDistr?.includes('(D-') ?? false,
@@ -153,51 +169,55 @@ const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
     (course: Course): boolean => course.catalogDistr?.includes('(HA-') ?? false,
     (course: Course): boolean => course.catalogDistr?.includes('(KCM-') ?? false,
     (course: Course): boolean => course.catalogDistr?.includes('(LA-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('(SBA-') ?? false
+    (course: Course): boolean => course.catalogDistr?.includes('(SBA-') ?? false,
   ],
   operator: 'and',
   fulfilledBy: 'courses',
   minCount: 3,
-  totalCount: 4
+  totalCount: 4,
 };
 
 const calsHumanDiversityRequirement: CollegeOrMajorRequirement = {
   name: 'Human Diversity (D)',
-  description: 'At least one course category MUST be completed in three different categories. Human Diversity (D) is a required category and MUST be completed.',
-  source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
+  description:
+    'At least one course category MUST be completed in three different categories. Human Diversity (D) is a required category and MUST be completed.',
+  source:
+    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: (course: Course): boolean => course.catalogDistr?.includes('(D-') ?? false,
   operator: 'or',
   fulfilledBy: 'courses',
-  minCount: 1
+  minCount: 1,
 };
 
 const calsWrittenAndOralExpressionRequirement: CollegeOrMajorRequirement = {
   name: 'Written and Oral Expression',
-  description: '9 credits total, of which at least six must be in written expression. '
-    + 'Oral expression is not required by the college, but may be required for some majors. '
-    + 'If not required, all nine credits may be in written expression. Writing in the Majors courses do not count towards the writing requirement.',
-  source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  checker: (course: Course): boolean => [
-    'written expression',
-    'oral expression',
-    'First-Year Writing Seminar'
-  ].some(keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false),
+  description:
+    '9 credits total, of which at least six must be in written expression. ' +
+    'Oral expression is not required by the college, but may be required for some majors. ' +
+    'If not required, all nine credits may be in written expression. Writing in the Majors courses do not count towards the writing requirement.',
+  source:
+    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
+  checker: (course: Course): boolean =>
+    ['written expression', 'oral expression', 'First-Year Writing Seminar'].some(
+      keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
+    ),
   operator: 'or',
   fulfilledBy: 'credits',
-  minCount: 9
+  minCount: 9,
 };
 
 const calsWrittenExpressionRequirement: CollegeOrMajorRequirement = {
   name: 'Written Expression',
   description: 'At least six credits must be in written expression.',
-  source: 'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  checker: (course: Course): boolean => [
-    'written expression',
-    'First-Year Writing Seminar'
-  ].some(keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false),
+  source:
+    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
+  checker: (course: Course): boolean =>
+    ['written expression', 'First-Year Writing Seminar'].some(
+      keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
+    ),
   operator: 'or',
   fulfilledBy: 'credits',
-  minCount: 6
+  minCount: 6,
 };
 
 const calsRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -210,7 +230,7 @@ const calsRequirements: readonly CollegeOrMajorRequirement[] = [
   calsSocialSciencesAndHumanitiesRequiement,
   calsHumanDiversityRequirement,
   calsWrittenAndOralExpressionRequirement,
-  calsWrittenExpressionRequirement
+  calsWrittenExpressionRequirement,
 ];
 
 export default calsRequirements;

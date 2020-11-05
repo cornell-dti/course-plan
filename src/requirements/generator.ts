@@ -4,19 +4,19 @@ import {
   DecoratedRequirementsJson,
   DecoratedCollegeOrMajorRequirement,
   EligibleCourses,
-  RequirementChecker
+  RequirementChecker,
 } from './types';
 import sourceRequirements from './data';
 import filteredAllCourses from './filtered-all-courses';
 
-const getEligibleCoursesFromRequirementCheckers = (checkers: readonly RequirementChecker[]): readonly EligibleCourses[] => (
+const getEligibleCoursesFromRequirementCheckers = (
+  checkers: readonly RequirementChecker[]
+): readonly EligibleCourses[] =>
   checkers.map(oneRequirementChecker => {
     const eligibleCoursesMap: { [semester: string]: number[] } = {};
     Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
       const courseIdSet = new Set(
-        courses
-          .filter(course => oneRequirementChecker(course))
-          .map(course => course.crseId)
+        courses.filter(course => oneRequirementChecker(course)).map(course => course.crseId)
       );
       if (courseIdSet.size > 0) {
         // Do not include empty semesters.
@@ -24,11 +24,10 @@ const getEligibleCoursesFromRequirementCheckers = (checkers: readonly Requiremen
       }
     });
     return eligibleCoursesMap;
-  })
-);
+  });
 
 const decorateRequirementWithCourses = (
-  requirement: CollegeOrMajorRequirement,
+  requirement: CollegeOrMajorRequirement
 ): DecoratedCollegeOrMajorRequirement => {
   switch (requirement.fulfilledBy) {
     case 'self-check':
@@ -38,7 +37,9 @@ const decorateRequirementWithCourses = (
       const { checker, ...rest } = requirement;
       return {
         ...rest,
-        courses: getEligibleCoursesFromRequirementCheckers(typeof checker === 'function' ? [checker] : checker)
+        courses: getEligibleCoursesFromRequirementCheckers(
+          typeof checker === 'function' ? [checker] : checker
+        ),
       };
     }
     case 'toggleable': {
@@ -53,7 +54,7 @@ const decorateRequirementWithCourses = (
             );
             return [optionName, { ...rest, courses }];
           })
-        )
+        ),
       };
     }
     default:
@@ -62,9 +63,7 @@ const decorateRequirementWithCourses = (
 };
 
 const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequirementsJson => {
-  const {
-    university, college, major, minor
-  } = sourceRequirements;
+  const { university, college, major, minor } = sourceRequirements;
   type MutableDecoratedJson = {
     university: {
       [key: string]: {
@@ -94,18 +93,26 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     };
   };
   const decoratedJson: MutableDecoratedJson = {
-    university: {}, college: {}, major: {}, minor: {}
+    university: {},
+    college: {},
+    major: {},
+    minor: {},
   };
-  const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) => (
-    requirements.map(decorateRequirementWithCourses)
-  );
+  const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) =>
+    requirements.map(decorateRequirementWithCourses);
   Object.entries(university).forEach(([universityName, universityRequirement]) => {
     const { requirements, ...rest } = universityRequirement;
-    decoratedJson.university[universityName] = { ...rest, requirements: decorateRequirements(requirements) };
+    decoratedJson.university[universityName] = {
+      ...rest,
+      requirements: decorateRequirements(requirements),
+    };
   });
   Object.entries(college).forEach(([collegeName, collegeRequirement]) => {
     const { requirements, ...rest } = collegeRequirement;
-    decoratedJson.college[collegeName] = { ...rest, requirements: decorateRequirements(requirements) };
+    decoratedJson.college[collegeName] = {
+      ...rest,
+      requirements: decorateRequirements(requirements),
+    };
   });
   Object.entries(major).forEach(([majorName, majorRequirement]) => {
     const { requirements, ...rest } = majorRequirement;

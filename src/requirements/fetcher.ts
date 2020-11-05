@@ -165,7 +165,7 @@ const courseFieldFilter = getCourseFieldFilter([
   'catalogComments',
   'catalogSatisfiesReq',
   'acadCareer',
-  'acadGroup'
+  'acadGroup',
 ]);
 
 generateSemesterJSONs(courseFieldFilter).then(x => {
