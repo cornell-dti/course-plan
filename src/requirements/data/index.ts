@@ -33,163 +33,162 @@ import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
 import psychMinorRequirements from './minors/psych';
 
-
 const json: RequirementsJson = {
   university: {
     UNI: {
       name: 'University',
-      requirements: universityRequirements
-    }
+      requirements: universityRequirements,
+    },
   },
   college: {
     AG: {
       name: 'Agriculture and Life Sciences',
-      requirements: calsRequirements
+      requirements: calsRequirements,
     },
     AR: {
       name: 'Architecture, Art and Planning',
-      requirements: aapRequirements
+      requirements: aapRequirements,
     },
     AS: {
       name: 'Arts and Sciences',
-      requirements: casRequirements
+      requirements: casRequirements,
     },
     EN: {
       name: 'Engineering',
-      requirements: engineeringRequirements
+      requirements: engineeringRequirements,
     },
     HE: {
       name: 'Human Ecology',
-      requirements: humanEcologyRequirements
+      requirements: humanEcologyRequirements,
     },
     IL: {
       name: 'Industrial Labor Relations',
-      requirements: ilrRequirements
+      requirements: ilrRequirements,
     },
     BU: {
       name: 'SC Johnson College of Business',
-      requirements: businessRequirements
-    }
+      requirements: businessRequirements,
+    },
   },
   major: {
     AEM: {
       name: 'Applied Economics and Management',
       schools: ['AG', 'BU'],
-      requirements: aemRequirements
+      requirements: aemRequirements,
     },
     BIO: {
       name: 'Biological Sciences',
       schools: ['AG', 'AS'],
-      requirements: bioRequirements
+      requirements: bioRequirements,
     },
     BE: {
       name: 'Biological Engineering',
       schools: ['EN'],
-      requirements: bioEngineeringRequirements
+      requirements: bioEngineeringRequirements,
     },
     COMM: {
       name: 'Communication',
       schools: ['AG'],
-      requirements: commRequirements
+      requirements: commRequirements,
     },
     CRP: {
       name: 'City and Regional Planning',
       schools: ['AR'],
-      requirements: crpRequirements
+      requirements: crpRequirements,
     },
     CS: {
       name: 'Computer Science',
       schools: ['EN', 'AS'],
-      requirements: csRequirements
+      requirements: csRequirements,
     },
     ECON: {
       name: 'Economics',
       schools: ['AS'],
-      requirements: economicsRequirements
+      requirements: economicsRequirements,
     },
     ENGL: {
       name: 'English',
       schools: ['AS'],
-      requirements: englishRequirements
+      requirements: englishRequirements,
     },
     GOVT: {
       name: 'Government',
       schools: ['AS'],
-      requirements: governmentRequirements
+      requirements: governmentRequirements,
     },
     HADM: {
       name: 'Hotel Administration',
       schools: ['BU'],
-      requirements: hotelAdminRequirements
+      requirements: hotelAdminRequirements,
     },
     HIST: {
       name: 'History',
       schools: ['AS'],
-      requirements: historyRequirements
+      requirements: historyRequirements,
     },
     INFO: {
       name: 'Information Science',
       schools: ['AS', 'AG'],
-      requirements: infoRequirements
+      requirements: infoRequirements,
     },
     ISST: {
       name: 'Information Science, Systems, and Technology',
       schools: ['EN'],
-      requirements: isstRequirements
+      requirements: isstRequirements,
     },
     ME: {
       name: 'Mechanical Engineering',
       schools: ['EN'],
-      requirements: mechnicalEngineeringRequirements
+      requirements: mechnicalEngineeringRequirements,
     },
     ORIE: {
       name: 'Operations Research and Engineering',
       schools: ['EN'],
-      requirements: orieRequirements
-    }
+      requirements: orieRequirements,
+    },
   },
   minor: {
     BU: {
       name: 'Business',
       schools: ['BU'],
-      requirements: buMinorRequirements
+      requirements: buMinorRequirements,
     },
     COGSCI: {
       name: 'Cognitive Science',
       schools: ['AS'],
-      requirements: cogsciMinorRequirements
+      requirements: cogsciMinorRequirements,
     },
     CS: {
       name: 'Computer Science',
       schools: ['EN', 'AS'],
-      requirements: csMinorRequirements
+      requirements: csMinorRequirements,
     },
     DBME: {
       name: 'Dyson Business Minor for Engineers',
       schools: ['BU'],
-      requirements: dbmeMinorRequirements
+      requirements: dbmeMinorRequirements,
     },
     ISST: {
       name: 'Industrial Systems and Information Technology',
       schools: ['EN'],
-      requirements: isstMinorRequirements
+      requirements: isstMinorRequirements,
     },
     MATH: {
       name: 'Applied Mathematics',
       schools: ['EN'],
-      requirements: mathMinorRequirements
+      requirements: mathMinorRequirements,
     },
     ORMS: {
       name: 'Operations Research and Management Science',
       schools: ['EN'],
-      requirements: ormsMinorRequirements
+      requirements: ormsMinorRequirements,
     },
     PSYCH: {
       name: 'Psychology',
       schools: ['AS'],
-      requirements: psychMinorRequirements
-    }
-  }
+      requirements: psychMinorRequirements,
+    },
+  },
 };
 
 export default json;

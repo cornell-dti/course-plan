@@ -1,40 +1,40 @@
 export const reviewColors = {
   red: '#d9534f',
   orange: '#f0ad4e',
-  green: '#5cb85c'
+  green: '#5cb85c',
 };
 
 export const coursesColorSet = [
   {
     text: 'Gray',
-    hex: '#C4C4C4'
+    hex: '#C4C4C4',
   },
   {
     text: 'Red',
-    hex: '#DA4A4A'
+    hex: '#DA4A4A',
   },
   {
     text: 'Orange',
-    hex: '#FFA53C'
+    hex: '#FFA53C',
   },
   {
     text: 'Yellow',
-    hex: '#FFE142'
+    hex: '#FFE142',
   },
   {
     text: 'Green',
-    hex: '#58C913'
+    hex: '#58C913',
   },
   {
     text: 'Blue',
-    hex: '#139DC9'
+    hex: '#139DC9',
   },
   {
     text: 'Purple',
-    hex: '#C478FF'
+    hex: '#C478FF',
   },
   {
     text: 'Pink',
-    hex: '#F296D3'
-  }
+    hex: '#F296D3',
+  },
 ];

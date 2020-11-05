@@ -18,9 +18,8 @@ export function ifCodeMatch(courseName: string, code: string): boolean {
  * @see ifCodeMatch
  * @returns if a code matches the course.
  */
-export const courseMatchesCode = (course: Course, code: string): boolean => (
-  ifCodeMatch(`${course.subject} ${course.catalogNbr}`, code)
-);
+export const courseMatchesCode = (course: Course, code: string): boolean =>
+  ifCodeMatch(`${course.subject} ${course.catalogNbr}`, code);
 
 /**
  * @param course course object with useful information retrived from Cornell courses API.
@@ -28,9 +27,8 @@ export const courseMatchesCode = (course: Course, code: string): boolean => (
  * @see courseMatchesCode
  * @returns if any code in `codeOptions` matches the course.
  */
-export const courseMatchesCodeOptions = (course: Course, codeOptions: readonly string[]): boolean => (
-  codeOptions.some(code => ifCodeMatch(`${course.subject} ${course.catalogNbr}`, code))
-);
+export const courseMatchesCodeOptions = (course: Course, codeOptions: readonly string[]): boolean =>
+  codeOptions.some(code => ifCodeMatch(`${course.subject} ${course.catalogNbr}`, code));
 
 /**
  * Almost colleges have FWS requirements. Instead of writing them from scratch each time, call this
@@ -39,19 +37,17 @@ export const courseMatchesCodeOptions = (course: Course, codeOptions: readonly s
  * @param course course object with useful information retrived from Cornell courses API.
  * @returns if the course satisfies FWS requirement.
  */
-export const courseIsFWS = (course: Course): boolean => (
-  course.titleLong.includes('FWS:')
-  || (course.catalogSatisfiesReq?.includes('First-Year Writing Seminar') ?? false)
-);
+export const courseIsFWS = (course: Course): boolean =>
+  course.titleLong.includes('FWS:') ||
+  (course.catalogSatisfiesReq?.includes('First-Year Writing Seminar') ?? false);
 
 /**
  * Used for total academic credit requirements for all colleges except EN and AR
  * @param course course object with useful information retrived from Cornell courses API.
  * @returns true if the course is not PE or 10** level
  */
-export const courseIsAllEligible = (course: Course): boolean => (
-  !ifCodeMatch(course.subject, 'PE') && !ifCodeMatch(course.catalogNbr, '10**')
-);
+export const courseIsAllEligible = (course: Course): boolean =>
+  !ifCodeMatch(course.subject, 'PE') && !ifCodeMatch(course.catalogNbr, '10**');
 
 /**
  * This function returns a checker that checks whether a course satisfy a single requirement by
@@ -78,9 +74,9 @@ export const courseIsAllEligible = (course: Course): boolean => (
  * @param includes a list of course code pattern to check against.
  * @returns a checker that can be directly assigned to requirement object.
  */
-export const includesWithSingleRequirement = (...includes: readonly string[]) => (course: Course): boolean => (
-  courseMatchesCodeOptions(course, includes)
-);
+export const includesWithSingleRequirement = (...includes: readonly string[]) => (
+  course: Course
+): boolean => courseMatchesCodeOptions(course, includes);
 
 /**
  * This function returns an array of checkers.
@@ -111,8 +107,9 @@ export const includesWithSingleRequirement = (...includes: readonly string[]) =>
  * @param includes a list of array of course code pattern to check against.
  * @returns an array of checkers that can be directly assigned to requirement object.
  */
-export const includesWithSubRequirements = (...includes: readonly string[][]): readonly ((course: Course) => boolean)[] => (
-  includes.map(
-    subRequirementInclude => (course: Course) => courseMatchesCodeOptions(course, subRequirementInclude)
-  )
-);
+export const includesWithSubRequirements = (
+  ...includes: readonly string[][]
+): readonly ((course: Course) => boolean)[] =>
+  includes.map(subRequirementInclude => (course: Course) =>
+    courseMatchesCodeOptions(course, subRequirementInclude)
+  );

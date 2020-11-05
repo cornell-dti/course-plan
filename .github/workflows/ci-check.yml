@@ -13,7 +13,7 @@ jobs:
       - name: NPM Install
         run: npm install
       - name: Run Prettier Check
-        run: $(npm bin)/prettier --check "**/*.js"
+        run: npm run format:check
       - name: Run Linter
         run: npm run lint
       - name: Type Check
