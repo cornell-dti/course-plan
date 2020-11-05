@@ -8,6 +8,7 @@
       :reqGroupColorMap="reqGroupColorMap"
       :user="user"
       :showMajorOrMinorRequirements="showMajorOrMinorRequirements"
+      :numOfColleges="numOfColleges"
       @activateMajor="activateMajor"
       @activateMinor="activateMinor"
       @toggleDetails="toggleDetails"
@@ -83,7 +84,8 @@ export default {
     minors: Array,
     reqGroupColorMap: Object,
     user: Object,
-    showMajorOrMinorRequirements: Boolean
+    showMajorOrMinorRequirements: Boolean,
+    numOfColleges: Number
   },
   methods: {
     activateMajor(id) {
