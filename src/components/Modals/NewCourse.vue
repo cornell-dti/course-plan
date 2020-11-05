@@ -2,9 +2,9 @@
   <div class="newCourse">
     <binaryButton></binaryButton>
     <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
+    <!-- <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div> -->
     <div class="autocomplete">
-      <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div>
-      <input v-else class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
+      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
     <div v-if="!isOnboard && !selected"> <!-- if a course is not selected -->
       <div class="newCourse-title">Add this class to the following semester</div>
@@ -67,7 +67,8 @@ export default {
     semesterID: Number,
     placeholderText: String,
     season: String,
-    year: Number
+    year: Number,
+    goBack: Boolean
   },
   data() {
     return {
@@ -84,6 +85,17 @@ export default {
       editMode: false,
       selectedCourse: ''
     };
+  },
+  watch: { 
+    goBack: function onPropChange(val) { // watch it
+      if (this.editMode) { this.editMode = false; }
+      else {
+        this.selected = false;
+        const impCopy = document.getElementById(`dropdown-${this.semesterID}`);
+        impCopy.value = '';
+        this.$root.$emit('toggle-left-button');
+      }
+    }
   },
   computed: {
     text() {
@@ -103,7 +115,6 @@ export default {
     closeCourseModal() {
       const modal = document.getElementById(`courseModal-${this.semesterID}`);
       modal.style.display = 'none';
-      this.editMode = false;
     },
     autocomplete(inp, courses) {
       /* the autocomplete function takes two arguments,
@@ -112,6 +123,32 @@ export default {
       */
       let currentFocus;
       const inpCopy = inp;
+      function removeActive(x) {
+        /* a function to remove the "active" class from all autocomplete items: */
+        for (let i = 0; i < x.length; i += 1) {
+          x[i].classList.remove('autocomplete-active');
+        }
+      }
+      function addActive(x) {
+        /* a function to classify an item as "active": */
+        if (!x) return;
+        /* start by removing the "active" class on all items: */
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = x.length - 1;
+        /* add class "autocomplete-active": */
+        x[currentFocus].classList.add('autocomplete-active');
+      }
+      function closeAllLists(elmnt) {
+        /* close all autocomplete lists in the document,
+        except the one passed as an argument: */
+        const x = document.getElementsByClassName('autocomplete-items');
+        for (let i = 0; i < x.length; i += 1) {
+          if (elmnt !== x[i] && elmnt !== inp) {
+            x[i].parentNode.removeChild(x[i]);
+          }
+        }
+      }
       /* execute a function when someone writes in the text field: */
       inp.addEventListener('input', () => {
         let a;
@@ -173,6 +210,7 @@ export default {
               inpCopy.name = newTitle.roster;
               this.selectedCourse = newTitle.title;
               this.selected = true;
+              this.$root.$emit('toggle-left-button');
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
@@ -208,32 +246,6 @@ export default {
           }
         }
       });
-      function addActive(x) {
-        /* a function to classify an item as "active": */
-        if (!x) return;
-        /* start by removing the "active" class on all items: */
-        removeActive(x);
-        if (currentFocus >= x.length) currentFocus = 0;
-        if (currentFocus < 0) currentFocus = x.length - 1;
-        /* add class "autocomplete-active": */
-        x[currentFocus].classList.add('autocomplete-active');
-      }
-      function removeActive(x) {
-        /* a function to remove the "active" class from all autocomplete items: */
-        for (let i = 0; i < x.length; i += 1) {
-          x[i].classList.remove('autocomplete-active');
-        }
-      }
-      function closeAllLists(elmnt) {
-        /* close all autocomplete lists in the document,
-        except the one passed as an argument: */
-        const x = document.getElementsByClassName('autocomplete-items');
-        for (let i = 0; i < x.length; i += 1) {
-          if (elmnt !== x[i] && elmnt !== inp) {
-            x[i].parentNode.removeChild(x[i]);
-          }
-        }
-      }
       /* execute a function when someone clicks in the document: */
       document.addEventListener('click', e => {
         closeAllLists(e.target);
@@ -252,6 +264,12 @@ export default {
       this.editMode = false;
       this.selected = false;
       this.selectedCourse = '';
+    },
+    isBack() {
+      return this.selected || this.editMode;
+    },
+    isEditMode() {
+      return this.editMode;
     }
   }
 };

@@ -17,9 +17,10 @@
         :season="season"
         :year="year"
         :labels="true"
+        :goBack="goBack"
       ></component>
       <div class="modal-buttonWrapper">
-        <button class="modal-button" @click="closeCurrentModal">{{ cancel }}</button>
+        <button class="modal-button" @click="backOrCancel">{{ leftButton }}</button>
         <button class="modal-button modal-button--add" :class='{"modal-button--disabled": isDisabled }' @click="addItem">{{ add }}</button>
       </div>
     </div>
@@ -43,7 +44,9 @@ export default {
     return {
       isOnboard: false,
       courseIsAddable: true,
-      isDisabled: false
+      isDisabled: false,
+      leftButton: 'CANCEL',
+      goBack: false
     };
   },
   props: {
@@ -52,6 +55,9 @@ export default {
     currentSemesters: Array,
     season: String,
     year: Number
+  },
+  mounted() {
+    this.$root.$on('toggle-left-button', this.toggleLeftButton);
   },
   computed: {
     contentId() {
@@ -174,6 +180,26 @@ export default {
           parseInt(yearInput.innerHTML, 10)
         );
 
+        this.closeCurrentModal();
+      }
+    },
+    cancelMaybe() {
+      if (this.type === 'course' && this.$refs.modalBodyComponent.isBack()) {
+        return 'BACK';
+      }
+      return 'CANCEL';
+    },
+    toggleLeftButton() {
+      if (this.leftButton === 'CANCEL') {
+        this.leftButton = 'BACK';
+      } else {
+        this.leftButton = 'CANCEL';
+      }
+    },
+    backOrCancel() {
+      if (this.leftButton === 'BACK') {
+        this.goBack = !this.goBack;
+      } else {
         this.closeCurrentModal();
       }
     }
