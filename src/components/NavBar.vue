@@ -18,10 +18,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import firebase from 'firebase/app';
 
-export default {
+export default Vue.extend({
   props: {
     isBottomPreview: Boolean,
   },
@@ -48,7 +49,7 @@ export default {
       this.$emit('toggleRequirementsBar');
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">
