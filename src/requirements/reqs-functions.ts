@@ -9,7 +9,7 @@ import {
   Course,
 } from './types';
 
-type RequirementMap = { readonly [code: string]: readonly string[] };
+export type RequirementMap = { readonly [code: string]: readonly string[] };
 type MutableRequirementMapWithMutableChildren = { [code: string]: string[] };
 
 function computeFulfillmentStatisticsFromCourses(
