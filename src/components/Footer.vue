@@ -18,17 +18,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 
-export default {
+export default Vue.extend({
   methods: {
     getYear() {
       const today = new Date();
       return today.getFullYear();
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">
