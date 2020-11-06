@@ -156,7 +156,6 @@ export type SingleMenuRequirement = {
   readonly name: string;
   readonly group: string;
   readonly specific: string | null;
-  readonly color: string;
   displayDetails: boolean;
   displayCompleted: boolean;
   type?: string;

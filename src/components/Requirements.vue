@@ -100,7 +100,6 @@ export default Vue.extend({
         name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
         group: group.groupName.toUpperCase(),
         specific: (group.specific) ? group.specific : null,
-        color: '105351',
         displayDetails: false,
         displayCompleted: false
       };
