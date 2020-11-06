@@ -101,6 +101,9 @@ import {
   AppUser,
   AppCourse,
   AppSemester,
+  firestoreCourseToAppCourse,
+  firestoreSemesterToAppSemester,
+  createAppUser,
 } from '@/user-data';
 import { RequirementMap } from '@/requirements/reqs-functions';
 
@@ -205,9 +208,13 @@ export default Vue.extend({
             this.uniqueIncrementer = firestoreUserData.uniqueIncrementer;
             this.loaded = true;
           } else {
-            this.semesters.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
-            this.firebaseSems.push({
+            this.semesters.push({
               id: this.currSemID,
+              type: this.getCurrentSeason(),
+              year: this.getCurrentYear(),
+              courses: [],
+            });
+            this.firebaseSems.push({
               type: this.getCurrentSeason(),
               year: this.getCurrentYear(),
               courses: [],
@@ -236,16 +243,17 @@ export default Vue.extend({
     },
 
     convertSemesters(firebaseSems: readonly FirestoreSemester[]) {
-      const semesters: AppSemester[] = [];
-
-      firebaseSems.forEach(firebaseSem => {
-        const firebaseCourses = firebaseSem.courses;
-        const courses: AppCourse[] = [];
-        firebaseCourses.forEach(firebaseCourse => {
-          courses.push(this.createCourse(firebaseCourse));
-        });
-        semesters.push(this.createSemester(courses, firebaseSem.type, firebaseSem.year));
+      const semesters = firebaseSems.map(firebaseSem => {
+        const appSemester = firestoreSemesterToAppSemester(
+          firebaseSem,
+          this.currSemID,
+          () => this.incrementID(),
+          (subject) => this.addColor(subject)
+        );
+        this.currSemID += 1;
+        return appSemester;
       });
+      this.updateRequirementsMenu();
       return semesters;
     },
     getCurrentSeason() {
@@ -271,130 +279,6 @@ export default Vue.extend({
       if (this.isMobile) {
         // Make sure semesterView is not compact by default on mobile
         this.compactVal = false;
-      }
-    },
-    /**
-     * Creates credit range based on course
-     * Example: [1, 4] is the credit range for the given course
-     */
-    createCourseCreditRange(course: FirestoreSemesterCourse): readonly [number, number] {
-      const courseCreditRange: number[] = [];
-      if (typeof course.creditRange !== 'undefined') {
-        return course.creditRange;
-      }
-      if (typeof course.enrollGroups !== 'undefined') {
-        course.enrollGroups.forEach(enrollGroup => {
-          courseCreditRange.push(enrollGroup.unitsMinimum);
-          courseCreditRange.push(enrollGroup.unitsMaximum);
-        });
-        return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
-      }
-      // @ts-ignore
-      return [course.credits, course.credits];
-    },
-
-    /**
-     * Creates a course on frontend with either user or API data
-     */
-    createCourse(course: FirestoreSemesterCourse): AppCourse {
-      const uniqueID = course.uniqueID || this.incrementID();
-
-      const subject = (course.code && course.code.split(' ')[0]) || course.subject;
-      const number = (course.code && course.code.split(' ')[1]) || course.catalogNbr;
-
-      // TODO: same field?
-      const name = course.titleLong || course.name;
-
-      // Description of course. Please leave the redundancy in place as a sanity check.
-      const description = course.description || course.description;
-
-      // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
-      const credits = course.credits || course.enrollGroups[0].unitsMaximum;
-      const creditRange = course.creditRange || this.createCourseCreditRange(course);
-      // Semesters: remove periods and split on ', '
-      // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
-      const catalogWhenOfferedDoesNotExist = (!course.catalogWhenOffered) || course.catalogWhenOffered === '';
-      const alternateSemesters = (catalogWhenOfferedDoesNotExist) ? [] : course.catalogWhenOffered!.replace(/\./g, '').split(', ');
-      const semesters = course.semesters || alternateSemesters;
-
-      // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
-      const prereqs = course.prereqs || course.catalogPrereqCoreq || '';
-
-      // To be redefined if does not exist
-      // @ts-ignore
-      let { enrollment, lectureTimes, instructors }: {
-        enrollment: readonly string[];
-        lectureTimes: readonly string[];
-        instructors:readonly string[];
-      } = course;
-
-      if (!(enrollment || lectureTimes || instructors)) {
-        // If new course, iterate through enrollment groups to retrieve enrollment info, lecture times, and instructors
-
-        // Hash maps used to remove redundancies
-        const enrollmentMap: Record<string, boolean> = {};
-        const lectureTimesMap: Record<string, boolean> = {};
-        const instructorsMap: Record<string, string> = {};
-        course.enrollGroups.forEach(group => {
-          group.classSections.forEach(section => {
-            // Add section
-            const enroll = section.ssrComponent;
-            enrollmentMap[enroll] = true;
-
-            section.meetings.forEach(meeting => {
-              const { pattern, timeStart, timeEnd } = meeting;
-              // Only add the time if it is a lecture
-              if (enroll === 'LEC') lectureTimesMap[`${pattern} ${timeStart} - ${timeEnd}`] = true;
-
-              meeting.instructors.forEach(instructor => {
-                const { netid, firstName, lastName } = instructor;
-                instructorsMap[netid] = `${firstName} ${lastName}`;
-              });
-            });
-          });
-        });
-
-        enrollment = Object.keys(enrollmentMap);
-        lectureTimes = Object.keys(lectureTimesMap);
-        instructors = Object.keys(instructorsMap).map(netid => `${instructorsMap[netid]} (${netid})`);
-      }
-
-      // Distribution of course (e.g. MQR-AS)
-      // alternateDistributions option in case catalogDistr for the course is null, undef, ''
-      const catalogDistrDoesNotExist = (!course.catalogDistr) || course.catalogDistr === '';
-      const alternateDistributions = (catalogDistrDoesNotExist) ? [''] : /\(([^)]+)\)/.exec(course.catalogDistr!)![1].split(', ');
-      const distributions = course.distributions || alternateDistributions;
-
-      // Get last semester of available course. TODO: Remove when no longer firebase data dependant
-      const lastRoster = course.lastRoster || course.roster;
-
-      // Create course from saved color. Otherwise, create course from subject color group
-      const color = course.color || this.addColor(subject);
-
-      const alerts = { requirement: null, caution: null };
-
-      // Update requirements menu
-      this.updateRequirementsMenu();
-
-      return {
-        crseId: course.crseId,
-        subject,
-        number,
-        name,
-        description,
-        credits,
-        creditRange,
-        semesters,
-        prereqs,
-        enrollment,
-        lectureTimes,
-        instructors,
-        distributions,
-        lastRoster,
-        color,
-        alerts,
-        check: true,
-        uniqueID
       }
     },
 
@@ -683,65 +567,26 @@ export default Vue.extend({
       this.isOnboarding = false;
     },
     parseUserData(data: FirestoreNestedUserData, name: FirestoreUserName): AppUser {
-      const user: AppUser = {
-        // TODO: take into account multiple majors and colleges
-        college: data.colleges[0].acronym,
-        collegeFN: data.colleges[0].fullName,
-        firstName: name.firstName,
-        middleName: name.middleName,
-        lastName: name.lastName,
-        major: [],
-        majorFN: [],
-        minor: [],
-        minorFN: [],
-        exam: [],
-        transferCourse: [],
-        tookSwim: data.tookSwim,
-      };
-      const transferClasses = [];
-      if ('exam' in data && data.exam.length > 0) {
-        const exams: FirestoreAPIBExam[] = [];
-        data.exam.forEach(exam => {
-          // TODO: add a course to chosen requirement or multiple fulfilling requirements
-          exams.push(exam);
-          if ('equivCourse' in exam) {
-            transferClasses.push(exam.equivCourse[0]);
-          }
-        });
-        user.exam = exams;
-      }
-      if ('class' in data && data.class.length > 0) {
-        const classes = [];
-        for (const course of data.class) {
-          classes.push(course);
-          const courseInfo = this.createCourse(course.course);
-          transferClasses.push(courseInfo);
-          // ; // TODO for user to pick which req a class goes for
-        }
-        user.transferCourse = classes;
-        this.currentClasses = transferClasses;
-      }
+      const user = createAppUser(data, name);
 
-      if ('majors' in data && data.majors.length > 0) {
-        const majors: string[] = [];
-        const majorsFN: string[] = [];
-        data.majors.forEach(major => {
-          majors.push(major.acronym);
-          majorsFN.push(major.fullName);
-        });
-        user.major = majors;
-        user.majorFN = majorsFN;
-      }
-      if ('minors' in data && data.minors.length > 0) {
-        const minors: string[] = [];
-        const minorsFN: string[] = [];
-        data.minors.forEach(minor => {
-          minors.push(minor.acronym);
-          minorsFN.push(minor.fullName);
-        });
-        user.minor = minors;
-        user.minorFN = minorsFN;
-      }
+      const transferClasses: any[] = [];
+      user.exam.forEach(exam => {
+        if ('equivCourse' in exam) {
+          transferClasses.push(exam.equivCourse[0]);
+        }
+      });
+      user.transferCourse.forEach(course => {
+        const courseInfo = firestoreCourseToAppCourse(
+          course.course,
+          () => this.incrementID(),
+          (subject) => this.addColor(subject)
+        );
+        transferClasses.push(courseInfo);
+        // ; // TODO for user to pick which req a class goes for
+      });
+      this.currentClasses = transferClasses;
+
+      this.updateRequirementsMenu();
       return user;
     },
 
