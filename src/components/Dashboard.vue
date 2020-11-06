@@ -275,6 +275,16 @@ export default Vue.extend({
       // @ts-ignore
       return this.yearText || this.year || currentYear;
     },
+    /**
+     * Creates a course on frontend with either user or API data
+     */
+    createCourse(course: FirestoreSemesterCourse): AppCourse {
+      return firestoreCourseToAppCourse(
+        course,
+        () => this.incrementID(),
+        (subject) => this.addColor(subject)
+      );
+    },
     updateSemesterView() {
       if (this.isMobile) {
         // Make sure semesterView is not compact by default on mobile
