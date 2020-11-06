@@ -16,7 +16,6 @@
         :reqIndex="index"
         :majors="majors"
         :minors="minors"
-        :reqGroupColorMap="reqGroupColorMap"
         :user="user"
         :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
         :numOfColleges="numOfColleges"
@@ -68,7 +67,6 @@ type Data = {
   majors: readonly Major[];
   minors: readonly Minor[];
   requirementsMap: RequirementMap;
-  reqGroupColorMap: {};
   numOfColleges: number
 }
 // emoji for clipboard
@@ -184,13 +182,6 @@ export default Vue.extend({
       ],
       requirementsMap: {
         // CS 1110: 'MQR-AS'
-      },
-      // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
-      reqGroupColorMap: {
-        UNIVERSITY: ['508197', 'grayblue'],
-        COLLEGE: ['1AA9A5', 'blue'],
-        MAJOR: ['105351', 'green'],
-        MINOR: ['92C3E6', 'lightblue']
       },
       numOfColleges: 1
     };

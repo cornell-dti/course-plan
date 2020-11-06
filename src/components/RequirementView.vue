@@ -97,10 +97,20 @@ export default Vue.extend({
     reqIndex: Number, // Index of this req in reqs array
     majors: Array as PropType<readonly Major[]>,
     minors: Array as PropType<readonly Minor[]>,
-    reqGroupColorMap: Object,
     user: Object as PropType<AppUser>,
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number
+  },
+  data() {
+    return {
+      // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
+      reqGroupColorMap: {
+        UNIVERSITY: ['508197', 'grayblue'],
+        COLLEGE: ['1AA9A5', 'blue'],
+        MAJOR: ['105351', 'green'],
+        MINOR: ['92C3E6', 'lightblue']
+      },
+    };
   },
   methods: {
     activateMajor(id: number) {
