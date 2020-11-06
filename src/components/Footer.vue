@@ -1,14 +1,18 @@
 <template>
   <div class="container-fluid footer p-0 page_404">
-    <div class= "row footer justify-content-center m-0">
+    <div class="row footer justify-content-center m-0">
       <div class="col-3 footer">
-        <a href ="https://www.cornelldti.org" class= "footer"> Cornell DTI @ {{getYear()}}</a>
+        <a href="https://www.cornelldti.org" class="footer"> Cornell DTI @ {{ getYear() }}</a>
       </div>
       <div class="col-3">
-        <p class= "footer">Built with LOVE</p>
+        <p class="footer">Built with LOVE</p>
       </div>
       <div class="col-3 footer">
-        <a  class="footer" href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be">Privacy Policy</a>
+        <a
+          class="footer"
+          href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be"
+          >Privacy Policy</a
+        >
       </div>
     </div>
   </div>
@@ -22,13 +26,13 @@ export default {
     getYear() {
       const today = new Date();
       return today.getFullYear();
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped lang="scss">
-p.footer{
+p.footer {
   text-align: center;
   font-style: normal;
   font-weight: normal;
@@ -45,15 +49,15 @@ a.footer {
   color: #757575;
 }
 .col-3 {
-  margin-left: .5rem;
-  margin-right: .5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
-.col-3.footer{
+.col-3.footer {
   text-align: center;
   padding-right: 0px;
   padding-left: 0px;
 }
-.row.footer{
-  padding : 40px;
+.row.footer {
+  padding: 40px;
 }
 </style>

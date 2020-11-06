@@ -14,8 +14,8 @@ method - unsure what the right move is right now
 <script>
 export default {
   props: {
-    text: String
-  }
+    text: String,
+  },
 };
 </script>
 
@@ -66,7 +66,7 @@ export default {
     display: flex;
     align-items: center;
 
-    color: #7B7D7E;
+    color: #7b7d7e;
 
     margin: 14px 16px 12px 16px;
   }

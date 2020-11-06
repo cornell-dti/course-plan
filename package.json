@@ -12,8 +12,8 @@
     "lint": "vue-cli-service lint",
     "tsc": "tsc",
     "build:staging": "vue-cli-service build --mode staging",
-    "format": "prettier --write \"**/*.{js,ts,css,html}\"",
-    "format:check": "prettier --check \"**/*.{js,ts,css,html}\"",
+    "format": "prettier --write \"**/*.{js,ts,css,html}\" src/App.vue \"src/components/{BottomBar*,Caution,Confirmation,Footer,Login,NavBar,TopBar,Modals/SemesterModal,Modals/TourWindow}.vue\"",
+    "format:check": "prettier --check \"**/*.{js,ts,css,html}\" src/App.vue \"src/components/{BottomBar*,Caution,Confirmation,Footer,Login,NavBar,TopBar,Modals/SemesterModal,Modals/TourWindow}.vue\"",
     "format:check:full": "prettier --check \"**/*.{js,ts,vue,scss,css,html}\"",
     "test": "jest"
   },
