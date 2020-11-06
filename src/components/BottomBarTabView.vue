@@ -1,7 +1,11 @@
 <template>
   <div class="bottombartabview">
     <div class="bottombartabview-bottomCourseWrapper">
-      <div v-for="(bottomCourse, index) in bottomCourses" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
+      <div
+        v-for="(bottomCourse, index) in bottomCourses"
+        :key="bottomCourse.id"
+        class="bottombartabview-courseWrapper"
+      >
         <bottombartab
           v-bind="bottomCourse"
           :id="bottomCourse.id"
@@ -11,7 +15,7 @@
           :courseObj="bottomCourse"
           :tabIndex="index"
           :bottomCourseFocus="bottomCourseFocus"
-          :isExpanded ="isExpanded"
+          :isExpanded="isExpanded"
           @bottomBarTabToggle="bottomBarTabToggle"
           @deleteBottomTab="deleteBottomTab"
           @toggleFromTab="toggleFromTab"
@@ -21,20 +25,34 @@
     </div>
     <div v-if="seeMoreCourses.length > 0" class="bottombartabview-seeMoreWrapper">
       <div class="bottombarSeeMoreTab" @click="bottomBarSeeMoreToggle">
-          <div class="bottombarSeeMoreTab-name">{{seeMoreString}}</div>
-          <img v-if="!seeMoreOpen" class="bottombarSeeMoreTab-arrow" src="@/assets/images/uparrow-white.svg" />
-          <img v-if="seeMoreOpen" class="bottombarSeeMoreTab-arrow" src="@/assets/images/downarrow-white.svg" />
+        <div class="bottombarSeeMoreTab-name">{{ seeMoreString }}</div>
+        <img
+          v-if="!seeMoreOpen"
+          class="bottombarSeeMoreTab-arrow"
+          src="@/assets/images/uparrow-white.svg"
+        />
+        <img
+          v-if="seeMoreOpen"
+          class="bottombarSeeMoreTab-arrow"
+          src="@/assets/images/downarrow-white.svg"
+        />
       </div>
       <div v-if="seeMoreOpen" class="bottombarSeeMoreOptions">
         <div class="seeMoreCourse-content">
-            <div
-              v-for="seeMoreCourse in seeMoreCourses"
-              :key="seeMoreCourse.id"
-              class="seeMoreCourse-option"
+          <div
+            v-for="seeMoreCourse in seeMoreCourses"
+            :key="seeMoreCourse.id"
+            class="seeMoreCourse-option"
+          >
+            <span class="seeMoreCourse-option-text" @click="moveToBottomBar(seeMoreCourse)"
+              >{{ seeMoreCourse.subject }} {{ seeMoreCourse.number }}</span
             >
-                <span class="seeMoreCourse-option-text" @click="moveToBottomBar(seeMoreCourse)">{{ seeMoreCourse.subject }} {{ seeMoreCourse.number}}</span>
-                <img class="seeMoreCourse-option-delete" src="@/assets/images/x-blue.svg" @click="deleteSeeMoreCourse(seeMoreCourse)"/>
-            </div>
+            <img
+              class="seeMoreCourse-option-delete"
+              src="@/assets/images/x-blue.svg"
+              @click="deleteSeeMoreCourse(seeMoreCourse)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -50,7 +68,7 @@ Vue.component('bottombartab', BottomBarTab);
 export default {
   data() {
     return {
-      seeMoreOpen: false
+      seeMoreOpen: false,
     };
   },
   props: {
@@ -58,13 +76,13 @@ export default {
     seeMoreCourses: Array,
     bottomCourseFocus: Number,
     isExpanded: Boolean,
-    maxBottomBarTabs: Number
+    maxBottomBarTabs: Number,
   },
 
   computed: {
     seeMoreString() {
       return 'See More';
-    }
+    },
   },
 
   methods: {
@@ -142,15 +160,13 @@ export default {
 
     updateBarTabs() {
       this.$emit('updateBarTabs');
-    }
-
-  }
+    },
+  },
 };
-
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .bottombartabview {
   width: 100%;
@@ -160,7 +176,6 @@ export default {
   align-items: flex-end;
 
   justify-content: space-between;
-
 
   &-bottomCourseWrapper {
     display: flex;
@@ -172,7 +187,7 @@ export default {
   }
 
   &-seeMoreWrapper {
-    display:flex;
+    display: flex;
     flex-direction: column;
     margin-left: auto;
     margin-right: 1%;
@@ -189,7 +204,7 @@ export default {
       justify-content: space-between;
       padding-left: 8px;
       padding-right: 8px;
-      cursor:pointer;
+      cursor: pointer;
       &-arrow {
         width: 14px;
         height: 50%;
@@ -200,10 +215,10 @@ export default {
 
   .bottombarSeeMoreOptions {
     width: 9rem;
-    background-color: #FFFFFF;;
+    background-color: #ffffff;
     border: 1px solid rgba(218, 218, 218, 0.2);
-    max-height:6.81rem;
-    overflow-y:scroll;
+    max-height: 6.81rem;
+    overflow-y: scroll;
     .seeMoreCourse {
       &-option {
         border: 1px solid rgba(218, 218, 218, 0.2);
@@ -232,13 +247,13 @@ export default {
       }
 
       &-option:hover {
-          text-decoration-line: underline;
-          background: rgba(50, 160, 242, 0.15);
+        text-decoration-line: underline;
+        background: rgba(50, 160, 242, 0.15);
       }
     }
 
     .seeMoreCourse-option:hover img {
-      display:block;
+      display: block;
     }
   }
 }
