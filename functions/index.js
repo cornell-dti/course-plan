@@ -95,8 +95,12 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
     });
 });
 
-function logUnfetchedCourse(course, roster) {
-  console.log(`Unable to fetch course data for course: ${course} in roster: ${roster}`);
+function logUnfetchedCrseCode(crseCode, roster) {
+  console.log(`Unable to fetch course data for crseCode: ${crseCode} in roster: ${roster}`);
+}
+
+function logUnfetchedCrseId(crseId, roster) {
+  console.log(`Unable to fetch course data for crseId: ${crseId} in roster: ${roster}`);
 }
 
 function fetchCoursesWithCrseCodes(roster, crseCodes, fetchedCoursesSoFar) {
@@ -119,13 +123,13 @@ function fetchCoursesWithCrseCodes(roster, crseCodes, fetchedCoursesSoFar) {
 
     let filteredCrseCode = `${filteredCourse.subject} ${filteredCourse.catalogNbr}`;
     // Remove already fetched course codes
-    crseCodes = crseCodes.filter(crseCode => crseCode != filteredCrseCode);
+    crseCodes = crseCodes.filter(crseCode => crseCode !== filteredCrseCode);
 
     fetchedCourses.push(filteredCourse);
   });
 
   // Log courses that could not be fetched
-  crseCodes.map(a => logUnfetchedCourse(a, roster));
+  crseCodes.map(crseCode => logUnfetchedCrseCode(crseCode, roster));
   return fetchedCourses;
 }
 
@@ -150,13 +154,13 @@ function fetchCoursesWithCrseIds(roster, crseIds, fetchedCoursesSoFar) {
     let filteredCrseId = filteredCourse.crseId;
 
     // Remove already fetched course ids
-    crseIds = crseIds.filter(crseId => crseId != filteredCrseId);
+    crseIds = crseIds.filter(crseId => crseId !== filteredCrseId);
 
     fetchedCourses.push(filteredCourse);
   });
 
   // Log courses that could not be fetched
-  crseIds.map(a => logUnfetchedCourse(a, roster));
+  crseIds.map(crseId => logUnfetchedCrseId(crseId, roster));
 
   return fetchedCourses;
 }
