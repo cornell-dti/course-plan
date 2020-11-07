@@ -1,20 +1,24 @@
 <template>
   <div class="tour">
-    <div class = "blackout">
-      <div class ="intropage">
-        <div class = "picture">
-          <img src = "@/assets/images/Person_planning.svg" alt = "person planning">
+    <div class="blackout">
+      <div class="intropage">
+        <div class="picture">
+          <img src="@/assets/images/Person_planning.svg" alt="person planning" />
         </div>
-        <div class = "content">
-          <div class = "title">
+        <div class="content">
+          <div class="title">
             {{ title }}
           </div>
-          <div class = "body" v-html = text>
-          </div>
-          <button @click = "$emit('hide'); $emit('startTour')">
+          <div class="body" v-html="text"></div>
+          <button
+            @click="
+              $emit('hide');
+              $emit('startTour');
+            "
+          >
             {{ buttonText }}
           </button>
-          <a @click = "$emit('skip')">
+          <a @click="$emit('skip')">
             {{ exit }}
           </a>
         </div>
@@ -35,7 +39,7 @@ const clickOutside = {
   },
   unbind(el) {
     document.body.removeEventListener('click', el.event);
-  }
+  },
 };
 
 export default {
@@ -43,46 +47,45 @@ export default {
     title: String,
     text: String,
     exit: String,
-    buttonText: String
+    buttonText: String,
   },
   data() {
     return {
-      hideOnClick: ''
+      hideOnClick: '',
     };
   },
   directives: {
-    'click-outside': clickOutside
-  }
+    'click-outside': clickOutside,
+  },
 };
-
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
-.blackout{
+.blackout {
   z-index: 100;
-  background-color:rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
   width: 100vw;
   height: 100vh;
-  left:0px;
-  bottom:0px;
+  left: 0px;
+  bottom: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.intropage{
+.intropage {
   z-index: 200;
   width: 40vw;
   height: 80vh;
-  background-color:white;
+  background-color: white;
   opacity: 1;
   position: absolute;
   border-radius: 9px;
   padding: 0px;
 }
-.picture{
+.picture {
   width: 100%;
   height: 66%;
   display: flex;
@@ -90,11 +93,11 @@ export default {
   background-color: $emGreen;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
-  img{
+  img {
     height: 100%;
   }
 }
-.content{
+.content {
   width: 100%;
   height: 34%;
   border-radius: 9px;
@@ -104,30 +107,29 @@ export default {
   flex-direction: column;
   padding-top: 2%;
   padding-bottom: 2%;
-  .title{
+  .title {
     font-weight: 600;
   }
-  .body{
-    font-size: .9em;
+  .body {
+    font-size: 0.9em;
     text-align: center;
     color: #757575;
     width: 90%;
   }
-  button{
+  button {
     background-color: $sangBlue;
     color: white;
     border: none;
-    padding-right: .7em;
-    padding-left: .7em;
-    padding-top: .3em;
-    padding-bottom: .3em;
+    padding-right: 0.7em;
+    padding-left: 0.7em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
     font-style: normal;
     font-weight: normal;
     border-radius: 3px;
   }
-  a{
+  a {
     font-weight: normal;
   }
 }
-
 </style>

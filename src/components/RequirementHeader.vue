@@ -68,8 +68,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   props: {
     reqIndex: Number,
     majors: Array,
@@ -87,17 +89,17 @@ export default {
     };
   },
   methods: {
-    toggleDetails(index) {
+    toggleDetails(index: number) {
       this.$emit('toggleDetails', index);
     },
-    activateMajor(id) {
+    activateMajor(id: number) {
       this.$emit('activateMajor', id);
     },
-    activateMinor(id) {
+    activateMinor(id: number) {
       this.$emit('activateMinor', id);
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">

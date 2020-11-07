@@ -16,7 +16,6 @@
         :reqIndex="index"
         :majors="majors"
         :minors="minors"
-        :reqGroupColorMap="reqGroupColorMap"
         :user="user"
         :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
         :numOfColleges="numOfColleges"
@@ -35,6 +34,7 @@
 import firebase from 'firebase/app';
 import 'firebase/functions';
 import { Vue } from 'vue-property-decorator';
+import { PropType } from 'vue';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
 // eslint-disable-next-line import/extensions
@@ -46,11 +46,12 @@ import Course from '@/components/Course.vue';
 // eslint-disable-next-line import/extensions
 import Modal from '@/components/Modals/Modal.vue';
 // eslint-disable-next-line import/extensions
-import RequirementView from '@/components/RequirementView.vue';
+import RequirementView, { Major, Minor } from '@/components/RequirementView.vue';
 // eslint-disable-next-line import/extensions
 import SubRequirement from '@/components/SubRequirement.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
-import { computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
+import { RequirementMap, computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
+import { AppUser, AppSemester } from '@/user-data';
 
 const functions = firebase.functions();
 
@@ -58,24 +59,14 @@ Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('requirementview', RequirementView);
 Vue.use(VueCollapse);
-type major = {
-  display: boolean;
-  major: string;
-  majorFN: string;
-}
-type minor = {
-  display: boolean;
-  minor: string;
-  minorFN: string;
-}
+
 type Data = {
-  actives: boolean[];
+  actives: readonly boolean[];
   modalShow: boolean;
   reqs: SingleMenuRequirement[];
-  majors: major[];
-  minors: minor[];
-  requirementsMap: {};
-  reqGroupColorMap: {};
+  majors: readonly Major[];
+  minors: readonly Minor[];
+  requirementsMap: RequirementMap;
   numOfColleges: number
 }
 // emoji for clipboard
@@ -91,8 +82,8 @@ tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
   props: {
-    semesters: Array,
-    user: Object,
+    semesters: Array as PropType<readonly AppSemester[]>,
+    user: Object as PropType<AppUser>,
     compact: Boolean,
     startTour: Boolean
   },
@@ -109,7 +100,6 @@ export default Vue.extend({
         name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
         group: group.groupName.toUpperCase(),
         specific: (group.specific) ? group.specific : null,
-        color: '105351',
         displayDetails: false,
         displayCompleted: false
       };
@@ -192,13 +182,6 @@ export default Vue.extend({
       requirementsMap: {
         // CS 1110: 'MQR-AS'
       },
-      // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
-      reqGroupColorMap: {
-        UNIVERSITY: ['508197', 'grayblue'],
-        COLLEGE: ['1AA9A5', 'blue'],
-        MAJOR: ['105351', 'green'],
-        MINOR: ['92C3E6', 'lightblue']
-      },
       numOfColleges: 1
     };
   },
@@ -247,7 +230,6 @@ export default Vue.extend({
     getCourseCodesArray(): readonly CourseTaken[] {
       const courses: CourseTaken[] = [];
       this.semesters.forEach(semester => {
-        // @ts-ignore
         semester.courses.forEach(course => {
           courses.push({
             code: `${course.lastRoster}: ${course.subject} ${course.number}`,
