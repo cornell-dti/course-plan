@@ -71,7 +71,7 @@
               <label class="onboarding-label">Your Major!</label>
               <div class="onboarding-selectWrapper">
                 <div
-                  class="onboarding-select onboarding-input"
+                  class="onboarding-select onboarding-input onboarding-section"
                   :class="{ 'onboarding-select--disabled': Object.keys(majors).length <= 0 }"
                   id="major"
                   v-for="(options, index) in displayOptions.major"
@@ -123,7 +123,7 @@
               <label class="onboarding-label">Your Minor (optional)</label>
               <div class="onboarding-selectWrapper">
                 <div
-                  class="onboarding-select onboarding-input"
+                  class="onboarding-select onboarding-input onboarding-section"
                   id="minor"
                   v-for="(options, index) in displayOptions.minor"
                   :key = index

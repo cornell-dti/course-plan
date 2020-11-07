@@ -9,10 +9,26 @@ input {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    
+    &-review {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
   }
-  &-section {
-      padding-bottom: 10px;
+  &-selectWrapper {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &-review {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-bottom: 1.5rem
+    }
+    
   }
   &-bottomWrapper {
     margin-top: 15px;
@@ -110,9 +126,18 @@ input {
     color: #404040;
     margin-bottom: .75rem;
     &--font{
+      color: #404040;
       padding:5px;
       margin-left:10px;
       background-color: white;
+    }
+    &--review{
+      font-weight: normal;
+      padding:5px;
+      margin-left:10px;
+      background-color: white;
+      color: #757575;
+      font-size: 16px;
     }
   }
   &-subHeader2 {
@@ -122,13 +147,25 @@ input {
     line-height: 18px;
     color: #404040;
     margin-bottom: .75rem;
+    
+    &-fillRow {
+      border: 1px solid #ffffff;
+      width: 100%;
+      border-bottom-color: #c4c4c4;
+      margin-bottom: 1.5rem;
+    }
+    &-review {
+      font-weight: 600;
+      font-size: 16px;
+    }
   }
 
 
   &-label {
+    font-weight: normal;
     font-size: 16px;
     line-height: 19px;
-    color: #757575;
+    color: #404040;
     margin-bottom: .5rem;
 
     &--bottom {
@@ -140,6 +177,12 @@ input {
             font-weight: bold;
             margin-right: 5px;
         }
+    }
+    &--review{
+      font-weight: normal;
+      background-color: white;
+      color: #757575;
+      font-size: 16px;
     }
     
   }
@@ -165,6 +208,8 @@ input {
         margin-right: 1.5rem;
       }
     }
+
+   &--nameReview 
 
     &--college {
       &:not(:last-child) {
@@ -193,7 +238,8 @@ input {
   &-remove {
     cursor: pointer;
     margin-left: .5rem;
-    color: #FF7979
+    color: #148481;
+
 
   }
 
@@ -246,7 +292,8 @@ input {
   }
 
   &-button {
-    background: #1AA9A5;
+    background: #148481;
+
     border: 0;
     box-sizing: border-box;
     border-radius: 1px;
@@ -263,6 +310,12 @@ input {
     &:active {
       background: #D7D7D7;
     }
+    &-previous {
+      background: #ffffff;
+      color: #148481;
+      border-radius: 0px;
+      border-width: 0px;
+    }
   }
 
   &-error {
@@ -271,7 +324,6 @@ input {
     line-height: 17px;
     color: #D8000C;
   }
-
   &-select {
     background: #ffffff;
     border: 1px solid #c4c4c4;
@@ -305,10 +357,16 @@ input {
       // padding-right: 40px;
     }
     &--columnWide {
-        display: flex;
-        flex-direction: column;
-       padding-right: 20px;
-       width: 260px;
+      display: flex;
+      flex-direction: column;
+      padding-right: 20px;
+      width: 260px;
+    }
+    &--columnFill {
+      display: flex;
+      flex-direction: column;
+      padding-right: 20px;
+      width: 100%;
     }
   }
 
