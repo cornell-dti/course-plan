@@ -96,6 +96,50 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
     });
 });
 
+function typeToOrderedNumber(type) {
+  switch (type) {
+    case 'WI':
+      return 0;
+    case 'SP':
+      return 1;
+    case 'SU':
+      return 2;
+    case 'FA':
+      return 3;
+    default:
+  }
+}
+
+function compareDataObjectsByRosters(dataObject1, dataObject2) {
+  const roster1 = dataObject1.roster;
+  const roster2 = dataObject2.roster;
+  const type1 = roster1.slice(0, 2);
+  const year1 = roster1.slice(2);
+  const type2 = roster2.slice(0, 2);
+  const year2 = roster2.slice(2);
+
+  if (year2 > year1) {
+    // roster2 has more recent year than roster1
+    return 1;
+  } else if (year1 > year2) {
+    // roster1 has more recent year than roster2
+    return -1;
+  } else if (typeToOrderedNumber(type2) > typeToOrderedNumber(type1)) {
+    // roster2 has more recent semester type than roster1
+    return 1;
+  } else if (typeToOrderedNumber(type1) > typeToOrderedNumber(type2)) {
+    // roster1 has more recent semester type than roster2
+    return -1;
+  } else {
+    return 0;
+  }
+}
+
+function sortDataCrseInfoByMostRecentRosters(dataCrseInfo) {
+  // Sorts from most recent roster
+  return dataCrseInfo.sort(compareDataObjectsByRosters);
+}
+
 function logUnfetchedCrseCode(crseCode, roster) {
   console.log(`Unable to fetch course data for crseCode: ${crseCode} in roster: ${roster}`);
 }
@@ -246,7 +290,9 @@ exports.FetchCourses = functions.https.onCall(data => {
   // Iterate over each dataObject in data.crseInfo
   // {"roster": "SP20", "crseCodes": ["CS 1110"], "crseIds": [358578]} is an example
   // of a dataObject
-  const dataCrseInfo = cleanDataCrseInfoByRoster(data.crseInfo);
+  const dataCrseInfo = sortDataCrseInfoByMostRecentRosters(
+    cleanDataCrseInfoByRoster(data.crseInfo)
+  );
   dataCrseInfo.forEach(dataObject => {
     let roster = dataObject.roster;
     // make [] in case dataObject.crseCodes is undefined
