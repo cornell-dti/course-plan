@@ -122,6 +122,7 @@ export type AppCourse = {
   color: string;
   check: boolean;
   uniqueID: number;
+  isReqCourse: boolean;
 };
 
 export type AppSemester = {
@@ -153,6 +154,7 @@ const createCourseCreditRange = (course: FirestoreSemesterCourse): readonly [num
 
 export const firestoreCourseToAppCourse = (
   course: FirestoreSemesterCourse,
+  isRequirementsCourse: boolean,
   incrementID: () => number,
   addColor: (subject: string) => string
 ): AppCourse => {
@@ -241,6 +243,8 @@ export const firestoreCourseToAppCourse = (
 
   const alerts = { requirement: null, caution: null };
 
+  const isReqCourse = isRequirementsCourse;
+
   return {
     crseId: course.crseId,
     subject,
@@ -260,6 +264,7 @@ export const firestoreCourseToAppCourse = (
     alerts,
     check: true,
     uniqueID,
+    isReqCourse,
   };
 };
 
@@ -271,7 +276,9 @@ export const firestoreSemesterToAppSemester = (
 ): AppSemester => {
   return {
     id: semesterID,
-    courses: courses.map(course => firestoreCourseToAppCourse(course, incrementID, addColor)),
+    courses: courses.map(course =>
+      firestoreCourseToAppCourse(course, false, incrementID, addColor)
+    ),
     type,
     year,
   };
