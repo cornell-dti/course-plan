@@ -103,6 +103,33 @@ function logUnfetchedCrseId(crseId, roster) {
   console.log(`Unable to fetch course data for crseId: ${crseId} in roster: ${roster}`);
 }
 
+function cleanCrseCodes(crseCodes, roster) {
+  let cleanedCrseCodes = [];
+  crseCodes.forEach(crseCode => {
+    if (typeof(crseCode) === 'string') {
+      cleanedCrseCodes.push(crseCode.toUpperCase());
+    } else {
+      console.log('crseCodes must be an array of strings');
+      logUnfetchedCrseCode(crseCode, roster);
+    }
+  });
+  return cleanedCrseCodes;
+}
+
+function cleanCrseIds(crseIds, roster) {
+  let cleanedCrseIds = [];
+  crseIds.forEach(crseId => {
+    let crseIdNumber = parseInt(crseId, 10);
+    if (crseIdNumber) {
+      cleanedCrseIds.push(crseIdNumber);
+    } else {
+      console.log('crseIds must be an array of numbers');
+      logUnfetchedCrseId(crseId, roster);
+    }
+  });
+  return cleanedCrseIds;
+}
+
 function fetchCoursesWithCrseCodes(roster, crseCodes, fetchedCoursesSoFar) {
   let fetchedCourses = [];
 
@@ -205,7 +232,7 @@ exports.FetchCourses = functions.https.onCall(data => {
     let fetchedCoursesSoFar = data.allowSameCourseForDifferentRosters ? [] : fetchedCourses;
 
     // First fetch any course objects with the provided crseCodes for this roster
-    crseCodes = crseCodes.map(crseCode => crseCode.toUpperCase());
+    crseCodes = cleanCrseCodes(crseCodes, roster);
     const fetchedCoursesWithCrseCodes = fetchCoursesWithCrseCodes(
       roster,
       crseCodes,
@@ -223,7 +250,7 @@ exports.FetchCourses = functions.https.onCall(data => {
       : fetchedCourses;
 
     // Fetch any course objects with the provided crseIds for this roster
-    crseIds = crseIds.map(crseId => parseInt(crseId, 10));
+    crseIds = cleanCrseIds(crseIds, roster);
     const fetchedCoursesWithCrseIds = fetchCoursesWithCrseIds(roster, crseIds, fetchedCoursesSoFar);
     fetchedCourses = fetchedCourses.concat(fetchedCoursesWithCrseIds);
   });
