@@ -106,7 +106,7 @@ function logUnfetchedCrseId(crseId, roster) {
 function cleanCrseCodes(crseCodes, roster) {
   let cleanedCrseCodes = [];
   crseCodes.forEach(crseCode => {
-    if (typeof(crseCode) === 'string') {
+    if (typeof crseCode === 'string') {
       cleanedCrseCodes.push(crseCode.toUpperCase());
     } else {
       console.log('crseCodes must be an array of strings');
