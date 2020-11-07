@@ -40,24 +40,27 @@
 </template>
 
 
-<script>
-import Vue from 'vue';
-import CompletedSubReqCourse from '@/components/CompletedSubReqCourse';
-import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+// eslint-disable-next-line import/extensions
+import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
+// eslint-disable-next-line import/extensions
+import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
+
+import { DisplayableRequirementFulfillment } from '@/requirements/types';
+
+// Arrows for dropup and dropdown
+import dropupIncompleteSrc from '@/assets/images/dropup.svg';
+import dropupCompletedSrc from '@/assets/images/dropup-lightgray.svg';
+import dropdownIncompleteSrc from '@/assets/images/dropdown.svg';
+import dropdownCompletedSrc from '@/assets/images/dropdown-lightgray.svg';
 
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
 
-// Arrows for dropup and dropdown
-const dropupIncompleteSrc = require('@/assets/images/dropup.svg');
-const dropupCompletedSrc = require('@/assets/images/dropup-lightgray.svg');
-const dropdownIncompleteSrc = require('@/assets/images/dropdown.svg');
-const dropdownCompletedSrc = require('@/assets/images/dropdown-lightgray.svg');
-
-
-export default {
+export default Vue.extend({
   props: {
-    subReq: Object,
+    subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqIndex: Number, // Subrequirement index
     reqIndex: Number, // Requirement index
     color: String,
@@ -75,13 +78,12 @@ export default {
       }
       return src;
     },
-    toggleDescription(reqIndex, isCompleted, subReqIndex) {
+    toggleDescription(reqIndex: number, isCompleted: boolean, subReqIndex: number) {
       const type = isCompleted ? 'completed' : 'ongoing';
       this.$emit('toggleDescription', reqIndex, type, subReqIndex);
-    }
-  }
-};
-
+    },
+  },
+});
 </script>
 
 
