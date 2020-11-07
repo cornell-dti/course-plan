@@ -11,10 +11,12 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   props: {
-    text: String
+    text: String,
   },
 
   computed: {
@@ -22,8 +24,8 @@ export default {
     // undo() {
     //   return 'UNDO';
     // }
-  }
-};
+  },
+});
 </script>
 
 <style scoped lang="scss">
@@ -41,7 +43,7 @@ export default {
     min-width: 42px;
     min-height: 42px;
 
-    background: #EB6D6D;
+    background: #eb6d6d;
     border-radius: 5px;
   }
 
@@ -69,7 +71,7 @@ export default {
     display: flex;
     align-items: center;
 
-    color: #7B7D7E;
+    color: #7b7d7e;
 
     margin-left: 8px;
     margin-right: 16px;

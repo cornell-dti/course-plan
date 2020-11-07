@@ -15,7 +15,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     operator: 'and',
     fulfilledBy: 'credits',
-    minCount: 15
+    minCount: 15,
   },
   {
     name: 'Focus Area',
@@ -25,15 +25,16 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       ['COMM 2200'],
       ['COMM 2450'],
       ['COMM 2760'],
-      ['COMM 2850'],
+      ['COMM 2850']
     ),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 6
+    minCount: 6,
   },
   {
     name: 'Focus Area Upper Level',
-    description: 'Students must take six credits (two courses) of coursework within their declared Focus Area at the 3100+ level.',
+    description:
+      'Students must take six credits (two courses) of coursework within their declared Focus Area at the 3100+ level.',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSingleRequirement(
       'COMM 31**',
@@ -47,17 +48,18 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'COMM 39**',
       'COMM 4***',
       'COMM 5***',
-      'COMM 6***',
+      'COMM 6***'
     ),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 6
+    minCount: 6,
   },
   {
     name: 'Upper-Level COMM',
-    description: 'Students must complete 9 additional credit hours at the 3100+ level.* Electives can come from any of the focus area lists. '
-    + 'A student may elect to fulfill 3 of these credit hours by taking a third focus area introductory course. '
-    + 'A maximum of 3 credits in either 4970 or 4990 (combined) can be counted toward the upper level major requirements. Refer to the Course and Time Roster for the most up-to-date offerings. ',
+    description:
+      'Students must complete 9 additional credit hours at the 3100+ level.* Electives can come from any of the focus area lists. ' +
+      'A student may elect to fulfill 3 of these credit hours by taking a third focus area introductory course. ' +
+      'A maximum of 3 credits in either 4970 or 4990 (combined) can be counted toward the upper level major requirements. Refer to the Course and Time Roster for the most up-to-date offerings. ',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSubRequirements(
       ['COMM 2179'],
@@ -105,22 +107,21 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 15
+    minCount: 15,
   },
   {
     name: 'Communication Practica',
     description: 'Three credits in the COMM 30XX range courses',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
-    checker: includesWithSingleRequirement(
-      'COMM 30**',
-    ),
+    checker: includesWithSingleRequirement('COMM 30**'),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 3
+    minCount: 3,
   },
   {
     name: 'Introductory Statistics Class',
-    description: 'Students must take an introductory statistics class, such as PAM 2100, AEM 2100, ILRST 2100, etc. or a score of 5 in AP statistics',
+    description:
+      'Students must take an introductory statistics class, such as PAM 2100, AEM 2100, ILRST 2100, etc. or a score of 5 in AP statistics',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSingleRequirement(
       'PAM 2100',
@@ -137,12 +138,12 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'MATH 1710',
       'PAM 2101',
       'PSYCH 2500',
-      'SOC 3010',
+      'SOC 3010'
     ),
     operator: 'or',
     fulfilledBy: 'courses',
-    minCount: 1
-  }
+    minCount: 1,
+  },
 ];
 
 export default commRequirements;

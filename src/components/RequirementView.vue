@@ -8,6 +8,7 @@
       :reqGroupColorMap="reqGroupColorMap"
       :user="user"
       :showMajorOrMinorRequirements="showMajorOrMinorRequirements"
+      :numOfColleges="numOfColleges"
       @activateMajor="activateMajor"
       @activateMinor="activateMinor"
       @toggleDetails="toggleDetails"
@@ -70,45 +71,70 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
-import RequirementHeader from '@/components/RequirementHeader';
-import SubRequirement from '@/components/SubRequirement';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+// eslint-disable-next-line import/extensions
+import RequirementHeader from '@/components/RequirementHeader.vue';
+// eslint-disable-next-line import/extensions
+import SubRequirement from '@/components/SubRequirement.vue';
+
+import { AppUser } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
 
-export default {
+export type Major = {
+  display: boolean;
+  readonly major: string;
+  readonly majorFN: string;
+}
+export type Minor = {
+  display: boolean;
+  readonly minor: string;
+  readonly minorFN: string;
+}
+
+export default Vue.extend({
   props: {
     reqs: Array,
     req: Object,
     reqIndex: Number, // Index of this req in reqs array
-    majors: Array,
-    minors: Array,
-    reqGroupColorMap: Object,
-    user: Object,
+    majors: Array as PropType<readonly Major[]>,
+    minors: Array as PropType<readonly Minor[]>,
+    user: Object as PropType<AppUser>,
     showMajorOrMinorRequirements: Boolean,
+    numOfColleges: Number,
     rostersFromLastTwoYears: Array
   },
+  data() {
+    return {
+      // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
+      reqGroupColorMap: {
+        UNIVERSITY: ['508197', 'grayblue'],
+        COLLEGE: ['1AA9A5', 'blue'],
+        MAJOR: ['105351', 'green'],
+        MINOR: ['92C3E6', 'lightblue']
+      },
+    };
+  },
   methods: {
-    activateMajor(id) {
+    activateMajor(id: number) {
       this.$emit('activateMajor', id);
     },
-    activateMinor(id) {
+    activateMinor(id: number) {
       this.$emit('activateMinor', id);
     },
-    toggleDetails(index) {
-      console.log('toggleDetails from RequirementView');
+    toggleDetails(index: number) {
       this.$emit('toggleDetails', index);
     },
-    toggleDescription(index, type, id) {
+    toggleDescription(index: number, type: 'ongoing' | 'completed', id: number) {
       this.$emit('toggleDescription', index, type, id);
     },
-    turnCompleted(index, bool) {
+    turnCompleted(index: number, bool: boolean) {
       this.$emit('turnCompleted', index, bool);
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">

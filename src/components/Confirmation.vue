@@ -11,12 +11,14 @@ method - unsure what the right move is right now
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   props: {
-    text: String
-  }
-};
+    text: String,
+  },
+});
 </script>
 
 <style scoped lang="scss">
@@ -66,7 +68,7 @@ export default {
     display: flex;
     align-items: center;
 
-    color: #7B7D7E;
+    color: #7b7d7e;
 
     margin: 14px 16px 12px 16px;
   }
