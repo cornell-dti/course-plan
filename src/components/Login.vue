@@ -243,7 +243,6 @@ export default Vue.extend({
             this.$store.commit('setCurrentUser', user);
             this.$store.dispatch('fetchUserProfile');
             this.$router.push(`${process.env.BASE_URL}/`);
-            this.$gtag.event('login', { method: 'Google' });
           } else {
             this.handleUserWithoutAccess();
           }

@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
 import BootstrapVue from 'bootstrap-vue';
-import VueGtag from 'vue-gtag';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -18,11 +17,6 @@ import * as fb from './firebaseConfig';
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
-
-// Enable Google analytics with custom events
-Vue.use(VueGtag, {
-  config: { id: 'UA-124837875-2' },
-});
 
 // handle page reloads
 let app: Vue | undefined;
