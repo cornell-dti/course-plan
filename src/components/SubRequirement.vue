@@ -37,12 +37,12 @@
     </div>
     <div v-if="!this.isCompleted" class="separator"></div>
     <div
-    v-for="(subReqCourseCodes, id) in subReqCoursesNotTakenArray"
-    :key="subReqCourseCodes.id">
+    v-for="(subReqCrseInfoObjects, id) in subReqCoursesNotTakenArray"
+    :key="subReqCrseInfoObjects.id">
       <incompletesubreqcourse
         :subReq="subReq"
         :subReqCourseId="id"
-        :courseCodes="subReqCourseCodes"
+        :crseInfoObjects="subReqCrseInfoObjects"
         :dataReady="dataReady"
         @isDataReady="isDataReady"
       />
@@ -75,25 +75,26 @@ const dropdownCompletedSrc = require('@/assets/images/dropdown-lightgray.svg');
 
 export default {
   mounted() {
-    if (!this.isUniversitySubReq) { // TODO: Change after removing University Reqs
+    if (!this.isUniversitySubReq && this.subReq.requirement.courses) { // TODO: Change after removing University Reqs
       const mostRecentRosters = this.rostersFromLastTwoYears;
       let filteredSubReqRosters;
+      console.log(this.subReq);
       // Iterate over each course slot for the subReq
       this.subReq.requirement.courses.forEach(subReqCourseRosterObject => {
         // Filter subreq roster object keys with the mostRecentRosters
         filteredSubReqRosters = Object.keys(subReqCourseRosterObject).filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1);
 
-        const courseCodesSet = new Set([]); // Maintain a set to remove dupes
+        const crseInfoObjects = []; // List of crseInfoObjects {roster: <roster>, crseIds: crseId[]} []
+        let seenCrseIds = []; // So we don't have duplicates
         filteredSubReqRosters.forEach(subReqRoster => {
-          // For each roster, create the course code and add to courseCodesSet
-          for (const [courseSubject, courseNumberArray] of Object.entries(subReqCourseRosterObject[subReqRoster])) {
-            const courseCodes = courseNumberArray.map(courseNumber => `${courseSubject} ${courseNumber}`);
-            courseCodes.forEach(code => courseCodesSet.add(code));
-          }
+          const subReqCrseIds = subReqCourseRosterObject[subReqRoster].filter(crseId => !seenCrseIds.includes(crseId));
+          const crseInfoObject = { roster: subReqRoster, crseIds: subReqCrseIds };
+
+          crseInfoObjects.push(crseInfoObject);
+          seenCrseIds = seenCrseIds.concat(subReqCrseIds);
         });
-        const courseCodesList = Array.from(courseCodesSet); // Change into list
-        // Push courseCodesList onto subReqCoursesNotTakenArray for the subReqCourse slot
-        this.subReqCoursesNotTakenArray.push(courseCodesList);
+        // Push crseInfoObjects onto subReqCoursesNotTakenArray for the subReqCourse slot
+        this.subReqCoursesNotTakenArray.push(crseInfoObjects);
       });
     }
   },
@@ -102,12 +103,12 @@ export default {
       subReqCoursesNotTakenArray: [],
       // subReqCoursesNotTakenArray = [
       //   [
-      //     'CS 1110',
-      //     'INFO 1300'
+      //     {roster: <roster>, crseIds: crseId[]},
+      //     {roster: <roster>, crseIds: crseId[]}
       //   ],
       //   [
-      //     'INFO 1200',
-      //     'MATH 1710'
+      //     {roster: <roster>, crseIds: crseId[]},
+      //     {roster: <roster>, crseIds: crseId[]}
       //   ]
       // ]
       dataReady: false, // true if dataReady for all subReqCourses. false otherwise

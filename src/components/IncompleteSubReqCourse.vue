@@ -1,7 +1,7 @@
 <template>
   <div class="incompletesubreqcourse">
     <div class="draggable-requirements-wrapper"
-      v-if="display && subReq.displayDescription && courseCodes.length > 0"
+      v-if="display && subReq.displayDescription && crseInfoObjects.length > 0"
     >
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
@@ -68,7 +68,7 @@ export default {
   props: {
     subReq: Object,
     subReqCourseId: Number,
-    courseCodes: Array,
+    crseInfoObjects: Array,
     dataReady: Boolean
   },
   watch: {
@@ -103,12 +103,25 @@ export default {
       if (!this.$data.scrollable) event.preventDefault();
     },
     getFirstFourCourseObjects() {
-      const firstFourCourseCodes = [];
-      for (let i = 0; i < 4 && i < this.courseCodes.length; i += 1) {
-        firstFourCourseCodes.push(this.courseCodes[i]);
+      const firstFourCrseInfoObjects = [];
+      let numAddedCrseIds = 0; // Keep track of the crseIds we have added
+
+      // Get first four distinct crseIds
+      for (let i = 0; numAddedCrseIds < 4 && i < this.crseInfoObjects.length; i += 1) {
+        const crseInfoObject = this.crseInfoObjects[i];
+        const crseInfoObjectCrseIds = crseInfoObject.crseIds;
+
+        if (crseInfoObjectCrseIds.length <= 4) {
+          numAddedCrseIds += crseInfoObjectCrseIds.length;
+        } else {
+          const reducedCrseIds = crseInfoObjectCrseIds.slice(0, 4);
+          crseInfoObject.crseIds = reducedCrseIds;
+          numAddedCrseIds += reducedCrseIds.length;
+        }
+        firstFourCrseInfoObjects.push(crseInfoObject);
       }
       let fetchedCourses;
-      FetchCourses({ courseCodes: firstFourCourseCodes }).then(result => {
+      FetchCourses({ crseInfo: firstFourCrseInfoObjects, allowSameCourseForDifferentRosters: false }).then(result => {
         fetchedCourses = result.data.courses;
         fetchedCourses.forEach(course => {
           console.log(course);
