@@ -2,176 +2,68 @@
     <div class="onboarding">
         <div class="onboarding-section">
           <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Basic Information</span></div>
-          <div class="onboarding-inputs onboarding-inputs--name">
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-              <label class="onboarding-label"><span class="onboarding-subHeader--font"> First Name* </span></label>
-              <input class="onboarding-input" v-model="firstName" />
+          <div class="onboarding-inputs onboarding-inputs">
+            <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Your Name</span></div>
+            <div class="onboarding-selectWrapperRow-review">
+              <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+                <label class="onboarding-label"><span> First Name </span></label>
+                <label class="onboarding-label--review"><span> {{ firstName }}</span></label>
+              </div>
+              <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+                <label class="onboarding-label"><span> Middle Name </span></label>
+                <label class="onboarding-label--review"><span> {{ middleName }}</span></label>
+              </div>
+              <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+                <label class="onboarding-label"><span> Last Name </span></label>
+                <label class="onboarding-label--review"><span> {{ lastName }}</span></label>
+              </div>
             </div>
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-              <label class="onboarding-label"><span class="onboarding-subHeader--font"> Middle Name </span></label>
-              <input class="onboarding-input" v-model="middleName" />
+            <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Your Major</span></div>
+            <div class="onboarding-selectWrapper">
+              <div class="onboarding-selectWrapper-review">
+                <label class="onboarding-label">College</label>
+                <label class="onboarding-label--review">{{ displayOptions.college[0].placeholder }}</label>
+              </div>
+              <div class="onboarding-selectWrapper-review">
+                <label class="onboarding-label">Major</label>
+                <label class="onboarding-label--review">{{ displayOptions.major[0].placeholder }}</label>
+              </div>
             </div>
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-              <label class="onboarding-label"><span class="onboarding-subHeader--font"> Last Name* </span></label>
-              <input class="onboarding-input" v-model="lastName" />
+            <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Your Minor</span></div>
+            <div class="onboarding-selectWrapper">
+              <label class="onboarding-label">Minor</label>
+              <label class="onboarding-label--review">{{ displayOptions.minor[0].placeholder }}</label>
             </div>
           </div>
         </div>
         <div class="onboarding-section">
           <!-- TODO: Multiple colleges -->
           <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Transfer Credits</span> </div>
-          <div class="onboarding-inputs">
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your College (required)</label>
-              <div class="onboarding-selectWrapper">
-                <div
-                  class="onboarding-select onboarding-input"
-                  :class="{ 'onboarding-select--disabled': Object.keys(colleges).length <= 0 }"
-                  id="college"
-                  v-for="(options, index) in displayOptions.college"
-                  :key = index
-                  :style="{ borderColor: options.boxBorder }"
-                  v-click-outside:[index]="closeCollegeDropdownIfOpen"
-                >
-                  <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideCollegeContent(index)">
-                    <div
-                      class="onboarding-dropdown-placeholder college-placeholder"
-                      id="college-placeholder"
-                      :style="{ color: options.placeholderColor }"
-                    >
-                      {{ options.placeholder }}
-                    </div>
-                    <div
-                      class="onboarding-dropdown-placeholder college-arrow"
-                      id="college-arrow"
-                      :style="{ borderTopColor: options.arrowColor }"
-                    ></div>
-                  </div>
-                  <div
-                    class="onboarding-dropdown-content college-content"
-                    id="college-content"
-                    v-if="options.shown"
-                  >
-                    <div
-                      v-for="(college, acronym) in colleges"
-                      :key="acronym"
-                      :id="college"
-                      class="onboarding-dropdown-content-item"
-                      @click="selectCollege(college, acronym, index)"
-                    >
-                      {{ college }}
-                    </div>
-                  </div>
-                </div>
+          <div class="onboarding-inputs onboarding-inputs">
+            <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Cornell Swimming Test</span></div>
+            <div class="onboarding-selectWrapper">
+              <div class="onboarding-selectWrapper-review">
+                <label class="onboarding-label">{{ this.user.tookSwim }}</label>
               </div>
             </div>
-
-
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major!</label>
-              <div class="onboarding-selectWrapper">
-                <div
-                  class="onboarding-select onboarding-input"
-                  :class="{ 'onboarding-select--disabled': Object.keys(majors).length <= 0 }"
-                  id="major"
-                  v-for="(options, index) in displayOptions.major"
-                  :key = index
-                  :style="{ borderColor: options.boxBorder }"
-                  v-click-outside:[index]="closeMajorDropdownIfOpen"
-                >
-                  <div class="onboarding-dropdown-placeholder major-wrapper" @click="showHideMajorContent(index)">
-                    <div
-                      class="onboarding-dropdown-placeholder major-placeholder"
-                      id="major-placeholder"
-                      :style="{ color: options.placeholderColor }"
-                    >
-                      {{options.placeholder}}
-                    </div>
-                    <div
-                      class="onboarding-dropdown-placeholder major-arrow"
-                      id="major-arrow"
-                      :style="{ borderTopColor: options.arrowColor }"
-                    ></div>
-                  </div>
-                  <div
-                    class="onboarding-dropdown-content major-content"
-                    id="major-content"
-                    v-if="options.shown"
-                  >
-                    <div
-                      v-for="(major, acronym) in majors"
-                      :key="acronym"
-                      :id="major"
-                      class="onboarding-dropdown-content-item"
-                      @click="selectMajor(major, acronym, index)"
-                    >
-                      {{ major }}
-                    </div>
-                  </div>
-                </div>
+            <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Test Credits</span></div>
+            <div class="onboarding-selectWrapper">
+              <div class="onboarding-selectWrapper-review">
+                <label class="onboarding-label">AP Credits</label>
+                <label v-for="(options, index) in displayOptions.exam" :key = "index" class="onboarding-label--review">{{ options.subject.placeholder }}</label>
               </div>
-              <div class="onboarding-addRemoveWrapper" :class="{ 'onboarding--hidden': displayOptions.major.length <= 0}">
-                <div class="onboarding-add" @click="addMajor">
-                  + add another major
-                </div>
-                <div class="onboarding-remove" @click="removeMajor" :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }">
-                  Remove
-                </div>
+              <div class="onboarding-selectWrapper">
+                <label class="onboarding-label">IB Credits</label>
+                <label class="onboarding-label--review">{{ }}</label>
               </div>
             </div>
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Minor (optional)</label>
-              <div class="onboarding-selectWrapper">
-                <div
-                  class="onboarding-select onboarding-input"
-                  id="minor"
-                  v-for="(options, index) in displayOptions.minor"
-                  :key = index
-                  :style="{ borderColor: options.boxBorder }"
-                  v-click-outside:[index]="closeMinorDropdownIfOpen"
-                >
-                  <div class="onboarding-dropdown-placeholder minor-wrapper" @click="showHideMinorContent(index)">
-                    <div
-                      class="onboarding-dropdown-placeholder minor-placeholder"
-                      id="minor-placeholder"
-                      :style="{ color: options.placeholderColor }"
-                    >
-                      {{ options.placeholder }}
-                    </div>
-                    <div
-                      class="onboarding-dropdown-placeholder minor-arrow"
-                      id="minor-arrow"
-                      :style="{ borderTopColor: options.arrowColor }"
-                    ></div>
-                  </div>
-                  <div
-                    class="onboarding-dropdown-content minor-content"
-                    id="minor-content"
-                    v-if="options.shown"
-                  >
-                    <div
-                      v-for="(minor, acronym) in minors"
-                      :key="acronym"
-                      :id="minor"
-                      class="onboarding-dropdown-content-item"
-                      @click="selectMinor(minor, acronym, index)"
-                    >
-                      {{ minor }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="onboarding-addRemoveWrapper" :class="{ 'onboarding--hidden': Object.keys(minors).length <= 0}">
-                <div class="onboarding-add" @click="addMinor">
-                  + add another minor
-                </div>
-                <div class="onboarding-remove" @click="removeMinor" :class="{'onboarding--hidden': displayOptions.minor.length === 1 && displayOptions.minor[0].placeholder == placeholderText}">
-                  Remove
-                </div>
-              </div>
+            <!-- <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Your Minor</span></div> -->
+            <div class="onboarding-selectWrapper">
+              <label class="onboarding-label">Total Transfer Credits</label>
+              <label class="onboarding-label--review">{{ }}</label>
             </div>
-    </div>
-  </div>
+          </div>
+          </div>
 </div>
 </template>
 
@@ -268,7 +160,9 @@ export default {
             placeholder: minorText,
             acronym: minorAcronym
           }
-        ]
+        ],
+        exam: [],
+        class: []
       },
       isError: false
     };

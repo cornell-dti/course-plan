@@ -28,7 +28,7 @@
                     :style="{ borderColor: options.type.boxBorder }"
                     v-click-outside:[index]="closeTypeDropdownIfOpen"
                   >
-                  <div class="onboarding-selectWrapperRow">
+                  <div v-if="options.type.placeholder != 'IB'" class="onboarding-selectWrapperRow">
                     <div class="onboarding-select--columnWide " >
                       <label class="onboarding-label">Subject</label>
                       <div class="onboarding-select onboarding-input">
@@ -73,7 +73,102 @@
                           :style="{ color: options.score.placeholderColor }"
 
                         >
-                        {{ options.score.placeholder }}
+                        <!-- {{ options.score.placeholder }} -->
+                        0
+                        </div>
+                        <div
+                          class="onboarding-dropdown-placeholder college-arrow"
+                          id="college-arrow"
+                          :style="{ borderTopColor: options.score.arrowColor }"
+                        ></div>
+                      </div>
+                      <div
+                        class="onboarding-dropdown-content college-content"
+                        id="college-content"
+                        v-if="options.score.shown"
+                      >
+                        <div
+                          v-for="(score, acronym) in scores"
+                          :key="acronym"
+                          :id="score"
+                          class="onboarding-dropdown-content-item"
+                          @click="selectScore(score, acronym, index)"
+                        >
+                        {{ score }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="onboarding-select--column-remove" >
+                  <div class="onboarding-remove" @click="removeExam" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
+                    x
+                  </div>
+                  </div>
+                </div>
+              </div>
+              <div class="onboarding-addRemoveWrapper" >
+                <div class="onboarding-add" @click="addExam">
+                  + add another subject
+                </div>
+              </div>
+            </div>
+            <div class="onboarding-subHeader"><span class="onboarding-subHeader--font">IB Credits</span></div>
+              <div class="onboarding-inputs">
+                <div
+                    class= "onboarding-section"
+                    id="college"
+                    v-for="(options, index) in displayOptions.exam"
+                    :key = index
+                    :style="{ borderColor: options.type.boxBorder }"
+                    v-click-outside:[index]="closeTypeDropdownIfOpen"
+                  >
+                  <div v-if="options.type.placeholder != 'AP'" class="onboarding-selectWrapperRow">
+                    <div class="onboarding-select--columnWide " >
+                      <label class="onboarding-label">Subject</label>
+                      <div class="onboarding-select onboarding-input">
+                        <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideSubjectContent(index)">
+                          <div
+                            class="onboarding-dropdown-placeholder college-placeholder"
+                            id="college-placeholder"
+                            :style="{ color: options.subject.placeholderColor }"
+                          >
+                          {{ options.subject.placeholder }}
+                          </div>
+                          <div
+                            class="onboarding-dropdown-placeholder college-arrow"
+                            id="college-arrow"
+                            :style="{ borderTopColor: options.subject.arrowColor }"
+                          ></div>
+                        </div>
+                        <div
+                          class="onboarding-dropdown-content college-content"
+                          id="college-content"
+                          v-if="options.subject.shown"
+                        >
+                        <div
+                          v-for="(subject, acronym) in subjects[index]"
+                          :key="acronym"
+                          :id="subject"
+                          class="onboarding-dropdown-content-item"
+                          @click="selectSubject(subject, acronym, index)"
+                        >
+                          {{ subject }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="onboarding-select--column" >
+                    <label class="onboarding-label">Score</label>
+                    <div class="onboarding-select onboarding-input">
+                      <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideScoreContent(index)">
+                        <div
+                          class="onboarding-dropdown-placeholder college-placeholder"
+                          id="college-placeholder"
+                          :style="{ color: options.score.placeholderColor }"
+
+                        >
+                        <!-- {{ options.score.placeholder }} -->
+                        0
                         </div>
                         <div
                           class="onboarding-dropdown-placeholder college-arrow"
@@ -120,7 +215,7 @@
                 v-for="(options, index) in displayOptions.class"
                 :key= index
                 class="onboarding-selectWrapperRow">
-                <div class = "onboarding-select--columnWide">
+                <div class = "onboarding-select--columnFill">
                   <newCourse
                   :semesterID= index
                   :isOnboard="true"

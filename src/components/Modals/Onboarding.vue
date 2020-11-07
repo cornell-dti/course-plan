@@ -31,7 +31,7 @@
             <label class="onboarding-bottom--text">Skip for now</label>
           </div>
           <div class="onboarding-bottom--contents">
-            <button class="onboarding-button" @click="goBack"> Prev </button>
+            <button class="onboarding-button-previous" @click="goBack"> &lt; Previous</button>
             <button class="onboarding-button" @click="submitOnboarding">Finish</button>
          </div>
         </div>
@@ -40,8 +40,8 @@
             <label class="onboarding-bottom--text">Skip for now</label>
           </div>
           <div class="onboarding-bottom--contents">
-            <button class="onboarding-button" @click="goBack"> Prev </button>
-            <button class="onboarding-button" @click="goNext">Next</button>
+            <button class="onboarding-button-previous" @click="goBack"> &lt; Previous</button>
+            <button class="onboarding-button" @click="goNext">Next &gt;</button>
         </div>
     </div>
     <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">Please fill out all required fields and try again.</div>

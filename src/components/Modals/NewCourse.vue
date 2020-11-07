@@ -83,6 +83,10 @@
       <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
         Add these Requirements
       </div>
+      <!-- <input v-if="!isOnboard" class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
+        semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" /> -->
+      <input v-if="isOnboard" class="newCourse-onboarding" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
+        semesterID" :placeholder="placeholderText" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
   </div>
 </template>
@@ -326,7 +330,21 @@ export default Vue.extend({
     width: 100%;
     border-radius: 3px;
     padding: 0.5rem;
-    border: 0.5px solid $inactiveGray;
+    border: 0.5px solid #c4c4c4;
+    &::placeholder {
+      color: #b6b6b6;
+    }
+  }
+  &-onboarding {
+    font-size: 14px;
+    line-height: 17px;
+    color: #757575;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.5rem;
+    border: 0.5px solid #b6b6b6;
+    border-radius: 0px;
+    background-color: #ffffff;
     &::placeholder {
       color: $darkPlaceholderGray;
     }
