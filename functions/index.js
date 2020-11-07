@@ -7,6 +7,7 @@ const db = admin.firestore();
 const userDataCollection = db.collection('userData');
 
 const fs = require('fs');
+const { parse } = require('path');
 
 const filteredCoursesPaths = fs.readdirSync('./filtered_courses/');
 
@@ -101,6 +102,35 @@ function logUnfetchedCrseCode(crseCode, roster) {
 
 function logUnfetchedCrseId(crseId, roster) {
   console.log(`Unable to fetch course data for crseId: ${crseId} in roster: ${roster}`);
+}
+
+function logInvalidRoster(roster) {
+  console.log(`Inputted roster: ${roster} is invalid`);
+}
+
+function cleanDataCrseInfoByRoster(dataCrseInfo) {
+  let cleanedDataCrseInfo = [];
+  dataCrseInfo.forEach(dataObject => {
+    let roster = dataObject.roster;
+    if (typeof roster === 'string' && roster.length === 4) {
+      roster = roster.toUpperCase();
+
+      let type = roster.slice(0, 2);
+      const validTypes = ['WI', 'SP', 'SU', 'FA'];
+
+      let year = roster.slice(2);
+      if (!(validTypes.includes(type) && parseInt(year, 10))) {
+        logInvalidRoster(roster);
+      } else {
+        // Update dataObject.roster with uppercased roster
+        dataObject.roster = roster;
+        cleanedDataCrseInfo.push(dataObject);
+      }
+    } else {
+      logInvalidRoster(roster);
+    }
+  });
+  return cleanedDataCrseInfo;
 }
 
 function cleanCrseCodes(crseCodes, roster) {
@@ -216,7 +246,8 @@ exports.FetchCourses = functions.https.onCall(data => {
   // Iterate over each dataObject in data.crseInfo
   // {"roster": "SP20", "crseCodes": ["CS 1110"], "crseIds": [358578]} is an example
   // of a dataObject
-  data.crseInfo.forEach(dataObject => {
+  const dataCrseInfo = cleanDataCrseInfoByRoster(data.crseInfo);
+  dataCrseInfo.forEach(dataObject => {
     let roster = dataObject.roster;
     // make [] in case dataObject.crseCodes is undefined
     // e.g. if dataObject is {"roster": "SP20", "crseIds": [358578]}
