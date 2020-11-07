@@ -205,7 +205,7 @@ exports.FetchCourses = functions.https.onCall(data => {
     let fetchedCoursesSoFar = data.allowSameCourseForDifferentRosters ? [] : fetchedCourses;
 
     // First fetch any course objects with the provided crseCodes for this roster
-    crseCodes = crseCodes.map(a => a.toUpperCase());
+    crseCodes = crseCodes.map(crseCode => crseCode.toUpperCase());
     const fetchedCoursesWithCrseCodes = fetchCoursesWithCrseCodes(
       roster,
       crseCodes,
@@ -223,7 +223,7 @@ exports.FetchCourses = functions.https.onCall(data => {
       : fetchedCourses;
 
     // Fetch any course objects with the provided crseIds for this roster
-    crseIds = crseIds.map(a => parseInt(a, 10));
+    crseIds = crseIds.map(crseId => parseInt(crseId, 10));
     const fetchedCoursesWithCrseIds = fetchCoursesWithCrseIds(roster, crseIds, fetchedCoursesSoFar);
     fetchedCourses = fetchedCourses.concat(fetchedCoursesWithCrseIds);
   });
