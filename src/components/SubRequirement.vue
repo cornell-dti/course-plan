@@ -268,6 +268,7 @@ button.view {
       align-items: center;
       color: $darkPlaceholderGray;
       background: transparent;
+      cursor: pointer;
     }
     &-wrapper {
       display: flex;
@@ -304,6 +305,11 @@ button.view {
         align-items: center;
         color: $lightPlaceholderGray;
         padding-left: 10px;
+        cursor: pointer;
+
+        &:first-child {
+          border-radius: 7px 7px 0px 0px;
+        }
 
         &:last-child {
           border-radius: 0px 0px 7px 7px;
