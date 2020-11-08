@@ -103,6 +103,16 @@ export type AppUser = {
   tookSwim: 'yes' | 'no';
 };
 
+export type AppMajor = {
+  readonly major: string;
+  readonly majorFN: string;
+};
+
+export type AppMinor = {
+  readonly minor: string;
+  readonly minorFN: string;
+};
+
 export type AppCourse = {
   readonly crseId: number;
   readonly subject: string;

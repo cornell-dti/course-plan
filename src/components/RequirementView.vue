@@ -4,6 +4,8 @@
       :reqIndex="reqIndex"
       :majors="majors"
       :minors="minors"
+      :displayedMajorIndex="displayedMajorIndex"
+      :displayedMinorIndex="displayedMinorIndex"
       :req="req"
       :reqGroupColorMap="reqGroupColorMap"
       :user="user"
@@ -20,7 +22,7 @@
         <div class="separator"></div>
         <div
           v-for="(subReq, id) in req.ongoing"
-          :key="subReq.id">
+          :key="id">
           <subrequirement
             :subReqIndex="id"
             :subReq="subReq"
@@ -47,7 +49,7 @@
 
       <!-- Completed requirements -->
         <div v-if="req.displayCompleted">
-          <div v-for="(subReq, id) in req.completed" :key="subReq.id">
+          <div v-for="(subReq, id) in req.completed" :key="id">
             <div class="separator" v-if="reqIndex < reqs.length - 1 || req.displayDetails"></div>
             <subrequirement
               :subReqIndex="id"
@@ -74,43 +76,36 @@ import RequirementHeader from '@/components/RequirementHeader.vue';
 // eslint-disable-next-line import/extensions
 import SubRequirement from '@/components/SubRequirement.vue';
 
-import { AppUser } from '@/user-data';
+import { SingleMenuRequirement } from '@/requirements/types';
+import { AppUser, AppMajor, AppMinor } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
 
-export type Major = {
-  display: boolean;
-  readonly major: string;
-  readonly majorFN: string;
-}
-export type Minor = {
-  display: boolean;
-  readonly minor: string;
-  readonly minorFN: string;
-}
+// reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
+const reqGroupColorMap = {
+  COLLEGE: ['1AA9A5', 'blue'],
+  MAJOR: ['105351', 'green'],
+  MINOR: ['92C3E6', 'lightblue']
+};
 
 export default Vue.extend({
   props: {
-    reqs: Array,
-    req: Object,
+    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
+    req: Object as PropType<SingleMenuRequirement>,
     reqIndex: Number, // Index of this req in reqs array
-    majors: Array as PropType<readonly Major[]>,
-    minors: Array as PropType<readonly Minor[]>,
+    majors: Array as PropType<readonly AppMajor[]>,
+    minors: Array as PropType<readonly AppMinor[]>,
+    displayedMajorIndex: Number,
+    displayedMinorIndex: Number,
     user: Object as PropType<AppUser>,
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number
   },
-  data() {
-    return {
-      // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
-      reqGroupColorMap: {
-        UNIVERSITY: ['508197', 'grayblue'],
-        COLLEGE: ['1AA9A5', 'blue'],
-        MAJOR: ['105351', 'green'],
-        MINOR: ['92C3E6', 'lightblue']
-      },
-    };
+  computed: {
+    reqGroupColorMap() {
+      return reqGroupColorMap;
+    }
   },
   methods: {
     activateMajor(id: number) {
