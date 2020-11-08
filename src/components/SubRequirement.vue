@@ -34,6 +34,36 @@
     :style="{ 'color': `#${color}` }"
     :href="subReq.requirement.source" target="_blank">
     <strong>Learn More</strong></a>
+    <div v-if="subReq.requirement.fulfilledBy === 'toggleable'">
+      <div class="toggleable-requirements-select-wrapper">
+        <div
+          class="toggleable-requirements-select toggleable-requirements-input"
+          v-click-outside="closeMenuIfOpen"
+        >
+          <div
+            class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-wrapper"
+            @click="showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown"
+          >
+            <div
+              class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-innerPlaceholder"
+            >
+              {{ selectedFulfillmentOption }}
+            </div>
+            <div class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"></div>
+          </div>
+          <div class="toggleable-requirements-dropdown-content" v-if="showFulfillmentOptionsDropdown">
+            <div
+              v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
+              :key="optionName"
+              class="toggleable-requirements-dropdown-content-item"
+              @click="chooseFulfillmentOption(optionName)"
+            >
+              {{optionName}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div v-if="!this.isCompleted" class="separator"></div>
   </div>
@@ -48,6 +78,7 @@ import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
 
 import { DisplayableRequirementFulfillment } from '@/requirements/types';
+import { clickOutside } from '@/utilities';
 
 // Arrows for dropup and dropdown
 import dropupIncompleteSrc from '@/assets/images/dropup.svg';
@@ -66,6 +97,17 @@ export default Vue.extend({
     color: String,
     isCompleted: Boolean
   },
+  data() {
+    return {
+      showFulfillmentOptionsDropdown: false,
+      selectedFulfillmentOption: this.subReq.requirement.fulfilledBy !== 'toggleable'
+        ? ''
+        : Object.keys(this.subReq.requirement.fulfillmentOptions)[0]
+    }
+  },
+  directives: {
+    'click-outside': clickOutside
+  },
   methods: {
     getSrc() {
       let src = dropdownCompletedSrc;
@@ -81,6 +123,13 @@ export default Vue.extend({
     toggleDescription(reqIndex: number, isCompleted: boolean, subReqIndex: number) {
       const type = isCompleted ? 'completed' : 'ongoing';
       this.$emit('toggleDescription', reqIndex, type, subReqIndex);
+    },
+    closeMenuIfOpen() {
+      this.showFulfillmentOptionsDropdown = false;
+    },
+    chooseFulfillmentOption(option: string) {
+      this.selectedFulfillmentOption = option;
+      this.showFulfillmentOptionsDropdown = false;
     },
   },
 });
@@ -157,7 +206,7 @@ button.view {
 .completed {
    margin-top: 1rem;
    &-ptext {
-     color: #757575;
+     color: $lightPlaceholderGray;
      font-size: 12px;
      opacity: 0.8;
      font-weight: normal;
@@ -170,7 +219,7 @@ button.view {
 }
 .text {
    &-right {
-     color: #757575;
+     color: $lightPlaceholderGray;
    }
  }
 .sup-req {
@@ -190,4 +239,87 @@ button.view {
   background-color: #d7d7d7;
 }
 
+.toggleable-requirements {
+  &-select {
+    background: $white;
+    border: .5px solid $inactiveGray;
+    box-sizing: border-box;
+    border-radius: 2px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 17px;
+    color: $darkPlaceholderGray;
+    position: relative;
+    &:not(:first-child) {
+      margin-top: .5rem;
+    }
+    &--disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+  &-dropdown {
+    &-placeholder {
+      height: 100%;
+      font-size: 14px;
+      line-height: 17px;
+      margin-left: .25rem;
+      display: flex;
+      align-items: center;
+      color: $darkPlaceholderGray;
+      background: transparent;
+      cursor: pointer;
+    }
+    &-wrapper {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+    }
+    &-innerPlaceholder {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      width: 100%;
+    }
+    &-arrow {
+      border-left: 6.24px solid transparent;
+      border-right: 6.24px solid transparent;
+      border-top: 6.24px solid $inactiveGray;
+      background: transparent;
+      margin-right: 8.7px;
+      margin-left: 5px;
+    }
+    &-content {
+      z-index: 2;
+      position: absolute;
+      width: inherit;
+      background: $white;
+      box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
+      border-radius: 7px;
+      margin-top: 3px;
+      &-item {
+        height: 2.25rem;
+        font-size: 14px;
+        line-height: 17px;
+        display: flex;
+        align-items: center;
+        color: $lightPlaceholderGray;
+        padding-left: 10px;
+        cursor: pointer;
+
+        &:first-child {
+          border-radius: 7px 7px 0px 0px;
+        }
+
+        &:last-child {
+          border-radius: 0px 0px 7px 7px;
+        }
+      }
+    }
+  }
+  &-dropdown-content div:hover {
+    background: rgba(50, 160, 242, 0.15);
+    width: 100%;
+  }
+}
 </style>
