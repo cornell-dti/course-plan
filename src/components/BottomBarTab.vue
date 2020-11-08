@@ -16,26 +16,29 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import { AppBottomBarCourse } from '@/user-data';
+
+export default Vue.extend({
   props: {
     subject: String,
     number: String,
     color: String,
     id: Number,
-    courseObj: Object,
+    courseObj: Object as PropType<AppBottomBarCourse>,
     tabIndex: Number,
     bottomCourseFocus: Number,
     isExpanded: Boolean,
   },
 
   methods: {
-    bottomBarTabToggle(courseObj) {
+    bottomBarTabToggle(courseObj: AppBottomBarCourse) {
       this.$emit('bottomBarTabToggle', courseObj);
       this.toggleFromTab();
     },
 
-    deleteBottomTab(courseObj) {
+    deleteBottomTab(courseObj: AppBottomBarCourse) {
       this.$emit('deleteBottomTab', courseObj);
     },
 
@@ -51,7 +54,7 @@ export default {
       return this.tabIndex === this.bottomCourseFocus;
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">
