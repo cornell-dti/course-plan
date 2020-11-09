@@ -26,20 +26,22 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
-import BottomBarCourse from '@/components/BottomBarCourse';
-import BottomBarTabView from '@/components/BottomBarTabView';
-import BottomBarTitle from '@/components/BottomBarTitle';
+<script lang="ts">
+/* eslint-disable import/extensions */
+import Vue, { PropType } from 'vue';
+import BottomBarCourse from '@/components/BottomBarCourse.vue';
+import BottomBarTabView from '@/components/BottomBarTabView.vue';
+import BottomBarTitle from '@/components/BottomBarTitle.vue';
+import { AppBottomBarCourse } from '@/user-data';
 
 Vue.component('bottombarcourse', BottomBarCourse);
 Vue.component('bottombartabview', BottomBarTabView);
 Vue.component('bottombartitle', BottomBarTitle);
 
-export default {
+export default Vue.extend({
   props: {
-    bottomCourses: Array,
-    seeMoreCourses: Array,
+    bottomCourses: Array as PropType<AppBottomBarCourse[]>,
+    seeMoreCourses: Array as PropType<AppBottomBarCourse[]>,
     bottomCourseFocus: Number,
     isExpanded: Boolean,
     maxBottomBarTabs: Number,
@@ -50,12 +52,12 @@ export default {
       if (this.isExpanded) this.$emit('close-bar');
       else this.$emit('open-bar');
     },
-    bottomBarTabToggle(courseObj) {
+    bottomBarTabToggle(courseObj: AppBottomBarCourse) {
       const newBottomCourseFocus = this.bottomCourses.indexOf(courseObj);
       this.$emit('change-focus', newBottomCourseFocus);
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">

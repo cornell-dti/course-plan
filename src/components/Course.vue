@@ -57,22 +57,9 @@
 <script>
 import Vue from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu';
+import { clickOutside } from '@/utilities';
 
 Vue.component('coursemenu', CourseMenu);
-
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
 
 export default {
   props: {

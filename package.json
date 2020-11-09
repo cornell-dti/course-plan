@@ -63,6 +63,12 @@
     "typescript": "~3.7.5",
     "vue-template-compiler": "^2.6.11"
   },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "arrowParens": "avoid"
+  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}

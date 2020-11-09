@@ -59,21 +59,23 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
-import BottomBarTab from '@/components/BottomBarTab';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+// eslint-disable-next-line import/extensions
+import BottomBarTab from '@/components/BottomBarTab.vue';
+import { AppBottomBarCourse } from '@/user-data';
 
 Vue.component('bottombartab', BottomBarTab);
 
-export default {
+export default Vue.extend({
   data() {
     return {
       seeMoreOpen: false,
     };
   },
   props: {
-    bottomCourses: Array,
-    seeMoreCourses: Array,
+    bottomCourses: Array as PropType<AppBottomBarCourse[]>,
+    seeMoreCourses: Array as PropType<AppBottomBarCourse[]>,
     bottomCourseFocus: Number,
     isExpanded: Boolean,
     maxBottomBarTabs: Number,
@@ -86,12 +88,14 @@ export default {
   },
 
   methods: {
-    bottomBarTabToggle(courseObj) {
+    bottomBarTabToggle(courseObj: AppBottomBarCourse) {
       this.$emit('bottomBarTabToggle', courseObj);
     },
 
-    deleteBottomTab(courseObj) {
-      let focusedCourse = this.bottomCourses[this.bottomCourseFocus];
+    deleteBottomTab(courseObj: AppBottomBarCourse) {
+      let focusedCourse: AppBottomBarCourse | undefined = this.bottomCourses[
+        this.bottomCourseFocus
+      ];
       let focusedCourseIndex = 0;
 
       for (let i = 0; i < this.bottomCourses.length; i += 1) {
@@ -128,7 +132,7 @@ export default {
       this.seeMoreOpen = !this.seeMoreOpen;
     },
 
-    moveToBottomBar(course) {
+    moveToBottomBar(course: AppBottomBarCourse) {
       if (this.bottomCourses.length >= this.maxBottomBarTabs) {
         const bottomCourseToMove = this.bottomCourses[this.bottomCourses.length - 1];
         // remove bottomCourseToMove from bottomCourses
@@ -144,7 +148,7 @@ export default {
       this.deleteSeeMoreCourse(course);
     },
 
-    deleteSeeMoreCourse(course) {
+    deleteSeeMoreCourse(course: AppBottomBarCourse) {
       // remove course from seeMoreCourses
       for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
         if (this.seeMoreCourses[i].uniqueID === course.uniqueID) {
@@ -162,7 +166,7 @@ export default {
       this.$emit('updateBarTabs');
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">

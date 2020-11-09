@@ -21,18 +21,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable import/extensions */
 import Vue from 'vue';
-import NewCourse from '@/components/Modals/NewCourse';
-import NewCustomCourse from '@/components/Modals/NewCustomCourse';
-import NewSemester from '@/components/Modals/NewSemester';
+import NewCourse from '@/components/Modals/NewCourse.vue';
+import NewCustomCourse from '@/components/Modals/NewCustomCourse.vue';
+import NewSemester from '@/components/Modals/NewSemester.vue';
 
 Vue.component('newCourse', NewCourse);
 Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 
 
-export default {
+export default Vue.extend({
   props: {
     deleteSemID: Number,
     deleteSemType: String,
@@ -52,7 +53,7 @@ export default {
   },
   methods: {
     closeCurrentModal() {
-      const modal = document.getElementById(`deleteSemesterModal-${this.deleteSemID}`);
+      const modal = document.getElementById(`deleteSemesterModal-${this.deleteSemID}`)!;
       modal.style.display = 'none';
     },
     deleteSemester() {
@@ -60,7 +61,7 @@ export default {
       this.closeCurrentModal();
     }
   }
-};
+});
 </script>
 
 <style lang="scss">

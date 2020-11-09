@@ -23,8 +23,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   data() {
     return {
       isOpenModal: false,
@@ -40,7 +42,7 @@ export default {
       this.isOpenModal = true;
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">

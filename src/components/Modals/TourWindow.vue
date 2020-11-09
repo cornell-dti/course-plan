@@ -27,22 +27,11 @@
   </div>
 </template>
 
-<script>
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event, binding.arg);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  },
-};
+<script lang="ts">
+import Vue from 'vue';
+import { clickOutside } from '@/utilities';
 
-export default {
+export default Vue.extend({
   props: {
     title: String,
     text: String,
@@ -57,7 +46,7 @@ export default {
   directives: {
     'click-outside': clickOutside,
   },
-};
+});
 </script>
 
 <style scoped lang="scss">
