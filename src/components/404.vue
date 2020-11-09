@@ -20,15 +20,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
-import Footer from '@/components/Footer';
-import TopBar from '@/components/TopBar';
+// eslint-disable-next-line import/extensions
+import Footer from '@/components/Footer.vue';
+// eslint-disable-next-line import/extensions
+import TopBar from '@/components/TopBar.vue';
 
 Vue.component('custom-footer', Footer);
 Vue.component('topbar', TopBar);
 
-export default {};
+export default Vue.extend({});
 </script>
 
 <style scoped lang="scss">
