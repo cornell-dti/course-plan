@@ -164,25 +164,20 @@ export type SingleMenuRequirement = {
 };
 
 export type ExamRequirements = {
-  readonly subject: string;
-  readonly credits: {
-    readonly operator: string;
-    readonly collegesApplied: string[];
-    readonly majorExcluded: string[];
-    readonly mininmumScore: number;
-    readonly courseEquivalents: string[];
-    readonly requirementEquivalents: string[];
+  readonly name: string;
+  readonly fulfillment: {
+    readonly courseEquivalents: Record<string, string>;
+    readonly minimumScore: number;
     readonly credits: number;
-    readonly compositeRequirement?: {
-      subject: string;
-      score: number;
-      classEquivalent: string[];
-    }[];
-  }[];
+    readonly majorsExcluded?: string[];
+  };
 };
 
-export type ExamData = {
-  readonly AP: ExamRequirements[];
-  readonly IB: ExamRequirements[];
-  // readonly transfer;
-};
+export type ExamData = Record<string, ExamRequirements[]>;
+
+export type ExamTaken = {
+  readonly name: string;
+  readonly score: number;
+}
+
+export type ExamsTaken = Record<string, ExamTaken[]>;
