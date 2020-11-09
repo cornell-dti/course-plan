@@ -202,12 +202,18 @@ export default Vue.extend({
         .then(doc => {
           if (doc.exists) {
             const firestoreUserData = doc.data() as FirestoreUserData;
-            this.semesters = this.convertSemesters(firestoreUserData.semesters);
+            this.semesters = this.convertSemesters(
+              firestoreUserData.semesters,
+              firestoreUserData.subjectColors,
+            );
+            this.currSemID += this.semesters.length;
+
             this.firebaseSems = firestoreUserData.semesters as FirestoreSemester[];
             this.user = this.parseUserData(firestoreUserData.userData, firestoreUserData.name);
             this.subjectColors = firestoreUserData.subjectColors;
             this.uniqueIncrementer = firestoreUserData.uniqueIncrementer;
             this.loaded = true;
+            this.updateRequirementsMenu();
           } else {
             this.semesters.push({
               id: this.currSemID,
@@ -243,19 +249,28 @@ export default Vue.extend({
       this.isOpeningRequirements = !this.isOpeningRequirements;
     },
 
-    convertSemesters(firebaseSems: readonly FirestoreSemester[]) {
-      const semesters = firebaseSems.map(firebaseSem => {
-        const appSemester = firestoreSemesterToAppSemester(
+    convertSemesters(
+      firebaseSems: readonly FirestoreSemester[],
+      subjectColors: { readonly [subject: string]: string },
+    ) {
+      return firebaseSems.map((firebaseSem, index) => {
+        return firestoreSemesterToAppSemester(
           firebaseSem,
-          this.currSemID,
-          () => this.incrementID(),
-          (subject) => this.addColor(subject)
+          index + 1,
+          () => {
+            throw new Error('Course from firestore should already have uniqueID!');
+          },
+          (subject) => {
+            const color = subjectColors[subject];
+            if (color == null) {
+              throw new Error(
+                "Course from firestore doesn't have color. Database might be corrupted.",
+              );
+            }
+            return color;
+          }
         );
-        this.currSemID += 1;
-        return appSemester;
       });
-      this.updateRequirementsMenu();
-      return semesters;
     },
     getCurrentSeason() {
       let currentSeason: FirestoreSemesterType;
