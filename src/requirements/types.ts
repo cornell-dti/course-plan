@@ -162,22 +162,3 @@ export type SingleMenuRequirement = {
   fulfilled?: number;
   required?: number;
 };
-
-export type ExamRequirements = {
-  readonly name: string;
-  readonly fulfillment: {
-    readonly courseEquivalents: Record<string, string>;
-    readonly minimumScore: number;
-    readonly credits: number;
-    readonly majorsExcluded?: string[];
-  };
-};
-
-export type ExamData = Record<string, ExamRequirements[]>;
-
-export type ExamTaken = {
-  readonly name: string;
-  readonly score: number;
-}
-
-export type ExamsTaken = Record<string, ExamTaken[]>;

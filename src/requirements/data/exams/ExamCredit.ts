@@ -1,25 +1,41 @@
 /* eslint-disable max-len */
-import { CourseTaken, ExamData, ExamRequirements, ExamTaken, ExamsTaken } from '../../types';
-import roster from '../../../../functions/filtered_courses/filtered-FA20-courses.json';
+import { CourseTaken } from '../../types';
 
-const sampleExams: ExamsTaken = {
-  // roster name?
-  AP: [{
-    name: 'Computer Science A',
-    score: 5
-  }],
-  IB: [{
-    name: 'Chemical And Physical Systems',
-    score: 5
-  }]
+// const sampleExams: ExamsTaken = {
+//   AP: [{
+//     name: 'Computer Science A',
+//     score: 5
+//   }],
+//   IB: [{
+//     name: 'Chemical And Physical Systems',
+//     score: 5
+//   }]
+// }
+
+export type ExamRequirements = {
+  readonly name: string;
+  readonly fulfillment: {
+    readonly courseEquivalents: Record<string, number>;
+    readonly minimumScore: number;
+    readonly credits: number;
+    readonly majorsExcluded?: string[];
+  };
+};
+export type ExamData = Record<string, ExamRequirements[]>;
+
+export type ExamTaken = {
+  readonly name: string;
+  readonly score: number;
 }
+export type ExamsTaken = Record<string, ExamTaken[]>;
 
 function userDataToCourses(college: string, major: string, userData: ExamsTaken, examType: string): CourseTaken[] {
   const userExams = userData[examType];
-  const examData = transferJSON[examType];
+  const exams = examData[examType];
   const courses: CourseTaken[] = [];
   userExams.forEach((userExam) => {
-    const exam = examData.reduce((prev, curr) => { // match exam to user-taken exam
+    // match exam to user-taken exam
+    const exam = exams.reduce((prev, curr) => {
       if (curr.name === userExam.name && userExam.score >= curr.fulfillment.minimumScore) {
         if (!prev || prev.fulfillment.minimumScore < curr.fulfillment.minimumScore) {
           return curr;
@@ -27,14 +43,13 @@ function userDataToCourses(college: string, major: string, userData: ExamsTaken,
       }
       return prev;
     });
-    const roster = 'FA20';
-    const code = exam.fulfillment.courseEquivalents[college];
+    const roster = 'FA20'; // TODO this is hardcoded
+    const courseId = exam.fulfillment.courseEquivalents[college];
     const excludedMajor = exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
-    if (code && !excludedMajor) {
-      const equivalentCourseId = 1234; // TODO
+    if (courseId && !excludedMajor) {
       courses.push({
         roster,
-        courseId: equivalentCourseId,
+        courseId,
         code: `${examType} ${exam.name}`,
         subject: examType,
         number: exam.name,
@@ -44,21 +59,24 @@ function userDataToCourses(college: string, major: string, userData: ExamsTaken,
   });
   return courses;
 }
+
 // TODO move sampleExams to signature as param
-function getCourseEquivalents(college: string, major: string): CourseTaken[] {
-  const APCourseEquivalents = userDataToCourses(college, major, sampleExams, 'AP');
-  const IBCourseEquivalents = userDataToCourses(college, major, sampleExams, 'IB');
+function getCourseEquivalents(college: string, major: string, userData: ExamsTaken): CourseTaken[] {
+  const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
+  const IBCourseEquivalents = userDataToCourses(college, major, userData, 'IB');
   return APCourseEquivalents.concat(IBCourseEquivalents);
 };
 
-const transferJSON: ExamData = {
+export default getCourseEquivalents;
+
+const examData: ExamData = {
   AP: [
     {
       name: 'Computer Science A',
       fulfillment: {
         courseEquivalents: {
-          'EN': 'CS 1110',
-          'AS': 'CS 1110'
+          'EN': 358526, // CS 1110
+          'AS': 358526 // CS 1110
         },
         minimumScore: 5,
         credits: 4
@@ -70,9 +88,9 @@ const transferJSON: ExamData = {
       name: 'Chemical And Physical Systems',
       fulfillment: {
         courseEquivalents: {
-          'EN': 'CHEM 2090',
-          'AS': 'CHEM 2070',
-          'AR': 'CHEM 2070'
+          'EN': 359187, // CHEM 2090
+          'AS': 351265, // CHEM 2070
+          'AR': 351265 // CHEM 2070
         },
         minimumScore: 5,
         credits: 4,
@@ -81,6 +99,7 @@ const transferJSON: ExamData = {
     }
   ]
 }
+
 // const transferJSON: ExamData = {
 //   AP: [
 //     {
@@ -393,4 +412,3 @@ const transferJSON: ExamData = {
 //         */
 //   ],
 // };
-export default getCourseEquivalents;
