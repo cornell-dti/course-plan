@@ -115,6 +115,8 @@ import SemesterMenu from '@/components/Modals/SemesterMenu';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
 import EditSemester from '@/components/Modals/EditSemester';
 
+import { clickOutside } from '@/utilities';
+
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
@@ -133,21 +135,6 @@ pageTour.setOption('doneLabel', 'Finish');
 pageTour.setOption('skipLabel', 'Skip This Tutorial');
 pageTour.setOption('nextLabel', 'Next');
 pageTour.setOption('exitOnOverlayClick', 'false');
-
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
-
 
 export default {
   data() {
@@ -365,12 +352,12 @@ export default {
       }
     },
     seasonMessage() {
-      return `<b>This is a Semester Card of your current semester! 
+      return `<b>This is a Semester Card of your current semester!
       <img src="${fall}"class = "newSemester-emoji-text">
       <img src="${spring}"class = "newSemester-emoji-text">
       <img src="${summer}"class = "newSemester-emoji-text">
       <img src="${winter}"class = "newSemester-emoji-text">
-      </b><div 
+      </b><div
       class = "introjs-bodytext"> You can add all courses here in the following semester.</div>`;
     },
     openSemesterMenu() {

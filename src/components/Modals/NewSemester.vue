@@ -108,6 +108,7 @@
 </template>
 
 <script>
+import { clickOutside } from '@/utilities';
 
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
@@ -116,21 +117,6 @@ import summer from '@/assets/images/summerEmoji.svg';
 import {
   inactiveGray, yuxuanBlue, lightPlaceholderGray, darkPlaceholderGray
 } from '@/assets/scss/_variables.scss';
-
-
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
