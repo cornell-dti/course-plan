@@ -154,7 +154,7 @@ export type SingleMenuRequirement = {
   readonly ongoing: DisplayableRequirementFulfillment[];
   readonly completed: DisplayableRequirementFulfillment[];
   readonly name: string;
-  readonly group: string;
+  readonly group: 'COLLEGE' | 'MAJOR' | 'MINOR';
   readonly specific: string | null;
   displayDetails: boolean;
   displayCompleted: boolean;
