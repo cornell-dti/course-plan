@@ -272,9 +272,7 @@ export default Vue.extend({
       return currentSeason;
     },
     getCurrentYear(): number {
-      const currentYear = new Date().getFullYear();
-      // @ts-ignore
-      return this.yearText || this.year || currentYear;
+      return new Date().getFullYear();
     },
     /**
      * Creates a course on frontend with either user or API data
