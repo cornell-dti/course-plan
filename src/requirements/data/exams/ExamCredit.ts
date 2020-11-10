@@ -26,14 +26,19 @@ export type ExamData = Record<string, ExamRequirements[]>;
 export type ExamTaken = {
   readonly name: string;
   readonly score: number;
-}
+};
 export type ExamsTaken = Record<string, ExamTaken[]>;
 
-function userDataToCourses(college: string, major: string, userData: ExamsTaken, examType: string): CourseTaken[] {
+function userDataToCourses(
+  college: string,
+  major: string,
+  userData: ExamsTaken,
+  examType: string
+): CourseTaken[] {
   const userExams = userData[examType];
   const exams = examData[examType];
   const courses: CourseTaken[] = [];
-  userExams.forEach((userExam) => {
+  userExams.forEach(userExam => {
     // match exam to user-taken exam
     const exam = exams.reduce((prev, curr) => {
       if (curr.name === userExam.name && userExam.score >= curr.fulfillment.minimumScore) {
@@ -45,7 +50,8 @@ function userDataToCourses(college: string, major: string, userData: ExamsTaken,
     });
     const roster = 'FA20'; // TODO this is hardcoded
     const courseId = exam.fulfillment.courseEquivalents[college];
-    const excludedMajor = exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
+    const excludedMajor =
+      exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
     if (courseId && !excludedMajor) {
       courses.push({
         roster,
@@ -54,7 +60,7 @@ function userDataToCourses(college: string, major: string, userData: ExamsTaken,
         subject: examType,
         number: exam.name,
         credits: exam.fulfillment.credits,
-      })
+      });
     }
   });
   return courses;
@@ -65,7 +71,7 @@ function getCourseEquivalents(college: string, major: string, userData: ExamsTak
   const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
   const IBCourseEquivalents = userDataToCourses(college, major, userData, 'IB');
   return APCourseEquivalents.concat(IBCourseEquivalents);
-};
+}
 
 export default getCourseEquivalents;
 
@@ -75,30 +81,30 @@ const examData: ExamData = {
       name: 'Computer Science A',
       fulfillment: {
         courseEquivalents: {
-          'EN': 358526, // CS 1110
-          'AS': 358526 // CS 1110
+          EN: 358526, // CS 1110
+          AS: 358526, // CS 1110
         },
         minimumScore: 5,
-        credits: 4
-      }
-    }
+        credits: 4,
+      },
+    },
   ],
   IB: [
     {
       name: 'Chemical And Physical Systems',
       fulfillment: {
         courseEquivalents: {
-          'EN': 359187, // CHEM 2090
-          'AS': 351265, // CHEM 2070
-          'AR': 351265 // CHEM 2070
+          EN: 359187, // CHEM 2090
+          AS: 351265, // CHEM 2070
+          AR: 351265, // CHEM 2070
         },
         minimumScore: 5,
         credits: 4,
-        majorsExcluded: ['CHEM']
-      }
-    }
-  ]
-}
+        majorsExcluded: ['CHEM'],
+      },
+    },
+  ],
+};
 
 // const transferJSON: ExamData = {
 //   AP: [
