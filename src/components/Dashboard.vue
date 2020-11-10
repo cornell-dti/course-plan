@@ -101,6 +101,7 @@ import {
   AppUser,
   AppCourse,
   AppSemester,
+  AppBottomBarCourse,
   firestoreCourseToAppCourse,
   firestoreSemesterToAppSemester,
   createAppUser,
@@ -148,8 +149,8 @@ export default Vue.extend({
         transferCourse: [],
         tookSwim: 'no',
       } as AppUser,
-      bottomCourses: [] as any[],
-      seeMoreCourses: [] as AppCourse[],
+      bottomCourses: [] as AppBottomBarCourse[],
+      seeMoreCourses: [] as AppBottomBarCourse[],
       subjectColors: {} as { [subject: string]: string },
       uniqueIncrementer: 0,
       // Default bottombar info without info
@@ -271,9 +272,7 @@ export default Vue.extend({
       return currentSeason;
     },
     getCurrentYear(): number {
-      const currentYear = new Date().getFullYear();
-      // @ts-ignore
-      return this.yearText || this.year || currentYear;
+      return new Date().getFullYear();
     },
     /**
      * Creates a course on frontend with either user or API data
@@ -428,7 +427,7 @@ export default Vue.extend({
 
     updateBar(course: AppCourse, colorJustChanged: string, color: string) {
       // Update Bar Information
-      const courseToAdd = {
+      const courseToAdd: AppBottomBarCourse = {
         subject: course.subject,
         number: course.number,
         name: course.name,
@@ -527,7 +526,7 @@ export default Vue.extend({
       } else if (this.maxBottomBarTabs === 2 && this.bottomCourses.length > 2) {
         // Move courses from bottom tab to see more for decreased max of 2
         while (this.bottomCourses.length > 2) {
-          const bottomCourseToMove = this.bottomCourses.pop();
+          const bottomCourseToMove = this.bottomCourses.pop()!;
           this.seeMoreCourses.unshift(bottomCourseToMove);
         }
       }
@@ -633,7 +632,7 @@ export default Vue.extend({
       return (str && str.length !== 0) ? str : 'None';
     },
 
-    naIfEmptyStringArray(arr: readonly unknown[]) {
+    naIfEmptyStringArray(arr: readonly string[]) {
       return (arr && arr.length !== 0 && arr[0] !== '') ? arr : ['N/A'];
     }
   }

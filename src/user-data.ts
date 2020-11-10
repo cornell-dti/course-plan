@@ -132,6 +132,26 @@ export type AppSemester = {
   readonly year: number;
 };
 
+export type AppBottomBarCourse = {
+  readonly subject: string;
+  readonly number: string;
+  readonly name: string;
+  readonly credits: number;
+  readonly semesters: string;
+  color: string;
+  readonly latestSem: string;
+  readonly instructors: string;
+  readonly distributionCategories: readonly string[];
+  readonly enrollmentInfo: string;
+  readonly latestLecInfo: readonly string[];
+  overallRating: number;
+  difficulty: number;
+  workload: number;
+  readonly prerequisites: string;
+  readonly description: string;
+  readonly uniqueID: number;
+};
+
 /**
  * Creates credit range based on course
  * Example: [1, 4] is the credit range for the given course

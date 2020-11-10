@@ -271,17 +271,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import { reviewColors } from '@/assets/constants/colors';
+import { AppBottomBarCourse } from '@/user-data';
 
-export default {
+export default Vue.extend({
   data() {
     return {
       isSmallerWidth: window.innerWidth <= 976,
     };
   },
   props: {
-    courseObj: Object,
+    courseObj: Object as PropType<AppBottomBarCourse>,
     id: Number,
   },
   created() {
@@ -292,19 +294,20 @@ export default {
   },
 
   methods: {
-    isSmallerWidthEventHandler(e) {
+    isSmallerWidthEventHandler() {
       this.isSmallerWidth = window.innerWidth <= 976;
     },
 
     toggle() {
+      // @ts-ignore
       this.$emit('toggle', this.isExpanded);
     },
 
-    joinIfExists(arr) {
+    joinIfExists(arr: readonly string[]) {
       return arr ? arr.join(',') : '';
     },
 
-    reviewsColor(review, flip = false) {
+    reviewsColor(review: number, flip = false) {
       const colors = Object.values(reviewColors);
       let index;
       if (review < 2) {
@@ -338,7 +341,7 @@ export default {
       return this.courseObj.workload;
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">

@@ -2,10 +2,10 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import firebase from 'firebase/app';
 
-import Login from '@/components/Login';
-import Dashboard from '@/components/Dashboard';
-import Settings from '@/components/Settings';
-import Page404 from '@/components/404';
+import Login from '@/components/Login.vue';
+import Dashboard from '@/components/Dashboard.vue';
+import Settings from '@/components/Settings.vue';
+import Page404 from '@/components/404.vue';
 
 Vue.use(Router);
 
