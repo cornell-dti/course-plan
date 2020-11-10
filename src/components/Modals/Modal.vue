@@ -1,6 +1,6 @@
 <template>
   <div class="modal">
-    <div class="modal-content" :id="contentId">
+    <div class="modal-content" :id="contentId" v-click-outside="closeCurrentModalIfOpen">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
         <img class="modal-exit" src="../../assets/images/x.png" @click="closeCurrentModal"/>
@@ -35,6 +35,20 @@ Vue.component('newCourse', NewCourse);
 Vue.component('newSemester', NewSemester);
 Vue.component('editSemester', EditSemester);
 
+const clickOutside = {
+  bind(el, binding, vnode) {
+    el.event = event => {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event);
+      }
+    };
+    document.body.addEventListener('click', el.event);
+  },
+  unbind(el) {
+    document.body.removeEventListener('click', el.event);
+  }
+};
+
 export default {
   data() {
     return {
@@ -42,13 +56,18 @@ export default {
       courseIsAddable: true,
       isDisabled: false,
       season: '',
-      year: ''
+      year: '',
+      stopClose: true
     };
   },
   props: {
     type: String,
     semesterID: Number,
-    currentSemesters: Array
+    currentSemesters: Array,
+    isOpen: Boolean
+  },
+  directives: {
+    'click-outside': clickOutside
   },
   computed: {
     contentId() {
@@ -85,9 +104,11 @@ export default {
       this.isDisabled = bool;
     },
     closeCourseModal() {
+      this.stopClose = true;
       this.$emit('close-course-modal');
     },
     closeCurrentModal() {
+      this.stopClose = true;
       if (this.type === 'course') {
         this.$emit('close-course-modal');
         return;
@@ -95,6 +116,13 @@ export default {
       if (this.type === 'semester') {
         this.$emit('close-semester-modal');
         this.$refs.modalBodyComponent.resetDropdowns();
+      }
+    },
+    closeCurrentModalIfOpen() {
+      if (this.stopClose) {
+        this.stopClose = false;
+      } else {
+        this.closeCurrentModal();
       }
     },
     // Note: Currently not used
