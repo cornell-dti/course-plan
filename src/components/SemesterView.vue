@@ -1,7 +1,7 @@
 <template>
   <div
     class="semesterView"
-    :class="{ bottomBar: isBottomBar, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}"
+    :class="{ bottomBar: isBottomBar && isBottomBarExpanded, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}"
     @click="closeBar"
     :key="key"
   >
@@ -297,6 +297,7 @@ export default {
      */
     toFirebaseCourse(course) {
       return {
+        crseId: course.crseId,
         code: `${course.subject} ${course.number}`,
         name: course.name,
         description: course.description,
@@ -345,11 +346,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .semesterView {
   width: 100%;
   display: flex;
   flex-direction: column;
   margin: 1.5rem 3rem 3rem;
+  position: relative;
 
   &-content {
     display: flex;
@@ -358,11 +362,11 @@ export default {
   }
 
   &-addSemesterButton {
-    background: #508197;
+    background: $sangBlue;
     border-radius: 8px;
     min-height: 2.5rem;
     min-width: 9rem;
-    color: #ffffff;
+    color: $white;
     border: none;
   }
 
@@ -379,7 +383,7 @@ export default {
 
   &-switch {
     display: flex;
-    color: #858585;
+    color: $medGray;
     align-items: center;
   }
 
@@ -471,7 +475,7 @@ export default {
 }
 
 .bottomBar {
-  margin-bottom: 300px;
+  margin-bottom: 350px;
 }
 
 .modal {

@@ -4,6 +4,9 @@ export type Course = {
   readonly catalogNbr: string;
   readonly titleLong: string;
   readonly description: string;
+  readonly enrollGroups: Object[];
+  readonly catalogWhenOffered?: string;
+  readonly catalogPrereqCoreq?: string;
   readonly catalogBreadth?: string;
   readonly catalogDistr?: string;
   readonly catalogAttribute: string;
@@ -15,62 +18,76 @@ export type Course = {
 
 export type CourseTaken = {
   readonly roster: string;
+  readonly courseId: number;
   readonly code: string;
   readonly subject: string;
   readonly number: string;
   readonly credits: number;
 };
 
-export interface BaseRequirement {
+type RequirementCommon = {
   /** Full name of the requirement. */
   readonly name: string;
   /** Description of the requirement. */
   readonly description: string;
   /** The source with more information on the requirement. (This should be a URL string.) */
   readonly source: string;
-  /** Defines whether courses are 'double counted': and for no double counting and or for double counting */
-  readonly operator: 'and' | 'or' | null;
-  readonly fulfilledBy: 'credits' | 'courses' | 'self-check';
-  readonly applies?: string;
-  /**
-   * The minimum count required to fulfill this requirement.
-   *
-   * - When fulfilledBy === 'credits', this field stores the min number of credits.
-   * - When fulfilledBy === 'courses', this field stores the min number of courses.
-   * - When fulfilledBy === 'self-check', this field should not exist.
-   */
-  readonly minCount?: number;
-  /**
-   * Some requirements have sub-requirements.
-   *
-   * - `minCount` specifies how many types of sub-requirements needs to be satisfied.
-   * - `totalCount` specifies how many courses/credits need to be earned in total.
-   */
-  readonly totalCount?: number;
   readonly progressBar?: boolean;
-}
-
-export type UniversityRequirements = {
-  readonly value: string;
-  readonly name: string;
-  readonly requirements: readonly BaseRequirement[];
 };
+/**
+ * @param T additional information only attached to credits and courses type.
+ */
+type RequirementFulfillmentInformation<T = {}> =
+  | {
+      readonly fulfilledBy: 'self-check';
+      // Currently unused.
+      readonly minCount?: number;
+    }
+  | ({
+      /** Defines whether courses are 'double counted': and for no double counting and or for double counting */
+      readonly operator: 'and' | 'or';
+      readonly fulfilledBy: 'credits' | 'courses';
+      /**
+       * The minimum count required to fulfill this requirement.
+       *
+       * - When fulfilledBy === 'credits', this field stores the min number of credits.
+       * - When fulfilledBy === 'courses', this field stores the min number of courses.
+       */
+      readonly minCount: number;
+      /**
+       * Some requirements have sub-requirements.
+       *
+       * - `minCount` specifies how many types of sub-requirements needs to be satisfied.
+       * - `totalCount` specifies how many courses/credits need to be earned in total.
+       */
+      readonly totalCount?: number;
+    } & T)
+  | {
+      readonly fulfilledBy: 'toggleable';
+      readonly fulfillmentOptions: {
+        readonly [optionName: string]: {
+          readonly minCount: number;
+          readonly totalCount?: number;
+          readonly counting: 'credits' | 'courses';
+          readonly operator: 'and' | 'or';
+        } & T;
+      };
+    };
+export type BaseRequirement = RequirementCommon & RequirementFulfillmentInformation;
 
-type Checker = (course: Course) => boolean;
-export interface CollegeOrMajorRequirement extends BaseRequirement {
-  readonly checker: Checker | readonly Checker[] | null;
-}
+export type RequirementChecker = (course: Course) => boolean;
+export type CollegeOrMajorRequirement = RequirementCommon &
+  RequirementFulfillmentInformation<{
+    readonly checker: RequirementChecker | readonly RequirementChecker[];
+  }>;
 
 export type EligibleCourses = {
-  readonly [semester: string]: {
-    // Subjects to course numbers
-    readonly [subject: string]: readonly string[];
-  };
+  // "FA20": [123456, 42, 65536, /* and another crseId */]
+  readonly [semester: string]: readonly number[];
 };
 
-export interface DecoratedCollegeOrMajorRequirement extends BaseRequirement {
-  readonly courses: readonly EligibleCourses[];
-}
+export type DecoratedCollegeOrMajorRequirement = RequirementCommon &
+  RequirementFulfillmentInformation<{ readonly courses: readonly EligibleCourses[] }>;
 
 export type CollegeRequirements<R> = {
   readonly [collegeCode: string]: {
@@ -88,7 +105,7 @@ export type MajorRequirements<R> = {
 };
 
 type GenericRequirementsJson<R> = {
-  readonly university: UniversityRequirements;
+  readonly university: CollegeRequirements<R>;
   readonly college: CollegeRequirements<R>;
   readonly major: MajorRequirements<R>;
   readonly minor: MajorRequirements<R>;
@@ -97,7 +114,7 @@ type GenericRequirementsJson<R> = {
 export type RequirementsJson = GenericRequirementsJson<CollegeOrMajorRequirement>;
 
 export type DecoratedRequirementsJson = {
-  readonly university: UniversityRequirements;
+  readonly university: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly college: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
@@ -111,13 +128,16 @@ export type RequirementFulfillment<M extends {}> = {
 } & M;
 
 export type RequirementFulfillmentStatistics = {
+  readonly fulfilledBy: 'courses' | 'credits' | 'self-check';
   /**
    * Current fulfillment progress.
    * When it's a number, it's either number of courses or number of credits.
    * When it's undefined, it means that the requirement is self-check.
    */
-  readonly minCountFulfilled?: number;
+  readonly minCountFulfilled: number;
+  readonly minCountRequired: number;
   readonly totalCountFulfilled?: number;
+  readonly totalCountRequired?: number;
 };
 
 export type GroupedRequirementFulfillmentReport = {
@@ -136,7 +156,6 @@ export type SingleMenuRequirement = {
   readonly name: string;
   readonly group: string;
   readonly specific: string | null;
-  readonly color: string;
   displayDetails: boolean;
   displayCompleted: boolean;
   type?: string;
@@ -144,11 +163,10 @@ export type SingleMenuRequirement = {
   required?: number;
 };
 
-
 export type ExamRequirements = {
   readonly subject: string;
   readonly credits: {
-    readonly operator: string,
+    readonly operator: string;
     readonly collegesApplied: string[];
     readonly majorExcluded: string[];
     readonly mininmumScore: number;
@@ -161,10 +179,10 @@ export type ExamRequirements = {
       classEquivalent: string[];
     }[];
   }[];
-}
+};
 
 export type ExamData = {
-  readonly AP: ExamRequirements[] ;
+  readonly AP: ExamRequirements[];
   readonly IB: ExamRequirements[];
   // readonly transfer;
-}
+};

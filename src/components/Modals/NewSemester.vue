@@ -108,26 +108,15 @@
 </template>
 
 <script>
+import { clickOutside } from '@/utilities';
 
-import fall from '../../assets/images/fallEmoji.svg';
-import spring from '../../assets/images/springEmoji.svg';
-import winter from '../../assets/images/winterEmoji.svg';
-import summer from '../../assets/images/summerEmoji.svg';
-
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
-
+import fall from '@/assets/images/fallEmoji.svg';
+import spring from '@/assets/images/springEmoji.svg';
+import winter from '@/assets/images/winterEmoji.svg';
+import summer from '@/assets/images/summerEmoji.svg';
+import {
+  inactiveGray, yuxuanBlue, lightPlaceholderGray, darkPlaceholderGray
+} from '@/assets/scss/_variables.scss';
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -222,11 +211,11 @@ export default {
 
       if (contentShown) {
         // clicked box when content shown. So then hide content
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = '#32A0F2';
-        displayOptions.arrowColor = '#32A0F2';
+        displayOptions.boxBorder = yuxuanBlue;
+        displayOptions.arrowColor = yuxuanBlue;
       }
     },
     showHideSeasonContent() {
@@ -241,8 +230,8 @@ export default {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
         displayOptions.shown = false;
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       }
     },
     closeSeasonDropdownIfOpen() {
@@ -274,9 +263,9 @@ export default {
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.stopClose = false;
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.placeholderColor = '#B6B6B6';
+      displayOptions.boxBorder = inactiveGray;
+      displayOptions.arrowColor = inactiveGray;
+      displayOptions.placeholderColor = darkPlaceholderGray;
 
       if (type === 'season') {
         this.seasonText = '';
@@ -346,15 +335,11 @@ export default {
   }
 
   &-select {
-    width: 114px;
-    height: 26px;
     left: 444px;
     top: 183px;
 
     background: #ffffff;
     // border: 1px solid #32A0F2;
-
-    border: 1px solid #c4c4c4;
 
     //when selected border-color: #32A0F2;
 
@@ -396,15 +381,8 @@ export default {
         // width: 121px;
         // height: 16px;
         width: 100%;
-        height: 100%;
+        border: 1px solid #c4c4c4;
         cursor: pointer;
-      }
-
-      &.year-wrapper {
-        // width: 62px;
-        // height: 16px;
-        width: 100%;
-        height: 100%;
       }
 
       &.season-placeholder,
@@ -448,27 +426,23 @@ export default {
   }
 
   &-dropdown-content {
-    width: 114px;
-    height: 134px;
+    max-height: 124px;
     left: 444px;
 
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-    border-radius: 7px;
-
-    margin-top: 3px;
+    border-radius: 0px 0px 7px 7px;
 
     &.year-content {
       width: 100%;
-      height: 223px;
       left: 574px;
       top: 209px;
 
       background: #ffffff;
       box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-      border-radius: 7px;
 
-      overflow: scroll;
+      overflow-y: scroll;
+      overflow-x: hidden,
     }
     &-season {
       padding-left: 0px;
@@ -476,7 +450,6 @@ export default {
       height: 14px;
     }
     &-item {
-      width: 106px;
       height: 31px;
       left: 454px;
       top: 213px;
@@ -490,6 +463,10 @@ export default {
       color: #757575;
       padding-left: 10px;
       cursor: pointer;
+
+      &:last-child {
+        border-radius: 0px 0px 7px 7px;
+      }
     }
   }
 

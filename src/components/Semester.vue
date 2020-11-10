@@ -116,6 +116,7 @@
 
 <script>
 import Vue from 'vue';
+// eslint-disable-next-line import/extensions
 import introJs from 'intro.js';
 import Course from '@/components/Course';
 import Modal from '@/components/Modals/Modal';
@@ -123,6 +124,8 @@ import Confirmation from '@/components/Confirmation';
 import SemesterMenu from '@/components/Modals/SemesterMenu';
 import DeleteSemester from '@/components/Modals/DeleteSemester';
 import EditSemester from '@/components/Modals/EditSemester';
+
+import { clickOutside } from '@/utilities';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -142,21 +145,6 @@ pageTour.setOption('doneLabel', 'Finish');
 pageTour.setOption('skipLabel', 'Skip This Tutorial');
 pageTour.setOption('nextLabel', 'Next');
 pageTour.setOption('exitOnOverlayClick', 'false');
-
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
-
 
 export default {
   data() {
@@ -377,12 +365,12 @@ export default {
       }
     },
     seasonMessage() {
-      return `<b>This is a Semester Card of your current semester! 
+      return `<b>This is a Semester Card of your current semester!
       <img src="${fall}"class = "newSemester-emoji-text">
       <img src="${spring}"class = "newSemester-emoji-text">
       <img src="${summer}"class = "newSemester-emoji-text">
       <img src="${winter}"class = "newSemester-emoji-text">
-      </b><div 
+      </b><div
       class = "introjs-bodytext"> You can add all courses here in the following semester.</div>`;
     },
     openSemesterMenu() {
@@ -425,6 +413,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 @mixin hover-button {
   border-color: #15a6cf;
   background: rgba(0, 0, 0, 0.03);
@@ -438,7 +428,7 @@ export default {
   border-radius: 11px;
 
   &-addSemesterButton {
-    background: #508197;
+    background: $sangBlue;
     border-radius: 8px;
     min-height: 2.5rem;
     min-width: 9rem;
@@ -458,10 +448,15 @@ export default {
     padding: 0.875rem 1.125rem;
   }
 
+  &-confirmation {
+    top: 16px;
+    display: none;
+  }
+
   &-top {
     display: flex;
     justify-content: space-between;
-    color: #858585;
+    color: $medGray;
     margin-left: 1.125rem;
     margin-right: 1.125rem;
   }

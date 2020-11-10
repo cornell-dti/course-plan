@@ -10,8 +10,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '10.x'
-      - name: NPM Install
-        run: npm install
+      - name: NPM Clean Install
+        run: npm ci
+      - name: Run Prettier Check
+        run: npm run format:check
       - name: Run Linter
         run: npm run lint
       - name: Type Check

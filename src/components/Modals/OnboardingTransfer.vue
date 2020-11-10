@@ -187,25 +187,13 @@
 import reqsData from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse';
+import { clickOutside } from '@/utilities';
+import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 Vue.component('newCourse', NewCourse);
 
 const placeholderText = 'Select one';
-const placeholderColor = '#757575';
-
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event, binding.arg);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
+const placeholderColor = lightPlaceholderGray;
 
 export default {
   props: {
@@ -254,7 +242,7 @@ export default {
               stopClose: false,
               boxBorder: '',
               arrowColor: '',
-              placeholderColor: '#757575',
+              placeholderColor: lightPlaceholderGray,
               placeholder: this.user.exam[x][sec],
               acronym: ''
             };
@@ -332,11 +320,11 @@ export default {
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
       if (contentShown) {
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = '#32A0F2';
-        displayOptions.arrowColor = '#32A0F2';
+        displayOptions.boxBorder = yuxuanBlue;
+        displayOptions.arrowColor = yuxuanBlue;
       }
     },
     showHideExamContent(i) {
@@ -360,16 +348,16 @@ export default {
             displayOptions[key].stopClose = false;
           } else if (key !== 'equivCourse' && displayOptions[key].shown) {
             displayOptions[key].shown = false;
-            displayOptions[key].boxBorder = '#C4C4C4';
-            displayOptions[key].arrowColor = '#C4C4C4';
+            displayOptions[key].boxBorder = inactiveGray;
+            displayOptions[key].arrowColor = inactiveGray;
           }
         });
       } else if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
       } else if ('equivCourse' && displayOptions.shown) {
         displayOptions.shown = false;
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       }
     },
     closeTypeDropdownIfOpen(event, i) {
@@ -427,9 +415,9 @@ export default {
       }
       displayOptions.placeholder = text;
       displayOptions.shown = false;
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.placeholderColor = '#757575';
+      displayOptions.arrowColor = inactiveGray;
+      displayOptions.boxBorder = inactiveGray;
+      displayOptions.placeholderColor = lightPlaceholderGray;
       this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
     },
     // Clear a major if a new college is selected and the major is not in it

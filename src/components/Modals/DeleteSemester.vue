@@ -21,7 +21,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable import/extensions */
 import Vue from 'vue';
 import NewCourse from '@/components/Modals/NewCourse';
 import NewSemester from '@/components/Modals/NewSemester';
@@ -30,7 +31,7 @@ Vue.component('newCourse', NewCourse);
 Vue.component('newSemester', NewSemester);
 
 
-export default {
+export default Vue.extend({
   props: {
     deleteSemID: Number,
     deleteSemType: String,
@@ -57,10 +58,12 @@ export default {
       this.closeCurrentModal();
     }
   }
-};
+});
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .deleteSemesterModal {
   padding: 1rem;
 
@@ -113,9 +116,9 @@ export default {
   &-button {
     width: 4.75rem;
     height: 2rem;
-    color: #508197;
+    color: $sangBlue;
     border-radius: 3px;
-    border: 1px solid #508197;
+    border: 1px solid $sangBlue;
     background-color: #ffffff;
     display: flex;
     justify-content: center;
@@ -134,7 +137,7 @@ export default {
 
     &--delete {
       color: #ffffff;
-      background-color: #508197;
+      background-color: $sangBlue;
       margin-left: 0.8rem;
       border: none;
       display: flex;

@@ -1,18 +1,18 @@
 <template>
   <div class="requirementheader">
     <!-- TODO change for multiple colleges -->
-    <div v-if="reqIndex<=2 || reqIndex == 2 + majors.length" class="row top">
+    <div v-if="reqIndex<=numOfColleges || reqIndex == numOfColleges + majors.length" class="row top">
       <p class="name col p-0">{{ req.name }}</p>
     </div>
       <!-- TODO change for multiple colleges -->
-      <div v-if="reqIndex==2" class="major">
+      <div v-if="reqIndex==numOfColleges" class="major">
         <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '' }"
           @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id" :class="{ pointer: multipleMajors }">
           <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
           <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
         </div>
       </div>
-      <div v-if="reqIndex==2+majors.length" class="minor">
+      <div v-if="reqIndex==numOfColleges+majors.length" class="minor">
         <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '' }"
           @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id"
           :class="{ pointer: multipleMinors }">
@@ -68,8 +68,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   props: {
     reqIndex: Number,
     majors: Array,
@@ -77,7 +79,8 @@ export default {
     req: Object,
     reqGroupColorMap: Object,
     user: Object,
-    showMajorOrMinorRequirements: Boolean
+    showMajorOrMinorRequirements: Boolean,
+    numOfColleges: Number
   },
   data() {
     return {
@@ -86,20 +89,22 @@ export default {
     };
   },
   methods: {
-    toggleDetails(index) {
+    toggleDetails(index: number) {
       this.$emit('toggleDetails', index);
     },
-    activateMajor(id) {
+    activateMajor(id: number) {
       this.$emit('activateMajor', id);
     },
-    activateMinor(id) {
+    activateMinor(id: number) {
       this.$emit('activateMinor', id);
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .major, .minor{
   display: flex;
   padding-bottom: 25px;
@@ -166,25 +171,25 @@ export default {
   font-weight: 600;
   font-size: 16px;
   line-height: 16px;
-  color: #000000;
+  color: $black;
 }
 .major {
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 17px;
-  color: #000000;
+  color: $black;
   &-college {
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
-    color: #000000;
+    color: $black;
   }
 }
 button.active {
-  color: #508197;
-  border-bottom: solid 10px #508197;
+  color: $sangBlue;
+  border-bottom: solid 10px $sangBlue;
   padding-bottom: 2px;
   margin: 5px;
 }
@@ -193,8 +198,8 @@ button.active {
   width: 14px;
 }
 .arrow {
-  fill: #1AA9A5;
-  color:#1AA9A5;
+  fill: $emGreen;
+  color:$emGreen;
   margin-top: -2px;
     &-up {
      margin-top: 4px;
@@ -204,7 +209,7 @@ button.active {
   margin: 0.3125rem 0 0 0;
   font-size: 12px;
   line-height: 12px;
-  color: #3C3C3C;
+  color: $darkGray;
 
    &-credits {
      font-weight: bold;

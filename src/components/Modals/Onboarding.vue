@@ -52,6 +52,8 @@ import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import OnboardingBasic from '@/components/Modals/OnboardingBasic';
 import OnboardingTransfer from '@/components/Modals/OnboardingTransfer';
+import { clickOutside } from '@/utilities';
+import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 require('@/assets/images/timeline1.svg');
 
@@ -60,19 +62,6 @@ Vue.component('onboardingTransfer', OnboardingTransfer);
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event, binding.arg);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
 
 export default {
   props: {
@@ -87,7 +76,7 @@ export default {
     if (this.user.college !== '') {
       collegeText = this.user.collegeFN;
       collegeAcronym = this.user.college;
-      collegePlaceholderColor = '#757575';
+      collegePlaceholderColor = lightPlaceholderGray;
     }
 
     let majorText = placeholderText;
@@ -96,7 +85,7 @@ export default {
     if ('major' in this.user && this.user.major.length > 0) {
       majorText = this.user.majorFN;
       majorAcronym = this.user.major;
-      majorPlaceholderColor = '#757575';
+      majorPlaceholderColor = lightPlaceholderGray;
     }
 
     let minorText = placeholderText;
@@ -105,7 +94,7 @@ export default {
     if ('minor' in this.user && this.user.minor.length > 0) {
       minorText = this.user.minorFN;
       minorAcronym = this.user.minor;
-      minorPlaceholderColor = '#757575';
+      minorPlaceholderColor = lightPlaceholderGray;
     }
 
     return {

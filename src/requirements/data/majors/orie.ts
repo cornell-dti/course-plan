@@ -4,8 +4,9 @@ import { includesWithSingleRequirement, includesWithSubRequirements } from '../c
 const orieRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Major Required Classes',
-    description: 'The following courses may be substituted for ORIE 3150, if not used to meet other require- ments: '
-      + 'MATH 3110 (Introduction to Analysis), MATH 4130 (Honors Real Analysis), MATH 4310 (Linear Algebra), MATH 4330 (Honors Linear Algebra), any 600 level ORIE course.',
+    description:
+      'The following courses may be substituted for ORIE 3150, if not used to meet other require- ments: ' +
+      'MATH 3110 (Introduction to Analysis), MATH 4130 (Honors Real Analysis), MATH 4310 (Linear Algebra), MATH 4330 (Honors Linear Algebra), any 600 level ORIE course.',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
     checker: includesWithSubRequirements(
       ['ORIE 3120'],
@@ -18,7 +19,7 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 7
+    minCount: 7,
   },
   {
     name: 'ORIE Electives',
@@ -27,7 +28,7 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('ORIE 4***', 'ORIE 5***', 'ORIE 6***'),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 9
+    minCount: 9,
   },
   {
     name: 'Engineering Distribution Courses',
@@ -40,26 +41,24 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 3
+    minCount: 3,
   },
   {
     name: 'Major Approved Electives (Non–ORIE)',
-    description: 'Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. '
-      + 'Technical courses in Engineering at the 2000 level or above.',
+    description:
+      'Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. ' +
+      'Technical courses in Engineering at the 2000 level or above.',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check'
+    fulfilledBy: 'self-check',
   },
   {
     name: 'Major Approved Elective',
-    description: 'Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. '
-      + 'Technical courses in Engineering at the 2000 level or above.',
+    description:
+      'Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. ' +
+      'Technical courses in Engineering at the 2000 level or above.',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check'
-  }
+    fulfilledBy: 'self-check',
+  },
 ];
 
 export default orieRequirements;

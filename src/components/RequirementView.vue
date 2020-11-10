@@ -8,6 +8,7 @@
       :reqGroupColorMap="reqGroupColorMap"
       :user="user"
       :showMajorOrMinorRequirements="showMajorOrMinorRequirements"
+      :numOfColleges="numOfColleges"
       @activateMajor="activateMajor"
       @activateMinor="activateMinor"
       @toggleDetails="toggleDetails"
@@ -66,46 +67,74 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
-import RequirementHeader from '@/components/RequirementHeader';
-import SubRequirement from '@/components/SubRequirement';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+// eslint-disable-next-line import/extensions
+import RequirementHeader from '@/components/RequirementHeader.vue';
+// eslint-disable-next-line import/extensions
+import SubRequirement from '@/components/SubRequirement.vue';
+
+import { AppUser } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
 
-export default {
+export type Major = {
+  display: boolean;
+  readonly major: string;
+  readonly majorFN: string;
+}
+export type Minor = {
+  display: boolean;
+  readonly minor: string;
+  readonly minorFN: string;
+}
+
+export default Vue.extend({
   props: {
     reqs: Array,
     req: Object,
     reqIndex: Number, // Index of this req in reqs array
-    majors: Array,
-    minors: Array,
-    reqGroupColorMap: Object,
-    user: Object,
-    showMajorOrMinorRequirements: Boolean
+    majors: Array as PropType<readonly Major[]>,
+    minors: Array as PropType<readonly Minor[]>,
+    user: Object as PropType<AppUser>,
+    showMajorOrMinorRequirements: Boolean,
+    numOfColleges: Number
+  },
+  data() {
+    return {
+      // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
+      reqGroupColorMap: {
+        UNIVERSITY: ['508197', 'grayblue'],
+        COLLEGE: ['1AA9A5', 'blue'],
+        MAJOR: ['105351', 'green'],
+        MINOR: ['92C3E6', 'lightblue']
+      },
+    };
   },
   methods: {
-    activateMajor(id) {
+    activateMajor(id: number) {
       this.$emit('activateMajor', id);
     },
-    activateMinor(id) {
+    activateMinor(id: number) {
       this.$emit('activateMinor', id);
     },
-    toggleDetails(index) {
+    toggleDetails(index: number) {
       this.$emit('toggleDetails', index);
     },
-    toggleDescription(index, type, id) {
+    toggleDescription(index: number, type: 'ongoing' | 'completed', id: number) {
       this.$emit('toggleDescription', index, type, id);
     },
-    turnCompleted(index, bool) {
+    turnCompleted(index: number, bool: boolean) {
       this.$emit('turnCompleted', index, bool);
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .btn {
   padding: 0;
   display: flex;
@@ -135,11 +164,11 @@ export default {
   font-weight: bold;
   font-size: 14px;
   line-height: 14px;
-  color: #3C3C3C;
+  color: $darkGray;
 }
 button.active {
-  color: #508197;
-  border-bottom: solid 10px #508197;
+  color: $sangBlue;
+  border-bottom: solid 10px $sangBlue;
   padding-bottom: 2px;
   margin: 5px;
 }
