@@ -29,11 +29,13 @@
         :isBottomBarExpanded="bottomBar.isExpanded"
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
+        :currSemID="currSemID"
 
         @compact-updated="compactVal = $event"
         @updateBar="updateBar"
         @close-bar="closeBar"
         @updateRequirementsMenu="updateRequirementsMenu"
+        @increment-semID="incrementSemID"
       />
     </div>
     <tourwindow
@@ -376,18 +378,9 @@ export default Vue.extend({
       // Return randomly generated color
       return randomColor;
     },
-
-    createSemester(courses: readonly AppCourse[], type: FirestoreSemesterType, year: number): AppSemester {
-      const semester = {
-        courses,
-        id: this.currSemID,
-        type,
-        year
-      };
+    incrementSemID(){
       this.currSemID += 1;
-      return semester;
     },
-
     updateRequirementsMenu() {
       this.requirementsKey += 1;
     },

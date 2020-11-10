@@ -12,6 +12,7 @@
       :semesterID="id"
       @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
+      @add-course="addCourse"
       ref="modal" />
     <confirmation
       class="confirmation-modal"

@@ -46,7 +46,6 @@
       :class="{ 'modal--flex': isCautionModalOpen }"
       :text="cautionText"
     />
-    <!-- TODO: investigate if there needs to be two different content divs with two sets of semesters -->
     <div class="semesterView-content">
       <div
         v-for="sem in semesters"
@@ -109,6 +108,7 @@ const SeasonsEnum = Object.freeze({
 export default {
   props: {
     semesters: Array,
+    currSemID: Number,
     compact: Boolean,
     isBottomBar: Boolean,
     isBottomBarExpanded: Boolean,
@@ -209,8 +209,18 @@ export default {
     closeCourseModal() {
       this.modalOpen = false;
     },
+    createSemester(courses, type, year) {
+      const semester = {
+        courses,
+        id: this.currSemID,
+        type,
+        year
+      };
+      this.$emit('increment-semID');
+      return semester;
+    },
     addSemester(type, year) {
-      const newSem = this.$parent.createSemester([], type, year);
+      const newSem = this.createSemester([], type, year);
 
       // find the index in which the semester should be added to maintain chronological order
       let i;

@@ -1,6 +1,6 @@
 <template>
   <div class="modal">
-    <div class="modal-content" :id="contentId" v-click-outside="closeCurrentModalIfOpen">
+    <div class="modal-content" :id="contentId">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
         <img class="modal-exit" src="../../assets/images/x.png" @click="closeCurrentModal"/>
@@ -150,8 +150,6 @@ export default {
       const subject = courseCode.split(' ')[0];
       const number = courseCode.split(' ')[1];
 
-      const parent = this.$parent;
-
       // To use for retrieve course data from Firebase
       // // TODO: error handling if course not found or some firebase error
       // docRef
@@ -175,7 +173,7 @@ export default {
               const course = resultJSONclass;
               course.roster = roster;
               if (this.courseIsAddable) {
-                parent.addCourse(course);
+                this.$emit('add-course', course);
               }
             }
           });
