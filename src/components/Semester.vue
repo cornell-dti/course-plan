@@ -371,7 +371,7 @@ export default {
         this.courses.forEach(course => {
           if (`${course.subject} ${course.number}` === key) {
             this.$refs.modal.courseIsAddable = false;
-            this.$parent.openCautionModal();
+            this.$emit('open-caution-modal');
           }
         });
       }

@@ -67,6 +67,7 @@
           @update-requirements-menu="updateRequirementsMenu"
           @close-course-modal="closeCourseModal"
           @open-course-modal="openCourseModal"
+          @open-caution-modal="openCautionModal"
         />
       </div>
       <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
