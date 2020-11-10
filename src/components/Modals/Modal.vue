@@ -93,6 +93,7 @@ export default {
         return;
       }
       if (this.type === 'semester') {
+        this.$emit('close-semester-modal');
         this.$refs.modalBodyComponent.resetDropdowns();
       }
     },

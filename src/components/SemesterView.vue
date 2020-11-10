@@ -13,6 +13,7 @@
       ref="modalComponent"
       :currentSemesters="semesters"
       @add-semester="addSemester"
+      @close-semester-modal="closeSemesterModal"
     />
     <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
       <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">+ New Semester</button>
@@ -197,6 +198,9 @@ export default {
     },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
+    },
+    closeSemesterModal() {
+      this.isSemesterModalOpen = false;
     },
     openCourseModal() {
       this.modalOpen = true;
