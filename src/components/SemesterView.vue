@@ -57,15 +57,12 @@
           :activatedCourse="activatedCourse"
           :semesters="semesters"
           :isFirstSem="checkIfFirstSem(sem.id)"
-          :isCourseModalOpen="modalOpen"
           @updateBar="updateBar"
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
           @build-duplicate-cautions="buildDuplicateCautions"
           @update-requirements-menu="updateRequirementsMenu"
-          @close-course-modal="closeCourseModal"
-          @open-course-modal="openCourseModal"
           @open-caution-modal="openCautionModal"
         />
       </div>
@@ -122,7 +119,6 @@ export default {
       key: 0,
       activatedCourse: {},
       isCourseClicked: false,
-      modalOpen: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
       isCautionModalOpen: false
@@ -202,12 +198,6 @@ export default {
     },
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
-    },
-    openCourseModal() {
-      this.modalOpen = true;
-    },
-    closeCourseModal() {
-      this.modalOpen = false;
     },
     createSemester(courses, type, year) {
       const semester = {

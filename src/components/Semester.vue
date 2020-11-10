@@ -163,13 +163,14 @@ export default {
       isEditSemesterOpen: false,
       isShadow: false,
       isDraggedFrom: false,
+      isCourseModalOpen: false,
 
       seasonImg: {
         Fall: fall,
         Spring: spring,
         Winter: winter,
         Summer: summer
-      }
+      },
     };
   },
   props: {
@@ -181,7 +182,6 @@ export default {
     activatedCourse: Object,
     semesters: Array,
     isFirstSem: Boolean,
-    isCourseModalOpen: Boolean
   },
 
   mounted() {
@@ -260,10 +260,10 @@ export default {
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
-      this.$emit('open-course-modal');
+      this.isCourseModalOpen = true;
     },
     closeCourseModal() {
-      this.$emit('close-course-modal');
+      this.isCourseModalOpen = false;
     },
     closeEditModal() {
       this.isEditSemesterOpen = false;
