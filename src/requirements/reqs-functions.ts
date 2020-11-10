@@ -209,8 +209,8 @@ export function computeRequirements(
     userCourses: coursesTaken,
     userChoiceOnFulfillmentStrategy: [],
     userChoiceOnDoubleCountingElimiation: [],
-    // TODO assign an unique ID to each requirement entry.
-    getRequirementUniqueID: requirement => `${requirement.name} ${requirement.description}`,
+    getRequirementUniqueID: requirement =>
+      `${requirement.sourceType}-${requirement.sourceSpecificName}-${requirement.name}`,
     getCourseUniqueID: course => `${course.roster} ${course.courseId}`,
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirement => {
       let eligibleCoursesList: readonly EligibleCourses[];
