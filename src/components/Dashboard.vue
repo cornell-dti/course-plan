@@ -103,7 +103,7 @@ import {
   AppSemester,
   AppBottomBarCourse,
   firestoreCourseToAppCourse,
-  firestoreSemesterToAppSemester,
+  firestoreSemestersToAppSemesters,
   createAppUser,
 } from '@/user-data';
 import { RequirementMap } from '@/requirements/reqs-functions';
@@ -202,12 +202,18 @@ export default Vue.extend({
         .then(doc => {
           if (doc.exists) {
             const firestoreUserData = doc.data() as FirestoreUserData;
-            this.semesters = this.convertSemesters(firestoreUserData.semesters);
+            this.semesters = firestoreSemestersToAppSemesters(
+              firestoreUserData.semesters,
+              firestoreUserData.subjectColors,
+            );
+            this.currSemID += this.semesters.length;
+
             this.firebaseSems = firestoreUserData.semesters as FirestoreSemester[];
             this.user = this.parseUserData(firestoreUserData.userData, firestoreUserData.name);
             this.subjectColors = firestoreUserData.subjectColors;
             this.uniqueIncrementer = firestoreUserData.uniqueIncrementer;
             this.loaded = true;
+            this.updateRequirementsMenu();
           } else {
             this.semesters.push({
               id: this.currSemID,
@@ -243,20 +249,6 @@ export default Vue.extend({
       this.isOpeningRequirements = !this.isOpeningRequirements;
     },
 
-    convertSemesters(firebaseSems: readonly FirestoreSemester[]) {
-      const semesters = firebaseSems.map(firebaseSem => {
-        const appSemester = firestoreSemesterToAppSemester(
-          firebaseSem,
-          this.currSemID,
-          () => this.incrementID(),
-          (subject) => this.addColor(subject)
-        );
-        this.currSemID += 1;
-        return appSemester;
-      });
-      this.updateRequirementsMenu();
-      return semesters;
-    },
     getCurrentSeason() {
       let currentSeason: FirestoreSemesterType;
       const currentMonth = new Date().getMonth();

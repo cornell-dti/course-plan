@@ -293,7 +293,7 @@ export const firestoreCourseToAppCourse = (
   };
 };
 
-export const firestoreSemesterToAppSemester = (
+const firestoreSemesterToAppSemester = (
   { courses, type, year }: FirestoreSemester,
   semesterID: number,
   incrementID: () => number,
@@ -305,6 +305,28 @@ export const firestoreSemesterToAppSemester = (
     type,
     year,
   };
+};
+
+export const firestoreSemestersToAppSemesters = (
+  firestoreSemesters: readonly FirestoreSemester[],
+  subjectColors: { readonly [subject: string]: string }
+): AppSemester[] => {
+  return firestoreSemesters.map((firebaseSem, index) => {
+    return firestoreSemesterToAppSemester(
+      firebaseSem,
+      index + 1,
+      () => {
+        throw new Error('Course from firestore should already have uniqueID!');
+      },
+      subject => {
+        const color = subjectColors[subject];
+        if (color == null) {
+          throw new Error("Course from firestore doesn't have color. Database might be corrupted.");
+        }
+        return color;
+      }
+    );
+  });
 };
 
 export const createAppUser = (data: FirestoreNestedUserData, name: FirestoreUserName): AppUser => {
