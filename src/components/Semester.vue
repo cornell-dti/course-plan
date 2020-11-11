@@ -1,19 +1,16 @@
 <template>
-  <div
-    class="semester"
-    :class="{ 'semester--compact': compact }"
-    :id="id"
-  >
+  <div class="semester" :class="{ 'semester--compact': compact }" :id="id">
     <modal
       :id="'courseModal-' + id"
       class="semester-modal"
       type="course"
-      :class="{ 'modal--block':  isCourseModalOpen }"
+      :class="{ 'modal--block': isCourseModalOpen }"
       :semesterID="id"
       @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
-      ref="modal" />
+      ref="modal"
+    />
     <confirmation
       class="confirmation-modal"
       :class="{ 'confirmation-modal--flex': isConfirmationOpen }"
@@ -21,7 +18,7 @@
     />
     <deletesemester
       class="semester-modal"
-      :class="{ 'modal--block':  isDeleteSemesterOpen }"
+      :class="{ 'modal--block': isDeleteSemesterOpen }"
       @delete-semester="deleteSemester"
       @close-delete-modal="closeDeleteModal"
       :deleteSemID="deleteSemID"
@@ -31,7 +28,7 @@
     />
     <editsemester
       class="semester-modal"
-      :class="{ 'modal--block':  isEditSemesterOpen }"
+      :class="{ 'modal--block': isEditSemesterOpen }"
       @edit-semester="editSemester"
       @close-edit-modal="closeEditModal"
       :semesters="semesters"
@@ -41,22 +38,31 @@
       ref="modalBodyComponent"
     />
     <button
-    v-if="isFirstSem" class="semester-addSemesterButton" @click="openSemesterModal"
-    data-intro-group="pageTour"
-    data-intro='<b>Add your past and future Semester Cards</b><br>
+      v-if="isFirstSem"
+      class="semester-addSemesterButton"
+      @click="openSemesterModal"
+      data-intro-group="pageTour"
+      data-intro='<b>Add your past and future Semester Cards</b><br>
       <div class = "introjs-bodytext">Once you’re done setting up your current semester,
       feel free to add both past and future semesters. Try to utilize your requirements bar</div>'
-    data-step ='4'
-    data-disable-interaction = '1'
-    >+ New Semester</button>
-    <div id = "tour" class="semester-content"
+      data-step="4"
+      data-disable-interaction="1"
+    >
+      + New Semester
+    </button>
+    <div
+      id="tour"
+      class="semester-content"
       data-intro-group="pageTour"
-      data-step = '2'
-      :data-intro = seasonMessage()
-      data-disable-interaction = '1'>
+      data-step="2"
+      :data-intro="seasonMessage()"
+      data-disable-interaction="1"
+    >
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
-          <span class="semester-name"><img class="season-emoji" :src='seasonImg[type]' alt=""> {{ type }} {{ year }}</span>
+          <span class="semester-name"
+            ><img class="season-emoji" :src="seasonImg[type]" alt="" /> {{ type }} {{ year }}</span
+          >
           <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
@@ -71,8 +77,8 @@
           v-dragula="courses"
           bag="first-bag"
           :semId="id"
-          :style="{height: courseContainerHeight + 'rem' }"
-          >
+          :style="{ height: courseContainerHeight + 'rem' }"
+        >
           <div v-for="course in courses" :key="course.uniqueID" class="semester-courseWrapper">
             <course
               v-bind="course"
@@ -95,12 +101,12 @@
           :class="{ 'semester-addWrapper--compact': compact }"
           @click="openCourseModal"
           data-intro-group="pageTour"
-          data-step = '3'
-          data-intro = '<b>Add your course in this semseter!</b><br>
+          data-step="3"
+          data-intro='<b>Add your course in this semseter!</b><br>
             <div class = "introjs-bodytext">To start planning your college career, you should try adding a course in your current semester.</div>'
-          data-disable-interaction = '1'
+          data-disable-interaction="1"
         >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" >{{
+          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
             buttonString
           }}</span>
         </div>
@@ -111,7 +117,8 @@
       class="semester-menu"
       @open-delete-semester-modal="openDeleteSemesterModal"
       @open-edit-semester-modal="openEditSemesterModal"
-      v-click-outside="closeSemesterMenuIfOpen" />
+      v-click-outside="closeSemesterMenuIfOpen"
+    />
   </div>
 </template>
 
@@ -168,7 +175,7 @@ export default {
         Fall: fall,
         Spring: spring,
         Winter: winter,
-        Summer: summer
+        Summer: summer,
       },
     };
   },
@@ -253,7 +260,7 @@ export default {
     },
     buttonString() {
       return '+ Course';
-    }
+    },
   },
   methods: {
     openCourseModal() {
@@ -297,7 +304,7 @@ export default {
       this.$gtag.event('add-course', {
         event_category: 'course',
         event_label: 'add',
-        value: 1
+        value: 1,
       });
     },
     deleteCourse(subject, number, uniqueID) {
@@ -312,7 +319,7 @@ export default {
       this.$gtag.event('delete-course', {
         event_category: 'course',
         event_label: 'delete',
-        value: 1
+        value: 1,
       });
       // Update requirements menu
       this.$emit('update-requirements-menu');
@@ -349,7 +356,8 @@ export default {
     buildIncorrectPlacementCautions() {
       if (this.courses) {
         this.courses.forEach(course => {
-          if (!course.semesters.includes(this.type)) course.alerts.caution = `Course unavailable in the ${this.type}`;
+          if (!course.semesters.includes(this.type))
+            course.alerts.caution = `Course unavailable in the ${this.type}`;
         });
       }
     },
@@ -404,16 +412,16 @@ export default {
     },
     editSemester(seasonInput, yearInput) {
       this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
-    }
+    },
   },
   directives: {
-    'click-outside': clickOutside
-  }
+    'click-outside': clickOutside,
+  },
 };
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 @mixin hover-button {
   border-color: #15a6cf;
@@ -493,7 +501,6 @@ export default {
     top: 2rem;
     z-index: 1;
   }
-
 
   &-name {
     font-size: 18px;
@@ -612,7 +619,7 @@ export default {
     filter: alpha(opacity=20);
   }
 
-  .semester-modal{
+  .semester-modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -643,7 +650,6 @@ export default {
     }
   }
 }
-
 
 @media only screen and (max-width: 878px) {
   .semester {

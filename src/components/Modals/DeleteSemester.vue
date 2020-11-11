@@ -3,18 +3,28 @@
     <div class="deleteSemesterModal-content" id="deleteSemester">
       <div class="deleteSemesterModal-top">
         <span class="deleteSemesterModal-title">{{ title }}</span>
-        <img class="deleteSemesterModal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
+        <img
+          class="deleteSemesterModal-exit"
+          src="@/assets/images/x.png"
+          @click="closeCurrentModal"
+        />
       </div>
       <div class="deleteSemesterModal-body">
         <div class="deleteSemesterModal-body-text">{{ text }}</div>
       </div>
       <div class="deleteSemesterModal-buttonWrapper">
         <button class="deleteSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
-        <div class="deleteSemesterModal-button deleteSemesterModal-button--delete" @click="deleteSemester">
-            <div class="deleteSemesterModal-button-left">
-                <img class="deleteSemesterModal-button-left-icon" src="@/assets/images/trash-white.svg" />
-                <span class="deleteSemesterModal-button-left-text">Delete</span>
-            </div>
+        <div
+          class="deleteSemesterModal-button deleteSemesterModal-button--delete"
+          @click="deleteSemester"
+        >
+          <div class="deleteSemesterModal-button-left">
+            <img
+              class="deleteSemesterModal-button-left-icon"
+              src="@/assets/images/trash-white.svg"
+            />
+            <span class="deleteSemesterModal-button-left-text">Delete</span>
+          </div>
         </div>
       </div>
     </div>
@@ -29,12 +39,11 @@ import NewSemester from '@/components/Modals/NewSemester.vue';
 Vue.component('newCourse', NewCourse);
 Vue.component('newSemester', NewSemester);
 
-
 export default Vue.extend({
   props: {
     deleteSemID: Number,
     deleteSemType: String,
-    deleteSemYear: Number
+    deleteSemYear: Number,
   },
 
   computed: {
@@ -46,7 +55,7 @@ export default Vue.extend({
     },
     title() {
       return 'Delete Semester';
-    }
+    },
   },
   methods: {
     closeCurrentModal() {
@@ -55,13 +64,13 @@ export default Vue.extend({
     deleteSemester() {
       this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);
       this.closeCurrentModal();
-    }
-  }
+    },
+  },
 });
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .deleteSemesterModal {
   padding: 1rem;
@@ -96,14 +105,14 @@ export default Vue.extend({
     font-weight: 600;
     font-size: 20px;
     line-height: 24px;
-    color: #3D3D3D;
+    color: #3d3d3d;
   }
 
   &-text {
     font-weight: normal;
     font-size: 14px;
     line-height: 17px;
-    color: #3D3D3D;
+    color: #3d3d3d;
   }
 
   &-buttonWrapper {
@@ -123,15 +132,15 @@ export default Vue.extend({
     justify-content: center;
 
     &-left {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
 
-        &-text {
-            margin-top: auto;
-            margin-bottom: auto;
-            margin-left: 0.195rem;
-        }
+      &-text {
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 0.195rem;
+      }
     }
 
     &--delete {
@@ -153,5 +162,4 @@ export default Vue.extend({
     }
   }
 }
-
 </style>
