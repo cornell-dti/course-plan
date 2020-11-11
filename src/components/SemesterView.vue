@@ -1,7 +1,11 @@
 <template>
   <div
     class="semesterView"
-    :class="{ bottomBar: isBottomBar && isBottomBarExpanded, expandedBottomBarSemesterView: isBottomBarExpanded, collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded}"
+    :class="{
+      bottomBar: isBottomBar && isBottomBarExpanded,
+      expandedBottomBarSemesterView: isBottomBarExpanded,
+      collapsedBottomBarSemesterView: isBottomBar && !isBottomBarExpanded,
+    }"
     @click="closeBar"
     :key="key"
   >
@@ -16,22 +20,23 @@
       @close-semester-modal="closeSemesterModal"
     />
     <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
-      <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">+ New Semester</button>
+      <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">
+        + New Semester
+      </button>
       <div class="semesterView-switch">
         <span v-if="!isMobile" class="semesterView-switchText">View:</span>
-        <div class="semesterView-switchImage semesterView-twoColumn"
+        <div
+          class="semesterView-switchImage semesterView-twoColumn"
           v-if="!isMobile"
           @click="setNotCompact"
           :class="{ 'semesterView-twoColumn--active': !compact }"
-        >
-        </div>
+        ></div>
         <div
           class="semesterView-switchImage semesterView-fourColumn"
           v-if="!isMobile"
           @click="setCompact"
           :class="{ 'semesterView-fourColumn--active': compact }"
-        >
-        </div>
+        ></div>
       </div>
     </div>
     <confirmation
@@ -50,7 +55,9 @@
       <div
         v-for="sem in semesters"
         :key="sem.id"
-        class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
+        class="semesterView-wrapper"
+        :class="{ 'semesterView-wrapper--compact': compact }"
+      >
         <semester
           v-bind="sem"
           :compact="compact"
@@ -67,9 +74,21 @@
         />
       </div>
       <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
-      <div v-if="compact" class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div v-if="compact" class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div v-if="compact" class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div
+        v-if="compact"
+        class="semesterView-empty semesterView-empty--compact"
+        aria-hidden="true"
+      ></div>
+      <div
+        v-if="compact"
+        class="semesterView-empty semesterView-empty--compact"
+        aria-hidden="true"
+      ></div>
+      <div
+        v-if="compact"
+        class="semesterView-empty semesterView-empty--compact"
+        aria-hidden="true"
+      ></div>
       <div v-if="compact"><div v-if="compact"></div></div>
     </div>
   </div>
@@ -99,7 +118,7 @@ const SeasonsEnum = Object.freeze({
   winter: 0,
   spring: 1,
   summer: 2,
-  fall: 3
+  fall: 3,
 });
 
 export default {
@@ -110,7 +129,7 @@ export default {
     isBottomBar: Boolean,
     isBottomBarExpanded: Boolean,
     isMobile: Boolean,
-    startTour: Boolean
+    startTour: Boolean,
   },
   data() {
     return {
@@ -121,7 +140,7 @@ export default {
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
-      isCautionModalOpen: false
+      isCautionModalOpen: false,
     };
   },
   watch: {
@@ -129,13 +148,13 @@ export default {
       deep: true,
       handler() {
         this.updateFirebaseSemester();
-      }
-    }
+      },
+    },
   },
   computed: {
     noSemesters() {
       return this.semesters.length === 0;
-    }
+    },
   },
   methods: {
     checkIfFirstSem(id) {
@@ -147,7 +166,7 @@ export default {
         this.$gtag.event('to-compact', {
           event_category: 'views',
           event_label: 'compact',
-          value: 1
+          value: 1,
         });
       }
     },
@@ -157,7 +176,7 @@ export default {
         this.$gtag.event('to-not-compact', {
           event_category: 'views',
           event_label: 'not-compact',
-          value: 1
+          value: 1,
         });
       }
     },
@@ -166,7 +185,8 @@ export default {
         const coursesMap = {};
         this.semesters.forEach(semester => {
           semester.courses.forEach(course => {
-            if (coursesMap[`${course.subject} ${course.number}`]) course.alerts.caution = 'Duplicate';
+            if (coursesMap[`${course.subject} ${course.number}`])
+              course.alerts.caution = 'Duplicate';
             coursesMap[`${course.subject} ${course.number}`] = true;
           });
         });
@@ -204,7 +224,7 @@ export default {
         courses,
         id: this.currSemID,
         type,
-        year
+        year,
       };
       this.$emit('increment-semID');
       return semester;
@@ -218,7 +238,10 @@ export default {
         const oldSem = this.semesters[i];
         if (oldSem.year < year) {
           break;
-        } else if (oldSem.year === year && SeasonsEnum[oldSem.type.toLowerCase()] < SeasonsEnum[type.toLowerCase()]) {
+        } else if (
+          oldSem.year === year &&
+          SeasonsEnum[oldSem.type.toLowerCase()] < SeasonsEnum[type.toLowerCase()]
+        ) {
           break;
         }
       }
@@ -227,7 +250,7 @@ export default {
       this.$gtag.event('add-semester', {
         event_category: 'semester',
         event_label: 'add',
-        value: 1
+        value: 1,
       });
 
       this.openSemesterConfirmationModal(type, year, true);
@@ -242,7 +265,7 @@ export default {
       this.$gtag.event('delete-semester', {
         event_category: 'semester',
         event_label: 'delete',
-        value: 1
+        value: 1,
       });
 
       // Confirm success with alert
@@ -255,9 +278,15 @@ export default {
       this.$emit('updateRequirementsMenu');
     },
     compare(a, b) {
-      if (a.type === b.type && a.year === b.year) { return 0; }
-      if (a.year > b.year) { return -1; }
-      if (a.year < b.year) { return 1; }
+      if (a.type === b.type && a.year === b.year) {
+        return 0;
+      }
+      if (a.year > b.year) {
+        return -1;
+      }
+      if (a.year < b.year) {
+        return 1;
+      }
       if (SeasonsEnum[a.type.toLowerCase()] < SeasonsEnum[b.type.toLowerCase()]) {
         return 1;
       }
@@ -311,7 +340,7 @@ export default {
         distributions: course.distributions,
         lastRoster: course.lastRoster,
         color: course.color,
-        uniqueID: course.uniqueID
+        uniqueID: course.uniqueID,
       };
     },
     /**
@@ -340,13 +369,13 @@ export default {
         .catch(error => {
           console.log('Error getting document:', error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .semesterView {
   width: 100%;
@@ -405,7 +434,6 @@ export default {
     }
   }
 
-
   &-twoColumn {
     background-image: url('~@/assets/images/views/twoColumn.svg');
 
@@ -415,7 +443,6 @@ export default {
     &--active {
       cursor: pointer;
       background-image: url('~@/assets/images/views/twoColumnSelected.svg');
-
     }
   }
 
@@ -444,7 +471,8 @@ export default {
     }
   }
 
-  &-confirmation, &-caution {
+  &-confirmation,
+  &-caution {
     display: none;
     margin: auto;
   }
@@ -501,5 +529,4 @@ export default {
     }
   }
 }
-
 </style>
