@@ -4,25 +4,36 @@
     :class="{ 'semester--compact': compact }"
     :id="id"
   >
-    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" ref="modal" />
+    <modal
+      :id="'courseModal-' + id"
+      class="semester-modal"
+      type="course"
+      :class="{ 'modal--block':  isCourseModalOpen }"
+      :semesterID="id"
+      @check-course-duplicate="checkCourseDuplicate"
+      @close-course-modal="closeCourseModal"
+      @add-course="addCourse"
+      ref="modal" />
     <confirmation
-      :id="'confirmation-' + id"
-      class="semester-confirmation"
+      class="confirmation-modal"
+      :class="{ 'confirmation-modal--flex': isConfirmationOpen }"
       :text="confirmationText"
     />
     <deletesemester
-      :id="'deleteSemesterModal-' + id"
       class="semester-modal"
+      :class="{ 'modal--block':  isDeleteSemesterOpen }"
       @delete-semester="deleteSemester"
+      @close-delete-modal="closeDeleteModal"
       :deleteSemID="deleteSemID"
       :deleteSemType="deleteSemType"
       :deleteSemYear="deleteSemYear"
       ref="deletesemester"
     />
     <editsemester
-      :id="'editSemesterModal-' + id"
       class="semester-modal"
+      :class="{ 'modal--block':  isEditSemesterOpen }"
       @edit-semester="editSemester"
+      @close-edit-modal="closeEditModal"
       :semesters="semesters"
       :deleteSemID="deleteSemID"
       :deleteSemType="deleteSemType"
@@ -140,6 +151,7 @@ export default {
   data() {
     return {
       confirmationText: '',
+      isConfirmationOpen: false,
       scrollable: true,
       semesterMenuOpen: false,
       stopCloseFlag: false,
@@ -147,15 +159,18 @@ export default {
       deleteSemID: 0,
       deleteSemType: '',
       deleteSemYear: 0,
+      isDeleteSemesterOpen: false,
+      isEditSemesterOpen: false,
       isShadow: false,
       isDraggedFrom: false,
+      isCourseModalOpen: false,
 
       seasonImg: {
         Fall: fall,
         Spring: spring,
         Winter: winter,
         Summer: summer
-      }
+      },
     };
   },
   props: {
@@ -166,7 +181,7 @@ export default {
     compact: Boolean,
     activatedCourse: Object,
     semesters: Array,
-    isFirstSem: Boolean
+    isFirstSem: Boolean,
   },
 
   mounted() {
@@ -245,14 +260,16 @@ export default {
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
-
-      const modal = document.getElementById(`courseModal-${this.id}`);
-      modal.style.display = 'block';
-
-      // Activate focus
-      const input = document.getElementById(`dropdown-${this.id}`);
-      input.value = '';
-      input.focus();
+      this.isCourseModalOpen = true;
+    },
+    closeCourseModal() {
+      this.isCourseModalOpen = false;
+    },
+    closeEditModal() {
+      this.isEditSemesterOpen = false;
+    },
+    closeDeleteModal() {
+      this.isDeleteSemesterOpen = false;
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
@@ -261,19 +278,16 @@ export default {
       this.$emit('new-semester');
     },
     openConfirmationModal(msg) {
-      // Set text and display confirmation modal, then have it disappear after 5 seconds
-
+      // Set text and display confirmation modal, then have it disappear after 3 seconds
       this.confirmationText = msg;
-      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
-      confirmationModal.style.display = 'flex';
+      this.isConfirmationOpen = true;
 
       setTimeout(() => {
-        confirmationModal.style.display = 'none';
+        this.closeConfirmationModal();
       }, 3000);
     },
     closeConfirmationModal() {
-      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
-      confirmationModal.style.display = 'none';
+      this.isConfirmationOpen = false;
     },
     addCourse(data) {
       const newCourse = this.$parent.$parent.createCourse(data);
@@ -346,7 +360,7 @@ export default {
         this.courses.forEach(course => {
           if (`${course.subject} ${course.number}` === key) {
             this.$refs.modal.courseIsAddable = false;
-            this.$parent.openCautionModal();
+            this.$emit('open-caution-modal');
           }
         });
       }
@@ -376,8 +390,7 @@ export default {
       this.deleteSemYear = this.year;
       this.deleteSemID = this.id;
 
-      const modal = document.getElementById(`deleteSemesterModal-${this.id}`);
-      modal.style.display = 'block';
+      this.isDeleteSemesterOpen = true;
     },
     deleteSemester(type, year) {
       this.$emit('delete-semester', type, year);
@@ -387,12 +400,10 @@ export default {
       this.deleteSemType = this.type;
       this.deleteSemYear = this.year;
       this.deleteSemID = this.id;
-      const modal = document.getElementById(`editSemesterModal-${this.id}`);
-      modal.style.display = 'block';
+
+      this.isEditSemesterOpen = true;
     },
-    editSemester(id) {
-      const seasonInput = document.getElementById(`season-placeholder-${this.id}`).innerHTML.trim(' ').split(' ')[0];
-      const yearInput = parseInt(document.getElementById(`year-placeholder-${this.id}`).innerHTML, 10);
+    editSemester(seasonInput, yearInput) {
       this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
     }
   },
@@ -560,7 +571,7 @@ export default {
 
   /* The Modal (background) */
   .semester-modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
@@ -602,18 +613,36 @@ export default {
     filter: alpha(opacity=20);
   }
 
-.semester-modal{
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
+  .semester-modal{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+
+    &--block {
+      display: block;
+    }
+  }
+
+  .confirmation-modal {
+    display: none;
+
+    &--flex {
+      display: flex;
+    }
+  }
+
+  .modal {
+    &--block {
+      display: block;
+    }
+  }
 }
 
 

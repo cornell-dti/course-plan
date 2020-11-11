@@ -5,7 +5,16 @@
     @click="closeBar"
     :key="key"
   >
-    <modal id="semesterModal" class="semester-modal" type="semester" ref="modalComponent" :currentSemesters="semesters" />
+    <modal
+      id="semesterModal"
+      class="semester-modal"
+      :class="{ 'modal--block': isSemesterModalOpen }"
+      type="semester"
+      ref="modalComponent"
+      :currentSemesters="semesters"
+      @add-semester="addSemester"
+      @close-semester-modal="closeSemesterModal"
+    />
     <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
       <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">+ New Semester</button>
       <div class="semesterView-switch">
@@ -28,36 +37,20 @@
     <confirmation
       :id="'semesterConfirmation'"
       class="semesterView-confirmation"
+      :class="{ 'modal--flex': isSemesterConfirmationOpen }"
       :text="confirmationText"
     />
     <caution
       :id="'semesterCaution'"
       class="semesterView-caution"
+      :class="{ 'modal--flex': isCautionModalOpen }"
       :text="cautionText"
     />
-    <div v-if="!compact" class="semesterView-content">
-      <div v-for="sem in semesters" :key="sem.id" class="semesterView-wrapper">
-        <semester
-          v-bind="sem"
-          :activatedCourse="activatedCourse"
-          :semesters="semesters"
-          :isFirstSem="checkIfFirstSem(sem.id)"
-          @updateBar="updateBar"
-          @new-semester="openSemesterModal"
-          @delete-semester="deleteSemester"
-          @edit-semester="editSemester"
-          @build-duplicate-cautions="buildDuplicateCautions"
-          @update-requirements-menu="updateRequirementsMenu"
-        />
-      </div>
-      <div class="semesterView-empty" aria-hidden="true"></div>
-    </div>
-    <!-- TODO: investigate if there needs to be two different content divs with two sets of semesters -->
-    <div v-if="compact" class="semesterView-content">
+    <div class="semesterView-content">
       <div
         v-for="sem in semesters"
         :key="sem.id"
-        class="semesterView-wrapper semesterView-wrapper--compact">
+        class="semesterView-wrapper" :class="{ 'semesterView-wrapper--compact': compact }">
         <semester
           v-bind="sem"
           :compact="compact"
@@ -68,13 +61,16 @@
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
+          @build-duplicate-cautions="buildDuplicateCautions"
           @update-requirements-menu="updateRequirementsMenu"
+          @open-caution-modal="openCautionModal"
         />
       </div>
-      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
-      <div><div></div></div>
+      <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
+      <div v-if="compact" class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div v-if="compact" class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div v-if="compact" class="semesterView-empty semesterView-empty--compact" aria-hidden="true"></div>
+      <div v-if="compact"><div v-if="compact"></div></div>
     </div>
   </div>
 </template>
@@ -109,6 +105,7 @@ const SeasonsEnum = Object.freeze({
 export default {
   props: {
     semesters: Array,
+    currSemID: Number,
     compact: Boolean,
     isBottomBar: Boolean,
     isBottomBarExpanded: Boolean,
@@ -121,7 +118,10 @@ export default {
       cautionText: '',
       key: 0,
       activatedCourse: {},
-      isCourseClicked: false
+      isCourseClicked: false,
+      isSemesterConfirmationOpen: false,
+      isSemesterModalOpen: false,
+      isCautionModalOpen: false
     };
   },
   watch: {
@@ -131,13 +131,6 @@ export default {
         this.updateFirebaseSemester();
       }
     }
-  },
-  mounted() {
-    this.$el.addEventListener('click', this.closeAllModals);
-  },
-
-  beforeDestroy() {
-    this.$el.removeEventListener('click', this.closeAllModals);
   },
   computed: {
     noSemesters() {
@@ -186,41 +179,38 @@ export default {
         this.confirmationText = `Deleted ${type} ${year} from plan`;
       }
 
-      const confirmationModal = document.getElementById(`semesterConfirmation`);
-      confirmationModal.style.display = 'flex';
+      this.isSemesterConfirmationOpen = true;
 
       setTimeout(() => {
-        confirmationModal.style.display = 'none';
+        this.isSemesterConfirmationOpen = false;
       }, 3000);
     },
     openCautionModal() {
       this.cautionText = `Unable to add course. Already in plan.`;
-      const cautionModal = document.getElementById(`semesterCaution`);
-      cautionModal.style.display = 'flex';
+      isCautionModalOpen = true;
 
       setTimeout(() => {
-        cautionModal.style.display = 'none';
+        isCautionModalOpen = false;
       }, 3000);
     },
     openSemesterModal() {
-      const modal = document.getElementById('semesterModal');
-      modal.style.display = 'block';
+      this.isSemesterModalOpen = true;
     },
-    closeAllModals(event) {
-      const modals = document.getElementsByClassName('semester-modal');
-      for (let i = 0; i < modals.length; i += 1) {
-        if (event.target === modals[i]) {
-          modals[i].style.display = 'none';
-          this.$refs.modalComponent.$refs.modalBodyComponent.resetDropdowns();
-        }
-      }
-      const deleteSemesterModal = document.getElementById('deleteSemester');
-      if (event.target === deleteSemesterModal) {
-        deleteSemesterModal.style.display = 'none';
-      }
+    closeSemesterModal() {
+      this.isSemesterModalOpen = false;
+    },
+    createSemester(courses, type, year) {
+      const semester = {
+        courses,
+        id: this.currSemID,
+        type,
+        year
+      };
+      this.$emit('increment-semID');
+      return semester;
     },
     addSemester(type, year) {
-      const newSem = this.$parent.createSemester([], type, year);
+      const newSem = this.createSemester([], type, year);
 
       // find the index in which the semester should be added to maintain chronological order
       let i;
@@ -486,6 +476,15 @@ export default {
 
 .bottomBar {
   margin-bottom: 350px;
+}
+
+.modal {
+  &--block {
+    display: block;
+  }
+  &--flex {
+    display: flex;
+  }
 }
 
 @media only screen and (max-width: 878px) {

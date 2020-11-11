@@ -25,11 +25,9 @@
 /* eslint-disable import/extensions */
 import Vue from 'vue';
 import NewCourse from '@/components/Modals/NewCourse.vue';
-import NewCustomCourse from '@/components/Modals/NewCustomCourse.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 
 Vue.component('newCourse', NewCourse);
-Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 
 
@@ -53,8 +51,7 @@ export default Vue.extend({
   },
   methods: {
     closeCurrentModal() {
-      const modal = document.getElementById(`deleteSemesterModal-${this.deleteSemID}`)!;
-      modal.style.display = 'none';
+      this.$emit('close-delete-modal');
     },
     deleteSemester() {
       this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);

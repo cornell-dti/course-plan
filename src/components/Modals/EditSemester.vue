@@ -14,6 +14,7 @@
             :year="deleteSemYear"
             :type="deleteSemType"
             @duplicateSemester="disableButton"
+            @updateSemProps="updateSemProps"
             ref="modalBodyComponent">
         </newSemester>
       </div>
@@ -32,11 +33,9 @@
 <script>
 import Vue from 'vue';
 import NewCourse from '@/components/Modals/NewCourse';
-import NewCustomCourse from '@/components/Modals/NewCustomCourse';
 import NewSemester from '@/components/Modals/NewSemester';
 
 Vue.component('newCourse', NewCourse);
-Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 
 export default {
@@ -48,7 +47,9 @@ export default {
   },
   data() {
     return {
-      isDisabled: false
+      isDisabled: false,
+      season: '',
+      year: ''
     };
   },
   computed: {
@@ -64,17 +65,20 @@ export default {
   },
   methods: {
     closeCurrentModal() {
-      const modal = document.getElementById(`editSemesterModal-${this.deleteSemID}`);
-      modal.style.display = 'none';
+      this.$emit('close-edit-modal');
     },
     editSemester() {
       if (!this.isDisabled) {
-        this.$parent.editSemester(this.deleteSemID);
+        this.$emit('edit-semester', this.season, this.year);
         this.closeCurrentModal();
       }
     },
     disableButton(bool) {
       this.isDisabled = bool;
+    },
+    updateSemProps(season, year) {
+      this.season = season;
+      this.year = year;
     }
   }
 };
