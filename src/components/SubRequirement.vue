@@ -72,9 +72,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-// eslint-disable-next-line import/extensions
 import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
-// eslint-disable-next-line import/extensions
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
 
 import { DisplayableRequirementFulfillment } from '@/requirements/types';

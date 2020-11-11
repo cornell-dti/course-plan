@@ -78,12 +78,12 @@
 <script>
 import Vue from 'vue';
 import clone from 'clone';
-import Course from '@/components/Course';
-import Semester from '@/components/Semester';
-import Confirmation from '@/components/Confirmation';
-import Caution from '@/components/Caution';
-import DeleteSemester from '@/components/Modals/DeleteSemester';
-import EditSemester from '@/components/Modals/EditSemester';
+import Course from '@/components/Course.vue';
+import Semester from '@/components/Semester.vue';
+import Confirmation from '@/components/Confirmation.vue';
+import Caution from '@/components/Caution.vue';
+import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
+import EditSemester from '@/components/Modals/EditSemester.vue';
 
 import { auth, userDataCollection } from '@/firebaseConfig';
 

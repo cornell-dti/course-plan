@@ -50,8 +50,8 @@
 <script>
 import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import OnboardingBasic from '@/components/Modals/OnboardingBasic';
-import OnboardingTransfer from '@/components/Modals/OnboardingTransfer';
+import OnboardingBasic from '@/components/Modals/OnboardingBasic.vue';
+import OnboardingTransfer from '@/components/Modals/OnboardingTransfer.vue';
 import { clickOutside } from '@/utilities';
 import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 

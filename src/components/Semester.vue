@@ -117,14 +117,13 @@
 
 <script>
 import Vue from 'vue';
-// eslint-disable-next-line import/extensions
 import introJs from 'intro.js';
-import Course from '@/components/Course';
-import Modal from '@/components/Modals/Modal';
-import Confirmation from '@/components/Confirmation';
-import SemesterMenu from '@/components/Modals/SemesterMenu';
-import DeleteSemester from '@/components/Modals/DeleteSemester';
-import EditSemester from '@/components/Modals/EditSemester';
+import Course from '@/components/Course.vue';
+import Modal from '@/components/Modals/Modal.vue';
+import Confirmation from '@/components/Confirmation.vue';
+import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
+import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
+import EditSemester from '@/components/Modals/EditSemester.vue';
 
 import { clickOutside } from '@/utilities';
 

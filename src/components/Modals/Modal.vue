@@ -27,9 +27,9 @@
 
 <script>
 import Vue from 'vue';
-import NewCourse from '@/components/Modals/NewCourse';
-import NewSemester from '@/components/Modals/NewSemester';
-import EditSemester from '@/components/Modals/EditSemester';
+import NewCourse from '@/components/Modals/NewCourse.vue';
+import NewSemester from '@/components/Modals/NewSemester.vue';
+import EditSemester from '@/components/Modals/EditSemester.vue';
 
 Vue.component('newCourse', NewCourse);
 Vue.component('newSemester', NewSemester);
