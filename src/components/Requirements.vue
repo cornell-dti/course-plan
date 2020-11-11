@@ -39,17 +39,11 @@ import { Vue } from 'vue-property-decorator';
 import { PropType } from 'vue';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
-// eslint-disable-next-line import/extensions
 import introJs from 'intro.js';
 
-// Disable import extension check because TS module resolution depends on it.
-// eslint-disable-next-line import/extensions
 import Course from '@/components/Course.vue';
-// eslint-disable-next-line import/extensions
 import Modal from '@/components/Modals/Modal.vue';
-// eslint-disable-next-line import/extensions
 import RequirementView from '@/components/RequirementView.vue';
-// eslint-disable-next-line import/extensions
 import SubRequirement from '@/components/SubRequirement.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { RequirementMap, computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';

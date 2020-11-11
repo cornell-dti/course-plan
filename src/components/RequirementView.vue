@@ -71,9 +71,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-// eslint-disable-next-line import/extensions
 import RequirementHeader from '@/components/RequirementHeader.vue';
-// eslint-disable-next-line import/extensions
 import SubRequirement from '@/components/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';

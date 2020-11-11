@@ -56,7 +56,7 @@
 
 <script>
 import Vue from 'vue';
-import CourseMenu from '@/components/Modals/CourseMenu';
+import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import { clickOutside } from '@/utilities';
 
 Vue.component('coursemenu', CourseMenu);

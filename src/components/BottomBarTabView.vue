@@ -61,7 +61,6 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-// eslint-disable-next-line import/extensions
 import BottomBarTab from '@/components/BottomBarTab.vue';
 import { AppBottomBarCourse } from '@/user-data';
 

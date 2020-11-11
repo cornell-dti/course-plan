@@ -22,7 +22,6 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable import/extensions */
 import Vue from 'vue';
 import NewCourse from '@/components/Modals/NewCourse.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';

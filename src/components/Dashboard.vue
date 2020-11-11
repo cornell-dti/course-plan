@@ -74,7 +74,6 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable import/extensions */
 import Vue from 'vue';
 
 import introJs from 'intro.js';
