@@ -121,6 +121,8 @@ export type DecoratedRequirementsJson = {
 };
 
 export type RequirementFulfillment<M extends {}> = {
+  /** ID of the requirement */
+  readonly id: string;
   /** The original requirement object. */
   readonly requirement: BaseRequirement;
   /** A list of courses that satisfy this requirement. */

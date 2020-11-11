@@ -16,11 +16,13 @@
         :reqIndex="index"
         :majors="majors"
         :minors="minors"
+        :toggleableRequirementChoices="toggleableRequirementChoices"
         :displayedMajorIndex="displayedMajorIndex"
         :displayedMinorIndex="displayedMinorIndex"
         :user="user"
         :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
         :numOfColleges="numOfColleges"
+        @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
         @activateMajor="activateMajor"
         @activateMinor="activateMinor"
         @toggleDetails="toggleDetails"
@@ -60,6 +62,8 @@ type Data = {
   actives: readonly boolean[];
   modalShow: boolean;
   reqs: SingleMenuRequirement[];
+  // map from requirement ID to option chosen
+  toggleableRequirementChoices: Readonly<Record<string, string>>;
   displayedMajorIndex: number,
   displayedMinorIndex: number,
   requirementsMap: RequirementMap;
@@ -84,44 +88,7 @@ export default Vue.extend({
     startTour: Boolean
   },
   mounted() {
-    const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major, this.user.minor);
-    // Send satisfied credits data back to dashboard to build alerts
-    this.$emit('requirementsMap', computeRequirementMap(groups));
-    // Turn result into data readable by requirements menu
-    const singleMenuRequirements = groups.map(group => {
-      const singleMenuRequirement: SingleMenuRequirement = {
-        ongoing: [],
-        completed: [],
-        name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
-        group: group.groupName.toUpperCase() as 'COLLEGE' | 'MAJOR' | 'MINOR',
-        specific: (group.specific) ? group.specific : null,
-        displayDetails: false,
-        displayCompleted: false
-      };
-      group.reqs.forEach(req => {
-        // Create progress bar with requirement with progressBar = true
-        if (req.requirement.progressBar) {
-          singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
-          singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
-          singleMenuRequirement.required = (req.requirement.fulfilledBy !== 'self-check' && req.totalCountRequired) || req.minCountRequired;
-        }
-        // Default display value of false for all requirement lists
-        const displayableRequirementFulfillment = { ...req, displayDescription: false };
-        if (!req.minCountFulfilled || req.minCountFulfilled < req.minCountRequired) {
-          singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
-        } else {
-          singleMenuRequirement.completed.push(displayableRequirementFulfillment);
-        }
-      });
-      // Make number of requirements items progress bar in absense of identified progress metric
-      if (!singleMenuRequirement.type) {
-        singleMenuRequirement.type = 'Requirements';
-        singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
-        singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
-      }
-      return singleMenuRequirement;
-    });
-    this.reqs.push(...singleMenuRequirements);
+    this.recomputeRequirements();
   },
   data() : Data {
     return {
@@ -174,6 +141,7 @@ export default Vue.extend({
         //   ]
         // }
       ],
+      toggleableRequirementChoices: {},
       requirementsMap: {
         // CS 1110: 'MQR-AS'
       },
@@ -207,6 +175,52 @@ export default Vue.extend({
     },
   },
   methods: {
+    recomputeRequirements(): void {
+      const groups = computeRequirements(
+        this.getCourseCodesArray(),
+        this.toggleableRequirementChoices,
+        this.user.college,
+        this.user.major,
+        this.user.minor,
+      );
+      // Send satisfied credits data back to dashboard to build alerts
+      this.$emit('requirementsMap', computeRequirementMap(groups));
+      // Turn result into data readable by requirements menu
+      const singleMenuRequirements = groups.map(group => {
+        const singleMenuRequirement: SingleMenuRequirement = {
+          ongoing: [],
+          completed: [],
+          name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
+          group: group.groupName.toUpperCase() as 'COLLEGE' | 'MAJOR' | 'MINOR',
+          specific: (group.specific) ? group.specific : null,
+          displayDetails: false,
+          displayCompleted: false
+        };
+        group.reqs.forEach(req => {
+          // Create progress bar with requirement with progressBar = true
+          if (req.requirement.progressBar) {
+            singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
+            singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
+            singleMenuRequirement.required = (req.requirement.fulfilledBy !== 'self-check' && req.totalCountRequired) || req.minCountRequired;
+          }
+          // Default display value of false for all requirement lists
+          const displayableRequirementFulfillment = { ...req, displayDescription: false };
+          if (!req.minCountFulfilled || req.minCountFulfilled < req.minCountRequired) {
+            singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
+          } else {
+            singleMenuRequirement.completed.push(displayableRequirementFulfillment);
+          }
+        });
+        // Make number of requirements items progress bar in absense of identified progress metric
+        if (!singleMenuRequirement.type) {
+          singleMenuRequirement.type = 'Requirements';
+          singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
+          singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+        }
+        return singleMenuRequirement;
+      });
+      this.reqs = singleMenuRequirements;
+    },
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
     },
@@ -217,6 +231,13 @@ export default Vue.extend({
       // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
       return id < this.numOfColleges ||
         id === this.displayedMinorIndex + this.numOfColleges + this.majors.length;
+    },
+    chooseToggleableRequirementOption(requirementID: string, option: string): void {
+      this.toggleableRequirementChoices = {
+        ...this.toggleableRequirementChoices,
+        [requirementID]: option,
+      };
+      this.recomputeRequirements();
     },
     toggleDetails(index: number): void {
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;

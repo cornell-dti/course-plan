@@ -92,16 +92,23 @@ export default Vue.extend({
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqIndex: Number, // Subrequirement index
     reqIndex: Number, // Requirement index
+    toggleableRequirementChoice: {
+      type: String,
+      required: false,
+    },
     color: String,
     isCompleted: Boolean
   },
   data() {
-    return {
-      showFulfillmentOptionsDropdown: false,
-      selectedFulfillmentOption: this.subReq.requirement.fulfilledBy !== 'toggleable'
-        ? ''
-        : Object.keys(this.subReq.requirement.fulfillmentOptions)[0]
-    }
+    return { showFulfillmentOptionsDropdown: false };
+  },
+  computed: {
+    selectedFulfillmentOption(): string {
+      if (this.subReq.requirement.fulfilledBy !== 'toggleable') {
+        return '';
+      }
+      return this.toggleableRequirementChoice || Object.keys(this.subReq.requirement.fulfillmentOptions)[0];
+    },
   },
   directives: {
     'click-outside': clickOutside
@@ -126,8 +133,8 @@ export default Vue.extend({
       this.showFulfillmentOptionsDropdown = false;
     },
     chooseFulfillmentOption(option: string) {
-      this.selectedFulfillmentOption = option;
       this.showFulfillmentOptionsDropdown = false;
+      this.$emit('changeToggleableRequirementChoice', this.subReq.id, option);
     },
   },
 });

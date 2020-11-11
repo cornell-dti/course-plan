@@ -271,6 +271,7 @@ export default Vue.extend({
      * Creates a course on frontend with either user or API data
      */
     createCourse(course: FirestoreSemesterCourse): AppCourse {
+      this.updateRequirementsMenu();
       return firestoreCourseToAppCourse(
         course,
         () => this.incrementID(),
