@@ -27,8 +27,10 @@
             :subReqIndex="id"
             :subReq="subReq"
             :reqIndex="reqIndex"
+            :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
             :color="reqGroupColorMap[req.group][0]"
             :isCompleted="false"
+            @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @toggleDescription="toggleDescription"
           />
         </div>
@@ -55,8 +57,10 @@
               :subReqIndex="id"
               :subReq="subReq"
               :reqIndex="reqIndex"
+              :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
               :color="reqGroupColorMap[req.group][0]"
               :isCompleted="true"
+              @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @toggleDescription="toggleDescription"
             />
           </div>
@@ -94,6 +98,7 @@ export default Vue.extend({
     reqIndex: Number, // Index of this req in reqs array
     majors: Array as PropType<readonly AppMajor[]>,
     minors: Array as PropType<readonly AppMinor[]>,
+    toggleableRequirementChoices: Object as PropType<Readonly<Record<string, string>>>,
     displayedMajorIndex: Number,
     displayedMinorIndex: Number,
     user: Object as PropType<AppUser>,
@@ -111,6 +116,9 @@ export default Vue.extend({
     },
     activateMinor(id: number) {
       this.$emit('activateMinor', id);
+    },
+    changeToggleableRequirementChoice(requirementID: string, option: string) {
+      this.$emit('changeToggleableRequirementChoice', requirementID, option);
     },
     toggleDetails(index: number) {
       this.$emit('toggleDetails', index);
