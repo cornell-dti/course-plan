@@ -3,13 +3,13 @@
     <div class="newSemester-section newSemester-type">
       <label v-if="labels" class="newSemester-label" for="type">Type</label>
       <div
-        v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
+        v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
         id="season"
         v-click-outside="closeSeasonDropdownIfOpen"
       >
         <div class="newSemester-dropdown-placeholder season-wrapper" @click="showHideSeasonContent">
           <div
-            v-if= "isEdit"
+            v-if="isEdit"
             class="newSemester-dropdown-placeholder season-placeholder"
             :id="'season-placeholder-' + id"
             :style="{ color: displayOptions.season.placeholderColor }"
@@ -67,7 +67,7 @@
     <div class="newSemester-section newSemester-year">
       <label v-if="labels" class="newSemester-label" for="year">Year</label>
       <div
-        v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
+        v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
         id="year"
         v-click-outside="closeYearDropdownIfOpen"
       >
@@ -172,7 +172,7 @@ export default {
     isEdit: Boolean,
     year: Number,
     type: String,
-    labels: Boolean
+    labels: Boolean,
   },
   data() {
     // years
