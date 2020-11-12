@@ -1,21 +1,25 @@
 <template>
-  <div class="bottombartitle" :style="{ background: `#${color}` }" v-bind:class="{ expandedBottomBarTitle: isExpanded }">
+  <div
+    class="bottombartitle"
+    :style="{ background: `#${color}` }"
+    v-bind:class="{ expandedBottomBarTitle: isExpanded }"
+  >
     <div class="bottombar-square-title">{{ name }}</div>
-    <img v-if="!isExpanded" class="bottombartitle-arrow" src="@/assets/images/uparrow-white.svg"/>
-    <img v-if="isExpanded" class="bottombartitle-arrow" src="@/assets/images/downarrow-white.svg"/>
+    <img v-if="!isExpanded" class="bottombartitle-arrow" src="@/assets/images/uparrow-white.svg" />
+    <img v-if="isExpanded" class="bottombartitle-arrow" src="@/assets/images/downarrow-white.svg" />
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 
-export default {
+export default Vue.extend({
   props: {
     color: String,
     name: String,
-    isExpanded: Boolean
-  }
-};
-
+    isExpanded: Boolean,
+  },
+});
 </script>
 
 <style scoped lang="scss">
@@ -23,8 +27,8 @@ export default {
   padding-left: 1.5rem;
   height: 2.5rem;
   line-height: 40px;
-  background-color: #25A2AA;
-  color: #FFF;
+  background-color: #25a2aa;
+  color: #fff;
   font-size: 16px;
   cursor: pointer;
   filter: brightness(100%);
@@ -54,9 +58,9 @@ export default {
   top: 40%;
 }
 
-.expandedBottomBarTitle{
-    position: fixed;
-    bottom: 16.25rem;
+.expandedBottomBarTitle {
+  position: fixed;
+  bottom: 16.25rem;
 }
 
 @media only screen and (max-width: 976px) {
@@ -78,5 +82,4 @@ export default {
     bottom: 9.25rem;
   }
 }
-
 </style>

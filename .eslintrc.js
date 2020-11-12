@@ -67,20 +67,13 @@ module.exports = {
           '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.',
       },
     ],
-    quotes: [
-      'error',
-      'single',
-      {
-        allowTemplateLiterals: true,
-      },
-    ],
     'max-len': ['error', { code: 200 }],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },
   overrides: [
     {
-      files: ['*.ts', '*.tsx'],
+      files: ['*.ts', '*.tsx', '*.vue'],
       rules: {
         'import/extensions': [
           'error',

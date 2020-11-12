@@ -20,14 +20,16 @@
         </div>
       </div>
     </div>
- </div>
+  </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   data() {
     return {
-      isOpenModal: false
+      isOpenModal: false,
     };
   },
   methods: {
@@ -38,9 +40,9 @@ export default {
     openEditSemesterModal() {
       this.$emit('open-edit-semester-modal');
       this.isOpenModal = true;
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
@@ -88,12 +90,11 @@ export default {
       height: 16px;
     }
   }
-  &-delete{
-      color: #EB6D6D;
+  &-delete {
+    color: #eb6d6d;
   }
-  &-edit{
+  &-edit {
     color: black;
   }
-
 }
 </style>

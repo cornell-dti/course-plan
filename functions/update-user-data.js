@@ -1,11 +1,17 @@
 const admin = require('firebase-admin');
+const fs = require('fs');
 const serviceAccount = require('./service-account.json');
-const filteredAllCourses = require('./filtered-all-courses.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
 });
+
+const filteredCoursesPaths = fs.readdirSync('./filtered_courses/');
+
+const filteredAllCourses = filteredCoursesPaths
+  .map(path => require('./filtered_courses/' + path))
+  .reduce((accum, currentValue) => Object.assign(accum, currentValue));
 
 const db = admin.firestore();
 const userDataCollection = db.collection('userData');

@@ -12,3 +12,17 @@ export default function getCurrentSeason() {
   }
   return currentSeason;
 }
+
+export const clickOutside = {
+  bind(el: any, binding: any, vnode: any) {
+    el.event = (event: any) => {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event, binding.arg);
+      }
+    };
+    document.body.addEventListener('click', el.event);
+  },
+  unbind(el: any) {
+    document.body.removeEventListener('click', el.event);
+  },
+};

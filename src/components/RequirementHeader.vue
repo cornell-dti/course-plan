@@ -6,17 +6,33 @@
     </div>
       <!-- TODO change for multiple colleges -->
       <div v-if="reqIndex==numOfColleges" class="major">
-        <div :style="{'border-bottom': major.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '' }"
-          @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="major.id" :class="{ pointer: multipleMajors }">
-          <p :style="{'font-weight': major.display ? '500' : '', 'color' : major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="major-title-top">{{major.majorFN}}</p>
-          <p :style="{'color': major.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
+        <div :style="{'border-bottom': id === displayedMajorIndex ? `2px solid #${reqGroupColorMap[req.group][0]}` : '' }"
+          @click="activateMajor(id)" class="major-title" v-for="(major, id) in majors" :key="id" :class="{ pointer: multipleMajors }">
+          <p
+            :style="{
+              'font-weight': id === displayedMajorIndex ? '500' : '',
+              'color' : id === displayedMajorIndex ? `#${reqGroupColorMap[req.group][0]}` : ''
+            }"
+            class="major-title-top"
+          >
+            {{major.majorFN}}
+          </p>
+          <p :style="{'color': id === displayedMajorIndex ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="major-title-bottom">({{user.collegeFN}})</p>
         </div>
       </div>
       <div v-if="reqIndex==numOfColleges+majors.length" class="minor">
-        <div :style="{'border-bottom': minor.display ? `2px solid #${reqGroupColorMap[req.group][0]}` : '' }"
-          @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="minor.id"
+        <div :style="{'border-bottom': id === displayedMinorIndex ? `2px solid #${reqGroupColorMap[req.group][0]}` : '' }"
+          @click="activateMinor(id)" class="major-title" v-for="(minor, id) in minors" :key="id"
           :class="{ pointer: multipleMinors }">
-          <p :style="{'font-weight': minor.display ? '500' : '', 'color' : minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}"  class="minor-title-top">{{minor.minorFN}}</p>
+          <p
+            :style="{
+              'font-weight': id === displayedMinorIndex ? '500' : '',
+              'color' : id === displayedMinorIndex ? `#${reqGroupColorMap[req.group][0]}` : ''
+            }"
+            class="minor-title-top"
+          >
+            {{minor.minorFN}}
+          </p>
           <!-- <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> Change for multiple colleges -->
         </div>
       </div>
@@ -26,7 +42,7 @@
         <div class="progress">
           <div
             class="progress-bar"
-            :style="{ 'background-color': `#${reqGroupColorMap[req.group][0]}`, width: `${(req.fulfilled/req.required)*100}%`}"
+            :style="{ 'background-color': `#${reqGroupColorMap[req.group][0]}`, width: progressWidth}"
             role="progressbar"
           ></div>
         </div>
@@ -68,36 +84,51 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+
+import { SingleMenuRequirement } from '@/requirements/types';
+import { AppUser, AppMajor, AppMinor } from '@/user-data';
+
+export default Vue.extend({
   props: {
     reqIndex: Number,
-    majors: Array,
-    minors: Array,
-    req: Object,
-    reqGroupColorMap: Object,
-    user: Object,
+    majors: Array as PropType<readonly AppMajor[]>,
+    minors: Array as PropType<readonly AppMinor[]>,
+    displayedMajorIndex: Number,
+    displayedMinorIndex: Number,
+    req: Object as PropType<SingleMenuRequirement>,
+    reqGroupColorMap: Object as PropType<Readonly<Record<string, string[]>>>,
+    user: Object as PropType<AppUser>,
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number
   },
-  data() {
-    return {
-      multipleMajors: this.majors.length > 1,
-      multipleMinors: this.minors.length > 1
-    };
+  computed: {
+    multipleMajors() {
+      return this.majors.length > 1;
+    },
+    multipleMinors() {
+      return this.minors.length > 1;
+    },
+    progressWidth() {
+      if (this.req.fulfilled != null && this.req.required != null) {
+        return `${this.req.fulfilled / this.req.required}%`;
+      }
+      return undefined;
+    }
   },
   methods: {
-    toggleDetails(index) {
+    toggleDetails(index: number) {
       this.$emit('toggleDetails', index);
     },
-    activateMajor(id) {
+    activateMajor(id: number) {
       this.$emit('activateMajor', id);
     },
-    activateMinor(id) {
+    activateMinor(id: number) {
       this.$emit('activateMinor', id);
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">

@@ -121,6 +121,8 @@ export type DecoratedRequirementsJson = {
 };
 
 export type RequirementFulfillment<M extends {}> = {
+  /** ID of the requirement */
+  readonly id: string;
   /** The original requirement object. */
   readonly requirement: BaseRequirement;
   /** A list of courses that satisfy this requirement. */
@@ -154,9 +156,8 @@ export type SingleMenuRequirement = {
   readonly ongoing: DisplayableRequirementFulfillment[];
   readonly completed: DisplayableRequirementFulfillment[];
   readonly name: string;
-  readonly group: string;
+  readonly group: 'COLLEGE' | 'MAJOR' | 'MINOR';
   readonly specific: string | null;
-  readonly color: string;
   displayDetails: boolean;
   displayCompleted: boolean;
   type?: string;

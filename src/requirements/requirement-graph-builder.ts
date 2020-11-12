@@ -48,7 +48,7 @@ type BuildRequirementFulfillmentGraphParameters<
     choice: UserChoiceOnFulfillmentStrategy
   ) => {
     readonly correspondingRequirement: Requirement;
-    readonly coursesOfChosenFulfillmentStrategy: Course[];
+    readonly coursesOfChosenFulfillmentStrategy: readonly Course[];
   };
   /**
    * Report whether a requirement allows a course connected to it to also be used to fulfill some

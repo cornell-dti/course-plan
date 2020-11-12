@@ -4,6 +4,8 @@
       :reqIndex="reqIndex"
       :majors="majors"
       :minors="minors"
+      :displayedMajorIndex="displayedMajorIndex"
+      :displayedMinorIndex="displayedMinorIndex"
       :req="req"
       :reqGroupColorMap="reqGroupColorMap"
       :user="user"
@@ -20,13 +22,15 @@
         <div class="separator"></div>
         <div
           v-for="(subReq, id) in req.ongoing"
-          :key="subReq.id">
+          :key="id">
           <subrequirement
             :subReqIndex="id"
             :subReq="subReq"
             :reqIndex="reqIndex"
+            :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
             :color="reqGroupColorMap[req.group][0]"
             :isCompleted="false"
+            @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @toggleDescription="toggleDescription"
           />
         </div>
@@ -47,14 +51,16 @@
 
       <!-- Completed requirements -->
         <div v-if="req.displayCompleted">
-          <div v-for="(subReq, id) in req.completed" :key="subReq.id">
+          <div v-for="(subReq, id) in req.completed" :key="id">
             <div class="separator" v-if="reqIndex < reqs.length - 1 || req.displayDetails"></div>
             <subrequirement
               :subReqIndex="id"
               :subReq="subReq"
               :reqIndex="reqIndex"
+              :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
               :color="reqGroupColorMap[req.group][0]"
               :isCompleted="true"
+              @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @toggleDescription="toggleDescription"
             />
           </div>
@@ -67,44 +73,64 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
-import RequirementHeader from '@/components/RequirementHeader';
-import SubRequirement from '@/components/SubRequirement';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import RequirementHeader from '@/components/RequirementHeader.vue';
+import SubRequirement from '@/components/SubRequirement.vue';
+
+import { SingleMenuRequirement } from '@/requirements/types';
+import { AppUser, AppMajor, AppMinor } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
 
-export default {
+// reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
+const reqGroupColorMap = {
+  COLLEGE: ['1AA9A5', 'blue'],
+  MAJOR: ['105351', 'green'],
+  MINOR: ['92C3E6', 'lightblue']
+};
+
+export default Vue.extend({
   props: {
-    reqs: Array,
-    req: Object,
+    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
+    req: Object as PropType<SingleMenuRequirement>,
     reqIndex: Number, // Index of this req in reqs array
-    majors: Array,
-    minors: Array,
-    reqGroupColorMap: Object,
-    user: Object,
+    majors: Array as PropType<readonly AppMajor[]>,
+    minors: Array as PropType<readonly AppMinor[]>,
+    toggleableRequirementChoices: Object as PropType<Readonly<Record<string, string>>>,
+    displayedMajorIndex: Number,
+    displayedMinorIndex: Number,
+    user: Object as PropType<AppUser>,
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number
   },
+  computed: {
+    reqGroupColorMap() {
+      return reqGroupColorMap;
+    }
+  },
   methods: {
-    activateMajor(id) {
+    activateMajor(id: number) {
       this.$emit('activateMajor', id);
     },
-    activateMinor(id) {
+    activateMinor(id: number) {
       this.$emit('activateMinor', id);
     },
-    toggleDetails(index) {
+    changeToggleableRequirementChoice(requirementID: string, option: string) {
+      this.$emit('changeToggleableRequirementChoice', requirementID, option);
+    },
+    toggleDetails(index: number) {
       this.$emit('toggleDetails', index);
     },
-    toggleDescription(index, type, id) {
+    toggleDescription(index: number, type: 'ongoing' | 'completed', id: number) {
       this.$emit('toggleDescription', index, type, id);
     },
-    turnCompleted(index, bool) {
+    turnCompleted(index: number, bool: boolean) {
       this.$emit('turnCompleted', index, bool);
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">

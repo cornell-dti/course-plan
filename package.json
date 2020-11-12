@@ -12,8 +12,8 @@
     "lint": "vue-cli-service lint",
     "tsc": "tsc",
     "build:staging": "vue-cli-service build --mode staging",
-    "format": "prettier --write \"**/*.{js,ts,css,html}\"",
-    "format:check": "prettier --check \"**/*.{js,ts,css,html}\"",
+    "format": "prettier --write \"**/*.{js,ts,css,html}\" src/App.vue \"src/components/{BottomBar*,Caution,Confirmation,Footer,Login,NavBar,TopBar,Semester*,Modals/SemesterModal,Modals/TourWindow,Modals/*Semester}.vue\"",
+    "format:check": "prettier --check \"**/*.{js,ts,css,html}\" src/App.vue \"src/components/{BottomBar*,Caution,Confirmation,Footer,Login,NavBar,TopBar,Semester*,Modals/SemesterModal,Modals/TourWindow,Modals/*Semester}.vue\"",
     "format:check:full": "prettier --check \"**/*.{js,ts,vue,scss,css,html}\"",
     "test": "jest"
   },
@@ -62,6 +62,12 @@
     "sass-loader": "^8.0.2",
     "typescript": "~3.7.5",
     "vue-template-compiler": "^2.6.11"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "arrowParens": "avoid"
   },
   "postcss": {
     "plugins": {

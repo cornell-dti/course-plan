@@ -1,7 +1,3 @@
-// One prop for text // Otherwise - the same for courses and semesters // Can leave as display: none
-like the 2 modals in Semester.vue until necessary? Or can itself be created from the addCourse()
-method - unsure what the right move is right now
-
 <template>
   <div class="confirmation">
     <div class="confirmation-left">
@@ -11,12 +7,14 @@ method - unsure what the right move is right now
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   props: {
-    text: String
-  }
-};
+    text: String,
+  },
+});
 </script>
 
 <style scoped lang="scss">
@@ -66,7 +64,7 @@ export default {
     display: flex;
     align-items: center;
 
-    color: #7B7D7E;
+    color: #7b7d7e;
 
     margin: 14px 16px 12px 16px;
   }

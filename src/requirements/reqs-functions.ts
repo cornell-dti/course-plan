@@ -9,7 +9,7 @@ import {
   Course,
 } from './types';
 
-type RequirementMap = { readonly [code: string]: readonly string[] };
+export type RequirementMap = { readonly [code: string]: readonly string[] };
 type MutableRequirementMapWithMutableChildren = { [code: string]: string[] };
 
 function computeFulfillmentStatisticsFromCourses(
@@ -102,8 +102,15 @@ function filterAndPartitionCoursesThatFulfillRequirement(
   return coursesThatFulfilledRequirement;
 }
 
+type RequirementWithIDSourceType = DecoratedCollegeOrMajorRequirement & {
+  readonly id: string;
+  readonly sourceType: 'College' | 'Major' | 'Minor';
+  readonly sourceSpecificName: string;
+};
+
 function computeFulfillmentCoursesAndStatistics(
-  requirement: DecoratedCollegeOrMajorRequirement,
+  requirement: RequirementWithIDSourceType,
+  toggleableRequirementChoices: Readonly<Record<string, string>>,
   coursesTaken: readonly CourseTaken[]
 ): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
   switch (requirement.fulfilledBy) {
@@ -119,27 +126,18 @@ function computeFulfillmentCoursesAndStatistics(
         requirement.totalCount
       );
     case 'toggleable': {
-      // Choose the max fulfillment progress as the statistics
-      // TODO: take user choices into account when we are going to integrating that.
-      return Object.values(requirement.fulfillmentOptions)
-        .map(option =>
-          computeFulfillmentStatisticsFromCourses(
-            filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, option.courses),
-            option.counting,
-            option.operator,
-            option.minCount,
-            option.totalCount
-          )
-        )
-        .reduce((max, current) => {
-          if (
-            max.minCountFulfilled / max.minCountRequired <
-            current.minCountFulfilled / current.minCountRequired
-          ) {
-            return current;
-          }
-          return max;
-        });
+      const option =
+        requirement.fulfillmentOptions[
+          toggleableRequirementChoices[requirement.id] ||
+            Object.keys(requirement.fulfillmentOptions)[0]
+        ];
+      return computeFulfillmentStatisticsFromCourses(
+        filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, option.courses),
+        option.counting,
+        option.operator,
+        option.minCount,
+        option.totalCount
+      );
     }
     default:
       throw new Error();
@@ -149,6 +147,7 @@ function computeFulfillmentCoursesAndStatistics(
 /**
  * @param coursesTaken a list of classes taken by the user, with some metadata (e.g. no. of credits)
  * helping to compute requirement progress.
+ * @param toggleableRequirementChoices an object map from toggleable requirement IDs to choices
  * @param college user's college.
  * @param majors user's list of majors.
  * @param minors user's list of minors.
@@ -156,6 +155,7 @@ function computeFulfillmentCoursesAndStatistics(
  */
 export function computeRequirements(
   coursesTaken: readonly CourseTaken[],
+  toggleableRequirementChoices: Readonly<Record<string, string>>,
   college: string,
   majors: readonly string[] | null,
   minors: readonly string[] | null
@@ -169,23 +169,37 @@ export function computeRequirements(
   const universityReqs = requirementJson.university.UNI;
   const collegeReqs = requirementJson.college[college];
 
-  type RequirementWithSourceType = DecoratedCollegeOrMajorRequirement & {
-    readonly sourceType: 'College' | 'Major' | 'Minor';
-    readonly sourceSpecificName: string;
-  };
-  const requirementsToBeConsideredInGraph: readonly RequirementWithSourceType[] = [
+  const requirementsToBeConsideredInGraph: readonly RequirementWithIDSourceType[] = [
     ...universityReqs.requirements.map(
-      it => ({ ...it, sourceType: 'College', sourceSpecificName: college } as const)
+      it =>
+        ({
+          ...it,
+          id: `College-UNI-${it.name}`,
+          sourceType: 'College',
+          sourceSpecificName: college,
+        } as const)
     ),
     ...collegeReqs.requirements.map(
-      it => ({ ...it, sourceType: 'College', sourceSpecificName: college } as const)
+      it =>
+        ({
+          ...it,
+          id: `College-${college}-${it.name}`,
+          sourceType: 'College',
+          sourceSpecificName: college,
+        } as const)
     ),
     ...(majors || [])
       .map(major => {
         const majorRequirement = requirementJson.major[major];
         if (majorRequirement == null) return [];
         return majorRequirement.requirements.map(
-          it => ({ ...it, sourceType: 'Major', sourceSpecificName: major } as const)
+          it =>
+            ({
+              ...it,
+              id: `Major-${major}-${it.name}`,
+              sourceType: 'Major',
+              sourceSpecificName: major,
+            } as const)
         );
       })
       .flat(),
@@ -194,23 +208,61 @@ export function computeRequirements(
         const minorRequirement = requirementJson.minor[minor];
         if (minorRequirement == null) return [];
         return minorRequirement.requirements.map(
-          it => ({ ...it, sourceType: 'Minor', sourceSpecificName: minor } as const)
+          it =>
+            ({
+              ...it,
+              id: `Minor-${minor}-${it.name}`,
+              sourceType: 'Minor',
+              sourceSpecificName: minor,
+            } as const)
         );
       })
       .flat(),
   ];
+  type UserChoiceOnFulfillmentStrategy = {
+    readonly correspondingRequirement: RequirementWithIDSourceType;
+    readonly coursesOfChosenFulfillmentStrategy: readonly CourseTaken[];
+  };
+  const userChoiceOnFulfillmentStrategy = requirementsToBeConsideredInGraph
+    .map((requirement): UserChoiceOnFulfillmentStrategy | null => {
+      if (requirement.fulfilledBy !== 'toggleable') {
+        return null;
+      }
+      const optionName =
+        toggleableRequirementChoices[requirement.id] ||
+        Object.keys(requirement.fulfillmentOptions)[0];
+
+      const courses: CourseTaken[] = [];
+      requirement.fulfillmentOptions[optionName].courses.forEach(eligibleCourses => {
+        Object.entries(eligibleCourses).forEach(([roster, courseIds]) => {
+          courseIds.forEach(courseId =>
+            courses.push({
+              roster,
+              courseId,
+              // Only roster and courseId are used for equality comparison,
+              // so other dummy values doesn't matter.
+              code: 'DUMMY',
+              subject: 'DUMMY',
+              number: 'DUMMY',
+              credits: 0,
+            })
+          );
+        });
+      });
+      return { correspondingRequirement: requirement, coursesOfChosenFulfillmentStrategy: courses };
+    })
+    .filter((it): it is UserChoiceOnFulfillmentStrategy => it != null);
 
   const { requirementFulfillmentGraph } = buildRequirementFulfillmentGraph<
-    RequirementWithSourceType,
+    RequirementWithIDSourceType,
     CourseTaken,
-    undefined
+    UserChoiceOnFulfillmentStrategy
   >({
     requirements: requirementsToBeConsideredInGraph,
     userCourses: coursesTaken,
-    userChoiceOnFulfillmentStrategy: [],
+    userChoiceOnFulfillmentStrategy,
     userChoiceOnDoubleCountingElimiation: [],
-    // TODO assign an unique ID to each requirement entry.
-    getRequirementUniqueID: requirement => `${requirement.name} ${requirement.description}`,
+    getRequirementUniqueID: requirement => requirement.id,
     getCourseUniqueID: course => `${course.roster} ${course.courseId}`,
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirement => {
       let eligibleCoursesList: readonly EligibleCourses[];
@@ -250,19 +302,15 @@ export function computeRequirements(
         })
         .flat();
     },
-    getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy: () => ({
-      // Give back dummy value for now. Give it a real strategy when we have non-empty
-      // userChoiceOnFulfillmentStrategy
-      correspondingRequirement: requirementsToBeConsideredInGraph[0],
-      coursesOfChosenFulfillmentStrategy: [],
-    }),
+    getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy: it => it,
     // TODO: Replace this dummy implementation once we decided how to determine if a requirement is
     // double-countable. Meanwhile, make it always return true to match the old behavior.
     allowDoubleCounting: () => true,
   });
 
   type FulfillmentStatistics = {
-    readonly requirement: RequirementWithSourceType;
+    readonly id: string;
+    readonly requirement: RequirementWithIDSourceType;
     readonly courses: readonly (readonly CourseTaken[])[];
   } & RequirementFulfillmentStatistics;
   const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];
@@ -271,8 +319,9 @@ export function computeRequirements(
   requirementFulfillmentGraph.getAllRequirements().forEach(requirement => {
     const courses = requirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement);
     const fulfillmentStatistics = {
+      id: requirement.id,
       requirement,
-      ...computeFulfillmentCoursesAndStatistics(requirement, courses),
+      ...computeFulfillmentCoursesAndStatistics(requirement, toggleableRequirementChoices, courses),
     };
 
     switch (requirement.sourceType) {

@@ -50,8 +50,9 @@
 <script>
 import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import OnboardingBasic from '@/components/Modals/OnboardingBasic';
-import OnboardingTransfer from '@/components/Modals/OnboardingTransfer';
+import OnboardingBasic from '@/components/Modals/OnboardingBasic.vue';
+import OnboardingTransfer from '@/components/Modals/OnboardingTransfer.vue';
+import { clickOutside } from '@/utilities';
 import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 require('@/assets/images/timeline1.svg');
@@ -61,19 +62,6 @@ Vue.component('onboardingTransfer', OnboardingTransfer);
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event, binding.arg);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
 
 export default {
   props: {

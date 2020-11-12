@@ -122,6 +122,26 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     const { requirements, ...rest } = minorRequirement;
     decoratedJson.minor[minorName] = { ...rest, requirements: decorateRequirements(requirements) };
   });
+
+  // Check no duplicate requirement identifier
+  const allRequirementIDs = [
+    ...Object.entries(decoratedJson.college).map(
+      ([code, requirements]) => ['COLLEGE', code, requirements] as const
+    ),
+    ...Object.entries(decoratedJson.major).map(
+      ([code, requirements]) => ['MAJOR', code, requirements] as const
+    ),
+    ...Object.entries(decoratedJson.minor).map(
+      ([code, requirements]) => ['MINOR', code, requirements] as const
+    ),
+  ].flatMap(([category, code, { requirements }]) =>
+    requirements.map(it => `${category}-${code}-${it.name}`)
+  );
+  const idSet = new Set(allRequirementIDs);
+  if (idSet.size !== allRequirementIDs.length) {
+    throw new Error('There are some duplicate requirement IDs!');
+  }
+
   return decoratedJson;
 };
 
