@@ -17,6 +17,8 @@
         :majors="majors"
         :minors="minors"
         :toggleableRequirementChoices="toggleableRequirementChoices"
+        :displayDetails="displayDetails"
+        :displayCompleted="displayCompleted"
         :displayedMajorIndex="displayedMajorIndex"
         :displayedMinorIndex="displayedMinorIndex"
         :user="user"
@@ -59,14 +61,15 @@ Vue.component('requirementview', RequirementView);
 Vue.use(VueCollapse);
 
 type Data = {
-  actives: readonly boolean[];
-  modalShow: boolean;
-  reqs: SingleMenuRequirement[];
+  reqs: readonly SingleMenuRequirement[];
+  // map from requirement group (e.g. CS major requirement group) to whether to display details.
+  displayDetails: Readonly<Record<string, boolean>>;
+  // map from requirement group to whether to display completed ones.
+  displayCompleted: Readonly<Record<string, boolean>>;
   // map from requirement ID to option chosen
   toggleableRequirementChoices: Readonly<Record<string, string>>;
   displayedMajorIndex: number,
   displayedMinorIndex: number,
-  requirementsMap: RequirementMap;
   numOfColleges: number
 }
 // emoji for clipboard
@@ -95,8 +98,6 @@ export default Vue.extend({
       // currentEditID: 0,
       // isEditing: false,
       // display: [],
-      actives: [false],
-      modalShow: false,
       displayedMajorIndex: 0,
       displayedMinorIndex: 0,
       reqs: [
@@ -141,10 +142,9 @@ export default Vue.extend({
         //   ]
         // }
       ],
+      displayDetails: {},
+      displayCompleted: {},
       toggleableRequirementChoices: {},
-      requirementsMap: {
-        // CS 1110: 'MQR-AS'
-      },
       numOfColleges: 1
     };
   },
@@ -192,9 +192,7 @@ export default Vue.extend({
           completed: [],
           name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
           group: group.groupName.toUpperCase() as 'COLLEGE' | 'MAJOR' | 'MINOR',
-          specific: (group.specific) ? group.specific : null,
-          displayDetails: false,
-          displayCompleted: false
+          specific: group.specific,
         };
         group.reqs.forEach(req => {
           // Create progress bar with requirement with progressBar = true
@@ -239,8 +237,8 @@ export default Vue.extend({
       };
       this.recomputeRequirements();
     },
-    toggleDetails(index: number): void {
-      this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
+    toggleDetails(name: string): void {
+      this.displayDetails = { ...this.displayDetails, [name]: !this.displayDetails[name] };
     },
     toggleDescription(index: number, type: 'ongoing' | 'completed', id: number): void {
       if (type === 'ongoing') {
@@ -251,8 +249,8 @@ export default Vue.extend({
         this.reqs[index].completed[id].displayDescription = !currentBool;
       }
     },
-    turnCompleted(index: number, bool: boolean): void {
-      this.reqs[index].displayCompleted = bool;
+    turnCompleted(name: string, bool: boolean): void {
+      this.displayCompleted = { ...this.displayCompleted, [name]: bool };
     },
     getCourseCodesArray(): readonly CourseTaken[] {
       const courses: CourseTaken[] = [];
