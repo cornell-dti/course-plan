@@ -42,7 +42,7 @@ export default {
     flex-direction: row;
     justify-content: center;
     flex-grow: 1;
-    width: 438px;
+    width: 100%;
     height: 36px;
     border: 1px solid $emGreen;
     border-radius: 4px;

@@ -5,13 +5,7 @@
     <div class="autocomplete">
       <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
-    <div v-if="!isOnboard && !selected"> <!-- if a course is not selected -->
-      <div class="newCourse-title">Add this class to the following semester</div>
-      <div class="newCourse-semester-edit">
-        <newSemester :type="season" :year="year"></newSemester>
-      </div>
-    </div>
-    <div v-else > <!-- if a course is selected -->
+    <div v-if="!isOnboard && selected" > <!-- if a course is selected -->
       <div class="newCourse-text">Selected Semester</div>
       <div class="newCourse-semester">
         <span class="newCourse-name">
@@ -44,11 +38,9 @@
 
 <script>
 import coursesJSON from '../../assets/courses/courses.json';
-import NewSemester from '@/components/Modals/NewSemester';
 import EditRequirement from '@/components/EditRequirement';
 import BinaryButton from '@/components/BinaryButton';
 
-Vue.component('newSemester', NewSemester);
 Vue.component('editRequirement', EditRequirement);
 Vue.component('binaryButton', BinaryButton);
 
@@ -78,18 +70,18 @@ export default {
       selected: false,
       requirements: ['DummyReq1', 'DummyReq2'],
       potentialReqs: ['PotentialReq1', 'PotentialReq2'],
-      binaryPotentialReqs: [['binarychoice1', 'binarychoice2']],
+      binaryPotentialReqs: [['Technical Communication', 'External Specialization']],
       editMode: false,
       selectedCourse: ''
     };
   },
   watch: { 
-    goBack: function onPropChange(val) { // watch it
+    goBack: function onPropChange(val) {
       if (this.editMode) { this.editMode = false; }
       else {
         this.selected = false;
-        const impCopy = document.getElementById(`dropdown-${this.semesterID}`);
-        impCopy.value = '';
+        const inpCopy = document.getElementById(`dropdown-${this.semesterID}`);
+        inpCopy.value = '';
         this.$root.$emit('toggle-left-button');
       }
     }
