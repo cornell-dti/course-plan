@@ -28,7 +28,6 @@
             :subReq="subReq"
             :reqIndex="reqIndex"
             :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
-            :changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             :color="reqGroupColorMap[req.group][0]"
             :isCompleted="false"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
@@ -58,8 +57,10 @@
               :subReqIndex="id"
               :subReq="subReq"
               :reqIndex="reqIndex"
+              :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
               :color="reqGroupColorMap[req.group][0]"
               :isCompleted="true"
+              @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @toggleDescription="toggleDescription"
             />
           </div>
