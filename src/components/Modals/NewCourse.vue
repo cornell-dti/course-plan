@@ -5,12 +5,12 @@
     <div class="autocomplete">
       <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
-    <!-- <div v-if="!isOnboard && !selected"> <!-- if a course is not selected -->
-      <!-- <div class="newCourse-title">Add this class to the following semester</div> -->
-      <!-- <div class="newCourse-semester-edit"> -->
-        <!-- <newSemester :type="season" :year="year"></newSemester> -->
-      <!-- </div> -->
-    <!-- </div> -->
+    <!-- <div v-if="!isOnboard && !selected"> 
+      <div class="newCourse-title">Add this class to the following semester</div>
+      <div class="newCourse-semester-edit">
+        <newSemester :type="season" :year="year"></newSemester>
+      </div>
+    </div> -->
     <div v-if="!isOnboard && selected" > <!-- if a course is selected -->
       <div class="newCourse-text">Selected Semester</div>
       <div class="newCourse-semester">
@@ -44,8 +44,8 @@
 
 <script>
 import coursesJSON from '../../assets/courses/courses.json';
-import EditRequirement from '@/components/EditRequirement';
-import BinaryButton from '@/components/BinaryButton';
+import EditRequirement from '@/components/EditRequirement.vue';
+import BinaryButton from '@/components/BinaryButton.vue';
 
 Vue.component('editRequirement', EditRequirement);
 Vue.component('binaryButton', BinaryButton);
@@ -56,7 +56,6 @@ const winter = require('../../assets/images/winterEmoji.svg');
 const summer = require('../../assets/images/summerEmoji.svg');
 
 export default {
-  components: { EditRequirement, BinaryButton },
   props: {
     isOnboard: Boolean,
     semesterID: Number,
