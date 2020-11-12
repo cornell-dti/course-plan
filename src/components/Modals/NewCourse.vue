@@ -25,7 +25,7 @@
         </div>
       </div>
       <div v-else class="newCourse-requirements-edit">
-        <editRequirement v-for="req in requirements" :key="req" :name="req" :selected="true"/>
+        <editRequirement v-for="req in requirements" :key="req" :name="req" :selected="true" :isClickable="true"/>
       </div>
       <div class="newCourse-title">This class could potentially fulfill the following requirement(s):</div>
       <div v-if="!editMode" class="newCourse-requirements-container">
@@ -268,7 +268,6 @@ export default {
 
 <style lang="scss">
 @import "@/assets/scss/_variables.scss";
-// TODO: font family
 .newCourse {
   &-text {
     font-size: 14px;

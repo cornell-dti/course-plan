@@ -1,14 +1,14 @@
 <template>
   <div class="binary-button">
-    <div @click="onClick(true)" :class="{'binary-button-selected': leftChosen}">
-      <img v-if="leftChosen" class="confirmation-icon" src="../assets/images/check.svg" />
+    <div @click="onClick(true)" :class="{'binary-button-selected': leftChosen}" class="binary-button-child">
+      <img v-if="leftChosen" class="confirmation-icon binary-button-check" src="../assets/images/check.svg" />
       <div>
         {{ choices[0] }}
       </div>
       <img v-if="leftChosen" class="confirmation-icon hidden" src="../assets/images/check.svg" />
     </div>
-    <div @click="onClick(false)" :class="{'binary-button-selected': !leftChosen}">
-      <img v-if="!leftChosen" class="confirmation-icon" src="../assets/images/check.svg" />
+    <div @click="onClick(false)" :class="{'binary-button-selected': !leftChosen}" class="binary-button-child">
+      <img v-if="!leftChosen" class="confirmation-icon binary-button-check" src="../assets/images/check.svg" />
       <div>
         {{ choices[1] }}
       </div>
@@ -49,15 +49,12 @@ export default {
     color: $emGreen;
     margin-bottom: 20px;
     cursor: pointer;
-    div {
+    &-child {
       text-align: center;
       font-weight: 500;
       font-size: 14px;
       line-height: 36px;
       width: 204px;
-      &:first-of-type {
-        border-right: 1px solid $emGreen;
-      }
     }
     &-selected {
       background: $emGreen;
@@ -65,12 +62,12 @@ export default {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      img {
-        padding-left: 7px;
-      }
       .hidden {
         visibility: hidden;
       }
+    }
+    &-check {
+      padding-left: 7px;
     }
   }
 </style>
