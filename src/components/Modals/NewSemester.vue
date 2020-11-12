@@ -1,5 +1,4 @@
 <template>
-  <div>
   <div class="newSemester">
     <div class="newSemester-section newSemester-type">
       <label v-if="labels" class="newSemester-label" for="type">Type</label>
@@ -70,7 +69,6 @@
       <div
         v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
         id="year"
-
         v-click-outside="closeYearDropdownIfOpen"
       >
         <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
