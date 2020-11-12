@@ -38,10 +38,10 @@ export default {
 <style scoped lang="scss">
   @import "@/assets/scss/_variables.scss";
   .edit-requirement {
-    border: 1px solid #2BBCC6;
+    border: 1px solid $emGreen;
     box-sizing: border-box;
     border-radius: 4px;
-    color: #2BBCC6;
+    color: $emGreen;
     height: 36px;
     width: 196px;
     margin-bottom: 20px;
@@ -53,7 +53,7 @@ export default {
     }
     &-selected {
       @extend .edit-requirement, .edit-requirement-text;
-      background: #2BBCC6;
+      background: $emGreen;
       color: $white;
       display: flex;
       flex-direction: row;

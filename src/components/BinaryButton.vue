@@ -44,9 +44,9 @@ export default {
     flex-grow: 1;
     width: 438px;
     height: 36px;
-    border: 1px solid #2BBCC6;
+    border: 1px solid $emGreen;
     border-radius: 4px;
-    color: #2BBCC6;
+    color: $emGreen;
     margin-bottom: 20px;
     cursor: pointer;
     div {
@@ -56,11 +56,11 @@ export default {
       line-height: 36px;
       width: 204px;
       &:first-of-type {
-        border-right: 1px solid #2BBCC6;
+        border-right: 1px solid $emGreen;
       }
     }
     &-selected {
-      background: #2BBCC6;
+      background: $emGreen;
       color: $white;
       display: flex;
       flex-direction: row;
