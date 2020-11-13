@@ -35,7 +35,7 @@ Vue.component('newCourse', NewCourse);
 Vue.component('newSemester', NewSemester);
 Vue.component('editSemester', EditSemester);
 
-export default {
+export default Vue.extend({
   data() {
     return {
       isOnboard: false,
@@ -168,7 +168,7 @@ export default {
       this.year = year;
     }
   }
-};
+});
 </script>
 
 <style lang="scss">

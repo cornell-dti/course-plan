@@ -8,9 +8,10 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import coursesJSON from '../../assets/courses/courses.json';
 
-export default {
+export default Vue.extend({
   props: {
     isOnboard: Boolean,
     semesterID: Number,
@@ -176,7 +177,7 @@ export default {
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     }
   }
-};
+});
 </script>
 
 <style lang="scss">

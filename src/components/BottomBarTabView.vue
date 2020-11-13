@@ -3,12 +3,12 @@
     <div class="bottombartabview-bottomCourseWrapper">
       <div
         v-for="(bottomCourse, index) in bottomCourses"
-        :key="bottomCourse.id"
+        :key="index"
         class="bottombartabview-courseWrapper"
       >
         <bottombartab
           v-bind="bottomCourse"
-          :id="bottomCourse.id"
+          :id="index"
           :subject="bottomCourse.subject"
           :number="bottomCourse.number"
           :color="bottomCourse.color"
@@ -40,8 +40,8 @@
       <div v-if="seeMoreOpen" class="bottombarSeeMoreOptions">
         <div class="seeMoreCourse-content">
           <div
-            v-for="seeMoreCourse in seeMoreCourses"
-            :key="seeMoreCourse.id"
+            v-for="(seeMoreCourse, index) in seeMoreCourses"
+            :key="index"
             class="seeMoreCourse-option"
           >
             <span class="seeMoreCourse-option-text" @click="moveToBottomBar(seeMoreCourse)"

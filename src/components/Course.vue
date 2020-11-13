@@ -61,7 +61,7 @@ import { clickOutside } from '@/utilities';
 
 Vue.component('coursemenu', CourseMenu);
 
-export default {
+export default Vue.extend({
   props: {
     courseObj: Object,
     subject: String,
@@ -163,7 +163,7 @@ export default {
   directives: {
     'click-outside': clickOutside
   }
-};
+});
 </script>
 
 <style scoped lang="scss">
