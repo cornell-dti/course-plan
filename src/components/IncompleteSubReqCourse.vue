@@ -86,7 +86,11 @@ export default {
   },
   computed: {
     addCourseLabel() {
-      return `Add Course ${this.subReqCourseId + 1}`;
+      let label = 'Add Course';
+      if (this.subReq.fulfilledBy === 'courses') {
+        label = `Add Course ${this.subReqCourseId + 1}`;
+      }
+      return label;
     },
     seeAll() {
       return 'See all >';
