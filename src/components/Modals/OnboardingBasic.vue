@@ -176,14 +176,14 @@
 </template>
 
 <script>
-
+import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import { clickOutside } from '@/utilities';
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 const placeholderText = 'Select one';
 
-export default {
+export default Vue.extend({
   props: {
     user: Object
   },
@@ -539,7 +539,7 @@ export default {
       this.displayOptions.minor.push(minor);
     }
   }
-};
+});
 
 </script>
 

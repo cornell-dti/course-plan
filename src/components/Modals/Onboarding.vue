@@ -63,7 +63,7 @@ Vue.component('onboardingTransfer', OnboardingTransfer);
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
 
-export default {
+export default Vue.extend({
   props: {
     isEditingProfile: Boolean,
     user: Object
@@ -221,7 +221,7 @@ export default {
       this.$emit('cancelOnboarding');
     }
   }
-};
+});
 </script>
 <style scoped lang="scss">
   @import '@/components/Modals/Onboarding.scss';
