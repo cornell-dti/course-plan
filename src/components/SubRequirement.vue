@@ -120,7 +120,7 @@ type Data = {
 
 export default Vue.extend({
   mounted() {
-    if (!this.isUniversitySubReq && this.subReq.requirement.courses) { // TODO: Change after removing University Reqs
+    if (this.subReq.requirement.courses) {
       const mostRecentRosters = this.rostersFromLastTwoYears;
       console.log(mostRecentRosters);
       let filteredSubReqRosters;
@@ -155,7 +155,6 @@ export default Vue.extend({
     reqIndex: Number, // Requirement index
     color: String,
     isCompleted: Boolean,
-    isUniversitySubReq: Boolean, // TODO: Change after removing University Reqs
     rostersFromLastTwoYears: Array
   },
   watch: {
