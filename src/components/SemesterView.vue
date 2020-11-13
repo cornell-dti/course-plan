@@ -94,8 +94,9 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+// @ts-ignore
 import clone from 'clone';
 import Course from '@/components/Course.vue';
 import Semester from '@/components/Semester.vue';
@@ -105,6 +106,13 @@ import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 
 import { auth, userDataCollection } from '@/firebaseConfig';
+import {
+  AppCourse,
+  AppSemester,
+  FirestoreSemester,
+  FirestoreSemesterCourse,
+  FirestoreSemesterType,
+} from '@/user-data';
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
@@ -121,9 +129,9 @@ const SeasonsEnum = Object.freeze({
   fall: 3,
 });
 
-export default {
+export default Vue.extend({
   props: {
-    semesters: Array,
+    semesters: Array as PropType<AppSemester[]>,
     currSemID: Number,
     compact: Boolean,
     isBottomBar: Boolean,
@@ -152,12 +160,12 @@ export default {
     },
   },
   computed: {
-    noSemesters() {
+    noSemesters(): boolean {
       return this.semesters.length === 0;
     },
   },
   methods: {
-    checkIfFirstSem(id) {
+    checkIfFirstSem(id: number) {
       return this.semesters[0].id === id;
     },
     setCompact() {
@@ -182,7 +190,7 @@ export default {
     },
     buildDuplicateCautions() {
       if (this.semesters) {
-        const coursesMap = {};
+        const coursesMap: Record<string, boolean> = {};
         this.semesters.forEach(semester => {
           semester.courses.forEach(course => {
             if (coursesMap[`${course.subject} ${course.number}`])
@@ -192,7 +200,7 @@ export default {
         });
       }
     },
-    openSemesterConfirmationModal(type, year, isAdd) {
+    openSemesterConfirmationModal(type: FirestoreSemesterType, year: number, isAdd: boolean) {
       if (isAdd) {
         this.confirmationText = `Added ${type} ${year} to plan`;
       } else {
@@ -207,10 +215,10 @@ export default {
     },
     openCautionModal() {
       this.cautionText = `Unable to add course. Already in plan.`;
-      isCautionModalOpen = true;
+      this.isCautionModalOpen = true;
 
       setTimeout(() => {
-        isCautionModalOpen = false;
+        this.isCautionModalOpen = false;
       }, 3000);
     },
     openSemesterModal() {
@@ -219,7 +227,7 @@ export default {
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
     },
-    createSemester(courses, type, year) {
+    createSemester(courses: readonly AppCourse[], type: FirestoreSemesterType, year: number) {
       const semester = {
         courses,
         id: this.currSemID,
@@ -229,7 +237,7 @@ export default {
       this.$emit('increment-semID');
       return semester;
     },
-    addSemester(type, year) {
+    addSemester(type: FirestoreSemesterType, year: number) {
       const newSem = this.createSemester([], type, year);
 
       // find the index in which the semester should be added to maintain chronological order
@@ -240,6 +248,7 @@ export default {
           break;
         } else if (
           oldSem.year === year &&
+          // @ts-ignore
           SeasonsEnum[oldSem.type.toLowerCase()] < SeasonsEnum[type.toLowerCase()]
         ) {
           break;
@@ -255,7 +264,7 @@ export default {
 
       this.openSemesterConfirmationModal(type, year, true);
     },
-    deleteSemester(type, year) {
+    deleteSemester(type: FirestoreSemesterType, year: number) {
       for (let i = 0; i < this.semesters.length; i += 1) {
         if (this.semesters[i].type === type && this.semesters[i].year === year) {
           this.semesters.splice(i, 1);
@@ -277,7 +286,7 @@ export default {
     updateRequirementsMenu() {
       this.$emit('updateRequirementsMenu');
     },
-    compare(a, b) {
+    compare(a: AppSemester, b: AppSemester): number {
       if (a.type === b.type && a.year === b.year) {
         return 0;
       }
@@ -287,12 +296,13 @@ export default {
       if (a.year < b.year) {
         return 1;
       }
+      // @ts-ignore
       if (SeasonsEnum[a.type.toLowerCase()] < SeasonsEnum[b.type.toLowerCase()]) {
         return 1;
       }
       return -1;
     },
-    editSemester(id, type, year) {
+    editSemester(id: number, type: FirestoreSemesterType, year: number) {
       let count = 1;
       for (let i = 0; i < this.semesters.length; i += 1) {
         if (this.semesters[i].id === id) {
@@ -301,13 +311,13 @@ export default {
           currSemester.year = year;
         }
       }
-      this.semesters = this.semesters.sort(this.compare);
+      this.semesters.sort(this.compare);
       this.semesters.forEach(sem => {
         sem.id = count;
         count += 1;
       });
     },
-    updateBar(course, colorJustChanged, color) {
+    updateBar(course: AppCourse, colorJustChanged: string, color: string) {
       this.activatedCourse = course;
       this.key += 1;
       this.$emit('updateBar', course, colorJustChanged, color);
@@ -324,7 +334,7 @@ export default {
      * Works in conjunction with addCourse()
      * CHANGE WILL ALTER DATA STRUCTURE
      */
-    toFirebaseCourse(course) {
+    toFirebaseCourse(course: AppCourse) {
       return {
         crseId: course.crseId,
         code: `${course.subject} ${course.number}`,
@@ -341,25 +351,27 @@ export default {
         lastRoster: course.lastRoster,
         color: course.color,
         uniqueID: course.uniqueID,
-      };
+      } as FirestoreSemesterCourse;
     },
     /**
      * Updates semester user data
      */
     updateFirebaseSemester() {
       // TODO: make user / docRef global
-      const user = auth.currentUser;
-      const userEmail = user.email;
+      const user = auth.currentUser!;
+      const userEmail = user.email!;
       const docRef = userDataCollection.doc(userEmail);
 
       docRef
         .get()
         .then(doc => {
           if (doc.exists) {
-            const firebaseSemesters = clone(this.semesters);
-            firebaseSemesters.forEach(sem => {
-              sem.courses = sem.courses.map(course => this.toFirebaseCourse(course));
-            });
+            const firebaseSemesters: FirestoreSemester[] = (clone(
+              this.semesters
+            ) as AppSemester[]).map(sem => ({
+              ...sem,
+              courses: sem.courses.map(course => this.toFirebaseCourse(course)),
+            }));
             docRef.update({ semesters: firebaseSemesters });
           } else {
             // doc.data() will be undefined in this case
@@ -371,7 +383,7 @@ export default {
         });
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">

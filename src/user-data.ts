@@ -119,8 +119,8 @@ export type AppCourse = {
   readonly number: string;
   readonly name: string;
   readonly description: string;
-  readonly credits: number;
-  readonly creditRange: readonly number[];
+  credits: number;
+  readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[];
   readonly prereqs: string;
   readonly enrollment: readonly string[];
@@ -135,10 +135,10 @@ export type AppCourse = {
 };
 
 export type AppSemester = {
-  readonly courses: readonly AppCourse[];
-  readonly id: number;
-  readonly type: FirestoreSemesterType;
-  readonly year: number;
+  courses: readonly AppCourse[];
+  id: number;
+  type: FirestoreSemesterType;
+  year: number;
 };
 
 export type AppBottomBarCourse = {
