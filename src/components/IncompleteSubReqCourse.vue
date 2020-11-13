@@ -54,6 +54,7 @@ export default {
       this.scrollable = true;
       // this.reqCourseDropHandler();
     });
+
   },
   data() {
     return {
@@ -69,22 +70,15 @@ export default {
     subReq: Object,
     subReqCourseId: Number,
     crseInfoObjects: Array,
+    subReqCourseObjectsNotTakenArray: Array,
     dataReady: Boolean
   },
   watch: {
-    subReq: {
-      immediate: true,
-      deep: true,
-      handler(updatedSubReq) {
-        if (updatedSubReq.displayDescription && this.courseObjects.length === 0) {
-          this.getFirstFourCourseObjects();
-        }
-      }
-    },
     dataReady: {
       immediate: true,
       handler(dataReady) {
         if (dataReady) {
+          this.getFirstFourCourseObjects();
           this.display = true;
         }
       }
@@ -103,43 +97,19 @@ export default {
       if (!this.$data.scrollable) event.preventDefault();
     },
     getFirstFourCourseObjects() {
-      const firstFourCrseInfoObjects = [];
-      let numAddedCrseIds = 0; // Keep track of the crseIds we have added
-
-      // Get first four distinct crseIds
-      for (let i = 0; numAddedCrseIds < 4 && i < this.crseInfoObjects.length; i += 1) {
+      console.log('subReqCourseObjectsNotTakenArray', this.subReqCourseObjectsNotTakenArray);
+      let firstFourObjects = [];
+      for (let i = 0; firstFourObjects.length < 4 && i < this.crseInfoObjects.length; i += 1){
         const crseInfoObject = this.crseInfoObjects[i];
-        const crseInfoObjectCrseIds = crseInfoObject.crseIds;
-
-        if (crseInfoObjectCrseIds.length <= 4) {
-          numAddedCrseIds += crseInfoObjectCrseIds.length;
-        } else {
-          const reducedCrseIds = crseInfoObjectCrseIds.slice(0, 4);
-          crseInfoObject.crseIds = reducedCrseIds;
-          numAddedCrseIds += reducedCrseIds.length;
-        }
-        firstFourCrseInfoObjects.push(crseInfoObject);
+        console.log('crseInfoObject', crseInfoObject);
+        const filteredCourses = this.subReqCourseObjectsNotTakenArray.filter(course => crseInfoObject.crseIds.includes(course.crseId));
+        console.log(filteredCourses);
+        const remainingCourses = Math.min(4 - firstFourObjects.length, filteredCourses.length);
+        firstFourObjects = firstFourObjects.concat(filteredCourses.slice(0, remainingCourses));
       }
-      let fetchedCourses;
-      FetchCourses({ crseInfo: firstFourCrseInfoObjects, allowSameCourseForDifferentRosters: false }).then(result => {
-        fetchedCourses = result.data.courses;
-        fetchedCourses.forEach(course => {
-          console.log(course);
-          const createdCourse = this.$parent.$parent.$parent.$parent.createCourse(course, true);
-          createdCourse.compact = true;
-          this.courseObjects.push(createdCourse);
-        });
-        this.isDataReady();
-      }).catch(error => {
-        console.log('FetchCourses() Error: ', error);
-      });
-    },
-    isDataReady() {
-      this.$emit('isDataReady');
+      this.courseObjects = firstFourObjects;
+      console.log('generated first four course objects: ', this.courseObjects);
     }
-    // reqCourseDropHandler() {
-    //   this.$emit('reqCourseDropHandler');
-    // }
   }
 };
 </script>

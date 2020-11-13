@@ -66,16 +66,19 @@
       </div>
     </div>
     <div v-if="!this.isCompleted" class="separator"></div>
-    <div
-    v-for="(subReqCrseInfoObjects, id) in subReqCoursesNotTakenArray"
-    :key="subReqCrseInfoObjects.id">
-      <incompletesubreqcourse
-        :subReq="subReq"
-        :subReqCourseId="id"
-        :crseInfoObjects="subReqCrseInfoObjects"
-        :dataReady="dataReady"
-        @isDataReady="isDataReady"
-      />
+    <div v-if="!this.isCompleted">
+      <div
+      v-for="(subReqCrseInfoObjects, id) in subReqCoursesNotTakenArray"
+      :key="subReqCrseInfoObjects.id">
+        <incompletesubreqcourse
+          :subReq="subReq"
+          :subReqCourseId="id"
+          :crseInfoObjects="subReqCrseInfoObjects"
+          :subReqCourseObjectsNotTakenArray="subReqCourseObjectsNotTakenArray"
+          :dataReady="dataReady"
+          @isDataReady="isDataReady"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +86,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import firebase from 'firebase/app';
 // eslint-disable-next-line import/extensions
 import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
 // eslint-disable-next-line import/extensions
@@ -100,37 +104,49 @@ import dropdownCompletedSrc from '@/assets/images/dropdown-lightgray.svg';
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
 
+require('firebase/functions');
+
+const functions = firebase.functions();
+
+const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
+
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
   selectedFulfillmentOption: string;
-  subReqCoursesNotTakenArray: Object[];
+  subReqCoursesNotTakenArray: Object[][];
+  subReqCourseObjectsNotTakenArray: Object[];
   dataReady: boolean;
-  dataReadyCounter: number;
 }
 
 export default Vue.extend({
   mounted() {
     if (!this.isUniversitySubReq && this.subReq.requirement.courses) { // TODO: Change after removing University Reqs
       const mostRecentRosters = this.rostersFromLastTwoYears;
+      console.log(mostRecentRosters);
       let filteredSubReqRosters;
       console.log(this.subReq);
       // Iterate over each course slot for the subReq
       this.subReq.requirement.courses.forEach(subReqCourseRosterObject => {
         // Filter subreq roster object keys with the mostRecentRosters
-        filteredSubReqRosters = Object.keys(subReqCourseRosterObject).filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1);
+        filteredSubReqRosters = Object.keys(subReqCourseRosterObject).filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1).reverse();
 
         const crseInfoObjects: Object[] = []; // List of crseInfoObjects {roster: <roster>, crseIds: crseId[]} []
         let seenCrseIds: number[] = []; // So we don't have duplicates
         filteredSubReqRosters.forEach(subReqRoster => {
           const subReqCrseIds = subReqCourseRosterObject[subReqRoster].filter((crseId: number) => !seenCrseIds.includes(crseId));
-          const crseInfoObject = { roster: subReqRoster, crseIds: subReqCrseIds };
 
-          crseInfoObjects.push(crseInfoObject);
-          seenCrseIds = seenCrseIds.concat(subReqCrseIds);
+          if (subReqCrseIds.length > 0) {
+            const crseInfoObject = { roster: subReqRoster, crseIds: subReqCrseIds };
+
+            crseInfoObjects.push(crseInfoObject);
+            seenCrseIds = seenCrseIds.concat(subReqCrseIds);
+          }
         });
         // Push crseInfoObjects onto subReqCoursesNotTakenArray for the subReqCourse slot
         this.subReqCoursesNotTakenArray.push(crseInfoObjects);
       });
+      this.dataReady = false;
+      console.log('subreq is remounted');
     }
   },
   props: {
@@ -141,6 +157,19 @@ export default Vue.extend({
     isCompleted: Boolean,
     isUniversitySubReq: Boolean, // TODO: Change after removing University Reqs
     rostersFromLastTwoYears: Array
+  },
+  watch: {
+    subReq: {
+      immediate: true,
+      deep: true,
+      handler(updatedSubReq) {
+        if (updatedSubReq.displayDescription && !this.isCompleted) {
+          console.log('About to getSubReqCourseObjects: ', this.subReqCourseObjectsNotTakenArray);
+          this.getSubReqCourseObjects();
+          console.log('Returned from getSubReqCourseObjects: ', this.subReqCourseObjectsNotTakenArray);
+        }
+      }
+    }
   },
   data() : Data {
     return {
@@ -159,8 +188,8 @@ export default Vue.extend({
       //     {roster: <roster>, crseIds: crseId[]}
       //   ]
       // ]
-      dataReady: false, // true if dataReady for all subReqCourses. false otherwise
-      dataReadyCounter: 0 // tracks dataReady status of all subReqCourses
+      subReqCourseObjectsNotTakenArray: [],
+      dataReady: false // true if dataReady for all subReqCourses. false otherwise
     }
   },
   directives: {
@@ -183,10 +212,7 @@ export default Vue.extend({
       this.$emit('toggleDescription', reqIndex, type, subReqIndex);
     },
     isDataReady() {
-      this.dataReadyCounter += 1;
-      if (this.dataReadyCounter === this.subReqCoursesNotTakenArray.length) {
-        this.dataReady = true;
-      }
+      this.dataReady = true;
     },
     closeMenuIfOpen() {
       this.showFulfillmentOptionsDropdown = false;
@@ -194,6 +220,39 @@ export default Vue.extend({
     chooseFulfillmentOption(option: string) {
       this.selectedFulfillmentOption = option;
       this.showFulfillmentOptionsDropdown = false;
+    },
+    getMaxFirstFourCourses() {
+      const subReqCoursesToFetch = [];
+      this.subReqCoursesNotTakenArray.forEach(subReqCourse => {
+        let numSeenCrseIds = 0;
+        for (let i = 0; numSeenCrseIds < 4 && i < subReqCourse.length; i += 1) {
+          const subReqCrseInfo = subReqCourse[i];
+          const remainingCourses = Math.min(4 - numSeenCrseIds, subReqCrseInfo.crseIds.length);
+          
+          subReqCoursesToFetch.push({roster: subReqCrseInfo.roster, crseIds: subReqCrseInfo.crseIds.slice(0, remainingCourses)});
+          numSeenCrseIds += remainingCourses;
+        }
+      });
+      return subReqCoursesToFetch;
+    },
+    getSubReqCourseObjects() {
+      this.subReqCourseObjectsNotTakenArray = [];
+      this.dataReady = false;
+      const subReqCoursesToFetch = this.getMaxFirstFourCourses();
+      let fetchedCourses;
+      FetchCourses({ crseInfo: subReqCoursesToFetch, allowSameCourseForDifferentRosters: false }).then(result => {
+        fetchedCourses = result.data.courses;
+        fetchedCourses.forEach(course => {
+          console.log(course);
+          const createdCourse = this.$parent.$parent.$parent.createCourse(course, true);
+          createdCourse.compact = true;
+          this.subReqCourseObjectsNotTakenArray.push(createdCourse);
+        });
+        this.isDataReady();
+      }).catch(error => {
+        console.log('FetchCourses() Error: ', error);
+      });
+      console.log('subReqCourseObjectsNotTakenArray', this.subReqCourseObjectsNotTakenArray)
     }
   }
 });
