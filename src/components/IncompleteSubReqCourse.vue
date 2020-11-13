@@ -5,7 +5,7 @@
     >
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
-        <div class="draggable-requirements-heading-seeAll">{{ seeAll }}</div>
+        <div v-if="showSeeAllLabel" class="draggable-requirements-heading-seeAll">{{ seeAll }}</div>
       </div>
         <div
           class="draggable-requirements-courses"
@@ -94,6 +94,10 @@ export default {
     },
     seeAll() {
       return 'See all >';
+    },
+    showSeeAllLabel() {
+      const allCrseIds = this.crseInfoObjects.map(crseInfoObject => crseInfoObject.crseIds).flat();
+      return allCrseIds.length > 4;
     }
   },
   methods: {
