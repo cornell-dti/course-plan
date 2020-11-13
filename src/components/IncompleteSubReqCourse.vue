@@ -96,6 +96,7 @@ export default {
       return 'See all >';
     },
     showSeeAllLabel() {
+      // Only show See all label when there are more than 4 courses
       const allCrseIds = this.crseInfoObjects.map(crseInfoObject => crseInfoObject.crseIds).flat();
       return allCrseIds.length > 4;
     }
@@ -123,6 +124,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .separator {
   height: 1px;
   width: 100%;
@@ -145,7 +148,7 @@ export default {
     &-seeAll{
       font-size: 12px;
       line-height: 15px;
-      color: #32A0F2;
+      color: $yuxuanBlue;
       padding: 1%;
       cursor: pointer;
     }
