@@ -144,7 +144,7 @@ export type RequirementFulfillmentStatistics = {
 
 export type GroupedRequirementFulfillmentReport = {
   readonly groupName: 'University' | 'College' | 'Major' | 'Minor';
-  readonly specific: string | null;
+  readonly specific: string;
   readonly reqs: readonly RequirementFulfillment<RequirementFulfillmentStatistics>[];
 };
 
@@ -157,9 +157,7 @@ export type SingleMenuRequirement = {
   readonly completed: DisplayableRequirementFulfillment[];
   readonly name: string;
   readonly group: 'COLLEGE' | 'MAJOR' | 'MINOR';
-  readonly specific: string | null;
-  displayDetails: boolean;
-  displayCompleted: boolean;
+  readonly specific: string;
   type?: string;
   fulfilled?: number;
   required?: number;

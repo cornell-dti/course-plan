@@ -55,10 +55,10 @@
         <!--View more college requirements -->
         <div class="row top">
           <div class="col-1 p-0" >
-            <button :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" class="btn" @click="toggleDetails(reqIndex)">
+            <button :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }" class="btn" @click="toggleDetails(req.name)">
               <!-- svg for dropdown icon -->
               <img
-                v-if="req.displayDetails"
+                v-if="displayDetails[req.name]"
                 class="arrow arrow-up"
                 :src="require(`@/assets/images/dropup-${reqGroupColorMap[req.group][1]}.svg`)"
                 alt="dropup"
@@ -75,8 +75,8 @@
               <button
                   class="btn req-name"
                   :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }"
-                  @click="toggleDetails(reqIndex)">
-                  {{ (req.displayDetails) ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements
+                  @click="toggleDetails(req.name)">
+                  {{ displayDetails[req.name] ? "Hide" : "View" }} All {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements
               </button>
           </div>
         </div>
@@ -95,6 +95,7 @@ export default Vue.extend({
     reqIndex: Number,
     majors: Array as PropType<readonly AppMajor[]>,
     minors: Array as PropType<readonly AppMinor[]>,
+    displayDetails: Object as PropType<Readonly<Record<string, boolean>>>,
     displayedMajorIndex: Number,
     displayedMinorIndex: Number,
     req: Object as PropType<SingleMenuRequirement>,
@@ -118,8 +119,8 @@ export default Vue.extend({
     }
   },
   methods: {
-    toggleDetails(index: number) {
-      this.$emit('toggleDetails', index);
+    toggleDetails(name: string) {
+      this.$emit('toggleDetails', name);
     },
     activateMajor(id: number) {
       this.$emit('activateMajor', id);
