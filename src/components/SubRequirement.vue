@@ -131,7 +131,6 @@ export default Vue.extend({
   mounted() {
     if (this.subReq.requirement.courses) {
       const mostRecentRosters = this.rostersFromLastTwoYears;
-      console.log(mostRecentRosters);
       let filteredSubReqRosters;
       // Iterate over each course slot for the subReq
       this.subReq.requirement.courses.forEach(subReqCourseRosterObject => {
@@ -153,7 +152,6 @@ export default Vue.extend({
         // Push crseInfoObjects onto subReqCoursesNotTakenArray for the subReqCourse slot
         this.subReqCoursesNotTakenArray.push(crseInfoObjects);
       });
-      console.log(this.subReq);
     }
   },
   props: {
