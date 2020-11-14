@@ -68,7 +68,7 @@
     <div v-if="!this.isCompleted">
       <div
       v-for="(subReqCrseInfoObjects, id) in subReqCoursesNotTakenArray"
-      :key="id">
+      :key="subReqCrseInfoObjects.id">
         <incompletesubreqcourse
           :subReq="subReq"
           :subReqCourseId="id"

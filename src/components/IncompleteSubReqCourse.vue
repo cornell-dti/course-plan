@@ -46,7 +46,7 @@ type CrseInfo = {
 }
 
 type Data = {
-  courseObjects: (AppCourse & {compact?: boolean})[];
+  courseObjects: AppCourse[];
   scrollable: boolean;
 }
 
@@ -111,7 +111,7 @@ export default Vue.extend({
       if (!this.$data.scrollable) event.preventDefault();
     },
     getFirstFourCourseObjects() {
-      let firstFourCourseObjects: (AppCourse & {compact?: boolean})[] = [];
+      let firstFourCourseObjects: AppCourse[] = [];
       for (let i = 0; firstFourCourseObjects.length < 4 && i < this.crseInfoObjects.length; i += 1){
         const crseInfoObject = this.crseInfoObjects[i];
         const filteredCourses: AppCourse[] = this.subReqCourseObjectsNotTakenArray.filter(course => crseInfoObject.crseIds.includes(course.crseId));
