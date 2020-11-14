@@ -1,33 +1,36 @@
 <template>
   <div class="subrequirement">
-    <div class="row depth-req">
-      <div class="col-1" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
-        <button class="btn">
-          <img
-            v-if="subReq.displayDescription"
-            class="arrow arrow-up"
-            :src="getSrc()"
-            alt="dropup"
-          />
-          <img
-            v-else
-            class="arrow arrow-down"
-            :src="getSrc()"
-            alt="dropdown"
-          />
-        </button>
-      </div>
-      <div class="col-7" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
-        <p v-bind:class="[{'sup-req': !this.isCompleted}, 'pointer', this.isCompleted ? 'completed-ptext' : 'incomplete-ptext']">{{subReq.requirement.name}}</p>
-      </div>
-      <div class="col">
-        <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">{{
-          (subReq.requirement.fulfilledBy !== 'self-check')
-          ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.requirement.totalCount
-          || subReq.requirement.minCount} ${subReq.requirement.fulfilledBy}`
-          : 'self check' }}</p>
-        <p v-if="this.isCompleted" class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.requirement.minCount}} {{ subReq.requirement.fulfilledBy }}</p>
-      </div>
+  <div class="row depth-req">
+    <div class="col-1" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
+      <button class="btn">
+        <img
+          v-if="subReq.displayDescription"
+          class="arrow arrow-up"
+          :src="getSrc()"
+          alt="dropup"
+        />
+        <img
+          v-else
+          class="arrow arrow-down"
+          :src="getSrc()"
+          alt="dropdown"
+        />
+      </button>
+    </div>
+    <div class="col-7" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
+      <p v-bind:class="[{'sup-req': !this.isCompleted}, 'pointer', this.isCompleted ? 'completed-ptext' : 'incomplete-ptext']">
+        <span>{{subReq.requirement.name}}</span>
+      </p>
+    </div>
+    <div class="col">
+      <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">{{
+        (subReq.fulfilledBy !== 'self-check')
+        ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.totalCountRequired
+        || subReq.minCountRequired} ${subReq.fulfilledBy}`
+        : 'self check' }}</p>
+      <p v-if="this.isCompleted" class="text-right completed-ptext">
+        <span>{{subReq.minCountFulfilled}}/{{subReq.minCountRequired}} {{ subReq.fulfilledBy }}</span>
+      </p>
     </div>
     <div v-if="subReq.displayDescription" :class="[{'completed-ptext': this.isCompleted}, 'description']">
       {{ subReq.requirement.description }} <a class="more"
@@ -44,22 +47,18 @@
               class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-wrapper"
               @click="showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown"
             >
-              <div
-                class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-innerPlaceholder"
-              >
-                {{ selectedFulfillmentOption }}
-              </div>
-              <div class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"></div>
+              <span>{{ selectedFulfillmentOption }}</span>
             </div>
-            <div class="toggleable-requirements-dropdown-content" v-if="showFulfillmentOptionsDropdown">
-              <div
-                v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
-                :key="optionName"
-                class="toggleable-requirements-dropdown-content-item"
-                @click="chooseFulfillmentOption(optionName)"
-              >
-                {{optionName}}
-              </div>
+            <div class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"></div>
+          </div>
+          <div class="toggleable-requirements-dropdown-content" v-if="showFulfillmentOptionsDropdown">
+            <div
+              v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
+              :key="optionName"
+              class="toggleable-requirements-dropdown-content-item"
+              @click="chooseFulfillmentOption(optionName)"
+            >
+              <span>{{optionName}}</span>
             </div>
           </div>
         </div>
@@ -81,6 +80,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 
@@ -89,7 +89,6 @@ import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 // eslint-disable-next-line import/extensions
 import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
-// eslint-disable-next-line import/extensions
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
 
 import { DisplayableRequirementFulfillment } from '@/requirements/types';
@@ -123,7 +122,6 @@ type CrseInfo = {
 
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
-  selectedFulfillmentOption: string;
   subReqCoursesNotTakenArray: CrseInfo[][];
   subReqCourseObjectsNotTakenArray: AppCourse[];
   dataReady: boolean;
@@ -133,6 +131,7 @@ export default Vue.extend({
   mounted() {
     if (this.subReq.requirement.courses) {
       const mostRecentRosters = this.rostersFromLastTwoYears;
+      console.log(mostRecentRosters);
       let filteredSubReqRosters;
       // Iterate over each course slot for the subReq
       this.subReq.requirement.courses.forEach(subReqCourseRosterObject => {
@@ -154,12 +153,17 @@ export default Vue.extend({
         // Push crseInfoObjects onto subReqCoursesNotTakenArray for the subReqCourse slot
         this.subReqCoursesNotTakenArray.push(crseInfoObjects);
       });
+      console.log(this.subReq);
     }
   },
   props: {
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqIndex: Number, // Subrequirement index
     reqIndex: Number, // Requirement index
+    toggleableRequirementChoice: {
+      type: String,
+      required: false,
+    },
     color: String,
     isCompleted: Boolean,
     rostersFromLastTwoYears: Array
@@ -178,9 +182,6 @@ export default Vue.extend({
   data() : Data {
     return {
       showFulfillmentOptionsDropdown: false,
-      selectedFulfillmentOption: this.subReq.requirement.fulfilledBy !== 'toggleable'
-        ? ''
-        : Object.keys(this.subReq.requirement.fulfillmentOptions)[0],
       subReqCoursesNotTakenArray: [],
       // subReqCoursesNotTakenArray = [
       //   [
@@ -195,6 +196,14 @@ export default Vue.extend({
       subReqCourseObjectsNotTakenArray: [], // array of fetched course objects
       dataReady: false // true if dataReady for all subReqCourses. false otherwise
     }
+  },
+  computed: {
+    selectedFulfillmentOption(): string {
+      if (this.subReq.requirement.fulfilledBy !== 'toggleable') {
+        return '';
+      }
+      return this.toggleableRequirementChoice || Object.keys(this.subReq.requirement.fulfillmentOptions)[0];
+    },
   },
   directives: {
     'click-outside': clickOutside
@@ -222,8 +231,8 @@ export default Vue.extend({
       this.showFulfillmentOptionsDropdown = false;
     },
     chooseFulfillmentOption(option: string) {
-      this.selectedFulfillmentOption = option;
       this.showFulfillmentOptionsDropdown = false;
+      this.$emit('changeToggleableRequirementChoice', this.subReq.id, option);
     },
     getMaxFirstFourCrseInfoObjects() : CrseInfo[] {
       const subReqCrseInfoObjectsToFetch:CrseInfo[] = [];
@@ -328,15 +337,12 @@ button.view {
   color: white;
   text-transform: uppercase;
 }
-.completed {
-   margin-top: 1rem;
-   &-ptext {
-     color: $lightPlaceholderGray;
-     font-size: 12px;
-     opacity: 0.8;
-     font-weight: normal;
-   }
- }
+.completed-ptext span {
+  color: $lightPlaceholderGray;
+  font-size: 12px;
+  opacity: 0.8;
+  font-weight: normal;
+}
 .incomplete {
   &-ptext {
     font-size: 14px;

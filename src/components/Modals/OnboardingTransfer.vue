@@ -183,10 +183,10 @@
 </template>
 
 <script>
-
+import Vue from 'vue';
 import reqsData from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
-import NewCourse from '@/components/Modals/NewCourse';
+import NewCourse from '@/components/Modals/NewCourse.vue';
 import { clickOutside } from '@/utilities';
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
@@ -195,7 +195,7 @@ Vue.component('newCourse', NewCourse);
 const placeholderText = 'Select one';
 const placeholderColor = lightPlaceholderGray;
 
-export default {
+export default Vue.extend({
   props: {
     user: Object
   },
@@ -539,7 +539,7 @@ export default {
         });
     }
   }
-};
+});
 
 </script>
 

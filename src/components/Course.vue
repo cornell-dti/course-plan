@@ -56,12 +56,12 @@
 
 <script>
 import Vue from 'vue';
-import CourseMenu from '@/components/Modals/CourseMenu';
+import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import { clickOutside } from '@/utilities';
 
 Vue.component('coursemenu', CourseMenu);
 
-export default {
+export default Vue.extend({
   props: {
     courseObj: Object,
     subject: String,
@@ -89,16 +89,10 @@ export default {
     };
   },
   computed: {
-    rqString() {
-      return 'RQ';
-    },
-
-    // TODO: bold requirements
     requirementString() {
       return this.alerts.requirement;
     },
 
-    // TODO: too much DOM manipulation that vue should fix - talk to Sam
     cautionString() {
       return this.alerts.caution;
     },
@@ -125,7 +119,6 @@ export default {
       return `https://www.cureviews.org/course/${this.subject}/${this.number}`;
     },
 
-    // TODO: change semester from FA18
     roster() {
       return `https://classes.cornell.edu/browse/roster/FA18/class/${this.subject}/${this.number}`;
     },
@@ -171,7 +164,7 @@ export default {
   directives: {
     'click-outside': clickOutside
   }
-};
+});
 </script>
 
 <style scoped lang="scss">

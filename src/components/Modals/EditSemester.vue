@@ -3,52 +3,63 @@
     <div class="editSemesterModal-content" id="deleteSemester">
       <div class="editSemesterModal-top">
         <span class="editSemesterModal-title">{{ title }}</span>
-        <img class="editSemesterModal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
+        <img
+          class="editSemesterModal-exit"
+          src="@/assets/images/x.png"
+          @click="closeCurrentModal"
+        />
       </div>
       <div class="editSemesterModal-body">
         <newSemester
-            class="modal-body"
-            :currentSemesters="semesters"
-            :id="deleteSemID"
-            :isEdit="true"
-            :year="deleteSemYear"
-            :type="deleteSemType"
-            @duplicateSemester="disableButton"
-            ref="modalBodyComponent">
+          class="modal-body"
+          :currentSemesters="semesters"
+          :id="deleteSemID"
+          :isEdit="true"
+          :year="deleteSemYear"
+          :type="deleteSemType"
+          @duplicateSemester="disableButton"
+          @updateSemProps="updateSemProps"
+          ref="modalBodyComponent"
+        >
         </newSemester>
       </div>
       <div class="editSemesterModal-buttonWrapper">
         <button class="editSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
-        <div class="editSemesterModal-button editSemesterModal-button--delete" :class='{"editSemesterModal-button--disabled": isDisabled }' @click="editSemester">
-            <div class="editSemesterModal-button-left">
-                <span class="editSemesterModal-button-left-text">Edit</span>
-            </div>
+        <div
+          class="editSemesterModal-button editSemesterModal-button--delete"
+          :class="{ 'editSemesterModal-button--disabled': isDisabled }"
+          @click="editSemester"
+        >
+          <div class="editSemesterModal-button-left">
+            <span class="editSemesterModal-button-left-text">Edit</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
-import NewCourse from '@/components/Modals/NewCourse';
-import NewCustomCourse from '@/components/Modals/NewCustomCourse';
-import NewSemester from '@/components/Modals/NewSemester';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import NewCourse from '@/components/Modals/NewCourse.vue';
+import NewSemester from '@/components/Modals/NewSemester.vue';
+import { AppSemester } from '@/user-data';
 
 Vue.component('newCourse', NewCourse);
-Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 
-export default {
+export default Vue.extend({
   props: {
-    semesters: Array,
+    semesters: Array as PropType<readonly AppSemester[]>,
     deleteSemID: Number,
     deleteSemType: String,
-    deleteSemYear: Number
+    deleteSemYear: Number,
   },
   data() {
     return {
-      isDisabled: false
+      isDisabled: false,
+      season: '',
+      year: '',
     };
   },
   computed: {
@@ -60,28 +71,31 @@ export default {
     },
     title() {
       return 'Edit Semester';
-    }
+    },
   },
   methods: {
     closeCurrentModal() {
-      const modal = document.getElementById(`editSemesterModal-${this.deleteSemID}`);
-      modal.style.display = 'none';
+      this.$emit('close-edit-modal');
     },
     editSemester() {
       if (!this.isDisabled) {
-        this.$parent.editSemester(this.deleteSemID);
+        this.$emit('edit-semester', this.season, this.year);
         this.closeCurrentModal();
       }
     },
-    disableButton(bool) {
+    disableButton(bool: boolean) {
       this.isDisabled = bool;
-    }
-  }
-};
+    },
+    updateSemProps(season: string, year: string) {
+      this.season = season;
+      this.year = year;
+    },
+  },
+});
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .modal {
   padding: 1rem;
@@ -173,14 +187,14 @@ export default {
     font-weight: 600;
     font-size: 20px;
     line-height: 24px;
-    color: #3D3D3D;
+    color: #3d3d3d;
   }
 
   &-text {
     font-weight: normal;
     font-size: 14px;
     line-height: 17px;
-    color: #3D3D3D;
+    color: #3d3d3d;
   }
 
   &-buttonWrapper {
@@ -200,15 +214,15 @@ export default {
     justify-content: center;
 
     &-left {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
 
-        &-text {
-            margin-top: auto;
-            margin-bottom: auto;
-            margin-left: 0.195rem;
-        }
+      &-text {
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 0.195rem;
+      }
     }
 
     &--delete {
@@ -222,11 +236,10 @@ export default {
     }
 
     &--disabled {
-      opacity: .3;
+      opacity: 0.3;
       border: 1px solid $sangBlue;
-      background-color: #CCCCCC;
+      background-color: #cccccc;
     }
   }
 }
-
 </style>

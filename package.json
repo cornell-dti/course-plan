@@ -11,9 +11,10 @@
     "req-gen": "node requirement-generator-dist/generator.js",
     "lint": "vue-cli-service lint",
     "tsc": "tsc",
+    "type-check": "tsc && vti diagnostics",
     "build:staging": "vue-cli-service build --mode staging",
-    "format": "prettier --write \"**/*.{js,ts,css,html}\" src/App.vue \"src/components/{BottomBar*,Caution,Confirmation,Footer,Login,NavBar,TopBar,Modals/SemesterModal,Modals/TourWindow}.vue\"",
-    "format:check": "prettier --check \"**/*.{js,ts,css,html}\" src/App.vue \"src/components/{BottomBar*,Caution,Confirmation,Footer,Login,NavBar,TopBar,Modals/SemesterModal,Modals/TourWindow}.vue\"",
+    "format": "prettier --write \"**/*.{js,ts,css,html}\" src/App.vue \"src/components/{BottomBar*,Caution,Confirmation,Footer,Login,NavBar,TopBar,Semester*,Modals/SemesterModal,Modals/TourWindow,Modals/*Semester}.vue\"",
+    "format:check": "prettier --check \"**/*.{js,ts,css,html}\" src/App.vue \"src/components/{BottomBar*,Caution,Confirmation,Footer,Login,NavBar,TopBar,Semester*,Modals/SemesterModal,Modals/TourWindow,Modals/*Semester}.vue\"",
     "format:check:full": "prettier --check \"**/*.{js,ts,vue,scss,css,html}\"",
     "test": "jest"
   },
@@ -61,6 +62,7 @@
     "prettier": "^2.1.2",
     "sass-loader": "^8.0.2",
     "typescript": "~3.7.5",
+    "vti": "0.0.17",
     "vue-template-compiler": "^2.6.11"
   },
   "prettier": {

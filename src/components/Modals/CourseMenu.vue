@@ -15,8 +15,8 @@
 
         <div v-if="displayColors" class="courseMenu-content courseMenu-colors" :class="{'courseMenu-colors--left': isLeft }">
           <div
-            v-for="color in colors"
-            :key="color.id"
+            v-for="(color, index) in colors"
+            :key="index"
             class="courseMenu-section"
             @click="colorCourse(color)"
           >
@@ -68,10 +68,10 @@
 
 <script>
 import Vue from 'vue';
-import Course from '@/components/Course';
+import Course from '@/components/Course.vue';
 import { coursesColorSet } from '../../assets/constants/colors';
 
-export default {
+export default Vue.extend({
   props: {
     getCreditRange: Array,
     semId: Number,
@@ -139,7 +139,7 @@ export default {
       return creditArray;
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">

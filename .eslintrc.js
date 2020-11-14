@@ -73,7 +73,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.ts', '*.tsx'],
+      files: ['*.ts', '*.tsx', '*.vue'],
       rules: {
         'import/extensions': [
           'error',

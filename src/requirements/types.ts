@@ -127,6 +127,8 @@ export type DecoratedRequirementsJson = {
 };
 
 export type RequirementFulfillment<M extends {}> = {
+  /** ID of the requirement */
+  readonly id: string;
   /** The original requirement object. */
   readonly requirement: BaseRequirement;
   /** A list of courses that satisfy this requirement. */
@@ -148,7 +150,7 @@ export type RequirementFulfillmentStatistics = {
 
 export type GroupedRequirementFulfillmentReport = {
   readonly groupName: 'University' | 'College' | 'Major' | 'Minor';
-  readonly specific: string | null;
+  readonly specific: string;
   readonly reqs: readonly RequirementFulfillment<RequirementFulfillmentStatistics>[];
 };
 
@@ -160,10 +162,8 @@ export type SingleMenuRequirement = {
   readonly ongoing: DisplayableRequirementFulfillment[];
   readonly completed: DisplayableRequirementFulfillment[];
   readonly name: string;
-  readonly group: string;
-  readonly specific: string | null;
-  displayDetails: boolean;
-  displayCompleted: boolean;
+  readonly group: 'COLLEGE' | 'MAJOR' | 'MINOR';
+  readonly specific: string;
   type?: string;
   fulfilled?: number;
   required?: number;
