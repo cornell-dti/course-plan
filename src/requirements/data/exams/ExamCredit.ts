@@ -2,15 +2,19 @@
 import { CourseTaken } from '../../types';
 
 // const sampleExams: ExamsTaken = {
-//   AP: [{
-//     name: 'Computer Science A',
-//     score: 5
-//   }],
-//   IB: [{
-//     name: 'Chemical And Physical Systems',
-//     score: 5
-//   }]
-// }
+//   AP: [
+//     {
+//       name: 'Computer Science A',
+//       score: 5,
+//     },
+//   ],
+//   IB: [
+//     {
+//       name: 'Chemical And Physical Systems',
+//       score: 5,
+//     },
+//   ],
+// };
 
 export type ExamRequirements = {
   readonly name: string;
@@ -40,40 +44,46 @@ function userDataToCourses(
   const courses: CourseTaken[] = [];
   userExams.forEach(userExam => {
     // match exam to user-taken exam
-    const exam = exams.reduce((prev, curr) => {
-      if (curr.name === userExam.name && userExam.score >= curr.fulfillment.minimumScore) {
-        if (!prev || prev.fulfillment.minimumScore < curr.fulfillment.minimumScore) {
-          return curr;
+    let exam: ExamRequirements | undefined;
+    exams.forEach(e => {
+      // check if exam name matches and score is high enough
+      if (e.name.includes(userExam.name) && userExam.score >= e.fulfillment.minimumScore) {
+        // update exam variable if this exam has a higher minimum score
+        if (!exam || exam.fulfillment.minimumScore < e.fulfillment.minimumScore) {
+          exam = e;
         }
       }
-      return prev;
     });
-    const roster = 'FA20'; // TODO this is hardcoded
-    const courseId = exam.fulfillment.courseEquivalents[college];
-    const excludedMajor =
-      exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
-    if (courseId && !excludedMajor) {
-      courses.push({
-        roster,
-        courseId,
-        code: `${examType} ${exam.name}`,
-        subject: examType,
-        number: exam.name,
-        credits: exam.fulfillment.credits,
-      });
+    // generate the equivalent course
+    if (exam) {
+      const roster = 'FA20'; // TODO this is hardcoded
+      const courseId = exam.fulfillment.courseEquivalents[college];
+      const excludedMajor =
+        exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
+      if (courseId && !excludedMajor) {
+        courses.push({
+          roster,
+          courseId,
+          code: `${examType} ${exam.name}`,
+          subject: examType,
+          number: exam.name,
+          credits: exam.fulfillment.credits,
+        });
+      }
     }
   });
   return courses;
 }
 
-// TODO move sampleExams to signature as param
-function getCourseEquivalents(college: string, major: string, userData: ExamsTaken): CourseTaken[] {
+export default function getCourseEquivalents(
+  college: string,
+  major: string,
+  userData: ExamsTaken
+): CourseTaken[] {
   const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
   const IBCourseEquivalents = userDataToCourses(college, major, userData, 'IB');
   return APCourseEquivalents.concat(IBCourseEquivalents);
 }
-
-export default getCourseEquivalents;
 
 const examData: ExamData = {
   AP: [
@@ -86,6 +96,19 @@ const examData: ExamData = {
         },
         minimumScore: 5,
         credits: 4,
+      },
+    },
+    {
+      name: 'Chemistry',
+      fulfillment: {
+        courseEquivalents: {
+          EN: 359187, // CHEM 2090
+          AS: 351265, // CHEM 2070
+          AR: 351265, // CHEM 2070
+        },
+        minimumScore: 5,
+        credits: 4,
+        majorsExcluded: ['CHEM'],
       },
     },
   ],
