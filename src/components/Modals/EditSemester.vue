@@ -39,17 +39,18 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import NewCourse from '@/components/Modals/NewCourse.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
+import { AppSemester } from '@/user-data';
 
 Vue.component('newCourse', NewCourse);
 Vue.component('newSemester', NewSemester);
 
-export default {
+export default Vue.extend({
   props: {
-    semesters: Array,
+    semesters: Array as PropType<readonly AppSemester[]>,
     deleteSemID: Number,
     deleteSemType: String,
     deleteSemYear: Number,
@@ -82,15 +83,15 @@ export default {
         this.closeCurrentModal();
       }
     },
-    disableButton(bool) {
+    disableButton(bool: boolean) {
       this.isDisabled = bool;
     },
-    updateSemProps(season, year) {
+    updateSemProps(season: string, year: string) {
       this.season = season;
       this.year = year;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">

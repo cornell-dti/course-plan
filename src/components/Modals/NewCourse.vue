@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import coursesJSON from '../../assets/courses/courses.json';
 import EditRequirement from '@/components/EditRequirement.vue';
 import BinaryButton from '@/components/BinaryButton.vue';
@@ -55,7 +56,7 @@ const spring = require('../../assets/images/springEmoji.svg');
 const winter = require('../../assets/images/winterEmoji.svg');
 const summer = require('../../assets/images/summerEmoji.svg');
 
-export default {
+export default Vue.extend({
   props: {
     isOnboard: Boolean,
     semesterID: Number,
@@ -264,7 +265,7 @@ export default {
       this.selectedCourse = '';
     }
   }
-};
+});
 </script>
 
 <style lang="scss">

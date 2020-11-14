@@ -4,6 +4,7 @@
       :reqIndex="reqIndex"
       :majors="majors"
       :minors="minors"
+      :displayDetails="displayDetails"
       :displayedMajorIndex="displayedMajorIndex"
       :displayedMinorIndex="displayedMinorIndex"
       :req="req"
@@ -17,7 +18,7 @@
     />
     <div v-if="showMajorOrMinorRequirements">
       <!--Show more of completed requirements -->
-      <div v-if="req.displayDetails">
+      <div v-if="displayDetails[req.name]">
         <p class="sub-title">In-Depth College Requirements</p>
         <div class="separator"></div>
         <div
@@ -42,17 +43,17 @@
               <!-- Toggle to display completed reqs -->
               <p
                 class="toggle"
-                v-if="req.displayCompleted"
-                v-on:click="turnCompleted(reqIndex, false)">HIDE</p>
-              <p class="toggle" v-else v-on:click="turnCompleted(reqIndex, true)">SHOW</p>
+                v-if="displayCompleted[req.name]"
+                v-on:click="turnCompleted(req.name, false)">HIDE</p>
+              <p class="toggle" v-else v-on:click="turnCompleted(req.name, true)">SHOW</p>
             </button>
           </div>
         </div>
 
       <!-- Completed requirements -->
-        <div v-if="req.displayCompleted">
+        <div v-if="displayCompleted[req.name]">
           <div v-for="(subReq, id) in req.completed" :key="id">
-            <div class="separator" v-if="reqIndex < reqs.length - 1 || req.displayDetails"></div>
+            <div class="separator" v-if="reqIndex < reqs.length - 1 || displayDetails[req.name]"></div>
             <subrequirement
               :subReqIndex="id"
               :subReq="subReq"
@@ -98,6 +99,8 @@ export default Vue.extend({
     reqIndex: Number, // Index of this req in reqs array
     majors: Array as PropType<readonly AppMajor[]>,
     minors: Array as PropType<readonly AppMinor[]>,
+    displayDetails: Object as PropType<Readonly<Record<string, boolean>>>,
+    displayCompleted: Object as PropType<Readonly<Record<string, boolean>>>,
     toggleableRequirementChoices: Object as PropType<Readonly<Record<string, string>>>,
     displayedMajorIndex: Number,
     displayedMinorIndex: Number,
@@ -126,8 +129,8 @@ export default Vue.extend({
     toggleDescription(index: number, type: 'ongoing' | 'completed', id: number) {
       this.$emit('toggleDescription', index, type, id);
     },
-    turnCompleted(index: number, bool: boolean) {
-      this.$emit('turnCompleted', index, bool);
+    turnCompleted(name: string, bool: boolean) {
+      this.$emit('turnCompleted', name, bool);
     }
   }
 });

@@ -143,7 +143,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import { clickOutside } from '@/utilities';
 
 import fall from '@/assets/images/fallEmoji.svg';
@@ -151,11 +152,16 @@ import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import {
+  // @ts-ignore
   inactiveGray,
+  // @ts-ignore
   yuxuanBlue,
+  // @ts-ignore
   lightPlaceholderGray,
+  // @ts-ignore
   darkPlaceholderGray,
 } from '@/assets/scss/_variables.scss';
+import { FirestoreSemesterType, AppSemester } from '@/user-data';
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -165,24 +171,42 @@ const SeasonsEnum = Object.freeze({
   fall: 3,
 });
 
-export default {
+type DisplayOption = {
+  shown: boolean;
+  stopClose: boolean;
+  boxBorder: string;
+  arrowColor: string;
+  placeholderColor: string;
+};
+
+type Data = {
+  readonly seasons: readonly (readonly [string, FirestoreSemesterType])[];
+  readonly years: readonly number[];
+  seasonText: string;
+  yearText: string;
+  readonly displayOptions: {
+    readonly year: DisplayOption;
+    readonly season: DisplayOption;
+  };
+};
+
+export default Vue.extend({
   props: {
-    currentSemesters: Array,
+    currentSemesters: Array as PropType<readonly AppSemester[] | null>,
     id: Number,
     isEdit: Boolean,
     year: Number,
-    type: String,
-    labels: Boolean,
+    type: String as PropType<FirestoreSemesterType>,
   },
-  data() {
+  data(): Data {
     // years
     const currentYear = new Date().getFullYear();
-    const seasons = [
+    const seasons: readonly (readonly [string, FirestoreSemesterType])[] = [
       [fall, 'Fall'],
       [spring, 'Spring'],
       [summer, 'Summer'],
       [winter, 'Winter'],
-    ];
+    ] as const;
     const years = [];
     let startYear = currentYear - 10;
     while (startYear <= currentYear + 10) {
@@ -215,28 +239,29 @@ export default {
     };
   },
   computed: {
-    seasonPlaceholder() {
+    seasonPlaceholder(): string {
       // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
       const currentSeason = this.getCurrentSeason();
       return this.seasonText || this.type || currentSeason;
     },
-    yearPlaceholder() {
+    yearPlaceholder(): number {
       const currentYear = new Date().getFullYear();
-      return this.yearText || this.year || currentYear;
+      return Number(this.yearText || this.year || currentYear);
     },
   },
   directives: {
     'click-outside': clickOutside,
   },
-  mounted() {
+  mounted(): void {
     this.$emit('updateSemProps', this.seasonPlaceholder, this.yearPlaceholder);
   },
   methods: {
-    seasonValue(season) {
+    seasonValue(season: readonly [string, string]): number {
+      // @ts-ignore
       return SeasonsEnum[season[1].toLowerCase()];
     },
-    getCurrentSeason() {
-      let currentSeason;
+    getCurrentSeason(): FirestoreSemesterType {
+      let currentSeason: FirestoreSemesterType;
       const currentMonth = new Date().getMonth();
       if (currentMonth === 0) {
         currentSeason = 'Winter';
@@ -249,7 +274,7 @@ export default {
       }
       return currentSeason;
     },
-    showHideContent(type) {
+    showHideContent(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
@@ -269,7 +294,7 @@ export default {
     showHideYearContent() {
       this.showHideContent('year');
     },
-    closeDropdownIfOpen(type) {
+    closeDropdownIfOpen(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
       if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
@@ -285,7 +310,7 @@ export default {
     closeYearDropdownIfOpen() {
       this.closeDropdownIfOpen('year');
     },
-    selectOption(type, text) {
+    selectOption(type: 'season' | 'year', text: string): void {
       if (type === 'season') {
         this.seasonText = text;
       } else {
@@ -302,13 +327,13 @@ export default {
         this.yearText || this.yearPlaceholder
       );
     },
-    selectSeason(text) {
+    selectSeason(text: string) {
       this.selectOption('season', text);
     },
-    selectYear(text) {
-      this.selectOption('year', text);
+    selectYear(text: string | number) {
+      this.selectOption('year', String(text));
     },
-    resetDropdown(type) {
+    resetDropdown(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.stopClose = false;
@@ -329,10 +354,11 @@ export default {
       // reset year dropdown
       this.resetDropdown('year');
     },
-    isDuplicate() {
+    isDuplicate(): boolean {
       let isDup = false;
-      if (this.currentSemesters != null) {
-        this.currentSemesters.forEach(semester => {
+      const semesters = this.currentSemesters;
+      if (semesters != null) {
+        semesters.forEach(semester => {
           if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder) {
             if (!this.isEdit || (this.isEdit && this.id !== semester.id)) {
               isDup = true;
@@ -344,7 +370,7 @@ export default {
       return isDup;
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
