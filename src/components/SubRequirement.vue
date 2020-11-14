@@ -65,7 +65,7 @@
       </div>
     </div>
     <div v-if="!this.isCompleted" class="separator"></div>
-    <div v-if="!this.isCompleted">
+    <div class="incompletesubreqcourse-wrapper" v-if="!this.isCompleted">
       <div
       v-for="(subReqCrseInfoObjects, id) in subReqCoursesNotTakenArray"
       :key="id">
@@ -336,7 +336,7 @@ button.view {
   color: white;
   text-transform: uppercase;
 }
-.completed-ptext span {
+.completed-ptext, .completed-ptext span {
   color: $lightPlaceholderGray;
   font-size: 12px;
   opacity: 0.8;
@@ -449,6 +449,11 @@ button.view {
   }
   &-dropdown-content div:hover {
     background: rgba(50, 160, 242, 0.15);
+    width: 100%;
+  }
+}
+.incompletesubreqcourse {
+  &-wrapper {
     width: 100%;
   }
 }
