@@ -224,6 +224,14 @@ export default Vue.extend({
     toggleDetails(index: number): void {
       console.log('toggleDetails');
       this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
+
+      // Do not display description for any subReqs
+      this.reqs[index].ongoing.forEach(ongoingSubReq => {
+        ongoingSubReq.displayDescription = false
+      });
+      this.reqs[index].completed.forEach(completedSubReq => {
+        completedSubReq.displayDescription = false
+      });
     },
     toggleDescription(index: number, type: 'ongoing' | 'completed', id: number): void {
       console.log('toggleDescription');

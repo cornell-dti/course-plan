@@ -163,6 +163,7 @@ export default Vue.extend({
       deep: true,
       handler(updatedSubReq) {
         if (updatedSubReq.displayDescription && !this.isCompleted) {
+          console.log('subReqCoursesNotTakenArray', this.subReqCoursesNotTakenArray);
           console.log('About to getSubReqCourseObjects: ', this.subReqCourseObjectsNotTakenArray);
           this.getSubReqCourseObjects();
           console.log('Returned from getSubReqCourseObjects: ', this.subReqCourseObjectsNotTakenArray);
@@ -242,7 +243,6 @@ export default Vue.extend({
       FetchCourses({ crseInfo: subReqCoursesToFetch, allowSameCourseForDifferentRosters: false }).then(result => {
         fetchedCourses = result.data.courses;
         fetchedCourses.forEach(course => {
-          console.log(course);
           const createdCourse = this.$parent.$parent.$parent.createCourse(course, true);
           createdCourse.compact = true;
           this.subReqCourseObjectsNotTakenArray.push(createdCourse);
@@ -251,7 +251,6 @@ export default Vue.extend({
       }).catch(error => {
         console.log('FetchCourses() Error: ', error);
       });
-      console.log('subReqCourseObjectsNotTakenArray', this.subReqCourseObjectsNotTakenArray)
     }
   }
 });

@@ -77,7 +77,7 @@ export default {
     dataReady: {
       immediate: true,
       handler(dataReady) {
-        if (dataReady) {
+        if (dataReady && this.subReqCourseObjectsNotTakenArray.length > 0) {
           this.getFirstFourCourseObjects();
           this.display = true;
         }
