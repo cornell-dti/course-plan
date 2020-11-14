@@ -5,6 +5,7 @@
     <div class="autocomplete">
       <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
+    <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
     <!-- <div v-if="!isOnboard && !selected"> 
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
