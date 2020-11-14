@@ -2,23 +2,29 @@
   <div class="requirements">
     <div id="req-tooltip" class="fixed"
       data-intro-group="req-tooltip"
-      :data-intro = getRequirementsTooltipText()
+      :data-intro="getRequirementsTooltipText()"
       data-disable-interaction = '1'
       data-step = '1'
       data-tooltipClass = 'tooltipCenter'
     >
     <h1 class="title">School Requirements</h1>
     <!-- loop through reqs array of req objects -->
-    <div class="req" v-for="(req, index) in reqs" :key="req.id">
+    <div class="req" v-for="(req, index) in reqs" :key="index">
       <requirementview
         :reqs="reqs"
         :req="req"
         :reqIndex="index"
         :majors="majors"
         :minors="minors"
+        :toggleableRequirementChoices="toggleableRequirementChoices"
+        :displayDetails="displayDetails"
+        :displayCompleted="displayCompleted"
+        :displayedMajorIndex="displayedMajorIndex"
+        :displayedMinorIndex="displayedMinorIndex"
         :user="user"
         :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
         :numOfColleges="numOfColleges"
+        @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
         @activateMajor="activateMajor"
         @activateMinor="activateMinor"
         @toggleDetails="toggleDetails"
@@ -37,21 +43,15 @@ import { Vue } from 'vue-property-decorator';
 import { PropType } from 'vue';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
-// eslint-disable-next-line import/extensions
 import introJs from 'intro.js';
 
-// Disable import extension check because TS module resolution depends on it.
-// eslint-disable-next-line import/extensions
 import Course from '@/components/Course.vue';
-// eslint-disable-next-line import/extensions
 import Modal from '@/components/Modals/Modal.vue';
-// eslint-disable-next-line import/extensions
-import RequirementView, { Major, Minor } from '@/components/RequirementView.vue';
-// eslint-disable-next-line import/extensions
+import RequirementView from '@/components/RequirementView.vue';
 import SubRequirement from '@/components/SubRequirement.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { RequirementMap, computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
-import { AppUser, AppSemester } from '@/user-data';
+import { AppUser, AppMajor, AppMinor, AppSemester } from '@/user-data';
 
 const functions = firebase.functions();
 
@@ -61,12 +61,15 @@ Vue.component('requirementview', RequirementView);
 Vue.use(VueCollapse);
 
 type Data = {
-  actives: readonly boolean[];
-  modalShow: boolean;
-  reqs: SingleMenuRequirement[];
-  majors: readonly Major[];
-  minors: readonly Minor[];
-  requirementsMap: RequirementMap;
+  reqs: readonly SingleMenuRequirement[];
+  // map from requirement group (e.g. CS major requirement group) to whether to display details.
+  displayDetails: Readonly<Record<string, boolean>>;
+  // map from requirement group to whether to display completed ones.
+  displayCompleted: Readonly<Record<string, boolean>>;
+  // map from requirement ID to option chosen
+  toggleableRequirementChoices: Readonly<Record<string, string>>;
+  displayedMajorIndex: number,
+  displayedMinorIndex: number,
   numOfColleges: number
 }
 // emoji for clipboard
@@ -88,55 +91,15 @@ export default Vue.extend({
     startTour: Boolean
   },
   mounted() {
-    this.getDisplays();
-    const groups = computeRequirements(this.getCourseCodesArray(), this.user.college, this.user.major, this.user.minor);
-    // Send satisfied credits data back to dashboard to build alerts
-    this.$emit('requirementsMap', computeRequirementMap(groups));
-    // Turn result into data readable by requirements menu
-    const singleMenuRequirements = groups.map(group => {
-      const singleMenuRequirement: SingleMenuRequirement = {
-        ongoing: [],
-        completed: [],
-        name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
-        group: group.groupName.toUpperCase(),
-        specific: (group.specific) ? group.specific : null,
-        displayDetails: false,
-        displayCompleted: false
-      };
-      group.reqs.forEach(req => {
-        // Create progress bar with requirement with progressBar = true
-        if (req.requirement.progressBar) {
-          singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
-          singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
-          singleMenuRequirement.required = (req.requirement.fulfilledBy !== 'self-check' && req.totalCountRequired) || req.minCountRequired;
-        }
-        // Default display value of false for all requirement lists
-        const displayableRequirementFulfillment = { ...req, displayDescription: false };
-        if (!req.minCountFulfilled || req.minCountFulfilled < req.minCountRequired) {
-          singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
-        } else {
-          singleMenuRequirement.completed.push(displayableRequirementFulfillment);
-        }
-      });
-      // Make number of requirements items progress bar in absense of identified progress metric
-      if (!singleMenuRequirement.type) {
-        singleMenuRequirement.type = 'Requirements';
-        singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
-        singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
-      }
-      return singleMenuRequirement;
-    });
-    this.reqs.push(...singleMenuRequirements);
+    this.recomputeRequirements();
   },
   data() : Data {
     return {
       // currentEditID: 0,
       // isEditing: false,
       // display: [],
-      actives: [false],
-      modalShow: false,
-      majors: [],
-      minors: [],
+      displayedMajorIndex: 0,
+      displayedMinorIndex: 0,
       reqs: [
         // Data structure for menu
         // {
@@ -179,9 +142,9 @@ export default Vue.extend({
         //   ]
         // }
       ],
-      requirementsMap: {
-        // CS 1110: 'MQR-AS'
-      },
+      displayDetails: {},
+      displayCompleted: {},
+      toggleableRequirementChoices: {},
       numOfColleges: 1
     };
   },
@@ -191,29 +154,91 @@ export default Vue.extend({
       tour.oncomplete(() => { this.$emit('showTourEndWindow'); });
     }
   },
+  computed: {
+    majors() {
+      const majors: AppMajor[] = [];
+      if (this.user.major != null) {
+        for (let i = 0; i < this.user.major.length; i += 1) {
+          majors.push({ major: this.user.major[i], majorFN: this.user.majorFN[i] });
+        }
+      }
+      return majors;
+    },
+    minors() {
+      const minors: AppMinor[] = [];
+      if (this.user.minor != null) {
+        for (let i = 0; i < this.user.minor.length; i += 1) {
+          minors.push({ minor: this.user.minor[i], minorFN: this.user.minorFN[i] });
+        }
+      }
+      return minors;
+    },
+  },
   methods: {
+    recomputeRequirements(): void {
+      const groups = computeRequirements(
+        this.getCourseCodesArray(),
+        this.toggleableRequirementChoices,
+        this.user.college,
+        this.user.major,
+        this.user.minor,
+      );
+      // Send satisfied credits data back to dashboard to build alerts
+      this.$emit('requirementsMap', computeRequirementMap(groups));
+      // Turn result into data readable by requirements menu
+      const singleMenuRequirements = groups.map(group => {
+        const singleMenuRequirement: SingleMenuRequirement = {
+          ongoing: [],
+          completed: [],
+          name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
+          group: group.groupName.toUpperCase() as 'COLLEGE' | 'MAJOR' | 'MINOR',
+          specific: group.specific,
+        };
+        group.reqs.forEach(req => {
+          // Create progress bar with requirement with progressBar = true
+          if (req.requirement.progressBar) {
+            singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
+            singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
+            singleMenuRequirement.required = (req.requirement.fulfilledBy !== 'self-check' && req.totalCountRequired) || req.minCountRequired;
+          }
+          // Default display value of false for all requirement lists
+          const displayableRequirementFulfillment = { ...req, displayDescription: false };
+          if (!req.minCountFulfilled || req.minCountFulfilled < req.minCountRequired) {
+            singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
+          } else {
+            singleMenuRequirement.completed.push(displayableRequirementFulfillment);
+          }
+        });
+        // Make number of requirements items progress bar in absense of identified progress metric
+        if (!singleMenuRequirement.type) {
+          singleMenuRequirement.type = 'Requirements';
+          singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
+          singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+        }
+        return singleMenuRequirement;
+      });
+      this.reqs = singleMenuRequirements;
+    },
     getRequirementTypeDisplayName(type: string): string {
       return type.charAt(0).toUpperCase() + type.substring(1);
     },
     showMajorOrMinorRequirements(id: number, group: string) {
-      let currentDisplay = 0;
       if (group === 'MAJOR') {
-        this.majors.forEach((major, i: number) => {
-          if (major.display) {
-            currentDisplay = i + this.numOfColleges; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
-          }
-        });
-        return (id < this.numOfColleges || id === currentDisplay);
+        return id === this.displayedMajorIndex + this.numOfColleges;
       }
-      this.minors.forEach((minor, i: number) => {
-        if (minor.display) {
-          currentDisplay = i + this.numOfColleges + this.majors.length; // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
-        }
-      });
-      return (id < this.numOfColleges || id === currentDisplay);
+      // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+      return id < this.numOfColleges ||
+        id === this.displayedMinorIndex + this.numOfColleges + this.majors.length;
     },
-    toggleDetails(index: number): void {
-      this.reqs[index].displayDetails = !this.reqs[index].displayDetails;
+    chooseToggleableRequirementOption(requirementID: string, option: string): void {
+      this.toggleableRequirementChoices = {
+        ...this.toggleableRequirementChoices,
+        [requirementID]: option,
+      };
+      this.recomputeRequirements();
+    },
+    toggleDetails(name: string): void {
+      this.displayDetails = { ...this.displayDetails, [name]: !this.displayDetails[name] };
     },
     toggleDescription(index: number, type: 'ongoing' | 'completed', id: number): void {
       if (type === 'ongoing') {
@@ -224,8 +249,8 @@ export default Vue.extend({
         this.reqs[index].completed[id].displayDescription = !currentBool;
       }
     },
-    turnCompleted(index: number, bool: boolean): void {
-      this.reqs[index].displayCompleted = bool;
+    turnCompleted(name: string, bool: boolean): void {
+      this.displayCompleted = { ...this.displayCompleted, [name]: bool };
     },
     getCourseCodesArray(): readonly CourseTaken[] {
       const courses: CourseTaken[] = [];
@@ -244,52 +269,10 @@ export default Vue.extend({
       return courses;
     },
     activateMajor(id: number) {
-      this.majors.forEach((major, i: number) => {
-        if (major.display) {
-          major.display = false;
-        }
-      });
-      this.majors[id].display = true;
+      this.displayedMajorIndex = id;
     },
     activateMinor(id: number) {
-      this.minors.forEach((minor, i: number) => {
-        if (minor.display) {
-          minor.display = false;
-        }
-      });
-      this.minors[id].display = true;
-    },
-    getDisplays() {
-      const majors = [];
-      if (this.user.major != null) {
-        for (let i = 0; i < this.user.major.length; i += 1) {
-          const userMajor = { display: true, major: '', majorFN: '' };
-          if (i === 0) {
-            userMajor.display = true;
-          } else {
-            userMajor.display = false;
-          }
-          userMajor.major = this.user.major[i];
-          userMajor.majorFN = this.user.majorFN[i];
-          majors.push(userMajor);
-        }
-      }
-      this.majors = majors;
-      const minors = [];
-      if (this.user.minor != null) {
-        for (let i = 0; i < this.user.minor.length; i += 1) {
-          const userMinor = { display: true, minor: '', minorFN: '' };
-          if (i === 0) {
-            userMinor.display = true;
-          } else {
-            userMinor.display = false;
-          }
-          userMinor.minor = this.user.minor[i];
-          userMinor.minorFN = this.user.minorFN[i];
-          minors.push(userMinor);
-        }
-      }
-      this.minors = minors;
+      this.displayedMinorIndex = id;
     },
     getRequirementsTooltipText() {
       return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>

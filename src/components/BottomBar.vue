@@ -27,7 +27,6 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable import/extensions */
 import Vue, { PropType } from 'vue';
 import BottomBarCourse from '@/components/BottomBarCourse.vue';
 import BottomBarTabView from '@/components/BottomBarTabView.vue';

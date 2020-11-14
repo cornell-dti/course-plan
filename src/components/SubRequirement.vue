@@ -18,7 +18,9 @@
       </button>
     </div>
     <div class="col-7" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
-      <p v-bind:class="[{'sup-req': !this.isCompleted}, 'pointer', this.isCompleted ? 'completed-ptext' : 'incomplete-ptext']">{{subReq.requirement.name}}</p>
+      <p v-bind:class="[{'sup-req': !this.isCompleted}, 'pointer', this.isCompleted ? 'completed-ptext' : 'incomplete-ptext']">
+        <span>{{subReq.requirement.name}}</span>
+      </p>
     </div>
     <div class="col">
       <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">{{
@@ -26,7 +28,9 @@
         ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.totalCountRequired
         || subReq.minCountRequired} ${subReq.fulfilledBy}`
         : 'self check' }}</p>
-      <p v-if="this.isCompleted" class="text-right completed-ptext">{{subReq.minCountFulfilled}}/{{subReq.minCountRequired}} {{ subReq.fulfilledBy }}</p>
+      <p v-if="this.isCompleted" class="text-right completed-ptext">
+        <span>{{subReq.minCountFulfilled}}/{{subReq.minCountRequired}} {{ subReq.fulfilledBy }}</span>
+      </p>
     </div>
   </div>
   <div v-if="subReq.displayDescription" :class="[{'completed-ptext': this.isCompleted}, 'description']">
@@ -47,7 +51,7 @@
             <div
               class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-innerPlaceholder"
             >
-              {{ selectedFulfillmentOption }}
+              <span>{{ selectedFulfillmentOption }}</span>
             </div>
             <div class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"></div>
           </div>
@@ -58,7 +62,7 @@
               class="toggleable-requirements-dropdown-content-item"
               @click="chooseFulfillmentOption(optionName)"
             >
-              {{optionName}}
+              <span>{{optionName}}</span>
             </div>
           </div>
         </div>
@@ -72,9 +76,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-// eslint-disable-next-line import/extensions
 import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
-// eslint-disable-next-line import/extensions
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
 
 import { DisplayableRequirementFulfillment } from '@/requirements/types';
@@ -94,16 +96,23 @@ export default Vue.extend({
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqIndex: Number, // Subrequirement index
     reqIndex: Number, // Requirement index
+    toggleableRequirementChoice: {
+      type: String,
+      required: false,
+    },
     color: String,
     isCompleted: Boolean
   },
   data() {
-    return {
-      showFulfillmentOptionsDropdown: false,
-      selectedFulfillmentOption: this.subReq.requirement.fulfilledBy !== 'toggleable'
-        ? ''
-        : Object.keys(this.subReq.requirement.fulfillmentOptions)[0]
-    }
+    return { showFulfillmentOptionsDropdown: false };
+  },
+  computed: {
+    selectedFulfillmentOption(): string {
+      if (this.subReq.requirement.fulfilledBy !== 'toggleable') {
+        return '';
+      }
+      return this.toggleableRequirementChoice || Object.keys(this.subReq.requirement.fulfillmentOptions)[0];
+    },
   },
   directives: {
     'click-outside': clickOutside
@@ -128,8 +137,8 @@ export default Vue.extend({
       this.showFulfillmentOptionsDropdown = false;
     },
     chooseFulfillmentOption(option: string) {
-      this.selectedFulfillmentOption = option;
       this.showFulfillmentOptionsDropdown = false;
+      this.$emit('changeToggleableRequirementChoice', this.subReq.id, option);
     },
   },
 });
@@ -203,15 +212,12 @@ button.view {
   color: white;
   text-transform: uppercase;
 }
-.completed {
-   margin-top: 1rem;
-   &-ptext {
-     color: $lightPlaceholderGray;
-     font-size: 12px;
-     opacity: 0.8;
-     font-weight: normal;
-   }
- }
+.completed-ptext span {
+  color: $lightPlaceholderGray;
+  font-size: 12px;
+  opacity: 0.8;
+  font-weight: normal;
+}
 .incomplete {
   &-ptext {
     font-size: 14px;

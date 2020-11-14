@@ -50,8 +50,8 @@
 <script>
 import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import OnboardingBasic from '@/components/Modals/OnboardingBasic';
-import OnboardingTransfer from '@/components/Modals/OnboardingTransfer';
+import OnboardingBasic from '@/components/Modals/OnboardingBasic.vue';
+import OnboardingTransfer from '@/components/Modals/OnboardingTransfer.vue';
 import { clickOutside } from '@/utilities';
 import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
@@ -63,7 +63,7 @@ Vue.component('onboardingTransfer', OnboardingTransfer);
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
 
-export default {
+export default Vue.extend({
   props: {
     isEditingProfile: Boolean,
     user: Object
@@ -221,7 +221,7 @@ export default {
       this.$emit('cancelOnboarding');
     }
   }
-};
+});
 </script>
 <style scoped lang="scss">
   @import '@/components/Modals/Onboarding.scss';

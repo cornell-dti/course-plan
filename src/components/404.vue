@@ -22,9 +22,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-// eslint-disable-next-line import/extensions
 import Footer from '@/components/Footer.vue';
-// eslint-disable-next-line import/extensions
 import TopBar from '@/components/TopBar.vue';
 
 Vue.component('custom-footer', Footer);

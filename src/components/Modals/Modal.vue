@@ -13,6 +13,8 @@
         :currentSemesters="currentSemesters"
         placeholderText = 'CS 1110", "Multivariable Calculus", etc.'
         @duplicateSemester="disableButton"
+        @close-current-model="closeCourseModal"
+        @updateSemProps="updateSemProps"
         ref="modalBodyComponent"
       ></component>
       <div class="modal-buttonWrapper">
@@ -25,28 +27,29 @@
 
 <script>
 import Vue from 'vue';
-import NewCourse from '@/components/Modals/NewCourse';
-import NewCustomCourse from '@/components/Modals/NewCustomCourse';
-import NewSemester from '@/components/Modals/NewSemester';
-import EditSemester from '@/components/Modals/EditSemester';
+import NewCourse from '@/components/Modals/NewCourse.vue';
+import NewSemester from '@/components/Modals/NewSemester.vue';
+import EditSemester from '@/components/Modals/EditSemester.vue';
 
 Vue.component('newCourse', NewCourse);
-Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 Vue.component('editSemester', EditSemester);
 
-export default {
+export default Vue.extend({
   data() {
     return {
       isOnboard: false,
       courseIsAddable: true,
-      isDisabled: false
+      isDisabled: false,
+      season: '',
+      year: ''
     };
   },
   props: {
     type: String,
     semesterID: Number,
-    currentSemesters: Array
+    currentSemesters: Array,
+    isOpen: Boolean
   },
   computed: {
     contentId() {
@@ -75,24 +78,25 @@ export default {
       if (this.type === 'course') {
         return 'newCourse';
       }
-      return 'newCustomCourse';
+      return '';
     }
   },
   methods: {
     disableButton(bool) {
       this.isDisabled = bool;
     },
+    closeCourseModal() {
+      this.$emit('close-course-modal');
+    },
     closeCurrentModal() {
-      let modal;
       if (this.type === 'course') {
-        modal = document.getElementById(`${this.type}Modal-${this.semesterID}`);
-      } else {
-        modal = document.getElementById(`${this.type}Modal`);
+        this.$emit('close-course-modal');
+        return;
       }
       if (this.type === 'semester') {
+        this.$emit('close-semester-modal');
         this.$refs.modalBodyComponent.resetDropdowns();
       }
-      modal.style.display = 'none';
     },
     // Note: Currently not used
     checkCourseDuplicate(key) {
@@ -103,13 +107,10 @@ export default {
         const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
         const title = dropdown.value;
 
-        // TODO: can I make the valid assumption that the course code is up to the colon in the title?
         const key = title.substring(0, title.indexOf(':'));
         this.addCourse();
       } else if (this.type === 'semester') {
         this.addSemester();
-      } else {
-        // TODO: add custom course
       }
     },
     addCourse() {
@@ -118,12 +119,9 @@ export default {
       // name used to transmit roster information
       const roster = dropdown.name;
 
-      // TODO: can I make the valid assumption that the course code is up to the colon in the title?
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
       const number = courseCode.split(' ')[1];
-
-      const parent = this.$parent;
 
       // To use for retrieve course data from Firebase
       // // TODO: error handling if course not found or some firebase error
@@ -148,7 +146,7 @@ export default {
               const course = resultJSONclass;
               course.roster = roster;
               if (this.courseIsAddable) {
-                parent.addCourse(course);
+                this.$emit('add-course', course);
               }
             }
           });
@@ -160,18 +158,17 @@ export default {
     },
     addSemester() {
       if (!this.isDisabled) {
-        const seasonInput = document.getElementById(`season-placeholder`);
-        const yearInput = document.getElementById(`year-placeholder`);
-        this.$parent.addSemester(
-          seasonInput.innerHTML.trim(' ').split(' ')[0],
-          parseInt(yearInput.innerHTML, 10)
-        );
+        this.$emit('add-semester', this.season, this.year);
 
         this.closeCurrentModal();
       }
+    },
+    updateSemProps(season, year) {
+      this.season = season;
+      this.year = year;
     }
   }
-};
+});
 </script>
 
 <style lang="scss">

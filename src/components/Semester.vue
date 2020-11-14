@@ -1,28 +1,36 @@
 <template>
-  <div
-    class="semester"
-    :class="{ 'semester--compact': compact }"
-    :id="id"
-  >
-    <modal :id="'courseModal-' + id" class="semester-modal" type="course" :semesterID="id" @check-course-duplicate="checkCourseDuplicate" ref="modal" />
+  <div class="semester" :class="{ 'semester--compact': compact }" :id="id">
+    <modal
+      :id="'courseModal-' + id"
+      class="semester-modal"
+      type="course"
+      :class="{ 'modal--block': isCourseModalOpen }"
+      :semesterID="id"
+      @check-course-duplicate="checkCourseDuplicate"
+      @close-course-modal="closeCourseModal"
+      @add-course="addCourse"
+      ref="modal"
+    />
     <confirmation
-      :id="'confirmation-' + id"
-      class="semester-confirmation"
+      class="confirmation-modal"
+      :class="{ 'confirmation-modal--flex': isConfirmationOpen }"
       :text="confirmationText"
     />
     <deletesemester
-      :id="'deleteSemesterModal-' + id"
       class="semester-modal"
+      :class="{ 'modal--block': isDeleteSemesterOpen }"
       @delete-semester="deleteSemester"
+      @close-delete-modal="closeDeleteModal"
       :deleteSemID="deleteSemID"
       :deleteSemType="deleteSemType"
       :deleteSemYear="deleteSemYear"
       ref="deletesemester"
     />
     <editsemester
-      :id="'editSemesterModal-' + id"
       class="semester-modal"
+      :class="{ 'modal--block': isEditSemesterOpen }"
       @edit-semester="editSemester"
+      @close-edit-modal="closeEditModal"
       :semesters="semesters"
       :deleteSemID="deleteSemID"
       :deleteSemType="deleteSemType"
@@ -30,22 +38,31 @@
       ref="modalBodyComponent"
     />
     <button
-    v-if="isFirstSem" class="semester-addSemesterButton" @click="openSemesterModal"
-    data-intro-group="pageTour"
-    data-intro='<b>Add your past and future Semester Cards</b><br>
+      v-if="isFirstSem"
+      class="semester-addSemesterButton"
+      @click="openSemesterModal"
+      data-intro-group="pageTour"
+      data-intro='<b>Add your past and future Semester Cards</b><br>
       <div class = "introjs-bodytext">Once you’re done setting up your current semester,
       feel free to add both past and future semesters. Try to utilize your requirements bar</div>'
-    data-step ='4'
-    data-disable-interaction = '1'
-    >+ New Semester</button>
-    <div id = "tour" class="semester-content"
+      data-step="4"
+      data-disable-interaction="1"
+    >
+      + New Semester
+    </button>
+    <div
+      id="tour"
+      class="semester-content"
       data-intro-group="pageTour"
-      data-step = '2'
-      :data-intro = seasonMessage()
-      data-disable-interaction = '1'>
+      data-step="2"
+      :data-intro="seasonMessage()"
+      data-disable-interaction="1"
+    >
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
-          <span class="semester-name"><img class="season-emoji" :src='seasonImg[type]' alt=""> {{ type }} {{ year }}</span>
+          <span class="semester-name"
+            ><img class="season-emoji" :src="seasonImg[type]" alt="" /> {{ type }} {{ year }}</span
+          >
           <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
@@ -60,8 +77,8 @@
           v-dragula="courses"
           bag="first-bag"
           :semId="id"
-          :style="{height: courseContainerHeight + 'rem' }"
-          >
+          :style="{ height: courseContainerHeight + 'rem' }"
+        >
           <div v-for="course in courses" :key="course.uniqueID" class="semester-courseWrapper">
             <course
               v-bind="course"
@@ -84,12 +101,12 @@
           :class="{ 'semester-addWrapper--compact': compact }"
           @click="openCourseModal"
           data-intro-group="pageTour"
-          data-step = '3'
-          data-intro = '<b>Add your course in this semseter!</b><br>
+          data-step="3"
+          data-intro='<b>Add your course in this semseter!</b><br>
             <div class = "introjs-bodytext">To start planning your college career, you should try adding a course in your current semester.</div>'
-          data-disable-interaction = '1'
+          data-disable-interaction="1"
         >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }" >{{
+          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
             buttonString
           }}</span>
         </div>
@@ -100,22 +117,23 @@
       class="semester-menu"
       @open-delete-semester-modal="openDeleteSemesterModal"
       @open-edit-semester-modal="openEditSemesterModal"
-      v-click-outside="closeSemesterMenuIfOpen" />
+      v-click-outside="closeSemesterMenuIfOpen"
+    />
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
-// eslint-disable-next-line import/extensions
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import introJs from 'intro.js';
-import Course from '@/components/Course';
-import Modal from '@/components/Modals/Modal';
-import Confirmation from '@/components/Confirmation';
-import SemesterMenu from '@/components/Modals/SemesterMenu';
-import DeleteSemester from '@/components/Modals/DeleteSemester';
-import EditSemester from '@/components/Modals/EditSemester';
+import Course from '@/components/Course.vue';
+import Modal from '@/components/Modals/Modal.vue';
+import Confirmation from '@/components/Confirmation.vue';
+import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
+import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
+import EditSemester from '@/components/Modals/EditSemester.vue';
 
 import { clickOutside } from '@/utilities';
+import { AppCourse, AppSemester } from '@/user-data';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -136,10 +154,11 @@ pageTour.setOption('skipLabel', 'Skip This Tutorial');
 pageTour.setOption('nextLabel', 'Next');
 pageTour.setOption('exitOnOverlayClick', 'false');
 
-export default {
+export default Vue.extend({
   data() {
     return {
       confirmationText: '',
+      isConfirmationOpen: false,
       scrollable: true,
       semesterMenuOpen: false,
       stopCloseFlag: false,
@@ -147,32 +166,36 @@ export default {
       deleteSemID: 0,
       deleteSemType: '',
       deleteSemYear: 0,
+      isDeleteSemesterOpen: false,
+      isEditSemesterOpen: false,
       isShadow: false,
       isDraggedFrom: false,
+      isCourseModalOpen: false,
 
       seasonImg: {
         Fall: fall,
         Spring: spring,
         Winter: winter,
-        Summer: summer
-      }
+        Summer: summer,
+      },
     };
   },
   props: {
     id: Number,
-    type: String,
+    type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>,
     year: Number,
-    courses: Array,
+    courses: Array as PropType<AppCourse[]>,
     compact: Boolean,
-    activatedCourse: Object,
-    semesters: Array,
-    isFirstSem: Boolean
+    activatedCourse: Object as PropType<AppCourse>,
+    semesters: Array as PropType<readonly AppSemester[]>,
+    isFirstSem: Boolean,
   },
 
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+    // @ts-ignore
     const service = Vue.$dragula.$service;
-    service.eventBus.$on('drag', data => {
+    service.eventBus.$on('drag', (data: any) => {
       if (parseInt(data.container.getAttribute('semId'), 10) === this.id) {
         this.isDraggedFrom = true;
       }
@@ -182,7 +205,7 @@ export default {
     service.eventBus.$on('drop', () => {
       this.scrollable = true;
     });
-    service.eventBus.$on('shadow', data => {
+    service.eventBus.$on('shadow', (data: any) => {
       if (parseInt(data.container.getAttribute('semId'), 10) === this.id) {
         this.isShadow = true;
       } else {
@@ -201,7 +224,7 @@ export default {
 
   computed: {
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
-    courseContainerHeight() {
+    courseContainerHeight(): number {
       let factor = 6.1;
       let extraIncrementer = 0;
       if (this.isShadow) {
@@ -226,9 +249,9 @@ export default {
       return `${credits.toString()} credits`;
     },
     // Note: Currently not used
-    deleteDuplicateCourses() {
-      const uniqueCoursesNames = [];
-      const uniqueCourses = [];
+    deleteDuplicateCourses(): readonly AppCourse[] {
+      const uniqueCoursesNames: string[] = [];
+      const uniqueCourses: AppCourse[] = [];
       this.courses.forEach(course => {
         if (uniqueCoursesNames.indexOf(course.name) === -1) {
           uniqueCourses.push(course);
@@ -239,20 +262,22 @@ export default {
     },
     buttonString() {
       return '+ Course';
-    }
+    },
   },
   methods: {
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
-
-      const modal = document.getElementById(`courseModal-${this.id}`);
-      modal.style.display = 'block';
-
-      // Activate focus
-      const input = document.getElementById(`dropdown-${this.id}`);
-      input.value = '';
-      input.focus();
+      this.isCourseModalOpen = true;
+    },
+    closeCourseModal() {
+      this.isCourseModalOpen = false;
+    },
+    closeEditModal() {
+      this.isEditSemesterOpen = false;
+    },
+    closeDeleteModal() {
+      this.isDeleteSemesterOpen = false;
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
@@ -260,23 +285,23 @@ export default {
 
       this.$emit('new-semester');
     },
-    openConfirmationModal(msg) {
-      // Set text and display confirmation modal, then have it disappear after 5 seconds
-
+    openConfirmationModal(msg: string) {
+      // Set text and display confirmation modal, then have it disappear after 3 seconds
       this.confirmationText = msg;
-      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
-      confirmationModal.style.display = 'flex';
+      this.isConfirmationOpen = true;
 
       setTimeout(() => {
-        confirmationModal.style.display = 'none';
+        this.closeConfirmationModal();
       }, 3000);
     },
     closeConfirmationModal() {
-      const confirmationModal = document.getElementById(`confirmation-${this.id}`);
-      confirmationModal.style.display = 'none';
+      this.isConfirmationOpen = false;
     },
-    addCourse(data) {
+    // TODO: give better type on data
+    addCourse(data: any) {
+      // @ts-ignore
       const newCourse = this.$parent.$parent.createCourse(data);
+      // TODO: stop mutating this data directly
       this.courses.push(newCourse);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
@@ -284,10 +309,10 @@ export default {
       this.$gtag.event('add-course', {
         event_category: 'course',
         event_label: 'add',
-        value: 1
+        value: 1,
       });
     },
-    deleteCourse(subject, number, uniqueID) {
+    deleteCourse(subject: string, number: string, uniqueID: number) {
       for (let i = 0; i < this.courses.length; i += 1) {
         if (this.courses[i].uniqueID === uniqueID) {
           this.courses.splice(i, 1);
@@ -299,12 +324,12 @@ export default {
       this.$gtag.event('delete-course', {
         event_category: 'course',
         event_label: 'delete',
-        value: 1
+        value: 1,
       });
       // Update requirements menu
       this.$emit('update-requirements-menu');
     },
-    colorCourse(color, uniqueID) {
+    colorCourse(color: string, uniqueID: number) {
       for (let i = 0; i < this.courses.length; i += 1) {
         if (this.courses[i].uniqueID === uniqueID) {
           this.courses[i].color = color;
@@ -312,10 +337,10 @@ export default {
         }
       }
     },
-    updateBar(course, colorJustChanged, color) {
+    updateBar(course: AppCourse, colorJustChanged: string, color: string) {
       this.$emit('updateBar', course, colorJustChanged, color);
     },
-    editCourseCredit(credit, uniqueID) {
+    editCourseCredit(credit: number, uniqueID: number) {
       for (let i = 0; i < this.courses.length; i += 1) {
         if (this.courses[i].uniqueID === uniqueID) {
           this.courses[i].credits = credit;
@@ -324,7 +349,7 @@ export default {
       }
       this.$emit('update-requirements-menu');
     },
-    dragListener(event) {
+    dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
     },
     buildCautions() {
@@ -336,17 +361,20 @@ export default {
     buildIncorrectPlacementCautions() {
       if (this.courses) {
         this.courses.forEach(course => {
-          if (!course.semesters.includes(this.type)) course.alerts.caution = `Course unavailable in the ${this.type}`;
+          if (!course.semesters.includes(this.type))
+            course.alerts.caution = `Course unavailable in the ${this.type}`;
         });
       }
     },
-    checkCourseDuplicate(key) {
+    checkCourseDuplicate(key: string) {
       if (this.courses) {
+        // @ts-ignore
         this.$refs.modal.courseIsAddable = true;
         this.courses.forEach(course => {
           if (`${course.subject} ${course.number}` === key) {
+            // @ts-ignore
             this.$refs.modal.courseIsAddable = false;
-            this.$parent.openCautionModal();
+            this.$emit('open-caution-modal');
           }
         });
       }
@@ -376,10 +404,9 @@ export default {
       this.deleteSemYear = this.year;
       this.deleteSemID = this.id;
 
-      const modal = document.getElementById(`deleteSemesterModal-${this.id}`);
-      modal.style.display = 'block';
+      this.isDeleteSemesterOpen = true;
     },
-    deleteSemester(type, year) {
+    deleteSemester(type: string, year: string) {
       this.$emit('delete-semester', type, year);
       this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
     },
@@ -387,23 +414,21 @@ export default {
       this.deleteSemType = this.type;
       this.deleteSemYear = this.year;
       this.deleteSemID = this.id;
-      const modal = document.getElementById(`editSemesterModal-${this.id}`);
-      modal.style.display = 'block';
+
+      this.isEditSemesterOpen = true;
     },
-    editSemester(id) {
-      const seasonInput = document.getElementById(`season-placeholder-${this.id}`).innerHTML.trim(' ').split(' ')[0];
-      const yearInput = parseInt(document.getElementById(`year-placeholder-${this.id}`).innerHTML, 10);
+    editSemester(seasonInput: string, yearInput: string) {
       this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
-    }
+    },
   },
   directives: {
-    'click-outside': clickOutside
-  }
-};
+    'click-outside': clickOutside,
+  },
+});
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 @mixin hover-button {
   border-color: #15a6cf;
@@ -484,7 +509,6 @@ export default {
     z-index: 1;
   }
 
-
   &-name {
     font-size: 18px;
     line-height: 18px;
@@ -560,7 +584,7 @@ export default {
 
   /* The Modal (background) */
   .semester-modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
@@ -602,20 +626,37 @@ export default {
     filter: alpha(opacity=20);
   }
 
-.semester-modal{
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-}
+  .semester-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 
+    &--block {
+      display: block;
+    }
+  }
+
+  .confirmation-modal {
+    display: none;
+
+    &--flex {
+      display: flex;
+    }
+  }
+
+  .modal {
+    &--block {
+      display: block;
+    }
+  }
+}
 
 @media only screen and (max-width: 878px) {
   .semester {

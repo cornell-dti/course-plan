@@ -8,9 +8,10 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import coursesJSON from '../../assets/courses/courses.json';
 
-export default {
+export default Vue.extend({
   props: {
     isOnboard: Boolean,
     semesterID: Number,
@@ -25,6 +26,11 @@ export default {
     }
   },
   mounted() {
+    // Activate focus and set input to empty
+    const input = document.getElementById(`dropdown-${this.semesterID}`);
+    input.value = '';
+    input.focus();
+
     this.autocomplete(
       document.getElementById(`dropdown-${this.semesterID}`),
       coursesJSON
@@ -32,8 +38,7 @@ export default {
   },
   methods: {
     closeCourseModal() {
-      const modal = document.getElementById(`courseModal-${this.semesterID}`);
-      modal.style.display = 'none';
+      this.$emit('close-course-modal');
     },
     autocomplete(inp, courses) {
       /* the autocomplete function takes two arguments,
@@ -172,7 +177,7 @@ export default {
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     }
   }
-};
+});
 </script>
 
 <style lang="scss">
