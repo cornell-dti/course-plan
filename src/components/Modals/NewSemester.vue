@@ -1,35 +1,8 @@
 <template>
-  <div class="newSemester">
-    <div class="newSemester-section newSemester-type">
-      <label v-if="labels" class="newSemester-label" for="type">Type</label>
-      <div
-        v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
-        id="season"
-        v-click-outside="closeSeasonDropdownIfOpen"
-      >
-        <div class="newSemester-dropdown-placeholder season-wrapper" @click="showHideSeasonContent">
-          <div
-            v-if="isEdit"
-            class="newSemester-dropdown-placeholder season-placeholder"
-            :id="'season-placeholder-' + id"
-            :style="{ color: displayOptions.season.placeholderColor }"
-          >
-            {{ seasonPlaceholder }}
-          </div>
-          <div
-            v-else
-            class="newSemester-dropdown-placeholder season-placeholder"
-            id="season-placeholder"
-            :style="{ color: displayOptions.season.placeholderColor }"
-          >
-            {{ seasonPlaceholder }}
-          </div>
-          <div
-            class="newSemester-dropdown-placeholder season-arrow"
-            id="season-arrow"
-            :style="{ borderTopColor: displayOptions.season.arrowColor }"
-          ></div>
-        </div>
+  <div>
+    <div class="newSemester">
+      <div class="newSemester-section newSemester-type">
+        <label class="newSemester-label" for="type">Type</label>
         <div
           v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
           id="season"
@@ -61,17 +34,6 @@
               :style="{ borderTopColor: displayOptions.season.arrowColor }"
             ></div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="newSemester-section newSemester-year">
-      <label v-if="labels" class="newSemester-label" for="year">Year</label>
-      <div
-        v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
-        id="year"
-        v-click-outside="closeYearDropdownIfOpen"
-      >
-        <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
           <div
             class="newSemester-dropdown-content season-content"
             id="season-content"
