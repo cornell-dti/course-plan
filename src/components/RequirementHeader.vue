@@ -91,7 +91,6 @@ export default Vue.extend({
   methods: {
     toggleDetails(index: number) {
       this.$emit('toggleDetails', index);
-      console.log('req.displayDetails after: ', this.req.displayDetails);
     },
     activateMajor(id: number) {
       this.$emit('activateMajor', id);

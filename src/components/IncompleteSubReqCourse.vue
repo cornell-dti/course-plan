@@ -29,34 +29,42 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 // eslint-disable-next-line import/extensions
 import Course from '@/components/Course.vue';
+import { DisplayableRequirementFulfillment } from '@/requirements/types';
+
+import { AppCourse } from '@/user-data';
 
 Vue.component('course', Course);
 
-require('firebase/functions');
+type CrseInfo = {
+  roster: string;
+  crseIds: number[];
+}
 
-const functions = firebase.functions();
+type Data = {
+  courseObjects: AppCourse[];
+  scrollable: boolean;
+  display: boolean;
+}
 
-const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
-
-export default {
+export default Vue.extend({
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
     const service = Vue.$dragula.$service;
     service.eventBus.$on('drag', () => {
       this.scrollable = true;
     });
-    service.eventBus.$on('drop', e => {
+    service.eventBus.$on('drop', (e: Object) => {
       this.scrollable = true;
       // this.reqCourseDropHandler();
     });
 
   },
-  data() {
+  data() : Data {
     return {
       courseObjects: [],
       scrollable: false,
@@ -67,10 +75,10 @@ export default {
     this.$el.removeEventListener('touchmove', this.dragListener);
   },
   props: {
-    subReq: Object,
+    subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqCourseId: Number,
-    crseInfoObjects: Array,
-    subReqCourseObjectsNotTakenArray: Array,
+    crseInfoObjects: Array as PropType<CrseInfo[]>,
+    subReqCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
     dataReady: Boolean
   },
   watch: {
@@ -102,25 +110,21 @@ export default {
     }
   },
   methods: {
-    dragListener(event) {
+    dragListener(event: { preventDefault: () => void; }) {
       if (!this.$data.scrollable) event.preventDefault();
     },
     getFirstFourCourseObjects() {
-      console.log('subReqCourseObjectsNotTakenArray', this.subReqCourseObjectsNotTakenArray);
-      let firstFourObjects = [];
-      for (let i = 0; firstFourObjects.length < 4 && i < this.crseInfoObjects.length; i += 1){
+      let firstFourCourseObjects: AppCourse[] = [];
+      for (let i = 0; firstFourCourseObjects.length < 4 && i < this.crseInfoObjects.length; i += 1){
         const crseInfoObject = this.crseInfoObjects[i];
-        console.log('crseInfoObject', crseInfoObject);
-        const filteredCourses = this.subReqCourseObjectsNotTakenArray.filter(course => crseInfoObject.crseIds.includes(course.crseId));
-        console.log(filteredCourses);
-        const remainingCourses = Math.min(4 - firstFourObjects.length, filteredCourses.length);
-        firstFourObjects = firstFourObjects.concat(filteredCourses.slice(0, remainingCourses));
+        const filteredCourses: AppCourse[] = this.subReqCourseObjectsNotTakenArray.filter(course => crseInfoObject.crseIds.includes(course.crseId));
+        const numRemainingCourses = Math.min(4 - firstFourCourseObjects.length, filteredCourses.length);
+        firstFourCourseObjects = firstFourCourseObjects.concat(filteredCourses.slice(0, numRemainingCourses));
       }
-      this.courseObjects = firstFourObjects;
-      console.log('generated first four course objects: ', this.courseObjects);
+      this.courseObjects = firstFourCourseObjects;
     }
   }
-};
+});
 </script>
 
 <style scoped lang="scss">
