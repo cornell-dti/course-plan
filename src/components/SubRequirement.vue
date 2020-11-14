@@ -254,6 +254,7 @@ export default Vue.extend({
       FetchCourses({ crseInfo: subReqCrseInfoObjectsToFetch, allowSameCourseForDifferentRosters: false }).then(result => {
         fetchedCourses = result.data.courses;
         fetchedCourses.forEach((course: FirestoreSemesterCourse) => {
+          // @ts-ignore
           const createdCourse = this.$parent.$parent.$parent.createCourse(course, true);
           createdCourse.compact = true;
           this.subReqCourseObjectsNotTakenArray.push(createdCourse);
