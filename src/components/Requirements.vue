@@ -243,6 +243,17 @@ export default Vue.extend({
     },
     toggleDetails(name: string): void {
       this.displayDetails = { ...this.displayDetails, [name]: !this.displayDetails[name] };
+
+      if (!this.displayDetails[name]) {
+        // Collapse Descriptions
+        const reqIndex = this.reqs.findIndex(req => req.name === name);
+        const newReqs = [...this.reqs];
+        
+        newReqs[reqIndex].ongoing.forEach(ongoingSubReq => { ongoingSubReq.displayDescription = false });
+        newReqs[reqIndex].completed.forEach(completedSubReq => { completedSubReq.displayDescription = false });
+
+        this.reqs = newReqs;
+      }
     },
     toggleDescription(index: number, type: 'ongoing' | 'completed', id: number): void {
       if (type === 'ongoing') {
