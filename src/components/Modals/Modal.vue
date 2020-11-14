@@ -17,8 +17,8 @@
         @updateSemProps="updateSemProps"
         @toggle-left-button="toggleLeftButton"
         ref="modalBodyComponent"
-        :season="season"
-        :year="year"
+        :season="seasonCourse"
+        :year="yearCourse"
         :labels="true"
         :goBack="goBack"
       ></component>
@@ -56,7 +56,9 @@ export default Vue.extend({
     type: String,
     semesterID: Number,
     currentSemesters: Array,
-    isOpen: Boolean
+    isOpen: Boolean,
+    seasonCourse: String,
+    yearCourse: Number
   },
   computed: {
     contentId() {
