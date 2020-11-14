@@ -86,6 +86,7 @@ export default Vue.extend({
       if (this.editMode) { this.editMode = false; }
       else {
         this.selected = false;
+        // copied code from line 125 and 209 TODO - refactor
         const inpCopy = document.getElementById(`dropdown-${this.semesterID}`);
         inpCopy.value = '';
         this.$emit('toggle-left-button');
