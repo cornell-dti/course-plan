@@ -18,7 +18,7 @@
               :courseObj="course"
               :id="course.subject + course.number"
               :uniqueID="course.uniqueID"
-              :compact="course.compact"
+              :compact="true"
               :active="false"
               class="requirements-course"
             />
