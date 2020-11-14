@@ -50,11 +50,15 @@
             <div class="onboarding-selectWrapper">
               <div class="onboarding-selectWrapper-review">
                 <label class="onboarding-label">AP Credits</label>
-                <label v-for="(options, index) in displayOptions.exam" :key = "index" class="onboarding-label--review">{{ options.subject.placeholder }}</label>
+                <div v-for="(options, index) in displayOptions.exam" :key = "index">
+                  <label v-if="typeof options.type != undefined && options.type.placeholder == 'AP'" class="onboarding-label--review">{{ options.subject.placeholder }}</label>
+                </div>
               </div>
               <div class="onboarding-selectWrapper">
                 <label class="onboarding-label">IB Credits</label>
-                <label class="onboarding-label--review">{{ }}</label>
+                <div v-for="(options, index) in displayOptions.exam" :key = "index">
+                  <label v-if="typeof options.type != undefined && options.type.placeholder == 'IB'" class="onboarding-label--review">{{ options.subject.placeholder }}</label>
+                </div>
               </div>
             </div>
             <!-- <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Your Minor</span></div> -->
@@ -70,6 +74,7 @@
 <script>
 
 import reqsData from '@/requirements/typed-requirement-json';
+import coursesJSON from '../../assets/courses/courses.json';
 
 const placeholderText = 'Select one';
 
@@ -176,9 +181,272 @@ export default {
     this.setMinorsList();
     this.flattenDisplayMajors();
     this.flattenDisplayMinors();
+    this.getClasses();
+    this.setExamsMap();
+    this.setSubjectList();
+    this.getCredits();
     this.$emit('updateBasic', this.displayOptions.major, this.displayOptions.college, this.displayOptions.minor);
   },
   methods: {
+    getClasses() {
+      let credits = 0;
+      const exams = [];
+      const sections = ['type', 'subject', 'score'];
+      if ('exam' in this.user && this.user.exam.length > 0) {
+        for (let x = 0; x < this.user.exam.length; x += 1) {
+          const exam = {};
+          for (const sec of sections) {
+            exam[sec] = {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholderColor: '#757575',
+              placeholder: this.user.exam[x][sec],
+              acronym: ''
+            };
+          }
+          if (typeof this.user.exam[x].subject !== 'undefined') {
+            exams.push(exam);
+            credits += this.user.exam[x].credits;
+            exam.equivCourse = this.user.exam[x].equivCourse;
+          }
+        }
+      }
+      const exam = {};
+      for (const sect of sections) {
+        exam[sect] = {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: placeholderText,
+          acronym: ''
+        };
+      }
+      exams.push(exam);
+      this.displayOptions.exam = exams;
+      const swim = (typeof this.user.tookSwim !== 'undefined') ? this.user.tookSwim : 'no';
+      this.tookSwimTest = swim;
+      const transferClass = [];
+      this.user.transferCourse.forEach(course => {
+        transferClass.push(course);
+      });
+      transferClass.push({ class: placeholderText, credits: 0 });
+      this.displayOptions.class = transferClass;
+    },
+    getCredits() {
+      let count = 0;
+      this.displayOptions.exam.forEach(exam => {
+        if (this.transferJSON !== null) {
+          const name = exam.subject.placeholder;
+          if (name in this.transferJSON) {
+            count += this.transferJSON[name].credits[0].credits;
+          }
+        }
+      });
+      this.displayOptions.class.forEach(clas => {
+        count += clas.credits;
+      });
+      this.totalCredits = count;
+    },
+    // getTransferMap() {
+    //   const TransferJSON = {};
+    //   reqsData.AP.forEach(sub => {
+    //     TransferJSON[sub.subject] = {
+    //       credits: sub.credits,
+    //       type: 'AP'
+    //     };
+    //   });
+    //   reqsData.IB.forEach(sub => {
+    //     TransferJSON[sub.subject] = {
+    //       credits: sub.credits,
+    //       type: 'IB'
+    //     };
+    //   });
+    //   this.transferJSON = TransferJSON;
+    //   if (typeof this.displayOptions !== 'undefined') {
+    //     this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+    //   }
+    // },
+    showHideExamContent(i) {
+      this.showHideContent('exam', 'type', i);
+    },
+    showHideSubjectContent(i) {
+      this.showHideContent('exam', 'subject', i);
+    },
+    showHideScoreContent(i) {
+      this.showHideContent('exam', 'score', i);
+    },
+    showHideClassContent(i) {
+      this.showHideContent('class', '', i);
+    },
+    closeTypeDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('exam', i);
+    },
+    closeClassDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('class', i);
+    },
+    // Set the colleges map to with acronym keys and full name values
+    setExamsMap() {
+      /** @type {Object.<string, string>} */
+      const exams = [];
+      Object.keys(reqsData).forEach(key => {
+        exams.push(key);
+      });
+      this.exams = exams;
+    },
+    // Set the majors map to with acronym keys and full name values
+    setSubjectList() {
+      /** @type {Object.<string, string>} */
+      const totalSubjects = [];
+      this.displayOptions.exam.forEach(exam => {
+        if (exam.type.placeholder !== placeholderText) {
+          const examType = exam.type.placeholder;
+          const subjects = [];
+          if (examType in reqsData && examType !== null) {
+            reqsData[examType].forEach(sub => {
+              subjects.push(sub.subject);
+            });
+            totalSubjects.push(subjects);
+            if (examType === 'AP') {
+              this.scores = [1, 2, 3, 4, 5];
+            } else {
+              this.scores = [1, 2, 3, 4, 5, 6, 7];
+            }
+          }
+        }
+      });
+      this.subjects = totalSubjects;
+    },
+    // Didn't want to seperate into two functions but v-model wouldn't work unless clicked twice?
+    updateSwimYes() {
+      this.tookSwimTest = 'yes';
+      this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+    },
+    updateSwimNo() {
+      this.tookSwimTest = 'no';
+      this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+    },
+    // Clear a major if a new college is selected and the major is not in it
+    clearSubjectAndScoreIfNotInCollege() {
+      const majorJSON = reqsData.major;
+      for (let x = 0; x < this.displayOptions.major.length; x += 1) {
+        const major = this.displayOptions.major[x];
+        let foundCollege = false;
+        // Do nothing if no major set
+        if (major.acronym !== '') {
+          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+            const college = this.displayOptions.college[i];
+            if (majorJSON[major.acronym].schools.includes(college.acronym)) {
+              foundCollege = true;
+              break;
+            }
+          }
+        }
+        if (!foundCollege) {
+          major.placeholderColor = '';
+          major.placeholder = placeholderText;
+          major.acronym = '';
+        }
+      }
+    },
+    selectExam(text, acronym, i) {
+      this.selectOption('exam', 'type', text, acronym, i);
+      this.setSubjectList();
+    },
+    selectScore(text, acronym, i) {
+      this.selectOption('exam', 'score', text, acronym, i);
+    },
+    selectSubject(text, acronym, i) {
+      const type = this.displayOptions.exam[i].type.placeholder;
+      const course = this.getCourseFromExam(type, text);
+      this.displayOptions.exam[i].equivCourse = course;
+      this.selectOption('exam', 'subject', text, acronym, i);
+    },
+    selectClass(text, acronym, i) {
+      this.selectOption('class', 'placholder', text, acronym, i);
+    },
+    addExam() {
+      const exam = {
+        type: {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: placeholderText,
+          acronym: ''
+        },
+        subject: {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: placeholderText,
+          placeholder: placeholderText,
+          acronym: ''
+        },
+        score: {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: placeholderText,
+          acronym: ''
+        }
+      };
+      this.displayOptions.exams = this.displayOptions.exam.push(exam);
+    },
+    getCourseFromExam(type, subject) {
+      let count = 0;
+      let courses;
+      for (const sub of reqsData[type]) {
+        if (sub.subject === subject) {
+          courses = reqsData[type][count].credits[0].courseEquivalents;
+          // as a default takes the first equivalent course
+          // TODO will need to add requirements menu if editiable.
+        }
+        count += 1;
+      }
+      return courses;
+    },
+    removeExam() {
+      this.displayOptions.exam.pop();
+    },
+    removeTransfer() {
+      this.displayOptions.class.pop();
+    },
+    addTransfer() {
+      this.displayOptions.class.push(placeholderText);
+    },
+    addItem(id) {
+      const dropdown = document.getElementById(`dropdown-${id}`);
+      const title = dropdown.value;
+      const courseCode = title.substring(0, title.indexOf(':'));
+      const subject = courseCode.split(' ')[0];
+      const number = courseCode.split(' ')[1];
+      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=FA14&subject=${subject}&q=${courseCode}`) // should be removed later
+        .then(res => res.json())
+        .then(resultJSON => {
+          // check catalogNbr of resultJSON class matches number of course to add
+          resultJSON.data.classes.forEach(resultJSONclass => {
+            if (resultJSONclass.catalogNbr === number) {
+              const course = resultJSONclass;
+              const creditsC = course.credits || course.enrollGroups[0].unitsMaximum;
+              this.displayOptions.class[id] = {
+                class: courseCode,
+                course,
+                credits: creditsC
+              };
+              this.getCredits();
+              this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+            }
+          });
+        });
+    },
     flattenDisplayMajors() {
       const majors = [];
       this.displayOptions.major.forEach(major => {
