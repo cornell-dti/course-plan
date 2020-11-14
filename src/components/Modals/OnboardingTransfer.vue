@@ -101,7 +101,7 @@
                   </div>
                   <div class="onboarding-select--column-remove" >
                   <div class="onboarding-remove" @click="removeExam" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
-                    x
+                    <img src="@/assets/images/x-green.svg" alt = "x"/>
                   </div>
                   </div>
                 </div>
@@ -195,7 +195,7 @@
                   </div>
                   <div class="onboarding-select--column-remove" >
                   <div class="onboarding-remove" @click="removeExam" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
-                    x
+                    <img src="@/assets/images/x-green.svg" alt = "x"/>
                   </div>
                   </div>
                 </div>
@@ -225,7 +225,7 @@
                 </div>
               <div class="onboarding-select--column">
                 <div class="onboarding-remove" @click="removeTransfer">
-                  x
+                  <img src="@/assets/images/x-green.svg" alt = "x"/>
                 </div>
               </div>
 

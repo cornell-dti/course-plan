@@ -68,7 +68,7 @@
 
 
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major!</label>
+              <label class="onboarding-label">Your Major (required)</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input onboarding-section"
