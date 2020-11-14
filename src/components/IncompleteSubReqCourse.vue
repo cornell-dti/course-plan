@@ -1,13 +1,14 @@
 <template>
   <div class="incompletesubreqcourse">
     <div class="draggable-requirements-wrapper"
-      v-if="display && subReq.displayDescription && crseInfoObjects.length > 0"
+      v-if="subReq.displayDescription && crseInfoObjects.length > 0"
     >
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
         <div v-if="showSeeAllLabel" class="draggable-requirements-heading-seeAll">{{ seeAll }}</div>
       </div>
         <div
+          v-if="display"
           class="draggable-requirements-courses"
           v-dragula="courseObjects"
           bag="first-bag"
