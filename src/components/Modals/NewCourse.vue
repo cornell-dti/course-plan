@@ -88,7 +88,7 @@ export default Vue.extend({
         this.selected = false;
         const inpCopy = document.getElementById(`dropdown-${this.semesterID}`);
         inpCopy.value = '';
-        this.$root.$emit('toggle-left-button');
+        this.$emit('toggle-left-button');
       }
     }
   },
@@ -209,7 +209,7 @@ export default Vue.extend({
               inpCopy.name = newTitle.roster;
               this.selectedCourse = newTitle.title;
               this.selected = true;
-              this.$root.$emit('toggle-left-button');
+              this.$emit('toggle-left-button');
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();

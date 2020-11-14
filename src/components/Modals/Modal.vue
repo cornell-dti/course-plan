@@ -15,6 +15,7 @@
         @duplicateSemester="disableButton"
         @close-current-model="closeCourseModal"
         @updateSemProps="updateSemProps"
+        @toggle-left-button="toggleLeftButton"
         ref="modalBodyComponent"
         :season="season"
         :year="year"
@@ -56,9 +57,6 @@ export default Vue.extend({
     semesterID: Number,
     currentSemesters: Array,
     isOpen: Boolean
-  },
-  mounted() {
-    this.$root.$on('toggle-left-button', this.toggleLeftButton);
   },
   computed: {
     contentId() {
