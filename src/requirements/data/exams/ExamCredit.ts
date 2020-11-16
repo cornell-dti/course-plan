@@ -1,21 +1,6 @@
 /* eslint-disable max-len */
 import { CourseTaken } from '../../types';
 
-// const sampleExams: ExamsTaken = {
-//   AP: [
-//     {
-//       name: 'Computer Science A',
-//       score: 5,
-//     },
-//   ],
-//   IB: [
-//     {
-//       name: 'Chemical And Physical Systems',
-//       score: 5,
-//     },
-//   ],
-// };
-
 export type ExamRequirements = {
   readonly name: string;
   readonly fulfillment: {
@@ -44,16 +29,16 @@ function userDataToCourses(
   const courses: CourseTaken[] = [];
   userExams.forEach(userExam => {
     // match exam to user-taken exam
-    let exam: ExamRequirements | undefined;
-    exams.forEach(e => {
+    const exam = exams.reduce((prev: ExamRequirements | undefined, curr: ExamRequirements) => {
       // check if exam name matches and score is high enough
-      if (e.name.includes(userExam.name) && userExam.score >= e.fulfillment.minimumScore) {
+      if (curr.name.includes(userExam.name) && userExam.score >= curr.fulfillment.minimumScore) {
         // update exam variable if this exam has a higher minimum score
-        if (!exam || exam.fulfillment.minimumScore < e.fulfillment.minimumScore) {
-          exam = e;
+        if (!prev || prev.fulfillment.minimumScore < curr.fulfillment.minimumScore) {
+          return curr;
         }
       }
-    });
+      return prev;
+    }, undefined);
     // generate the equivalent course
     if (exam) {
       const roster = 'FA20'; // TODO this is hardcoded
