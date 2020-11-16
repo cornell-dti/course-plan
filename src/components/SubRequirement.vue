@@ -1,10 +1,10 @@
 <template>
   <div class="subrequirement">
   <div class="row depth-req">
-    <div class="col-1" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
+    <div class="col-1" @click="toggleDescription()">
       <button class="btn">
         <img
-          v-if="subReq.displayDescription"
+          v-if="displayDescription"
           class="arrow arrow-up"
           :src="getSrc()"
           alt="dropup"
@@ -17,7 +17,7 @@
         />
       </button>
     </div>
-    <div class="col-7" @click="toggleDescription(reqIndex, isCompleted, subReqIndex)">
+    <div class="col-7" @click="toggleDescription()">
       <p v-bind:class="[{'sup-req': !this.isCompleted}, 'pointer', this.isCompleted ? 'completed-ptext' : 'incomplete-ptext']">
         <span>{{subReq.requirement.name}}</span>
       </p>
@@ -33,7 +33,7 @@
       </p>
     </div>
   </div>
-  <div v-if="subReq.displayDescription" :class="[{'completed-ptext': this.isCompleted}, 'description']">
+  <div v-if="displayDescription" :class="[{'completed-ptext': this.isCompleted}, 'description']">
     {{ subReq.requirement.description }} <a class="more"
     :style="{ 'color': `#${color}` }"
     :href="subReq.requirement.source" target="_blank">
@@ -104,7 +104,10 @@ export default Vue.extend({
     isCompleted: Boolean
   },
   data() {
-    return { showFulfillmentOptionsDropdown: false };
+    return {
+      displayDescription: false,
+      showFulfillmentOptionsDropdown: false,
+    };
   },
   computed: {
     selectedFulfillmentOption(): string {
@@ -120,18 +123,17 @@ export default Vue.extend({
   methods: {
     getSrc() {
       let src = dropdownCompletedSrc;
-      if (this.subReq.displayDescription && !this.isCompleted) {
+      if (this.displayDescription && !this.isCompleted) {
         src = dropupIncompleteSrc;
-      } else if (this.subReq.displayDescription && this.isCompleted) {
+      } else if (this.displayDescription && this.isCompleted) {
         src = dropupCompletedSrc;
-      } else if (!this.subReq.displayDescription && !this.isCompleted) {
+      } else if (!this.displayDescription && !this.isCompleted) {
         src = dropdownIncompleteSrc;
       }
       return src;
     },
-    toggleDescription(reqIndex: number, isCompleted: boolean, subReqIndex: number) {
-      const type = isCompleted ? 'completed' : 'ongoing';
-      this.$emit('toggleDescription', reqIndex, type, subReqIndex);
+    toggleDescription() {
+      this.displayDescription = !this.displayDescription;
     },
     closeMenuIfOpen() {
       this.showFulfillmentOptionsDropdown = false;
