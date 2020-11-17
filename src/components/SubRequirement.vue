@@ -91,7 +91,7 @@ import firebase from 'firebase/app';
 import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
 
-import { DisplayableRequirementFulfillment } from '@/requirements/types';
+import { DisplayableRequirementFulfillment, EligibleCourses } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
 
 // Arrows for dropup and dropdown
@@ -129,30 +129,7 @@ type Data = {
 
 export default Vue.extend({
   mounted() {
-    if (this.subReq.requirement.courses) {
-      const mostRecentRosters = this.rostersFromLastTwoYears;
-      let filteredSubReqRosters;
-      // Iterate over each course slot for the subReq
-      this.subReq.requirement.courses.forEach(subReqCourseRosterObject => {
-        // Filter subreq roster object keys with the mostRecentRosters
-        filteredSubReqRosters = Object.keys(subReqCourseRosterObject).filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1).reverse();
-
-        const crseInfoObjects: CrseInfo[] = []; // List of crseInfoObjects {roster: <roster>, crseIds: crseId[]} []
-        let seenCrseIds: number[] = []; // So we don't have duplicates
-        filteredSubReqRosters.forEach(subReqRoster => {
-          const subReqCrseIds = subReqCourseRosterObject[subReqRoster].filter((crseId: number) => !seenCrseIds.includes(crseId));
-
-          if (subReqCrseIds.length > 0) {
-            const crseInfoObject = { roster: subReqRoster, crseIds: subReqCrseIds };
-
-            crseInfoObjects.push(crseInfoObject);
-            seenCrseIds = seenCrseIds.concat(subReqCrseIds);
-          }
-        });
-        // Push crseInfoObjects onto subReqCoursesNotTakenArray for the subReqCourse slot
-        this.subReqCoursesNotTakenArray.push(crseInfoObjects);
-      });
-    }
+    this.generateSubReqCoursesNotTakenArray();
   },
   props: {
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
@@ -164,7 +141,7 @@ export default Vue.extend({
     },
     color: String,
     isCompleted: Boolean,
-    rostersFromLastTwoYears: Array
+    rostersFromLastTwoYears: Array as PropType<readonly String[]>
   },
   watch: {
     subReq: {
@@ -174,6 +151,13 @@ export default Vue.extend({
         if (updatedSubReq.displayDescription && !this.isCompleted) {
           this.getSubReqCourseObjects();
         }
+      }
+    },
+    toggleableRequirementChoice: {
+      immediate: true,
+      deep: true,
+      handler(updatedToggleableRequirementChoice) {
+        this.generateSubReqCoursesNotTakenArray();
       }
     }
   },
@@ -225,12 +209,52 @@ export default Vue.extend({
     isDataReady() {
       this.dataReady = true;
     },
+    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean) {
+      this.$emit('createCourse', course, isRequirementsCourse);
+    },
     closeMenuIfOpen() {
       this.showFulfillmentOptionsDropdown = false;
     },
     chooseFulfillmentOption(option: string) {
       this.showFulfillmentOptionsDropdown = false;
       this.$emit('changeToggleableRequirementChoice', this.subReq.id, option);
+    },
+    generateSubReqCoursesNotTakenArray(){
+      // Reset subReqCoursesNotTakenArray
+      this.subReqCoursesNotTakenArray = [];
+
+      // Depending on fulfilledBy, subReqCourses is accessed differently from subReq
+      let subReqCourses;
+      if (this.subReq.requirement.fulfilledBy === 'toggleable') {
+        const fulfillmentOption = this.toggleableRequirementChoice || this.selectedFulfillmentOption;
+        subReqCourses = this.subReq.requirement.fulfillmentOptions[fulfillmentOption].courses;
+      } else if (this.subReq.requirement.fulfilledBy === 'self-check') {
+        subReqCourses = [];
+      } else { // fulfilledBy courses or credits
+        subReqCourses = this.subReq.requirement.courses;
+      }
+      const mostRecentRosters = this.rostersFromLastTwoYears;
+      let filteredSubReqRosters;
+      // Iterate over each course slot for the subReq
+      subReqCourses.forEach((subReqCourseRosterObject:EligibleCourses) => {
+        // Filter subreq roster object keys with the mostRecentRosters
+        filteredSubReqRosters = Object.keys(subReqCourseRosterObject).filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1).reverse();
+
+        const crseInfoObjects: CrseInfo[] = []; // List of crseInfoObjects {roster: <roster>, crseIds: crseId[]} []
+        let seenCrseIds: number[] = []; // So we don't have duplicates
+        filteredSubReqRosters.forEach(subReqRoster => {
+          const subReqCrseIds = subReqCourseRosterObject[subReqRoster].filter((crseId: number) => !seenCrseIds.includes(crseId));
+
+          if (subReqCrseIds.length > 0) {
+            const crseInfoObject = { roster: subReqRoster, crseIds: subReqCrseIds };
+
+            crseInfoObjects.push(crseInfoObject);
+            seenCrseIds = seenCrseIds.concat(subReqCrseIds);
+          }
+        });
+        // Push crseInfoObjects onto subReqCoursesNotTakenArray for the subReqCourse slot
+        this.subReqCoursesNotTakenArray.push(crseInfoObjects);
+      });
     },
     getMaxFirstFourCrseInfoObjects() : CrseInfo[] {
       const subReqCrseInfoObjectsToFetch:CrseInfo[] = [];

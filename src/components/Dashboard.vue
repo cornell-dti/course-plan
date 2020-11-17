@@ -19,6 +19,7 @@
           :key="requirementsKey"
           :startTour="startTour"
           @requirementsMap="loadRequirementsMap"
+          @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
          />
       </div>

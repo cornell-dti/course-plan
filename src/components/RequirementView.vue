@@ -34,6 +34,7 @@
             :rostersFromLastTwoYears="rostersFromLastTwoYears"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @toggleDescription="toggleDescription"
+            @createCourse="createCourse"
           />
         </div>
 
@@ -65,6 +66,7 @@
               :rostersFromLastTwoYears="rostersFromLastTwoYears"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @toggleDescription="toggleDescription"
+              @createCourse="createCourse"
             />
           </div>
         </div>
@@ -82,7 +84,7 @@ import RequirementHeader from '@/components/RequirementHeader.vue';
 import SubRequirement from '@/components/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppUser, AppMajor, AppMinor } from '@/user-data';
+import { AppUser, AppMajor, AppMinor, FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
@@ -109,7 +111,7 @@ export default Vue.extend({
     user: Object as PropType<AppUser>,
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number,
-    rostersFromLastTwoYears: Array
+    rostersFromLastTwoYears: Array as PropType<readonly String[]>
   },
   computed: {
     reqGroupColorMap() {
@@ -125,6 +127,9 @@ export default Vue.extend({
     },
     changeToggleableRequirementChoice(requirementID: string, option: string) {
       this.$emit('changeToggleableRequirementChoice', requirementID, option);
+    },
+    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean) {
+      this.$emit('createCourse', course, isRequirementsCourse);
     },
     toggleDetails(index: number) {
       this.$emit('toggleDetails', index);

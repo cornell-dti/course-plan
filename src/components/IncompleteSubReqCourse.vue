@@ -33,7 +33,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
-// eslint-disable-next-line import/extensions
 import Course from '@/components/Course.vue';
 import { DisplayableRequirementFulfillment } from '@/requirements/types';
 
@@ -60,9 +59,8 @@ export default Vue.extend({
     service.eventBus.$on('drag', () => {
       this.scrollable = true;
     });
-    service.eventBus.$on('drop', (e: Object) => {
+    service.eventBus.$on('drop', () => {
       this.scrollable = true;
-      // this.reqCourseDropHandler();
     });
 
   },

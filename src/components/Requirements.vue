@@ -31,6 +31,7 @@
         @toggleDetails="toggleDetails"
         @toggleDescription="toggleDescription"
         @turnCompleted="turnCompleted"
+        @createCourse="createCourse"
       />
     </div>
     </div>
@@ -52,7 +53,7 @@ import RequirementView from '@/components/RequirementView.vue';
 import SubRequirement from '@/components/SubRequirement.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { RequirementMap, computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
-import { AppUser, AppMajor, AppMinor, AppSemester } from '@/user-data';
+import { AppUser, AppMajor, AppMinor, AppSemester, FirestoreSemesterCourse } from '@/user-data';
 
 const functions = firebase.functions();
 
@@ -288,6 +289,9 @@ export default Vue.extend({
     },
     activateMinor(id: number) {
       this.displayedMinorIndex = id;
+    },
+    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean) {
+      this.$emit('createCourse', course, isRequirementsCourse);
     },
     getRequirementsTooltipText() {
       return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
