@@ -32,7 +32,6 @@
         <span>{{subReq.minCountFulfilled}}/{{subReq.minCountRequired}} {{ subReq.fulfilledBy }}</span>
       </p>
     </div>
-  </div>
   <div v-if="displayDescription" :class="[{'completed-ptext': this.isCompleted}, 'description']">
     {{ subReq.requirement.description }} <a class="more"
     :style="{ 'color': `#${color}` }"
@@ -81,6 +80,7 @@
         />
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -132,7 +132,6 @@ type Data = {
 export default Vue.extend({
   mounted() {
     this.generateSubReqCoursesNotTakenArray();
-    console.log(this.subReqCoursesNotTakenArray);
   },
   props: {
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
@@ -199,7 +198,6 @@ export default Vue.extend({
     },
     toggleDescription() {
       this.displayDescription = !this.displayDescription;
-      console.log('this.displayDescription', this.displayDescription);
       if (this.displayDescription && !this.isCompleted) {
         this.getSubReqCourseObjects();
       }
@@ -355,7 +353,7 @@ button.view {
   font-size: 14px;
   line-height: 14px;
   text-align: center;
-  color: white;
+  color: $white;
   text-transform: uppercase;
 }
 .completed-ptext, .completed-ptext span {
@@ -379,7 +377,7 @@ button.view {
   font-weight: normal;
   font-size: 14px;
   line-height: 14px;
-  color: #757575;
+  color: $lightPlaceholderGray;
   &-progress {
     font-size: 14px;
     line-height: 14px;
@@ -393,6 +391,8 @@ button.view {
 
 .toggleable-requirements {
   &-select {
+    display: flex;
+    flex-direction: row;
     background: $white;
     border: .5px solid $inactiveGray;
     box-sizing: border-box;
@@ -440,11 +440,13 @@ button.view {
       background: transparent;
       margin-right: 8.7px;
       margin-left: 5px;
+      margin-top: 5px;
+      margin-bottom: auto;
     }
     &-content {
       z-index: 2;
       position: absolute;
-      width: inherit;
+      width: 80%;
       background: $white;
       box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
       border-radius: 7px;

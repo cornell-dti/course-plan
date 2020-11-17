@@ -317,7 +317,7 @@ export default Vue.extend({
   height: 100vh;
   width: 25rem;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
-  background-color: white;
+  background-color: $white;
 }
 .fixed {
   position: fixed;

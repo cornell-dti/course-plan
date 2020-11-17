@@ -159,7 +159,7 @@ export default Vue.extend({
   padding: 0;
 }
 .specific {
-  color: #757575;
+  color: $lightPlaceholderGray;
 }
 .sub-title {
   padding: 0;
@@ -183,7 +183,7 @@ button.view {
   font-size: 14px;
   line-height: 14px;
   text-align: center;
-  color: white;
+  color: $white;
   text-transform: uppercase;
 }
 .toggle {
@@ -196,7 +196,7 @@ button.view {
 .completed {
    margin-top: 1rem;
    &-ptext {
-     color: #757575;
+     color: $lightPlaceholderGray;
      font-size: 12px;
      opacity: 0.8;
      font-weight: normal;
