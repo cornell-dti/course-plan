@@ -17,8 +17,6 @@
         :majors="majors"
         :minors="minors"
         :toggleableRequirementChoices="toggleableRequirementChoices"
-        :displayDetails="displayDetails"
-        :displayCompleted="displayCompleted"
         :displayedMajorIndex="displayedMajorIndex"
         :displayedMinorIndex="displayedMinorIndex"
         :user="user"
@@ -28,10 +26,6 @@
         @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
         @activateMajor="activateMajor"
         @activateMinor="activateMinor"
-        @toggleDetails="toggleDetails"
-        @toggleDescription="toggleDescription"
-        @turnCompleted="turnCompleted"
-        @createCourse="createCourse"
       />
     </div>
     </div>
@@ -64,10 +58,6 @@ Vue.use(VueCollapse);
 
 type Data = {
   reqs: readonly SingleMenuRequirement[];
-  // map from requirement group (e.g. CS major requirement group) to whether to display details.
-  displayDetails: Readonly<Record<string, boolean>>;
-  // map from requirement group to whether to display completed ones.
-  displayCompleted: Readonly<Record<string, boolean>>;
   // map from requirement ID to option chosen
   toggleableRequirementChoices: Readonly<Record<string, string>>;
   displayedMajorIndex: number,
@@ -146,8 +136,6 @@ export default Vue.extend({
         //   ]
         // }
       ],
-      displayDetails: {},
-      displayCompleted: {},
       toggleableRequirementChoices: {},
       numOfColleges: 1,
       rostersFromLastTwoYears: []
@@ -241,32 +229,6 @@ export default Vue.extend({
         [requirementID]: option,
       };
       this.recomputeRequirements();
-    },
-    toggleDetails(name: string): void {
-      this.displayDetails = { ...this.displayDetails, [name]: !this.displayDetails[name] };
-
-      if (!this.displayDetails[name]) {
-        // Collapse Descriptions
-        const reqIndex = this.reqs.findIndex(req => req.name === name);
-        const newReqs = [...this.reqs];
-        
-        newReqs[reqIndex].ongoing.forEach(ongoingSubReq => { ongoingSubReq.displayDescription = false });
-        newReqs[reqIndex].completed.forEach(completedSubReq => { completedSubReq.displayDescription = false });
-
-        this.reqs = newReqs;
-      }
-    },
-    toggleDescription(index: number, type: 'ongoing' | 'completed', id: number): void {
-      if (type === 'ongoing') {
-        const currentBool = this.reqs[index].ongoing[id].displayDescription;
-        this.reqs[index].ongoing[id].displayDescription = !currentBool;
-      } else if (type === 'completed') {
-        const currentBool = this.reqs[index].completed[id].displayDescription;
-        this.reqs[index].completed[id].displayDescription = !currentBool;
-      }
-    },
-    turnCompleted(name: string, bool: boolean): void {
-      this.displayCompleted = { ...this.displayCompleted, [name]: bool };
     },
     getCourseCodesArray(): readonly CourseTaken[] {
       const courses: CourseTaken[] = [];

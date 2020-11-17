@@ -18,7 +18,7 @@
     />
     <div v-if="showMajorOrMinorRequirements">
       <!--Show more of completed requirements -->
-      <div v-if="displayDetails[req.name]">
+      <div v-if="displayDetails">
         <p class="sub-title">In-Depth College Requirements</p>
         <div class="separator"></div>
         <div
@@ -33,8 +33,6 @@
             :isCompleted="false"
             :rostersFromLastTwoYears="rostersFromLastTwoYears"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
-            @toggleDescription="toggleDescription"
-            @createCourse="createCourse"
           />
         </div>
 
@@ -43,19 +41,16 @@
           <div class="col-1 text-right">
             <button class="btn float-right" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }">
               <!-- Toggle to display completed reqs -->
-              <p
-                class="toggle"
-                v-if="displayCompleted[req.name]"
-                v-on:click="turnCompleted(req.name, false)">HIDE</p>
-              <p class="toggle" v-else v-on:click="turnCompleted(req.name, true)">SHOW</p>
+              <p class="toggle" v-if="displayCompleted" v-on:click="turnCompleted(false)">HIDE</p>
+              <p class="toggle" v-else v-on:click="turnCompleted(true)">SHOW</p>
             </button>
           </div>
         </div>
 
       <!-- Completed requirements -->
-        <div v-if="displayCompleted[req.name]">
+        <div v-if="displayCompleted">
           <div v-for="(subReq, id) in req.completed" :key="id">
-            <div class="separator" v-if="reqIndex < reqs.length - 1 || displayDetails[req.name]"></div>
+            <div class="separator" v-if="reqIndex < reqs.length - 1 || displayDetails"></div>
             <subrequirement
               :subReqIndex="id"
               :subReq="subReq"
@@ -65,8 +60,6 @@
               :isCompleted="true"
               :rostersFromLastTwoYears="rostersFromLastTwoYears"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
-              @toggleDescription="toggleDescription"
-              @createCourse="createCourse"
             />
           </div>
         </div>
@@ -103,8 +96,6 @@ export default Vue.extend({
     reqIndex: Number, // Index of this req in reqs array
     majors: Array as PropType<readonly AppMajor[]>,
     minors: Array as PropType<readonly AppMinor[]>,
-    displayDetails: Object as PropType<Readonly<Record<string, boolean>>>,
-    displayCompleted: Object as PropType<Readonly<Record<string, boolean>>>,
     toggleableRequirementChoices: Object as PropType<Readonly<Record<string, string>>>,
     displayedMajorIndex: Number,
     displayedMinorIndex: Number,
@@ -112,6 +103,12 @@ export default Vue.extend({
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number,
     rostersFromLastTwoYears: Array as PropType<readonly String[]>
+  },
+  data() {
+    return {
+      displayDetails: false,
+      displayCompleted: false,
+    };
   },
   computed: {
     reqGroupColorMap() {
@@ -128,17 +125,11 @@ export default Vue.extend({
     changeToggleableRequirementChoice(requirementID: string, option: string) {
       this.$emit('changeToggleableRequirementChoice', requirementID, option);
     },
-    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean) {
-      this.$emit('createCourse', course, isRequirementsCourse);
+    toggleDetails() {
+      this.displayDetails = !this.displayDetails;
     },
-    toggleDetails(index: number) {
-      this.$emit('toggleDetails', index);
-    },
-    toggleDescription(index: number, type: 'ongoing' | 'completed', id: number) {
-      this.$emit('toggleDescription', index, type, id);
-    },
-    turnCompleted(name: string, bool: boolean) {
-      this.$emit('turnCompleted', name, bool);
+    turnCompleted(bool: boolean) {
+      this.displayCompleted = bool;
     }
   }
 });
