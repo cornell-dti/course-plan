@@ -1,14 +1,14 @@
 <template>
   <div class="incompletesubreqcourse">
     <div class="draggable-requirements-wrapper"
-      v-if="subReq.displayDescription && crseInfoObjects.length > 0"
+      v-if="displayDescription && crseInfoObjects.length > 0"
     >
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
         <div v-if="showSeeAllLabel" class="draggable-requirements-heading-seeAll">{{ seeAll }}</div>
       </div>
         <div
-          v-if="display"
+          v-if="displayCourses"
           class="draggable-requirements-courses"
           v-dragula="courseObjects"
           bag="first-bag"
@@ -48,7 +48,7 @@ type CrseInfo = {
 type Data = {
   courseObjects: AppCourse[];
   scrollable: boolean;
-  display: boolean;
+  displayCourses: boolean;
 }
 
 export default Vue.extend({
@@ -68,7 +68,7 @@ export default Vue.extend({
     return {
       courseObjects: [],
       scrollable: false,
-      display: false
+      displayCourses: false
     };
   },
   beforeDestroy() {
@@ -79,7 +79,8 @@ export default Vue.extend({
     subReqCourseId: Number,
     crseInfoObjects: Array as PropType<CrseInfo[]>,
     subReqCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
-    dataReady: Boolean
+    dataReady: Boolean,
+    displayDescription: Boolean
   },
   watch: {
     dataReady: {
@@ -87,7 +88,7 @@ export default Vue.extend({
       handler(dataReady) {
         if (dataReady && this.subReqCourseObjectsNotTakenArray.length > 0) {
           this.getFirstFourCourseObjects();
-          this.display = true;
+          this.displayCourses = true;
         }
       }
     }
