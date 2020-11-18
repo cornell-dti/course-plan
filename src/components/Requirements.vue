@@ -52,11 +52,7 @@ import {
   CourseTaken,
   SingleMenuRequirement,
 } from '@/requirements/types';
-import {
-  RequirementMap,
-  computeRequirements,
-  computeRequirementMap,
-} from '@/requirements/reqs-functions';
+import { RequirementMap, computeRequirements } from '@/requirements/reqs-functions';
 import { AppUser, AppMajor, AppMinor, AppSemester, FirestoreSemesterCourse } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
@@ -190,8 +186,6 @@ export default Vue.extend({
         this.user.major,
         this.user.minor
       );
-      // Send satisfied credits data back to dashboard to build alerts
-      this.$emit('requirementsMap', computeRequirementMap(groups));
       // Turn result into data readable by requirements menu
       const singleMenuRequirements = groups.map(group => {
         const singleMenuRequirement: SingleMenuRequirement = {

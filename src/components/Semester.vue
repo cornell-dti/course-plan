@@ -85,6 +85,7 @@
             <course
               v-bind="course"
               :courseObj="course"
+              :duplicatedCourseCodeList="duplicatedCourseCodeList"
               :id="course.subject + course.number"
               :uniqueID="course.uniqueID"
               :compact="compact"
@@ -189,6 +190,7 @@ export default Vue.extend({
     courses: Array as PropType<AppCourse[]>,
     compact: Boolean,
     activatedCourse: Object as PropType<AppCourse>,
+    duplicatedCourseCodeList: Array as PropType<readonly string[]>,
     semesters: Array as PropType<readonly AppSemester[]>,
     isFirstSem: Boolean,
   },
@@ -218,7 +220,6 @@ export default Vue.extend({
       this.isShadow = false;
       this.isDraggedFrom = false;
     });
-    this.buildCautions();
   },
   beforeDestroy() {
     this.$el.removeEventListener('touchmove', this.dragListener);
@@ -307,7 +308,6 @@ export default Vue.extend({
       this.courses.push(newCourse);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
-      this.buildCautions();
       this.$gtag.event('add-course', {
         event_category: 'course',
         event_label: 'add',
@@ -354,20 +354,17 @@ export default Vue.extend({
     dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
     },
-    buildCautions() {
-      this.buildDuplicateCautions();
-    },
-    buildDuplicateCautions() {
-      this.$emit('build-duplicate-cautions');
-    },
+    // TODO: unused
     buildIncorrectPlacementCautions() {
       if (this.courses) {
         this.courses.forEach(course => {
           if (!course.semesters.includes(this.type))
+            // @ts-ignore
             course.alerts.caution = `Course unavailable in the ${this.type}`;
         });
       }
     },
+
     checkCourseDuplicate(key: string) {
       if (this.courses) {
         // @ts-ignore
