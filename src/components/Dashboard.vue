@@ -1,6 +1,8 @@
 <template>
-  <div id= "dashboard" class="dashboard">
-    <onboarding class="dashboard-onboarding" v-if="isOnboarding"
+  <div id="dashboard" class="dashboard">
+    <onboarding
+      class="dashboard-onboarding"
+      v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
       :user="user"
       @onboard="endOnboarding"
@@ -8,12 +10,15 @@
     />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
-        <navbar class="dashboard-nav"
-        @editProfile="editProfile"
-        @toggleRequirementsBar="toggleRequirementsBar"
-        :isBottomPreview="bottomBar.isPreview"
+        <navbar
+          class="dashboard-nav"
+          @editProfile="editProfile"
+          @toggleRequirementsBar="toggleRequirementsBar"
+          :isBottomPreview="bottomBar.isPreview"
         />
-        <requirements class="dashboard-reqs" v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
+        <requirements
+          class="dashboard-reqs"
+          v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
@@ -21,9 +26,10 @@
           @requirementsMap="loadRequirementsMap"
           @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
-         />
+        />
       </div>
-      <semesterview v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
+      <semesterview
+        v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
         :semesters="semesters"
         :compact="compactVal"
         :startTour="startTour"
@@ -31,7 +37,6 @@
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
         :currSemID="currSemID"
-
         @compact-updated="compactVal = $event"
         @updateBar="updateBar"
         @close-bar="closeBar"
@@ -44,8 +49,11 @@
       :text="welcomeBodytext"
       :exit="welcomeExit"
       :buttonText="welcomeButtonText"
-      @hide = "welcomeHidden = false; if(startTour==false) startTour = true"
-      @skip = "welcomeHidden = false;"
+      @hide="
+        welcomeHidden = false;
+        if (startTour == false) startTour = true;
+      "
+      @skip="welcomeHidden = false"
       v-if="welcomeHidden"
     >
     </tourwindow>
@@ -54,21 +62,21 @@
       :text="congratsBodytext"
       :exit="congratsExit"
       :buttonText="congratsButtonText"
-      @hide = "showTourEndWindow = false;"
+      @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
     >
     </tourwindow>
     <div id="dashboard-bottomView">
       <bottombar
-      v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
-      :bottomCourses="bottomCourses"
-      :seeMoreCourses="seeMoreCourses"
-      :bottomCourseFocus="bottomBar.bottomCourseFocus"
-      :isExpanded="bottomBar.isExpanded"
-      :maxBottomBarTabs="maxBottomBarTabs"
-      @close-bar="closeBar"
-      @open-bar="openBar"
-      @change-focus="changeBottomCourseFocus"
+        v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
+        :bottomCourses="bottomCourses"
+        :seeMoreCourses="seeMoreCourses"
+        :bottomCourseFocus="bottomBar.bottomCourseFocus"
+        :isExpanded="bottomBar.isExpanded"
+        :maxBottomBarTabs="maxBottomBarTabs"
+        @close-bar="closeBar"
+        @open-bar="openBar"
+        @change-focus="changeBottomCourseFocus"
       />
     </div>
   </div>
@@ -125,7 +133,6 @@ tour.setOption('skipLabel', 'Skip This Tutorial');
 tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
-
 export default Vue.extend({
   data() {
     const user = auth.currentUser;
@@ -176,7 +183,7 @@ export default Vue.extend({
         so feel free to surf through CoursePlan <img src = "${surfing}"
         class = "emoji-text" alt = "surf">`,
       congratsExit: '',
-      congratsButtonText: 'Start Planning'
+      congratsButtonText: 'Start Planning',
     };
   },
   created() {
@@ -200,13 +207,14 @@ export default Vue.extend({
       const docRef = this.getDocRef();
 
       // TODO: error handling for firebase errors
-      docRef.get()
+      docRef
+        .get()
         .then(doc => {
           if (doc.exists) {
             const firestoreUserData = doc.data() as FirestoreUserData;
             this.semesters = firestoreSemestersToAppSemesters(
               firestoreUserData.semesters,
-              firestoreUserData.subjectColors,
+              firestoreUserData.subjectColors
             );
             this.currSemID += this.semesters.length;
 
@@ -279,7 +287,7 @@ export default Vue.extend({
         course,
         isRequirementsCourse,
         () => this.incrementID(),
-        (subject) => this.addColor(subject)
+        subject => this.addColor(subject)
       );
     },
     updateSemesterView() {
@@ -313,32 +321,32 @@ export default Vue.extend({
       const colors = [
         {
           text: 'Red',
-          hex: 'DA4A4A'
+          hex: 'DA4A4A',
         },
         {
           text: 'Orange',
-          hex: 'FFA53C'
+          hex: 'FFA53C',
         },
         {
           text: 'Yellow',
-          hex: 'FFE142'
+          hex: 'FFE142',
         },
         {
           text: 'Green',
-          hex: '58C913'
+          hex: '58C913',
         },
         {
           text: 'Blue',
-          hex: '139DC9'
+          hex: '139DC9',
         },
         {
           text: 'Purple',
-          hex: 'C478FF'
+          hex: 'C478FF',
         },
         {
           text: 'Pink',
-          hex: 'F296D3'
-        }
+          hex: 'F296D3',
+        },
       ];
 
       // If subjectColor attribute does not exist, make it an empty object
@@ -359,7 +367,7 @@ export default Vue.extend({
       // pick a color from unusedColors if there are any
       if (unusedColors.length !== 0) {
         randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
-      // otherwise pick a color following the random order set by the first 7 subjects
+        // otherwise pick a color following the random order set by the first 7 subjects
       } else {
         const colorIndex = Object.keys(this.subjectColors).length;
         const key = Object.keys(this.subjectColors)[colorIndex % colors.length];
@@ -374,7 +382,7 @@ export default Vue.extend({
       // Return randomly generated color
       return randomColor;
     },
-    incrementSemID(){
+    incrementSemID() {
       this.currSemID += 1;
     },
     updateRequirementsMenu() {
@@ -433,7 +441,7 @@ export default Vue.extend({
         workload: 0,
         prerequisites: this.noneIfEmpty(course.prereqs),
         description: course.description,
-        uniqueID: course.uniqueID
+        uniqueID: course.uniqueID,
       };
 
       // expand bottombar if first course added
@@ -460,7 +468,8 @@ export default Vue.extend({
         // Do not add course to bottomCourses if color was only changed
         if (this.bottomCourses.length < this.maxBottomBarTabs && !colorJustChanged) {
           this.bottomCourses.unshift(courseToAdd);
-        } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
+        } else {
+          // else check no dupe in seeMoreCourses and add to seeMoreCourses
           for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
             // if colorJustChanged and course already exists in seeMoreCourses, just update course color
             if (this.seeMoreCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
@@ -490,16 +499,22 @@ export default Vue.extend({
     },
 
     getReviews(subject: string, number: string, callback: (review: any) => void) {
-      fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(res => {
-        res.json().then(reviews => {
-          callback(reviews[0]);
-        });
-      });
+      fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(
+        res => {
+          res.json().then(reviews => {
+            callback(reviews[0]);
+          });
+        }
+      );
     },
 
     updateBarTabs() {
       // Move courses from see more to bottom tab to fulfill increased bottom tab capacity
-      if (this.maxBottomBarTabs === 4 && this.bottomCourses.length < 4 && this.seeMoreCourses.length > 0) {
+      if (
+        this.maxBottomBarTabs === 4 &&
+        this.bottomCourses.length < 4 &&
+        this.seeMoreCourses.length > 0
+      ) {
         while (this.bottomCourses.length < 4) {
           // if any See More courses exist, move first See More Course to end of tab
           if (this.seeMoreCourses.length > 0) {
@@ -532,7 +547,7 @@ export default Vue.extend({
       this.isOnboarding = true;
     },
 
-    endOnboarding(onboardingData: {userData: FirestoreNestedUserData, name: FirestoreUserName}) {
+    endOnboarding(onboardingData: { userData: FirestoreNestedUserData; name: FirestoreUserName }) {
       const user = this.parseUserData(onboardingData.userData, onboardingData.name);
 
       this.user = user;
@@ -546,7 +561,8 @@ export default Vue.extend({
         subjectColors: this.subjectColors,
         uniqueIncrementer: this.uniqueIncrementer,
       };
-      docRef.get()
+      docRef
+        .get()
         .then(doc => {
           if (doc.exists) {
             this.welcomeHidden = false;
@@ -556,7 +572,8 @@ export default Vue.extend({
           docRef.set(data);
           this.cancelOnboarding();
           this.updateRequirementsMenu();
-        }).catch(error => {
+        })
+        .catch(error => {
           console.log('Error getting document:', error);
         });
       // set the new name and userData, along with either an empty list of semesters or preserve the old list
@@ -579,7 +596,7 @@ export default Vue.extend({
           course.course,
           false,
           () => this.incrementID(),
-          (subject) => this.addColor(subject)
+          subject => this.addColor(subject)
         );
         transferClasses.push(courseInfo);
         // ; // TODO for user to pick which req a class goes for
@@ -604,7 +621,7 @@ export default Vue.extend({
       } else {
         for (let i = 0; i < distributions.length; i += 1) {
           // @ts-ignore
-          distributions[i].replace((/[A-Za-z0-9-]+/g), d => {
+          distributions[i].replace(/[A-Za-z0-9-]+/g, d => {
             matches.push(d);
           });
         }
@@ -614,17 +631,17 @@ export default Vue.extend({
     },
 
     joinOrNAString(arr: readonly unknown[]) {
-      return (arr.length !== 0 && arr[0] !== '') ? arr.join(', ') : 'N/A';
+      return arr.length !== 0 && arr[0] !== '' ? arr.join(', ') : 'N/A';
     },
 
     noneIfEmpty(str: string) {
-      return (str && str.length !== 0) ? str : 'None';
+      return str && str.length !== 0 ? str : 'None';
     },
 
     naIfEmptyStringArray(arr: readonly string[]) {
-      return (arr && arr.length !== 0 && arr[0] !== '') ? arr : ['N/A'];
-    }
-  }
+      return arr && arr.length !== 0 && arr[0] !== '' ? arr : ['N/A'];
+    },
+  },
 });
 </script>
 
@@ -667,7 +684,6 @@ export default Vue.extend({
   padding: 1rem;
   height: 12.12rem;
 }
-
 
 @media only screen and (max-width: 878px) {
   .dashboard {

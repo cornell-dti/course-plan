@@ -3,7 +3,7 @@
     <div class="modal-content" :id="contentId">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
-        <img class="modal-exit" src="../../assets/images/x.png" @click="closeCurrentModal"/>
+        <img class="modal-exit" src="../../assets/images/x.png" @click="closeCurrentModal" />
       </div>
       <component
         class="modal-body"
@@ -11,7 +11,7 @@
         :isOnboard="isOnboard"
         :semesterID="semesterID"
         :currentSemesters="currentSemesters"
-        placeholderText = '"CS 1110", "Multivariable Calculus", etc.'
+        placeholderText='"CS 1110", "Multivariable Calculus", etc.'
         @duplicateSemester="disableButton"
         @close-current-model="closeCourseModal"
         @updateSemProps="updateSemProps"
@@ -24,7 +24,13 @@
       ></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" @click="backOrCancel">{{ leftButton }}</button>
-        <button class="modal-button modal-button--add" :class='{"modal-button--disabled": isDisabled }' @click="addItem">{{ add }}</button>
+        <button
+          class="modal-button modal-button--add"
+          :class="{ 'modal-button--disabled': isDisabled }"
+          @click="addItem"
+        >
+          {{ add }}
+        </button>
       </div>
     </div>
   </div>
@@ -49,7 +55,7 @@ export default Vue.extend({
       leftButton: 'CANCEL',
       goBack: false,
       season: '',
-      year: ''
+      year: '',
     };
   },
   props: {
@@ -58,7 +64,7 @@ export default Vue.extend({
     currentSemesters: Array,
     isOpen: Boolean,
     seasonCourse: String,
-    yearCourse: Number
+    yearCourse: Number,
   },
   computed: {
     contentId() {
@@ -85,7 +91,7 @@ export default Vue.extend({
         return 'newCourse';
       }
       return '';
-    }
+    },
   },
   methods: {
     disableButton(bool) {
@@ -145,7 +151,9 @@ export default Vue.extend({
       //   })
       //   .catch(error => {
       //     console.log('Error getting document:', error);
-      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
+      fetch(
+        `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`
+      )
         .then(res => res.json())
         .then(resultJSON => {
           // check catalogNbr of resultJSON class matches number of course to add
@@ -188,13 +196,13 @@ export default Vue.extend({
     updateSemProps(season, year) {
       this.season = season;
       this.year = year;
-    }
-  }
+    },
+  },
 });
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .modal {
   padding: 1rem;
@@ -254,9 +262,9 @@ export default Vue.extend({
     }
 
     &--disabled {
-      opacity: .3;
+      opacity: 0.3;
       border: 1px solid $sangBlue;
-      background-color: #CCCCCC;
+      background-color: #cccccc;
     }
   }
 }
@@ -274,5 +282,4 @@ export default Vue.extend({
     width: 100%;
   }
 }
-
 </style>

@@ -21,9 +21,7 @@
       <div v-if="displayDetails">
         <p class="sub-title">In-Depth College Requirements</p>
         <div class="separator"></div>
-        <div
-          v-for="(subReq, id) in req.ongoing"
-          :key="id">
+        <div v-for="(subReq, id) in req.ongoing" :key="id">
           <subrequirement
             :subReqIndex="id"
             :subReq="subReq"
@@ -39,7 +37,10 @@
         <div v-if="req.completed.length > 0" class="row completed">
           <p class="col sub-title specific">Filled Requirements</p>
           <div class="col-1 text-right">
-            <button class="btn float-right" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }">
+            <button
+              class="btn float-right"
+              :style="{ color: `#${reqGroupColorMap[req.group][0]}` }"
+            >
               <!-- Toggle to display completed reqs -->
               <p class="toggle" v-if="displayCompleted" v-on:click="turnCompleted(false)">HIDE</p>
               <p class="toggle" v-else v-on:click="turnCompleted(true)">SHOW</p>
@@ -47,7 +48,7 @@
           </div>
         </div>
 
-      <!-- Completed requirements -->
+        <!-- Completed requirements -->
         <div v-if="displayCompleted">
           <div v-for="(subReq, id) in req.completed" :key="id">
             <div class="separator" v-if="reqIndex < reqs.length - 1 || displayDetails"></div>
@@ -65,8 +66,8 @@
         </div>
       </div>
 
-    <!-- Add separator if additional completed requirements -->
-    <div class="separator"></div>
+      <!-- Add separator if additional completed requirements -->
+      <div class="separator"></div>
     </div>
   </div>
 </template>
@@ -86,7 +87,7 @@ Vue.component('subrequirement', SubRequirement);
 const reqGroupColorMap = {
   COLLEGE: ['1AA9A5', 'blue'],
   MAJOR: ['105351', 'green'],
-  MINOR: ['92C3E6', 'lightblue']
+  MINOR: ['92C3E6', 'lightblue'],
 };
 
 export default Vue.extend({
@@ -102,7 +103,7 @@ export default Vue.extend({
     user: Object as PropType<AppUser>,
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number,
-    rostersFromLastTwoYears: Array as PropType<readonly String[]>
+    rostersFromLastTwoYears: Array as PropType<readonly String[]>,
   },
   data() {
     return {
@@ -113,7 +114,7 @@ export default Vue.extend({
   computed: {
     reqGroupColorMap() {
       return reqGroupColorMap;
-    }
+    },
   },
   methods: {
     activateMajor(id: number) {
@@ -130,27 +131,28 @@ export default Vue.extend({
     },
     turnCompleted(bool: boolean) {
       this.displayCompleted = bool;
-    }
-  }
+    },
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .btn {
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  &-2{
+  &-2 {
     padding-top: 0px;
-    margin:0px
+    margin: 0px;
   }
 }
-.btn:focus,.btn:active {
-   outline: none !important;
-   box-shadow: none;
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none;
 }
 .row {
   margin: 0;
@@ -194,14 +196,14 @@ button.view {
   line-height: 12px;
 }
 .completed {
-   margin-top: 1rem;
-   &-ptext {
-     color: $lightPlaceholderGray;
-     font-size: 12px;
-     opacity: 0.8;
-     font-weight: normal;
-   }
- }
+  margin-top: 1rem;
+  &-ptext {
+    color: $lightPlaceholderGray;
+    font-size: 12px;
+    opacity: 0.8;
+    font-weight: normal;
+  }
+}
 .separator {
   height: 1px;
   width: 100%;
