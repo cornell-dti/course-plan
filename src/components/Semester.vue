@@ -300,7 +300,7 @@ export default Vue.extend({
     // TODO: give better type on data
     addCourse(data: any) {
       // @ts-ignore
-      const newCourse = this.$parent.$parent.createCourse(data);
+      const newCourse = this.$parent.$parent.createCourse(data, false);
       // TODO: stop mutating this data directly
       this.courses.push(newCourse);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
@@ -555,7 +555,7 @@ export default Vue.extend({
 
     &--compact {
       margin-top: -1.2rem;
-      width: 10.5rem;
+      width: 10rem;
       height: 2rem;
     }
 
@@ -666,7 +666,7 @@ export default Vue.extend({
     &-addWrapper {
       width: 17rem;
       &--compact {
-        width: 10.5rem;
+        width: 10rem;
         height: 2rem;
       }
     }

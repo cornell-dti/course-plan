@@ -113,7 +113,7 @@ export default Vue.extend({
     },
     progressWidth() {
       if (this.req.fulfilled != null && this.req.required != null) {
-        return `${this.req.fulfilled / this.req.required}%`;
+        return `${this.req.fulfilled / this.req.required * 100}%`;
       }
       return undefined;
     }

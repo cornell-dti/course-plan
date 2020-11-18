@@ -9,7 +9,7 @@
           <div :class="{ 'course-code--min': compact }" class="course-code">
             {{ subject }} {{ number }}
           </div>
-          <div class="course-dotRow" @click="openMenu">
+          <div v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
         </div>
@@ -77,7 +77,8 @@ export default Vue.extend({
     id: String,
     uniqueID: Number,
     active: Boolean,
-    semId: Number
+    semId: Number,
+    isReqCourse: Boolean
   },
   data() {
     return {
@@ -185,7 +186,7 @@ export default Vue.extend({
   }
 
   &--min {
-    width: 10.5rem;
+    width: 10rem;
     height: 2.125rem;
   }
 
@@ -362,7 +363,7 @@ export default Vue.extend({
 
   &.course--min {
     height: 2.125rem;
-    width: 10.5rem;
+    width: 10rem;
   }
 }
 
@@ -438,7 +439,7 @@ export default Vue.extend({
   .course {
     width: 17rem;
     &--min {
-      width: 10.5rem;
+      width: 10rem;
       height: 2.125rem;
     }
     &-main {
@@ -506,7 +507,7 @@ export default Vue.extend({
 
     &.course--min {
       height: 2.125rem;
-      width: 10.5rem;
+      width: 10rem;
     }
   }
 }

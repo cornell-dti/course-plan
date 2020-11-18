@@ -89,6 +89,12 @@ export type EligibleCourses = {
 export type DecoratedCollegeOrMajorRequirement = RequirementCommon &
   RequirementFulfillmentInformation<{ readonly courses: readonly EligibleCourses[] }>;
 
+export type RequirementWithIDSourceType = DecoratedCollegeOrMajorRequirement & {
+  readonly id: string;
+  readonly sourceType: 'College' | 'Major' | 'Minor';
+  readonly sourceSpecificName: string;
+};
+
 export type CollegeRequirements<R> = {
   readonly [collegeCode: string]: {
     readonly name: string;
@@ -124,7 +130,7 @@ export type RequirementFulfillment<M extends {}> = {
   /** ID of the requirement */
   readonly id: string;
   /** The original requirement object. */
-  readonly requirement: BaseRequirement;
+  readonly requirement: DecoratedCollegeOrMajorRequirement;
   /** A list of courses that satisfy this requirement. */
   readonly courses: readonly (readonly CourseTaken[])[];
 } & M;

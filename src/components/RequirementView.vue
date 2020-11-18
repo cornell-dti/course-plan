@@ -31,6 +31,7 @@
             :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
             :color="reqGroupColorMap[req.group][0]"
             :isCompleted="false"
+            :rostersFromLastTwoYears="rostersFromLastTwoYears"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
           />
         </div>
@@ -57,6 +58,7 @@
               :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
               :color="reqGroupColorMap[req.group][0]"
               :isCompleted="true"
+              :rostersFromLastTwoYears="rostersFromLastTwoYears"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             />
           </div>
@@ -75,7 +77,7 @@ import RequirementHeader from '@/components/RequirementHeader.vue';
 import SubRequirement from '@/components/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppUser, AppMajor, AppMinor } from '@/user-data';
+import { AppUser, AppMajor, AppMinor, FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
@@ -99,7 +101,8 @@ export default Vue.extend({
     displayedMinorIndex: Number,
     user: Object as PropType<AppUser>,
     showMajorOrMinorRequirements: Boolean,
-    numOfColleges: Number
+    numOfColleges: Number,
+    rostersFromLastTwoYears: Array as PropType<readonly String[]>
   },
   data() {
     return {
@@ -156,7 +159,7 @@ export default Vue.extend({
   padding: 0;
 }
 .specific {
-  color: #757575;
+  color: $lightPlaceholderGray;
 }
 .sub-title {
   padding: 0;
@@ -180,7 +183,7 @@ button.view {
   font-size: 14px;
   line-height: 14px;
   text-align: center;
-  color: white;
+  color: $white;
   text-transform: uppercase;
 }
 .toggle {
@@ -193,7 +196,7 @@ button.view {
 .completed {
    margin-top: 1rem;
    &-ptext {
-     color: #757575;
+     color: $lightPlaceholderGray;
      font-size: 12px;
      opacity: 0.8;
      font-weight: normal;
@@ -202,6 +205,6 @@ button.view {
 .separator {
   height: 1px;
   width: 100%;
-  background-color: #d7d7d7;
+  background-color: $inactiveGray;
 }
 </style>

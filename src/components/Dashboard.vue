@@ -19,6 +19,7 @@
           :key="requirementsKey"
           :startTour="startTour"
           @requirementsMap="loadRequirementsMap"
+          @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
          />
       </div>
@@ -270,10 +271,13 @@ export default Vue.extend({
     /**
      * Creates a course on frontend with either user or API data
      */
-    createCourse(course: FirestoreSemesterCourse): AppCourse {
-      this.updateRequirementsMenu();
+    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean): AppCourse {
+      if (!isRequirementsCourse) {
+        this.updateRequirementsMenu();
+      }
       return firestoreCourseToAppCourse(
         course,
+        isRequirementsCourse,
         () => this.incrementID(),
         (subject) => this.addColor(subject)
       );
@@ -573,6 +577,7 @@ export default Vue.extend({
       user.transferCourse.forEach(course => {
         const courseInfo = firestoreCourseToAppCourse(
           course.course,
+          false,
           () => this.incrementID(),
           (subject) => this.addColor(subject)
         );

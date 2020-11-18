@@ -21,6 +21,7 @@
         :displayedMinorIndex="displayedMinorIndex"
         :user="user"
         :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
+        :rostersFromLastTwoYears="rostersFromLastTwoYears"
         :numOfColleges="numOfColleges"
         @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
         @activateMajor="activateMajor"
@@ -46,7 +47,8 @@ import RequirementView from '@/components/RequirementView.vue';
 import SubRequirement from '@/components/SubRequirement.vue';
 import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { RequirementMap, computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
-import { AppUser, AppMajor, AppMinor, AppSemester } from '@/user-data';
+import { AppUser, AppMajor, AppMinor, AppSemester, FirestoreSemesterCourse } from '@/user-data';
+import { getRostersFromLastTwoYears } from '@/utilities';
 
 const functions = firebase.functions();
 
@@ -162,6 +164,9 @@ export default Vue.extend({
       }
       return minors;
     },
+    rostersFromLastTwoYears() {
+      return getRostersFromLastTwoYears();
+    }
   },
   methods: {
     recomputeRequirements(): void {
@@ -248,6 +253,9 @@ export default Vue.extend({
     activateMinor(id: number) {
       this.displayedMinorIndex = id;
     },
+    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean) {
+      this.$emit('createCourse', course, isRequirementsCourse);
+    },
     getRequirementsTooltipText() {
       return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
@@ -263,7 +271,7 @@ export default Vue.extend({
   height: 100vh;
   width: 25rem;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
-  background-color: white;
+  background-color: $white;
 }
 .fixed {
   position: fixed;
