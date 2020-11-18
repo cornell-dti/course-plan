@@ -123,15 +123,11 @@ type CrseInfo = {
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
   displayDescription: boolean;
-  subReqCoursesNotTakenArray: CrseInfo[][];
   subReqCourseObjectsNotTakenArray: AppCourse[];
   dataReady: boolean;
 }
 
 export default Vue.extend({
-  mounted() {
-    this.generateSubReqCoursesNotTakenArray();
-  },
   props: {
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqIndex: Number, // Subrequirement index
@@ -145,11 +141,11 @@ export default Vue.extend({
     rostersFromLastTwoYears: Array as PropType<readonly String[]>
   },
   watch: {
-    toggleableRequirementChoice: {
+    subReqCoursesNotTakenArray: {
       immediate: true,
       deep: true,
-      handler(updatedToggleableRequirementChoice) {
-        this.generateSubReqCoursesNotTakenArray();
+      handler(updatedSubReqCoursesNotTakenArray) {
+        this.getSubReqCourseObjects();
       }
     }
   },
@@ -157,7 +153,6 @@ export default Vue.extend({
     return {
       showFulfillmentOptionsDropdown: false,
       displayDescription: false,
-      subReqCoursesNotTakenArray: [],
       subReqCourseObjectsNotTakenArray: [], // array of fetched course objects
       dataReady: false // true if dataReady for all subReqCourses. false otherwise
     }
@@ -169,6 +164,9 @@ export default Vue.extend({
       }
       return this.toggleableRequirementChoice || Object.keys(this.subReq.requirement.fulfillmentOptions)[0];
     },
+    subReqCoursesNotTakenArray():CrseInfo[][] {
+      return this.generateSubReqCoursesNotTakenArray();
+    }
   },
   directives: {
     'click-outside': clickOutside
@@ -204,9 +202,9 @@ export default Vue.extend({
       this.showFulfillmentOptionsDropdown = false;
       this.$emit('changeToggleableRequirementChoice', this.subReq.id, option);
     },
-    generateSubReqCoursesNotTakenArray(){
+    generateSubReqCoursesNotTakenArray():CrseInfo[][] {
       // Reset subReqCoursesNotTakenArray
-      this.subReqCoursesNotTakenArray = [];
+      const subReqCoursesNotTakenArray:CrseInfo[][] = [];
 
       // Depending on fulfilledBy, subReqCourses is accessed differently from subReq
       let subReqCourses;
@@ -226,20 +224,20 @@ export default Vue.extend({
         filteredSubReqRosters = Object.keys(subReqCourseRosterObject).filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1).reverse();
 
         const crseInfoObjects: CrseInfo[] = []; // List of crseInfoObjects {roster: <roster>, crseIds: crseId[]} []
-        let seenCrseIds: number[] = []; // So we don't have duplicates
+        const seenCrseIds = new Set(); // So we don't have duplicates
         filteredSubReqRosters.forEach(subReqRoster => {
-          const subReqCrseIds = subReqCourseRosterObject[subReqRoster].filter((crseId: number) => !seenCrseIds.includes(crseId));
+          const subReqCrseIds = subReqCourseRosterObject[subReqRoster].filter((crseId: number) => !seenCrseIds.has(crseId));
 
           if (subReqCrseIds.length > 0) {
             const crseInfoObject = { roster: subReqRoster, crseIds: subReqCrseIds };
-
             crseInfoObjects.push(crseInfoObject);
-            seenCrseIds = seenCrseIds.concat(subReqCrseIds);
+            subReqCrseIds.forEach(subReqCrseId => seenCrseIds.add(subReqCrseId));
           }
         });
         // Push crseInfoObjects onto subReqCoursesNotTakenArray for the subReqCourse slot
-        this.subReqCoursesNotTakenArray.push(crseInfoObjects);
+        subReqCoursesNotTakenArray.push(crseInfoObjects);
       });
+      return subReqCoursesNotTakenArray;
     },
     getMaxFirstFourCrseInfoObjects() : CrseInfo[] {
       const subReqCrseInfoObjectsToFetch:CrseInfo[] = [];
@@ -255,7 +253,7 @@ export default Vue.extend({
       });
       return subReqCrseInfoObjectsToFetch;
     },
-    getSubReqCourseObjects() : void {
+    getSubReqCourseObjects(): void {
       this.subReqCourseObjectsNotTakenArray = [];
       this.dataReady = false;
       const subReqCrseInfoObjectsToFetch = this.getMaxFirstFourCrseInfoObjects();

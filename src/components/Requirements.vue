@@ -63,8 +63,7 @@ type Data = {
   toggleableRequirementChoices: Readonly<Record<string, string>>;
   displayedMajorIndex: number,
   displayedMinorIndex: number,
-  numOfColleges: number,
-  rostersFromLastTwoYears: string[];
+  numOfColleges: number
 }
 // emoji for clipboard
 const clipboard = require('../assets/images/clipboard.svg');
@@ -86,7 +85,6 @@ export default Vue.extend({
   },
   mounted() {
     this.recomputeRequirements();
-    this.rostersFromLastTwoYears = getRostersFromLastTwoYears();
   },
   data() : Data {
     return {
@@ -138,8 +136,7 @@ export default Vue.extend({
         // }
       ],
       toggleableRequirementChoices: {},
-      numOfColleges: 1,
-      rostersFromLastTwoYears: []
+      numOfColleges: 1
     };
   },
   watch: {
@@ -167,6 +164,9 @@ export default Vue.extend({
       }
       return minors;
     },
+    rostersFromLastTwoYears() {
+      return getRostersFromLastTwoYears();
+    }
   },
   methods: {
     recomputeRequirements(): void {
