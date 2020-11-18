@@ -539,7 +539,8 @@ export default Vue.extend({
         name: onboardingData.name,
         userData: onboardingData.userData,
         semesters: this.firebaseSems,
-        subjectColors: this.subjectColors
+        subjectColors: this.subjectColors,
+        uniqueIncrementer: this.uniqueIncrementer,
       };
       docRef.get()
         .then(doc => {

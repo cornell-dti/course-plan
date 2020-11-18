@@ -19,13 +19,13 @@
     "test": "jest"
   },
   "dependencies": {
-    "@firebase/analytics": "^0.2.13",
+    "@firebase/analytics": "^0.6.2",
     "@types/intro.js": "^2.4.6",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.13.0",
     "clone": "^2.1.2",
     "dragula": "^3.7.2",
-    "firebase": "^6.6.2",
+    "firebase": "^8.0.1",
     "intro.js": "^2.9.3",
     "jsonschema": "^1.2.5",
     "node-fetch": "^2.6.1",

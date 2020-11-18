@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { User } from 'firebase/app';
+import firebase from 'firebase/app';
 
 import * as fb from './firebaseConfig';
 
 Vue.use(Vuex);
 
 type State = {
-  currentUser: User | null;
+  currentUser: firebase.User | null;
   userProfile: {};
 };
 
@@ -20,7 +20,7 @@ const store = new Vuex.Store<State>({
     fetchUserProfile({ commit, state }) {},
   },
   mutations: {
-    setCurrentUser(state: State, val: User) {
+    setCurrentUser(state: State, val: firebase.User) {
       state.currentUser = val;
     },
   },

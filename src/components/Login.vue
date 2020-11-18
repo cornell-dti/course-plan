@@ -172,7 +172,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import firebase, { User } from 'firebase/app';
+import firebase from 'firebase/app';
 import introJs from 'intro.js';
 
 import Footer from '@/components/Footer.vue';
@@ -226,7 +226,7 @@ export default Vue.extend({
           this.errorMsg = err.message;
         });
     },
-    checkEmailAccess({ user }: { user: User | null }) {
+    checkEmailAccess({ user }: { user: firebase.User | null }) {
       if (user == null) {
         return;
       }
