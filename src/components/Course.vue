@@ -186,7 +186,7 @@ export default Vue.extend({
   }
 
   &--min {
-    width: 10.5rem;
+    width: 10rem;
     height: 2.125rem;
   }
 
@@ -363,7 +363,7 @@ export default Vue.extend({
 
   &.course--min {
     height: 2.125rem;
-    width: 10.5rem;
+    width: 10rem;
   }
 }
 
@@ -439,7 +439,7 @@ export default Vue.extend({
   .course {
     width: 17rem;
     &--min {
-      width: 10.5rem;
+      width: 10rem;
       height: 2.125rem;
     }
     &-main {
@@ -507,7 +507,7 @@ export default Vue.extend({
 
     &.course--min {
       height: 2.125rem;
-      width: 10.5rem;
+      width: 10rem;
     }
   }
 }

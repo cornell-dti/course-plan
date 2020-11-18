@@ -173,6 +173,7 @@ export default Vue.extend({
 .requirements {
   &-courseWrapper {
     padding: 1%;
+    max-width: 50%;
   }
   &-course {
     touch-action: none;
