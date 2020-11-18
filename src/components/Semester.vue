@@ -10,6 +10,8 @@
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
       ref="modal"
+      :seasonCourse="type"
+      :yearCourse="year"
     />
     <confirmation
       class="confirmation-modal"

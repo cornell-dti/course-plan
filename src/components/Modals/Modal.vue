@@ -11,14 +11,19 @@
         :isOnboard="isOnboard"
         :semesterID="semesterID"
         :currentSemesters="currentSemesters"
-        placeholderText = 'CS 1110", "Multivariable Calculus", etc.'
+        placeholderText = '"CS 1110", "Multivariable Calculus", etc.'
         @duplicateSemester="disableButton"
         @close-current-model="closeCourseModal"
         @updateSemProps="updateSemProps"
+        @toggle-left-button="toggleLeftButton"
         ref="modalBodyComponent"
+        :season="seasonCourse"
+        :year="yearCourse"
+        :labels="true"
+        :goBack="goBack"
       ></component>
       <div class="modal-buttonWrapper">
-        <button class="modal-button" @click="closeCurrentModal">{{ cancel }}</button>
+        <button class="modal-button" @click="backOrCancel">{{ leftButton }}</button>
         <button class="modal-button modal-button--add" :class='{"modal-button--disabled": isDisabled }' @click="addItem">{{ add }}</button>
       </div>
     </div>
@@ -41,6 +46,8 @@ export default Vue.extend({
       isOnboard: false,
       courseIsAddable: true,
       isDisabled: false,
+      leftButton: 'CANCEL',
+      goBack: false,
       season: '',
       year: ''
     };
@@ -49,7 +56,9 @@ export default Vue.extend({
     type: String,
     semesterID: Number,
     currentSemesters: Array,
-    isOpen: Boolean
+    isOpen: Boolean,
+    seasonCourse: String,
+    yearCourse: Number
   },
   computed: {
     contentId() {
@@ -61,15 +70,12 @@ export default Vue.extend({
         return `${start}Semester`;
       }
       if (this.type === 'course') {
-        return `${start}Course`;
+        return `Add Course`;
       }
       return `${start}Custom Course`;
     },
     add() {
       return 'ADD';
-    },
-    cancel() {
-      return 'CANCEL';
     },
     body() {
       if (this.type === 'semester') {
@@ -89,7 +95,9 @@ export default Vue.extend({
       this.$emit('close-course-modal');
     },
     closeCurrentModal() {
+      this.courseSelected = false;
       if (this.type === 'course') {
+        this.$refs.modalBodyComponent.reset();
         this.$emit('close-course-modal');
         return;
       }
@@ -160,6 +168,20 @@ export default Vue.extend({
       if (!this.isDisabled) {
         this.$emit('add-semester', this.season, this.year);
 
+        this.closeCurrentModal();
+      }
+    },
+    toggleLeftButton() {
+      if (this.leftButton === 'CANCEL') {
+        this.leftButton = 'BACK';
+      } else {
+        this.leftButton = 'CANCEL';
+      }
+    },
+    backOrCancel() {
+      if (this.leftButton === 'BACK') {
+        this.goBack = !this.goBack;
+      } else {
         this.closeCurrentModal();
       }
     },
