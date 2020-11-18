@@ -115,12 +115,12 @@ export default Vue.extend({
       if (!this.$data.scrollable) event.preventDefault();
     },
     getFirstFourCourseObjects() {
-      let firstFourCourseObjects: AppCourse[] = [];
+      const firstFourCourseObjects: AppCourse[] = [];
       for (let i = 0; firstFourCourseObjects.length < 4 && i < this.crseInfoObjects.length; i += 1){
         const crseInfoObject = this.crseInfoObjects[i];
         const filteredCourses: AppCourse[] = this.subReqCourseObjectsNotTakenArray.filter(course => crseInfoObject.crseIds.includes(course.crseId));
         const numRemainingCourses = Math.min(4 - firstFourCourseObjects.length, filteredCourses.length);
-        firstFourCourseObjects = firstFourCourseObjects.concat(filteredCourses.slice(0, numRemainingCourses));
+        firstFourCourseObjects.push(...filteredCourses.slice(0, numRemainingCourses));
       }
       this.courseObjects = firstFourCourseObjects;
     }
@@ -134,7 +134,7 @@ export default Vue.extend({
 .separator {
   height: 1px;
   width: 100%;
-  background-color: #d7d7d7;
+  background-color: $inactiveGray;
 }
 
 .draggable-requirements {
@@ -148,7 +148,7 @@ export default Vue.extend({
     &-label{
       font-size: 14px;
       line-height: 17px;
-      color: #9E9E9E;
+      color: $lightLabelGray;
     }
     &-seeAll{
       font-size: 12px;

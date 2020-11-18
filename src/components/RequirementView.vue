@@ -205,6 +205,6 @@ button.view {
 .separator {
   height: 1px;
   width: 100%;
-  background-color: #d7d7d7;
+  background-color: $inactiveGray;
 }
 </style>

@@ -88,7 +88,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
-// eslint-disable-next-line import/extensions
 import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
 
@@ -159,16 +158,6 @@ export default Vue.extend({
       showFulfillmentOptionsDropdown: false,
       displayDescription: false,
       subReqCoursesNotTakenArray: [],
-      // subReqCoursesNotTakenArray = [
-      //   [
-      //     {roster: <roster>, crseIds: crseId[]},
-      //     {roster: <roster>, crseIds: crseId[]}
-      //   ],
-      //   [
-      //     {roster: <roster>, crseIds: crseId[]},
-      //     {roster: <roster>, crseIds: crseId[]}
-      //   ]
-      // ]
       subReqCourseObjectsNotTakenArray: [], // array of fetched course objects
       dataReady: false // true if dataReady for all subReqCourses. false otherwise
     }
@@ -323,7 +312,7 @@ export default Vue.extend({
 }
 .description {
   margin: 0 0 0.5rem 1.8rem;
-  color: #353535;
+  color: #4F4F4F;
   font-size: 14px;
 }
 .pointer {
@@ -386,7 +375,7 @@ button.view {
 .separator {
   height: 1px;
   width: 100%;
-  background-color: #d7d7d7;
+  background-color: $inactiveGray;
 }
 
 .toggleable-requirements {
