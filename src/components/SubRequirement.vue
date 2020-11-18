@@ -345,7 +345,7 @@ button.view {
   color: $white;
   text-transform: uppercase;
 }
-.completed-ptext, .completed-ptext span {
+.completed-ptext span {
   color: $lightPlaceholderGray;
   font-size: 12px;
   opacity: 0.8;
