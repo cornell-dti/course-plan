@@ -1,30 +1,35 @@
 <template>
   <div class="incompletesubreqcourse">
-    <div class="draggable-requirements-wrapper"
+    <div
+      class="draggable-requirements-wrapper"
       v-if="displayDescription && crseInfoObjects.length > 0"
     >
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
         <div v-if="showSeeAllLabel" class="draggable-requirements-heading-seeAll">{{ seeAll }}</div>
       </div>
+      <div
+        v-if="displayCourses"
+        class="draggable-requirements-courses"
+        v-dragula="courseObjects"
+        bag="first-bag"
+      >
         <div
-          v-if="displayCourses"
-          class="draggable-requirements-courses"
-          v-dragula="courseObjects"
-          bag="first-bag"
+          v-for="course in courseObjects"
+          :key="course.uniqueID"
+          class="requirements-courseWrapper"
         >
-          <div v-for="course in courseObjects" :key="course.uniqueID" class="requirements-courseWrapper">
-            <course
-              v-bind="course"
-              :courseObj="course"
-              :id="course.subject + course.number"
-              :uniqueID="course.uniqueID"
-              :compact="true"
-              :active="false"
-              class="requirements-course"
-            />
-          </div>
+          <course
+            v-bind="course"
+            :courseObj="course"
+            :id="course.subject + course.number"
+            :uniqueID="course.uniqueID"
+            :compact="true"
+            :active="false"
+            class="requirements-course"
+          />
         </div>
+      </div>
       <div class="separator"></div>
     </div>
   </div>
@@ -43,13 +48,13 @@ Vue.component('course', Course);
 type CrseInfo = {
   roster: string;
   crseIds: number[];
-}
+};
 
 type Data = {
   courseObjects: AppCourse[];
   scrollable: boolean;
   displayCourses: boolean;
-}
+};
 
 export default Vue.extend({
   mounted() {
@@ -62,13 +67,12 @@ export default Vue.extend({
     service.eventBus.$on('drop', () => {
       this.scrollable = true;
     });
-
   },
-  data() : Data {
+  data(): Data {
     return {
       courseObjects: [],
       scrollable: false,
-      displayCourses: false
+      displayCourses: false,
     };
   },
   beforeDestroy() {
@@ -80,7 +84,7 @@ export default Vue.extend({
     crseInfoObjects: Array as PropType<CrseInfo[]>,
     subReqCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
     dataReady: Boolean,
-    displayDescription: Boolean
+    displayDescription: Boolean,
   },
   watch: {
     dataReady: {
@@ -90,8 +94,8 @@ export default Vue.extend({
           this.getFirstFourCourseObjects();
           this.displayCourses = true;
         }
-      }
-    }
+      },
+    },
   },
   computed: {
     addCourseLabel() {
@@ -108,28 +112,37 @@ export default Vue.extend({
       // Only show See all label when there are more than 4 courses
       const allCrseIds = this.crseInfoObjects.map(crseInfoObject => crseInfoObject.crseIds).flat();
       return allCrseIds.length > 4;
-    }
+    },
   },
   methods: {
-    dragListener(event: { preventDefault: () => void; }) {
+    dragListener(event: { preventDefault: () => void }) {
       if (!this.$data.scrollable) event.preventDefault();
     },
     getFirstFourCourseObjects() {
       const firstFourCourseObjects: AppCourse[] = [];
-      for (let i = 0; firstFourCourseObjects.length < 4 && i < this.crseInfoObjects.length; i += 1){
+      for (
+        let i = 0;
+        firstFourCourseObjects.length < 4 && i < this.crseInfoObjects.length;
+        i += 1
+      ) {
         const crseInfoObject = this.crseInfoObjects[i];
-        const filteredCourses: AppCourse[] = this.subReqCourseObjectsNotTakenArray.filter(course => crseInfoObject.crseIds.includes(course.crseId));
-        const numRemainingCourses = Math.min(4 - firstFourCourseObjects.length, filteredCourses.length);
+        const filteredCourses: AppCourse[] = this.subReqCourseObjectsNotTakenArray.filter(course =>
+          crseInfoObject.crseIds.includes(course.crseId)
+        );
+        const numRemainingCourses = Math.min(
+          4 - firstFourCourseObjects.length,
+          filteredCourses.length
+        );
         firstFourCourseObjects.push(...filteredCourses.slice(0, numRemainingCourses));
       }
       this.courseObjects = firstFourCourseObjects;
-    }
-  }
+    },
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .separator {
   height: 1px;
@@ -145,12 +158,12 @@ export default Vue.extend({
   &-heading {
     display: flex;
     justify-content: space-between;
-    &-label{
+    &-label {
       font-size: 14px;
       line-height: 17px;
       color: $lightLabelGray;
     }
-    &-seeAll{
+    &-seeAll {
       font-size: 12px;
       line-height: 15px;
       color: $yuxuanBlue;
@@ -159,7 +172,7 @@ export default Vue.extend({
     }
   }
 
-  &-courses{
+  &-courses {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -167,7 +180,6 @@ export default Vue.extend({
     margin-bottom: 2%;
     width: 100%;
   }
-
 }
 
 .requirements {

@@ -1,6 +1,10 @@
 <template>
-  <div :class="{ 'course--min': compact, 'active': active }" class="course" @click="updateBar()">
-    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active, 'course-color--min': compact }">
+  <div :class="{ 'course--min': compact, active: active }" class="course" @click="updateBar()">
+    <div
+      class="course-color"
+      :style="cssVars"
+      :class="{ 'course-color--active': active, 'course-color--min': compact }"
+    >
       <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
     </div>
     <div :class="{ 'course-content--min': compact }" class="course-content">
@@ -78,14 +82,14 @@ export default Vue.extend({
     uniqueID: Number,
     active: Boolean,
     semId: Number,
-    isReqCourse: Boolean
+    isReqCourse: Boolean,
   },
   data() {
     return {
       menuOpen: false,
       stopCloseFlag: false,
       getCreditRange: this.creditRange,
-      colorJustChanged: false
+      colorJustChanged: false,
     };
   },
   computed: {
@@ -125,9 +129,9 @@ export default Vue.extend({
 
     cssVars() {
       return {
-        '--bg-color': `#${this.color}`
+        '--bg-color': `#${this.color}`,
       };
-    }
+    },
   },
   methods: {
     openMenu() {
@@ -159,17 +163,17 @@ export default Vue.extend({
     editCourseCredit(credit) {
       this.$emit('edit-course-credit', credit, this.uniqueID);
       this.closeMenuIfOpen();
-    }
+    },
   },
   directives: {
-    'click-outside': clickOutside
-  }
+    'click-outside': clickOutside,
+  },
 });
 </script>
 
 <style scoped lang="scss">
 // TODO: font families
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .course {
   width: 21.375rem;
@@ -240,12 +244,11 @@ export default Vue.extend({
     justify-content: space-between;
     align-items: center;
 
-
     &--min {
       width: 9.25rem;
       margin-bottom: 0;
       margin-top: 0;
-      margin-right: .5rem;
+      margin-right: 0.5rem;
     }
   }
 
@@ -479,7 +482,7 @@ export default Vue.extend({
         width: 9.25rem;
         margin-bottom: 0;
         margin-top: 0;
-        margin-right: .5rem;
+        margin-right: 0.5rem;
       }
     }
 

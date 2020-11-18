@@ -1,33 +1,35 @@
 <template v-if="semesters">
   <div class="requirements">
-    <div id="req-tooltip" class="fixed"
+    <div
+      id="req-tooltip"
+      class="fixed"
       data-intro-group="req-tooltip"
       :data-intro="getRequirementsTooltipText()"
-      data-disable-interaction = '1'
-      data-step = '1'
-      data-tooltipClass = 'tooltipCenter'
+      data-disable-interaction="1"
+      data-step="1"
+      data-tooltipClass="tooltipCenter"
     >
-    <h1 class="title">School Requirements</h1>
-    <!-- loop through reqs array of req objects -->
-    <div class="req" v-for="(req, index) in reqs" :key="index">
-      <requirementview
-        :reqs="reqs"
-        :req="req"
-        :reqIndex="index"
-        :majors="majors"
-        :minors="minors"
-        :toggleableRequirementChoices="toggleableRequirementChoices"
-        :displayedMajorIndex="displayedMajorIndex"
-        :displayedMinorIndex="displayedMinorIndex"
-        :user="user"
-        :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
-        :rostersFromLastTwoYears="rostersFromLastTwoYears"
-        :numOfColleges="numOfColleges"
-        @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
-        @activateMajor="activateMajor"
-        @activateMinor="activateMinor"
-      />
-    </div>
+      <h1 class="title">School Requirements</h1>
+      <!-- loop through reqs array of req objects -->
+      <div class="req" v-for="(req, index) in reqs" :key="index">
+        <requirementview
+          :reqs="reqs"
+          :req="req"
+          :reqIndex="index"
+          :majors="majors"
+          :minors="minors"
+          :toggleableRequirementChoices="toggleableRequirementChoices"
+          :displayedMajorIndex="displayedMajorIndex"
+          :displayedMinorIndex="displayedMinorIndex"
+          :user="user"
+          :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
+          :rostersFromLastTwoYears="rostersFromLastTwoYears"
+          :numOfColleges="numOfColleges"
+          @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
+          @activateMajor="activateMajor"
+          @activateMinor="activateMinor"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -45,8 +47,16 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import RequirementView from '@/components/RequirementView.vue';
 import SubRequirement from '@/components/SubRequirement.vue';
-import { BaseRequirement as Requirement, CourseTaken, SingleMenuRequirement } from '@/requirements/types';
-import { RequirementMap, computeRequirements, computeRequirementMap } from '@/requirements/reqs-functions';
+import {
+  BaseRequirement as Requirement,
+  CourseTaken,
+  SingleMenuRequirement,
+} from '@/requirements/types';
+import {
+  RequirementMap,
+  computeRequirements,
+  computeRequirementMap,
+} from '@/requirements/reqs-functions';
 import { AppUser, AppMajor, AppMinor, AppSemester, FirestoreSemesterCourse } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
 
@@ -61,10 +71,10 @@ type Data = {
   reqs: readonly SingleMenuRequirement[];
   // map from requirement ID to option chosen
   toggleableRequirementChoices: Readonly<Record<string, string>>;
-  displayedMajorIndex: number,
-  displayedMinorIndex: number,
-  numOfColleges: number
-}
+  displayedMajorIndex: number;
+  displayedMinorIndex: number;
+  numOfColleges: number;
+};
 // emoji for clipboard
 const clipboard = require('../assets/images/clipboard.svg');
 
@@ -81,12 +91,12 @@ export default Vue.extend({
     semesters: Array as PropType<readonly AppSemester[]>,
     user: Object as PropType<AppUser>,
     compact: Boolean,
-    startTour: Boolean
+    startTour: Boolean,
   },
   mounted() {
     this.recomputeRequirements();
   },
-  data() : Data {
+  data(): Data {
     return {
       // currentEditID: 0,
       // isEditing: false,
@@ -136,14 +146,16 @@ export default Vue.extend({
         // }
       ],
       toggleableRequirementChoices: {},
-      numOfColleges: 1
+      numOfColleges: 1,
     };
   },
   watch: {
     startTour() {
       tour.start();
-      tour.oncomplete(() => { this.$emit('showTourEndWindow'); });
-    }
+      tour.oncomplete(() => {
+        this.$emit('showTourEndWindow');
+      });
+    },
   },
   computed: {
     majors() {
@@ -166,7 +178,7 @@ export default Vue.extend({
     },
     rostersFromLastTwoYears() {
       return getRostersFromLastTwoYears();
-    }
+    },
   },
   methods: {
     recomputeRequirements(): void {
@@ -175,7 +187,7 @@ export default Vue.extend({
         this.toggleableRequirementChoices,
         this.user.college,
         this.user.major,
-        this.user.minor,
+        this.user.minor
       );
       // Send satisfied credits data back to dashboard to build alerts
       this.$emit('requirementsMap', computeRequirementMap(groups));
@@ -184,16 +196,22 @@ export default Vue.extend({
         const singleMenuRequirement: SingleMenuRequirement = {
           ongoing: [],
           completed: [],
-          name: `${group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()} Requirements`,
+          name: `${
+            group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()
+          } Requirements`,
           group: group.groupName.toUpperCase() as 'COLLEGE' | 'MAJOR' | 'MINOR',
           specific: group.specific,
         };
         group.reqs.forEach(req => {
           // Create progress bar with requirement with progressBar = true
           if (req.requirement.progressBar) {
-            singleMenuRequirement.type = this.getRequirementTypeDisplayName(req.requirement.fulfilledBy);
+            singleMenuRequirement.type = this.getRequirementTypeDisplayName(
+              req.requirement.fulfilledBy
+            );
             singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
-            singleMenuRequirement.required = (req.requirement.fulfilledBy !== 'self-check' && req.totalCountRequired) || req.minCountRequired;
+            singleMenuRequirement.required =
+              (req.requirement.fulfilledBy !== 'self-check' && req.totalCountRequired) ||
+              req.minCountRequired;
           }
           // Default display value of false for all requirement lists
           const displayableRequirementFulfillment = { ...req, displayDescription: false };
@@ -207,7 +225,8 @@ export default Vue.extend({
         if (!singleMenuRequirement.type) {
           singleMenuRequirement.type = 'Requirements';
           singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
-          singleMenuRequirement.required = singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+          singleMenuRequirement.required =
+            singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
         }
         return singleMenuRequirement;
       });
@@ -221,8 +240,10 @@ export default Vue.extend({
         return id === this.displayedMajorIndex + this.numOfColleges;
       }
       // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
-      return id < this.numOfColleges ||
-        id === this.displayedMinorIndex + this.numOfColleges + this.majors.length;
+      return (
+        id < this.numOfColleges ||
+        id === this.displayedMinorIndex + this.numOfColleges + this.majors.length
+      );
     },
     chooseToggleableRequirementOption(requirementID: string, option: string): void {
       this.toggleableRequirementChoices = {
@@ -241,7 +262,7 @@ export default Vue.extend({
             courseId: course.crseId,
             number: course.number,
             credits: course.credits,
-            roster: course.lastRoster
+            roster: course.lastRoster,
           });
         });
       });
@@ -260,14 +281,15 @@ export default Vue.extend({
       return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>`;
-    }
-  }
+    },
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
-.requirements, .fixed {
+@import '@/assets/scss/_variables.scss';
+.requirements,
+.fixed {
   height: 100vh;
   width: 25rem;
   padding: 1.625rem 1.5rem 1.625rem 1.5rem;
@@ -306,7 +328,8 @@ h1.title {
   }
 }
 @media only screen and (max-width: 976px) {
-  .requirements, .fixed {
+  .requirements,
+  .fixed {
     width: 21rem;
   }
 }

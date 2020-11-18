@@ -1,89 +1,102 @@
 <template>
   <div class="subrequirement">
-  <div class="row depth-req">
-    <div class="col-1" @click="toggleDescription()">
-      <button class="btn">
-        <img
-          v-if="displayDescription"
-          class="arrow arrow-up"
-          :src="getSrc()"
-          alt="dropup"
-        />
-        <img
-          v-else
-          class="arrow arrow-down"
-          :src="getSrc()"
-          alt="dropdown"
-        />
-      </button>
-    </div>
-    <div class="col-7" @click="toggleDescription()">
-      <p v-bind:class="[{'sup-req': !this.isCompleted}, 'pointer', this.isCompleted ? 'completed-ptext' : 'incomplete-ptext']">
-        <span>{{subReq.requirement.name}}</span>
-      </p>
-    </div>
-    <div class="col">
-      <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">{{
-        (subReq.fulfilledBy !== 'self-check')
-        ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${subReq.totalCountRequired
-        || subReq.minCountRequired} ${subReq.fulfilledBy}`
-        : 'self check' }}</p>
-      <p v-if="this.isCompleted" class="text-right completed-ptext">
-        <span>{{subReq.minCountFulfilled}}/{{subReq.minCountRequired}} {{ subReq.fulfilledBy }}</span>
-      </p>
-    </div>
-  <div v-if="displayDescription" :class="[{'completed-ptext': this.isCompleted}, 'description']">
-    {{ subReq.requirement.description }} <a class="more"
-    :style="{ 'color': `#${color}` }"
-    :href="subReq.requirement.source" target="_blank">
-    <strong>Learn More</strong></a>
-    <div v-if="subReq.requirement.fulfilledBy === 'toggleable'">
-      <div class="toggleable-requirements-select-wrapper">
-          <div
-            class="toggleable-requirements-select toggleable-requirements-input"
-            v-click-outside="closeMenuIfOpen"
+    <div class="row depth-req">
+      <div class="col-1" @click="toggleDescription()">
+        <button class="btn">
+          <img v-if="displayDescription" class="arrow arrow-up" :src="getSrc()" alt="dropup" />
+          <img v-else class="arrow arrow-down" :src="getSrc()" alt="dropdown" />
+        </button>
+      </div>
+      <div class="col-7" @click="toggleDescription()">
+        <p
+          v-bind:class="[
+            { 'sup-req': !this.isCompleted },
+            'pointer',
+            this.isCompleted ? 'completed-ptext' : 'incomplete-ptext',
+          ]"
+        >
+          <span>{{ subReq.requirement.name }}</span>
+        </p>
+      </div>
+      <div class="col">
+        <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">
+          {{
+            subReq.fulfilledBy !== 'self-check'
+              ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${
+                  subReq.totalCountRequired || subReq.minCountRequired
+                } ${subReq.fulfilledBy}`
+              : 'self check'
+          }}
+        </p>
+        <p v-if="this.isCompleted" class="text-right completed-ptext">
+          <span
+            >{{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
+            {{ subReq.fulfilledBy }}</span
           >
+        </p>
+      </div>
+      <div
+        v-if="displayDescription"
+        :class="[{ 'completed-ptext': this.isCompleted }, 'description']"
+      >
+        {{ subReq.requirement.description }}
+        <a
+          class="more"
+          :style="{ color: `#${color}` }"
+          :href="subReq.requirement.source"
+          target="_blank"
+        >
+          <strong>Learn More</strong></a
+        >
+        <div v-if="subReq.requirement.fulfilledBy === 'toggleable'">
+          <div class="toggleable-requirements-select-wrapper">
             <div
-              class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-wrapper"
-              @click="showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown"
+              class="toggleable-requirements-select toggleable-requirements-input"
+              v-click-outside="closeMenuIfOpen"
             >
-              <span>{{ selectedFulfillmentOption }}</span>
+              <div
+                class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-wrapper"
+                @click="showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown"
+              >
+                <span>{{ selectedFulfillmentOption }}</span>
+              </div>
+              <div
+                class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"
+              ></div>
             </div>
-            <div class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"></div>
-          </div>
-          <div class="toggleable-requirements-dropdown-content" v-if="showFulfillmentOptionsDropdown">
             <div
-              v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
-              :key="optionName"
-              class="toggleable-requirements-dropdown-content-item"
-              @click="chooseFulfillmentOption(optionName)"
+              class="toggleable-requirements-dropdown-content"
+              v-if="showFulfillmentOptionsDropdown"
             >
-              <span>{{optionName}}</span>
+              <div
+                v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
+                :key="optionName"
+                class="toggleable-requirements-dropdown-content-item"
+                @click="chooseFulfillmentOption(optionName)"
+              >
+                <span>{{ optionName }}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div v-if="!this.isCompleted" class="separator"></div>
-    <div class="incompletesubreqcourse-wrapper" v-if="!this.isCompleted">
-      <div
-      v-for="(subReqCrseInfoObjects, id) in subReqCoursesNotTakenArray"
-      :key="id">
-        <incompletesubreqcourse
-          :subReq="subReq"
-          :subReqCourseId="id"
-          :crseInfoObjects="subReqCrseInfoObjects"
-          :subReqCourseObjectsNotTakenArray="subReqCourseObjectsNotTakenArray"
-          :dataReady="dataReady"
-          :displayDescription="displayDescription"
-          @isDataReady="isDataReady"
-        />
+      <div v-if="!this.isCompleted" class="separator"></div>
+      <div class="incompletesubreqcourse-wrapper" v-if="!this.isCompleted">
+        <div v-for="(subReqCrseInfoObjects, id) in subReqCoursesNotTakenArray" :key="id">
+          <incompletesubreqcourse
+            :subReq="subReq"
+            :subReqCourseId="id"
+            :crseInfoObjects="subReqCrseInfoObjects"
+            :subReqCourseObjectsNotTakenArray="subReqCourseObjectsNotTakenArray"
+            :dataReady="dataReady"
+            :displayDescription="displayDescription"
+            @isDataReady="isDataReady"
+          />
+        </div>
       </div>
     </div>
   </div>
-  </div>
 </template>
-
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
@@ -100,11 +113,7 @@ import dropupCompletedSrc from '@/assets/images/dropup-lightgray.svg';
 import dropdownIncompleteSrc from '@/assets/images/dropdown.svg';
 import dropdownCompletedSrc from '@/assets/images/dropdown-lightgray.svg';
 
-import {
-  FirestoreSemesterCourse,
-  AppCourse,
-  firestoreCourseToAppCourse
-} from '@/user-data';
+import { FirestoreSemesterCourse, AppCourse, firestoreCourseToAppCourse } from '@/user-data';
 
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
@@ -118,14 +127,14 @@ const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 type CrseInfo = {
   roster: string;
   crseIds: number[];
-}
+};
 
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
   displayDescription: boolean;
   subReqCourseObjectsNotTakenArray: AppCourse[];
   dataReady: boolean;
-}
+};
 
 export default Vue.extend({
   props: {
@@ -138,7 +147,7 @@ export default Vue.extend({
     },
     color: String,
     isCompleted: Boolean,
-    rostersFromLastTwoYears: Array as PropType<readonly String[]>
+    rostersFromLastTwoYears: Array as PropType<readonly String[]>,
   },
   watch: {
     subReqCoursesNotTakenArray: {
@@ -146,30 +155,33 @@ export default Vue.extend({
       deep: true,
       handler(updatedSubReqCoursesNotTakenArray) {
         this.getSubReqCourseObjects();
-      }
-    }
+      },
+    },
   },
-  data() : Data {
+  data(): Data {
     return {
       showFulfillmentOptionsDropdown: false,
       displayDescription: false,
       subReqCourseObjectsNotTakenArray: [], // array of fetched course objects
-      dataReady: false // true if dataReady for all subReqCourses. false otherwise
-    }
+      dataReady: false, // true if dataReady for all subReqCourses. false otherwise
+    };
   },
   computed: {
     selectedFulfillmentOption(): string {
       if (this.subReq.requirement.fulfilledBy !== 'toggleable') {
         return '';
       }
-      return this.toggleableRequirementChoice || Object.keys(this.subReq.requirement.fulfillmentOptions)[0];
+      return (
+        this.toggleableRequirementChoice ||
+        Object.keys(this.subReq.requirement.fulfillmentOptions)[0]
+      );
     },
-    subReqCoursesNotTakenArray():CrseInfo[][] {
+    subReqCoursesNotTakenArray(): CrseInfo[][] {
       return this.generateSubReqCoursesNotTakenArray();
-    }
+    },
   },
   directives: {
-    'click-outside': clickOutside
+    'click-outside': clickOutside,
   },
   methods: {
     getSrc() {
@@ -202,31 +214,37 @@ export default Vue.extend({
       this.showFulfillmentOptionsDropdown = false;
       this.$emit('changeToggleableRequirementChoice', this.subReq.id, option);
     },
-    generateSubReqCoursesNotTakenArray():CrseInfo[][] {
+    generateSubReqCoursesNotTakenArray(): CrseInfo[][] {
       // Reset subReqCoursesNotTakenArray
-      const subReqCoursesNotTakenArray:CrseInfo[][] = [];
+      const subReqCoursesNotTakenArray: CrseInfo[][] = [];
 
       // Depending on fulfilledBy, subReqCourses is accessed differently from subReq
       let subReqCourses;
       if (this.subReq.requirement.fulfilledBy === 'toggleable') {
-        const fulfillmentOption = this.toggleableRequirementChoice || this.selectedFulfillmentOption;
+        const fulfillmentOption =
+          this.toggleableRequirementChoice || this.selectedFulfillmentOption;
         subReqCourses = this.subReq.requirement.fulfillmentOptions[fulfillmentOption].courses;
       } else if (this.subReq.requirement.fulfilledBy === 'self-check') {
         subReqCourses = [];
-      } else { // fulfilledBy courses or credits
+      } else {
+        // fulfilledBy courses or credits
         subReqCourses = this.subReq.requirement.courses;
       }
       const mostRecentRosters = this.rostersFromLastTwoYears;
       let filteredSubReqRosters;
       // Iterate over each course slot for the subReq
-      subReqCourses.forEach((subReqCourseRosterObject:EligibleCourses) => {
+      subReqCourses.forEach((subReqCourseRosterObject: EligibleCourses) => {
         // Filter subreq roster object keys with the mostRecentRosters
-        filteredSubReqRosters = Object.keys(subReqCourseRosterObject).filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1).reverse();
+        filteredSubReqRosters = Object.keys(subReqCourseRosterObject)
+          .filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1)
+          .reverse();
 
         const crseInfoObjects: CrseInfo[] = []; // List of crseInfoObjects {roster: <roster>, crseIds: crseId[]} []
         const seenCrseIds = new Set(); // So we don't have duplicates
         filteredSubReqRosters.forEach(subReqRoster => {
-          const subReqCrseIds = subReqCourseRosterObject[subReqRoster].filter((crseId: number) => !seenCrseIds.has(crseId));
+          const subReqCrseIds = subReqCourseRosterObject[subReqRoster].filter(
+            (crseId: number) => !seenCrseIds.has(crseId)
+          );
 
           if (subReqCrseIds.length > 0) {
             const crseInfoObject = { roster: subReqRoster, crseIds: subReqCrseIds };
@@ -239,15 +257,18 @@ export default Vue.extend({
       });
       return subReqCoursesNotTakenArray;
     },
-    getMaxFirstFourCrseInfoObjects() : CrseInfo[] {
-      const subReqCrseInfoObjectsToFetch:CrseInfo[] = [];
+    getMaxFirstFourCrseInfoObjects(): CrseInfo[] {
+      const subReqCrseInfoObjectsToFetch: CrseInfo[] = [];
       this.subReqCoursesNotTakenArray.forEach(subReqCourseArray => {
         let numSeenCrseIds = 0;
         for (let i = 0; numSeenCrseIds < 4 && i < subReqCourseArray.length; i += 1) {
           const subReqCrseInfo = subReqCourseArray[i];
           const numRemainingCourses = Math.min(4 - numSeenCrseIds, subReqCrseInfo.crseIds.length);
-          
-          subReqCrseInfoObjectsToFetch.push({roster: subReqCrseInfo.roster, crseIds: subReqCrseInfo.crseIds.slice(0, numRemainingCourses)});
+
+          subReqCrseInfoObjectsToFetch.push({
+            roster: subReqCrseInfo.roster,
+            crseIds: subReqCrseInfo.crseIds.slice(0, numRemainingCourses),
+          });
           numSeenCrseIds += numRemainingCourses;
         }
       });
@@ -258,40 +279,45 @@ export default Vue.extend({
       this.dataReady = false;
       const subReqCrseInfoObjectsToFetch = this.getMaxFirstFourCrseInfoObjects();
       let fetchedCourses;
-      FetchCourses({ crseInfo: subReqCrseInfoObjectsToFetch, allowSameCourseForDifferentRosters: false }).then(result => {
-        fetchedCourses = result.data.courses;
-        fetchedCourses.forEach((course: FirestoreSemesterCourse) => {
-          // @ts-ignore
-          const createdCourse = this.$parent.$parent.$parent.createCourse(course, true);
-          createdCourse.compact = true;
-          this.subReqCourseObjectsNotTakenArray.push(createdCourse);
+      FetchCourses({
+        crseInfo: subReqCrseInfoObjectsToFetch,
+        allowSameCourseForDifferentRosters: false,
+      })
+        .then(result => {
+          fetchedCourses = result.data.courses;
+          fetchedCourses.forEach((course: FirestoreSemesterCourse) => {
+            // @ts-ignore
+            const createdCourse = this.$parent.$parent.$parent.createCourse(course, true);
+            createdCourse.compact = true;
+            this.subReqCourseObjectsNotTakenArray.push(createdCourse);
+          });
+          this.isDataReady();
+        })
+        .catch(error => {
+          console.log('FetchCourses() Error: ', error);
         });
-        this.isDataReady();
-      }).catch(error => {
-        console.log('FetchCourses() Error: ', error);
-      });
-    }
-  }
+    },
+  },
 });
 </script>
 
-
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .btn {
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  &-2{
+  &-2 {
     padding-top: 0px;
-    margin:0px
+    margin: 0px;
   }
 }
-.btn:focus,.btn:active {
-   outline: none !important;
-   box-shadow: none;
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none;
 }
 .row {
   margin: 0;
@@ -310,7 +336,7 @@ export default Vue.extend({
 }
 .description {
   margin: 0 0 0.5rem 1.8rem;
-  color: #4F4F4F;
+  color: #4f4f4f;
   font-size: 14px;
 }
 .pointer {
@@ -326,11 +352,11 @@ button.active {
   height: 14px;
   width: 14px;
   fill: $emGreen;
-  color:$emGreen;
+  color: $emGreen;
   margin-top: -2px;
-    &-up {
-     margin-top: 4px;
-   }
+  &-up {
+    margin-top: 4px;
+  }
 }
 button.view {
   margin: 0.7rem 0 2rem 0;
@@ -355,10 +381,10 @@ button.view {
   }
 }
 .text {
-   &-right {
-     color: $lightPlaceholderGray;
-   }
- }
+  &-right {
+    color: $lightPlaceholderGray;
+  }
+}
 .sup-req {
   font-style: normal;
   font-weight: normal;
@@ -381,7 +407,7 @@ button.view {
     display: flex;
     flex-direction: row;
     background: $white;
-    border: .5px solid $inactiveGray;
+    border: 0.5px solid $inactiveGray;
     box-sizing: border-box;
     border-radius: 2px;
     width: 100%;
@@ -390,7 +416,7 @@ button.view {
     color: $darkPlaceholderGray;
     position: relative;
     &:not(:first-child) {
-      margin-top: .5rem;
+      margin-top: 0.5rem;
     }
     &--disabled {
       opacity: 0.3;
@@ -402,7 +428,7 @@ button.view {
       height: 100%;
       font-size: 14px;
       line-height: 17px;
-      margin-left: .25rem;
+      margin-left: 0.25rem;
       display: flex;
       align-items: center;
       color: $darkPlaceholderGray;

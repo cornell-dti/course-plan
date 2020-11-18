@@ -3,7 +3,14 @@
     <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
     <!-- TODO: for some reason this breaks the dropdown <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div> -->
     <div class="autocomplete">
-      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
+      <input
+        class="newCourse-dropdown"
+        :id="'dropdown-' + semesterID"
+        :ref="'dropdown-' + semesterID"
+        :placeholder="placeholder"
+        @keyup.enter="addCourse"
+        @keyup.esc="closeCourseModal"
+      />
     </div>
     <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
     <!-- <div v-if="!isOnboard && !selected"> 
@@ -12,33 +19,64 @@
         <newSemester :type="season" :year="year"></newSemester>
       </div>
     </div> -->
-    <div v-if="!isOnboard && selected" > <!-- if a course is selected -->
+    <div v-if="!isOnboard && selected">
+      <!-- if a course is selected -->
       <div class="newCourse-text">Selected Semester</div>
       <div class="newCourse-semester">
         <span class="newCourse-name">
-          <img class="newCourse-season-emoji" :src='seasonImg[season]' alt=""> {{ season }} {{ year }}
+          <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
+          {{ year }}
         </span>
       </div>
       <div class="newCourse-title">This class fulfills the following requirement(s):</div>
       <div v-if="!editMode" class="newCourse-requirements-container">
-        <div  class="newCourse-requirements" v-for="req in requirements" :key="req" :class="{'newCourse-space': !checkIfLast(req, requirements)}">
-        {{ checkIfLast(req, requirements) ? req : `${req},`}}
+        <div
+          class="newCourse-requirements"
+          v-for="req in requirements"
+          :key="req"
+          :class="{ 'newCourse-space': !checkIfLast(req, requirements) }"
+        >
+          {{ checkIfLast(req, requirements) ? req : `${req},` }}
         </div>
       </div>
       <div v-else class="newCourse-requirements-edit">
-        <editRequirement v-for="req in requirements" :key="req" :name="req" :selected="true" :isClickable="true"/>
+        <editRequirement
+          v-for="req in requirements"
+          :key="req"
+          :name="req"
+          :selected="true"
+          :isClickable="true"
+        />
       </div>
-      <div class="newCourse-title">This class could potentially fulfill the following requirement(s):</div>
+      <div class="newCourse-title">
+        This class could potentially fulfill the following requirement(s):
+      </div>
       <div v-if="!editMode" class="newCourse-requirements-container">
-        <div class="newCourse-name" v-for="potreq in potentialReqs" :key="potreq" :class="{'newCourse-space': !checkIfLast(potreq, potentialReqs)}">
-          {{ checkIfLast(potreq, potentialReqs) ? potreq : `${potreq},`}}
+        <div
+          class="newCourse-name"
+          v-for="potreq in potentialReqs"
+          :key="potreq"
+          :class="{ 'newCourse-space': !checkIfLast(potreq, potentialReqs) }"
+        >
+          {{ checkIfLast(potreq, potentialReqs) ? potreq : `${potreq},` }}
         </div>
       </div>
       <div v-else class="newCourse-requirements-edit">
-        <editRequirement v-for="potreq in potentialReqs" :key="potreq" :name="potreq" :isClickable="true"/>
-        <binaryButton  v-for="choice in binaryPotentialReqs" :key="choice[0]" :choices="choice"></binaryButton>
+        <editRequirement
+          v-for="potreq in potentialReqs"
+          :key="potreq"
+          :name="potreq"
+          :isClickable="true"
+        />
+        <binaryButton
+          v-for="choice in binaryPotentialReqs"
+          :key="choice[0]"
+          :choices="choice"
+        ></binaryButton>
       </div>
-      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">Add these Requirements</div>
+      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
+        Add these Requirements
+      </div>
     </div>
   </div>
 </template>
@@ -64,7 +102,7 @@ export default Vue.extend({
     placeholderText: String,
     season: String,
     year: Number,
-    goBack: Boolean
+    goBack: Boolean,
   },
   data() {
     return {
@@ -72,27 +110,28 @@ export default Vue.extend({
         Fall: fall,
         Spring: spring,
         Winter: winter,
-        Summer: summer
+        Summer: summer,
       },
       selected: false,
       requirements: ['DummyReq1', 'DummyReq2'],
       potentialReqs: ['PotentialReq1', 'PotentialReq2'],
       binaryPotentialReqs: [['Technical Communication', 'External Specialization']],
       editMode: false,
-      selectedCourse: ''
+      selectedCourse: '',
     };
   },
-  watch: { 
+  watch: {
     goBack: function onPropChange(val) {
-      if (this.editMode) { this.editMode = false; }
-      else {
+      if (this.editMode) {
+        this.editMode = false;
+      } else {
         this.selected = false;
         // copied code from line 125 and 209 TODO - refactor
         const inpCopy = document.getElementById(`dropdown-${this.semesterID}`);
         inpCopy.value = '';
         this.$emit('toggle-left-button');
       }
-    }
+    },
   },
   computed: {
     text() {
@@ -100,7 +139,7 @@ export default Vue.extend({
     },
     placeholder() {
       return this.placeholderText;
-    }
+    },
   },
   mounted() {
     // Activate focus and set input to empty
@@ -108,10 +147,7 @@ export default Vue.extend({
     input.value = '';
     input.focus();
 
-    this.autocomplete(
-      document.getElementById(`dropdown-${this.semesterID}`),
-      coursesJSON
-    );
+    this.autocomplete(document.getElementById(`dropdown-${this.semesterID}`), coursesJSON);
   },
   methods: {
     closeCourseModal() {
@@ -176,10 +212,7 @@ export default Vue.extend({
               const result = { title: `${attr}: ${courses[attr].t}`, roster: courses[attr].r };
               if (attr.toUpperCase().includes(val) && attr !== 'lastScanned') {
                 code.push(result);
-              } else if (
-                courses[attr].t
-                && courses[attr].t.toUpperCase().includes(val)
-              ) {
+              } else if (courses[attr].t && courses[attr].t.toUpperCase().includes(val)) {
                 title.push(result);
               }
             }
@@ -265,13 +298,13 @@ export default Vue.extend({
       this.editMode = false;
       this.selected = false;
       this.selectedCourse = '';
-    }
-  }
+    },
+  },
 });
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 .newCourse {
   &-text {
     font-size: 14px;
@@ -391,5 +424,4 @@ input {
   background-color: DodgerBlue !important;
   color: $white;
 }
-
 </style>
