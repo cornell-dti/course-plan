@@ -59,6 +59,7 @@ import {
 } from '@/requirements/reqs-functions';
 import { AppUser, AppMajor, AppMinor, AppSemester, FirestoreSemesterCourse } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
+import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 
 const functions = firebase.functions();
 
@@ -266,6 +267,7 @@ export default Vue.extend({
           });
         });
       });
+      courses.push(...getCourseEquivalentsFromUserExams(this.user));
       return courses;
     },
     activateMajor(id: number) {
