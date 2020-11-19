@@ -70,7 +70,7 @@ export default function getCourseEquivalents(
   return APCourseEquivalents.concat(IBCourseEquivalents);
 }
 
-const examData: ExamData = {
+export const examData: ExamData = {
   AP: [
     {
       name: 'Computer Science A',

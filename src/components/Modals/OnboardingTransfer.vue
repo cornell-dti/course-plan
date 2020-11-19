@@ -23,7 +23,7 @@
                   class= "onboarding-section"
                   id="college"
                   v-for="(options, index) in displayOptions.exam"
-                  :key = index
+                  :key="index"
                   :style="{ borderColor: options.type.boxBorder }"
                   v-click-outside:[index]="closeTypeDropdownIfOpen"
                 >
@@ -146,12 +146,12 @@
               <label class="onboarding-label">Equivalent Cornell Class</label>
               <div
                 v-for="(options, index) in displayOptions.class"
-                :key= index
+                :key="index"
                 class="onboarding-selectWrapper">
                 <newCourse
-                :semesterID= index
+                :semesterID="index"
                 :isOnboard="true"
-                :placeholderText= options.class
+                :placeholderText="options.class"
                 @addItem="addItem"
                 > </newCourse>
               <div class="onboarding-addRemoveWrapper">
@@ -182,12 +182,14 @@
     </div>
 </template>
 
-<script>
-import Vue from 'vue';
-import reqsData from '@/requirements/data/exams/ExamCredit';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse.vue';
 import { clickOutside } from '@/utilities';
+import { AppUser, FirestoreTransferClass } from '@/user-data';
+// @ts-ignore
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 Vue.component('newCourse', NewCourse);
@@ -195,11 +197,41 @@ Vue.component('newCourse', NewCourse);
 const placeholderText = 'Select one';
 const placeholderColor = lightPlaceholderGray;
 
+type Section = 'type' | 'subject' | 'score';
+
+type DisplayOption = {
+  shown: boolean;
+  stopClose: boolean;
+  boxBorder: string;
+  arrowColor: string;
+  placeholderColor: string;
+  placeholder: string;
+  acronym: string;
+};
+
+type Data = {
+  tookSwimTest: string;
+  scores: number[];
+  classes: [];
+  exams: string[];
+  subjects: string[][];
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  displayOptions: {
+    exam: Record<'type' | 'subject' | 'score', DisplayOption>[];
+    class: FirestoreTransferClass[];
+  };
+  transferJSON: any,
+  isError: boolean;
+  totalCredits: number;
+};
+
 export default Vue.extend({
   props: {
-    user: Object
+    user: Object as PropType<AppUser>
   },
-  data() {
+  data(): Data {
     return {
       tookSwimTest: '',
       scores: [],
@@ -231,11 +263,12 @@ export default Vue.extend({
   methods: {
     getClasses() {
       let credits = 0;
-      const exams = [];
-      const sections = ['type', 'subject', 'score'];
+      const exams: Record<Section, DisplayOption>[] = [];
+      const sections = ['type', 'subject', 'score'] as const;
       if ('exam' in this.user && this.user.exam.length > 0) {
         for (let x = 0; x < this.user.exam.length; x += 1) {
-          const exam = {};
+          // @ts-ignore
+          const exam: Record<'type' | 'subject' | 'score', DisplayOption> = {};
           for (const sec of sections) {
             exam[sec] = {
               shown: false,
@@ -243,18 +276,21 @@ export default Vue.extend({
               boxBorder: '',
               arrowColor: '',
               placeholderColor: lightPlaceholderGray,
-              placeholder: this.user.exam[x][sec],
+              placeholder: String(this.user.exam[x][sec]),
               acronym: ''
             };
           }
           if (typeof this.user.exam[x].subject !== 'undefined') {
             exams.push(exam);
+            // @ts-ignore
             credits += this.user.exam[x].credits;
+            // @ts-ignore
             exam.equivCourse = this.user.exam[x].equivCourse;
           }
         }
       }
-      const exam = {};
+      // @ts-ignore
+      const exam: Record<Section, DisplayOption> = {};
       for (const sect of sections) {
         exam[sect] = {
           shown: false,
@@ -270,10 +306,11 @@ export default Vue.extend({
       this.displayOptions.exam = exams;
       const swim = (typeof this.user.tookSwim !== 'undefined') ? this.user.tookSwim : 'no';
       this.tookSwimTest = swim;
-      const transferClass = [];
+      const transferClass: FirestoreTransferClass[] = [];
       this.user.transferCourse.forEach(course => {
         transferClass.push(course);
       });
+      // @ts-ignore
       transferClass.push({ class: placeholderText, credits: 0 });
       this.displayOptions.class = transferClass;
     },
@@ -293,15 +330,23 @@ export default Vue.extend({
       this.totalCredits = count;
     },
     getTransferMap() {
-      const TransferJSON = {};
+      const TransferJSON: Record<string, { credits: number; type: 'AP' | 'IB' }> = {};
       reqsData.AP.forEach(sub => {
+        // TODO: UNBREAK reqsData FORMAT
+        // @ts-ignore
         TransferJSON[sub.subject] = {
+          // TODO: UNBREAK reqsData FORMAT
+          // @ts-ignore
           credits: sub.credits,
           type: 'AP'
         };
       });
       reqsData.IB.forEach(sub => {
+        // TODO: UNBREAK reqsData FORMAT
+        // @ts-ignore
         TransferJSON[sub.subject] = {
+          // TODO: UNBREAK reqsData FORMAT
+          // @ts-ignore
           credits: sub.credits,
           type: 'IB'
         };
@@ -311,9 +356,8 @@ export default Vue.extend({
         this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
       }
     },
-    showHideContent(type, section, i) {
-      let displayOptions = this.displayOptions[type];
-      displayOptions = displayOptions[i];
+    showHideContent(type: 'exam' | 'class', section: Section, i: number) {
+      let displayOptions: any = this.displayOptions[type][i];
       if (type === 'exam') {
         displayOptions = displayOptions[section];
       }
@@ -327,21 +371,21 @@ export default Vue.extend({
         displayOptions.arrowColor = yuxuanBlue;
       }
     },
-    showHideExamContent(i) {
+    showHideExamContent(i: number) {
       this.showHideContent('exam', 'type', i);
     },
-    showHideSubjectContent(i) {
+    showHideSubjectContent(i: number) {
       this.showHideContent('exam', 'subject', i);
     },
-    showHideScoreContent(i) {
+    showHideScoreContent(i: number) {
       this.showHideContent('exam', 'score', i);
     },
-    showHideClassContent(i) {
+    showHideClassContent(i: number) {
+      // @ts-ignore
       this.showHideContent('class', '', i);
     },
-    closeDropdownIfOpen(section, i) {
-      let displayOptions = this.displayOptions[section];
-      displayOptions = displayOptions[i];
+    closeDropdownIfOpen(section: 'exam' | 'class', i: number) {
+      const displayOptions: any = this.displayOptions[section][i];
       if (section === 'exam') {
         Object.keys(displayOptions).forEach(key => {
           if (key !== 'equivCourse' && displayOptions[key].stopClose) {
@@ -360,16 +404,15 @@ export default Vue.extend({
         displayOptions.arrowColor = inactiveGray;
       }
     },
-    closeTypeDropdownIfOpen(event, i) {
+    closeTypeDropdownIfOpen(event: unknown, i: number) {
       this.closeDropdownIfOpen('exam', i);
     },
-    closeClassDropdownIfOpen(event, i) {
+    closeClassDropdownIfOpen(event: unknown, i: number) {
       this.closeDropdownIfOpen('class', i);
     },
     // Set the colleges map to with acronym keys and full name values
     setExamsMap() {
-      /** @type {Object.<string, string>} */
-      const exams = [];
+      const exams: string[] = [];
       Object.keys(reqsData).forEach(key => {
         exams.push(key);
       });
@@ -378,13 +421,17 @@ export default Vue.extend({
     // Set the majors map to with acronym keys and full name values
     setSubjectList() {
       /** @type {Object.<string, string>} */
-      const totalSubjects = [];
+      const totalSubjects: string[][] = [];
       this.displayOptions.exam.forEach(exam => {
         if (exam.type.placeholder !== placeholderText) {
           const examType = exam.type.placeholder;
-          const subjects = [];
+          const subjects: string[] = [];
           if (examType in reqsData && examType !== null) {
+            // TODO: UNBREAK reqsData FORMAT
+            // @ts-ignore
             reqsData[examType].forEach(sub => {
+              // TODO: UNBREAK reqsData FORMAT
+              // @ts-ignore
               subjects.push(sub.subject);
             });
             totalSubjects.push(subjects);
@@ -407,9 +454,8 @@ export default Vue.extend({
       this.tookSwimTest = 'no';
       this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
     },
-    selectOption(type, section, text, acronym, i) {
-      let displayOptions = this.displayOptions[type];
-      displayOptions = displayOptions[i];
+    selectOption(type: 'exam' | 'class', section: Section, text: string, acronym: string | number, i: number) {
+      let displayOptions: any = this.displayOptions[type][i];
       if (type === 'exam') {
         displayOptions = displayOptions[section];
       }
@@ -423,13 +469,19 @@ export default Vue.extend({
     // Clear a major if a new college is selected and the major is not in it
     clearSubjectAndScoreIfNotInCollege() {
       const majorJSON = reqsData.major;
+      // @ts-ignore
       for (let x = 0; x < this.displayOptions.major.length; x += 1) {
+        // @ts-ignore
         const major = this.displayOptions.major[x];
         let foundCollege = false;
         // Do nothing if no major set
         if (major.acronym !== '') {
+          // @ts-ignore
           for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+            // @ts-ignore
             const college = this.displayOptions.college[i];
+            // TODO: UNBREAK reqsData FORMAT
+            // @ts-ignore
             if (majorJSON[major.acronym].schools.includes(college.acronym)) {
               foundCollege = true;
               break;
@@ -443,20 +495,23 @@ export default Vue.extend({
         }
       }
     },
-    selectExam(text, acronym, i) {
+    selectExam(text: string, acronym: string | number, i: number) {
       this.selectOption('exam', 'type', text, acronym, i);
       this.setSubjectList();
     },
-    selectScore(text, acronym, i) {
-      this.selectOption('exam', 'score', text, acronym, i);
+    selectScore(text: number, acronym: string | number, i: number) {
+      this.selectOption('exam', 'score', String(text), acronym, i);
     },
-    selectSubject(text, acronym, i) {
+    selectSubject(text: string, acronym: string | number, i: number) {
       const type = this.displayOptions.exam[i].type.placeholder;
+      // @ts-ignore
       const course = this.getCourseFromExam(type, text);
+      // @ts-ignore
       this.displayOptions.exam[i].equivCourse = course;
       this.selectOption('exam', 'subject', text, acronym, i);
     },
-    selectClass(text, acronym, i) {
+    selectClass(text: string, acronym: string | number, i: number) {
+      // @ts-ignore
       this.selectOption('class', 'placholder', text, acronym, i);
     },
     addExam() {
@@ -489,13 +544,18 @@ export default Vue.extend({
           acronym: ''
         }
       };
+      // @ts-ignore
       this.displayOptions.exams = this.displayOptions.exam.push(exam);
     },
-    getCourseFromExam(type, subject) {
+    getCourseFromExam(type: 'AP' | 'IB', subject: string) {
       let count = 0;
       let courses;
       for (const sub of reqsData[type]) {
+        // TODO: UNBREAK reqsData FORMAT
+        // @ts-ignore
         if (sub.subject === subject) {
+          // TODO: UNBREAK reqsData FORMAT
+          // @ts-ignore
           courses = reqsData[type][count].credits[0].courseEquivalents;
           // as a default takes the first equivalent course
           // TODO will need to add requirements menu if editiable.
@@ -511,11 +571,13 @@ export default Vue.extend({
       this.displayOptions.class.pop();
     },
     addTransfer() {
+      // @ts-ignore
       this.displayOptions.class.push(placeholderText);
     },
-    addItem(id) {
-      const dropdown = document.getElementById(`dropdown-${id}`);
-      const title = dropdown.value;
+    addItem(id: number) {
+      const dropdown = document.getElementById(`dropdown-${id}`)!;
+      // @ts-ignore
+      const title: string = dropdown.value;
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
       const number = courseCode.split(' ')[1];
@@ -523,7 +585,7 @@ export default Vue.extend({
         .then(res => res.json())
         .then(resultJSON => {
           // check catalogNbr of resultJSON class matches number of course to add
-          resultJSON.data.classes.forEach(resultJSONclass => {
+          resultJSON.data.classes.forEach((resultJSONclass: any) => {
             if (resultJSONclass.catalogNbr === number) {
               const course = resultJSONclass;
               const creditsC = course.credits || course.enrollGroups[0].unitsMaximum;
