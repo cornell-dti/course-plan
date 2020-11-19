@@ -10,19 +10,19 @@ export type ExamRequirements = {
     readonly majorsExcluded?: string[];
   };
 };
-export type ExamData = Record<string, ExamRequirements[]>;
+export type ExamData = Record<'AP' | 'IB', ExamRequirements[]>;
 
 export type ExamTaken = {
   readonly name: string;
   readonly score: number;
 };
-export type ExamsTaken = Record<string, ExamTaken[]>;
+export type ExamsTaken = Record<'AP' | 'IB', ExamTaken[]>;
 
 function userDataToCourses(
   college: string,
   major: string,
   userData: ExamsTaken,
-  examType: string
+  examType: 'AP' | 'IB'
 ): CourseTaken[] {
   const userExams = userData[examType];
   const exams = examData[examType];

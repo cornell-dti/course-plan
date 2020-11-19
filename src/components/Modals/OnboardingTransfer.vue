@@ -332,22 +332,14 @@ export default Vue.extend({
     getTransferMap() {
       const TransferJSON: Record<string, { credits: number; type: 'AP' | 'IB' }> = {};
       reqsData.AP.forEach(sub => {
-        // TODO: UNBREAK reqsData FORMAT
-        // @ts-ignore
-        TransferJSON[sub.subject] = {
-          // TODO: UNBREAK reqsData FORMAT
-          // @ts-ignore
-          credits: sub.credits,
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
           type: 'AP'
         };
       });
       reqsData.IB.forEach(sub => {
-        // TODO: UNBREAK reqsData FORMAT
-        // @ts-ignore
-        TransferJSON[sub.subject] = {
-          // TODO: UNBREAK reqsData FORMAT
-          // @ts-ignore
-          credits: sub.credits,
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
           type: 'IB'
         };
       });
@@ -424,15 +416,12 @@ export default Vue.extend({
       const totalSubjects: string[][] = [];
       this.displayOptions.exam.forEach(exam => {
         if (exam.type.placeholder !== placeholderText) {
-          const examType = exam.type.placeholder;
+          // @ts-ignore
+          const examType: 'AP' | 'IB' = exam.type.placeholder;
           const subjects: string[] = [];
           if (examType in reqsData && examType !== null) {
-            // TODO: UNBREAK reqsData FORMAT
-            // @ts-ignore
             reqsData[examType].forEach(sub => {
-              // TODO: UNBREAK reqsData FORMAT
-              // @ts-ignore
-              subjects.push(sub.subject);
+              subjects.push(sub.name);
             });
             totalSubjects.push(subjects);
             if (examType === 'AP') {
@@ -466,35 +455,6 @@ export default Vue.extend({
       displayOptions.placeholderColor = lightPlaceholderGray;
       this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
     },
-    // Clear a major if a new college is selected and the major is not in it
-    clearSubjectAndScoreIfNotInCollege() {
-      const majorJSON = reqsData.major;
-      // @ts-ignore
-      for (let x = 0; x < this.displayOptions.major.length; x += 1) {
-        // @ts-ignore
-        const major = this.displayOptions.major[x];
-        let foundCollege = false;
-        // Do nothing if no major set
-        if (major.acronym !== '') {
-          // @ts-ignore
-          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            // @ts-ignore
-            const college = this.displayOptions.college[i];
-            // TODO: UNBREAK reqsData FORMAT
-            // @ts-ignore
-            if (majorJSON[major.acronym].schools.includes(college.acronym)) {
-              foundCollege = true;
-              break;
-            }
-          }
-        }
-        if (!foundCollege) {
-          major.placeholderColor = '';
-          major.placeholder = placeholderText;
-          major.acronym = '';
-        }
-      }
-    },
     selectExam(text: string, acronym: string | number, i: number) {
       this.selectOption('exam', 'type', text, acronym, i);
       this.setSubjectList();
@@ -503,8 +463,8 @@ export default Vue.extend({
       this.selectOption('exam', 'score', String(text), acronym, i);
     },
     selectSubject(text: string, acronym: string | number, i: number) {
-      const type = this.displayOptions.exam[i].type.placeholder;
       // @ts-ignore
+      const type: 'AP' | 'IB' = this.displayOptions.exam[i].type.placeholder;
       const course = this.getCourseFromExam(type, text);
       // @ts-ignore
       this.displayOptions.exam[i].equivCourse = course;
@@ -544,23 +504,17 @@ export default Vue.extend({
           acronym: ''
         }
       };
-      // @ts-ignore
-      this.displayOptions.exams = this.displayOptions.exam.push(exam);
+      this.displayOptions.exam.push(exam);
     },
     getCourseFromExam(type: 'AP' | 'IB', subject: string) {
-      let count = 0;
-      let courses;
-      for (const sub of reqsData[type]) {
-        // TODO: UNBREAK reqsData FORMAT
-        // @ts-ignore
-        if (sub.subject === subject) {
-          // TODO: UNBREAK reqsData FORMAT
-          // @ts-ignore
-          courses = reqsData[type][count].credits[0].courseEquivalents;
+      let courses: Record<string, number> | undefined;
+      for (const exam of reqsData[type]) {
+        if (exam.name === subject) {
+          courses = exam.fulfillment.courseEquivalents
           // as a default takes the first equivalent course
           // TODO will need to add requirements menu if editiable.
+          break;
         }
-        count += 1;
       }
       return courses;
     },
