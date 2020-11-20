@@ -25,9 +25,9 @@
                     class= "onboarding-section"
                     id="college"
                     v-for="(options, index) in displayOptions.exam"
-                    :key = index
+                    :key = "index + 'AP'"
                     :style="{ borderColor: options.type.boxBorder }"
-                    v-click-outside:[index]="closeTypeDropdownIfOpen"
+                    v-click-outside:[index]="closeAPDropdownIfOpen"
                   >
                   <div v-if="options.type.placeholder != 'IB'" class="onboarding-selectWrapperRow">
                     <div class="onboarding-select--columnWide " >
@@ -74,8 +74,7 @@
                           :style="{ color: options.score.placeholderColor }"
 
                         >
-                        <!-- {{ options.score.placeholder }} -->
-                        0
+                        {{ options.score.placeholder }}
                         </div>
                         <div
                           class="onboarding-dropdown-placeholder college-arrow"
@@ -108,7 +107,7 @@
                 </div>
               </div>
               <div class="onboarding-addRemoveWrapper" >
-                <div class="onboarding-add" @click="addExam">
+                <div class="onboarding-add" @click="addExam('AP')">
                   + add another subject
                 </div>
               </div>
@@ -121,7 +120,7 @@
                     v-for="(options, index) in displayOptions.exam"
                     :key = index
                     :style="{ borderColor: options.type.boxBorder }"
-                    v-click-outside:[index]="closeTypeDropdownIfOpen"
+                    v-click-outside:[index]="closeIBDropdownIfOpen"
                   >
                   <div v-if="options.type.placeholder != 'AP'" class="onboarding-selectWrapperRow">
                     <div class="onboarding-select--columnWide " >
@@ -168,8 +167,7 @@
                           :style="{ color: options.score.placeholderColor }"
 
                         >
-                        <!-- {{ options.score.placeholder }} -->
-                        0
+                        {{ options.score.placeholder }}
                         </div>
                         <div
                           class="onboarding-dropdown-placeholder college-arrow"
@@ -202,7 +200,7 @@
                 </div>
               </div>
               <div class="onboarding-addRemoveWrapper" >
-                <div class="onboarding-add" @click="addExam">
+                <div class="onboarding-add" @click="addExam('IB')">
                   + add another subject
                 </div>
               </div>
@@ -363,17 +361,42 @@ export default Vue.extend({
       // @ts-ignore
       const exam: Record<Section, DisplayOption> = {};
       for (const sect of sections) {
-        exam[sect] = {
+        let placeholderSect = placeholderText;
+        if (sect === 'type') {
+          placeholderSect = 'AP';
+        } else if (sect === 'score') {
+          placeholderSect = 0;
+        }
+        examAP[sect] = {
           shown: false,
           stopClose: false,
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '',
-          placeholder: placeholderText,
+          placeholder: placeholderSect,
           acronym: ''
         };
       }
-      exams.push(exam);
+      exams.push(examAP);
+      const examIB = {};
+      for (const sect of sections) {
+        let placeholderSect = placeholderText;
+        if (sect === 'type') {
+          placeholderSect = 'IB';
+        } else if (sect === 'score') {
+          placeholderSect = 0;
+        }
+        examIB[sect] = {
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: '',
+          placeholder: placeholderSect,
+          acronym: ''
+        };
+      }
+      exams.push(examIB);
       this.displayOptions.exam = exams;
       const swim = (typeof this.user.tookSwim !== 'undefined') ? this.user.tookSwim : 'no';
       this.tookSwimTest = swim;
@@ -453,7 +476,7 @@ export default Vue.extend({
         Object.keys(displayOptions).forEach(key => {
           if (key !== 'equivCourse' && displayOptions[key].stopClose) {
             displayOptions[key].stopClose = false;
-          } else if (key !== 'equivCourse' && displayOptions[key].shown) {
+          } else if (key !== 'equivCourse' && displayOptions[key].shown && displayOptions.type.placeholder === type) {
             displayOptions[key].shown = false;
             displayOptions[key].boxBorder = inactiveGray;
             displayOptions[key].arrowColor = inactiveGray;
@@ -467,11 +490,17 @@ export default Vue.extend({
         displayOptions.arrowColor = inactiveGray;
       }
     },
-    closeTypeDropdownIfOpen(event: unknown, i: number) {
-      this.closeDropdownIfOpen('exam', i);
+    closeTypeDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('exam', type, i);
     },
-    closeClassDropdownIfOpen(event: unknown, i: number) {
-      this.closeDropdownIfOpen('class', i);
+    closeIBDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('exam', 'IB', i);
+    },
+    closeAPDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('exam', 'AP', i);
+    },
+    closeClassDropdownIfOpen(event, i) {
+      this.closeDropdownIfOpen('class', '', i);
     },
     // Set the colleges map to with acronym keys and full name values
     setExamsMap() {
@@ -486,6 +515,7 @@ export default Vue.extend({
       /** @type {Object.<string, string>} */
       const totalSubjects: string[][] = [];
       this.displayOptions.exam.forEach(exam => {
+        console.log(exam.type.placeholder);
         if (exam.type.placeholder !== placeholderText) {
           // @ts-ignore
           const examType: 'AP' | 'IB' = exam.type.placeholder;
@@ -545,7 +575,7 @@ export default Vue.extend({
       // @ts-ignore
       this.selectOption('class', 'placholder', text, acronym, i);
     },
-    addExam() {
+    addExam(type) {
       const exam = {
         type: {
           shown: false,
@@ -553,7 +583,7 @@ export default Vue.extend({
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '',
-          placeholder: placeholderText,
+          placeholder: type,
           acronym: ''
         },
         subject: {
@@ -562,7 +592,7 @@ export default Vue.extend({
           boxBorder: '',
           arrowColor: '',
           placeholderColor: placeholderText,
-          placeholder: placeholderText,
+          placeholder: 'asdf',
           acronym: ''
         },
         score: {
