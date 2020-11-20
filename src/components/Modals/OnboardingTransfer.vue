@@ -17,6 +17,7 @@
         <div class="onboarding-section">
           <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Transfer Credits (Optional)</span></div>
           <div class="onboarding-inputs">
+            <!-- <div class= -->
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <div class="onboarding-subHeader"><span class="onboarding-subHeader--font">AP Credits</span></div>
               <div class="onboarding-inputs">
@@ -223,7 +224,7 @@
                   @addItem="addItem"
                   > </newCourse>
                 </div>
-              <div class="onboarding-select--column">
+              <div class="onboarding-select--column-remove">
                 <div class="onboarding-remove" @click="removeTransfer">
                   <img src="@/assets/images/x-green.svg" alt = "x"/>
                 </div>
@@ -240,7 +241,7 @@
             </div>
             <div class="onboarding-bottomWrapper">
               <div class=" onboarding-label--bottom">
-              <label class=" onboarding-label" >Total Transfer Credits</label>
+                <label class=" onboarding-label" >Total Transfer Credits:</label>
               </div>
               <div class="onboarding-label--bottom">
                 <label class=" onboarding-label onboarding-label--bottom---bold">{{totalCredits}} </label>
@@ -376,6 +377,7 @@ export default {
     },
     getTransferMap() {
       const TransferJSON = {};
+      console.log(reqsData);
       reqsData.AP.forEach(sub => {
         TransferJSON[sub.subject] = {
           credits: sub.credits,
