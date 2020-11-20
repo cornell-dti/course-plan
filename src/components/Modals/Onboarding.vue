@@ -26,7 +26,7 @@
         <div class="onboarding-bottom--section onboarding-bottom--section---center">
           <img class="timeline" :src="require(`@/assets/images/timeline${currentPage}.svg`)" alt="X">
         </div>
-        <div v-if="currentPage==3" class="onboarding-bottom--section onboarding-bottom--section---center">
+        <div v-if="currentPage==3" class="onboarding-bottom--section">
           <div class="onboarding-bottom--contents" @click="cancel">
             <label class="onboarding-bottom--text">Skip for now</label>
           </div>
