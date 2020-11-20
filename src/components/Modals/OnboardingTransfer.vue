@@ -397,6 +397,7 @@ export default {
     },
     showHideContent(type, section, i) {
       let displayOptions = this.displayOptions[type];
+      console.log(displayOptions);
       displayOptions = displayOptions[i];
       if (type === 'exam') {
         displayOptions = displayOptions[section];
