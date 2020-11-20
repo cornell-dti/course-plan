@@ -99,53 +99,9 @@ export default Vue.extend({
   },
   data(): Data {
     return {
-      // currentEditID: 0,
-      // isEditing: false,
-      // display: [],
       displayedMajorIndex: 0,
       displayedMinorIndex: 0,
-      reqs: [
-        // Data structure for menu
-        // {
-        //   name: 'UNIVERSITY REQUIREMENT',
-        //   group: 'UNIVERSITY',
-        //   type: 'Credits',
-        //   specific: 'AS',
-        //   fulfilled: 46,
-        //   required: 120,
-        //   color: '105351',
-        //   displayDetails: false,
-        //   displayCompleted: true,
-        //   ongoing: [
-        //     {
-        //       name: 'CALS Credits',
-        //       type: 'Credits',
-        //       fulfilled: 12,
-        //       required: 55,
-        //       description: 'All students need to to take 55 credits',
-        //       displayDescription: false
-        //     },
-        //     {
-        //       name: 'PE Credits',
-        //       type: 'Credits',
-        //       fulfilled: 1,
-        //       required: 2,
-        //       description: 'All students must take 2 PE courses in freshman year',
-        //       displayDescription: false
-        //     }
-        //   ],
-        //   completed: [
-        //     {
-        //       name: 'Quantitative Literacy',
-        //       type: 'Credits',
-        //       fulfilled: 2,
-        //       required: 2,
-        //       description: 'Quantitiative literacy required for all CALS students',
-        //       displayDescription: false
-        //     }
-        //   ]
-        // }
-      ],
+      reqs: [],
       toggleableRequirementChoices: {},
       numOfColleges: 1,
     };
