@@ -62,9 +62,9 @@
               </div>
             </div>
             <!-- <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Your Minor</span></div> -->
-            <div class="onboarding-selectWrapper">
-              <label class="onboarding-label">Total Transfer Credits</label>
-              <label class="onboarding-label--review">{{ }}</label>
+            <div class="onboarding-bottomWrapper">
+              <label class="onboarding-label--bottom">Total Transfer Credits:</label>
+              <label class="onboarding-label--bottom">{{ totalCredits }} Credits</label>
             </div>
           </div>
           </div>
@@ -74,6 +74,7 @@
 <script>
 
 import reqsData from '@/requirements/typed-requirement-json';
+import examData from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
 
 const placeholderText = 'Select one';
@@ -132,6 +133,7 @@ export default {
       middleName: this.user.middleName,
       lastName: this.user.lastName,
       placeholderText,
+      totalCredits: 0,
       displayOptions: {
         college: [
           {
@@ -182,6 +184,7 @@ export default {
     this.flattenDisplayMajors();
     this.flattenDisplayMinors();
     this.getClasses();
+    this.getTransferMap();
     this.setExamsMap();
     this.setSubjectList();
     this.getCredits();
@@ -251,25 +254,26 @@ export default {
       });
       this.totalCredits = count;
     },
-    // getTransferMap() {
-    //   const TransferJSON = {};
-    //   reqsData.AP.forEach(sub => {
-    //     TransferJSON[sub.subject] = {
-    //       credits: sub.credits,
-    //       type: 'AP'
-    //     };
-    //   });
-    //   reqsData.IB.forEach(sub => {
-    //     TransferJSON[sub.subject] = {
-    //       credits: sub.credits,
-    //       type: 'IB'
-    //     };
-    //   });
-    //   this.transferJSON = TransferJSON;
-    //   if (typeof this.displayOptions !== 'undefined') {
-    //     this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
-    //   }
-    // },
+    getTransferMap() {
+      // console.log(reqsData);
+      const TransferJSON = {};
+      examData.AP.forEach(sub => {
+        TransferJSON[sub.subject] = {
+          credits: sub.credits,
+          type: 'AP'
+        };
+      });
+      examData.IB.forEach(sub => {
+        TransferJSON[sub.subject] = {
+          credits: sub.credits,
+          type: 'IB'
+        };
+      });
+      this.transferJSON = TransferJSON;
+      if (typeof this.displayOptions !== 'undefined') {
+        this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+      }
+    },
     showHideExamContent(i) {
       this.showHideContent('exam', 'type', i);
     },
@@ -292,7 +296,7 @@ export default {
     setExamsMap() {
       /** @type {Object.<string, string>} */
       const exams = [];
-      Object.keys(reqsData).forEach(key => {
+      Object.keys(examData).forEach(key => {
         exams.push(key);
       });
       this.exams = exams;
@@ -305,8 +309,8 @@ export default {
         if (exam.type.placeholder !== placeholderText) {
           const examType = exam.type.placeholder;
           const subjects = [];
-          if (examType in reqsData && examType !== null) {
-            reqsData[examType].forEach(sub => {
+          if (examType in examData && examType !== null) {
+            examData[examType].forEach(sub => {
               subjects.push(sub.subject);
             });
             totalSubjects.push(subjects);
