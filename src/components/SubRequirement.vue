@@ -91,6 +91,7 @@
             :dataReady="dataReady"
             :displayDescription="displayDescription"
             @isDataReady="isDataReady"
+            @onShowAllCourses="onShowAllCourses"
           />
         </div>
       </div>
@@ -194,6 +195,9 @@ export default Vue.extend({
         src = dropdownIncompleteSrc;
       }
       return src;
+    },
+    onShowAllCourses(courses: AppCourse[]) {
+      this.$emit('onShowAllCourses', courses);
     },
     toggleDescription() {
       this.displayDescription = !this.displayDescription;

@@ -31,6 +31,7 @@
             :isCompleted="false"
             :rostersFromLastTwoYears="rostersFromLastTwoYears"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
+            @onShowAllCourses="onShowAllCourses"
           />
         </div>
 
@@ -61,6 +62,7 @@
               :isCompleted="true"
               :rostersFromLastTwoYears="rostersFromLastTwoYears"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
+              @onShowAllCourses="onShowAllCourses"
             />
           </div>
         </div>
@@ -78,7 +80,7 @@ import RequirementHeader from '@/components/RequirementHeader.vue';
 import SubRequirement from '@/components/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppUser, AppMajor, AppMinor, FirestoreSemesterCourse } from '@/user-data';
+import { AppUser, AppMajor, AppMinor, FirestoreSemesterCourse, AppCourse } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
@@ -122,6 +124,9 @@ export default Vue.extend({
     },
     activateMinor(id: number) {
       this.$emit('activateMinor', id);
+    },
+    onShowAllCourses(courses: AppCourse[]) {
+      this.$emit('onShowAllCourses', courses);
     },
     changeToggleableRequirementChoice(requirementID: string, option: string) {
       this.$emit('changeToggleableRequirementChoice', requirementID, option);

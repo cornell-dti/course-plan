@@ -6,7 +6,11 @@
     >
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
-        <div v-if="showSeeAllLabel" class="draggable-requirements-heading-seeAll">{{ seeAll }}</div>
+        <div
+          v-if="showSeeAllLabel"
+          class="draggable-requirements-heading-seeAll"
+          @click="onShowAllCourses"
+        >{{ seeAll }}</div>
       </div>
       <div
         v-if="displayCourses"
@@ -136,6 +140,9 @@ export default Vue.extend({
         firstFourCourseObjects.push(...filteredCourses.slice(0, numRemainingCourses));
       }
       this.courseObjects = firstFourCourseObjects;
+    },
+    onShowAllCourses(courses: AppCourse[]) {
+      this.$emit('onShowAllCourses', this.subReqCourseObjectsNotTakenArray);
     },
   },
 });

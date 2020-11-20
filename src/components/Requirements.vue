@@ -4,6 +4,7 @@
       id="req-tooltip"
       class="fixed"
       data-intro-group="req-tooltip"
+      :v-bind:class="{'d-none': !shouldShowAllCourses}"
       :data-intro="getRequirementsTooltipText()"
       data-disable-interaction="1"
       data-step="1"
@@ -28,7 +29,34 @@
           @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
           @activateMajor="activateMajor"
           @activateMinor="activateMinor"
+          @onShowAllCourses="onShowAllCourses"
         />
+      </div>
+    </div>
+    <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses">
+      <div class="see-all-padding-x see-all-header pb-3">
+        <img
+          class="back-arrow arrow-left"
+          :src="require(`@/assets/images/dropdown-lightblue.svg`)"
+          alt="dropdown"
+        />
+        <button class="btn back-button p-0" @click="shouldShowAllCourses = false">GO BACK TO REQUIREMENTS</button>
+      </div>
+      <div class="see-all-padding-x py-3">
+        <h1 class="title">Introductory Programming Meeting</h1>
+        <div v-for="(courseData, index) in showAllCourses" :key="index">
+          <div class="mt-3">
+          <course
+            v-bind="courseData"
+            :courseObj="courseData"
+            :id="courseData.subject + courseData.number"
+            :uniqueID="courseData.uniqueID"
+            :compact="false"
+            :active="false"
+            class="requirements-course"
+          />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -57,7 +85,7 @@ import {
   computeRequirements,
   computeRequirementMap,
 } from '@/requirements/reqs-functions';
-import { AppUser, AppMajor, AppMinor, AppSemester, FirestoreSemesterCourse } from '@/user-data';
+import { AppUser, AppMajor, AppMinor, AppSemester, FirestoreSemesterCourse, AppCourse } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 
@@ -75,6 +103,8 @@ type Data = {
   displayedMajorIndex: number;
   displayedMinorIndex: number;
   numOfColleges: number;
+  showAllCourses: AppCourse[],
+  shouldShowAllCourses: boolean,
 };
 // emoji for clipboard
 const clipboard = require('../assets/images/clipboard.svg');
@@ -104,6 +134,8 @@ export default Vue.extend({
       reqs: [],
       toggleableRequirementChoices: {},
       numOfColleges: 1,
+      showAllCourses: [],
+      shouldShowAllCourses: false,
     };
   },
   watch: {
@@ -240,6 +272,10 @@ export default Vue.extend({
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>`;
     },
+    onShowAllCourses(courses: AppCourse[]) {
+      this.showAllCourses = courses;
+      this.shouldShowAllCourses = true;
+    },
   },
 });
 </script>
@@ -250,7 +286,6 @@ export default Vue.extend({
 .fixed {
   height: 100vh;
   width: 25rem;
-  padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: $white;
 }
 .fixed {
@@ -259,6 +294,18 @@ export default Vue.extend({
   left: 4.5rem;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+.fixed, .see-all-padding {
+  padding: 1.625rem 1.5rem;
+}
+.see-all-padding-y {
+  padding: 1.625rem 0;
+}
+.see-all-padding-x {
+  padding: 0 1.625rem;
+}
+.see-all-header {
+  box-shadow: 0 4px 8px -8px gray;
 }
 h1.title {
   font-style: normal;
@@ -285,6 +332,21 @@ h1.title {
     line-height: 12px;
   }
 }
+
+.back-button {
+  color: $yuxuanBlue;
+  font-size: 0.9rem;
+}
+
+.back-arrow {
+  width: 14px;
+  height: 14px;
+}
+
+.arrow-left {
+  transform: rotate(90deg)
+}
+
 @media only screen and (max-width: 976px) {
   .requirements,
   .fixed {
