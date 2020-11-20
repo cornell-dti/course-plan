@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+import { AppUser } from '@/user-data';
 import { CourseTaken } from '../../types';
 
 export type ExamRequirements = {
@@ -13,7 +13,7 @@ export type ExamRequirements = {
 export type ExamData = Record<'AP' | 'IB', ExamRequirements[]>;
 
 export type ExamTaken = {
-  readonly name: string;
+  readonly subject: string;
   readonly score: number;
 };
 export type ExamsTaken = Record<'AP' | 'IB', ExamTaken[]>;
@@ -31,7 +31,7 @@ function userDataToCourses(
     // match exam to user-taken exam
     const exam = exams.reduce((prev: ExamRequirements | undefined, curr: ExamRequirements) => {
       // check if exam name matches and score is high enough
-      if (curr.name.includes(userExam.name) && userExam.score >= curr.fulfillment.minimumScore) {
+      if (curr.name.includes(userExam.subject) && userExam.score >= curr.fulfillment.minimumScore) {
         // update exam variable if this exam has a higher minimum score
         if (!prev || prev.fulfillment.minimumScore < curr.fulfillment.minimumScore) {
           return curr;
@@ -60,14 +60,32 @@ function userDataToCourses(
   return courses;
 }
 
-export default function getCourseEquivalents(
+function getCourseEquivalentsFromOneMajor(
   college: string,
   major: string,
   userData: ExamsTaken
-): CourseTaken[] {
+): readonly CourseTaken[] {
   const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
   const IBCourseEquivalents = userDataToCourses(college, major, userData, 'IB');
   return APCourseEquivalents.concat(IBCourseEquivalents);
+}
+
+export default function getCourseEquivalentsFromUserExams(user: AppUser): readonly CourseTaken[] {
+  const courses: CourseTaken[] = [];
+  const examCourseIDSet = new Set<number>();
+  const userExamData: ExamsTaken = { AP: [], IB: [] };
+  user.exam.forEach(exam => {
+    userExamData[exam.type].push(exam);
+  });
+  user.major.forEach(major =>
+    getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
+      if (!examCourseIDSet.has(course.courseId)) {
+        examCourseIDSet.add(course.courseId);
+        courses.push(course);
+      }
+    })
+  );
+  return courses;
 }
 
 export const examData: ExamData = {
