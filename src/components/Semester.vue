@@ -98,20 +98,12 @@
             />
           </div>
         </div>
-        <div
-          class="semester-courseWrapper semester-addWrapper"
-          :class="{ 'semester-addWrapper--compact': compact }"
-          @click="openCourseModal"
-          data-intro-group="pageTour"
-          data-step="3"
-          data-intro='<b>Add your course in this semseter!</b><br>
-            <div class = "introjs-bodytext">To start planning your college career, you should try adding a course in your current semester.</div>'
-          data-disable-interaction="1"
+        <addcoursebutton
+          :compact="compact"
+          @open-course-modal="openCourseModal"
         >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
-            buttonString
-          }}</span>
-        </div>
+          {{ buttonString }}
+        </addcoursebutton>
       </div>
     </div>
     <semestermenu
@@ -133,6 +125,7 @@ import Confirmation from '@/components/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
+import AddCourseButton from '@/components/AddCourseButton.vue';
 
 import { clickOutside } from '@/utilities';
 import { AppCourse, AppSemester } from '@/user-data';
@@ -143,6 +136,7 @@ Vue.component('confirmation', Confirmation);
 Vue.component('semestermenu', SemesterMenu);
 Vue.component('deletesemester', DeleteSemester);
 Vue.component('editsemester', EditSemester);
+Vue.component('addcoursebutton', AddCourseButton);
 
 const fall = require('../assets/images/fallEmoji.svg');
 const spring = require('../assets/images/springEmoji.svg');
@@ -432,13 +426,6 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
-@mixin hover-button {
-  border-color: #15a6cf;
-  background: rgba(0, 0, 0, 0.03);
-  color: #15a6cf;
-  cursor: pointer;
-}
-
 .semester {
   width: fit-content;
   position: relative;
@@ -559,12 +546,6 @@ export default Vue.extend({
       margin-top: -1.2rem;
       width: 10rem;
       height: 2rem;
-    }
-
-    &:hover,
-    &:active,
-    &:focus {
-      @include hover-button();
     }
   }
 

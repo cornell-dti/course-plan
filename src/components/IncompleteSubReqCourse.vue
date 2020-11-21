@@ -2,7 +2,7 @@
   <div class="incompletesubreqcourse">
     <div
       class="draggable-requirements-wrapper"
-      v-if="displayDescription && crseInfoObjects.length > 0"
+      v-if="displayDescription"
     >
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
@@ -15,7 +15,7 @@
         </div>
       </div>
       <div
-        v-if="displayCourses"
+        v-if="displayCourses && crseInfoObjects.length > 0"
         class="draggable-requirements-courses"
         v-dragula="courseObjects"
         bag="first-bag"
@@ -35,6 +35,9 @@
             class="requirements-course"
           />
         </div>
+      </div>
+      <div v-if="subReq.fulfilledBy === 'self-check'">
+        Hey there
       </div>
       <div class="separator"></div>
     </div>
