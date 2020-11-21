@@ -37,7 +37,12 @@
         </div>
       </div>
       <div v-if="subReq.fulfilledBy === 'self-check'">
-        Hey there
+        <addcoursebutton
+          :compact="true"
+          :shouldClearPadding="true"
+        >
+          + Course
+        </addcoursebutton>
       </div>
       <div class="separator"></div>
     </div>
@@ -48,10 +53,12 @@
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import Course from '@/components/Course.vue';
+import AddCourseButton from '@/components/AddCourseButton.vue';
 import { DisplayableRequirementFulfillment } from '@/requirements/types';
 import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('course', Course);
+Vue.component('addcoursebutton', AddCourseButton);
 
 type CrseInfo = {
   roster: string;

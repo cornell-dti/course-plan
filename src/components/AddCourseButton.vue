@@ -1,7 +1,7 @@
 <template>
   <div
     class="semester-courseWrapper semester-addWrapper"
-    :class="{ 'semester-addWrapper--compact': compact }"
+    :class="{ 'semester-addWrapper--compact': compact, 'my-2 mx-0': shouldClearPadding }"
     @click="onClick"
     data-intro-group="pageTour"
     data-step="3"
@@ -21,10 +21,11 @@
   export default Vue.extend({
     props: {
       compact: Boolean,
+      shouldClearPadding: Boolean,
     },
     methods: {
       onClick() {
-        this.$emit('open-course-modal');
+        this.$emit('click');
       }
     }
   })

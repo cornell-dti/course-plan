@@ -100,7 +100,7 @@
         </div>
         <addcoursebutton
           :compact="compact"
-          @open-course-modal="openCourseModal"
+          @click="openCourseModal"
         >
           {{ buttonString }}
         </addcoursebutton>
