@@ -30,6 +30,12 @@ input {
       justify-content: space-between;
       margin-bottom: 1.5rem
     }
+    &-reviewExam {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 1.5rem
+    }
     
   }
   &-bottomWrapper {
@@ -96,6 +102,9 @@ input {
 
     &--name {
       display: flex;
+    }
+    &--review {
+      width: 36rem;
     }
     &--radioWrapper {
         flex-direction: row;
@@ -218,6 +227,8 @@ input {
   &-inputWrapper {
     &--name {
       width: calc(100% / 3);
+      display: flex;
+      flex-direction: column;
 
       &:not(:last-child) {
         margin-right: 1.5rem;
@@ -405,16 +416,6 @@ input {
       &.college-wrapper,
       &.major-wrapper,
       &.minor-wrapper {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        height: 100%;
-
-      }
-
-      &.college-wrapper,
-      &.major-wrapper,
-      &.minor-wrapper {
         width: 100%;
         height: 100%;
       }
@@ -507,4 +508,10 @@ select option[disabled]:first-child {
 }
 .x-center {
   align-self:center;
+}
+.checkmark {
+  margin-right: 5px;
+}
+.addSpaceTop {
+  margin-top: 30px;
 }

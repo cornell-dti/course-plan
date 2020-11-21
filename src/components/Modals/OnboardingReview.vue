@@ -2,7 +2,7 @@
     <div class="onboarding">
         <div class="onboarding-section">
           <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Basic Information</span></div>
-          <div class="onboarding-inputs onboarding-inputs">
+          <div class="onboarding-subsection onboarding-inputs--review">
             <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Your Name</span></div>
             <div class="onboarding-selectWrapperRow-review">
               <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
@@ -44,23 +44,44 @@
             <div class="onboarding-selectWrapper">
               <div class="onboarding-selectWrapper-review">
                 <label class="onboarding-label">
-                  <img src="@/assets/images/checkmark-green.svg">
+                  <img class="checkmark" src="@/assets/images/checkmark-green.svg">
                   {{ this.user.tookSwim === 'yes' ? "Yes" : "No" }}
                 </label>
               </div>
             </div>
             <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Test Credits</span></div>
             <div class="onboarding-selectWrapper">
-              <div class="onboarding-selectWrapper-review">
-                <label class="onboarding-label">AP Credits</label>
-                <div v-for="(options, index) in displayOptions.exam" :key = "index">
-                  <label v-if="typeof options.type != undefined && options.type.placeholder == 'AP'" class="onboarding-label--review">{{ options.subject.placeholder }}</label>
+              <div class="onboarding-selectWrapper-reviewExam">
+                <div>
+                  <label class="onboarding-label">AP Credits</label>
+                  <div v-for="(options, index) in displayOptions.exam" :key = "'AP'+index">
+                    <label v-if="typeof options.type != undefined && options.type.placeholder == 'AP'" class="onboarding-label--review">{{ options.subject.placeholder }}</label>
+                  </div>
+                  <label class="onboarding-label addSpaceTop">IB Credits</label>
+                  <div v-for="(options, index) in displayOptions.exam" :key = "'IB'+index">
+                    <label v-if="typeof options.type != undefined && options.type.placeholder == 'IB'" class="onboarding-label--review">{{ options.subject.placeholder }}</label>
+                  </div>
                 </div>
-              </div>
-              <div class="onboarding-selectWrapper">
-                <label class="onboarding-label">IB Credits</label>
-                <div v-for="(options, index) in displayOptions.exam" :key = "index">
-                  <label v-if="typeof options.type != undefined && options.type.placeholder == 'IB'" class="onboarding-label--review">{{ options.subject.placeholder }}</label>
+                <div>
+                  <label class="onboarding-label">Score</label>
+                  <div v-for="(options, index) in displayOptions.exam" :key = "'APScore'+index">
+                    <label v-if="typeof options.type != undefined && options.type.placeholder == 'AP'" class="onboarding-label--review">{{ options.score.placeholder }}</label>
+                  </div>
+                  <label class="onboarding-label addSpaceTop">Score</label>
+                  <div v-for="(options, index) in displayOptions.exam" :key = "'IBScore'+index">
+                    <label v-if="typeof options.type != undefined && options.type.placeholder == 'IB'" class="onboarding-label--review">{{ options.score.placeholder }}</label>
+                  </div>
+                </div>
+                <div>
+                  <label class="onboarding-label ">Credit</label>
+                  <div v-for="(options, index) in displayOptions.exam" :key = "'APCredit'+index">
+                    <!-- TODO replace credit with actual value -->
+                    <label v-if="typeof options.type != undefined && options.type.placeholder == 'AP'" class="onboarding-label--review">{{ getExamCredit(options) }}</label>
+                  </div>
+                  <label class="onboarding-label addSpaceTop">Credit</label>
+                  <div v-for="(options, index) in displayOptions.exam" :key = "'IBCredit'+index">
+                    <label v-if="typeof options.type != undefined && options.type.placeholder == 'IB'" class="onboarding-label--review">{{ getExamCredit(options) }}</label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -256,6 +277,15 @@ export default {
         count += clas.credits;
       });
       this.totalCredits = count;
+    },
+    getExamCredit(exam) {
+      const name = exam.subject.placeholder;
+      if (this.transferJSON !== null) {
+        if (name in this.transferJSON) {
+          return this.transferJSON[name].credits[0].credits;
+        }
+      }
+      return 0;
     },
     getTransferMap() {
       // console.log(reqsData);

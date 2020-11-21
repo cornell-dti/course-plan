@@ -8,12 +8,12 @@
               <div class="onboarding-inputs--radioWrapper">
                 <label class="onboarding-inputs--radio--radioText" for="yes">
                   <input class="onboarding-inputs--radio" type="radio" v-on:click="updateSwimYes" v-model="tookSwimTest" id="yes" value="yes">
-                  <img :src="swimYesImage">
+                  <img class="checkmark" :src="swimYesImage">
                   Yes
                 </label>
                 <label class="onboarding-inputs--radio--radioText" for="no">
                   <input class="onboarding-inputs--radio" type="radio" v-on:click="updateSwimNo" v-model="tookSwimTest" id="no" value="no">
-                  <img :src="swimNoImage">
+                  <img class="checkmark" :src="swimNoImage">
                   No
                 </label>
               </div>
@@ -107,10 +107,10 @@
                   </div>
                   <div class="onboarding-select--columnCenter" >
                     <label class="onboarding-label">Credits</label>
-                    <label class="college-placeholder">0</label>
+                    <label class="college-placeholder">{{ getExamCredit(options) }}</label>
                   </div>
                   <div class="onboarding-select--column-remove" >
-                    <div class="onboarding-remove" @click="removeExam(index)" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
+                    <div class="onboarding-remove" @click="removeExam(index)" :class="{ 'onboarding--hidden': countExamType(displayOptions.exam, 'AP') <= 1}" >
                       <img src="@/assets/images/x-green.svg" alt = "x"/>
                     </div>
                   </div>
@@ -204,11 +204,11 @@
                   </div>
                   <div class="onboarding-select--columnCenter" >
                     <label class="onboarding-label">Credits</label>
-                    <label class="college-placeholder">0</label>
+                    <label class="college-placeholder">{{ getExamCredit(options) }}</label>
                   </div>
                   <div class="onboarding-select--column-remove" >
                     <!-- TODO: need to check if at least one ib or ap !!!-->
-                  <div class="onboarding-remove" @click="removeExam(index)" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
+                  <div class="onboarding-remove" @click="removeExam(index)" :class="{ 'onboarding--hidden': countExamType(displayOptions.exam, 'IB') <= 1}" >
                     <img src="@/assets/images/x-green.svg" alt = "x"/>
                   </div>
                   </div>
@@ -238,7 +238,7 @@
                   > </newCourse>
                 </div>
                 <div class="onboarding-select--column-remove">
-                  <div class="onboarding-remove" @click="removeTransfer">
+                  <div class="onboarding-remove" @click="removeTransfer(index)">
                     <img src="@/assets/images/x-green.svg" alt = "x"/>
                   </div>
                 </div>
@@ -444,6 +444,15 @@ export default Vue.extend({
       });
       this.totalCredits = count;
     },
+    getExamCredit(exam) {
+      const name = exam.subject.placeholder;
+      if (this.transferJSON !== null) {
+        if (name in this.transferJSON) {
+          return this.transferJSON[name].credits[0].credits;
+        }
+      }
+      return 0;
+    },
     getTransferMap() {
       const TransferJSON: Record<string, { credits: number; type: 'AP' | 'IB' }> = {};
       reqsData.AP.forEach(sub => {
@@ -648,17 +657,25 @@ export default Vue.extend({
     removeExam(index) {
       this.displayOptions.exam.splice(index, 1);
     },
-    removeTransfer() {
-      this.displayOptions.class.pop();
+    removeTransfer(index) {
+      this.displayOptions.class.splice(index, 1);
     },
     addTransfer() {
       // @ts-ignore
       this.displayOptions.class.push(placeholderText);
     },
-    addItem(id: number) {
-      const dropdown = document.getElementById(`dropdown-${id}`)!;
-      // @ts-ignore
-      const title: string = dropdown.value;
+    countExamType(exams, type) {
+      let counter = 0;
+      for (let i = 0; i < exams.length; i += 1) {
+        if (exams[i].type.placeholder === type) {
+          counter += 1;
+        }
+      }
+      return counter;
+    },
+    addItem(id) {
+      const dropdown = document.getElementById(`dropdown-${id}`);
+      const title = dropdown.value;
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
       const number = courseCode.split(' ')[1];
