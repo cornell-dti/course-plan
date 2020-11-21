@@ -401,7 +401,7 @@ export default {
       this.user.transferCourse.forEach(course => {
         transferClass.push(course);
       });
-      transferClass.push({ class: undefined, credits: 0 });
+      transferClass.push({ class: '', credits: 0 });
       this.displayOptions.class = transferClass;
     },
     getCredits() {
