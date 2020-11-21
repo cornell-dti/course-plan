@@ -10,7 +10,9 @@
           v-if="showSeeAllLabel"
           class="draggable-requirements-heading-seeAll"
           @click="onShowAllCourses"
-        >{{ seeAll }}</div>
+        >
+          {{ seeAll }}
+        </div>
       </div>
       <div
         v-if="displayCourses"

@@ -4,7 +4,7 @@
       id="req-tooltip"
       class="fixed"
       data-intro-group="req-tooltip"
-      :v-bind:class="{'d-none': !shouldShowAllCourses}"
+      :v-bind:class="{ 'd-none': !shouldShowAllCourses }"
       :data-intro="getRequirementsTooltipText()"
       data-disable-interaction="1"
       data-step="1"
@@ -40,21 +40,25 @@
           :src="require(`@/assets/images/dropdown-lightblue.svg`)"
           alt="dropdown"
         />
-        <button class="btn back-button p-0" @click="shouldShowAllCourses = false">GO BACK TO REQUIREMENTS</button>
+        <button class="btn back-button p-0" @click="shouldShowAllCourses = false">
+          GO BACK TO REQUIREMENTS
+        </button>
       </div>
       <div class="see-all-padding-x py-3">
         <h1 class="title">Introductory Programming Meeting</h1>
-        <div v-for="(courseData, index) in showAllCourses" :key="index">
-          <div class="mt-3">
-          <course
-            v-bind="courseData"
-            :courseObj="courseData"
-            :id="courseData.subject + courseData.number"
-            :uniqueID="courseData.uniqueID"
-            :compact="false"
-            :active="false"
-            class="requirements-course"
-          />
+        <div v-dragula="showAllCourses" bag="first-bag">
+          <div v-for="(courseData, index) in showAllCourses" :key="index">
+            <div class="mt-3">
+              <course
+                v-bind="courseData"
+                :courseObj="courseData"
+                :id="courseData.subject + courseData.number"
+                :uniqueID="courseData.uniqueID"
+                :compact="false"
+                :active="false"
+                class="requirements-course"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -85,7 +89,14 @@ import {
   computeRequirements,
   computeRequirementMap,
 } from '@/requirements/reqs-functions';
-import { AppUser, AppMajor, AppMinor, AppSemester, FirestoreSemesterCourse, AppCourse } from '@/user-data';
+import {
+  AppUser,
+  AppMajor,
+  AppMinor,
+  AppSemester,
+  FirestoreSemesterCourse,
+  AppCourse,
+} from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 
@@ -103,8 +114,8 @@ type Data = {
   displayedMajorIndex: number;
   displayedMinorIndex: number;
   numOfColleges: number;
-  showAllCourses: AppCourse[],
-  shouldShowAllCourses: boolean,
+  showAllCourses: AppCourse[];
+  shouldShowAllCourses: boolean;
 };
 // emoji for clipboard
 const clipboard = require('../assets/images/clipboard.svg');
@@ -295,7 +306,8 @@ export default Vue.extend({
   overflow-y: scroll;
   overflow-x: hidden;
 }
-.fixed, .see-all-padding {
+.fixed,
+.see-all-padding {
   padding: 1.625rem 1.5rem;
 }
 .see-all-padding-y {
@@ -344,7 +356,7 @@ h1.title {
 }
 
 .arrow-left {
-  transform: rotate(90deg)
+  transform: rotate(90deg);
 }
 
 @media only screen and (max-width: 976px) {
