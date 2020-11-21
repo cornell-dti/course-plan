@@ -81,13 +81,7 @@ import RequirementHeader from '@/components/RequirementHeader.vue';
 import SubRequirement from '@/components/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
-import {
-  AppUser,
-  AppMajor,
-  AppMinor,
-  FirestoreSemesterCourse,
-  AppCourse,
-} from '@/user-data';
+import { AppUser, AppMajor, AppMinor, FirestoreSemesterCourse, AppCourse } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
