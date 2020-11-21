@@ -41,7 +41,7 @@
           :src="require(`@/assets/images/dropdown-lightblue.svg`)"
           alt="dropdown"
         />
-        <button class="btn back-button p-0" @click="shouldShowAllCourses = false">
+        <button class="btn back-button p-0" @click="backFromSeeAll">
           GO BACK TO REQUIREMENTS
         </button>
       </div>
@@ -372,6 +372,11 @@ export default Vue.extend({
           });
       }
     },
+    backFromSeeAll() {
+      this.shouldShowAllCourses = false;
+      this.showAllCourses = {name: '', courses: []};
+      this.showAllSubReqCourses = [];
+    }
   },
 });
 </script>
