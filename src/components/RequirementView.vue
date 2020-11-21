@@ -30,6 +30,7 @@
             :color="reqGroupColorMap[req.group][0]"
             :isCompleted="false"
             :rostersFromLastTwoYears="rostersFromLastTwoYears"
+            :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
           />
@@ -61,6 +62,7 @@
               :color="reqGroupColorMap[req.group][0]"
               :isCompleted="true"
               :rostersFromLastTwoYears="rostersFromLastTwoYears"
+              :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @onShowAllCourses="onShowAllCourses"
             />
@@ -106,6 +108,7 @@ export default Vue.extend({
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number,
     rostersFromLastTwoYears: Array as PropType<readonly String[]>,
+    lastLoadedShowAllCourseId: Number,
   },
   data() {
     return {

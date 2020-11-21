@@ -91,6 +91,7 @@
             :subReqCoursesNotTakenArray="subReqCoursesNotTakenArray"
             :dataReady="dataReady"
             :displayDescription="displayDescription"
+            :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
             @isDataReady="isDataReady"
             @onShowAllCourses="onShowAllCourses"
           />
@@ -149,6 +150,7 @@ export default Vue.extend({
     color: String,
     isCompleted: Boolean,
     rostersFromLastTwoYears: Array as PropType<readonly String[]>,
+    lastLoadedShowAllCourseId: Number,
   },
   watch: {
     subReqCoursesNotTakenArray: {

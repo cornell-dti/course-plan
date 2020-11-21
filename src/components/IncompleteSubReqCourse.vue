@@ -48,11 +48,6 @@ import Course from '@/components/Course.vue';
 import { DisplayableRequirementFulfillment } from '@/requirements/types';
 import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
 
-require('firebase/functions');
-
-const functions = firebase.functions();
-const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
-
 Vue.component('course', Course);
 
 type CrseInfo = {
@@ -96,6 +91,7 @@ export default Vue.extend({
     subReqCoursesNotTakenArray: Array as PropType<CrseInfo[][]>,
     dataReady: Boolean,
     displayDescription: Boolean,
+    lastLoadedShowAllCourseId: Number,
   },
   watch: {
     dataReady: {
@@ -148,36 +144,8 @@ export default Vue.extend({
       }
       this.courseObjects = firstFourCourseObjects;
     },
-    getAllCrseInfoFromSemester(): CrseInfo[] {
-      const subReqCrseInfoObjectsToFetch: CrseInfo[] = [];
-      this.subReqCoursesNotTakenArray.forEach(subReqCourseArray => {
-        const crseInfoFromSemester = subReqCourseArray.filter((crseInfo: CrseInfo) => {
-          return crseInfo.roster === 'FA20';
-        });
-        subReqCrseInfoObjectsToFetch.push(crseInfoFromSemester[0]);
-      });
-      return subReqCrseInfoObjectsToFetch;
-    },
     onShowAllCourses(courses: AppCourse[]) {
-      const subReqCrseInfoObjectsToFetch = this.getAllCrseInfoFromSemester();
-      let fetchedCourses;
-      FetchCourses({
-        crseInfo: subReqCrseInfoObjectsToFetch,
-        allowSameCourseForDifferentRosters: false,
-      })
-        .then(result => {
-          fetchedCourses = result.data.courses;
-          fetchedCourses.forEach((course: FirestoreSemesterCourse) => {
-            // @ts-ignore [We should resolve this later]
-            const createdCourse = this.$parent.$parent.$parent.$parent.createCourse(course, true);
-            createdCourse.compact = true;
-            this.subReqCourseObjectsNotTakenArray.push(createdCourse);
-          });
-          this.$emit('onShowAllCourses', {name: this.subReq.requirement.name, courses: this.subReqCourseObjectsNotTakenArray});
-        })
-        .catch(error => {
-          console.log('FetchCourses() Error: ', error);
-        });
+      this.$emit('onShowAllCourses', {requirementName: this.subReq.requirement.name, subReqCoursesArray: this.subReqCoursesNotTakenArray,});
     },
   },
 });

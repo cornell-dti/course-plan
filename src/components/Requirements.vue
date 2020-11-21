@@ -26,6 +26,7 @@
           :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
           :rostersFromLastTwoYears="rostersFromLastTwoYears"
           :numOfColleges="numOfColleges"
+          :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
           @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
           @activateMajor="activateMajor"
           @activateMinor="activateMinor"
@@ -33,7 +34,7 @@
         />
       </div>
     </div>
-    <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses">
+    <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses" @scroll="onScrollSeeAll">
       <div class="see-all-padding-x see-all-header pb-3">
         <img
           class="back-arrow arrow-left"
@@ -102,11 +103,17 @@ import { getRostersFromLastTwoYears } from '@/utilities';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 
 const functions = firebase.functions();
+const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('requirementview', RequirementView);
 Vue.use(VueCollapse);
+
+type CrseInfo = {
+  roster: string;
+  crseIds: number[];
+};
 
 type Data = {
   reqs: readonly SingleMenuRequirement[];
@@ -116,7 +123,9 @@ type Data = {
   displayedMinorIndex: number;
   numOfColleges: number;
   showAllCourses: ShowAllCourses, 
-  shouldShowAllCourses: boolean;
+  shouldShowAllCourses: boolean,
+  showAllSubReqCourses: CrseInfo[][],
+  lastLoadedShowAllCourseId: number,
 };
 // emoji for clipboard
 const clipboard = require('../assets/images/clipboard.svg');
@@ -148,6 +157,8 @@ export default Vue.extend({
       numOfColleges: 1,
       showAllCourses: {name: '', courses: []},
       shouldShowAllCourses: false,
+      lastLoadedShowAllCourseId: 0,
+      showAllSubReqCourses: [],
     };
   },
   watch: {
@@ -284,10 +295,74 @@ export default Vue.extend({
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>`;
     },
-    onShowAllCourses(showAllCourses: {name: string, courses: AppCourse[] }) {
-      this.showAllCourses = showAllCourses;
-      this.shouldShowAllCourses = true;
+    getAllCrseInfoFromSemester(subReqCoursesArray: CrseInfo[][]): Promise<AppCourse[]> {
+      return new Promise((resolve, reject) => {
+        let subReqCrseInfoObjectsToFetch: CrseInfo[] = [];
+        // Used to identify index of lastLoadedSeeAll
+        const subReqCourses = subReqCoursesArray;
+        let coursesCount = 0;
+        subReqCourses.forEach((subReqCourseArray, i) => {
+          const crseInfoFromSemester: CrseInfo[] = [];
+          subReqCourseArray.forEach((crseInfo: CrseInfo) => {
+            const lastLoadedIndexOf = crseInfo.crseIds.indexOf(this.lastLoadedShowAllCourseId);
+            if (lastLoadedIndexOf !== -1) {
+              subReqCrseInfoObjectsToFetch = [];
+              crseInfo.crseIds.splice(0, lastLoadedIndexOf + 1);
+            }
+            if (coursesCount + crseInfo.crseIds.length >= 24) {
+              const remainingCount = 24 - coursesCount;
+              return crseInfoFromSemester.push({...crseInfo, crseIds: crseInfo.crseIds.slice(0, remainingCount)});
+            }
+            coursesCount += crseInfo.crseIds.length
+            return crseInfoFromSemester.push(crseInfo);
+          });
+          subReqCrseInfoObjectsToFetch.push(crseInfoFromSemester[0]);
+        });
+        const fetchedCourses: AppCourse[] = [];
+        FetchCourses({
+          crseInfo: subReqCrseInfoObjectsToFetch,
+          allowSameCourseForDifferentRosters: false,
+        })
+        .then(result => {
+          result.data.courses.forEach((course: FirestoreSemesterCourse) => {
+            // @ts-ignore [We should resolve this later]
+            const createdCourse = this.$parent.createCourse(course, true);
+            createdCourse.compact = true;
+            fetchedCourses.push(createdCourse);
+          });
+          return resolve(fetchedCourses);
+        })
+        .catch(error => {
+          return reject(error);
+        });
+      })
     },
+    onShowAllCourses(showAllCourses: {requirementName: string, subReqCoursesArray: CrseInfo[][]}) {
+      this.shouldShowAllCourses = true;
+      this.showAllSubReqCourses = showAllCourses.subReqCoursesArray;
+      this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray)
+        .then((fetchedCourses) => {
+          const lastCourse = fetchedCourses[fetchedCourses.length - 1];
+          this.lastLoadedShowAllCourseId = lastCourse.crseId;
+          this.showAllCourses = {name: showAllCourses.requirementName, courses: fetchedCourses};
+        })
+        .catch((err) => {
+          console.log("Fetch Error: ", err);
+        })
+    },
+    onScrollSeeAll(event: any) {
+      const { target } = event;
+      const { scrollTop, clientHeight, scrollHeight } = target;
+      if (scrollTop + clientHeight >= scrollHeight) {
+        this.getAllCrseInfoFromSemester(this.showAllSubReqCourses)
+          .then((fetchedCourses) => {
+            this.showAllCourses = {...this.showAllCourses, courses: [...this.showAllCourses.courses, ...fetchedCourses]}
+          })
+          .catch((err) => {
+            console.log("Fetch error: ", err)
+          })
+      }
+    }
   },
 });
 </script>

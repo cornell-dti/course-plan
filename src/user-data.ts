@@ -164,7 +164,7 @@ export type AppBottomBarCourse = {
 
 export type ShowAllCourses = {
   readonly name: string,
-  readonly courses: AppCourse[]
+  readonly courses: AppCourse[],
 };
 
 /**
