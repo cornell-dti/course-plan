@@ -87,6 +87,10 @@
         semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" /> -->
       <input v-if="isOnboard" class="newCourse-onboarding" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
         semesterID" :placeholder="placeholderText" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
+      <input v-if="!isOnboard" class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
+        semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
+      <input v-if="isOnboard" :class="onboardingStyle(placeholderText)" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
+        semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
   </div>
 </template>
@@ -150,8 +154,8 @@ export default Vue.extend({
       return 'Search Course Roster';
     },
     placeholder() {
-      return this.placeholderText;
-    },
+      return this.placeholderText !== undefined ? this.placeholderText : '"CS110", "Multivariable Calculus", etc';
+    }
   },
   mounted() {
     // Activate focus and set input to empty
@@ -312,6 +316,15 @@ export default Vue.extend({
     },
   },
 });
+
+    addCourse() {
+      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
+    },
+    onboardingStyle(placeholderText) {
+      return placeholderText !== undefined ? 'newCourse-onboarding' : 'newCourse-onboardingEmpty';
+    }
+  }
+};
 </script>
 
 <style lang="scss">
@@ -338,7 +351,7 @@ export default Vue.extend({
   &-onboarding {
     font-size: 14px;
     line-height: 17px;
-    color: #757575;
+    color: #000000;
     width: 100%;
     border-radius: 3px;
     padding: 0.5rem;
@@ -346,50 +359,21 @@ export default Vue.extend({
     border-radius: 0px;
     background-color: #ffffff;
     &::placeholder {
-      color: $darkPlaceholderGray;
+      color: #000000;
     }
   }
-  &-semester {
-    margin-top: 8px;
-    margin-bottom: 15px;
-    &-edit {
-      width: 50%;
-    }
-  }
-  &-name {
-    position: relative;
-    border-radius: 11px;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    color: $darkGray;
-  }
-  &-season-emoji {
-    height: 18px;
-    margin-top: -4px;
-  }
-  &-title {
+  &-onboardingEmpty {
     font-size: 14px;
     line-height: 17px;
-    color: $lightPlaceholderGray;
-    margin-bottom: 6px;
-  }
-  &-requirements {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    color: $emGreen;
-    &-container {
-      display: flex;
-      flex-direction: row;
-      margin-bottom: 13px;
-    }
-    &-edit {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      flex-wrap: wrap;
+    color: #000000;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.5rem;
+    border: 0.5px solid #b6b6b6;
+    border-radius: 0px;
+    background-color: #ffffff;
+    &::placeholder {
+      color: #B6B6B6;
     }
   }
   &-space {

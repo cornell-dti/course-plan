@@ -44,7 +44,7 @@ input {
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
-    width: 36rem;
+    width: 46rem;
   }
 
   &-cancel {
@@ -91,7 +91,8 @@ input {
     box-sizing: border-box;
     border-radius: 9px;
 
-    padding: 2rem;
+    padding: 3rem;
+    padding-top: 2rem;
 
     &--name {
       display: flex;
@@ -102,6 +103,7 @@ input {
     }
     &--radio{
         margin-right: 9px;
+        display: none;
         &--radioText{
             font-style: normal;
             font-weight: normal;
@@ -110,7 +112,18 @@ input {
             color: #757575;
             margin-right: 65px;
         }
+      &:checked {
+        // background: "@/assets/images/checkmark-green.svg"
+      }
     }
+  }
+  &-subsection{
+    border: 1px solid #C4C4C4;
+    box-sizing: border-box;
+    border-radius: 9px;
+
+    padding: 3rem;
+    padding-top:2rem;
   }
   &-subHeader {
     font-weight: bold;
@@ -238,6 +251,7 @@ input {
     cursor: pointer;
     margin-left: .5rem;
     color: #148481;
+    padding-bottom: .5rem;
 
 
   }
@@ -347,8 +361,15 @@ input {
     &--column {
         display: flex;
         flex-direction: column;
+        margin-right: 20px;
         // padding-right: 40px;
     }
+    &--columnCenter {
+      display: flex;
+      flex-direction: column;
+      margin-right: 10px;
+      align-items:center;
+  }
     &--column-remove {
       display: flex;
       flex-direction: column-reverse;
@@ -358,7 +379,7 @@ input {
       display: flex;
       flex-direction: column;
       padding-right: 20px;
-      width: 260px;
+      width: 250px;
     }
     &--columnFill {
       display: flex;
@@ -483,4 +504,7 @@ select option[disabled]:first-child {
     justify-content: center;
     align-self: center;
     margin-bottom: 20 px;
+}
+.x-center {
+  align-self:center;
 }
