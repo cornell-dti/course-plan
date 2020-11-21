@@ -6,10 +6,16 @@
             <div class="onboarding-inputWrapper">
               <label class="onboarding-label">Have you taken the Swim Test? (Choose yes if you are a transfer)</label>
               <div class="onboarding-inputs--radioWrapper">
-                <input class="onboarding-inputs--radio" type="radio" v-on:click="updateSwimYes" v-model="tookSwimTest" value="yes">
-                <label class="onboarding-inputs--radio--radioText" for="yes">Yes</label>
-                <input class="onboarding-inputs--radio" type="radio" v-on:click="updateSwimNo" v-model="tookSwimTest" value="no">
-                <label class="onboarding-inputs--radio--radioText" for="no">No</label>
+                <label class="onboarding-inputs--radio--radioText" for="yes">
+                  <input class="onboarding-inputs--radio" type="radio" v-on:click="updateSwimYes" v-model="tookSwimTest" id="yes" value="yes">
+                  <img :src="swimYesImage">
+                  Yes
+                </label>
+                <label class="onboarding-inputs--radio--radioText" for="no">
+                  <input class="onboarding-inputs--radio" type="radio" v-on:click="updateSwimNo" v-model="tookSwimTest" id="no" value="no">
+                  <img :src="swimNoImage">
+                  No
+                </label>
               </div>
             </div>
           </div>
@@ -20,7 +26,7 @@
             <!-- <div class= -->
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
               <div class="onboarding-subHeader"><span class="onboarding-subHeader--font">AP Credits</span></div>
-              <div class="onboarding-inputs">
+              <div class="onboarding-subsection">
                 <div
                     class= "onboarding-section"
                     id="college"
@@ -88,7 +94,7 @@
                         v-if="options.score.shown"
                       >
                         <div
-                          v-for="(score, acronym) in scores"
+                          v-for="(score, acronym) in scoresAP"
                           :key="acronym"
                           :id="score"
                           class="onboarding-dropdown-content-item"
@@ -99,10 +105,14 @@
                       </div>
                     </div>
                   </div>
-                  <div class="onboarding-select--column-remove" >
-                  <div class="onboarding-remove" @click="removeExam" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
-                    <img src="@/assets/images/x-green.svg" alt = "x"/>
+                  <div class="onboarding-select--columnCenter" >
+                    <label class="onboarding-label">Credits</label>
+                    <label class="college-placeholder">0</label>
                   </div>
+                  <div class="onboarding-select--column-remove" >
+                    <div class="onboarding-remove" @click="removeExam(index)" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
+                      <img src="@/assets/images/x-green.svg" alt = "x"/>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -181,7 +191,7 @@
                         v-if="options.score.shown"
                       >
                         <div
-                          v-for="(score, acronym) in scores"
+                          v-for="(score, acronym) in scoresIB"
                           :key="acronym"
                           :id="score"
                           class="onboarding-dropdown-content-item"
@@ -192,8 +202,13 @@
                       </div>
                     </div>
                   </div>
+                  <div class="onboarding-select--columnCenter" >
+                    <label class="onboarding-label">Credits</label>
+                    <label class="college-placeholder">0</label>
+                  </div>
                   <div class="onboarding-select--column-remove" >
-                  <div class="onboarding-remove" @click="removeExam" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
+                    <!-- TODO: need to check if at least one ib or ap !!!-->
+                  <div class="onboarding-remove" @click="removeExam(index)" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
                     <img src="@/assets/images/x-green.svg" alt = "x"/>
                   </div>
                   </div>
@@ -218,15 +233,15 @@
                   <newCourse
                   :semesterID= index
                   :isOnboard="true"
-                  :placeholderText= options.class
+                  :placeholderText= "options.class"
                   @addItem="addItem"
                   > </newCourse>
                 </div>
-              <div class="onboarding-select--column-remove">
-                <div class="onboarding-remove" @click="removeTransfer">
-                  <img src="@/assets/images/x-green.svg" alt = "x"/>
+                <div class="onboarding-select--column-remove">
+                  <div class="onboarding-remove" @click="removeTransfer">
+                    <img src="@/assets/images/x-green.svg" alt = "x"/>
+                  </div>
                 </div>
-              </div>
 
             </div>
                 <div class="onboarding-addRemoveWrapper">
@@ -256,6 +271,8 @@
 import reqsData from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse';
+import checkmarkSelected from '@/assets/images/checkmark-green.svg';
+import checkmarkUnselected from '@/assets/images/checkmark-empty.svg';
 
 Vue.component('newCourse', NewCourse);
 
@@ -283,7 +300,8 @@ export default {
   data() {
     return {
       tookSwimTest: '',
-      scores: [],
+      scoresAP: [1, 2, 3, 4, 5],
+      scoresIB: [1, 2, 3, 4, 5, 6, 7],
       classes: [],
       exams: [],
       subjects: [[]],
@@ -296,7 +314,9 @@ export default {
       },
       transferJSON: {},
       isError: false,
-      totalCredits: 0
+      totalCredits: 0,
+      swimYesImage: '',
+      swimNoImage: ''
     };
   },
   directives: {
@@ -308,6 +328,7 @@ export default {
     this.setExamsMap();
     this.setSubjectList();
     this.getCredits();
+    this.setSwimImages();
   },
   methods: {
     getClasses() {
@@ -380,7 +401,7 @@ export default {
       this.user.transferCourse.forEach(course => {
         transferClass.push(course);
       });
-      transferClass.push({ class: placeholderText, credits: 0 });
+      transferClass.push({ class: undefined, credits: 0 });
       this.displayOptions.class = transferClass;
     },
     getCredits() {
@@ -493,7 +514,6 @@ export default {
       /** @type {Object.<string, string>} */
       const totalSubjects = [];
       this.displayOptions.exam.forEach(exam => {
-        console.log(exam.type.placeholder);
         if (exam.type.placeholder !== placeholderText) {
           const examType = exam.type.placeholder;
           const subjects = [];
@@ -502,11 +522,6 @@ export default {
               subjects.push(sub.subject);
             });
             totalSubjects.push(subjects);
-            if (examType === 'AP') {
-              this.scores = [1, 2, 3, 4, 5];
-            } else {
-              this.scores = [1, 2, 3, 4, 5, 6, 7];
-            }
           }
         }
       });
@@ -515,11 +530,20 @@ export default {
     // Didn't want to seperate into two functions but v-model wouldn't work unless clicked twice?
     updateSwimYes() {
       this.tookSwimTest = 'yes';
+      this.swimYesImage = checkmarkSelected;
+      this.swimNoImage = checkmarkUnselected;
       this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
     },
     updateSwimNo() {
       this.tookSwimTest = 'no';
+      this.swimNoImage = checkmarkSelected;
+      this.swimYesImage = checkmarkUnselected;
       this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+    },
+    setSwimImages() {
+      this.swimYesImage = this.tookSwimTest === 'yes' ? checkmarkSelected : checkmarkUnselected;
+      this.swimNoImage = this.tookSwimTest === 'no' ? checkmarkSelected : checkmarkUnselected;
+      // this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
     },
     selectOption(type, section, text, acronym, i) {
       let displayOptions = this.displayOptions[type];
@@ -590,7 +614,7 @@ export default {
           boxBorder: '',
           arrowColor: '',
           placeholderColor: placeholderText,
-          placeholder: 'asdf',
+          placeholder: placeholderText,
           acronym: ''
         },
         score: {
@@ -599,11 +623,12 @@ export default {
           boxBorder: '',
           arrowColor: '',
           placeholderColor: '',
-          placeholder: placeholderText,
+          placeholder: 0,
           acronym: ''
         }
       };
       this.displayOptions.exams = this.displayOptions.exam.push(exam);
+      this.setSubjectList();
     },
     getCourseFromExam(type, subject) {
       let count = 0;
@@ -618,8 +643,8 @@ export default {
       }
       return courses;
     },
-    removeExam() {
-      this.displayOptions.exam.pop();
+    removeExam(index) {
+      this.displayOptions.exam.splice(index, 1);
     },
     removeTransfer() {
       this.displayOptions.class.pop();

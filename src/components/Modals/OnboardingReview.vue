@@ -43,7 +43,10 @@
             <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Cornell Swimming Test</span></div>
             <div class="onboarding-selectWrapper">
               <div class="onboarding-selectWrapper-review">
-                <label class="onboarding-label">{{ this.user.tookSwim }}</label>
+                <label class="onboarding-label">
+                  <img src="@/assets/images/checkmark-green.svg">
+                  {{ this.user.tookSwim === 'yes' ? "Yes" : "No" }}
+                </label>
               </div>
             </div>
             <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Test Credits</span></div>

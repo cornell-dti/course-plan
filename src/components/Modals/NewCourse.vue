@@ -2,10 +2,10 @@
   <div class="newCourse">
     <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
     <div class="autocomplete">
-      <!-- <input v-if="!isOnboard" class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
-        semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" /> -->
-      <input v-if="isOnboard" class="newCourse-onboarding" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
-        semesterID" :placeholder="placeholderText" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
+      <input v-if="!isOnboard" class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
+        semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
+      <input v-if="isOnboard" :class="onboardingStyle(placeholderText)" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
+        semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
   </div>
 </template>
@@ -24,7 +24,7 @@ export default {
       return 'Search or Create New Course';
     },
     placeholder() {
-      return this.placeholderText;
+      return this.placeholderText !== undefined ? this.placeholderText : '"CS110", "Multivariable Calculus", etc';
     }
   },
   mounted() {
@@ -173,6 +173,9 @@ export default {
 
     addCourse() {
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
+    },
+    onboardingStyle(placeholderText) {
+      return placeholderText !== undefined ? 'newCourse-onboarding' : 'newCourse-onboardingEmpty';
     }
   }
 };
@@ -202,7 +205,7 @@ export default {
   &-onboarding {
     font-size: 14px;
     line-height: 17px;
-    color: #757575;
+    color: #000000;
     width: 100%;
     border-radius: 3px;
     padding: 0.5rem;
@@ -210,7 +213,21 @@ export default {
     border-radius: 0px;
     background-color: #ffffff;
     &::placeholder {
-      color: #b6b6b6;
+      color: #000000;
+    }
+  }
+  &-onboardingEmpty {
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.5rem;
+    border: 0.5px solid #b6b6b6;
+    border-radius: 0px;
+    background-color: #ffffff;
+    &::placeholder {
+      color: #B6B6B6;
     }
   }
 }
