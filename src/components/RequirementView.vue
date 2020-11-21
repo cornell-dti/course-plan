@@ -87,7 +87,6 @@ import {
   AppMinor,
   FirestoreSemesterCourse,
   AppCourse,
-  ShowAllCourses,
 } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
