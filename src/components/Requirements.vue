@@ -41,9 +41,7 @@
           :src="require(`@/assets/images/dropdown-lightblue.svg`)"
           alt="dropdown"
         />
-        <button class="btn back-button p-0" @click="backFromSeeAll">
-          GO BACK TO REQUIREMENTS
-        </button>
+        <button class="btn back-button p-0" @click="backFromSeeAll">GO BACK TO REQUIREMENTS</button>
       </div>
       <div class="see-all-padding-x py-3">
         <h1 class="title">{{ showAllCourses.name }}</h1>
@@ -374,9 +372,9 @@ export default Vue.extend({
     },
     backFromSeeAll() {
       this.shouldShowAllCourses = false;
-      this.showAllCourses = {name: '', courses: []};
+      this.showAllCourses = { name: '', courses: [] };
       this.showAllSubReqCourses = [];
-    }
+    },
   },
 });
 </script>

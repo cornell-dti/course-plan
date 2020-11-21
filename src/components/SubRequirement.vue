@@ -170,7 +170,6 @@ export default Vue.extend({
   },
   computed: {
     isCompleted(): boolean {
-      console.log(this.subReq.requirement);
       return false;
     },
     selectedFulfillmentOption(): string {
@@ -224,14 +223,13 @@ export default Vue.extend({
       this.$emit('changeToggleableRequirementChoice', this.subReq.id, option);
     },
     getFulfillededByCourses() {
-      switch(this.subReq.requirement.fulfilledBy) {
+      switch (this.subReq.requirement.fulfilledBy) {
         case 'toggleable':
-          return this.subReq
-            .requirement
-            .fulfillmentOptions[this.toggleableRequirementChoice || this.selectedFulfillmentOption]
-            .courses;
+          return this.subReq.requirement.fulfillmentOptions[
+            this.toggleableRequirementChoice || this.selectedFulfillmentOption
+          ].courses;
         case 'self-check':
-          return []
+          return [];
         default:
           return this.subReq.requirement.courses;
       }
