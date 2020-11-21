@@ -30,6 +30,7 @@
       </div>
       <semesterview
         v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
+        ref="semesterview"
         :semesters="semesters"
         :compact="compactVal"
         :startTour="startTour"

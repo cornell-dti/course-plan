@@ -40,6 +40,7 @@
         <addcoursebutton
           :compact="true"
           :shouldClearPadding="true"
+          @click="onAddCourse"
         >
           + Course
         </addcoursebutton>
@@ -160,6 +161,10 @@ export default Vue.extend({
         subReqCoursesArray: this.subReqCoursesNotTakenArray,
       });
     },
+    onAddCourse() {
+      const dashboardRef = this.$parent.$parent.$parent.$parent as any;
+      dashboardRef.$refs.semesterview.$refs.semester[0].openCourseModal();
+    }
   },
 });
 </script>

@@ -60,6 +60,7 @@
       >
         <semester
           v-bind="sem"
+          ref="semester"
           :compact="compact"
           :activatedCourse="activatedCourse"
           :semesters="semesters"
