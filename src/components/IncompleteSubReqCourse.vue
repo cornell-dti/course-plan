@@ -168,12 +168,12 @@ export default Vue.extend({
         .then(result => {
           fetchedCourses = result.data.courses;
           fetchedCourses.forEach((course: FirestoreSemesterCourse) => {
-            // @ts-ignore
+            // @ts-ignore [We should resolve this later]
             const createdCourse = this.$parent.$parent.$parent.$parent.createCourse(course, true);
             createdCourse.compact = true;
             this.subReqCourseObjectsNotTakenArray.push(createdCourse);
           });
-          this.$emit('onShowAllCourses', this.subReqCourseObjectsNotTakenArray);
+          this.$emit('onShowAllCourses', {name: this.subReq.requirement.name, courses: this.subReqCourseObjectsNotTakenArray});
         })
         .catch(error => {
           console.log('FetchCourses() Error: ', error);

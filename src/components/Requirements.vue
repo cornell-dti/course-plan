@@ -45,9 +45,9 @@
         </button>
       </div>
       <div class="see-all-padding-x py-3">
-        <h1 class="title">Introductory Programming Meeting</h1>
-        <div v-dragula="showAllCourses" bag="first-bag">
-          <div v-for="(courseData, index) in showAllCourses" :key="index">
+        <h1 class="title">{{ showAllCourses.name }}</h1>
+        <div v-dragula="showAllCourses.courses" bag="first-bag">
+          <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
             <div class="mt-3">
               <course
                 v-bind="courseData"
@@ -96,6 +96,7 @@ import {
   AppSemester,
   FirestoreSemesterCourse,
   AppCourse,
+  ShowAllCourses,
 } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
@@ -114,7 +115,7 @@ type Data = {
   displayedMajorIndex: number;
   displayedMinorIndex: number;
   numOfColleges: number;
-  showAllCourses: AppCourse[];
+  showAllCourses: ShowAllCourses, 
   shouldShowAllCourses: boolean;
 };
 // emoji for clipboard
@@ -145,7 +146,7 @@ export default Vue.extend({
       reqs: [],
       toggleableRequirementChoices: {},
       numOfColleges: 1,
-      showAllCourses: [],
+      showAllCourses: {name: '', courses: []},
       shouldShowAllCourses: false,
     };
   },
@@ -283,8 +284,8 @@ export default Vue.extend({
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>`;
     },
-    onShowAllCourses(courses: AppCourse[]) {
-      this.showAllCourses = courses;
+    onShowAllCourses(showAllCourses: {name: string, courses: AppCourse[] }) {
+      this.showAllCourses = showAllCourses;
       this.shouldShowAllCourses = true;
     },
   },

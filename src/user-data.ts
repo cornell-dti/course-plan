@@ -162,6 +162,11 @@ export type AppBottomBarCourse = {
   readonly uniqueID: number;
 };
 
+export type ShowAllCourses = {
+  readonly name: string,
+  readonly courses: AppCourse[]
+};
+
 /**
  * Creates credit range based on course
  * Example: [1, 4] is the credit range for the given course
