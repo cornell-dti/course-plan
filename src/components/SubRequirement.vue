@@ -87,7 +87,7 @@
             :subReq="subReq"
             :subReqCourseId="id"
             :crseInfoObjects="subReqCrseInfoObjects"
-            :subReqCourseObjectsNotTakenArray="subReqCourseObjectsNotTakenArray"
+            :subReqFetchedCourseObjectsNotTakenArray="subReqFetchedCourseObjectsNotTakenArray"
             :subReqCoursesNotTakenArray="subReqCoursesNotTakenArray"
             :dataReady="dataReady"
             :displayDescription="displayDescription"
@@ -134,7 +134,7 @@ type CrseInfo = {
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
   displayDescription: boolean;
-  subReqCourseObjectsNotTakenArray: AppCourse[];
+  subReqFetchedCourseObjectsNotTakenArray: AppCourse[];
   dataReady: boolean;
 };
 
@@ -164,7 +164,7 @@ export default Vue.extend({
     return {
       showFulfillmentOptionsDropdown: false,
       displayDescription: false,
-      subReqCourseObjectsNotTakenArray: [], // array of fetched course objects
+      subReqFetchedCourseObjectsNotTakenArray: [], // array of fetched course objects
       dataReady: false, // true if dataReady for all subReqCourses. false otherwise
     };
   },
@@ -284,7 +284,7 @@ export default Vue.extend({
       return subReqCrseInfoObjectsToFetch;
     },
     getSubReqCourseObjects(): void {
-      this.subReqCourseObjectsNotTakenArray = [];
+      this.subReqFetchedCourseObjectsNotTakenArray = [];
       this.dataReady = false;
       const subReqCrseInfoObjectsToFetch = this.getMaxFirstFourCrseInfoObjects();
       let fetchedCourses;
@@ -298,7 +298,7 @@ export default Vue.extend({
             // @ts-ignore
             const createdCourse = this.$parent.$parent.$parent.createCourse(course, true);
             createdCourse.compact = true;
-            this.subReqCourseObjectsNotTakenArray.push(createdCourse);
+            this.subReqFetchedCourseObjectsNotTakenArray.push(createdCourse);
           });
           this.isDataReady();
         })

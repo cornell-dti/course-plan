@@ -87,7 +87,7 @@ export default Vue.extend({
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqCourseId: Number,
     crseInfoObjects: Array as PropType<CrseInfo[]>,
-    subReqCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
+    subReqFetchedCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
     subReqCoursesNotTakenArray: Array as PropType<CrseInfo[][]>,
     dataReady: Boolean,
     displayDescription: Boolean,
@@ -97,7 +97,7 @@ export default Vue.extend({
     dataReady: {
       immediate: true,
       handler(dataReady) {
-        if (dataReady && this.subReqCourseObjectsNotTakenArray.length > 0) {
+        if (dataReady && this.subReqFetchedCourseObjectsNotTakenArray.length > 0) {
           this.getFirstFourCourseObjects();
           this.displayCourses = true;
         }
@@ -133,8 +133,8 @@ export default Vue.extend({
         i += 1
       ) {
         const crseInfoObject = this.crseInfoObjects[i];
-        const filteredCourses: AppCourse[] = this.subReqCourseObjectsNotTakenArray.filter(course =>
-          crseInfoObject.crseIds.includes(course.crseId)
+        const filteredCourses: AppCourse[] = this.subReqFetchedCourseObjectsNotTakenArray.filter(
+          course => crseInfoObject.crseIds.includes(course.crseId)
         );
         const numRemainingCourses = Math.min(
           4 - firstFourCourseObjects.length,

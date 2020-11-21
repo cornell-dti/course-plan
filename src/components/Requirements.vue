@@ -95,7 +95,6 @@ import {
   AppSemester,
   FirestoreSemesterCourse,
   AppCourse,
-  ShowAllCourses,
 } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
@@ -111,6 +110,11 @@ Vue.use(VueCollapse);
 type CrseInfo = {
   roster: string;
   crseIds: number[];
+};
+
+export type ShowAllCourses = {
+  readonly name: string;
+  readonly courses: AppCourse[];
 };
 
 type Data = {
