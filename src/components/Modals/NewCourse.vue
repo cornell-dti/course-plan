@@ -24,7 +24,7 @@ export default {
       return 'Search or Create New Course';
     },
     placeholder() {
-      return this.placeholderText !== '' ? this.placeholderText : '"CS110", "Multivariable Calculus", etc';
+      return this.placeholderText !== 'Select one' ? this.placeholderText : '"CS110", "Multivariable Calculus", etc';
     }
   },
   mounted() {
@@ -175,7 +175,7 @@ export default {
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     },
     onboardingStyle(placeholderText) {
-      return placeholderText !== '' ? 'newCourse-onboarding' : 'newCourse-onboardingEmpty';
+      return placeholderText !== 'Select one' ? 'newCourse-onboarding' : 'newCourse-onboardingEmpty';
     }
   }
 };
