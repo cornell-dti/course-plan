@@ -122,10 +122,10 @@ type Data = {
   displayedMajorIndex: number;
   displayedMinorIndex: number;
   numOfColleges: number;
-  showAllCourses: ShowAllCourses, 
-  shouldShowAllCourses: boolean,
-  showAllSubReqCourses: CrseInfo[][],
-  lastLoadedShowAllCourseId: number,
+  showAllCourses: ShowAllCourses;
+  shouldShowAllCourses: boolean;
+  showAllSubReqCourses: CrseInfo[][];
+  lastLoadedShowAllCourseId: number;
 };
 // emoji for clipboard
 const clipboard = require('../assets/images/clipboard.svg');
@@ -155,7 +155,7 @@ export default Vue.extend({
       reqs: [],
       toggleableRequirementChoices: {},
       numOfColleges: 1,
-      showAllCourses: {name: '', courses: []},
+      showAllCourses: { name: '', courses: [] },
       shouldShowAllCourses: false,
       lastLoadedShowAllCourseId: 0,
       showAllSubReqCourses: [],
@@ -311,9 +311,12 @@ export default Vue.extend({
             }
             if (coursesCount + crseInfo.crseIds.length >= 24) {
               const remainingCount = 24 - coursesCount;
-              return crseInfoFromSemester.push({...crseInfo, crseIds: crseInfo.crseIds.slice(0, remainingCount)});
+              return crseInfoFromSemester.push({
+                ...crseInfo,
+                crseIds: crseInfo.crseIds.slice(0, remainingCount),
+              });
             }
-            coursesCount += crseInfo.crseIds.length
+            coursesCount += crseInfo.crseIds.length;
             return crseInfoFromSemester.push(crseInfo);
           });
           subReqCrseInfoObjectsToFetch.push(crseInfoFromSemester[0]);
@@ -323,46 +326,52 @@ export default Vue.extend({
           crseInfo: subReqCrseInfoObjectsToFetch,
           allowSameCourseForDifferentRosters: false,
         })
-        .then(result => {
-          result.data.courses.forEach((course: FirestoreSemesterCourse) => {
-            // @ts-ignore [We should resolve this later]
-            const createdCourse = this.$parent.createCourse(course, true);
-            createdCourse.compact = true;
-            fetchedCourses.push(createdCourse);
+          .then(result => {
+            result.data.courses.forEach((course: FirestoreSemesterCourse) => {
+              // @ts-ignore [We should resolve this later]
+              const createdCourse = this.$parent.createCourse(course, true);
+              createdCourse.compact = true;
+              fetchedCourses.push(createdCourse);
+            });
+            return resolve(fetchedCourses);
+          })
+          .catch(error => {
+            return reject(error);
           });
-          return resolve(fetchedCourses);
-        })
-        .catch(error => {
-          return reject(error);
-        });
-      })
+      });
     },
-    onShowAllCourses(showAllCourses: {requirementName: string, subReqCoursesArray: CrseInfo[][]}) {
+    onShowAllCourses(showAllCourses: {
+      requirementName: string;
+      subReqCoursesArray: CrseInfo[][];
+    }) {
       this.shouldShowAllCourses = true;
       this.showAllSubReqCourses = showAllCourses.subReqCoursesArray;
       this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray)
-        .then((fetchedCourses) => {
+        .then(fetchedCourses => {
           const lastCourse = fetchedCourses[fetchedCourses.length - 1];
           this.lastLoadedShowAllCourseId = lastCourse.crseId;
-          this.showAllCourses = {name: showAllCourses.requirementName, courses: fetchedCourses};
+          this.showAllCourses = { name: showAllCourses.requirementName, courses: fetchedCourses };
         })
-        .catch((err) => {
-          console.log("Fetch Error: ", err);
-        })
+        .catch(err => {
+          console.log('Fetch Error: ', err);
+        });
     },
     onScrollSeeAll(event: any) {
       const { target } = event;
       const { scrollTop, clientHeight, scrollHeight } = target;
       if (scrollTop + clientHeight >= scrollHeight) {
         this.getAllCrseInfoFromSemester(this.showAllSubReqCourses)
-          .then((fetchedCourses) => {
-            this.showAllCourses = {...this.showAllCourses, courses: [...this.showAllCourses.courses, ...fetchedCourses]}
+          .then(fetchedCourses => {
+            this.showAllCourses = {
+              ...this.showAllCourses,
+              courses: [...this.showAllCourses.courses, ...fetchedCourses],
+            };
           })
-          .catch((err) => {
-            console.log("Fetch error: ", err)
-          })
+          .catch(err => {
+            console.log('Fetch error: ', err);
+          });
       }
-    }
+    },
   },
 });
 </script>

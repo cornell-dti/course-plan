@@ -145,7 +145,10 @@ export default Vue.extend({
       this.courseObjects = firstFourCourseObjects;
     },
     onShowAllCourses(courses: AppCourse[]) {
-      this.$emit('onShowAllCourses', {requirementName: this.subReq.requirement.name, subReqCoursesArray: this.subReqCoursesNotTakenArray,});
+      this.$emit('onShowAllCourses', {
+        requirementName: this.subReq.requirement.name,
+        subReqCoursesArray: this.subReqCoursesNotTakenArray,
+      });
     },
   },
 });
