@@ -46,8 +46,12 @@ import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import Course from '@/components/Course.vue';
 import { DisplayableRequirementFulfillment } from '@/requirements/types';
+import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
 
-import { AppCourse } from '@/user-data';
+require('firebase/functions');
+
+const functions = firebase.functions();
+const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
 Vue.component('course', Course);
 
@@ -89,6 +93,7 @@ export default Vue.extend({
     subReqCourseId: Number,
     crseInfoObjects: Array as PropType<CrseInfo[]>,
     subReqCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
+    subReqCoursesNotTakenArray: Array as PropType<CrseInfo[][]>,
     dataReady: Boolean,
     displayDescription: Boolean,
   },
@@ -143,8 +148,36 @@ export default Vue.extend({
       }
       this.courseObjects = firstFourCourseObjects;
     },
+    getAllCrseInfoFromSemester(): CrseInfo[] {
+      const subReqCrseInfoObjectsToFetch: CrseInfo[] = [];
+      this.subReqCoursesNotTakenArray.forEach(subReqCourseArray => {
+        const crseInfoFromSemester = subReqCourseArray.filter((crseInfo: CrseInfo) => {
+          return crseInfo.roster === 'FA20';
+        });
+        subReqCrseInfoObjectsToFetch.push(crseInfoFromSemester[0]);
+      });
+      return subReqCrseInfoObjectsToFetch;
+    },
     onShowAllCourses(courses: AppCourse[]) {
-      this.$emit('onShowAllCourses', this.subReqCourseObjectsNotTakenArray);
+      const subReqCrseInfoObjectsToFetch = this.getAllCrseInfoFromSemester();
+      let fetchedCourses;
+      FetchCourses({
+        crseInfo: subReqCrseInfoObjectsToFetch,
+        allowSameCourseForDifferentRosters: false,
+      })
+        .then(result => {
+          fetchedCourses = result.data.courses;
+          fetchedCourses.forEach((course: FirestoreSemesterCourse) => {
+            // @ts-ignore
+            const createdCourse = this.$parent.$parent.$parent.$parent.createCourse(course, true);
+            createdCourse.compact = true;
+            this.subReqCourseObjectsNotTakenArray.push(createdCourse);
+          });
+          this.$emit('onShowAllCourses', this.subReqCourseObjectsNotTakenArray);
+        })
+        .catch(error => {
+          console.log('FetchCourses() Error: ', error);
+        });
     },
   },
 });

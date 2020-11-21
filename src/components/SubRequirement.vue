@@ -88,6 +88,7 @@
             :subReqCourseId="id"
             :crseInfoObjects="subReqCrseInfoObjects"
             :subReqCourseObjectsNotTakenArray="subReqCourseObjectsNotTakenArray"
+            :subReqCoursesNotTakenArray="subReqCoursesNotTakenArray"
             :dataReady="dataReady"
             :displayDescription="displayDescription"
             @isDataReady="isDataReady"
@@ -122,7 +123,6 @@ Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
 require('firebase/functions');
 
 const functions = firebase.functions();
-
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
 type CrseInfo = {
