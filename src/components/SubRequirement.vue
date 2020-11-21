@@ -148,7 +148,6 @@ export default Vue.extend({
       required: false,
     },
     color: String,
-    isCompleted: Boolean,
     rostersFromLastTwoYears: Array as PropType<readonly String[]>,
     lastLoadedShowAllCourseId: Number,
   },
@@ -170,6 +169,10 @@ export default Vue.extend({
     };
   },
   computed: {
+    isCompleted(): boolean {
+      console.log(this.subReq.requirement);
+      return false;
+    },
     selectedFulfillmentOption(): string {
       if (this.subReq.requirement.fulfilledBy !== 'toggleable') {
         return '';
@@ -220,22 +223,24 @@ export default Vue.extend({
       this.showFulfillmentOptionsDropdown = false;
       this.$emit('changeToggleableRequirementChoice', this.subReq.id, option);
     },
+    getFulfillededByCourses() {
+      switch(this.subReq.requirement.fulfilledBy) {
+        case 'toggleable':
+          return this.subReq
+            .requirement
+            .fulfillmentOptions[this.toggleableRequirementChoice || this.selectedFulfillmentOption]
+            .courses;
+        case 'self-check':
+          return []
+        default:
+          return this.subReq.requirement.courses;
+      }
+    },
     generateSubReqCoursesNotTakenArray(): CrseInfo[][] {
       // Reset subReqCoursesNotTakenArray
       const subReqCoursesNotTakenArray: CrseInfo[][] = [];
-
       // Depending on fulfilledBy, subReqCourses is accessed differently from subReq
-      let subReqCourses;
-      if (this.subReq.requirement.fulfilledBy === 'toggleable') {
-        const fulfillmentOption =
-          this.toggleableRequirementChoice || this.selectedFulfillmentOption;
-        subReqCourses = this.subReq.requirement.fulfillmentOptions[fulfillmentOption].courses;
-      } else if (this.subReq.requirement.fulfilledBy === 'self-check') {
-        subReqCourses = [];
-      } else {
-        // fulfilledBy courses or credits
-        subReqCourses = this.subReq.requirement.courses;
-      }
+      const subReqCourses = this.getFulfillededByCourses();
       const mostRecentRosters = this.rostersFromLastTwoYears;
       let filteredSubReqRosters;
       // Iterate over each course slot for the subReq
