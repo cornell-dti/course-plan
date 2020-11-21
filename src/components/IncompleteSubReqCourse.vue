@@ -1,9 +1,6 @@
 <template>
   <div class="incompletesubreqcourse">
-    <div
-      class="draggable-requirements-wrapper"
-      v-if="displayDescription"
-    >
+    <div class="draggable-requirements-wrapper" v-if="displayDescription">
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
         <div
@@ -37,11 +34,7 @@
         </div>
       </div>
       <div v-if="subReq.fulfilledBy === 'self-check'">
-        <addcoursebutton
-          :compact="true"
-          :shouldClearPadding="true"
-          @click="onAddCourse"
-        >
+        <addcoursebutton :compact="true" :shouldClearPadding="true" @click="onAddCourse">
           + Course
         </addcoursebutton>
       </div>
@@ -164,7 +157,7 @@ export default Vue.extend({
     onAddCourse() {
       const dashboardRef = this.$parent.$parent.$parent.$parent as any;
       dashboardRef.$refs.semesterview.$refs.semester[0].openCourseModal();
-    }
+    },
   },
 });
 </script>

@@ -183,7 +183,7 @@ export default Vue.extend({
         ? `${this.subReq.totalCountFulfilled || this.subReq.minCountFulfilled}/${
             this.subReq.totalCountRequired || this.subReq.minCountRequired
           } ${this.subReq.fulfilledBy}`
-        : 'self check'
+        : 'self check';
     },
   },
   directives: {

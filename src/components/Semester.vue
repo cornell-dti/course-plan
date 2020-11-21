@@ -98,10 +98,7 @@
             />
           </div>
         </div>
-        <addcoursebutton
-          :compact="compact"
-          @click="openCourseModal"
-        >
+        <addcoursebutton :compact="compact" @click="openCourseModal">
           {{ buttonString }}
         </addcoursebutton>
       </div>
