@@ -154,7 +154,7 @@ export default Vue.extend({
       return 'Search Course Roster';
     },
     placeholder() {
-      return this.placeholderText !== undefined ? this.placeholderText : '"CS110", "Multivariable Calculus", etc';
+      return this.placeholderText !== '' ? this.placeholderText : '"CS110", "Multivariable Calculus", etc';
     }
   },
   mounted() {
@@ -321,7 +321,7 @@ export default Vue.extend({
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     },
     onboardingStyle(placeholderText) {
-      return placeholderText !== undefined ? 'newCourse-onboarding' : 'newCourse-onboardingEmpty';
+      return placeholderText !== '' ? 'newCourse-onboarding' : 'newCourse-onboardingEmpty';
     }
   }
 };
@@ -363,6 +363,7 @@ export default Vue.extend({
     }
   }
   &-onboardingEmpty {
+    // this part repeats &-onboarding except for different placeholder color, how do i make it so I don't have to repeat stuff?
     font-size: 14px;
     line-height: 17px;
     color: #000000;
