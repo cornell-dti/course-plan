@@ -309,7 +309,6 @@ export default Vue.extend({
         confirmationMsg = `Added ${courseCode} to ${this.type} ${this.year}`;
       }
       this.openConfirmationModal(confirmationMsg);
-      this.buildCautions();
       this.$gtag.event('add-course', {
         event_category: 'course',
         event_label: 'add',

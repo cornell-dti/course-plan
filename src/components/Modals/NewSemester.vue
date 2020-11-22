@@ -274,11 +274,6 @@ export default Vue.extend({
       this.closeDropdownIfOpen('year');
     },
     selectOption(type: 'season' | 'year', text: string): void {
-      if (type === 'season') {
-        this.seasonText = text;
-      } else {
-        this.yearText = text;
-      }
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.boxBorder = '#C4C4C4';
@@ -291,10 +286,13 @@ export default Vue.extend({
       );
     },
     selectSeason(text: string) {
+      this.seasonText = text;
       this.selectOption('season', text);
     },
-    selectYear(text: string) {
-      this.selectOption('year', text);
+    selectYear(text: number) {
+      const yearText = text.toString();
+      this.yearText = yearText;
+      this.selectOption('year', yearText);
     },
     resetDropdown(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
