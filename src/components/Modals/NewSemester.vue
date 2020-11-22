@@ -177,7 +177,6 @@ export default Vue.extend({
       years.push(startYear);
       startYear += 1;
     }
-    years.map(String);
 
     return {
       seasons,
