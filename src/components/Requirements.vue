@@ -203,8 +203,6 @@ export default Vue.extend({
         this.user.major,
         this.user.minor
       );
-      // Send satisfied credits data back to dashboard to build alerts
-      this.$emit('requirementsMap', computeRequirementMap(groups));
       // Turn result into data readable by requirements menu
       const singleMenuRequirements = groups.map(group => {
         const singleMenuRequirement: SingleMenuRequirement = {
