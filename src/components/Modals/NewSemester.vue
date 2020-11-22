@@ -342,6 +342,7 @@ export default Vue.extend({
   color: red;
 }
 .duplicate {
+  border-radius: 3px;
   border: 1px solid red;
 }
 .newSemester {
@@ -380,7 +381,7 @@ export default Vue.extend({
     //when selected border-color: #32A0F2;
 
     box-sizing: border-box;
-    border-radius: 1px;
+    border-radius: 2px;
     width: 100%;
     font-style: normal;
     font-weight: normal;
@@ -414,9 +415,8 @@ export default Vue.extend({
       &.year-wrapper {
         display: flex;
         flex-direction: row;
-        // width: 121px;
-        // height: 16px;
         width: 100%;
+        border-radius: 2px;
         border: 1px solid #c4c4c4;
         cursor: pointer;
       }
@@ -462,7 +462,7 @@ export default Vue.extend({
   }
 
   &-dropdown-content {
-    max-height: 124px;
+    max-height: 140px;
 
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);

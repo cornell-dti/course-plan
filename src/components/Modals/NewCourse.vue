@@ -13,7 +13,7 @@
       />
     </div>
     <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
-    <div v-if="isCourseModelSelectingSemester"> 
+    <div v-if="isCourseModelSelectingSemester && !selected"> 
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
         <newSemester :type="season" :year="year"></newSemester>
@@ -339,7 +339,7 @@ export default Vue.extend({
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
-    color: $black;
+    color: $darkGray;
   }
   &-season-emoji {
     height: 18px;
@@ -348,7 +348,7 @@ export default Vue.extend({
   &-title {
     font-size: 14px;
     line-height: 17px;
-    color: $black;
+    color: $darkGray;
     margin-bottom: 6px;
   }
   &-requirements {
