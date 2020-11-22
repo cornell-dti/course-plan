@@ -63,13 +63,13 @@
           ref="semester"
           :compact="compact"
           :activatedCourse="activatedCourse"
+          :duplicatedCourseCodeList="duplicatedCourseCodeList"
           :semesters="semesters"
           :isFirstSem="checkIfFirstSem(sem.id)"
           @updateBar="updateBar"
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
-          @build-duplicate-cautions="buildDuplicateCautions"
           @update-requirements-menu="updateRequirementsMenu"
           @open-caution-modal="openCautionModal"
           @add-course-to-semester="addCourseToSemester"
@@ -147,6 +147,7 @@ export default Vue.extend({
       cautionText: '',
       key: 0,
       activatedCourse: {},
+      duplicatedCourseCodeList: [] as readonly string[],
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
@@ -157,6 +158,7 @@ export default Vue.extend({
     semesters: {
       deep: true,
       handler() {
+        this.buildDuplicateCautions();
         this.updateFirebaseSemester();
       },
     },
@@ -165,6 +167,9 @@ export default Vue.extend({
     noSemesters(): boolean {
       return this.semesters.length === 0;
     },
+  },
+  mounted() {
+    this.buildDuplicateCautions();
   },
   methods: {
     checkIfFirstSem(id: number) {
@@ -191,16 +196,22 @@ export default Vue.extend({
       }
     },
     buildDuplicateCautions() {
+      const allCourseSet = new Set<string>();
+      const duplicatedCourseCodeList: string[] = [];
       if (this.semesters) {
         const coursesMap: Record<string, boolean> = {};
         this.semesters.forEach(semester => {
           semester.courses.forEach(course => {
-            if (coursesMap[`${course.subject} ${course.number}`])
-              course.alerts.caution = 'Duplicate';
-            coursesMap[`${course.subject} ${course.number}`] = true;
+            const code = `${course.subject} ${course.number}`;
+            if (allCourseSet.has(code)) {
+              duplicatedCourseCodeList.push(code);
+            } else {
+              allCourseSet.add(code);
+            }
           });
         });
       }
+      this.duplicatedCourseCodeList = duplicatedCourseCodeList;
     },
     openSemesterConfirmationModal(type: FirestoreSemesterType, year: number, isAdd: boolean) {
       if (isAdd) {

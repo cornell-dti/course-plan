@@ -128,7 +128,6 @@ export type AppCourse = {
   readonly instructors: readonly string[];
   readonly distributions: readonly string[];
   readonly lastRoster: string;
-  readonly alerts: { requirement: string | null; caution: string | null };
   color: string;
   check: boolean;
   uniqueID: number;
@@ -271,8 +270,6 @@ export const firestoreCourseToAppCourse = (
   // Create course from saved color. Otherwise, create course from subject color group
   const color = course.color || addColor(subject);
 
-  const alerts = { requirement: null, caution: null };
-
   const isReqCourse = isRequirementsCourse;
 
   return {
@@ -291,7 +288,6 @@ export const firestoreCourseToAppCourse = (
     distributions,
     lastRoster,
     color,
-    alerts,
     check: true,
     uniqueID,
     isReqCourse,

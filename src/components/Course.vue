@@ -23,16 +23,7 @@
           <span v-if="!compact && semesterString" class="course-semesters">{{
             semesterString
           }}</span>
-          <!-- <div v-if="!compact && alerts.requirement" class="course-outerWrapper course-tooltip">
-            <div class="course-iconWrapper course-iconWrapper--info">
-              <img class="course-icon course-icon--info" src="../assets/images/info.svg" />
-            </div>
-            <div
-              class="course-tooltiptext course-tooltiptext--info"
-              v-html="requirementString"
-            ></div>
-          </div> -->
-          <div v-if="alerts.caution" class="course-outerWrapper course-tooltip">
+          <div v-if="cautionString" class="course-outerWrapper course-tooltip">
             <div v-if="!compact" class="course-iconWrapper course-iconWrapper--caution">
               <img class="course-icon course-icon--caution" src="../assets/images/caution.svg" />
             </div>
@@ -76,7 +67,7 @@ export default Vue.extend({
     prereqs: String,
     semesters: Array,
     color: String,
-    alerts: Object,
+    duplicatedCourseCodeList: Array,
     compact: Boolean,
     id: String,
     uniqueID: Number,
@@ -93,14 +84,11 @@ export default Vue.extend({
     };
   },
   computed: {
-    requirementString() {
-      return this.alerts.requirement;
-    },
-
     cautionString() {
-      return this.alerts.caution;
+      return this.duplicatedCourseCodeList.includes(`${this.subject} ${this.number}`)
+        ? 'Duplicate'
+        : null;
     },
-
     semesterString() {
       let semesterString = '';
       this.semesters.forEach(semester => {
