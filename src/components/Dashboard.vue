@@ -23,7 +23,6 @@
           :user="user"
           :key="requirementsKey"
           :startTour="startTour"
-          @requirementsMap="loadRequirementsMap"
           @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
         />
@@ -388,35 +387,11 @@ export default Vue.extend({
     updateRequirementsMenu() {
       this.requirementsKey += 1;
     },
-
-    loadRequirementsMap(requirementsMap: RequirementMap) {
-      // Get map of requirements
-      this.buildRequirementsAlert(requirementsMap);
-    },
     showTourEnd() {
       if (!this.isMobile) {
         this.showTourEndWindow = true;
       }
     },
-    buildRequirementsAlert(requirementsMap: RequirementMap) {
-      // Update semesters with alerts
-      this.semesters.forEach(semester => {
-        semester.courses.forEach(course => {
-          const courseCode = `${course.subject} ${course.number}`;
-          if (courseCode in requirementsMap) {
-            // Add and to parse array to natural language
-            const courseReqs = requirementsMap[courseCode] as string[];
-            if (courseReqs.length > 1) {
-              const listLength = courseReqs.length;
-              courseReqs[listLength - 2] = `${courseReqs[listLength - 2]}, and ${courseReqs.pop()}`;
-            }
-            const parsedCourseReqs = `Satisfies ${courseReqs.join(', ')} Requirements`;
-            course.alerts.requirement = parsedCourseReqs;
-          }
-        });
-      });
-    },
-
     changeBottomCourseFocus(newBottomCourseFocus: number) {
       this.bottomBar.bottomCourseFocus = newBottomCourseFocus;
     },
