@@ -72,6 +72,7 @@
           @build-duplicate-cautions="buildDuplicateCautions"
           @update-requirements-menu="updateRequirementsMenu"
           @open-caution-modal="openCautionModal"
+          @add-course-to-semester="addCourseToSemester"
         />
       </div>
       <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
@@ -242,9 +243,9 @@ export default Vue.extend({
       const newSem = this.createSemester([], type, year);
 
       // find the index in which the semester should be added to maintain chronological order
-      let i;
-      for (i = 0; i < this.semesters.length; i += 1) {
-        const oldSem = this.semesters[i];
+      let semesterIndex;
+      for (semesterIndex = 0; semesterIndex < this.semesters.length; semesterIndex += 1) {
+        const oldSem = this.semesters[semesterIndex];
         if (oldSem.year < year) {
           break;
         } else if (
@@ -255,7 +256,7 @@ export default Vue.extend({
           break;
         }
       }
-      this.semesters.splice(i, 0, newSem);
+      this.semesters.splice(semesterIndex, 0, newSem);
 
       this.$gtag.event('add-semester', {
         event_category: 'semester',
@@ -264,6 +265,8 @@ export default Vue.extend({
       });
 
       this.openSemesterConfirmationModal(type, year, true);
+
+      return semesterIndex;
     },
     deleteSemester(type: FirestoreSemesterType, year: number) {
       for (let i = 0; i < this.semesters.length; i += 1) {
@@ -283,6 +286,24 @@ export default Vue.extend({
 
       // Update requirements menu from dashboard
       this.$emit('updateRequirementsMenu');
+    },
+    addCourseToSemester(season: FirestoreSemesterType, year: number, newCourse: any) {
+      let semesterFound = false;
+      this.semesters.forEach(sem => {
+        if (sem.type === season && sem.year === year) {
+          semesterFound = true;
+          sem.courses = [...sem.courses, newCourse];
+        }
+      });
+
+      if (!semesterFound) {
+        const semesterIndex = this.addSemester(season, year);
+        console.log(semesterIndex);
+        this.semesters[semesterIndex].courses = [
+          ...this.semesters[semesterIndex].courses,
+          newCourse,
+        ];
+      }
     },
     updateRequirementsMenu() {
       this.$emit('updateRequirementsMenu');

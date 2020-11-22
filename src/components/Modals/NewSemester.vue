@@ -37,7 +37,7 @@
           </div>
           <div
             class="newSemester-dropdown-content season-content position-absolute w-100"
-            id="season-content"            
+            id="season-content"
             v-if="displayOptions.season.shown"
           >
             <div
@@ -294,8 +294,8 @@ export default Vue.extend({
     selectSeason(text: string) {
       this.selectOption('season', text);
     },
-    selectYear(text: string | number) {
-      this.selectOption('year', String(text));
+    selectYear(text: string) {
+      this.selectOption('year', text);
     },
     resetDropdown(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
@@ -435,7 +435,6 @@ export default Vue.extend({
         height: 6.24px;
         border-left: 6.24px solid transparent;
         border-right: 6.24px solid transparent;
-
         border-top: 6.24px solid #c4c4c4;
 
         //when clicked border-top-color: #32A0F2;

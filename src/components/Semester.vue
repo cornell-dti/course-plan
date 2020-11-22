@@ -294,13 +294,20 @@ export default Vue.extend({
       this.isConfirmationOpen = false;
     },
     // TODO: give better type on data
-    addCourse(data: any) {
+    addCourse(data: any, season: string | null = null, year: number | null = null) {
       // @ts-ignore
       const newCourse = this.$parent.$parent.createCourse(data, false);
       // TODO: stop mutating this data directly
-      this.courses.push(newCourse);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
-      this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
+      let confirmationMsg;
+      if (season !== '' || year !== 0) {
+        this.$emit('add-course-to-semester', season, year, newCourse);
+        confirmationMsg = `Added ${courseCode} to ${season} ${year}`;
+      } else {
+        this.courses.push(newCourse);
+        confirmationMsg = `Added ${courseCode} to ${this.type} ${this.year}`;
+      }
+      this.openConfirmationModal(confirmationMsg);
       this.buildCautions();
       this.$gtag.event('add-course', {
         event_category: 'course',

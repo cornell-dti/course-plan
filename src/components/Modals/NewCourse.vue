@@ -8,25 +8,26 @@
         :id="'dropdown-' + semesterID"
         :ref="'dropdown-' + semesterID"
         :placeholder="placeholder"
-        @keyup.enter="addCourse"
         @keyup.esc="closeCourseModal"
       />
     </div>
     <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
-    <div v-if="isCourseModelSelectingSemester && !selected"> 
+    <div v-if="isCourseModelSelectingSemester && !selected">
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
-        <newSemester :type="season" :year="year"></newSemester>
+        <newSemester :type="season" :year="year" @updateSemProps="updateSemProps"></newSemester>
       </div>
     </div>
     <div v-if="!isOnboard && selected">
       <!-- if a course is selected -->
-      <div class="newCourse-text">Selected Semester</div>
-      <div class="newCourse-semester">
-        <span class="newCourse-name">
-          <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
-          {{ year }}
-        </span>
+      <div v-if="isCourseModelSelectingSemester">
+        <div class="newCourse-text">Selected Semester</div>
+        <div class="newCourse-semester">
+          <span class="newCourse-name">
+            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
+            {{ year }}
+          </span>
+        </div>
       </div>
       <div class="newCourse-title">This class fulfills the following requirement(s):</div>
       <div v-if="!editMode" class="newCourse-requirements-container">
@@ -119,6 +120,7 @@ export default Vue.extend({
       binaryPotentialReqs: [['Technical Communication', 'External Specialization']],
       editMode: false,
       selectedCourse: '',
+      selectorSemesterId: '',
     };
   },
   watch: {
@@ -249,7 +251,6 @@ export default Vue.extend({
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
-              this.addCourse();
             });
             a.appendChild(div);
           });
@@ -286,9 +287,6 @@ export default Vue.extend({
         closeAllLists(e.target);
       });
     },
-    addCourse() {
-      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
-    },
     checkIfLast(elem, list) {
       return elem === list[list.length - 1];
     },
@@ -299,6 +297,9 @@ export default Vue.extend({
       this.editMode = false;
       this.selected = false;
       this.selectedCourse = '';
+    },
+    updateSemProps(season, year) {
+      this.$emit('updateSemProps', season, year);
     },
   },
 });
@@ -321,7 +322,6 @@ export default Vue.extend({
     border-radius: 3px;
     padding: 0.5rem;
     border: 0.5px solid $inactiveGray;
-    margin-bottom: 15px;
     &::placeholder {
       color: $darkPlaceholderGray;
     }
@@ -389,6 +389,7 @@ export default Vue.extend({
   display: inline-block;
   width: 100%;
   margin-top: 0.5rem;
+  padding-bottom: 12px;
 }
 input {
   border: 1px solid transparent;

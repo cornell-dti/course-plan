@@ -18,8 +18,8 @@
         @updateSemProps="updateSemProps"
         @toggle-left-button="toggleLeftButton"
         ref="modalBodyComponent"
-        :season="seasonCourse"
-        :year="yearCourse"
+        :season="season"
+        :year="year"
         :labels="true"
         :goBack="goBack"
       ></component>
@@ -56,7 +56,7 @@ export default Vue.extend({
       leftButton: 'CANCEL',
       goBack: false,
       season: '',
-      year: '',
+      year: 0,
     };
   },
   props: {
@@ -64,8 +64,6 @@ export default Vue.extend({
     semesterID: Number,
     currentSemesters: Array,
     isOpen: Boolean,
-    seasonCourse: String,
-    yearCourse: Number,
     isCourseModelSelectingSemester: Boolean,
   },
   computed: {
@@ -164,7 +162,7 @@ export default Vue.extend({
               const course = resultJSONclass;
               course.roster = roster;
               if (this.courseIsAddable) {
-                this.$emit('add-course', course);
+                this.$emit('add-course', course, this.season, this.year);
               }
             }
           });
@@ -264,6 +262,7 @@ export default Vue.extend({
     }
 
     &--disabled {
+      pointer-events: none;
       opacity: 0.3;
       border: 1px solid $sangBlue;
       background-color: #cccccc;
