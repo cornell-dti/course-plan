@@ -13,12 +13,12 @@
       />
     </div>
     <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
-    <!-- <div v-if="!isOnboard && !selected"> 
+    <div v-if="isCourseModelSelectingSemester"> 
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
         <newSemester :type="season" :year="year"></newSemester>
       </div>
-    </div> -->
+    </div>
     <div v-if="!isOnboard && selected">
       <!-- if a course is selected -->
       <div class="newCourse-text">Selected Semester</div>
@@ -103,6 +103,7 @@ export default Vue.extend({
     season: String,
     year: Number,
     goBack: Boolean,
+    isCourseModelSelectingSemester: Boolean,
   },
   data() {
     return {

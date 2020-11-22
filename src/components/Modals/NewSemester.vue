@@ -6,6 +6,7 @@
         <div
           v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
           id="season"
+          class="position-relative"
           v-click-outside="closeSeasonDropdownIfOpen"
         >
           <div
@@ -35,8 +36,8 @@
             ></div>
           </div>
           <div
-            class="newSemester-dropdown-content season-content"
-            id="season-content"
+            class="newSemester-dropdown-content season-content position-absolute w-100"
+            id="season-content"            
             v-if="displayOptions.season.shown"
           >
             <div
@@ -58,6 +59,7 @@
         <div
           v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
           id="year"
+          class="position-relative"
           v-click-outside="closeYearDropdownIfOpen"
         >
           <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
@@ -84,7 +86,7 @@
             ></div>
           </div>
           <div
-            class="newSemester-dropdown-content year-content"
+            class="newSemester-dropdown-content year-content position-absolute"
             id="year-content"
             v-if="displayOptions.year.shown"
           >
@@ -372,9 +374,6 @@ export default Vue.extend({
   }
 
   &-select {
-    left: 444px;
-    top: 183px;
-
     background: #ffffff;
     // border: 1px solid #32A0F2;
 
@@ -464,16 +463,14 @@ export default Vue.extend({
 
   &-dropdown-content {
     max-height: 124px;
-    left: 444px;
 
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 0px 0px 7px 7px;
 
     &.year-content {
+      z-index: 1;
       width: 100%;
-      left: 574px;
-      top: 209px;
 
       background: #ffffff;
       box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);

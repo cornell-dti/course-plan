@@ -11,6 +11,7 @@
         :isOnboard="isOnboard"
         :semesterID="semesterID"
         :currentSemesters="currentSemesters"
+        :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
         placeholderText='"CS 1110", "Multivariable Calculus", etc.'
         @duplicateSemester="disableButton"
         @close-current-model="closeCourseModal"
@@ -65,6 +66,7 @@ export default Vue.extend({
     isOpen: Boolean,
     seasonCourse: String,
     yearCourse: Number,
+    isCourseModelSelectingSemester: Boolean,
   },
   computed: {
     contentId() {

@@ -156,7 +156,7 @@ export default Vue.extend({
     },
     onAddCourse() {
       const dashboardRef = this.$parent.$parent.$parent.$parent as any;
-      dashboardRef.$refs.semesterview.$refs.semester[0].openCourseModal();
+      dashboardRef.$refs.semesterview.$refs.semester[0].openCourseModal(true);
     },
   },
 });

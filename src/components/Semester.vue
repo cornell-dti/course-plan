@@ -6,6 +6,7 @@
       type="course"
       :class="{ 'modal--block': isCourseModalOpen }"
       :semesterID="id"
+      :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
       @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
@@ -164,6 +165,7 @@ export default Vue.extend({
       isShadow: false,
       isDraggedFrom: false,
       isCourseModalOpen: false,
+      isCourseModelSelectingSemester: false,
 
       seasonImg: {
         Fall: fall,
@@ -258,10 +260,11 @@ export default Vue.extend({
     },
   },
   methods: {
-    openCourseModal() {
+    openCourseModal(isSelectingSemester: boolean = false) {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.isCourseModalOpen = true;
+      this.isCourseModelSelectingSemester = isSelectingSemester;
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
