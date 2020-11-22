@@ -85,6 +85,7 @@ export default Vue.extend({
   },
   computed: {
     cautionString() {
+      if (this.duplicatedCourseCodeList == null) return null;
       return this.duplicatedCourseCodeList.includes(`${this.subject} ${this.number}`)
         ? 'Duplicate'
         : null;
