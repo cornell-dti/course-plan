@@ -147,7 +147,7 @@ type Data = {
   readonly seasons: readonly (readonly [string, FirestoreSemesterType])[];
   readonly years: readonly number[];
   seasonText: string;
-  yearText: string;
+  yearText: number;
   readonly displayOptions: {
     readonly year: DisplayOption;
     readonly season: DisplayOption;
@@ -182,7 +182,7 @@ export default Vue.extend({
       seasons,
       years,
       seasonText: '',
-      yearText: '',
+      yearText: 0,
       displayOptions: {
         season: {
           shown: false,
@@ -273,7 +273,7 @@ export default Vue.extend({
     closeYearDropdownIfOpen() {
       this.closeDropdownIfOpen('year');
     },
-    selectOption(type: 'season' | 'year', text: string): void {
+    selectOption(type: 'season' | 'year'): void {
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.boxBorder = '#C4C4C4';
@@ -285,14 +285,13 @@ export default Vue.extend({
         this.yearText || this.yearPlaceholder
       );
     },
-    selectSeason(text: string) {
-      this.seasonText = text;
-      this.selectOption('season', text);
+    selectSeason(season: string) {
+      this.seasonText = season;
+      this.selectOption('season');
     },
-    selectYear(text: number) {
-      const yearText = text.toString();
-      this.yearText = yearText;
-      this.selectOption('year', yearText);
+    selectYear(year: number) {
+      this.yearText = year;
+      this.selectOption('year');
     },
     resetDropdown(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
@@ -305,7 +304,7 @@ export default Vue.extend({
       if (type === 'season') {
         this.seasonText = '';
       } else {
-        this.yearText = '';
+        this.yearText = 0;
       }
     },
     resetDropdowns() {
