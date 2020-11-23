@@ -3,9 +3,10 @@
     <div class="row depth-req">
       <div class="col-1" @click="toggleDescription()">
         <button class="btn">
-          <svg class="arrow" viewBox="0 0 15 15" :class="{'arrow-up': displayDescription}" :fill="getSvgColor()" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14.1424 7.07107L7.07129 14.1421L0.000221372 7.07107H14.1424Z"/>
-          </svg>
+          <dropdownarrow
+            :isFlipped="displayDescription"
+            :fillColor="getArrowColor()"
+          />
         </button>
       </div>
       <div class="col-7" @click="toggleDescription()">
@@ -104,18 +105,16 @@ import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
+import DropDownArrow from '@/components/DropDownArrow.vue';
 
 import { DisplayableRequirementFulfillment, EligibleCourses } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
-
-// Arrows for dropup and dropdown
-import dropup from '@/assets/images/dropup.svg';
-import dropdown from '@/assets/images/dropdown.svg';
 
 import { FirestoreSemesterCourse, AppCourse, firestoreCourseToAppCourse } from '@/user-data';
 
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
+Vue.component('dropdownarrow', DropDownArrow);
 
 require('firebase/functions');
 
@@ -183,14 +182,8 @@ export default Vue.extend({
     'click-outside': clickOutside,
   },
   methods: {
-    getSvgColor() {
+    getArrowColor() {
       return this.isCompleted ? '#979797CC' : '#979797';
-    },
-    getSvgViewBox() {
-      return this.displayDescription ? '0 0 15 15' : '0 0 17 17'
-    },
-    getArrow() {
-      return this.displayDescription ? dropup : dropdown;
     },
     toggleDescription() {
       this.displayDescription = !this.displayDescription;
@@ -344,17 +337,6 @@ button.active {
   border-bottom: solid 10px $sangBlue;
   padding-bottom: 2px;
   margin: 5px;
-}
-.arrow {
-  height: 14px;
-  width: 14px;
-  margin-top: -4px;
-  &-up {
-    height: 14px;
-    width: 14px;
-    margin-top: 1px;
-    transform: rotate(180deg);
-  }
 }
 button.view {
   margin: 0.7rem 0 2rem 0;

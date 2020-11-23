@@ -88,18 +88,9 @@
             class="btn"
             @click="toggleDetails()"
           >
-            <!-- svg for dropdown icon -->
-            <img
-              v-if="displayDetails"
-              class="arrow arrow-up"
-              :src="require(`@/assets/images/dropup-${reqGroupColorMap[req.group][1]}.svg`)"
-              alt="dropup"
-            />
-            <img
-              v-else
-              class="arrow arrow-down"
-              :src="require(`@/assets/images/dropdown-${reqGroupColorMap[req.group][1]}.svg`)"
-              alt="dropdown"
+            <dropdownarrow
+              :isFlipped="displayDetails"
+              :fillColor="`#${reqGroupColorMap[req.group][0]}`"
             />
           </button>
         </div>
@@ -120,9 +111,11 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-
+import DropDownArrow from '@/components/DropDownArrow.vue';
 import { SingleMenuRequirement } from '@/requirements/types';
 import { AppUser, AppMajor, AppMinor } from '@/user-data';
+
+Vue.component('dropdownarrow', DropDownArrow);
 
 export default Vue.extend({
   props: {
@@ -258,18 +251,6 @@ button.active {
   border-bottom: solid 10px $sangBlue;
   padding-bottom: 2px;
   margin: 5px;
-}
-.arrow {
-  height: 14px;
-  width: 14px;
-}
-.arrow {
-  fill: $emGreen;
-  color: $emGreen;
-  margin-top: -2px;
-  &-up {
-    margin-top: 4px;
-  }
 }
 .progress-text {
   margin: 0.3125rem 0 0 0;
