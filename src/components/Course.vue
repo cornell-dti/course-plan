@@ -67,7 +67,10 @@ export default Vue.extend({
     prereqs: String,
     semesters: Array,
     color: String,
-    duplicatedCourseCodeList: Array,
+    duplicatedCourseCodeList: {
+      required: false,
+      type: Array,
+    },
     compact: Boolean,
     id: String,
     uniqueID: Number,
