@@ -36,11 +36,9 @@
     </div>
     <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses" @scroll="onScrollSeeAll">
       <div class="see-all-padding-x see-all-header pb-3">
-        <img
-          class="back-arrow arrow-left"
-          :src="require(`@/assets/images/dropdown-lightblue.svg`)"
-          alt="dropdown"
-        />
+        <span class="arrow-left">
+          <dropdownarrow :isPointingLeft="true" :fillColor="'#32A0F2'" />
+        </span>
         <button class="btn back-button p-0" @click="backFromSeeAll">GO BACK TO REQUIREMENTS</button>
       </div>
       <div class="see-all-padding-x py-3">
@@ -78,6 +76,7 @@ import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import RequirementView from '@/components/RequirementView.vue';
 import SubRequirement from '@/components/SubRequirement.vue';
+import DropDownArrow from '@/components/DropDownArrow.vue';
 import {
   BaseRequirement as Requirement,
   CourseTaken,
@@ -105,6 +104,7 @@ const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('requirementview', RequirementView);
+Vue.component('dropdownarrow', DropDownArrow);
 Vue.use(VueCollapse);
 
 type CrseInfo = {
@@ -438,11 +438,6 @@ h1.title {
 .back-button {
   color: $yuxuanBlue;
   font-size: 0.9rem;
-}
-
-.back-arrow {
-  width: 14px;
-  height: 14px;
 }
 
 .arrow-left {
