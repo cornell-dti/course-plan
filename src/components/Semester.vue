@@ -6,6 +6,7 @@
       type="course"
       :class="{ 'modal--block': isCourseModalOpen }"
       :semesterID="id"
+      :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
       @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
@@ -99,20 +100,11 @@
             />
           </div>
         </div>
-        <div
-          class="semester-courseWrapper semester-addWrapper"
-          :class="{ 'semester-addWrapper--compact': compact }"
+        <addcoursebutton
+          :compact="compact"
+          :shouldShowWalkthrough="true"
           @click="openCourseModal"
-          data-intro-group="pageTour"
-          data-step="3"
-          data-intro='<b>Add your course in this semseter!</b><br>
-            <div class = "introjs-bodytext">To start planning your college career, you should try adding a course in your current semester.</div>'
-          data-disable-interaction="1"
-        >
-          <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">{{
-            buttonString
-          }}</span>
-        </div>
+        />
       </div>
     </div>
     <semestermenu
@@ -134,6 +126,7 @@ import Confirmation from '@/components/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
+import AddCourseButton from '@/components/AddCourseButton.vue';
 
 import { clickOutside } from '@/utilities';
 import { AppCourse, AppSemester } from '@/user-data';
@@ -144,6 +137,7 @@ Vue.component('confirmation', Confirmation);
 Vue.component('semestermenu', SemesterMenu);
 Vue.component('deletesemester', DeleteSemester);
 Vue.component('editsemester', EditSemester);
+Vue.component('addcoursebutton', AddCourseButton);
 
 const fall = require('../assets/images/fallEmoji.svg');
 const spring = require('../assets/images/springEmoji.svg');
@@ -174,6 +168,7 @@ export default Vue.extend({
       isShadow: false,
       isDraggedFrom: false,
       isCourseModalOpen: false,
+      isCourseModelSelectingSemester: false,
 
       seasonImg: {
         Fall: fall,
@@ -263,15 +258,13 @@ export default Vue.extend({
       });
       return uniqueCourses;
     },
-    buttonString() {
-      return '+ Course';
-    },
   },
   methods: {
-    openCourseModal() {
+    openCourseModal(isSelectingSemester: boolean = false) {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.isCourseModalOpen = true;
+      this.isCourseModelSelectingSemester = isSelectingSemester;
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
@@ -301,13 +294,20 @@ export default Vue.extend({
       this.isConfirmationOpen = false;
     },
     // TODO: give better type on data
-    addCourse(data: any) {
+    addCourse(data: any, season: string | null = null, year: number | null = null) {
       // @ts-ignore
       const newCourse = this.$parent.$parent.createCourse(data, false);
       // TODO: stop mutating this data directly
-      this.courses.push(newCourse);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
-      this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
+      let confirmationMsg;
+      if (season !== '' || year !== 0) {
+        this.$emit('add-course-to-semester', season, year, newCourse);
+        confirmationMsg = `Added ${courseCode} to ${season} ${year}`;
+      } else {
+        this.courses.push(newCourse);
+        confirmationMsg = `Added ${courseCode} to ${this.type} ${this.year}`;
+      }
+      this.openConfirmationModal(confirmationMsg);
       this.$gtag.event('add-course', {
         event_category: 'course',
         event_label: 'add',
@@ -429,13 +429,6 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
-@mixin hover-button {
-  border-color: #15a6cf;
-  background: rgba(0, 0, 0, 0.03);
-  color: #15a6cf;
-  cursor: pointer;
-}
-
 .semester {
   width: fit-content;
   position: relative;
@@ -556,12 +549,6 @@ export default Vue.extend({
       margin-top: -1.2rem;
       width: 10rem;
       height: 2rem;
-    }
-
-    &:hover,
-    &:active,
-    &:focus {
-      @include hover-button();
     }
   }
 

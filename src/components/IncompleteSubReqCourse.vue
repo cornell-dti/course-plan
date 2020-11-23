@@ -1,15 +1,18 @@
 <template>
   <div class="incompletesubreqcourse">
-    <div
-      class="draggable-requirements-wrapper"
-      v-if="displayDescription && crseInfoObjects.length > 0"
-    >
+    <div class="draggable-requirements-wrapper" v-if="displayDescription">
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
-        <div v-if="showSeeAllLabel" class="draggable-requirements-heading-seeAll">{{ seeAll }}</div>
+        <div
+          v-if="showSeeAllLabel"
+          class="draggable-requirements-heading-seeAll"
+          @click="onShowAllCourses"
+        >
+          {{ seeAll }}
+        </div>
       </div>
       <div
-        v-if="displayCourses"
+        v-if="displayCourses && crseInfoObjects.length > 0"
         class="draggable-requirements-courses"
         v-dragula="courseObjects"
         bag="first-bag"
@@ -30,6 +33,9 @@
           />
         </div>
       </div>
+      <div v-if="subReq.fulfilledBy === 'self-check'">
+        <addcoursebutton :compact="true" :shouldClearPadding="true" @click="onAddCourse" />
+      </div>
       <div class="separator"></div>
     </div>
   </div>
@@ -39,11 +45,12 @@
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import Course from '@/components/Course.vue';
+import AddCourseButton from '@/components/AddCourseButton.vue';
 import { DisplayableRequirementFulfillment } from '@/requirements/types';
-
-import { AppCourse } from '@/user-data';
+import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('course', Course);
+Vue.component('addcoursebutton', AddCourseButton);
 
 type CrseInfo = {
   roster: string;
@@ -82,15 +89,17 @@ export default Vue.extend({
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqCourseId: Number,
     crseInfoObjects: Array as PropType<CrseInfo[]>,
-    subReqCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
+    subReqFetchedCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
+    subReqCoursesNotTakenArray: Array as PropType<CrseInfo[][]>,
     dataReady: Boolean,
     displayDescription: Boolean,
+    lastLoadedShowAllCourseId: Number,
   },
   watch: {
     dataReady: {
       immediate: true,
       handler(dataReady) {
-        if (dataReady && this.subReqCourseObjectsNotTakenArray.length > 0) {
+        if (dataReady && this.subReqFetchedCourseObjectsNotTakenArray.length > 0) {
           this.getFirstFourCourseObjects();
           this.displayCourses = true;
         }
@@ -126,8 +135,8 @@ export default Vue.extend({
         i += 1
       ) {
         const crseInfoObject = this.crseInfoObjects[i];
-        const filteredCourses: AppCourse[] = this.subReqCourseObjectsNotTakenArray.filter(course =>
-          crseInfoObject.crseIds.includes(course.crseId)
+        const filteredCourses: AppCourse[] = this.subReqFetchedCourseObjectsNotTakenArray.filter(
+          course => crseInfoObject.crseIds.includes(course.crseId)
         );
         const numRemainingCourses = Math.min(
           4 - firstFourCourseObjects.length,
@@ -136,6 +145,16 @@ export default Vue.extend({
         firstFourCourseObjects.push(...filteredCourses.slice(0, numRemainingCourses));
       }
       this.courseObjects = firstFourCourseObjects;
+    },
+    onShowAllCourses(courses: AppCourse[]) {
+      this.$emit('onShowAllCourses', {
+        requirementName: this.subReq.requirement.name,
+        subReqCoursesArray: this.subReqCoursesNotTakenArray,
+      });
+    },
+    onAddCourse() {
+      const dashboardRef = this.$parent.$parent.$parent.$parent as any;
+      dashboardRef.$refs.semesterview.$refs.semester[0].openCourseModal(true);
     },
   },
 });

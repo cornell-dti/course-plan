@@ -20,13 +20,7 @@
       </div>
       <div class="col">
         <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">
-          {{
-            subReq.fulfilledBy !== 'self-check'
-              ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${
-                  subReq.totalCountRequired || subReq.minCountRequired
-                } ${subReq.fulfilledBy}`
-              : 'self check'
-          }}
+          {{ subReqProgress }}
         </p>
         <p v-if="this.isCompleted" class="text-right completed-ptext">
           <span
@@ -87,10 +81,13 @@
             :subReq="subReq"
             :subReqCourseId="id"
             :crseInfoObjects="subReqCrseInfoObjects"
-            :subReqCourseObjectsNotTakenArray="subReqCourseObjectsNotTakenArray"
+            :subReqFetchedCourseObjectsNotTakenArray="subReqFetchedCourseObjectsNotTakenArray"
+            :subReqCoursesNotTakenArray="subReqCoursesNotTakenArray"
             :dataReady="dataReady"
             :displayDescription="displayDescription"
+            :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
             @isDataReady="isDataReady"
+            @onShowAllCourses="onShowAllCourses"
           />
         </div>
       </div>
@@ -121,7 +118,6 @@ Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
 require('firebase/functions');
 
 const functions = firebase.functions();
-
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
 type CrseInfo = {
@@ -132,7 +128,7 @@ type CrseInfo = {
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
   displayDescription: boolean;
-  subReqCourseObjectsNotTakenArray: AppCourse[];
+  subReqFetchedCourseObjectsNotTakenArray: AppCourse[];
   dataReady: boolean;
 };
 
@@ -146,8 +142,8 @@ export default Vue.extend({
       required: false,
     },
     color: String,
-    isCompleted: Boolean,
     rostersFromLastTwoYears: Array as PropType<readonly String[]>,
+    lastLoadedShowAllCourseId: Number,
   },
   watch: {
     subReqCoursesNotTakenArray: {
@@ -162,11 +158,14 @@ export default Vue.extend({
     return {
       showFulfillmentOptionsDropdown: false,
       displayDescription: false,
-      subReqCourseObjectsNotTakenArray: [], // array of fetched course objects
+      subReqFetchedCourseObjectsNotTakenArray: [], // array of fetched course objects
       dataReady: false, // true if dataReady for all subReqCourses. false otherwise
     };
   },
   computed: {
+    isCompleted(): boolean {
+      return false;
+    },
     selectedFulfillmentOption(): string {
       if (this.subReq.requirement.fulfilledBy !== 'toggleable') {
         return '';
@@ -178,6 +177,13 @@ export default Vue.extend({
     },
     subReqCoursesNotTakenArray(): CrseInfo[][] {
       return this.generateSubReqCoursesNotTakenArray();
+    },
+    subReqProgress(): string {
+      return this.subReq.fulfilledBy !== 'self-check'
+        ? `${this.subReq.totalCountFulfilled || this.subReq.minCountFulfilled}/${
+            this.subReq.totalCountRequired || this.subReq.minCountRequired
+          } ${this.subReq.fulfilledBy}`
+        : 'self check';
     },
   },
   directives: {
@@ -194,6 +200,9 @@ export default Vue.extend({
         src = dropdownIncompleteSrc;
       }
       return src;
+    },
+    onShowAllCourses(courses: AppCourse[]) {
+      this.$emit('onShowAllCourses', courses);
     },
     toggleDescription() {
       this.displayDescription = !this.displayDescription;
@@ -214,22 +223,24 @@ export default Vue.extend({
       this.showFulfillmentOptionsDropdown = false;
       this.$emit('changeToggleableRequirementChoice', this.subReq.id, option);
     },
+    getFulfillededByCourses() {
+      switch (this.subReq.requirement.fulfilledBy) {
+        case 'toggleable':
+          return this.subReq.requirement.fulfillmentOptions[
+            this.toggleableRequirementChoice || this.selectedFulfillmentOption
+          ].courses;
+        case 'self-check':
+          return null;
+        default:
+          return this.subReq.requirement.courses;
+      }
+    },
     generateSubReqCoursesNotTakenArray(): CrseInfo[][] {
       // Reset subReqCoursesNotTakenArray
       const subReqCoursesNotTakenArray: CrseInfo[][] = [];
-
       // Depending on fulfilledBy, subReqCourses is accessed differently from subReq
-      let subReqCourses;
-      if (this.subReq.requirement.fulfilledBy === 'toggleable') {
-        const fulfillmentOption =
-          this.toggleableRequirementChoice || this.selectedFulfillmentOption;
-        subReqCourses = this.subReq.requirement.fulfillmentOptions[fulfillmentOption].courses;
-      } else if (this.subReq.requirement.fulfilledBy === 'self-check') {
-        subReqCourses = [];
-      } else {
-        // fulfilledBy courses or credits
-        subReqCourses = this.subReq.requirement.courses;
-      }
+      const subReqCourses = this.getFulfillededByCourses();
+      if (subReqCourses == null) return [[]];
       const mostRecentRosters = this.rostersFromLastTwoYears;
       let filteredSubReqRosters;
       // Iterate over each course slot for the subReq
@@ -275,7 +286,7 @@ export default Vue.extend({
       return subReqCrseInfoObjectsToFetch;
     },
     getSubReqCourseObjects(): void {
-      this.subReqCourseObjectsNotTakenArray = [];
+      this.subReqFetchedCourseObjectsNotTakenArray = [];
       this.dataReady = false;
       const subReqCrseInfoObjectsToFetch = this.getMaxFirstFourCrseInfoObjects();
       let fetchedCourses;
@@ -289,7 +300,7 @@ export default Vue.extend({
             // @ts-ignore
             const createdCourse = this.$parent.$parent.$parent.createCourse(course, true);
             createdCourse.compact = true;
-            this.subReqCourseObjectsNotTakenArray.push(createdCourse);
+            this.subReqFetchedCourseObjectsNotTakenArray.push(createdCourse);
           });
           this.isDataReady();
         })

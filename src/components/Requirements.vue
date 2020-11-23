@@ -4,6 +4,7 @@
       id="req-tooltip"
       class="fixed"
       data-intro-group="req-tooltip"
+      :v-bind:class="{ 'd-none': !shouldShowAllCourses }"
       :data-intro="getRequirementsTooltipText()"
       data-disable-interaction="1"
       data-step="1"
@@ -25,10 +26,40 @@
           :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
           :rostersFromLastTwoYears="rostersFromLastTwoYears"
           :numOfColleges="numOfColleges"
+          :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
           @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
           @activateMajor="activateMajor"
           @activateMinor="activateMinor"
+          @onShowAllCourses="onShowAllCourses"
         />
+      </div>
+    </div>
+    <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses" @scroll="onScrollSeeAll">
+      <div class="see-all-padding-x see-all-header pb-3">
+        <img
+          class="back-arrow arrow-left"
+          :src="require(`@/assets/images/dropdown-lightblue.svg`)"
+          alt="dropdown"
+        />
+        <button class="btn back-button p-0" @click="backFromSeeAll">GO BACK TO REQUIREMENTS</button>
+      </div>
+      <div class="see-all-padding-x py-3">
+        <h1 class="title">{{ showAllCourses.name }}</h1>
+        <div v-dragula="showAllCourses.courses" bag="first-bag">
+          <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
+            <div class="mt-3">
+              <course
+                v-bind="courseData"
+                :courseObj="courseData"
+                :id="courseData.subject + courseData.number"
+                :uniqueID="courseData.uniqueID"
+                :compact="false"
+                :active="false"
+                class="requirements-course"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -52,17 +83,39 @@ import {
   CourseTaken,
   SingleMenuRequirement,
 } from '@/requirements/types';
-import { RequirementMap, computeRequirements } from '@/requirements/reqs-functions';
-import { AppUser, AppMajor, AppMinor, AppSemester, FirestoreSemesterCourse } from '@/user-data';
+import {
+  RequirementMap,
+  computeRequirements,
+  computeRequirementMap,
+} from '@/requirements/reqs-functions';
+import {
+  AppUser,
+  AppMajor,
+  AppMinor,
+  AppSemester,
+  FirestoreSemesterCourse,
+  AppCourse,
+} from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 
 const functions = firebase.functions();
+const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('requirementview', RequirementView);
 Vue.use(VueCollapse);
+
+type CrseInfo = {
+  roster: string;
+  crseIds: number[];
+};
+
+export type ShowAllCourses = {
+  readonly name: string;
+  readonly courses: AppCourse[];
+};
 
 type Data = {
   reqs: readonly SingleMenuRequirement[];
@@ -71,6 +124,10 @@ type Data = {
   displayedMajorIndex: number;
   displayedMinorIndex: number;
   numOfColleges: number;
+  showAllCourses: ShowAllCourses;
+  shouldShowAllCourses: boolean;
+  showAllSubReqCourses: CrseInfo[][];
+  lastLoadedShowAllCourseId: number;
 };
 // emoji for clipboard
 const clipboard = require('../assets/images/clipboard.svg');
@@ -95,55 +152,15 @@ export default Vue.extend({
   },
   data(): Data {
     return {
-      // currentEditID: 0,
-      // isEditing: false,
-      // display: [],
       displayedMajorIndex: 0,
       displayedMinorIndex: 0,
-      reqs: [
-        // Data structure for menu
-        // {
-        //   name: 'UNIVERSITY REQUIREMENT',
-        //   group: 'UNIVERSITY',
-        //   type: 'Credits',
-        //   specific: 'AS',
-        //   fulfilled: 46,
-        //   required: 120,
-        //   color: '105351',
-        //   displayDetails: false,
-        //   displayCompleted: true,
-        //   ongoing: [
-        //     {
-        //       name: 'CALS Credits',
-        //       type: 'Credits',
-        //       fulfilled: 12,
-        //       required: 55,
-        //       description: 'All students need to to take 55 credits',
-        //       displayDescription: false
-        //     },
-        //     {
-        //       name: 'PE Credits',
-        //       type: 'Credits',
-        //       fulfilled: 1,
-        //       required: 2,
-        //       description: 'All students must take 2 PE courses in freshman year',
-        //       displayDescription: false
-        //     }
-        //   ],
-        //   completed: [
-        //     {
-        //       name: 'Quantitative Literacy',
-        //       type: 'Credits',
-        //       fulfilled: 2,
-        //       required: 2,
-        //       description: 'Quantitiative literacy required for all CALS students',
-        //       displayDescription: false
-        //     }
-        //   ]
-        // }
-      ],
+      reqs: [],
       toggleableRequirementChoices: {},
       numOfColleges: 1,
+      showAllCourses: { name: '', courses: [] },
+      shouldShowAllCourses: false,
+      lastLoadedShowAllCourseId: 0,
+      showAllSubReqCourses: [],
     };
   },
   watch: {
@@ -278,6 +295,88 @@ export default Vue.extend({
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>`;
     },
+    getAllCrseInfoFromSemester(subReqCoursesArray: CrseInfo[][]): Promise<AppCourse[]> {
+      return new Promise((resolve, reject) => {
+        let subReqCrseInfoObjectsToFetch: CrseInfo[] = [];
+        // Used to identify index of lastLoadedSeeAll
+        const subReqCourses = subReqCoursesArray;
+        let coursesCount = 0;
+        subReqCourses.forEach((subReqCourseArray, i) => {
+          const crseInfoFromSemester: CrseInfo[] = [];
+          subReqCourseArray.forEach((crseInfo: CrseInfo) => {
+            const lastLoadedIndexOf = crseInfo.crseIds.indexOf(this.lastLoadedShowAllCourseId);
+            if (lastLoadedIndexOf !== -1) {
+              subReqCrseInfoObjectsToFetch = [];
+              crseInfo.crseIds.splice(0, lastLoadedIndexOf + 1);
+            }
+            if (coursesCount + crseInfo.crseIds.length >= 24) {
+              const remainingCount = 24 - coursesCount;
+              return crseInfoFromSemester.push({
+                ...crseInfo,
+                crseIds: crseInfo.crseIds.slice(0, remainingCount),
+              });
+            }
+            coursesCount += crseInfo.crseIds.length;
+            return crseInfoFromSemester.push(crseInfo);
+          });
+          subReqCrseInfoObjectsToFetch.push(crseInfoFromSemester[0]);
+        });
+        const fetchedCourses: AppCourse[] = [];
+        FetchCourses({
+          crseInfo: subReqCrseInfoObjectsToFetch,
+          allowSameCourseForDifferentRosters: false,
+        })
+          .then(result => {
+            result.data.courses.forEach((course: FirestoreSemesterCourse) => {
+              // @ts-ignore [We should resolve this later]
+              const createdCourse = this.$parent.createCourse(course, true);
+              createdCourse.compact = true;
+              fetchedCourses.push(createdCourse);
+            });
+            return resolve(fetchedCourses);
+          })
+          .catch(error => {
+            return reject(error);
+          });
+      });
+    },
+    onShowAllCourses(showAllCourses: {
+      requirementName: string;
+      subReqCoursesArray: CrseInfo[][];
+    }) {
+      this.shouldShowAllCourses = true;
+      this.showAllSubReqCourses = showAllCourses.subReqCoursesArray;
+      this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray)
+        .then(fetchedCourses => {
+          const lastCourse = fetchedCourses[fetchedCourses.length - 1];
+          this.lastLoadedShowAllCourseId = lastCourse.crseId;
+          this.showAllCourses = { name: showAllCourses.requirementName, courses: fetchedCourses };
+        })
+        .catch(err => {
+          console.log('Fetch Error: ', err);
+        });
+    },
+    onScrollSeeAll(event: any) {
+      const { target } = event;
+      const { scrollTop, clientHeight, scrollHeight } = target;
+      if (scrollTop + clientHeight >= scrollHeight) {
+        this.getAllCrseInfoFromSemester(this.showAllSubReqCourses)
+          .then(fetchedCourses => {
+            this.showAllCourses = {
+              ...this.showAllCourses,
+              courses: [...this.showAllCourses.courses, ...fetchedCourses],
+            };
+          })
+          .catch(err => {
+            console.log('Fetch error: ', err);
+          });
+      }
+    },
+    backFromSeeAll() {
+      this.shouldShowAllCourses = false;
+      this.showAllCourses = { name: '', courses: [] };
+      this.showAllSubReqCourses = [];
+    },
   },
 });
 </script>
@@ -288,7 +387,6 @@ export default Vue.extend({
 .fixed {
   height: 100vh;
   width: 25rem;
-  padding: 1.625rem 1.5rem 1.625rem 1.5rem;
   background-color: $white;
 }
 .fixed {
@@ -297,6 +395,19 @@ export default Vue.extend({
   left: 4.5rem;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+.fixed,
+.see-all-padding {
+  padding: 1.625rem 1.5rem;
+}
+.see-all-padding-y {
+  padding: 1.625rem 0;
+}
+.see-all-padding-x {
+  padding: 0 1.625rem;
+}
+.see-all-header {
+  box-shadow: 0 4px 8px -8px gray;
 }
 h1.title {
   font-style: normal;
@@ -323,6 +434,21 @@ h1.title {
     line-height: 12px;
   }
 }
+
+.back-button {
+  color: $yuxuanBlue;
+  font-size: 0.9rem;
+}
+
+.back-arrow {
+  width: 14px;
+  height: 14px;
+}
+
+.arrow-left {
+  transform: rotate(90deg);
+}
+
 @media only screen and (max-width: 976px) {
   .requirements,
   .fixed {
