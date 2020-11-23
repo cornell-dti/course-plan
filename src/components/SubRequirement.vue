@@ -9,9 +9,9 @@
       <div class="col-7" @click="toggleDescription()">
         <p
           v-bind:class="[
-            { 'sup-req': !this.isCompleted },
+            { 'sup-req': !this.isFulfilled },
             'pointer',
-            this.isCompleted ? 'completed-ptext' : 'incomplete-ptext',
+            this.isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
           ]"
         >
           <span>{{ subReq.requirement.name }}</span>
@@ -21,7 +21,7 @@
         <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">
           {{ subReqProgress }}
         </p>
-        <p v-if="this.isCompleted" class="text-right completed-ptext">
+        <p v-if="this.isFulfilled" class="text-right completed-ptext">
           <span
             >{{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
             {{ subReq.fulfilledBy }}</span
@@ -30,7 +30,7 @@
       </div>
       <div
         v-if="displayDescription"
-        :class="[{ 'completed-ptext': this.isCompleted }, 'description']"
+        :class="[{ 'completed-ptext': this.isFulfilled }, 'description']"
       >
         {{ subReq.requirement.description }}
         <a
@@ -74,7 +74,7 @@
         </div>
       </div>
       <div v-if="!this.isCompleted" class="separator"></div>
-      <div class="incompletesubreqcourse-wrapper" v-if="!this.isCompleted">
+      <div class="incompletesubreqcourse-wrapper" v-if="!this.isFulfilled">
         <div v-for="(subReqCrseInfoObjects, id) in subReqCoursesNotTakenArray" :key="id">
           <incompletesubreqcourse
             :subReq="subReq"
@@ -132,6 +132,7 @@ export default Vue.extend({
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqIndex: Number, // Subrequirement index
     reqIndex: Number, // Requirement index
+    isCompleted: Boolean,
     toggleableRequirementChoice: {
       type: String,
       required: false,
@@ -158,7 +159,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    isCompleted(): boolean {
+    isFulfilled(): boolean {
       return false;
     },
     selectedFulfillmentOption(): string {
@@ -193,7 +194,7 @@ export default Vue.extend({
     },
     toggleDescription() {
       this.displayDescription = !this.displayDescription;
-      if (this.displayDescription && !this.isCompleted) {
+      if (this.displayDescription && !this.isFulfilled) {
         this.getSubReqCourseObjects();
       }
     },
@@ -223,6 +224,9 @@ export default Vue.extend({
       }
     },
     generateSubReqCoursesNotTakenArray(): CrseInfo[][] {
+      const allTakenCourseIds = this.subReq.courses
+        .reduce((acc, course) => acc.concat(course), [])
+        .map(course => course.courseId);
       // Reset subReqCoursesNotTakenArray
       const subReqCoursesNotTakenArray: CrseInfo[][] = [];
       // Depending on fulfilledBy, subReqCourses is accessed differently from subReq
@@ -245,7 +249,10 @@ export default Vue.extend({
           );
 
           if (subReqCrseIds.length > 0) {
-            const crseInfoObject = { roster: subReqRoster, crseIds: subReqCrseIds };
+            const filteredSubReqCrseIds = subReqCrseIds.filter(
+              crseIds => this.isCompleted || !allTakenCourseIds.includes(crseIds)
+            );
+            const crseInfoObject = { roster: subReqRoster, crseIds: filteredSubReqCrseIds };
             crseInfoObjects.push(crseInfoObject);
             subReqCrseIds.forEach(subReqCrseId => seenCrseIds.add(subReqCrseId));
           }
