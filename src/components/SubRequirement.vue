@@ -231,7 +231,7 @@ export default Vue.extend({
             this.toggleableRequirementChoice || this.selectedFulfillmentOption
           ].courses;
         case 'self-check':
-          return [];
+          return null;
         default:
           return this.subReq.requirement.courses;
       }
