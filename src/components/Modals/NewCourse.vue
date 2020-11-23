@@ -392,6 +392,7 @@ export default Vue.extend({
     text-decoration-line: underline;
     color: $yuxuanBlue;
     cursor: pointer;
+  }
   &-onboarding {
     font-size: 14px;
     line-height: 17px;
