@@ -514,3 +514,13 @@ select option[disabled]:first-child {
 .addSpaceTop {
   margin-top: 30px;
 }
+.alignCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.alignEnd {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
