@@ -2,9 +2,10 @@
   <div class="subrequirement">
     <div class="row depth-req">
       <div class="col-1" @click="toggleDescription()">
-        <button class="btn">
-          <img v-if="displayDescription" class="arrow arrow-up" :src="getSrc()" alt="dropup" />
-          <img v-else class="arrow arrow-down" :src="getSrc()" alt="dropdown" />
+        <button class="btn" :style="{color: getSvgColor()}">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14.1424 7.07107L7.07129 14.1421L0.000221372 7.07107H14.1424Z"/>
+        </svg>
         </button>
       </div>
       <div class="col-7" @click="toggleDescription()">
@@ -108,10 +109,8 @@ import { DisplayableRequirementFulfillment, EligibleCourses } from '@/requiremen
 import { clickOutside } from '@/utilities';
 
 // Arrows for dropup and dropdown
-import dropupIncompleteSrc from '@/assets/images/dropup.svg';
-import dropupCompletedSrc from '@/assets/images/dropup-lightgray.svg';
-import dropdownIncompleteSrc from '@/assets/images/dropdown.svg';
-import dropdownCompletedSrc from '@/assets/images/dropdown-lightgray.svg';
+import dropup from '@/assets/images/dropup.svg';
+import dropdown from '@/assets/images/dropdown.svg';
 
 import { FirestoreSemesterCourse, AppCourse, firestoreCourseToAppCourse } from '@/user-data';
 
@@ -184,16 +183,11 @@ export default Vue.extend({
     'click-outside': clickOutside,
   },
   methods: {
-    getSrc() {
-      let src = dropdownCompletedSrc;
-      if (this.displayDescription && !this.isCompleted) {
-        src = dropupIncompleteSrc;
-      } else if (this.displayDescription && this.isCompleted) {
-        src = dropupCompletedSrc;
-      } else if (!this.displayDescription && !this.isCompleted) {
-        src = dropdownIncompleteSrc;
-      }
-      return src;
+    getSvgColor() {
+      return this.isCompleted ? '#979797' : '#979797CC';
+    },
+    getArrow() {
+      return this.displayDescription ? dropup : dropdown;
     },
     toggleDescription() {
       this.displayDescription = !this.displayDescription;
@@ -493,5 +487,9 @@ button.view {
   &-wrapper {
     width: 100%;
   }
+}
+
+.drop-incomplete {
+
 }
 </style>
