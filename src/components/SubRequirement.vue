@@ -3,8 +3,7 @@
     <div class="row depth-req">
       <div class="col-1" @click="toggleDescription()">
         <button class="btn">
-          <img v-if="displayDescription" class="arrow arrow-up" :src="getSrc()" alt="dropup" />
-          <img v-else class="arrow arrow-down" :src="getSrc()" alt="dropdown" />
+          <dropdownarrow :isFlipped="displayDescription" :fillColor="getArrowColor()" />
         </button>
       </div>
       <div class="col-7" @click="toggleDescription()">
@@ -100,20 +99,16 @@ import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
+import DropDownArrow from '@/components/DropDownArrow.vue';
 
 import { DisplayableRequirementFulfillment, EligibleCourses } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
-
-// Arrows for dropup and dropdown
-import dropupIncompleteSrc from '@/assets/images/dropup.svg';
-import dropupCompletedSrc from '@/assets/images/dropup-lightgray.svg';
-import dropdownIncompleteSrc from '@/assets/images/dropdown.svg';
-import dropdownCompletedSrc from '@/assets/images/dropdown-lightgray.svg';
 
 import { FirestoreSemesterCourse, AppCourse, firestoreCourseToAppCourse } from '@/user-data';
 
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
+Vue.component('dropdownarrow', DropDownArrow);
 
 require('firebase/functions');
 
@@ -190,16 +185,8 @@ export default Vue.extend({
     'click-outside': clickOutside,
   },
   methods: {
-    getSrc() {
-      let src = dropdownCompletedSrc;
-      if (this.displayDescription && !this.isCompleted) {
-        src = dropupIncompleteSrc;
-      } else if (this.displayDescription && this.isCompleted) {
-        src = dropupCompletedSrc;
-      } else if (!this.displayDescription && !this.isCompleted) {
-        src = dropdownIncompleteSrc;
-      }
-      return src;
+    getArrowColor() {
+      return this.isCompleted ? '#979797CC' : '#979797';
     },
     onShowAllCourses(courses: AppCourse[]) {
       this.$emit('onShowAllCourses', courses);
@@ -358,16 +345,6 @@ button.active {
   border-bottom: solid 10px $sangBlue;
   padding-bottom: 2px;
   margin: 5px;
-}
-.arrow {
-  height: 14px;
-  width: 14px;
-  fill: $emGreen;
-  color: $emGreen;
-  margin-top: -2px;
-  &-up {
-    margin-top: 4px;
-  }
 }
 button.view {
   margin: 0.7rem 0 2rem 0;
