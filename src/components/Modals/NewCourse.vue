@@ -392,6 +392,34 @@ export default Vue.extend({
     text-decoration-line: underline;
     color: $yuxuanBlue;
     cursor: pointer;
+  &-onboarding {
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.5rem;
+    border: 0.5px solid #b6b6b6;
+    border-radius: 0px;
+    background-color: #ffffff;
+    &::placeholder {
+      color: #000000;
+    }
+  }
+  &-onboardingEmpty {
+    // this part repeats &-onboarding except for different placeholder color, how do i make it so I don't have to repeat stuff?
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.5rem;
+    border: 0.5px solid #b6b6b6;
+    border-radius: 0px;
+    background-color: #ffffff;
+    &::placeholder {
+      color: #B6B6B6;
+    }
   }
 }
 .autocomplete {
