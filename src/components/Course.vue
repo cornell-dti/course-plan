@@ -67,7 +67,10 @@ export default Vue.extend({
     prereqs: String,
     semesters: Array,
     color: String,
-    duplicatedCourseCodeList: Array,
+    duplicatedCourseCodeList: {
+      required: false,
+      type: Array,
+    },
     compact: Boolean,
     id: String,
     uniqueID: Number,
@@ -85,6 +88,7 @@ export default Vue.extend({
   },
   computed: {
     cautionString() {
+      if (this.duplicatedCourseCodeList == null) return null;
       return this.duplicatedCourseCodeList.includes(`${this.subject} ${this.number}`)
         ? 'Duplicate'
         : null;
