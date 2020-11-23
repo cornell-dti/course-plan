@@ -2,10 +2,10 @@
   <div class="subrequirement">
     <div class="row depth-req">
       <div class="col-1" @click="toggleDescription()">
-        <button class="btn" :style="{color: getSvgColor()}">
-          <svg width="15" height="15" viewBox="0 0 15 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path d="M14.1424 7.07107L7.07129 14.1421L0.000221372 7.07107H14.1424Z"/>
-        </svg>
+        <button class="btn">
+          <svg class="arrow" viewBox="0 0 15 15" :class="{'arrow-up': displayDescription}" :fill="getSvgColor()" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.1424 7.07107L7.07129 14.1421L0.000221372 7.07107H14.1424Z"/>
+          </svg>
         </button>
       </div>
       <div class="col-7" @click="toggleDescription()">
@@ -184,7 +184,10 @@ export default Vue.extend({
   },
   methods: {
     getSvgColor() {
-      return this.isCompleted ? '#979797' : '#979797CC';
+      return this.isCompleted ? '#979797CC' : '#979797';
+    },
+    getSvgViewBox() {
+      return this.displayDescription ? '0 0 15 15' : '0 0 17 17'
     },
     getArrow() {
       return this.displayDescription ? dropup : dropdown;
@@ -345,11 +348,12 @@ button.active {
 .arrow {
   height: 14px;
   width: 14px;
-  fill: $emGreen;
-  color: $emGreen;
-  margin-top: -2px;
+  margin-top: -4px;
   &-up {
-    margin-top: 4px;
+    height: 14px;
+    width: 14px;
+    margin-top: 1px;
+    transform: rotate(180deg);
   }
 }
 button.view {
@@ -487,9 +491,5 @@ button.view {
   &-wrapper {
     width: 100%;
   }
-}
-
-.drop-incomplete {
-
 }
 </style>
