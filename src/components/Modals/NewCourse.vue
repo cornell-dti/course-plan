@@ -15,7 +15,12 @@
     <div v-if="isCourseModelSelectingSemester && !selected">
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
-        <newSemester :type="season" :year="year" @updateSemProps="updateSemProps"></newSemester>
+        <newSemester
+          :type="season"
+          :year="year"
+          :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
+          @updateSemProps="updateSemProps"
+        ></newSemester>
       </div>
     </div>
     <div v-if="!isOnboard && selected">
@@ -348,7 +353,7 @@ export default Vue.extend({
   &-title {
     font-size: 14px;
     line-height: 17px;
-    color: $darkGray;
+    color: $lightPlaceholderGray;
     margin-bottom: 6px;
   }
   &-requirements {

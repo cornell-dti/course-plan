@@ -34,9 +34,7 @@
         </div>
       </div>
       <div v-if="subReq.fulfilledBy === 'self-check'">
-        <addcoursebutton :compact="true" :shouldClearPadding="true" @click="onAddCourse">
-          + Course
-        </addcoursebutton>
+        <addcoursebutton :compact="true" :shouldClearPadding="true" @click="onAddCourse" />
       </div>
       <div class="separator"></div>
     </div>

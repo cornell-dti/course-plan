@@ -100,9 +100,11 @@
             />
           </div>
         </div>
-        <addcoursebutton :compact="compact" @click="openCourseModal">
-          {{ buttonString }}
-        </addcoursebutton>
+        <addcoursebutton
+          :compact="compact"
+          :shouldShowWalkthrough="true"
+          @click="openCourseModal"
+        />
       </div>
     </div>
     <semestermenu
@@ -255,9 +257,6 @@ export default Vue.extend({
         }
       });
       return uniqueCourses;
-    },
-    buttonString() {
-      return '+ Course';
     },
   },
   methods: {

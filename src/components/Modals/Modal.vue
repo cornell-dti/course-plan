@@ -20,7 +20,6 @@
         ref="modalBodyComponent"
         :season="season"
         :year="year"
-        :labels="true"
         :goBack="goBack"
       ></component>
       <div class="modal-buttonWrapper">

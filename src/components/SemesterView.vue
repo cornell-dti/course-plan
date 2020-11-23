@@ -251,7 +251,6 @@ export default Vue.extend({
       return semester;
     },
     addSemester(type: FirestoreSemesterType, year: number) {
-      console.log(year);
       const newSem = this.createSemester([], type, year);
 
       // find the index in which the semester should be added to maintain chronological order
