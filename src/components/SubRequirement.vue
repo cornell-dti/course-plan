@@ -270,8 +270,7 @@ export default Vue.extend({
         });
         // Push crseInfoObjects onto subReqCoursesNotTakenArray for the subReqCourse slot
         subReqCoursesNotTakenArray.push(crseInfoObjects);
-      });
-      // console.log(subReqCoursesNotTakenArray);
+      });      
       return subReqCoursesNotTakenArray;
     },
     getMaxFirstFourCrseInfoObjects(): CrseInfo[] {
