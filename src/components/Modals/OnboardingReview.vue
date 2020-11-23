@@ -114,7 +114,7 @@
 <script>
 
 import reqsData from '@/requirements/typed-requirement-json';
-import examData from '@/requirements/data/exams/ExamCredit';
+import { examData } from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
 
 const placeholderText = 'Select one';

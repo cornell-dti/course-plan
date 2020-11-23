@@ -85,12 +85,6 @@
       </div>
       <!-- <input v-if="!isOnboard" class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
         semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" /> -->
-      <input v-if="isOnboard" class="newCourse-onboarding" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
-        semesterID" :placeholder="placeholderText" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
-      <input v-if="!isOnboard" class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
-        semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
-      <input v-if="isOnboard" :class="onboardingStyle(placeholderText)" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
-        semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
     </div>
   </div>
 </template>
@@ -314,17 +308,14 @@ export default Vue.extend({
     updateSemProps(season, year) {
       this.$emit('updateSemProps', season, year);
     },
-  },
-});
-
     addCourse() {
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     },
     onboardingStyle(placeholderText) {
       return placeholderText !== 'Select one' ? 'newCourse-onboarding' : 'newCourse-onboardingEmpty';
     }
-  }
-};
+  },
+});
 </script>
 
 <style lang="scss">
@@ -335,7 +326,6 @@ export default Vue.extend({
     line-height: 17px;
     color: $lightPlaceholderGray;
   }
-
   &-dropdown {
     font-size: 14px;
     line-height: 17px;
@@ -343,38 +333,52 @@ export default Vue.extend({
     width: 100%;
     border-radius: 3px;
     padding: 0.5rem;
-    border: 0.5px solid #c4c4c4;
+    border: 0.5px solid $inactiveGray;
     &::placeholder {
-      color: #b6b6b6;
+      color: $darkPlaceholderGray;
     }
   }
-  &-onboarding {
-    font-size: 14px;
-    line-height: 17px;
-    color: #000000;
-    width: 100%;
-    border-radius: 3px;
-    padding: 0.5rem;
-    border: 0.5px solid #b6b6b6;
-    border-radius: 0px;
-    background-color: #ffffff;
-    &::placeholder {
-      color: #000000;
+  &-semester {
+    margin-top: 8px;
+    margin-bottom: 15px;
+    &-edit {
+      width: 50%;
     }
   }
-  &-onboardingEmpty {
-    // this part repeats &-onboarding except for different placeholder color, how do i make it so I don't have to repeat stuff?
+  &-name {
+    position: relative;
+    border-radius: 11px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    color: $darkGray;
+  }
+  &-season-emoji {
+    height: 18px;
+    margin-top: -4px;
+  }
+  &-title {
     font-size: 14px;
     line-height: 17px;
-    color: #000000;
-    width: 100%;
-    border-radius: 3px;
-    padding: 0.5rem;
-    border: 0.5px solid #b6b6b6;
-    border-radius: 0px;
-    background-color: #ffffff;
-    &::placeholder {
-      color: #B6B6B6;
+    color: $lightPlaceholderGray;
+    margin-bottom: 6px;
+  }
+  &-requirements {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    color: $emGreen;
+    &-container {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 13px;
+    }
+    &-edit {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
   }
   &-space {
@@ -390,7 +394,6 @@ export default Vue.extend({
     cursor: pointer;
   }
 }
-
 .autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
@@ -405,7 +408,6 @@ input {
   padding: 10px;
   font-size: 16px;
 }
-
 .autocomplete-items {
   position: absolute;
   border: 1px solid #d4d4d4;
@@ -416,7 +418,6 @@ input {
   top: 100%;
   left: 0;
   right: 0;
-
   box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
 }
