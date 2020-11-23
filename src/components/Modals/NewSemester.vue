@@ -2,10 +2,13 @@
   <div>
     <div class="newSemester">
       <div class="newSemester-section newSemester-type">
-        <label class="newSemester-label" for="type">Type</label>
+        <label v-if="!isCourseModelSelectingSemester" class="newSemester-label" for="type"
+          >Type</label
+        >
         <div
           v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
           id="season"
+          class="position-relative"
           v-click-outside="closeSeasonDropdownIfOpen"
         >
           <div
@@ -35,7 +38,7 @@
             ></div>
           </div>
           <div
-            class="newSemester-dropdown-content season-content"
+            class="newSemester-dropdown-content season-content position-absolute w-100"
             id="season-content"
             v-if="displayOptions.season.shown"
           >
@@ -54,10 +57,13 @@
         </div>
       </div>
       <div class="newSemester-section newSemester-year">
-        <label class="newSemester-label" for="year">Year</label>
+        <label v-if="!isCourseModelSelectingSemester" class="newSemester-label" for="year"
+          >Year</label
+        >
         <div
           v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
           id="year"
+          class="position-relative"
           v-click-outside="closeYearDropdownIfOpen"
         >
           <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
@@ -84,7 +90,7 @@
             ></div>
           </div>
           <div
-            class="newSemester-dropdown-content year-content"
+            class="newSemester-dropdown-content year-content position-absolute"
             id="year-content"
             v-if="displayOptions.year.shown"
           >
@@ -145,7 +151,7 @@ type Data = {
   readonly seasons: readonly (readonly [string, FirestoreSemesterType])[];
   readonly years: readonly number[];
   seasonText: string;
-  yearText: string;
+  yearText: number;
   readonly displayOptions: {
     readonly year: DisplayOption;
     readonly season: DisplayOption;
@@ -159,6 +165,7 @@ export default Vue.extend({
     isEdit: Boolean,
     year: Number,
     type: String as PropType<FirestoreSemesterType>,
+    isCourseModelSelectingSemester: Boolean,
   },
   data(): Data {
     // years
@@ -175,13 +182,12 @@ export default Vue.extend({
       years.push(startYear);
       startYear += 1;
     }
-    years.map(String);
 
     return {
       seasons,
       years,
       seasonText: '',
-      yearText: '',
+      yearText: 0,
       displayOptions: {
         season: {
           shown: false,
@@ -272,12 +278,7 @@ export default Vue.extend({
     closeYearDropdownIfOpen() {
       this.closeDropdownIfOpen('year');
     },
-    selectOption(type: 'season' | 'year', text: string): void {
-      if (type === 'season') {
-        this.seasonText = text;
-      } else {
-        this.yearText = text;
-      }
+    selectOption(type: 'season' | 'year'): void {
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.boxBorder = '#C4C4C4';
@@ -289,11 +290,13 @@ export default Vue.extend({
         this.yearText || this.yearPlaceholder
       );
     },
-    selectSeason(text: string) {
-      this.selectOption('season', text);
+    selectSeason(season: string) {
+      this.seasonText = season;
+      this.selectOption('season');
     },
-    selectYear(text: string | number) {
-      this.selectOption('year', String(text));
+    selectYear(year: number) {
+      this.yearText = year;
+      this.selectOption('year');
     },
     resetDropdown(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
@@ -306,7 +309,7 @@ export default Vue.extend({
       if (type === 'season') {
         this.seasonText = '';
       } else {
-        this.yearText = '';
+        this.yearText = 0;
       }
     },
     resetDropdowns() {
@@ -340,6 +343,7 @@ export default Vue.extend({
   color: red;
 }
 .duplicate {
+  border-radius: 3px;
   border: 1px solid red;
 }
 .newSemester {
@@ -372,16 +376,13 @@ export default Vue.extend({
   }
 
   &-select {
-    left: 444px;
-    top: 183px;
-
     background: #ffffff;
     // border: 1px solid #32A0F2;
 
     //when selected border-color: #32A0F2;
 
     box-sizing: border-box;
-    border-radius: 1px;
+    border-radius: 2px;
     width: 100%;
     font-style: normal;
     font-weight: normal;
@@ -415,9 +416,8 @@ export default Vue.extend({
       &.year-wrapper {
         display: flex;
         flex-direction: row;
-        // width: 121px;
-        // height: 16px;
         width: 100%;
+        border-radius: 2px;
         border: 1px solid #c4c4c4;
         cursor: pointer;
       }
@@ -436,7 +436,6 @@ export default Vue.extend({
         height: 6.24px;
         border-left: 6.24px solid transparent;
         border-right: 6.24px solid transparent;
-
         border-top: 6.24px solid #c4c4c4;
 
         //when clicked border-top-color: #32A0F2;
@@ -463,17 +462,15 @@ export default Vue.extend({
   }
 
   &-dropdown-content {
-    max-height: 124px;
-    left: 444px;
+    max-height: 140px;
 
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 0px 0px 7px 7px;
 
     &.year-content {
+      z-index: 1;
       width: 100%;
-      left: 574px;
-      top: 209px;
 
       background: #ffffff;
       box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);

@@ -60,7 +60,6 @@
               :reqIndex="reqIndex"
               :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
               :color="reqGroupColorMap[req.group][0]"
-              :isCompleted="true"
               :rostersFromLastTwoYears="rostersFromLastTwoYears"
               :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"

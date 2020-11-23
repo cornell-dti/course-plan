@@ -19,14 +19,8 @@
         </p>
       </div>
       <div class="col">
-        <p v-if="!this.isFulfilled" class="sup-req-progress text-right incomplete-ptext">
-          {{
-            subReq.fulfilledBy !== 'self-check'
-              ? `${subReq.totalCountFulfilled || subReq.minCountFulfilled}/${
-                  subReq.totalCountRequired || subReq.minCountRequired
-                } ${subReq.fulfilledBy}`
-              : 'self check'
-          }}
+        <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">
+          {{ subReqProgress }}
         </p>
         <p v-if="this.isFulfilled" class="text-right completed-ptext">
           <span
@@ -185,6 +179,13 @@ export default Vue.extend({
     subReqCoursesNotTakenArray(): CrseInfo[][] {
       return this.generateSubReqCoursesNotTakenArray();
     },
+    subReqProgress(): string {
+      return this.subReq.fulfilledBy !== 'self-check'
+        ? `${this.subReq.totalCountFulfilled || this.subReq.minCountFulfilled}/${
+            this.subReq.totalCountRequired || this.subReq.minCountRequired
+          } ${this.subReq.fulfilledBy}`
+        : 'self check';
+    },
   },
   directives: {
     'click-outside': clickOutside,
@@ -243,6 +244,7 @@ export default Vue.extend({
       const subReqCoursesNotTakenArray: CrseInfo[][] = [];
       // Depending on fulfilledBy, subReqCourses is accessed differently from subReq
       const subReqCourses = this.getFulfillededByCourses();
+      if (subReqCourses == null) return [[]];
       const mostRecentRosters = this.rostersFromLastTwoYears;
       let filteredSubReqRosters;
       // Iterate over each course slot for the subReq

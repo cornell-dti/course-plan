@@ -1,9 +1,6 @@
 <template>
   <div class="incompletesubreqcourse">
-    <div
-      class="draggable-requirements-wrapper"
-      v-if="displayDescription && crseInfoObjects.length > 0"
-    >
+    <div class="draggable-requirements-wrapper" v-if="displayDescription">
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
         <div
@@ -15,7 +12,7 @@
         </div>
       </div>
       <div
-        v-if="displayCourses"
+        v-if="displayCourses && crseInfoObjects.length > 0"
         class="draggable-requirements-courses"
         v-dragula="courseObjects"
         bag="first-bag"
@@ -36,6 +33,9 @@
           />
         </div>
       </div>
+      <div v-if="subReq.fulfilledBy === 'self-check'">
+        <addcoursebutton :compact="true" :shouldClearPadding="true" @click="onAddCourse" />
+      </div>
       <div class="separator"></div>
     </div>
   </div>
@@ -45,10 +45,12 @@
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import Course from '@/components/Course.vue';
+import AddCourseButton from '@/components/AddCourseButton.vue';
 import { DisplayableRequirementFulfillment } from '@/requirements/types';
 import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('course', Course);
+Vue.component('addcoursebutton', AddCourseButton);
 
 type CrseInfo = {
   roster: string;
@@ -149,6 +151,10 @@ export default Vue.extend({
         requirementName: this.subReq.requirement.name,
         subReqCoursesArray: this.subReqCoursesNotTakenArray,
       });
+    },
+    onAddCourse() {
+      const dashboardRef = this.$parent.$parent.$parent.$parent as any;
+      dashboardRef.$refs.semesterview.$refs.semester[0].openCourseModal(true);
     },
   },
 });
