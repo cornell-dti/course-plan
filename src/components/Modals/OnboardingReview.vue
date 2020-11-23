@@ -62,7 +62,7 @@
                     <label v-if="typeof options.type != undefined && options.type.placeholder == 'IB'" class="onboarding-label--review">{{ options.subject.placeholder }}</label>
                   </div>
                 </div>
-                <div>
+                <div class = "alignCenter">
                   <label class="onboarding-label">Score</label>
                   <div v-for="(options, index) in displayOptions.exam" :key = "'APScore'+index">
                     <label v-if="typeof options.type != undefined && options.type.placeholder == 'AP'" class="onboarding-label--review">{{ options.score.placeholder }}</label>
@@ -72,7 +72,7 @@
                     <label v-if="typeof options.type != undefined && options.type.placeholder == 'IB'" class="onboarding-label--review">{{ options.score.placeholder }}</label>
                   </div>
                 </div>
-                <div>
+                <div class = "alignCenter">
                   <label class="onboarding-label ">Credit</label>
                   <div v-for="(options, index) in displayOptions.exam" :key = "'APCredit'+index">
                     <!-- TODO replace credit with actual value -->
@@ -85,9 +85,25 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Your Minor</span></div> -->
+            <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Transferred Course Credits</span></div>
+            <div class = "onboarding-selectWrapper">
+              <div class="onboarding-selectWrapper-reviewExam">
+                <div>
+                  <div
+                    v-for="(options, index) in displayOptions.class" :key= index>
+                    <label v-if="options.class !== 'Select one'" class="onboarding-label--review"> {{ options.class }} </label>
+                  </div>
+                </div>
+                <div class="alignEnd">
+                  <div
+                    v-for="(options, index) in displayOptions.class" :key= index>
+                    <label v-if="options.class !== 'Select one'" class="onboarding-label--review"> {{ options.credits }} Credits </label>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="onboarding-bottomWrapper">
-              <label class="onboarding-label--bottom">Total Transfer Credits:</label>
+              <label class="onboarding-subHeader2-review">Total Transfer Credits:</label>
               <label class="onboarding-label--bottom">{{ totalCredits }} Credits</label>
             </div>
           </div>
