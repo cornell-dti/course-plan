@@ -3,10 +3,7 @@
     <div class="row depth-req">
       <div class="col-1" @click="toggleDescription()">
         <button class="btn">
-          <dropdownarrow
-            :isFlipped="displayDescription"
-            :fillColor="getArrowColor()"
-          />
+          <dropdownarrow :isFlipped="displayDescription" :fillColor="getArrowColor()" />
         </button>
       </div>
       <div class="col-7" @click="toggleDescription()">
