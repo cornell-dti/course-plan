@@ -13,9 +13,6 @@ input {
     justify-content: space-between;
     
   }
-  &-section {
-      padding-bottom: 10px;
-  }
   &-bottomWrapper {
     margin-top: 15px;
     display: flex;
@@ -25,10 +22,10 @@ input {
 
   &-main {
     background: #ffffff;
-    border-radius: 9px;
+    border-radius: 6px;
     margin-left: auto;
     margin-right: auto;
-    width: 36rem;
+    max-width: 40rem;
   }
 
   &-cancel {
@@ -41,7 +38,7 @@ input {
   }
 
   &-content {
-    padding: 2.5rem 2.5rem 0 2.5rem;
+    padding: 1.5rem 2rem 0 2rem;
   }
 
   &-top {
@@ -54,16 +51,16 @@ input {
   &-header {
     // TODO: font-size is 40px on designs, but does not fit
     font-weight: bold;
-    font-size: 38px;
+    font-size: 36px;
     color: #4F4F4F;
   }
 
   &-description {
     font-weight: 300;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 24px;
 
-    color: #757575;
+    color: #4F4F4F;
   }
 
   &-section {
@@ -73,9 +70,8 @@ input {
   &-inputs {
     border: 1px solid #C4C4C4;
     box-sizing: border-box;
-    border-radius: 9px;
-
-    padding: 2rem;
+    border-radius: 4px;
+    padding: 2rem 2.4rem;
 
     &--name {
       display: flex;
@@ -101,7 +97,7 @@ input {
     font-size: 18px;
     line-height: 22px;
     position:relative; 
-    top: 23px;
+    top: 24px;
     padding-left:15px;
     /* identical to box height */
     
@@ -112,8 +108,6 @@ input {
     color: #404040;
     margin-bottom: .75rem;
     &--font{
-      padding:5px;
-      margin-left:10px;
       background-color: white;
     }
   }
@@ -129,9 +123,8 @@ input {
 
   &-label {
     font-size: 16px;
-    line-height: 19px;
     color: #757575;
-    margin-bottom: .5rem;
+    margin-bottom: .2rem;
 
     &--bottom {
         display: flex;

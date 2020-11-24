@@ -1,5 +1,5 @@
 <template>
-    <div class="onboarding">
+    <div>
         <div class="onboarding-section">
           <div class="onboarding-subHeader"><span class="onboarding-subHeader--font">Cornell Swimming Test </span> </div>
           <div class="onboarding-inputs onboarding-inputs--name">

@@ -6,17 +6,17 @@
       </div>
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
         <div class="onboarding-top">
-          <div v-if="!isEditingProfile" class="onboarding-header">👏 Welcome to CoursePlan</div>
-          <div v-if="isEditingProfile" class="onboarding-header">👋 Hi {{ user.firstName }}</div>
-          <div v-if="!isEditingProfile" class="onboarding-description">Let's get to know you first!</div>
-          <div v-if="isEditingProfile" class="onboarding-description">Let's edit your profile!</div>
-          <onboardingBasic v-if="currentPage == 1"
-            :user="user"
-            @updateBasic="updateBasic"/>
-          <onboardingTransfer v-if="currentPage == 2"
-            :user="user"
-            @updateTransfer="updateTransfer"
-            />
+          <div class="onboarding-header">{{ getHeader }}</div>
+          <div class="onboarding-description">{{ getDescription }}</div>
+          <div class="px-2 w-100">
+            <onboardingBasic v-if="currentPage == 1"
+              :user="user"
+              @updateBasic="updateBasic"/>
+            <onboardingTransfer v-if="currentPage == 2"
+              :user="user"
+              @updateTransfer="updateTransfer"
+              />
+          </div>
         </div>
       </div>
       <div class="onboarding-bottom">
@@ -120,6 +120,14 @@ export default Vue.extend({
   },
   directives: {
     'click-outside': clickOutside
+  },
+  computed: {
+    getHeader() {
+      return this.isEditingProfile ? `👋 Hi ${this.user.firstName }` : '👏 Welcome to CoursePlan';
+    },
+    getDescription() {
+      return this.isEditingProfile ? `Let's edit your profile` : `Let's get to know you first`;
+    }
   },
   methods: {
     submitOnboarding() {

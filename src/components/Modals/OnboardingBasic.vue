@@ -1,28 +1,28 @@
 <template>
-    <div class="onboarding">
+    <div>
         <div class="onboarding-section">
-          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Your Name</span></div>
+          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font font-weight-bold px-2">Your Name</span></div>
           <div class="onboarding-inputs onboarding-inputs--name">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-              <label class="onboarding-label"><span class="onboarding-subHeader--font"> First Name* </span></label>
+              <label class="onboarding-label"><span class="onboarding-subHeader--font">First Name*</span></label>
               <input class="onboarding-input" v-model="firstName" />
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-              <label class="onboarding-label"><span class="onboarding-subHeader--font"> Middle Name </span></label>
+              <label class="onboarding-label"><span class="onboarding-subHeader--font">Middle Name</span></label>
               <input class="onboarding-input" v-model="middleName" />
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-              <label class="onboarding-label"><span class="onboarding-subHeader--font"> Last Name* </span></label>
+              <label class="onboarding-label"><span class="onboarding-subHeader--font">Last Name<span class="required">*</span></span></label>
               <input class="onboarding-input" v-model="lastName" />
             </div>
           </div>
         </div>
         <div class="onboarding-section">
           <!-- TODO: Multiple colleges -->
-          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Your College</span> </div>
+          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font font-weight-bold px-2">Your College</span> </div>
           <div class="onboarding-inputs">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your College (required)</label>
+              <label class="onboarding-label">Your College</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -68,7 +68,7 @@
 
 
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major!</label>
+              <label class="onboarding-label">Your Major</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -545,4 +545,8 @@ export default Vue.extend({
 
 <style scoped lang="scss">
   @import '@/components/Modals/Onboarding.scss';
+
+  .required {
+    color: $emGreen;
+  }
 </style>
