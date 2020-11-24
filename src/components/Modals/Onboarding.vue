@@ -20,27 +20,13 @@
         </div>
       </div>
       <div class="onboarding-bottom">
-        <div class="onboarding-bottom--section onboarding-bottom--section---center">
-          <img class="timeline" :src="require(`@/assets/images/timeline${currentPage}.svg`)" alt="X">
+        <div class="w-100">
+          <img class="w-100 px-2 mb-3" :src="require(`@/assets/images/timeline${currentPage}.svg`)" alt="X">
         </div>
-        <div v-if="currentPage==3" class="onboarding-bottom--section onboarding-bottom--section---center">
-          <div class="onboarding-bottom--contents" @click="cancel">
-            <label class="onboarding-bottom--text">Skip for now</label>
-          </div>
-          <div class="onboarding-bottom--contents">
-            <button class="onboarding-button" @click="goBack"> Prev </button>
-            <button class="onboarding-button" @click="submitOnboarding">Finish</button>
-         </div>
-        </div>
-        <div v-else class="onboarding-bottom--section">
-          <div class="onboarding-bottom--contents" @click="cancel">
-            <label class="onboarding-bottom--text">Skip for now</label>
-          </div>
-          <div class="onboarding-bottom--contents">
-            <button class="onboarding-button" @click="goBack"> Prev </button>
-            <button class="onboarding-button" @click="goNext">Next</button>
-        </div>
-    </div>
+        <div class="onboarding-buttons-container">
+          <button class="btn onboarding-button" @click="goNext">Next</button>
+          <button class="btn onboarding-button" @click="goBack">Previous</button>
+      </div>
     <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">Please fill out all required fields and try again.</div>
   </div>
   </div>
@@ -233,4 +219,16 @@ export default Vue.extend({
 </script>
 <style scoped lang="scss">
   @import '@/components/Modals/Onboarding.scss';
+
+  .onboarding {
+    
+    &-button {
+      background-color: #148481;
+    }
+
+    &-buttons-container {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+  }
 </style>

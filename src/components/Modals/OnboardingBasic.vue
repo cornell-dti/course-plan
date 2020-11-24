@@ -3,15 +3,15 @@
         <div class="onboarding-section">
           <div class="onboarding-subHeader"><span class="onboarding-subHeader--font font-weight-bold px-2">Your Name</span></div>
           <div class="onboarding-inputs onboarding-inputs--name">
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <div class="col pl-0 pr-2">
               <label class="onboarding-label"><span class="onboarding-subHeader--font">First Name<span class="required">*</span></span></label>
               <input class="onboarding-input" v-model="firstName" />
             </div>
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <div class="col px-2">
               <label class="onboarding-label"><span class="onboarding-subHeader--font">Middle Name</span></label>
               <input class="onboarding-input" v-model="middleName" />
             </div>
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <div class="col pr-0 pl-2">
               <label class="onboarding-label"><span class="onboarding-subHeader--font">Last Name<span class="required">*</span></span></label>
               <input class="onboarding-input" v-model="lastName" />
             </div>
@@ -71,7 +71,7 @@
               <label class="onboarding-label">Major<span class="required">*</span></label>
               <div class="onboarding-selectWrapper">
                 <div
-                  class="onboarding-select onboarding-input"
+                  class="onboarding-select onboarding-input mb-2"
                   :class="{ 'onboarding-select--disabled': Object.keys(majors).length <= 0 }"
                   id="major"
                   v-for="(options, index) in displayOptions.major"

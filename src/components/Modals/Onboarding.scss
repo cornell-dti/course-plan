@@ -148,16 +148,6 @@ input {
     border-radius: 2px;
   }
 
-  &-inputWrapper {
-    &--name {
-      width: calc(100% / 3);
-
-      &:not(:last-child) {
-        margin-right: 1.5rem;
-      }
-    }
-  }
-
   &-addRemoveWrapper {
     margin-top: .5rem;
     display: flex;
@@ -182,33 +172,12 @@ input {
       
     display: flex;
     flex-direction: column;
-    padding-left: 56px;
-    padding-right: 56px;
+    padding: 24px 56px;
     border-top: 1px solid #E5E5E5;
     box-sizing: border-box;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 9px;
     padding-top: 1rem;
-    height: 6rem;
 
-    &--section {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        padding-bottom: 12px;
-
-        &---center {
-            display:flex;
-            justify-content: center;
-        }
-    }
-
-    &--contents {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        
-    }
     &--text {
         font-style: normal;
         font-weight: normal;
@@ -223,26 +192,6 @@ input {
             color: #404040;
         }
 
-    }
-  }
-
-  &-button {
-    background: $emGreen;
-    border: 0;
-    box-sizing: border-box;
-    border-radius: 1px;
-    font-size: 14px;
-    line-height: 14px;
-    color: #FFFFFF;
-    margin: 5px;
-
-    width: 80px;
-    min-height: 1.75rem;
-
-    &:hover,
-    &:focus,
-    &:active {
-      background: #D7D7D7;
     }
   }
 
@@ -395,10 +344,4 @@ select.empty {
 /* Hidden placeholder */
 select option[disabled]:first-child {
   display: none;
-}
-.timeline {
-    display: flex;
-    justify-content: center;
-    align-self: center;
-    margin-bottom: 20 px;
 }
