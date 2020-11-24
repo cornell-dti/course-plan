@@ -63,15 +63,11 @@ input {
     color: #4F4F4F;
   }
 
-  &-section {
-    margin-bottom: 1rem;
-  }
-
   &-inputs {
     border: 1px solid #C4C4C4;
     box-sizing: border-box;
     border-radius: 4px;
-    padding: 2rem 2.4rem;
+    padding: 1.6rem 2.6rem;
 
     &--name {
       display: flex;
@@ -123,7 +119,7 @@ input {
 
   &-label {
     font-size: 16px;
-    color: #757575;
+    color: #404040;
     margin-bottom: .2rem;
 
     &--bottom {
@@ -158,15 +154,6 @@ input {
 
       &:not(:last-child) {
         margin-right: 1.5rem;
-      }
-    }
-
-    &--college {
-      &:not(:last-child) {
-        margin-bottom: 1rem;
-      }
-      &:first-child {
-        margin-bottom: 2rem;
       }
     }
   }
@@ -271,7 +258,6 @@ input {
     border: 1px solid #c4c4c4;
 
     box-sizing: border-box;
-    border-radius: 1px;
     width: 100%;
     font-size: 14px;
     line-height: 17px;

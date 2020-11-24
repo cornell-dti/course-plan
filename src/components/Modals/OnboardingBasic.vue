@@ -4,7 +4,7 @@
           <div class="onboarding-subHeader"><span class="onboarding-subHeader--font font-weight-bold px-2">Your Name</span></div>
           <div class="onboarding-inputs onboarding-inputs--name">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-              <label class="onboarding-label"><span class="onboarding-subHeader--font">First Name*</span></label>
+              <label class="onboarding-label"><span class="onboarding-subHeader--font">First Name<span class="required">*</span></span></label>
               <input class="onboarding-input" v-model="firstName" />
             </div>
             <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
@@ -19,10 +19,10 @@
         </div>
         <div class="onboarding-section">
           <!-- TODO: Multiple colleges -->
-          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font font-weight-bold px-2">Your College</span> </div>
+          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font font-weight-bold px-2">Your Major</span> </div>
           <div class="onboarding-inputs">
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your College</label>
+            <div class="onboarding-inputWrapper pb-2">
+              <label class="onboarding-label">College<span class="required">*</span></label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -67,8 +67,8 @@
             </div>
 
 
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major</label>
+            <div class="onboarding-inputWrapper">
+              <label class="onboarding-label">Major<span class="required">*</span></label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -119,8 +119,11 @@
                 </div>
               </div>
             </div>
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Minor (optional)</label>
+    </div>
+    <div class="onboarding-subHeader"><span class="onboarding-subHeader--font font-weight-bold px-2">Your Minor</span> </div>
+          <div class="onboarding-inputs">
+<div class="onboarding-inputWrapper onboarding-inputWrapper--college">
+              <label class="onboarding-label">Minor</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -170,7 +173,7 @@
                 </div>
               </div>
             </div>
-    </div>
+          </div>
   </div>
 </div>
 </template>
