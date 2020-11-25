@@ -30,7 +30,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Chemistry',
     description:
-      'CHEM 2090.  Majors in Chemical Engineering or those planning on a health-related career should take CHEM 2090 and then 2080.  ' +
+      'CHEM 2090. Majors in Chemical Engineering or those planning on a health-related career should take CHEM 2090 and then 2080.  ' +
       'Students in Environmental Engineering should take CHEM 2090 and CHEM 1570/3570.  ' +
       'Earth and Atmospheric Sciences majors should take CHEM 2090 and then 2080/1570.',
     source:
@@ -52,7 +52,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Computing',
-    description: '(CS 1110, 1112, 1114, or 1115)',
+    description: 'CS 1110, 1112, 1114, or 1115.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'),
@@ -100,14 +100,15 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'Six credits of electives are required and must be approved by the student’s faculty advisor.',
     source:
-      'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives#adv_elective',
+      'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     fulfilledBy: 'self-check',
     minCount: 6,
   },
   {
-    name: 'Technical Communication',
+    name: 'Engineering Communications',
     description:
-      'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
+      'An engineering communications course must be taken as an engineering distribution, liberal studies, Advisor-approved Elective, or Major course. '
+      + 'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/engineering-communications-program/technical',
     checker: includesWithSubRequirements(
@@ -144,3 +145,4 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default engineeringRequirements;
+
