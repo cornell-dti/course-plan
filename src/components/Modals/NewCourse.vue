@@ -11,7 +11,6 @@
         @keyup.esc="closeCourseModal"
       />
     </div>
-    <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
     <div v-if="isCourseModelSelectingSemester && !selected">
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
