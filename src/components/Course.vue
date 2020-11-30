@@ -1,6 +1,7 @@
 <template>
-  <div :class="{ 'course--min': compact, active: active }" class="course" @click="updateBar()">
+  <div :class="{ 'course--min': compact, active: active, 'completedReqCourse': isCompletedReqCourse}" class="course" :style="borderColorCSSvar" @click="updateBar()">
     <div
+      v-if="!isCompletedReqCourse"
       class="course-color"
       :style="cssVars"
       :class="{ 'course-color--active': active, 'course-color--min': compact }"
@@ -77,6 +78,7 @@ export default Vue.extend({
     active: Boolean,
     semId: Number,
     isReqCourse: Boolean,
+    isCompletedReqCourse: Boolean
   },
   data() {
     return {
@@ -117,6 +119,12 @@ export default Vue.extend({
 
     roster() {
       return `https://classes.cornell.edu/browse/roster/FA18/class/${this.subject}/${this.number}`;
+    },
+
+    borderColorCSSvar() {
+      return {
+        '--border-color': `#${this.color}`,
+      };
     },
 
     cssVars() {
@@ -360,6 +368,11 @@ export default Vue.extend({
     height: 2.125rem;
     width: 10rem;
   }
+}
+
+.completedReqCourse {
+  border: 1px solid;
+  border-color: var(--border-color);
 }
 
 // TODO: convert px to rem for spacing
