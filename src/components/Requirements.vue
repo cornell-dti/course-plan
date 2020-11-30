@@ -399,6 +399,11 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+.separator {
+  height: 1px;
+  width: 100%;
+  background-color: $inactiveGray;
+}
 .requirements,
 .fixed {
   height: 100vh;

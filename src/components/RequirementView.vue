@@ -35,6 +35,7 @@
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
           />
+          <div class="separator"></div>
         </div>
 
         <div v-if="req.completed.length > 0" class="row completed">

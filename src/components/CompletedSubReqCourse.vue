@@ -1,7 +1,7 @@
 <template>
   <div class="completedsubreqcourse">
-    <div v-for="course in courseObjects" :key="course.uniqueID" class="completed-reqCourses-course-wrapper">
-      <div class="separator"></div>
+    <div v-for="courseObject in courseObjects" :key="courseObject.uniqueID" class="completed-reqCourses-course-wrapper">
+      <div id="completedSeparator" class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
           <span class="completed-reqCourses-course-heading-check"><img src="@/assets/images/checkmark-green.svg" /></span>
@@ -11,12 +11,14 @@
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <course
-          v-bind="course"
-          :courseObj="course"
-          :id="course.subject + course.number"
-          :uniqueID="course.uniqueID"
+          v-bind="courseObject"
+          :courseObj="courseObject"
+          :id="courseObject.subject + courseObject.number"
+          :uniqueID="courseObject.uniqueID"
           :compact="true"
           :active="false"
+          :isCompletedReqCourse="true"
+          :isReqCourse="true"
           class="completed-reqCourses-course-object"
         />
         <div class="completed-reqCourses-course-object-semester">
@@ -32,7 +34,7 @@ import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import Course from '@/components/Course.vue';
 import { DisplayableRequirementFulfillment, CourseTaken } from '@/requirements/types';
-import { AppCourse, FirestoreSemesterCourse, AppSemester } from '@/user-data';
+import { AppCourse, FirestoreSemesterCourse, AppSemester, FirestoreSemesterType } from '@/user-data';
 
 Vue.component('course', Course);
 
@@ -49,12 +51,14 @@ type CompletedSubReqCourseSlot = {
 type IncompleteSubReqCourseSlot = {
   isCompleted: false;
   courses: CrseInfo[];
-}
+};
 
 type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 
 type Data = {
   courseObjects: AppCourse[];
+  semesterType: FirestoreSemesterType;
+  semesterYear: number;
 };
 
 export default Vue.extend({
@@ -66,8 +70,23 @@ export default Vue.extend({
   },
   data(): Data {
     return {
-      courseObjects: [],
+      semesterType: 'Fall',
+      semesterYear: 1234,
+      courseObjects: []
     };
+  },
+  mounted() {
+    const crseTaken = this.crsesTaken[0];
+
+    for (let i = 0; this.courseObjects.length < 1 && i < this.semesters.length; i += 1) {
+      const semester = this.semesters[i];
+      const filteredSemesterCourses = semester.courses.filter(course => course.crseId === crseTaken.courseId && course.subject === crseTaken.subject && course.number === crseTaken.number);
+      if (filteredSemesterCourses.length > 0) {
+        this.courseObjects.push(filteredSemesterCourses[0]);
+        this.semesterType = semester.type;
+        this.semesterYear = semester.year;
+      }
+    }
   },
   computed: {
     courseLabel() {
@@ -77,9 +96,13 @@ export default Vue.extend({
       return 'Reset';
     },
     semesterLabel() {
-      const semester = this.getS
-      return `in ${this.semesterType} ${this.semesterYear}`;
+      return `in ${this.$data.semesterType} ${this.$data.semesterYear}`;
     }
+  },
+  methods: {
+    dragListener(event: { preventDefault: () => void }) {
+      if (!this.$data.scrollable) event.preventDefault();
+    },
   },
 });
 </script>

@@ -73,8 +73,7 @@
           </div>
         </div>
       </div>
-      <div v-if="!this.isCompleted" class="separator"></div>
-      <div class="subreqcourse-wrapper">
+      <div v-if="displayDescription" class="subreqcourse-wrapper">
         <div v-for="(subReqCourseSlot, id) in subReqCoursesArray" :key="id">
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completedsubreqcourse
@@ -84,7 +83,7 @@
               :semesters="semesters"
             />
           </div>
-          <div v-else class="incompletesubreqcourse-wrapper">
+          <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
             <incompletesubreqcourse
               :subReq="subReq"
               :subReqCourseId="id"
