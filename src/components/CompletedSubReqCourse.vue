@@ -31,10 +31,27 @@
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import Course from '@/components/Course.vue';
-import { DisplayableRequirementFulfillment } from '@/requirements/types';
-import { AppCourse, FirestoreSemesterCourse, FirestoreSemesterType } from '@/user-data';
+import { DisplayableRequirementFulfillment, CourseTaken } from '@/requirements/types';
+import { AppCourse, FirestoreSemesterCourse, AppSemester } from '@/user-data';
 
 Vue.component('course', Course);
+
+type CrseInfo = {
+  roster: string;
+  crseIds: number[];
+};
+
+type CompletedSubReqCourseSlot = {
+  isCompleted: true;
+  courses: readonly CourseTaken[];
+};
+
+type IncompleteSubReqCourseSlot = {
+  isCompleted: false;
+  courses: CrseInfo[];
+}
+
+type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 
 type Data = {
   courseObjects: AppCourse[];
@@ -44,8 +61,8 @@ export default Vue.extend({
   props: {
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqCourseId: Number,
-    semesterType: String as PropType<FirestoreSemesterType>,
-    semesterYear: Number
+    crsesTaken: Array as PropType<readonly CourseTaken[]>,
+    semesters: Array as PropType<readonly AppSemester[]>,
   },
   data(): Data {
     return {
@@ -60,6 +77,7 @@ export default Vue.extend({
       return 'Reset';
     },
     semesterLabel() {
+      const semester = this.getS
       return `in ${this.semesterType} ${this.semesterYear}`;
     }
   },

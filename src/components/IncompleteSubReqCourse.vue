@@ -46,7 +46,7 @@ import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import Course from '@/components/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
-import { DisplayableRequirementFulfillment } from '@/requirements/types';
+import { DisplayableRequirementFulfillment, CourseTaken } from '@/requirements/types';
 import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('course', Course);
@@ -56,6 +56,18 @@ type CrseInfo = {
   roster: string;
   crseIds: number[];
 };
+
+type CompletedSubReqCourseSlot = {
+  isCompleted: true;
+  courses: readonly CourseTaken[];
+};
+
+type IncompleteSubReqCourseSlot = {
+  isCompleted: false;
+  courses: CrseInfo[];
+}
+
+type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 
 type Data = {
   courseObjects: AppCourse[];
@@ -90,7 +102,7 @@ export default Vue.extend({
     subReqCourseId: Number,
     crseInfoObjects: Array as PropType<CrseInfo[]>,
     subReqFetchedCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
-    subReqCoursesNotTakenArray: Array as PropType<CrseInfo[][]>,
+    subReqCoursesArray: Array as PropType<SubReqCourseSlot[]>,
     dataReady: Boolean,
     displayDescription: Boolean,
     lastLoadedShowAllCourseId: Number,
@@ -149,7 +161,7 @@ export default Vue.extend({
     onShowAllCourses(courses: AppCourse[]) {
       this.$emit('onShowAllCourses', {
         requirementName: this.subReq.requirement.name,
-        subReqCoursesArray: this.subReqCoursesNotTakenArray,
+        subReqCoursesArray: this.subReqCoursesArray,
       });
     },
     onAddCourse() {

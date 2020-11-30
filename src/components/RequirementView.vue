@@ -31,6 +31,7 @@
             :isCompleted="false"
             :rostersFromLastTwoYears="rostersFromLastTwoYears"
             :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
+            :semesters="semesters"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
           />
@@ -63,6 +64,7 @@
               :isCompleted="true"
               :rostersFromLastTwoYears="rostersFromLastTwoYears"
               :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
+              :semesters="semesters"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @onShowAllCourses="onShowAllCourses"
             />
@@ -82,7 +84,7 @@ import RequirementHeader from '@/components/RequirementHeader.vue';
 import SubRequirement from '@/components/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppUser, AppMajor, AppMinor, FirestoreSemesterCourse, AppCourse } from '@/user-data';
+import { AppUser, AppMajor, AppMinor, FirestoreSemesterCourse, AppCourse, AppSemester } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
@@ -109,6 +111,7 @@ export default Vue.extend({
     numOfColleges: Number,
     rostersFromLastTwoYears: Array as PropType<readonly String[]>,
     lastLoadedShowAllCourseId: Number,
+    semesters: Array as PropType<readonly AppSemester[]>,
   },
   data() {
     return {
