@@ -121,7 +121,7 @@ type CompletedSubReqCourseSlot = {
 type IncompleteSubReqCourseSlot = {
   isCompleted: false;
   courses: CrseInfo[];
-}
+};
 
 type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 
@@ -301,7 +301,11 @@ export default Vue.extend({
     activateMinor(id: number) {
       this.displayedMinorIndex = id;
     },
-    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean, isCompletedRequirementsCourse: boolean) {
+    createCourse(
+      course: FirestoreSemesterCourse,
+      isRequirementsCourse: boolean,
+      isCompletedRequirementsCourse: boolean
+    ) {
       this.$emit('createCourse', course, isRequirementsCourse, isCompletedRequirementsCourse);
     },
     getRequirementsTooltipText() {

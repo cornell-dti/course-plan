@@ -1,13 +1,21 @@
 <template>
   <div class="completedsubreqcourse">
-    <div v-for="courseObject in courseObjects" :key="courseObject.uniqueID" class="completed-reqCourses-course-wrapper">
+    <div
+      v-for="courseObject in courseObjects"
+      :key="courseObject.uniqueID"
+      class="completed-reqCourses-course-wrapper"
+    >
       <div id="completedSeparator" class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
-          <span class="completed-reqCourses-course-heading-check"><img src="@/assets/images/checkmark-green.svg" /></span>
-          {{courseLabel}}
+          <span class="completed-reqCourses-course-heading-check"
+            ><img src="@/assets/images/checkmark-green.svg"
+          /></span>
+          {{ courseLabel }}
         </div>
-        <div class="completed-reqCourses-course-heading-reset-button reqCourse-button">{{ resetText }}</div>
+        <div class="completed-reqCourses-course-heading-reset-button reqCourse-button">
+          {{ resetText }}
+        </div>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <course
@@ -22,7 +30,7 @@
           class="completed-reqCourses-course-object"
         />
         <div class="completed-reqCourses-course-object-semester">
-          {{semesterLabel}}
+          {{ semesterLabel }}
         </div>
       </div>
     </div>
@@ -34,7 +42,12 @@ import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import Course from '@/components/Course.vue';
 import { DisplayableRequirementFulfillment, CourseTaken } from '@/requirements/types';
-import { AppCourse, FirestoreSemesterCourse, AppSemester, FirestoreSemesterType } from '@/user-data';
+import {
+  AppCourse,
+  FirestoreSemesterCourse,
+  AppSemester,
+  FirestoreSemesterType,
+} from '@/user-data';
 
 Vue.component('course', Course);
 
@@ -72,7 +85,7 @@ export default Vue.extend({
     return {
       semesterType: 'Fall',
       semesterYear: 1234,
-      courseObjects: []
+      courseObjects: [],
     };
   },
   mounted() {
@@ -80,7 +93,12 @@ export default Vue.extend({
 
     for (let i = 0; this.courseObjects.length < 1 && i < this.semesters.length; i += 1) {
       const semester = this.semesters[i];
-      const filteredSemesterCourses = semester.courses.filter(course => course.crseId === crseTaken.courseId && course.subject === crseTaken.subject && course.number === crseTaken.number);
+      const filteredSemesterCourses = semester.courses.filter(
+        course =>
+          course.crseId === crseTaken.courseId &&
+          course.subject === crseTaken.subject &&
+          course.number === crseTaken.number
+      );
       if (filteredSemesterCourses.length > 0) {
         this.courseObjects.push(filteredSemesterCourses[0]);
         this.semesterType = semester.type;
@@ -97,7 +115,7 @@ export default Vue.extend({
     },
     semesterLabel() {
       return `in ${this.$data.semesterType} ${this.$data.semesterYear}`;
-    }
+    },
   },
   methods: {
     dragListener(event: { preventDefault: () => void }) {
@@ -164,4 +182,3 @@ export default Vue.extend({
   }
 }
 </style>
-

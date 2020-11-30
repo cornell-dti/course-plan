@@ -295,7 +295,7 @@ export const firestoreCourseToAppCourse = (
     check: true,
     uniqueID,
     isReqCourse,
-    isCompletedReqCourse
+    isCompletedReqCourse,
   };
 };
 

@@ -279,7 +279,11 @@ export default Vue.extend({
     /**
      * Creates a course on frontend with either user or API data
      */
-    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean, isCompletedRequirementsCourse: boolean): AppCourse {
+    createCourse(
+      course: FirestoreSemesterCourse,
+      isRequirementsCourse: boolean,
+      isCompletedRequirementsCourse: boolean
+    ): AppCourse {
       if (!isRequirementsCourse) {
         this.updateRequirementsMenu();
       }
