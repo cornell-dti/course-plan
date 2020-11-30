@@ -65,7 +65,7 @@ type CompletedSubReqCourseSlot = {
 type IncompleteSubReqCourseSlot = {
   isCompleted: false;
   courses: CrseInfo[];
-}
+};
 
 type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 

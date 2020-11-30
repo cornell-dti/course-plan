@@ -1,5 +1,10 @@
 <template>
-  <div :class="{ 'course--min': compact, active: active, 'completedReqCourse': isCompletedReqCourse}" class="course" :style="borderColorCSSvar" @click="updateBar()">
+  <div
+    :class="{ 'course--min': compact, active: active, completedReqCourse: isCompletedReqCourse }"
+    class="course"
+    :style="borderColorCSSvar"
+    @click="updateBar()"
+  >
     <div
       v-if="!isCompletedReqCourse"
       class="course-color"
@@ -78,7 +83,7 @@ export default Vue.extend({
     active: Boolean,
     semId: Number,
     isReqCourse: Boolean,
-    isCompletedReqCourse: Boolean
+    isCompletedReqCourse: Boolean,
   },
   data() {
     return {
