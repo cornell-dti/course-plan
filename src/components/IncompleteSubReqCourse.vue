@@ -1,6 +1,7 @@
 <template>
   <div class="incompletesubreqcourse">
     <div class="draggable-requirements-wrapper" v-if="displayDescription">
+      <div id="incompleteSeparator" class="separator"></div>
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
         <div
@@ -36,7 +37,6 @@
       <div v-if="subReq.fulfilledBy === 'self-check'">
         <addcoursebutton :compact="true" :shouldClearPadding="true" @click="onAddCourse" />
       </div>
-      <div class="separator"></div>
     </div>
   </div>
 </template>
