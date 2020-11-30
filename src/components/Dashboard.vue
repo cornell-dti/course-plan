@@ -296,13 +296,14 @@ export default Vue.extend({
     /**
      * Creates a course on frontend with either user or API data
      */
-    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean): AppCourse {
+    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean, isCompletedRequirementsCourse: boolean): AppCourse {
       if (!isRequirementsCourse) {
         this.updateRequirementsMenu();
       }
       return firestoreCourseToAppCourse(
         course,
         isRequirementsCourse,
+        isCompletedRequirementsCourse,
         () => this.incrementID(),
         subject => this.addColor(subject)
       );
@@ -588,6 +589,7 @@ export default Vue.extend({
       user.transferCourse.forEach(course => {
         const courseInfo = firestoreCourseToAppCourse(
           course.course,
+          false,
           false,
           () => this.incrementID(),
           subject => this.addColor(subject)

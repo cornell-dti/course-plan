@@ -74,7 +74,9 @@
         </div>
       </div>
       <div v-if="!this.isCompleted" class="separator"></div>
-      <div class="incompletesubreqcourse-wrapper" v-if="!this.isFulfilled">
+      <div class="completedsubreqcourse-wrapper" v-if="this.isCompleted">
+      </div>
+      <div class="incompletesubreqcourse-wrapper" v-if="!this.isCompleted">
         <div v-for="(subReqCrseInfoObjects, id) in subReqCoursesNotTakenArray" :key="id">
           <incompletesubreqcourse
             :subReq="subReq"
@@ -150,6 +152,11 @@ export default Vue.extend({
       },
     },
   },
+  mounted() {
+    if (this.isCompleted) {
+      console.log(this.subReq);
+    }
+  },
   data(): Data {
     return {
       showFulfillmentOptionsDropdown: false,
@@ -201,8 +208,8 @@ export default Vue.extend({
     isDataReady() {
       this.dataReady = true;
     },
-    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean) {
-      this.$emit('createCourse', course, isRequirementsCourse);
+    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean, isCompletedRequirementsCourse: boolean) {
+      this.$emit('createCourse', course, isRequirementsCourse, isCompletedRequirementsCourse);
     },
     closeMenuIfOpen() {
       this.showFulfillmentOptionsDropdown = false;
@@ -292,7 +299,7 @@ export default Vue.extend({
           fetchedCourses = result.data.courses;
           fetchedCourses.forEach((course: FirestoreSemesterCourse) => {
             // @ts-ignore
-            const createdCourse = this.$parent.$parent.$parent.createCourse(course, true);
+            const createdCourse = this.$parent.$parent.$parent.createCourse(course, true, false);
             createdCourse.compact = true;
             this.subReqFetchedCourseObjectsNotTakenArray.push(createdCourse);
           });
