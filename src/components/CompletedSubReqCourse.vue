@@ -1,6 +1,6 @@
 <template>
   <div class="completedsubreqcourse">
-    <div class="completed-reqCourses-course-wrapper">
+    <div v-for="course in courseObjects" :key="course.uniqueID" class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
@@ -36,12 +36,21 @@ import { AppCourse, FirestoreSemesterCourse, FirestoreSemesterType } from '@/use
 
 Vue.component('course', Course);
 
+type Data = {
+  courseObjects: AppCourse[];
+};
+
 export default Vue.extend({
   props: {
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqCourseId: Number,
     semesterType: String as PropType<FirestoreSemesterType>,
     semesterYear: Number
+  },
+  data(): Data {
+    return {
+      courseObjects: [],
+    };
   },
   computed: {
     courseLabel() {
