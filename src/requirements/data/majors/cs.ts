@@ -41,7 +41,9 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: (course: Course): boolean => {
-      if (courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4998', 'CS 4410'])) {
+      if (
+        courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4998', 'CS 4410', 'CS 4820'])
+      ) {
         return false;
       }
       return ifCodeMatch(course.subject, 'CS') && ifCodeMatch(course.catalogNbr, '4***');

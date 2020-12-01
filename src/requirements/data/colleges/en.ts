@@ -81,19 +81,35 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 2,
   },
+  // TODO: Check for categories & handle changed requirements for those entering in 2020 and later
   {
-    name: 'Liberal Studies Distribution',
-    description: 'Liberal Studies Distribution (six courses)',
+    name: 'Liberal Studies Distribution: 6 courses',
+    description:
+      'Liberal arts commonly include courses in the humanities. A minimum of six courses must be taken. ' +
+      ' These courses must come from some different groups and at least two courses must be at the 2000 level or higher.',
     source:
-      'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
+      'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
     checker: (course: Course): boolean =>
       ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA', 'FL', 'CE'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
     operator: 'or',
     fulfilledBy: 'courses',
-    minCount: 3,
-    totalCount: 6,
+    minCount: 6,
+  },
+  {
+    name: 'Liberal Studies Distribution: 18 credits',
+    description:
+      'In addition to six courses, the liberal studies distribution must total a minimum of 18 credits.',
+    source:
+      'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
+    checker: (course: Course): boolean =>
+      ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA', 'FL', 'CE'].some(
+        distribution => course.catalogDistr?.includes(distribution) ?? false
+      ),
+    operator: 'or',
+    fulfilledBy: 'credits',
+    minCount: 18,
   },
   {
     name: 'Advisor-Approved Electives',
