@@ -38,6 +38,7 @@
         :isMobile="isMobile"
         :currSemID="currSemID"
         @compact-updated="compactVal = $event"
+        @edit-semesters="editSemesters"
         @updateBar="updateBar"
         @close-bar="closeBar"
         @updateRequirementsMenu="updateRequirementsMenu"
@@ -245,6 +246,10 @@ export default Vue.extend({
         });
     },
 
+    editSemesters(newSemesters: AppSemester[]) {
+      this.semesters = newSemesters;
+      this.updateRequirementsMenu();
+    },
     resizeEventHandler(e: any) {
       this.isMobile = window.innerWidth <= 440;
       this.isTablet = window.innerWidth <= 878;
