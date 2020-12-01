@@ -82,6 +82,8 @@ import {
   BaseRequirement as Requirement,
   CourseTaken,
   SingleMenuRequirement,
+  SubReqCourseSlot,
+  CrseInfo,
 } from '@/requirements/types';
 import {
   RequirementMap,
@@ -107,23 +109,6 @@ Vue.component('modal', Modal);
 Vue.component('requirementview', RequirementView);
 Vue.component('dropdownarrow', DropDownArrow);
 Vue.use(VueCollapse);
-
-type CrseInfo = {
-  roster: string;
-  crseIds: number[];
-};
-
-type CompletedSubReqCourseSlot = {
-  isCompleted: true;
-  courses: readonly CourseTaken[];
-};
-
-type IncompleteSubReqCourseSlot = {
-  isCompleted: false;
-  courses: CrseInfo[];
-};
-
-type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 
 export type ShowAllCourses = {
   readonly name: string;
@@ -162,7 +147,6 @@ export default Vue.extend({
   },
   mounted() {
     this.recomputeRequirements();
-    console.log(this.reqs);
   },
   data(): Data {
     return {

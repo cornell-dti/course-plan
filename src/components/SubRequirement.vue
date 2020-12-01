@@ -114,6 +114,8 @@ import {
   DisplayableRequirementFulfillment,
   EligibleCourses,
   CourseTaken,
+  SubReqCourseSlot,
+  CrseInfo,
 } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
 
@@ -132,23 +134,6 @@ require('firebase/functions');
 
 const functions = firebase.functions();
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
-
-type CrseInfo = {
-  roster: string;
-  crseIds: number[];
-};
-
-type CompletedSubReqCourseSlot = {
-  isCompleted: true;
-  courses: readonly CourseTaken[];
-};
-
-type IncompleteSubReqCourseSlot = {
-  isCompleted: false;
-  courses: CrseInfo[];
-};
-
-type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 
 type Data = {
   showFulfillmentOptionsDropdown: boolean;

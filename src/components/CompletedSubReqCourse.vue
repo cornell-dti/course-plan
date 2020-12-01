@@ -51,23 +51,6 @@ import {
 
 Vue.component('course', Course);
 
-type CrseInfo = {
-  roster: string;
-  crseIds: number[];
-};
-
-type CompletedSubReqCourseSlot = {
-  isCompleted: true;
-  courses: readonly CourseTaken[];
-};
-
-type IncompleteSubReqCourseSlot = {
-  isCompleted: false;
-  courses: CrseInfo[];
-};
-
-type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
-
 type Data = {
   courseObjects: AppCourse[];
   semesterType: FirestoreSemesterType;
@@ -83,8 +66,8 @@ export default Vue.extend({
   },
   data(): Data {
     return {
-      semesterType: 'Fall',
-      semesterYear: 1234,
+      semesterType: 'Fall', // 'Fall' is an arbitrary FirestoreSemesterType value that user will never see
+      semesterYear: 0,
       courseObjects: [],
     };
   },
@@ -138,15 +121,15 @@ export default Vue.extend({
   &-reqCourses {
     &-course {
       &-wrapper {
-        margin-top: 4%;
-        margin-bottom: 4%;
+        margin-top: 0.6rem;
+        margin-bottom: 0.6rem;
       }
       &-heading {
         &-wrapper {
           display: flex;
           flex-direction: row;
           justify-content: space-between;
-          margin-top: 2%;
+          margin-top: 0.6rem;
         }
         &-course {
           font-size: 14px;
@@ -164,7 +147,7 @@ export default Vue.extend({
           font-size: 14px;
           line-height: 16px;
           color: $darkLabelGray;
-          margin-top: 2%;
+          margin-top: 0.6rem;
           font-style: italic;
         }
       }
@@ -177,7 +160,7 @@ export default Vue.extend({
     font-size: 12px;
     line-height: 15px;
     color: $yuxuanBlue;
-    padding: 1%;
+    padding: 0.2rem;
     cursor: pointer;
   }
 }
