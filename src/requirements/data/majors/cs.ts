@@ -1,5 +1,10 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements, courseMatchesCodeOptions, ifCodeMatch} from '../checkers-common';
+import {
+  includesWithSingleRequirement,
+  includesWithSubRequirements,
+  courseMatchesCodeOptions,
+  ifCodeMatch,
+} from '../checkers-common';
 
 const csRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -31,8 +36,10 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'CS Electives',
-    description: 'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4998 are NOT allowed.',
-    source: 'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
+    description:
+      'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4998 are NOT allowed.',
+    source:
+      'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: (course: Course): boolean => {
       if (courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4998', 'CS 4410'])) {
         return false;
@@ -47,7 +54,8 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'CS Practicum or Project',
     description:
       'CS practicums (CS 4xx1) or CS 3152, CS 4152, CS 4154, CS 4740, CS 4752, CS 5150, CS 5152, CS 5412, CS 5414, CS 5431, CS 5625, or CS 5643.',
-    source: 'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
+    source:
+      'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: includesWithSingleRequirement(
       'CS 4**1',
       'CS 3152',
@@ -69,8 +77,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Technical Electives',
-    description:
-      'Three 3000-level or above (3+ credits each) courses with technical content',
+    description: 'Three 3000-level or above (3+ credits each) courses with technical content',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor/technicalelectives',
     fulfilledBy: 'self-check',
     minCount: 3,
@@ -95,12 +102,11 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'self-check',
     minCount: 3,
   },
-  // TODO: Requirement whose classes can be double counted 
+  // TODO: Requirement whose classes can be double counted
   {
     name: 'Probability',
     description: 'Must take BTRY 3080, CS 4850, ECE 3100, ECON 3130, ENGRD 2700, or MATH 4710.',
-    source:
-      'https://www.cs.cornell.edu/undergrad/csmajor',
+    source: 'https://www.cs.cornell.edu/undergrad/csmajor',
     checker: includesWithSubRequirements([
       'BTRY 3080',
       'CS 4850',
@@ -116,4 +122,3 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default csRequirements;
-

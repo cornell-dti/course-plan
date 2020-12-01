@@ -107,8 +107,8 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Engineering Communications',
     description:
-      'An engineering communications course must be taken as an engineering distribution, liberal studies, Advisor-approved Elective, or Major course. '
-      + 'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
+      'An engineering communications course must be taken as an engineering distribution, liberal studies, Advisor-approved Elective, or Major course. ' +
+      'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/engineering-communications-program/technical',
     checker: includesWithSubRequirements(
@@ -145,4 +145,3 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default engineeringRequirements;
-
