@@ -3,7 +3,7 @@
     <div class="modal-content" :id="contentId">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
-        <img class="modal-exit" src="../../assets/images/x.png" @click="closeCurrentModal"/>
+        <img class="modal-exit" src="../../assets/images/x.png" @click="closeCurrentModal" />
       </div>
       <component
         class="modal-body"
@@ -11,13 +11,26 @@
         :isOnboard="isOnboard"
         :semesterID="semesterID"
         :currentSemesters="currentSemesters"
-        placeholderText = 'CS 1110", "Multivariable Calculus", etc.'
+        :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
+        placeholderText='"CS 1110", "Multivariable Calculus", etc.'
         @duplicateSemester="disableButton"
+        @close-current-model="closeCourseModal"
+        @updateSemProps="updateSemProps"
+        @toggle-left-button="toggleLeftButton"
         ref="modalBodyComponent"
+        :season="season"
+        :year="year"
+        :goBack="goBack"
       ></component>
       <div class="modal-buttonWrapper">
-        <button class="modal-button" @click="closeCurrentModal">{{ cancel }}</button>
-        <button class="modal-button modal-button--add" :class='{"modal-button--disabled": isDisabled }' @click="addItem">{{ add }}</button>
+        <button class="modal-button" @click="backOrCancel">{{ leftButton }}</button>
+        <button
+          class="modal-button modal-button--add"
+          :class="{ 'modal-button--disabled': isDisabled }"
+          @click="addItem"
+        >
+          {{ add }}
+        </button>
       </div>
     </div>
   </div>
@@ -25,28 +38,32 @@
 
 <script>
 import Vue from 'vue';
-import NewCourse from '@/components/Modals/NewCourse';
-import NewCustomCourse from '@/components/Modals/NewCustomCourse';
-import NewSemester from '@/components/Modals/NewSemester';
-import EditSemester from '@/components/Modals/EditSemester';
+import NewCourse from '@/components/Modals/NewCourse.vue';
+import NewSemester from '@/components/Modals/NewSemester.vue';
+import EditSemester from '@/components/Modals/EditSemester.vue';
 
 Vue.component('newCourse', NewCourse);
-Vue.component('newCustomCourse', NewCustomCourse);
 Vue.component('newSemester', NewSemester);
 Vue.component('editSemester', EditSemester);
 
-export default {
+export default Vue.extend({
   data() {
     return {
       isOnboard: false,
       courseIsAddable: true,
-      isDisabled: false
+      isDisabled: false,
+      leftButton: 'CANCEL',
+      goBack: false,
+      season: '',
+      year: 0,
     };
   },
   props: {
     type: String,
     semesterID: Number,
-    currentSemesters: Array
+    currentSemesters: Array,
+    isOpen: Boolean,
+    isCourseModelSelectingSemester: Boolean,
   },
   computed: {
     contentId() {
@@ -58,15 +75,12 @@ export default {
         return `${start}Semester`;
       }
       if (this.type === 'course') {
-        return `${start}Course`;
+        return `Add Course`;
       }
       return `${start}Custom Course`;
     },
     add() {
       return 'ADD';
-    },
-    cancel() {
-      return 'CANCEL';
     },
     body() {
       if (this.type === 'semester') {
@@ -75,24 +89,27 @@ export default {
       if (this.type === 'course') {
         return 'newCourse';
       }
-      return 'newCustomCourse';
-    }
+      return '';
+    },
   },
   methods: {
     disableButton(bool) {
       this.isDisabled = bool;
     },
+    closeCourseModal() {
+      this.$emit('close-course-modal');
+    },
     closeCurrentModal() {
-      let modal;
+      this.courseSelected = false;
       if (this.type === 'course') {
-        modal = document.getElementById(`${this.type}Modal-${this.semesterID}`);
-      } else {
-        modal = document.getElementById(`${this.type}Modal`);
+        this.$refs.modalBodyComponent.reset();
+        this.$emit('close-course-modal');
+        return;
       }
       if (this.type === 'semester') {
+        this.$emit('close-semester-modal');
         this.$refs.modalBodyComponent.resetDropdowns();
       }
-      modal.style.display = 'none';
     },
     // Note: Currently not used
     checkCourseDuplicate(key) {
@@ -103,13 +120,10 @@ export default {
         const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
         const title = dropdown.value;
 
-        // TODO: can I make the valid assumption that the course code is up to the colon in the title?
         const key = title.substring(0, title.indexOf(':'));
         this.addCourse();
       } else if (this.type === 'semester') {
         this.addSemester();
-      } else {
-        // TODO: add custom course
       }
     },
     addCourse() {
@@ -118,12 +132,9 @@ export default {
       // name used to transmit roster information
       const roster = dropdown.name;
 
-      // TODO: can I make the valid assumption that the course code is up to the colon in the title?
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
       const number = courseCode.split(' ')[1];
-
-      const parent = this.$parent;
 
       // To use for retrieve course data from Firebase
       // // TODO: error handling if course not found or some firebase error
@@ -139,7 +150,9 @@ export default {
       //   })
       //   .catch(error => {
       //     console.log('Error getting document:', error);
-      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`)
+      fetch(
+        `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`
+      )
         .then(res => res.json())
         .then(resultJSON => {
           // check catalogNbr of resultJSON class matches number of course to add
@@ -148,7 +161,7 @@ export default {
               const course = resultJSONclass;
               course.roster = roster;
               if (this.courseIsAddable) {
-                parent.addCourse(course);
+                this.$emit('add-course', course, this.season, this.year);
               }
             }
           });
@@ -160,27 +173,41 @@ export default {
     },
     addSemester() {
       if (!this.isDisabled) {
-        const seasonInput = document.getElementById(`season-placeholder`);
-        const yearInput = document.getElementById(`year-placeholder`);
-        this.$parent.addSemester(
-          seasonInput.innerHTML.trim(' ').split(' ')[0],
-          parseInt(yearInput.innerHTML, 10)
-        );
+        this.$emit('add-semester', this.season, this.year);
 
         this.closeCurrentModal();
       }
-    }
-  }
-};
+    },
+    toggleLeftButton() {
+      if (this.leftButton === 'CANCEL') {
+        this.leftButton = 'BACK';
+      } else {
+        this.leftButton = 'CANCEL';
+      }
+    },
+    backOrCancel() {
+      if (this.leftButton === 'BACK') {
+        this.goBack = !this.goBack;
+      } else {
+        this.closeCurrentModal();
+      }
+    },
+    updateSemProps(season, year) {
+      this.season = season;
+      this.year = year;
+    },
+  },
+});
 </script>
 
 <style lang="scss">
-// TODO: font family
+@import '@/assets/scss/_variables.scss';
+
 .modal {
   padding: 1rem;
 
   &-content {
-    background: #ffffff;
+    background: $white;
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
@@ -217,25 +244,27 @@ export default {
 
   &-button {
     width: 4.75rem;
-    height: 2rem;
+    height: 1.8rem;
     color: #5b676d;
     border-radius: 3px;
     border: 1px solid #3d3d3d;
-    background-color: #ffffff;
+    background-color: $white;
     display: flex;
     justify-content: center;
+    align-items: center;
 
     &--add {
-      color: #ffffff;
-      background-color: #508197;
+      color: $white;
+      background-color: $sangBlue;
       margin-left: 0.5rem;
       border: none;
     }
 
     &--disabled {
-      opacity: .3;
-      border: 1px solid #508197;
-      background-color: #CCCCCC;
+      pointer-events: none;
+      opacity: 0.3;
+      border: 1px solid $sangBlue;
+      background-color: #cccccc;
     }
   }
 }
@@ -253,5 +282,4 @@ export default {
     width: 100%;
   }
 }
-
 </style>

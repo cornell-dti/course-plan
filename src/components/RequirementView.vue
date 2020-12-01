@@ -4,121 +4,162 @@
       :reqIndex="reqIndex"
       :majors="majors"
       :minors="minors"
+      :displayDetails="displayDetails"
+      :displayedMajorIndex="displayedMajorIndex"
+      :displayedMinorIndex="displayedMinorIndex"
       :req="req"
       :reqGroupColorMap="reqGroupColorMap"
       :user="user"
       :showMajorOrMinorRequirements="showMajorOrMinorRequirements"
+      :numOfColleges="numOfColleges"
       @activateMajor="activateMajor"
       @activateMinor="activateMinor"
       @toggleDetails="toggleDetails"
     />
     <div v-if="showMajorOrMinorRequirements">
       <!--Show more of completed requirements -->
-      <div v-if="req.displayDetails">
+      <div v-if="displayDetails">
         <p class="sub-title">In-Depth College Requirements</p>
         <div class="separator"></div>
-        <div
-          v-for="(subReq, id) in req.ongoing"
-          :key="subReq.id">
+        <div v-for="(subReq, id) in req.ongoing" :key="id">
           <subrequirement
             :subReqIndex="id"
             :subReq="subReq"
             :reqIndex="reqIndex"
+            :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
             :color="reqGroupColorMap[req.group][0]"
             :isCompleted="false"
-            @toggleDescription="toggleDescription"
+            :rostersFromLastTwoYears="rostersFromLastTwoYears"
+            :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
+            @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
+            @onShowAllCourses="onShowAllCourses"
           />
         </div>
 
         <div v-if="req.completed.length > 0" class="row completed">
           <p class="col sub-title specific">Filled Requirements</p>
           <div class="col-1 text-right">
-            <button class="btn float-right" :style="{ 'color': `#${reqGroupColorMap[req.group][0]}` }">
+            <button
+              class="btn float-right"
+              :style="{ color: `#${reqGroupColorMap[req.group][0]}` }"
+            >
               <!-- Toggle to display completed reqs -->
-              <p
-                class="toggle"
-                v-if="req.displayCompleted"
-                v-on:click="turnCompleted(reqIndex, false)">HIDE</p>
-              <p class="toggle" v-else v-on:click="turnCompleted(reqIndex, true)">SHOW</p>
+              <p class="toggle" v-if="displayCompleted" v-on:click="turnCompleted(false)">HIDE</p>
+              <p class="toggle" v-else v-on:click="turnCompleted(true)">SHOW</p>
             </button>
           </div>
         </div>
 
-      <!-- Completed requirements -->
-        <div v-if="req.displayCompleted">
-          <div v-for="(subReq, id) in req.completed" :key="subReq.id">
-            <div class="separator" v-if="reqIndex < reqs.length - 1 || req.displayDetails"></div>
+        <!-- Completed requirements -->
+        <div v-if="displayCompleted">
+          <div v-for="(subReq, id) in req.completed" :key="id">
+            <div class="separator" v-if="reqIndex < reqs.length - 1 || displayDetails"></div>
             <subrequirement
               :subReqIndex="id"
               :subReq="subReq"
               :reqIndex="reqIndex"
+              :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
               :color="reqGroupColorMap[req.group][0]"
-              :isCompleted="true"
-              @toggleDescription="toggleDescription"
+              :rostersFromLastTwoYears="rostersFromLastTwoYears"
+              :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
+              @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
+              @onShowAllCourses="onShowAllCourses"
             />
           </div>
         </div>
       </div>
 
-    <!-- Add separator if additional completed requirements -->
-    <div class="separator"></div>
+      <!-- Add separator if additional completed requirements -->
+      <div class="separator"></div>
     </div>
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
-import RequirementHeader from '@/components/RequirementHeader';
-import SubRequirement from '@/components/SubRequirement';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import RequirementHeader from '@/components/RequirementHeader.vue';
+import SubRequirement from '@/components/SubRequirement.vue';
+
+import { SingleMenuRequirement } from '@/requirements/types';
+import { AppUser, AppMajor, AppMinor, FirestoreSemesterCourse, AppCourse } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
 
-export default {
+// reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
+const reqGroupColorMap = {
+  COLLEGE: ['1AA9A5', 'blue'],
+  MAJOR: ['105351', 'green'],
+  MINOR: ['92C3E6', 'lightblue'],
+};
+
+export default Vue.extend({
   props: {
-    reqs: Array,
-    req: Object,
+    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
+    req: Object as PropType<SingleMenuRequirement>,
     reqIndex: Number, // Index of this req in reqs array
-    majors: Array,
-    minors: Array,
-    reqGroupColorMap: Object,
-    user: Object,
-    showMajorOrMinorRequirements: Boolean
+    majors: Array as PropType<readonly AppMajor[]>,
+    minors: Array as PropType<readonly AppMinor[]>,
+    toggleableRequirementChoices: Object as PropType<Readonly<Record<string, string>>>,
+    displayedMajorIndex: Number,
+    displayedMinorIndex: Number,
+    user: Object as PropType<AppUser>,
+    showMajorOrMinorRequirements: Boolean,
+    numOfColleges: Number,
+    rostersFromLastTwoYears: Array as PropType<readonly String[]>,
+    lastLoadedShowAllCourseId: Number,
+  },
+  data() {
+    return {
+      displayDetails: false,
+      displayCompleted: false,
+    };
+  },
+  computed: {
+    reqGroupColorMap() {
+      return reqGroupColorMap;
+    },
   },
   methods: {
-    activateMajor(id) {
+    activateMajor(id: number) {
       this.$emit('activateMajor', id);
     },
-    activateMinor(id) {
+    activateMinor(id: number) {
       this.$emit('activateMinor', id);
     },
-    toggleDetails(index) {
-      this.$emit('toggleDetails', index);
+    onShowAllCourses(courses: AppCourse[]) {
+      this.$emit('onShowAllCourses', courses);
     },
-    toggleDescription(index, type, id) {
-      this.$emit('toggleDescription', index, type, id);
+    changeToggleableRequirementChoice(requirementID: string, option: string) {
+      this.$emit('changeToggleableRequirementChoice', requirementID, option);
     },
-    turnCompleted(index, bool) {
-      this.$emit('turnCompleted', index, bool);
-    }
-  }
-};
+    toggleDetails() {
+      this.displayDetails = !this.displayDetails;
+    },
+    turnCompleted(bool: boolean) {
+      this.displayCompleted = bool;
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .btn {
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  &-2{
+  &-2 {
     padding-top: 0px;
-    margin:0px
+    margin: 0px;
   }
 }
-.btn:focus,.btn:active {
-   outline: none !important;
-   box-shadow: none;
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none;
 }
 .row {
   margin: 0;
@@ -127,7 +168,7 @@ export default {
   padding: 0;
 }
 .specific {
-  color: #757575;
+  color: $lightPlaceholderGray;
 }
 .sub-title {
   padding: 0;
@@ -135,11 +176,11 @@ export default {
   font-weight: bold;
   font-size: 14px;
   line-height: 14px;
-  color: #3C3C3C;
+  color: $darkGray;
 }
 button.active {
-  color: #508197;
-  border-bottom: solid 10px #508197;
+  color: $sangBlue;
+  border-bottom: solid 10px $sangBlue;
   padding-bottom: 2px;
   margin: 5px;
 }
@@ -151,7 +192,7 @@ button.view {
   font-size: 14px;
   line-height: 14px;
   text-align: center;
-  color: white;
+  color: $white;
   text-transform: uppercase;
 }
 .toggle {
@@ -162,17 +203,17 @@ button.view {
   line-height: 12px;
 }
 .completed {
-   margin-top: 1rem;
-   &-ptext {
-     color: #757575;
-     font-size: 12px;
-     opacity: 0.8;
-     font-weight: normal;
-   }
- }
+  margin-top: 1rem;
+  &-ptext {
+    color: $lightPlaceholderGray;
+    font-size: 12px;
+    opacity: 0.8;
+    font-weight: normal;
+  }
+}
 .separator {
   height: 1px;
   width: 100%;
-  background-color: #d7d7d7;
+  background-color: $inactiveGray;
 }
 </style>

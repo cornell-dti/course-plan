@@ -18,7 +18,7 @@ it('RequirementFulfillmentGraph works.', () => {
     ['CS3410/CS3420', 'CS 3410'],
     ['CS3410/CS3420', 'CS 3420'],
     ['Probability', 'MATH 4710'],
-    ['Elective', 'MATH 4710']
+    ['Elective', 'MATH 4710'],
   ]);
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual(['CS 3410', 'CS 3420']);
   expect(graph.getConnectedCoursesFromRequirement('Probability')).toEqual(['MATH 4710']);
@@ -27,7 +27,7 @@ it('RequirementFulfillmentGraph works.', () => {
   expect(graph.getConnectedRequirementsFromCourse('CS 3420')).toEqual(['CS3410/CS3420']);
   expect(graph.getConnectedRequirementsFromCourse('MATH 4710')).toEqual([
     'Probability',
-    'Elective'
+    'Elective',
   ]);
   expect(graph.existsEdge('CS3410/CS3420', 'CS 3410')).toBeTruthy();
   expect(graph.existsEdge('CS3410/CS3420', 'CS 3420')).toBeTruthy();
@@ -42,7 +42,7 @@ it('RequirementFulfillmentGraph works.', () => {
   expect(graph.getConnectedRequirementsFromCourse('CS 3420')).toEqual([]);
   expect(graph.getConnectedRequirementsFromCourse('MATH 4710')).toEqual([
     'Probability',
-    'Elective'
+    'Elective',
   ]);
   expect(graph.existsEdge('CS3410/CS3420', 'CS 3410')).toBeTruthy();
   expect(graph.existsEdge('CS3410/CS3420', 'CS 3420')).toBeFalsy();

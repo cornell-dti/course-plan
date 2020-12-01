@@ -1,6 +1,8 @@
 <template>
-  <div id= "dashboard" class="dashboard">
-    <onboarding class="dashboard-onboarding" v-if="isOnboarding"
+  <div id="dashboard" class="dashboard">
+    <onboarding
+      class="dashboard-onboarding"
+      v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
       :user="user"
       @onboard="endOnboarding"
@@ -8,32 +10,38 @@
     />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
-        <navbar class="dashboard-nav"
-        @editProfile="editProfile"
-        @toggleRequirementsBar="toggleRequirementsBar"
-        :isBottomPreview="bottomBar.isPreview"
+        <navbar
+          class="dashboard-nav"
+          @editProfile="editProfile"
+          @toggleRequirementsBar="toggleRequirementsBar"
+          :isBottomPreview="bottomBar.isPreview"
         />
-        <requirements class="dashboard-reqs" v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
+        <requirements
+          class="dashboard-reqs"
+          v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :semesters="semesters"
           :user="user"
           :key="requirementsKey"
           :startTour="startTour"
-          @requirementsMap="loadRequirementsMap"
+          @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
-         />
+        />
       </div>
-      <semesterview v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
+      <semesterview
+        v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
+        ref="semesterview"
         :semesters="semesters"
         :compact="compactVal"
         :startTour="startTour"
         :isBottomBarExpanded="bottomBar.isExpanded"
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
-
+        :currSemID="currSemID"
         @compact-updated="compactVal = $event"
         @updateBar="updateBar"
         @close-bar="closeBar"
         @updateRequirementsMenu="updateRequirementsMenu"
+        @increment-semID="incrementSemID"
       />
     </div>
     <tourwindow
@@ -41,8 +49,11 @@
       :text="welcomeBodytext"
       :exit="welcomeExit"
       :buttonText="welcomeButtonText"
-      @hide = "welcomeHidden = false; if(startTour==false) startTour = true"
-      @skip = "welcomeHidden = false;"
+      @hide="
+        welcomeHidden = false;
+        if (startTour == false) startTour = true;
+      "
+      @skip="welcomeHidden = false"
       v-if="welcomeHidden"
     >
     </tourwindow>
@@ -51,40 +62,61 @@
       :text="congratsBodytext"
       :exit="congratsExit"
       :buttonText="congratsButtonText"
-      @hide = "showTourEndWindow = false;"
+      @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
     >
     </tourwindow>
     <div id="dashboard-bottomView">
       <bottombar
-      v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
-      :bottomCourses="bottomCourses"
-      :seeMoreCourses="seeMoreCourses"
-      :isExpanded="this.bottomBar.isExpanded"
-      :maxBottomBarTabs="maxBottomBarTabs"
-      @close-bar="closeBar"
-      @open-bar="openBar"
+        v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
+        :bottomCourses="bottomCourses"
+        :seeMoreCourses="seeMoreCourses"
+        :bottomCourseFocus="bottomBar.bottomCourseFocus"
+        :isExpanded="bottomBar.isExpanded"
+        :maxBottomBarTabs="maxBottomBarTabs"
+        @close-bar="closeBar"
+        @open-bar="openBar"
+        @change-focus="changeBottomCourseFocus"
       />
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 
 import introJs from 'intro.js';
-import Course from '@/components/Course';
-import SemesterView from '@/components/SemesterView';
-import Requirements from '@/components/Requirements';
-import BottomBar from '@/components/BottomBar';
-import NavBar from '@/components/NavBar';
-import Onboarding from '@/components/Modals/Onboarding';
-import TourWindow from '@/components/Modals/TourWindow';
+import Course from '@/components/Course.vue';
+import SemesterView from '@/components/SemesterView.vue';
+import Requirements from '@/components/Requirements.vue';
+import BottomBar from '@/components/BottomBar.vue';
+import NavBar from '@/components/NavBar.vue';
+import Onboarding from '@/components/Modals/Onboarding.vue';
+import TourWindow from '@/components/Modals/TourWindow.vue';
 
 import surfing from '@/assets/images/surfing.svg';
 
 import '@/vueDragulaConfig';
 import { auth, userDataCollection } from '@/firebaseConfig';
+import {
+  FirestoreUserName,
+  FirestoreSemesterCourse,
+  FirestoreSemesterType,
+  FirestoreSemester,
+  FirestoreMajorOrMinor,
+  FirestoreAPIBExam,
+  FirestoreTransferClass,
+  FirestoreNestedUserData,
+  FirestoreUserData,
+  AppUser,
+  AppCourse,
+  AppSemester,
+  AppBottomBarCourse,
+  firestoreCourseToAppCourse,
+  firestoreSemestersToAppSemesters,
+  createAppUser,
+} from '@/user-data';
+import { RequirementMap } from '@/requirements/reqs-functions';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
@@ -101,18 +133,17 @@ tour.setOption('skipLabel', 'Skip This Tutorial');
 tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
-
-export default {
+export default Vue.extend({
   data() {
     const user = auth.currentUser;
-    const names = user.displayName.split(' ');
+    const names = user!.displayName!.split(' ');
     return {
       loaded: false,
       compactVal: false,
       currSemID: 1,
-      semesters: [],
-      firebaseSems: [],
-      currentClasses: [],
+      semesters: [] as AppSemester[],
+      firebaseSems: [] as FirestoreSemester[],
+      currentClasses: [] as AppCourse[],
       user: {
         major: [],
         majorFN: [],
@@ -124,13 +155,15 @@ export default {
         minor: [],
         minorFN: [],
         exam: [],
-        transferCourse: []
-      },
-      bottomCourses: [],
-      seeMoreCourses: [],
-      subjectColors: {},
+        transferCourse: [],
+        tookSwim: 'no',
+      } as AppUser,
+      bottomCourses: [] as AppBottomBarCourse[],
+      seeMoreCourses: [] as AppBottomBarCourse[],
+      subjectColors: {} as { [subject: string]: string },
+      uniqueIncrementer: 0,
       // Default bottombar info without info
-      bottomBar: { isPreview: false, isExpanded: false },
+      bottomBar: { isPreview: false, isExpanded: false, bottomCourseFocus: 0 },
       requirementsKey: 0,
       isOnboarding: false,
       isEditingProfile: false,
@@ -146,11 +179,11 @@ export default {
       startTour: false,
       showTourEndWindow: false,
       congrats: 'Congratulations! That’s a wrap',
-      congratsBodytext: `Other than this, there is more you can explore, 
-        so feel free to surf through CoursePlan <img src = "${surfing}" 
+      congratsBodytext: `Other than this, there is more you can explore,
+        so feel free to surf through CoursePlan <img src = "${surfing}"
         class = "emoji-text" alt = "surf">`,
       congratsExit: '',
-      congratsButtonText: 'Start Planning'
+      congratsButtonText: 'Start Planning',
     };
   },
   created() {
@@ -165,7 +198,7 @@ export default {
   methods: {
     getDocRef() {
       const user = auth.currentUser;
-      const userEmail = user.email;
+      const userEmail = user!.email as string;
       const docRef = userDataCollection.doc(userEmail);
       return docRef;
     },
@@ -174,18 +207,36 @@ export default {
       const docRef = this.getDocRef();
 
       // TODO: error handling for firebase errors
-      docRef.get()
+      docRef
+        .get()
         .then(doc => {
           if (doc.exists) {
-            this.semesters = this.convertSemesters(doc.data().semesters);
-            this.firebaseSems = doc.data().semesters;
-            this.user = this.parseUserData(doc.data().userData, doc.data().name);
-            this.subjectColors = doc.data().subjectColors;
-            this.uniqueIncrementer = doc.data().uniqueIncrementer;
+            const firestoreUserData = doc.data() as FirestoreUserData;
+            this.semesters = firestoreSemestersToAppSemesters(
+              firestoreUserData.semesters,
+              firestoreUserData.subjectColors
+            );
+            this.currSemID += this.semesters.length;
+
+            this.firebaseSems = firestoreUserData.semesters as FirestoreSemester[];
+            this.user = this.parseUserData(firestoreUserData.userData, firestoreUserData.name);
+            this.subjectColors = firestoreUserData.subjectColors;
+            this.uniqueIncrementer = firestoreUserData.uniqueIncrementer;
             this.loaded = true;
+            this.updateRequirementsMenu();
           } else {
-            this.semesters.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
-            this.firebaseSems.push(this.createSemester([], this.getCurrentSeason(), this.getCurrentYear()));
+            this.semesters.push({
+              id: this.currSemID,
+              type: this.getCurrentSeason(),
+              year: this.getCurrentYear(),
+              courses: [],
+            });
+            this.firebaseSems.push({
+              type: this.getCurrentSeason(),
+              year: this.getCurrentYear(),
+              courses: [],
+            });
+            this.currSemID += 1;
             this.startOnboarding();
           }
         })
@@ -194,10 +245,13 @@ export default {
         });
     },
 
-    resizeEventHandler(e) {
+    resizeEventHandler(e: any) {
       this.isMobile = window.innerWidth <= 440;
       this.isTablet = window.innerWidth <= 878;
       this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
+      if (this.bottomBar.bottomCourseFocus >= this.maxBottomBarTabs) {
+        this.changeBottomCourseFocus(this.maxBottomBarTabs - 1);
+      }
       this.updateBarTabs();
       this.updateSemesterView();
     },
@@ -205,21 +259,8 @@ export default {
       this.isOpeningRequirements = !this.isOpeningRequirements;
     },
 
-    convertSemesters(firebaseSems) {
-      const semesters = [];
-
-      firebaseSems.forEach(firebaseSem => {
-        const firebaseCourses = firebaseSem.courses;
-        const courses = [];
-        firebaseCourses.forEach(firebaseCourse => {
-          courses.push(this.createCourse(firebaseCourse));
-        });
-        semesters.push(this.createSemester(courses, firebaseSem.type, firebaseSem.year));
-      });
-      return semesters;
-    },
     getCurrentSeason() {
-      let currentSeason;
+      let currentSeason: FirestoreSemesterType;
       const currentMonth = new Date().getMonth();
       if (currentMonth === 0) {
         currentSeason = 'Winter';
@@ -232,133 +273,28 @@ export default {
       }
       return currentSeason;
     },
-    getCurrentYear() {
-      const currentYear = new Date().getFullYear();
-      return this.yearText || this.year || currentYear;
+    getCurrentYear(): number {
+      return new Date().getFullYear();
+    },
+    /**
+     * Creates a course on frontend with either user or API data
+     */
+    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean): AppCourse {
+      if (!isRequirementsCourse) {
+        this.updateRequirementsMenu();
+      }
+      return firestoreCourseToAppCourse(
+        course,
+        isRequirementsCourse,
+        () => this.incrementID(),
+        subject => this.addColor(subject)
+      );
     },
     updateSemesterView() {
       if (this.isMobile) {
         // Make sure semesterView is not compact by default on mobile
         this.compactVal = false;
       }
-    },
-    /**
-     * Creates credit range based on course
-     * Example: [1, 4] is the credit range for the given course
-     */
-    createCourseCreditRange(course) {
-      const courseCreditRange = [];
-      if (typeof course.creditRange !== 'undefined') {
-        return course.creditRange;
-      }
-      if (typeof course.enrollGroups !== 'undefined') {
-        course.enrollGroups.forEach(enrollGroup => {
-          courseCreditRange.push(enrollGroup.unitsMinimum);
-          courseCreditRange.push(enrollGroup.unitsMaximum);
-        });
-        return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
-      }
-      return [course.credits, course.credits];
-    },
-
-    /**
-     * Creates a course on frontend with either user or API data
-     */
-    createCourse(course) {
-      const uniqueID = course.uniqueID || this.incrementID();
-
-      const subject = (course.code && course.code.split(' ')[0]) || course.subject;
-      const number = (course.code && course.code.split(' ')[1]) || course.catalogNbr;
-
-      // TODO: same field?
-      const name = course.titleLong || course.name;
-
-      // Description of course. Please leave the redundancy in place as a sanity check.
-      const description = course.description || course.description;
-
-      // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
-      const credits = course.credits || course.enrollGroups[0].unitsMaximum;
-      const creditRange = course.creditRange || this.createCourseCreditRange(course);
-      // Semesters: remove periods and split on ', '
-      // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
-      const catalogWhenOfferedDoesNotExist = (!course.catalogWhenOffered) || course.catalogWhenOffered === '';
-      const alternateSemesters = (catalogWhenOfferedDoesNotExist) ? [] : course.catalogWhenOffered.replace(/\./g, '').split(', ');
-      const semesters = course.semesters || alternateSemesters;
-
-      // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
-      const prereqs = course.prereqs || course.catalogPrereqCoreq || '';
-
-      // To be redefined if does not exist
-      let { enrollment, lectureTimes, instructors } = course;
-
-      if (!(enrollment || lectureTimes || instructors)) {
-        // If new course, iterate through enrollment groups to retrieve enrollment info, lecture times, and instructors
-
-        // Hash maps used to remove redundancies
-        const enrollmentMap = {};
-        const lectureTimesMap = {};
-        const instructorsMap = {};
-        course.enrollGroups.forEach(group => {
-          group.classSections.forEach(section => {
-            // Add section
-            const enroll = section.ssrComponent;
-            enrollmentMap[enroll] = true;
-
-            section.meetings.forEach(meeting => {
-              const { pattern, timeStart, timeEnd } = meeting;
-              // Only add the time if it is a lecture
-              if (enroll === 'LEC') lectureTimesMap[`${pattern} ${timeStart} - ${timeEnd}`] = true;
-
-              meeting.instructors.forEach(instructor => {
-                const { netid, firstName, lastName } = instructor;
-                instructorsMap[netid] = `${firstName} ${lastName}`;
-              });
-            });
-          });
-        });
-
-        enrollment = Object.keys(enrollmentMap);
-        lectureTimes = Object.keys(lectureTimesMap);
-        instructors = Object.keys(instructorsMap).map(netid => `${instructorsMap[netid]} (${netid})`);
-      }
-
-      // Distribution of course (e.g. MQR-AS)
-      // alternateDistributions option in case catalogDistr for the course is null, undef, ''
-      const catalogDistrDoesNotExist = (!course.catalogDistr) || course.catalogDistr === '';
-      const alternateDistributions = (catalogDistrDoesNotExist) ? [''] : /\(([^)]+)\)/.exec(course.catalogDistr)[1].split(', ');
-      const distributions = course.distributions || alternateDistributions;
-
-      // Get last semester of available course. TODO: Remove when no longer firebase data dependant
-      const lastRoster = course.lastRoster || course.roster;
-
-      // Create course from saved color. Otherwise, create course from subject color group
-      const color = course.color || this.addColor(subject);
-
-      const alerts = { requirement: null, caution: null };
-
-      const newCourse = {
-        subject,
-        number,
-        name,
-        description,
-        credits,
-        creditRange,
-        semesters,
-        prereqs,
-        enrollment,
-        lectureTimes,
-        instructors,
-        distributions,
-        lastRoster,
-        color,
-        alerts,
-        check: true,
-        uniqueID
-      };
-      // Update requirements menu
-      this.updateRequirementsMenu();
-
-      return newCourse;
     },
 
     incrementID() {
@@ -379,45 +315,45 @@ export default {
       return this.uniqueIncrementer;
     },
 
-    addColor(subject) {
+    addColor(subject: string) {
       if (this.subjectColors && this.subjectColors[subject]) return this.subjectColors[subject];
 
       const colors = [
         {
           text: 'Red',
-          hex: 'DA4A4A'
+          hex: 'DA4A4A',
         },
         {
           text: 'Orange',
-          hex: 'FFA53C'
+          hex: 'FFA53C',
         },
         {
           text: 'Yellow',
-          hex: 'FFE142'
+          hex: 'FFE142',
         },
         {
           text: 'Green',
-          hex: '58C913'
+          hex: '58C913',
         },
         {
           text: 'Blue',
-          hex: '139DC9'
+          hex: '139DC9',
         },
         {
           text: 'Purple',
-          hex: 'C478FF'
+          hex: 'C478FF',
         },
         {
           text: 'Pink',
-          hex: 'F296D3'
-        }
+          hex: 'F296D3',
+        },
       ];
 
       // If subjectColor attribute does not exist, make it an empty object
       if (this.subjectColors === undefined) this.subjectColors = {};
 
       // Create list of used colors
-      const colorsUsedMap = {};
+      const colorsUsedMap: Record<string, boolean> = {};
       for (const subjectKey of Object.keys(this.subjectColors)) {
         const subjectColor = this.subjectColors[subjectKey];
         colorsUsedMap[subjectColor] = true;
@@ -431,7 +367,7 @@ export default {
       // pick a color from unusedColors if there are any
       if (unusedColors.length !== 0) {
         randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
-      // otherwise pick a color following the random order set by the first 7 subjects
+        // otherwise pick a color following the random order set by the first 7 subjects
       } else {
         const colorIndex = Object.keys(this.subjectColors).length;
         const key = Object.keys(this.subjectColors)[colorIndex % colors.length];
@@ -446,53 +382,24 @@ export default {
       // Return randomly generated color
       return randomColor;
     },
-
-    createSemester(courses, type, year) {
-      const semester = {
-        courses,
-        id: this.currSemID,
-        type,
-        year
-      };
+    incrementSemID() {
       this.currSemID += 1;
-      return semester;
     },
-
     updateRequirementsMenu() {
       this.requirementsKey += 1;
-    },
-
-    loadRequirementsMap(requirementsMap) {
-      // Get map of requirements
-      this.buildRequirementsAlert(requirementsMap);
     },
     showTourEnd() {
       if (!this.isMobile) {
         this.showTourEndWindow = true;
       }
     },
-    buildRequirementsAlert(requirementsMap) {
-      // Update semesters with alerts
-      this.semesters.forEach(semester => {
-        semester.courses.forEach(course => {
-          const courseCode = `${course.subject} ${course.number}`;
-          if (courseCode in requirementsMap) {
-            // Add and to parse array to natural language
-            const courseReqs = requirementsMap[courseCode];
-            if (courseReqs.length > 1) {
-              const listLength = courseReqs.length;
-              courseReqs[listLength - 2] = `${courseReqs[listLength - 2]}, and ${courseReqs.pop()}`;
-            }
-            const parsedCourseReqs = `Satisfies ${courseReqs.join(', ')} Requirements`;
-            course.alerts.requirement = parsedCourseReqs;
-          }
-        });
-      });
+    changeBottomCourseFocus(newBottomCourseFocus: number) {
+      this.bottomBar.bottomCourseFocus = newBottomCourseFocus;
     },
 
-    updateBar(course, colorJustChanged, color) {
+    updateBar(course: AppCourse, colorJustChanged: string, color: string) {
       // Update Bar Information
-      const courseToAdd = {
+      const courseToAdd: AppBottomBarCourse = {
         subject: course.subject,
         number: course.number,
         name: course.name,
@@ -510,62 +417,80 @@ export default {
         workload: 0,
         prerequisites: this.noneIfEmpty(course.prereqs),
         description: course.description,
-        uniqueID: course.uniqueID
+        uniqueID: course.uniqueID,
       };
 
       // expand bottombar if first course added
       if (this.bottomCourses.length === 0) {
-        this.bottomBar.isExpanded = true;
+        this.bottomBar.bottomCourseFocus = 0;
+        this.openBar();
       }
 
+      let bottomCourseIndex = -1;
       // if course already exists in bottomCourses, first remove course
       for (let i = 0; i < this.bottomCourses.length; i += 1) {
         // if colorJustChanged and course already exists, just update course color
-        if (this.bottomCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
-          this.bottomCourses[i].color = color;
-        } else if (this.bottomCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
-          this.bottomCourses.splice(i, 1);
+        if (this.bottomCourses[i].uniqueID === course.uniqueID) {
+          if (colorJustChanged) {
+            this.bottomCourses[i].color = color;
+          } else {
+            bottomCourseIndex = i;
+          }
         }
       }
 
-      // Prepending bottomCourse to front of bottom courses array if bottomCourses < this.maxBottomBarTabs
-      // Do not add course to bottomCourses if color was only changed
-      if (this.bottomCourses.length < this.maxBottomBarTabs && !colorJustChanged) {
-        this.bottomCourses.unshift(courseToAdd);
-      } else { // else check no dupe in seeMoreCourses and add to seeMoreCourses
-        for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-          // if colorJustChanged and course already exists in seeMoreCourses, just update course color
-          if (this.seeMoreCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
-            this.seeMoreCourses[i].color = color;
-          } else if (this.seeMoreCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
-            this.seeMoreCourses.splice(i, 1);
+      if (bottomCourseIndex < 0) {
+        // Prepending bottomCourse to front of bottom courses array if bottomCourses < this.maxBottomBarTabs
+        // Do not add course to bottomCourses if color was only changed
+        if (this.bottomCourses.length < this.maxBottomBarTabs && !colorJustChanged) {
+          this.bottomCourses.unshift(courseToAdd);
+        } else {
+          // else check no dupe in seeMoreCourses and add to seeMoreCourses
+          for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
+            // if colorJustChanged and course already exists in seeMoreCourses, just update course color
+            if (this.seeMoreCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
+              this.seeMoreCourses[i].color = color;
+            } else if (this.seeMoreCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
+              this.seeMoreCourses.splice(i, 1);
+            }
+          }
+          // Do not move courses around from bottomCourses to seeMoreCourses if only color changed
+          if (!colorJustChanged) {
+            this.bottomCourses.unshift(courseToAdd);
+            this.seeMoreCourses.unshift(this.bottomCourses[this.bottomCourses.length - 1]);
+            this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
           }
         }
-        // Do not move courses around from bottomCourses to seeMoreCourses if only color changed
-        if (!colorJustChanged) {
-          this.bottomCourses.unshift(courseToAdd);
-          this.seeMoreCourses.unshift(this.bottomCourses[this.bottomCourses.length - 1]);
-          this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
-        }
+        bottomCourseIndex = 0;
       }
+      if (!colorJustChanged) {
+        this.bottomBar.bottomCourseFocus = bottomCourseIndex;
+      }
+
       this.getReviews(course.subject, course.number, review => {
-        this.bottomCourses[0].overallRating = review.classRating;
-        this.bottomCourses[0].difficulty = review.classDifficulty;
-        this.bottomCourses[0].workload = review.classWorkload;
+        this.bottomCourses[bottomCourseIndex].overallRating = review.classRating;
+        this.bottomCourses[bottomCourseIndex].difficulty = review.classDifficulty;
+        this.bottomCourses[bottomCourseIndex].workload = review.classWorkload;
       });
     },
 
-    getReviews(subject, number, callback) {
-      fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(res => {
-        res.json().then(reviews => {
-          callback(reviews[0]);
-        });
-      });
+    getReviews(subject: string, number: string, callback: (review: any) => void) {
+      fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(
+        res => {
+          res.json().then(reviews => {
+            callback(reviews[0]);
+          });
+        }
+      );
     },
 
     updateBarTabs() {
       // Move courses from see more to bottom tab to fulfill increased bottom tab capacity
-      if (this.maxBottomBarTabs === 4 && this.bottomCourses.length < 4 && this.seeMoreCourses.length > 0) {
+      if (
+        this.maxBottomBarTabs === 4 &&
+        this.bottomCourses.length < 4 &&
+        this.seeMoreCourses.length > 0
+      ) {
         while (this.bottomCourses.length < 4) {
           // if any See More courses exist, move first See More Course to end of tab
           if (this.seeMoreCourses.length > 0) {
@@ -580,7 +505,7 @@ export default {
       } else if (this.maxBottomBarTabs === 2 && this.bottomCourses.length > 2) {
         // Move courses from bottom tab to see more for decreased max of 2
         while (this.bottomCourses.length > 2) {
-          const bottomCourseToMove = this.bottomCourses.pop();
+          const bottomCourseToMove = this.bottomCourses.pop()!;
           this.seeMoreCourses.unshift(bottomCourseToMove);
         }
       }
@@ -598,7 +523,7 @@ export default {
       this.isOnboarding = true;
     },
 
-    endOnboarding(onboardingData) {
+    endOnboarding(onboardingData: { userData: FirestoreNestedUserData; name: FirestoreUserName }) {
       const user = this.parseUserData(onboardingData.userData, onboardingData.name);
 
       this.user = user;
@@ -609,9 +534,11 @@ export default {
         name: onboardingData.name,
         userData: onboardingData.userData,
         semesters: this.firebaseSems,
-        subjectColors: this.subjectColors
+        subjectColors: this.subjectColors,
+        uniqueIncrementer: this.uniqueIncrementer,
       };
-      docRef.get()
+      docRef
+        .get()
         .then(doc => {
           if (doc.exists) {
             this.welcomeHidden = false;
@@ -621,7 +548,8 @@ export default {
           docRef.set(data);
           this.cancelOnboarding();
           this.updateRequirementsMenu();
-        }).catch(error => {
+        })
+        .catch(error => {
           console.log('Error getting document:', error);
         });
       // set the new name and userData, along with either an empty list of semesters or preserve the old list
@@ -630,62 +558,28 @@ export default {
     cancelOnboarding() {
       this.isOnboarding = false;
     },
-    parseUserData(data, name) {
-      const user = {
-        // TODO: take into account multiple majors and colleges
-        college: data.colleges[0].acronym,
-        collegeFN: data.colleges[0].fullName,
-        firstName: name.firstName,
-        middleName: name.middleName,
-        lastName: name.lastName,
-        exam: [],
-        transferCourse: [],
-        tookSwim: data.tookSwim
-      };
-      const transferClasses = [];
-      if ('exam' in data && data.exam.length > 0) {
-        const exams = [];
-        data.exam.forEach(exam => {
-          // TODO: add a course to chosen requirement or multiple fulfilling requirements
-          exams.push(exam);
-          if ('equivCourse' in exam) {
-            transferClasses.push(exam.equivCourse[0]);
-          }
-        });
-        user.exam = exams;
-      }
-      if ('class' in data && data.class.length > 0) {
-        const classes = [];
-        for (const course of data.class) {
-          classes.push(course);
-          const courseInfo = this.createCourse(course.course);
-          transferClasses.push(courseInfo);
-          // ; // TODO for user to pick which req a class goes for
-        }
-        user.transferCourse = classes;
-        this.currentClasses = transferClasses;
-      }
+    parseUserData(data: FirestoreNestedUserData, name: FirestoreUserName): AppUser {
+      const user = createAppUser(data, name);
 
-      if ('majors' in data && data.majors.length > 0) {
-        const majors = [];
-        const majorsFN = [];
-        data.majors.forEach(major => {
-          majors.push(major.acronym);
-          majorsFN.push(major.fullName);
-        });
-        user.major = majors;
-        user.majorFN = majorsFN;
-      }
-      if ('minors' in data && data.minors.length > 0) {
-        const minors = [];
-        const minorsFN = [];
-        data.minors.forEach(minor => {
-          minors.push(minor.acronym);
-          minorsFN.push(minor.fullName);
-        });
-        user.minor = minors;
-        user.minorFN = minorsFN;
-      }
+      const transferClasses: any[] = [];
+      user.exam.forEach(exam => {
+        if ('equivCourse' in exam) {
+          transferClasses.push(exam.equivCourse[0]);
+        }
+      });
+      user.transferCourse.forEach(course => {
+        const courseInfo = firestoreCourseToAppCourse(
+          course.course,
+          false,
+          () => this.incrementID(),
+          subject => this.addColor(subject)
+        );
+        transferClasses.push(courseInfo);
+        // ; // TODO for user to pick which req a class goes for
+      });
+      this.currentClasses = transferClasses;
+
+      this.updateRequirementsMenu();
       return user;
     },
 
@@ -694,15 +588,16 @@ export default {
       this.isEditingProfile = true;
     },
 
-    cleanCourseDistributionsArray(distributions) {
+    cleanCourseDistributionsArray(distributions: readonly string[]) {
       // Iterates over distributions array and cleans every entry
       // Removes stray parentheses, spaces, and commas
-      let matches = [];
+      let matches: string[] = [];
       if (distributions[0] === '') {
         matches = ['N/A'];
       } else {
         for (let i = 0; i < distributions.length; i += 1) {
-          distributions[i].replace((/[A-Za-z0-9-]+/g), d => {
+          // @ts-ignore
+          distributions[i].replace(/[A-Za-z0-9-]+/g, d => {
             matches.push(d);
           });
         }
@@ -711,19 +606,19 @@ export default {
       return matches;
     },
 
-    joinOrNAString(arr) {
-      return (arr.length !== 0 && arr[0] !== '') ? arr.join(', ') : 'N/A';
+    joinOrNAString(arr: readonly unknown[]) {
+      return arr.length !== 0 && arr[0] !== '' ? arr.join(', ') : 'N/A';
     },
 
-    noneIfEmpty(str) {
-      return (str && str.length !== 0) ? str : 'None';
+    noneIfEmpty(str: string) {
+      return str && str.length !== 0 ? str : 'None';
     },
 
-    naIfEmptyStringArray(arr) {
-      return (arr && arr.length !== 0 && arr[0] !== '') ? arr : ['N/A'];
-    }
-  }
-};
+    naIfEmptyStringArray(arr: readonly string[]) {
+      return arr && arr.length !== 0 && arr[0] !== '' ? arr : ['N/A'];
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
@@ -765,7 +660,6 @@ export default {
   padding: 1rem;
   height: 12.12rem;
 }
-
 
 @media only screen and (max-width: 878px) {
   .dashboard {

@@ -2,49 +2,59 @@
   <div class="navbar" :class="{ bottomPreview: isBottomPreview }">
     <div class="navbar-top">
       <div class="navbar-iconWrapper">
-        <img class="navbar-icon" src="@/assets/images/branding/logo.svg">
+        <img class="navbar-icon" src="@/assets/images/branding/logo.svg" />
       </div>
       <div class="navbar-iconWrapper desktop" id="profileIcon" @click="editProfile"></div>
     </div>
     <div class="navbar-bottom">
-      <div class="navbar-iconWrapper mobile" id="requirementsBar" @click="toggleRequirementsBar"></div>
+      <div
+        class="navbar-iconWrapper mobile"
+        id="requirementsBar"
+        @click="toggleRequirementsBar"
+      ></div>
       <div class="navbar-iconWrapper mobile" id="profileIcon" @click="editProfile"></div>
       <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import firebase from 'firebase/app';
 
-export default {
+export default Vue.extend({
   props: {
-    isBottomPreview: Boolean
+    isBottomPreview: Boolean,
   },
 
   methods: {
     logout() {
-      firebase.auth().signOut().then(() => {
-        window.location.reload(false);
-      }, error => {
-        // TODO: error
-        console.log(error);
-      });
+      firebase
+        .auth()
+        .signOut()
+        .then(
+          () => {
+            window.location.reload(false);
+          },
+          error => {
+            // TODO: error
+            console.log(error);
+          }
+        );
     },
     editProfile() {
       this.$emit('editProfile');
     },
     toggleRequirementsBar() {
       this.$emit('toggleRequirementsBar');
-    }
-  }
-};
+    },
+  },
+});
 </script>
-
 
 <style scoped lang="scss">
 .navbar {
-  background-color: #F7F7F7;
+  background-color: #f7f7f7;
   width: 4.5rem;
   height: 100vh;
   display: flex;
@@ -67,7 +77,7 @@ export default {
   }
 }
 
-.pointer{
+.pointer {
   cursor: pointer;
 }
 #profileIcon {
@@ -100,7 +110,6 @@ export default {
   &:focus,
   &:active {
     background-image: url('~@/assets/images/navbar/starBlue.svg');
-
   }
 }
 
@@ -136,7 +145,6 @@ export default {
       justify-content: space-between;
       min-width: 35%;
     }
-
 
     &-iconWrapper {
       &:not(:first-child) {

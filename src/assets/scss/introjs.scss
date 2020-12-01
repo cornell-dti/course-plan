@@ -1,3 +1,5 @@
+@import "@/assets/scss/_variables.scss";
+
 .introjs-tooltip {
     background-color: white;
     border-radius: 9px;
@@ -12,7 +14,7 @@
 .introjs-donebutton{
     color: white !important;
     background-image: none !important;
-    background-color: #508197 !important;
+    background-color: $sangBlue !important;
     text-shadow: none;
     border: none;
     border-radius: 3px;
@@ -21,7 +23,7 @@
     &:hover,
     &:focus {
       color: white !important;
-      background-color: #508197;
+      background-color: $sangBlue;
       background-image: none;
     }
 }
@@ -31,14 +33,14 @@
     background-image: none;
     padding-left: 0px;
     background-color: white;
-    color: #508197;
+    color: $sangBlue;
     &:active,
     &:focus,
     &:hover {
       background-image: none;
       background-color:transparent; 
       padding-left: 0px;
-      color: #508197;
+      color: $sangBlue;
       background-color: white;
       box-shadow:none;
     }
@@ -46,26 +48,26 @@
 .introjs-nextbutton{
     color: white !important;
     background-image: none;
-    background-color: #508197;
+    background-color: $sangBlue;
     text-shadow: none;
     border: none;
     border-radius: 3px;
 }
 .introjs-nextbutton:hover{
     color: white !important;
-    background-color: #508197;
+    background-color: $sangBlue;
     background-image: none;
 }
 .introjs-nextbutton:focus{
     color: white !important;
-    background-color: #508197;
+    background-color: $sangBlue;
     background-image: none;
 }
 .introjs-prevbutton{
     display:none !important;
 }
 a:not([href]) {
-    color: #508197;
+    color: $sangBlue;
 }
 .introjs-bullets {
     display:none;

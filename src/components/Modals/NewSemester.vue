@@ -1,205 +1,235 @@
 <template>
   <div>
-  <div class="newSemester">
-    <div class="newSemester-section newSemester-type">
-      <label class="newSemester-label" for="type">Type</label>
-      <div
-        v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
-        id="season"
-        v-click-outside="closeSeasonDropdownIfOpen"
-      >
-        <div class="newSemester-dropdown-placeholder season-wrapper" @click="showHideSeasonContent">
-          <div
-            v-if= "isEdit"
-            class="newSemester-dropdown-placeholder season-placeholder"
-            :id="'season-placeholder-' + id"
-            :style="{ color: displayOptions.season.placeholderColor }"
-          >
-            {{ seasonPlaceholder }}
-          </div>
-          <div
-            v-else
-            class="newSemester-dropdown-placeholder season-placeholder"
-            id="season-placeholder"
-            :style="{ color: displayOptions.season.placeholderColor }"
-          >
-            {{ seasonPlaceholder }}
-          </div>
-          <div
-            class="newSemester-dropdown-placeholder season-arrow"
-            id="season-arrow"
-            :style="{ borderTopColor: displayOptions.season.arrowColor }"
-          ></div>
-        </div>
+    <div class="newSemester">
+      <div class="newSemester-section newSemester-type">
+        <label v-if="!isCourseModelSelectingSemester" class="newSemester-label" for="type"
+          >Type</label
+        >
         <div
-          class="newSemester-dropdown-content season-content"
-          id="season-content"
-          v-if="displayOptions.season.shown"
+          v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
+          id="season"
+          class="position-relative"
+          v-click-outside="closeSeasonDropdownIfOpen"
         >
           <div
-            v-bind:class="{ warning: isDuplicate}"
-            v-for="season in seasons"
-            :key="seasonValue(season)"
-            :id="season"
-            class="newSemester-dropdown-content-item"
-            @click="selectSeason(season[1])"
+            class="newSemester-dropdown-placeholder season-wrapper"
+            @click="showHideSeasonContent"
           >
-          <img
-            v-bind:src='season[0]'
-            class= "newSemester-dropdown-content-season"
-          />
-            {{ season[1] }}
+            <div
+              v-if="isEdit"
+              class="newSemester-dropdown-placeholder season-placeholder"
+              :id="'season-placeholder-' + id"
+              :style="{ color: displayOptions.season.placeholderColor }"
+            >
+              {{ seasonPlaceholder }}
+            </div>
+            <div
+              v-else
+              class="newSemester-dropdown-placeholder season-placeholder"
+              id="season-placeholder"
+              :style="{ color: displayOptions.season.placeholderColor }"
+            >
+              {{ seasonPlaceholder }}
+            </div>
+            <div
+              class="newSemester-dropdown-placeholder season-arrow"
+              id="season-arrow"
+              :style="{ borderTopColor: displayOptions.season.arrowColor }"
+            ></div>
+          </div>
+          <div
+            class="newSemester-dropdown-content season-content position-absolute w-100"
+            id="season-content"
+            v-if="displayOptions.season.shown"
+          >
+            <div
+              v-bind:class="{ warning: isDuplicate }"
+              v-for="season in seasons"
+              :key="seasonValue(season)"
+              :id="season"
+              class="newSemester-dropdown-content-item"
+              @click="selectSeason(season[1])"
+            >
+              <img v-bind:src="season[0]" class="newSemester-dropdown-content-season" />
+              {{ season[1] }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="newSemester-section newSemester-year">
+        <label v-if="!isCourseModelSelectingSemester" class="newSemester-label" for="year"
+          >Year</label
+        >
+        <div
+          v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
+          id="year"
+          class="position-relative"
+          v-click-outside="closeYearDropdownIfOpen"
+        >
+          <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
+            <div
+              v-if="isEdit"
+              class="newSemester-dropdown-placeholder year-placeholder"
+              :id="'year-placeholder-' + id"
+              :style="{ color: displayOptions.year.placeholderColor }"
+            >
+              {{ yearPlaceholder }}
+            </div>
+            <div
+              v-else
+              class="newSemester-dropdown-placeholder year-placeholder"
+              id="year-placeholder"
+              :style="{ color: displayOptions.year.placeholderColor }"
+            >
+              {{ yearPlaceholder }}
+            </div>
+            <div
+              class="newSemester-dropdown-placeholder year-arrow"
+              id="year-arrow"
+              :style="{ borderTopColor: displayOptions.year.arrowColor }"
+            ></div>
+          </div>
+          <div
+            class="newSemester-dropdown-content year-content position-absolute"
+            id="year-content"
+            v-if="displayOptions.year.shown"
+          >
+            <div
+              v-for="year in years"
+              :key="year"
+              :id="year"
+              class="newSemester-dropdown-content-item"
+              @click="selectYear(year)"
+            >
+              {{ year }}
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="newSemester-section newSemester-year">
-      <label class="newSemester-label" for="year">Year</label>
-      <div
-        v-bind:class="[{ duplicate:  isDuplicate()}, { 'newSemester-select' : !isDuplicate()}  ]"
-        id="year"
-
-        v-click-outside="closeYearDropdownIfOpen"
-      >
-        <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
-          <div
-            v-if="isEdit"
-            class="newSemester-dropdown-placeholder year-placeholder"
-            :id="'year-placeholder-' + id"
-            :style="{ color: displayOptions.year.placeholderColor }"
-          >
-            {{ yearPlaceholder }}
-          </div>
-          <div
-            v-else
-            class="newSemester-dropdown-placeholder year-placeholder"
-            id="year-placeholder"
-            :style="{ color: displayOptions.year.placeholderColor }"
-          >
-            {{ yearPlaceholder }}
-          </div>
-          <div
-            class="newSemester-dropdown-placeholder year-arrow"
-            id="year-arrow"
-            :style="{ borderTopColor: displayOptions.year.arrowColor }"
-          ></div>
-        </div>
-        <div
-          class="newSemester-dropdown-content year-content"
-          id="year-content"
-          v-if="displayOptions.year.shown"
-        >
-          <div
-            v-for="year in years"
-            :key="year"
-            :id="year"
-            class="newSemester-dropdown-content-item"
-            @click="selectYear(year)"
-          >
-            {{ year }}
-          </div>
-        </div>
-      </div>
-    </div>
+    <div v-if="isDuplicate()" class="newSemester-duplicate">Duplicate Semester</div>
   </div>
-  <div v-if="isDuplicate()" class= "newSemester-duplicate" >Duplicate Semester</div>
-  </div>
-
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import { clickOutside } from '@/utilities';
 
-import fall from '../../assets/images/fallEmoji.svg';
-import spring from '../../assets/images/springEmoji.svg';
-import winter from '../../assets/images/winterEmoji.svg';
-import summer from '../../assets/images/summerEmoji.svg';
-
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
-
+import fall from '@/assets/images/fallEmoji.svg';
+import spring from '@/assets/images/springEmoji.svg';
+import winter from '@/assets/images/winterEmoji.svg';
+import summer from '@/assets/images/summerEmoji.svg';
+import {
+  // @ts-ignore
+  inactiveGray,
+  // @ts-ignore
+  yuxuanBlue,
+  // @ts-ignore
+  lightPlaceholderGray,
+  // @ts-ignore
+  darkPlaceholderGray,
+} from '@/assets/scss/_variables.scss';
+import { FirestoreSemesterType, AppSemester } from '@/user-data';
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
   winter: 0,
   spring: 1,
   summer: 2,
-  fall: 3
+  fall: 3,
 });
 
-export default {
+type DisplayOption = {
+  shown: boolean;
+  stopClose: boolean;
+  boxBorder: string;
+  arrowColor: string;
+  placeholderColor: string;
+};
+
+type Data = {
+  readonly seasons: readonly (readonly [string, FirestoreSemesterType])[];
+  readonly years: readonly number[];
+  seasonText: string;
+  yearText: number;
+  readonly displayOptions: {
+    readonly year: DisplayOption;
+    readonly season: DisplayOption;
+  };
+};
+
+export default Vue.extend({
   props: {
-    currentSemesters: Array,
+    currentSemesters: Array as PropType<readonly AppSemester[] | null>,
     id: Number,
     isEdit: Boolean,
     year: Number,
-    type: String
+    type: String as PropType<FirestoreSemesterType>,
+    isCourseModelSelectingSemester: Boolean,
   },
-  data() {
+  data(): Data {
     // years
     const currentYear = new Date().getFullYear();
-    const seasons = [[fall, 'Fall'], [spring, 'Spring'], [summer, 'Summer'], [winter, 'Winter']];
+    const seasons: readonly (readonly [string, FirestoreSemesterType])[] = [
+      [fall, 'Fall'],
+      [spring, 'Spring'],
+      [summer, 'Summer'],
+      [winter, 'Winter'],
+    ] as const;
     const years = [];
     let startYear = currentYear - 10;
     while (startYear <= currentYear + 10) {
       years.push(startYear);
       startYear += 1;
     }
-    years.map(String);
 
     return {
       seasons,
       years,
       seasonText: '',
-      yearText: '',
+      yearText: 0,
       displayOptions: {
         season: {
           shown: false,
           stopClose: false,
           boxBorder: '',
           arrowColor: '',
-          placeholderColor: ''
+          placeholderColor: '',
         },
         year: {
           shown: false,
           stopClose: false,
           boxBorder: '',
           arrowColor: '',
-          placeholderColor: ''
-        }
-      }
+          placeholderColor: '',
+        },
+      },
     };
   },
   computed: {
-    seasonPlaceholder() {
+    seasonPlaceholder(): string {
       // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
       const currentSeason = this.getCurrentSeason();
       return this.seasonText || this.type || currentSeason;
     },
-    yearPlaceholder() {
+    yearPlaceholder(): number {
       const currentYear = new Date().getFullYear();
-      return this.yearText || this.year || currentYear;
-    }
+      return Number(this.yearText || this.year || currentYear);
+    },
   },
   directives: {
-    'click-outside': clickOutside
+    'click-outside': clickOutside,
+  },
+  mounted(): void {
+    this.$emit('updateSemProps', this.seasonPlaceholder, this.yearPlaceholder);
   },
   methods: {
-    seasonValue(season) {
+    seasonValue(season: readonly [string, string]): number {
+      // @ts-ignore
       return SeasonsEnum[season[1].toLowerCase()];
     },
-    getCurrentSeason() {
-      let currentSeason;
+    getCurrentSeason(): FirestoreSemesterType {
+      let currentSeason: FirestoreSemesterType;
       const currentMonth = new Date().getMonth();
       if (currentMonth === 0) {
         currentSeason = 'Winter';
@@ -212,18 +242,18 @@ export default {
       }
       return currentSeason;
     },
-    showHideContent(type) {
+    showHideContent(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
 
       if (contentShown) {
         // clicked box when content shown. So then hide content
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = '#32A0F2';
-        displayOptions.arrowColor = '#32A0F2';
+        displayOptions.boxBorder = yuxuanBlue;
+        displayOptions.arrowColor = yuxuanBlue;
       }
     },
     showHideSeasonContent() {
@@ -232,14 +262,14 @@ export default {
     showHideYearContent() {
       this.showHideContent('year');
     },
-    closeDropdownIfOpen(type) {
+    closeDropdownIfOpen(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
       if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
         displayOptions.shown = false;
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       }
     },
     closeSeasonDropdownIfOpen() {
@@ -248,36 +278,38 @@ export default {
     closeYearDropdownIfOpen() {
       this.closeDropdownIfOpen('year');
     },
-    selectOption(type, text) {
-      if (type === 'season') {
-        this.seasonText = text;
-      } else {
-        this.yearText = text;
-      }
+    selectOption(type: 'season' | 'year'): void {
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.boxBorder = '#C4C4C4';
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
+      this.$emit(
+        'updateSemProps',
+        this.seasonText || this.seasonPlaceholder,
+        this.yearText || this.yearPlaceholder
+      );
     },
-    selectSeason(text) {
-      this.selectOption('season', text);
+    selectSeason(season: string) {
+      this.seasonText = season;
+      this.selectOption('season');
     },
-    selectYear(text) {
-      this.selectOption('year', text);
+    selectYear(year: number) {
+      this.yearText = year;
+      this.selectOption('year');
     },
-    resetDropdown(type) {
+    resetDropdown(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
       displayOptions.stopClose = false;
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.placeholderColor = '#B6B6B6';
+      displayOptions.boxBorder = inactiveGray;
+      displayOptions.arrowColor = inactiveGray;
+      displayOptions.placeholderColor = darkPlaceholderGray;
 
       if (type === 'season') {
         this.seasonText = '';
       } else {
-        this.yearText = '';
+        this.yearText = 0;
       }
     },
     resetDropdowns() {
@@ -287,10 +319,11 @@ export default {
       // reset year dropdown
       this.resetDropdown('year');
     },
-    isDuplicate() {
+    isDuplicate(): boolean {
       let isDup = false;
-      if (this.currentSemesters != null) {
-        this.currentSemesters.forEach(semester => {
+      const semesters = this.currentSemesters;
+      if (semesters != null) {
+        semesters.forEach(semester => {
           if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder) {
             if (!this.isEdit || (this.isEdit && this.id !== semester.id)) {
               isDup = true;
@@ -300,16 +333,17 @@ export default {
       }
       this.$emit('duplicateSemester', isDup);
       return isDup;
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style lang="scss">
 .duplicate-p {
-  color : red;
+  color: red;
 }
 .duplicate {
+  border-radius: 3px;
   border: 1px solid red;
 }
 .newSemester {
@@ -318,7 +352,7 @@ export default {
   &-duplicate {
     color: red;
     font-size: 14px;
-    margin-top: .5rem;
+    margin-top: 0.5rem;
   }
   &-section {
     font-size: 14px;
@@ -342,20 +376,13 @@ export default {
   }
 
   &-select {
-    width: 114px;
-    height: 26px;
-    left: 444px;
-    top: 183px;
-
     background: #ffffff;
     // border: 1px solid #32A0F2;
-
-    border: 1px solid #c4c4c4;
 
     //when selected border-color: #32A0F2;
 
     box-sizing: border-box;
-    border-radius: 1px;
+    border-radius: 2px;
     width: 100%;
     font-style: normal;
     font-weight: normal;
@@ -369,7 +396,7 @@ export default {
     width: 12px;
     height: 12px;
   }
-  &-emoji-text{
+  &-emoji-text {
     height: 14px;
     padding: 0px;
   }
@@ -389,18 +416,10 @@ export default {
       &.year-wrapper {
         display: flex;
         flex-direction: row;
-        // width: 121px;
-        // height: 16px;
         width: 100%;
-        height: 100%;
+        border-radius: 2px;
+        border: 1px solid #c4c4c4;
         cursor: pointer;
-      }
-
-      &.year-wrapper {
-        // width: 62px;
-        // height: 16px;
-        width: 100%;
-        height: 100%;
       }
 
       &.season-placeholder,
@@ -417,7 +436,6 @@ export default {
         height: 6.24px;
         border-left: 6.24px solid transparent;
         border-right: 6.24px solid transparent;
-
         border-top: 6.24px solid #c4c4c4;
 
         //when clicked border-top-color: #32A0F2;
@@ -444,27 +462,21 @@ export default {
   }
 
   &-dropdown-content {
-    width: 114px;
-    height: 134px;
-    left: 444px;
+    max-height: 140px;
 
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-    border-radius: 7px;
-
-    margin-top: 3px;
+    border-radius: 0px 0px 7px 7px;
 
     &.year-content {
+      z-index: 1;
       width: 100%;
-      height: 223px;
-      left: 574px;
-      top: 209px;
 
       background: #ffffff;
       box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-      border-radius: 7px;
 
-      overflow: scroll;
+      overflow-y: scroll;
+      overflow-x: hidden;
     }
     &-season {
       padding-left: 0px;
@@ -472,7 +484,6 @@ export default {
       height: 14px;
     }
     &-item {
-      width: 106px;
       height: 31px;
       left: 454px;
       top: 213px;
@@ -486,6 +497,10 @@ export default {
       color: #757575;
       padding-left: 10px;
       cursor: pointer;
+
+      &:last-child {
+        border-radius: 0px 0px 7px 7px;
+      }
     }
   }
 

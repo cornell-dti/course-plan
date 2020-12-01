@@ -176,26 +176,14 @@
 </template>
 
 <script>
-
+import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
+import { clickOutside } from '@/utilities';
+import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 const placeholderText = 'Select one';
 
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event, binding.arg);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
-
-export default {
+export default Vue.extend({
   props: {
     user: Object
   },
@@ -207,7 +195,7 @@ export default {
     if (this.user.college !== '') {
       collegeText = this.user.collegeFN;
       collegeAcronym = this.user.college;
-      collegePlaceholderColor = '#757575';
+      collegePlaceholderColor = lightPlaceholderGray;
     }
 
     let majorText = placeholderText;
@@ -216,7 +204,7 @@ export default {
     if ('major' in this.user && this.user.major.length > 0) {
       majorText = this.user.majorFN;
       majorAcronym = this.user.major;
-      majorPlaceholderColor = '#757575';
+      majorPlaceholderColor = lightPlaceholderGray;
     }
     let minorText = placeholderText;
     let minorAcronym = '';
@@ -224,7 +212,7 @@ export default {
     if ('minor' in this.user && this.user.minor.length > 0) {
       minorText = this.user.minorFN;
       minorAcronym = this.user.minor;
-      minorPlaceholderColor = '#757575';
+      minorPlaceholderColor = lightPlaceholderGray;
     }
     return {
       // TODO: Get real college, major, and minor lists
@@ -296,7 +284,7 @@ export default {
               stopClose: false,
               boxBorder: '',
               arrowColor: '',
-              placeholderColor: '#757575',
+              placeholderColor: lightPlaceholderGray,
               placeholder: major.placeholder[i],
               acronym: major.acronym[i]
             };
@@ -327,7 +315,7 @@ export default {
               stopClose: false,
               boxBorder: '',
               arrowColor: '',
-              placeholderColor: '#757575',
+              placeholderColor: lightPlaceholderGray,
               placeholder: minor.placeholder[i],
               acronym: minor.acronym[i]
             };
@@ -446,11 +434,11 @@ export default {
 
       if (contentShown) {
         // clicked box when content shown. So then hide content
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = '#32A0F2';
-        displayOptions.arrowColor = '#32A0F2';
+        displayOptions.boxBorder = yuxuanBlue;
+        displayOptions.arrowColor = yuxuanBlue;
       }
     },
     showHideCollegeContent(i) {
@@ -469,8 +457,8 @@ export default {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
         displayOptions.shown = false;
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       }
     },
     closeCollegeDropdownIfOpen(event, i) {
@@ -488,9 +476,9 @@ export default {
       displayOptions.placeholder = text;
       displayOptions.acronym = acronym;
       displayOptions.shown = false;
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.placeholderColor = '#757575';
+      displayOptions.arrowColor = inactiveGray;
+      displayOptions.boxBorder = inactiveGray;
+      displayOptions.placeholderColor = lightPlaceholderGray;
       this.$emit('updateBasic', this.displayOptions.major, this.displayOptions.college, this.displayOptions.minor);
     },
     selectCollege(text, acronym, i) {
@@ -551,7 +539,7 @@ export default {
       this.displayOptions.minor.push(minor);
     }
   }
-};
+});
 
 </script>
 

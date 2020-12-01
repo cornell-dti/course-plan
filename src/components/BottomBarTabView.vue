@@ -1,94 +1,109 @@
 <template>
   <div class="bottombartabview">
     <div class="bottombartabview-bottomCourseWrapper">
-      <div v-for="bottomCourse in bottomCourses.slice(0, 1)" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
+      <div
+        v-for="(bottomCourse, index) in bottomCourses"
+        :key="index"
+        class="bottombartabview-courseWrapper"
+      >
         <bottombartab
           v-bind="bottomCourse"
-          :id="bottomCourse.id"
+          :id="index"
           :subject="bottomCourse.subject"
           :number="bottomCourse.number"
           :color="bottomCourse.color"
-          :courseObj ="bottomCourse"
-          :isFirstTab = true
-          :isExpanded ="isExpanded"
+          :courseObj="bottomCourse"
+          :tabIndex="index"
+          :bottomCourseFocus="bottomCourseFocus"
+          :isExpanded="isExpanded"
           @bottomBarTabToggle="bottomBarTabToggle"
           @deleteBottomTab="deleteBottomTab"
           @toggleFromTab="toggleFromTab"
-        />
-      </div>
-      <div v-for="bottomCourse in bottomCourses.slice(1)" :key="bottomCourse.id" class="bottombartabview-courseWrapper">
-        <bottombartab
-          v-bind="bottomCourse"
-          :id="bottomCourse.id"
-          :subject="bottomCourse.subject"
-          :number="bottomCourse.number"
-          :color="bottomCourse.color"
-          :courseObj ="bottomCourse"
-          :isFirstTab = false
-          :isExpanded ="isExpanded"
-          @bottomBarTabToggle="bottomBarTabToggle"
-          @deleteBottomTab="deleteBottomTab"
-          @toggleFromTab="toggleFromTab"
+          @updateBarTabs="updateBarTabs"
         />
       </div>
     </div>
     <div v-if="seeMoreCourses.length > 0" class="bottombartabview-seeMoreWrapper">
       <div class="bottombarSeeMoreTab" @click="bottomBarSeeMoreToggle">
-          <div class="bottombarSeeMoreTab-name">{{seeMoreString}}</div>
-          <img v-if="!seeMoreOpen" class="bottombarSeeMoreTab-arrow" src="@/assets/images/uparrow-white.svg" />
-          <img v-if="seeMoreOpen" class="bottombarSeeMoreTab-arrow" src="@/assets/images/downarrow-white.svg" />
+        <div class="bottombarSeeMoreTab-name">{{ seeMoreString }}</div>
+        <img
+          v-if="!seeMoreOpen"
+          class="bottombarSeeMoreTab-arrow"
+          src="@/assets/images/uparrow-white.svg"
+        />
+        <img
+          v-if="seeMoreOpen"
+          class="bottombarSeeMoreTab-arrow"
+          src="@/assets/images/downarrow-white.svg"
+        />
       </div>
       <div v-if="seeMoreOpen" class="bottombarSeeMoreOptions">
         <div class="seeMoreCourse-content">
-            <div
-              v-for="seeMoreCourse in seeMoreCourses"
-              :key="seeMoreCourse.id"
-              class="seeMoreCourse-option"
+          <div
+            v-for="(seeMoreCourse, index) in seeMoreCourses"
+            :key="index"
+            class="seeMoreCourse-option"
+          >
+            <span class="seeMoreCourse-option-text" @click="moveToBottomBar(seeMoreCourse)"
+              >{{ seeMoreCourse.subject }} {{ seeMoreCourse.number }}</span
             >
-                <span class="seeMoreCourse-option-text" @click="moveToBottomBar(seeMoreCourse)">{{ seeMoreCourse.subject }} {{ seeMoreCourse.number}}</span>
-                <img class="seeMoreCourse-option-delete" src="@/assets/images/x-blue.svg" @click="deleteSeeMoreCourse(seeMoreCourse)"/>
-            </div>
+            <img
+              class="seeMoreCourse-option-delete"
+              src="@/assets/images/x-blue.svg"
+              @click="deleteSeeMoreCourse(seeMoreCourse)"
+            />
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
-import BottomBarTab from '@/components/BottomBarTab';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import BottomBarTab from '@/components/BottomBarTab.vue';
+import { AppBottomBarCourse } from '@/user-data';
 
 Vue.component('bottombartab', BottomBarTab);
 
-export default {
+export default Vue.extend({
   data() {
     return {
-      seeMoreOpen: false
+      seeMoreOpen: false,
     };
   },
   props: {
-    bottomCourses: Array,
-    seeMoreCourses: Array,
+    bottomCourses: Array as PropType<AppBottomBarCourse[]>,
+    seeMoreCourses: Array as PropType<AppBottomBarCourse[]>,
+    bottomCourseFocus: Number,
     isExpanded: Boolean,
-    maxBottomBarTabs: Number
+    maxBottomBarTabs: Number,
   },
 
   computed: {
     seeMoreString() {
       return 'See More';
-    }
+    },
   },
 
   methods: {
-    bottomBarTabToggle(courseObj) {
+    bottomBarTabToggle(courseObj: AppBottomBarCourse) {
       this.$emit('bottomBarTabToggle', courseObj);
     },
 
-    deleteBottomTab(subject, number) {
+    deleteBottomTab(courseObj: AppBottomBarCourse) {
+      let focusedCourse: AppBottomBarCourse | undefined = this.bottomCourses[
+        this.bottomCourseFocus
+      ];
+      let focusedCourseIndex = 0;
+
       for (let i = 0; i < this.bottomCourses.length; i += 1) {
-        if (this.bottomCourses[i].subject === subject && this.bottomCourses[i].number === number) {
+        if (this.bottomCourses[i].uniqueID === courseObj.uniqueID) {
           this.bottomCourses.splice(i, 1);
-          break;
+          if (i === this.bottomCourseFocus) {
+            focusedCourse = undefined;
+            focusedCourseIndex = i;
+          }
         }
       }
 
@@ -101,13 +116,22 @@ export default {
         // add course to end of bottomCourses
         this.bottomCourses.push(seeMoreCourseToMove);
       }
+
+      // update focused course
+      if (focusedCourse) {
+        this.bottomBarTabToggle(focusedCourse);
+      } else if (focusedCourseIndex < this.bottomCourses.length) {
+        this.bottomBarTabToggle(this.bottomCourses[focusedCourseIndex]);
+      } else {
+        this.bottomBarTabToggle(this.bottomCourses[this.bottomCourses.length - 1]);
+      }
     },
 
     bottomBarSeeMoreToggle() {
       this.seeMoreOpen = !this.seeMoreOpen;
     },
 
-    moveToBottomBar(course) {
+    moveToBottomBar(course: AppBottomBarCourse) {
       if (this.bottomCourses.length >= this.maxBottomBarTabs) {
         const bottomCourseToMove = this.bottomCourses[this.bottomCourses.length - 1];
         // remove bottomCourseToMove from bottomCourses
@@ -116,35 +140,37 @@ export default {
         // add bottomCourseToMove to seeMoreCourses
         this.seeMoreCourses.unshift(bottomCourseToMove);
       }
-      // remove course from seeMoreCourses
-      for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-        if (this.seeMoreCourses[i].uniqueID === course.uniqueID) {
-          this.seeMoreCourses.splice(i, 1);
-        }
-      }
       // add course to bottomCourses
       this.bottomCourses.unshift(course);
+      this.bottomBarTabToggle(this.bottomCourses[0]);
+      // remove course from seeMoreCourses
+      this.deleteSeeMoreCourse(course);
     },
 
-    deleteSeeMoreCourse(course) {
+    deleteSeeMoreCourse(course: AppBottomBarCourse) {
       // remove course from seeMoreCourses
       for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
         if (this.seeMoreCourses[i].uniqueID === course.uniqueID) {
           this.seeMoreCourses.splice(i, 1);
         }
       }
+      this.updateBarTabs();
     },
 
     toggleFromTab() {
       this.$emit('toggleFromTab');
-    }
+    },
 
-  }
-};
-
+    updateBarTabs() {
+      this.$emit('updateBarTabs');
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .bottombartabview {
   width: 100%;
   display: flex;
@@ -153,7 +179,6 @@ export default {
   align-items: flex-end;
 
   justify-content: space-between;
-
 
   &-bottomCourseWrapper {
     display: flex;
@@ -165,7 +190,7 @@ export default {
   }
 
   &-seeMoreWrapper {
-    display:flex;
+    display: flex;
     flex-direction: column;
     margin-left: auto;
     margin-right: 1%;
@@ -173,7 +198,7 @@ export default {
       color: white;
       width: 9rem;
       height: 1.75rem;
-      background-color: #508197;
+      background-color: $sangBlue;
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
       display: flex;
@@ -182,7 +207,7 @@ export default {
       justify-content: space-between;
       padding-left: 8px;
       padding-right: 8px;
-      cursor:pointer;
+      cursor: pointer;
       &-arrow {
         width: 14px;
         height: 50%;
@@ -193,10 +218,10 @@ export default {
 
   .bottombarSeeMoreOptions {
     width: 9rem;
-    background-color: #FFFFFF;;
+    background-color: #ffffff;
     border: 1px solid rgba(218, 218, 218, 0.2);
-    max-height:6.81rem;
-    overflow-y:scroll;
+    max-height: 6.81rem;
+    overflow-y: scroll;
     .seeMoreCourse {
       &-option {
         border: 1px solid rgba(218, 218, 218, 0.2);
@@ -225,13 +250,13 @@ export default {
       }
 
       &-option:hover {
-          text-decoration-line: underline;
-          background: rgba(50, 160, 242, 0.15);
+        text-decoration-line: underline;
+        background: rgba(50, 160, 242, 0.15);
       }
     }
 
     .seeMoreCourse-option:hover img {
-      display:block;
+      display: block;
     }
   }
 }

@@ -1,106 +1,121 @@
 <template>
-  <div class="bottombartab" :style="{ background: `#${color}` }" :class="{ inactive: !isFirstTab}" @click="bottomBarTabToggle(courseObj)">
-    <div class="bottombartab-wrapper" @click="toggleFromTab">
-      <img v-if="isFirstTab && !isExpanded" class="bottombartab-arrow" src="@/assets/images/uparrow-white.svg"/>
-      <img v-if="isFirstTab && isExpanded" class="bottombartab-arrow" src="@/assets/images/downarrow-white.svg"/>
-      <div class="bottombartab-name">{{subject}} {{number}}</div>
+  <div
+    class="bottombartab"
+    :style="{ background: `#${color}` }"
+    :class="{ inactive: !isBottomCourseFocus }"
+    @click="bottomBarTabToggle(courseObj)"
+  >
+    <div class="bottombartab-wrapper">
+      <div class="bottombartab-name">{{ subject }} {{ number }}</div>
     </div>
-    <img class="bottombartab-delete" src="@/assets/images/x-white.svg" @click="deleteBottomTab(subject, number)"/>
+    <img
+      class="bottombartab-delete"
+      src="@/assets/images/x-white.svg"
+      @click.stop="deleteBottomTab(courseObj)"
+    />
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import { AppBottomBarCourse } from '@/user-data';
 
-export default {
+export default Vue.extend({
   props: {
     subject: String,
     number: String,
     color: String,
     id: Number,
-    courseObj: Object,
-    isFirstTab: Boolean,
-    isExpanded: Boolean
+    courseObj: Object as PropType<AppBottomBarCourse>,
+    tabIndex: Number,
+    bottomCourseFocus: Number,
+    isExpanded: Boolean,
   },
 
   methods: {
-    bottomBarTabToggle(courseObj) {
+    bottomBarTabToggle(courseObj: AppBottomBarCourse) {
       this.$emit('bottomBarTabToggle', courseObj);
+      this.toggleFromTab();
     },
 
-    deleteBottomTab(subject, number) {
-      this.$emit('deleteBottomTab', subject, number);
+    deleteBottomTab(courseObj: AppBottomBarCourse) {
+      this.$emit('deleteBottomTab', courseObj);
     },
 
     toggleFromTab() {
-      if ((!this.isFirstTab && !this.isExpanded) || this.isFirstTab) {
+      if (this.tabIndex === this.bottomCourseFocus || !this.isExpanded) {
         this.$emit('toggleFromTab');
       }
-    }
+    },
+  },
 
-  }
-};
+  computed: {
+    isBottomCourseFocus() {
+      return this.tabIndex === this.bottomCourseFocus;
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
-  .bottombartab {
-    position: relative;
-    width: 11.5rem;
-    height: 1.75rem;
-    background-color: #25A2AA;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    display: flex;
-    align-items: center;
+.bottombartab {
+  position: relative;
+  width: 11.5rem;
+  height: 1.75rem;
+  background-color: #25a2aa;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  display: flex;
+  align-items: center;
 
-    display: flex;
-    justify-content: space-between;
-    padding-left: 8px;
-    padding-right: 8px;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 8px;
+  padding-right: 8px;
 
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 75%;
+  }
+
+  &-arrow {
+    width: 14px;
+    height: 50%;
+    margin-right: 4%;
+    margin-top: 5%;
+  }
+
+  &-name {
+    color: white;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  &-delete {
+    width: 10px;
+    height: 50%;
     cursor: pointer;
-
-    &:hover {
-      opacity: 1.0;
-    }
-
-    &-wrapper {
-      display: flex;
-      flex-direction: row;
-      width: 75%;
-    }
-
-    &-arrow {
-      width: 14px;
-      height: 50%;
-      margin-right: 4%;
-      margin-top: 5%;
-    }
-
-    &-name {
-      color: white;
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 20px;
-    }
-
-    &-delete {
-      width: 10px;
-      height: 50%;
-      cursor:pointer;
-    }
   }
+}
 
-  .inactive {
-    mix-blend-mode: multiply;
-    opacity: 0.8;
-  }
+.inactive {
+  mix-blend-mode: multiply;
+  opacity: 0.8;
+}
 
 @media only screen and (max-width: 976px) {
   .bottombartab {
     width: 10.5rem;
   }
 }
-
 
 @media only screen and (max-width: 440px) {
   .bottombartab {
@@ -116,5 +131,4 @@ export default {
     }
   }
 }
-
 </style>

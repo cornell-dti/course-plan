@@ -266,38 +266,58 @@
     </div>
 </template>
 
-<script>
-
-import reqsData from '@/requirements/data/exams/ExamCredit';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
-import NewCourse from '@/components/Modals/NewCourse';
+import NewCourse from '@/components/Modals/NewCourse.vue';
+import { clickOutside } from '@/utilities';
+import { AppUser, FirestoreTransferClass } from '@/user-data';
+// @ts-ignore
+import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 import checkmarkSelected from '@/assets/images/checkmark-green.svg';
 import checkmarkUnselected from '@/assets/images/checkmark-empty.svg';
 
 Vue.component('newCourse', NewCourse);
 
 const placeholderText = 'Select one';
-const placeholderColor = '#757575';
+const placeholderColor = lightPlaceholderGray;
 
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event, binding.arg);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
+type Section = 'type' | 'subject' | 'score';
+
+type DisplayOption = {
+  shown: boolean;
+  stopClose: boolean;
+  boxBorder: string;
+  arrowColor: string;
+  placeholderColor: string;
+  placeholder: string;
+  acronym: string;
 };
 
-export default {
+type Data = {
+  tookSwimTest: string;
+  scores: number[];
+  classes: [];
+  exams: string[];
+  subjects: string[][];
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  displayOptions: {
+    exam: Record<'type' | 'subject' | 'score', DisplayOption>[];
+    class: FirestoreTransferClass[];
+  };
+  transferJSON: any,
+  isError: boolean;
+  totalCredits: number;
+};
+
+export default Vue.extend({
   props: {
-    user: Object
+    user: Object as PropType<AppUser>
   },
-  data() {
+  data(): Data {
     return {
       tookSwimTest: '',
       scoresAP: [1, 2, 3, 4, 5],
@@ -333,30 +353,34 @@ export default {
   methods: {
     getClasses() {
       let credits = 0;
-      const exams = [];
-      const sections = ['type', 'subject', 'score'];
+      const exams: Record<Section, DisplayOption>[] = [];
+      const sections = ['type', 'subject', 'score'] as const;
       if ('exam' in this.user && this.user.exam.length > 0) {
         for (let x = 0; x < this.user.exam.length; x += 1) {
-          const exam = {};
+          // @ts-ignore
+          const exam: Record<'type' | 'subject' | 'score', DisplayOption> = {};
           for (const sec of sections) {
             exam[sec] = {
               shown: false,
               stopClose: false,
               boxBorder: '',
               arrowColor: '',
-              placeholderColor: '#757575',
-              placeholder: this.user.exam[x][sec],
+              placeholderColor: lightPlaceholderGray,
+              placeholder: String(this.user.exam[x][sec]),
               acronym: ''
             };
           }
           if (typeof this.user.exam[x].subject !== 'undefined') {
             exams.push(exam);
+            // @ts-ignore
             credits += this.user.exam[x].credits;
+            // @ts-ignore
             exam.equivCourse = this.user.exam[x].equivCourse;
           }
         }
       }
-      const examAP = {};
+      // @ts-ignore
+      const exam: Record<Section, DisplayOption> = {};
       for (const sect of sections) {
         let placeholderSect = placeholderText;
         if (sect === 'type') {
@@ -397,10 +421,11 @@ export default {
       this.displayOptions.exam = exams;
       const swim = (typeof this.user.tookSwim !== 'undefined') ? this.user.tookSwim : 'no';
       this.tookSwimTest = swim;
-      const transferClass = [];
+      const transferClass: FirestoreTransferClass[] = [];
       this.user.transferCourse.forEach(course => {
         transferClass.push(course);
       });
+      // @ts-ignore
       transferClass.push({ class: placeholderText, credits: 0 });
       this.displayOptions.class = transferClass;
     },
@@ -429,17 +454,16 @@ export default {
       return 0;
     },
     getTransferMap() {
-      const TransferJSON = {};
-      console.log(reqsData);
+      const TransferJSON: Record<string, { credits: number; type: 'AP' | 'IB' }> = {};
       reqsData.AP.forEach(sub => {
-        TransferJSON[sub.subject] = {
-          credits: sub.credits,
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
           type: 'AP'
         };
       });
       reqsData.IB.forEach(sub => {
-        TransferJSON[sub.subject] = {
-          credits: sub.credits,
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
           type: 'IB'
         };
       });
@@ -448,53 +472,52 @@ export default {
         this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
       }
     },
-    showHideContent(type, section, i) {
-      let displayOptions = this.displayOptions[type];
-      displayOptions = displayOptions[i];
+    showHideContent(type: 'exam' | 'class', section: Section, i: number) {
+      let displayOptions: any = this.displayOptions[type][i];
       if (type === 'exam') {
         displayOptions = displayOptions[section];
       }
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
       if (contentShown) {
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       } else {
-        displayOptions.boxBorder = '#32A0F2';
-        displayOptions.arrowColor = '#32A0F2';
+        displayOptions.boxBorder = yuxuanBlue;
+        displayOptions.arrowColor = yuxuanBlue;
       }
     },
-    showHideExamContent(i) {
+    showHideExamContent(i: number) {
       this.showHideContent('exam', 'type', i);
     },
-    showHideSubjectContent(i) {
+    showHideSubjectContent(i: number) {
       this.showHideContent('exam', 'subject', i);
     },
-    showHideScoreContent(i) {
+    showHideScoreContent(i: number) {
       this.showHideContent('exam', 'score', i);
     },
-    showHideClassContent(i) {
+    showHideClassContent(i: number) {
+      // @ts-ignore
       this.showHideContent('class', '', i);
     },
-    closeDropdownIfOpen(section, type, i) {
-      let displayOptions = this.displayOptions[section];
-      displayOptions = displayOptions[i];
+    closeDropdownIfOpen(section: 'exam' | 'class', i: number) {
+      const displayOptions: any = this.displayOptions[section][i];
       if (section === 'exam') {
         Object.keys(displayOptions).forEach(key => {
           if (key !== 'equivCourse' && displayOptions[key].stopClose) {
             displayOptions[key].stopClose = false;
           } else if (key !== 'equivCourse' && displayOptions[key].shown && displayOptions.type.placeholder === type) {
             displayOptions[key].shown = false;
-            displayOptions[key].boxBorder = '#C4C4C4';
-            displayOptions[key].arrowColor = '#C4C4C4';
+            displayOptions[key].boxBorder = inactiveGray;
+            displayOptions[key].arrowColor = inactiveGray;
           }
         });
       } else if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
       } else if ('equivCourse' && displayOptions.shown) {
         displayOptions.shown = false;
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
+        displayOptions.boxBorder = inactiveGray;
+        displayOptions.arrowColor = inactiveGray;
       }
     },
     closeTypeDropdownIfOpen(event, i) {
@@ -511,8 +534,7 @@ export default {
     },
     // Set the colleges map to with acronym keys and full name values
     setExamsMap() {
-      /** @type {Object.<string, string>} */
-      const exams = [];
+      const exams: string[] = [];
       Object.keys(reqsData).forEach(key => {
         exams.push(key);
       });
@@ -521,14 +543,15 @@ export default {
     // Set the majors map to with acronym keys and full name values
     setSubjectList() {
       /** @type {Object.<string, string>} */
-      const totalSubjects = [];
+      const totalSubjects: string[][] = [];
       this.displayOptions.exam.forEach(exam => {
         if (exam.type.placeholder !== placeholderText) {
-          const examType = exam.type.placeholder;
-          const subjects = [];
+          // @ts-ignore
+          const examType: 'AP' | 'IB' = exam.type.placeholder;
+          const subjects: string[] = [];
           if (examType in reqsData && examType !== null) {
             reqsData[examType].forEach(sub => {
-              subjects.push(sub.subject);
+              subjects.push(sub.name);
             });
             totalSubjects.push(subjects);
           }
@@ -562,48 +585,28 @@ export default {
       }
       displayOptions.placeholder = text;
       displayOptions.shown = false;
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.placeholderColor = '#757575';
+      displayOptions.arrowColor = inactiveGray;
+      displayOptions.boxBorder = inactiveGray;
+      displayOptions.placeholderColor = lightPlaceholderGray;
       this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
     },
-    // Clear a major if a new college is selected and the major is not in it
-    clearSubjectAndScoreIfNotInCollege() {
-      const majorJSON = reqsData.major;
-      for (let x = 0; x < this.displayOptions.major.length; x += 1) {
-        const major = this.displayOptions.major[x];
-        let foundCollege = false;
-        // Do nothing if no major set
-        if (major.acronym !== '') {
-          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            const college = this.displayOptions.college[i];
-            if (majorJSON[major.acronym].schools.includes(college.acronym)) {
-              foundCollege = true;
-              break;
-            }
-          }
-        }
-        if (!foundCollege) {
-          major.placeholderColor = '';
-          major.placeholder = placeholderText;
-          major.acronym = '';
-        }
-      }
-    },
-    selectExam(text, acronym, i) {
+    selectExam(text: string, acronym: string | number, i: number) {
       this.selectOption('exam', 'type', text, acronym, i);
       this.setSubjectList();
     },
-    selectScore(text, acronym, i) {
-      this.selectOption('exam', 'score', text, acronym, i);
+    selectScore(text: number, acronym: string | number, i: number) {
+      this.selectOption('exam', 'score', String(text), acronym, i);
     },
-    selectSubject(text, acronym, i) {
-      const type = this.displayOptions.exam[i].type.placeholder;
+    selectSubject(text: string, acronym: string | number, i: number) {
+      // @ts-ignore
+      const type: 'AP' | 'IB' = this.displayOptions.exam[i].type.placeholder;
       const course = this.getCourseFromExam(type, text);
+      // @ts-ignore
       this.displayOptions.exam[i].equivCourse = course;
       this.selectOption('exam', 'subject', text, acronym, i);
     },
-    selectClass(text, acronym, i) {
+    selectClass(text: string, acronym: string | number, i: number) {
+      // @ts-ignore
       this.selectOption('class', 'placholder', text, acronym, i);
     },
     addExam(type) {
@@ -639,16 +642,15 @@ export default {
       this.displayOptions.exams = this.displayOptions.exam.push(exam);
       this.setSubjectList();
     },
-    getCourseFromExam(type, subject) {
-      let count = 0;
-      let courses;
-      for (const sub of reqsData[type]) {
-        if (sub.subject === subject) {
-          courses = reqsData[type][count].credits[0].courseEquivalents;
+    getCourseFromExam(type: 'AP' | 'IB', subject: string) {
+      let courses: Record<string, number> | undefined;
+      for (const exam of reqsData[type]) {
+        if (exam.name === subject) {
+          courses = exam.fulfillment.courseEquivalents
           // as a default takes the first equivalent course
           // TODO will need to add requirements menu if editiable.
+          break;
         }
-        count += 1;
       }
       return courses;
     },
@@ -659,6 +661,7 @@ export default {
       this.displayOptions.class.splice(index, 1);
     },
     addTransfer() {
+      // @ts-ignore
       this.displayOptions.class.push(placeholderText);
     },
     countExamType(exams, type) {
@@ -680,7 +683,7 @@ export default {
         .then(res => res.json())
         .then(resultJSON => {
           // check catalogNbr of resultJSON class matches number of course to add
-          resultJSON.data.classes.forEach(resultJSONclass => {
+          resultJSON.data.classes.forEach((resultJSONclass: any) => {
             if (resultJSONclass.catalogNbr === number) {
               const course = resultJSONclass;
               const creditsC = course.credits || course.enrollGroups[0].unitsMaximum;
@@ -696,7 +699,7 @@ export default {
         });
     }
   }
-};
+});
 
 </script>
 
