@@ -11,19 +11,21 @@
     "req-gen": "node requirement-generator-dist/generator.js",
     "lint": "vue-cli-service lint",
     "tsc": "tsc",
+    "type-check": "tsc && vti diagnostics",
     "build:staging": "vue-cli-service build --mode staging",
-    "format": "prettier --write '**/*.{js,vue,scss,css,html}'",
-    "format:check": "prettier --check '**/*.{js,vue,scss,css,html}'",
+    "format": "prettier --write \"**/*.{js,ts,css,html}\" src/App.vue \"src/components/{BinaryButton,BottomBar*,*Course,Caution,Confirmation,Dashboard,Footer,Login,NavBar,TopBar,*Requirement*,*Semester*,Modals/SemesterModal,Modals/NewCourse,Modals/Modal,Modals/TourWindow,Modals/*Semester}.vue\"",
+    "format:check": "prettier --check \"**/*.{js,ts,css,html}\" src/App.vue \"src/components/{BinaryButton,BottomBar*,Course,Caution,Confirmation,Dashboard,Footer,Login,NavBar,TopBar,*Requirement*,*Semester*,Modals/SemesterModal,Modals/NewCourse,Modals/Modal,Modals/TourWindow,Modals/*Semester}.vue\"",
+    "format:check:full": "prettier --check \"**/*.{js,ts,vue,scss,css,html}\"",
     "test": "jest"
   },
   "dependencies": {
-    "@firebase/analytics": "^0.2.13",
+    "@firebase/analytics": "^0.6.2",
     "@types/intro.js": "^2.4.6",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.13.0",
     "clone": "^2.1.2",
     "dragula": "^3.7.2",
-    "firebase": "^6.6.2",
+    "firebase": "^8.0.1",
     "intro.js": "^2.9.3",
     "jsonschema": "^1.2.5",
     "node-fetch": "^2.6.1",
@@ -53,12 +55,21 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^26.3.0",
     "eslint": "^5.16.0",
+    "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-vue": "^5.0.0",
     "jest": "^26.4.2",
     "node-sass": "^4.13.1",
+    "prettier": "^2.1.2",
     "sass-loader": "^8.0.2",
     "typescript": "~3.7.5",
+    "vti": "0.0.17",
     "vue-template-compiler": "^2.6.11"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "arrowParens": "avoid"
   },
   "postcss": {
     "plugins": {

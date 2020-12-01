@@ -1,42 +1,165 @@
 <template>
   <div class="newCourse">
     <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
+    <!-- TODO: for some reason this breaks the dropdown <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div> -->
     <div class="autocomplete">
-      <input v-if="!isOnboard" class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
-        semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
-      <input v-if="isOnboard" :class="onboardingStyle(placeholderText)" :id="'dropdown-' + semesterID" :ref="'dropdown-' +
-        semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
+      <input
+        :class="onboardingStyle(placeholderText, isOnboard)"
+        :id="'dropdown-' + semesterID"
+        :ref="'dropdown-' + semesterID"
+        :placeholder="placeholder"
+        @keyup.esc="closeCourseModal"
+      />
+    </div>
+    <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
+    <div v-if="isCourseModelSelectingSemester && !selected">
+      <div class="newCourse-title">Add this class to the following semester</div>
+      <div class="newCourse-semester-edit">
+        <newSemester
+          :type="season"
+          :year="year"
+          :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
+          @updateSemProps="updateSemProps"
+        ></newSemester>
+      </div>
+    </div>
+    <div v-if="!isOnboard && selected">
+      <!-- if a course is selected -->
+      <div v-if="isCourseModelSelectingSemester">
+        <div class="newCourse-text">Selected Semester</div>
+        <div class="newCourse-semester">
+          <span class="newCourse-name">
+            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
+            {{ year }}
+          </span>
+        </div>
+      </div>
+      <div class="newCourse-title">This class fulfills the following requirement(s):</div>
+      <div v-if="!editMode" class="newCourse-requirements-container">
+        <div
+          class="newCourse-requirements"
+          v-for="req in requirements"
+          :key="req"
+          :class="{ 'newCourse-space': !checkIfLast(req, requirements) }"
+        >
+          {{ checkIfLast(req, requirements) ? req : `${req},` }}
+        </div>
+      </div>
+      <div v-else class="newCourse-requirements-edit">
+        <editRequirement
+          v-for="req in requirements"
+          :key="req"
+          :name="req"
+          :selected="true"
+          :isClickable="true"
+        />
+      </div>
+      <div class="newCourse-title">
+        This class could potentially fulfill the following requirement(s):
+      </div>
+      <div v-if="!editMode" class="newCourse-requirements-container">
+        <div
+          class="newCourse-name"
+          v-for="potreq in potentialReqs"
+          :key="potreq"
+          :class="{ 'newCourse-space': !checkIfLast(potreq, potentialReqs) }"
+        >
+          {{ checkIfLast(potreq, potentialReqs) ? potreq : `${potreq},` }}
+        </div>
+      </div>
+      <div v-else class="newCourse-requirements-edit">
+        <editRequirement
+          v-for="potreq in potentialReqs"
+          :key="potreq"
+          :name="potreq"
+          :isClickable="true"
+        />
+        <binaryButton
+          v-for="choice in binaryPotentialReqs"
+          :key="choice[0]"
+          :choices="choice"
+        ></binaryButton>
+      </div>
+      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
+        Add these Requirements
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
 import coursesJSON from '../../assets/courses/courses.json';
+import EditRequirement from '@/components/EditRequirement.vue';
+import BinaryButton from '@/components/BinaryButton.vue';
 
-export default {
+Vue.component('editRequirement', EditRequirement);
+Vue.component('binaryButton', BinaryButton);
+
+const fall = require('../../assets/images/fallEmoji.svg');
+const spring = require('../../assets/images/springEmoji.svg');
+const winter = require('../../assets/images/winterEmoji.svg');
+const summer = require('../../assets/images/summerEmoji.svg');
+
+export default Vue.extend({
   props: {
     isOnboard: Boolean,
     semesterID: Number,
-    placeholderText: String
+    placeholderText: String,
+    season: String,
+    year: Number,
+    goBack: Boolean,
+    isCourseModelSelectingSemester: Boolean,
+  },
+  data() {
+    return {
+      seasonImg: {
+        Fall: fall,
+        Spring: spring,
+        Winter: winter,
+        Summer: summer,
+      },
+      selected: false,
+      requirements: ['DummyReq1', 'DummyReq2'],
+      potentialReqs: ['PotentialReq1', 'PotentialReq2'],
+      binaryPotentialReqs: [['Technical Communication', 'External Specialization']],
+      editMode: false,
+      selectedCourse: '',
+      selectorSemesterId: '',
+    };
+  },
+  watch: {
+    goBack: function onPropChange(val) {
+      if (this.editMode) {
+        this.editMode = false;
+      } else {
+        this.selected = false;
+        // copied code from line 125 and 209 TODO - refactor
+        const inpCopy = document.getElementById(`dropdown-${this.semesterID}`);
+        inpCopy.value = '';
+        this.$emit('toggle-left-button');
+      }
+    },
   },
   computed: {
     text() {
-      return 'Search or Create New Course';
+      return 'Search Course Roster';
     },
     placeholder() {
       return this.placeholderText !== 'Select one' ? this.placeholderText : '"CS110", "Multivariable Calculus", etc';
     }
   },
   mounted() {
-    this.autocomplete(
-      document.getElementById(`dropdown-${this.semesterID}`),
-      coursesJSON
-    );
+    // Activate focus and set input to empty
+    const input = document.getElementById(`dropdown-${this.semesterID}`);
+    input.value = '';
+    input.focus();
+
+    this.autocomplete(document.getElementById(`dropdown-${this.semesterID}`), coursesJSON);
   },
   methods: {
     closeCourseModal() {
-      const modal = document.getElementById(`courseModal-${this.semesterID}`);
-      modal.style.display = 'none';
+      this.$emit('close-course-modal');
     },
     autocomplete(inp, courses) {
       /* the autocomplete function takes two arguments,
@@ -45,6 +168,32 @@ export default {
       */
       let currentFocus;
       const inpCopy = inp;
+      function removeActive(x) {
+        /* a function to remove the "active" class from all autocomplete items: */
+        for (let i = 0; i < x.length; i += 1) {
+          x[i].classList.remove('autocomplete-active');
+        }
+      }
+      function addActive(x) {
+        /* a function to classify an item as "active": */
+        if (!x) return;
+        /* start by removing the "active" class on all items: */
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = x.length - 1;
+        /* add class "autocomplete-active": */
+        x[currentFocus].classList.add('autocomplete-active');
+      }
+      function closeAllLists(elmnt) {
+        /* close all autocomplete lists in the document,
+        except the one passed as an argument: */
+        const x = document.getElementsByClassName('autocomplete-items');
+        for (let i = 0; i < x.length; i += 1) {
+          if (elmnt !== x[i] && elmnt !== inp) {
+            x[i].parentNode.removeChild(x[i]);
+          }
+        }
+      }
       /* execute a function when someone writes in the text field: */
       inp.addEventListener('input', () => {
         let a;
@@ -71,10 +220,7 @@ export default {
               const result = { title: `${attr}: ${courses[attr].t}`, roster: courses[attr].r };
               if (attr.toUpperCase().includes(val) && attr !== 'lastScanned') {
                 code.push(result);
-              } else if (
-                courses[attr].t
-                && courses[attr].t.toUpperCase().includes(val)
-              ) {
+              } else if (courses[attr].t && courses[attr].t.toUpperCase().includes(val)) {
                 title.push(result);
               }
             }
@@ -104,10 +250,12 @@ export default {
               /* insert the value for the autocomplete text field: */
               inpCopy.value = newTitle.title;
               inpCopy.name = newTitle.roster;
+              this.selectedCourse = newTitle.title;
+              this.selected = true;
+              this.$emit('toggle-left-button');
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
-              this.addCourse();
             });
             a.appendChild(div);
           });
@@ -139,67 +287,57 @@ export default {
           }
         }
       });
-      function addActive(x) {
-        /* a function to classify an item as "active": */
-        if (!x) return;
-        /* start by removing the "active" class on all items: */
-        removeActive(x);
-        if (currentFocus >= x.length) currentFocus = 0;
-        if (currentFocus < 0) currentFocus = x.length - 1;
-        /* add class "autocomplete-active": */
-        x[currentFocus].classList.add('autocomplete-active');
-      }
-      function removeActive(x) {
-        /* a function to remove the "active" class from all autocomplete items: */
-        for (let i = 0; i < x.length; i += 1) {
-          x[i].classList.remove('autocomplete-active');
-        }
-      }
-      function closeAllLists(elmnt) {
-        /* close all autocomplete lists in the document,
-        except the one passed as an argument: */
-        const x = document.getElementsByClassName('autocomplete-items');
-        for (let i = 0; i < x.length; i += 1) {
-          if (elmnt !== x[i] && elmnt !== inp) {
-            x[i].parentNode.removeChild(x[i]);
-          }
-        }
-      }
       /* execute a function when someone clicks in the document: */
       document.addEventListener('click', e => {
         closeAllLists(e.target);
       });
     },
-
+    checkIfLast(elem, list) {
+      return elem === list[list.length - 1];
+    },
+    toggleEditMode() {
+      this.editMode = !this.editMode;
+    },
+    reset() {
+      this.editMode = false;
+      this.selected = false;
+      this.selectedCourse = '';
+    },
+    updateSemProps(season, year) {
+      this.$emit('updateSemProps', season, year);
+    },
     addCourse() {
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     },
-    onboardingStyle(placeholderText) {
+    onboardingStyle(placeholderText, isOnboard) {
+      if (!isOnboard) {
+        return 'newCourse-dropdown';
+      }
       return placeholderText !== 'Select one' ? 'newCourse-onboarding' : 'newCourse-onboardingEmpty';
     }
-  }
-};
+  },
+});
 </script>
 
 <style lang="scss">
-// TODO: font family
+@import '@/assets/scss/_variables.scss';
 .newCourse {
   &-text {
     font-size: 14px;
     line-height: 17px;
-    color: #757575;
+    color: $lightPlaceholderGray;
   }
 
   &-dropdown {
     font-size: 14px;
     line-height: 17px;
-    color: #757575;
+    color: $lightPlaceholderGray;
     width: 100%;
     border-radius: 3px;
     padding: 0.5rem;
-    border: 0.5px solid #c4c4c4;
+    border: 0.5px solid $inactiveGray;
     &::placeholder {
-      color: #b6b6b6;
+      color: $darkPlaceholderGray;
     }
   }
   &-onboarding {
@@ -231,6 +369,61 @@ export default {
       color: #B6B6B6;
     }
   }
+  &-semester {
+    margin-top: 8px;
+    margin-bottom: 15px;
+    &-edit {
+      width: 50%;
+    }
+  }
+  &-name {
+    position: relative;
+    border-radius: 11px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    color: $darkGray;
+  }
+  &-season-emoji {
+    height: 18px;
+    margin-top: -4px;
+  }
+  &-title {
+    font-size: 14px;
+    line-height: 17px;
+    color: $lightPlaceholderGray;
+    margin-bottom: 6px;
+  }
+  &-requirements {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    color: $emGreen;
+    &-container {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 13px;
+    }
+    &-edit {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+  }
+  &-space {
+    margin-right: 5px;
+  }
+  &-link {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    text-decoration-line: underline;
+    color: $yuxuanBlue;
+    cursor: pointer;
+  }
 }
 
 .autocomplete {
@@ -239,6 +432,7 @@ export default {
   display: inline-block;
   width: 100%;
   margin-top: 0.5rem;
+  padding-bottom: 12px;
 }
 input {
   border: 1px solid transparent;
@@ -264,7 +458,7 @@ input {
 .autocomplete-items div {
   padding: 10px;
   cursor: pointer;
-  background-color: #fff;
+  background-color: $white;
 }
 .autocomplete-items div:hover {
   /*when hovering an item:*/
@@ -273,6 +467,6 @@ input {
 .autocomplete-active {
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;
-  color: #ffffff;
+  color: $white;
 }
 </style>

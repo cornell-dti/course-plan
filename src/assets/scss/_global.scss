@@ -26,13 +26,8 @@
 }
 
 // colors
-$primary: #f15151;
-$error: #ef5777;
-$success: #1abc9c;
-$light: #f5f8fa;
-$medium: #657786;
-$dark: #34495e;
-$white: #fff;
+@import 'variables';
+
 // resets
 body {
   margin: 0;
@@ -96,6 +91,16 @@ a {
   &:hover {
     color: lighten($primary, 5%);
   }
+}
+
+button:hover {
+  opacity: 0.95;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: none;
+  opacity: 0.9;
 }
 
 // globals

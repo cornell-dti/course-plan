@@ -21,7 +21,7 @@ const getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy =
   choice: 1 | 2
 ) => ({
   correspondingRequirement: 'CS3410/CS3420',
-  coursesOfChosenFulfillmentStrategy: [choice === 1 ? 'CS3410' : 'CS3420']
+  coursesOfChosenFulfillmentStrategy: [choice === 1 ? 'CS3410' : 'CS3420'],
 });
 
 it('buildRequirementFulfillmentGraph phase 1 test 1', () => {
@@ -34,7 +34,7 @@ it('buildRequirementFulfillmentGraph phase 1 test 1', () => {
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-    allowDoubleCounting: () => false
+    allowDoubleCounting: () => false,
   });
 
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual(['CS3410', 'CS3420']);
@@ -42,7 +42,7 @@ it('buildRequirementFulfillmentGraph phase 1 test 1', () => {
   expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([
     'CS3410',
     'CS3420',
-    'MATH4710'
+    'MATH4710',
   ]);
 });
 
@@ -58,7 +58,7 @@ it('buildRequirementFulfillmentGraph phase 1 test 2', () => {
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-    allowDoubleCounting: () => false
+    allowDoubleCounting: () => false,
   });
 
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual(['CS3410']);
@@ -81,7 +81,7 @@ it('buildRequirementFulfillmentGraph phase 2-1 test', () => {
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-    allowDoubleCounting: () => false
+    allowDoubleCounting: () => false,
   });
 
   // In this case, 3420 is removed since user chooses strategy 1.
@@ -90,7 +90,7 @@ it('buildRequirementFulfillmentGraph phase 2-1 test', () => {
   expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([
     'CS3410',
     'CS3420',
-    'MATH4710'
+    'MATH4710',
   ]);
 });
 
@@ -108,7 +108,7 @@ it('buildRequirementFulfillmentGraph phase 2-2 test', () => {
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-    allowDoubleCounting: () => false
+    allowDoubleCounting: () => false,
   });
 
   // In this case, 3410 is removed since user chooses strategy 2.
@@ -117,7 +117,7 @@ it('buildRequirementFulfillmentGraph phase 2-2 test', () => {
   expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([
     'CS3410',
     'CS3420',
-    'MATH4710'
+    'MATH4710',
   ]);
 });
 
@@ -136,7 +136,7 @@ it('buildRequirementFulfillmentGraph phase 3 test 1', () => {
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-    allowDoubleCounting: () => false
+    allowDoubleCounting: () => false,
   });
 
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual(['CS3410']);
@@ -159,7 +159,7 @@ it('buildRequirementFulfillmentGraph phase 3 test 2', () => {
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-    allowDoubleCounting: () => false
+    allowDoubleCounting: () => false,
   });
 
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual(['CS3410']);
@@ -168,7 +168,7 @@ it('buildRequirementFulfillmentGraph phase 3 test 2', () => {
   expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([
     'CS3410',
     'CS3420',
-    'MATH4710'
+    'MATH4710',
   ]);
 });
 
@@ -181,13 +181,13 @@ it('buildRequirementFulfillmentGraph phase 4 test 1', () => {
       userChoiceOnFulfillmentStrategy: [1],
       userChoiceOnDoubleCountingElimiation: [
         ['CS3410/CS3420', 'CS3410'],
-        ['Probability', 'MATH4710']
+        ['Probability', 'MATH4710'],
       ],
       getRequirementUniqueID: getUniqueID,
       getCourseUniqueID: getUniqueID,
       getAllCoursesThatCanPotentiallySatisfyRequirement,
       getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-      allowDoubleCounting: () => false
+      allowDoubleCounting: () => false,
     }
   );
 
@@ -206,7 +206,7 @@ it('buildRequirementFulfillmentGraph phase 4 test 2', () => {
       getCourseUniqueID: getUniqueID,
       getAllCoursesThatCanPotentiallySatisfyRequirement,
       getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-      allowDoubleCounting: () => false
+      allowDoubleCounting: () => false,
     }
   );
 
@@ -226,7 +226,7 @@ it('buildRequirementFulfillmentGraph phase 4 test 3', () => {
       getCourseUniqueID: getUniqueID,
       getAllCoursesThatCanPotentiallySatisfyRequirement,
       getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-      allowDoubleCounting: requirement => requirement === 'Probability'
+      allowDoubleCounting: requirement => requirement === 'Probability',
     }
   );
 

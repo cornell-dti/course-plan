@@ -6,20 +6,16 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Introductory Microeconomics',
     description: 'ECON 1100 or ECON 3030 or HADM 1410 or PAM 2000',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
-    checker: includesWithSingleRequirement(
-      'ECON 1100',
-      'ECON 3030',
-      'HADM 1410',
-      'PAM 2000'
-    ),
+    checker: includesWithSingleRequirement('ECON 1100', 'ECON 3030', 'HADM 1410', 'PAM 2000'),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 3
+    minCount: 3,
   },
   {
     name: 'Introduction to basic business concepts',
-    description: 'Choose one: AEM 1200, AEM 2400, HADM 2410, ENGRI 1270, ILRD 1700, NCC 5530, NCC 5580'
-    + 'ORIE 4152, ENGRG 4610, MAE 4610',
+    description:
+      'Choose one: AEM 1200, AEM 2400, HADM 2410, ENGRI 1270, ILRD 1700, NCC 5530, NCC 5580' +
+      'ORIE 4152, ENGRG 4610, MAE 4610',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
     checker: includesWithSingleRequirement(
       'AEM 1200',
@@ -35,51 +31,40 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 3
+    minCount: 3,
   },
   // TODO: restrictions + additional class for ORIE majors
   {
     name: 'Accounting principles',
     description: 'AEM 2210 or HADM 2230 or NCC 5500 or ORIE 3150',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
-    checker: includesWithSingleRequirement(
-      'AEM 2210',
-      'HADM 2230',
-      'NCC 5500',
-      'ORIE 3150'
-    ),
+    checker: includesWithSingleRequirement('AEM 2210', 'HADM 2230', 'NCC 5500', 'ORIE 3150'),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 3
+    minCount: 3,
   },
   {
     name: 'Finance',
     description: 'AEM 2241/5241 OR HADM 2250 OR NCC 5560',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
-    checker: includesWithSingleRequirement(
-      'AEM 2241',
-      'AEM 5241',
-      'HADM 2250',
-      'NCC 5560',
-    ),
+    checker: includesWithSingleRequirement('AEM 2241', 'AEM 5241', 'HADM 2250', 'NCC 5560'),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 3
+    minCount: 3,
   },
   {
     name: 'Capstone course',
     description: 'AEM 4660',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
-    checker: includesWithSingleRequirement(
-      'AEM 4660'
-    ),
+    checker: includesWithSingleRequirement('AEM 4660'),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 1.5
+    minCount: 1.5,
   },
   {
     name: 'Career goals',
-    description: 'Choose a course that will expand your business management skills in a field of your choice from the following.',
+    description:
+      'Choose a course that will expand your business management skills in a field of your choice from the following.',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
     checker: includesWithSingleRequirement(
       'AEM 3230',
@@ -126,8 +111,8 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     operator: 'or',
     fulfilledBy: 'credits',
-    minCount: 3
-  }
+    minCount: 3,
+  },
 ];
 
 export default dbmeMinorRequirements;

@@ -48,7 +48,7 @@ type BuildRequirementFulfillmentGraphParameters<
     choice: UserChoiceOnFulfillmentStrategy
   ) => {
     readonly correspondingRequirement: Requirement;
-    readonly coursesOfChosenFulfillmentStrategy: Course[];
+    readonly coursesOfChosenFulfillmentStrategy: readonly Course[];
   };
   /**
    * Report whether a requirement allows a course connected to it to also be used to fulfill some
@@ -66,7 +66,7 @@ const buildRequirementFulfillmentGraph = <Requirement, Course, UserChoiceOnFulfi
   getCourseUniqueID,
   getAllCoursesThatCanPotentiallySatisfyRequirement,
   getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-  allowDoubleCounting
+  allowDoubleCounting,
 }: BuildRequirementFulfillmentGraphParameters<
   Requirement,
   Course,
@@ -94,7 +94,7 @@ const buildRequirementFulfillmentGraph = <Requirement, Course, UserChoiceOnFulfi
   userChoiceOnFulfillmentStrategy.forEach(choice => {
     const {
       correspondingRequirement,
-      coursesOfChosenFulfillmentStrategy
+      coursesOfChosenFulfillmentStrategy,
     } = getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy(choice);
     const coursesToKeepSet = new HashMap<Course, null>(getCourseUniqueID);
     coursesOfChosenFulfillmentStrategy.forEach(course => coursesToKeepSet.set(course, null));
@@ -122,10 +122,9 @@ const buildRequirementFulfillmentGraph = <Requirement, Course, UserChoiceOnFulfi
   const illegallyDoubleCountedCourses = graph
     .getAllCourses()
     .filter(
-      course => (
+      course =>
         graph.getConnectedRequirementsFromCourse(course).filter(it => !allowDoubleCounting(it))
           .length > 1
-      )
     );
 
   // Phase MAX_INT: PROFIT!

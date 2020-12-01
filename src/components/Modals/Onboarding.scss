@@ -1,3 +1,5 @@
+@import "@/assets/scss/_variables.scss";
+
 input {
   background-color: none;
 }
@@ -253,7 +255,7 @@ input {
 
   &-add {
     cursor: pointer;
-    color: #1AA9A5;
+    color: $emGreen;
   }
 
   &-remove {
@@ -314,8 +316,7 @@ input {
   }
 
   &-button {
-    background: #148481;
-
+    background: $emGreen;
     border: 0;
     box-sizing: border-box;
     border-radius: 1px;
@@ -518,6 +519,10 @@ select option[disabled]:first-child {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.alignLeft {
+  display: flex;
+  flex-direction: column;
 }
 .alignEnd {
   display: flex;

@@ -1,6 +1,10 @@
 <template>
-  <div :class="{ 'course--min': compact, 'active': active }" class="course" @click="updateBar()">
-    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active, 'course-color--min': compact }">
+  <div :class="{ 'course--min': compact, active: active }" class="course" @click="updateBar()">
+    <div
+      class="course-color"
+      :style="cssVars"
+      :class="{ 'course-color--active': active, 'course-color--min': compact }"
+    >
       <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
     </div>
     <div :class="{ 'course-content--min': compact }" class="course-content">
@@ -9,7 +13,7 @@
           <div :class="{ 'course-code--min': compact }" class="course-code">
             {{ subject }} {{ number }}
           </div>
-          <div class="course-dotRow" @click="openMenu">
+          <div v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
         </div>
@@ -19,16 +23,7 @@
           <span v-if="!compact && semesterString" class="course-semesters">{{
             semesterString
           }}</span>
-          <!-- <div v-if="!compact && alerts.requirement" class="course-outerWrapper course-tooltip">
-            <div class="course-iconWrapper course-iconWrapper--info">
-              <img class="course-icon course-icon--info" src="../assets/images/info.svg" />
-            </div>
-            <div
-              class="course-tooltiptext course-tooltiptext--info"
-              v-html="requirementString"
-            ></div>
-          </div> -->
-          <div v-if="alerts.caution" class="course-outerWrapper course-tooltip">
+          <div v-if="cautionString" class="course-outerWrapper course-tooltip">
             <div v-if="!compact" class="course-iconWrapper course-iconWrapper--caution">
               <img class="course-icon course-icon--caution" src="../assets/images/caution.svg" />
             </div>
@@ -56,25 +51,12 @@
 
 <script>
 import Vue from 'vue';
-import CourseMenu from '@/components/Modals/CourseMenu';
+import CourseMenu from '@/components/Modals/CourseMenu.vue';
+import { clickOutside } from '@/utilities';
 
 Vue.component('coursemenu', CourseMenu);
 
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
-
-export default {
+export default Vue.extend({
   props: {
     courseObj: Object,
     subject: String,
@@ -85,36 +67,32 @@ export default {
     prereqs: String,
     semesters: Array,
     color: String,
-    alerts: Object,
+    duplicatedCourseCodeList: {
+      required: false,
+      type: Array,
+    },
     compact: Boolean,
     id: String,
     uniqueID: Number,
     active: Boolean,
-    semId: Number
+    semId: Number,
+    isReqCourse: Boolean,
   },
   data() {
     return {
       menuOpen: false,
       stopCloseFlag: false,
       getCreditRange: this.creditRange,
-      colorJustChanged: false
+      colorJustChanged: false,
     };
   },
   computed: {
-    rqString() {
-      return 'RQ';
-    },
-
-    // TODO: bold requirements
-    requirementString() {
-      return this.alerts.requirement;
-    },
-
-    // TODO: too much DOM manipulation that vue should fix - talk to Sam
     cautionString() {
-      return this.alerts.caution;
+      if (this.duplicatedCourseCodeList == null) return null;
+      return this.duplicatedCourseCodeList.includes(`${this.subject} ${this.number}`)
+        ? 'Duplicate'
+        : null;
     },
-
     semesterString() {
       let semesterString = '';
       this.semesters.forEach(semester => {
@@ -137,16 +115,15 @@ export default {
       return `https://www.cureviews.org/course/${this.subject}/${this.number}`;
     },
 
-    // TODO: change semester from FA18
     roster() {
       return `https://classes.cornell.edu/browse/roster/FA18/class/${this.subject}/${this.number}`;
     },
 
     cssVars() {
       return {
-        '--bg-color': `#${this.color}`
+        '--bg-color': `#${this.color}`,
       };
-    }
+    },
   },
   methods: {
     openMenu() {
@@ -178,23 +155,24 @@ export default {
     editCourseCredit(credit) {
       this.$emit('edit-course-credit', credit, this.uniqueID);
       this.closeMenuIfOpen();
-    }
+    },
   },
   directives: {
-    'click-outside': clickOutside
-  }
-};
+    'click-outside': clickOutside,
+  },
+});
 </script>
 
 <style scoped lang="scss">
 // TODO: font families
-// TODO: common variables (colors)
+@import '@/assets/scss/_variables.scss';
+
 .course {
   width: 21.375rem;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: row;
-  background-color: white;
+  background-color: $white;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
   position: relative;
   height: 5.625rem;
@@ -204,7 +182,7 @@ export default {
   }
 
   &--min {
-    width: 10.5rem;
+    width: 10rem;
     height: 2.125rem;
   }
 
@@ -258,12 +236,11 @@ export default {
     justify-content: space-between;
     align-items: center;
 
-
     &--min {
       width: 9.25rem;
       margin-bottom: 0;
       margin-top: 0;
-      margin-right: .5rem;
+      margin-right: 0.5rem;
     }
   }
 
@@ -282,7 +259,7 @@ export default {
   &-code {
     font-size: 14px;
     line-height: 17px;
-    color: #858585;
+    color: $medGray;
 
     &--min {
       color: #3d3d3d;
@@ -381,7 +358,7 @@ export default {
 
   &.course--min {
     height: 2.125rem;
-    width: 10.5rem;
+    width: 10rem;
   }
 }
 
@@ -397,8 +374,8 @@ export default {
 .course-tooltip .course-tooltiptext {
   visibility: hidden;
   width: 120px;
-  color: #858585;
-  background-color: #fff;
+  color: $medGray;
+  background-color: $white;
   text-align: center;
   padding: 0.5rem;
   border-radius: 6px;
@@ -457,7 +434,7 @@ export default {
   .course {
     width: 17rem;
     &--min {
-      width: 10.5rem;
+      width: 10rem;
       height: 2.125rem;
     }
     &-main {
@@ -497,7 +474,7 @@ export default {
         width: 9.25rem;
         margin-bottom: 0;
         margin-top: 0;
-        margin-right: .5rem;
+        margin-right: 0.5rem;
       }
     }
 
@@ -525,7 +502,7 @@ export default {
 
     &.course--min {
       height: 2.125rem;
-      width: 10.5rem;
+      width: 10rem;
     }
   }
 }
