@@ -119,7 +119,7 @@ export type AppCourse = {
   readonly number: string;
   readonly name: string;
   readonly description: string;
-  credits: number;
+  readonly credits: number;
   readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[];
   readonly prereqs: string;
@@ -128,18 +128,18 @@ export type AppCourse = {
   readonly instructors: readonly string[];
   readonly distributions: readonly string[];
   readonly lastRoster: string;
-  color: string;
-  check: boolean;
+  readonly color: string;
+  readonly check: boolean;
   uniqueID: number;
   isReqCourse: boolean;
   isCompletedReqCourse: boolean;
 };
 
 export type AppSemester = {
-  courses: readonly AppCourse[];
+  readonly courses: readonly AppCourse[];
   id: number;
-  type: FirestoreSemesterType;
-  year: number;
+  readonly type: FirestoreSemesterType;
+  readonly year: number;
 };
 
 export type AppBottomBarCourse = {

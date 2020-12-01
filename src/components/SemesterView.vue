@@ -133,7 +133,7 @@ const SeasonsEnum = Object.freeze({
 
 export default Vue.extend({
   props: {
-    semesters: Array as PropType<AppSemester[]>,
+    semesters: Array as PropType<readonly AppSemester[]>,
     currSemID: Number,
     compact: Boolean,
     isBottomBar: Boolean,
@@ -156,7 +156,6 @@ export default Vue.extend({
   },
   watch: {
     semesters: {
-      deep: true,
       handler() {
         this.buildDuplicateCautions();
         this.updateFirebaseSemester();
@@ -252,22 +251,7 @@ export default Vue.extend({
     },
     addSemester(type: FirestoreSemesterType, year: number) {
       const newSem = this.createSemester([], type, year);
-
-      // find the index in which the semester should be added to maintain chronological order
-      let semesterIndex;
-      for (semesterIndex = 0; semesterIndex < this.semesters.length; semesterIndex += 1) {
-        const oldSem = this.semesters[semesterIndex];
-        if (oldSem.year < year) {
-          break;
-        } else if (
-          oldSem.year === year &&
-          // @ts-ignore
-          SeasonsEnum[oldSem.type.toLowerCase()] < SeasonsEnum[type.toLowerCase()]
-        ) {
-          break;
-        }
-      }
-      this.semesters.splice(semesterIndex, 0, newSem);
+      const newSemesters = [...this.semesters, newSem].sort(this.compare);
 
       this.$gtag.event('add-semester', {
         event_category: 'semester',
@@ -276,16 +260,12 @@ export default Vue.extend({
       });
 
       this.openSemesterConfirmationModal(type, year, true);
-
-      return semesterIndex;
+      this.$emit('edit-semesters', newSemesters);
     },
     deleteSemester(type: FirestoreSemesterType, year: number) {
-      for (let i = 0; i < this.semesters.length; i += 1) {
-        if (this.semesters[i].type === type && this.semesters[i].year === year) {
-          this.semesters.splice(i, 1);
-          break;
-        }
-      }
+      const newSemesters = this.semesters.filter(
+        semester => semester.type !== type || semester.year !== year
+      );
       this.$gtag.event('delete-semester', {
         event_category: 'semester',
         event_label: 'delete',
@@ -296,24 +276,25 @@ export default Vue.extend({
       this.openSemesterConfirmationModal(type, year, false);
 
       // Update requirements menu from dashboard
-      this.$emit('updateRequirementsMenu');
+      this.$emit('edit-semesters', newSemesters);
     },
     addCourseToSemester(season: FirestoreSemesterType, year: number, newCourse: any) {
       let semesterFound = false;
-      this.semesters.forEach(sem => {
+      const newSemestersWithCourse = this.semesters.map(sem => {
         if (sem.type === season && sem.year === year) {
           semesterFound = true;
-          sem.courses = [...sem.courses, newCourse];
+          return { ...sem, courses: [...sem.courses, newCourse] };
         }
+        return sem;
       });
 
-      if (!semesterFound) {
-        const semesterIndex = this.addSemester(season, year);
-        console.log(semesterIndex);
-        this.semesters[semesterIndex].courses = [
-          ...this.semesters[semesterIndex].courses,
-          newCourse,
-        ];
+      if (semesterFound) {
+        this.$emit('edit-semesters', newSemestersWithCourse);
+      } else {
+        const newSem = this.createSemester([], season, year);
+        newSem.courses = [newCourse];
+        const newSemesters = [...this.semesters, newSem].sort(this.compare);
+        this.$emit('edit-semesters', newSemesters);
       }
     },
     updateRequirementsMenu() {
@@ -335,20 +316,18 @@ export default Vue.extend({
       }
       return -1;
     },
-    editSemester(id: number, type: FirestoreSemesterType, year: number) {
+    editSemester(id: number, updater: (oldSemester: AppSemester) => AppSemester) {
       let count = 1;
-      for (let i = 0; i < this.semesters.length; i += 1) {
-        if (this.semesters[i].id === id) {
-          const currSemester = this.semesters[i];
-          currSemester.type = type;
-          currSemester.year = year;
-        }
-      }
-      this.semesters.sort(this.compare);
-      this.semesters.forEach(sem => {
+      const newSemesters = this.semesters
+        .map((currentSemester, index, array) =>
+          currentSemester.id === id ? updater(currentSemester) : currentSemester
+        )
+        .sort(this.compare);
+      newSemesters.forEach(sem => {
         sem.id = count;
         count += 1;
       });
+      this.$emit('edit-semesters', newSemesters);
     },
     updateBar(course: AppCourse, colorJustChanged: string, color: string) {
       this.activatedCourse = course;
