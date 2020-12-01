@@ -112,6 +112,7 @@
 </template>
 
 <script>
+// TODO: a lot of the functions are repeated from basic and transfer pages, is there a way to avoid that?
 
 import reqsData from '@/requirements/typed-requirement-json';
 import examData from '@/requirements/data/exams/ExamCredit';
