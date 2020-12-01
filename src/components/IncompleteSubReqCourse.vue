@@ -46,28 +46,16 @@ import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import Course from '@/components/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
-import { DisplayableRequirementFulfillment, CourseTaken } from '@/requirements/types';
+import {
+  DisplayableRequirementFulfillment,
+  CourseTaken,
+  SubReqCourseSlot,
+  CrseInfo,
+} from '@/requirements/types';
 import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('course', Course);
 Vue.component('addcoursebutton', AddCourseButton);
-
-type CrseInfo = {
-  roster: string;
-  crseIds: number[];
-};
-
-type CompletedSubReqCourseSlot = {
-  isCompleted: true;
-  courses: readonly CourseTaken[];
-};
-
-type IncompleteSubReqCourseSlot = {
-  isCompleted: false;
-  courses: CrseInfo[];
-};
-
-type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 
 type Data = {
   courseObjects: AppCourse[];
@@ -183,12 +171,13 @@ export default Vue.extend({
 
 .draggable-requirements {
   &-wrapper {
-    margin-top: 2%;
-    margin-bottom: 2%;
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
   }
   &-heading {
     display: flex;
     justify-content: space-between;
+    margin-top: 0.2rem;
     &-label {
       font-size: 14px;
       line-height: 17px;
@@ -198,7 +187,7 @@ export default Vue.extend({
       font-size: 12px;
       line-height: 15px;
       color: $yuxuanBlue;
-      padding: 1%;
+      padding: 0.2rem;
       cursor: pointer;
     }
   }
@@ -207,15 +196,15 @@ export default Vue.extend({
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-left: -1%;
-    margin-bottom: 2%;
+    margin-left: -0.2rem;
+    margin-bottom: 0.2rem;
     width: 100%;
   }
 }
 
 .requirements {
   &-courseWrapper {
-    padding: 1%;
+    padding: 0.2rem;
     max-width: 50%;
   }
   &-course {
