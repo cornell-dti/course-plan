@@ -1,5 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements, courseMatchesCodeOptions, courseIsAllEligible } from '../checkers-common';
+import { includesWithSingleRequirement, includesWithSubRequirements, courseMatchesCodeOptions, ifCodeMatch} from '../checkers-common';
 
 const csRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -34,12 +34,12 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4998 are NOT allowed.',
     source: 'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: (course: Course): boolean => {
-      if (courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4998'])) {
+      if (courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4998', 'CS 4410'])) {
         return false;
       }
-      return course.subject === 'CS' && course.catalogNbr === '4***'
+      return ifCodeMatch(course.subject, 'CS') && ifCodeMatch(course.catalogNbr, '4***');
     },
-    operator: 'and',
+    operator: 'or',
     fulfilledBy: 'courses',
     minCount: 3,
   },
