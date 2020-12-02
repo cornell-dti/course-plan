@@ -261,7 +261,7 @@ input {
 
   &-remove {
     cursor: pointer;
-    margin-left: .5rem;
+    margin-left: 1rem;
     color: #148481;
     padding-bottom: .5rem;
 
@@ -374,18 +374,20 @@ input {
         display: flex;
         flex-direction: column;
         margin-right: 20px;
-        // padding-right: 40px;
     }
     &--columnCenter {
       display: flex;
       flex-direction: column;
-      margin-right: 10px;
       align-items:center;
   }
     &--column-remove {
       display: flex;
       flex-direction: column-reverse;
-      // padding-right: 40px;
+      justify-content: center;
+    }
+    &--column-removeExam {
+      display: flex;
+      flex-direction: column-reverse;
     }
     &--columnWide {
       display: flex;
@@ -396,7 +398,6 @@ input {
     &--columnFill {
       display: flex;
       flex-direction: column;
-      padding-right: 20px;
       width: 100%;
     }
   }
@@ -429,7 +430,22 @@ input {
         width: 100%;
       }
 
-      &.college-arrow,
+      &.college-arrow {
+        border-left: 6.24px solid transparent;
+        border-right: 6.24px solid transparent;
+
+        border-top: 6.24px solid #c4c4c4;
+        background: transparent;
+
+        //when clicked border-top-color: #32A0F2;
+
+        margin-top: 30px;
+        margin-bottom: 10.17px;
+
+        margin-right: 8.7px;
+        margin-left: 5px;
+      }
+
       &.major-arrow,
       &.minor-arrow {
         border-left: 6.24px solid transparent;
@@ -440,7 +456,7 @@ input {
 
         //when clicked border-top-color: #32A0F2;
 
-        margin-top: 30px;
+        margin-top: 10px;
         margin-bottom: 10.17px;
 
         margin-right: 8.7px;

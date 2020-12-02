@@ -1,6 +1,9 @@
 <template>
   <div class="newCourse">
     <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
+    <!-- <div v-if="isOnboard" class="autocomplete">
+      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
+    </div> -->
     <!-- TODO: for some reason this breaks the dropdown <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div> -->
     <div class="autocomplete">
       <input
@@ -9,6 +12,7 @@
         :ref="'dropdown-' + semesterID"
         :placeholder="placeholder"
         @keyup.esc="closeCourseModal"
+        @keyup.enter="addCourse"
       />
     </div>
     <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
@@ -256,6 +260,9 @@ export default Vue.extend({
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
+              if (this.isOnboard) {
+                this.addCourse();
+              }
             });
             a.appendChild(div);
           });

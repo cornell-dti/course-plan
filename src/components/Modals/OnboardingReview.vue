@@ -134,20 +134,6 @@ import coursesJSON from '../../assets/courses/courses.json';
 
 const placeholderText = 'Select one';
 
-const clickOutside = {
-  bind(el, binding, vnode) {
-    el.event = event => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event, binding.arg);
-      }
-    };
-    document.body.addEventListener('click', el.event);
-  },
-  unbind(el) {
-    document.body.removeEventListener('click', el.event);
-  }
-};
-
 export default {
   props: {
     user: Object
@@ -230,21 +216,13 @@ export default {
       isError: false
     };
   },
-  directives: {
-    'click-outside': clickOutside
-  },
   mounted() {
     this.setCollegesMap();
-    this.setMajorsList();
-    this.setMinorsList();
-    this.flattenDisplayMajors();
-    this.flattenDisplayMinors();
     this.getClasses();
     this.getTransferMap();
     this.setExamsMap();
     this.setSubjectList();
     this.getCredits();
-    this.$emit('updateBasic', this.displayOptions.major, this.displayOptions.college, this.displayOptions.minor);
   },
   methods: {
     getClasses() {
@@ -320,7 +298,6 @@ export default {
       return 0;
     },
     getTransferMap() {
-      // console.log(reqsData);
       const TransferJSON = {};
       examData.AP.forEach(sub => {
         TransferJSON[sub.name] = {
@@ -338,24 +315,6 @@ export default {
       if (typeof this.displayOptions !== 'undefined') {
         this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
       }
-    },
-    showHideExamContent(i) {
-      this.showHideContent('exam', 'type', i);
-    },
-    showHideSubjectContent(i) {
-      this.showHideContent('exam', 'subject', i);
-    },
-    showHideScoreContent(i) {
-      this.showHideContent('exam', 'score', i);
-    },
-    showHideClassContent(i) {
-      this.showHideContent('class', '', i);
-    },
-    closeTypeDropdownIfOpen(event, i) {
-      this.closeDropdownIfOpen('exam', i);
-    },
-    closeClassDropdownIfOpen(event, i) {
-      this.closeDropdownIfOpen('class', i);
     },
     // Set the colleges map to with acronym keys and full name values
     setExamsMap() {
@@ -389,196 +348,6 @@ export default {
       });
       this.subjects = totalSubjects;
     },
-    // Didn't want to seperate into two functions but v-model wouldn't work unless clicked twice?
-    updateSwimYes() {
-      this.tookSwimTest = 'yes';
-      this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
-    },
-    updateSwimNo() {
-      this.tookSwimTest = 'no';
-      this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
-    },
-    // Clear a major if a new college is selected and the major is not in it
-    clearSubjectAndScoreIfNotInCollege() {
-      const majorJSON = reqsData.major;
-      for (let x = 0; x < this.displayOptions.major.length; x += 1) {
-        const major = this.displayOptions.major[x];
-        let foundCollege = false;
-        // Do nothing if no major set
-        if (major.acronym !== '') {
-          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            const college = this.displayOptions.college[i];
-            if (majorJSON[major.acronym].schools.includes(college.acronym)) {
-              foundCollege = true;
-              break;
-            }
-          }
-        }
-        if (!foundCollege) {
-          major.placeholderColor = '';
-          major.placeholder = placeholderText;
-          major.acronym = '';
-        }
-      }
-    },
-    selectExam(text, acronym, i) {
-      this.selectOption('exam', 'type', text, acronym, i);
-      this.setSubjectList();
-    },
-    selectScore(text, acronym, i) {
-      this.selectOption('exam', 'score', text, acronym, i);
-    },
-    selectSubject(text, acronym, i) {
-      const type = this.displayOptions.exam[i].type.placeholder;
-      const course = this.getCourseFromExam(type, text);
-      this.displayOptions.exam[i].equivCourse = course;
-      this.selectOption('exam', 'subject', text, acronym, i);
-    },
-    selectClass(text, acronym, i) {
-      this.selectOption('class', 'placholder', text, acronym, i);
-    },
-    addExam() {
-      const exam = {
-        type: {
-          shown: false,
-          stopClose: false,
-          boxBorder: '',
-          arrowColor: '',
-          placeholderColor: '',
-          placeholder: placeholderText,
-          acronym: ''
-        },
-        subject: {
-          shown: false,
-          stopClose: false,
-          boxBorder: '',
-          arrowColor: '',
-          placeholderColor: placeholderText,
-          placeholder: placeholderText,
-          acronym: ''
-        },
-        score: {
-          shown: false,
-          stopClose: false,
-          boxBorder: '',
-          arrowColor: '',
-          placeholderColor: '',
-          placeholder: placeholderText,
-          acronym: ''
-        }
-      };
-      this.displayOptions.exams = this.displayOptions.exam.push(exam);
-    },
-    getCourseFromExam(type, subject) {
-      let count = 0;
-      let courses;
-      for (const sub of reqsData[type]) {
-        if (sub.subject === subject) {
-          courses = reqsData[type][count].credits[0].courseEquivalents;
-          // as a default takes the first equivalent course
-          // TODO will need to add requirements menu if editiable.
-        }
-        count += 1;
-      }
-      return courses;
-    },
-    removeExam() {
-      this.displayOptions.exam.pop();
-    },
-    removeTransfer() {
-      this.displayOptions.class.pop();
-    },
-    addTransfer() {
-      this.displayOptions.class.push(placeholderText);
-    },
-    addItem(id) {
-      console.log("asdf");
-      const dropdown = document.getElementById(`dropdown-${id}`);
-      const title = dropdown.value;
-      const courseCode = title.substring(0, title.indexOf(':'));
-      const subject = courseCode.split(' ')[0];
-      const number = courseCode.split(' ')[1];
-      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=FA14&subject=${subject}&q=${courseCode}`) // should be removed later
-        .then(res => res.json())
-        .then(resultJSON => {
-          // check catalogNbr of resultJSON class matches number of course to add
-          resultJSON.data.classes.forEach(resultJSONclass => {
-            if (resultJSONclass.catalogNbr === number) {
-              const course = resultJSONclass;
-              const creditsC = course.credits || course.enrollGroups[0].unitsMaximum;
-              this.displayOptions.class[id] = {
-                class: courseCode,
-                course,
-                credits: creditsC
-              };
-              this.getCredits();
-              this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
-            }
-          });
-        });
-    },
-    flattenDisplayMajors() {
-      const majors = [];
-      this.displayOptions.major.forEach(major => {
-        if (Array.isArray(major.acronym)) {
-          major.acronym.flat(Infinity);
-          for (let i = 0; i < major.acronym.length; i += 1) {
-            const newMajor = {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: '#757575',
-              placeholder: major.placeholder[i],
-              acronym: major.acronym[i]
-            };
-            majors.push(newMajor);
-          }
-        } else {
-          majors.push({
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: '',
-            placeholder: major.placeholder,
-            acronym: major.acronym
-          });
-        }
-      });
-      this.displayOptions.major = majors;
-    },
-    flattenDisplayMinors() {
-      const minors = [];
-      this.displayOptions.minor.forEach(minor => {
-        if (Array.isArray(minor.acronym)) {
-          minor.acronym.flat(Infinity);
-          for (let i = 0; i < minor.acronym.length; i += 1) {
-            const newminor = {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: '#757575',
-              placeholder: minor.placeholder[i],
-              acronym: minor.acronym[i]
-            };
-            minors.push(newminor);
-          }
-        } else {
-          minors.push({
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: '',
-            placeholder: minor.placeholder,
-            acronym: minor.acronym
-          });
-        }
-      });
-      this.displayOptions.minor = minors;
-    },
     // Set the colleges map to with acronym keys and full name values
     setCollegesMap() {
       /** @type {Object.<string, string>} */
@@ -588,199 +357,6 @@ export default {
         colleges[key] = collegeJSON[key].name;
       });
       this.colleges = colleges;
-    },
-    // Set the majors map to with acronym keys and full name values
-    setMajorsList() {
-      /** @type {Object.<string, string>} */
-      const majors = {};
-      const majorJSON = reqsData.major;
-      Object.keys(majorJSON).forEach(key => {
-        // make sure name defined
-        // only show majors for schools the user is in
-        for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-          const college = this.displayOptions.college[i];
-          if (majorJSON[key].schools.includes(college.acronym)) {
-            majors[key] = majorJSON[key].name;
-          }
-        }
-      });
-      this.majors = majors;
-    },
-    // TODO: add minors when the list exists
-    setMinorsList() {
-      const minors = {};
-      const minorJSON = reqsData.minor;
-      for (const key in minorJSON) {
-        // make sure name defined
-        if ('name' in minorJSON[key]) {
-          // only show majors for schools the user is in
-          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            minors[key] = minorJSON[key].name;
-          }
-        }
-      }
-      this.minors = minors;
-    },
-    // Clear a major if a new college is selected and the major is not in it
-    clearMajorIfNotInCollege() {
-      const majorJSON = reqsData.major;
-      for (let x = 0; x < this.displayOptions.major.length; x += 1) {
-        const major = this.displayOptions.major[x];
-        let foundCollege = false;
-        // Do nothing if no major set
-        if (major.acronym !== '') {
-          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            const college = this.displayOptions.college[i];
-            if (majorJSON[major.acronym].schools.includes(college.acronym)) {
-              foundCollege = true;
-              break;
-            }
-          }
-        }
-        if (!foundCollege) {
-          major.placeholderColor = '';
-          major.placeholder = placeholderText;
-          major.acronym = '';
-        }
-      }
-    },
-    // check to see if a set of options (college, major, minor) only has placeholder texts (so no options selected)
-    noOptionSelected(options) {
-      let bool = true;
-      options.forEach(option => {
-        if (option.placeholder !== placeholderText) {
-          bool = false;
-        }
-      });
-
-      return bool;
-    },
-    notPlaceholderOptions(options) {
-      const list = [];
-      options.forEach(option => {
-        if (option.placeholder !== placeholderText) {
-          const obj = {
-            acronym: option.acronym,
-            fullName: option.placeholder
-          };
-
-          list.push(obj);
-        }
-      });
-
-      return list;
-    },
-    showHideContent(type, i) {
-      let displayOptions = this.displayOptions[type];
-      displayOptions = displayOptions[i];
-      const contentShown = displayOptions.shown;
-      displayOptions.shown = !contentShown;
-
-      if (contentShown) {
-        // clicked box when content shown. So then hide content
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
-      } else {
-        displayOptions.boxBorder = '#32A0F2';
-        displayOptions.arrowColor = '#32A0F2';
-      }
-    },
-    showHideCollegeContent(i) {
-      this.showHideContent('college', i);
-    },
-    showHideMajorContent(i) {
-      this.showHideContent('major', i);
-    },
-    showHideMinorContent(i) {
-      this.showHideContent('minor', i);
-    },
-    closeDropdownIfOpen(type, i) {
-      let displayOptions = this.displayOptions[type];
-      displayOptions = displayOptions[i];
-      if (displayOptions.stopClose) {
-        displayOptions.stopClose = false;
-      } else if (displayOptions.shown) {
-        displayOptions.shown = false;
-        displayOptions.boxBorder = '#C4C4C4';
-        displayOptions.arrowColor = '#C4C4C4';
-      }
-    },
-    closeCollegeDropdownIfOpen(event, i) {
-      this.closeDropdownIfOpen('college', i);
-    },
-    closeMajorDropdownIfOpen(event, i) {
-      this.closeDropdownIfOpen('major', i);
-    },
-    closeMinorDropdownIfOpen(event, i) {
-      this.closeDropdownIfOpen('minor', i);
-    },
-    selectOption(type, text, acronym, i) {
-      let displayOptions = this.displayOptions[type];
-      displayOptions = displayOptions[i];
-      displayOptions.placeholder = text;
-      displayOptions.acronym = acronym;
-      displayOptions.shown = false;
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.placeholderColor = '#757575';
-      this.$emit('updateBasic', this.displayOptions.major, this.displayOptions.college, this.displayOptions.minor);
-    },
-    selectCollege(text, acronym, i) {
-      this.selectOption('college', text, acronym, i);
-      this.setMajorsList();
-      this.clearMajorIfNotInCollege();
-    },
-    selectMajor(text, acronym, i) {
-      this.selectOption('major', text, acronym, i);
-    },
-    selectMinor(text, acronym, i) {
-      this.selectOption('minor', text, acronym, i);
-    },
-    removeMajor() {
-      this.displayOptions.major.pop();
-      if (this.displayOptions.major.length === 0) {
-        this.addMajor();
-      }
-    },
-    removeMinor() {
-      this.displayOptions.minor.pop();
-      if (this.displayOptions.minor.length === 0) {
-        this.addMinor();
-      }
-    },
-    addMajor() {
-      const newMajor = {
-        shown: false,
-        stopClose: false,
-        boxBorder: '',
-        arrowColor: '',
-        placeholderColor: '',
-        placeholder: placeholderText,
-        acronym: ''
-      };
-      const majors = [];
-      this.displayOptions.major.forEach(maj => {
-        if (maj.length > 0) {
-          maj.forEach(subMaj => {
-            majors.push(subMaj);
-          });
-        } else {
-          majors.push(maj);
-        }
-      });
-      this.displayOptions.major = majors;
-      this.displayOptions.major.push(newMajor);
-    },
-    addMinor() {
-      const minor = {
-        shown: false,
-        stopClose: false,
-        boxBorder: '',
-        arrowColor: '',
-        placeholderColor: '',
-        placeholder: placeholderText
-      };
-      this.displayOptions.minor.push(minor);
     },
     setPage(page) {
       this.$emit('setPage', page);

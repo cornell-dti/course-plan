@@ -76,7 +76,6 @@
                       <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideScoreContent(index)">
                         <div
                           class="onboarding-dropdown-placeholder college-placeholder"
-                          id="college-placeholder"
                           :style="{ color: options.score.placeholderColor }"
 
                         >
@@ -109,8 +108,12 @@
                     <label class="onboarding-label">Credits</label>
                     <label class="college-placeholder">{{ getExamCredit(options) }}</label>
                   </div>
-                  <div class="onboarding-select--column-remove" >
-                    <div class="onboarding-remove" @click="removeExam(index)" :class="{ 'onboarding--hidden': countExamType(displayOptions.exam, 'AP') <= 1}" >
+                  <div class="onboarding-select--column-removeExam" >
+                    <div 
+                      class="onboarding-remove" 
+                      @click="removeExam(index)" 
+                      :class="{ 'onboarding--hidden': countExamType(displayOptions.exam, 'AP') === 1 && options.subject.placeholder == placeholderText}" 
+                    >
                       <img src="@/assets/images/x-green.svg" alt = "x"/>
                     </div>
                   </div>
@@ -206,9 +209,13 @@
                     <label class="onboarding-label">Credits</label>
                     <label class="college-placeholder">{{ getExamCredit(options) }}</label>
                   </div>
-                  <div class="onboarding-select--column-remove" >
+                  <div class="onboarding-select--column-removeExam" >
                     <!-- TODO: need to check if at least one ib or ap !!!-->
-                  <div class="onboarding-remove" @click="removeExam(index)" :class="{ 'onboarding--hidden': countExamType(displayOptions.exam, 'IB') <= 1}" >
+                  <div 
+                    class="onboarding-remove" 
+                    @click="removeExam(index)" 
+                    :class="{ 'onboarding--hidden': countExamType(displayOptions.exam, 'IB') === 1 && options.subject.placeholder == placeholderText}"
+                  >
                     <img src="@/assets/images/x-green.svg" alt = "x"/>
                   </div>
                   </div>
@@ -238,7 +245,11 @@
                   > </newCourse>
                 </div>
                 <div class="onboarding-select--column-remove">
-                  <div class="onboarding-remove" @click="removeTransfer(index)">
+                  <div 
+                    class="onboarding-remove" 
+                    @click="removeTransfer(index)"
+                    :class="{ 'onboarding--hidden': displayOptions.class.length === 1 && (options.class == placeholderText || options.class == null)}"
+                  >
                     <img src="@/assets/images/x-green.svg" alt = "x"/>
                   </div>
                 </div>
@@ -301,6 +312,7 @@ type Data = {
   scoresIB: number[];
   classes: [];
   exams: string[];
+  placeholderText: string;
   subjects: string[][];
   firstName: string;
   middleName?: string;
@@ -327,6 +339,7 @@ export default Vue.extend({
       scoresIB: [1, 2, 3, 4, 5, 6, 7],
       classes: [],
       exams: [],
+      placeholderText,
       subjects: [[]],
       firstName: this.user.firstName,
       middleName: this.user.middleName,
@@ -657,13 +670,19 @@ export default Vue.extend({
     },
     removeExam(index: number) {
       this.displayOptions.exam.splice(index, 1);
+      if (this.countExamType(this.displayOptions.exam, 'AP') === 0) {
+        this.addExam('AP');
+      }
+      if (this.countExamType(this.displayOptions.exam, 'IB') === 0) {
+        this.addExam('IB');
+      }
     },
     removeTransfer(index: number) {
       this.displayOptions.class.splice(index, 1);
     },
     addTransfer() {
       // @ts-ignore
-      this.displayOptions.class.push(placeholderText);
+      this.displayOptions.class.push({ class: placeholderText, credits: 0 });
     },
     countExamType(exams: Record<'type' | 'subject' | 'score', DisplayOption>[], type: 'AP' | 'IB') {
       let counter = 0;

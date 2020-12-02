@@ -71,7 +71,7 @@
               <label class="onboarding-label">Your Major (required)</label>
               <div class="onboarding-selectWrapper">
                 <div
-                  class="onboarding-select onboarding-input onboarding-section"
+                  class="onboarding-selectWrapperRow onboarding-section"
                   :class="{ 'onboarding-select--disabled': Object.keys(majors).length <= 0 }"
                   id="major"
                   v-for="(options, index) in displayOptions.major"
@@ -79,7 +79,7 @@
                   :style="{ borderColor: options.boxBorder }"
                   v-click-outside:[index]="closeMajorDropdownIfOpen"
                 >
-                  <div class="onboarding-dropdown-placeholder major-wrapper" @click="showHideMajorContent(index)">
+                  <div class="onboarding-dropdown-placeholder onboarding-input  major-wrapper" @click="showHideMajorContent(index)">
                     <div
                       class="onboarding-dropdown-placeholder major-placeholder"
                       id="major-placeholder"
@@ -108,29 +108,33 @@
                       {{ major }}
                     </div>
                   </div>
+                  <div class="onboarding-remove" @click="removeMajor(index)" :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }">
+                    <img src="@/assets/images/x-green.svg" alt = "x"/>
+                  </div>
                 </div>
               </div>
               <div class="onboarding-addRemoveWrapper" :class="{ 'onboarding--hidden': displayOptions.major.length <= 0}">
                 <div class="onboarding-add" @click="addMajor">
                   + add another major
                 </div>
-                <div class="onboarding-remove" @click="removeMajor" :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }">
-                  Remove
-                </div>
               </div>
             </div>
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Minor (optional)</label>
-              <div class="onboarding-selectWrapper">
+        
+    </div>
+      <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Your Minor</span> </div>
+      <div class="onboarding-inputs">
+        <div class="onboarding-inputWrapper">
+              <label class="onboarding-label">Minor</label>
+              <div>
                 <div
-                  class="onboarding-select onboarding-input onboarding-section"
+                  class="onboarding-selectWrapperRow"
                   id="minor"
                   v-for="(options, index) in displayOptions.minor"
                   :key = index
                   :style="{ borderColor: options.boxBorder }"
                   v-click-outside:[index]="closeMinorDropdownIfOpen"
                 >
-                  <div class="onboarding-dropdown-placeholder minor-wrapper" @click="showHideMinorContent(index)">
+                  <div class="onboarding-dropdown-placeholder onboarding-input minor-wrapper" @click="showHideMinorContent(index)">
                     <div
                       class="onboarding-dropdown-placeholder minor-placeholder"
                       id="minor-placeholder"
@@ -159,17 +163,20 @@
                       {{ minor }}
                     </div>
                   </div>
+                  <div 
+                    class="onboarding-remove" @click="removeMinor(index)" 
+                    :class="{'onboarding--hidden': displayOptions.minor.length === 1 && displayOptions.minor[0].placeholder == placeholderText}"
+                  >
+                    <img src="@/assets/images/x-green.svg" alt = "x"/>
+                  </div>
                 </div>
               </div>
               <div class="onboarding-addRemoveWrapper" :class="{ 'onboarding--hidden': Object.keys(minors).length <= 0}">
                 <div class="onboarding-add" @click="addMinor">
                   + add another minor
                 </div>
-                <div class="onboarding-remove" @click="removeMinor" :class="{'onboarding--hidden': displayOptions.minor.length === 1 && displayOptions.minor[0].placeholder == placeholderText}">
-                  Remove
-                </div>
               </div>
-            </div>
+        </div>
     </div>
   </div>
 </div>
@@ -492,14 +499,14 @@ export default Vue.extend({
     selectMinor(text, acronym, i) {
       this.selectOption('minor', text, acronym, i);
     },
-    removeMajor() {
-      this.displayOptions.major.pop();
+    removeMajor(index) {
+      this.displayOptions.major.splice(index, 1);
       if (this.displayOptions.major.length === 0) {
         this.addMajor();
       }
     },
-    removeMinor() {
-      this.displayOptions.minor.pop();
+    removeMinor(index) {
+      this.displayOptions.minor.splice(index, 1);
       if (this.displayOptions.minor.length === 0) {
         this.addMinor();
       }
