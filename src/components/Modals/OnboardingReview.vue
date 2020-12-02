@@ -33,13 +33,17 @@
               </div>
               <div class="onboarding-selectWrapper-review">
                 <label class="onboarding-label">Major</label>
-                <label class="onboarding-label--review">{{ displayOptions.major[0].placeholder }}</label>
+                <div v-for="(major, index) in displayOptions.major" :key = "'Major'+index">
+                  <label class="onboarding-label--review">{{ major.placeholder }}</label>
+                </div>
               </div>
             </div>
             <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Your Minor</span></div>
             <div class="onboarding-selectWrapper">
               <label class="onboarding-label">Minor</label>
-              <label class="onboarding-label--review">{{ displayOptions.minor[0].placeholder }}</label>
+              <div v-for="(minor, index) in displayOptions.minor" :key = "'Minor'+index">
+                <label class="onboarding-label--review">{{ minor.placeholder }}</label>
+              </div>
             </div>
           </div>
         </div>
@@ -219,12 +223,72 @@ export default {
   mounted() {
     this.setCollegesMap();
     this.getClasses();
+    this.flattenDisplayMajors();
+    this.flattenDisplayMinors();
     this.getTransferMap();
     this.setExamsMap();
     this.setSubjectList();
     this.getCredits();
   },
   methods: {
+    flattenDisplayMajors() {
+      const majors = [];
+      this.displayOptions.major.forEach(major => {
+        if (Array.isArray(major.acronym)) {
+          major.acronym.flat(Infinity);
+          for (let i = 0; i < major.acronym.length; i += 1) {
+            const newMajor = {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholder: major.placeholder[i],
+              acronym: major.acronym[i]
+            };
+            majors.push(newMajor);
+          }
+        } else {
+          majors.push({
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholder: major.placeholder,
+            acronym: major.acronym
+          });
+        }
+      });
+      this.displayOptions.major = majors;
+    },
+    flattenDisplayMinors() {
+      const minors = [];
+      this.displayOptions.minor.forEach(minor => {
+        if (Array.isArray(minor.acronym)) {
+          minor.acronym.flat(Infinity);
+          for (let i = 0; i < minor.acronym.length; i += 1) {
+            const newminor = {
+              shown: false,
+              stopClose: false,
+              boxBorder: '',
+              arrowColor: '',
+              placeholder: minor.placeholder[i],
+              acronym: minor.acronym[i]
+            };
+            minors.push(newminor);
+          }
+        } else {
+          minors.push({
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            acronym: minor.acronym
+          });
+        }
+      });
+      this.displayOptions.minor = minors;
+    },
     getClasses() {
       let credits = 0;
       const exams = [];

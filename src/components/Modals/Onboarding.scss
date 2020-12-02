@@ -11,6 +11,7 @@ input {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    width:100%;
     &-review {
       margin-top: 15px;
       display: flex;
@@ -97,8 +98,8 @@ input {
     box-sizing: border-box;
     border-radius: 9px;
 
-    padding: 3rem;
-    padding-top: 2rem;
+    padding: 2rem 3rem 2rem;
+    // padding-top: 2rem;
 
     &--name {
       display: flex;
@@ -343,9 +344,10 @@ input {
   }
 
   &-error {
-    margin-top: .5rem;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 17px;
+    text-align: center;
+    margin-bottom: 1rem;
     color: #D8000C;
   }
   &-select {
@@ -430,22 +432,7 @@ input {
         width: 100%;
       }
 
-      &.college-arrow {
-        border-left: 6.24px solid transparent;
-        border-right: 6.24px solid transparent;
-
-        border-top: 6.24px solid #c4c4c4;
-        background: transparent;
-
-        //when clicked border-top-color: #32A0F2;
-
-        margin-top: 30px;
-        margin-bottom: 10.17px;
-
-        margin-right: 8.7px;
-        margin-left: 5px;
-      }
-
+      &.college-arrow,
       &.major-arrow,
       &.minor-arrow {
         border-left: 6.24px solid transparent;
@@ -456,7 +443,7 @@ input {
 
         //when clicked border-top-color: #32A0F2;
 
-        margin-top: 10px;
+        margin-top: 30px;
         margin-bottom: 10.17px;
 
         margin-right: 8.7px;

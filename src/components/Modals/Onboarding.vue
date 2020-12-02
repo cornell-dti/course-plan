@@ -22,6 +22,7 @@
             @setPage="setPage"
           />
         </div>
+        <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">Please fill out all required fields and try again.</div>
       </div>
       <div class="onboarding-bottom">
         <div class="onboarding-bottom--section onboarding-bottom--section---center">
@@ -43,7 +44,6 @@
             <button class="onboarding-button" @click="goNext">Next &gt;</button>
           </div>
         </div>
-      <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">Please fill out all required fields and try again.</div>
     </div>
   </div>
   </div>

@@ -22,7 +22,7 @@
           <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Your College</span> </div>
           <div class="onboarding-inputs">
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your College (required)</label>
+              <label class="onboarding-label">Your College*</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-select onboarding-input"
@@ -68,7 +68,7 @@
 
 
             <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <label class="onboarding-label">Your Major (required)</label>
+              <label class="onboarding-label">Your Major*</label>
               <div class="onboarding-selectWrapper">
                 <div
                   class="onboarding-selectWrapperRow onboarding-section"
@@ -79,33 +79,35 @@
                   :style="{ borderColor: options.boxBorder }"
                   v-click-outside:[index]="closeMajorDropdownIfOpen"
                 >
-                  <div class="onboarding-dropdown-placeholder onboarding-input  major-wrapper" @click="showHideMajorContent(index)">
-                    <div
-                      class="onboarding-dropdown-placeholder major-placeholder"
-                      id="major-placeholder"
-                      :style="{ color: options.placeholderColor }"
-                    >
-                      {{options.placeholder}}
+                  <div class="onboarding-select onboarding-input">
+                    <div class="onboarding-dropdown-placeholder major-wrapper" @click="showHideMajorContent(index)">
+                      <div
+                        class="onboarding-dropdown-placeholder major-placeholder"
+                        id="major-placeholder"
+                        :style="{ color: options.placeholderColor }"
+                      >
+                        {{options.placeholder}}
+                      </div>
+                      <div
+                        class="onboarding-dropdown-placeholder major-arrow"
+                        id="major-arrow"
+                        :style="{ borderTopColor: options.arrowColor }"
+                      ></div>
                     </div>
                     <div
-                      class="onboarding-dropdown-placeholder major-arrow"
-                      id="major-arrow"
-                      :style="{ borderTopColor: options.arrowColor }"
-                    ></div>
-                  </div>
-                  <div
-                    class="onboarding-dropdown-content major-content"
-                    id="major-content"
-                    v-if="options.shown"
-                  >
-                    <div
-                      v-for="(major, acronym) in majors"
-                      :key="acronym"
-                      :id="major"
-                      class="onboarding-dropdown-content-item"
-                      @click="selectMajor(major, acronym, index)"
+                      class="onboarding-dropdown-content major-content"
+                      id="major-content"
+                      v-if="options.shown"
                     >
-                      {{ major }}
+                      <div
+                        v-for="(major, acronym) in majors"
+                        :key="acronym"
+                        :id="major"
+                        class="onboarding-dropdown-content-item"
+                        @click="selectMajor(major, acronym, index)"
+                      >
+                        {{ major }}
+                      </div>
                     </div>
                   </div>
                   <div class="onboarding-remove" @click="removeMajor(index)" :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }">
@@ -134,33 +136,35 @@
                   :style="{ borderColor: options.boxBorder }"
                   v-click-outside:[index]="closeMinorDropdownIfOpen"
                 >
-                  <div class="onboarding-dropdown-placeholder onboarding-input minor-wrapper" @click="showHideMinorContent(index)">
-                    <div
-                      class="onboarding-dropdown-placeholder minor-placeholder"
-                      id="minor-placeholder"
-                      :style="{ color: options.placeholderColor }"
-                    >
-                      {{ options.placeholder }}
+                  <div class="onboarding-select onboarding-input">
+                    <div class="onboarding-dropdown-placeholder minor-wrapper" @click="showHideMinorContent(index)">
+                      <div
+                        class="onboarding-dropdown-placeholder minor-placeholder"
+                        id="minor-placeholder"
+                        :style="{ color: options.placeholderColor }"
+                      >
+                        {{ options.placeholder }}
+                      </div>
+                      <div
+                        class="onboarding-dropdown-placeholder minor-arrow"
+                        id="minor-arrow"
+                        :style="{ borderTopColor: options.arrowColor }"
+                      ></div>
                     </div>
                     <div
-                      class="onboarding-dropdown-placeholder minor-arrow"
-                      id="minor-arrow"
-                      :style="{ borderTopColor: options.arrowColor }"
-                    ></div>
-                  </div>
-                  <div
-                    class="onboarding-dropdown-content minor-content"
-                    id="minor-content"
-                    v-if="options.shown"
-                  >
-                    <div
-                      v-for="(minor, acronym) in minors"
-                      :key="acronym"
-                      :id="minor"
-                      class="onboarding-dropdown-content-item"
-                      @click="selectMinor(minor, acronym, index)"
+                      class="onboarding-dropdown-content minor-content"
+                      id="minor-content"
+                      v-if="options.shown"
                     >
-                      {{ minor }}
+                      <div
+                        v-for="(minor, acronym) in minors"
+                        :key="acronym"
+                        :id="minor"
+                        class="onboarding-dropdown-content-item"
+                        @click="selectMinor(minor, acronym, index)"
+                      >
+                        {{ minor }}
+                      </div>
                     </div>
                   </div>
                   <div 
