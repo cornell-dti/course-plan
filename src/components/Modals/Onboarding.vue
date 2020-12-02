@@ -19,6 +19,7 @@
             />
           <onboardingReview v-if="currentPage == 3"
             :user="user"
+            @setPage="setPage"
           />
         </div>
       </div>
@@ -206,6 +207,9 @@ export default Vue.extend({
     },
     goBack() {
       this.currentPage = (this.currentPage - 1 === 0) ? 0 : this.currentPage - 1;
+    },
+    setPage(page) {
+      this.currentPage = page;
     },
     goNext() {
       this.currentPage = (this.currentPage === FINAL_PAGE) ? FINAL_PAGE : this.currentPage + 1;

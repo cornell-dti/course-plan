@@ -1,7 +1,14 @@
 <template>
     <div class="onboarding">
         <div class="onboarding-section">
-          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Basic Information</span></div>
+          <div class="onboarding-subHeader">
+            <span class="onboarding-subHeader--font"> Basic Information</span>
+            <span>
+              <button class="onboarding-button-previous" @click="setPage(1)"> 
+                <img src="@/assets/images/edit-review.svg">
+              </button>
+            </span>
+          </div>
           <div class="onboarding-subsection onboarding-inputs--review">
             <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Your Name</span></div>
             <div class="onboarding-selectWrapperRow-review">
@@ -38,7 +45,14 @@
         </div>
         <div class="onboarding-section">
           <!-- TODO: Multiple colleges -->
-          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Transfer Credits</span> </div>
+          <div class="onboarding-subHeader">
+            <span class="onboarding-subHeader--font"> Transfer Credits</span> 
+            <span>
+              <button class="onboarding-button-previous" @click="setPage(2)"> 
+                <img src="@/assets/images/edit-review.svg">
+              </button>
+            </span>
+          </div>
           <div class="onboarding-inputs onboarding-inputs">
             <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Cornell Swimming Test</span></div>
             <div class="onboarding-selectWrapper">
@@ -478,6 +492,7 @@ export default {
       this.displayOptions.class.push(placeholderText);
     },
     addItem(id) {
+      console.log("asdf");
       const dropdown = document.getElementById(`dropdown-${id}`);
       const title = dropdown.value;
       const courseCode = title.substring(0, title.indexOf(':'));
@@ -766,6 +781,9 @@ export default {
         placeholder: placeholderText
       };
       this.displayOptions.minor.push(minor);
+    },
+    setPage(page) {
+      this.$emit('setPage', page);
     }
   }
 };
