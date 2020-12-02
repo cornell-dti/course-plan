@@ -86,7 +86,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
 import introJs from 'intro.js';
 import Course from '@/components/Course.vue';
 import SemesterView from '@/components/Semester/SemesterView.vue';
@@ -214,9 +213,8 @@ export default Vue.extend({
       const docRef = this.getDocRef();
 
       // TODO: error handling for firebase errors
-      docRef
-        .get()
-        .then(doc => {
+      docRef.onSnapshot(
+        doc => {
           if (doc.exists) {
             const firestoreUserData = doc.data() as FirestoreUserData;
             this.semesters = firestoreSemestersToAppSemesters(firestoreUserData.semesters);
@@ -232,15 +230,61 @@ export default Vue.extend({
             this.semesters = [{ type: getCurrentSeason(), year: getCurrentYear(), courses: [] }];
             this.startOnboarding();
           }
+        },
+        error => {
+          console.log('Error getting document:', error);
+        }
+      );
+    },
+
+    /**
+     * Reduces course object to only information needed to be stored on Firebase
+     * Works in conjunction with addCourse()
+     * CHANGE WILL ALTER DATA STRUCTURE
+     */
+    toFirebaseCourse(course: AppCourse): FirestoreSemesterCourse {
+      return {
+        crseId: course.crseId,
+        code: `${course.subject} ${course.number}`,
+        name: course.name,
+        description: course.description,
+        credits: course.credits,
+        creditRange: course.creditRange,
+        semesters: course.semesters,
+        prereqs: course.prereqs,
+        enrollment: course.enrollment,
+        lectureTimes: course.lectureTimes,
+        instructors: course.instructors,
+        distributions: course.distributions,
+        lastRoster: course.lastRoster,
+        color: course.color,
+        uniqueID: course.uniqueID,
+      };
+    },
+    editSemesters(newSemesters: readonly AppSemester[]) {
+      this.semesters = newSemesters;
+
+      // TODO: make user / docRef global
+      const user = auth.currentUser!;
+      const userEmail = user.email!;
+      const docRef = userDataCollection.doc(userEmail);
+
+      docRef
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            const firebaseSemesters: FirestoreSemester[] = newSemesters.map(sem => ({
+              ...sem,
+              courses: sem.courses.map(course => this.toFirebaseCourse(course)),
+            }));
+            docRef.update({ semesters: firebaseSemesters });
+          } else {
+            console.log('No such document!');
+          }
         })
         .catch(error => {
           console.log('Error getting document:', error);
         });
-    },
-
-    editSemesters(newSemesters: readonly AppSemester[]) {
-      this.semesters = newSemesters;
-      this.recomputeRequirements();
     },
     chooseToggleableRequirementOption(
       toggleableRequirementChoices: AppToggleableRequirementChoices
@@ -249,6 +293,7 @@ export default Vue.extend({
       this.getDocRef().update({ toggleableRequirementChoices });
       this.recomputeRequirements();
     },
+
     resizeEventHandler(e: any) {
       this.isMobile = window.innerWidth <= 440;
       this.isTablet = window.innerWidth <= 878;

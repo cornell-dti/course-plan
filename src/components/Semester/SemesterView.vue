@@ -99,8 +99,6 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-// @ts-ignore
-import clone from 'clone';
 import Course from '@/components/Course.vue';
 import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Confirmation.vue';
@@ -160,7 +158,6 @@ export default Vue.extend({
     semesters: {
       handler() {
         this.buildDuplicateCautions();
-        this.updateFirebaseSemester();
       },
     },
   },
@@ -333,59 +330,6 @@ export default Vue.extend({
         this.$emit('close-bar');
       }
       this.isCourseClicked = false;
-    },
-    /**
-     * Reduces course object to only information needed to be stored on Firebase
-     * Works in conjunction with addCourse()
-     * CHANGE WILL ALTER DATA STRUCTURE
-     */
-    toFirebaseCourse(course: AppCourse): FirestoreSemesterCourse {
-      return {
-        crseId: course.crseId,
-        code: `${course.subject} ${course.number}`,
-        name: course.name,
-        description: course.description,
-        credits: course.credits,
-        creditRange: course.creditRange,
-        semesters: course.semesters,
-        prereqs: course.prereqs,
-        enrollment: course.enrollment,
-        lectureTimes: course.lectureTimes,
-        instructors: course.instructors,
-        distributions: course.distributions,
-        lastRoster: course.lastRoster,
-        color: course.color,
-        uniqueID: course.uniqueID,
-      };
-    },
-    /**
-     * Updates semester user data
-     */
-    updateFirebaseSemester() {
-      // TODO: make user / docRef global
-      const user = auth.currentUser!;
-      const userEmail = user.email!;
-      const docRef = userDataCollection.doc(userEmail);
-
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const firebaseSemesters: FirestoreSemester[] = (clone(
-              this.semesters
-            ) as AppSemester[]).map(sem => ({
-              ...sem,
-              courses: sem.courses.map(course => this.toFirebaseCourse(course)),
-            }));
-            docRef.update({ semesters: firebaseSemesters });
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
     },
   },
 });
