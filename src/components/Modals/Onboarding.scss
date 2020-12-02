@@ -520,6 +520,10 @@ select option[disabled]:first-child {
   flex-direction: column;
   align-items: center;
 }
+.alignLeft {
+  display: flex;
+  flex-direction: column;
+}
 .alignEnd {
   display: flex;
   flex-direction: column;

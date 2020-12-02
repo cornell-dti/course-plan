@@ -21,7 +21,7 @@ Vue.use(BootstrapVue);
 
 // Enable Google analytics with custom events
 Vue.use(VueGtag, {
-  config: { id: 'UA-124837875-2' },
+  config: { id: 'UA-124837875-2' }
 });
 
 // handle page reloads
@@ -32,7 +32,7 @@ fb.auth.onAuthStateChanged(() => {
       el: '#app',
       router,
       store,
-      render: h => h(App),
+      render: h => h(App)
     });
   }
 });

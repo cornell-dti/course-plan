@@ -52,7 +52,7 @@
             <div class="onboarding-subHeader2-fillRow"><span class="onboarding-subHeader2-review"> Test Credits</span></div>
             <div class="onboarding-selectWrapper">
               <div class="onboarding-selectWrapper-reviewExam">
-                <div>
+                <div class = "alignLeft">
                   <label class="onboarding-label">AP Credits</label>
                   <div v-for="(options, index) in displayOptions.exam" :key = "'AP'+index">
                     <label v-if="typeof options.type != undefined && options.type.placeholder == 'AP'" class="onboarding-label--review">{{ options.subject.placeholder }}</label>
@@ -175,6 +175,7 @@ export default {
       lastName: this.user.lastName,
       placeholderText,
       totalCredits: 0,
+      transferJSON: {},
       displayOptions: {
         college: [
           {
@@ -286,7 +287,7 @@ export default {
         if (this.transferJSON !== null) {
           const name = exam.subject.placeholder;
           if (name in this.transferJSON) {
-            count += this.transferJSON[name].credits[0].credits;
+            count += this.transferJSON[name].credits;
           }
         }
       });
@@ -299,7 +300,7 @@ export default {
       const name = exam.subject.placeholder;
       if (this.transferJSON !== null) {
         if (name in this.transferJSON) {
-          return this.transferJSON[name].credits[0].credits;
+          return this.transferJSON[name].credits;
         }
       }
       return 0;
@@ -308,14 +309,14 @@ export default {
       // console.log(reqsData);
       const TransferJSON = {};
       examData.AP.forEach(sub => {
-        TransferJSON[sub.subject] = {
-          credits: sub.credits,
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
           type: 'AP'
         };
       });
       examData.IB.forEach(sub => {
-        TransferJSON[sub.subject] = {
-          credits: sub.credits,
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
           type: 'IB'
         };
       });
