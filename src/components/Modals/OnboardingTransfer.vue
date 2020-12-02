@@ -450,7 +450,7 @@ export default Vue.extend({
       });
       this.totalCredits = count;
     },
-    getExamCredit(exam) {
+    getExamCredit(exam: any) {
       const name = exam.subject.placeholder;
       if (this.transferJSON !== null) {
         if (name in this.transferJSON) {

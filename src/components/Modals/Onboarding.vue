@@ -24,28 +24,26 @@
       </div>
       <div class="onboarding-bottom">
         <div class="onboarding-bottom--section onboarding-bottom--section---center">
-          <img class="timeline" :src="require(`@/assets/images/timeline${currentPage}.svg`)" alt="X">
+          <img class="timeline" :src="require(`@/assets/images/timeline${currentPage}text.svg`)" alt="X">
         </div>
         <div v-if="currentPage==3" class="onboarding-bottom--section">
-          <div class="onboarding-bottom--contents" @click="cancel">
+          <!-- keeping skip button code in case we want to add back -->
+          <!-- <div class="onboarding-bottom--contents" @click="cancel">
             <label class="onboarding-bottom--text">Skip for now</label>
-          </div>
+          </div> -->
           <div class="onboarding-bottom--contents">
             <button class="onboarding-button-previous" @click="goBack"> &lt; Previous</button>
             <button class="onboarding-button" @click="submitOnboarding">Finish</button>
          </div>
         </div>
         <div v-else class="onboarding-bottom--section">
-          <div class="onboarding-bottom--contents" @click="cancel">
-            <label class="onboarding-bottom--text">Skip for now</label>
-          </div>
           <div class="onboarding-bottom--contents">
-            <button class="onboarding-button-previous" @click="goBack"> &lt; Previous</button>
+            <button v-if="currentPage != 1" class="onboarding-button-previous" @click="goBack"> &lt; Previous</button>
             <button class="onboarding-button" @click="goNext">Next &gt;</button>
+          </div>
         </div>
+      <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">Please fill out all required fields and try again.</div>
     </div>
-    <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">Please fill out all required fields and try again.</div>
-  </div>
   </div>
   </div>
 </template>
