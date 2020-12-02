@@ -548,7 +548,7 @@ export default Vue.extend({
     closeClassDropdownIfOpen(event: unknown, i: number) {
       this.closeDropdownIfOpen('class', null, i);
     },
-    // Set the colleges map to with acronym keys and full name values
+    // Set the exam map to with acronym keys and full name values
     setExamsMap() {
       const exams: string[] = [];
       Object.keys(reqsData).forEach(key => {
@@ -556,7 +556,7 @@ export default Vue.extend({
       });
       this.exams = exams;
     },
-    // Set the majors map to with acronym keys and full name values
+    // Set the subject map to with acronym keys and full name values
     setSubjectList() {
       /** @type {Object.<string, string>} */
       const totalSubjects: string[][] = [];
@@ -655,6 +655,7 @@ export default Vue.extend({
         }
       };
       this.displayOptions.exam.push(exam);
+      this.setSubjectList();
     },
     getCourseFromExam(type: 'AP' | 'IB', subject: string) {
       let courses: Record<string, number> | undefined;
@@ -678,7 +679,11 @@ export default Vue.extend({
       }
     },
     removeTransfer(index: number) {
+      console.log(index);
       this.displayOptions.class.splice(index, 1);
+      if (this.displayOptions.class.length === 0) {
+        this.addTransfer();
+      }
     },
     addTransfer() {
       // @ts-ignore
