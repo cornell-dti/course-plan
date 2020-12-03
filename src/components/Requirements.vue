@@ -285,12 +285,8 @@ export default Vue.extend({
     activateMinor(id: number) {
       this.displayedMinorIndex = id;
     },
-    createCourse(
-      course: FirestoreSemesterCourse,
-      isRequirementsCourse: boolean,
-      isCompletedRequirementsCourse: boolean
-    ) {
-      this.$emit('createCourse', course, isRequirementsCourse, isCompletedRequirementsCourse);
+    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean) {
+      this.$emit('createCourse', course, isRequirementsCourse);
     },
     getRequirementsTooltipText() {
       return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
@@ -333,7 +329,7 @@ export default Vue.extend({
           .then(result => {
             result.data.courses.forEach((course: FirestoreSemesterCourse) => {
               // @ts-ignore [We should resolve this later]
-              const createdCourse = this.$parent.createCourse(course, true, false);
+              const createdCourse = this.$parent.createCourse(course, true);
               createdCourse.compact = true;
               fetchedCourses.push(createdCourse);
             });

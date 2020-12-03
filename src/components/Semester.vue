@@ -296,7 +296,7 @@ export default Vue.extend({
     // TODO: give better type on data
     addCourse(data: any, season: string | null = null, year: number | null = null) {
       // @ts-ignore
-      const newCourse = this.$parent.$parent.createCourse(data, false, false);
+      const newCourse = this.$parent.$parent.createCourse(data, false);
       // TODO: stop mutating this data directly
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       let confirmationMsg;
