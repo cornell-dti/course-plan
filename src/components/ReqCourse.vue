@@ -55,7 +55,7 @@ export default Vue.extend({
         '--bg-color': `#${this.color}`,
       };
     },
-    courseCodeLabel() {
+    courseCodeLabel(): string {
       return `${this.subject} ${this.number}`;
     },
   },
