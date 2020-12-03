@@ -82,6 +82,7 @@ export type FirestoreNestedUserData = {
 export type FirestoreUserData = {
   readonly name: FirestoreUserName;
   readonly semesters: readonly FirestoreSemester[];
+  readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };
   readonly uniqueIncrementer: number;
   readonly userData: FirestoreNestedUserData;
@@ -160,6 +161,9 @@ export type AppBottomBarCourse = {
   readonly description: string;
   readonly uniqueID: number;
 };
+
+// map from requirement ID to option chosen
+export type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 
 /**
  * Creates credit range based on course
