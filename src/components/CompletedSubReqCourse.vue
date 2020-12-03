@@ -15,7 +15,7 @@
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <reqcourse
-          :id="subject + number"
+          :id="courseSubject + courseNumber"
           :color="color"
           :subject="courseSubject"
           :number="courseNumber"
