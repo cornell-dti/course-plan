@@ -241,6 +241,7 @@
                   :semesterID= index
                   :isOnboard="true"
                   :placeholderText= "options.class"
+                  :key = displayOptions.class.length
                   @addItem="addItem"
                   > </newCourse>
                 </div>
@@ -321,6 +322,7 @@ type Data = {
     exam: Record<'type' | 'subject' | 'score', DisplayOption>[];
     class: FirestoreTransferClass[];
   };
+  key: number,
   transferJSON: any,
   isError: boolean;
   totalCredits: number;
@@ -348,6 +350,7 @@ export default Vue.extend({
         exam: [],
         class: []
       },
+      key: 0,
       transferJSON: {},
       isError: false,
       totalCredits: 0,
@@ -656,6 +659,7 @@ export default Vue.extend({
       };
       this.displayOptions.exam.push(exam);
       this.setSubjectList();
+      this.getCredits();
     },
     getCourseFromExam(type: 'AP' | 'IB', subject: string) {
       let courses: Record<string, number> | undefined;
@@ -677,13 +681,15 @@ export default Vue.extend({
       if (this.countExamType(this.displayOptions.exam, 'IB') === 0) {
         this.addExam('IB');
       }
+      this.getCredits();
+      this.key += 1;
     },
     removeTransfer(index: number) {
-      console.log(index);
       this.displayOptions.class.splice(index, 1);
       if (this.displayOptions.class.length === 0) {
         this.addTransfer();
       }
+      this.getCredits();
     },
     addTransfer() {
       // @ts-ignore
@@ -713,11 +719,17 @@ export default Vue.extend({
             if (resultJSONclass.catalogNbr === number) {
               const course = resultJSONclass;
               const creditsC = course.credits || course.enrollGroups[0].unitsMaximum;
+              // this.displayOptions.class[id] = {
+              //   class: courseCode,
+              //   course,
+              //   credits: creditsC
+              // };
               this.displayOptions.class[id] = {
                 class: courseCode,
                 course,
                 credits: creditsC
               };
+              console.log(this.displayOptions.class);
               this.getCredits();
               this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
             }
