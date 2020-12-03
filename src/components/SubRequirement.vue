@@ -258,6 +258,7 @@ export default Vue.extend({
           subReqCoursesArray.push({ isCompleted: false, courses: crseInfoArray });
         }
       }
+      console.log(subReqCoursesArray);
       return subReqCoursesArray;
     },
     generateSubReqIncompleteCrseInfoArray(
