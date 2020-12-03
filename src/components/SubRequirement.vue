@@ -217,12 +217,8 @@ export default Vue.extend({
     isDataReady() {
       this.dataReady = true;
     },
-    createCourse(
-      course: FirestoreSemesterCourse,
-      isRequirementsCourse: boolean,
-      isCompletedRequirementsCourse: boolean
-    ) {
-      this.$emit('createCourse', course, isRequirementsCourse, isCompletedRequirementsCourse);
+    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean) {
+      this.$emit('createCourse', course, isRequirementsCourse);
     },
     closeMenuIfOpen() {
       this.showFulfillmentOptionsDropdown = false;
@@ -258,7 +254,6 @@ export default Vue.extend({
           subReqCoursesArray.push({ isCompleted: false, courses: crseInfoArray });
         }
       }
-      console.log(subReqCoursesArray);
       return subReqCoursesArray;
     },
     generateSubReqIncompleteCrseInfoArray(
@@ -326,7 +321,7 @@ export default Vue.extend({
           fetchedCourses = result.data.courses;
           fetchedCourses.forEach((course: FirestoreSemesterCourse) => {
             // @ts-ignore
-            const createdCourse = this.$parent.$parent.$parent.createCourse(course, true, false);
+            const createdCourse = this.$parent.$parent.$parent.createCourse(course, true);
             createdCourse.compact = true;
             this.subReqFetchedCourseObjectsNotTakenArray.push(createdCourse);
           });

@@ -42,7 +42,7 @@ export default Vue.extend({
     subject: String,
     number: String,
     isCompletedReqCourse: Boolean,
-    compact: Boolean
+    compact: Boolean,
   },
   computed: {
     borderColorCSSvar() {
@@ -57,8 +57,8 @@ export default Vue.extend({
     },
     courseCodeLabel() {
       return `${this.subject} ${this.number}`;
-    }
-  }
+    },
+  },
 });
 </script>
 
