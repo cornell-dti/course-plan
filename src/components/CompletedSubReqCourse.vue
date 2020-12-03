@@ -1,10 +1,6 @@
 <template>
   <div class="completedsubreqcourse">
-    <div
-      v-for="courseObject in courseObjects"
-      :key="courseObject.uniqueID"
-      class="completed-reqCourses-course-wrapper"
-    >
+    <div class="completed-reqCourses-course-wrapper">
       <div id="completedSeparator" class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
@@ -18,15 +14,13 @@
         </div>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
-        <course
-          v-bind="courseObject"
-          :courseObj="courseObject"
-          :id="courseObject.subject + courseObject.number"
-          :uniqueID="courseObject.uniqueID"
+        <reqcourse
+          :id="subject + number"
+          :color="color"
+          :subject="courseSubject"
+          :number="courseNumber"
           :compact="true"
-          :active="false"
           :isCompletedReqCourse="true"
-          :isReqCourse="true"
           class="completed-reqCourses-course-object"
         />
         <div class="completed-reqCourses-course-object-semester">
@@ -40,7 +34,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
-import Course from '@/components/Course.vue';
+import ReqCourse from '@/components/ReqCourse.vue';
 import { DisplayableRequirementFulfillment, CourseTaken } from '@/requirements/types';
 import {
   AppCourse,
@@ -49,10 +43,14 @@ import {
   FirestoreSemesterType,
 } from '@/user-data';
 
-Vue.component('course', Course);
+Vue.component('reqcourse', ReqCourse);
 
 type Data = {
-  courseObjects: AppCourse[];
+  color: string;
+  transferCreditColor: string;
+  courseSubject: string;
+  courseNumber: string;
+  isTransferCredit: boolean;
   semesterType: FirestoreSemesterType;
   semesterYear: number;
 };
@@ -68,25 +66,20 @@ export default Vue.extend({
     return {
       semesterType: 'Fall', // 'Fall' is an arbitrary FirestoreSemesterType value that user will never see
       semesterYear: 0,
-      courseObjects: [],
+      color: '',
+      transferCreditColor: 'DA4A4A', // Arbitrary color for transfer credit
+      courseSubject: '',
+      courseNumber: '',
+      isTransferCredit: false,
     };
   },
   mounted() {
     const crseTaken = this.crsesTaken[0];
-
-    for (let i = 0; this.courseObjects.length < 1 && i < this.semesters.length; i += 1) {
-      const semester = this.semesters[i];
-      const filteredSemesterCourses = semester.courses.filter(
-        course =>
-          course.crseId === crseTaken.courseId &&
-          course.subject === crseTaken.subject &&
-          course.number === crseTaken.number
-      );
-      if (filteredSemesterCourses.length > 0) {
-        this.courseObjects.push(filteredSemesterCourses[0]);
-        this.semesterType = semester.type;
-        this.semesterYear = semester.year;
-      }
+    this.isTransferCredit = crseTaken.subject === 'AP' || crseTaken.subject === 'IB';
+    if (!this.isTransferCredit) {
+      this.setCourseAndSemesterForNonTransferCredits(crseTaken);
+    } else {
+      this.setCourseAndSemesterForTransferCredits(crseTaken);
     }
   },
   computed: {
@@ -97,13 +90,42 @@ export default Vue.extend({
       return 'Reset';
     },
     semesterLabel() {
-      return `in ${this.$data.semesterType} ${this.$data.semesterYear}`;
+      let label = `in ${this.$data.semesterType} ${this.$data.semesterYear}`;
+      if (this.isTransferCredit) {
+        label = 'in Transfer Credits';
+      }
+      return label;
     },
   },
   methods: {
     dragListener(event: { preventDefault: () => void }) {
       if (!this.$data.scrollable) event.preventDefault();
     },
+    setCourseAndSemesterForNonTransferCredits(crseTaken: CourseTaken) {
+      for (let i = 0; i < this.semesters.length; i += 1) {
+        const semester = this.semesters[i];
+        const filteredSemesterCourses = semester.courses.filter(
+          course =>
+            course.crseId === crseTaken.courseId &&
+            course.subject === crseTaken.subject &&
+            course.number === crseTaken.number
+        );
+        if (filteredSemesterCourses.length > 0) {
+          const course = filteredSemesterCourses[0];
+          this.color = course.color;
+          this.courseSubject = course.subject;
+          this.courseNumber = course.number;
+          this.semesterType = semester.type;
+          this.semesterYear = semester.year;
+          break;
+        }
+      }
+    },
+    setCourseAndSemesterForTransferCredits(crseTaken: CourseTaken) {
+      this.color = this.transferCreditColor;
+      this.courseSubject = crseTaken.subject;
+      this.courseNumber = crseTaken.number;
+    }
   },
 });
 </script>
