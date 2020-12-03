@@ -122,7 +122,7 @@
             </div>
             <div class="onboarding-bottomWrapper">
               <label class="onboarding-subHeader2-review">Total Transfer Credits:</label>
-              <label class="onboarding-label--bottom">{{ totalCredits }} Credits</label>
+              <div class="onboarding-label--bottom"><label class="onboarding-label--bottom---bold">{{ totalCredits }}</label> <label>&nbsp;Credits</label></div>
             </div>
           </div>
           </div>
