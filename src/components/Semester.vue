@@ -189,7 +189,20 @@ export default Vue.extend({
     semesters: Array as PropType<readonly AppSemester[]>,
     isFirstSem: Boolean,
   },
-
+  watch: {
+    courses: {
+      handler() {
+        this.$emit(
+          'edit-semester',
+          this.id,
+          (semester: AppSemester): AppSemester => ({
+            ...semester,
+            courses: this.courses,
+          })
+        );
+      },
+    },
+  },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
     // @ts-ignore
