@@ -195,7 +195,7 @@ export default Vue.extend({
         this.closeCurrentModal();
       }
     },
-    updateSemProps(season : string, year : number) {
+    updateSemProps(season: string, year: number) {
       this.season = season;
       this.year = year;
     },

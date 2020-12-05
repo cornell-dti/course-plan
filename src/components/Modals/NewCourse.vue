@@ -167,7 +167,7 @@ export default Vue.extend({
       @inp: input
       @courses: object of courses from JSON
       */
-      let currentFocus : number;
+      let currentFocus: number;
       const inpCopy = inp;
       function removeActive(x) {
         /* a function to remove the "active" class from all autocomplete items: */
