@@ -145,7 +145,7 @@ export default Vue.extend({
     user: Object as PropType<AppUser>,
     compact: Boolean,
     startTour: Boolean,
-    reqs: Array as PropType<readonly SingleMenuRequirement[]>
+    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },
   data(): Data {
     return {
@@ -164,7 +164,7 @@ export default Vue.extend({
       tour.oncomplete(() => {
         this.$emit('showTourEndWindow');
       });
-    }
+    },
   },
   computed: {
     majors() {

@@ -192,7 +192,7 @@ export default Vue.extend({
         class = "emoji-text" alt = "surf">`,
       congratsExit: '',
       congratsButtonText: 'Start Planning',
-      reqs: [] as readonly SingleMenuRequirement[]
+      reqs: [] as readonly SingleMenuRequirement[],
     };
   },
   created() {
@@ -713,7 +713,7 @@ export default Vue.extend({
         return singleMenuRequirement;
       });
       this.reqs = singleMenuRequirements;
-    }
+    },
   },
 });
 </script>
