@@ -637,11 +637,13 @@ export default Vue.extend({
       return arr && arr.length !== 0 && arr[0] !== '' ? arr : ['N/A'];
     },
 
-    deleteCourseFromSemesters(subject: string, number: string) {
+    deleteCourseFromSemesters(subject: string, number: string, uniqueID: number) {
       const updatedSemesters = this.semesters.map(semester => {
-        const coursesWithoutDeleted = semester.courses.filter(
-          course => course.subject !== subject && course.number !== number
-        );
+        const coursesWithoutDeleted = semester.courses.filter(course => {
+          return (
+            course.subject !== subject || course.number !== number || course.uniqueID !== uniqueID
+          );
+        });
         return { ...semester, courses: coursesWithoutDeleted };
       });
       this.editSemesters(updatedSemesters);
