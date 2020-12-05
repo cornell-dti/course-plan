@@ -133,7 +133,6 @@ export type AppCourse = {
   readonly check: boolean;
   uniqueID: number;
   readonly isReqCourse: boolean;
-  isCompletedReqCourse: boolean;
 };
 
 export type AppSemester = {
