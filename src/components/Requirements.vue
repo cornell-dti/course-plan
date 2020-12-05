@@ -90,6 +90,7 @@ import {
   AppSemester,
   FirestoreSemesterCourse,
   AppCourse,
+  AppToggleableRequirementChoices,
 } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
@@ -114,8 +115,6 @@ export type ShowAllCourses = {
 };
 
 type Data = {
-  // map from requirement ID to option chosen
-  toggleableRequirementChoices: Readonly<Record<string, string>>;
   displayedMajorIndex: number;
   displayedMinorIndex: number;
   numOfColleges: number;
@@ -137,6 +136,7 @@ tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
   props: {
+    toggleableRequirementChoices: Object as PropType<AppToggleableRequirementChoices>,
     semesters: Array as PropType<readonly AppSemester[]>,
     user: Object as PropType<AppUser>,
     compact: Boolean,
@@ -147,7 +147,6 @@ export default Vue.extend({
     return {
       displayedMajorIndex: 0,
       displayedMinorIndex: 0,
-      toggleableRequirementChoices: {},
       numOfColleges: 1,
       showAllCourses: { name: '', courses: [] },
       shouldShowAllCourses: false,
@@ -161,7 +160,7 @@ export default Vue.extend({
       tour.oncomplete(() => {
         this.$emit('showTourEndWindow');
       });
-    },
+    }
   },
   computed: {
     majors() {
@@ -198,7 +197,7 @@ export default Vue.extend({
       );
     },
     chooseToggleableRequirementOption(requirementID: string, option: string): void {
-      this.toggleableRequirementChoices = {
+      const newToggleableRequirementChoices = {
         ...this.toggleableRequirementChoices,
         [requirementID]: option,
       };

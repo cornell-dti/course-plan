@@ -13,8 +13,8 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSubRequirements(['MATH 1910'], ['MATH 1920'], ['MATH 2930', 'MATH 2940']),
     operator: 'and',
-    fulfilledBy: 'credits',
-    minCount: 14,
+    fulfilledBy: 'courses',
+    minCount: 3,
   },
   {
     name: 'Physics',
@@ -24,21 +24,21 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSubRequirements(['PHYS 1112'], ['PHYS 2213']),
     operator: 'and',
-    fulfilledBy: 'credits',
-    minCount: 8,
+    fulfilledBy: 'courses',
+    minCount: 2,
   },
   {
     name: 'Chemistry',
     description:
-      'CHEM 2090.  Majors in Chemical Engineering or those planning on a health-related career should take CHEM 2090 and then 2080.  ' +
+      'CHEM 2090. Majors in Chemical Engineering or those planning on a health-related career should take CHEM 2090 and then 2080.  ' +
       'Students in Environmental Engineering should take CHEM 2090 and CHEM 1570/3570.  ' +
       'Earth and Atmospheric Sciences majors should take CHEM 2090 and then 2080/1570.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CHEM 2090'),
     operator: 'or',
-    fulfilledBy: 'credits',
-    minCount: 4,
+    fulfilledBy: 'courses',
+    minCount: 1,
   },
   {
     name: 'First-Year Writing Seminars',
@@ -47,18 +47,18 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: courseIsFWS,
     operator: 'or',
-    fulfilledBy: 'credits',
-    minCount: 6,
+    fulfilledBy: 'courses',
+    minCount: 2,
   },
   {
     name: 'Computing',
-    description: '(CS 1110, 1112, 1114, or 1115)',
+    description: 'CS 1110, 1112, 1114, or 1115.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'),
     operator: 'or',
-    fulfilledBy: 'credits',
-    minCount: 4,
+    fulfilledBy: 'courses',
+    minCount: 1,
   },
   {
     name: 'Introduction to Engineering',
@@ -78,35 +78,52 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: (course: Course): boolean => course.subject === 'ENGRD',
     operator: 'or',
-    fulfilledBy: 'credits',
-    minCount: 6,
+    fulfilledBy: 'courses',
+    minCount: 2,
   },
+  // TODO: Check for categories & handle changed requirements for those entering in 2020 and later
   {
-    name: 'Liberal Studies Distribution',
-    description: 'Liberal Studies Distribution (six courses)',
+    name: 'Liberal Studies Distribution: 6 courses',
+    description:
+      'Liberal arts commonly include courses in the humanities. A minimum of six courses must be taken. ' +
+      ' These courses must come from some different groups and at least two courses must be at the 2000 level or higher.',
     source:
-      'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
+      'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
     checker: (course: Course): boolean =>
       ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA', 'FL', 'CE'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
     operator: 'or',
     fulfilledBy: 'courses',
-    minCount: 3,
-    totalCount: 6,
+    minCount: 6,
+  },
+  {
+    name: 'Liberal Studies Distribution: 18 credits',
+    description:
+      'In addition to six courses, the liberal studies distribution must total a minimum of 18 credits.',
+    source:
+      'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
+    checker: (course: Course): boolean =>
+      ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA', 'FL', 'CE'].some(
+        distribution => course.catalogDistr?.includes(distribution) ?? false
+      ),
+    operator: 'or',
+    fulfilledBy: 'credits',
+    minCount: 18,
   },
   {
     name: 'Advisor-Approved Electives',
     description:
       'Six credits of electives are required and must be approved by the student’s faculty advisor.',
     source:
-      'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives#adv_elective',
+      'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     fulfilledBy: 'self-check',
     minCount: 6,
   },
   {
-    name: 'Technical Communication',
+    name: 'Engineering Communications',
     description:
+      'An engineering communications course must be taken as an engineering distribution, liberal studies, Advisor-approved Elective, or Major course. ' +
       'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/engineering-communications-program/technical',

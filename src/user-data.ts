@@ -82,6 +82,7 @@ export type FirestoreNestedUserData = {
 export type FirestoreUserData = {
   readonly name: FirestoreUserName;
   readonly semesters: readonly FirestoreSemester[];
+  readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };
   readonly uniqueIncrementer: number;
   readonly userData: FirestoreNestedUserData;
@@ -119,7 +120,7 @@ export type AppCourse = {
   readonly number: string;
   readonly name: string;
   readonly description: string;
-  credits: number;
+  readonly credits: number;
   readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[];
   readonly prereqs: string;
@@ -128,17 +129,17 @@ export type AppCourse = {
   readonly instructors: readonly string[];
   readonly distributions: readonly string[];
   readonly lastRoster: string;
-  color: string;
-  check: boolean;
+  readonly color: string;
+  readonly check: boolean;
   uniqueID: number;
-  isReqCourse: boolean;
+  readonly isReqCourse: boolean;
 };
 
 export type AppSemester = {
-  courses: readonly AppCourse[];
+  readonly courses: readonly AppCourse[];
   id: number;
-  type: FirestoreSemesterType;
-  year: number;
+  readonly type: FirestoreSemesterType;
+  readonly year: number;
 };
 
 export type AppBottomBarCourse = {
@@ -160,6 +161,9 @@ export type AppBottomBarCourse = {
   readonly description: string;
   readonly uniqueID: number;
 };
+
+// map from requirement ID to option chosen
+export type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 
 /**
  * Creates credit range based on course

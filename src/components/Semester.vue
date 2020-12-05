@@ -182,14 +182,27 @@ export default Vue.extend({
     id: Number,
     type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>,
     year: Number,
-    courses: Array as PropType<AppCourse[]>,
+    courses: Array as PropType<readonly AppCourse[]>,
     compact: Boolean,
     activatedCourse: Object as PropType<AppCourse>,
     duplicatedCourseCodeList: Array as PropType<readonly string[]>,
     semesters: Array as PropType<readonly AppSemester[]>,
     isFirstSem: Boolean,
   },
-
+  watch: {
+    courses: {
+      handler() {
+        this.$emit(
+          'edit-semester',
+          this.id,
+          (semester: AppSemester): AppSemester => ({
+            ...semester,
+            courses: this.courses,
+          })
+        );
+      },
+    },
+  },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
     // @ts-ignore
@@ -304,7 +317,14 @@ export default Vue.extend({
         this.$emit('add-course-to-semester', season, year, newCourse);
         confirmationMsg = `Added ${courseCode} to ${season} ${year}`;
       } else {
-        this.courses.push(newCourse);
+        this.$emit(
+          'edit-semester',
+          this.id,
+          (semester: AppSemester): AppSemester => ({
+            ...semester,
+            courses: [...this.courses, newCourse],
+          })
+        );
         confirmationMsg = `Added ${courseCode} to ${this.type} ${this.year}`;
       }
       this.openConfirmationModal(confirmationMsg);
@@ -315,12 +335,6 @@ export default Vue.extend({
       });
     },
     deleteCourse(subject: string, number: string, uniqueID: number) {
-      for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].uniqueID === uniqueID) {
-          this.courses.splice(i, 1);
-          break;
-        }
-      }
       const courseCode = `${subject} ${number}`;
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
       this.$gtag.event('delete-course', {
@@ -329,27 +343,41 @@ export default Vue.extend({
         value: 1,
       });
       // Update requirements menu
-      this.$emit('update-requirements-menu');
+      this.$emit(
+        'edit-semester',
+        this.id,
+        (semester: AppSemester): AppSemester => ({
+          ...semester,
+          courses: this.courses.filter(course => course.uniqueID !== uniqueID),
+        })
+      );
     },
     colorCourse(color: string, uniqueID: number) {
-      for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].uniqueID === uniqueID) {
-          this.courses[i].color = color;
-          break;
-        }
-      }
+      this.$emit(
+        'edit-semester',
+        this.id,
+        (semester: AppSemester): AppSemester => ({
+          ...semester,
+          courses: this.courses.map(course =>
+            course.uniqueID === uniqueID ? { ...course, color } : course
+          ),
+        })
+      );
     },
     updateBar(course: AppCourse, colorJustChanged: string, color: string) {
       this.$emit('updateBar', course, colorJustChanged, color);
     },
     editCourseCredit(credit: number, uniqueID: number) {
-      for (let i = 0; i < this.courses.length; i += 1) {
-        if (this.courses[i].uniqueID === uniqueID) {
-          this.courses[i].credits = credit;
-          break;
-        }
-      }
-      this.$emit('update-requirements-menu');
+      this.$emit(
+        'edit-semester',
+        this.id,
+        (semester: AppSemester): AppSemester => ({
+          ...semester,
+          courses: this.courses.map(course =>
+            course.uniqueID === uniqueID ? { ...course, credits: credit } : course
+          ),
+        })
+      );
     },
     dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
@@ -416,8 +444,16 @@ export default Vue.extend({
 
       this.isEditSemesterOpen = true;
     },
-    editSemester(seasonInput: string, yearInput: string) {
-      this.$emit('edit-semester', this.deleteSemID, seasonInput, yearInput);
+    editSemester(seasonInput: 'Fall' | 'Spring' | 'Winter' | 'Summer', yearInput: number) {
+      this.$emit(
+        'edit-semester',
+        this.deleteSemID,
+        (oldSemester: AppSemester): AppSemester => ({
+          ...oldSemester,
+          type: seasonInput,
+          year: yearInput,
+        })
+      );
     },
   },
   directives: {

@@ -20,6 +20,7 @@
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :semesters="semesters"
+          :toggleableRequirementChoices="toggleableRequirementChoices"
           :user="user"
           :key="requirementsKey"
           :startTour="startTour"
@@ -27,6 +28,7 @@
           @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
           @chooseToggleableRequirementOption="recomputeRequirements"
+          @on-toggleable-requirement-choices-change="chooseToggleableRequirementOption"
         />
       </div>
       <semesterview
@@ -40,6 +42,7 @@
         :isMobile="isMobile"
         :currSemID="currSemID"
         @compact-updated="compactVal = $event"
+        @edit-semesters="editSemesters"
         @updateBar="updateBar"
         @close-bar="closeBar"
         @updateRequirementsMenu="updateRequirementsMenu"
@@ -117,6 +120,7 @@ import {
   firestoreCourseToAppCourse,
   firestoreSemestersToAppSemesters,
   createAppUser,
+  AppToggleableRequirementChoices,
 } from '@/user-data';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { RequirementMap, computeRequirements } from '@/requirements/reqs-functions';
@@ -148,6 +152,7 @@ export default Vue.extend({
       semesters: [] as AppSemester[],
       firebaseSems: [] as FirestoreSemester[],
       currentClasses: [] as AppCourse[],
+      toggleableRequirementChoices: {} as AppToggleableRequirementChoices,
       user: {
         major: [],
         majorFN: [],
@@ -188,7 +193,6 @@ export default Vue.extend({
         class = "emoji-text" alt = "surf">`,
       congratsExit: '',
       congratsButtonText: 'Start Planning',
-      toggleableRequirementChoices: {},
       reqs: [] as readonly SingleMenuRequirement[],
     };
   },
@@ -223,6 +227,8 @@ export default Vue.extend({
               firestoreUserData.subjectColors
             );
             this.currSemID += this.semesters.length;
+            this.toggleableRequirementChoices =
+              firestoreUserData.toggleableRequirementChoices || {};
 
             this.firebaseSems = firestoreUserData.semesters as FirestoreSemester[];
             this.user = this.parseUserData(firestoreUserData.userData, firestoreUserData.name);
@@ -253,6 +259,16 @@ export default Vue.extend({
         });
     },
 
+    editSemesters(newSemesters: AppSemester[]) {
+      this.semesters = newSemesters;
+      this.updateRequirementsMenu();
+    },
+    chooseToggleableRequirementOption(
+      toggleableRequirementChoices: AppToggleableRequirementChoices
+    ) {
+      this.toggleableRequirementChoices = toggleableRequirementChoices;
+      this.getDocRef().update({ toggleableRequirementChoices });
+    },
     resizeEventHandler(e: any) {
       this.isMobile = window.innerWidth <= 440;
       this.isTablet = window.innerWidth <= 878;
@@ -541,6 +557,7 @@ export default Vue.extend({
       const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,
+        toggleableRequirementChoices: this.toggleableRequirementChoices,
         semesters: this.firebaseSems,
         subjectColors: this.subjectColors,
         uniqueIncrementer: this.uniqueIncrementer,
