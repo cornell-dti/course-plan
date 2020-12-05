@@ -173,7 +173,7 @@ export default Vue.extend({
   display: flex;
   flex-direction: row;
   background-color: $white;
-  box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
+  box-shadow: 0px 0px 10px 4px $boxShadowGray;
   position: relative;
   height: 5.625rem;
 
@@ -241,6 +241,7 @@ export default Vue.extend({
       margin-bottom: 0;
       margin-top: 0;
       margin-right: 0.5rem;
+      margin-left: 0.5rem;
     }
   }
 
