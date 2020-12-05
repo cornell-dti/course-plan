@@ -153,8 +153,8 @@ export default Vue.extend({
     turnCompleted(bool: boolean) {
       this.displayCompleted = bool;
     },
-    deleteCourseFromSemesters(subject: string, number: string, uniqueId: number) {
-      this.$emit('deleteCourseFromSemesters', subject, number, uniqueId);
+    deleteCourseFromSemesters(uniqueId: number) {
+      this.$emit('deleteCourseFromSemesters', uniqueId);
     },
   },
 });

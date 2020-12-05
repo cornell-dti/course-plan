@@ -131,13 +131,10 @@ export default Vue.extend({
       this.color = this.transferCreditColor;
       this.courseSubject = crseTaken.subject;
       this.courseNumber = crseTaken.number;
-      this.courseUniqueId = crseTaken.courseId;
     },
     onReset() {
       this.$emit(
         'deleteCourseFromSemesters',
-        this.courseSubject,
-        this.courseNumber,
         this.courseUniqueId
       );
     },
