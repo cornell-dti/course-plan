@@ -9,7 +9,10 @@
           /></span>
           {{ courseLabel }}
         </div>
-        <div class="completed-reqCourses-course-heading-reset-button reqCourse-button">
+        <div
+          class="completed-reqCourses-course-heading-reset-button reqCourse-button"
+          @click="onReset"
+        >
           {{ resetText }}
         </div>
       </div>
@@ -125,6 +128,9 @@ export default Vue.extend({
       this.color = this.transferCreditColor;
       this.courseSubject = crseTaken.subject;
       this.courseNumber = crseTaken.number;
+    },
+    onReset() {
+      this.$emit('deleteCourseFromSemesters', this.courseSubject, this.courseSubject);
     },
   },
 });

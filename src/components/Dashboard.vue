@@ -27,6 +27,7 @@
           @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
           @on-toggleable-requirement-choices-change="chooseToggleableRequirementOption"
+          @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
       <semesterview
@@ -635,6 +636,14 @@ export default Vue.extend({
     naIfEmptyStringArray(arr: readonly string[]) {
       return arr && arr.length !== 0 && arr[0] !== '' ? arr : ['N/A'];
     },
+
+    deleteCourseFromSemesters(subject: string, number: string) {
+      const updatedSemesters = this.semesters.map((semester) => {
+        const coursesWithoutDeleted = semester.courses.filter((course) => course.subject !== subject && course.number !== number);
+        return {...semester, courses: coursesWithoutDeleted};
+      });
+      this.editSemesters(updatedSemesters);
+    }
   },
 });
 </script>

@@ -34,6 +34,7 @@
             :semesters="semesters"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
+            @deleteCourseFromSemesters="deleteCourseFromSemesters"
           />
           <div class="separator"></div>
         </div>
@@ -68,6 +69,7 @@
               :semesters="semesters"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @onShowAllCourses="onShowAllCourses"
+              @deleteCourseFromSemesters="deleteCourseFromSemesters"
             />
           </div>
         </div>
@@ -151,6 +153,9 @@ export default Vue.extend({
     turnCompleted(bool: boolean) {
       this.displayCompleted = bool;
     },
+    deleteCourseFromSemesters(subject: string, number: string) {
+      this.$emit('deleteCourseFromSemesters', subject, number);
+    }
   },
 });
 </script>
