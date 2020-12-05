@@ -82,10 +82,7 @@ import {
   CourseTaken,
   SingleMenuRequirement,
 } from '@/requirements/types';
-import {
-  RequirementMap,
-  computeRequirementMap,
-} from '@/requirements/reqs-functions';
+import { RequirementMap, computeRequirementMap } from '@/requirements/reqs-functions';
 import {
   AppUser,
   AppMajor,
@@ -144,7 +141,7 @@ export default Vue.extend({
     user: Object as PropType<AppUser>,
     compact: Boolean,
     startTour: Boolean,
-    reqs: Array as PropType<readonly SingleMenuRequirement[]>
+    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },
   data(): Data {
     return {

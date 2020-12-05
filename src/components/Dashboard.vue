@@ -122,7 +122,6 @@ import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import { RequirementMap, computeRequirements } from '@/requirements/reqs-functions';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 
-
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
@@ -190,7 +189,7 @@ export default Vue.extend({
       congratsExit: '',
       congratsButtonText: 'Start Planning',
       toggleableRequirementChoices: {},
-      reqs: [] as readonly SingleMenuRequirement[]
+      reqs: [] as readonly SingleMenuRequirement[],
     };
   },
   created() {
