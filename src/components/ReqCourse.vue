@@ -7,7 +7,7 @@
     <div
       v-if="!isCompletedReqCourse"
       class="reqcourse-color"
-      :style="cssVars"
+      :style="courseColorCSSvar"
       :class="{ 'reqcourse-color--min': compact }"
     >
       <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
@@ -15,18 +15,14 @@
     <div :class="{ 'reqcourse-content--min': compact }" class="reqcourse-content">
       <div :class="{ 'reqcourse-main--min': compact }" class="reqcourse-main">
         <div :class="{ 'reqcourse-top--min': compact }" class="reqcourse-top">
-          <div :class="{ 'reqcourse-code--min': compact }" class="reqcourse-code">
+          <div
+            :class="{ 'reqcourse-code--min': compact }"
+            :title="courseCodeLabel"
+            class="reqcourse-code"
+          >
             {{ courseCodeLabel }}
           </div>
         </div>
-        <!-- TODO: Revisit if we want this component for Incomplete Req Courses-->
-        <!-- <div v-if="!compact" class="reqcourse-name">{{ name }}</div>
-        <div class="reqcourse-info">
-          <span v-if="!compact" class="reqcourse-credits">{{ creditString }}</span>
-          <span v-if="!compact && semesterString" class="reqcourse-semesters">{{
-            semesterString
-          }}</span>
-        </div> -->
       </div>
     </div>
   </div>
@@ -50,7 +46,7 @@ export default Vue.extend({
         '--border-color': `#${this.color}`,
       };
     },
-    cssVars(): any {
+    courseColorCSSvar(): any {
       return {
         '--bg-color': `#${this.color}`,
       };
@@ -71,7 +67,7 @@ export default Vue.extend({
   display: flex;
   flex-direction: row;
   background-color: $white;
-  box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
+  box-shadow: 0px 0px 10px 4px $boxShadowGray;
   position: relative;
   height: 5.625rem;
 
@@ -119,6 +115,7 @@ export default Vue.extend({
       margin-bottom: 0;
       margin-top: 0;
       margin-right: 0.5rem;
+      margin-left: 0.5rem;
     }
   }
 
@@ -141,6 +138,10 @@ export default Vue.extend({
 
     &--min {
       color: $primaryGray;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 0.5rem;
     }
   }
 }
