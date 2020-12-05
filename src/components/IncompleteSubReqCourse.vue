@@ -1,6 +1,7 @@
 <template>
   <div class="incompletesubreqcourse">
     <div class="draggable-requirements-wrapper" v-if="displayDescription">
+      <div id="incompleteSeparator" class="separator"></div>
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
         <div
@@ -36,7 +37,6 @@
       <div v-if="subReq.fulfilledBy === 'self-check'">
         <addcoursebutton :compact="true" :shouldClearPadding="true" @click="onAddCourse" />
       </div>
-      <div class="separator"></div>
     </div>
   </div>
 </template>
@@ -46,16 +46,16 @@ import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
 import Course from '@/components/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
-import { DisplayableRequirementFulfillment } from '@/requirements/types';
+import {
+  DisplayableRequirementFulfillment,
+  CourseTaken,
+  SubReqCourseSlot,
+  CrseInfo,
+} from '@/requirements/types';
 import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('course', Course);
 Vue.component('addcoursebutton', AddCourseButton);
-
-type CrseInfo = {
-  roster: string;
-  crseIds: number[];
-};
 
 type Data = {
   courseObjects: AppCourse[];
@@ -90,7 +90,7 @@ export default Vue.extend({
     subReqCourseId: Number,
     crseInfoObjects: Array as PropType<CrseInfo[]>,
     subReqFetchedCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
-    subReqCoursesNotTakenArray: Array as PropType<CrseInfo[][]>,
+    subReqCoursesArray: Array as PropType<SubReqCourseSlot[]>,
     dataReady: Boolean,
     displayDescription: Boolean,
     lastLoadedShowAllCourseId: Number,
@@ -149,7 +149,7 @@ export default Vue.extend({
     onShowAllCourses(courses: AppCourse[]) {
       this.$emit('onShowAllCourses', {
         requirementName: this.subReq.requirement.name,
-        subReqCoursesArray: this.subReqCoursesNotTakenArray,
+        subReqCoursesArray: this.subReqCoursesArray,
       });
     },
     onAddCourse() {
@@ -171,12 +171,13 @@ export default Vue.extend({
 
 .draggable-requirements {
   &-wrapper {
-    margin-top: 2%;
-    margin-bottom: 2%;
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
   }
   &-heading {
     display: flex;
     justify-content: space-between;
+    margin-top: 0.2rem;
     &-label {
       font-size: 14px;
       line-height: 17px;
@@ -186,7 +187,7 @@ export default Vue.extend({
       font-size: 12px;
       line-height: 15px;
       color: $yuxuanBlue;
-      padding: 1%;
+      padding: 0.2rem;
       cursor: pointer;
     }
   }
@@ -195,15 +196,15 @@ export default Vue.extend({
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-left: -1%;
-    margin-bottom: 2%;
+    margin-left: -0.2rem;
+    margin-bottom: 0.2rem;
     width: 100%;
   }
 }
 
 .requirements {
   &-courseWrapper {
-    padding: 1%;
+    padding: 0.2rem;
     max-width: 50%;
   }
   &-course {
