@@ -638,12 +638,14 @@ export default Vue.extend({
     },
 
     deleteCourseFromSemesters(subject: string, number: string) {
-      const updatedSemesters = this.semesters.map((semester) => {
-        const coursesWithoutDeleted = semester.courses.filter((course) => course.subject !== subject && course.number !== number);
-        return {...semester, courses: coursesWithoutDeleted};
+      const updatedSemesters = this.semesters.map(semester => {
+        const coursesWithoutDeleted = semester.courses.filter(
+          course => course.subject !== subject && course.number !== number
+        );
+        return { ...semester, courses: coursesWithoutDeleted };
       });
       this.editSemesters(updatedSemesters);
-    }
+    },
   },
 });
 </script>

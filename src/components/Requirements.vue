@@ -384,7 +384,7 @@ export default Vue.extend({
     },
     deleteCourseFromSemesters(subject: string, number: string) {
       this.$emit('deleteCourseFromSemesters', subject, number);
-    }
+    },
   },
 });
 </script>

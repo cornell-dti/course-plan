@@ -45,12 +45,12 @@ export default Vue.extend({
     compact: Boolean,
   },
   computed: {
-    borderColorCSSvar() : any {
+    borderColorCSSvar(): any {
       return {
         '--border-color': `#${this.color}`,
       };
     },
-    cssVars() : any {
+    cssVars(): any {
       return {
         '--bg-color': `#${this.color}`,
       };
