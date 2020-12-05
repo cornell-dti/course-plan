@@ -66,6 +66,7 @@
           :duplicatedCourseCodeList="duplicatedCourseCodeList"
           :semesters="semesters"
           :isFirstSem="checkIfFirstSem(sem.id)"
+          :reqs="reqs"
           @updateBar="updateBar"
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
@@ -115,6 +116,7 @@ import {
   FirestoreSemesterCourse,
   FirestoreSemesterType,
 } from '@/user-data';
+import { SingleMenuRequirement } from '@/requirements/types';
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
@@ -140,6 +142,7 @@ export default Vue.extend({
     isBottomBarExpanded: Boolean,
     isMobile: Boolean,
     startTour: Boolean,
+    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },
   data() {
     return {

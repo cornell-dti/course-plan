@@ -40,6 +40,7 @@
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
         :currSemID="currSemID"
+        :reqs="reqs"
         @compact-updated="compactVal = $event"
         @edit-semesters="editSemesters"
         @updateBar="updateBar"

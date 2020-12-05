@@ -86,11 +86,12 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import coursesJSON from '../../assets/courses/courses.json';
 import EditRequirement from '@/components/EditRequirement.vue';
 import BinaryButton from '@/components/BinaryButton.vue';
+import { SingleMenuRequirement } from '@/requirements/types';
 
 Vue.component('editRequirement', EditRequirement);
 Vue.component('binaryButton', BinaryButton);
@@ -109,6 +110,7 @@ export default Vue.extend({
     year: Number,
     goBack: Boolean,
     isCourseModelSelectingSemester: Boolean,
+    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },
   data() {
     return {
@@ -160,12 +162,12 @@ export default Vue.extend({
     closeCourseModal() {
       this.$emit('close-course-modal');
     },
-    autocomplete(inp, courses) {
+    autocomplete(inp, courses: object) {
       /* the autocomplete function takes two arguments,
       @inp: input
       @courses: object of courses from JSON
       */
-      let currentFocus;
+      let currentFocus : number;
       const inpCopy = inp;
       function removeActive(x) {
         /* a function to remove the "active" class from all autocomplete items: */
@@ -302,7 +304,7 @@ export default Vue.extend({
       this.selected = false;
       this.selectedCourse = '';
     },
-    updateSemProps(season, year) {
+    updateSemProps(season: string, year: number) {
       this.$emit('updateSemProps', season, year);
     },
   },

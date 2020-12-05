@@ -13,6 +13,7 @@
       ref="modal"
       :seasonCourse="type"
       :yearCourse="year"
+      :reqs="reqs"
     />
     <confirmation
       class="confirmation-modal"
@@ -130,6 +131,7 @@ import AddCourseButton from '@/components/AddCourseButton.vue';
 
 import { clickOutside } from '@/utilities';
 import { AppCourse, AppSemester } from '@/user-data';
+import { SingleMenuRequirement } from '@/requirements/types';
 
 Vue.component('course', Course);
 Vue.component('modal', Modal);
@@ -188,6 +190,7 @@ export default Vue.extend({
     duplicatedCourseCodeList: Array as PropType<readonly string[]>,
     semesters: Array as PropType<readonly AppSemester[]>,
     isFirstSem: Boolean,
+    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },
   watch: {
     courses: {

@@ -21,6 +21,7 @@
         :season="season"
         :year="year"
         :goBack="goBack"
+        :reqs="reqs"
       ></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" @click="backOrCancel">{{ leftButton }}</button>
@@ -36,11 +37,12 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import NewCourse from '@/components/Modals/NewCourse.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
+import { SingleMenuRequirement } from '@/requirements/types';
 
 Vue.component('newCourse', NewCourse);
 Vue.component('newSemester', NewSemester);
@@ -64,6 +66,7 @@ export default Vue.extend({
     currentSemesters: Array,
     isOpen: Boolean,
     isCourseModelSelectingSemester: Boolean,
+    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },
   computed: {
     contentId() {
@@ -93,7 +96,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    disableButton(bool) {
+    disableButton(bool: boolean) {
       this.isDisabled = bool;
     },
     closeCourseModal() {
@@ -192,7 +195,7 @@ export default Vue.extend({
         this.closeCurrentModal();
       }
     },
-    updateSemProps(season, year) {
+    updateSemProps(season : string, year : number) {
       this.season = season;
       this.year = year;
     },
