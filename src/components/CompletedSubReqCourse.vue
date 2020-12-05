@@ -133,10 +133,7 @@ export default Vue.extend({
       this.courseNumber = crseTaken.number;
     },
     onReset() {
-      this.$emit(
-        'deleteCourseFromSemesters',
-        this.courseUniqueId
-      );
+      this.$emit('deleteCourseFromSemesters', this.courseUniqueId);
     },
   },
 });
