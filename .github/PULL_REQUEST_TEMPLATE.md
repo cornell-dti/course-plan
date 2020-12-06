@@ -18,8 +18,9 @@ This pull request is the first step towards implementing feature Foo
 
 <!--- List any important or subtle points, future considerations, or other items of note. -->
 
-### Breaking Changes  <!-- Optional -->
+### Breaking Changes <!-- Optional -->
 
 <!-- Keep items that apply: -->
+
 - Database schema change (anything that changes Firestore collection structure)
 - Other change that could cause problems (Detailed in notes)
