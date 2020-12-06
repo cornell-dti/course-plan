@@ -17,9 +17,7 @@
     </div>
     <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
     <div v-if="isCourseModelSelectingSemester && !selected">
-      <div class="newCourse-title">
-        Add this class to the following semester
-      </div>
+      <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
         <newSemester
           :type="season"
@@ -35,19 +33,13 @@
         <div class="newCourse-text">Selected Semester</div>
         <div class="newCourse-semester">
           <span class="newCourse-name">
-            <img
-              class="newCourse-season-emoji"
-              :src="seasonImg[season]"
-              alt=""
-            />
+            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="" />
             {{ season }}
             {{ year }}
           </span>
         </div>
       </div>
-      <div class="newCourse-title">
-        This class fulfills the following requirement(s):
-      </div>
+      <div class="newCourse-title">This class fulfills the following requirement(s):</div>
       <div v-if="!editMode" class="newCourse-requirements-container">
         <div
           class="newCourse-requirements"
@@ -135,9 +127,7 @@ export default Vue.extend({
       selected: false,
       requirements: ['DummyReq1', 'DummyReq2'],
       potentialReqs: ['PotentialReq1', 'PotentialReq2'],
-      binaryPotentialReqs: [
-        ['Technical Communication', 'External Specialization'],
-      ],
+      binaryPotentialReqs: [['Technical Communication', 'External Specialization']],
       editMode: false,
       selectedCourse: '',
       selectorSemesterId: '',
@@ -172,10 +162,7 @@ export default Vue.extend({
     input.value = '';
     input.focus();
 
-    this.autocomplete(
-      document.getElementById(`dropdown-${this.semesterID}`),
-      coursesJSON
-    );
+    this.autocomplete(document.getElementById(`dropdown-${this.semesterID}`), coursesJSON);
   },
   methods: {
     closeCourseModal() {
@@ -243,10 +230,7 @@ export default Vue.extend({
               };
               if (attr.toUpperCase().includes(val) && attr !== 'lastScanned') {
                 code.push(result);
-              } else if (
-                courses[attr].t &&
-                courses[attr].t.toUpperCase().includes(val)
-              ) {
+              } else if (courses[attr].t && courses[attr].t.toUpperCase().includes(val)) {
                 title.push(result);
               }
             }
@@ -336,8 +320,7 @@ export default Vue.extend({
       this.$emit('updateSemProps', season, year);
     },
     addCourse() {
-      if (this.$refs[`dropdown-${this.semesterID}`].value)
-        this.$emit('addItem', this.semesterID);
+      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     },
     onboardingStyle(placeholderText, isOnboard) {
       if (!isOnboard) {
