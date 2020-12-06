@@ -32,6 +32,7 @@
           @activateMajor="activateMajor"
           @activateMinor="activateMinor"
           @onShowAllCourses="onShowAllCourses"
+          @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
     </div>
@@ -380,6 +381,9 @@ export default Vue.extend({
       this.shouldShowAllCourses = false;
       this.showAllCourses = { name: '', courses: [] };
       this.showAllSubReqCourses = [];
+    },
+    deleteCourseFromSemesters(uniqueId: number) {
+      this.$emit('deleteCourseFromSemesters', uniqueId);
     },
   },
 });

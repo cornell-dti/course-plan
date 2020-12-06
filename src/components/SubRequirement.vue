@@ -81,6 +81,7 @@
               :subReqCourseId="id"
               :crsesTaken="subReqCourseSlot.courses"
               :semesters="semesters"
+              @deleteCourseFromSemesters="deleteCourseFromSemesters"
             />
           </div>
           <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
@@ -330,6 +331,9 @@ export default Vue.extend({
         .catch(error => {
           console.log('FetchCourses() Error: ', error);
         });
+    },
+    deleteCourseFromSemesters(uniqueId: number) {
+      this.$emit('deleteCourseFromSemesters', uniqueId);
     },
   },
 });
