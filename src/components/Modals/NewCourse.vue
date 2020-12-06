@@ -17,7 +17,9 @@
     </div>
     <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
     <div v-if="isCourseModelSelectingSemester && !selected">
-      <div class="newCourse-title">Add this class to the following semester</div>
+      <div class="newCourse-title">
+        Add this class to the following semester
+      </div>
       <div class="newCourse-semester-edit">
         <newSemester
           :type="season"
@@ -33,12 +35,19 @@
         <div class="newCourse-text">Selected Semester</div>
         <div class="newCourse-semester">
           <span class="newCourse-name">
-            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
+            <img
+              class="newCourse-season-emoji"
+              :src="seasonImg[season]"
+              alt=""
+            />
+            {{ season }}
             {{ year }}
           </span>
         </div>
       </div>
-      <div class="newCourse-title">This class fulfills the following requirement(s):</div>
+      <div class="newCourse-title">
+        This class fulfills the following requirement(s):
+      </div>
       <div v-if="!editMode" class="newCourse-requirements-container">
         <div
           class="newCourse-requirements"
@@ -126,7 +135,9 @@ export default Vue.extend({
       selected: false,
       requirements: ['DummyReq1', 'DummyReq2'],
       potentialReqs: ['PotentialReq1', 'PotentialReq2'],
-      binaryPotentialReqs: [['Technical Communication', 'External Specialization']],
+      binaryPotentialReqs: [
+        ['Technical Communication', 'External Specialization'],
+      ],
       editMode: false,
       selectedCourse: '',
       selectorSemesterId: '',
@@ -150,8 +161,10 @@ export default Vue.extend({
       return 'Search Course Roster';
     },
     placeholder() {
-      return this.placeholderText !== 'Select one' ? this.placeholderText : '"CS110", "Multivariable Calculus", etc';
-    }
+      return this.placeholderText !== 'Select one'
+        ? this.placeholderText
+        : '"CS110", "Multivariable Calculus", etc';
+    },
   },
   mounted() {
     // Activate focus and set input to empty
@@ -159,7 +172,10 @@ export default Vue.extend({
     input.value = '';
     input.focus();
 
-    this.autocomplete(document.getElementById(`dropdown-${this.semesterID}`), coursesJSON);
+    this.autocomplete(
+      document.getElementById(`dropdown-${this.semesterID}`),
+      coursesJSON
+    );
   },
   methods: {
     closeCourseModal() {
@@ -221,10 +237,16 @@ export default Vue.extend({
 
           for (const attr in courses) {
             if (courses[attr]) {
-              const result = { title: `${attr}: ${courses[attr].t}`, roster: courses[attr].r };
+              const result = {
+                title: `${attr}: ${courses[attr].t}`,
+                roster: courses[attr].r,
+              };
               if (attr.toUpperCase().includes(val) && attr !== 'lastScanned') {
                 code.push(result);
-              } else if (courses[attr].t && courses[attr].t.toUpperCase().includes(val)) {
+              } else if (
+                courses[attr].t &&
+                courses[attr].t.toUpperCase().includes(val)
+              ) {
                 title.push(result);
               }
             }
@@ -314,14 +336,17 @@ export default Vue.extend({
       this.$emit('updateSemProps', season, year);
     },
     addCourse() {
-      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
+      if (this.$refs[`dropdown-${this.semesterID}`].value)
+        this.$emit('addItem', this.semesterID);
     },
     onboardingStyle(placeholderText, isOnboard) {
       if (!isOnboard) {
         return 'newCourse-dropdown';
       }
-      return placeholderText !== 'Select one' ? 'newCourse-onboarding' : 'newCourse-onboardingEmpty';
-    }
+      return placeholderText !== 'Select one'
+        ? 'newCourse-onboarding'
+        : 'newCourse-onboardingEmpty';
+    },
   },
 });
 </script>
@@ -372,7 +397,7 @@ export default Vue.extend({
     border-radius: 0px;
     background-color: #ffffff;
     &::placeholder {
-      color: #B6B6B6;
+      color: #b6b6b6;
     }
   }
   &-semester {

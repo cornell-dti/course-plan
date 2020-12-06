@@ -69,7 +69,10 @@
     </tourwindow>
     <div id="dashboard-bottomView">
       <bottombar
-        v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
+        v-if="
+          bottomCourses.length > 0 &&
+          ((!isOpeningRequirements && isTablet) || !isTablet)
+        "
         :bottomCourses="bottomCourses"
         :seeMoreCourses="seeMoreCourses"
         :bottomCourseFocus="bottomBar.bottomCourseFocus"
@@ -173,7 +176,8 @@ export default Vue.extend({
       isMobile: window.innerWidth <= 440,
       maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4,
       welcome: 'Welcome Cornellian!',
-      welcomeBodytext: 'View your college requirements, plan your semesters and courses, and more.',
+      welcomeBodytext:
+        'View your college requirements, plan your semesters and courses, and more.',
       welcomeExit: 'No, I want to skip this',
       welcomeButtonText: 'Start Tutorial',
       welcomeHidden: false,
@@ -220,7 +224,10 @@ export default Vue.extend({
             this.currSemID += this.semesters.length;
 
             this.firebaseSems = firestoreUserData.semesters as FirestoreSemester[];
-            this.user = this.parseUserData(firestoreUserData.userData, firestoreUserData.name);
+            this.user = this.parseUserData(
+              firestoreUserData.userData,
+              firestoreUserData.name
+            );
             this.subjectColors = firestoreUserData.subjectColors;
             this.uniqueIncrementer = firestoreUserData.uniqueIncrementer;
             this.loaded = true;
@@ -284,7 +291,10 @@ export default Vue.extend({
     /**
      * Creates a course on frontend with either user or API data
      */
-    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean): AppCourse {
+    createCourse(
+      course: FirestoreSemesterCourse,
+      isRequirementsCourse: boolean
+    ): AppCourse {
       if (!isRequirementsCourse) {
         this.updateRequirementsMenu();
       }
@@ -321,7 +331,8 @@ export default Vue.extend({
     },
 
     addColor(subject: string) {
-      if (this.subjectColors && this.subjectColors[subject]) return this.subjectColors[subject];
+      if (this.subjectColors && this.subjectColors[subject])
+        return this.subjectColors[subject];
 
       const colors = [
         {
@@ -371,7 +382,8 @@ export default Vue.extend({
 
       // pick a color from unusedColors if there are any
       if (unusedColors.length !== 0) {
-        randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
+        randomColor =
+          unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
         // otherwise pick a color following the random order set by the first 7 subjects
       } else {
         const colorIndex = Object.keys(this.subjectColors).length;
@@ -414,7 +426,9 @@ export default Vue.extend({
         latestSem: course.lastRoster,
         // Array data
         instructors: this.joinOrNAString(course.instructors),
-        distributionCategories: this.cleanCourseDistributionsArray(course.distributions),
+        distributionCategories: this.cleanCourseDistributionsArray(
+          course.distributions
+        ),
         enrollmentInfo: this.joinOrNAString(course.enrollment),
         latestLecInfo: this.naIfEmptyStringArray(course.lectureTimes),
         overallRating: 0,
@@ -447,22 +461,33 @@ export default Vue.extend({
       if (bottomCourseIndex < 0) {
         // Prepending bottomCourse to front of bottom courses array if bottomCourses < this.maxBottomBarTabs
         // Do not add course to bottomCourses if color was only changed
-        if (this.bottomCourses.length < this.maxBottomBarTabs && !colorJustChanged) {
+        if (
+          this.bottomCourses.length < this.maxBottomBarTabs &&
+          !colorJustChanged
+        ) {
           this.bottomCourses.unshift(courseToAdd);
         } else {
           // else check no dupe in seeMoreCourses and add to seeMoreCourses
           for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
             // if colorJustChanged and course already exists in seeMoreCourses, just update course color
-            if (this.seeMoreCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
+            if (
+              this.seeMoreCourses[i].uniqueID === course.uniqueID &&
+              colorJustChanged
+            ) {
               this.seeMoreCourses[i].color = color;
-            } else if (this.seeMoreCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
+            } else if (
+              this.seeMoreCourses[i].uniqueID === course.uniqueID &&
+              !colorJustChanged
+            ) {
               this.seeMoreCourses.splice(i, 1);
             }
           }
           // Do not move courses around from bottomCourses to seeMoreCourses if only color changed
           if (!colorJustChanged) {
             this.bottomCourses.unshift(courseToAdd);
-            this.seeMoreCourses.unshift(this.bottomCourses[this.bottomCourses.length - 1]);
+            this.seeMoreCourses.unshift(
+              this.bottomCourses[this.bottomCourses.length - 1]
+            );
             this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
           }
         }
@@ -473,20 +498,26 @@ export default Vue.extend({
       }
 
       this.getReviews(course.subject, course.number, review => {
-        this.bottomCourses[bottomCourseIndex].overallRating = review.classRating;
-        this.bottomCourses[bottomCourseIndex].difficulty = review.classDifficulty;
+        this.bottomCourses[bottomCourseIndex].overallRating =
+          review.classRating;
+        this.bottomCourses[bottomCourseIndex].difficulty =
+          review.classDifficulty;
         this.bottomCourses[bottomCourseIndex].workload = review.classWorkload;
       });
     },
 
-    getReviews(subject: string, number: string, callback: (review: any) => void) {
-      fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(
-        res => {
-          res.json().then(reviews => {
-            callback(reviews[0]);
-          });
-        }
-      );
+    getReviews(
+      subject: string,
+      number: string,
+      callback: (review: any) => void
+    ) {
+      fetch(
+        `https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`
+      ).then(res => {
+        res.json().then(reviews => {
+          callback(reviews[0]);
+        });
+      });
     },
 
     updateBarTabs() {
@@ -528,8 +559,14 @@ export default Vue.extend({
       this.isOnboarding = true;
     },
 
-    endOnboarding(onboardingData: { userData: FirestoreNestedUserData; name: FirestoreUserName }) {
-      const user = this.parseUserData(onboardingData.userData, onboardingData.name);
+    endOnboarding(onboardingData: {
+      userData: FirestoreNestedUserData;
+      name: FirestoreUserName;
+    }) {
+      const user = this.parseUserData(
+        onboardingData.userData,
+        onboardingData.name
+      );
 
       this.user = user;
       this.loaded = true;
@@ -563,7 +600,10 @@ export default Vue.extend({
     cancelOnboarding() {
       this.isOnboarding = false;
     },
-    parseUserData(data: FirestoreNestedUserData, name: FirestoreUserName): AppUser {
+    parseUserData(
+      data: FirestoreNestedUserData,
+      name: FirestoreUserName
+    ): AppUser {
       const user = createAppUser(data, name);
 
       const transferClasses: any[] = [];
