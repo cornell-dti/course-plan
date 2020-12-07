@@ -14,16 +14,16 @@ type State = {
 const store = new Vuex.Store<State>({
   state: {
     currentUser: null,
-    userProfile: {}
+    userProfile: {},
   },
   actions: {
-    fetchUserProfile({ commit, state }) {}
+    fetchUserProfile({ commit, state }) {},
   },
   mutations: {
     setCurrentUser(state: State, val: firebase.User) {
       state.currentUser = val;
-    }
-  }
+    },
+  },
 });
 
 fb.auth.onAuthStateChanged(user => {
