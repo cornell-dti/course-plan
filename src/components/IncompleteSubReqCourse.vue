@@ -14,7 +14,7 @@
       </div>
       <div
         v-if="!dataReady && crseInfoObjects.length > 0"
-        class="facebook-card loading-requirements-courses"
+        class="loading-requirements-courses"
       >
         <vue-skeleton-loader
           v-for="n in defaultNumberofLoadingCards"
