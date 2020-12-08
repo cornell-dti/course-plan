@@ -12,6 +12,14 @@
           {{ seeAll }}
         </div>
       </div>
+      <div class="facebook-card">
+        <skeleton-loader-vue
+          type="circle"
+          :width="200"
+          :height="200"
+          animation="fade"
+        />
+      </div>
       <div
         v-if="displayCourses && crseInfoObjects.length > 0"
         class="draggable-requirements-courses"
@@ -44,6 +52,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
+import VueSkeletonLoader from 'skeleton-loader-vue';
 import Course from '@/components/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 import {
@@ -54,6 +63,7 @@ import {
 } from '@/requirements/types';
 import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
 
+Vue.component('vue-skeleton-loader', VueSkeletonLoader);
 Vue.component('course', Course);
 Vue.component('addcoursebutton', AddCourseButton);
 
