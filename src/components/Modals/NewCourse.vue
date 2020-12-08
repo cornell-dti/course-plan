@@ -86,7 +86,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue, { PropType } from 'vue';
 import coursesJSON from '../../assets/courses/courses.json';
 import EditRequirement from '@/components/EditRequirement.vue';
@@ -110,7 +110,7 @@ export default Vue.extend({
     year: Number,
     goBack: Boolean,
     isCourseModelSelectingSemester: Boolean,
-    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
+    reqs: Array,
   },
   data() {
     return {
@@ -162,12 +162,12 @@ export default Vue.extend({
     closeCourseModal() {
       this.$emit('close-course-modal');
     },
-    autocomplete(inp, courses: object) {
+    autocomplete(inp, courses) {
       /* the autocomplete function takes two arguments,
       @inp: input
       @courses: object of courses from JSON
       */
-      let currentFocus: number;
+      let currentFocus;
       const inpCopy = inp;
       function removeActive(x) {
         /* a function to remove the "active" class from all autocomplete items: */
@@ -304,9 +304,15 @@ export default Vue.extend({
       this.selected = false;
       this.selectedCourse = '';
     },
-    updateSemProps(season: string, year: number) {
+    updateSemProps(season, year) {
       this.$emit('updateSemProps', season, year);
     },
+    getReqsRelatedToCourse() {
+      // selected course
+      // reqs : array
+      // map/loop through array
+        // ongoing : array
+    }
   },
 });
 </script>

@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue, { PropType } from 'vue';
 import NewCourse from '@/components/Modals/NewCourse.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
@@ -66,7 +66,7 @@ export default Vue.extend({
     currentSemesters: Array,
     isOpen: Boolean,
     isCourseModelSelectingSemester: Boolean,
-    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
+    reqs: Array,
   },
   computed: {
     contentId() {
@@ -96,7 +96,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    disableButton(bool: boolean) {
+    disableButton(bool) {
       this.isDisabled = bool;
     },
     closeCourseModal() {
@@ -195,7 +195,7 @@ export default Vue.extend({
         this.closeCurrentModal();
       }
     },
-    updateSemProps(season: string, year: number) {
+    updateSemProps(season, year) {
       this.season = season;
       this.year = year;
     },
