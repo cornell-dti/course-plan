@@ -27,10 +27,12 @@
           :rostersFromLastTwoYears="rostersFromLastTwoYears"
           :numOfColleges="numOfColleges"
           :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
+          :semesters="semesters"
           @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
           @activateMajor="activateMajor"
           @activateMinor="activateMinor"
           @onShowAllCourses="onShowAllCourses"
+          @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
     </div>
@@ -81,6 +83,8 @@ import {
   BaseRequirement as Requirement,
   CourseTaken,
   SingleMenuRequirement,
+  SubReqCourseSlot,
+  CrseInfo,
 } from '@/requirements/types';
 import {
   RequirementMap,
@@ -108,11 +112,6 @@ Vue.component('requirementview', RequirementView);
 Vue.component('dropdownarrow', DropDownArrow);
 Vue.use(VueCollapse);
 
-type CrseInfo = {
-  roster: string;
-  crseIds: number[];
-};
-
 export type ShowAllCourses = {
   readonly name: string;
   readonly courses: AppCourse[];
@@ -124,7 +123,7 @@ type Data = {
   numOfColleges: number;
   showAllCourses: ShowAllCourses;
   shouldShowAllCourses: boolean;
-  showAllSubReqCourses: CrseInfo[][];
+  showAllSubReqCourses: SubReqCourseSlot[];
   lastLoadedShowAllCourseId: number;
 };
 // emoji for clipboard
@@ -221,31 +220,33 @@ export default Vue.extend({
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>`;
     },
-    getAllCrseInfoFromSemester(subReqCoursesArray: CrseInfo[][]): Promise<AppCourse[]> {
+    getAllCrseInfoFromSemester(subReqCoursesArray: SubReqCourseSlot[]): Promise<AppCourse[]> {
       return new Promise((resolve, reject) => {
         let subReqCrseInfoObjectsToFetch: CrseInfo[] = [];
         // Used to identify index of lastLoadedSeeAll
         const subReqCourses = subReqCoursesArray;
         let coursesCount = 0;
-        subReqCourses.forEach((subReqCourseArray, i) => {
-          const crseInfoFromSemester: CrseInfo[] = [];
-          subReqCourseArray.forEach((crseInfo: CrseInfo) => {
-            const lastLoadedIndexOf = crseInfo.crseIds.indexOf(this.lastLoadedShowAllCourseId);
-            if (lastLoadedIndexOf !== -1) {
-              subReqCrseInfoObjectsToFetch = [];
-              crseInfo.crseIds.splice(0, lastLoadedIndexOf + 1);
-            }
-            if (coursesCount + crseInfo.crseIds.length >= 24) {
-              const remainingCount = 24 - coursesCount;
-              return crseInfoFromSemester.push({
-                ...crseInfo,
-                crseIds: crseInfo.crseIds.slice(0, remainingCount),
-              });
-            }
-            coursesCount += crseInfo.crseIds.length;
-            return crseInfoFromSemester.push(crseInfo);
-          });
-          subReqCrseInfoObjectsToFetch.push(crseInfoFromSemester[0]);
+        subReqCourses.forEach((subReqCourseSlot, i) => {
+          if (!subReqCourseSlot.isCompleted) {
+            const crseInfoFromSemester: CrseInfo[] = [];
+            subReqCourseSlot.courses.forEach((crseInfo: CrseInfo) => {
+              const lastLoadedIndexOf = crseInfo.crseIds.indexOf(this.lastLoadedShowAllCourseId);
+              if (lastLoadedIndexOf !== -1) {
+                subReqCrseInfoObjectsToFetch = [];
+                crseInfo.crseIds.splice(0, lastLoadedIndexOf + 1);
+              }
+              if (coursesCount + crseInfo.crseIds.length >= 24) {
+                const remainingCount = 24 - coursesCount;
+                return crseInfoFromSemester.push({
+                  ...crseInfo,
+                  crseIds: crseInfo.crseIds.slice(0, remainingCount),
+                });
+              }
+              coursesCount += crseInfo.crseIds.length;
+              return crseInfoFromSemester.push(crseInfo);
+            });
+            subReqCrseInfoObjectsToFetch.push(crseInfoFromSemester[0]);
+          }
         });
         const fetchedCourses: AppCourse[] = [];
         FetchCourses({
@@ -268,7 +269,7 @@ export default Vue.extend({
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
-      subReqCoursesArray: CrseInfo[][];
+      subReqCoursesArray: SubReqCourseSlot[];
     }) {
       this.shouldShowAllCourses = true;
       this.showAllSubReqCourses = showAllCourses.subReqCoursesArray;
@@ -303,12 +304,20 @@ export default Vue.extend({
       this.showAllCourses = { name: '', courses: [] };
       this.showAllSubReqCourses = [];
     },
+    deleteCourseFromSemesters(uniqueId: number) {
+      this.$emit('deleteCourseFromSemesters', uniqueId);
+    },
   },
 });
 </script>
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+.separator {
+  height: 1px;
+  width: 100%;
+  background-color: $inactiveGray;
+}
 .requirements,
 .fixed {
   height: 100vh;

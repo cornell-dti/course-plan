@@ -73,21 +73,31 @@
           </div>
         </div>
       </div>
-      <div v-if="!this.isCompleted" class="separator"></div>
-      <div class="incompletesubreqcourse-wrapper" v-if="!this.isFulfilled">
-        <div v-for="(subReqCrseInfoObjects, id) in subReqCoursesNotTakenArray" :key="id">
-          <incompletesubreqcourse
-            :subReq="subReq"
-            :subReqCourseId="id"
-            :crseInfoObjects="subReqCrseInfoObjects"
-            :subReqFetchedCourseObjectsNotTakenArray="subReqFetchedCourseObjectsNotTakenArray"
-            :subReqCoursesNotTakenArray="subReqCoursesNotTakenArray"
-            :dataReady="dataReady"
-            :displayDescription="displayDescription"
-            :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
-            @isDataReady="isDataReady"
-            @onShowAllCourses="onShowAllCourses"
-          />
+      <div v-if="displayDescription" class="subreqcourse-wrapper">
+        <div v-for="(subReqCourseSlot, id) in subReqCoursesArray" :key="id">
+          <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
+            <completedsubreqcourse
+              :subReq="subReq"
+              :subReqCourseId="id"
+              :crsesTaken="subReqCourseSlot.courses"
+              :semesters="semesters"
+              @deleteCourseFromSemesters="deleteCourseFromSemesters"
+            />
+          </div>
+          <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
+            <incompletesubreqcourse
+              :subReq="subReq"
+              :subReqCourseId="id"
+              :crseInfoObjects="subReqCourseSlot.courses"
+              :subReqFetchedCourseObjectsNotTakenArray="subReqFetchedCourseObjectsNotTakenArray"
+              :subReqCoursesArray="subReqCoursesArray"
+              :dataReady="dataReady"
+              :displayDescription="displayDescription"
+              :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
+              @isDataReady="isDataReady"
+              @onShowAllCourses="onShowAllCourses"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -101,10 +111,21 @@ import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
-import { DisplayableRequirementFulfillment, EligibleCourses } from '@/requirements/types';
+import {
+  DisplayableRequirementFulfillment,
+  EligibleCourses,
+  CourseTaken,
+  SubReqCourseSlot,
+  CrseInfo,
+} from '@/requirements/types';
 import { clickOutside } from '@/utilities';
 
-import { FirestoreSemesterCourse, AppCourse, firestoreCourseToAppCourse } from '@/user-data';
+import {
+  FirestoreSemesterCourse,
+  AppCourse,
+  firestoreCourseToAppCourse,
+  AppSemester,
+} from '@/user-data';
 
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
@@ -114,11 +135,6 @@ require('firebase/functions');
 
 const functions = firebase.functions();
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
-
-type CrseInfo = {
-  roster: string;
-  crseIds: number[];
-};
 
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
@@ -140,12 +156,13 @@ export default Vue.extend({
     color: String,
     rostersFromLastTwoYears: Array as PropType<readonly String[]>,
     lastLoadedShowAllCourseId: Number,
+    semesters: Array as PropType<readonly AppSemester[]>,
   },
   watch: {
-    subReqCoursesNotTakenArray: {
+    subReqCoursesArray: {
       immediate: true,
       deep: true,
-      handler(updatedSubReqCoursesNotTakenArray) {
+      handler(updatedSubReqCoursesArray) {
         this.getSubReqCourseObjects();
       },
     },
@@ -171,8 +188,8 @@ export default Vue.extend({
         Object.keys(this.subReq.requirement.fulfillmentOptions)[0]
       );
     },
-    subReqCoursesNotTakenArray(): CrseInfo[][] {
-      return this.generateSubReqCoursesNotTakenArray();
+    subReqCoursesArray(): SubReqCourseSlot[] {
+      return this.generateSubReqCoursesArray();
     },
     subReqProgress(): string {
       return this.subReq.fulfilledBy !== 'self-check'
@@ -223,58 +240,71 @@ export default Vue.extend({
           return this.subReq.requirement.courses;
       }
     },
-    generateSubReqCoursesNotTakenArray(): CrseInfo[][] {
+    generateSubReqCoursesArray(): SubReqCourseSlot[] {
+      const subReqCoursesArray: SubReqCourseSlot[] = [];
+      const subReqCourses = this.getFulfillededByCourses();
+
+      if (subReqCourses === null) return [];
+
+      for (let i = 0; i < this.subReq.courses.length; i += 1) {
+        const subReqCourseSlot = this.subReq.courses[i];
+        if (subReqCourseSlot.length > 0) {
+          subReqCoursesArray.push({ isCompleted: true, courses: subReqCourseSlot });
+        } else {
+          const crseInfoArray = this.generateSubReqIncompleteCrseInfoArray(subReqCourses, i);
+          subReqCoursesArray.push({ isCompleted: false, courses: crseInfoArray });
+        }
+      }
+      return subReqCoursesArray;
+    },
+    generateSubReqIncompleteCrseInfoArray(
+      subReqCourses: readonly EligibleCourses[],
+      subReqCourseIndex: number
+    ): CrseInfo[] {
       const allTakenCourseIds = this.subReq.courses
         .reduce((acc, course) => acc.concat(course), [])
         .map(course => course.courseId);
-      // Reset subReqCoursesNotTakenArray
-      const subReqCoursesNotTakenArray: CrseInfo[][] = [];
-      // Depending on fulfilledBy, subReqCourses is accessed differently from subReq
-      const subReqCourses = this.getFulfillededByCourses();
-      if (subReqCourses == null) return [[]];
+
       const mostRecentRosters = this.rostersFromLastTwoYears;
-      let filteredSubReqRosters;
-      // Iterate over each course slot for the subReq
-      subReqCourses.forEach((subReqCourseRosterObject: EligibleCourses) => {
-        // Filter subreq roster object keys with the mostRecentRosters
-        filteredSubReqRosters = Object.keys(subReqCourseRosterObject)
-          .filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1)
-          .reverse();
+      const subReqCourseRosterObject: EligibleCourses = subReqCourses[subReqCourseIndex];
+      // Filter subreq roster object keys with the mostRecentRosters
+      const filteredSubReqRosters = Object.keys(subReqCourseRosterObject)
+        .filter(subReqRoster => mostRecentRosters.indexOf(subReqRoster) !== -1)
+        .reverse();
 
-        const crseInfoObjects: CrseInfo[] = []; // List of crseInfoObjects {roster: <roster>, crseIds: crseId[]} []
-        const seenCrseIds = new Set(); // So we don't have duplicates
-        filteredSubReqRosters.forEach(subReqRoster => {
-          const subReqCrseIds = subReqCourseRosterObject[subReqRoster].filter(
-            (crseId: number) => !seenCrseIds.has(crseId)
+      const subReqIncompleteCrseInfoArray: CrseInfo[] = [];
+      const seenCrseIds = new Set(); // So we don't have duplicates
+      filteredSubReqRosters.forEach(subReqRoster => {
+        const subReqCrseIds = subReqCourseRosterObject[subReqRoster].filter(
+          (crseId: number) => !seenCrseIds.has(crseId)
+        );
+
+        if (subReqCrseIds.length > 0) {
+          const filteredSubReqCrseIds = subReqCrseIds.filter(
+            crseIds => this.isCompleted || !allTakenCourseIds.includes(crseIds)
           );
-
-          if (subReqCrseIds.length > 0) {
-            const filteredSubReqCrseIds = subReqCrseIds.filter(
-              crseIds => this.isCompleted || !allTakenCourseIds.includes(crseIds)
-            );
-            const crseInfoObject = { roster: subReqRoster, crseIds: filteredSubReqCrseIds };
-            crseInfoObjects.push(crseInfoObject);
-            subReqCrseIds.forEach(subReqCrseId => seenCrseIds.add(subReqCrseId));
-          }
-        });
-        // Push crseInfoObjects onto subReqCoursesNotTakenArray for the subReqCourse slot
-        subReqCoursesNotTakenArray.push(crseInfoObjects);
+          const crseInfoObject = { roster: subReqRoster, crseIds: filteredSubReqCrseIds };
+          subReqIncompleteCrseInfoArray.push(crseInfoObject);
+          subReqCrseIds.forEach(subReqCrseId => seenCrseIds.add(subReqCrseId));
+        }
       });
-      return subReqCoursesNotTakenArray;
+      return subReqIncompleteCrseInfoArray;
     },
     getMaxFirstFourCrseInfoObjects(): CrseInfo[] {
       const subReqCrseInfoObjectsToFetch: CrseInfo[] = [];
-      this.subReqCoursesNotTakenArray.forEach(subReqCourseArray => {
-        let numSeenCrseIds = 0;
-        for (let i = 0; numSeenCrseIds < 4 && i < subReqCourseArray.length; i += 1) {
-          const subReqCrseInfo = subReqCourseArray[i];
-          const numRemainingCourses = Math.min(4 - numSeenCrseIds, subReqCrseInfo.crseIds.length);
+      this.subReqCoursesArray.forEach(subReqCourseArray => {
+        if (!subReqCourseArray.isCompleted) {
+          let numSeenCrseIds = 0;
+          for (let i = 0; numSeenCrseIds < 4 && i < subReqCourseArray.courses.length; i += 1) {
+            const subReqCrseInfo = subReqCourseArray.courses[i];
+            const numRemainingCourses = Math.min(4 - numSeenCrseIds, subReqCrseInfo.crseIds.length);
 
-          subReqCrseInfoObjectsToFetch.push({
-            roster: subReqCrseInfo.roster,
-            crseIds: subReqCrseInfo.crseIds.slice(0, numRemainingCourses),
-          });
-          numSeenCrseIds += numRemainingCourses;
+            subReqCrseInfoObjectsToFetch.push({
+              roster: subReqCrseInfo.roster,
+              crseIds: subReqCrseInfo.crseIds.slice(0, numRemainingCourses),
+            });
+            numSeenCrseIds += numRemainingCourses;
+          }
         }
       });
       return subReqCrseInfoObjectsToFetch;
@@ -301,6 +331,9 @@ export default Vue.extend({
         .catch(error => {
           console.log('FetchCourses() Error: ', error);
         });
+    },
+    deleteCourseFromSemesters(uniqueId: number) {
+      this.$emit('deleteCourseFromSemesters', uniqueId);
     },
   },
 });
@@ -484,7 +517,7 @@ button.view {
     width: 100%;
   }
 }
-.incompletesubreqcourse {
+.subreqcourse {
   &-wrapper {
     width: 100%;
   }

@@ -28,6 +28,7 @@
           @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
           @on-toggleable-requirement-choices-change="chooseToggleableRequirementOption"
+          @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
       <semesterview
@@ -714,6 +715,15 @@ export default Vue.extend({
         return singleMenuRequirement;
       });
       this.reqs = singleMenuRequirements;
+    },
+    deleteCourseFromSemesters(uniqueID: number) {
+      const updatedSemesters = this.semesters.map(semester => {
+        const coursesWithoutDeleted = semester.courses.filter(course => {
+          return course.uniqueID !== uniqueID;
+        });
+        return { ...semester, courses: coursesWithoutDeleted };
+      });
+      this.editSemesters(updatedSemesters);
     },
   },
 });

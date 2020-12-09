@@ -132,7 +132,7 @@ export type AppCourse = {
   readonly color: string;
   readonly check: boolean;
   uniqueID: number;
-  readonly isReqCourse: boolean;
+  isReqCourse: boolean;
 };
 
 export type AppSemester = {
