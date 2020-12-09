@@ -264,9 +264,33 @@ export default {
           },
         ],
         exam: [
-          {}
+          {
+            // unnecessary but required for type check, as this is not ts file yet
+            shown: false,
+            stopClose: false,
+            boxBorder: '',
+            arrowColor: '',
+            placeholderColor: '',
+            placeholder: placeholderText,
+            acronym: '',
+            type: {
+              placeholder: ''
+            },
+            subject: {
+              placeholder: ''
+            },
+            score: {
+              placeholder: ''
+            },
+          }
         ],
-        class: [],
+        class: [
+          { 
+            // unnecessary but required for type check, as this is not ts file yet
+            class: placeholderText, 
+            credits: 0,
+          },
+        ],
       },
       isError: false,
     };
