@@ -20,11 +20,14 @@
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :semesters="semesters"
+          :toggleableRequirementChoices="toggleableRequirementChoices"
           :user="user"
           :key="requirementsKey"
           :startTour="startTour"
           @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
+          @on-toggleable-requirement-choices-change="chooseToggleableRequirementOption"
+          @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
       <semesterview
@@ -116,6 +119,7 @@ import {
   firestoreCourseToAppCourse,
   firestoreSemestersToAppSemesters,
   createAppUser,
+  AppToggleableRequirementChoices,
 } from '@/user-data';
 import { RequirementMap } from '@/requirements/reqs-functions';
 
@@ -145,6 +149,7 @@ export default Vue.extend({
       semesters: [] as AppSemester[],
       firebaseSems: [] as FirestoreSemester[],
       currentClasses: [] as AppCourse[],
+      toggleableRequirementChoices: {} as AppToggleableRequirementChoices,
       user: {
         major: [],
         majorFN: [],
@@ -218,6 +223,8 @@ export default Vue.extend({
               firestoreUserData.subjectColors
             );
             this.currSemID += this.semesters.length;
+            this.toggleableRequirementChoices =
+              firestoreUserData.toggleableRequirementChoices || {};
 
             this.firebaseSems = firestoreUserData.semesters as FirestoreSemester[];
             this.user = this.parseUserData(firestoreUserData.userData, firestoreUserData.name);
@@ -249,6 +256,12 @@ export default Vue.extend({
     editSemesters(newSemesters: AppSemester[]) {
       this.semesters = newSemesters;
       this.updateRequirementsMenu();
+    },
+    chooseToggleableRequirementOption(
+      toggleableRequirementChoices: AppToggleableRequirementChoices
+    ) {
+      this.toggleableRequirementChoices = toggleableRequirementChoices;
+      this.getDocRef().update({ toggleableRequirementChoices });
     },
     resizeEventHandler(e: any) {
       this.isMobile = window.innerWidth <= 440;
@@ -538,6 +551,7 @@ export default Vue.extend({
       const data = {
         name: onboardingData.name,
         userData: onboardingData.userData,
+        toggleableRequirementChoices: this.toggleableRequirementChoices,
         semesters: this.firebaseSems,
         subjectColors: this.subjectColors,
         uniqueIncrementer: this.uniqueIncrementer,
@@ -621,6 +635,16 @@ export default Vue.extend({
 
     naIfEmptyStringArray(arr: readonly string[]) {
       return arr && arr.length !== 0 && arr[0] !== '' ? arr : ['N/A'];
+    },
+
+    deleteCourseFromSemesters(uniqueID: number) {
+      const updatedSemesters = this.semesters.map(semester => {
+        const coursesWithoutDeleted = semester.courses.filter(course => {
+          return course.uniqueID !== uniqueID;
+        });
+        return { ...semester, courses: coursesWithoutDeleted };
+      });
+      this.editSemesters(updatedSemesters);
     },
   },
 });

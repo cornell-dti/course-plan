@@ -78,7 +78,7 @@
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">
-              <img class="checkmark" src="@/assets/images/checkmark-green.svg" />
+              <img class="checkmark" src="@/assets/images/checkmark-onboarding.svg" />
               {{ this.user.tookSwim === 'yes' ? 'Yes' : 'No' }}
             </label>
           </div>
@@ -263,7 +263,9 @@ export default {
             acronym: minorAcronym,
           },
         ],
-        exam: [],
+        exam: [
+          {}
+        ],
         class: [],
       },
       isError: false,

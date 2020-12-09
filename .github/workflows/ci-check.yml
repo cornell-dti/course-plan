@@ -7,9 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Set up Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '10.x'
+        uses: actions/setup-node@v2-beta
       - name: NPM Clean Install
         run: npm ci
       - name: Run Prettier Check

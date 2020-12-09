@@ -166,3 +166,20 @@ export type SingleMenuRequirement = {
   fulfilled?: number;
   required?: number;
 };
+
+export type CrseInfo = {
+  readonly roster: string;
+  crseIds: number[];
+};
+
+export type CompletedSubReqCourseSlot = {
+  readonly isCompleted: true;
+  readonly courses: readonly CourseTaken[];
+};
+
+export type IncompleteSubReqCourseSlot = {
+  readonly isCompleted: false;
+  readonly courses: readonly CrseInfo[];
+};
+
+export type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
