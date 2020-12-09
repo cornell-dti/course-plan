@@ -121,11 +121,12 @@ export default Vue.extend({
         Summer: summer,
       },
       selected: false,
-      requirements: ['DummyReq1', 'DummyReq2'],
-      potentialReqs: ['PotentialReq1', 'PotentialReq2'],
-      binaryPotentialReqs: [['Technical Communication', 'External Specialization']],
+      requirements: [],
+      potentialReqs: [],
+      binaryPotentialReqs: [],
       editMode: false,
       selectedCourse: '',
+      selectedCourseID: -1,
       selectorSemesterId: '',
     };
   },
@@ -218,7 +219,11 @@ export default Vue.extend({
 
           for (const attr in courses) {
             if (courses[attr]) {
-              const result = { title: `${attr}: ${courses[attr].t}`, roster: courses[attr].r };
+              const result = {
+                title: `${attr}: ${courses[attr].t}`,
+                roster: courses[attr].r,
+                id: courses[attr].i,
+              };
               if (attr.toUpperCase().includes(val) && attr !== 'lastScanned') {
                 code.push(result);
               } else if (courses[attr].t && courses[attr].t.toUpperCase().includes(val)) {
@@ -251,9 +256,12 @@ export default Vue.extend({
               /* insert the value for the autocomplete text field: */
               inpCopy.value = newTitle.title;
               inpCopy.name = newTitle.roster;
+              this.selectedCourseID = newTitle.id;
               this.selectedCourse = newTitle.title;
               this.selected = true;
               this.$emit('toggle-left-button');
+              this.getReqsRelatedToCourse();
+
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
@@ -308,11 +316,35 @@ export default Vue.extend({
       this.$emit('updateSemProps', season, year);
     },
     getReqsRelatedToCourse() {
-      // selected course
-      // reqs : array
-      // map/loop through array
-        // ongoing : array
-    }
+      const relatedReqs = [];
+      const potReqs = [];
+      // parse through reqs object
+      for (let i = 0; i < this.reqs.length; i += 1) {
+        const subreqs = this.reqs[i].ongoing;
+        for (let j = 0; j < subreqs.length; j += 1) {
+          // requirements
+          if (subreqs[j].fulfilledBy === 'courses') {
+            const { courses } = subreqs[j].requirement;
+            if (typeof courses !== 'undefined') {
+              for (let k = 0; k < courses.length; k += 1) {
+                for (const [_, ids] of Object.entries(courses[k])) {
+                  if (ids.includes(this.selectedCourseID)) {
+                    relatedReqs.push(subreqs[j].requirement.name);
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          // potential requirements
+          if (subreqs[j].fulfilledBy === 'self-check') {
+            potReqs.push(subreqs[j].requirement.name);
+          }
+          this.requirements = relatedReqs;
+          this.potentialReqs = potReqs;
+        }
+      }
+    },
   },
 });
 </script>
