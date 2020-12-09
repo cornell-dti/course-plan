@@ -57,13 +57,8 @@
         This class could potentially fulfill the following requirement(s):
       </div>
       <div v-if="!editMode" class="newCourse-requirements-container">
-        <div
-          class="newCourse-name"
-          v-for="potreq in potentialReqs"
-          :key="potreq"
-          :class="{ 'newCourse-space': !checkIfLast(potreq, potentialReqs) }"
-        >
-          {{ checkIfLast(potreq, potentialReqs) ? potreq : `${potreq},` }}
+        <div class="newCourse-name">
+          {{ potReqs }}
         </div>
       </div>
       <div v-else class="newCourse-requirements-edit">
@@ -149,6 +144,9 @@ export default Vue.extend({
     },
     placeholder() {
       return this.placeholderText;
+    },
+    potReqs() {
+      return this.potentialReqs.join(', ');
     },
   },
   mounted() {
@@ -318,6 +316,7 @@ export default Vue.extend({
     getReqsRelatedToCourse() {
       const relatedReqs = [];
       const potReqs = [];
+
       // parse through reqs object
       for (let i = 0; i < this.reqs.length; i += 1) {
         const subreqs = this.reqs[i].ongoing;

@@ -1,18 +1,18 @@
 <template>
   <div
     class="edit-requirement"
-    :class="{ 'edit-requirement-selected': selected, 'edit-requirement-pointer': isClickable }"
+    :class="{ 'edit-requirement-selected': isSelected, 'edit-requirement-pointer': isClickable }"
     v-on="isClickable ? { click: () => onClick() } : { click: $event => $event.preventDefault() }"
   >
     <img
-      v-if="selected"
+      v-if="isSelected"
       class="confirmation-icon edit-requirement-check"
       src="../assets/images/check.svg"
     />
     <div class="edit-requirement-text" :class="{ 'edit-requirement-multiline': multiline }">
       {{ name }}
     </div>
-    <img v-if="selected" class="confirmation-icon hidden" src="../assets/images/check.svg" />
+    <img v-if="isSelected" class="confirmation-icon hidden" src="../assets/images/check.svg" />
   </div>
 </template>
 
@@ -25,12 +25,20 @@ export default {
   },
   data() {
     return {
-      multiline: this.selected ? this.name.length >= 24 : this.name.length > 30,
+      isSelected: false,
     };
+  },
+  computed: {
+    multiline() {
+      return this.isSelected ? this.name.length >= 24 : this.name.length > 30;
+    },
+  },
+  mounted() {
+    this.isSelected = this.selected;
   },
   methods: {
     onClick() {
-      this.selected = !this.selected;
+      this.isSelected = !this.isSelected;
     },
   },
 };
