@@ -11,6 +11,7 @@ export type ExamRequirements = {
   };
 };
 export type ExamData = Record<'AP' | 'IB', ExamRequirements[]>;
+export type ReqsData = Record<'AP' | 'IB', { readonly name: string; readonly credits: number }[]>;
 
 export type ExamTaken = {
   readonly subject: string;
@@ -45,7 +46,7 @@ function userDataToCourses(
       const courseEquivalents =
         (exam.fulfillment.courseEquivalents &&
           (exam.fulfillment.courseEquivalents[college] ||
-            exam.fulfillment.courseEquivalents['DEFAULT'])) ||
+            exam.fulfillment.courseEquivalents.DEFAULT)) ||
         [];
       let courseIds: number[]; // [A,B,C] => (A and B and C)
       if (typeof courseEquivalents === 'number') {
@@ -337,10 +338,38 @@ export const examData: ExamData = {
             365785, // STSCI 2150
             360952, // STSCI 2200
           ],
+          AG: [],
           BU: [],
           EN: [],
         },
         minimumScore: 4,
+        credits: 4,
+        majorsExcluded: ['Biological Sciences'],
+      },
+    },
+    {
+      name: 'Statistics',
+      fulfillment: {
+        courseEquivalents: {
+          DEFAULT: [
+            350500, // AEM 2100
+            360952, // BTRY 3010
+            352353, // BTRY 6010
+            350154, // ILRST 2100
+            352353, // ILRST 6100
+            352245, // MATH 1710
+            351485, // PAM 2100
+            363824, // PAM 2101
+            351674, // PSYCH 2500
+            354665, // SOC 3010
+            350154, // STSCI 2100
+            365785, // STSCI 2150
+            360952, // STSCI 2200
+          ],
+          BU: [],
+          EN: [],
+        },
+        minimumScore: 5,
         credits: 4,
       },
     },
