@@ -1,4 +1,4 @@
-import { AppUser } from '@/user-data';
+import { AppUser } from '../../../user-data';
 import { CourseTaken } from '../../types';
 
 export type ExamRequirements = {
