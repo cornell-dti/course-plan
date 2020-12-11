@@ -13,7 +13,10 @@ import Vue from 'vue';
 export default Vue.extend({
   props: {
     compact: Boolean,
-    cautionString: String,
+    cautionString: {
+      type: String,
+      required: true,
+    },
   },
 });
 </script>
