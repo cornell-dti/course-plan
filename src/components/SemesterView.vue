@@ -70,7 +70,6 @@
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
-          @update-requirements-menu="updateRequirementsMenu"
           @open-caution-modal="openCautionModal"
           @add-course-to-semester="addCourseToSemester"
         />
@@ -296,9 +295,6 @@ export default Vue.extend({
         const newSemesters = [...this.semesters, newSem].sort(this.compare);
         this.$emit('edit-semesters', newSemesters);
       }
-    },
-    updateRequirementsMenu() {
-      this.$emit('updateRequirementsMenu');
     },
     compare(a: AppSemester, b: AppSemester): number {
       if (a.type === b.type && a.year === b.year) {
