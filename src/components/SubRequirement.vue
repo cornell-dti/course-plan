@@ -249,7 +249,14 @@ export default Vue.extend({
       for (let i = 0; i < this.subReq.courses.length; i += 1) {
         const subReqCourseSlot = this.subReq.courses[i];
         if (subReqCourseSlot.length > 0) {
-          subReqCoursesArray.push({ isCompleted: true, courses: subReqCourseSlot });
+          subReqCourseSlot.forEach(subReqCourse => {
+            subReqCoursesArray.push({ isCompleted: true, courses: [subReqCourse] });
+          });
+          // Create new IncompletedSubReqCourse slot if all credits or courses not met
+          if (this.subReq.courses.length === 1 && !this.isCompleted) {
+            const crseInfoArray = this.generateSubReqIncompleteCrseInfoArray(subReqCourses, i);
+            subReqCoursesArray.push({ isCompleted: false, courses: crseInfoArray });
+          }
         } else {
           const crseInfoArray = this.generateSubReqIncompleteCrseInfoArray(subReqCourses, i);
           subReqCoursesArray.push({ isCompleted: false, courses: crseInfoArray });
