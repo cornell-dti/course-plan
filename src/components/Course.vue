@@ -41,23 +41,24 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/CourseCaution.vue';
 import { clickOutside } from '@/utilities';
+import { AppCourse } from '@/user-data';
 
 Vue.component('coursemenu', CourseMenu);
 Vue.component('course-caution', CourseCaution);
 
 export default Vue.extend({
   props: {
-    courseObj: Object,
+    courseObj: Object as PropType<AppCourse>,
     subject: String,
     number: String,
     name: String,
     credits: Number,
-    creditRange: Array,
+    creditRange: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
     prereqs: String,
     semesters: Array,
     color: String,
@@ -81,13 +82,13 @@ export default Vue.extend({
     };
   },
   computed: {
-    cautionString() {
+    cautionString(): string | null {
       if (this.duplicatedCourseCodeList == null) return null;
       return this.duplicatedCourseCodeList.includes(`${this.subject} ${this.number}`)
         ? 'Duplicate'
         : null;
     },
-    semesterString() {
+    semesterString(): string {
       let semesterString = '';
       this.semesters.forEach(semester => {
         semesterString += `${semester}, `;
@@ -99,21 +100,21 @@ export default Vue.extend({
       return semesterString;
     },
 
-    creditString() {
+    creditString(): string {
       if (this.credits === 1) {
         return `${this.credits} credit`;
       }
       return `${this.credits} credits`;
     },
-    review() {
+    review(): string {
       return `https://www.cureviews.org/course/${this.subject}/${this.number}`;
     },
 
-    roster() {
+    roster(): string {
       return `https://classes.cornell.edu/browse/roster/FA18/class/${this.subject}/${this.number}`;
     },
 
-    cssVars() {
+    cssVars(): { '--bg-color': string } {
       return {
         '--bg-color': `#${this.color}`,
       };
@@ -135,7 +136,7 @@ export default Vue.extend({
       this.$emit('delete-course', this.subject, this.number, this.uniqueID);
       this.closeMenuIfOpen();
     },
-    colorCourse(color) {
+    colorCourse(color: string) {
       this.$emit('color-course', color, this.uniqueID);
       this.closeMenuIfOpen();
       this.colorJustChanged = true;
@@ -146,7 +147,7 @@ export default Vue.extend({
       }
       this.colorJustChanged = false;
     },
-    editCourseCredit(credit) {
+    editCourseCredit(credit: number) {
       this.$emit('edit-course-credit', credit, this.uniqueID);
       this.closeMenuIfOpen();
     },
