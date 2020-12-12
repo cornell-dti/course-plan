@@ -69,7 +69,14 @@ function userDataToCourses(
             credits: 0,
           });
         });
-        // TODO add courses representing credits (exam.fulfillment.credits)
+        courses.push({
+          roster,
+          courseId: 10,
+          code: `CREDITS ${examType} ${exam.name}`,
+          subject: 'CREDITS',
+          number: exam.fulfillment.credits.toString(),
+          credits: exam.fulfillment.credits,
+        });
       }
     }
   });
@@ -189,8 +196,8 @@ const examData: ExamData = {
       name: 'English Literature and Composition',
       fulfillment: {
         courseEquivalents: {
-          AS: 100000, // FWS
-          EN: 100000, // FWS
+          AS: 11, // FWS
+          EN: 11, // FWS
         },
         minimumScore: 4,
         credits: 3,
@@ -200,8 +207,8 @@ const examData: ExamData = {
       name: 'English Language and Composition',
       fulfillment: {
         courseEquivalents: {
-          AS: 100000, // FWS
-          EN: 100000, // FWS
+          AS: 11, // FWS
+          EN: 11, // FWS
         },
         minimumScore: 4,
         credits: 3,
@@ -435,8 +442,8 @@ const examData: ExamData = {
       name: 'English Literature A',
       fulfillment: {
         courseEquivalents: {
-          AS: 100000, // FWS
-          EN: 100000, // FWS
+          AS: 11, // FWS
+          EN: 11, // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -446,8 +453,8 @@ const examData: ExamData = {
       name: 'English Language and Literature',
       fulfillment: {
         courseEquivalents: {
-          AS: 100000, // FWS
-          EN: 100000, // FWS
+          AS: 11, // FWS
+          EN: 11, // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -478,6 +485,7 @@ const examData: ExamData = {
       fulfillment: {
         courseEquivalents: {
           DEFAULT: [355142, 355197], // PHYS 1101, PHYS 2207
+          EN: 355146, // PHYS 1112
         },
         minimumScore: 6,
         credits: 4,
