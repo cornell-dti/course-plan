@@ -1,4 +1,4 @@
-import { AppUser } from '../../../user-data';
+import { AppUser, FirestoreAPIBExam } from '@/user-data';
 import { CourseTaken } from '../../types';
 
 export type ExamRequirements = {
@@ -11,13 +11,15 @@ export type ExamRequirements = {
   };
 };
 export type ExamData = Record<'AP' | 'IB', ExamRequirements[]>;
-export type ReqsData = Record<'AP' | 'IB', { readonly name: string; readonly credits: number }[]>;
+export type ReqsData = Record<'AP' | 'IB', string[]>;
 
 export type ExamTaken = {
   readonly subject: string;
   readonly score: number;
 };
 export type ExamsTaken = Record<'AP' | 'IB', ExamTaken[]>;
+
+export function userExamToExamData(examTaken: ExamTaken) {}
 
 function userDataToCourses(
   college: string,
@@ -64,9 +66,10 @@ function userDataToCourses(
             code: `${examType} ${exam.name}`,
             subject: examType,
             number: exam.name,
-            credits: exam.fulfillment.credits,
+            credits: 0,
           });
         });
+        // TODO add courses representing credits (exam.fulfillment.credits)
       }
     }
   });
@@ -83,13 +86,25 @@ function getCourseEquivalentsFromOneMajor(
   return APCourseEquivalents.concat(IBCourseEquivalents);
 }
 
-export default function getCourseEquivalentsFromUserExams(user: AppUser): readonly CourseTaken[] {
+export default function getCourseEquivalentsFromUserExams(
+  user: AppUser,
+  exams?: ExamsTaken,
+): readonly CourseTaken[] {
   const courses: CourseTaken[] = [];
   const examCourseIDSet = new Set<number>();
   const userExamData: ExamsTaken = { AP: [], IB: [] };
-  user.exam.forEach(exam => {
-    userExamData[exam.type].push(exam);
-  });
+  if (exams) {
+    exams.AP.forEach(exam => {
+      userExamData.AP.push(exam);
+    });
+    exams.IB.forEach(exam => {
+      userExamData.IB.push(exam);
+    });
+  } else {
+    user.exam.forEach(exam => {
+      userExamData[exam.type].push(exam);
+    });
+  }
   user.major.forEach(major =>
     getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
       if (!examCourseIDSet.has(course.courseId)) {
@@ -101,7 +116,7 @@ export default function getCourseEquivalentsFromUserExams(user: AppUser): readon
   return courses;
 }
 
-export const examData: ExamData = {
+const examData: ExamData = {
   AP: [
     {
       name: 'Biology',
@@ -441,4 +456,14 @@ export const examData: ExamData = {
       },
     },
   ],
+};
+
+function toReqsData(data: ExamRequirements[]) {
+  const exams = data.map(({ name }) => name);
+  return [...new Set(exams)];
+}
+
+export const reqsData: ReqsData = {
+  AP: toReqsData(examData.AP),
+  IB: toReqsData(examData.IB),
 };
