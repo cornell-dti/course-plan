@@ -88,7 +88,7 @@ function getCourseEquivalentsFromOneMajor(
 
 export default function getCourseEquivalentsFromUserExams(
   user: AppUser,
-  exams?: ExamsTaken,
+  exams?: ExamsTaken
 ): readonly CourseTaken[] {
   const courses: CourseTaken[] = [];
   const examCourseIDSet = new Set<number>();
@@ -394,22 +394,18 @@ const examData: ExamData = {
       name: 'Chemical And Physical Systems',
       fulfillment: {
         courseEquivalents: {
-          EN: 359187, // CHEM 2090
-          AS: 351265, // CHEM 2070
-          AR: 351265, // CHEM 2070
+          DEFAULT: [355142, 355143], // PHYS 1101, PHYS 1102
         },
-        minimumScore: 5,
-        credits: 4,
-        majorsExcluded: ['CHEM'],
+        minimumScore: 6,
+        credits: 8,
       },
     },
     {
       name: 'Chemistry',
       fulfillment: {
         courseEquivalents: {
+          DEFAULT: 351265, // CHEM 2070
           EN: 359187, // CHEM 2090
-          AS: 351265, // CHEM 2070
-          AR: 351265, // CHEM 2070
         },
         minimumScore: 6,
         credits: 4,
@@ -419,27 +415,28 @@ const examData: ExamData = {
       name: 'Computer Science',
       fulfillment: {
         courseEquivalents: {
-          // CS 1110
-          EN: 358526,
-          AS: 358526,
+          DEFAULT: 358526, // CS 1110
         },
         minimumScore: 6,
         credits: 4,
       },
     },
     {
-      name: 'Economics', // TODO
+      name: 'Economics',
       fulfillment: {
-        courseEquivalents: {},
+        courseEquivalents: {
+          DEFAULT: [350025, 350038], // ECON 1110, ECON 1120
+        },
         minimumScore: 6,
-        credits: 4,
+        credits: 6,
       },
     },
     {
       name: 'English Literature A',
       fulfillment: {
         courseEquivalents: {
-          // TODO
+          AS: 100000, // FWS
+          EN: 100000, // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -449,10 +446,41 @@ const examData: ExamData = {
       name: 'English Language and Literature',
       fulfillment: {
         courseEquivalents: {
-          // TODO
+          AS: 100000, // FWS
+          EN: 100000, // FWS
         },
         minimumScore: 7,
         credits: 3,
+      },
+    },
+    {
+      name: 'Mathematics',
+      fulfillment: {
+        courseEquivalents: {
+          DEFAULT: [352111, 352116], // MATH 1106, MATH 1110
+        },
+        minimumScore: 6,
+        credits: 4,
+      },
+    },
+    {
+      name: 'Physical Science',
+      fulfillment: {
+        courseEquivalents: {
+          DEFAULT: [351265, 355142], // CHEM 2070, PHYS 1101
+        },
+        minimumScore: 6,
+        credits: 8,
+      },
+    },
+    {
+      name: 'Physics',
+      fulfillment: {
+        courseEquivalents: {
+          DEFAULT: [355142, 355197], // PHYS 1101, PHYS 2207
+        },
+        minimumScore: 6,
+        credits: 4,
       },
     },
   ],
