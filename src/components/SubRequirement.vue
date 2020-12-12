@@ -253,6 +253,7 @@ export default Vue.extend({
             subReqCoursesArray.push({ isCompleted: true, courses: [subReqCourse] });
           });
           // Create new IncompletedSubReqCourse slot if all credits or courses not met
+          // but only one CompletedSubReqCourse slot exists
           if (this.subReq.courses.length === 1 && !this.isCompleted) {
             const crseInfoArray = this.generateSubReqIncompleteCrseInfoArray(subReqCourses, i);
             subReqCoursesArray.push({ isCompleted: false, courses: crseInfoArray });
