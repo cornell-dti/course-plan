@@ -45,7 +45,7 @@
       :class="{ 'modal--flex': isSemesterConfirmationOpen }"
       :text="confirmationText"
     />
-    <caution
+    <semester-caution
       :id="'semesterCaution'"
       class="semesterView-caution"
       :class="{ 'modal--flex': isCautionModalOpen }"
@@ -102,7 +102,7 @@ import clone from 'clone';
 import Course from '@/components/Course.vue';
 import Semester from '@/components/Semester.vue';
 import Confirmation from '@/components/Confirmation.vue';
-import Caution from '@/components/Caution.vue';
+import SemesterCaution from '@/components/SemesterCaution.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 
@@ -118,7 +118,7 @@ import {
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
-Vue.component('caution', Caution);
+Vue.component('semester-caution', SemesterCaution);
 Vue.component('deletesemester', DeleteSemester);
 Vue.component('editsemester', EditSemester);
 
