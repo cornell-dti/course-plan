@@ -66,14 +66,14 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue, {PropType} from 'vue';
 import Course from '@/components/Course.vue';
 import { coursesColorSet } from '../../assets/constants/colors';
 
 export default Vue.extend({
   props: {
-    getCreditRange: Array,
+    getCreditRange: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
     semId: Number,
     isCompact: Boolean
   },
@@ -89,11 +89,12 @@ export default Vue.extend({
   },
   computed: {
     // TODO: implement this without DOM manipulation and with semID changing (right now, stays the same if a sem is added)
-    numPerRow() {
+    numPerRow(): number {
       const itemWidth = 406; // width of a semester div
       const itemWidthCompact = 232; // width of a compact semester div in px
 
       const grid = document.getElementsByClassName('semesterView-content')[0];
+      // @ts-ignore
       const gridStyle = grid.currentStyle || window.getComputedStyle(grid);
       const gridWidth = grid.clientWidth - (parseFloat(gridStyle.paddingLeft) + parseFloat(gridStyle.paddingRight));
 
@@ -110,21 +111,22 @@ export default Vue.extend({
     deleteCourse() {
       this.$emit('delete-course');
     },
-    colorCourse(color) {
+    colorCourse(color: { hex: string }) {
       this.$emit('color-course', color.hex.substring(1));
     },
-    setDisplayColors(bool) {
+    setDisplayColors(bool: boolean) {
       this.displayColors = bool;
     },
-    setDisplayEditCourseCredits(bool) {
+    setDisplayEditCourseCredits(bool: boolean) {
       this.displayEditCourseCredits = bool;
     },
-    editCourseCredit(credit) {
+    editCourseCredit(credit: number) {
       this.$emit('edit-course-credit', credit);
     },
     makeCreditArary() {
-      const creditArray = [];
+      const creditArray: number[] = [];
       let accu = (this.getCreditRange[0] < 1) ? 0 : (this.getCreditRange[0] - 1);
+
       for (let i = accu; i < (this.getCreditRange[1]); i += 1) {
         if (this.getCreditRange[0] < 1) {
           accu += 0.5;

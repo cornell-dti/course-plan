@@ -19,6 +19,7 @@
         <requirements
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
+          :reqs="reqs"
           :semesters="semesters"
           :toggleableRequirementChoices="toggleableRequirementChoices"
           :user="user"
@@ -46,7 +47,6 @@
         @edit-semesters="editSemesters"
         @updateBar="updateBar"
         @close-bar="closeBar"
-        @updateRequirementsMenu="updateRequirementsMenu"
         @increment-semID="incrementSemID"
       />
     </div>
@@ -236,7 +236,6 @@ export default Vue.extend({
             this.subjectColors = firestoreUserData.subjectColors;
             this.uniqueIncrementer = firestoreUserData.uniqueIncrementer;
             this.loaded = true;
-            this.updateRequirementsMenu();
             this.recomputeRequirements();
           } else {
             this.semesters.push({
@@ -262,7 +261,7 @@ export default Vue.extend({
 
     editSemesters(newSemesters: AppSemester[]) {
       this.semesters = newSemesters;
-      this.updateRequirementsMenu();
+      this.recomputeRequirements();
     },
     chooseToggleableRequirementOption(
       toggleableRequirementChoices: AppToggleableRequirementChoices
@@ -307,7 +306,7 @@ export default Vue.extend({
      */
     createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean): AppCourse {
       if (!isRequirementsCourse) {
-        this.updateRequirementsMenu();
+        this.recomputeRequirements();
       }
       return firestoreCourseToAppCourse(
         course,
@@ -410,9 +409,6 @@ export default Vue.extend({
     },
     incrementSemID() {
       this.currSemID += 1;
-    },
-    updateRequirementsMenu() {
-      this.requirementsKey += 1;
     },
     showTourEnd() {
       if (!this.isMobile) {
@@ -574,7 +570,7 @@ export default Vue.extend({
           }
           docRef.set(data);
           this.cancelOnboarding();
-          this.updateRequirementsMenu();
+          this.recomputeRequirements();
         })
         .catch(error => {
           console.log('Error getting document:', error);
@@ -606,7 +602,6 @@ export default Vue.extend({
       });
       this.currentClasses = transferClasses;
 
-      this.updateRequirementsMenu();
       return user;
     },
 
