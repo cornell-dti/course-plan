@@ -33,49 +33,48 @@
           </span>
         </div>
       </div>
-      <div class="newCourse-title">This class fulfills the following requirement(s):</div>
-      <div v-if="!editMode" class="newCourse-requirements-container">
-        <div
-          class="newCourse-requirements"
-          v-for="req in requirements"
-          :key="req"
-          :class="{ 'newCourse-space': !checkIfLast(req, requirements) }"
-        >
-          {{ checkIfLast(req, requirements) ? req : `${req},` }}
+      <div v-if="hasReqs">
+        <div class="newCourse-title">This class fulfills the following requirement(s):</div>
+        <div v-if="!editMode" class="newCourse-requirements-container">
+          <div class="newCourse-requirements">
+            {{ selectedReqs }}
+          </div>
+        </div>
+        <div v-else class="newCourse-requirements-edit">
+          <editRequirement
+            v-for="req in requirements"
+            :key="req"
+            :name="req"
+            :selected="true"
+            :isClickable="true"
+          />
         </div>
       </div>
-      <div v-else class="newCourse-requirements-edit">
-        <editRequirement
-          v-for="req in requirements"
-          :key="req"
-          :name="req"
-          :selected="true"
-          :isClickable="true"
-        />
-      </div>
-      <div class="newCourse-title">
-        This class could potentially fulfill the following requirement(s):
-      </div>
-      <div v-if="!editMode" class="newCourse-requirements-container">
-        <div class="newCourse-name">
-          {{ potReqs }}
+      <div v-if="hasPotReqs">
+        <div class="newCourse-title">
+          This class could potentially fulfill the following requirement(s):
         </div>
-      </div>
-      <div v-else class="newCourse-requirements-edit">
-        <editRequirement
-          v-for="potreq in potentialReqs"
-          :key="potreq"
-          :name="potreq"
-          :isClickable="true"
-        />
-        <binaryButton
-          v-for="choice in binaryPotentialReqs"
-          :key="choice[0]"
-          :choices="choice"
-        ></binaryButton>
-      </div>
-      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
-        Add these Requirements
+        <div v-if="!editMode" class="newCourse-requirements-container">
+          <div class="newCourse-name">
+            {{ potReqs }}
+          </div>
+        </div>
+        <div v-else class="newCourse-requirements-edit">
+          <editRequirement
+            v-for="potreq in potentialReqs"
+            :key="potreq"
+            :name="potreq"
+            :isClickable="true"
+          />
+          <binaryButton
+            v-for="choice in binaryPotentialReqs"
+            :key="choice[0]"
+            :choices="choice"
+          ></binaryButton>
+        </div>
+        <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
+          Add these Requirements
+        </div>
       </div>
     </div>
   </div>
@@ -147,6 +146,15 @@ export default Vue.extend({
     },
     potReqs() {
       return this.potentialReqs.join(', ');
+    },
+    selectedReqs() {
+      return this.requirements.join(', ');
+    },
+    hasReqs() {
+      return this.requirements.length !== 0;
+    },
+    hasPotReqs() {
+      return this.potentialReqs.length !== 0;
     },
   },
   mounted() {
