@@ -127,6 +127,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/engineering-communications-program/technical',
+    allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements(
       ['ENGRC 3500'],
       ['ENGRC 3020'],
