@@ -1,4 +1,4 @@
-import { AppUser, FirestoreAPIBExam } from '@/user-data';
+import { AppUser, FirestoreAPIBExam } from '../../../user-data';
 import { CourseTaken } from '../../types';
 
 export type ExamRequirements = {
@@ -93,26 +93,15 @@ function getCourseEquivalentsFromOneMajor(
   return APCourseEquivalents.concat(IBCourseEquivalents);
 }
 
-export default function getCourseEquivalentsFromUserExams(
-  user: AppUser,
-  exams?: ExamsTaken
-): readonly CourseTaken[] {
+export default function getCourseEquivalentsFromUserExams(user: AppUser): readonly CourseTaken[] {
   const courses: CourseTaken[] = [];
   const examCourseCodeSet = new Set<string>();
   const userExamData: ExamsTaken = { AP: [], IB: [] };
-  if (exams) {
-    exams.AP.forEach(exam => {
-      userExamData.AP.push(exam);
-    });
-    exams.IB.forEach(exam => {
-      userExamData.IB.push(exam);
-    });
-  } else {
-    user.exam.forEach(exam => {
-      userExamData[exam.type].push(exam);
-    });
-  }
-  user.major.forEach(major =>
+  user.exam.forEach((exam: FirestoreAPIBExam) => {
+    const examTaken: ExamTaken = { subject: exam.subject, score: exam.score };
+    userExamData[exam.type].push(examTaken);
+  });
+  user.major.forEach((major: string) =>
     getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
       if (!examCourseCodeSet.has(course.code)) {
         examCourseCodeSet.add(course.code);

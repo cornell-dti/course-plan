@@ -38,7 +38,7 @@ export const courseMatchesCodeOptions = (course: Course, codeOptions: readonly s
  * @returns if the course satisfies FWS requirement.
  */
 export const courseIsFWS = (course: Course): boolean =>
-  course.crseId == 11 ||
+  course.crseId === 11 ||
   course.titleLong.includes('FWS:') ||
   (course.catalogSatisfiesReq?.includes('First-Year Writing Seminar') ?? false);
 
@@ -48,7 +48,7 @@ export const courseIsFWS = (course: Course): boolean =>
  * @returns true if the course is not PE or 10** level
  */
 export const courseIsAllEligible = (course: Course): boolean =>
-  course.crseId == 10 ||
+  course.crseId === 10 ||
   (!ifCodeMatch(course.subject, 'PE') && !ifCodeMatch(course.catalogNbr, '10**'));
 
 /**
