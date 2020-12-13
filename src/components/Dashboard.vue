@@ -19,7 +19,6 @@
         <requirements
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
-          :reqs="reqs"
           :semesters="semesters"
           :toggleableRequirementChoices="toggleableRequirementChoices"
           :user="user"
