@@ -5,9 +5,38 @@ import {
   DecoratedCollegeOrMajorRequirement,
   EligibleCourses,
   RequirementChecker,
+  Course,
 } from './types';
 import sourceRequirements from './data';
 import filteredAllCourses from './filtered-all-courses';
+
+/**
+ * Special (synthetic) courses, as used in AP/IB equivalent courses generation.
+ */
+const specialCourses: Course[] = [
+  {
+    subject: 'CREDITS',
+    crseId: 10,
+    catalogNbr: '',
+    titleLong: '',
+    description: '',
+    enrollGroups: [],
+    catalogAttribute: '',
+    acadCareer: '',
+    acadGroup: '',
+  },
+  {
+    subject: 'FWS',
+    crseId: 11,
+    catalogNbr: '',
+    titleLong: '',
+    description: '',
+    enrollGroups: [],
+    catalogAttribute: '',
+    acadCareer: '',
+    acadGroup: '',
+  },
+];
 
 const getEligibleCoursesFromRequirementCheckers = (
   checkers: readonly RequirementChecker[]
@@ -16,7 +45,9 @@ const getEligibleCoursesFromRequirementCheckers = (
     const eligibleCoursesMap: { [semester: string]: number[] } = {};
     Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
       const courseIdSet = new Set(
-        courses.filter(course => oneRequirementChecker(course)).map(course => course.crseId)
+        [...courses, ...specialCourses]
+          .filter(course => oneRequirementChecker(course))
+          .map(course => course.crseId)
       );
       if (courseIdSet.size > 0) {
         // Do not include empty semesters.
