@@ -8,6 +8,7 @@ const universityRequirements: readonly CollegeOrMajorRequirement[] = [
       'All incoming freshmen are required to take two credits (two courses) of Physical Education, ' +
       'one credit each semester of the first year on campus.',
     source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11637',
+    allowCourseDoubleCounting: true,
     checker: (course: Course): boolean => 'PE'.includes(course.subject),
     operator: 'or',
     fulfilledBy: 'courses',
