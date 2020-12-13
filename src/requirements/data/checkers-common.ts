@@ -31,6 +31,13 @@ export const courseMatchesCodeOptions = (course: Course, codeOptions: readonly s
   codeOptions.some(code => ifCodeMatch(`${course.subject} ${course.catalogNbr}`, code));
 
 /**
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @returns true if the course is AP/IB equivalent course or credit
+ */
+export const courseIsAPIB = (course: Course): boolean =>
+  [10, 11].includes(course.crseId) || ['AP', 'IB', 'CREDITS'].includes(course.subject);
+
+/**
  * Almost colleges have FWS requirements. Instead of writing them from scratch each time, call this
  * function.
  *
@@ -48,14 +55,10 @@ export const courseIsFWS = (course: Course): boolean =>
  * @returns true if the course is not PE or 10** level
  */
 export const courseIsAllEligible = (course: Course): boolean =>
-  !ifCodeMatch(course.subject, 'PE') && !ifCodeMatch(course.catalogNbr, '10**');
-
-/**
- * @param course course object with useful information retrived from Cornell courses API.
- * @returns true if the course is AP/IB equivalent course or credit
- */
-export const courseIsAPIB = (course: Course): boolean =>
-  [10, 11].includes(course.crseId) || ['AP', 'IB', 'CREDITS'].includes(course.subject);
+  course.crseId === 10 ||
+  (!courseIsAPIB(course) &&
+    !ifCodeMatch(course.subject, 'PE') &&
+    !ifCodeMatch(course.catalogNbr, '10**'));
 
 /**
  * This function returns a checker that checks whether a course satisfy a single requirement by
