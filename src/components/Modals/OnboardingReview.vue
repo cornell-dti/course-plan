@@ -39,9 +39,11 @@
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">College*</label>
-            <label class="onboarding-label--review">{{
-              displayOptions.college[0].placeholder
-            }}</label>
+            <div>
+              <label class="onboarding-label--review">{{
+                displayOptions.college[0].placeholder
+              }}</label>
+            </div>
           </div>
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">Major*</label>
@@ -265,7 +267,7 @@ export default {
         ],
         exam: [
           {
-            // unnecessary but required for type check, as this is not ts file yet
+            // unnecessary but required for type check, as this is not ts file yet, whats a better way to deal with this?
             shown: false,
             stopClose: false,
             boxBorder: '',

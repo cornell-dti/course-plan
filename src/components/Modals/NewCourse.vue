@@ -1,9 +1,6 @@
 <template>
   <div class="newCourse">
     <div v-if="!isOnboard" class="newCourse-text">{{ text }}</div>
-    <!-- <div v-if="isOnboard" class="autocomplete">
-      <input class="newCourse-dropdown" :id="'dropdown-' + semesterID" :ref="'dropdown-' + semesterID" :placeholder="placeholder" @keyup.enter="addCourse" @keyup.esc="closeCourseModal" />
-    </div> -->
     <!-- TODO: for some reason this breaks the dropdown <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div> -->
     <div class="autocomplete">
       <input
@@ -33,7 +30,7 @@
         <div class="newCourse-text">Selected Semester</div>
         <div class="newCourse-semester">
           <span class="newCourse-name">
-            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="" />
+            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="season-emoji" />
             {{ season }}
             {{ year }}
           </span>
@@ -328,7 +325,7 @@ export default Vue.extend({
       }
       return placeholderText !== 'Select one'
         ? 'newCourse-onboarding'
-        : 'newCourse-onboardingEmpty';
+        : 'newCourse-onboarding newCourse-onboardingEmpty';
     },
   },
 });
@@ -369,16 +366,6 @@ export default Vue.extend({
     }
   }
   &-onboardingEmpty {
-    // this part repeats &-onboarding except for different placeholder color, how do i make it so I don't have to repeat stuff?
-    font-size: 14px;
-    line-height: 17px;
-    color: #000000;
-    width: 100%;
-    border-radius: 3px;
-    padding: 0.5rem;
-    border: 0.5px solid #b6b6b6;
-    border-radius: 0px;
-    background-color: #ffffff;
     &::placeholder {
       color: #b6b6b6;
     }
