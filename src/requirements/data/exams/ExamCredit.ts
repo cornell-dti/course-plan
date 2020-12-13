@@ -19,8 +19,6 @@ export type ExamTaken = {
 };
 export type ExamsTaken = Record<'AP' | 'IB', ExamTaken[]>;
 
-export function userExamToExamData(examTaken: ExamTaken) {}
-
 function userDataToCourses(
   college: string,
   major: string,

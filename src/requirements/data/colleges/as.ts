@@ -3,6 +3,7 @@ import {
   courseIsFWS,
   includesWithSingleRequirement,
   courseIsAllEligible,
+  courseIsAPIB,
 } from '../checkers-common';
 
 const casRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -25,7 +26,8 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       'they can also take all their credits in Arts & Sciences and accumulate more than 120. ' +
       'Note: AP, IB, and A-Level credits count toward the 120 total credits but not toward the 100 A&S credits.',
     source: 'https://as.cornell.edu/degree-requirements',
-    checker: (course: Course): boolean => course.catalogDistr?.includes('-AS') ?? false,
+    checker: (course: Course): boolean =>
+      (!courseIsAPIB(course) && course.catalogDistr?.includes('-AS')) ?? false,
     operator: 'or',
     fulfilledBy: 'credits',
     minCount: 100,

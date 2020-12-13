@@ -48,8 +48,14 @@ export const courseIsFWS = (course: Course): boolean =>
  * @returns true if the course is not PE or 10** level
  */
 export const courseIsAllEligible = (course: Course): boolean =>
-  course.crseId === 10 ||
-  (!ifCodeMatch(course.subject, 'PE') && !ifCodeMatch(course.catalogNbr, '10**'));
+  !ifCodeMatch(course.subject, 'PE') && !ifCodeMatch(course.catalogNbr, '10**');
+
+/**
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @returns true if the course is AP/IB equivalent course or credit
+ */
+export const courseIsAPIB = (course: Course): boolean =>
+  [10, 11].includes(course.crseId) || ['AP', 'IB', 'CREDITS'].includes(course.subject);
 
 /**
  * This function returns a checker that checks whether a course satisfy a single requirement by
