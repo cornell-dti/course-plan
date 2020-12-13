@@ -19,7 +19,7 @@
                 id="yes"
                 value="yes"
               />
-              <img class="checkmark" :src="swimYesImage" />
+              <img class="checkmark" :src="swimYesImage" alt="checkmark"/>
               Yes
             </label>
             <label class="onboarding-inputs--radio--radioText" for="no">
@@ -31,7 +31,7 @@
                 id="no"
                 value="no"
               />
-              <img class="checkmark" :src="swimNoImage" />
+              <img class="checkmark" :src="swimNoImage" alt="checkmark" />
               No
             </label>
           </div>
@@ -43,7 +43,6 @@
         <span class="onboarding-subHeader--font"> Transfer Credits (Optional)</span>
       </div>
       <div class="onboarding-inputs">
-        <!-- <div class= -->
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
           <div class="onboarding-subHeader">
             <span class="onboarding-subHeader--font">AP Credits</span>
@@ -246,7 +245,6 @@
                   <label class="college-placeholder">{{ getExamCredit(options) }}</label>
                 </div>
                 <div class="onboarding-select--column-removeExam">
-                  <!-- TODO: need to check if at least one ib or ap !!!-->
                   <div
                     class="onboarding-remove"
                     @click="removeExam(index)"
@@ -657,7 +655,6 @@ export default Vue.extend({
     setSwimImages() {
       this.swimYesImage = this.tookSwimTest === 'yes' ? checkmarkSelected : checkmarkUnselected;
       this.swimNoImage = this.tookSwimTest === 'no' ? checkmarkSelected : checkmarkUnselected;
-      // this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
     },
     selectOption(
       type: 'exam' | 'class',
@@ -795,17 +792,11 @@ export default Vue.extend({
             if (resultJSONclass.catalogNbr === number) {
               const course = resultJSONclass;
               const creditsC = course.credits || course.enrollGroups[0].unitsMaximum;
-              // this.displayOptions.class[id] = {
-              //   class: courseCode,
-              //   course,
-              //   credits: creditsC
-              // };
               this.displayOptions.class[id] = {
                 class: courseCode,
                 course,
                 credits: creditsC,
               };
-              console.log(this.displayOptions.class);
               this.getCredits();
               this.$emit(
                 'updateTransfer',

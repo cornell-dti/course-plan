@@ -5,7 +5,7 @@
         <span class="onboarding-subHeader--font"> Basic Information</span>
         <span>
           <button class="onboarding-button-previous" @click="setPage(1)">
-            <img src="@/assets/images/edit-review.svg" />
+            <img src="@/assets/images/edit-review.svg" alt="edit"/>
           </button>
         </span>
       </div>
@@ -129,7 +129,7 @@
             <div class="alignCenter">
               <label class="onboarding-label">Credit</label>
               <div v-for="(options, index) in displayOptions.exam" :key="'APCredit' + index">
-                <!-- TODO replace credit with actual value -->
+                <!-- TODO replace credit with true value rather than dummy json value, or remove credit from showing -->
                 <label
                   v-if="typeof options.type != undefined && options.type.placeholder == 'AP'"
                   class="onboarding-label--review"
@@ -181,7 +181,7 @@
 </template>
 
 <script>
-// TODO: a lot of the functions are repeated from basic and transfer pages, is there a way to avoid that?
+// TODO: move repeated functions in all onboarding pages to a separate file
 
 import reqsData from '@/requirements/typed-requirement-json';
 import { examData } from '@/requirements/data/exams/ExamCredit';
@@ -221,7 +221,7 @@ export default {
       minorPlaceholderColor = '#757575';
     }
     return {
-      // TODO: Get real college, major, and minor lists
+      // TODO: Store info of form locally to save form input when moving between pages
       colleges: {},
       majors: {},
       minors: {},
@@ -462,7 +462,7 @@ export default {
         );
       }
     },
-    // Set the colleges map to with acronym keys and full name values
+    // Set the exam map to with acronym keys and full name values
     setExamsMap() {
       /** @type {Object.<string, string>} */
       const exams = [];
@@ -471,7 +471,7 @@ export default {
       });
       this.exams = exams;
     },
-    // Set the majors map to with acronym keys and full name values
+    // Set the subject map to with acronym keys and full name values
     setSubjectList() {
       /** @type {Object.<string, string>} */
       const totalSubjects = [];
@@ -484,11 +484,6 @@ export default {
               subjects.push(sub.subject);
             });
             totalSubjects.push(subjects);
-            if (examType === 'AP') {
-              this.scores = [1, 2, 3, 4, 5];
-            } else {
-              this.scores = [1, 2, 3, 4, 5, 6, 7];
-            }
           }
         }
       });

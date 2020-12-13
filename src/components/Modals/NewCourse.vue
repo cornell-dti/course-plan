@@ -354,20 +354,20 @@ export default Vue.extend({
   &-onboarding {
     font-size: 14px;
     line-height: 17px;
-    color: #000000;
+    color: $black;
     width: 100%;
     border-radius: 3px;
     padding: 0.5rem;
-    border: 0.5px solid #b6b6b6;
+    border: 0.5px solid $darkPlaceholderGray;
     border-radius: 0px;
-    background-color: #ffffff;
+    background-color: $white;
     &::placeholder {
-      color: #000000;
+      color: $black;
     }
   }
   &-onboardingEmpty {
     &::placeholder {
-      color: #b6b6b6;
+      color: $darkPlaceholderGray;
     }
   }
   &-semester {
