@@ -56,27 +56,41 @@ function userDataToCourses(
       } else {
         courseIds = courseEquivalents;
       }
+      const singleCourse = courseIds.length === 1;
       const excludedMajor =
         exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
       if (!excludedMajor) {
-        courseIds.forEach(courseId => {
+        if (singleCourse) {
+          const courseId = courseIds[0];
           courses.push({
             roster,
             courseId,
             code: `${examType} ${exam.name}`,
             subject: examType,
             number: exam.name,
-            credits: 0,
+            credits: exam.fulfillment.credits,
           });
-        });
-        courses.push({
-          roster,
-          courseId: 10,
-          code: `CREDITS ${examType} ${exam.name}`,
-          subject: 'CREDITS',
-          number: exam.fulfillment.credits.toString(),
-          credits: exam.fulfillment.credits,
-        });
+        } else {
+          // separate credits from equivalent course
+          courseIds.forEach(courseId => {
+            courses.push({
+              roster,
+              courseId,
+              code: `${examType} ${exam.name}`,
+              subject: examType,
+              number: exam.name,
+              credits: 0,
+            });
+          });
+          courses.push({
+            roster,
+            courseId: 10,
+            code: `CREDITS ${examType} ${exam.name}`,
+            subject: 'CREDITS',
+            number: exam.fulfillment.credits.toString(),
+            credits: exam.fulfillment.credits,
+          });
+        }
       }
     }
   });
