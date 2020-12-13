@@ -98,7 +98,7 @@ export default function getCourseEquivalentsFromUserExams(
   exams?: ExamsTaken
 ): readonly CourseTaken[] {
   const courses: CourseTaken[] = [];
-  const examCourseIDSet = new Set<number>();
+  const examCourseCodeSet = new Set<string>();
   const userExamData: ExamsTaken = { AP: [], IB: [] };
   if (exams) {
     exams.AP.forEach(exam => {
@@ -114,8 +114,8 @@ export default function getCourseEquivalentsFromUserExams(
   }
   user.major.forEach(major =>
     getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
-      if (!examCourseIDSet.has(course.courseId)) {
-        examCourseIDSet.add(course.courseId);
+      if (!examCourseCodeSet.has(course.code)) {
+        examCourseCodeSet.add(course.code);
         courses.push(course);
       }
     })

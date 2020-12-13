@@ -145,6 +145,24 @@ function computeFulfillmentCoursesAndStatistics(
 }
 
 /**
+ * Removes all AP/IB equivalent course credit if it's a duplicate crseId.
+ * In the future, we may need to implement a more fleshed-out system.
+ * Eg. "A student taking CHEM 1560, CHEM 2070, or 2090 will forfeit AP [CHEM] credit."
+ *
+ * @param coursesTaken a list of classes taken by the user, with some metadata (e.g. no. of credits)
+ * helping to compute requirement progress.
+ */
+function forfeitTransferCredit(coursesTaken: readonly CourseTaken[]): readonly CourseTaken[] {
+  const equivalentCourses = coursesTaken.filter(course => course.subject !== 'CREDITS');
+  const equivalentCourseIds = new Set(equivalentCourses.map(({ courseId }) => courseId));
+  let transferCreditCourses = coursesTaken.filter(course => course.subject === 'CREDITS');
+  transferCreditCourses = transferCreditCourses.filter(
+    ({ courseId }) => !equivalentCourseIds.has(courseId)
+  );
+  return equivalentCourses.concat(transferCreditCourses);
+}
+
+/**
  * @param coursesTaken a list of classes taken by the user, with some metadata (e.g. no. of credits)
  * helping to compute requirement progress.
  * @param toggleableRequirementChoices an object map from toggleable requirement IDs to choices
@@ -259,7 +277,7 @@ export function computeRequirements(
     UserChoiceOnFulfillmentStrategy
   >({
     requirements: requirementsToBeConsideredInGraph,
-    userCourses: coursesTaken,
+    userCourses: forfeitTransferCredit(coursesTaken),
     userChoiceOnFulfillmentStrategy,
     userChoiceOnDoubleCountingElimiation: [],
     getRequirementUniqueID: requirement => requirement.id,
