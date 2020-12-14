@@ -12,6 +12,7 @@
       class="bottombartab-delete"
       src="@/assets/images/x-white.svg"
       @click.stop="deleteBottomTab(courseObj)"
+      alt="x"
     />
   </div>
 </template>

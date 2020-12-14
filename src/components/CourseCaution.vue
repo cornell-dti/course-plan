@@ -1,7 +1,7 @@
 <template>
   <div class="course-outerWrapper course-tooltip">
     <div v-if="!compact" class="course-iconWrapper course-iconWrapper--caution">
-      <img class="course-icon course-icon--caution" src="@/assets/images/caution.svg" />
+      <img class="course-icon course-icon--caution" src="@/assets/images/caution.svg" alt="caution sign" />
     </div>
     <div class="course-tooltiptext course-tooltiptext--caution" v-html="cautionString"></div>
   </div>

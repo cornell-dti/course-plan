@@ -30,11 +30,13 @@
           v-if="!seeMoreOpen"
           class="bottombarSeeMoreTab-arrow"
           src="@/assets/images/uparrow-white.svg"
+          alt="up arrow"
         />
         <img
           v-if="seeMoreOpen"
           class="bottombarSeeMoreTab-arrow"
           src="@/assets/images/downarrow-white.svg"
+          alt="down arrow"
         />
       </div>
       <div v-if="seeMoreOpen" class="bottombarSeeMoreOptions">
@@ -51,6 +53,7 @@
               class="seeMoreCourse-option-delete"
               src="@/assets/images/x-blue.svg"
               @click="deleteSeeMoreCourse(seeMoreCourse)"
+              alt="x"
             />
           </div>
         </div>

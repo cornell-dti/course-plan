@@ -9,6 +9,7 @@
         v-if="leftChosen"
         class="confirmation-icon binary-button-check"
         src="@/assets/images/check.svg"
+        alt="checkmark"
       />
       <div>
         {{ choices[0] }}
@@ -24,6 +25,7 @@
         v-if="!leftChosen"
         class="confirmation-icon binary-button-check"
         src="@/assets/images/check.svg"
+        alt="checkmark"
       />
       <div>
         {{ choices[1] }}
