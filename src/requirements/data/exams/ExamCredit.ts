@@ -18,6 +18,50 @@ export type ExamTaken = {
 };
 export type ExamsTaken = Record<'AP' | 'IB', ExamTaken[]>;
 
+export const examData: ExamData = {
+  AP: [
+    {
+      name: 'Computer Science A',
+      fulfillment: {
+        courseEquivalents: {
+          EN: 358526, // CS 1110
+          AS: 358526, // CS 1110
+        },
+        minimumScore: 5,
+        credits: 4,
+      },
+    },
+    {
+      name: 'Chemistry',
+      fulfillment: {
+        courseEquivalents: {
+          EN: 359187, // CHEM 2090
+          AS: 351265, // CHEM 2070
+          AR: 351265, // CHEM 2070
+        },
+        minimumScore: 5,
+        credits: 4,
+        majorsExcluded: ['CHEM'],
+      },
+    },
+  ],
+  IB: [
+    {
+      name: 'Chemical And Physical Systems',
+      fulfillment: {
+        courseEquivalents: {
+          EN: 359187, // CHEM 2090
+          AS: 351265, // CHEM 2070
+          AR: 351265, // CHEM 2070
+        },
+        minimumScore: 5,
+        credits: 4,
+        majorsExcluded: ['CHEM'],
+      },
+    },
+  ],
+};
+
 function userDataToCourses(
   college: string,
   major: string,
@@ -88,49 +132,7 @@ export default function getCourseEquivalentsFromUserExams(user: AppUser): readon
   return courses;
 }
 
-export const examData: ExamData = {
-  AP: [
-    {
-      name: 'Computer Science A',
-      fulfillment: {
-        courseEquivalents: {
-          EN: 358526, // CS 1110
-          AS: 358526, // CS 1110
-        },
-        minimumScore: 5,
-        credits: 4,
-      },
-    },
-    {
-      name: 'Chemistry',
-      fulfillment: {
-        courseEquivalents: {
-          EN: 359187, // CHEM 2090
-          AS: 351265, // CHEM 2070
-          AR: 351265, // CHEM 2070
-        },
-        minimumScore: 5,
-        credits: 4,
-        majorsExcluded: ['CHEM'],
-      },
-    },
-  ],
-  IB: [
-    {
-      name: 'Chemical And Physical Systems',
-      fulfillment: {
-        courseEquivalents: {
-          EN: 359187, // CHEM 2090
-          AS: 351265, // CHEM 2070
-          AR: 351265, // CHEM 2070
-        },
-        minimumScore: 5,
-        credits: 4,
-        majorsExcluded: ['CHEM'],
-      },
-    },
-  ],
-};
+
 
 // const transferJSON: ExamData = {
 //   AP: [
