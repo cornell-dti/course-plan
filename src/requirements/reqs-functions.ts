@@ -253,7 +253,10 @@ export function computeRequirements(
     })
     .filter((it): it is UserChoiceOnFulfillmentStrategy => it != null);
 
-  const { requirementFulfillmentGraph } = buildRequirementFulfillmentGraph<
+  const {
+    requirementFulfillmentGraph,
+    illegallyDoubleCountedCourses,
+  } = buildRequirementFulfillmentGraph<
     RequirementWithIDSourceType,
     CourseTaken,
     UserChoiceOnFulfillmentStrategy
@@ -303,9 +306,16 @@ export function computeRequirements(
         .flat();
     },
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy: it => it,
-    // TODO: Replace this dummy implementation once we decided how to determine if a requirement is
-    // double-countable. Meanwhile, make it always return true to match the old behavior.
-    allowDoubleCounting: () => true,
+    allowDoubleCounting: requirement => {
+      // All minor requirements are automatically double-countable.
+      if (requirement.sourceType === 'Minor') return true;
+      if (requirement.sourceType === 'Major') {
+        if (majors == null) throw new Error("shouldn't get here since we have major requirements!");
+        // If it's not the first major, then it's double countable.
+        if (requirement.sourceSpecificName !== majors[0]) return true;
+      }
+      return requirement.allowCourseDoubleCounting || false;
+    },
   });
 
   type FulfillmentStatistics = {
