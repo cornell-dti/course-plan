@@ -28,11 +28,11 @@
     <div class="onboarding-section">
       <!-- TODO: Multiple colleges -->
       <div class="onboarding-subHeader">
-        <span class="onboarding-subHeader--font"> Your College</span>
+        <span class="onboarding-subHeader--font"> College</span>
       </div>
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <label class="onboarding-label">Your College*</label>
+          <label class="onboarding-label">College*</label>
           <div class="onboarding-selectWrapper">
             <div
               class="onboarding-select onboarding-input"
@@ -80,58 +80,59 @@
         </div>
 
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <label class="onboarding-label">Your Major</label>
-          <div class="onboarding-selectWrapper">
-            <div
-              class="onboarding-selectWrapperRow onboarding-section"
-              :class="{ 'onboarding-select--disabled': Object.keys(majors).length <= 0 }"
-              id="major"
-              v-for="(options, index) in displayOptions.major"
-              :key="index"
-              :style="{ borderColor: options.boxBorder }"
-              v-click-outside:[index]="closeMajorDropdownIfOpen"
-            >
-              <div class="onboarding-select onboarding-input">
+          <label class="onboarding-label">Major</label>
+          <div
+            class="onboarding-selectWrapperRow onboarding-section"
+            :class="{ 'onboarding-select--disabled': Object.keys(majors).length <= 0 }"
+            id="major"
+            v-for="(options, index) in displayOptions.major"
+            :key="index"
+            :style="{ borderColor: options.boxBorder }"
+            v-click-outside:[index]="closeMajorDropdownIfOpen"
+          >
+            <div class="onboarding-select onboarding-input">
+              <div
+                class="onboarding-dropdown-placeholder major-wrapper"
+                @click="showHideMajorContent(index)"
+              >
                 <div
-                  class="onboarding-dropdown-placeholder major-wrapper"
-                  @click="showHideMajorContent(index)"
+                  class="onboarding-dropdown-placeholder major-placeholder"
+                  id="major-placeholder"
+                  :style="{ color: options.placeholderColor }"
                 >
-                  <div
-                    class="onboarding-dropdown-placeholder major-placeholder"
-                    id="major-placeholder"
-                    :style="{ color: options.placeholderColor }"
-                  >
-                    {{ options.placeholder }}
-                  </div>
-                  <div
-                    class="onboarding-dropdown-placeholder major-arrow"
-                    id="major-arrow"
-                    :style="{ borderTopColor: options.arrowColor }"
-                  ></div>
+                  {{ options.placeholder }}
                 </div>
                 <div
-                  class="onboarding-dropdown-content major-content"
-                  id="major-content"
-                  v-if="options.shown"
-                >
-                  <div
-                    v-for="(major, acronym) in majors"
-                    :key="acronym"
-                    :id="major"
-                    class="onboarding-dropdown-content-item"
-                    @click="selectMajor(major, acronym, index)"
-                  >
-                    {{ major }}
-                  </div>
-                </div>
+                  class="onboarding-dropdown-placeholder major-arrow"
+                  id="major-arrow"
+                  :style="{ borderTopColor: options.arrowColor }"
+                ></div>
               </div>
               <div
-                class="onboarding-remove"
-                @click="removeMajor(index)"
-                :class="{ 'onboarding--hidden': displayOptions.major.length <= 1 }"
+                class="onboarding-dropdown-content major-content"
+                id="major-content"
+                v-if="options.shown"
               >
-                <img src="@/assets/images/x-green.svg" alt="x" />
+                <div
+                  v-for="(major, acronym) in majors"
+                  :key="acronym"
+                  :id="major"
+                  class="onboarding-dropdown-content-item"
+                  @click="selectMajor(major, acronym, index)"
+                >
+                  {{ major }}
+                </div>
               </div>
+            </div>
+            <div
+              class="onboarding-remove"
+              @click="removeMajor(index)"
+              :class="{
+                'onboarding--hidden':
+                  displayOptions.major.length === 1 &&
+                  displayOptions.major[0].placeholder == placeholderText,
+              }">
+              <img src="@/assets/images/x-green.svg" alt="x" />
             </div>
           </div>
           <div
@@ -143,7 +144,7 @@
         </div>
       </div>
       <div class="onboarding-subHeader">
-        <span class="onboarding-subHeader--font"> Your Minor</span>
+        <span class="onboarding-subHeader--font"> Minor</span>
       </div>
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper">
