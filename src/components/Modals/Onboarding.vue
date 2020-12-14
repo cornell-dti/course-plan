@@ -64,8 +64,6 @@ import OnboardingReview from '@/components/Modals/OnboardingReview.vue';
 import { clickOutside } from '@/utilities';
 import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
-require('@/assets/images/timeline1.svg');
-
 Vue.component('onboardingBasic', OnboardingBasic);
 Vue.component('onboardingTransfer', OnboardingTransfer);
 Vue.component('onboardingReview', OnboardingReview);
