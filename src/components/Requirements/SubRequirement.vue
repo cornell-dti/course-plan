@@ -107,8 +107,8 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
-import CompletedSubReqCourse from '@/components/CompletedSubReqCourse.vue';
-import IncompleteSubReqCourse from '@/components/IncompleteSubReqCourse.vue';
+import CompletedSubReqCourse from '@/components/Requirements/CompletedSubReqCourse.vue';
+import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCourse.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
 import {

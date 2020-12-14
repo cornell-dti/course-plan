@@ -76,8 +76,8 @@ import introJs from 'intro.js';
 
 import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
-import RequirementView from '@/components/RequirementView.vue';
-import SubRequirement from '@/components/SubRequirement.vue';
+import RequirementView from '@/components/Requirements/RequirementView.vue';
+import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import {
   BaseRequirement as Requirement,
@@ -127,7 +127,7 @@ type Data = {
   lastLoadedShowAllCourseId: number;
 };
 // emoji for clipboard
-const clipboard = require('../assets/images/clipboard.svg');
+const clipboard = require('@/assets/images/clipboard.svg');
 
 // This section will be revisited when we try to make first-time tooltips
 const tour = introJs().start();

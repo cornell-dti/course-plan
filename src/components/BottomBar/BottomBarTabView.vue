@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import BottomBarTab from '@/components/BottomBarTab.vue';
+import BottomBarTab from '@/components/BottomBar/BottomBarTab.vue';
 import { AppBottomBarCourse } from '@/user-data';
 
 Vue.component('bottombartab', BottomBarTab);
