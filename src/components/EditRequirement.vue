@@ -16,8 +16,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   props: {
     name: String,
     selected: Boolean,
@@ -29,7 +31,7 @@ export default {
     };
   },
   computed: {
-    multiline() {
+    multiline(): boolean {
       return this.isSelected ? this.name.length >= 24 : this.name.length > 30;
     },
   },
@@ -41,7 +43,7 @@ export default {
       this.isSelected = !this.isSelected;
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">
