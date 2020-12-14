@@ -4,7 +4,7 @@ import { CourseTaken } from '../../types';
 export type ExamRequirements = {
   readonly name: string;
   readonly fulfillment: {
-    readonly courseEquivalents?: Record<string, number | number[]>;
+    readonly courseEquivalents?: Record<string, number[]>;
     readonly minimumScore: number;
     readonly credits: number;
     readonly majorsExcluded?: string[];
@@ -48,18 +48,11 @@ function userDataToCourses(
           (exam.fulfillment.courseEquivalents[college] ||
             exam.fulfillment.courseEquivalents.DEFAULT)) ||
         [];
-      let courseIds: number[]; // [A,B,C] => (A and B and C)
-      if (typeof courseEquivalents === 'number') {
-        courseIds = [courseEquivalents];
-      } else {
-        courseIds = courseEquivalents;
-      }
-      const singleCourse = courseIds.length === 1;
       const excludedMajor =
         exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
       if (!excludedMajor) {
-        if (singleCourse) {
-          const courseId = courseIds[0];
+        if (courseEquivalents.length === 1) {
+          const courseId = courseEquivalents[0];
           courses.push({
             roster,
             courseId,
@@ -70,7 +63,7 @@ function userDataToCourses(
           });
         } else {
           // separate credits from equivalent course
-          courseIds.forEach(courseId => {
+          courseEquivalents.forEach(courseId => {
             courses.push({
               roster,
               courseId,
@@ -144,8 +137,8 @@ const examData: ExamData = {
       name: 'Chemistry',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 351265, // CHEM 2070
-          EN: 359187, // CHEM 2090
+          DEFAULT: [351265], // CHEM 2070
+          EN: [359187], // CHEM 2090
         },
         minimumScore: 5,
         credits: 4,
@@ -155,7 +148,7 @@ const examData: ExamData = {
       name: 'Computer Science A',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 358526, // CS 1110
+          DEFAULT: [358526], // CS 1110
         },
         minimumScore: 5,
         credits: 4,
@@ -165,7 +158,7 @@ const examData: ExamData = {
       name: 'Microeconomics',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 350025, // ECON 1110
+          DEFAULT: [350025], // ECON 1110
         },
         minimumScore: 4,
         credits: 3,
@@ -175,7 +168,7 @@ const examData: ExamData = {
       name: 'Microeconomics',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 350025, // ECON 1110
+          DEFAULT: [350025], // ECON 1110
           BU: [350025, 351468], // ECON 1110, HADM 1410
         },
         minimumScore: 5,
@@ -187,7 +180,7 @@ const examData: ExamData = {
       fulfillment: {
         courseEquivalents: {
           // ECON 1120
-          DEFAULT: 350038,
+          DEFAULT: [350038],
         },
         minimumScore: 4,
         credits: 3,
@@ -197,8 +190,8 @@ const examData: ExamData = {
       name: 'English Literature and Composition',
       fulfillment: {
         courseEquivalents: {
-          AS: 11, // FWS
-          EN: 11, // FWS
+          AS: [11], // FWS
+          EN: [11], // FWS
         },
         minimumScore: 4,
         credits: 3,
@@ -208,8 +201,8 @@ const examData: ExamData = {
       name: 'English Language and Composition',
       fulfillment: {
         courseEquivalents: {
-          AS: 11, // FWS
-          EN: 11, // FWS
+          AS: [11], // FWS
+          EN: [11], // FWS
         },
         minimumScore: 4,
         credits: 3,
@@ -219,7 +212,7 @@ const examData: ExamData = {
       name: 'French Language',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 353172, // FREN 2090
+          DEFAULT: [353172], // FREN 2090
         },
         minimumScore: 4,
         credits: 3,
@@ -261,7 +254,7 @@ const examData: ExamData = {
       name: 'Mathematics BC (Engineering)',
       fulfillment: {
         courseEquivalents: {
-          EN: 352255, // MATH 1910
+          EN: [352255], // MATH 1910
         },
         minimumScore: 5,
         credits: 4,
@@ -271,7 +264,7 @@ const examData: ExamData = {
       name: 'Mathematics AB',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 352116, // MATH 1110
+          DEFAULT: [352116], // MATH 1110
         },
         minimumScore: 4,
         credits: 4,
@@ -281,7 +274,7 @@ const examData: ExamData = {
       name: 'Physics I',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 355142, // PHYS 1101
+          DEFAULT: [355142], // PHYS 1101
         },
         minimumScore: 5,
         credits: 4,
@@ -291,7 +284,7 @@ const examData: ExamData = {
       name: 'Physics II',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 355143, // PHYS 1102
+          DEFAULT: [355143], // PHYS 1102
         },
         minimumScore: 5,
         credits: 4,
@@ -301,8 +294,8 @@ const examData: ExamData = {
       name: 'Physics C-Mechanics',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 355197, // PHYS 2207
-          EN: 355146, // PHYS 1112
+          DEFAULT: [355197], // PHYS 2207
+          EN: [355146], // PHYS 1112
         },
         minimumScore: 5,
         credits: 4,
@@ -312,7 +305,7 @@ const examData: ExamData = {
       name: 'Physics C-Electricity & Magnetism',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 355207, // PHYS 2213
+          DEFAULT: [355207], // PHYS 2213
         },
         minimumScore: 5,
         credits: 4,
@@ -322,7 +315,7 @@ const examData: ExamData = {
       name: 'Psychology',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 351438, // PSYCH 1101
+          DEFAULT: [351438], // PSYCH 1101
         },
         minimumScore: 4,
         credits: 3,
@@ -412,8 +405,8 @@ const examData: ExamData = {
       name: 'Chemistry',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 351265, // CHEM 2070
-          EN: 359187, // CHEM 2090
+          DEFAULT: [351265], // CHEM 2070
+          EN: [359187], // CHEM 2090
         },
         minimumScore: 6,
         credits: 4,
@@ -423,7 +416,7 @@ const examData: ExamData = {
       name: 'Computer Science',
       fulfillment: {
         courseEquivalents: {
-          DEFAULT: 358526, // CS 1110
+          DEFAULT: [358526], // CS 1110
         },
         minimumScore: 6,
         credits: 4,
@@ -443,8 +436,8 @@ const examData: ExamData = {
       name: 'English Literature A',
       fulfillment: {
         courseEquivalents: {
-          AS: 11, // FWS
-          EN: 11, // FWS
+          AS: [11], // FWS
+          EN: [11], // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -454,8 +447,8 @@ const examData: ExamData = {
       name: 'English Language and Literature',
       fulfillment: {
         courseEquivalents: {
-          AS: 11, // FWS
-          EN: 11, // FWS
+          AS: [11], // FWS
+          EN: [11], // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -486,7 +479,7 @@ const examData: ExamData = {
       fulfillment: {
         courseEquivalents: {
           DEFAULT: [355142, 355197], // PHYS 1101, PHYS 2207
-          EN: 355146, // PHYS 1112
+          EN: [355146], // PHYS 1112
         },
         minimumScore: 6,
         credits: 4,
