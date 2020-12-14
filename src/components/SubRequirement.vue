@@ -70,6 +70,7 @@
                 <span>{{ optionName }}</span>
               </div>
             </div>
+            {{ this.subReq.requirement.fulfillmentOptions[selectedFulfillmentOption].description }}
           </div>
         </div>
       </div>

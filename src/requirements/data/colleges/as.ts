@@ -172,8 +172,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 4,
-    totalCount: 5,
+    minCount: 5,
   },
   {
     name: 'Geographic Breadth Requirement (GB)',
