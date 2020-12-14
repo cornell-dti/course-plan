@@ -1,4 +1,5 @@
 import { Course } from '../types';
+import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './constants';
 
 /**
  * @param courseName name of the course (as a code)
@@ -35,7 +36,8 @@ export const courseMatchesCodeOptions = (course: Course, codeOptions: readonly s
  * @returns true if the course is AP/IB equivalent course or credit
  */
 export const courseIsAPIB = (course: Course): boolean =>
-  [10, 11].includes(course.crseId) || ['AP', 'IB', 'CREDITS'].includes(course.subject);
+  [CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.crseId) ||
+  ['AP', 'IB', 'CREDITS'].includes(course.subject);
 
 /**
  * Almost colleges have FWS requirements. Instead of writing them from scratch each time, call this
@@ -45,7 +47,7 @@ export const courseIsAPIB = (course: Course): boolean =>
  * @returns if the course satisfies FWS requirement.
  */
 export const courseIsFWS = (course: Course): boolean =>
-  course.crseId === 11 ||
+  course.crseId === FWS_COURSE_ID ||
   course.titleLong.includes('FWS:') ||
   (course.catalogSatisfiesReq?.includes('First-Year Writing Seminar') ?? false);
 
@@ -55,7 +57,7 @@ export const courseIsFWS = (course: Course): boolean =>
  * @returns true if the course is not PE or 10** level
  */
 export const courseIsAllEligible = (course: Course): boolean =>
-  course.crseId === 10 ||
+  course.crseId === CREDITS_COURSE_ID ||
   (!courseIsAPIB(course) &&
     !ifCodeMatch(course.subject, 'PE') &&
     !ifCodeMatch(course.catalogNbr, '10**'));

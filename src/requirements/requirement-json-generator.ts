@@ -8,6 +8,7 @@ import {
   Course,
 } from './types';
 import sourceRequirements from './data';
+import { FWS_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
 import filteredAllCourses from './filtered-all-courses';
 
 /**
@@ -15,8 +16,8 @@ import filteredAllCourses from './filtered-all-courses';
  */
 const specialCourses: Course[] = [
   {
-    subject: 'CREDITS',
-    crseId: 10,
+    subject: 'CREDITS', // fulfills total academic credit requirement
+    crseId: CREDITS_COURSE_ID,
     catalogNbr: '',
     titleLong: '',
     description: '',
@@ -26,8 +27,8 @@ const specialCourses: Course[] = [
     acadGroup: '',
   },
   {
-    subject: 'FWS',
-    crseId: 11,
+    subject: 'FWS', // fulfills FWS requirement
+    crseId: FWS_COURSE_ID,
     catalogNbr: '',
     titleLong: '',
     description: '',
