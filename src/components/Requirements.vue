@@ -127,7 +127,7 @@ type Data = {
   lastLoadedShowAllCourseId: number;
 };
 // emoji for clipboard
-const clipboard = require('../assets/images/clipboard.svg');
+const clipboard = require('@/assets/images/clipboard.svg');
 
 // This section will be revisited when we try to make first-time tooltips
 const tour = introJs().start();

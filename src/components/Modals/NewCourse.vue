@@ -89,17 +89,17 @@
 
 <script>
 import Vue from 'vue';
-import coursesJSON from '../../assets/courses/courses.json';
+import coursesJSON from '@/assets/courses/courses.json';
 import EditRequirement from '@/components/EditRequirement.vue';
 import BinaryButton from '@/components/BinaryButton.vue';
 
 Vue.component('editRequirement', EditRequirement);
 Vue.component('binaryButton', BinaryButton);
 
-const fall = require('../../assets/images/fallEmoji.svg');
-const spring = require('../../assets/images/springEmoji.svg');
-const winter = require('../../assets/images/winterEmoji.svg');
-const summer = require('../../assets/images/summerEmoji.svg');
+const fall = require('@/assets/images/fallEmoji.svg');
+const spring = require('@/assets/images/springEmoji.svg');
+const winter = require('@/assets/images/winterEmoji.svg');
+const summer = require('@/assets/images/summerEmoji.svg');
 
 export default Vue.extend({
   props: {

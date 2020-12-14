@@ -3,7 +3,7 @@
     <div class="modal-content" :id="contentId">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
-        <img class="modal-exit" src="../../assets/images/x.png" @click="closeCurrentModal" />
+        <img class="modal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
       </div>
       <component
         class="modal-body"
