@@ -32,6 +32,8 @@ type RequirementCommon = {
   readonly description: string;
   /** The source with more information on the requirement. (This should be a URL string.) */
   readonly source: string;
+  /** If this is set to true, then an edge to the course doesn't count towards double counting. */
+  readonly allowCourseDoubleCounting?: true;
   readonly progressBar?: boolean;
 };
 /**

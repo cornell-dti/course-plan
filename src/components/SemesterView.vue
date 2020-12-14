@@ -45,7 +45,7 @@
       :class="{ 'modal--flex': isSemesterConfirmationOpen }"
       :text="confirmationText"
     />
-    <caution
+    <semester-caution
       :id="'semesterCaution'"
       class="semesterView-caution"
       :class="{ 'modal--flex': isCautionModalOpen }"
@@ -70,7 +70,6 @@
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
-          @update-requirements-menu="updateRequirementsMenu"
           @open-caution-modal="openCautionModal"
           @add-course-to-semester="addCourseToSemester"
         />
@@ -103,7 +102,7 @@ import clone from 'clone';
 import Course from '@/components/Course.vue';
 import Semester from '@/components/Semester.vue';
 import Confirmation from '@/components/Confirmation.vue';
-import Caution from '@/components/Caution.vue';
+import SemesterCaution from '@/components/SemesterCaution.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 
@@ -119,7 +118,7 @@ import {
 Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
-Vue.component('caution', Caution);
+Vue.component('semester-caution', SemesterCaution);
 Vue.component('deletesemester', DeleteSemester);
 Vue.component('editsemester', EditSemester);
 
@@ -296,9 +295,6 @@ export default Vue.extend({
         const newSemesters = [...this.semesters, newSem].sort(this.compare);
         this.$emit('edit-semesters', newSemesters);
       }
-    },
-    updateRequirementsMenu() {
-      this.$emit('updateRequirementsMenu');
     },
     compare(a: AppSemester, b: AppSemester): number {
       if (a.type === b.type && a.year === b.year) {

@@ -19,6 +19,7 @@
         <requirements
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
+          :reqs="reqs"
           :semesters="semesters"
           :toggleableRequirementChoices="toggleableRequirementChoices"
           :user="user"
@@ -27,6 +28,7 @@
           @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
           @on-toggleable-requirement-choices-change="chooseToggleableRequirementOption"
+          @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
       <semesterview
@@ -43,7 +45,6 @@
         @edit-semesters="editSemesters"
         @updateBar="updateBar"
         @close-bar="closeBar"
-        @updateRequirementsMenu="updateRequirementsMenu"
         @increment-semID="incrementSemID"
       />
     </div>
@@ -120,7 +121,9 @@ import {
   createAppUser,
   AppToggleableRequirementChoices,
 } from '@/user-data';
-import { RequirementMap } from '@/requirements/reqs-functions';
+import { RequirementMap, computeRequirements } from '@/requirements/reqs-functions';
+import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
+import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
@@ -189,6 +192,7 @@ export default Vue.extend({
         class = "emoji-text" alt = "surf">`,
       congratsExit: '',
       congratsButtonText: 'Start Planning',
+      reqs: [] as readonly SingleMenuRequirement[],
     };
   },
   created() {
@@ -230,7 +234,7 @@ export default Vue.extend({
             this.subjectColors = firestoreUserData.subjectColors;
             this.uniqueIncrementer = firestoreUserData.uniqueIncrementer;
             this.loaded = true;
-            this.updateRequirementsMenu();
+            this.recomputeRequirements();
           } else {
             this.semesters.push({
               id: this.currSemID,
@@ -254,13 +258,14 @@ export default Vue.extend({
 
     editSemesters(newSemesters: AppSemester[]) {
       this.semesters = newSemesters;
-      this.updateRequirementsMenu();
+      this.recomputeRequirements();
     },
     chooseToggleableRequirementOption(
       toggleableRequirementChoices: AppToggleableRequirementChoices
     ) {
       this.toggleableRequirementChoices = toggleableRequirementChoices;
       this.getDocRef().update({ toggleableRequirementChoices });
+      this.recomputeRequirements();
     },
     resizeEventHandler(e: any) {
       this.isMobile = window.innerWidth <= 440;
@@ -298,7 +303,7 @@ export default Vue.extend({
      */
     createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean): AppCourse {
       if (!isRequirementsCourse) {
-        this.updateRequirementsMenu();
+        this.recomputeRequirements();
       }
       return firestoreCourseToAppCourse(
         course,
@@ -401,9 +406,6 @@ export default Vue.extend({
     },
     incrementSemID() {
       this.currSemID += 1;
-    },
-    updateRequirementsMenu() {
-      this.requirementsKey += 1;
     },
     showTourEnd() {
       if (!this.isMobile) {
@@ -565,7 +567,7 @@ export default Vue.extend({
           }
           docRef.set(data);
           this.cancelOnboarding();
-          this.updateRequirementsMenu();
+          this.recomputeRequirements();
         })
         .catch(error => {
           console.log('Error getting document:', error);
@@ -597,7 +599,6 @@ export default Vue.extend({
       });
       this.currentClasses = transferClasses;
 
-      this.updateRequirementsMenu();
       return user;
     },
 
@@ -634,6 +635,87 @@ export default Vue.extend({
 
     naIfEmptyStringArray(arr: readonly string[]) {
       return arr && arr.length !== 0 && arr[0] !== '' ? arr : ['N/A'];
+    },
+
+    getCourseCodesArray(): readonly CourseTaken[] {
+      const courses: CourseTaken[] = [];
+      this.semesters.forEach(semester => {
+        semester.courses.forEach(course => {
+          courses.push({
+            code: `${course.lastRoster}: ${course.subject} ${course.number}`,
+            subject: course.subject,
+            courseId: course.crseId,
+            number: course.number,
+            credits: course.credits,
+            roster: course.lastRoster,
+          });
+        });
+      });
+      courses.push(...getCourseEquivalentsFromUserExams(this.user));
+      return courses;
+    },
+
+    getRequirementTypeDisplayName(type: string): string {
+      return type.charAt(0).toUpperCase() + type.substring(1);
+    },
+
+    recomputeRequirements(): void {
+      const groups = computeRequirements(
+        this.getCourseCodesArray(),
+        this.toggleableRequirementChoices,
+        this.user.college,
+        this.user.major,
+        this.user.minor
+      );
+      // Turn result into data readable by requirements menu
+      const singleMenuRequirements = groups.map(group => {
+        const singleMenuRequirement: SingleMenuRequirement = {
+          ongoing: [],
+          completed: [],
+          name: `${
+            group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()
+          } Requirements`,
+          group: group.groupName.toUpperCase() as 'COLLEGE' | 'MAJOR' | 'MINOR',
+          specific: group.specific,
+        };
+        group.reqs.forEach(req => {
+          // Create progress bar with requirement with progressBar = true
+          if (req.requirement.progressBar) {
+            singleMenuRequirement.type = this.getRequirementTypeDisplayName(
+              req.requirement.fulfilledBy
+            );
+            singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
+            singleMenuRequirement.required =
+              (req.requirement.fulfilledBy !== 'self-check' && req.totalCountRequired) ||
+              req.minCountRequired;
+          }
+          // Default display value of false for all requirement lists
+          const displayableRequirementFulfillment = { ...req, displayDescription: false };
+          if (!req.minCountFulfilled || req.minCountFulfilled < req.minCountRequired) {
+            singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
+          } else {
+            singleMenuRequirement.completed.push(displayableRequirementFulfillment);
+          }
+        });
+        // Make number of requirements items progress bar in absense of identified progress metric
+        if (!singleMenuRequirement.type) {
+          singleMenuRequirement.type = 'Requirements';
+          singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
+          singleMenuRequirement.required =
+            singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
+        }
+        return singleMenuRequirement;
+      });
+      this.reqs = singleMenuRequirements;
+    },
+    deleteCourseFromSemesters(uniqueID: number) {
+      const updatedSemesters = this.semesters.map(semester => {
+        const coursesWithoutDeleted = semester.courses.filter(course => {
+          return course.uniqueID !== uniqueID;
+        });
+        return { ...semester, courses: coursesWithoutDeleted };
+      });
+      this.editSemesters(updatedSemesters);
     },
   },
 });

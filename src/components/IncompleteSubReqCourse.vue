@@ -12,6 +12,18 @@
           {{ seeAll }}
         </div>
       </div>
+      <div v-if="!dataReady && crseInfoObjects.length > 0" class="loading-requirements-courses">
+        <vue-skeleton-loader
+          v-for="n in defaultNumberofLoadingCards"
+          :key="n"
+          class="loading-courseWrapper"
+          type="rect"
+          :width="loadingCoursePixelWidth"
+          :height="loadingCoursePixelHeight"
+          animation="fade"
+          :rounded="true"
+        />
+      </div>
       <div
         v-if="displayCourses && crseInfoObjects.length > 0"
         class="draggable-requirements-courses"
@@ -44,6 +56,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
+import VueSkeletonLoader from 'skeleton-loader-vue';
 import Course from '@/components/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 import {
@@ -54,6 +67,7 @@ import {
 } from '@/requirements/types';
 import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
 
+Vue.component('vue-skeleton-loader', VueSkeletonLoader);
 Vue.component('course', Course);
 Vue.component('addcoursebutton', AddCourseButton);
 
@@ -114,6 +128,15 @@ export default Vue.extend({
       }
       return label;
     },
+    defaultNumberofLoadingCards() {
+      return 4;
+    },
+    loadingCoursePixelWidth() {
+      return '160';
+    },
+    loadingCoursePixelHeight() {
+      return '34';
+    },
     seeAll() {
       return 'See all >';
     },
@@ -169,7 +192,8 @@ export default Vue.extend({
   background-color: $inactiveGray;
 }
 
-.draggable-requirements {
+.draggable-requirements,
+.loading-requirements {
   &-wrapper {
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
@@ -202,7 +226,8 @@ export default Vue.extend({
   }
 }
 
-.requirements {
+.requirements,
+.loading {
   &-courseWrapper {
     padding: 0.2rem;
     max-width: 50%;

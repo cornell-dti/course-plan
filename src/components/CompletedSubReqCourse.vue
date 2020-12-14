@@ -9,7 +9,10 @@
           /></span>
           {{ courseLabel }}
         </div>
-        <div class="completed-reqCourses-course-heading-reset-button reqCourse-button">
+        <div
+          class="completed-reqCourses-course-heading-reset-button reqCourse-button"
+          @click="onReset"
+        >
           {{ resetText }}
         </div>
       </div>
@@ -45,11 +48,12 @@ import {
 
 Vue.component('reqcourse', ReqCourse);
 
-type Data = {
+type CompletedSubReq = {
   color: string;
   transferCreditColor: string;
   courseSubject: string;
   courseNumber: string;
+  courseUniqueId: number;
   isTransferCredit: boolean;
   semesterType: FirestoreSemesterType;
   semesterYear: number;
@@ -62,7 +66,7 @@ export default Vue.extend({
     crsesTaken: Array as PropType<readonly CourseTaken[]>,
     semesters: Array as PropType<readonly AppSemester[]>,
   },
-  data(): Data {
+  data(): CompletedSubReq {
     return {
       semesterType: 'Fall', // 'Fall' is an arbitrary FirestoreSemesterType value that user will never see
       semesterYear: 0,
@@ -70,6 +74,7 @@ export default Vue.extend({
       transferCreditColor: 'DA4A4A', // Arbitrary color for transfer credit
       courseSubject: '',
       courseNumber: '',
+      courseUniqueId: 0,
       isTransferCredit: false,
     };
   },
@@ -115,6 +120,7 @@ export default Vue.extend({
           this.color = course.color;
           this.courseSubject = course.subject;
           this.courseNumber = course.number;
+          this.courseUniqueId = course.uniqueID;
           this.semesterType = semester.type;
           this.semesterYear = semester.year;
           break;
@@ -125,6 +131,9 @@ export default Vue.extend({
       this.color = this.transferCreditColor;
       this.courseSubject = crseTaken.subject;
       this.courseNumber = crseTaken.number;
+    },
+    onReset() {
+      this.$emit('deleteCourseFromSemesters', this.courseUniqueId);
     },
   },
 });
