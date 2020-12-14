@@ -11,6 +11,8 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Introductory Programming',
     description: 'CS 111x (CS 1110, 1112, 1114, or 1115) and CS 2110 (or CS 2112) or equivalent.',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor',
+    // Allow double counting, because it overlaps with engineering's requirements.
+    allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements(
       ['CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'],
       ['CS 2110', 'CS 2112']
@@ -104,11 +106,11 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'self-check',
     minCount: 3,
   },
-  // TODO: Requirement whose classes can be double counted
   {
     name: 'Probability',
     description: 'Must take BTRY 3080, CS 4850, ECE 3100, ECON 3130, ENGRD 2700, or MATH 4710.',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor',
+    allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements([
       'BTRY 3080',
       'CS 4850',
