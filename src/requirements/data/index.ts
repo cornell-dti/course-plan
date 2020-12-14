@@ -12,9 +12,12 @@ import aemRequirements from './majors/aem';
 import bioRequirements from './majors/bio';
 import bioEngineeringRequirements from './majors/be';
 import biomedicalEngineeringRequirements from './majors/bme';
+import chemERequirements from './majors/chemE';
+import civilRequirements from './majors/ce';
 import commRequirements from './majors/comm';
 import crpRequirements from './majors/crp';
 import csRequirements from './majors/cs';
+import deaRequirements from './majors/dea';
 import economicsRequirements from './majors/econ';
 import englishRequirements from './majors/engl';
 import governmentRequirements from './majors/govt';
@@ -92,6 +95,16 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: bioEngineeringRequirements,
     },
+    CE: {
+      name: 'Civil Engineering',
+      schools: ['EN'],
+      requirements: civilRequirements,
+    },
+    CHEME: {
+      name: 'Chemical and Biomolecular Engineering',
+      schools: ['EN'],
+      requirements: chemERequirements,
+    },
     COMM: {
       name: 'Communication',
       schools: ['AG'],
@@ -106,6 +119,11 @@ const json: RequirementsJson = {
       name: 'Computer Science',
       schools: ['EN', 'AS'],
       requirements: csRequirements,
+    },
+    DEA: {
+      name: 'Design and Environmental Analysis',
+      schools: ['HE'],
+      requirements: deaRequirements,
     },
     ECON: {
       name: 'Economics',
