@@ -132,8 +132,6 @@ export default function getCourseEquivalentsFromUserExams(user: AppUser): readon
   return courses;
 }
 
-
-
 // const transferJSON: ExamData = {
 //   AP: [
 //     {
