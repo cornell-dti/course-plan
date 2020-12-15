@@ -231,8 +231,8 @@ export default Vue.extend({
   },
   data() {
     // Set dropdown colleges and majors if already filled out
-    let collegeText = placeholderText;
-    let collegeAcronym = '';
+    let collegeText = this.user.college || placeholderText;
+    let collegeAcronym = this.user.college;
     let collegePlaceholderColor = '';
     if (this.user.college !== '') {
       collegeText = this.user.collegeFN;

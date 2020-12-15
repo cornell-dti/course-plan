@@ -16,6 +16,7 @@
             v-if="currentPage == 1" 
             :user="user" 
             ref = "basic"
+            :key="keyCounter"
             @updateBasic="updateBasic" 
           />
           <onboardingTransfer
@@ -239,18 +240,48 @@ export default Vue.extend({
       }
       this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
     },
+    basicOptionsToUser(major, minor){
+      const userMajors = [];
+      for( let i = 0; i < major.length; i += 1) {
+        if( major[i].placeholder !== 'Select one') {
+          userMajors.push(major[i].acronym);
+        }
+      }
+      const userMinors = [];
+      for( let i = 0; i < minor.length; i += 1) {
+        if( minor[i].placeholder !== 'Select one') {
+          userMinors.push(minor[i].acronym);
+        }
+      }
+      const basicData = {
+        userMajors,
+        userMinors
+      }
+      return basicData;
+    },
     updateBasic(newMajor, newCollege, newMinor, name) {
+      console.log(this.user);
+      console.log(newMajor);
+      console.log(newCollege);
+      console.log(newMinor);
+      const basicData = this.basicOptionsToUser(newMajor, newMinor);
       this.displayOptions.major = newMajor;
+      // this.user.major = basicData.userMajors;
       this.displayOptions.minor = newMinor;
+      // this.user.minor = basicData.userMinor;
       this.displayOptions.college = newCollege;
+      // in this format since we may support multiple colleges in future
+      this.user.college = newCollege[0].acronym;
       this.firstName = name.firstName;
       this.user.firstName = name.firstName;
       this.middleName = name.middleName;
       this.user.middleName = name.middleName;
       this.lastName = name.lastName;
       this.user.lastName = name.lastName;
+      this.keyCounter += 1;
+      console.log(this.user);
     },
-    optionsToUser(exam, classes){
+    transferOptionsToUser(exam, classes){
       const userExams = []
       for(let i = 0; i < exam.length; i += 1) {
         if( exam[i].score !== undefined && exam[i].score.placeholder !== "0" 
@@ -277,7 +308,7 @@ export default Vue.extend({
       return transferData;
     },
     updateTransfer(exam, classes, tookSwim) {
-      const convertedData = this.optionsToUser(exam, classes);
+      const convertedData = this.transferOptionsToUser(exam, classes);
       this.displayOptions.exam = exam;
       this.user.exam = convertedData.userExams;
       this.displayOptions.class = classes;
