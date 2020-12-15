@@ -30,7 +30,7 @@
           <div class="onboarding-bottom--contents">
             <button class="onboarding-button" @click="goBack"> Prev </button>
             <button class="onboarding-button" @click="submitOnboarding">Finish</button>
-         </div>
+        </div>
         </div>
         <div v-else class="onboarding-bottom--section">
           <div class="onboarding-bottom--contents" @click="cancel">
@@ -50,8 +50,8 @@
 <script>
 import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import OnboardingBasic from '@/components/Modals/OnboardingBasic.vue';
-import OnboardingTransfer from '@/components/Modals/OnboardingTransfer.vue';
+import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
+import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { clickOutside } from '@/utilities';
 import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
@@ -224,5 +224,5 @@ export default Vue.extend({
 });
 </script>
 <style scoped lang="scss">
-  @import '@/components/Modals/Onboarding.scss';
+  @import '@/components/Modals/Onboarding/Onboarding.scss';
 </style>
