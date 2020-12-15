@@ -4,7 +4,6 @@ import firebase from 'firebase/app';
 
 import Login from '@/containers/Login.vue';
 import Dashboard from '@/containers/Dashboard.vue';
-import Settings from '@/containers/Settings.vue';
 import Page404 from '@/containers/404.vue';
 
 Vue.use(Router);
@@ -23,14 +22,6 @@ const router = new Router({
       path: `${baseURL}/`,
       name: 'Dashboard',
       component: Dashboard,
-      meta: {
-        requiresAuth: true,
-      },
-    },
-    {
-      path: `${baseURL}/settings`,
-      name: 'Settings',
-      component: Settings,
       meta: {
         requiresAuth: true,
       },
