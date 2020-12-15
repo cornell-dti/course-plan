@@ -101,7 +101,6 @@ import {
   AppToggleableRequirementChoices,
 } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
-import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 
 const functions = firebase.functions();
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
