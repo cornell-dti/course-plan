@@ -312,14 +312,27 @@ export default Vue.extend({
     this.setMinorsList();
     this.flattenDisplayMajors();
     this.flattenDisplayMinors();
-    this.$emit(
-      'updateBasic',
-      this.displayOptions.major,
-      this.displayOptions.college,
-      this.displayOptions.minor
-    );
+    const name = {
+      firstName: this.firstName,
+      middleName: this.middleName,
+      lastName: this.lastName
+    }
   },
   methods: {
+    updateBasic(){
+      const name = {
+        firstName: this.firstName,
+        middleName: this.middleName,
+        lastName: this.lastName
+      }
+      this.$emit(
+        'updateBasic',
+        this.displayOptions.major,
+        this.displayOptions.college,
+        this.displayOptions.minor,
+        name
+      );
+    },
     flattenDisplayMajors() {
       const majors = [];
       this.displayOptions.major.forEach(major => {
@@ -526,12 +539,11 @@ export default Vue.extend({
       displayOptions.arrowColor = inactiveGray;
       displayOptions.boxBorder = inactiveGray;
       displayOptions.placeholderColor = lightPlaceholderGray;
-      this.$emit(
-        'updateBasic',
-        this.displayOptions.major,
-        this.displayOptions.college,
-        this.displayOptions.minor
-      );
+      const name = {
+        firstName: this.firstName,
+        middleName: this.middleName,
+        lastName: this.lastName
+      }
     },
     selectCollege(text, acronym, i) {
       this.selectOption('college', text, acronym, i);

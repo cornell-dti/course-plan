@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2-review"> Your Major</span>
+          <span class="onboarding-subHeader2-review"> Major</span>
         </div>
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-review">
@@ -46,14 +46,14 @@
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label">Major*</label>
+            <label class="onboarding-label">Major</label>
             <div v-for="(major, index) in displayOptions.major" :key="'Major' + index">
               <label class="onboarding-label--review">{{ major.placeholder }}</label>
             </div>
           </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2-review"> Your Minor</span>
+          <span class="onboarding-subHeader2-review"> Minor</span>
         </div>
         <div class="onboarding-selectWrapper">
           <label class="onboarding-label">Minors:</label>

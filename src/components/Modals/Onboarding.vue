@@ -12,10 +12,17 @@
             Let's get to know you first!
           </div>
           <div v-if="isEditingProfile" class="onboarding-description">Let's edit your profile!</div>
-          <onboardingBasic v-if="currentPage == 1" :user="user" @updateBasic="updateBasic" />
+          <onboardingBasic 
+            v-if="currentPage == 1" 
+            :user="user" 
+            ref = "basic"
+            @updateBasic="updateBasic" 
+          />
           <onboardingTransfer
             v-if="currentPage == 2"
             :user="user"
+            :key="keyCounter"
+            ref = "transfer"
             @updateTransfer="updateTransfer"
           />
           <onboardingReview v-if="currentPage == 3" :user="user" @setPage="setPage" />
@@ -74,34 +81,35 @@ const FINAL_PAGE = 3;
 export default Vue.extend({
   props: {
     isEditingProfile: Boolean,
-    user: Object,
+    userData: Object,
   },
   data() {
     // Set dropdown colleges and majors if already filled out
     let collegeText = placeholderText;
     let collegeAcronym = '';
     let collegePlaceholderColor = '';
-    if (this.user.college !== '') {
-      collegeText = this.user.collegeFN;
-      collegeAcronym = this.user.college;
+    // const user = this.userData;
+    if (this.userData.college !== '') {
+      collegeText = this.userData.collegeFN;
+      collegeAcronym = this.userData.college;
       collegePlaceholderColor = lightPlaceholderGray;
     }
 
     let majorText = placeholderText;
     let majorAcronym = '';
     let majorPlaceholderColor = '';
-    if ('major' in this.user && this.user.major.length > 0) {
-      majorText = this.user.majorFN;
-      majorAcronym = this.user.major;
+    if ('major' in this.userData && this.userData.major.length > 0) {
+      majorText = this.userData.majorFN;
+      majorAcronym = this.userData.major;
       majorPlaceholderColor = lightPlaceholderGray;
     }
 
     let minorText = placeholderText;
     let minorAcronym = '';
     let minorPlaceholderColor = '';
-    if ('minor' in this.user && this.user.minor.length > 0) {
-      minorText = this.user.minorFN;
-      minorAcronym = this.user.minor;
+    if ('minor' in this.userData && this.userData.minor.length > 0) {
+      minorText = this.userData.minorFN;
+      minorAcronym = this.userData.minor;
       minorPlaceholderColor = lightPlaceholderGray;
     }
 
@@ -111,9 +119,9 @@ export default Vue.extend({
       colleges: {},
       majors: {},
       minors: {},
-      firstName: this.user.firstName,
-      middleName: this.user.middleName,
-      lastName: this.user.lastName,
+      firstName: this.userData.firstName,
+      middleName: this.userData.middleName,
+      lastName: this.userData.lastName,
       tookSwim: '',
       placeholderText,
       displayOptions: {
@@ -124,6 +132,8 @@ export default Vue.extend({
         class: [],
       },
       isError: false,
+      keyCounter: 1,
+      user: JSON.parse(JSON.stringify(this.userData)),
     };
   },
   directives: {
@@ -213,23 +223,68 @@ export default Vue.extend({
       return list;
     },
     goBack() {
+      if( this.currentPage === 2 ) {
+        this.$refs.transfer.updateTransfer();
+      }
       this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
     },
     setPage(page) {
       this.currentPage = page;
     },
     goNext() {
+      if( this.currentPage === 1) {
+        this.$refs.basic.updateBasic();
+      } else if( this.currentPage === 2 ) {
+        this.$refs.transfer.updateTransfer();
+      }
       this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
     },
-    updateBasic(newMajor, newCollege, newMinor) {
+    updateBasic(newMajor, newCollege, newMinor, name) {
       this.displayOptions.major = newMajor;
       this.displayOptions.minor = newMinor;
       this.displayOptions.college = newCollege;
+      this.firstName = name.firstName;
+      this.user.firstName = name.firstName;
+      this.middleName = name.middleName;
+      this.user.middleName = name.middleName;
+      this.lastName = name.lastName;
+      this.user.lastName = name.lastName;
+    },
+    optionsToUser(exam, classes){
+      const userExams = []
+      for(let i = 0; i < exam.length; i += 1) {
+        if( exam[i].score !== undefined && exam[i].score.placeholder !== "0" 
+            && exam[i].subject.placeholder !== 'Select one' ){
+          const currExam = {
+              equivCourse: exam[i].equivCourse,
+              score: exam[i].score.placeholder,
+              subject: exam[i].subject.placeholder,
+              type: exam[i].type.placeholder
+          }
+          userExams.push(currExam);
+        }
+      }
+      const userClasses = [];
+      for(let i = 0; i < classes.length; i += 1){
+        if( classes[i].class !== 'Select one') {
+          userClasses.push(classes[i]);
+        }
+      }
+      const transferData = {
+        userExams,
+        userClasses
+      }
+      return transferData;
     },
     updateTransfer(exam, classes, tookSwim) {
+      const convertedData = this.optionsToUser(exam, classes);
       this.displayOptions.exam = exam;
+      this.user.exam = convertedData.userExams;
       this.displayOptions.class = classes;
+      this.user.transferCourse = convertedData.userClasses;
       this.tookSwim = tookSwim;
+      this.user.tookSwim = tookSwim
+      this.keyCounter += 1;
     },
     cancel() {
       this.$emit('cancelOnboarding');
