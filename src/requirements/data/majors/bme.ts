@@ -12,6 +12,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
     operator: 'and',
     fulfilledBy: 'courses',
     minCount: 1,
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'Core Courses Part 1',

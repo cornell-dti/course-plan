@@ -72,7 +72,7 @@ type RequirementFulfillmentInformation<T = {}> =
           readonly totalCount?: number;
           readonly counting: 'credits' | 'courses';
           readonly operator: 'and' | 'or';
-          readonly description?: string;
+          readonly description: string;
         } & T;
       };
     };

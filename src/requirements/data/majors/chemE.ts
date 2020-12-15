@@ -27,6 +27,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
         minCount: 1,
       },
     },
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'Semester 3',
@@ -41,13 +42,14 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     operator: 'and',
     fulfilledBy: 'courses',
     minCount: 4,
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'Semester 4',
-    description: 'MATH 2904 or CEE 3040 or ENGRD 2700, CHEME 3230, CHEM 3090, and CHEM 2900.',
+    description: 'MATH 2940 or CEE 3040 or ENGRD 2700, CHEME 3230, CHEM 3090, and CHEM 2900.',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817',
     checker: includesWithSubRequirements(
-      ['MATH 2904', 'CEE 3040', 'ENGRD 2700'],
+      ['MATH 2940', 'CEE 3040', 'ENGRD 2700'],
       ['CHEME 3230'],
       ['CHEM 3090'],
       ['CHEM 2900']
@@ -55,6 +57,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     operator: 'and',
     fulfilledBy: 'courses',
     minCount: 4,
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'Semester 4: Biology Elective',
@@ -135,6 +138,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     operator: 'and',
     fulfilledBy: 'courses',
     minCount: 5,
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'Semester 6',
