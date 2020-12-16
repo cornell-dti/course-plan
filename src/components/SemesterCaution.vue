@@ -1,7 +1,7 @@
 <template>
   <div class="caution">
     <div class="caution-left">
-      <img class="caution-icon" src="../assets/images/caution-white.svg" />
+      <img class="caution-icon" src="@/assets/images/caution-white.svg" />
     </div>
     <div class="caution-text">{{ text }}</div>
     <div class="caution-right">

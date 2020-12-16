@@ -54,7 +54,9 @@
               target="_blank"
             >
               View Course Information on Roster
-              <span class="info-link-blue-img"><img src="@/assets/images/link-blue.svg" /></span>
+              <span class="info-link-blue-img"
+                ><img src="@/assets/images/link-blue.svg" alt="link arrow"
+              /></span>
             </a>
           </div>
         </div>
@@ -262,7 +264,9 @@
               target="_blank"
             >
               View Course Information on Roster
-              <span class="info-link-blue-img"><img src="@/assets/images/link-blue.svg" /></span>
+              <span class="info-link-blue-img"
+                ><img src="@/assets/images/link-blue.svg" alt="link arrow"
+              /></span>
             </a>
           </div>
         </div>

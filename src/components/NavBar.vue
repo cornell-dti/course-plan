@@ -2,7 +2,7 @@
   <div class="navbar" :class="{ bottomPreview: isBottomPreview }">
     <div class="navbar-top">
       <div class="navbar-iconWrapper">
-        <img class="navbar-icon" src="@/assets/images/branding/logo.svg" />
+        <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
       </div>
       <div class="navbar-iconWrapper desktop" id="profileIcon" @click="editProfile"></div>
     </div>
