@@ -241,37 +241,42 @@ export default Vue.extend({
       this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
     },
     basicOptionsToUser(major, minor){
-      const userMajors = [];
+      const userMajorsAcronym = [];
+      const userMajorsFN = [];
       for( let i = 0; i < major.length; i += 1) {
         if( major[i].placeholder !== 'Select one') {
-          userMajors.push(major[i].acronym);
+          userMajorsAcronym.push(major[i].acronym);
+          userMajorsFN.push(major[i].placeholder)
         }
       }
-      const userMinors = [];
+      const userMinorsAcronym = [];
+      const userMinorsFN = [];
       for( let i = 0; i < minor.length; i += 1) {
         if( minor[i].placeholder !== 'Select one') {
-          userMinors.push(minor[i].acronym);
+          userMinorsAcronym.push(minor[i].acronym);
+          userMinorsFN.push(minor[i].placeholder);
         }
       }
       const basicData = {
-        userMajors,
-        userMinors
+        userMajorsAcronym,
+        userMajorsFN,
+        userMinorsAcronym,
+        userMinorsFN
       }
       return basicData;
     },
     updateBasic(newMajor, newCollege, newMinor, name) {
-      console.log(this.user);
-      console.log(newMajor);
-      console.log(newCollege);
-      console.log(newMinor);
       const basicData = this.basicOptionsToUser(newMajor, newMinor);
       this.displayOptions.major = newMajor;
-      // this.user.major = basicData.userMajors;
+      this.user.major = basicData.userMajorsAcronym;
+      this.user.majorFN = basicData.userMajorsFN;
       this.displayOptions.minor = newMinor;
-      // this.user.minor = basicData.userMinor;
+      this.user.minor = basicData.userMinorsAcronym;
+      this.user.minorFN = basicData.userMinorsFN;
       this.displayOptions.college = newCollege;
       // in this format since we may support multiple colleges in future
       this.user.college = newCollege[0].acronym;
+      this.user.collegeFN = newCollege[0].placeholder;
       this.firstName = name.firstName;
       this.user.firstName = name.firstName;
       this.middleName = name.middleName;
@@ -279,7 +284,6 @@ export default Vue.extend({
       this.lastName = name.lastName;
       this.user.lastName = name.lastName;
       this.keyCounter += 1;
-      console.log(this.user);
     },
     transferOptionsToUser(exam, classes){
       const userExams = []

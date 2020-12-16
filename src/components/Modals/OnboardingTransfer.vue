@@ -130,10 +130,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="onboarding-select--columnCenter">
-                  <label class="onboarding-label">Credits</label>
-                  <label class="college-placeholder">{{ getExamCredit(options) }}</label>
-                </div>
                 <div class="onboarding-select--column-removeExam">
                   <div
                     class="onboarding-remove"
@@ -240,10 +236,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="onboarding-select--columnCenter">
-                  <label class="onboarding-label">Credits</label>
-                  <label class="college-placeholder">{{ getExamCredit(options) }}</label>
-                </div>
                 <div class="onboarding-select--column-removeExam">
                   <div
                     class="onboarding-remove"
@@ -302,17 +294,6 @@
             <div class="onboarding-addRemoveWrapper">
               <div class="onboarding-add" @click="addTransfer">+ add another subject</div>
             </div>
-          </div>
-        </div>
-        <div class="onboarding-bottomWrapper">
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label">Total Transfer Credits:</label>
-          </div>
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label onboarding-label--bottom---bold"
-              >{{ totalCredits }}
-            </label>
-            <label class="onboarding-label"> Credits</label>
           </div>
         </div>
       </div>

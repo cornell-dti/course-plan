@@ -126,25 +126,6 @@
                 >
               </div>
             </div>
-            <div class="alignCenter">
-              <label class="onboarding-label">Credit</label>
-              <div v-for="(options, index) in displayOptions.exam" :key="'APCredit' + index">
-                <!-- TODO replace credit with true value rather than dummy json value, or remove credit from showing -->
-                <label
-                  v-if="typeof options.type != undefined && options.type.placeholder == 'AP'"
-                  class="onboarding-label--review"
-                  >{{ getExamCredit(options) }}</label
-                >
-              </div>
-              <label class="onboarding-label addSpaceTop">Credit</label>
-              <div v-for="(options, index) in displayOptions.exam" :key="'IBCredit' + index">
-                <label
-                  v-if="typeof options.type != undefined && options.type.placeholder == 'IB'"
-                  class="onboarding-label--review"
-                  >{{ getExamCredit(options) }}</label
-                >
-              </div>
-            </div>
           </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
@@ -159,20 +140,6 @@
                 </label>
               </div>
             </div>
-            <div class="alignEnd">
-              <div v-for="(options, index) in displayOptions.class" :key="index">
-                <label v-if="options.class !== 'Select one'" class="onboarding-label--review">
-                  {{ options.credits }} Credits
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="onboarding-bottomWrapper">
-          <label class="onboarding-subHeader2--review">Total Transfer Credits:</label>
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label--bottom---bold">{{ totalCredits }}</label>
-            <label>Credits</label>
           </div>
         </div>
       </div>
