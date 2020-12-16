@@ -75,9 +75,7 @@
           ></binaryButton>
         </div>
       </div>
-      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
-        Edit Requirements
-      </div>
+      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">Edit Requirements</div>
     </div>
   </div>
 </template>
