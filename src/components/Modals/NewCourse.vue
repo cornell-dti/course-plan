@@ -131,12 +131,14 @@ export default Vue.extend({
     goBack: function onPropChange(val) {
       if (this.editMode) {
         this.editMode = false;
+        this.$emit('allow-add', false);
       } else {
         this.selected = false;
         // copied code from line 125 and 209 TODO - refactor
         const inpCopy = document.getElementById(`dropdown-${this.semesterID}`);
         inpCopy.value = '';
         this.$emit('toggle-left-button');
+        this.$emit('allow-add', true);
       }
     },
   },
@@ -269,6 +271,7 @@ export default Vue.extend({
               this.selectedCourse = newTitle.title;
               this.selected = true;
               this.$emit('toggle-left-button');
+              this.$emit('allow-add', false);
               this.getReqsRelatedToCourse();
 
               /* close the list of autocompleted values,
@@ -320,6 +323,10 @@ export default Vue.extend({
       this.editMode = false;
       this.selected = false;
       this.selectedCourse = '';
+      this.selectedCourseID = -1;
+      this.selectedReqs = [];
+      this.requirements = [];
+      this.potentialReqs = [];
     },
     updateSemProps(season, year) {
       this.$emit('updateSemProps', season, year);
@@ -359,8 +366,8 @@ export default Vue.extend({
     editReq(data) {
       const { name, isSelected } = data;
       if (isSelected) {
-        this.selectedReqs.push(name);
-      } else {
+        this.selectedReqs.push(name); // add to selectedReqs
+      } else { // remove from selectedReqs
         const index = this.selectedReqs.indexOf(name);
         if(index > -1) {
           this.selectedReqs.splice(this.selectedReqs.indexOf(name), 1);

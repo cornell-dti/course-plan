@@ -17,6 +17,7 @@
         @close-current-model="closeCourseModal"
         @updateSemProps="updateSemProps"
         @toggle-left-button="toggleLeftButton"
+        @allow-add="disableButton"
         ref="modalBodyComponent"
         :season="season"
         :year="year"
@@ -95,6 +96,9 @@ export default Vue.extend({
       return '';
     },
   },
+  mounted() {
+    this.isDisabled = this.type === 'course';
+  },
   methods: {
     disableButton(bool) {
       this.isDisabled = bool;
@@ -106,6 +110,7 @@ export default Vue.extend({
       this.courseSelected = false;
       if (this.type === 'course') {
         this.$refs.modalBodyComponent.reset();
+        this.isDisabled = true;
         this.$emit('close-course-modal');
         return;
       }
@@ -199,6 +204,9 @@ export default Vue.extend({
       this.season = season;
       this.year = year;
     },
+    allowAdd() {
+      this.isDisabled = false;
+    }
   },
 });
 </script>
