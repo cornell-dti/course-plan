@@ -131,6 +131,7 @@ export default Vue.extend({
     goBack: function onPropChange(val) {
       if (this.editMode) {
         this.editMode = false;
+        this.selectedReqs = [...this.requirements];
         this.$emit('allow-add', false);
       } else {
         this.selected = false;
@@ -318,6 +319,7 @@ export default Vue.extend({
     },
     toggleEditMode() {
       this.editMode = !this.editMode;
+      this.$emit('edit-mode');
     },
     reset() {
       this.editMode = false;
@@ -373,6 +375,22 @@ export default Vue.extend({
           this.selectedReqs.splice(this.selectedReqs.indexOf(name), 1);
         }
       }
+    },
+    next() {
+      this.editMode = false;
+
+      // update requirements & potReqs
+      const newPotReqs = [];
+      const newReqs = []
+      for( let i=0; i<this.potentialReqs.length; i += 1) {
+        if(this.selectedReqs.includes(this.potentialReqs[i])) {
+          newReqs.push(this.potentialReqs[i]);
+        } else {
+          newPotReqs.push(this.potentialReqs[i]);
+        }
+      }
+      this.requirements = [...this.requirements, ...newReqs];
+      this.potentialReqs = [...newPotReqs];
     }
   },
 });

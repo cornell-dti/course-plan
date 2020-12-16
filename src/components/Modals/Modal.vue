@@ -18,6 +18,7 @@
         @updateSemProps="updateSemProps"
         @toggle-left-button="toggleLeftButton"
         @allow-add="disableButton"
+        @edit-mode="editMode"
         ref="modalBodyComponent"
         :season="season"
         :year="year"
@@ -31,7 +32,7 @@
           :class="{ 'modal-button--disabled': isDisabled }"
           @click="addItem"
         >
-          {{ add }}
+          {{ rightButton }}
         </button>
       </div>
     </div>
@@ -56,6 +57,7 @@ export default Vue.extend({
       courseIsAddable: true,
       isDisabled: false,
       leftButton: 'CANCEL',
+      rightButton: 'ADD',
       goBack: false,
       season: '',
       year: 0,
@@ -82,9 +84,6 @@ export default Vue.extend({
         return `Add Course`;
       }
       return `${start}Custom Course`;
-    },
-    add() {
-      return 'ADD';
     },
     body() {
       if (this.type === 'semester') {
@@ -125,11 +124,16 @@ export default Vue.extend({
     },
     addItem() {
       if (this.type === 'course') {
-        const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
-        const title = dropdown.value;
+        if(this.rightButton === 'NEXT') {
+          this.rightButton = 'ADD';
+          this.$refs.modalBodyComponent.next();
+        } else {
+          const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
+          const title = dropdown.value;
 
-        const key = title.substring(0, title.indexOf(':'));
-        this.addCourse();
+          const key = title.substring(0, title.indexOf(':'));
+          this.addCourse();
+        }
       } else if (this.type === 'semester') {
         this.addSemester();
       }
@@ -204,8 +208,9 @@ export default Vue.extend({
       this.season = season;
       this.year = year;
     },
-    allowAdd() {
-      this.isDisabled = false;
+    editMode() {
+      this.leftButton = 'BACK';
+      this.rightButton = 'NEXT';
     }
   },
 });
