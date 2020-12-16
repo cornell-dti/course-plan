@@ -303,10 +303,10 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
-import coursesJSON from '../../assets/courses/courses.json';
 import checkmarkSelected from '@/assets/images/checkmark-onboarding.svg';
 import checkmarkUnselected from '@/assets/images/checkmark-empty.svg';
+import { reqsData } from '@/requirements/data/exams/ExamCredit';
+import coursesJSON from '@/assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse.vue';
 import { clickOutside } from '@/utilities';
 import { AppUser, FirestoreTransferClass } from '@/user-data';
@@ -346,7 +346,6 @@ type Data = {
     class: FirestoreTransferClass[];
   };
   key: number;
-  transferJSON: any;
   isError: boolean;
   totalCredits: number;
   swimYesImage: string;
@@ -374,7 +373,6 @@ export default Vue.extend({
         class: [],
       },
       key: 0,
-      transferJSON: {},
       isError: false,
       totalCredits: 0,
       swimYesImage: '',
@@ -386,7 +384,6 @@ export default Vue.extend({
   },
   mounted() {
     this.getClasses();
-    this.getTransferMap();
     this.setExamsMap();
     this.setSubjectList();
     this.getCredits();
@@ -476,43 +473,11 @@ export default Vue.extend({
     },
     getCredits() {
       let count = 0;
-      this.displayOptions.exam.forEach(exam => {
-        if (this.transferJSON !== null) {
-          const name = exam.subject.placeholder;
-          if (name in this.transferJSON) {
-            count += this.transferJSON[name].credits;
-          }
-        }
-      });
+      // TODO add exam credit
       this.displayOptions.class.forEach(clas => {
         count += clas.credits;
       });
       this.totalCredits = count;
-    },
-    getExamCredit(exam: Record<'type' | 'subject' | 'score', DisplayOption>) {
-      const name = exam.subject.placeholder;
-      if (this.transferJSON !== null) {
-        if (name in this.transferJSON) {
-          return this.transferJSON[name].credits;
-        }
-      }
-      return 0;
-    },
-    getTransferMap() {
-      const TransferJSON: Record<string, { credits: number; type: 'AP' | 'IB' }> = {};
-      reqsData.AP.forEach(sub => {
-        TransferJSON[sub.name] = {
-          credits: sub.fulfillment.credits,
-          type: 'AP',
-        };
-      });
-      reqsData.IB.forEach(sub => {
-        TransferJSON[sub.name] = {
-          credits: sub.fulfillment.credits,
-          type: 'IB',
-        };
-      });
-      this.transferJSON = TransferJSON;
     },
     showHideContent(type: 'exam' | 'class', section: Section, i: number) {
       let displayOptions: any = this.displayOptions[type][i];
@@ -594,7 +559,7 @@ export default Vue.extend({
           const subjects: string[] = [];
           if (examType in reqsData && examType !== null) {
             reqsData[examType].forEach(sub => {
-              subjects.push(sub.name);
+              subjects.push(sub);
             });
             totalSubjects.push(subjects);
           }
@@ -644,9 +609,6 @@ export default Vue.extend({
     selectSubject(text: string, acronym: string | number, i: number) {
       // @ts-ignore
       const type: 'AP' | 'IB' = this.displayOptions.exam[i].type.placeholder;
-      const course = this.getCourseFromExam(type, text);
-      // @ts-ignore
-      this.displayOptions.exam[i].equivCourse = course;
       this.selectOption('exam', 'subject', text, acronym, i);
     },
     selectClass(text: string, acronym: string | number, i: number) {
@@ -686,18 +648,6 @@ export default Vue.extend({
       this.displayOptions.exam.push(exam);
       this.setSubjectList();
       this.getCredits();
-    },
-    getCourseFromExam(type: 'AP' | 'IB', subject: string) {
-      let courses: Record<string, number> | undefined;
-      for (const exam of reqsData[type]) {
-        if (exam.name === subject) {
-          courses = exam.fulfillment.courseEquivalents;
-          // as a default takes the first equivalent course
-          // TODO will need to add requirements menu if editiable.
-          break;
-        }
-      }
-      return courses;
     },
     removeExam(index: number) {
       this.displayOptions.exam.splice(index, 1);

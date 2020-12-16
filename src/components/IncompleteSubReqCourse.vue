@@ -12,10 +12,7 @@
           {{ seeAll }}
         </div>
       </div>
-      <div
-        v-if="!dataReady && crseInfoObjects.length > 0"
-        class="loading-requirements-courses"
-      >
+      <div v-if="!dataReady && crseInfoObjects.length > 0" class="loading-requirements-courses">
         <vue-skeleton-loader
           v-for="n in defaultNumberofLoadingCards"
           :key="n"
