@@ -37,7 +37,7 @@
         <div class="newCourse-title">This class fulfills the following requirement(s):</div>
         <div v-if="!editMode" class="newCourse-requirements-container">
           <div class="newCourse-requirements">
-            {{ selectedReqs }}
+            {{ relatedReqs }}
           </div>
         </div>
         <div v-else class="newCourse-requirements-edit">
@@ -47,6 +47,7 @@
             :name="req"
             :selected="true"
             :isClickable="true"
+            @edit-req="editReq"
           />
         </div>
       </div>
@@ -65,6 +66,7 @@
             :key="potreq"
             :name="potreq"
             :isClickable="true"
+            @edit-req="editReq"
           />
           <binaryButton
             v-for="choice in binaryPotentialReqs"
@@ -122,6 +124,7 @@ export default Vue.extend({
       selectedCourse: '',
       selectedCourseID: -1,
       selectorSemesterId: '',
+      selectedReqs: []
     };
   },
   watch: {
@@ -147,7 +150,7 @@ export default Vue.extend({
     potReqs() {
       return this.potentialReqs.join(', ');
     },
-    selectedReqs() {
+    relatedReqs() {
       return this.requirements.join(', ');
     },
     hasReqs() {
@@ -347,11 +350,23 @@ export default Vue.extend({
           if (subreqs[j].fulfilledBy === 'self-check') {
             potReqs.push(subreqs[j].requirement.name);
           }
-          this.requirements = relatedReqs;
-          this.potentialReqs = potReqs;
+          this.requirements = [...relatedReqs];
+          this.potentialReqs = [...potReqs];
+          this.selectedReqs = [...relatedReqs];
         }
       }
     },
+    editReq(data) {
+      const { name, isSelected } = data;
+      if (isSelected) {
+        this.selectedReqs.push(name);
+      } else {
+        const index = this.selectedReqs.indexOf(name);
+        if(index > -1) {
+          this.selectedReqs.splice(this.selectedReqs.indexOf(name), 1);
+        }
+      }
+    }
   },
 });
 </script>
