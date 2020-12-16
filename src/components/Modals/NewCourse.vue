@@ -74,9 +74,9 @@
             :choices="choice"
           ></binaryButton>
         </div>
-        <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
-          Add these Requirements
-        </div>
+      </div>
+      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
+        Edit Requirements
       </div>
     </div>
   </div>
