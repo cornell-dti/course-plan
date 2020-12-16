@@ -30,13 +30,13 @@
           v-if="!seeMoreOpen"
           class="bottombarSeeMoreTab-arrow"
           src="@/assets/images/uparrow-white.svg"
-          alt="up arrow"
+          alt="expand see more"
         />
         <img
           v-if="seeMoreOpen"
           class="bottombarSeeMoreTab-arrow"
           src="@/assets/images/downarrow-white.svg"
-          alt="down arrow"
+          alt="collapse see more"
         />
       </div>
       <div v-if="seeMoreOpen" class="bottombarSeeMoreOptions">

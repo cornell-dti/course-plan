@@ -9,13 +9,13 @@
       v-if="!isExpanded"
       class="bottombartitle-arrow"
       src="@/assets/images/uparrow-white.svg"
-      alt="up arrow"
+      alt="collapse bottom bar class"
     />
     <img
       v-if="isExpanded"
       class="bottombartitle-arrow"
       src="@/assets/images/downarrow-white.svg"
-      alt="down arrow"
+      alt="expand bottom bar class"
     />
   </div>
 </template>
