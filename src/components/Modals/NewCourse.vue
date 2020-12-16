@@ -75,7 +75,7 @@
           ></binaryButton>
         </div>
       </div>
-      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">Edit Requirements</div>
+      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">{{ editReqsText }}</div>
     </div>
   </div>
 </template>
@@ -143,6 +143,9 @@ export default Vue.extend({
     hasPotReqs() {
       return this.potentialReqs.length !== 0;
     },
+    editReqsText() {
+      return this.potentialReqs.length !== 0 ? "Add these Requirements" : "Edit Requirements";
+    }
   },
   mounted() {
     // Activate focus and set input to empty
