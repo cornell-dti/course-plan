@@ -1,70 +1,96 @@
 <template>
-    <div class="onboarding">
-        <div class="onboarding-section">
-          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font">Cornell Swimming Test </span> </div>
-          <div class="onboarding-inputs onboarding-inputs--name">
-            <div class="onboarding-inputWrapper">
-              <label class="onboarding-label">Have you taken or planning on taking the Swim Test?</label>
-              <div class="onboarding-inputs--radioWrapper">
-                <input class="onboarding-inputs--radio" type="radio" v-on:click="updateSwimYes" v-model="tookSwimTest" value="yes">
-                <label class="onboarding-inputs--radio--radioText" for="yes">Yes</label>
-                <input class="onboarding-inputs--radio" type="radio" v-on:click="updateSwimNo" v-model="tookSwimTest" value="no">
-                <label class="onboarding-inputs--radio--radioText" for="no">No</label>
-              </div>
-            </div>
+  <div class="onboarding">
+    <div class="onboarding-section">
+      <div class="onboarding-subHeader">
+        <span class="onboarding-subHeader--font">Cornell Swimming Test </span>
+      </div>
+      <div class="onboarding-inputs onboarding-inputs--name">
+        <div class="onboarding-inputWrapper">
+          <label class="onboarding-label"
+            >Have you taken or planning on taking the Swim Test?</label
+          >
+          <div class="onboarding-inputs--radioWrapper">
+            <input
+              class="onboarding-inputs--radio"
+              type="radio"
+              v-on:click="updateSwimYes"
+              v-model="tookSwimTest"
+              value="yes"
+            />
+            <label class="onboarding-inputs--radio--radioText" for="yes">Yes</label>
+            <input
+              class="onboarding-inputs--radio"
+              type="radio"
+              v-on:click="updateSwimNo"
+              v-model="tookSwimTest"
+              value="no"
+            />
+            <label class="onboarding-inputs--radio--radioText" for="no">No</label>
           </div>
         </div>
-        <div class="onboarding-section">
-          <div class="onboarding-subHeader"><span class="onboarding-subHeader--font"> Transfer Credits (Optional)</span></div>
-          <div class="onboarding-inputs">
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <div class="onboarding-subHeader2">Test Credits</div>
+      </div>
+    </div>
+    <div class="onboarding-section">
+      <div class="onboarding-subHeader">
+        <span class="onboarding-subHeader--font"> Transfer Credits (Optional)</span>
+      </div>
+      <div class="onboarding-inputs">
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
+          <div class="onboarding-subHeader2">Test Credits</div>
+          <div
+            class="onboarding-section"
+            id="college"
+            v-for="(options, index) in displayOptions.exam"
+            :key="index"
+            :style="{ borderColor: options.type.boxBorder }"
+            v-click-outside:[index]="closeTypeDropdownIfOpen"
+          >
+            <label class="onboarding-label">Source/Type</label>
+            <div
+              class="onboarding-select onboarding-input"
+              :style="{ borderColor: options.type.boxBorder }"
+            >
               <div
-                  class= "onboarding-section"
-                  id="college"
-                  v-for="(options, index) in displayOptions.exam"
-                  :key="index"
-                  :style="{ borderColor: options.type.boxBorder }"
-                  v-click-outside:[index]="closeTypeDropdownIfOpen"
+                class="onboarding-dropdown-placeholder college-wrapper"
+                @click="showHideExamContent(index)"
+              >
+                <div
+                  class="onboarding-dropdown-placeholder college-placeholder"
+                  id="college-placeholder"
+                  :style="{ color: options.type.placeholderColor }"
                 >
-               <label class="onboarding-label">Source/Type</label>
-              <div class="onboarding-select onboarding-input"
-                    :style="{borderColor: options.type.boxBorder}" >
-                  <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideExamContent(index)">
-                    <div
-                      class="onboarding-dropdown-placeholder college-placeholder"
-                      id="college-placeholder"
-                      :style="{ color: options.type.placeholderColor}"
-                    >
-                      {{ options.type.placeholder }}
-                    </div>
-                    <div
-                      class="onboarding-dropdown-placeholder college-arrow"
-                      id="college-arrow"
-                      :style="{ borderTopColor: options.type.arrowColor }"
-                    ></div>
-                  </div>
-                  <div
-                    class="onboarding-dropdown-content college-content"
-                    id="college-content"
-                    v-if="options.type.shown"
-                  >
-                    <div
-                      v-for="(exam, acronym) in exams"
-                      :key="acronym"
-                      :id="exam"
-                      class="onboarding-dropdown-content-item"
-                      @click="selectExam(exam, acronym, index)"
-                    >
-                      {{ exam }}
-                    </div>
-                  </div>
+                  {{ options.type.placeholder }}
+                </div>
+                <div
+                  class="onboarding-dropdown-placeholder college-arrow"
+                  id="college-arrow"
+                  :style="{ borderTopColor: options.type.arrowColor }"
+                ></div>
               </div>
-              <div class="onboarding-selectWrapperRow">
-                <div class="onboarding-select--columnWide " >
-                  <label class="onboarding-label">Subject</label>
-                  <div class="onboarding-select onboarding-input">
-                  <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideSubjectContent(index)">
+              <div
+                class="onboarding-dropdown-content college-content"
+                id="college-content"
+                v-if="options.type.shown"
+              >
+                <div
+                  v-for="(exam, acronym) in exams"
+                  :key="acronym"
+                  :id="exam"
+                  class="onboarding-dropdown-content-item"
+                  @click="selectExam(exam, acronym, index)"
+                >
+                  {{ exam }}
+                </div>
+              </div>
+            </div>
+            <div class="onboarding-selectWrapperRow">
+              <div class="onboarding-select--columnWide">
+                <label class="onboarding-label">Subject</label>
+                <div class="onboarding-select onboarding-input">
+                  <div
+                    class="onboarding-dropdown-placeholder college-wrapper"
+                    @click="showHideSubjectContent(index)"
+                  >
                     <div
                       class="onboarding-dropdown-placeholder college-placeholder"
                       id="college-placeholder"
@@ -93,17 +119,19 @@
                       {{ subject }}
                     </div>
                   </div>
-                  </div>
                 </div>
-                <div class="onboarding-select--column" >
-                  <label class="onboarding-label">Score</label>
-                  <div class="onboarding-select onboarding-input">
-                  <div class="onboarding-dropdown-placeholder college-wrapper" @click="showHideScoreContent(index)">
+              </div>
+              <div class="onboarding-select--column">
+                <label class="onboarding-label">Score</label>
+                <div class="onboarding-select onboarding-input">
+                  <div
+                    class="onboarding-dropdown-placeholder college-wrapper"
+                    @click="showHideScoreContent(index)"
+                  >
                     <div
                       class="onboarding-dropdown-placeholder college-placeholder"
                       id="college-placeholder"
                       :style="{ color: options.score.placeholderColor }"
-
                     >
                       {{ options.score.placeholder }}
                     </div>
@@ -129,57 +157,57 @@
                     </div>
                   </div>
                 </div>
-                </div>
-                 </div>
-              </div>
-              <div class="onboarding-addRemoveWrapper" >
-                <div class="onboarding-add" @click="addExam">
-                  Add
-                </div>
-                <div class="onboarding-remove" @click="removeExam" :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1}" >
-                  Remove
-                </div>
-              </div>
-            </div>
-            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-              <div class="onboarding-subHeader2">Credits From Other Instituions</div>
-              <label class="onboarding-label">Equivalent Cornell Class</label>
-              <div
-                v-for="(options, index) in displayOptions.class"
-                :key="index"
-                class="onboarding-selectWrapper">
-                <newCourse
-                :semesterID="index"
-                :isOnboard="true"
-                :placeholderText="options.class"
-                @addItem="addItem"
-                > </newCourse>
-              <div class="onboarding-addRemoveWrapper">
-                <div class="onboarding-remove" @click="removeTransfer">
-                  Remove
-                </div>
-              </div>
-
-            </div>
-                <div class="onboarding-addRemoveWrapper">
-                <div class="onboarding-add" @click="addTransfer">
-                  Add
-                </div>
-              </div>
-
-            </div>
-            <div class="onboarding-bottomWrapper">
-              <div class=" onboarding-label--bottom">
-              <label class=" onboarding-label" >Total Non-Cornell Credits</label>
-              </div>
-              <div class="onboarding-label--bottom">
-                <label class=" onboarding-label onboarding-label--bottom---bold">{{totalCredits}} </label>
-                <label class="onboarding-label"> Credits</label>
               </div>
             </div>
           </div>
+          <div class="onboarding-addRemoveWrapper">
+            <div class="onboarding-add" @click="addExam">Add</div>
+            <div
+              class="onboarding-remove"
+              @click="removeExam"
+              :class="{ 'onboarding--hidden': displayOptions.exam.length <= 1 }"
+            >
+              Remove
+            </div>
+          </div>
         </div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
+          <div class="onboarding-subHeader2">Credits From Other Instituions</div>
+          <label class="onboarding-label">Equivalent Cornell Class</label>
+          <div
+            v-for="(options, index) in displayOptions.class"
+            :key="index"
+            class="onboarding-selectWrapper"
+          >
+            <newCourse
+              :semesterID="index"
+              :isOnboard="true"
+              :placeholderText="options.class"
+              @addItem="addItem"
+            >
+            </newCourse>
+            <div class="onboarding-addRemoveWrapper">
+              <div class="onboarding-remove" @click="removeTransfer">Remove</div>
+            </div>
+          </div>
+          <div class="onboarding-addRemoveWrapper">
+            <div class="onboarding-add" @click="addTransfer">Add</div>
+          </div>
+        </div>
+        <div class="onboarding-bottomWrapper">
+          <div class="onboarding-label--bottom">
+            <label class="onboarding-label">Total Non-Cornell Credits</label>
+          </div>
+          <div class="onboarding-label--bottom">
+            <label class="onboarding-label onboarding-label--bottom---bold"
+              >{{ totalCredits }}
+            </label>
+            <label class="onboarding-label"> Credits</label>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -222,14 +250,14 @@ type Data = {
     exam: Record<'type' | 'subject' | 'score', DisplayOption>[];
     class: FirestoreTransferClass[];
   };
-  transferJSON: any,
+  transferJSON: any;
   isError: boolean;
   totalCredits: number;
 };
 
 export default Vue.extend({
   props: {
-    user: Object as PropType<AppUser>
+    user: Object as PropType<AppUser>,
   },
   data(): Data {
     return {
@@ -243,15 +271,15 @@ export default Vue.extend({
       lastName: this.user.lastName,
       displayOptions: {
         exam: [],
-        class: []
+        class: [],
       },
       transferJSON: {},
       isError: false,
-      totalCredits: 0
+      totalCredits: 0,
     };
   },
   directives: {
-    'click-outside': clickOutside
+    'click-outside': clickOutside,
   },
   mounted() {
     this.getClasses();
@@ -277,7 +305,7 @@ export default Vue.extend({
               arrowColor: '',
               placeholderColor: lightPlaceholderGray,
               placeholder: String(this.user.exam[x][sec]),
-              acronym: ''
+              acronym: '',
             };
           }
           if (typeof this.user.exam[x].subject !== 'undefined') {
@@ -299,12 +327,12 @@ export default Vue.extend({
           arrowColor: '',
           placeholderColor: '',
           placeholder: placeholderText,
-          acronym: ''
+          acronym: '',
         };
       }
       exams.push(exam);
       this.displayOptions.exam = exams;
-      const swim = (typeof this.user.tookSwim !== 'undefined') ? this.user.tookSwim : 'no';
+      const swim = typeof this.user.tookSwim !== 'undefined' ? this.user.tookSwim : 'no';
       this.tookSwimTest = swim;
       const transferClass: FirestoreTransferClass[] = [];
       this.user.transferCourse.forEach(course => {
@@ -325,7 +353,12 @@ export default Vue.extend({
     getTransferMap() {
       this.transferJSON = reqsData;
       if (typeof this.displayOptions !== 'undefined') {
-        this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+        this.$emit(
+          'updateTransfer',
+          this.displayOptions.exam,
+          this.displayOptions.class,
+          this.tookSwimTest
+        );
       }
     },
     showHideContent(type: 'exam' | 'class', section: Section, i: number) {
@@ -417,13 +450,29 @@ export default Vue.extend({
     // Didn't want to seperate into two functions but v-model wouldn't work unless clicked twice?
     updateSwimYes() {
       this.tookSwimTest = 'yes';
-      this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+      this.$emit(
+        'updateTransfer',
+        this.displayOptions.exam,
+        this.displayOptions.class,
+        this.tookSwimTest
+      );
     },
     updateSwimNo() {
       this.tookSwimTest = 'no';
-      this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+      this.$emit(
+        'updateTransfer',
+        this.displayOptions.exam,
+        this.displayOptions.class,
+        this.tookSwimTest
+      );
     },
-    selectOption(type: 'exam' | 'class', section: Section, text: string, acronym: string | number, i: number) {
+    selectOption(
+      type: 'exam' | 'class',
+      section: Section,
+      text: string,
+      acronym: string | number,
+      i: number
+    ) {
       let displayOptions: any = this.displayOptions[type][i];
       if (type === 'exam') {
         displayOptions = displayOptions[section];
@@ -433,7 +482,12 @@ export default Vue.extend({
       displayOptions.arrowColor = inactiveGray;
       displayOptions.boxBorder = inactiveGray;
       displayOptions.placeholderColor = lightPlaceholderGray;
-      this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+      this.$emit(
+        'updateTransfer',
+        this.displayOptions.exam,
+        this.displayOptions.class,
+        this.tookSwimTest
+      );
     },
     selectExam(text: string, acronym: string | number, i: number) {
       this.selectOption('exam', 'type', text, acronym, i);
@@ -460,7 +514,7 @@ export default Vue.extend({
           arrowColor: '',
           placeholderColor: '',
           placeholder: placeholderText,
-          acronym: ''
+          acronym: '',
         },
         subject: {
           shown: false,
@@ -469,7 +523,7 @@ export default Vue.extend({
           arrowColor: '',
           placeholderColor: placeholderText,
           placeholder: placeholderText,
-          acronym: ''
+          acronym: '',
         },
         score: {
           shown: false,
@@ -478,8 +532,8 @@ export default Vue.extend({
           arrowColor: '',
           placeholderColor: '',
           placeholder: placeholderText,
-          acronym: ''
-        }
+          acronym: '',
+        },
       };
       this.displayOptions.exam.push(exam);
     },
@@ -500,7 +554,9 @@ export default Vue.extend({
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
       const number = courseCode.split(' ')[1];
-      fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=FA14&subject=${subject}&q=${courseCode}`) // should be removed later
+      fetch(
+        `https://classes.cornell.edu/api/2.0/search/classes.json?roster=FA14&subject=${subject}&q=${courseCode}`
+      ) // should be removed later
         .then(res => res.json())
         .then(resultJSON => {
           // check catalogNbr of resultJSON class matches number of course to add
@@ -511,19 +567,23 @@ export default Vue.extend({
               this.displayOptions.class[id] = {
                 class: courseCode,
                 course,
-                credits: creditsC
+                credits: creditsC,
               };
               this.getCredits();
-              this.$emit('updateTransfer', this.displayOptions.exam, this.displayOptions.class, this.tookSwimTest);
+              this.$emit(
+                'updateTransfer',
+                this.displayOptions.exam,
+                this.displayOptions.class,
+                this.tookSwimTest
+              );
             }
           });
         });
-    }
-  }
+    },
+  },
 });
-
 </script>
 
 <style scoped lang="scss">
-  @import '@/components/Modals/Onboarding.scss';
+@import '@/components/Modals/Onboarding.scss';
 </style>
