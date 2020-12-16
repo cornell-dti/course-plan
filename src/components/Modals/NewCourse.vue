@@ -104,7 +104,6 @@ export default Vue.extend({
     placeholderText: String,
     season: String,
     year: Number,
-    goBack: Boolean,
     isCourseModelSelectingSemester: Boolean,
     reqs: Array,
   },
@@ -124,24 +123,8 @@ export default Vue.extend({
       selectedCourse: '',
       selectedCourseID: -1,
       selectorSemesterId: '',
-      selectedReqs: []
+      selectedReqs: [],
     };
-  },
-  watch: {
-    goBack: function onPropChange(val) {
-      if (this.editMode) {
-        this.editMode = false;
-        this.selectedReqs = [...this.requirements];
-        this.$emit('allow-add', false);
-      } else {
-        this.selected = false;
-        // copied code from line 125 and 209 TODO - refactor
-        const inpCopy = document.getElementById(`dropdown-${this.semesterID}`);
-        inpCopy.value = '';
-        this.$emit('toggle-left-button');
-        this.$emit('allow-add', true);
-      }
-    },
   },
   computed: {
     text() {
@@ -369,9 +352,10 @@ export default Vue.extend({
       const { name, isSelected } = data;
       if (isSelected) {
         this.selectedReqs.push(name); // add to selectedReqs
-      } else { // remove from selectedReqs
+      } else {
+        // remove from selectedReqs
         const index = this.selectedReqs.indexOf(name);
-        if(index > -1) {
+        if (index > -1) {
           this.selectedReqs.splice(this.selectedReqs.indexOf(name), 1);
         }
       }
@@ -379,19 +363,39 @@ export default Vue.extend({
     next() {
       this.editMode = false;
 
-      // update requirements & potReqs
+      // update potentialReqs by removing the ones that were selected
       const newPotReqs = [];
-      const newReqs = []
-      for( let i=0; i<this.potentialReqs.length; i += 1) {
-        if(this.selectedReqs.includes(this.potentialReqs[i])) {
-          newReqs.push(this.potentialReqs[i]);
-        } else {
+      for (let i = 0; i < this.potentialReqs.length; i += 1) {
+        if (!this.selectedReqs.includes(this.potentialReqs[i])) {
           newPotReqs.push(this.potentialReqs[i]);
         }
       }
-      this.requirements = [...this.requirements, ...newReqs];
+      // add the requirements that were deselected to potential requirements
+      for (let i = 0; i < this.requirements.length; i += 1) {
+        if (!this.selectedReqs.includes(this.requirements[i])) {
+          newPotReqs.push(this.requirements[i]);
+        }
+      }
+      this.requirements = [...this.selectedReqs];
       this.potentialReqs = [...newPotReqs];
-    }
+    },
+    goBack() {
+      if (this.editMode) {
+        this.editMode = false;
+        this.selectedReqs = [...this.requirements];
+        this.$emit('allow-add', false);
+      } else {
+        this.selected = false;
+        // copied code from line 125 and 209 TODO - refactor
+        const inpCopy = document.getElementById(`dropdown-${this.semesterID}`);
+        inpCopy.value = '';
+        this.$emit('toggle-left-button');
+        this.$emit('allow-add', true);
+      }
+    },
+    getSelectedReqs() {
+      return this.selectedReqs;
+    },
   },
 });
 </script>

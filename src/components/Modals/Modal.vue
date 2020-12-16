@@ -124,7 +124,7 @@ export default Vue.extend({
     },
     addItem() {
       if (this.type === 'course') {
-        if(this.rightButton === 'NEXT') {
+        if (this.rightButton === 'NEXT') {
           this.rightButton = 'ADD';
           this.$refs.modalBodyComponent.next();
         } else {
@@ -132,6 +132,8 @@ export default Vue.extend({
           const title = dropdown.value;
 
           const key = title.substring(0, title.indexOf(':'));
+          const selectedReqs = this.$refs.modalBodyComponent.getSelectedReqs();
+          console.log(selectedReqs);
           this.addCourse();
         }
       } else if (this.type === 'semester') {
@@ -200,6 +202,7 @@ export default Vue.extend({
     backOrCancel() {
       if (this.leftButton === 'BACK') {
         this.goBack = !this.goBack;
+        this.$refs.modalBodyComponent.goBack();
       } else {
         this.closeCurrentModal();
       }
@@ -211,7 +214,7 @@ export default Vue.extend({
     editMode() {
       this.leftButton = 'BACK';
       this.rightButton = 'NEXT';
-    }
+    },
   },
 });
 </script>
