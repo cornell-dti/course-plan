@@ -136,7 +136,8 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       Biology: {
-        description: 'Take 1: BIOG 1140, BIOG 1440, BIOMG 1350, BIOEE 1610 or BIOG 1445',
+        description:
+          'Take 1: BIOG 1140, BIOG 1440, BIOMG 1350, BIOEE 1610, BIOG 1445, or 5 on AP Biology',
         checker: includesWithSubRequirements([
           'BIOG 1140',
           'BIOG 1440',
@@ -148,41 +149,16 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
         operator: 'and',
         minCount: 1,
       },
-      // TODO: Placeholder for AP Bio
-      'AP Biology score of 5': {
-        description: 'AP Biology score of 5',
-        checker: includesWithSubRequirements(['BIOG 1140']),
-        counting: 'courses',
-        operator: 'and',
-        minCount: 1,
-      },
       Chemistry: {
-        description: 'Take 1: CHEM 1560 or CHEM 2070 or CHEM 2080',
+        description: 'Take 1: CHEM 1560, CHEM 2070, CHEM 2080, or 5 on AP Chemistry',
         checker: includesWithSubRequirements(['CHEM 1560', 'CHEM 2070', 'CHEM 2080']),
         counting: 'courses',
         operator: 'and',
         minCount: 1,
       },
-      // TODO: Placeholder for AP Chem
-      'AP Chemistry score of 5': {
-        description: 'AP Chemistry score of 5',
-        // Add AP course: "Chemistry"
-        checker: includesWithSubRequirements(['CHEM 2080']),
-        counting: 'courses',
-        operator: 'and',
-        minCount: 1,
-      },
       Physics: {
-        description: 'Take 1: PHYS 1101, PHYS 2207, PHYS 1102, or PHYS 2208',
+        description: 'Take 1: PHYS 1101, PHYS 2207, PHYS 1102, PHYS 2208, or 5 on AP Physics',
         checker: includesWithSubRequirements(['PHYS 1101', 'PHYS 2207', 'PHYS 1102', 'PHYS 2208']),
-        counting: 'courses',
-        operator: 'and',
-        minCount: 1,
-      },
-      // TODO: Placeholder for AP Physics
-      'AP Physics score of 5': {
-        description: 'AP Physics score of 5',
-        checker: includesWithSubRequirements(['PHYS 1101']),
         counting: 'courses',
         operator: 'and',
         minCount: 1,
