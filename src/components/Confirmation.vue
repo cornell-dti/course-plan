@@ -1,7 +1,7 @@
 <template>
   <div class="confirmation">
     <div class="confirmation-left">
-      <img class="confirmation-icon" src="../assets/images/checkmark.svg" />
+      <img class="confirmation-icon" src="@/assets/images/checkmark.svg" alt="checkmark" />
     </div>
     <div class="confirmation-text">{{ text }}</div>
   </div>

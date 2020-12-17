@@ -8,12 +8,13 @@
       <img
         v-if="leftChosen"
         class="confirmation-icon binary-button-check"
-        src="../assets/images/check.svg"
+        src="@/assets/images/check.svg"
+        alt="checkmark"
       />
       <div>
         {{ choices[0] }}
       </div>
-      <img v-if="leftChosen" class="confirmation-icon hidden" src="../assets/images/check.svg" />
+      <img v-if="leftChosen" class="confirmation-icon hidden" src="@/assets/images/check.svg" />
     </div>
     <div
       @click="onClick(false)"
@@ -23,12 +24,13 @@
       <img
         v-if="!leftChosen"
         class="confirmation-icon binary-button-check"
-        src="../assets/images/check.svg"
+        src="@/assets/images/check.svg"
+        alt="checkmark"
       />
       <div>
         {{ choices[1] }}
       </div>
-      <img v-if="!leftChosen" class="confirmation-icon hidden" src="../assets/images/check.svg" />
+      <img v-if="!leftChosen" class="confirmation-icon hidden" src="@/assets/images/check.svg" />
     </div>
   </div>
 </template>

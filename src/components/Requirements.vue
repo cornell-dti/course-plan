@@ -101,7 +101,6 @@ import {
   AppToggleableRequirementChoices,
 } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
-import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 
 const functions = firebase.functions();
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
@@ -127,7 +126,7 @@ type Data = {
   lastLoadedShowAllCourseId: number;
 };
 // emoji for clipboard
-const clipboard = require('../assets/images/clipboard.svg');
+const clipboard = require('@/assets/images/clipboard.svg');
 
 // This section will be revisited when we try to make first-time tooltips
 const tour = introJs().start();
