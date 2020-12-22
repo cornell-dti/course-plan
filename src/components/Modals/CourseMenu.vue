@@ -1,5 +1,5 @@
 <template>
-  <div class="courseMenu" >
+  <div class="courseMenu">
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
@@ -13,7 +13,11 @@
         </div>
         <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
 
-        <div v-if="displayColors" class="courseMenu-content courseMenu-colors" :class="{'courseMenu-colors--left': isLeft }">
+        <div
+          v-if="displayColors"
+          class="courseMenu-content courseMenu-colors"
+          :class="{ 'courseMenu-colors--left': isLeft }"
+        >
           <div
             v-for="(color, index) in colors"
             :key="index"
@@ -35,15 +39,22 @@
         @mouseover="setDisplayEditCourseCredits(true)"
         @mouseleave="setDisplayEditCourseCredits(false)"
         v-if="this.getCreditRange[0] != this.getCreditRange[1]"
-        >
+      >
         <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" :class="{'courseMenu-icon--left': isLeft }" src="@/assets/images/edit-credits.svg" />
+          <img
+            class="courseMenu-icon"
+            :class="{ 'courseMenu-icon--left': isLeft }"
+            src="@/assets/images/edit-credits.svg"
+          />
           <span class="courseMenu-text">Edit Credits</span>
         </div>
         <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
-          <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
-          :class="{'courseMenu-editCredits--left': isLeft }">
+        <div
+          v-if="displayEditCourseCredits"
+          class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
+          :class="{ 'courseMenu-editCredits--left': isLeft }"
+        >
           <div
             v-for="credit in makeCreditArary()"
             :key="credit"
@@ -56,7 +67,11 @@
           </div>
         </div>
       </div>
-      <div class="courseMenu-section" :class="{'courseMenu-section--left': isLeft }" @click="deleteCourse">
+      <div
+        class="courseMenu-section"
+        :class="{ 'courseMenu-section--left': isLeft }"
+        @click="deleteCourse"
+      >
         <div class="courseMenu-left">
           <img class="courseMenu-icon" src="@/assets/images/trash.svg" />
           <span class="courseMenu-text">Delete</span>
@@ -67,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import Vue, {PropType} from 'vue';
+import Vue, { PropType } from 'vue';
 import Course from '@/components/Course.vue';
 import { coursesColorSet } from '@/assets/constants/colors';
 
@@ -75,7 +90,7 @@ export default Vue.extend({
   props: {
     getCreditRange: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
     semId: Number,
-    isCompact: Boolean
+    isCompact: Boolean,
   },
   data() {
     return {
@@ -84,7 +99,7 @@ export default Vue.extend({
       // isLeft: this.semId % numPerRow() === 0,
       colors: coursesColorSet,
       displayColors: false,
-      displayEditCourseCredits: false
+      displayEditCourseCredits: false,
     };
   },
   computed: {
@@ -96,7 +111,8 @@ export default Vue.extend({
       const grid = document.getElementsByClassName('semesterView-content')[0];
       // @ts-ignore
       const gridStyle = grid.currentStyle || window.getComputedStyle(grid);
-      const gridWidth = grid.clientWidth - (parseFloat(gridStyle.paddingLeft) + parseFloat(gridStyle.paddingRight));
+      const gridWidth =
+        grid.clientWidth - (parseFloat(gridStyle.paddingLeft) + parseFloat(gridStyle.paddingRight));
 
       let numPerRow = 0;
       if (this.isCompact) {
@@ -105,7 +121,7 @@ export default Vue.extend({
         numPerRow = Math.min(Math.floor(gridWidth / itemWidth), 2);
       }
       return numPerRow;
-    }
+    },
   },
   methods: {
     deleteCourse() {
@@ -125,9 +141,9 @@ export default Vue.extend({
     },
     makeCreditArary() {
       const creditArray: number[] = [];
-      let accu = (this.getCreditRange[0] < 1) ? 0 : (this.getCreditRange[0] - 1);
+      let accu = this.getCreditRange[0] < 1 ? 0 : this.getCreditRange[0] - 1;
 
-      for (let i = accu; i < (this.getCreditRange[1]); i += 1) {
+      for (let i = accu; i < this.getCreditRange[1]; i += 1) {
         if (this.getCreditRange[0] < 1) {
           accu += 0.5;
           creditArray.push(accu);
@@ -139,13 +155,13 @@ export default Vue.extend({
         }
       }
       return creditArray;
-    }
-  }
+    },
+  },
 });
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .courseMenu {
   &-content {
@@ -207,7 +223,7 @@ export default Vue.extend({
     }
 
     &--left {
-      margin-right: .25rem;
+      margin-right: 0.25rem;
     }
   }
   &-colors {

@@ -8,7 +8,11 @@
           <div id="oops" class="color_box">
             Oops...
             <br />Page Not Found
-            <img class="thinking-face" src="@/assets/images/thinking_face.svg" alt="thinking face" />
+            <img
+              class="thinking-face"
+              src="@/assets/images/thinking_face.svg"
+              alt="thinking face"
+            />
           </div>
         </div>
       </div>
