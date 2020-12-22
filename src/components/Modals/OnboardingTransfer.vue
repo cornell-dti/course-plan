@@ -19,7 +19,7 @@
                 id="yes"
                 value="yes"
               />
-              <img class="checkmark" :src="swimYesImage" alt="checkmark"/>
+              <img class="checkmark" :src="swimYesImage" alt="checkmark" />
               Yes
             </label>
             <label class="onboarding-inputs--radio--radioText" for="no">
