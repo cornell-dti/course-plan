@@ -303,6 +303,20 @@
               <div class="onboarding-add" @click="addTransfer">+ add another subject</div>
             </div>
           </div>
+          <div class="onboarding-addRemoveWrapper">
+            <div class="onboarding-add" @click="addTransfer">Add</div>
+          </div>
+        </div>
+        <div class="onboarding-bottomWrapper">
+          <div class="onboarding-label--bottom">
+            <label class="onboarding-label">Total Non-Cornell Credits</label>
+          </div>
+          <div class="onboarding-label--bottom">
+            <label class="onboarding-label onboarding-label--bottom---bold"
+              >{{ totalCredits }}
+            </label>
+            <label class="onboarding-label"> Credits</label>
+          </div>
         </div>
         <div class="onboarding-bottomWrapper">
           <div class="onboarding-label--bottom">
@@ -689,9 +703,6 @@ export default Vue.extend({
     selectSubject(text: string, acronym: string | number, i: number) {
       // @ts-ignore
       const type: 'AP' | 'IB' = this.displayOptions.exam[i].type.placeholder;
-      const course = this.getCourseFromExam(type, text);
-      // @ts-ignore
-      this.displayOptions.exam[i].equivCourse = course;
       this.selectOption('exam', 'subject', text, acronym, i);
     },
     selectClass(text: string, acronym: string | number, i: number) {
@@ -733,7 +744,7 @@ export default Vue.extend({
       this.getCredits();
     },
     getCourseFromExam(type: 'AP' | 'IB', subject: string) {
-      let courses: Record<string, number> | undefined;
+      let courses: Record<string, number[]> | undefined;
       for (const exam of reqsData[type]) {
         if (exam.name === subject) {
           courses = exam.fulfillment.courseEquivalents;

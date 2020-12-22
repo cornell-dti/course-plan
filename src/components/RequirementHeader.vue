@@ -72,6 +72,8 @@
             width: progressWidth,
           }"
           role="progressbar"
+          :aria-valuenow="progressWidth"
+          aria-valuemax="100%"
         ></div>
       </div>
 

@@ -18,8 +18,7 @@
           <input class="onboarding-input" v-model="middleName" />
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-          <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font"> Last Name* </span></label
+          <label class="onboarding-label"    ><span class="onboarding-subHeader--font"> Last Name* </span></label
           >
           <input class="onboarding-input" v-model="lastName" />
         </div>
@@ -192,6 +191,11 @@
                     {{ minor }}
                   </div>
                 </div>
+                <div
+                  class="onboarding-dropdown-placeholder minor-arrow"
+                  id="minor-arrow"
+                  :style="{ borderTopColor: options.arrowColor }"
+                ></div>
               </div>
               <div
                 class="onboarding-remove"

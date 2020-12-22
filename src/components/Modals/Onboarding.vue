@@ -32,7 +32,7 @@
             alt="X"
           />
         </div>
-        <div v-if="currentPage == 3" class="onboarding-bottom--section">
+        <div v-if="currentPage === 3" class="onboarding-bottom--section">
           <!-- keeping skip button code in case we want to add back -->
           <!-- <div class="onboarding-bottom--contents" @click="cancel">
             <label class="onboarding-bottom--text">Skip for now</label>
