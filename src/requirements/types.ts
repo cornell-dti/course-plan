@@ -156,9 +156,7 @@ export type GroupedRequirementFulfillmentReport = {
   readonly reqs: readonly RequirementFulfillment<RequirementFulfillmentStatistics>[];
 };
 
-export type DisplayableRequirementFulfillment = RequirementFulfillment<
-  RequirementFulfillmentStatistics
->;
+export type DisplayableRequirementFulfillment = RequirementFulfillment<RequirementFulfillmentStatistics>;
 
 export type SingleMenuRequirement = {
   readonly ongoing: DisplayableRequirementFulfillment[];
