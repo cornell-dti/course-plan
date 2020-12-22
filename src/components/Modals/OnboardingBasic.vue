@@ -18,7 +18,8 @@
           <input class="onboarding-input" v-model="middleName" />
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-          <label class="onboarding-label"    ><span class="onboarding-subHeader--font"> Last Name* </span></label
+          <label class="onboarding-label"
+            ><span class="onboarding-subHeader--font"> Last Name* </span></label
           >
           <input class="onboarding-input" v-model="lastName" />
         </div>
