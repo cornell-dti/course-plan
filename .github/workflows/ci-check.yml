@@ -16,6 +16,7 @@ jobs:
             echo "package-lock.json has become out of sync."
             echo "Make sure you use the same NPM version as the CI's NPM version."
             echo "CI's NPM version is $(npm --version). Please make sure that at least the minor version agrees."
+            git diff package-lock.json
             exit 1
           fi
       - name: Run Prettier Check
