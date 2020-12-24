@@ -8,8 +8,16 @@ jobs:
       - uses: actions/checkout@master
       - name: Set up Node
         uses: actions/setup-node@v2-beta
-      - name: NPM Clean Install
-        run: npm ci
+      - name: NPM Install
+        run: npm install
+      - name: Check package-lock.json is unchanged
+        run: |
+          if [[ `git status --porcelain` == *"package-lock.json"* ]]; then
+            echo "package-lock.json has become out of sync."
+            echo "Make sure you use the same NPM version as the CI's NPM version."
+            echo "CI's NPM version is $(npm --version). Please make sure that at least the minor version agrees."
+            exit 1
+          fi
       - name: Run Prettier Check
         run: npm run format:check
       - name: Run Linter
