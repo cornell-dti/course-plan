@@ -46,7 +46,7 @@
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label">Major*</label>
+            <label class="onboarding-label">Major</label>
             <div v-for="(major, index) in displayOptions.major" :key="'Major' + index">
               <label class="onboarding-label--review">{{ major.placeholder }}</label>
             </div>
