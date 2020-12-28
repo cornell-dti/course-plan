@@ -321,16 +321,16 @@ export default Vue.extend({
     const name = {
       firstName: this.firstName,
       middleName: this.middleName,
-      lastName: this.lastName
-    }
+      lastName: this.lastName,
+    };
   },
   methods: {
-    updateBasic(){
+    updateBasic() {
       const name = {
         firstName: this.firstName,
         middleName: this.middleName,
-        lastName: this.lastName
-      }
+        lastName: this.lastName,
+      };
       this.$emit(
         'updateBasic',
         this.displayOptions.major,
@@ -548,8 +548,8 @@ export default Vue.extend({
       const name = {
         firstName: this.firstName,
         middleName: this.middleName,
-        lastName: this.lastName
-      }
+        lastName: this.lastName,
+      };
     },
     selectCollege(text, acronym, i) {
       this.selectOption('college', text, acronym, i);

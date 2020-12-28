@@ -12,18 +12,18 @@
             Let's get to know you first!
           </div>
           <div v-if="isEditingProfile" class="onboarding-description">Let's edit your profile!</div>
-          <onboardingBasic 
-            v-if="currentPage == 1" 
-            :user="user" 
-            ref = "basic"
+          <onboardingBasic
+            v-if="currentPage == 1"
+            :user="user"
+            ref="basic"
             :key="keyCounter"
-            @updateBasic="updateBasic" 
+            @updateBasic="updateBasic"
           />
           <onboardingTransfer
             v-if="currentPage == 2"
             :user="user"
             :key="keyCounter"
-            ref = "transfer"
+            ref="transfer"
             @updateTransfer="updateTransfer"
           />
           <onboardingReview v-if="currentPage == 3" :user="user" @setPage="setPage" />
@@ -224,7 +224,7 @@ export default Vue.extend({
       return list;
     },
     goBack() {
-      if( this.currentPage === 2 ) {
+      if (this.currentPage === 2) {
         this.$refs.transfer.updateTransfer();
       }
       this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
@@ -233,26 +233,26 @@ export default Vue.extend({
       this.currentPage = page;
     },
     goNext() {
-      if( this.currentPage === 1) {
+      if (this.currentPage === 1) {
         this.$refs.basic.updateBasic();
-      } else if( this.currentPage === 2 ) {
+      } else if (this.currentPage === 2) {
         this.$refs.transfer.updateTransfer();
       }
       this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
     },
-    basicOptionsToUser(major, minor){
+    basicOptionsToUser(major, minor) {
       const userMajorsAcronym = [];
       const userMajorsFN = [];
-      for( let i = 0; i < major.length; i += 1) {
-        if( major[i].placeholder !== 'Select one') {
+      for (let i = 0; i < major.length; i += 1) {
+        if (major[i].placeholder !== 'Select one') {
           userMajorsAcronym.push(major[i].acronym);
-          userMajorsFN.push(major[i].placeholder)
+          userMajorsFN.push(major[i].placeholder);
         }
       }
       const userMinorsAcronym = [];
       const userMinorsFN = [];
-      for( let i = 0; i < minor.length; i += 1) {
-        if( minor[i].placeholder !== 'Select one') {
+      for (let i = 0; i < minor.length; i += 1) {
+        if (minor[i].placeholder !== 'Select one') {
           userMinorsAcronym.push(minor[i].acronym);
           userMinorsFN.push(minor[i].placeholder);
         }
@@ -261,8 +261,8 @@ export default Vue.extend({
         userMajorsAcronym,
         userMajorsFN,
         userMinorsAcronym,
-        userMinorsFN
-      }
+        userMinorsFN,
+      };
       return basicData;
     },
     updateBasic(newMajor, newCollege, newMinor, name) {
@@ -285,30 +285,33 @@ export default Vue.extend({
       this.user.lastName = name.lastName;
       this.keyCounter += 1;
     },
-    transferOptionsToUser(exam, classes){
-      const userExams = []
-      for(let i = 0; i < exam.length; i += 1) {
-        if( exam[i].score !== undefined && exam[i].score.placeholder !== "0" 
-            && exam[i].subject.placeholder !== 'Select one' ){
+    transferOptionsToUser(exam, classes) {
+      const userExams = [];
+      for (let i = 0; i < exam.length; i += 1) {
+        if (
+          exam[i].score !== undefined &&
+          exam[i].score.placeholder !== '0' &&
+          exam[i].subject.placeholder !== 'Select one'
+        ) {
           const currExam = {
-              equivCourse: exam[i].equivCourse,
-              score: exam[i].score.placeholder,
-              subject: exam[i].subject.placeholder,
-              type: exam[i].type.placeholder
-          }
+            equivCourse: exam[i].equivCourse,
+            score: exam[i].score.placeholder,
+            subject: exam[i].subject.placeholder,
+            type: exam[i].type.placeholder,
+          };
           userExams.push(currExam);
         }
       }
       const userClasses = [];
-      for(let i = 0; i < classes.length; i += 1){
-        if( classes[i].class !== 'Select one') {
+      for (let i = 0; i < classes.length; i += 1) {
+        if (classes[i].class !== 'Select one') {
           userClasses.push(classes[i]);
         }
       }
       const transferData = {
         userExams,
-        userClasses
-      }
+        userClasses,
+      };
       return transferData;
     },
     updateTransfer(exam, classes, tookSwim) {
@@ -318,7 +321,7 @@ export default Vue.extend({
       this.displayOptions.class = classes;
       this.user.transferCourse = convertedData.userClasses;
       this.tookSwim = tookSwim;
-      this.user.tookSwim = tookSwim
+      this.user.tookSwim = tookSwim;
       this.keyCounter += 1;
     },
     cancel() {
