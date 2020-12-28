@@ -11,9 +11,9 @@
       </div>
       <div class="onboarding-subsection onboarding-inputs--review">
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2--review"> Your Name</span>
+          <span class="onboarding-subHeader2-review"> Your Name</span>
         </div>
-        <div class="onboarding-selectWrapperRow--review">
+        <div class="onboarding-selectWrapperRow-review">
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
             <label class="onboarding-label"><span> First Name </span></label>
             <label class="onboarding-label--review"
@@ -34,10 +34,10 @@
           </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2--review"> Major</span>
+          <span class="onboarding-subHeader2-review"> Your Major</span>
         </div>
         <div class="onboarding-selectWrapper">
-          <div class="onboarding-selectWrapper--review">
+          <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">College*</label>
             <div>
               <label class="onboarding-label--review">{{
@@ -45,7 +45,7 @@
               }}</label>
             </div>
           </div>
-          <div class="onboarding-selectWrapper--review">
+          <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">Major</label>
             <div v-for="(major, index) in displayOptions.major" :key="'Major' + index">
               <label class="onboarding-label--review">{{ major.placeholder }}</label>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2--review"> Minor</span>
+          <span class="onboarding-subHeader2-review"> Your Minor</span>
         </div>
         <div class="onboarding-selectWrapper">
           <label class="onboarding-label">Minors:</label>
@@ -75,10 +75,10 @@
       </div>
       <div class="onboarding-inputs onboarding-inputs">
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2--review"> Cornell Swimming Test</span>
+          <span class="onboarding-subHeader2-review"> Cornell Swimming Test</span>
         </div>
         <div class="onboarding-selectWrapper">
-          <div class="onboarding-selectWrapper--review">
+          <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">
               <img class="checkmark" src="@/assets/images/checkmark-onboarding.svg" />
               {{ this.user.tookSwim === 'yes' ? 'Yes' : 'No' }}
@@ -267,7 +267,7 @@ export default {
         ],
         exam: [
           {
-            // unnecessary but required for type check, as this is not ts file yet?
+            // unnecessary but required for type check, as this is not ts file yet, whats a better way to deal with this?
             shown: false,
             stopClose: false,
             boxBorder: '',

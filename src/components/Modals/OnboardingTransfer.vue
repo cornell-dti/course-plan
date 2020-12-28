@@ -336,10 +336,10 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
+import coursesJSON from '../../assets/courses/courses.json';
 import checkmarkSelected from '@/assets/images/checkmark-onboarding.svg';
 import checkmarkUnselected from '@/assets/images/checkmark-empty.svg';
-import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
-import coursesJSON from '@/assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse.vue';
 import { clickOutside } from '@/utilities';
 import { AppUser, FirestoreTransferClass } from '@/user-data';

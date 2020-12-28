@@ -13,7 +13,7 @@ input {
     justify-content: space-between;
     width: 100%;
 
-    &--review {
+    &-review {
       margin-top: 15px;
       display: flex;
       flex-direction: row;
@@ -33,7 +33,7 @@ input {
       justify-content: space-between;
       margin-bottom: 1.5rem
     }
-    &--reviewExam {
+    &-reviewExam {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -176,7 +176,7 @@ input {
       border-bottom-color: #c4c4c4;
       margin-bottom: 1.5rem;
     }
-    &--review {
+    &-review {
       font-weight: 600;
       font-size: 16px;
     }
