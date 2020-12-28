@@ -130,6 +130,10 @@
                     </div>
                   </div>
                 </div>
+                <div class="onboarding-select--columnCenter">
+                  <label class="onboarding-label">Credits</label>
+                  <label class="college-placeholder">{{ getExamCredit(options) }}</label>
+                </div>
                 <div class="onboarding-select--column-removeExam">
                   <div
                     class="onboarding-remove"
@@ -236,6 +240,10 @@
                     </div>
                   </div>
                 </div>
+                <div class="onboarding-select--columnCenter">
+                  <label class="onboarding-label">Credits</label>
+                  <label class="college-placeholder">{{ getExamCredit(options) }}</label>
+                </div>
                 <div class="onboarding-select--column-removeExam">
                   <div
                     class="onboarding-remove"
@@ -310,6 +318,17 @@
             <label class="onboarding-label"> Credits</label>
           </div>
         </div>
+        <div class="onboarding-bottomWrapper">
+          <div class="onboarding-label--bottom">
+            <label class="onboarding-label">Total Transfer Credits:</label>
+          </div>
+          <div class="onboarding-label--bottom">
+            <label class="onboarding-label onboarding-label--bottom---bold"
+              >{{ totalCredits }}
+            </label>
+            <label class="onboarding-label"> Credits</label>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -319,7 +338,7 @@
 import Vue, { PropType } from 'vue';
 import checkmarkSelected from '@/assets/images/checkmark-onboarding.svg';
 import checkmarkUnselected from '@/assets/images/checkmark-empty.svg';
-import { reqsData } from '@/requirements/data/exams/ExamCredit';
+import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '@/assets/courses/courses.json';
 import NewCourse from '@/components/Modals/NewCourse.vue';
 import { clickOutside } from '@/utilities';
@@ -360,6 +379,7 @@ type Data = {
     class: FirestoreTransferClass[];
   };
   key: number;
+  transferJSON: any;
   isError: boolean;
   totalCredits: number;
   swimYesImage: string;
@@ -387,6 +407,7 @@ export default Vue.extend({
         class: [],
       },
       key: 0,
+      transferJSON: {},
       isError: false,
       totalCredits: 0,
       swimYesImage: '',
@@ -487,11 +508,51 @@ export default Vue.extend({
     },
     getCredits() {
       let count = 0;
-      // TODO add exam credit
+      this.displayOptions.exam.forEach(exam => {
+        if (this.transferJSON !== null) {
+          const name = exam.subject.placeholder;
+          if (name in this.transferJSON) {
+            count += this.transferJSON[name].credits;
+          }
+        }
+      });
       this.displayOptions.class.forEach(clas => {
         count += clas.credits;
       });
       this.totalCredits = count;
+    },
+    getExamCredit(exam: Record<'type' | 'subject' | 'score', DisplayOption>) {
+      const name = exam.subject.placeholder;
+      if (this.transferJSON !== null) {
+        if (name in this.transferJSON) {
+          return this.transferJSON[name].credits;
+        }
+      }
+      return 0;
+    },
+    getTransferMap() {
+      const TransferJSON: Record<string, { credits: number; type: 'AP' | 'IB' }> = {};
+      reqsData.AP.forEach(sub => {
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
+          type: 'AP',
+        };
+      });
+      reqsData.IB.forEach(sub => {
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
+          type: 'IB',
+        };
+      });
+      this.transferJSON = TransferJSON;
+      if (typeof this.displayOptions !== 'undefined') {
+        this.$emit(
+          'updateTransfer',
+          this.displayOptions.exam,
+          this.displayOptions.class,
+          this.tookSwimTest
+        );
+      }
     },
     showHideContent(type: 'exam' | 'class', section: Section, i: number) {
       let displayOptions: any = this.displayOptions[type][i];
@@ -573,7 +634,7 @@ export default Vue.extend({
           const subjects: string[] = [];
           if (examType in reqsData && examType !== null) {
             reqsData[examType].forEach(sub => {
-              subjects.push(sub);
+              subjects.push(sub.name);
             });
             totalSubjects.push(subjects);
           }
@@ -586,11 +647,23 @@ export default Vue.extend({
       this.tookSwimTest = 'yes';
       this.swimYesImage = checkmarkSelected;
       this.swimNoImage = checkmarkUnselected;
+      this.$emit(
+        'updateTransfer',
+        this.displayOptions.exam,
+        this.displayOptions.class,
+        this.tookSwimTest
+      );
     },
     updateSwimNo() {
       this.tookSwimTest = 'no';
       this.swimNoImage = checkmarkSelected;
       this.swimYesImage = checkmarkUnselected;
+      this.$emit(
+        'updateTransfer',
+        this.displayOptions.exam,
+        this.displayOptions.class,
+        this.tookSwimTest
+      );
     },
     setSwimImages() {
       this.swimYesImage = this.tookSwimTest === 'yes' ? checkmarkSelected : checkmarkUnselected;
@@ -662,6 +735,18 @@ export default Vue.extend({
       this.displayOptions.exam.push(exam);
       this.setSubjectList();
       this.getCredits();
+    },
+    getCourseFromExam(type: 'AP' | 'IB', subject: string) {
+      let courses: Record<string, number[]> | undefined;
+      for (const exam of reqsData[type]) {
+        if (exam.name === subject) {
+          courses = exam.fulfillment.courseEquivalents;
+          // as a default takes the first equivalent course
+          // TODO will need to add requirements menu if editiable.
+          break;
+        }
+      }
+      return courses;
     },
     removeExam(index: number) {
       this.displayOptions.exam.splice(index, 1);

@@ -86,10 +86,10 @@
           </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2--review"> Test Credits</span>
+          <span class="onboarding-subHeader2-review"> Test Credits</span>
         </div>
         <div class="onboarding-selectWrapper">
-          <div class="onboarding-selectWrapper--reviewExam">
+          <div class="onboarding-selectWrapper-reviewExam">
             <div class="alignLeft">
               <label class="onboarding-label">AP Credits</label>
               <div v-for="(options, index) in displayOptions.exam" :key="'AP' + index">
@@ -126,13 +126,32 @@
                 >
               </div>
             </div>
+            <div class="alignCenter">
+              <label class="onboarding-label">Credit</label>
+              <div v-for="(options, index) in displayOptions.exam" :key="'APCredit' + index">
+                <!-- TODO replace credit with true value rather than dummy json value, or remove credit from showing -->
+                <label
+                  v-if="typeof options.type != undefined && options.type.placeholder == 'AP'"
+                  class="onboarding-label--review"
+                  >{{ getExamCredit(options) }}</label
+                >
+              </div>
+              <label class="onboarding-label addSpaceTop">Credit</label>
+              <div v-for="(options, index) in displayOptions.exam" :key="'IBCredit' + index">
+                <label
+                  v-if="typeof options.type != undefined && options.type.placeholder == 'IB'"
+                  class="onboarding-label--review"
+                  >{{ getExamCredit(options) }}</label
+                >
+              </div>
+            </div>
           </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2--review"> Transferred Course Credits</span>
+          <span class="onboarding-subHeader2-review"> Transferred Course Credits</span>
         </div>
         <div class="onboarding-selectWrapper">
-          <div class="onboarding-selectWrapper--reviewExam">
+          <div class="onboarding-selectWrapper-reviewExam">
             <div>
               <div v-for="(options, index) in displayOptions.class" :key="index">
                 <label v-if="options.class !== 'Select one'" class="onboarding-label--review">
@@ -140,6 +159,20 @@
                 </label>
               </div>
             </div>
+            <div class="alignEnd">
+              <div v-for="(options, index) in displayOptions.class" :key="index">
+                <label v-if="options.class !== 'Select one'" class="onboarding-label--review">
+                  {{ options.credits }} Credits
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="onboarding-bottomWrapper">
+          <label class="onboarding-subHeader2-review">Total Transfer Credits:</label>
+          <div class="onboarding-label--bottom">
+            <label class="onboarding-label--bottom---bold">{{ totalCredits }}</label>
+            <label>Credits</label>
           </div>
         </div>
       </div>
@@ -151,6 +184,7 @@
 // TODO: move repeated functions in all onboarding pages to a separate file
 
 import reqsData from '@/requirements/typed-requirement-json';
+import { examData } from '@/requirements/data/exams/ExamCredit';
 import coursesJSON from '../../assets/courses/courses.json';
 
 const placeholderText = 'Select one';
@@ -196,6 +230,7 @@ export default {
       lastName: this.user.lastName,
       placeholderText,
       totalCredits: 0,
+      transferJSON: {},
       displayOptions: {
         college: [
           {
@@ -263,9 +298,14 @@ export default {
     };
   },
   mounted() {
+    this.setCollegesMap();
     this.getClasses();
     this.flattenDisplayMajors();
     this.flattenDisplayMinors();
+    this.getTransferMap();
+    this.setExamsMap();
+    this.setSubjectList();
+    this.getCredits();
   },
   methods: {
     flattenDisplayMajors() {
@@ -373,6 +413,91 @@ export default {
       });
       transferClass.push({ class: placeholderText, credits: 0 });
       this.displayOptions.class = transferClass;
+    },
+    getCredits() {
+      let count = 0;
+      this.displayOptions.exam.forEach(exam => {
+        if (this.transferJSON !== null) {
+          const name = exam.subject.placeholder;
+          if (name in this.transferJSON) {
+            count += this.transferJSON[name].credits;
+          }
+        }
+      });
+      this.displayOptions.class.forEach(clas => {
+        count += clas.credits;
+      });
+      this.totalCredits = count;
+    },
+    getExamCredit(exam) {
+      const name = exam.subject.placeholder;
+      if (this.transferJSON !== null) {
+        if (name in this.transferJSON) {
+          return this.transferJSON[name].credits;
+        }
+      }
+      return 0;
+    },
+    getTransferMap() {
+      const TransferJSON = {};
+      examData.AP.forEach(sub => {
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
+          type: 'AP',
+        };
+      });
+      examData.IB.forEach(sub => {
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
+          type: 'IB',
+        };
+      });
+      this.transferJSON = TransferJSON;
+      if (typeof this.displayOptions !== 'undefined') {
+        this.$emit(
+          'updateTransfer',
+          this.displayOptions.exam,
+          this.displayOptions.class,
+          this.tookSwimTest
+        );
+      }
+    },
+    // Set the exam map to with acronym keys and full name values
+    setExamsMap() {
+      /** @type {Object.<string, string>} */
+      const exams = [];
+      Object.keys(examData).forEach(key => {
+        exams.push(key);
+      });
+      this.exams = exams;
+    },
+    // Set the subject map to with acronym keys and full name values
+    setSubjectList() {
+      /** @type {Object.<string, string>} */
+      const totalSubjects = [];
+      this.displayOptions.exam.forEach(exam => {
+        if (exam.type.placeholder !== placeholderText) {
+          const examType = exam.type.placeholder;
+          const subjects = [];
+          if (examType in examData && examType !== null) {
+            examData[examType].forEach(sub => {
+              subjects.push(sub.subject);
+            });
+            totalSubjects.push(subjects);
+          }
+        }
+      });
+      this.subjects = totalSubjects;
+    },
+    // Set the colleges map to with acronym keys and full name values
+    setCollegesMap() {
+      /** @type {Object.<string, string>} */
+      const colleges = {};
+      const collegeJSON = reqsData.college;
+      Object.keys(collegeJSON).forEach(key => {
+        colleges[key] = collegeJSON[key].name;
+      });
+      this.colleges = colleges;
     },
     setPage(page) {
       this.$emit('setPage', page);
