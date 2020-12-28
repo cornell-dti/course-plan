@@ -11,7 +11,7 @@ input {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width:100%;
+    width: 100%;
 
     &-review {
       margin-top: 15px;
@@ -39,7 +39,7 @@ input {
       justify-content: space-between;
       margin-bottom: 1.5rem
     }
-    
+
   }
   &-bottomWrapper {
     margin-top: 15px;
@@ -136,7 +136,7 @@ input {
     font-weight: bold;
     font-size: 18px;
     line-height: 22px;
-    position:relative; 
+    position: relative;
     top: 23px;
     padding-left:15px;
     padding-right:15px;
@@ -170,7 +170,7 @@ input {
     line-height: 18px;
     color: #404040;
     margin-bottom: .75rem;
-    
+
     &-fillRow {
       border: 1px solid #ffffff;
       width: 100%;
@@ -208,7 +208,7 @@ input {
       color: $lightPlaceholderGray;
       font-size: 16px;
     }
-    
+
   }
 
   &-input {
@@ -267,7 +267,6 @@ input {
   }
 
   &-bottom {
-      
     display: flex;
     flex-direction: column;
     padding-left: 56px;
@@ -295,7 +294,7 @@ input {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        
+
     }
     &--text {
         font-style: normal;
@@ -455,8 +454,8 @@ input {
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 7px;
-    max-height:150px; 
-    overflow:auto; 
+    max-height: 150px;
+    overflow: auto;
 
     margin-top: 3px;
 
