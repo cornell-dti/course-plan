@@ -139,10 +139,10 @@ Vue.component('deletesemester', DeleteSemester);
 Vue.component('editsemester', EditSemester);
 Vue.component('addcoursebutton', AddCourseButton);
 
-const fall = require('../assets/images/fallEmoji.svg');
-const spring = require('../assets/images/springEmoji.svg');
-const winter = require('../assets/images/winterEmoji.svg');
-const summer = require('../assets/images/summerEmoji.svg');
+const fall = require('@/assets/images/fallEmoji.svg');
+const spring = require('@/assets/images/springEmoji.svg');
+const winter = require('@/assets/images/winterEmoji.svg');
+const summer = require('@/assets/images/summerEmoji.svg');
 
 const pageTour = introJs();
 pageTour.setOption('exitOnEsc', 'false');

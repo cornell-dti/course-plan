@@ -5,7 +5,7 @@
         <span class="onboarding-subHeader--font"> Basic Information</span>
         <span>
           <button class="onboarding-button-previous" @click="setPage(1)">
-            <img src="@/assets/images/edit-review.svg" alt="edit"/>
+            <img src="@/assets/images/edit-review.svg" alt="edit" />
           </button>
         </span>
       </div>
@@ -241,20 +241,20 @@ export default {
             placeholder: placeholderText,
             acronym: '',
             type: {
-              placeholder: ''
+              placeholder: '',
             },
             subject: {
-              placeholder: ''
+              placeholder: '',
             },
             score: {
-              placeholder: ''
+              placeholder: '',
             },
-          }
+          },
         ],
         class: [
-          { 
+          {
             // unnecessary but required for type check, as this is not ts file yet
-            class: placeholderText, 
+            class: placeholderText,
             credits: 0,
           },
         ],

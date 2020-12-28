@@ -19,7 +19,7 @@
                 id="yes"
                 value="yes"
               />
-              <img class="checkmark" :src="swimYesImage" alt="checkmark"/>
+              <img class="checkmark" :src="swimYesImage" alt="checkmark" />
               Yes
             </label>
             <label class="onboarding-inputs--radio--radioText" for="no">
@@ -295,6 +295,20 @@
               <div class="onboarding-add" @click="addTransfer">+ add another subject</div>
             </div>
           </div>
+          <div class="onboarding-addRemoveWrapper">
+            <div class="onboarding-add" @click="addTransfer">Add</div>
+          </div>
+        </div>
+        <div class="onboarding-bottomWrapper">
+          <div class="onboarding-label--bottom">
+            <label class="onboarding-label">Total Non-Cornell Credits</label>
+          </div>
+          <div class="onboarding-label--bottom">
+            <label class="onboarding-label onboarding-label--bottom---bold"
+              >{{ totalCredits }}
+            </label>
+            <label class="onboarding-label"> Credits</label>
+          </div>
         </div>
       </div>
     </div>
@@ -473,11 +487,51 @@ export default Vue.extend({
     },
     getCredits() {
       let count = 0;
-      // TODO add exam credit
+      this.displayOptions.exam.forEach(exam => {
+        if (this.transferJSON !== null) {
+          const name = exam.subject.placeholder;
+          if (name in this.transferJSON) {
+            count += this.transferJSON[name].credits;
+          }
+        }
+      });
       this.displayOptions.class.forEach(clas => {
         count += clas.credits;
       });
       this.totalCredits = count;
+    },
+    getExamCredit(exam: Record<'type' | 'subject' | 'score', DisplayOption>) {
+      const name = exam.subject.placeholder;
+      if (this.transferJSON !== null) {
+        if (name in this.transferJSON) {
+          return this.transferJSON[name].credits;
+        }
+      }
+      return 0;
+    },
+    getTransferMap() {
+      const TransferJSON: Record<string, { credits: number; type: 'AP' | 'IB' }> = {};
+      reqsData.AP.forEach(sub => {
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
+          type: 'AP',
+        };
+      });
+      reqsData.IB.forEach(sub => {
+        TransferJSON[sub.name] = {
+          credits: sub.fulfillment.credits,
+          type: 'IB',
+        };
+      });
+      this.transferJSON = TransferJSON;
+      if (typeof this.displayOptions !== 'undefined') {
+        this.$emit(
+          'updateTransfer',
+          this.displayOptions.exam,
+          this.displayOptions.class,
+          this.tookSwimTest
+        );
+      }
     },
     showHideContent(type: 'exam' | 'class', section: Section, i: number) {
       let displayOptions: any = this.displayOptions[type][i];
@@ -559,7 +613,7 @@ export default Vue.extend({
           const subjects: string[] = [];
           if (examType in reqsData && examType !== null) {
             reqsData[examType].forEach(sub => {
-              subjects.push(sub);
+              subjects.push(sub.name);
             });
             totalSubjects.push(subjects);
           }
@@ -648,6 +702,18 @@ export default Vue.extend({
       this.displayOptions.exam.push(exam);
       this.setSubjectList();
       this.getCredits();
+    },
+    getCourseFromExam(type: 'AP' | 'IB', subject: string) {
+      let courses: Record<string, number[]> | undefined;
+      for (const exam of reqsData[type]) {
+        if (exam.name === subject) {
+          courses = exam.fulfillment.courseEquivalents;
+          // as a default takes the first equivalent course
+          // TODO will need to add requirements menu if editiable.
+          break;
+        }
+      }
+      return courses;
     },
     removeExam(index: number) {
       this.displayOptions.exam.splice(index, 1);

@@ -131,7 +131,8 @@
                 'onboarding--hidden':
                   displayOptions.major.length === 1 &&
                   displayOptions.major[0].placeholder == placeholderText,
-              }">
+              }"
+            >
               <img src="@/assets/images/x-green.svg" alt="x" />
             </div>
           </div>
@@ -191,6 +192,11 @@
                     {{ minor }}
                   </div>
                 </div>
+                <div
+                  class="onboarding-dropdown-placeholder minor-arrow"
+                  id="minor-arrow"
+                  :style="{ borderTopColor: options.arrowColor }"
+                ></div>
               </div>
               <div
                 class="onboarding-remove"

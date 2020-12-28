@@ -82,9 +82,9 @@
 </template>
 
 <script lang="ts">
-import Vue, {PropType} from 'vue';
+import Vue, { PropType } from 'vue';
 import Course from '@/components/Course.vue';
-import { coursesColorSet } from '../../assets/constants/colors';
+import { coursesColorSet } from '@/assets/constants/colors';
 
 export default Vue.extend({
   props: {
@@ -141,9 +141,9 @@ export default Vue.extend({
     },
     makeCreditArary() {
       const creditArray: number[] = [];
-      let accu = (this.getCreditRange[0] < 1) ? 0 : (this.getCreditRange[0] - 1);
+      let accu = this.getCreditRange[0] < 1 ? 0 : this.getCreditRange[0] - 1;
 
-      for (let i = accu; i < (this.getCreditRange[1]); i += 1) {
+      for (let i = accu; i < this.getCreditRange[1]; i += 1) {
         if (this.getCreditRange[0] < 1) {
           accu += 0.5;
           creditArray.push(accu);

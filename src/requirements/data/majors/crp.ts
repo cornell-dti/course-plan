@@ -45,8 +45,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
       ),
     operator: 'or',
     fulfilledBy: 'courses',
-    totalCount: 5,
-    minCount: 4,
+    minCount: 5,
   },
   {
     name: 'Core Classes',

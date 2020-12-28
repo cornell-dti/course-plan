@@ -11,7 +11,7 @@ input {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width:100%;
+    width: 100%;
 
     &--review {
       margin-top: 15px;
@@ -39,7 +39,7 @@ input {
       justify-content: space-between;
       margin-bottom: 1.5rem
     }
-    
+
   }
   &-bottomWrapper {
     margin-top: 15px;
@@ -129,35 +129,34 @@ input {
     box-sizing: border-box;
     border-radius: 9px;
     padding: 3rem;
-    padding-top:2rem;
-
+    padding-top: 2rem;
   }
   &-subHeader {
     font-weight: bold;
     font-size: 18px;
     line-height: 22px;
-    position:relative; 
+    position: relative;
     top: 23px;
-    padding-left:15px;
-    padding-right:15px;
+    padding-left: 15px;
+    padding-right: 15px;
     /* identical to box height */
     display: flex;
     align-items: center;
     text-align: center;
     justify-content: space-between;
-    color: #404040;
+    color: $darkGray2;
     margin-bottom: .75rem;
 
     &--font{
-      color: #404040;
-      padding:5px;
-      margin-left:10px;
+      color: $darkGray2;
+      padding: 5px;
+      margin-left: 10px;
       background-color: white;
     }
     &--review{
       font-weight: normal;
-      padding:5px;
-      margin-left:10px;
+      padding: 5px;
+      margin-left: 10px;
       background-color: white;
       color: $lightPlaceholderGray;
       font-size: 16px;
@@ -168,9 +167,9 @@ input {
     font-weight: 600;
     font-size: 18px;
     line-height: 18px;
-    color: #404040;
+    color: $darkGray2;
     margin-bottom: .75rem;
-    
+
     &-fillRow {
       border: 1px solid #ffffff;
       width: 100%;
@@ -188,7 +187,7 @@ input {
     font-weight: normal;
     font-size: 16px;
     line-height: 19px;
-    color: #404040;
+    color: $darkGray2;
     margin-bottom: .5rem;
 
     &--bottom {
@@ -208,7 +207,7 @@ input {
       color: $lightPlaceholderGray;
       font-size: 16px;
     }
-    
+
   }
 
   &-input {
@@ -267,7 +266,6 @@ input {
   }
 
   &-bottom {
-      
     display: flex;
     flex-direction: column;
     padding-left: 56px;
@@ -295,7 +293,7 @@ input {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        
+
     }
     &--text {
         font-style: normal;
@@ -308,7 +306,7 @@ input {
         color: #B6B6B6;
 
         &:hover {
-            color: #404040;
+            color: $darkGray2;
         }
 
     }
@@ -455,8 +453,8 @@ input {
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 7px;
-    max-height:150px; 
-    overflow:auto; 
+    max-height: 150px;
+    overflow: auto;
 
     margin-top: 3px;
 
