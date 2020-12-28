@@ -129,8 +129,7 @@ input {
     box-sizing: border-box;
     border-radius: 9px;
     padding: 3rem;
-    padding-top:2rem;
-
+    padding-top: 2rem;
   }
   &-subHeader {
     font-weight: bold;
@@ -138,26 +137,26 @@ input {
     line-height: 22px;
     position: relative;
     top: 23px;
-    padding-left:15px;
-    padding-right:15px;
+    padding-left: 15px;
+    padding-right: 15px;
     /* identical to box height */
     display: flex;
     align-items: center;
     text-align: center;
     justify-content: space-between;
-    color: #404040;
+    color: $darkGray2;
     margin-bottom: .75rem;
 
     &--font{
-      color: #404040;
-      padding:5px;
-      margin-left:10px;
+      color: $darkGray2;
+      padding: 5px;
+      margin-left: 10px;
       background-color: white;
     }
     &--review{
       font-weight: normal;
-      padding:5px;
-      margin-left:10px;
+      padding: 5px;
+      margin-left: 10px;
       background-color: white;
       color: $lightPlaceholderGray;
       font-size: 16px;
@@ -168,7 +167,7 @@ input {
     font-weight: 600;
     font-size: 18px;
     line-height: 18px;
-    color: #404040;
+    color: $darkGray2;
     margin-bottom: .75rem;
 
     &-fillRow {
@@ -188,7 +187,7 @@ input {
     font-weight: normal;
     font-size: 16px;
     line-height: 19px;
-    color: #404040;
+    color: $darkGray2;
     margin-bottom: .5rem;
 
     &--bottom {
@@ -307,7 +306,7 @@ input {
         color: #B6B6B6;
 
         &:hover {
-            color: #404040;
+            color: $darkGray2;
         }
 
     }
