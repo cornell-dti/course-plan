@@ -374,6 +374,9 @@ export default {
       transferClass.push({ class: placeholderText, credits: 0 });
       this.displayOptions.class = transferClass;
     },
+    setPage(page) {
+      this.$emit('setPage', page);
+    },
   },
 };
 </script>
