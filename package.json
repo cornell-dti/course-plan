@@ -63,7 +63,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "jest": "^26.4.2",
     "node-sass": "^4.13.1",
-    "prettier": "^2.1.2",
+    "prettier": "2.2.1",
     "sass-loader": "^8.0.2",
     "typescript": "~3.7.5",
     "vti": "0.0.17",

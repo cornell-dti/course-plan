@@ -18,39 +18,37 @@
             :user="user"
             @updateTransfer="updateTransfer"
           />
+          <onboardingReview v-if="currentPage == 3" :user="user" @setPage="setPage" />
+        </div>
+        <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">
+          Please fill out all required fields and try again.
         </div>
       </div>
       <div class="onboarding-bottom">
         <div class="onboarding-bottom--section onboarding-bottom--section---center">
           <img
             class="timeline"
-            :src="require(`@/assets/images/timeline${currentPage}.svg`)"
+            :src="require(`@/assets/images/timeline${currentPage}text.svg`)"
             alt="X"
           />
         </div>
-        <div
-          v-if="currentPage == 3"
-          class="onboarding-bottom--section onboarding-bottom--section---center"
-        >
-          <div class="onboarding-bottom--contents" @click="cancel">
+        <div v-if="currentPage === 3" class="onboarding-bottom--section">
+          <!-- keeping skip button code in case we want to add back -->
+          <!-- <div class="onboarding-bottom--contents" @click="cancel">
             <label class="onboarding-bottom--text">Skip for now</label>
-          </div>
+          </div> -->
           <div class="onboarding-bottom--contents">
-            <button class="onboarding-button" @click="goBack">Prev</button>
+            <button class="onboarding-button-previous" @click="goBack">&lt; Previous</button>
             <button class="onboarding-button" @click="submitOnboarding">Finish</button>
           </div>
         </div>
         <div v-else class="onboarding-bottom--section">
-          <div class="onboarding-bottom--contents" @click="cancel">
-            <label class="onboarding-bottom--text">Skip for now</label>
-          </div>
           <div class="onboarding-bottom--contents">
-            <button class="onboarding-button" @click="goBack">Prev</button>
-            <button class="onboarding-button" @click="goNext">Next</button>
+            <button v-if="currentPage != 1" class="onboarding-button-previous" @click="goBack">
+              &lt; Previous
+            </button>
+            <button class="onboarding-button" @click="goNext">Next &gt;</button>
           </div>
-        </div>
-        <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">
-          Please fill out all required fields and try again.
         </div>
       </div>
     </div>
@@ -62,13 +60,13 @@ import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import OnboardingBasic from '@/components/Modals/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/OnboardingTransfer.vue';
+import OnboardingReview from '@/components/Modals/OnboardingReview.vue';
 import { clickOutside } from '@/utilities';
 import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
-require('@/assets/images/timeline1.svg');
-
 Vue.component('onboardingBasic', OnboardingBasic);
 Vue.component('onboardingTransfer', OnboardingTransfer);
+Vue.component('onboardingReview', OnboardingReview);
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -216,6 +214,9 @@ export default Vue.extend({
     },
     goBack() {
       this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
+    },
+    setPage(page) {
+      this.currentPage = page;
     },
     goNext() {
       this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;

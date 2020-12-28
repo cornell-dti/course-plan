@@ -4,11 +4,12 @@
     <!-- TODO: for some reason this breaks the dropdown <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div> -->
     <div class="autocomplete">
       <input
-        class="newCourse-dropdown"
+        :class="onboardingStyle(placeholderText, isOnboard)"
         :id="'dropdown-' + semesterID"
         :ref="'dropdown-' + semesterID"
         :placeholder="placeholder"
         @keyup.esc="closeCourseModal"
+        @keyup.enter="addCourse"
       />
     </div>
     <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
@@ -29,7 +30,8 @@
         <div class="newCourse-text">Selected Semester</div>
         <div class="newCourse-semester">
           <span class="newCourse-name">
-            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
+            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="season-emoji" />
+            {{ season }}
             {{ year }}
           </span>
         </div>
@@ -146,7 +148,9 @@ export default Vue.extend({
       return 'Search Course Roster';
     },
     placeholder() {
-      return this.placeholderText;
+      return this.placeholderText !== 'Select one'
+        ? this.placeholderText
+        : '"CS110", "Multivariable Calculus", etc';
     },
   },
   mounted() {
@@ -217,7 +221,10 @@ export default Vue.extend({
 
           for (const attr in courses) {
             if (courses[attr]) {
-              const result = { title: `${attr}: ${courses[attr].t}`, roster: courses[attr].r };
+              const result = {
+                title: `${attr}: ${courses[attr].t}`,
+                roster: courses[attr].r,
+              };
               if (attr.toUpperCase().includes(val) && attr !== 'lastScanned') {
                 code.push(result);
               } else if (courses[attr].t && courses[attr].t.toUpperCase().includes(val)) {
@@ -256,6 +263,9 @@ export default Vue.extend({
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
+              if (this.isOnboard) {
+                this.addCourse();
+              }
             });
             a.appendChild(div);
           });
@@ -306,6 +316,17 @@ export default Vue.extend({
     updateSemProps(season, year) {
       this.$emit('updateSemProps', season, year);
     },
+    addCourse() {
+      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
+    },
+    onboardingStyle(placeholderText, isOnboard) {
+      if (!isOnboard) {
+        return 'newCourse-dropdown';
+      }
+      return placeholderText !== 'Select one'
+        ? 'newCourse-onboarding'
+        : 'newCourse-onboarding newCourse-onboardingEmpty';
+    },
   },
 });
 </script>
@@ -318,7 +339,6 @@ export default Vue.extend({
     line-height: 17px;
     color: $lightPlaceholderGray;
   }
-
   &-dropdown {
     font-size: 14px;
     line-height: 17px;
@@ -327,6 +347,25 @@ export default Vue.extend({
     border-radius: 3px;
     padding: 0.5rem;
     border: 0.5px solid $inactiveGray;
+    &::placeholder {
+      color: $darkPlaceholderGray;
+    }
+  }
+  &-onboarding {
+    font-size: 14px;
+    line-height: 17px;
+    color: $black;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.5rem;
+    border: 0.5px solid $darkPlaceholderGray;
+    border-radius: 0px;
+    background-color: $white;
+    &::placeholder {
+      color: $black;
+    }
+  }
+  &-onboardingEmpty {
     &::placeholder {
       color: $darkPlaceholderGray;
     }
@@ -387,7 +426,6 @@ export default Vue.extend({
     cursor: pointer;
   }
 }
-
 .autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
@@ -402,7 +440,6 @@ input {
   padding: 10px;
   font-size: 16px;
 }
-
 .autocomplete-items {
   position: absolute;
   border: 1px solid #d4d4d4;
@@ -413,7 +450,6 @@ input {
   top: 100%;
   left: 0;
   right: 0;
-
   box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
 }

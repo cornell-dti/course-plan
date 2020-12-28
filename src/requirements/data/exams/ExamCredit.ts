@@ -19,7 +19,7 @@ export type ExamTaken = {
 };
 export type ExamsTaken = Record<'AP' | 'IB', ExamTaken[]>;
 
-const examData: ExamData = {
+export const examData: ExamData = {
   AP: [
     {
       name: 'Biology',
