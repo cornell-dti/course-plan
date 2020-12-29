@@ -5,7 +5,7 @@
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
           <span class="completed-reqCourses-course-heading-check"
-            ><img src="@/assets/images/checkmark-green.svg"
+            ><img src="@/assets/images/checkmark-green.svg" alt="checkmark"
           /></span>
           {{ courseLabel }}
         </div>

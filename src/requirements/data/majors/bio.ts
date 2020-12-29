@@ -41,12 +41,14 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Option 1': {
+        description: 'CHEM 2070 AND CHEM 2080',
         checker: includesWithSubRequirements(['CHEM 2070'], ['CHEM 2080']),
         counting: 'courses',
         operator: 'and',
         minCount: 2,
       },
       'Option 2': {
+        description: 'CHEM 2150',
         checker: includesWithSubRequirements(['CHEM 2150']),
         counting: 'courses',
         operator: 'and',

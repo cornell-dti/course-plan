@@ -5,36 +5,40 @@
     @click="onClick"
     v-bind:data-intro-group="shouldShowWalkthrough ? 'pageTour' : null"
     v-bind:data-step="shouldShowWalkthrough ? '3' : null"
-    v-bind:data-intro='shouldShowWalkthrough ? `<b>Add your course in this semseter!</b><br>
-      <div class = "introjs-bodytext">To start planning your college career, you should try adding a course in your current semester.</div>` : null'
+    v-bind:data-intro="
+      shouldShowWalkthrough
+        ? `<b>Add your course in this semseter!</b><br>
+      <div class = &quot;introjs-bodytext&quot;>To start planning your college career, you should try adding a course in your current semester.</div>`
+        : null
+    "
     v-bind:data-disable-interaction="shouldShowWalkthrough ? '1' : null"
   >
     <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">
-      {{addCourseText}}
+      {{ addCourseText }}
     </span>
   </div>
 </template>
 
 <script>
-  import Vue, { PropType } from 'vue';
+import Vue, { PropType } from 'vue';
 
-  export default Vue.extend({
-    props: {
-      compact: Boolean,
-      shouldClearPadding: Boolean,
-      shouldShowWalkthrough: Boolean,
+export default Vue.extend({
+  props: {
+    compact: Boolean,
+    shouldClearPadding: Boolean,
+    shouldShowWalkthrough: Boolean,
+  },
+  computed: {
+    addCourseText() {
+      return '+ Course';
     },
-    computed: {
-      addCourseText() {
-        return '+ Course'
-      }
+  },
+  methods: {
+    onClick() {
+      this.$emit('click');
     },
-    methods: {
-      onClick() {
-        this.$emit('click');
-      }
-    }
-  })
+  },
+});
 </script>
 
 <style scoped lang="scss">

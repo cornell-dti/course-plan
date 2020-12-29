@@ -19,105 +19,7 @@ export type ExamTaken = {
 };
 export type ExamsTaken = Record<'AP' | 'IB', ExamTaken[]>;
 
-function userDataToCourses(
-  college: string,
-  major: string,
-  userData: ExamsTaken,
-  examType: 'AP' | 'IB'
-): CourseTaken[] {
-  const userExams = userData[examType];
-  const exams = examData[examType];
-  const courses: CourseTaken[] = [];
-  userExams.forEach(userExam => {
-    // match exam to user-taken exam
-    const exam = exams.reduce((prev: ExamRequirements | undefined, curr: ExamRequirements) => {
-      // check if exam name matches and score is high enough
-      if (curr.name.includes(userExam.subject) && userExam.score >= curr.fulfillment.minimumScore) {
-        // update exam variable if this exam has a higher minimum score
-        if (!prev || prev.fulfillment.minimumScore < curr.fulfillment.minimumScore) {
-          return curr;
-        }
-      }
-      return prev;
-    }, undefined);
-    // generate the equivalent course
-    if (exam) {
-      const roster = 'FA20'; // TODO this is hardcoded
-      const courseEquivalents =
-        (exam.fulfillment.courseEquivalents &&
-          (exam.fulfillment.courseEquivalents[college] ||
-            exam.fulfillment.courseEquivalents.DEFAULT)) ||
-        [];
-      const excludedMajor =
-        exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
-      if (!excludedMajor) {
-        if (courseEquivalents.length === 1) {
-          const courseId = courseEquivalents[0];
-          courses.push({
-            roster,
-            courseId,
-            code: `${examType} ${exam.name}`,
-            subject: examType,
-            number: exam.name,
-            credits: exam.fulfillment.credits,
-          });
-        } else {
-          // separate credits from equivalent course
-          courseEquivalents.forEach(courseId => {
-            courses.push({
-              roster,
-              courseId,
-              code: `${examType} ${exam.name}`,
-              subject: examType,
-              number: exam.name,
-              credits: 0,
-            });
-          });
-          courses.push({
-            roster,
-            courseId: 10,
-            code: `CREDITS ${examType} ${exam.name}`,
-            subject: 'CREDITS',
-            number: exam.fulfillment.credits.toString(),
-            credits: exam.fulfillment.credits,
-          });
-        }
-      }
-    }
-  });
-  return courses;
-}
-
-function getCourseEquivalentsFromOneMajor(
-  college: string,
-  major: string,
-  userData: ExamsTaken
-): readonly CourseTaken[] {
-  const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
-  const IBCourseEquivalents = userDataToCourses(college, major, userData, 'IB');
-  return APCourseEquivalents.concat(IBCourseEquivalents);
-}
-
-export default function getCourseEquivalentsFromUserExams(user: AppUser): readonly CourseTaken[] {
-  const courses: CourseTaken[] = [];
-  const examCourseCodeSet = new Set<string>();
-  const userExamData: ExamsTaken = { AP: [], IB: [] };
-  user.exam.forEach((exam: FirestoreAPIBExam) => {
-    const examTaken: ExamTaken = { subject: exam.subject, score: exam.score };
-    userExamData[exam.type].push(examTaken);
-  });
-  user.major.forEach((major: string) =>
-    getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
-      if (!examCourseCodeSet.has(course.code)) {
-        examCourseCodeSet.add(course.code);
-        courses.push(course);
-      }
-    })
-  );
-  return courses;
-}
-
-const examData: ExamData = {
+export const examData: ExamData = {
   AP: [
     {
       name: 'Biology',
@@ -487,6 +389,104 @@ const examData: ExamData = {
     },
   ],
 };
+
+function userDataToCourses(
+  college: string,
+  major: string,
+  userData: ExamsTaken,
+  examType: 'AP' | 'IB'
+): CourseTaken[] {
+  const userExams = userData[examType];
+  const exams = examData[examType];
+  const courses: CourseTaken[] = [];
+  userExams.forEach(userExam => {
+    // match exam to user-taken exam
+    const exam = exams.reduce((prev: ExamRequirements | undefined, curr: ExamRequirements) => {
+      // check if exam name matches and score is high enough
+      if (curr.name.includes(userExam.subject) && userExam.score >= curr.fulfillment.minimumScore) {
+        // update exam variable if this exam has a higher minimum score
+        if (!prev || prev.fulfillment.minimumScore < curr.fulfillment.minimumScore) {
+          return curr;
+        }
+      }
+      return prev;
+    }, undefined);
+    // generate the equivalent course
+    if (exam) {
+      const roster = 'FA20'; // TODO this is hardcoded
+      const courseEquivalents =
+        (exam.fulfillment.courseEquivalents &&
+          (exam.fulfillment.courseEquivalents[college] ||
+            exam.fulfillment.courseEquivalents.DEFAULT)) ||
+        [];
+      const excludedMajor =
+        exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
+      if (!excludedMajor) {
+        if (courseEquivalents.length === 1) {
+          const courseId = courseEquivalents[0];
+          courses.push({
+            roster,
+            courseId,
+            code: `${examType} ${exam.name}`,
+            subject: examType,
+            number: exam.name,
+            credits: exam.fulfillment.credits,
+          });
+        } else {
+          // separate credits from equivalent course
+          courseEquivalents.forEach(courseId => {
+            courses.push({
+              roster,
+              courseId,
+              code: `${examType} ${exam.name}`,
+              subject: examType,
+              number: exam.name,
+              credits: 0,
+            });
+          });
+          courses.push({
+            roster,
+            courseId: 10,
+            code: `CREDITS ${examType} ${exam.name}`,
+            subject: 'CREDITS',
+            number: exam.fulfillment.credits.toString(),
+            credits: exam.fulfillment.credits,
+          });
+        }
+      }
+    }
+  });
+  return courses;
+}
+
+function getCourseEquivalentsFromOneMajor(
+  college: string,
+  major: string,
+  userData: ExamsTaken
+): readonly CourseTaken[] {
+  const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
+  const IBCourseEquivalents = userDataToCourses(college, major, userData, 'IB');
+  return APCourseEquivalents.concat(IBCourseEquivalents);
+}
+
+export default function getCourseEquivalentsFromUserExams(user: AppUser): readonly CourseTaken[] {
+  const courses: CourseTaken[] = [];
+  const examCourseCodeSet = new Set<string>();
+  const userExamData: ExamsTaken = { AP: [], IB: [] };
+  user.exam.forEach((exam: FirestoreAPIBExam) => {
+    const examTaken: ExamTaken = { subject: exam.subject, score: exam.score };
+    userExamData[exam.type].push(examTaken);
+  });
+  user.major.forEach((major: string) =>
+    getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
+      if (!examCourseCodeSet.has(course.code)) {
+        examCourseCodeSet.add(course.code);
+        courses.push(course);
+      }
+    })
+  );
+  return courses;
+}
 
 function toReqsData(data: ExamRequirements[]) {
   const exams = data.map(({ name }) => name);
