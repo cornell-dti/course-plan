@@ -92,8 +92,8 @@
 <script>
 import Vue from 'vue';
 import coursesJSON from '@/assets/courses/courses.json';
-import EditRequirement from '@/components/EditRequirement.vue';
-import BinaryButton from '@/components/BinaryButton.vue';
+import EditRequirement from '@/components/Modals/NewCourse/EditRequirement.vue';
+import BinaryButton from '@/components/Modals/NewCourse/BinaryButton.vue';
 
 Vue.component('editRequirement', EditRequirement);
 Vue.component('binaryButton', BinaryButton);

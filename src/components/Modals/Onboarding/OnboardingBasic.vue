@@ -613,5 +613,5 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import '@/components/Modals/Onboarding.scss';
+@import '@/components/Modals/Onboarding/Onboarding.scss';
 </style>

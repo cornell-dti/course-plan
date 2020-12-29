@@ -66,9 +66,9 @@
 <script>
 import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import OnboardingBasic from '@/components/Modals/OnboardingBasic.vue';
-import OnboardingTransfer from '@/components/Modals/OnboardingTransfer.vue';
-import OnboardingReview from '@/components/Modals/OnboardingReview.vue';
+import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
+import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
+import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import { clickOutside } from '@/utilities';
 import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
@@ -331,5 +331,5 @@ export default Vue.extend({
 });
 </script>
 <style scoped lang="scss">
-@import '@/components/Modals/Onboarding.scss';
+@import '@/components/Modals/Onboarding/Onboarding.scss';
 </style>

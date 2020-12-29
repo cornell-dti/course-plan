@@ -185,7 +185,7 @@
 
 import reqsData from '@/requirements/typed-requirement-json';
 import { examData } from '@/requirements/data/exams/ExamCredit';
-import coursesJSON from '../../assets/courses/courses.json';
+import coursesJSON from '@/assets/courses/courses.json';
 
 const placeholderText = 'Select one';
 
@@ -507,5 +507,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '@/components/Modals/Onboarding.scss';
+@import '@/components/Modals/Onboarding/Onboarding.scss';
 </style>

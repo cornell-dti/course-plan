@@ -7,13 +7,13 @@
     <img
       v-if="selected"
       class="confirmation-icon edit-requirement-check"
-      src="/images/check.svg"
+      src="@/assets/images/check.svg"
       alt="checkmark"
     />
     <div class="edit-requirement-text" :class="{ 'edit-requirement-multiline': multiline }">
       {{ name }}
     </div>
-    <img v-if="selected" class="confirmation-icon hidden" src="/images/check.svg" />
+    <img v-if="selected" class="confirmation-icon hidden" src="@/assets/images/check.svg" />
   </div>
 </template>
 

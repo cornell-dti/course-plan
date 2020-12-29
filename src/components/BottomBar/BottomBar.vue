@@ -28,9 +28,9 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import BottomBarCourse from '@/components/BottomBarCourse.vue';
-import BottomBarTabView from '@/components/BottomBarTabView.vue';
-import BottomBarTitle from '@/components/BottomBarTitle.vue';
+import BottomBarCourse from '@/components/BottomBar/BottomBarCourse.vue';
+import BottomBarTabView from '@/components/BottomBar/BottomBarTabView.vue';
+import BottomBarTitle from '@/components/BottomBar/BottomBarTitle.vue';
 import { AppBottomBarCourse } from '@/user-data';
 
 Vue.component('bottombarcourse', BottomBarCourse);

@@ -337,10 +337,10 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
-import coursesJSON from '../../assets/courses/courses.json';
+import coursesJSON from '@/assets/courses/courses.json';
 import checkmarkSelected from '@/assets/images/checkmark-onboarding.svg';
 import checkmarkUnselected from '@/assets/images/checkmark-empty.svg';
-import NewCourse from '@/components/Modals/NewCourse.vue';
+import NewCourse from '@/components/Modals/NewCourse/NewCourse.vue';
 import { clickOutside } from '@/utilities';
 import { AppUser, FirestoreTransferClass } from '@/user-data';
 // @ts-ignore
@@ -819,5 +819,5 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import '@/components/Modals/Onboarding.scss';
+@import '@/components/Modals/Onboarding/Onboarding.scss';
 </style>
