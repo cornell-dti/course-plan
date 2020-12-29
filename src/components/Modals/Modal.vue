@@ -133,7 +133,6 @@ export default Vue.extend({
 
           const key = title.substring(0, title.indexOf(':'));
           const selectedReqs = this.$refs.modalBodyComponent.getSelectedReqs();
-          console.log(selectedReqs);
           this.addCourse();
         }
       } else if (this.type === 'semester') {
