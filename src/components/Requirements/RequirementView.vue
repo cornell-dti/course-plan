@@ -83,8 +83,8 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import RequirementHeader from '@/components/RequirementHeader.vue';
-import SubRequirement from '@/components/SubRequirement.vue';
+import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
+import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
 import {

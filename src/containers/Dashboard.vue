@@ -4,7 +4,7 @@
       class="dashboard-onboarding"
       v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
-      :user="user"
+      :userData="user"
       @onboard="endOnboarding"
       @cancelOnboarding="cancelOnboarding"
     />
@@ -92,11 +92,11 @@ import Vue from 'vue';
 
 import introJs from 'intro.js';
 import Course from '@/components/Course.vue';
-import SemesterView from '@/components/SemesterView.vue';
-import Requirements from '@/components/Requirements.vue';
-import BottomBar from '@/components/BottomBar.vue';
+import SemesterView from '@/components/Semester/SemesterView.vue';
+import Requirements from '@/components/Requirements/Requirements.vue';
+import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
-import Onboarding from '@/components/Modals/Onboarding.vue';
+import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 
 import surfing from '@/assets/images/surfing.svg';

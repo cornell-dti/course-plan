@@ -37,7 +37,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import firebase from 'firebase/app';
-import ReqCourse from '@/components/ReqCourse.vue';
+import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import { DisplayableRequirementFulfillment, CourseTaken } from '@/requirements/types';
 import {
   AppCourse,

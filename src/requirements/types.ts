@@ -72,6 +72,7 @@ type RequirementFulfillmentInformation<T = {}> =
           readonly totalCount?: number;
           readonly counting: 'credits' | 'courses';
           readonly operator: 'and' | 'or';
+          readonly description: string;
         } & T;
       };
     };
@@ -156,9 +157,7 @@ export type GroupedRequirementFulfillmentReport = {
   readonly reqs: readonly RequirementFulfillment<RequirementFulfillmentStatistics>[];
 };
 
-export type DisplayableRequirementFulfillment = RequirementFulfillment<
-  RequirementFulfillmentStatistics
->;
+export type DisplayableRequirementFulfillment = RequirementFulfillment<RequirementFulfillmentStatistics>;
 
 export type SingleMenuRequirement = {
   readonly ongoing: DisplayableRequirementFulfillment[];

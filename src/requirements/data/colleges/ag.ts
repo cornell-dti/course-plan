@@ -173,8 +173,7 @@ const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
   ],
   operator: 'and',
   fulfilledBy: 'courses',
-  minCount: 3,
-  totalCount: 4,
+  minCount: 4,
 };
 
 const calsHumanDiversityRequirement: CollegeOrMajorRequirement = {

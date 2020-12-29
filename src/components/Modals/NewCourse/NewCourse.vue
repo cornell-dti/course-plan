@@ -4,11 +4,12 @@
     <!-- TODO: for some reason this breaks the dropdown <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div> -->
     <div class="autocomplete">
       <input
-        class="newCourse-dropdown"
+        :class="onboardingStyle(placeholderText, isOnboard)"
         :id="'dropdown-' + semesterID"
         :ref="'dropdown-' + semesterID"
         :placeholder="placeholder"
         @keyup.esc="closeCourseModal"
+        @keyup.enter="addCourse"
       />
     </div>
     <div v-if="isCourseModelSelectingSemester && !selected">
@@ -28,7 +29,8 @@
         <div class="newCourse-text">Selected Semester</div>
         <div class="newCourse-semester">
           <span class="newCourse-name">
-            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
+            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="season-emoji" />
+            {{ season }}
             {{ year }}
           </span>
         </div>
@@ -85,9 +87,8 @@
 <script>
 import Vue from 'vue';
 import coursesJSON from '@/assets/courses/courses.json';
-import EditRequirement from '@/components/EditRequirement.vue';
-import BinaryButton from '@/components/BinaryButton.vue';
-import { SingleMenuRequirement } from '@/requirements/types';
+import EditRequirement from '@/components/Modals/NewCourse/EditRequirement.vue';
+import BinaryButton from '@/components/Modals/NewCourse/BinaryButton.vue';
 
 Vue.component('editRequirement', EditRequirement);
 Vue.component('binaryButton', BinaryButton);
@@ -131,7 +132,9 @@ export default Vue.extend({
       return 'Search Course Roster';
     },
     placeholder() {
-      return this.placeholderText;
+      return this.placeholderText !== 'Select one'
+        ? this.placeholderText
+        : '"CS110", "Multivariable Calculus", etc';
     },
     potReqs() {
       return this.potentialReqs.join(', ');
@@ -264,6 +267,9 @@ export default Vue.extend({
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
+              if (this.isOnboard) {
+                this.addCourse();
+              }
             });
             a.appendChild(div);
           });
@@ -396,8 +402,16 @@ export default Vue.extend({
         this.$emit('allow-add', true);
       }
     },
-    getSelectedReqs() {
-      return this.selectedReqs;
+    addCourse() {
+      if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
+    },
+    onboardingStyle(placeholderText, isOnboard) {
+      if (!isOnboard) {
+        return 'newCourse-dropdown';
+      }
+      return placeholderText !== 'Select one'
+        ? 'newCourse-onboarding'
+        : 'newCourse-onboarding newCourse-onboardingEmpty';
     },
   },
 });
@@ -411,7 +425,6 @@ export default Vue.extend({
     line-height: 17px;
     color: $lightPlaceholderGray;
   }
-
   &-dropdown {
     font-size: 14px;
     line-height: 17px;
@@ -420,6 +433,25 @@ export default Vue.extend({
     border-radius: 3px;
     padding: 0.5rem;
     border: 0.5px solid $inactiveGray;
+    &::placeholder {
+      color: $darkPlaceholderGray;
+    }
+  }
+  &-onboarding {
+    font-size: 14px;
+    line-height: 17px;
+    color: $black;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.5rem;
+    border: 0.5px solid $darkPlaceholderGray;
+    border-radius: 0px;
+    background-color: $white;
+    &::placeholder {
+      color: $black;
+    }
+  }
+  &-onboardingEmpty {
     &::placeholder {
       color: $darkPlaceholderGray;
     }
@@ -480,7 +512,6 @@ export default Vue.extend({
     cursor: pointer;
   }
 }
-
 .autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
@@ -495,7 +526,6 @@ input {
   padding: 10px;
   font-size: 16px;
 }
-
 .autocomplete-items {
   position: absolute;
   border: 1px solid #d4d4d4;
@@ -506,7 +536,6 @@ input {
   top: 100%;
   left: 0;
   right: 0;
-
   box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
 }
