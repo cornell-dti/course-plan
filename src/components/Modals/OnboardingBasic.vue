@@ -237,8 +237,8 @@ export default Vue.extend({
   },
   data() {
     // Set dropdown colleges and majors if already filled out
-    let collegeText = placeholderText;
-    let collegeAcronym = '';
+    let collegeText = this.user.college || placeholderText;
+    let collegeAcronym = this.user.college;
     let collegePlaceholderColor = '';
     if (this.user.college !== '') {
       collegeText = this.user.collegeFN;
@@ -318,14 +318,27 @@ export default Vue.extend({
     this.setMinorsList();
     this.flattenDisplayMajors();
     this.flattenDisplayMinors();
-    this.$emit(
-      'updateBasic',
-      this.displayOptions.major,
-      this.displayOptions.college,
-      this.displayOptions.minor
-    );
+    const name = {
+      firstName: this.firstName,
+      middleName: this.middleName,
+      lastName: this.lastName,
+    };
   },
   methods: {
+    updateBasic() {
+      const name = {
+        firstName: this.firstName,
+        middleName: this.middleName,
+        lastName: this.lastName,
+      };
+      this.$emit(
+        'updateBasic',
+        this.displayOptions.major,
+        this.displayOptions.college,
+        this.displayOptions.minor,
+        name
+      );
+    },
     flattenDisplayMajors() {
       const majors = [];
       this.displayOptions.major.forEach(major => {
@@ -532,12 +545,11 @@ export default Vue.extend({
       displayOptions.arrowColor = inactiveGray;
       displayOptions.boxBorder = inactiveGray;
       displayOptions.placeholderColor = lightPlaceholderGray;
-      this.$emit(
-        'updateBasic',
-        this.displayOptions.major,
-        this.displayOptions.college,
-        this.displayOptions.minor
-      );
+      const name = {
+        firstName: this.firstName,
+        middleName: this.middleName,
+        lastName: this.lastName,
+      };
     },
     selectCollege(text, acronym, i) {
       this.selectOption('college', text, acronym, i);

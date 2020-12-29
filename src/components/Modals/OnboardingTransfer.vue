@@ -419,7 +419,6 @@ export default Vue.extend({
   },
   mounted() {
     this.getClasses();
-    this.getTransferMap();
     this.setExamsMap();
     this.setSubjectList();
     this.getCredits();
@@ -686,12 +685,6 @@ export default Vue.extend({
       displayOptions.arrowColor = inactiveGray;
       displayOptions.boxBorder = inactiveGray;
       displayOptions.placeholderColor = lightPlaceholderGray;
-      this.$emit(
-        'updateTransfer',
-        this.displayOptions.exam,
-        this.displayOptions.class,
-        this.tookSwimTest
-      );
     },
     selectExam(text: string, acronym: string | number, i: number) {
       this.selectOption('exam', 'type', text, acronym, i);
@@ -786,6 +779,14 @@ export default Vue.extend({
       }
       return counter;
     },
+    updateTransfer() {
+      this.$emit(
+        'updateTransfer',
+        this.displayOptions.exam,
+        this.displayOptions.class,
+        this.tookSwimTest
+      );
+    },
     addItem(id: number) {
       const dropdown = document.getElementById(`dropdown-${id}`)!;
       // @ts-ignore
@@ -809,12 +810,6 @@ export default Vue.extend({
                 credits: creditsC,
               };
               this.getCredits();
-              this.$emit(
-                'updateTransfer',
-                this.displayOptions.exam,
-                this.displayOptions.class,
-                this.tookSwimTest
-              );
             }
           });
         });

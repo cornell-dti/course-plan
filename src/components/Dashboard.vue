@@ -4,7 +4,7 @@
       class="dashboard-onboarding"
       v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
-      :user="user"
+      :userData="user"
       @onboard="endOnboarding"
       @cancelOnboarding="cancelOnboarding"
     />
