@@ -25,7 +25,6 @@
           :user="user"
           :key="requirementsKey"
           :startTour="startTour"
-          @createCourse="createCourse"
           @showTourEndWindow="showTourEnd"
           @on-toggleable-requirement-choices-change="chooseToggleableRequirementOption"
           @deleteCourseFromSemesters="deleteCourseFromSemesters"
@@ -112,11 +111,12 @@ import {
   FirestoreTransferClass,
   FirestoreNestedUserData,
   FirestoreUserData,
+  CornellCourseRosterCourse,
   AppUser,
   AppCourse,
   AppSemester,
   AppBottomBarCourse,
-  firestoreCourseToAppCourse,
+  cornellCourseRosterCourseToAppCourse,
   firestoreSemestersToAppSemesters,
   createAppUser,
   AppToggleableRequirementChoices,
@@ -221,10 +221,7 @@ export default Vue.extend({
         .then(doc => {
           if (doc.exists) {
             const firestoreUserData = doc.data() as FirestoreUserData;
-            this.semesters = firestoreSemestersToAppSemesters(
-              firestoreUserData.semesters,
-              firestoreUserData.subjectColors
-            );
+            this.semesters = firestoreSemestersToAppSemesters(firestoreUserData.semesters);
             this.currSemID += this.semesters.length;
             this.toggleableRequirementChoices =
               firestoreUserData.toggleableRequirementChoices || {};
@@ -301,11 +298,14 @@ export default Vue.extend({
     /**
      * Creates a course on frontend with either user or API data
      */
-    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean): AppCourse {
+    createAppCourseFromCornellRosterCourse(
+      course: CornellCourseRosterCourse,
+      isRequirementsCourse: boolean
+    ): AppCourse {
       if (!isRequirementsCourse) {
         this.recomputeRequirements();
       }
-      return firestoreCourseToAppCourse(
+      return cornellCourseRosterCourseToAppCourse(
         course,
         isRequirementsCourse,
         () => this.incrementID(),
@@ -588,7 +588,7 @@ export default Vue.extend({
         }
       });
       user.transferCourse.forEach(course => {
-        const courseInfo = firestoreCourseToAppCourse(
+        const courseInfo = cornellCourseRosterCourseToAppCourse(
           course.course,
           false,
           () => this.incrementID(),
