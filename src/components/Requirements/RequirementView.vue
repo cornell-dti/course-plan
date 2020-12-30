@@ -101,9 +101,9 @@ Vue.component('subrequirement', SubRequirement);
 
 // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
 const reqGroupColorMap = {
-  COLLEGE: ['1AA9A5', 'blue'],
-  MAJOR: ['105351', 'green'],
-  MINOR: ['92C3E6', 'lightblue'],
+  COLLEGE: ['4D7D92', 'sangBlue'],
+  MAJOR: ['148481', 'emGreen'],
+  MINOR: ['105351', 'chrisGreen'],
 };
 
 export default Vue.extend({

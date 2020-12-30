@@ -499,7 +499,7 @@ export default Vue.extend({
   &-top {
     display: flex;
     justify-content: space-between;
-    color: $medGray;
+    color: $darkGray;
     margin-left: 1.125rem;
     margin-right: 1.125rem;
   }

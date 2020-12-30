@@ -722,12 +722,15 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import "@/assets/scss/_variables.scss";
+
 .dashboard {
   display: flex;
   flex-direction: column;
 
   &-mainView {
     display: flex;
+    background-color: $backgroundBlue;
   }
 
   &-menus {

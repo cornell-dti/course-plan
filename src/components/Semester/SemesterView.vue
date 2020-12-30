@@ -432,7 +432,7 @@ export default Vue.extend({
 
   &-switch {
     display: flex;
-    color: $medGray;
+    color: $darkGray;
     align-items: center;
   }
 

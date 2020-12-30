@@ -34,7 +34,7 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 .bottombartitle {
-  padding-left: 1.5rem;
+  padding-left: 0.5rem;
   height: 2.5rem;
   line-height: 40px;
   background-color: #25a2aa;

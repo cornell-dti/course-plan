@@ -115,6 +115,7 @@
 import Vue, { PropType } from 'vue';
 import { clickOutside } from '@/utilities';
 
+
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
@@ -407,10 +408,10 @@ export default Vue.extend({
       font-size: 14px;
       line-height: 15px;
 
-      color: #b6b6b6;
+      color: #757575;
 
       background-color: white;
-      color: #b6b6b6;
+      color: #757575;
 
       &.season-wrapper,
       &.year-wrapper {
