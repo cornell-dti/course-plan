@@ -125,6 +125,7 @@ import {
 import { RequirementMap, computeRequirements } from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
+import getCurrentSeason, { getCurrentYear } from '@/utilities';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
@@ -149,8 +150,7 @@ export default Vue.extend({
       loaded: false,
       compactVal: false,
       currSemID: 1,
-      semesters: [] as AppSemester[],
-      firebaseSems: [] as FirestoreSemester[],
+      semesters: [] as readonly AppSemester[],
       currentClasses: [] as AppCourse[],
       toggleableRequirementChoices: {} as AppToggleableRequirementChoices,
       user: {
@@ -227,24 +227,15 @@ export default Vue.extend({
             this.toggleableRequirementChoices =
               firestoreUserData.toggleableRequirementChoices || {};
 
-            this.firebaseSems = firestoreUserData.semesters as FirestoreSemester[];
             this.user = this.parseUserData(firestoreUserData.userData, firestoreUserData.name);
             this.subjectColors = firestoreUserData.subjectColors;
             this.uniqueIncrementer = firestoreUserData.uniqueIncrementer;
             this.loaded = true;
             this.recomputeRequirements();
           } else {
-            this.semesters.push({
-              id: this.currSemID,
-              type: this.getCurrentSeason(),
-              year: this.getCurrentYear(),
-              courses: [],
-            });
-            this.firebaseSems.push({
-              type: this.getCurrentSeason(),
-              year: this.getCurrentYear(),
-              courses: [],
-            });
+            this.semesters = [
+              { id: this.currSemID, type: getCurrentSeason(), year: getCurrentYear(), courses: [] },
+            ];
             this.currSemID += 1;
             this.startOnboarding();
           }
@@ -254,7 +245,7 @@ export default Vue.extend({
         });
     },
 
-    editSemesters(newSemesters: AppSemester[]) {
+    editSemesters(newSemesters: readonly AppSemester[]) {
       this.semesters = newSemesters;
       this.recomputeRequirements();
     },
@@ -279,23 +270,6 @@ export default Vue.extend({
       this.isOpeningRequirements = !this.isOpeningRequirements;
     },
 
-    getCurrentSeason() {
-      let currentSeason: FirestoreSemesterType;
-      const currentMonth = new Date().getMonth();
-      if (currentMonth === 0) {
-        currentSeason = 'Winter';
-      } else if (currentMonth <= 4) {
-        currentSeason = 'Spring';
-      } else if (currentMonth <= 7) {
-        currentSeason = 'Summer';
-      } else {
-        currentSeason = 'Fall';
-      }
-      return currentSeason;
-    },
-    getCurrentYear(): number {
-      return new Date().getFullYear();
-    },
     /**
      * Creates a course on frontend with either user or API data
      */
@@ -547,11 +521,11 @@ export default Vue.extend({
       this.loaded = true;
 
       const docRef = this.getDocRef();
-      const data = {
+      const data: FirestoreUserData = {
         name: onboardingData.name,
         userData: onboardingData.userData,
         toggleableRequirementChoices: this.toggleableRequirementChoices,
-        semesters: this.firebaseSems,
+        semesters: [{ type: getCurrentSeason(), year: getCurrentYear(), courses: [] }],
         subjectColors: this.subjectColors,
         uniqueIncrementer: this.uniqueIncrementer,
       };
