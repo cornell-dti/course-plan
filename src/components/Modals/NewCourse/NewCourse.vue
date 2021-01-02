@@ -402,6 +402,9 @@ export default Vue.extend({
         this.$emit('allow-add', true);
       }
     },
+    getSelectedReqs() {
+      return this.selectedReqs;
+    },
     addCourse() {
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
     },
