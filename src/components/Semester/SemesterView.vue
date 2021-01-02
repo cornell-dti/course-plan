@@ -342,7 +342,7 @@ export default Vue.extend({
      * Works in conjunction with addCourse()
      * CHANGE WILL ALTER DATA STRUCTURE
      */
-    toFirebaseCourse(course: AppCourse) {
+    toFirebaseCourse(course: AppCourse): FirestoreSemesterCourse {
       return {
         crseId: course.crseId,
         code: `${course.subject} ${course.number}`,
@@ -359,7 +359,7 @@ export default Vue.extend({
         lastRoster: course.lastRoster,
         color: course.color,
         uniqueID: course.uniqueID,
-      } as FirestoreSemesterCourse;
+      };
     },
     /**
      * Updates semester user data
