@@ -130,7 +130,7 @@ import EditSemester from '@/components/Modals/EditSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
 import { clickOutside } from '@/utilities';
-import { AppCourse, AppSemester } from '@/user-data';
+import { AppCourse, AppSemester, CornellCourseRosterCourse } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
 
 Vue.component('course', Course);
@@ -309,11 +309,13 @@ export default Vue.extend({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    // TODO: give better type on data
-    addCourse(data: any, season: string | null = null, year: number | null = null) {
+    addCourse(
+      data: CornellCourseRosterCourse,
+      season: string | null = null,
+      year: number | null = null
+    ) {
       // @ts-ignore
-      const newCourse = this.$parent.$parent.createCourse(data, false);
-      // TODO: stop mutating this data directly
+      const newCourse = this.$parent.$parent.createAppCourseFromCornellRosterCourse(data, false);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       let confirmationMsg;
       if (season !== '' || year !== 0) {
