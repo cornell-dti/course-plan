@@ -12,7 +12,6 @@
         @keyup.enter="addCourse"
       />
     </div>
-    <!-- TODO : factor this code back in when we add the option to add from the requirements bar -->
     <div v-if="isCourseModelSelectingSemester && !selected">
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
@@ -36,54 +35,50 @@
           </span>
         </div>
       </div>
-      <div class="newCourse-title">This class fulfills the following requirement(s):</div>
-      <div v-if="!editMode" class="newCourse-requirements-container">
-        <div
-          class="newCourse-requirements"
-          v-for="req in requirements"
-          :key="req"
-          :class="{ 'newCourse-space': !checkIfLast(req, requirements) }"
-        >
-          {{ checkIfLast(req, requirements) ? req : `${req},` }}
+      <div v-if="hasReqs">
+        <div class="newCourse-title">This class fulfills the following requirement(s):</div>
+        <div v-if="!editMode" class="newCourse-requirements-container">
+          <div class="newCourse-requirements">
+            {{ relatedReqs }}
+          </div>
+        </div>
+        <div v-else class="newCourse-requirements-edit">
+          <editRequirement
+            v-for="req in requirements"
+            :key="req"
+            :name="req"
+            :selected="true"
+            :isClickable="true"
+            @edit-req="editReq"
+          />
         </div>
       </div>
-      <div v-else class="newCourse-requirements-edit">
-        <editRequirement
-          v-for="req in requirements"
-          :key="req"
-          :name="req"
-          :selected="true"
-          :isClickable="true"
-        />
-      </div>
-      <div class="newCourse-title">
-        This class could potentially fulfill the following requirement(s):
-      </div>
-      <div v-if="!editMode" class="newCourse-requirements-container">
-        <div
-          class="newCourse-name"
-          v-for="potreq in potentialReqs"
-          :key="potreq"
-          :class="{ 'newCourse-space': !checkIfLast(potreq, potentialReqs) }"
-        >
-          {{ checkIfLast(potreq, potentialReqs) ? potreq : `${potreq},` }}
+      <div v-if="hasPotReqs">
+        <div class="newCourse-title">
+          This class could potentially fulfill the following requirement(s):
         </div>
-      </div>
-      <div v-else class="newCourse-requirements-edit">
-        <editRequirement
-          v-for="potreq in potentialReqs"
-          :key="potreq"
-          :name="potreq"
-          :isClickable="true"
-        />
-        <binaryButton
-          v-for="choice in binaryPotentialReqs"
-          :key="choice[0]"
-          :choices="choice"
-        ></binaryButton>
+        <div v-if="!editMode" class="newCourse-requirements-container">
+          <div class="newCourse-name">
+            {{ potReqs }}
+          </div>
+        </div>
+        <div v-else class="newCourse-requirements-edit">
+          <editRequirement
+            v-for="potreq in potentialReqs"
+            :key="potreq"
+            :name="potreq"
+            :isClickable="true"
+            @edit-req="editReq"
+          />
+          <binaryButton
+            v-for="choice in binaryPotentialReqs"
+            :key="choice[0]"
+            :choices="choice"
+          ></binaryButton>
+        </div>
       </div>
       <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
-        Add these Requirements
+        {{ editReqsText }}
       </div>
     </div>
   </div>
@@ -110,8 +105,8 @@ export default Vue.extend({
     placeholderText: String,
     season: String,
     year: Number,
-    goBack: Boolean,
     isCourseModelSelectingSemester: Boolean,
+    reqs: Array,
   },
   data() {
     return {
@@ -122,26 +117,15 @@ export default Vue.extend({
         Summer: summer,
       },
       selected: false,
-      requirements: ['DummyReq1', 'DummyReq2'],
-      potentialReqs: ['PotentialReq1', 'PotentialReq2'],
-      binaryPotentialReqs: [['Technical Communication', 'External Specialization']],
+      requirements: [],
+      potentialReqs: [],
+      binaryPotentialReqs: [],
       editMode: false,
       selectedCourse: '',
+      selectedCourseID: -1,
       selectorSemesterId: '',
+      selectedReqs: [],
     };
-  },
-  watch: {
-    goBack: function onPropChange(val) {
-      if (this.editMode) {
-        this.editMode = false;
-      } else {
-        this.selected = false;
-        // copied code from line 125 and 209 TODO - refactor
-        const inpCopy = document.getElementById(`dropdown-${this.semesterID}`);
-        inpCopy.value = '';
-        this.$emit('toggle-left-button');
-      }
-    },
   },
   computed: {
     text() {
@@ -151,6 +135,21 @@ export default Vue.extend({
       return this.placeholderText !== 'Select one'
         ? this.placeholderText
         : '"CS110", "Multivariable Calculus", etc';
+    },
+    potReqs() {
+      return this.potentialReqs.join(', ');
+    },
+    relatedReqs() {
+      return this.requirements.join(', ');
+    },
+    hasReqs() {
+      return this.requirements.length !== 0;
+    },
+    hasPotReqs() {
+      return this.potentialReqs.length !== 0;
+    },
+    editReqsText() {
+      return this.potentialReqs.length !== 0 ? 'Add these Requirements' : 'Edit Requirements';
     },
   },
   mounted() {
@@ -224,6 +223,7 @@ export default Vue.extend({
               const result = {
                 title: `${attr}: ${courses[attr].t}`,
                 roster: courses[attr].r,
+                id: courses[attr].i,
               };
               if (attr.toUpperCase().includes(val) && attr !== 'lastScanned') {
                 code.push(result);
@@ -257,9 +257,13 @@ export default Vue.extend({
               /* insert the value for the autocomplete text field: */
               inpCopy.value = newTitle.title;
               inpCopy.name = newTitle.roster;
+              this.selectedCourseID = newTitle.id;
               this.selectedCourse = newTitle.title;
               this.selected = true;
               this.$emit('toggle-left-button');
+              this.$emit('allow-add', false);
+              this.getReqsRelatedToCourse();
+
               /* close the list of autocompleted values,
                   (or any other open lists of autocompleted values: */
               closeAllLists();
@@ -307,14 +311,96 @@ export default Vue.extend({
     },
     toggleEditMode() {
       this.editMode = !this.editMode;
+      this.$emit('edit-mode');
     },
     reset() {
       this.editMode = false;
       this.selected = false;
       this.selectedCourse = '';
+      this.selectedCourseID = -1;
+      this.selectedReqs = [];
+      this.requirements = [];
+      this.potentialReqs = [];
     },
     updateSemProps(season, year) {
       this.$emit('updateSemProps', season, year);
+    },
+    getReqsRelatedToCourse() {
+      const relatedReqs = [];
+      const potReqs = [];
+
+      // parse through reqs object
+      for (let i = 0; i < this.reqs.length; i += 1) {
+        const subreqs = this.reqs[i].ongoing;
+        for (let j = 0; j < subreqs.length; j += 1) {
+          // requirements
+          if (subreqs[j].fulfilledBy === 'courses') {
+            const { courses } = subreqs[j].requirement;
+            if (typeof courses !== 'undefined') {
+              for (let k = 0; k < courses.length; k += 1) {
+                for (const [_, ids] of Object.entries(courses[k])) {
+                  if (ids.includes(this.selectedCourseID)) {
+                    relatedReqs.push(subreqs[j].requirement.name);
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          // potential requirements
+          if (subreqs[j].fulfilledBy === 'self-check') {
+            potReqs.push(subreqs[j].requirement.name);
+          }
+          this.requirements = [...relatedReqs];
+          this.potentialReqs = [...potReqs];
+          this.selectedReqs = [...relatedReqs];
+        }
+      }
+    },
+    editReq(data) {
+      const { name, isSelected } = data;
+      if (isSelected) {
+        this.selectedReqs.push(name); // add to selectedReqs
+      } else {
+        // remove from selectedReqs
+        const index = this.selectedReqs.indexOf(name);
+        if (index > -1) {
+          this.selectedReqs.splice(this.selectedReqs.indexOf(name), 1);
+        }
+      }
+    },
+    next() {
+      this.editMode = false;
+
+      // update potentialReqs by removing the ones that were selected
+      const newPotReqs = [];
+      for (let i = 0; i < this.potentialReqs.length; i += 1) {
+        if (!this.selectedReqs.includes(this.potentialReqs[i])) {
+          newPotReqs.push(this.potentialReqs[i]);
+        }
+      }
+      // add the requirements that were deselected to potential requirements
+      for (let i = 0; i < this.requirements.length; i += 1) {
+        if (!this.selectedReqs.includes(this.requirements[i])) {
+          newPotReqs.push(this.requirements[i]);
+        }
+      }
+      this.requirements = [...this.selectedReqs];
+      this.potentialReqs = [...newPotReqs];
+    },
+    goBack() {
+      if (this.editMode) {
+        this.editMode = false;
+        this.selectedReqs = [...this.requirements];
+        this.$emit('allow-add', false);
+      } else {
+        this.selected = false;
+        // copied code from line 125 and 209 TODO - refactor
+        const inpCopy = document.getElementById(`dropdown-${this.semesterID}`);
+        inpCopy.value = '';
+        this.$emit('toggle-left-button');
+        this.$emit('allow-add', true);
+      }
     },
     addCourse() {
       if (this.$refs[`dropdown-${this.semesterID}`].value) this.$emit('addItem', this.semesterID);
