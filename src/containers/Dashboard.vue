@@ -339,7 +339,7 @@ export default Vue.extend({
     },
 
     addColor(subject: string) {
-      if (this.subjectColors && this.subjectColors[subject]) return this.subjectColors[subject];
+      if (this.subjectColors[subject]) return this.subjectColors[subject];
 
       const colors = [
         {
@@ -371,9 +371,6 @@ export default Vue.extend({
           hex: 'F296D3',
         },
       ];
-
-      // If subjectColor attribute does not exist, make it an empty object
-      if (this.subjectColors === undefined) this.subjectColors = {};
 
       // Create list of used colors
       const colorsUsedMap: Record<string, boolean> = {};
