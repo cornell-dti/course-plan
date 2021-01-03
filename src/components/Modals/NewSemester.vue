@@ -115,7 +115,6 @@
 import Vue, { PropType } from 'vue';
 import { clickOutside } from '@/utilities';
 
-
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';

@@ -72,7 +72,7 @@
             width: progressWidth,
           }"
           role="progressbar"
-          :aria-valuenow="progressWidth.slice(0, -1).substring(0,4)"
+          :aria-valuenow="progressWidth.slice(0, -1).substring(0, 4)"
           aria-valuemin="0"
           aria-valuemax="100"
         ></div>

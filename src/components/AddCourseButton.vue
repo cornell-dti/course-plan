@@ -45,9 +45,9 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 
 @mixin hover-button {
-  border-color:$yuxuanBlue;
+  border-color: $yuxuanBlue;
   background: rgba(0, 0, 0, 0.03);
-  color:$yuxuanBlue;
+  color: $yuxuanBlue;
   cursor: pointer;
 }
 

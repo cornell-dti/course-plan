@@ -255,7 +255,7 @@ export default Vue.extend({
   &-code {
     font-size: 14px;
     line-height: 17px;
-    color: $primaryGray;;
+    color: $primaryGray;
 
     &--min {
       color: $primaryGray;

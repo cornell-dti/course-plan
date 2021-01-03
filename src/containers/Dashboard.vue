@@ -722,7 +722,7 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .dashboard {
   display: flex;

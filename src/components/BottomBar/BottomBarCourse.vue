@@ -85,7 +85,7 @@
                     width: `${(courseObj.overallRating / 5) * 100}%`,
                     background: reviewsColor(courseObj.overallRating),
                   }"
-                  :aria-valuenow="courseObj.overallRating / 5 * 100"
+                  :aria-valuenow="(courseObj.overallRating / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
                 ></div>
@@ -104,7 +104,7 @@
                     width: `${(courseObj.difficulty / 5) * 100}%`,
                     background: reviewsColor(courseObj.difficulty, true),
                   }"
-                  aria-valuenow="courseObj.difficulty / 5 * 100"
+                  :aria-valuenow="(courseObj.difficulty / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
                 ></div>
@@ -123,7 +123,7 @@
                     width: `${(courseObj.workload / 5) * 100}%`,
                     background: reviewsColor(courseObj.workload, true),
                   }"
-                  :aria-valuenow="courseObj.workload / 5 * 100"
+                  :aria-valuenow="(courseObj.workload / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
                 ></div>
@@ -160,7 +160,7 @@
                     width: `${(courseObj.overallRating / 5) * 100}%`,
                     background: reviewsColor(courseObj.overallRating),
                   }"
-                  :aria-valuenow="courseObj.overallRating / 5 * 100"
+                  :aria-valuenow="(courseObj.overallRating / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
                 ></div>
@@ -198,7 +198,7 @@
                     width: `${(courseObj.workload / 5) * 100}%`,
                     background: reviewsColor(courseObj.workload, true),
                   }"
-                  :aria-valuenow="courseObj.workload / 5 * 100"
+                  :aria-valuenow="(courseObj.workload / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
                 ></div>
@@ -420,7 +420,7 @@ export default Vue.extend({
     margin-top: inherit;
 
     &-blue {
-      color:#2577B5;
+      color: #2577b5;
       // TODO: update picture
       font-weight: 500;
 
@@ -472,7 +472,7 @@ export default Vue.extend({
     &-link {
       font-size: 12px;
       text-decoration-line: underline;
-      color: #2577B5;
+      color: #2577b5;
       &-wrapper {
         display: flex;
         flex-direction: row-reverse;
