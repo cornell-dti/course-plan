@@ -74,8 +74,8 @@ export default Vue.extend({
     align-items: center;
     // border: 2px dashed #d8d8d8;
     // TODO: update border color
-    border: 2px dashed #737373;
-    // border-color: 2px dashed #737373;
+    border: 2px dashed $medGray;
+    // border-color: 2px dashed $medGray;
     margin-left: 1.125rem;
     margin-right: 1.125rem;
 
@@ -96,7 +96,7 @@ export default Vue.extend({
     font-weight: 500;
     font-size: 16px;
     line-height: 20px;
-    color: #737373;
+    color: $medGray;
 
     &--compact {
       font-size: 14px;

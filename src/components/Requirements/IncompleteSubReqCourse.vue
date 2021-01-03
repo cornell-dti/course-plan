@@ -205,7 +205,7 @@ export default Vue.extend({
     &-label {
       font-size: 14px;
       line-height: 17px;
-      color: $lightLabelGray;
+      color: $lightPlaceholderGray;
     }
     &-seeAll {
       font-size: 12px;

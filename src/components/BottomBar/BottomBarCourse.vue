@@ -85,6 +85,7 @@
                     width: `${(courseObj.overallRating / 5) * 100}%`,
                     background: reviewsColor(courseObj.overallRating),
                   }"
+                  aria-label="Overall Rating"
                   :aria-valuenow="(courseObj.overallRating / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
@@ -104,6 +105,7 @@
                     width: `${(courseObj.difficulty / 5) * 100}%`,
                     background: reviewsColor(courseObj.difficulty, true),
                   }"
+                  aria-label="Difficulty Rating"
                   :aria-valuenow="(courseObj.difficulty / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
@@ -123,6 +125,7 @@
                     width: `${(courseObj.workload / 5) * 100}%`,
                     background: reviewsColor(courseObj.workload, true),
                   }"
+                  aria-label="Workload Rating"
                   :aria-valuenow="(courseObj.workload / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
@@ -160,6 +163,7 @@
                     width: `${(courseObj.overallRating / 5) * 100}%`,
                     background: reviewsColor(courseObj.overallRating),
                   }"
+                  aria-label="Overall Rating"
                   :aria-valuenow="(courseObj.overallRating / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
@@ -179,6 +183,7 @@
                     width: `${(courseObj.difficulty / 5) * 100}%`,
                     background: reviewsColor(courseObj.difficulty, true),
                   }"
+                  aria-label="Difficulty Rating"
                   :aria-valuenow="(courseObj.difficulty / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
@@ -198,6 +203,7 @@
                     width: `${(courseObj.workload / 5) * 100}%`,
                     background: reviewsColor(courseObj.workload, true),
                   }"
+                  aria-label="Workload Rating"
                   :aria-valuenow="(courseObj.workload / 5) * 100"
                   aria-valuemin="0"
                   aria-valuemax="100"
@@ -420,7 +426,7 @@ export default Vue.extend({
     margin-top: inherit;
 
     &-blue {
-      color: #2577b5;
+      color: $yuxuanBlue;
       // TODO: update picture
       font-weight: 500;
 
@@ -470,9 +476,9 @@ export default Vue.extend({
     }
 
     &-link {
-      font-size: 12px;
+      font-size: 14px;
       text-decoration-line: underline;
-      color: #2577b5;
+      color: $yuxuanBlue;
       &-wrapper {
         display: flex;
         flex-direction: row-reverse;
