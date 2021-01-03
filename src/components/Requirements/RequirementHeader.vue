@@ -73,7 +73,7 @@
           }"
           role="progressbar"
           aria-label="Requirements Progress"
-          :aria-valuenow="progressWidth.slice(0, -1).substring(0, 4)"
+          :aria-valuenow="progressWidthValue"
           aria-valuemin="0"
           aria-valuemax="100"
         ></div>
@@ -147,6 +147,12 @@ export default Vue.extend({
         return `${(this.req.fulfilled / this.req.required) * 100}%`;
       }
       return undefined;
+    },
+    progressWidthValue() {
+      if (this.req.fulfilled != null && this.req.required != null) {
+        return ((this.req.fulfilled / this.req.required) * 100).toFixed(1);
+      }
+      return '0';
     },
   },
   methods: {
