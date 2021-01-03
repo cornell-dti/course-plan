@@ -1,34 +1,26 @@
-export default function getCurrentSeason() {
-  let currentSeason;
+import { FirestoreSemesterType } from './user-data';
+
+export default function getCurrentSeason(): FirestoreSemesterType {
   const currentMonth = new Date().getMonth();
-  if (currentMonth === 0) {
-    currentSeason = 'Winter';
-  } else if (currentMonth <= 4) {
-    currentSeason = 'Spring';
-  } else if (currentMonth <= 7) {
-    currentSeason = 'Summer';
-  } else {
-    currentSeason = 'Fall';
-  }
-  return currentSeason;
+  if (currentMonth === 0) return 'Winter';
+  if (currentMonth <= 4) return 'Spring';
+  if (currentMonth <= 7) return 'Summer';
+  return 'Fall';
 }
 
-export function getCurrentType() {
-  let currentType;
+export function getCurrentType(): 'WI' | 'SP' | 'SU' | 'FA' {
   const currentMonth = new Date().getMonth();
-  if (currentMonth === 0) {
-    currentType = 'WI';
-  } else if (currentMonth <= 4) {
-    currentType = 'SP';
-  } else if (currentMonth <= 7) {
-    currentType = 'SU';
-  } else {
-    currentType = 'FA';
-  }
-  return currentType;
+  if (currentMonth === 0) return 'WI';
+  if (currentMonth <= 4) return 'SP';
+  if (currentMonth <= 7) return 'SU';
+  return 'FA';
 }
 
-export function getCurrentYearSuffix() {
+export function getCurrentYear(): number {
+  return new Date().getFullYear();
+}
+
+export function getCurrentYearSuffix(): string {
   // If current year is 2020, get string '20'
   const currentYear = new Date().getFullYear();
   return currentYear.toString().substring(2);
