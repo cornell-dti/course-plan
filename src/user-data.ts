@@ -10,44 +10,20 @@ export type FirestoreUserName = {
 
 export type FirestoreSemesterCourse = {
   readonly crseId: number;
-  readonly uniqueID?: number;
-  readonly code?: string;
-  readonly subject: string;
-  readonly catalogNbr: string;
-  readonly titleLong?: string;
+  readonly lastRoster: string;
+  readonly uniqueID: number;
+  readonly code: string;
   readonly name: string;
   readonly description: string;
-  readonly credits?: number;
-  readonly creditRange?: readonly [number, number];
-  readonly semesters?: readonly string[];
-  readonly prereqs?: string;
-  readonly enrollment?: readonly string[];
-  readonly lectureTimes?: readonly string[];
-  readonly instructors?: readonly string[];
-  readonly enrollGroups: readonly {
-    readonly unitsMinimum: number;
-    readonly unitsMaximum: number;
-    readonly classSections: readonly {
-      readonly ssrComponent: string;
-      readonly meetings: readonly {
-        readonly pattern: unknown;
-        readonly timeStart: unknown;
-        readonly timeEnd: unknown;
-        readonly instructors: readonly {
-          readonly netid: string;
-          readonly firstName: string;
-          readonly lastName: string;
-        }[];
-      }[];
-    }[];
-  }[];
-  readonly catalogWhenOffered?: string;
-  readonly catalogPrereqCoreq?: '';
-  readonly catalogDistr?: string;
-  readonly distributions?: readonly string[];
-  readonly color?: string;
-  readonly lastRoster?: string;
-  readonly roster: string;
+  readonly credits: number;
+  readonly creditRange: readonly [number, number];
+  readonly semesters: readonly string[];
+  readonly prereqs: string;
+  readonly enrollment: readonly string[];
+  readonly lectureTimes: readonly string[];
+  readonly instructors: readonly string[];
+  readonly distributions: readonly string[];
+  readonly color: string;
 };
 
 export type FirestoreSemesterType = 'Fall' | 'Spring' | 'Summer' | 'Winter';
@@ -67,7 +43,7 @@ export type FirestoreAPIBExam = {
 };
 export type FirestoreTransferClass = {
   readonly class: string;
-  readonly course: FirestoreSemesterCourse;
+  readonly course: CornellCourseRosterCourse;
   readonly credits: number;
 };
 export type FirestoreNestedUserData = {
@@ -86,6 +62,35 @@ export type FirestoreUserData = {
   readonly subjectColors: { readonly [subject: string]: string };
   readonly uniqueIncrementer: number;
   readonly userData: FirestoreNestedUserData;
+};
+
+export type CornellCourseRosterCourse = {
+  readonly crseId: number;
+  readonly subject: string;
+  readonly catalogNbr: string;
+  readonly titleLong: string;
+  readonly description: string;
+  readonly enrollGroups: readonly {
+    readonly unitsMinimum: number;
+    readonly unitsMaximum: number;
+    readonly classSections: readonly {
+      readonly ssrComponent: string;
+      readonly meetings: readonly {
+        readonly pattern: unknown;
+        readonly timeStart: unknown;
+        readonly timeEnd: unknown;
+        readonly instructors: readonly {
+          readonly netid: string;
+          readonly firstName: string;
+          readonly lastName: string;
+        }[];
+      }[];
+    }[];
+  }[];
+  readonly catalogWhenOffered?: string;
+  readonly catalogPrereqCoreq?: string;
+  readonly catalogDistr?: string;
+  readonly roster: string;
 };
 
 export type AppUser = {
@@ -169,42 +174,28 @@ export type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
  * Creates credit range based on course
  * Example: [1, 4] is the credit range for the given course
  */
-const createCourseCreditRange = (course: FirestoreSemesterCourse): readonly [number, number] => {
+const createCourseCreditRange = (course: CornellCourseRosterCourse): readonly [number, number] => {
   const courseCreditRange: number[] = [];
-  if (typeof course.creditRange !== 'undefined') {
-    return course.creditRange;
-  }
-  if (typeof course.enrollGroups !== 'undefined') {
-    course.enrollGroups.forEach(enrollGroup => {
-      courseCreditRange.push(enrollGroup.unitsMinimum);
-      courseCreditRange.push(enrollGroup.unitsMaximum);
-    });
-    return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
-  }
-  // @ts-ignore
-  return [course.credits, course.credits];
+  course.enrollGroups.forEach(enrollGroup => {
+    courseCreditRange.push(enrollGroup.unitsMinimum);
+    courseCreditRange.push(enrollGroup.unitsMaximum);
+  });
+  return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
 };
 
-export const firestoreCourseToAppCourse = (
-  course: FirestoreSemesterCourse,
+export const cornellCourseRosterCourseToAppCourse = (
+  course: CornellCourseRosterCourse,
   isRequirementsCourse: boolean,
   incrementID: () => number,
   addColor: (subject: string) => string
 ): AppCourse => {
-  const uniqueID = course.uniqueID || incrementID();
+  const uniqueID = incrementID();
 
-  const subject = (course.code && course.code.split(' ')[0]) || course.subject;
-  const number = (course.code && course.code.split(' ')[1]) || course.catalogNbr;
-
-  // TODO: same field?
-  const name = course.titleLong || course.name;
-
-  // Description of course. Please leave the redundancy in place as a sanity check.
-  const description = course.description || course.description;
+  const { subject, catalogNbr: number, titleLong: name, description, roster: lastRoster } = course;
 
   // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
-  const credits = course.credits || course.enrollGroups[0].unitsMaximum;
-  const creditRange = course.creditRange || createCourseCreditRange(course);
+  const credits = course.enrollGroups[0].unitsMaximum;
+  const creditRange = createCourseCreditRange(course);
   // Semesters: remove periods and split on ', '
   // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
   const catalogWhenOfferedDoesNotExist =
@@ -212,53 +203,41 @@ export const firestoreCourseToAppCourse = (
   const alternateSemesters = catalogWhenOfferedDoesNotExist
     ? []
     : course.catalogWhenOffered!.replace(/\./g, '').split(', ');
-  const semesters = course.semesters || alternateSemesters;
+  const semesters = alternateSemesters;
 
   // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
-  const prereqs = course.prereqs || course.catalogPrereqCoreq || '';
+  const prereqs = course.catalogPrereqCoreq || '';
 
-  // To be redefined if does not exist
-  // @ts-ignore
-  let {
-    enrollment,
-    lectureTimes,
-    instructors,
-  }: {
-    enrollment: readonly string[];
-    lectureTimes: readonly string[];
-    instructors: readonly string[];
-  } = course;
+  // If new course, iterate through enrollment groups to retrieve enrollment info, lecture times, and instructors
 
-  if (!(enrollment || lectureTimes || instructors)) {
-    // If new course, iterate through enrollment groups to retrieve enrollment info, lecture times, and instructors
+  // Hash maps used to remove redundancies
+  const enrollmentMap: Record<string, boolean> = {};
+  const lectureTimesMap: Record<string, boolean> = {};
+  const instructorsMap: Record<string, string> = {};
+  course.enrollGroups.forEach(group => {
+    group.classSections.forEach(section => {
+      // Add section
+      const enroll = section.ssrComponent;
+      enrollmentMap[enroll] = true;
 
-    // Hash maps used to remove redundancies
-    const enrollmentMap: Record<string, boolean> = {};
-    const lectureTimesMap: Record<string, boolean> = {};
-    const instructorsMap: Record<string, string> = {};
-    course.enrollGroups.forEach(group => {
-      group.classSections.forEach(section => {
-        // Add section
-        const enroll = section.ssrComponent;
-        enrollmentMap[enroll] = true;
+      section.meetings.forEach(meeting => {
+        const { pattern, timeStart, timeEnd } = meeting;
+        // Only add the time if it is a lecture
+        if (enroll === 'LEC') lectureTimesMap[`${pattern} ${timeStart} - ${timeEnd}`] = true;
 
-        section.meetings.forEach(meeting => {
-          const { pattern, timeStart, timeEnd } = meeting;
-          // Only add the time if it is a lecture
-          if (enroll === 'LEC') lectureTimesMap[`${pattern} ${timeStart} - ${timeEnd}`] = true;
-
-          meeting.instructors.forEach(instructor => {
-            const { netid, firstName, lastName } = instructor;
-            instructorsMap[netid] = `${firstName} ${lastName}`;
-          });
+        meeting.instructors.forEach(instructor => {
+          const { netid, firstName, lastName } = instructor;
+          instructorsMap[netid] = `${firstName} ${lastName}`;
         });
       });
     });
+  });
 
-    enrollment = Object.keys(enrollmentMap);
-    lectureTimes = Object.keys(lectureTimesMap);
-    instructors = Object.keys(instructorsMap).map(netid => `${instructorsMap[netid]} (${netid})`);
-  }
+  const enrollment = Object.keys(enrollmentMap);
+  const lectureTimes = Object.keys(lectureTimesMap);
+  const instructors = Object.keys(instructorsMap).map(
+    netid => `${instructorsMap[netid]} (${netid})`
+  );
 
   // Distribution of course (e.g. MQR-AS)
   // alternateDistributions option in case catalogDistr for the course is null, undef, ''
@@ -266,13 +245,10 @@ export const firestoreCourseToAppCourse = (
   const alternateDistributions = catalogDistrDoesNotExist
     ? ['']
     : /\(([^)]+)\)/.exec(course.catalogDistr!)![1].split(', ');
-  const distributions = course.distributions || alternateDistributions;
-
-  // Get last semester of available course. TODO: Remove when no longer firebase data dependant
-  const lastRoster = course.lastRoster || course.roster;
+  const distributions = alternateDistributions;
 
   // Create course from saved color. Otherwise, create course from subject color group
-  const color = course.color || addColor(subject);
+  const color = addColor(subject);
 
   const isReqCourse = isRequirementsCourse;
 
@@ -298,41 +274,68 @@ export const firestoreCourseToAppCourse = (
   };
 };
 
+export const firestoreCourseToAppCourse = (
+  course: FirestoreSemesterCourse,
+  isRequirementsCourse: boolean
+): AppCourse => {
+  const {
+    uniqueID,
+    code,
+    name,
+    description,
+    credits,
+    creditRange,
+    semesters,
+    prereqs,
+    enrollment,
+    lectureTimes,
+    instructors,
+    distributions,
+    lastRoster,
+    color,
+  } = course;
+
+  const [subject, number] = code.split(' ');
+
+  return {
+    crseId: course.crseId,
+    subject,
+    number,
+    name,
+    description,
+    credits,
+    creditRange,
+    semesters,
+    prereqs,
+    enrollment,
+    lectureTimes,
+    instructors,
+    distributions,
+    lastRoster,
+    color,
+    check: true,
+    uniqueID,
+    isReqCourse: isRequirementsCourse,
+  };
+};
+
 const firestoreSemesterToAppSemester = (
   { courses, type, year }: FirestoreSemester,
-  semesterID: number,
-  incrementID: () => number,
-  addColor: (subject: string) => string
+  semesterID: number
 ): AppSemester => {
   return {
     id: semesterID,
-    courses: courses.map(course =>
-      firestoreCourseToAppCourse(course, false, incrementID, addColor)
-    ),
+    courses: courses.map(course => firestoreCourseToAppCourse(course, false)),
     type,
     year,
   };
 };
 
 export const firestoreSemestersToAppSemesters = (
-  firestoreSemesters: readonly FirestoreSemester[],
-  subjectColors: { readonly [subject: string]: string }
+  firestoreSemesters: readonly FirestoreSemester[]
 ): AppSemester[] => {
   return firestoreSemesters.map((firebaseSem, index) => {
-    return firestoreSemesterToAppSemester(
-      firebaseSem,
-      index + 1,
-      () => {
-        throw new Error('Course from firestore should already have uniqueID!');
-      },
-      subject => {
-        const color = subjectColors[subject];
-        if (color == null) {
-          throw new Error("Course from firestore doesn't have color. Database might be corrupted.");
-        }
-        return color;
-      }
-    );
+    return firestoreSemesterToAppSemester(firebaseSem, index + 1);
   });
 };
 

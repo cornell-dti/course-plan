@@ -19,13 +19,12 @@
         <requirements
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
-          :reqs="reqs"
           :semesters="semesters"
           :toggleableRequirementChoices="toggleableRequirementChoices"
           :user="user"
           :key="requirementsKey"
           :startTour="startTour"
-          @createCourse="createCourse"
+          :reqs="reqs"
           @showTourEndWindow="showTourEnd"
           @on-toggleable-requirement-choices-change="chooseToggleableRequirementOption"
           @deleteCourseFromSemesters="deleteCourseFromSemesters"
@@ -41,6 +40,7 @@
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
         :currSemID="currSemID"
+        :reqs="reqs"
         @compact-updated="compactVal = $event"
         @edit-semesters="editSemesters"
         @updateBar="updateBar"
@@ -112,11 +112,12 @@ import {
   FirestoreTransferClass,
   FirestoreNestedUserData,
   FirestoreUserData,
+  CornellCourseRosterCourse,
   AppUser,
   AppCourse,
   AppSemester,
   AppBottomBarCourse,
-  firestoreCourseToAppCourse,
+  cornellCourseRosterCourseToAppCourse,
   firestoreSemestersToAppSemesters,
   createAppUser,
   AppToggleableRequirementChoices,
@@ -221,10 +222,7 @@ export default Vue.extend({
         .then(doc => {
           if (doc.exists) {
             const firestoreUserData = doc.data() as FirestoreUserData;
-            this.semesters = firestoreSemestersToAppSemesters(
-              firestoreUserData.semesters,
-              firestoreUserData.subjectColors
-            );
+            this.semesters = firestoreSemestersToAppSemesters(firestoreUserData.semesters);
             this.currSemID += this.semesters.length;
             this.toggleableRequirementChoices =
               firestoreUserData.toggleableRequirementChoices || {};
@@ -301,11 +299,14 @@ export default Vue.extend({
     /**
      * Creates a course on frontend with either user or API data
      */
-    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean): AppCourse {
+    createAppCourseFromCornellRosterCourse(
+      course: CornellCourseRosterCourse,
+      isRequirementsCourse: boolean
+    ): AppCourse {
       if (!isRequirementsCourse) {
         this.recomputeRequirements();
       }
-      return firestoreCourseToAppCourse(
+      return cornellCourseRosterCourseToAppCourse(
         course,
         isRequirementsCourse,
         () => this.incrementID(),
@@ -338,7 +339,7 @@ export default Vue.extend({
     },
 
     addColor(subject: string) {
-      if (this.subjectColors && this.subjectColors[subject]) return this.subjectColors[subject];
+      if (this.subjectColors[subject]) return this.subjectColors[subject];
 
       const colors = [
         {
@@ -370,9 +371,6 @@ export default Vue.extend({
           hex: 'F296D3',
         },
       ];
-
-      // If subjectColor attribute does not exist, make it an empty object
-      if (this.subjectColors === undefined) this.subjectColors = {};
 
       // Create list of used colors
       const colorsUsedMap: Record<string, boolean> = {};
@@ -588,7 +586,7 @@ export default Vue.extend({
         }
       });
       user.transferCourse.forEach(course => {
-        const courseInfo = firestoreCourseToAppCourse(
+        const courseInfo = cornellCourseRosterCourseToAppCourse(
           course.course,
           false,
           () => this.incrementID(),

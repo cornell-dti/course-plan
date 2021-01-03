@@ -95,8 +95,8 @@ import {
   AppMajor,
   AppMinor,
   AppSemester,
-  FirestoreSemesterCourse,
   AppCourse,
+  CornellCourseRosterCourse,
   AppToggleableRequirementChoices,
 } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
@@ -210,9 +210,6 @@ export default Vue.extend({
     activateMinor(id: number) {
       this.displayedMinorIndex = id;
     },
-    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean) {
-      this.$emit('createCourse', course, isRequirementsCourse);
-    },
     getRequirementsTooltipText() {
       return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
@@ -252,9 +249,12 @@ export default Vue.extend({
           allowSameCourseForDifferentRosters: false,
         })
           .then(result => {
-            result.data.courses.forEach((course: FirestoreSemesterCourse) => {
+            result.data.courses.forEach((course: CornellCourseRosterCourse) => {
               // @ts-ignore [We should resolve this later]
-              const createdCourse = this.$parent.createCourse(course, true);
+              const createdCourse = this.$parent.createAppCourseFromCornellRosterCourse(
+                course,
+                true
+              );
               createdCourse.compact = true;
               fetchedCourses.push(createdCourse);
             });

@@ -17,10 +17,13 @@
         @close-current-model="closeCourseModal"
         @updateSemProps="updateSemProps"
         @toggle-left-button="toggleLeftButton"
+        @allow-add="disableButton"
+        @edit-mode="editMode"
         ref="modalBodyComponent"
         :season="season"
         :year="year"
         :goBack="goBack"
+        :reqs="reqs"
       ></component>
       <div class="modal-buttonWrapper">
         <button class="modal-button" @click="backOrCancel">{{ leftButton }}</button>
@@ -29,7 +32,7 @@
           :class="{ 'modal-button--disabled': isDisabled }"
           @click="addItem"
         >
-          {{ add }}
+          {{ rightButton }}
         </button>
       </div>
     </div>
@@ -41,6 +44,7 @@ import Vue from 'vue';
 import NewCourse from '@/components/Modals/NewCourse/NewCourse.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
+import { SingleMenuRequirement } from '@/requirements/types';
 
 Vue.component('newCourse', NewCourse);
 Vue.component('newSemester', NewSemester);
@@ -53,6 +57,7 @@ export default Vue.extend({
       courseIsAddable: true,
       isDisabled: false,
       leftButton: 'CANCEL',
+      rightButton: 'ADD',
       goBack: false,
       season: '',
       year: 0,
@@ -64,6 +69,7 @@ export default Vue.extend({
     currentSemesters: Array,
     isOpen: Boolean,
     isCourseModelSelectingSemester: Boolean,
+    reqs: Array,
   },
   computed: {
     contentId() {
@@ -79,9 +85,6 @@ export default Vue.extend({
       }
       return `${start}Custom Course`;
     },
-    add() {
-      return 'ADD';
-    },
     body() {
       if (this.type === 'semester') {
         return 'newSemester';
@@ -91,6 +94,9 @@ export default Vue.extend({
       }
       return '';
     },
+  },
+  mounted() {
+    this.isDisabled = this.type === 'course';
   },
   methods: {
     disableButton(bool) {
@@ -103,6 +109,7 @@ export default Vue.extend({
       this.courseSelected = false;
       if (this.type === 'course') {
         this.$refs.modalBodyComponent.reset();
+        this.isDisabled = true;
         this.$emit('close-course-modal');
         return;
       }
@@ -117,11 +124,17 @@ export default Vue.extend({
     },
     addItem() {
       if (this.type === 'course') {
-        const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
-        const title = dropdown.value;
+        if (this.rightButton === 'NEXT') {
+          this.rightButton = 'ADD';
+          this.$refs.modalBodyComponent.next();
+        } else {
+          const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
+          const title = dropdown.value;
 
-        const key = title.substring(0, title.indexOf(':'));
-        this.addCourse();
+          const key = title.substring(0, title.indexOf(':'));
+          const selectedReqs = this.$refs.modalBodyComponent.getSelectedReqs();
+          this.addCourse();
+        }
       } else if (this.type === 'semester') {
         this.addSemester();
       }
@@ -188,6 +201,7 @@ export default Vue.extend({
     backOrCancel() {
       if (this.leftButton === 'BACK') {
         this.goBack = !this.goBack;
+        this.$refs.modalBodyComponent.goBack();
       } else {
         this.closeCurrentModal();
       }
@@ -195,6 +209,10 @@ export default Vue.extend({
     updateSemProps(season, year) {
       this.season = season;
       this.year = year;
+    },
+    editMode() {
+      this.leftButton = 'BACK';
+      this.rightButton = 'NEXT';
     },
   },
 });

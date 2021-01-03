@@ -121,12 +121,7 @@ import {
 } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
 
-import {
-  FirestoreSemesterCourse,
-  AppCourse,
-  firestoreCourseToAppCourse,
-  AppSemester,
-} from '@/user-data';
+import { CornellCourseRosterCourse, AppCourse, AppSemester } from '@/user-data';
 
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
@@ -218,9 +213,6 @@ export default Vue.extend({
     },
     isDataReady() {
       this.dataReady = true;
-    },
-    createCourse(course: FirestoreSemesterCourse, isRequirementsCourse: boolean) {
-      this.$emit('createCourse', course, isRequirementsCourse);
     },
     closeMenuIfOpen() {
       this.showFulfillmentOptionsDropdown = false;
@@ -329,9 +321,12 @@ export default Vue.extend({
       })
         .then(result => {
           fetchedCourses = result.data.courses;
-          fetchedCourses.forEach((course: FirestoreSemesterCourse) => {
+          fetchedCourses.forEach((course: CornellCourseRosterCourse) => {
             // @ts-ignore
-            const createdCourse = this.$parent.$parent.$parent.createCourse(course, true);
+            const createdCourse = this.$parent.$parent.$parent.createAppCourseFromCornellRosterCourse(
+              course,
+              true
+            );
             createdCourse.compact = true;
             this.subReqFetchedCourseObjectsNotTakenArray.push(createdCourse);
           });
