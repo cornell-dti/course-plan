@@ -53,19 +53,20 @@
     />
     <div class="semesterView-content">
       <div
-        v-for="sem in semesters"
-        :key="sem.id"
+        v-for="(sem, semesterIndex) in semesters"
+        :key="`${sem.year}-${sem.type}`"
         class="semesterView-wrapper"
         :class="{ 'semesterView-wrapper--compact': compact }"
       >
         <semester
           v-bind="sem"
           ref="semester"
+          :semesterIndex="semesterIndex"
           :compact="compact"
           :activatedCourse="activatedCourse"
           :duplicatedCourseCodeList="duplicatedCourseCodeList"
           :semesters="semesters"
-          :isFirstSem="checkIfFirstSem(sem.id)"
+          :isFirstSem="checkIfFirstSem(sem)"
           :reqs="reqs"
           @updateBar="updateBar"
           @new-semester="openSemesterModal"
@@ -135,7 +136,6 @@ const SeasonsEnum = Object.freeze({
 export default Vue.extend({
   props: {
     semesters: Array as PropType<readonly AppSemester[]>,
-    currSemID: Number,
     compact: Boolean,
     isBottomBar: Boolean,
     isBottomBarExpanded: Boolean,
@@ -173,8 +173,8 @@ export default Vue.extend({
     this.buildDuplicateCautions();
   },
   methods: {
-    checkIfFirstSem(id: number) {
-      return this.semesters[0].id === id;
+    checkIfFirstSem(semester: AppSemester) {
+      return this.semesters[0].year === semester.year && this.semesters[0].type === semester.type;
     },
     setCompact() {
       if (!this.compact) {
@@ -242,14 +242,7 @@ export default Vue.extend({
       this.isSemesterModalOpen = false;
     },
     createSemester(courses: readonly AppCourse[], type: FirestoreSemesterType, year: number) {
-      const semester = {
-        courses,
-        id: this.currSemID,
-        type,
-        year,
-      };
-      this.$emit('increment-semID');
-      return semester;
+      return { courses, type, year };
     },
     addSemester(type: FirestoreSemesterType, year: number) {
       const newSem = this.createSemester([], type, year);
@@ -315,17 +308,18 @@ export default Vue.extend({
       }
       return -1;
     },
-    editSemester(id: number, updater: (oldSemester: AppSemester) => AppSemester) {
-      let count = 1;
+    editSemester(
+      year: number,
+      type: FirestoreSemesterType,
+      updater: (oldSemester: AppSemester) => AppSemester
+    ) {
       const newSemesters = this.semesters
-        .map((currentSemester, index, array) =>
-          currentSemester.id === id ? updater(currentSemester) : currentSemester
+        .map(currentSemester =>
+          currentSemester.year === year && currentSemester.type === type
+            ? updater(currentSemester)
+            : currentSemester
         )
         .sort(this.compare);
-      newSemesters.forEach(sem => {
-        sem.id = count;
-        count += 1;
-      });
       this.$emit('edit-semesters', newSemesters);
     },
     updateBar(course: AppCourse, colorJustChanged: string, color: string) {

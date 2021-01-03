@@ -29,7 +29,7 @@
     </div>
     <coursemenu
       v-if="menuOpen"
-      :semId="semId"
+      :semesterIndex="semesterIndex"
       :isCompact="compact"
       class="course-menu"
       @delete-course="deleteCourse"
@@ -70,7 +70,7 @@ export default Vue.extend({
     id: String,
     uniqueID: Number,
     active: Boolean,
-    semId: Number,
+    semesterIndex: Number,
     isReqCourse: Boolean,
   },
   data() {

@@ -65,7 +65,7 @@ export default Vue.extend({
   },
   props: {
     type: String,
-    semesterID: Number,
+    semesterID: String,
     currentSemesters: Array,
     isOpen: Boolean,
     isCourseModelSelectingSemester: Boolean,

@@ -1,11 +1,10 @@
 <template>
-  <div class="semester" :class="{ 'semester--compact': compact }" :id="id">
+  <div class="semester" :class="{ 'semester--compact': compact }">
     <modal
-      :id="'courseModal-' + id"
       class="semester-modal"
       type="course"
       :class="{ 'modal--block': isCourseModalOpen }"
-      :semesterID="id"
+      :semesterID="`${year}-${type}`"
       :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
       @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
@@ -25,7 +24,6 @@
       :class="{ 'modal--block': isDeleteSemesterOpen }"
       @delete-semester="deleteSemester"
       @close-delete-modal="closeDeleteModal"
-      :deleteSemID="deleteSemID"
       :deleteSemType="deleteSemType"
       :deleteSemYear="deleteSemYear"
       ref="deletesemester"
@@ -36,7 +34,6 @@
       @edit-semester="editSemester"
       @close-edit-modal="closeEditModal"
       :semesters="semesters"
-      :deleteSemID="deleteSemID"
       :deleteSemType="deleteSemType"
       :deleteSemYear="deleteSemYear"
       ref="modalBodyComponent"
@@ -80,7 +77,7 @@
           class="draggable-semester-courses"
           v-dragula="courses"
           bag="first-bag"
-          :semId="id"
+          :semester-key="`${year}-${type}`"
           :style="{ height: courseContainerHeight + 'rem' }"
         >
           <div v-for="course in courses" :key="course.uniqueID" class="semester-courseWrapper">
@@ -93,7 +90,7 @@
               :compact="compact"
               :active="activatedCourse.uniqueID === course.uniqueID"
               class="semester-course"
-              :semId="id"
+              :semesterIndex="semesterIndex + 1"
               @delete-course="deleteCourse"
               @color-course="colorCourse"
               @updateBar="updateBar"
@@ -162,7 +159,6 @@ export default Vue.extend({
       semesterMenuOpen: false,
       stopCloseFlag: false,
 
-      deleteSemID: 0,
       deleteSemType: '',
       deleteSemYear: 0,
       isDeleteSemesterOpen: false,
@@ -181,7 +177,7 @@ export default Vue.extend({
     };
   },
   props: {
-    id: Number,
+    semesterIndex: Number,
     type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>,
     year: Number,
     courses: Array as PropType<readonly AppCourse[]>,
@@ -197,7 +193,8 @@ export default Vue.extend({
       handler() {
         this.$emit(
           'edit-semester',
-          this.id,
+          this.year,
+          this.type,
           (semester: AppSemester): AppSemester => ({
             ...semester,
             courses: this.courses,
@@ -211,7 +208,7 @@ export default Vue.extend({
     // @ts-ignore
     const service = Vue.$dragula.$service;
     service.eventBus.$on('drag', (data: any) => {
-      if (parseInt(data.container.getAttribute('semId'), 10) === this.id) {
+      if (data.container.getAttribute('semester-key') === `${this.year}-${this.type}`) {
         this.isDraggedFrom = true;
       }
       this.scrollable = true;
@@ -221,7 +218,7 @@ export default Vue.extend({
       this.scrollable = true;
     });
     service.eventBus.$on('shadow', (data: any) => {
-      if (parseInt(data.container.getAttribute('semId'), 10) === this.id) {
+      if (data.container.getAttribute('semester-key') === `${this.year}-${this.type}`) {
         this.isShadow = true;
       } else {
         this.isShadow = false;
@@ -324,7 +321,8 @@ export default Vue.extend({
       } else {
         this.$emit(
           'edit-semester',
-          this.id,
+          this.year,
+          this.type,
           (semester: AppSemester): AppSemester => ({
             ...semester,
             courses: [...this.courses, newCourse],
@@ -350,7 +348,8 @@ export default Vue.extend({
       // Update requirements menu
       this.$emit(
         'edit-semester',
-        this.id,
+        this.year,
+        this.type,
         (semester: AppSemester): AppSemester => ({
           ...semester,
           courses: this.courses.filter(course => course.uniqueID !== uniqueID),
@@ -360,7 +359,8 @@ export default Vue.extend({
     colorCourse(color: string, uniqueID: number) {
       this.$emit(
         'edit-semester',
-        this.id,
+        this.year,
+        this.type,
         (semester: AppSemester): AppSemester => ({
           ...semester,
           courses: this.courses.map(course =>
@@ -375,7 +375,8 @@ export default Vue.extend({
     editCourseCredit(credit: number, uniqueID: number) {
       this.$emit(
         'edit-semester',
-        this.id,
+        this.year,
+        this.type,
         (semester: AppSemester): AppSemester => ({
           ...semester,
           courses: this.courses.map(course =>
@@ -434,8 +435,6 @@ export default Vue.extend({
     openDeleteSemesterModal() {
       this.deleteSemType = this.type;
       this.deleteSemYear = this.year;
-      this.deleteSemID = this.id;
-
       this.isDeleteSemesterOpen = true;
     },
     deleteSemester(type: string, year: string) {
@@ -445,14 +444,14 @@ export default Vue.extend({
     openEditSemesterModal() {
       this.deleteSemType = this.type;
       this.deleteSemYear = this.year;
-      this.deleteSemID = this.id;
 
       this.isEditSemesterOpen = true;
     },
     editSemester(seasonInput: 'Fall' | 'Spring' | 'Winter' | 'Summer', yearInput: number) {
       this.$emit(
         'edit-semester',
-        this.deleteSemID,
+        this.year,
+        this.type,
         (oldSemester: AppSemester): AppSemester => ({
           ...oldSemester,
           type: seasonInput,
