@@ -72,10 +72,6 @@ export default Vue.extend({
     display: flex;
     justify-content: center;
     align-items: center;
-    // border: 2px dashed #d8d8d8;
-    // TODO: update border color
-    border: 2px dashed $medGray;
-    // border-color: 2px dashed $medGray;
     margin-left: 1.125rem;
     margin-right: 1.125rem;
 
