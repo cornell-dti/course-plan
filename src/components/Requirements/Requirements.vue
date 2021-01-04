@@ -10,7 +10,6 @@
       data-step="1"
       data-tooltipClass="tooltipCenter"
     >
-      <h1 class="title">School Requirements</h1>
       <!-- loop through reqs array of req objects -->
       <div class="req" v-for="(req, index) in reqs" :key="index">
         <requirementview

@@ -18,10 +18,6 @@ export const coursesColorSet = [
     hex: '#FFA53C',
   },
   {
-    text: 'Yellow',
-    hex: '#FFE142',
-  },
-  {
     text: 'Green',
     hex: '#58C913',
   },

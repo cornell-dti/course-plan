@@ -7,7 +7,7 @@
     v-bind:data-step="shouldShowWalkthrough ? '3' : null"
     v-bind:data-intro="
       shouldShowWalkthrough
-        ? `<b>Add your course in this semseter!</b><br>
+        ? `<b>Add your course in this semester!</b><br>
       <div class = &quot;introjs-bodytext&quot;>To start planning your college career, you should try adding a course in your current semester.</div>`
         : null
     "
@@ -45,9 +45,9 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 
 @mixin hover-button {
-  border-color: #15a6cf;
+  border-color: $yuxuanBlue;
   background: rgba(0, 0, 0, 0.03);
-  color: #15a6cf;
+  color: $yuxuanBlue;
   cursor: pointer;
 }
 
@@ -72,8 +72,6 @@ export default Vue.extend({
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px dashed #d8d8d8;
-    color: #d8d8d8;
     margin-left: 1.125rem;
     margin-right: 1.125rem;
 
@@ -94,6 +92,7 @@ export default Vue.extend({
     font-weight: 500;
     font-size: 16px;
     line-height: 20px;
+    color: $medGray;
 
     &--compact {
       font-size: 14px;

@@ -165,7 +165,7 @@ export default Vue.extend({
         &-course {
           font-size: 14px;
           line-height: 17px;
-          color: $lightLabelGray;
+          color: $lightPlaceholderGray;
         }
       }
       &-object {
@@ -177,7 +177,7 @@ export default Vue.extend({
         &-semester {
           font-size: 14px;
           line-height: 16px;
-          color: $darkLabelGray;
+          color: $lightPlaceholderGray;
           margin-top: 0.6rem;
           font-style: italic;
         }
@@ -188,7 +188,7 @@ export default Vue.extend({
 
 .reqCourse {
   &-button {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 15px;
     color: $yuxuanBlue;
     padding: 0.2rem;

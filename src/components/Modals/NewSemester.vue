@@ -407,10 +407,10 @@ export default Vue.extend({
       font-size: 14px;
       line-height: 15px;
 
-      color: #b6b6b6;
+      color: #757575;
 
       background-color: white;
-      color: #b6b6b6;
+      color: #757575;
 
       &.season-wrapper,
       &.year-wrapper {

@@ -72,8 +72,10 @@
             width: progressWidth,
           }"
           role="progressbar"
-          :aria-valuenow="progressWidth"
-          aria-valuemax="100%"
+          aria-label="Requirements Progress"
+          :aria-valuenow="progressWidthValue"
+          aria-valuemin="0"
+          aria-valuemax="100"
         ></div>
       </div>
 
@@ -146,6 +148,12 @@ export default Vue.extend({
       }
       return undefined;
     },
+    progressWidthValue() {
+      if (this.req.fulfilled != null && this.req.required != null) {
+        return ((this.req.fulfilled / this.req.required) * 100).toFixed(1);
+      }
+      return '0';
+    },
   },
   methods: {
     toggleDetails() {
@@ -173,7 +181,7 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
     text-align: center;
-    color: #757575;
+    color: $lightPlaceholderGray;
     padding-bottom: 6px;
     &-top {
       text-align: center;
@@ -232,20 +240,20 @@ export default Vue.extend({
   font-weight: 600;
   font-size: 16px;
   line-height: 16px;
-  color: $black;
+  color: $darkGray;
 }
 .major {
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 17px;
-  color: $black;
+  color: $darkGray;
   &-college {
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
-    color: $black;
+    color: $darkGray;
   }
 }
 button.active {

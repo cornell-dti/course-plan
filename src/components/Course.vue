@@ -255,17 +255,17 @@ export default Vue.extend({
   &-code {
     font-size: 14px;
     line-height: 17px;
-    color: $medGray;
+    color: $primaryGray;
 
     &--min {
-      color: #3d3d3d;
+      color: $primaryGray;
     }
   }
 
   &-name {
     font-size: 16px;
     line-height: 19px;
-    color: #3d3d3d;
+    color: $primaryGray;
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
     width: 18rem;
@@ -278,7 +278,7 @@ export default Vue.extend({
   &-info {
     font-size: 14px;
     line-height: 17px;
-    color: #757575;
+    color: $lightPlaceholderGray;
     display: flex;
     align-items: center;
   }
@@ -316,7 +316,7 @@ export default Vue.extend({
 }
 
 .active {
-  border: 1px solid #2b6693;
+  border: 1px solid $yuxuanBlue;
   height: 5.625rem;
   width: 21.375rem;
 
@@ -392,7 +392,7 @@ export default Vue.extend({
     }
   }
   .active {
-    border: 1px solid #2b6693;
+    border: 1px solid $yuxuanBlue;
     height: 5.625rem;
     width: 17rem;
 
