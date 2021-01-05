@@ -13,7 +13,6 @@
         <newSemester
           class="modal-body"
           :currentSemesters="semesters"
-          :id="deleteSemID"
           :isEdit="true"
           :year="deleteSemYear"
           :type="deleteSemType"
@@ -51,7 +50,6 @@ Vue.component('newSemester', NewSemester);
 export default Vue.extend({
   props: {
     semesters: Array as PropType<readonly AppSemester[]>,
-    deleteSemID: Number,
     deleteSemType: String,
     deleteSemYear: Number,
   },

@@ -101,7 +101,7 @@ const summer = require('@/assets/images/summerEmoji.svg');
 export default Vue.extend({
   props: {
     isOnboard: Boolean,
-    semesterID: Number,
+    semesterID: String,
     placeholderText: String,
     season: String,
     year: Number,

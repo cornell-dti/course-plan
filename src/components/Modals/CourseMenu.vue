@@ -89,12 +89,14 @@ import { coursesColorSet } from '@/assets/constants/colors';
 export default Vue.extend({
   props: {
     getCreditRange: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
-    semId: Number,
+    semesterIndex: Number,
     isCompact: Boolean,
   },
   data() {
     return {
-      isLeft: (this.semId % 2 === 0 && !this.isCompact) || (this.semId % 4 === 0 && this.isCompact),
+      isLeft:
+        (this.semesterIndex % 2 === 0 && !this.isCompact) ||
+        (this.semesterIndex % 4 === 0 && this.isCompact),
       // TODO: better version for all breakpoints
       // isLeft: this.semId % numPerRow() === 0,
       colors: coursesColorSet,

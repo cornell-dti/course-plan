@@ -39,13 +39,11 @@
         :isBottomBarExpanded="bottomBar.isExpanded"
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
-        :currSemID="currSemID"
         :reqs="reqs"
         @compact-updated="compactVal = $event"
         @edit-semesters="editSemesters"
         @updateBar="updateBar"
         @close-bar="closeBar"
-        @increment-semID="incrementSemID"
       />
     </div>
     <tourwindow
@@ -149,7 +147,6 @@ export default Vue.extend({
     return {
       loaded: false,
       compactVal: false,
-      currSemID: 1,
       semesters: [] as readonly AppSemester[],
       currentClasses: [] as AppCourse[],
       toggleableRequirementChoices: {} as AppToggleableRequirementChoices,
@@ -223,7 +220,6 @@ export default Vue.extend({
           if (doc.exists) {
             const firestoreUserData = doc.data() as FirestoreUserData;
             this.semesters = firestoreSemestersToAppSemesters(firestoreUserData.semesters);
-            this.currSemID += this.semesters.length;
             this.toggleableRequirementChoices =
               firestoreUserData.toggleableRequirementChoices || {};
 
@@ -233,10 +229,7 @@ export default Vue.extend({
             this.loaded = true;
             this.recomputeRequirements();
           } else {
-            this.semesters = [
-              { id: this.currSemID, type: getCurrentSeason(), year: getCurrentYear(), courses: [] },
-            ];
-            this.currSemID += 1;
+            this.semesters = [{ type: getCurrentSeason(), year: getCurrentYear(), courses: [] }];
             this.startOnboarding();
           }
         })
@@ -371,9 +364,6 @@ export default Vue.extend({
 
       // Return randomly generated color
       return randomColor;
-    },
-    incrementSemID() {
-      this.currSemID += 1;
     },
     showTourEnd() {
       if (!this.isMobile) {

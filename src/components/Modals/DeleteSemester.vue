@@ -39,7 +39,6 @@ Vue.component('newCourse', NewCourse);
 
 export default Vue.extend({
   props: {
-    deleteSemID: Number,
     deleteSemType: String,
     deleteSemYear: Number,
   },
