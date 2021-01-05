@@ -108,7 +108,7 @@ import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 
-import { auth, userDataCollection } from '@/firebaseConfig';
+import { auth, semestersCollection } from '@/firebaseConfig';
 import {
   AppCourse,
   AppSemester,
@@ -365,27 +365,15 @@ export default Vue.extend({
       // TODO: make user / docRef global
       const user = auth.currentUser!;
       const userEmail = user.email!;
-      const docRef = userDataCollection.doc(userEmail);
+      const docRef = semestersCollection.doc(userEmail);
 
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const firebaseSemesters: FirestoreSemester[] = (clone(
-              this.semesters
-            ) as AppSemester[]).map(sem => ({
-              ...sem,
-              courses: sem.courses.map(course => this.toFirebaseCourse(course)),
-            }));
-            docRef.update({ semesters: firebaseSemesters });
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
+      const firebaseSemesters: FirestoreSemester[] = this.semesters.map(sem => ({
+        ...sem,
+        courses: sem.courses.map(course => this.toFirebaseCourse(course)),
+      }));
+      docRef.set({ semesters: firebaseSemesters }).catch(error => {
+        console.error('Error writing document:', error);
+      });
     },
   },
 });

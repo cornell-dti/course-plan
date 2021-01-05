@@ -46,7 +46,7 @@ export type FirestoreTransferClass = {
   readonly course: CornellCourseRosterCourse;
   readonly credits: number;
 };
-export type FirestoreNestedUserData = {
+export type FirestoreOnboardingUserData = {
   readonly class: readonly FirestoreTransferClass[];
   readonly colleges: readonly FirestoreCollege[];
   readonly majors: readonly FirestoreMajorOrMinor[];
@@ -61,7 +61,7 @@ export type FirestoreUserData = {
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };
   readonly uniqueIncrementer: number;
-  readonly userData: FirestoreNestedUserData;
+  readonly userData: FirestoreOnboardingUserData;
 };
 
 export type CornellCourseRosterCourse = {
@@ -336,7 +336,10 @@ export const firestoreSemestersToAppSemesters = (
   return firestoreSemesters.map(firestoreSemesterToAppSemester);
 };
 
-export const createAppUser = (data: FirestoreNestedUserData, name: FirestoreUserName): AppUser => {
+export const createAppUser = (
+  data: FirestoreOnboardingUserData,
+  name: FirestoreUserName
+): AppUser => {
   const user: AppUser = {
     // TODO: take into account multiple majors and colleges
     college: data.colleges[0].acronym,
