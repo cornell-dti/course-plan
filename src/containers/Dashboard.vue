@@ -123,7 +123,7 @@ import {
 import { RequirementMap, computeRequirements } from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
-import getCurrentSeason, { getCurrentYear } from '@/utilities';
+import getCurrentSeason, { getCurrentYear, getSubjectColor } from '@/utilities';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
@@ -306,64 +306,11 @@ export default Vue.extend({
     },
 
     addColor(subject: string) {
-      if (this.subjectColors[subject]) return this.subjectColors[subject];
-
-      const colors = [
-        {
-          text: 'Red',
-          hex: 'DA4A4A',
-        },
-        {
-          text: 'Orange',
-          hex: 'FFA53C',
-        },
-        {
-          text: 'Green',
-          hex: '58C913',
-        },
-        {
-          text: 'Blue',
-          hex: '139DC9',
-        },
-        {
-          text: 'Purple',
-          hex: 'C478FF',
-        },
-        {
-          text: 'Pink',
-          hex: 'F296D3',
-        },
-      ];
-
-      // Create list of used colors
-      const colorsUsedMap: Record<string, boolean> = {};
-      for (const subjectKey of Object.keys(this.subjectColors)) {
-        const subjectColor = this.subjectColors[subjectKey];
-        colorsUsedMap[subjectColor] = true;
-      }
-
-      // Filter out used colors
-      const unusedColors = colors.filter(color => !colorsUsedMap[color.hex]);
-
-      let randomColor;
-
-      // pick a color from unusedColors if there are any
-      if (unusedColors.length !== 0) {
-        randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
-        // otherwise pick a color following the random order set by the first 7 subjects
-      } else {
-        const colorIndex = Object.keys(this.subjectColors).length;
-        const key = Object.keys(this.subjectColors)[colorIndex % colors.length];
-        randomColor = this.subjectColors[key];
-      }
-
+      const color = getSubjectColor(this.subjectColors, subject);
       // Update subjectColors on Firebase with new subject color group
       const docRef = this.getDocRef();
-      this.subjectColors[subject] = randomColor;
       docRef.update({ subjectColors: this.subjectColors });
-
-      // Return randomly generated color
-      return randomColor;
+      return color;
     },
     showTourEnd() {
       if (!this.isMobile) {

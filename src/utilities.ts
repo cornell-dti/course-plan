@@ -55,6 +55,62 @@ export function getRostersFromLastTwoYears() {
   return mostRecentRosters;
 }
 
+export const getSubjectColor = (subjectColors: Record<string, string>, subject: string): string => {
+  if (subjectColors[subject]) return subjectColors[subject];
+
+  const colors = [
+    {
+      text: 'Red',
+      hex: 'DA4A4A',
+    },
+    {
+      text: 'Orange',
+      hex: 'FFA53C',
+    },
+    {
+      text: 'Green',
+      hex: '58C913',
+    },
+    {
+      text: 'Blue',
+      hex: '139DC9',
+    },
+    {
+      text: 'Purple',
+      hex: 'C478FF',
+    },
+    {
+      text: 'Pink',
+      hex: 'F296D3',
+    },
+  ];
+
+  // Create list of used colors
+  const colorsUsedMap: Record<string, boolean> = {};
+  for (const subjectKey of Object.keys(subjectColors)) {
+    const subjectColor = subjectColors[subjectKey];
+    colorsUsedMap[subjectColor] = true;
+  }
+
+  // Filter out used colors
+  const unusedColors = colors.filter(color => !colorsUsedMap[color.hex]);
+
+  let randomColor;
+
+  // pick a color from unusedColors if there are any
+  if (unusedColors.length !== 0) {
+    randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
+    // otherwise pick a color following the random order set by the first 7 subjects
+  } else {
+    const colorIndex = Object.keys(subjectColors).length;
+    const key = Object.keys(subjectColors)[colorIndex % colors.length];
+    randomColor = subjectColors[key];
+  }
+
+  subjectColors[subject] = randomColor;
+  return randomColor;
+};
+
 export const clickOutside = {
   bind(el: any, binding: any, vnode: any) {
     el.event = (event: any) => {
