@@ -99,7 +99,16 @@ import TourWindow from '@/components/Modals/TourWindow.vue';
 import surfing from '@/assets/images/surfing.svg';
 
 import '@/vueDragulaConfig';
-import { auth, userDataCollection } from '@/firebaseConfig';
+import {
+  auth,
+  db,
+  usernameCollection,
+  semestersCollection,
+  toggleableRequirementChoicesCollection,
+  subjectColorsCollection,
+  uniqueIncrementerCollection,
+  onboardingDataCollection,
+} from '@/firebaseConfig';
 import {
   FirestoreUserName,
   FirestoreSemesterCourse,
@@ -108,7 +117,7 @@ import {
   FirestoreMajorOrMinor,
   FirestoreAPIBExam,
   FirestoreTransferClass,
-  FirestoreNestedUserData,
+  FirestoreOnboardingUserData,
   FirestoreUserData,
   CornellCourseRosterCourse,
   AppUser,
@@ -203,39 +212,57 @@ export default Vue.extend({
     window.removeEventListener('resize', this.resizeEventHandler);
   },
   methods: {
-    getDocRef() {
+    getUserEmail(): string {
       const user = auth.currentUser;
-      const userEmail = user!.email as string;
-      const docRef = userDataCollection.doc(userEmail);
-      return docRef;
+      return user!.email as string;
     },
 
     getInformationFromUser() {
-      const docRef = this.getDocRef();
+      Promise.all([
+        usernameCollection.doc(this.getUserEmail()).get(),
+        semestersCollection.doc(this.getUserEmail()).get(),
+        toggleableRequirementChoicesCollection.doc(this.getUserEmail()).get(),
+        subjectColorsCollection.doc(this.getUserEmail()).get(),
+        uniqueIncrementerCollection.doc(this.getUserEmail()).get(),
+        onboardingDataCollection.doc(this.getUserEmail()).get(),
+      ]).then(
+        ([
+          usernameDoc,
+          semesterDoc,
+          toggleableRequirementChoicesDoc,
+          subjectColorsDoc,
+          uniqueIncrementerDoc,
+          onboardingDataDoc,
+        ]) => {
+          const usernameData = usernameDoc.data();
+          const semestersData = semesterDoc.data();
+          const uniqueIncrementerData = uniqueIncrementerDoc.data();
+          const onboardingData = onboardingDataDoc.data();
+          if (usernameData != null && onboardingData != null) {
+            this.user = this.parseUserData(onboardingData, usernameData);
+          }
+          if (semestersData != null) {
+            this.semesters = firestoreSemestersToAppSemesters(semestersData.semesters);
+          } else {
+            const newSemesterData = [
+              { type: getCurrentSeason(), year: getCurrentYear(), courses: [] },
+            ];
+            this.semesters = newSemesterData;
+            semestersCollection.doc(this.getUserEmail()).set({ semesters: newSemesterData });
+          }
+          this.toggleableRequirementChoices = toggleableRequirementChoicesDoc.data() || {};
+          this.subjectColors = subjectColorsDoc.data() || {};
+          this.uniqueIncrementer =
+            uniqueIncrementerData != null ? uniqueIncrementerData.uniqueIncrementer : 0;
 
-      // TODO: error handling for firebase errors
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            const firestoreUserData = doc.data() as FirestoreUserData;
-            this.semesters = firestoreSemestersToAppSemesters(firestoreUserData.semesters);
-            this.toggleableRequirementChoices =
-              firestoreUserData.toggleableRequirementChoices || {};
-
-            this.user = this.parseUserData(firestoreUserData.userData, firestoreUserData.name);
-            this.subjectColors = firestoreUserData.subjectColors;
-            this.uniqueIncrementer = firestoreUserData.uniqueIncrementer;
+          if (usernameData != null && semestersData != null && onboardingData != null) {
             this.loaded = true;
             this.recomputeRequirements();
           } else {
-            this.semesters = [{ type: getCurrentSeason(), year: getCurrentYear(), courses: [] }];
             this.startOnboarding();
           }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error);
-        });
+        }
+      );
     },
 
     editSemesters(newSemesters: readonly AppSemester[]) {
@@ -246,7 +273,9 @@ export default Vue.extend({
       toggleableRequirementChoices: AppToggleableRequirementChoices
     ) {
       this.toggleableRequirementChoices = toggleableRequirementChoices;
-      this.getDocRef().update({ toggleableRequirementChoices });
+      toggleableRequirementChoicesCollection
+        .doc(this.getUserEmail())
+        .set(toggleableRequirementChoices);
       this.recomputeRequirements();
     },
     resizeEventHandler(e: any) {
@@ -288,7 +317,6 @@ export default Vue.extend({
     },
 
     incrementID() {
-      const docRef = this.getDocRef();
       // If uniqueIncrementer attribute does not exist, initialize it to 0 and populate existing courses
       if (this.uniqueIncrementer === undefined) {
         this.uniqueIncrementer = 0;
@@ -301,15 +329,16 @@ export default Vue.extend({
       } else {
         this.uniqueIncrementer += 1;
       }
-      docRef.update({ uniqueIncrementer: this.uniqueIncrementer });
+      uniqueIncrementerCollection
+        .doc(this.getUserEmail())
+        .set({ uniqueIncrementer: this.uniqueIncrementer });
       return this.uniqueIncrementer;
     },
 
     addColor(subject: string) {
       const color = getSubjectColor(this.subjectColors, subject);
       // Update subjectColors on Firebase with new subject color group
-      const docRef = this.getDocRef();
-      docRef.update({ subjectColors: this.subjectColors });
+      subjectColorsCollection.doc(this.getUserEmail()).set(this.subjectColors);
       return color;
     },
     showTourEnd() {
@@ -447,43 +476,34 @@ export default Vue.extend({
       this.isOnboarding = true;
     },
 
-    endOnboarding(onboardingData: { userData: FirestoreNestedUserData; name: FirestoreUserName }) {
+    endOnboarding(onboardingData: {
+      userData: FirestoreOnboardingUserData;
+      name: FirestoreUserName;
+    }) {
       const user = this.parseUserData(onboardingData.userData, onboardingData.name);
 
       this.user = user;
       this.loaded = true;
+      if (!this.isMobile) {
+        this.welcomeHidden = true;
+      }
 
-      const docRef = this.getDocRef();
-      const data: FirestoreUserData = {
-        name: onboardingData.name,
-        userData: onboardingData.userData,
-        toggleableRequirementChoices: this.toggleableRequirementChoices,
-        semesters: [{ type: getCurrentSeason(), year: getCurrentYear(), courses: [] }],
-        subjectColors: this.subjectColors,
-        uniqueIncrementer: this.uniqueIncrementer,
-      };
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            this.welcomeHidden = false;
-          } else if (!this.isMobile) {
-            this.welcomeHidden = true;
-          }
-          docRef.set(data);
-          this.cancelOnboarding();
-          this.recomputeRequirements();
-        })
+      db.batch()
+        .set(usernameCollection.doc(this.getUserEmail()), onboardingData.name)
+        .set(onboardingDataCollection.doc(this.getUserEmail()), onboardingData.userData)
+        .commit()
         .catch(error => {
-          console.log('Error getting document:', error);
+          console.log('Failed to write onboarding data:', error);
         });
-      // set the new name and userData, along with either an empty list of semesters or preserve the old list
+
+      this.cancelOnboarding();
+      this.recomputeRequirements();
     },
 
     cancelOnboarding() {
       this.isOnboarding = false;
     },
-    parseUserData(data: FirestoreNestedUserData, name: FirestoreUserName): AppUser {
+    parseUserData(data: FirestoreOnboardingUserData, name: FirestoreUserName): AppUser {
       const user = createAppUser(data, name);
 
       const transferClasses: any[] = [];
