@@ -35,22 +35,22 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+
+export default Vue.extend({
   props: {
-    choices: Array,
+    choices: (Array as unknown) as PropType<readonly [string, string]>,
   },
   data() {
-    return {
-      leftChosen: true,
-    };
+    return { leftChosen: true };
   },
   methods: {
-    onClick(left) {
+    onClick(left: boolean) {
       this.leftChosen = left;
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">

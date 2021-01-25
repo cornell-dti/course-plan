@@ -111,14 +111,7 @@ import {
 } from '@/firebaseConfig';
 import {
   FirestoreUserName,
-  FirestoreSemesterCourse,
-  FirestoreSemesterType,
-  FirestoreSemester,
-  FirestoreMajorOrMinor,
-  FirestoreAPIBExam,
-  FirestoreTransferClass,
   FirestoreOnboardingUserData,
-  FirestoreUserData,
   CornellCourseRosterCourse,
   AppUser,
   AppCourse,
@@ -129,7 +122,7 @@ import {
   createAppUser,
   AppToggleableRequirementChoices,
 } from '@/user-data';
-import { RequirementMap, computeRequirements } from '@/requirements/reqs-functions';
+import { computeRequirements } from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 import getCurrentSeason, { getCurrentYear, getSubjectColor } from '@/utilities';
@@ -278,7 +271,7 @@ export default Vue.extend({
         .set(toggleableRequirementChoices);
       this.recomputeRequirements();
     },
-    resizeEventHandler(e: any) {
+    resizeEventHandler() {
       this.isMobile = window.innerWidth <= 440;
       this.isTablet = window.innerWidth <= 878;
       this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
@@ -635,9 +628,9 @@ export default Vue.extend({
     },
     deleteCourseFromSemesters(uniqueID: number) {
       const updatedSemesters = this.semesters.map(semester => {
-        const coursesWithoutDeleted = semester.courses.filter(course => {
-          return course.uniqueID !== uniqueID;
-        });
+        const coursesWithoutDeleted = semester.courses.filter(
+          course => course.uniqueID !== uniqueID
+        );
         return { ...semester, courses: coursesWithoutDeleted };
       });
       this.editSemesters(updatedSemesters);

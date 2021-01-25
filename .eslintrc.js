@@ -4,6 +4,7 @@ module.exports = {
   root: true,
   extends: [
     'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:vue/essential',
     '@vue/airbnb',
     '@vue/typescript',
@@ -25,6 +26,7 @@ module.exports = {
   },
   // add your custom rules here
   rules: {
+    '@typescript-eslint/ban-ts-comment': ['warn'],
     // TODO: change no-console to error out for prod
     'no-console': ['warn'],
     // TODO: fix copied js code that makes this warn necessary
@@ -67,7 +69,11 @@ module.exports = {
           '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.',
       },
     ],
+    'max-classes-per-file': ['off'],
     'max-len': ['error', { code: 200 }],
+    'no-unused-vars': ['off'],
+    'no-use-before-define': ['off'],
+    'vue/no-mutating-props': ['warn'],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },

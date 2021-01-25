@@ -337,7 +337,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
-import coursesJSON from '@/assets/courses/courses.json';
 import checkmarkSelected from '@/assets/images/checkmark-onboarding.svg';
 import checkmarkUnselected from '@/assets/images/checkmark-empty.svg';
 import NewCourse from '@/components/Modals/NewCourse/NewCourse.vue';
@@ -349,7 +348,6 @@ import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_v
 Vue.component('newCourse', NewCourse);
 
 const placeholderText = 'Select one';
-const placeholderColor = lightPlaceholderGray;
 
 type Section = 'type' | 'subject' | 'score';
 
@@ -426,7 +424,6 @@ export default Vue.extend({
   },
   methods: {
     getClasses() {
-      let credits = 0;
       const exams: Record<Section, DisplayOption>[] = [];
       const sections = ['type', 'subject', 'score'] as const;
       if ('exam' in this.user && this.user.exam.length > 0) {
@@ -446,8 +443,6 @@ export default Vue.extend({
           }
           if (typeof this.user.exam[x].subject !== 'undefined') {
             exams.push(exam);
-            // @ts-ignore
-            credits += this.user.exam[x].credits;
             // @ts-ignore
             exam.equivCourse = this.user.exam[x].equivCourse;
           }

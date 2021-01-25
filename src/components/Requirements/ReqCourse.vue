@@ -29,8 +29,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import firebase from 'firebase/app';
+import Vue from 'vue';
 
 export default Vue.extend({
   props: {
@@ -41,15 +40,11 @@ export default Vue.extend({
     compact: Boolean,
   },
   computed: {
-    borderColorCSSvar(): any {
-      return {
-        '--border-color': `#${this.color}`,
-      };
+    borderColorCSSvar(): { '--border-color': string } {
+      return { '--border-color': `#${this.color}` };
     },
-    courseColorCSSvar(): any {
-      return {
-        '--bg-color': `#${this.color}`,
-      };
+    courseColorCSSvar(): { '--bg-color': string } {
+      return { '--bg-color': `#${this.color}` };
     },
     courseCodeLabel(): string {
       return `${this.subject} ${this.number}`;

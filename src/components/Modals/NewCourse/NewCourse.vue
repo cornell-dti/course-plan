@@ -90,13 +90,13 @@ import coursesJSON from '@/assets/courses/courses.json';
 import EditRequirement from '@/components/Modals/NewCourse/EditRequirement.vue';
 import BinaryButton from '@/components/Modals/NewCourse/BinaryButton.vue';
 
+import fall from '@/assets/images/fallEmoji.svg';
+import spring from '@/assets/images/springEmoji.svg';
+import winter from '@/assets/images/winterEmoji.svg';
+import summer from '@/assets/images/summerEmoji.svg';
+
 Vue.component('editRequirement', EditRequirement);
 Vue.component('binaryButton', BinaryButton);
-
-const fall = require('@/assets/images/fallEmoji.svg');
-const spring = require('@/assets/images/springEmoji.svg');
-const winter = require('@/assets/images/winterEmoji.svg');
-const summer = require('@/assets/images/summerEmoji.svg');
 
 export default Vue.extend({
   props: {

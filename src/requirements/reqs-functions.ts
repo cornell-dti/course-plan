@@ -6,7 +6,6 @@ import {
   DecoratedCollegeOrMajorRequirement,
   RequirementFulfillmentStatistics,
   GroupedRequirementFulfillmentReport,
-  Course,
 } from './types';
 
 export type RequirementMap = { readonly [code: string]: readonly string[] };

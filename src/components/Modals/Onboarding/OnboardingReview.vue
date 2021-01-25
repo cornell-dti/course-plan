@@ -182,14 +182,13 @@
 
 <script>
 // TODO: move repeated functions in all onboarding pages to a separate file
-
+import Vue from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import { examData } from '@/requirements/data/exams/ExamCredit';
-import coursesJSON from '@/assets/courses/courses.json';
 
 const placeholderText = 'Select one';
 
-export default {
+export default Vue.extend({
   props: {
     user: Object,
   },
@@ -503,7 +502,7 @@ export default {
       this.$emit('setPage', page);
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">

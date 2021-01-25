@@ -1,5 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { includesWithSubRequirements } from '../checkers-common';
 
 const bioRequirements: readonly CollegeOrMajorRequirement[] = [
   {

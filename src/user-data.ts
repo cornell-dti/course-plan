@@ -322,19 +322,15 @@ const firestoreSemesterToAppSemester = ({
   courses,
   type,
   year,
-}: FirestoreSemester): AppSemester => {
-  return {
-    courses: courses.map(course => firestoreCourseToAppCourse(course, false)),
-    type,
-    year,
-  };
-};
+}: FirestoreSemester): AppSemester => ({
+  courses: courses.map(course => firestoreCourseToAppCourse(course, false)),
+  type,
+  year,
+});
 
 export const firestoreSemestersToAppSemesters = (
   firestoreSemesters: readonly FirestoreSemester[]
-): AppSemester[] => {
-  return firestoreSemesters.map(firestoreSemesterToAppSemester);
-};
+): AppSemester[] => firestoreSemesters.map(firestoreSemesterToAppSemester);
 
 export const createAppUser = (
   data: FirestoreOnboardingUserData,

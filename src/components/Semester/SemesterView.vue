@@ -99,8 +99,6 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-// @ts-ignore
-import clone from 'clone';
 import Course from '@/components/Course.vue';
 import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Confirmation.vue';
@@ -200,7 +198,6 @@ export default Vue.extend({
       const allCourseSet = new Set<string>();
       const duplicatedCourseCodeList: string[] = [];
       if (this.semesters) {
-        const coursesMap: Record<string, boolean> = {};
         this.semesters.forEach(semester => {
           semester.courses.forEach(course => {
             const code = `${course.subject} ${course.number}`;

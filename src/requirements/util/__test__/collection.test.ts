@@ -6,6 +6,7 @@ it('HashMap tests', () => {
   map.set('1', 1);
   map.set('2', 2);
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   map.forEach(() => {});
 
   expect(map.get('1')).toBe(1);
@@ -53,6 +54,7 @@ it('HashSet tests', () => {
   set.add('1');
   set.add('2');
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   set.forEach(() => {});
 
   expect(set.has('1')).toBeTruthy();

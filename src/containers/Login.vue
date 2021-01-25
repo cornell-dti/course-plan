@@ -173,7 +173,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import firebase from 'firebase/app';
-import introJs from 'intro.js';
 
 import Footer from '@/components/Footer.vue';
 import TopBar from '@/components/TopBar.vue';
@@ -237,16 +236,13 @@ export default Vue.extend({
           if (doc.exists) {
             this.performingRequest = false;
             this.$store.commit('setCurrentUser', user);
-            this.$store.dispatch('fetchUserProfile');
             this.$router.push(`${process.env.BASE_URL}/`);
             this.$gtag.event('login', { method: 'Google' });
           } else {
             this.handleUserWithoutAccess();
           }
         })
-        .catch(error => {
-          this.handleUserWithoutAccess();
-        });
+        .catch(() => this.handleUserWithoutAccess());
     },
 
     handleUserWithoutAccess() {
