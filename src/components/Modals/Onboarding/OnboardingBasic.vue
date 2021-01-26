@@ -318,11 +318,6 @@ export default Vue.extend({
     this.setMinorsList();
     this.flattenDisplayMajors();
     this.flattenDisplayMinors();
-    const name = {
-      firstName: this.firstName,
-      middleName: this.middleName,
-      lastName: this.lastName,
-    };
   },
   methods: {
     updateBasic() {
@@ -545,11 +540,6 @@ export default Vue.extend({
       displayOptions.arrowColor = inactiveGray;
       displayOptions.boxBorder = inactiveGray;
       displayOptions.placeholderColor = lightPlaceholderGray;
-      const name = {
-        firstName: this.firstName,
-        middleName: this.middleName,
-        lastName: this.lastName,
-      };
     },
     selectCollege(text, acronym, i) {
       this.selectOption('college', text, acronym, i);

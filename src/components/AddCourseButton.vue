@@ -19,8 +19,8 @@
   </div>
 </template>
 
-<script>
-import Vue, { PropType } from 'vue';
+<script lang="ts">
+import Vue from 'vue';
 
 export default Vue.extend({
   props: {

@@ -55,17 +55,15 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import firebase from 'firebase/app';
 import VueSkeletonLoader from 'skeleton-loader-vue';
 import Course from '@/components/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 import {
   DisplayableRequirementFulfillment,
-  CourseTaken,
   SubReqCourseSlot,
   CrseInfo,
 } from '@/requirements/types';
-import { AppCourse, FirestoreSemesterCourse } from '@/user-data';
+import { AppCourse } from '@/user-data';
 
 Vue.component('vue-skeleton-loader', VueSkeletonLoader);
 Vue.component('course', Course);
@@ -169,7 +167,7 @@ export default Vue.extend({
       }
       this.courseObjects = firstFourCourseObjects;
     },
-    onShowAllCourses(courses: AppCourse[]) {
+    onShowAllCourses() {
       this.$emit('onShowAllCourses', {
         requirementName: this.subReq.requirement.name,
         subReqCoursesArray: this.subReqCoursesArray,

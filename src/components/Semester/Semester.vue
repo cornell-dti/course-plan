@@ -130,6 +130,11 @@ import { clickOutside } from '@/utilities';
 import { AppCourse, AppSemester, CornellCourseRosterCourse } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
 
+import fall from '@/assets/images/fallEmoji.svg';
+import spring from '@/assets/images/springEmoji.svg';
+import winter from '@/assets/images/winterEmoji.svg';
+import summer from '@/assets/images/summerEmoji.svg';
+
 Vue.component('course', Course);
 Vue.component('modal', Modal);
 Vue.component('confirmation', Confirmation);
@@ -137,11 +142,6 @@ Vue.component('semestermenu', SemesterMenu);
 Vue.component('deletesemester', DeleteSemester);
 Vue.component('editsemester', EditSemester);
 Vue.component('addcoursebutton', AddCourseButton);
-
-const fall = require('@/assets/images/fallEmoji.svg');
-const spring = require('@/assets/images/springEmoji.svg');
-const winter = require('@/assets/images/winterEmoji.svg');
-const summer = require('@/assets/images/summerEmoji.svg');
 
 const pageTour = introJs();
 pageTour.setOption('exitOnEsc', 'false');
@@ -273,7 +273,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    openCourseModal(isSelectingSemester: boolean = false) {
+    openCourseModal(isSelectingSemester = false) {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.isCourseModalOpen = true;

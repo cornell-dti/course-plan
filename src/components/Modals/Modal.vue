@@ -44,7 +44,6 @@ import Vue from 'vue';
 import NewCourse from '@/components/Modals/NewCourse/NewCourse.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
-import { SingleMenuRequirement } from '@/requirements/types';
 
 Vue.component('newCourse', NewCourse);
 Vue.component('newSemester', NewSemester);

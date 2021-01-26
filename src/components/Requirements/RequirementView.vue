@@ -87,14 +87,7 @@ import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
-import {
-  AppUser,
-  AppMajor,
-  AppMinor,
-  FirestoreSemesterCourse,
-  AppCourse,
-  AppSemester,
-} from '@/user-data';
+import { AppUser, AppMajor, AppMinor, AppCourse, AppSemester } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
@@ -119,7 +112,7 @@ export default Vue.extend({
     user: Object as PropType<AppUser>,
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number,
-    rostersFromLastTwoYears: Array as PropType<readonly String[]>,
+    rostersFromLastTwoYears: Array as PropType<readonly string[]>,
     lastLoadedShowAllCourseId: Number,
     semesters: Array as PropType<readonly AppSemester[]>,
   },

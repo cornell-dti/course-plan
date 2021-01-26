@@ -4,7 +4,7 @@ export type Course = {
   readonly catalogNbr: string;
   readonly titleLong: string;
   readonly description: string;
-  readonly enrollGroups: Object[];
+  readonly enrollGroups: unknown[];
   readonly catalogWhenOffered?: string;
   readonly catalogPrereqCoreq?: string;
   readonly catalogBreadth?: string;
@@ -39,7 +39,7 @@ type RequirementCommon = {
 /**
  * @param T additional information only attached to credits and courses type.
  */
-type RequirementFulfillmentInformation<T = {}> =
+type RequirementFulfillmentInformation<T = Record<string, unknown>> =
   | {
       readonly fulfilledBy: 'self-check';
       // Currently unused.
@@ -129,7 +129,7 @@ export type DecoratedRequirementsJson = {
   readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };
 
-export type RequirementFulfillment<M extends {}> = {
+export type RequirementFulfillment<M extends Record<string, unknown>> = {
   /** ID of the requirement */
   readonly id: string;
   /** The original requirement object. */

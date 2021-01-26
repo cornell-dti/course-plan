@@ -8,7 +8,7 @@ import { Course } from './types';
 
 const PREFIX = 'https://classes.cornell.edu/api/2.0';
 
-const wait = (time: number) => new Promise(resolve => setTimeout(() => resolve(), time));
+const wait = (time: number) => new Promise<void>(resolve => setTimeout(() => resolve(), time));
 
 const getSemesters = async (): Promise<readonly string[]> => {
   const response = await fetch(`${PREFIX}/config/rosters.json`);
@@ -59,8 +59,8 @@ const getCoursesInSemesterAndSubject = async <T extends keyof Course>(
 const getAllCoursesInSemester = async <T extends keyof Course>(
   semester: string,
   courseFieldFilter: CourseFieldFilter<T>,
-  coolingTimeMs: number = 50,
-  doPrintDebuggingInfo: boolean = false
+  coolingTimeMs = 50,
+  doPrintDebuggingInfo = false
 ): Promise<readonly Pick<Course, T>[]> => {
   const courses: Pick<Course, T>[] = [];
   const subjects = await getSubjects(semester);
@@ -89,8 +89,8 @@ type AllCourses<T extends keyof Course> = { [semester: string]: readonly Pick<Co
 
 const getAllCourses = async <T extends keyof Course>(
   courseFieldFilter: CourseFieldFilter<T>,
-  coolingTimeMs: number = 50,
-  doPrintDebuggingInfo: boolean = true
+  coolingTimeMs = 50,
+  doPrintDebuggingInfo = true
 ): Promise<AllCourses<T>> => {
   const startTime = new Date().getTime();
   const courses: AllCourses<T> = {};
@@ -120,8 +120,8 @@ const getAllCourses = async <T extends keyof Course>(
 
 const generateSemesterJSONs = async <T extends keyof Course>(
   courseFieldFilter: CourseFieldFilter<T>,
-  coolingTimeMs: number = 50,
-  doPrintDebuggingInfo: boolean = true
+  coolingTimeMs = 50,
+  doPrintDebuggingInfo = true
 ): Promise<void> => {
   const startTime = new Date().getTime();
   const semesters = await getSemesters();
@@ -168,6 +168,6 @@ const courseFieldFilter = getCourseFieldFilter([
   'acadGroup',
 ]);
 
-generateSemesterJSONs(courseFieldFilter).then(x => {
+generateSemesterJSONs(courseFieldFilter).then(() => {
   console.log('All semester JSONs generated.');
 });

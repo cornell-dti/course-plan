@@ -65,12 +65,10 @@
 
 <script>
 import Vue from 'vue';
-import reqsData from '@/requirements/typed-requirement-json';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import { clickOutside } from '@/utilities';
-import { lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 Vue.component('onboardingBasic', OnboardingBasic);
 Vue.component('onboardingTransfer', OnboardingTransfer);
@@ -85,35 +83,6 @@ export default Vue.extend({
     userData: Object,
   },
   data() {
-    // Set dropdown colleges and majors if already filled out
-    let collegeText = placeholderText;
-    let collegeAcronym = '';
-    let collegePlaceholderColor = '';
-    // const user = this.userData;
-    if (this.userData.college !== '') {
-      collegeText = this.userData.collegeFN;
-      collegeAcronym = this.userData.college;
-      collegePlaceholderColor = lightPlaceholderGray;
-    }
-
-    let majorText = placeholderText;
-    let majorAcronym = '';
-    let majorPlaceholderColor = '';
-    if ('major' in this.userData && this.userData.major.length > 0) {
-      majorText = this.userData.majorFN;
-      majorAcronym = this.userData.major;
-      majorPlaceholderColor = lightPlaceholderGray;
-    }
-
-    let minorText = placeholderText;
-    let minorAcronym = '';
-    let minorPlaceholderColor = '';
-    if ('minor' in this.userData && this.userData.minor.length > 0) {
-      minorText = this.userData.minorFN;
-      minorAcronym = this.userData.minor;
-      minorPlaceholderColor = lightPlaceholderGray;
-    }
-
     return {
       // TODO: Get real college, major, and minor lists
       currentPage: 1,

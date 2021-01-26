@@ -67,8 +67,7 @@
 <script lang="ts">
 import firebase from 'firebase/app';
 import 'firebase/functions';
-import { Vue } from 'vue-property-decorator';
-import { PropType } from 'vue';
+import Vue, { PropType } from 'vue';
 // @ts-ignore
 import VueCollapse from 'vue2-collapse';
 import introJs from 'intro.js';
@@ -76,20 +75,8 @@ import introJs from 'intro.js';
 import Course from '@/components/Course.vue';
 import Modal from '@/components/Modals/Modal.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
-import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import {
-  BaseRequirement as Requirement,
-  CourseTaken,
-  SingleMenuRequirement,
-  SubReqCourseSlot,
-  CrseInfo,
-} from '@/requirements/types';
-import {
-  RequirementMap,
-  computeRequirements,
-  computeRequirementMap,
-} from '@/requirements/reqs-functions';
+import { SingleMenuRequirement, SubReqCourseSlot, CrseInfo } from '@/requirements/types';
 import {
   AppUser,
   AppMajor,
@@ -100,8 +87,9 @@ import {
   AppToggleableRequirementChoices,
 } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
+// emoji for clipboard
+import clipboard from '@/assets/images/clipboard.svg';
 
-const functions = firebase.functions();
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
 Vue.component('course', Course);
@@ -124,8 +112,6 @@ type Data = {
   showAllSubReqCourses: SubReqCourseSlot[];
   lastLoadedShowAllCourseId: number;
 };
-// emoji for clipboard
-const clipboard = require('@/assets/images/clipboard.svg');
 
 // This section will be revisited when we try to make first-time tooltips
 const tour = introJs().start();
@@ -260,9 +246,7 @@ export default Vue.extend({
             });
             return resolve(fetchedCourses);
           })
-          .catch(error => {
-            return reject(error);
-          });
+          .catch(error => reject(error));
       });
     },
     onShowAllCourses(showAllCourses: {

@@ -26,7 +26,7 @@ export function getCurrentYearSuffix(): string {
   return currentYear.toString().substring(2);
 }
 
-export function getRostersFromLastTwoYears() {
+export function getRostersFromLastTwoYears(): string[] {
   // If current roster is FA20, get all rosters thru FA18
   const currentType = getCurrentType();
   const currentYearSuffix = getCurrentYearSuffix();
@@ -112,15 +112,17 @@ export const getSubjectColor = (subjectColors: Record<string, string>, subject: 
 };
 
 export const clickOutside = {
-  bind(el: any, binding: any, vnode: any) {
-    el.event = (event: any) => {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+  bind(el: any, binding: any, vnode: any): void {
+    el.event = (event: Event) => {
       if (!(el === event.target || el.contains(event.target))) {
         vnode.context[binding.expression](event, binding.arg);
       }
     };
     document.body.addEventListener('click', el.event);
   },
-  unbind(el: any) {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+  unbind(el: any): void {
     document.body.removeEventListener('click', el.event);
   },
 };

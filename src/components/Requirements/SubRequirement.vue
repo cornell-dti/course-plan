@@ -115,7 +115,6 @@ import DropDownArrow from '@/components/DropDownArrow.vue';
 import {
   DisplayableRequirementFulfillment,
   EligibleCourses,
-  CourseTaken,
   SubReqCourseSlot,
   CrseInfo,
 } from '@/requirements/types';
@@ -129,7 +128,6 @@ Vue.component('dropdownarrow', DropDownArrow);
 
 require('firebase/functions');
 
-const functions = firebase.functions();
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
 type Data = {
@@ -150,7 +148,7 @@ export default Vue.extend({
       required: false,
     },
     color: String,
-    rostersFromLastTwoYears: Array as PropType<readonly String[]>,
+    rostersFromLastTwoYears: Array as PropType<readonly string[]>,
     lastLoadedShowAllCourseId: Number,
     semesters: Array as PropType<readonly AppSemester[]>,
   },
@@ -158,7 +156,7 @@ export default Vue.extend({
     subReqCoursesArray: {
       immediate: true,
       deep: true,
-      handler(updatedSubReqCoursesArray) {
+      handler() {
         this.getSubReqCourseObjects();
       },
     },

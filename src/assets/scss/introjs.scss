@@ -1,87 +1,87 @@
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/scss/_variables.scss';
 
 .introjs-tooltip {
-    background-color: white;
-    border-radius: 9px;
-    font-family: "ProximaNova";
+  background-color: white;
+  border-radius: 9px;
+  font-family: 'ProximaNova';
 }
-.introjs-helperNumberLayer{
-    display: none;
+.introjs-helperNumberLayer {
+  display: none;
 }
-.introjs-helperLayer{
-    border-radius: 9px;
+.introjs-helperLayer {
+  border-radius: 9px;
 }
-.introjs-donebutton{
+.introjs-donebutton {
+  color: white !important;
+  background-image: none !important;
+  background-color: $sangBlue !important;
+  text-shadow: none;
+  border: none;
+  border-radius: 3px;
+  float: right !important;
+  padding: 0.5em 0.7em 0.5em !important;
+  &:hover,
+  &:focus {
     color: white !important;
-    background-image: none !important;
-    background-color: $sangBlue !important;
-    text-shadow: none;
-    border: none;
-    border-radius: 3px;
-    float: right !important;
-    padding: .5em .7em .5em !important;
-    &:hover,
-    &:focus {
-      color: white !important;
-      background-color: $sangBlue;
-      background-image: none;
-    }
-}
-.introjs-skipbutton{
-    float:left;
-    border:none;
+    background-color: $sangBlue;
     background-image: none;
+  }
+}
+.introjs-skipbutton {
+  float: left;
+  border: none;
+  background-image: none;
+  padding-left: 0px;
+  background-color: white;
+  color: $sangBlue;
+  &:active,
+  &:focus,
+  &:hover {
+    background-image: none;
+    background-color: transparent;
     padding-left: 0px;
-    background-color: white;
     color: $sangBlue;
-    &:active,
-    &:focus,
-    &:hover {
-      background-image: none;
-      background-color:transparent; 
-      padding-left: 0px;
-      color: $sangBlue;
-      background-color: white;
-      box-shadow:none;
-    }
+    background-color: white;
+    box-shadow: none;
+  }
 }
-.introjs-nextbutton{
-    color: white !important;
-    background-image: none;
-    background-color: $sangBlue;
-    text-shadow: none;
-    border: none;
-    border-radius: 3px;
+.introjs-nextbutton {
+  color: white !important;
+  background-image: none;
+  background-color: $sangBlue;
+  text-shadow: none;
+  border: none;
+  border-radius: 3px;
 }
-.introjs-nextbutton:hover{
-    color: white !important;
-    background-color: $sangBlue;
-    background-image: none;
+.introjs-nextbutton:hover {
+  color: white !important;
+  background-color: $sangBlue;
+  background-image: none;
 }
-.introjs-nextbutton:focus{
-    color: white !important;
-    background-color: $sangBlue;
-    background-image: none;
+.introjs-nextbutton:focus {
+  color: white !important;
+  background-color: $sangBlue;
+  background-image: none;
 }
-.introjs-prevbutton{
-    display:none !important;
+.introjs-prevbutton {
+  display: none !important;
 }
 a:not([href]) {
-    color: $sangBlue;
+  color: $sangBlue;
 }
 .introjs-bullets {
-    display:none;
+  display: none;
 }
-.introjs-bodytext{
-    color:#757575;
+.introjs-bodytext {
+  color: #757575;
 }
 .introjs-disabled {
-    display: none !important;
+  display: none !important;
 }
-.tooltipCenter{
-    align-self: center;
-    width: 20vw;
+.tooltipCenter {
+  align-self: center;
+  width: 20vw;
 }
-.introjs-tooltipReferenceLayer{
-    display: flex;
+.introjs-tooltipReferenceLayer {
+  display: flex;
 }
