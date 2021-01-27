@@ -110,8 +110,7 @@ export default Vue.extend({
       const itemWidthCompact = 232; // width of a compact semester div in px
 
       const grid = document.getElementsByClassName('semesterView-content')[0];
-      // @ts-ignore
-      const gridStyle = grid.currentStyle || window.getComputedStyle(grid);
+      const gridStyle = window.getComputedStyle(grid);
       const gridWidth =
         grid.clientWidth - (parseFloat(gridStyle.paddingLeft) + parseFloat(gridStyle.paddingRight));
 

@@ -338,7 +338,7 @@ export default Vue.extend({
             const { courses } = subreqs[j].requirement;
             if (typeof courses !== 'undefined') {
               for (let k = 0; k < courses.length; k += 1) {
-                for (const [_, ids] of Object.entries(courses[k])) {
+                for (const [, ids] of Object.entries(courses[k])) {
                   if (ids.includes(this.selectedCourseID)) {
                     relatedReqs.push(subreqs[j].requirement.name);
                     break;

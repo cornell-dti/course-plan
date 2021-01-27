@@ -308,11 +308,6 @@ export default Vue.extend({
       this.isSmallerWidth = window.innerWidth <= 976;
     },
 
-    toggle() {
-      // @ts-ignore
-      this.$emit('toggle', this.isExpanded);
-    },
-
     joinIfExists(arr: readonly string[]) {
       return arr ? arr.join(',') : '';
     },

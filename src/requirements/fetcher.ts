@@ -31,6 +31,8 @@ type CourseFieldFilter<T extends keyof Course> = (course: Course) => Pick<Course
 const getCourseFieldFilter = <T extends keyof Course>(allowedFields: T[]): CourseFieldFilter<T> => (
   course: Course
 ) => {
+  // Too dynamic
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const filteredCourseObject: any = {};
   Object.entries(course).forEach(([field, value]) => {
     if (allowedFields.includes(field as T)) {
@@ -86,37 +88,6 @@ const getAllCoursesInSemester = async <T extends keyof Course>(
 };
 
 type AllCourses<T extends keyof Course> = { [semester: string]: readonly Pick<Course, T>[] };
-
-const getAllCourses = async <T extends keyof Course>(
-  courseFieldFilter: CourseFieldFilter<T>,
-  coolingTimeMs = 50,
-  doPrintDebuggingInfo = true
-): Promise<AllCourses<T>> => {
-  const startTime = new Date().getTime();
-  const courses: AllCourses<T> = {};
-  const semesters = await getSemesters();
-  if (doPrintDebuggingInfo) {
-    console.log(`We have ${semesters.length} semesters in total.`);
-  }
-  let semesterCount = 0;
-  for (const semester of semesters) {
-    const semesterCourses = await getAllCoursesInSemester(
-      semester,
-      courseFieldFilter,
-      coolingTimeMs,
-      doPrintDebuggingInfo
-    );
-    courses[semester] = semesterCourses;
-    semesterCount += 1;
-    if (doPrintDebuggingInfo) {
-      console.log(`We fetched ${semesterCount} out of ${semesters.length} semesters.`);
-    }
-  }
-  if (doPrintDebuggingInfo) {
-    console.log(`Total Running Time: ${new Date().getTime() - startTime}ms.`);
-  }
-  return courses;
-};
 
 const generateSemesterJSONs = async <T extends keyof Course>(
   courseFieldFilter: CourseFieldFilter<T>,

@@ -341,8 +341,8 @@ import checkmarkSelected from '@/assets/images/checkmark-onboarding.svg';
 import checkmarkUnselected from '@/assets/images/checkmark-empty.svg';
 import NewCourse from '@/components/Modals/NewCourse/NewCourse.vue';
 import { clickOutside } from '@/utilities';
-import { AppUser, FirestoreTransferClass } from '@/user-data';
-// @ts-ignore
+import { AppUser, CornellCourseRosterCourse, FirestoreTransferClass } from '@/user-data';
+// @ts-expect-error: typescript cannot understand scss variable imports.
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 Vue.component('newCourse', NewCourse);
@@ -783,8 +783,7 @@ export default Vue.extend({
       );
     },
     addItem(id: number) {
-      const dropdown = document.getElementById(`dropdown-${id}`)!;
-      // @ts-ignore
+      const dropdown = document.getElementById(`dropdown-${id}`) as HTMLInputElement;
       const title: string = dropdown.value;
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
@@ -795,10 +794,10 @@ export default Vue.extend({
         .then(res => res.json())
         .then(resultJSON => {
           // check catalogNbr of resultJSON class matches number of course to add
-          resultJSON.data.classes.forEach((resultJSONclass: any) => {
+          resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
             if (resultJSONclass.catalogNbr === number) {
               const course = resultJSONclass;
-              const creditsC = course.credits || course.enrollGroups[0].unitsMaximum;
+              const creditsC = course.enrollGroups[0].unitsMaximum;
               this.displayOptions.class[id] = {
                 class: courseCode,
                 course,

@@ -1,4 +1,9 @@
-import { FirestoreSemesterType } from './user-data';
+import type { FirestoreSemesterType } from './user-data';
+
+export function checkNotNull<T>(value: T | null | undefined): T {
+  if (value == null) throw new Error();
+  return value;
+}
 
 export default function getCurrentSeason(): FirestoreSemesterType {
   const currentMonth = new Date().getMonth();

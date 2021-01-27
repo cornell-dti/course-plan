@@ -127,11 +127,6 @@ export default Vue.extend({
           this.rightButton = 'ADD';
           this.$refs.modalBodyComponent.next();
         } else {
-          const dropdown = document.getElementById(`dropdown-${this.semesterID}`);
-          const title = dropdown.value;
-
-          const key = title.substring(0, title.indexOf(':'));
-          const selectedReqs = this.$refs.modalBodyComponent.getSelectedReqs();
           this.addCourse();
         }
       } else if (this.type === 'semester') {
