@@ -115,6 +115,7 @@ import {
   FirestoreSemesterType,
 } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
+import { checkNotNull } from '@/utilities';
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
@@ -270,7 +271,7 @@ export default Vue.extend({
       // Update requirements menu from dashboard
       this.$emit('edit-semesters', newSemesters);
     },
-    addCourseToSemester(season: FirestoreSemesterType, year: number, newCourse: any) {
+    addCourseToSemester(season: FirestoreSemesterType, year: number, newCourse: AppCourse) {
       let semesterFound = false;
       const newSemestersWithCourse = this.semesters.map(sem => {
         if (sem.type === season && sem.year === year) {
@@ -299,7 +300,7 @@ export default Vue.extend({
       if (a.year < b.year) {
         return 1;
       }
-      // @ts-ignore
+      // @ts-expect-error: typescript cannot understand Fall -> fall conversion by .toLowerCase()
       if (SeasonsEnum[a.type.toLowerCase()] < SeasonsEnum[b.type.toLowerCase()]) {
         return 1;
       }
@@ -360,8 +361,7 @@ export default Vue.extend({
      */
     updateFirebaseSemester() {
       // TODO: make user / docRef global
-      const user = auth.currentUser!;
-      const userEmail = user.email!;
+      const userEmail = checkNotNull(checkNotNull(auth.currentUser).email);
       const docRef = semestersCollection.doc(userEmail);
 
       const firebaseSemesters: FirestoreSemester[] = this.semesters.map(sem => ({

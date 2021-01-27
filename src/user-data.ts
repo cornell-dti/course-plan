@@ -197,11 +197,10 @@ export const cornellCourseRosterCourseToAppCourse = (
   const creditRange = createCourseCreditRange(course);
   // Semesters: remove periods and split on ', '
   // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
-  const catalogWhenOfferedDoesNotExist =
-    !course.catalogWhenOffered || course.catalogWhenOffered === '';
-  const alternateSemesters = catalogWhenOfferedDoesNotExist
-    ? []
-    : course.catalogWhenOffered!.replace(/\./g, '').split(', ');
+  const alternateSemesters =
+    !course.catalogWhenOffered || course.catalogWhenOffered === ''
+      ? []
+      : course.catalogWhenOffered.replace(/\./g, '').split(', ');
   const semesters = alternateSemesters;
 
   // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
@@ -240,10 +239,10 @@ export const cornellCourseRosterCourseToAppCourse = (
 
   // Distribution of course (e.g. MQR-AS)
   // alternateDistributions option in case catalogDistr for the course is null, undef, ''
-  const catalogDistrDoesNotExist = !course.catalogDistr || course.catalogDistr === '';
-  const alternateDistributions = catalogDistrDoesNotExist
-    ? ['']
-    : /\(([^)]+)\)/.exec(course.catalogDistr!)![1].split(', ');
+  const alternateDistributions =
+    !course.catalogDistr || course.catalogDistr === ''
+      ? ['']
+      : (/\(([^)]+)\)/.exec(course.catalogDistr) || [])[1].split(', ');
   const distributions = alternateDistributions;
 
   // Create course from saved color. Otherwise, create course from subject color group

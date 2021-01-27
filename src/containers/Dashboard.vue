@@ -125,7 +125,7 @@ import {
 import { computeRequirements } from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
-import getCurrentSeason, { getCurrentYear, getSubjectColor } from '@/utilities';
+import getCurrentSeason, { checkNotNull, getCurrentYear, getSubjectColor } from '@/utilities';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
@@ -144,8 +144,7 @@ tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
   data() {
-    const user = auth.currentUser;
-    const names = user!.displayName!.split(' ');
+    const names = checkNotNull(checkNotNull(auth.currentUser).displayName).split(' ');
     return {
       loaded: false,
       compactVal: false,
@@ -206,8 +205,7 @@ export default Vue.extend({
   },
   methods: {
     getUserEmail(): string {
-      const user = auth.currentUser;
-      return user!.email as string;
+      return checkNotNull(checkNotNull(auth.currentUser).email);
     },
 
     getInformationFromUser() {
@@ -420,7 +418,15 @@ export default Vue.extend({
       });
     },
 
-    getReviews(subject: string, number: string, callback: (review: any) => void) {
+    getReviews(
+      subject: string,
+      number: string,
+      callback: (review: {
+        classRating: number;
+        classDifficulty: number;
+        classWorkload: number;
+      }) => void
+    ) {
       fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(
         res => {
           res.json().then(reviews => {

@@ -68,7 +68,6 @@
 import firebase from 'firebase/app';
 import 'firebase/functions';
 import Vue, { PropType } from 'vue';
-// @ts-ignore
 import VueCollapse from 'vue2-collapse';
 import introJs from 'intro.js';
 
@@ -207,7 +206,7 @@ export default Vue.extend({
         // Used to identify index of lastLoadedSeeAll
         const subReqCourses = subReqCoursesArray;
         let coursesCount = 0;
-        subReqCourses.forEach((subReqCourseSlot, i) => {
+        subReqCourses.forEach(subReqCourseSlot => {
           if (!subReqCourseSlot.isCompleted) {
             const crseInfoFromSemester: CrseInfo[] = [];
             subReqCourseSlot.courses.forEach((crseInfo: CrseInfo) => {
@@ -265,9 +264,9 @@ export default Vue.extend({
           console.log('Fetch Error: ', err);
         });
     },
-    onScrollSeeAll(event: any) {
+    onScrollSeeAll(event: Event) {
       const { target } = event;
-      const { scrollTop, clientHeight, scrollHeight } = target;
+      const { scrollTop, clientHeight, scrollHeight } = target as HTMLDivElement;
       if (scrollTop + clientHeight >= scrollHeight) {
         this.getAllCrseInfoFromSemester(this.showAllSubReqCourses)
           .then(fetchedCourses => {

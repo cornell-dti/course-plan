@@ -270,10 +270,7 @@ export function computeRequirements(
     })
     .filter((it): it is UserChoiceOnFulfillmentStrategy => it != null);
 
-  const {
-    requirementFulfillmentGraph,
-    illegallyDoubleCountedCourses,
-  } = buildRequirementFulfillmentGraph<
+  const { requirementFulfillmentGraph } = buildRequirementFulfillmentGraph<
     RequirementWithIDSourceType,
     CourseTaken,
     UserChoiceOnFulfillmentStrategy
