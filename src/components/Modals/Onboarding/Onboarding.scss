@@ -350,10 +350,6 @@ input {
     color: #b6b6b6;
     position: relative;
 
-    &:not(:first-child) {
-      //margin-top: .5rem;
-    }
-
     &--disabled {
       opacity: 0.3;
       pointer-events: none;
@@ -404,24 +400,18 @@ input {
 
       background: transparent;
 
-      &.college-wrapper,
-      &.major-wrapper,
-      &.minor-wrapper {
+      &.college-major-minor-wrapper {
         width: 100%;
         height: 100%;
       }
 
-      &.college-placeholder,
-      &.major-placeholder,
-      &.minor-placeholder {
+      &.college-major-minor-placeholder {
         margin-top: 5px;
         margin-bottom: 5px;
         width: 100%;
       }
 
-      &.college-arrow,
-      &.major-arrow,
-      &.minor-arrow {
+      &.college-major-minor-arrow {
         border-left: 6.24px solid transparent;
         border-right: 6.24px solid transparent;
 

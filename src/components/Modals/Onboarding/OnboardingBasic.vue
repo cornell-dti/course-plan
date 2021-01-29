@@ -37,38 +37,30 @@
             <div
               class="onboarding-select onboarding-input"
               :class="{ 'onboarding-select--disabled': Object.keys(colleges).length <= 0 }"
-              id="college"
               v-for="(options, index) in displayOptions.college"
               :key="index"
               :style="{ borderColor: options.boxBorder }"
               v-click-outside:[index]="closeCollegeDropdownIfOpen"
             >
               <div
-                class="onboarding-dropdown-placeholder college-wrapper"
+                class="onboarding-dropdown-placeholder college-major-minor-wrapper"
                 @click="showHideCollegeContent(index)"
               >
                 <div
-                  class="onboarding-dropdown-placeholder college-placeholder"
-                  id="college-placeholder"
+                  class="onboarding-dropdown-placeholder college-major-minor-placeholder"
                   :style="{ color: options.placeholderColor }"
                 >
                   {{ options.placeholder }}
                 </div>
                 <div
-                  class="onboarding-dropdown-placeholder college-arrow"
-                  id="college-arrow"
+                  class="onboarding-dropdown-placeholder college-major-minor-arrow"
                   :style="{ borderTopColor: options.arrowColor }"
                 ></div>
               </div>
-              <div
-                class="onboarding-dropdown-content college-content"
-                id="college-content"
-                v-if="options.shown"
-              >
+              <div class="onboarding-dropdown-content" v-if="options.shown">
                 <div
                   v-for="(college, acronym) in colleges"
                   :key="acronym"
-                  :id="college"
                   class="onboarding-dropdown-content-item"
                   @click="selectCollege(college, acronym, index)"
                 >
@@ -84,7 +76,6 @@
           <div
             class="onboarding-selectWrapperRow onboarding-section"
             :class="{ 'onboarding-select--disabled': Object.keys(majors).length <= 0 }"
-            id="major"
             v-for="(options, index) in displayOptions.major"
             :key="index"
             :style="{ borderColor: options.boxBorder }"
@@ -92,31 +83,24 @@
           >
             <div class="onboarding-select onboarding-input">
               <div
-                class="onboarding-dropdown-placeholder major-wrapper"
+                class="onboarding-dropdown-placeholder college-major-minor-wrapper"
                 @click="showHideMajorContent(index)"
               >
                 <div
-                  class="onboarding-dropdown-placeholder major-placeholder"
-                  id="major-placeholder"
+                  class="onboarding-dropdown-placeholder college-major-minor-placeholder"
                   :style="{ color: options.placeholderColor }"
                 >
                   {{ options.placeholder }}
                 </div>
                 <div
-                  class="onboarding-dropdown-placeholder major-arrow"
-                  id="major-arrow"
+                  class="onboarding-dropdown-placeholder college-major-minor-arrow"
                   :style="{ borderTopColor: options.arrowColor }"
                 ></div>
               </div>
-              <div
-                class="onboarding-dropdown-content major-content"
-                id="major-content"
-                v-if="options.shown"
-              >
+              <div class="onboarding-dropdown-content" v-if="options.shown">
                 <div
                   v-for="(major, acronym) in majors"
                   :key="acronym"
-                  :id="major"
                   class="onboarding-dropdown-content-item"
                   @click="selectMajor(major, acronym, index)"
                 >
@@ -153,7 +137,6 @@
           <div>
             <div
               class="onboarding-selectWrapperRow"
-              id="minor"
               v-for="(options, index) in displayOptions.minor"
               :key="index"
               :style="{ borderColor: options.boxBorder }"
@@ -161,31 +144,24 @@
             >
               <div class="onboarding-select onboarding-input">
                 <div
-                  class="onboarding-dropdown-placeholder minor-wrapper"
+                  class="onboarding-dropdown-placeholder college-major-minor-wrapper"
                   @click="showHideMinorContent(index)"
                 >
                   <div
-                    class="onboarding-dropdown-placeholder minor-placeholder"
-                    id="minor-placeholder"
+                    class="onboarding-dropdown-placeholder college-major-minor-placeholder"
                     :style="{ color: options.placeholderColor }"
                   >
                     {{ options.placeholder }}
                   </div>
                   <div
-                    class="onboarding-dropdown-placeholder minor-arrow"
-                    id="minor-arrow"
+                    class="onboarding-dropdown-placeholder college-major-minor-arrow"
                     :style="{ borderTopColor: options.arrowColor }"
                   ></div>
                 </div>
-                <div
-                  class="onboarding-dropdown-content minor-content"
-                  id="minor-content"
-                  v-if="options.shown"
-                >
+                <div class="onboarding-dropdown-content" v-if="options.shown">
                   <div
                     v-for="(minor, acronym) in minors"
                     :key="acronym"
-                    :id="minor"
                     class="onboarding-dropdown-content-item"
                     @click="selectMinor(minor, acronym, index)"
                   >
@@ -193,8 +169,7 @@
                   </div>
                 </div>
                 <div
-                  class="onboarding-dropdown-placeholder minor-arrow"
-                  id="minor-arrow"
+                  class="onboarding-dropdown-placeholder college-major-minor-arrow"
                   :style="{ borderTopColor: options.arrowColor }"
                 ></div>
               </div>
@@ -223,17 +198,29 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import { clickOutside } from '@/utilities';
+// @ts-expect-error: typescript cannot understand scss variable imports.
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
+import { AppUser } from '@/user-data';
 
 const placeholderText = 'Select one';
 
+type DisplayOption = {
+  shown: boolean;
+  stopClose: boolean;
+  boxBorder: string;
+  arrowColor: string;
+  placeholderColor: string;
+  placeholder: string;
+  acronym: string;
+};
+
 export default Vue.extend({
   props: {
-    user: Object,
+    user: Object as PropType<AppUser>,
   },
   data() {
     // Set dropdown colleges and majors if already filled out
@@ -245,28 +232,55 @@ export default Vue.extend({
       collegeAcronym = this.user.college;
       collegePlaceholderColor = lightPlaceholderGray;
     }
-
-    let majorText = placeholderText;
-    let majorAcronym = '';
-    let majorPlaceholderColor = '';
-    if ('major' in this.user && this.user.major.length > 0) {
-      majorText = this.user.majorFN;
-      majorAcronym = this.user.major;
-      majorPlaceholderColor = lightPlaceholderGray;
+    const majors: DisplayOption[] = [];
+    const minors: DisplayOption[] = [];
+    if (this.user.major.length > 0) {
+      this.user.major.forEach((majorAcronym, i) => {
+        majors.push({
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: lightPlaceholderGray,
+          placeholder: this.user.majorFN[i],
+          acronym: majorAcronym,
+        });
+      });
+    } else {
+      majors.push({
+        shown: false,
+        stopClose: false,
+        boxBorder: '',
+        arrowColor: '',
+        placeholderColor: '',
+        placeholder: placeholderText,
+        acronym: '',
+      });
     }
-    let minorText = placeholderText;
-    let minorAcronym = '';
-    let minorPlaceholderColor = '';
-    if ('minor' in this.user && this.user.minor.length > 0) {
-      minorText = this.user.minorFN;
-      minorAcronym = this.user.minor;
-      minorPlaceholderColor = lightPlaceholderGray;
+    if (this.user.minor.length > 0) {
+      this.user.minor.forEach((minorAcronym, i) => {
+        minors.push({
+          shown: false,
+          stopClose: false,
+          boxBorder: '',
+          arrowColor: '',
+          placeholderColor: lightPlaceholderGray,
+          placeholder: this.user.minorFN[i],
+          acronym: minorAcronym,
+        });
+      });
+    } else {
+      minors.push({
+        shown: false,
+        stopClose: false,
+        boxBorder: '',
+        arrowColor: '',
+        placeholderColor: '',
+        placeholder: placeholderText,
+        acronym: '',
+      });
     }
     return {
-      // TODO: Get real college, major, and minor lists
-      colleges: {},
-      majors: {},
-      minors: {},
       firstName: this.user.firstName,
       middleName: this.user.middleName,
       lastName: this.user.lastName,
@@ -283,28 +297,8 @@ export default Vue.extend({
             acronym: collegeAcronym,
           },
         ],
-        major: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: majorPlaceholderColor,
-            placeholder: majorText,
-            acronym: majorAcronym,
-          },
-        ],
-        minor: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: minorPlaceholderColor,
-            placeholder: minorText,
-            acronym: minorAcronym,
-          },
-        ],
+        major: majors,
+        minor: minors,
       },
       isError: false,
     };
@@ -312,12 +306,41 @@ export default Vue.extend({
   directives: {
     'click-outside': clickOutside,
   },
-  mounted() {
-    this.setCollegesMap();
-    this.setMajorsList();
-    this.setMinorsList();
-    this.flattenDisplayMajors();
-    this.flattenDisplayMinors();
+  computed: {
+    colleges(): Readonly<Record<string, string>> {
+      return Object.fromEntries(
+        Object.entries(reqsData.college).map(([key, { name }]) => [key, name])
+      );
+    },
+    majors(): Readonly<Record<string, string>> {
+      const majors: Record<string, string> = {};
+      const majorJSON = reqsData.major;
+      Object.keys(majorJSON).forEach(key => {
+        // make sure name defined
+        // only show majors for schools the user is in
+        for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+          const college = this.displayOptions.college[i];
+          if (majorJSON[key].schools.includes(college.acronym)) {
+            majors[key] = majorJSON[key].name;
+          }
+        }
+      });
+      return majors;
+    },
+    minors(): Readonly<Record<string, string>> {
+      const minors: Record<string, string> = {};
+      const minorJSON = reqsData.minor;
+      for (const key in minorJSON) {
+        // make sure name defined
+        if ('name' in minorJSON[key]) {
+          // only show majors for schools the user is in
+          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
+            minors[key] = minorJSON[key].name;
+          }
+        }
+      }
+      return minors;
+    },
   },
   methods: {
     updateBasic() {
@@ -333,110 +356,6 @@ export default Vue.extend({
         this.displayOptions.minor,
         name
       );
-    },
-    flattenDisplayMajors() {
-      const majors = [];
-      this.displayOptions.major.forEach(major => {
-        if (Array.isArray(major.acronym)) {
-          major.acronym.flat(Infinity);
-          for (let i = 0; i < major.acronym.length; i += 1) {
-            const newMajor = {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: lightPlaceholderGray,
-              placeholder: major.placeholder[i],
-              acronym: major.acronym[i],
-            };
-            majors.push(newMajor);
-          }
-        } else {
-          majors.push({
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: '',
-            placeholder: major.placeholder,
-            acronym: major.acronym,
-          });
-        }
-      });
-      this.displayOptions.major = majors;
-    },
-    flattenDisplayMinors() {
-      const minors = [];
-      this.displayOptions.minor.forEach(minor => {
-        if (Array.isArray(minor.acronym)) {
-          minor.acronym.flat(Infinity);
-          for (let i = 0; i < minor.acronym.length; i += 1) {
-            const newminor = {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: lightPlaceholderGray,
-              placeholder: minor.placeholder[i],
-              acronym: minor.acronym[i],
-            };
-            minors.push(newminor);
-          }
-        } else {
-          minors.push({
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: '',
-            placeholder: minor.placeholder,
-            acronym: minor.acronym,
-          });
-        }
-      });
-      this.displayOptions.minor = minors;
-    },
-    // Set the colleges map to with acronym keys and full name values
-    setCollegesMap() {
-      /** @type {Object.<string, string>} */
-      const colleges = {};
-      const collegeJSON = reqsData.college;
-      Object.keys(collegeJSON).forEach(key => {
-        colleges[key] = collegeJSON[key].name;
-      });
-      this.colleges = colleges;
-    },
-    // Set the majors map to with acronym keys and full name values
-    setMajorsList() {
-      /** @type {Object.<string, string>} */
-      const majors = {};
-      const majorJSON = reqsData.major;
-      Object.keys(majorJSON).forEach(key => {
-        // make sure name defined
-        // only show majors for schools the user is in
-        for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-          const college = this.displayOptions.college[i];
-          if (majorJSON[key].schools.includes(college.acronym)) {
-            majors[key] = majorJSON[key].name;
-          }
-        }
-      });
-      this.majors = majors;
-    },
-    // TODO: add minors when the list exists
-    setMinorsList() {
-      const minors = {};
-      const minorJSON = reqsData.minor;
-      for (const key in minorJSON) {
-        // make sure name defined
-        if ('name' in minorJSON[key]) {
-          // only show majors for schools the user is in
-          for (let i = 0; i < this.displayOptions.college.length; i += 1) {
-            minors[key] = minorJSON[key].name;
-          }
-        }
-      }
-      this.minors = minors;
     },
     // Clear a major if a new college is selected and the major is not in it
     clearMajorIfNotInCollege() {
@@ -461,35 +380,8 @@ export default Vue.extend({
         }
       }
     },
-    // check to see if a set of options (college, major, minor) only has placeholder texts (so no options selected)
-    noOptionSelected(options) {
-      let bool = true;
-      options.forEach(option => {
-        if (option.placeholder !== placeholderText) {
-          bool = false;
-        }
-      });
-
-      return bool;
-    },
-    notPlaceholderOptions(options) {
-      const list = [];
-      options.forEach(option => {
-        if (option.placeholder !== placeholderText) {
-          const obj = {
-            acronym: option.acronym,
-            fullName: option.placeholder,
-          };
-
-          list.push(obj);
-        }
-      });
-
-      return list;
-    },
-    showHideContent(type, i) {
-      let displayOptions = this.displayOptions[type];
-      displayOptions = displayOptions[i];
+    showHideContent(type: 'college' | 'major' | 'minor', i: number) {
+      const displayOptions = this.displayOptions[type][i];
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
 
@@ -502,18 +394,17 @@ export default Vue.extend({
         displayOptions.arrowColor = yuxuanBlue;
       }
     },
-    showHideCollegeContent(i) {
+    showHideCollegeContent(i: number) {
       this.showHideContent('college', i);
     },
-    showHideMajorContent(i) {
+    showHideMajorContent(i: number) {
       this.showHideContent('major', i);
     },
-    showHideMinorContent(i) {
+    showHideMinorContent(i: number) {
       this.showHideContent('minor', i);
     },
-    closeDropdownIfOpen(type, i) {
-      let displayOptions = this.displayOptions[type];
-      displayOptions = displayOptions[i];
+    closeDropdownIfOpen(type: 'college' | 'major' | 'minor', i: number) {
+      const displayOptions = this.displayOptions[type][i];
       if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
@@ -522,18 +413,17 @@ export default Vue.extend({
         displayOptions.arrowColor = inactiveGray;
       }
     },
-    closeCollegeDropdownIfOpen(event, i) {
+    closeCollegeDropdownIfOpen(_: unknown, i: number) {
       this.closeDropdownIfOpen('college', i);
     },
-    closeMajorDropdownIfOpen(event, i) {
+    closeMajorDropdownIfOpen(_: unknown, i: number) {
       this.closeDropdownIfOpen('major', i);
     },
-    closeMinorDropdownIfOpen(event, i) {
+    closeMinorDropdownIfOpen(_: unknown, i: number) {
       this.closeDropdownIfOpen('minor', i);
     },
-    selectOption(type, text, acronym, i) {
-      let displayOptions = this.displayOptions[type];
-      displayOptions = displayOptions[i];
+    selectOption(type: 'college' | 'major' | 'minor', text: string, acronym: string, i: number) {
+      const displayOptions = this.displayOptions[type][i];
       displayOptions.placeholder = text;
       displayOptions.acronym = acronym;
       displayOptions.shown = false;
@@ -541,24 +431,23 @@ export default Vue.extend({
       displayOptions.boxBorder = inactiveGray;
       displayOptions.placeholderColor = lightPlaceholderGray;
     },
-    selectCollege(text, acronym, i) {
+    selectCollege(text: string, acronym: string, i: number) {
       this.selectOption('college', text, acronym, i);
-      this.setMajorsList();
       this.clearMajorIfNotInCollege();
     },
-    selectMajor(text, acronym, i) {
+    selectMajor(text: string, acronym: string, i: number) {
       this.selectOption('major', text, acronym, i);
     },
-    selectMinor(text, acronym, i) {
+    selectMinor(text: string, acronym: string, i: number) {
       this.selectOption('minor', text, acronym, i);
     },
-    removeMajor(index) {
+    removeMajor(index: number) {
       this.displayOptions.major.splice(index, 1);
       if (this.displayOptions.major.length === 0) {
         this.addMajor();
       }
     },
-    removeMinor(index) {
+    removeMinor(index: number) {
       this.displayOptions.minor.splice(index, 1);
       if (this.displayOptions.minor.length === 0) {
         this.addMinor();
@@ -574,17 +463,6 @@ export default Vue.extend({
         placeholder: placeholderText,
         acronym: '',
       };
-      const majors = [];
-      this.displayOptions.major.forEach(maj => {
-        if (maj.length > 0) {
-          maj.forEach(subMaj => {
-            majors.push(subMaj);
-          });
-        } else {
-          majors.push(maj);
-        }
-      });
-      this.displayOptions.major = majors;
       this.displayOptions.major.push(newMajor);
     },
     addMinor() {
@@ -595,6 +473,7 @@ export default Vue.extend({
         arrowColor: '',
         placeholderColor: '',
         placeholder: placeholderText,
+        acronym: '',
       };
       this.displayOptions.minor.push(minor);
     },

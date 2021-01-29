@@ -16,7 +16,6 @@
                 type="radio"
                 v-on:click="updateSwimYes"
                 v-model="tookSwimTest"
-                id="yes"
                 value="yes"
               />
               <img class="checkmark" :src="swimYesImage" alt="checkmark" />
@@ -28,7 +27,6 @@
                 type="radio"
                 v-on:click="updateSwimNo"
                 v-model="tookSwimTest"
-                id="no"
                 value="no"
               />
               <img class="checkmark" :src="swimNoImage" alt="checkmark" />
@@ -50,7 +48,6 @@
           <div class="onboarding-subsection">
             <div
               class="onboarding-section"
-              id="college"
               v-for="(options, index) in displayOptions.exam"
               :key="index + 'AP'"
               :style="{ borderColor: options.type.boxBorder }"
@@ -61,31 +58,27 @@
                   <label class="onboarding-label">Subject</label>
                   <div class="onboarding-select onboarding-input">
                     <div
-                      class="onboarding-dropdown-placeholder college-wrapper"
+                      class="onboarding-dropdown-placeholder college-major-minor-wrapper"
                       @click="showHideSubjectContent(index)"
                     >
                       <div
-                        class="onboarding-dropdown-placeholder college-placeholder"
-                        id="college-placeholder"
+                        class="onboarding-dropdown-placeholder college-major-minor-placeholder"
                         :style="{ color: options.subject.placeholderColor }"
                       >
                         {{ options.subject.placeholder }}
                       </div>
                       <div
                         class="onboarding-dropdown-placeholder college-arrow"
-                        id="college-arrow"
                         :style="{ borderTopColor: options.subject.arrowColor }"
                       ></div>
                     </div>
                     <div
                       class="onboarding-dropdown-content college-content"
-                      id="college-content"
                       v-if="options.subject.shown"
                     >
                       <div
                         v-for="(subject, acronym) in subjects[index]"
                         :key="acronym"
-                        :id="subject"
                         class="onboarding-dropdown-content-item"
                         @click="selectSubject(subject, acronym, index)"
                       >
@@ -98,30 +91,27 @@
                   <label class="onboarding-label">Score</label>
                   <div class="onboarding-select onboarding-input">
                     <div
-                      class="onboarding-dropdown-placeholder college-wrapper"
+                      class="onboarding-dropdown-placeholder college-major-minor-wrapper"
                       @click="showHideScoreContent(index)"
                     >
                       <div
-                        class="onboarding-dropdown-placeholder college-placeholder"
+                        class="onboarding-dropdown-placeholder college-major-minor-placeholder"
                         :style="{ color: options.score.placeholderColor }"
                       >
                         {{ options.score.placeholder }}
                       </div>
                       <div
                         class="onboarding-dropdown-placeholder college-arrow"
-                        id="college-arrow"
                         :style="{ borderTopColor: options.score.arrowColor }"
                       ></div>
                     </div>
                     <div
                       class="onboarding-dropdown-content college-content"
-                      id="college-content"
                       v-if="options.score.shown"
                     >
                       <div
                         v-for="(score, acronym) in scoresAP"
                         :key="acronym"
-                        :id="score"
                         class="onboarding-dropdown-content-item"
                         @click="selectScore(score, acronym, index)"
                       >
@@ -132,7 +122,9 @@
                 </div>
                 <div class="onboarding-select--columnCenter">
                   <label class="onboarding-label">Credits</label>
-                  <label class="college-placeholder">{{ getExamCredit(options) }}</label>
+                  <label class="college-major-minor-placeholder">{{
+                    getExamCredit(options)
+                  }}</label>
                 </div>
                 <div class="onboarding-select--column-removeExam">
                   <div
@@ -159,7 +151,6 @@
           <div class="onboarding-inputs">
             <div
               class="onboarding-section"
-              id="college"
               v-for="(options, index) in displayOptions.exam"
               :key="index"
               :style="{ borderColor: options.type.boxBorder }"
@@ -170,25 +161,22 @@
                   <label class="onboarding-label">Subject</label>
                   <div class="onboarding-select onboarding-input">
                     <div
-                      class="onboarding-dropdown-placeholder college-wrapper"
+                      class="onboarding-dropdown-placeholder college-major-minor-wrapper"
                       @click="showHideSubjectContent(index)"
                     >
                       <div
-                        class="onboarding-dropdown-placeholder college-placeholder"
-                        id="college-placeholder"
+                        class="onboarding-dropdown-placeholder college-major-minor-placeholder"
                         :style="{ color: options.subject.placeholderColor }"
                       >
                         {{ options.subject.placeholder }}
                       </div>
                       <div
                         class="onboarding-dropdown-placeholder college-arrow"
-                        id="college-arrow"
                         :style="{ borderTopColor: options.subject.arrowColor }"
                       ></div>
                     </div>
                     <div
                       class="onboarding-dropdown-content college-content"
-                      id="college-content"
                       v-if="options.subject.shown"
                     >
                       <div
@@ -207,31 +195,27 @@
                   <label class="onboarding-label">Score</label>
                   <div class="onboarding-select onboarding-input">
                     <div
-                      class="onboarding-dropdown-placeholder college-wrapper"
+                      class="onboarding-dropdown-placeholder college-major-minor-wrapper"
                       @click="showHideScoreContent(index)"
                     >
                       <div
-                        class="onboarding-dropdown-placeholder college-placeholder"
-                        id="college-placeholder"
+                        class="onboarding-dropdown-placeholder college-major-minor-placeholder"
                         :style="{ color: options.score.placeholderColor }"
                       >
                         {{ options.score.placeholder }}
                       </div>
                       <div
                         class="onboarding-dropdown-placeholder college-arrow"
-                        id="college-arrow"
                         :style="{ borderTopColor: options.score.arrowColor }"
                       ></div>
                     </div>
                     <div
                       class="onboarding-dropdown-content college-content"
-                      id="college-content"
                       v-if="options.score.shown"
                     >
                       <div
                         v-for="(score, acronym) in scoresIB"
                         :key="acronym"
-                        :id="score"
                         class="onboarding-dropdown-content-item"
                         @click="selectScore(score, acronym, index)"
                       >
@@ -242,7 +226,9 @@
                 </div>
                 <div class="onboarding-select--columnCenter">
                   <label class="onboarding-label">Credits</label>
-                  <label class="college-placeholder">{{ getExamCredit(options) }}</label>
+                  <label class="college-major-minor-placeholder">{{
+                    getExamCredit(options)
+                  }}</label>
                 </div>
                 <div class="onboarding-select--column-removeExam">
                   <div
@@ -450,8 +436,6 @@ export default Vue.extend({
       }
       // @ts-ignore
       const examAP: Record<Section, DisplayOption> = {};
-      // @ts-ignore
-      const exam: Record<Section, DisplayOption> = {};
       for (const sect of sections) {
         let placeholderSect = placeholderText;
         if (sect === 'type') {
