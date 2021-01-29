@@ -366,7 +366,6 @@ export default Vue.extend({
       this.displayOptions.minor = minors;
     },
     getClasses() {
-      let credits = 0;
       const exams = [];
       const sections = ['type', 'subject', 'score'];
       if ('exam' in this.user && this.user.exam.length > 0) {
@@ -385,7 +384,6 @@ export default Vue.extend({
           }
           if (typeof this.user.exam[x].subject !== 'undefined') {
             exams.push(exam);
-            credits += this.user.exam[x].credits;
             exam.equivCourse = this.user.exam[x].equivCourse;
           }
         }
