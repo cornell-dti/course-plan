@@ -17,19 +17,19 @@
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
             <label class="onboarding-label"><span> First Name </span></label>
             <label class="onboarding-label--review"
-              ><span> {{ firstName }}</span></label
+              ><span> {{ user.firstName }}</span></label
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
             <label class="onboarding-label"><span> Middle Name </span></label>
             <label class="onboarding-label--review"
-              ><span> {{ middleName }}</span></label
+              ><span> {{ user.middleName }}</span></label
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
             <label class="onboarding-label"><span> Last Name </span></label>
             <label class="onboarding-label--review"
-              ><span> {{ lastName }}</span></label
+              ><span> {{ user.lastName }}</span></label
             >
           </div>
         </div>
@@ -40,15 +40,13 @@
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">College*</label>
             <div>
-              <label class="onboarding-label--review">{{
-                displayOptions.college[0].placeholder
-              }}</label>
+              <label class="onboarding-label--review">{{ collegeText }}</label>
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">Major</label>
-            <div v-for="(major, index) in displayOptions.major" :key="'Major' + index">
-              <label class="onboarding-label--review">{{ major.placeholder }}</label>
+            <div v-for="(major, index) in user.majorFN" :key="index">
+              <label class="onboarding-label--review">{{ major }}</label>
             </div>
           </div>
         </div>
@@ -57,8 +55,8 @@
         </div>
         <div class="onboarding-selectWrapper">
           <label class="onboarding-label">Minors:</label>
-          <div v-for="(minor, index) in displayOptions.minor" :key="'Minor' + index">
-            <label class="onboarding-label--review">{{ minor.placeholder }}</label>
+          <div v-for="(minor, index) in user.minorFN" :key="index">
+            <label class="onboarding-label--review">{{ minor }}</label>
           </div>
         </div>
       </div>
@@ -183,188 +181,45 @@
 <script>
 // TODO: move repeated functions in all onboarding pages to a separate file
 import Vue from 'vue';
-import reqsData from '@/requirements/typed-requirement-json';
 import { examData } from '@/requirements/data/exams/ExamCredit';
 
 const placeholderText = 'Select one';
 
 export default Vue.extend({
-  props: {
-    user: Object,
+  props: { user: Object },
+  computed: {
+    collegeText() {
+      return this.user.college !== '' ? this.user.collegeFN : placeholderText;
+    },
   },
   data() {
-    // Set dropdown colleges and majors if already filled out
-    let collegeText = placeholderText;
-    let collegeAcronym = '';
-    let collegePlaceholderColor = '';
-    if (this.user.college !== '') {
-      collegeText = this.user.collegeFN;
-      collegeAcronym = this.user.college;
-      collegePlaceholderColor = '#757575';
-    }
-
-    let majorText = placeholderText;
-    let majorAcronym = '';
-    let majorPlaceholderColor = '';
-    if ('major' in this.user && this.user.major.length > 0) {
-      majorText = this.user.majorFN;
-      majorAcronym = this.user.major;
-      majorPlaceholderColor = '#757575';
-    }
-    let minorText = placeholderText;
-    let minorAcronym = '';
-    let minorPlaceholderColor = '';
-    if ('minor' in this.user && this.user.minor.length > 0) {
-      minorText = this.user.minorFN;
-      minorAcronym = this.user.minor;
-      minorPlaceholderColor = '#757575';
-    }
     return {
-      // TODO: Store info of form locally to save form input when moving between pages
-      colleges: {},
-      majors: {},
-      minors: {},
-      firstName: this.user.firstName,
-      middleName: this.user.middleName,
-      lastName: this.user.lastName,
       placeholderText,
       totalCredits: 0,
       transferJSON: {},
       displayOptions: {
-        college: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: collegePlaceholderColor,
-            placeholder: collegeText,
-            acronym: collegeAcronym,
-          },
-        ],
-        major: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: majorPlaceholderColor,
-            placeholder: majorText,
-            acronym: majorAcronym,
-          },
-        ],
-        minor: [
-          {
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: minorPlaceholderColor,
-            placeholder: minorText,
-            acronym: minorAcronym,
-          },
-        ],
         exam: [
           {
             // unnecessary but required for type check, as this is not ts file yet, whats a better way to deal with this?
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: '',
             placeholder: placeholderText,
-            acronym: '',
-            type: {
-              placeholder: '',
-            },
-            subject: {
-              placeholder: '',
-            },
-            score: {
-              placeholder: '',
-            },
+            type: { placeholder: '' },
+            subject: { placeholder: '' },
+            score: { placeholder: '' },
           },
         ],
         class: [
-          {
-            // unnecessary but required for type check, as this is not ts file yet
-            class: placeholderText,
-            credits: 0,
-          },
+          // unnecessary but required for type check, as this is not ts file yet
+          { class: placeholderText, credits: 0 },
         ],
       },
-      isError: false,
     };
   },
   mounted() {
-    this.setCollegesMap();
     this.getClasses();
-    this.flattenDisplayMajors();
-    this.flattenDisplayMinors();
     this.getTransferMap();
-    this.setExamsMap();
-    this.setSubjectList();
     this.getCredits();
   },
   methods: {
-    flattenDisplayMajors() {
-      const majors = [];
-      this.displayOptions.major.forEach(major => {
-        if (Array.isArray(major.acronym)) {
-          major.acronym.flat(Infinity);
-          for (let i = 0; i < major.acronym.length; i += 1) {
-            const newMajor = {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholder: major.placeholder[i],
-              acronym: major.acronym[i],
-            };
-            majors.push(newMajor);
-          }
-        } else {
-          majors.push({
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholder: major.placeholder,
-            acronym: major.acronym,
-          });
-        }
-      });
-      this.displayOptions.major = majors;
-    },
-    flattenDisplayMinors() {
-      const minors = [];
-      this.displayOptions.minor.forEach(minor => {
-        if (Array.isArray(minor.acronym)) {
-          minor.acronym.flat(Infinity);
-          for (let i = 0; i < minor.acronym.length; i += 1) {
-            const newminor = {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholder: minor.placeholder[i],
-              acronym: minor.acronym[i],
-            };
-            minors.push(newminor);
-          }
-        } else {
-          minors.push({
-            shown: false,
-            stopClose: false,
-            boxBorder: '',
-            arrowColor: '',
-            placeholderColor: '',
-            acronym: minor.acronym,
-          });
-        }
-      });
-      this.displayOptions.minor = minors;
-    },
     getClasses() {
       const exams = [];
       const sections = ['type', 'subject', 'score'];
@@ -372,15 +227,7 @@ export default Vue.extend({
         for (let x = 0; x < this.user.exam.length; x += 1) {
           const exam = {};
           for (const sec of sections) {
-            exam[sec] = {
-              shown: false,
-              stopClose: false,
-              boxBorder: '',
-              arrowColor: '',
-              placeholderColor: '#757575',
-              placeholder: this.user.exam[x][sec],
-              acronym: '',
-            };
+            exam[sec] = { placeholder: this.user.exam[x][sec] };
           }
           if (typeof this.user.exam[x].subject !== 'undefined') {
             exams.push(exam);
@@ -389,16 +236,8 @@ export default Vue.extend({
         }
       }
       const exam = {};
-      for (const sect of sections) {
-        exam[sect] = {
-          shown: false,
-          stopClose: false,
-          boxBorder: '',
-          arrowColor: '',
-          placeholderColor: '',
-          placeholder: placeholderText,
-          acronym: '',
-        };
+      for (const sec of sections) {
+        exam[sec] = { placeholder: placeholderText };
       }
       exams.push(exam);
       this.displayOptions.exam = exams;
@@ -458,43 +297,6 @@ export default Vue.extend({
           this.tookSwimTest
         );
       }
-    },
-    // Set the exam map to with acronym keys and full name values
-    setExamsMap() {
-      /** @type {Object.<string, string>} */
-      const exams = [];
-      Object.keys(examData).forEach(key => {
-        exams.push(key);
-      });
-      this.exams = exams;
-    },
-    // Set the subject map to with acronym keys and full name values
-    setSubjectList() {
-      /** @type {Object.<string, string>} */
-      const totalSubjects = [];
-      this.displayOptions.exam.forEach(exam => {
-        if (exam.type.placeholder !== placeholderText) {
-          const examType = exam.type.placeholder;
-          const subjects = [];
-          if (examType in examData && examType !== null) {
-            examData[examType].forEach(sub => {
-              subjects.push(sub.subject);
-            });
-            totalSubjects.push(subjects);
-          }
-        }
-      });
-      this.subjects = totalSubjects;
-    },
-    // Set the colleges map to with acronym keys and full name values
-    setCollegesMap() {
-      /** @type {Object.<string, string>} */
-      const colleges = {};
-      const collegeJSON = reqsData.college;
-      Object.keys(collegeJSON).forEach(key => {
-        colleges[key] = collegeJSON[key].name;
-      });
-      this.colleges = colleges;
     },
     setPage(page) {
       this.$emit('setPage', page);
