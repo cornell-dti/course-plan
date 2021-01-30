@@ -49,7 +49,7 @@
             <div
               class="onboarding-section"
               v-for="(options, index) in displayOptions.exam"
-              :key="index + 'AP'"
+              :key="index"
               :style="{ borderColor: options.type.boxBorder }"
               v-click-outside:[index]="closeAPDropdownIfOpen"
             >
