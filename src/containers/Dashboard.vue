@@ -149,7 +149,6 @@ export default Vue.extend({
       loaded: false,
       compactVal: false,
       semesters: [] as readonly AppSemester[],
-      currentClasses: [] as AppCourse[],
       toggleableRequirementChoices: {} as AppToggleableRequirementChoices,
       user: {
         major: [],
@@ -230,7 +229,7 @@ export default Vue.extend({
           const uniqueIncrementerData = uniqueIncrementerDoc.data();
           const onboardingData = onboardingDataDoc.data();
           if (usernameData != null && onboardingData != null) {
-            this.user = this.parseUserData(onboardingData, usernameData);
+            this.user = createAppUser(onboardingData, usernameData);
           }
           if (semestersData != null) {
             this.semesters = firestoreSemestersToAppSemesters(semestersData.semesters);
@@ -479,7 +478,7 @@ export default Vue.extend({
       userData: FirestoreOnboardingUserData;
       name: FirestoreUserName;
     }) {
-      const user = this.parseUserData(onboardingData.userData, onboardingData.name);
+      const user = createAppUser(onboardingData.userData, onboardingData.name);
 
       this.user = user;
       this.loaded = true;
@@ -501,29 +500,6 @@ export default Vue.extend({
 
     cancelOnboarding() {
       this.isOnboarding = false;
-    },
-    parseUserData(data: FirestoreOnboardingUserData, name: FirestoreUserName): AppUser {
-      const user = createAppUser(data, name);
-
-      const transferClasses: any[] = [];
-      user.exam.forEach(exam => {
-        if ('equivCourse' in exam) {
-          transferClasses.push(exam.equivCourse[0]);
-        }
-      });
-      user.transferCourse.forEach(course => {
-        const courseInfo = cornellCourseRosterCourseToAppCourse(
-          course.course,
-          false,
-          () => this.incrementID(),
-          subject => this.addColor(subject)
-        );
-        transferClasses.push(courseInfo);
-        // ; // TODO for user to pick which req a class goes for
-      });
-      this.currentClasses = transferClasses;
-
-      return user;
     },
 
     editProfile() {

@@ -138,11 +138,6 @@ export default Vue.extend({
   },
   methods: {
     updateBasic() {
-      const name = {
-        firstName: this.firstName,
-        middleName: this.middleName,
-        lastName: this.lastName,
-      };
       this.$emit(
         'updateBasic',
         { acronym: this.collegeAcronym, text: this.colleges[this.collegeAcronym] },
@@ -154,7 +149,11 @@ export default Vue.extend({
           acronym,
           text: this.minors[acronym] || placeholderText,
         })),
-        name
+        {
+          firstName: this.firstName,
+          middleName: this.middleName,
+          lastName: this.lastName,
+        }
       );
     },
     // Clear a major if a new college is selected and the major is not in it
@@ -174,40 +173,36 @@ export default Vue.extend({
         }
       }
     },
-    onSelectDropdown(
-      dropdowns: readonly DropdownSlot[],
-      acronym: string,
-      text: string,
-      index: number
-    ): void {
-      const dropdown = dropdowns[index];
-      dropdown.acronym = acronym;
-      dropdown.text = text;
-    },
     selectCollege(acronym: string) {
       this.collegeAcronym = acronym;
+      this.clearMajorIfNotInCollege();
+      this.updateBasic();
     },
     selectMajor(acronym: string, i: number) {
       this.majorAcronyms = this.majorAcronyms.map((dropdown, index) =>
         index === i ? acronym : dropdown
       );
+      this.updateBasic();
     },
     selectMinor(acronym: string, i: number) {
       this.minorAcronyms = this.minorAcronyms.map((dropdown, index) =>
         index === i ? acronym : dropdown
       );
+      this.updateBasic();
     },
     removeMajor(index: number) {
       this.majorAcronyms.splice(index, 1);
       if (this.majorAcronyms.length === 0) {
         this.addMajor();
       }
+      this.updateBasic();
     },
     removeMinor(index: number) {
       this.minorAcronyms.splice(index, 1);
       if (this.minorAcronyms.length === 0) {
         this.addMinor();
       }
+      this.updateBasic();
     },
     addMajor() {
       this.majorAcronyms.push('');
