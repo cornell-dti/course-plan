@@ -78,7 +78,6 @@ type Data = {
 export default Vue.extend({
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
-    // @ts-ignore
     const service = Vue.$dragula.$service;
     service.eventBus.$on('drag', () => {
       this.scrollable = true;

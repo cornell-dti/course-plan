@@ -38,7 +38,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { clickOutside } from '@/utilities';
-// @ts-expect-error: typescript cannot understand scss variable imports.
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 const placeholderText = 'Select one';
