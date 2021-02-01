@@ -84,20 +84,16 @@ export default Vue.extend({
   },
   data() {
     return {
-      // TODO: Get real college, major, and minor lists
       currentPage: 1,
-      colleges: {},
-      majors: {},
-      minors: {},
       firstName: this.userData.firstName,
       middleName: this.userData.middleName,
       lastName: this.userData.lastName,
       tookSwim: '',
       placeholderText,
+      collegeDropdown: {},
+      majorDropdowns: [],
+      minorDropdowns: [],
       displayOptions: {
-        college: [],
-        major: [],
-        minor: [],
         exam: [],
         class: [],
       },
@@ -115,7 +111,7 @@ export default Vue.extend({
       if (
         this.firstName === '' ||
         this.lastName === '' ||
-        this.noOptionSelected(this.displayOptions.college)
+        this.collegeDropdown.text === placeholderText
       ) {
         this.isError = true;
       } else {
@@ -126,9 +122,9 @@ export default Vue.extend({
             lastName: this.lastName,
           },
           userData: {
-            colleges: this.notPlaceholderOptions(this.displayOptions.college),
-            majors: this.notPlaceholderOptions(this.displayOptions.major),
-            minors: this.notPlaceholderOptions(this.displayOptions.minor),
+            colleges: this.notPlaceholderOptions([this.collegeDropdown]),
+            majors: this.notPlaceholderOptions(this.majorDropdowns),
+            minors: this.notPlaceholderOptions(this.minorDropdowns),
             exam: this.notPlaceholderOptionsExam(this.displayOptions.exam),
             class: this.notPlaceholderOptionsClass(this.displayOptions.class),
             tookSwim: this.tookSwim,
@@ -137,18 +133,7 @@ export default Vue.extend({
         this.$emit('onboard', onboardingData);
       }
     },
-    // check to see if a set of options (college, major, minor) only has placeholder texts (so no options selected)
     // TODO check if all fields in a exam (subject, score, type) are filled
-    noOptionSelected(options) {
-      let bool = true;
-      options.forEach(option => {
-        if (option.placeholder !== placeholderText) {
-          bool = false;
-        }
-      });
-
-      return bool;
-    },
     notPlaceholderOptionsClass(options) {
       const list = [];
       options.forEach(option => {
@@ -179,18 +164,9 @@ export default Vue.extend({
       return list;
     },
     notPlaceholderOptions(options) {
-      const list = [];
-      options.forEach(option => {
-        if (option.placeholder !== placeholderText) {
-          const obj = {
-            acronym: option.acronym,
-            fullName: option.placeholder,
-          };
-
-          list.push(obj);
-        }
-      });
-      return list;
+      return options
+        .filter(option => option.text !== placeholderText)
+        .map(option => ({ acronym: option.acronym, fullName: option.text }));
     },
     goBack() {
       if (this.currentPage === 2) {
@@ -213,17 +189,17 @@ export default Vue.extend({
       const userMajorsAcronym = [];
       const userMajorsFN = [];
       for (let i = 0; i < major.length; i += 1) {
-        if (major[i].placeholder !== 'Select one') {
+        if (major[i].text !== placeholderText) {
           userMajorsAcronym.push(major[i].acronym);
-          userMajorsFN.push(major[i].placeholder);
+          userMajorsFN.push(major[i].text);
         }
       }
       const userMinorsAcronym = [];
       const userMinorsFN = [];
       for (let i = 0; i < minor.length; i += 1) {
-        if (minor[i].placeholder !== 'Select one') {
+        if (minor[i].text !== placeholderText) {
           userMinorsAcronym.push(minor[i].acronym);
-          userMinorsFN.push(minor[i].placeholder);
+          userMinorsFN.push(minor[i].text);
         }
       }
       const basicData = {
@@ -234,18 +210,17 @@ export default Vue.extend({
       };
       return basicData;
     },
-    updateBasic(newMajor, newCollege, newMinor, name) {
+    updateBasic(newCollege, newMajor, newMinor, name) {
       const basicData = this.basicOptionsToUser(newMajor, newMinor);
-      this.displayOptions.major = newMajor;
+      this.majorDropdowns = newMajor;
       this.user.major = basicData.userMajorsAcronym;
       this.user.majorFN = basicData.userMajorsFN;
-      this.displayOptions.minor = newMinor;
+      this.minorDropdowns = newMinor;
       this.user.minor = basicData.userMinorsAcronym;
       this.user.minorFN = basicData.userMinorsFN;
-      this.displayOptions.college = newCollege;
-      // in this format since we may support multiple colleges in future
-      this.user.college = newCollege[0].acronym;
-      this.user.collegeFN = newCollege[0].placeholder;
+      this.collegeDropdown = newCollege;
+      this.user.college = newCollege.acronym;
+      this.user.collegeFN = newCollege.text;
       this.firstName = name.firstName;
       this.user.firstName = name.firstName;
       this.middleName = name.middleName;
