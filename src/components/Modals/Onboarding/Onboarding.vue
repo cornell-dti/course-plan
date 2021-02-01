@@ -16,13 +16,11 @@
             v-if="currentPage == 1"
             :user="user"
             ref="basic"
-            :key="keyCounter"
             @updateBasic="updateBasic"
           />
           <onboardingTransfer
             v-if="currentPage == 2"
             :user="user"
-            :key="keyCounter"
             ref="transfer"
             @updateTransfer="updateTransfer"
           />
@@ -63,210 +61,136 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { clickOutside } from '@/utilities';
+import { AppUser, FirestoreAPIBExam, FirestoreTransferClass, FirestoreUserName } from '@/user-data';
 
 Vue.component('onboardingBasic', OnboardingBasic);
 Vue.component('onboardingTransfer', OnboardingTransfer);
 Vue.component('onboardingReview', OnboardingReview);
+
+type DropdownSlot = { acronym: string; text: string };
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
 
 export default Vue.extend({
   props: {
-    isEditingProfile: Boolean,
-    userData: Object,
+    isEditingProfile: { type: Boolean, required: true },
+    userData: { type: Object as PropType<AppUser>, required: true },
   },
   data() {
     return {
       currentPage: 1,
-      firstName: this.userData.firstName,
-      middleName: this.userData.middleName,
-      lastName: this.userData.lastName,
-      tookSwim: '',
-      placeholderText,
-      collegeDropdown: {},
-      majorDropdowns: [],
-      minorDropdowns: [],
-      displayOptions: {
-        exam: [],
-        class: [],
-      },
+      majorDropdowns: [] as readonly DropdownSlot[],
+      minorDropdowns: [] as readonly DropdownSlot[],
       isError: false,
-      keyCounter: 1,
-      user: JSON.parse(JSON.stringify(this.userData)),
+      user: this.userData,
     };
-  },
-  directives: {
-    'click-outside': clickOutside,
   },
   methods: {
     submitOnboarding() {
       // Display error if a required field is empty, otherwise submit
       if (
-        this.firstName === '' ||
-        this.lastName === '' ||
-        this.collegeDropdown.text === placeholderText
+        this.user.firstName === '' ||
+        this.user.lastName === '' ||
+        this.user.collegeFN === placeholderText
       ) {
         this.isError = true;
       } else {
         const onboardingData = {
           name: {
-            firstName: this.firstName,
-            middleName: this.middleName,
-            lastName: this.lastName,
+            firstName: this.user.firstName,
+            middleName: this.user.middleName,
+            lastName: this.user.lastName,
           },
           userData: {
-            colleges: this.notPlaceholderOptions([this.collegeDropdown]),
+            colleges: [{ acronym: this.user.college, fullName: this.user.collegeFN }],
             majors: this.notPlaceholderOptions(this.majorDropdowns),
             minors: this.notPlaceholderOptions(this.minorDropdowns),
-            exam: this.notPlaceholderOptionsExam(this.displayOptions.exam),
-            class: this.notPlaceholderOptionsClass(this.displayOptions.class),
-            tookSwim: this.tookSwim,
+            exam: this.user.exam.filter(exam => exam.subject !== placeholderText),
+            class: this.user.transferCourse.filter(
+              oneClass => oneClass.class !== placeholderText && oneClass.class !== null
+            ),
+            tookSwim: this.user.tookSwim,
           },
         };
         this.$emit('onboard', onboardingData);
       }
     },
-    // TODO check if all fields in a exam (subject, score, type) are filled
-    notPlaceholderOptionsClass(options) {
-      const list = [];
-      options.forEach(option => {
-        if (option.class !== placeholderText && option.class !== null) {
-          list.push(option);
-        }
-      });
-      return list;
-    },
-    notPlaceholderOptionsExam(options) {
-      const list = [];
-      const sections = ['type', 'subject', 'score'];
-      options.forEach(option => {
-        const exam = {};
-        let isValidExam = true;
-        for (const sec of sections) {
-          if (option[sec].placeholder !== placeholderText && option[sec].placeholder !== null) {
-            exam[sec] = option[sec].placeholder;
-          } else {
-            isValidExam = false;
-          }
-        }
-        if (typeof option.equivCourse !== 'undefined') {
-          exam.equivCourse = option.equivCourse;
-        }
-        if (isValidExam) list.push(exam);
-      });
-      return list;
-    },
-    notPlaceholderOptions(options) {
+    notPlaceholderOptions(options: readonly DropdownSlot[]) {
       return options
         .filter(option => option.text !== placeholderText)
         .map(option => ({ acronym: option.acronym, fullName: option.text }));
     },
     goBack() {
-      if (this.currentPage === 2) {
-        this.$refs.transfer.updateTransfer();
-      }
       this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
     },
-    setPage(page) {
+    setPage(page: number) {
       this.currentPage = page;
     },
     goNext() {
-      if (this.currentPage === 1) {
-        this.$refs.basic.updateBasic();
-      } else if (this.currentPage === 2) {
-        this.$refs.transfer.updateTransfer();
-      }
       this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
     },
-    basicOptionsToUser(major, minor) {
-      const userMajorsAcronym = [];
-      const userMajorsFN = [];
+    basicOptionsToUser(major: readonly DropdownSlot[], minor: readonly DropdownSlot[]) {
+      const userMajorsAcronym: string[] = [];
+      const userMajorsFN: string[] = [];
       for (let i = 0; i < major.length; i += 1) {
         if (major[i].text !== placeholderText) {
           userMajorsAcronym.push(major[i].acronym);
           userMajorsFN.push(major[i].text);
         }
       }
-      const userMinorsAcronym = [];
-      const userMinorsFN = [];
+      const userMinorsAcronym: string[] = [];
+      const userMinorsFN: string[] = [];
       for (let i = 0; i < minor.length; i += 1) {
         if (minor[i].text !== placeholderText) {
           userMinorsAcronym.push(minor[i].acronym);
           userMinorsFN.push(minor[i].text);
         }
       }
-      const basicData = {
-        userMajorsAcronym,
-        userMajorsFN,
-        userMinorsAcronym,
-        userMinorsFN,
-      };
-      return basicData;
+      return { userMajorsAcronym, userMajorsFN, userMinorsAcronym, userMinorsFN };
     },
-    updateBasic(newCollege, newMajor, newMinor, name) {
-      const basicData = this.basicOptionsToUser(newMajor, newMinor);
+    updateBasic(
+      { acronym: college, text: collegeFN }: DropdownSlot,
+      newMajor: readonly DropdownSlot[],
+      newMinor: readonly DropdownSlot[],
+      { firstName, middleName, lastName }: FirestoreUserName
+    ) {
+      const {
+        userMajorsAcronym: major,
+        userMajorsFN: majorFN,
+        userMinorsAcronym: minor,
+        userMinorsFN: minorFN,
+      } = this.basicOptionsToUser(newMajor, newMinor);
       this.majorDropdowns = newMajor;
-      this.user.major = basicData.userMajorsAcronym;
-      this.user.majorFN = basicData.userMajorsFN;
       this.minorDropdowns = newMinor;
-      this.user.minor = basicData.userMinorsAcronym;
-      this.user.minorFN = basicData.userMinorsFN;
-      this.collegeDropdown = newCollege;
-      this.user.college = newCollege.acronym;
-      this.user.collegeFN = newCollege.text;
-      this.firstName = name.firstName;
-      this.user.firstName = name.firstName;
-      this.middleName = name.middleName;
-      this.user.middleName = name.middleName;
-      this.lastName = name.lastName;
-      this.user.lastName = name.lastName;
-      this.keyCounter += 1;
-    },
-    transferOptionsToUser(exam, classes) {
-      const userExams = [];
-      for (let i = 0; i < exam.length; i += 1) {
-        if (
-          exam[i].score !== undefined &&
-          exam[i].score.placeholder !== '0' &&
-          exam[i].subject.placeholder !== 'Select one'
-        ) {
-          const currExam = {
-            equivCourse: exam[i].equivCourse,
-            score: exam[i].score.placeholder,
-            subject: exam[i].subject.placeholder,
-            type: exam[i].type.placeholder,
-          };
-          userExams.push(currExam);
-        }
-      }
-      const userClasses = [];
-      for (let i = 0; i < classes.length; i += 1) {
-        if (classes[i].class !== 'Select one') {
-          userClasses.push(classes[i]);
-        }
-      }
-      const transferData = {
-        userExams,
-        userClasses,
+      this.user = {
+        ...this.user,
+        firstName,
+        middleName,
+        lastName,
+        college,
+        collegeFN,
+        major,
+        majorFN,
+        minor,
+        minorFN,
       };
-      return transferData;
     },
-    updateTransfer(exam, classes, tookSwim) {
-      const convertedData = this.transferOptionsToUser(exam, classes);
-      this.displayOptions.exam = exam;
-      this.user.exam = convertedData.userExams;
-      this.displayOptions.class = classes;
-      this.user.transferCourse = convertedData.userClasses;
-      this.tookSwim = tookSwim;
-      this.user.tookSwim = tookSwim;
-      this.keyCounter += 1;
+    updateTransfer(
+      exams: readonly FirestoreAPIBExam[],
+      classes: readonly FirestoreTransferClass[],
+      tookSwim: 'yes' | 'no'
+    ) {
+      const userExams = exams.filter(
+        ({ subject, score }) => score !== 0 && subject !== placeholderText
+      );
+      const userClasses = classes.filter(it => it.class !== placeholderText);
+      this.user = { ...this.user, exam: userExams, transferCourse: userClasses, tookSwim };
     },
     cancel() {
       this.$emit('cancelOnboarding');

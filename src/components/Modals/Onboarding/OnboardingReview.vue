@@ -90,57 +90,44 @@
           <div class="onboarding-selectWrapper-reviewExam">
             <div class="alignLeft">
               <label class="onboarding-label">AP Credits</label>
-              <div v-for="(options, index) in displayOptions.exam" :key="'AP' + index">
-                <label
-                  v-if="typeof options.type != undefined && options.type.placeholder == 'AP'"
-                  class="onboarding-label--review"
-                  >{{ options.subject.placeholder }}</label
-                >
+              <div v-for="(exam, index) in user.exam" :key="'AP' + index">
+                <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
+                  exam.subject
+                }}</label>
               </div>
               <label class="onboarding-label addSpaceTop">IB Credits</label>
-              <div v-for="(options, index) in displayOptions.exam" :key="'IB' + index">
-                <label
-                  v-if="typeof options.type != undefined && options.type.placeholder == 'IB'"
-                  class="onboarding-label--review"
-                  >{{ options.subject.placeholder }}</label
-                >
+              <div v-for="(exam, index) in user.exam" :key="'IB' + index">
+                <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
+                  exam.subject
+                }}</label>
               </div>
             </div>
             <div class="alignCenter">
               <label class="onboarding-label">Score</label>
-              <div v-for="(options, index) in displayOptions.exam" :key="'APScore' + index">
-                <label
-                  v-if="typeof options.type != undefined && options.type.placeholder == 'AP'"
-                  class="onboarding-label--review"
-                  >{{ options.score.placeholder }}</label
-                >
+              <div v-for="(exam, index) in user.exam" :key="'APScore' + index">
+                <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
+                  exam.score
+                }}</label>
               </div>
               <label class="onboarding-label addSpaceTop">Score</label>
-              <div v-for="(options, index) in displayOptions.exam" :key="'IBScore' + index">
-                <label
-                  v-if="typeof options.type != undefined && options.type.placeholder == 'IB'"
-                  class="onboarding-label--review"
-                  >{{ options.score.placeholder }}</label
-                >
+              <div v-for="(exam, index) in user.exam" :key="'IBScore' + index">
+                <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
+                  exam.score
+                }}</label>
               </div>
             </div>
             <div class="alignCenter">
               <label class="onboarding-label">Credit</label>
-              <div v-for="(options, index) in displayOptions.exam" :key="'APCredit' + index">
-                <!-- TODO replace credit with true value rather than dummy json value, or remove credit from showing -->
-                <label
-                  v-if="typeof options.type != undefined && options.type.placeholder == 'AP'"
-                  class="onboarding-label--review"
-                  >{{ getExamCredit(options) }}</label
-                >
+              <div v-for="(exam, index) in user.exam" :key="'APCredit' + index">
+                <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
+                  getExamCredit(exam)
+                }}</label>
               </div>
               <label class="onboarding-label addSpaceTop">Credit</label>
-              <div v-for="(options, index) in displayOptions.exam" :key="'IBCredit' + index">
-                <label
-                  v-if="typeof options.type != undefined && options.type.placeholder == 'IB'"
-                  class="onboarding-label--review"
-                  >{{ getExamCredit(options) }}</label
-                >
+              <div v-for="(exam, index) in user.exam" :key="'IBCredit' + index">
+                <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
+                  getExamCredit(exam)
+                }}</label>
               </div>
             </div>
           </div>
@@ -151,17 +138,13 @@
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-reviewExam">
             <div>
-              <div v-for="(options, index) in displayOptions.class" :key="index">
-                <label v-if="options.class !== 'Select one'" class="onboarding-label--review">
-                  {{ options.class }}
-                </label>
+              <div v-for="(course, index) in user.transferCourse" :key="index">
+                <label class="onboarding-label--review">{{ course.class }}</label>
               </div>
             </div>
             <div class="alignEnd">
-              <div v-for="(options, index) in displayOptions.class" :key="index">
-                <label v-if="options.class !== 'Select one'" class="onboarding-label--review">
-                  {{ options.credits }} Credits
-                </label>
+              <div v-for="(course, index) in user.transferCourse" :key="index">
+                <label class="onboarding-label--review"> {{ course.credits }} Credits </label>
               </div>
             </div>
           </div>
@@ -178,127 +161,33 @@
   </div>
 </template>
 
-<script>
-// TODO: move repeated functions in all onboarding pages to a separate file
-import Vue from 'vue';
-import { examData } from '@/requirements/data/exams/ExamCredit';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
+import { AppUser } from '@/user-data';
 
 const placeholderText = 'Select one';
 
 export default Vue.extend({
-  props: { user: Object },
+  props: { user: Object as PropType<AppUser> },
   computed: {
-    collegeText() {
+    collegeText(): string {
       return this.user.college !== '' ? this.user.collegeFN : placeholderText;
     },
-  },
-  data() {
-    return {
-      placeholderText,
-      totalCredits: 0,
-      transferJSON: {},
-      displayOptions: {
-        exam: [
-          {
-            // unnecessary but required for type check, as this is not ts file yet, whats a better way to deal with this?
-            placeholder: placeholderText,
-            type: { placeholder: '' },
-            subject: { placeholder: '' },
-            score: { placeholder: '' },
-          },
-        ],
-        class: [
-          // unnecessary but required for type check, as this is not ts file yet
-          { class: placeholderText, credits: 0 },
-        ],
-      },
-    };
-  },
-  mounted() {
-    this.getClasses();
-    this.getTransferMap();
-    this.getCredits();
-  },
-  methods: {
-    getClasses() {
-      const exams = [];
-      const sections = ['type', 'subject', 'score'];
-      if ('exam' in this.user && this.user.exam.length > 0) {
-        for (let x = 0; x < this.user.exam.length; x += 1) {
-          const exam = {};
-          for (const sec of sections) {
-            exam[sec] = { placeholder: this.user.exam[x][sec] };
-          }
-          if (typeof this.user.exam[x].subject !== 'undefined') {
-            exams.push(exam);
-            exam.equivCourse = this.user.exam[x].equivCourse;
-          }
-        }
-      }
-      const exam = {};
-      for (const sec of sections) {
-        exam[sec] = { placeholder: placeholderText };
-      }
-      exams.push(exam);
-      this.displayOptions.exam = exams;
-      const swim = typeof this.user.tookSwim !== 'undefined' ? this.user.tookSwim : 'no';
-      this.tookSwimTest = swim;
-      const transferClass = [];
-      this.user.transferCourse.forEach(course => {
-        transferClass.push(course);
-      });
-      transferClass.push({ class: placeholderText, credits: 0 });
-      this.displayOptions.class = transferClass;
-    },
-    getCredits() {
+    totalCredits(): number {
       let count = 0;
-      this.displayOptions.exam.forEach(exam => {
-        if (this.transferJSON !== null) {
-          const name = exam.subject.placeholder;
-          if (name in this.transferJSON) {
-            count += this.transferJSON[name].credits;
-          }
-        }
+      this.user.exam.forEach(exam => {
+        count += getExamCredit(exam);
       });
-      this.displayOptions.class.forEach(clas => {
+      this.user.transferCourse.forEach(clas => {
         count += clas.credits;
       });
-      this.totalCredits = count;
+      return count;
     },
-    getExamCredit(exam) {
-      const name = exam.subject.placeholder;
-      if (this.transferJSON !== null) {
-        if (name in this.transferJSON) {
-          return this.transferJSON[name].credits;
-        }
-      }
-      return 0;
-    },
-    getTransferMap() {
-      const TransferJSON = {};
-      examData.AP.forEach(sub => {
-        TransferJSON[sub.name] = {
-          credits: sub.fulfillment.credits,
-          type: 'AP',
-        };
-      });
-      examData.IB.forEach(sub => {
-        TransferJSON[sub.name] = {
-          credits: sub.fulfillment.credits,
-          type: 'IB',
-        };
-      });
-      this.transferJSON = TransferJSON;
-      if (typeof this.displayOptions !== 'undefined') {
-        this.$emit(
-          'updateTransfer',
-          this.displayOptions.exam,
-          this.displayOptions.class,
-          this.tookSwimTest
-        );
-      }
-    },
-    setPage(page) {
+  },
+  methods: {
+    getExamCredit,
+    setPage(page: number): void {
       this.$emit('setPage', page);
     },
   },

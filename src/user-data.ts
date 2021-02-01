@@ -36,10 +36,9 @@ export type FirestoreSemester = {
 export type FirestoreCollege = { readonly acronym: string; readonly fullName: string };
 export type FirestoreMajorOrMinor = { readonly acronym: string; readonly fullName: string };
 export type FirestoreAPIBExam = {
-  readonly equivCourse: readonly string[];
+  readonly type: 'AP' | 'IB';
   readonly score: number;
   readonly subject: string;
-  readonly type: 'AP' | 'IB';
 };
 export type FirestoreTransferClass = {
   readonly class: string;
@@ -100,13 +99,13 @@ export type AppUser = {
   readonly college: string;
   // FN === Full Name
   readonly collegeFN: string;
-  major: readonly string[];
-  majorFN: readonly string[];
-  minor: readonly string[];
-  minorFN: readonly string[];
-  exam: readonly FirestoreAPIBExam[];
-  transferCourse: FirestoreTransferClass[];
-  tookSwim: 'yes' | 'no';
+  readonly major: readonly string[];
+  readonly majorFN: readonly string[];
+  readonly minor: readonly string[];
+  readonly minorFN: readonly string[];
+  readonly exam: readonly FirestoreAPIBExam[];
+  readonly transferCourse: readonly FirestoreTransferClass[];
+  readonly tookSwim: 'yes' | 'no';
 };
 
 export type AppMajor = {
@@ -335,48 +334,37 @@ export const createAppUser = (
   data: FirestoreOnboardingUserData,
   name: FirestoreUserName
 ): AppUser => {
+  const major: string[] = [];
+  const majorFN: string[] = [];
+  const minor: string[] = [];
+  const minorFN: string[] = [];
+  if ('majors' in data) {
+    data.majors.forEach(({ acronym, fullName }) => {
+      major.push(acronym);
+      majorFN.push(fullName);
+    });
+  }
+  if ('minors' in data) {
+    data.minors.forEach(({ acronym, fullName }) => {
+      minor.push(acronym);
+      minorFN.push(fullName);
+    });
+  }
+
   const user: AppUser = {
-    // TODO: take into account multiple majors and colleges
+    // TODO: take into account multiple colleges
     college: data.colleges[0].acronym,
     collegeFN: data.colleges[0].fullName,
     firstName: name.firstName,
     middleName: name.middleName,
     lastName: name.lastName,
-    major: [],
-    majorFN: [],
-    minor: [],
-    minorFN: [],
-    exam: [],
-    transferCourse: [],
+    major,
+    majorFN,
+    minor,
+    minorFN,
+    exam: 'exam' in data && data.exam.length > 0 ? [...data.exam] : [],
+    transferCourse: 'class' in data && data.class.length > 0 ? [...data.class] : [],
     tookSwim: data.tookSwim,
   };
-  if ('exam' in data && data.exam.length > 0) {
-    user.exam = [...data.exam];
-  }
-  if ('class' in data && data.class.length > 0) {
-    user.transferCourse = [...data.class];
-  }
-
-  if ('majors' in data && data.majors.length > 0) {
-    const majors: string[] = [];
-    const majorsFN: string[] = [];
-    data.majors.forEach(major => {
-      majors.push(major.acronym);
-      majorsFN.push(major.fullName);
-    });
-    user.major = majors;
-    user.majorFN = majorsFN;
-  }
-  if ('minors' in data && data.minors.length > 0) {
-    const minors: string[] = [];
-    const minorsFN: string[] = [];
-    data.minors.forEach(minor => {
-      minors.push(minor.acronym);
-      minorsFN.push(minor.fullName);
-    });
-    user.minor = minors;
-    user.minorFN = minorsFN;
-  }
-
   return user;
 };
