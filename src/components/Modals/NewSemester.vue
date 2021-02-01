@@ -93,14 +93,7 @@ import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
-import {
-  // @ts-expect-error: TS is unable to understand scss import
-  inactiveGray,
-  // @ts-expect-error: TS is unable to understand scss import
-  yuxuanBlue,
-  // @ts-expect-error: TS is unable to understand scss import
-  darkPlaceholderGray,
-} from '@/assets/scss/_variables.scss';
+import { inactiveGray, yuxuanBlue, darkPlaceholderGray } from '@/assets/scss/_variables.scss';
 import { FirestoreSemesterType, AppSemester } from '@/user-data';
 
 // enum to define seasons as integers in season order
