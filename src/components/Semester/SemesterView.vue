@@ -9,12 +9,10 @@
     @click="closeBar"
     :key="key"
   >
-    <modal
+    <new-semester-modal
       id="semesterModal"
       class="semester-modal"
       :class="{ 'modal--block': isSemesterModalOpen }"
-      type="semester"
-      ref="modalComponent"
       :currentSemesters="semesters"
       @add-semester="addSemester"
       @close-semester-modal="closeSemesterModal"
@@ -103,6 +101,7 @@ import Course from '@/components/Course.vue';
 import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Confirmation.vue';
 import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
+import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 
@@ -121,6 +120,7 @@ Vue.component('course', Course);
 Vue.component('semester', Semester);
 Vue.component('confirmation', Confirmation);
 Vue.component('semester-caution', SemesterCaution);
+Vue.component('new-semester-modal', NewSemesterModal);
 Vue.component('deletesemester', DeleteSemester);
 Vue.component('editsemester', EditSemester);
 

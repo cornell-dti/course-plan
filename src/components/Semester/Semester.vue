@@ -1,8 +1,7 @@
 <template>
   <div class="semester" :class="{ 'semester--compact': compact }">
-    <modal
+    <new-course-modal
       class="semester-modal"
-      type="course"
       :class="{ 'modal--block': isCourseModalOpen }"
       :semesterID="`${year}-${type}`"
       :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
@@ -119,7 +118,7 @@
 import Vue, { PropType } from 'vue';
 import introJs from 'intro.js';
 import Course from '@/components/Course.vue';
-import Modal from '@/components/Modals/Modal.vue';
+import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import Confirmation from '@/components/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
@@ -136,7 +135,7 @@ import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 
 Vue.component('course', Course);
-Vue.component('modal', Modal);
+Vue.component('new-course-modal', NewCourseModal);
 Vue.component('confirmation', Confirmation);
 Vue.component('semestermenu', SemesterMenu);
 Vue.component('deletesemester', DeleteSemester);
@@ -205,7 +204,6 @@ export default Vue.extend({
   },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
-    // @ts-ignore
     const service = Vue.$dragula.$service;
     service.eventBus.$on('drag', (data: any) => {
       if (data.container.getAttribute('semester-key') === `${this.year}-${this.type}`) {
