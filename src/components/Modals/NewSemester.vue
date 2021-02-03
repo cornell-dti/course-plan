@@ -190,7 +190,7 @@ export default Vue.extend({
   },
   methods: {
     seasonValue(season: readonly [string, string]): number {
-      // @ts-ignore
+      // @ts-expect-error: TS cannot understand lowercasing the string produces the right field name.
       return SeasonsEnum[season[1].toLowerCase()];
     },
     getCurrentSeason(): FirestoreSemesterType {

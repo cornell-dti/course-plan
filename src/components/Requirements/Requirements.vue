@@ -72,7 +72,6 @@ import VueCollapse from 'vue2-collapse';
 import introJs from 'intro.js';
 
 import Course from '@/components/Course.vue';
-import Modal from '@/components/Modals/Modal.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { SingleMenuRequirement, SubReqCourseSlot, CrseInfo } from '@/requirements/types';
@@ -92,7 +91,6 @@ import clipboard from '@/assets/images/clipboard.svg';
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
 Vue.component('course', Course);
-Vue.component('modal', Modal);
 Vue.component('requirementview', RequirementView);
 Vue.component('dropdownarrow', DropDownArrow);
 Vue.use(VueCollapse);

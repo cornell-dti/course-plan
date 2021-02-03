@@ -73,7 +73,7 @@ export default Vue.extend({
   padding: 1rem;
 
   &-content {
-    background: #ffffff;
+    background: $white;
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
@@ -102,14 +102,14 @@ export default Vue.extend({
     font-weight: 600;
     font-size: 20px;
     line-height: 24px;
-    color: #3d3d3d;
+    color: $primaryGray;
   }
 
   &-text {
     font-weight: normal;
     font-size: 14px;
     line-height: 17px;
-    color: #3d3d3d;
+    color: $primaryGray;
   }
 
   &-buttonWrapper {
