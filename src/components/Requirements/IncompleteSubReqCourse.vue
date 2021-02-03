@@ -1,7 +1,7 @@
 <template>
   <div class="incompletesubreqcourse">
     <div class="draggable-requirements-wrapper" v-if="displayDescription">
-      <div id="incompleteSeparator" class="separator"></div>
+      <div class="separator"></div>
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
         <div
@@ -38,7 +38,6 @@
           <course
             v-bind="course"
             :courseObj="course"
-            :id="course.subject + course.number"
             :uniqueID="course.uniqueID"
             :compact="true"
             :active="false"

@@ -33,7 +33,6 @@
               v-bind:class="{ warning: isDuplicate }"
               v-for="season in seasons"
               :key="seasonValue(season)"
-              :id="season"
               class="newSemester-dropdown-content-item"
               @click="selectSeason(season[1])"
             >
@@ -71,7 +70,6 @@
             <div
               v-for="year in years"
               :key="year"
-              :id="year"
               class="newSemester-dropdown-content-item"
               @click="selectYear(year)"
             >
