@@ -79,7 +79,7 @@ export default Vue.extend({
     font-weight: bold;
     font-size: 16px;
     line-height: 20px;
-    color: #3d3d3d;
+    color: $primaryGray;
   }
 
   &-buttonWrapper {
@@ -91,9 +91,9 @@ export default Vue.extend({
   &-button {
     width: 4.75rem;
     height: 1.8rem;
-    color: #5b676d;
+    color: $activeGray;
     border-radius: 3px;
-    border: 1px solid #3d3d3d;
+    border: 1px solid $primaryGray;
     background-color: $white;
     display: flex;
     justify-content: center;
@@ -110,7 +110,7 @@ export default Vue.extend({
       pointer-events: none;
       opacity: 0.3;
       border: 1px solid $sangBlue;
-      background-color: #cccccc;
+      background-color: $disabledGray;
     }
   }
 }

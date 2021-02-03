@@ -128,14 +128,14 @@ export default Vue.extend({
     font-weight: 600;
     font-size: 20px;
     line-height: 24px;
-    color: #3d3d3d;
+    color: $primaryGray;
   }
 
   &-text {
     font-weight: normal;
     font-size: 14px;
     line-height: 17px;
-    color: #3d3d3d;
+    color: $activeGray;
   }
 
   &-buttonWrapper {
@@ -179,7 +179,7 @@ export default Vue.extend({
     &--disabled {
       opacity: 0.3;
       border: 1px solid $sangBlue;
-      background-color: #cccccc;
+      background-color: $disabledGray;
     }
   }
 }
