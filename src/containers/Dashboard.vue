@@ -1,5 +1,5 @@
 <template>
-  <div id="dashboard" class="dashboard">
+  <div class="dashboard">
     <onboarding
       class="dashboard-onboarding"
       v-if="isOnboarding"
@@ -68,7 +68,7 @@
       v-if="showTourEndWindow"
     >
     </tourwindow>
-    <div id="dashboard-bottomView">
+    <div>
       <bottombar
         v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
         :bottomCourses="bottomCourses"

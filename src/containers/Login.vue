@@ -1,5 +1,5 @@
 <template>
-  <div id="login">
+  <div>
     <transition name="fade">
       <div v-if="performingRequest" class="loading">
         <p>Loading...</p>
@@ -79,8 +79,7 @@
           </div>
           <div class="col-6 col-md-6 image-wrapper women-wrapper">
             <img
-              id="hide"
-              class="women"
+              class="hide women"
               src="@/assets/images/Person_planning.svg"
               alt="women planning"
             />
@@ -93,9 +92,8 @@
         <div class="drag phonepad row no-gutters">
           <div class="col-md-6 image-wrapper image-wrapper--drag">
             <img
-              id="hide"
               style="position: relative"
-              class="preview"
+              class="hide preview"
               src="@/assets/images/drag.svg"
               alt="Dragging preview"
             />
@@ -121,7 +119,7 @@
             </p>
           </div>
           <div class="col-md-7 image-wrapper image-wrapper--semester">
-            <img id="hide" class="schedule" src="@/assets/images/schedule.svg" alt="Plan preview" />
+            <img class="hide schedule" src="@/assets/images/schedule.svg" alt="Plan preview" />
           </div>
         </div>
       </div>
@@ -546,7 +544,7 @@ p {
   max-width: 600px;
 }
 @media (max-width: 1154px) {
-  img#hide {
+  img.hide {
     display: none;
   }
   .top-bar {

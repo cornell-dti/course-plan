@@ -67,7 +67,6 @@ export default Vue.extend({
       type: Array,
     },
     compact: Boolean,
-    id: String,
     uniqueID: Number,
     active: Boolean,
     semesterIndex: Number,

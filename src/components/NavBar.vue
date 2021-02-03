@@ -7,11 +7,7 @@
       <div class="navbar-iconWrapper desktop" id="profileIcon" @click="editProfile"></div>
     </div>
     <div class="navbar-bottom">
-      <div
-        class="navbar-iconWrapper mobile"
-        id="requirementsBar"
-        @click="toggleRequirementsBar"
-      ></div>
+      <div class="navbar-iconWrapper mobile requirementsBar" @click="toggleRequirementsBar"></div>
       <div class="navbar-iconWrapper mobile" id="profileIcon" @click="editProfile"></div>
       <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
     </div>
@@ -91,7 +87,7 @@ export default Vue.extend({
   }
 }
 
-#requirementsBar {
+.requirementsBar {
   cursor: pointer;
   background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
 
@@ -164,7 +160,7 @@ export default Vue.extend({
 
 @media only screen and (max-width: 600px) {
   .navbar {
-    #requirementsBar {
+    .requirementsBar {
       cursor: pointer;
       background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
 

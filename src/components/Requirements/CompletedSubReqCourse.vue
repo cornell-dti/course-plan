@@ -1,7 +1,7 @@
 <template>
   <div class="completedsubreqcourse">
     <div class="completed-reqCourses-course-wrapper">
-      <div id="completedSeparator" class="separator"></div>
+      <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
           <span class="completed-reqCourses-course-heading-check"
@@ -18,7 +18,6 @@
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <reqcourse
-          :id="courseSubject + courseNumber"
           :color="color"
           :subject="courseSubject"
           :number="courseNumber"

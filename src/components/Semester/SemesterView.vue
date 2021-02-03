@@ -10,7 +10,6 @@
     :key="key"
   >
     <new-semester-modal
-      id="semesterModal"
       class="semester-modal"
       :class="{ 'modal--block': isSemesterModalOpen }"
       :currentSemesters="semesters"
@@ -38,13 +37,11 @@
       </div>
     </div>
     <confirmation
-      :id="'semesterConfirmation'"
       class="semesterView-confirmation"
       :class="{ 'modal--flex': isSemesterConfirmationOpen }"
       :text="confirmationText"
     />
     <semester-caution
-      :id="'semesterCaution'"
       class="semesterView-caution"
       :class="{ 'modal--flex': isCautionModalOpen }"
       :text="cautionText"

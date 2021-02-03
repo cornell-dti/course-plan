@@ -1,6 +1,6 @@
 <template>
   <div class="editSemesterModal">
-    <div class="editSemesterModal-content" id="deleteSemester">
+    <div class="editSemesterModal-content">
       <div class="editSemesterModal-top">
         <span class="editSemesterModal-title">{{ title }}</span>
         <img

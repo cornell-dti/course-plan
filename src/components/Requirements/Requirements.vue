@@ -1,7 +1,6 @@
 <template v-if="semesters">
   <div class="requirements">
     <div
-      id="req-tooltip"
       class="fixed"
       data-intro-group="req-tooltip"
       :v-bind:class="{ 'd-none': !shouldShowAllCourses }"
@@ -50,7 +49,6 @@
               <course
                 v-bind="courseData"
                 :courseObj="courseData"
-                :id="courseData.subject + courseData.number"
                 :uniqueID="courseData.uniqueID"
                 :compact="false"
                 :active="false"

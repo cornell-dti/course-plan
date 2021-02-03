@@ -8,7 +8,6 @@
       >
         <bottombartab
           v-bind="bottomCourse"
-          :id="index"
           :subject="bottomCourse.subject"
           :number="bottomCourse.number"
           :color="bottomCourse.color"

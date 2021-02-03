@@ -51,7 +51,6 @@
       + New Semester
     </button>
     <div
-      id="tour"
       class="semester-content"
       data-intro-group="pageTour"
       data-step="2"
@@ -84,7 +83,6 @@
               v-bind="course"
               :courseObj="course"
               :duplicatedCourseCodeList="duplicatedCourseCodeList"
-              :id="course.subject + course.number"
               :uniqueID="course.uniqueID"
               :compact="compact"
               :active="activatedCourse.uniqueID === course.uniqueID"

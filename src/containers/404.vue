@@ -5,7 +5,7 @@
       <div class="message-container">
         <img class="img-404" src="@/assets/images/404.svg" alt="404" />
         <div class="oops-wrapper">
-          <div id="oops" class="color_box">
+          <div class="oops color_box">
             Oops...
             <br />Page Not Found
             <img
@@ -39,7 +39,7 @@ export default Vue.extend({});
 .logo {
   width: 12rem;
 }
-#oops {
+.oops {
   text-align: left;
   display: inline-block;
   font-weight: bold;
