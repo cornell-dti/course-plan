@@ -107,14 +107,12 @@
               class="onboarding-selectWrapperRow"
             >
               <div class="onboarding-select--columnFill">
-                <newCourse
-                  :semesterID="String(index)"
-                  :isOnboard="true"
-                  :placeholderText="options.class"
-                  :key="classes.length"
-                  @addItem="addItem"
-                >
-                </newCourse>
+                <course-selector
+                  :searchBoxClassName="transferClassSearchboxClassname(options.class)"
+                  :placeholder="getTransferClassSearchboxPlaceholder(options.class)"
+                  :autoFocus="false"
+                  @on-select="course => onCourseSelection(index, course)"
+                />
               </div>
               <div class="onboarding-select--column-remove">
                 <div
@@ -168,12 +166,10 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
-import NewCourse from '@/components/Modals/NewCourse/NewCourse.vue';
 import { AppUser, FirestoreAPIBExam, CornellCourseRosterCourse } from '@/user-data';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
-
-Vue.component('newCourse', NewCourse);
+import CourseSelector, { MatchingCourseSearchResult } from '../NewCourse/CourseSelector.vue';
 
 const placeholderText = 'Select one';
 
@@ -208,7 +204,11 @@ export const getExamCredit = (exam: FirestoreAPIBExam): number => {
 };
 
 export default Vue.extend({
-  components: { OnboardingTransferSwimming, OnboardingTransferExamPropertyDropdown },
+  components: {
+    CourseSelector,
+    OnboardingTransferSwimming,
+    OnboardingTransferExamPropertyDropdown,
+  },
   props: {
     user: Object as PropType<AppUser>,
   },
@@ -251,6 +251,14 @@ export default Vue.extend({
   },
   methods: {
     getExamCredit,
+    getTransferClassSearchboxPlaceholder(text: string): string {
+      return text !== placeholderText ? text : '"CS1110", "Multivariable Calculus", etc';
+    },
+    transferClassSearchboxClassname(text: string): string {
+      return text !== placeholderText
+        ? 'new-course-onboarding'
+        : 'new-course-onboarding new-course-onboarding-empty';
+    },
     updateSwim(tookSwimTest: boolean) {
       this.tookSwimTest = tookSwimTest ? 'yes' : 'no';
       this.updateTransfer();
@@ -299,9 +307,7 @@ export default Vue.extend({
         this.tookSwimTest
       );
     },
-    addItem(id: number) {
-      const dropdown = document.getElementById(`dropdown-${id}`) as HTMLInputElement;
-      const title: string = dropdown.value;
+    onCourseSelection(id: number, { title }: MatchingCourseSearchResult) {
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
       const number = courseCode.split(' ')[1];
@@ -315,7 +321,10 @@ export default Vue.extend({
             if (resultJSONclass.catalogNbr === number) {
               const course = resultJSONclass;
               const creditsC = course.enrollGroups[0].unitsMaximum;
-              this.classes[id] = { class: courseCode, course, credits: creditsC };
+              const classes = [...this.classes];
+              classes[id] = { class: courseCode, course, credits: creditsC };
+              this.classes = classes;
+              this.updateTransfer();
             }
           });
         });
@@ -326,4 +335,28 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 @import '@/components/Modals/Onboarding/Onboarding.scss';
+</style>
+<style lang="scss">
+@import '@/components/Modals/Onboarding/Onboarding.scss';
+.new-course {
+  &-onboarding {
+    font-size: 14px;
+    line-height: 17px;
+    color: $black;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.5rem;
+    border: 0.5px solid $darkPlaceholderGray;
+    border-radius: 0px;
+    background-color: $white;
+    &::placeholder {
+      color: $black;
+    }
+  }
+  &-onboarding-empty {
+    &::placeholder {
+      color: $darkPlaceholderGray;
+    }
+  }
+}
 </style>

@@ -16,10 +16,11 @@
       :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
       placeholderText='"CS 1110", "Multivariable Calculus", etc.'
       @duplicateSemester="disableButton"
-      @close-current-model="closeCourseModal"
+      @close-course-modal="closeCourseModal"
       @updateSemProps="updateSemProps"
       @toggle-left-button="toggleLeftButton"
       @allow-add="disableButton"
+      @on-course-select="selectCourse"
       @edit-mode="editMode"
       ref="modalBodyComponent"
       :season="season"
@@ -35,12 +36,14 @@ import Vue, { PropType } from 'vue';
 import NewCourse from '@/components/Modals/NewCourse/NewCourse.vue';
 import { AppSemester, CornellCourseRosterCourse } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
+import { MatchingCourseSearchResult } from './CourseSelector.vue';
 
 Vue.component('newCourse', NewCourse);
 
 export default Vue.extend({
   data() {
     return {
+      selectedCourse: null as MatchingCourseSearchResult | null,
       courseIsAddable: true,
       isDisabled: true,
       leftButtonText: 'CANCEL',
@@ -59,6 +62,9 @@ export default Vue.extend({
     reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },
   methods: {
+    selectCourse(result: MatchingCourseSearchResult) {
+      this.selectedCourse = result;
+    },
     disableButton(bool: boolean) {
       this.isDisabled = bool;
     },
@@ -85,10 +91,8 @@ export default Vue.extend({
       }
     },
     addCourse() {
-      const dropdown = document.getElementById(`dropdown-${this.semesterID}`) as HTMLInputElement;
-      const title = dropdown.value;
-      // name used to transmit roster information
-      const roster = dropdown.name;
+      if (this.selectedCourse == null) return;
+      const { roster, title } = this.selectedCourse;
 
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
@@ -110,8 +114,8 @@ export default Vue.extend({
           });
         });
 
-      // clear input and close modal when complete
-      dropdown.value = '';
+      // @ts-expect-error: TS cannot understand $ref's component.
+      this.$refs.modalBodyComponent.reset();
       this.closeCurrentModal();
     },
     toggleLeftButton() {

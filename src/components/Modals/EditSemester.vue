@@ -40,11 +40,9 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import NewCourse from '@/components/Modals/NewCourse/NewCourse.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import { AppSemester } from '@/user-data';
 
-Vue.component('newCourse', NewCourse);
 Vue.component('newSemester', NewSemester);
 
 export default Vue.extend({

@@ -85,8 +85,6 @@ export default Vue.extend({
   data() {
     return {
       currentPage: 1,
-      majorDropdowns: [] as readonly DropdownSlot[],
-      minorDropdowns: [] as readonly DropdownSlot[],
       isError: false,
       user: this.userData,
     };
@@ -109,8 +107,12 @@ export default Vue.extend({
           },
           userData: {
             colleges: [{ acronym: this.user.college, fullName: this.user.collegeFN }],
-            majors: this.notPlaceholderOptions(this.majorDropdowns),
-            minors: this.notPlaceholderOptions(this.minorDropdowns),
+            majors: this.notPlaceholderOptions(
+              this.user.major.map((acronym, i) => ({ acronym, text: this.user.majorFN[i] }))
+            ),
+            minors: this.notPlaceholderOptions(
+              this.user.minor.map((acronym, i) => ({ acronym, text: this.user.minorFN[i] }))
+            ),
             exam: this.user.exam.filter(exam => exam.subject !== placeholderText),
             class: this.user.transferCourse.filter(
               oneClass => oneClass.class !== placeholderText && oneClass.class !== null
@@ -166,8 +168,6 @@ export default Vue.extend({
         userMinorsAcronym: minor,
         userMinorsFN: minorFN,
       } = this.basicOptionsToUser(newMajor, newMinor);
-      this.majorDropdowns = newMajor;
-      this.minorDropdowns = newMinor;
       this.user = {
         ...this.user,
         firstName,
