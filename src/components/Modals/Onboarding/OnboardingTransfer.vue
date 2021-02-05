@@ -350,7 +350,7 @@ export default Vue.extend({
     border-radius: 0px;
     background-color: $white;
     &::placeholder {
-      color: $black;
+      color: $lightPlaceholderGray;
     }
   }
   &-onboarding-empty {
