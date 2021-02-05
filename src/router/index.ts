@@ -8,18 +8,16 @@ import Page404 from '@/containers/404.vue';
 
 Vue.use(Router);
 
-const baseURL = process.env.BASE_URL;
-
 const router = new Router({
   mode: 'history',
   routes: [
     {
-      path: `${baseURL}/login`,
+      path: '/login',
       name: 'Login',
       component: Login,
     },
     {
-      path: `${baseURL}/`,
+      path: '/',
       name: 'Dashboard',
       component: Dashboard,
       meta: {
@@ -27,7 +25,7 @@ const router = new Router({
       },
     },
     {
-      path: `${baseURL}/*`,
+      path: '/*',
       name: '404',
       component: Page404,
     },
@@ -36,16 +34,12 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   const { matched } = to;
-  if (matched.length === 0) {
-    next(baseURL);
-    return;
-  }
 
   const requiresAuth = matched.some(x => x.meta.requiresAuth);
   const { currentUser } = firebase.auth();
 
   if (requiresAuth && !currentUser) {
-    next(`${baseURL}/login`);
+    next('/login');
   } else if (requiresAuth && currentUser) {
     next();
   } else {

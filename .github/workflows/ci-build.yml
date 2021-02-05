@@ -13,31 +13,11 @@ jobs:
       - name: NPM Install
         run: npm install
       - name: Build
-        run: PUBLIC_URL="/course-plan/${{ github.event.number }}" npm run build:staging
-      - name: Upload Built Static Assets
-        uses: actions/upload-artifact@master
+        run: npm run build:staging
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          name: built-assets
-          path: dist
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - name: Download Built Static Assets
-        uses: actions/download-artifact@master
-        with:
-          name: built-assets
-          path: ${{ github.event.number }}
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          keep_files: true
-          publish_dir: '.'
-          github_token: '${{ secrets.BOT_TOKEN }}'
-      - name: Comment on pull request
-        uses: cornell-dti/dti-repo-tools@master
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CORNELLDTI_COURSEPLAN_DEV }}'
+          projectId: cornelldti-courseplan-dev
         env:
-          BOT_TOKEN: '${{ secrets.BOT_TOKEN }}'
-        with:
-          command: pr-comment
-          argument: '[deployment-bot] Deployed to https://cornell-dti.github.io/course-plan/${{ github.event.number }}/index.html'
+          FIREBASE_CLI_PREVIEWS: hostingchannels
