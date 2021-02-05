@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 import filteredAllCourses from './filtered-all-courses';
 
-type CourseJson = {
+export type CourseJson = {
   [courseCode: string]: {
     i: number; // course id
     t: string; // title

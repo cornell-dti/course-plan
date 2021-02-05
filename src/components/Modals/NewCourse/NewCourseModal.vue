@@ -31,9 +31,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import NewCourse from '@/components/Modals/NewCourse/NewCourse.vue';
-import { CornellCourseRosterCourse } from '@/user-data';
+import { AppSemester, CornellCourseRosterCourse } from '@/user-data';
+import { SingleMenuRequirement } from '@/requirements/types';
 
 Vue.component('newCourse', NewCourse);
 
@@ -52,10 +53,10 @@ export default Vue.extend({
   props: {
     type: String,
     semesterID: String,
-    currentSemesters: Array,
+    currentSemesters: Array as PropType<readonly AppSemester[]>,
     isOpen: Boolean,
     isCourseModelSelectingSemester: Boolean,
-    reqs: Array,
+    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },
   methods: {
     disableButton(bool: boolean) {
