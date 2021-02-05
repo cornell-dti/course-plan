@@ -234,7 +234,7 @@ export default Vue.extend({
           if (doc.exists) {
             this.performingRequest = false;
             this.$store.commit('setCurrentUser', user);
-            this.$router.push(`${process.env.BASE_URL}/`);
+            this.$router.push('/');
             this.$gtag.event('login', { method: 'Google' });
           } else {
             this.handleUserWithoutAccess();

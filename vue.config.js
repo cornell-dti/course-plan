@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: process.env.PUBLIC_URL || '',
+  publicPath: '',
   configureWebpack: {
     devtool: 'source-map',
   },
