@@ -40,7 +40,7 @@
           </div>
         </div>
         <div v-else class="newCourse-requirements-edit">
-          <editRequirement
+          <edit-single-requirement
             v-for="req in requirements"
             :key="req"
             :name="req"
@@ -60,10 +60,11 @@
           </div>
         </div>
         <div v-else class="newCourse-requirements-edit">
-          <editRequirement
+          <edit-single-requirement
             v-for="potreq in potentialReqs"
             :key="potreq"
             :name="potreq"
+            :selected="false"
             :isClickable="true"
             @edit-req="editReq"
           />
@@ -79,7 +80,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import EditRequirement from '@/components/Modals/NewCourse/EditRequirement.vue';
+import EditSingleRequirement from '@/components/Modals/NewCourse/EditSingleRequirement.vue';
 import BinaryButton from '@/components/Modals/NewCourse/BinaryButton.vue';
 import CourseSelector, {
   MatchingCourseSearchResult,
@@ -92,10 +93,8 @@ import summer from '@/assets/images/summerEmoji.svg';
 import { FirestoreSemesterType } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
 
-Vue.component('editRequirement', EditRequirement);
-
 export default Vue.extend({
-  components: { BinaryButton, CourseSelector },
+  components: { BinaryButton, CourseSelector, EditSingleRequirement },
   props: {
     semesterID: String,
     season: String as PropType<FirestoreSemesterType>,
