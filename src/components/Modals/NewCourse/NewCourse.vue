@@ -1,16 +1,15 @@
 <template>
   <div class="newCourse">
-    <div class="newCourse-text">{{ text }}</div>
-    <!-- TODO: for some reason this breaks the dropdown <div v-if="selected" class="newCourse-name newCourse-requirements-container">{{ selectedCourse }}</div> -->
+    <div class="newCourse-text">Search Course Roster</div>
     <course-selector
       search-box-class-name="newCourse-dropdown"
       :key="courseSelectorKey"
-      :placeholder="placeholder"
+      placeholder='"CS1110", "Multivariable Calculus", etc'
       :autoFocus="true"
       @on-escape="closeCourseModal"
       @on-select="onSelectCourse"
     />
-    <div v-if="isCourseModelSelectingSemester && !selected">
+    <div v-if="isCourseModelSelectingSemester && selectedCourse == null">
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
         <newSemester
@@ -21,7 +20,7 @@
         ></newSemester>
       </div>
     </div>
-    <div v-if="selected">
+    <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
       <div v-if="isCourseModelSelectingSemester">
         <div class="newCourse-text">Selected Semester</div>
@@ -99,7 +98,6 @@ export default Vue.extend({
   components: { BinaryButton, CourseSelector },
   props: {
     semesterID: String,
-    placeholderText: String,
     season: String as PropType<FirestoreSemesterType>,
     year: Number,
     isCourseModelSelectingSemester: Boolean,
@@ -107,13 +105,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      seasonImg: {
-        Fall: fall,
-        Spring: spring,
-        Winter: winter,
-        Summer: summer,
-      },
-      selected: false,
       requirements: [] as string[],
       potentialReqs: [] as string[],
       binaryPotentialReqs: [] as (readonly [string, string])[],
@@ -125,13 +116,8 @@ export default Vue.extend({
     };
   },
   computed: {
-    text(): string {
-      return 'Search Course Roster';
-    },
-    placeholder(): string {
-      return this.placeholderText !== 'Select one'
-        ? this.placeholderText
-        : '"CS1110", "Multivariable Calculus", etc';
+    seasonImg(): Readonly<Record<FirestoreSemesterType, string>> {
+      return { Fall: fall, Spring: spring, Winter: winter, Summer: summer };
     },
     potReqs(): string {
       return this.potentialReqs.join(', ');
@@ -161,13 +147,11 @@ export default Vue.extend({
       this.$emit('toggle-left-button');
       this.$emit('allow-add', false);
       this.$emit('on-course-select', result);
-      this.selected = true;
       this.selectedCourse = result;
       this.getReqsRelatedToCourse(result);
     },
     reset() {
       this.editMode = false;
-      this.selected = false;
       this.courseSelectorKey += 1;
       this.selectedCourse = null;
       this.selectedReqs = [];
@@ -244,7 +228,6 @@ export default Vue.extend({
         this.selectedReqs = [...this.requirements];
         this.$emit('allow-add', false);
       } else {
-        this.selected = false;
         this.selectedCourse = null;
         this.$emit('toggle-left-button');
         this.$emit('allow-add', true);
