@@ -14,7 +14,6 @@
       :semesterID="semesterID"
       :currentSemesters="currentSemesters"
       :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
-      placeholderText='"CS 1110", "Multivariable Calculus", etc.'
       @duplicateSemester="disableButton"
       @close-course-modal="closeCourseModal"
       @updateSemProps="updateSemProps"
