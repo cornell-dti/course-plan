@@ -4,7 +4,12 @@
       <div class="newCourse-title">This class fulfills the following requirement(s):</div>
       <div v-if="!editMode" class="newCourse-requirements-container">
         <div class="newCourse-requirements">
-          {{ relatedRequirements.map(it => it.name).join(', ') }}
+          {{
+            relatedRequirements
+              .filter(({ id }) => selectedRequirementIDs.includes(id))
+              .map(it => it.name)
+              .join(', ')
+          }}
         </div>
       </div>
       <div v-else class="newCourse-requirements-edit">
@@ -24,7 +29,12 @@
       </div>
       <div v-if="!editMode" class="newCourse-requirements-container">
         <div class="newCourse-name">
-          {{ potentialRequirements.map(it => it.name).join(', ') }}
+          {{
+            potentialRequirements
+              .filter(({ id }) => selectedRequirementIDs.includes(id))
+              .map(it => it.name)
+              .join(', ')
+          }}
         </div>
       </div>
       <div v-else class="newCourse-requirements-edit">
