@@ -1,36 +1,26 @@
 <template>
   <div class="binary-button">
     <div
-      @click="onClick(true)"
-      :class="{ 'binary-button-selected': leftChosen }"
+      v-for="choice in choices"
+      :key="choice.id"
+      @click="onClick(choice.id)"
+      :class="{ 'binary-button-selected': chosenID === choice.id }"
       class="binary-button-child"
     >
       <img
-        v-if="leftChosen"
+        v-if="chosenID === choice.id"
         class="confirmation-icon binary-button-check"
         src="@/assets/images/check.svg"
         alt="checkmark"
       />
       <div>
-        {{ choices[0] }}
+        {{ choice.name }}
       </div>
-      <img v-if="leftChosen" class="confirmation-icon hidden" src="@/assets/images/check.svg" />
-    </div>
-    <div
-      @click="onClick(false)"
-      :class="{ 'binary-button-selected': !leftChosen }"
-      class="binary-button-child"
-    >
       <img
-        v-if="!leftChosen"
-        class="confirmation-icon binary-button-check"
+        v-if="chosenID === choice.id"
+        class="confirmation-icon hidden"
         src="@/assets/images/check.svg"
-        alt="checkmark"
       />
-      <div>
-        {{ choices[1] }}
-      </div>
-      <img v-if="!leftChosen" class="confirmation-icon hidden" src="@/assets/images/check.svg" />
     </div>
   </div>
 </template>
@@ -40,14 +30,15 @@ import Vue, { PropType } from 'vue';
 
 export default Vue.extend({
   props: {
-    choices: (Array as unknown) as PropType<readonly [string, string]>,
-  },
-  data() {
-    return { leftChosen: true };
+    chosenID: { type: String, required: true },
+    choices: {
+      type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
+      required: true,
+    },
   },
   methods: {
-    onClick(left: boolean) {
-      this.leftChosen = left;
+    onClick(id: string) {
+      this.$emit('on-select', id, this.choices);
     },
   },
 });

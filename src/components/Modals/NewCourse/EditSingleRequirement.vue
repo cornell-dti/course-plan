@@ -1,11 +1,11 @@
 <template>
   <div
     class="edit-requirement"
-    :class="{ 'edit-requirement-selected': isSelected, 'edit-requirement-pointer': isClickable }"
+    :class="{ 'edit-requirement-selected': selected, 'edit-requirement-pointer': isClickable }"
     v-on="isClickable ? { click: () => onClick() } : { click: $event => $event.preventDefault() }"
   >
     <img
-      v-if="isSelected"
+      v-if="selected"
       class="confirmation-icon edit-requirement-check"
       src="@/assets/images/check.svg"
       alt="checkmark"
@@ -13,7 +13,7 @@
     <div class="edit-requirement-text" :class="{ 'edit-requirement-multiline': multiline }">
       {{ name }}
     </div>
-    <img v-if="isSelected" class="confirmation-icon hidden" src="@/assets/images/check.svg" />
+    <img v-if="selected" class="confirmation-icon hidden" src="@/assets/images/check.svg" />
   </div>
 </template>
 
@@ -33,17 +33,12 @@ export default Vue.extend({
   },
   computed: {
     multiline(): boolean {
-      return this.isSelected ? this.name.length >= 24 : this.name.length > 30;
+      return this.selected ? this.name.length >= 24 : this.name.length > 30;
     },
-  },
-  mounted() {
-    this.isSelected = this.selected;
   },
   methods: {
     onClick() {
-      this.isSelected = !this.isSelected;
-      const data = { name: this.name, isSelected: this.isSelected };
-      this.$emit('edit-req', data);
+      this.$emit('on-select', !this.selected);
     },
   },
 });
