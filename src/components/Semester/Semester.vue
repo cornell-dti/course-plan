@@ -203,7 +203,7 @@ export default Vue.extend({
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
     const service = Vue.$dragula.$service;
-    service.eventBus.$on('drag', (data: any) => {
+    service.eventBus.$on('drag', data => {
       if (data.container.getAttribute('semester-key') === `${this.year}-${this.type}`) {
         this.isDraggedFrom = true;
       }
@@ -213,7 +213,7 @@ export default Vue.extend({
     service.eventBus.$on('drop', () => {
       this.scrollable = true;
     });
-    service.eventBus.$on('shadow', (data: any) => {
+    service.eventBus.$on('shadow', data => {
       if (data.container.getAttribute('semester-key') === `${this.year}-${this.type}`) {
         this.isShadow = true;
       } else {
