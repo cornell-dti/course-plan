@@ -17,7 +17,7 @@ declare module 'vue/types/vue' {
               | 'over'
               | 'out'
               | 'cloned',
-            listener: (e: Element) => void
+            listener: (e: { container: Element }) => void
           ) => void;
         };
       };
