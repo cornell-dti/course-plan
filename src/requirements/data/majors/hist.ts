@@ -21,9 +21,7 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
       '(Courses that fulfill the Arts & Sciences historical breadth requirement do not necessarily fulfill the History pre-1800 requirement.)',
     source: 'https://history.cornell.edu/undergraduate',
     checker: (course: Course): boolean =>
-      // REQ_TODO: investigate whether course data has this field (catalogCourseSubfield)
-      // @ts-ignore
-      course.catalogCourseSubfield && course.catalogCourseSubfield.includes('HPE'),
+      course.catalogCourseSubfield != null && course.catalogCourseSubfield.includes('HPE'),
     subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 3,
