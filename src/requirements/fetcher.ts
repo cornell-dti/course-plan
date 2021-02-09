@@ -26,26 +26,61 @@ const getSubjects = async (semester: string): Promise<readonly string[]> => {
   }
 };
 
-type CourseFieldFilter<T extends keyof Course> = (course: Course) => Pick<Course, T>;
-
-const getCourseFieldFilter = <T extends keyof Course>(allowedFields: T[]): CourseFieldFilter<T> => (
-  course: Course
-) => {
-  // Too dynamic
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const filteredCourseObject: any = {};
-  Object.entries(course).forEach(([field, value]) => {
-    if (allowedFields.includes(field as T)) {
-      filteredCourseObject[field] = value;
-    }
-  });
-  return filteredCourseObject;
-};
+const courseFieldFilter = ({
+  subject,
+  crseId,
+  catalogNbr,
+  titleLong,
+  description,
+  enrollGroups,
+  catalogWhenOffered,
+  catalogPrereqCoreq,
+  catalogBreadth,
+  catalogDistr,
+  catalogAttribute,
+  catalogComments,
+  catalogSatisfiesReq,
+  catalogCourseSubfield,
+  acadCareer,
+  acadGroup,
+}: Course): Course => ({
+  subject,
+  crseId,
+  catalogNbr,
+  titleLong,
+  description,
+  enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum, classSections }) => ({
+    unitsMaximum,
+    unitsMinimum,
+    classSections: classSections.map(({ ssrComponent, meetings }) => ({
+      ssrComponent,
+      meetings: meetings.map(({ pattern, timeStart, timeEnd, instructors }) => ({
+        pattern,
+        timeStart,
+        timeEnd,
+        instructors: instructors.map(({ netid, firstName, lastName }) => ({
+          netid,
+          firstName,
+          lastName,
+        })),
+      })),
+    })),
+  })),
+  catalogWhenOffered: catalogWhenOffered || undefined,
+  catalogPrereqCoreq: catalogPrereqCoreq || undefined,
+  catalogBreadth: catalogBreadth || undefined,
+  catalogDistr: catalogDistr || undefined,
+  catalogAttribute,
+  catalogComments: catalogComments || undefined,
+  catalogSatisfiesReq: catalogSatisfiesReq || undefined,
+  catalogCourseSubfield: catalogCourseSubfield || undefined,
+  acadCareer,
+  acadGroup,
+});
 
 const getCoursesInSemesterAndSubject = async <T extends keyof Course>(
   semester: string,
-  subject: string,
-  courseFieldFilter: CourseFieldFilter<T>
+  subject: string
 ): Promise<readonly Pick<Course, T>[]> => {
   try {
     const response = await fetch(
@@ -58,24 +93,19 @@ const getCoursesInSemesterAndSubject = async <T extends keyof Course>(
   }
 };
 
-const getAllCoursesInSemester = async <T extends keyof Course>(
+const getAllCoursesInSemester = async (
   semester: string,
-  courseFieldFilter: CourseFieldFilter<T>,
   coolingTimeMs = 50,
   doPrintDebuggingInfo = false
-): Promise<readonly Pick<Course, T>[]> => {
-  const courses: Pick<Course, T>[] = [];
+): Promise<readonly Course[]> => {
+  const courses: Course[] = [];
   const subjects = await getSubjects(semester);
   if (doPrintDebuggingInfo) {
     console.log(`We have ${subjects.length} subjects in ${semester} total.`);
   }
   let subjectCount = 0;
   for (const subject of subjects) {
-    const semesterCourses = await getCoursesInSemesterAndSubject(
-      semester,
-      subject,
-      courseFieldFilter
-    );
+    const semesterCourses = await getCoursesInSemesterAndSubject(semester, subject);
     courses.push(...semesterCourses);
     await wait(coolingTimeMs);
     subjectCount += 1;
@@ -87,10 +117,9 @@ const getAllCoursesInSemester = async <T extends keyof Course>(
   return courses;
 };
 
-type AllCourses<T extends keyof Course> = { [semester: string]: readonly Pick<Course, T>[] };
+type AllCourses = { [semester: string]: readonly Course[] };
 
-const generateSemesterJSONs = async <T extends keyof Course>(
-  courseFieldFilter: CourseFieldFilter<T>,
+const generateSemesterJSONs = async (
   coolingTimeMs = 50,
   doPrintDebuggingInfo = true
 ): Promise<void> => {
@@ -103,11 +132,10 @@ const generateSemesterJSONs = async <T extends keyof Course>(
   for (const semester of semesters) {
     const semesterCourses = await getAllCoursesInSemester(
       semester,
-      courseFieldFilter,
       coolingTimeMs,
       doPrintDebuggingInfo
     );
-    const courses: AllCourses<T> = {};
+    const courses: AllCourses = {};
     courses[semester] = semesterCourses;
     const fileFunctionsSrc = `functions/filtered_courses/filtered-${semester}-courses.json`;
     writeFileSync(fileFunctionsSrc, JSON.stringify(courses));
@@ -121,24 +149,6 @@ const generateSemesterJSONs = async <T extends keyof Course>(
   }
 };
 
-const courseFieldFilter = getCourseFieldFilter([
-  'subject',
-  'crseId',
-  'catalogNbr',
-  'titleLong',
-  'description',
-  'enrollGroups',
-  'catalogWhenOffered',
-  'catalogPrereqCoreq',
-  'catalogBreadth',
-  'catalogDistr',
-  'catalogAttribute',
-  'catalogComments',
-  'catalogSatisfiesReq',
-  'acadCareer',
-  'acadGroup',
-]);
-
-generateSemesterJSONs(courseFieldFilter).then(() => {
+generateSemesterJSONs().then(() => {
   console.log('All semester JSONs generated.');
 });
