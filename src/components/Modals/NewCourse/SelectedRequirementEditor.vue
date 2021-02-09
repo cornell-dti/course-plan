@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="relatedRequirements.length > 0">
+    <div v-if="selectedRequirementsCommaSeparatedList.trim().length > 0">
       <div class="newCourse-title">This class fulfills the following requirement(s):</div>
       <div v-if="!editMode" class="newCourse-requirements-container">
         <div class="newCourse-requirements">
@@ -18,7 +18,7 @@
         />
       </div>
     </div>
-    <div v-if="potentialRequirements.length > 0">
+    <div v-if="notSelectedRequirementsCommaSeparatedList.trim().length > 0">
       <div class="newCourse-title">
         This class could potentially fulfill the following requirement(s):
       </div>
