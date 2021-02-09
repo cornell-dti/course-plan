@@ -32,56 +32,25 @@
           </span>
         </div>
       </div>
-      <div v-if="hasReqs">
-        <div class="newCourse-title">This class fulfills the following requirement(s):</div>
-        <div v-if="!editMode" class="newCourse-requirements-container">
-          <div class="newCourse-requirements">
-            {{ relatedReqs }}
-          </div>
-        </div>
-        <div v-else class="newCourse-requirements-edit">
-          <edit-single-requirement
-            v-for="req in requirements"
-            :key="req"
-            :name="req"
-            :selected="true"
-            :isClickable="true"
-            @edit-req="editReq"
-          />
-        </div>
-      </div>
-      <div v-if="hasPotReqs">
-        <div class="newCourse-title">
-          This class could potentially fulfill the following requirement(s):
-        </div>
-        <div v-if="!editMode" class="newCourse-requirements-container">
-          <div class="newCourse-name">
-            {{ potReqs }}
-          </div>
-        </div>
-        <div v-else class="newCourse-requirements-edit">
-          <edit-single-requirement
-            v-for="potreq in potentialReqs"
-            :key="potreq"
-            :name="potreq"
-            :selected="false"
-            :isClickable="true"
-            @edit-req="editReq"
-          />
-          <binary-button v-for="choice in binaryPotentialReqs" :key="choice[0]" :choices="choice" />
-        </div>
-      </div>
-      <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
-        {{ editReqsText }}
-      </div>
+      <selected-requirement-editor
+        :key="courseSelectorKey"
+        :editMode="editMode"
+        :selectedRequirementIDs="selectedRequirementIDs"
+        :relatedRequirements="relatedRequirements"
+        :potentialRequirements="potentialRequirements"
+        :radioPotentialRequirements="mockRadioPotentialRequirement"
+        @on-selected-change="onSelectedChange"
+        @edit-mode="toggleEditMode"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import EditSingleRequirement from '@/components/Modals/NewCourse/EditSingleRequirement.vue';
-import BinaryButton from '@/components/Modals/NewCourse/BinaryButton.vue';
+import SelectedRequirementEditor, {
+  RequirementWithID,
+} from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 import CourseSelector, {
   MatchingCourseSearchResult,
 } from '@/components/Modals/NewCourse/CourseSelector.vue';
@@ -94,7 +63,7 @@ import { FirestoreSemesterType } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
 
 export default Vue.extend({
-  components: { BinaryButton, CourseSelector, EditSingleRequirement },
+  components: { CourseSelector, SelectedRequirementEditor },
   props: {
     semesterID: String,
     season: String as PropType<FirestoreSemesterType>,
@@ -104,34 +73,27 @@ export default Vue.extend({
   },
   data() {
     return {
-      requirements: [] as string[],
-      potentialReqs: [] as string[],
-      binaryPotentialReqs: [] as (readonly [string, string])[],
+      selectedRequirementIDs: [] as readonly string[],
+      relatedRequirements: [] as readonly RequirementWithID[],
+      potentialRequirements: [] as readonly RequirementWithID[],
+      radioPotentialRequirements: [] as readonly (readonly RequirementWithID[])[],
       editMode: false,
       courseSelectorKey: 0,
       selectedCourse: null as MatchingCourseSearchResult | null,
       selectorSemesterId: '',
-      selectedReqs: [] as string[],
     };
   },
   computed: {
     seasonImg(): Readonly<Record<FirestoreSemesterType, string>> {
       return { Fall: fall, Spring: spring, Winter: winter, Summer: summer };
     },
-    potReqs(): string {
-      return this.potentialReqs.join(', ');
-    },
-    relatedReqs(): string {
-      return this.requirements.join(', ');
-    },
-    hasReqs(): boolean {
-      return this.requirements.length !== 0;
-    },
-    hasPotReqs(): boolean {
-      return this.potentialReqs.length !== 0;
-    },
-    editReqsText(): string {
-      return this.potentialReqs.length !== 0 ? 'Add these Requirements' : 'Edit Requirements';
+    mockRadioPotentialRequirement(): readonly (readonly RequirementWithID[])[] {
+      return [
+        [
+          { id: '111', name: 'option 1' },
+          { id: '222', name: 'option 2' },
+        ],
+      ];
     },
   },
   methods: {
@@ -153,29 +115,31 @@ export default Vue.extend({
       this.editMode = false;
       this.courseSelectorKey += 1;
       this.selectedCourse = null;
-      this.selectedReqs = [];
-      this.requirements = [];
-      this.potentialReqs = [];
+      this.selectedRequirementIDs = [];
+      this.relatedRequirements = [];
+      this.potentialRequirements = [];
+      this.radioPotentialRequirements = [];
     },
     updateSemProps(season: string, year: number) {
       this.$emit('updateSemProps', season, year);
     },
     getReqsRelatedToCourse(selectedCourse: MatchingCourseSearchResult) {
-      const relatedReqs = [];
-      const potReqs = [];
+      const relatedRequirements: RequirementWithID[] = [];
+      const potentialRequirements: RequirementWithID[] = [];
 
       // parse through reqs object
       for (let i = 0; i < this.reqs.length; i += 1) {
         const subreqs = this.reqs[i].ongoing;
         for (let j = 0; j < subreqs.length; j += 1) {
           // requirements
+
           const subRequirement = subreqs[j].requirement;
           if (subRequirement.fulfilledBy === 'courses') {
             const { courses } = subRequirement;
             for (let k = 0; k < courses.length; k += 1) {
               for (const [, ids] of Object.entries(courses[k])) {
                 if (ids.includes(selectedCourse.id)) {
-                  relatedReqs.push(subreqs[j].requirement.name);
+                  relatedRequirements.push({ id: subreqs[j].id, name: subRequirement.name });
                   break;
                 }
               }
@@ -183,48 +147,23 @@ export default Vue.extend({
           }
           // potential requirements
           if (subreqs[j].fulfilledBy === 'self-check') {
-            potReqs.push(subreqs[j].requirement.name);
+            potentialRequirements.push({ id: subreqs[j].id, name: subRequirement.name });
           }
-          this.requirements = [...relatedReqs];
-          this.potentialReqs = [...potReqs];
-          this.selectedReqs = [...relatedReqs];
+          this.relatedRequirements = relatedRequirements;
+          this.potentialRequirements = potentialRequirements;
+          this.selectedRequirementIDs = relatedRequirements.map(it => it.id);
         }
       }
     },
-    editReq({ name, isSelected }: Readonly<{ name: string; isSelected: boolean }>) {
-      if (isSelected) {
-        this.selectedReqs.push(name); // add to selectedReqs
-      } else {
-        // remove from selectedReqs
-        const index = this.selectedReqs.indexOf(name);
-        if (index > -1) {
-          this.selectedReqs.splice(this.selectedReqs.indexOf(name), 1);
-        }
-      }
+    onSelectedChange(selected: readonly string[]) {
+      this.selectedRequirementIDs = selected;
     },
     next() {
       this.editMode = false;
-
-      // update potentialReqs by removing the ones that were selected
-      const newPotReqs = [];
-      for (let i = 0; i < this.potentialReqs.length; i += 1) {
-        if (!this.selectedReqs.includes(this.potentialReqs[i])) {
-          newPotReqs.push(this.potentialReqs[i]);
-        }
-      }
-      // add the requirements that were deselected to potential requirements
-      for (let i = 0; i < this.requirements.length; i += 1) {
-        if (!this.selectedReqs.includes(this.requirements[i])) {
-          newPotReqs.push(this.requirements[i]);
-        }
-      }
-      this.requirements = [...this.selectedReqs];
-      this.potentialReqs = [...newPotReqs];
     },
     goBack() {
       if (this.editMode) {
         this.editMode = false;
-        this.selectedReqs = [...this.requirements];
         this.$emit('allow-add', false);
       } else {
         this.selectedCourse = null;
@@ -281,43 +220,5 @@ export default Vue.extend({
     color: $lightPlaceholderGray;
     margin-bottom: 6px;
   }
-  &-requirements {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    color: $emGreen;
-    &-container {
-      display: flex;
-      flex-direction: row;
-      margin-bottom: 13px;
-    }
-    &-edit {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-  }
-  &-space {
-    margin-right: 5px;
-  }
-  &-link {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    text-decoration-line: underline;
-    color: $yuxuanBlue;
-    cursor: pointer;
-  }
-}
-.autocomplete {
-  /*the container must be positioned relative:*/
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  margin-top: 0.5rem;
-  padding-bottom: 12px;
 }
 </style>
