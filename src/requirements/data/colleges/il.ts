@@ -14,7 +14,7 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
       'PE courses and courses numbered 1000-1099 do not count towards the 120 credits',
     source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11587',
     checker: courseIsAllEligible,
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 120,
   },
@@ -35,7 +35,7 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ILRLR 2050'],
       ['ILRLE 2400']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 9,
   },
@@ -46,7 +46,7 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements',
     checker: courseIsFWS,
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },
@@ -67,7 +67,7 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
       'ENGL 2880',
       'ENGL 2890'
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 1,
   },

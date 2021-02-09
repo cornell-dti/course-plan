@@ -10,7 +10,7 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://courses.cornell.edu/content.php?catoid=41&navoid=11600#Cornell_Credit_Requirements',
     checker: courseIsAllEligible,
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 120,
   },
@@ -20,7 +20,7 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
       'Students must complete a minimum of 43 Human Ecology credits from College Distribution, Major Requirements and electives.',
     source: 'https://www.human.cornell.edu/academics/policies/requirements',
     checker: (course: Course): boolean => course.acadGroup.includes('HE'),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 43,
   },

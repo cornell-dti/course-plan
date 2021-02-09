@@ -14,7 +14,7 @@ type MutableRequirementMapWithMutableChildren = { [code: string]: string[] };
 function computeFulfillmentStatisticsFromCourses(
   coursesThatFulfilledRequirement: readonly (readonly CourseTaken[])[],
   counting: 'courses' | 'credits',
-  operator: 'and' | 'or',
+  subRequirementProgress: 'every-course-needed' | 'any-can-count',
   minCountRequired: number,
   totalCountRequired?: number
 ): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
@@ -26,11 +26,14 @@ function computeFulfillmentStatisticsFromCourses(
 
     switch (counting) {
       case 'courses':
-        minCountFulfilled += operator === 'or' ? coursesThatFulfilledSubRequirement.length : 1;
+        minCountFulfilled +=
+          subRequirementProgress === 'any-can-count'
+            ? coursesThatFulfilledSubRequirement.length
+            : 1;
         break;
       case 'credits':
         minCountFulfilled +=
-          operator === 'or'
+          subRequirementProgress === 'any-can-count'
             ? coursesThatFulfilledSubRequirement
                 .map(course => course.credits)
                 .reduce((a, b) => a + b, 0)
@@ -120,7 +123,7 @@ function computeFulfillmentCoursesAndStatistics(
       return computeFulfillmentStatisticsFromCourses(
         filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, requirement.courses),
         requirement.fulfilledBy,
-        requirement.operator,
+        requirement.subRequirementProgress,
         requirement.minCount,
         requirement.totalCount
       );
@@ -133,7 +136,7 @@ function computeFulfillmentCoursesAndStatistics(
       return computeFulfillmentStatisticsFromCourses(
         filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, option.courses),
         option.counting,
-        option.operator,
+        option.subRequirementProgress,
         option.minCount,
         option.totalCount
       );

@@ -16,7 +16,7 @@ const psychMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'PSYCH 5***',
       'PSYCH 6***'
     ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 18,
   },

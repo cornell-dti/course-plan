@@ -46,8 +46,8 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
       readonly minCount?: number;
     }
   | ({
-      /** Defines whether courses are 'double counted': and for no double counting and or for double counting */
-      readonly operator: 'and' | 'or';
+      /** Defines how courses in a sub-requirement can be all counted towards a stat. */
+      readonly subRequirementProgress: 'every-course-needed' | 'any-can-count';
       readonly fulfilledBy: 'credits' | 'courses';
       /**
        * The minimum count required to fulfill this requirement.
@@ -71,7 +71,7 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
           readonly minCount: number;
           readonly totalCount?: number;
           readonly counting: 'credits' | 'courses';
-          readonly operator: 'and' | 'or';
+          readonly subRequirementProgress: 'every-course-needed' | 'any-can-count';
           readonly description: string;
         } & T;
       };

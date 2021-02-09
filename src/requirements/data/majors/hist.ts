@@ -24,7 +24,7 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
       // REQ_TODO: investigate whether course data has this field (catalogCourseSubfield)
       // @ts-ignore
       course.catalogCourseSubfield && course.catalogCourseSubfield.includes('HPE'),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 3,
   },

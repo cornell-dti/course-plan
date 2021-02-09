@@ -21,7 +21,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       ['DEA 4040'],
       ['DEA 5304']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 11,
   },
@@ -63,7 +63,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       'DEA 5305',
       'DEA 5560',
     ]),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 9,
   },
@@ -73,7 +73,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: includesWithSubRequirements(['DEA 3550', 'ILROB 4710', 'PAM 3120']),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -83,7 +83,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: includesWithSubRequirements(['HD 1150', 'HC 1170', 'PSYCH 1101']),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -93,7 +93,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: includesWithSubRequirements(['ECON 1110']),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -106,7 +106,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CA', 'HA', 'LA/LAD'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -118,7 +118,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: includesWithSubRequirements(['PAM 2100', 'AEM 2100', 'ILRST 2100', 'PSYCH 2500']),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -141,21 +141,21 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
           'BIOG 1445',
         ]),
         counting: 'courses',
-        operator: 'and',
+        subRequirementProgress: 'every-course-needed',
         minCount: 1,
       },
       Chemistry: {
         description: 'Take 1: CHEM 1560, CHEM 2070, CHEM 2080, or 5 on AP Chemistry',
         checker: includesWithSubRequirements(['CHEM 1560', 'CHEM 2070', 'CHEM 2080']),
         counting: 'courses',
-        operator: 'and',
+        subRequirementProgress: 'every-course-needed',
         minCount: 1,
       },
       Physics: {
         description: 'Take 1: PHYS 1101, PHYS 2207, PHYS 1102, PHYS 2208, or 5 on AP Physics',
         checker: includesWithSubRequirements(['PHYS 1101', 'PHYS 2207', 'PHYS 1102', 'PHYS 2208']),
         counting: 'courses',
-        operator: 'and',
+        subRequirementProgress: 'every-course-needed',
         minCount: 1,
       },
     },
@@ -170,7 +170,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       ['PBS', 'BIOLS-AG', 'BIONLS-AG '].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },
@@ -184,7 +184,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       ['PBS', 'BIOLS-AG', 'BIONLS-AG', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 6,
   },
