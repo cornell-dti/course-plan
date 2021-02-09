@@ -17,7 +17,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'],
       ['CS 2110', 'CS 2112']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 2,
   },
@@ -32,7 +32,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 4820'],
       ['CS 4410']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 5,
   },
@@ -50,7 +50,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       }
       return ifCodeMatch(course.subject, 'CS') && ifCodeMatch(course.catalogNbr, '4***');
     },
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 3,
   },
@@ -75,7 +75,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'CS 5625',
       'CS 5643'
     ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -119,7 +119,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'ENGRD 2700',
       'MATH 4710',
     ]),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 1,
   },

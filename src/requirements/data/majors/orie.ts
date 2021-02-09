@@ -17,7 +17,7 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ORIE 3510'],
       ['ORIE 4580']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 7,
   },
@@ -26,7 +26,7 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'At least 9 credits of ORIE electives at the 4000 level or above',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
     checker: includesWithSingleRequirement('ORIE 4***', 'ORIE 5***', 'ORIE 6***'),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 9,
   },
@@ -39,7 +39,7 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ENGRD 2***', 'ENGRD 3***'],
       ['ENGRI 1***']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 3,
   },

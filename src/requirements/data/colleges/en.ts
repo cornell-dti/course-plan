@@ -12,7 +12,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSubRequirements(['MATH 1910'], ['MATH 1920'], ['MATH 2930', 'MATH 2940']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 3,
   },
@@ -23,7 +23,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSubRequirements(['PHYS 1112'], ['PHYS 2213']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 2,
   },
@@ -36,7 +36,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CHEM 2090'),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -46,7 +46,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: courseIsFWS,
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 2,
   },
@@ -56,7 +56,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -66,7 +66,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: (course: Course): boolean => course.subject === 'ENGRI',
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },
@@ -77,7 +77,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: (course: Course): boolean => course.subject === 'ENGRD',
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 2,
   },
@@ -93,7 +93,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA', 'FL', 'CE'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 6,
   },
@@ -107,7 +107,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA', 'FL', 'CE'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 18,
   },
@@ -155,7 +155,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MSE 4030', 'MSE 4040'],
       ['MSE 4050', 'MSE 4060']
     ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
   },

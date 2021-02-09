@@ -13,7 +13,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       ['COMM 2310'],
       ['COMM 2820']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'credits',
     minCount: 15,
   },
@@ -27,7 +27,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       ['COMM 2760'],
       ['COMM 2850']
     ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 6,
   },
@@ -50,7 +50,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'COMM 5***',
       'COMM 6***'
     ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 6,
   },
@@ -105,7 +105,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       ['COMM 4970'],
       ['COMM 4990']
     ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 15,
   },
@@ -114,7 +114,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Three credits in the COMM 30XX range courses',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSingleRequirement('COMM 30**'),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },
@@ -140,7 +140,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'PSYCH 2500',
       'SOC 3010'
     ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
   },

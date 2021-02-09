@@ -9,7 +9,7 @@ const businessRequirements: readonly CollegeOrMajorRequirement[] = [
       'PE courses and courses numbered 1000-1099 do not count towards the 120 credits',
     source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11715',
     checker: courseIsAllEligible,
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 120,
   },

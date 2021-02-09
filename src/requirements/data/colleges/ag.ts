@@ -9,7 +9,7 @@ const totalAcademicCreditsRequirement: CollegeOrMajorRequirement = {
     'PE courses do not count.',
   source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11561',
   checker: (course: Course): boolean => !['PE'].includes(course.subject),
-  operator: 'or',
+  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 120,
 };
@@ -28,7 +28,7 @@ const calsCreditsRequirement: CollegeOrMajorRequirement = {
     ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(
       course.subject
     ),
-  operator: 'or',
+  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 55,
 };
@@ -112,7 +112,7 @@ const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequiremen
     'STS 2871',
     'VIEN 2204'
   ),
-  operator: 'or',
+  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 6,
 };
@@ -134,7 +134,7 @@ const calsChemistryOrPhysicsRequiement: CollegeOrMajorRequirement = {
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: (course: Course): boolean => ['CHEM', 'CHEME', 'PHYS'].includes(course.subject),
-  operator: 'or',
+  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 3,
 };
@@ -148,7 +148,7 @@ const calsQuantitativeLiteracyRequirement: CollegeOrMajorRequirement = {
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: (course: Course): boolean => ['MATH', 'STSCI'].includes(course.subject),
-  operator: 'or',
+  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'courses',
   minCount: 1,
 };
@@ -171,7 +171,7 @@ const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
     (course: Course): boolean => course.catalogDistr?.includes('(LA-') ?? false,
     (course: Course): boolean => course.catalogDistr?.includes('(SBA-') ?? false,
   ],
-  operator: 'and',
+  subRequirementProgress: 'every-course-needed',
   fulfilledBy: 'courses',
   minCount: 4,
 };
@@ -183,7 +183,7 @@ const calsHumanDiversityRequirement: CollegeOrMajorRequirement = {
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: (course: Course): boolean => course.catalogDistr?.includes('(D-') ?? false,
-  operator: 'or',
+  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'courses',
   minCount: 1,
 };
@@ -200,7 +200,7 @@ const calsWrittenAndOralExpressionRequirement: CollegeOrMajorRequirement = {
     ['written expression', 'oral expression', 'First-Year Writing Seminar'].some(
       keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
     ),
-  operator: 'or',
+  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 9,
 };
@@ -214,7 +214,7 @@ const calsWrittenExpressionRequirement: CollegeOrMajorRequirement = {
     ['written expression', 'First-Year Writing Seminar'].some(
       keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
     ),
-  operator: 'or',
+  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 6,
 };
