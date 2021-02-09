@@ -4,12 +4,7 @@
       <div class="newCourse-title">This class fulfills the following requirement(s):</div>
       <div v-if="!editMode" class="newCourse-requirements-container">
         <div class="newCourse-requirements">
-          {{
-            relatedRequirements
-              .filter(({ id }) => selectedRequirementIDs.includes(id))
-              .map(it => it.name)
-              .join(', ')
-          }}
+          {{ selectedRequirementsCommaSeparatedList }}
         </div>
       </div>
       <div v-else class="newCourse-requirements-edit">
@@ -29,12 +24,7 @@
       </div>
       <div v-if="!editMode" class="newCourse-requirements-container">
         <div class="newCourse-name">
-          {{
-            potentialRequirements
-              .filter(({ id }) => selectedRequirementIDs.includes(id))
-              .map(it => it.name)
-              .join(', ')
-          }}
+          {{ notSelectedRequirementsCommaSeparatedList }}
         </div>
       </div>
       <div v-else class="newCourse-requirements-edit">
@@ -89,6 +79,18 @@ export default Vue.extend({
     },
   },
   computed: {
+    selectedRequirementsCommaSeparatedList(): string {
+      return [...this.relatedRequirements, ...this.potentialRequirements]
+        .filter(({ id }) => this.selectedRequirementIDs.includes(id))
+        .map(it => it.name)
+        .join(', ');
+    },
+    notSelectedRequirementsCommaSeparatedList(): string {
+      return [...this.relatedRequirements, ...this.potentialRequirements]
+        .filter(({ id }) => !this.selectedRequirementIDs.includes(id))
+        .map(it => it.name)
+        .join(', ');
+    },
     editRequirementsText(): string {
       return this.potentialRequirements.length !== 0
         ? 'Add these Requirements'
