@@ -79,14 +79,21 @@ export default Vue.extend({
     },
   },
   computed: {
+    allRequirements(): readonly RequirementWithID[] {
+      return [
+        ...this.relatedRequirements,
+        ...this.potentialRequirements,
+        ...this.radioPotentialRequirements.flat(),
+      ];
+    },
     selectedRequirementsCommaSeparatedList(): string {
-      return [...this.relatedRequirements, ...this.potentialRequirements]
+      return this.allRequirements
         .filter(({ id }) => this.selectedRequirementIDs.includes(id))
         .map(it => it.name)
         .join(', ');
     },
     notSelectedRequirementsCommaSeparatedList(): string {
-      return [...this.relatedRequirements, ...this.potentialRequirements]
+      return this.allRequirements
         .filter(({ id }) => !this.selectedRequirementIDs.includes(id))
         .map(it => it.name)
         .join(', ');
