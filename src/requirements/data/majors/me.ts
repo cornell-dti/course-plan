@@ -8,7 +8,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
     checker: includesWithSingleRequirement('ENGRD 2020'),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -30,7 +30,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MAE 4272'],
       ['MAE 4300']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 10,
   },
@@ -65,7 +65,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'BTRY 3010',
       'CS 2800'
     ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },

@@ -14,7 +14,7 @@ const ormsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ORIE 3510',
       'ORIE 4580'
     ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 3,
   },
@@ -23,7 +23,7 @@ const ormsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Any ORIE courses at the 3000 level or higher.',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors',
     checker: includesWithSingleRequirement('ORIE 3***', 'ORIE 4***', 'ORIE 5***'),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 3,
   },

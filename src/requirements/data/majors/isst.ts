@@ -8,7 +8,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core',
     checker: includesWithSubRequirements(['ORIE 3300'], ['ORIE 3500']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 2,
   },
@@ -21,7 +21,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core',
     checker: includesWithSubRequirements(['INFO 2300'], ['ORIE 3800'], ['INFO 3300', 'INFO 4300']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 3,
   },
@@ -32,7 +32,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core',
     checker: includesWithSubRequirements(['INFO 2040'], ['INFO 2450', 'ENGRC 3350']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 2,
   },
@@ -48,7 +48,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 2940'],
       ['MATH 2930', 'MATH 3040', 'CS 2800']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 4,
   },
@@ -60,7 +60,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/math',
     checker: includesWithSubRequirements(['ENGRD 2110'], ['ENGRD 2700']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 2,
   },

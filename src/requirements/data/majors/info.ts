@@ -15,7 +15,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       ['INFO 2450'],
       ['INFO 2950']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 5,
   },
@@ -50,7 +50,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
         'STSCI 2200',
       ]
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 3,
   },
@@ -82,7 +82,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       'INFO 5***',
       'INFO 6***'
     ),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 3,
   },

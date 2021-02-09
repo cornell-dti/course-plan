@@ -17,7 +17,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 2220'],
       ['HADM 3210']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 4,
   },
@@ -27,7 +27,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSubRequirements(['HADM 1150'], ['HADM 2810'], ['HADM 3870']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 3,
   },
@@ -37,7 +37,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSubRequirements(['HADM 2360'], ['HADM 3350']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 2,
   },
@@ -47,7 +47,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSingleRequirement('HADM 1740'),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -57,7 +57,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSubRequirements(['HADM 1650'], ['HADM 3650']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 2,
   },
@@ -72,7 +72,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 2010'],
       ['HADM 3010']
     ),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 4,
   },
@@ -82,7 +82,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSubRequirements(['HADM 2550'], ['HADM 3550']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 2,
   },
@@ -92,7 +92,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSubRequirements(['HADM 1410'], ['HADM 2430']),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 2,
   },
@@ -102,7 +102,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSingleRequirement('HADM 4410'),
-    operator: 'and',
+    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
     minCount: 1,
   },
@@ -112,7 +112,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSingleRequirement('HADM 3***'),
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 14,
   },
@@ -132,7 +132,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: courseIsFWS,
-    operator: 'or',
+    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },
