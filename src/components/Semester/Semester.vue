@@ -3,15 +3,12 @@
     <new-course-modal
       class="semester-modal"
       :class="{ 'modal--block': isCourseModalOpen }"
-      :semesterID="`${year}-${type}`"
       :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
+      :reqs="reqs"
       @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
       ref="modal"
-      :seasonCourse="type"
-      :yearCourse="year"
-      :reqs="reqs"
     />
     <confirmation
       class="confirmation-modal"
