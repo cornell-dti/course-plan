@@ -1,26 +1,19 @@
 <template>
-  <div class="binary-button">
+  <div class="requirement-radio-button">
     <div
       v-for="choice in choices"
       :key="choice.id"
       @click="onClick(choice.id)"
-      :class="{ 'binary-button-selected': chosenID === choice.id }"
-      class="binary-button-child"
+      :class="{ 'requirement-radio-button-selected': chosenID === choice.id }"
+      class="requirement-radio-button-child"
     >
       <img
         v-if="chosenID === choice.id"
-        class="confirmation-icon binary-button-check"
+        class="confirmation-icon requirement-radio-button-check"
         src="@/assets/images/check.svg"
         alt="checkmark"
       />
-      <div>
-        {{ choice.name }}
-      </div>
-      <img
-        v-if="chosenID === choice.id"
-        class="confirmation-icon hidden"
-        src="@/assets/images/check.svg"
-      />
+      <div class="radio-button-text">{{ choice.name }}</div>
     </div>
   </div>
 </template>
@@ -46,7 +39,7 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
-.binary-button {
+.requirement-radio-button {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -59,24 +52,28 @@ export default Vue.extend({
   margin-bottom: 20px;
   cursor: pointer;
   &-child {
-    text-align: center;
     font-weight: 500;
     font-size: 14px;
     line-height: 36px;
     width: 204px;
+  }
+  & .radio-button-text {
+    flex: 1 1 auto;
+    text-align: center;
   }
   &-selected {
     background: $emGreen;
     color: $white;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    .hidden {
-      visibility: hidden;
+    justify-content: flex-start;
+    & .radio-button-text {
+      margin-left: -21px;
     }
   }
   &-check {
-    padding-left: 7px;
+    padding: 0 7px;
+    width: 2rem;
   }
 }
 </style>

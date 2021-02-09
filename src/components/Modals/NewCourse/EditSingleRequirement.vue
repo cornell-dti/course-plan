@@ -13,7 +13,6 @@
     <div class="edit-requirement-text" :class="{ 'edit-requirement-multiline': multiline }">
       {{ name }}
     </div>
-    <img v-if="selected" class="confirmation-icon hidden" src="@/assets/images/check.svg" />
   </div>
 </template>
 
@@ -33,7 +32,7 @@ export default Vue.extend({
   },
   computed: {
     multiline(): boolean {
-      return this.selected ? this.name.length >= 24 : this.name.length > 30;
+      return this.selected ? this.name.length >= 26 : this.name.length > 30;
     },
   },
   methods: {
@@ -66,10 +65,7 @@ export default Vue.extend({
     color: $white;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    .hidden {
-      visibility: hidden;
-    }
+    justify-content: flex-start;
   }
   &-multiline {
     line-height: 17px;
@@ -78,7 +74,8 @@ export default Vue.extend({
     cursor: pointer;
   }
   &-check {
-    padding-left: 7px;
+    padding: 0 7px;
+    width: 2rem;
   }
 }
 </style>
