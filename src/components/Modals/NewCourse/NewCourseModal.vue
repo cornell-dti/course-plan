@@ -4,76 +4,152 @@
     contentClass="content-course"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
-    :rightButtonIsDisabled="isDisabled"
+    :rightButtonIsDisabled="selectedCourse == null"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addItem"
   >
-    <newCourse
-      :isOnboard="false"
-      :semesterID="semesterID"
-      :currentSemesters="currentSemesters"
-      :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
-      @duplicateSemester="disableButton"
-      @close-course-modal="closeCourseModal"
-      @updateSemProps="updateSemProps"
-      @toggle-left-button="toggleLeftButton"
-      @allow-add="disableButton"
-      @on-course-select="selectCourse"
-      @edit-mode="editMode"
-      ref="modalBodyComponent"
-      :season="season"
-      :year="year"
-      :goBack="goBack"
-      :reqs="reqs"
+    <div class="newCourse-text">Search Course Roster</div>
+    <course-selector
+      search-box-class-name="newCourse-dropdown"
+      :key="courseSelectorKey"
+      placeholder='"CS1110", "Multivariable Calculus", etc'
+      :autoFocus="true"
+      @on-escape="closeCurrentModal"
+      @on-select="selectCourse"
     />
+    <div v-if="isCourseModelSelectingSemester && selectedCourse == null">
+      <div class="newCourse-title">Add this class to the following semester</div>
+      <div class="newCourse-semester-edit">
+        <newSemester
+          :type="season"
+          :year="year"
+          :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
+          @updateSemProps="updateSemProps"
+        ></newSemester>
+      </div>
+    </div>
+    <div v-if="selectedCourse != null">
+      <!-- if a course is selected -->
+      <div v-if="isCourseModelSelectingSemester">
+        <div class="newCourse-text">Selected Semester</div>
+        <div class="newCourse-semester">
+          <span class="newCourse-name">
+            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="season-emoji" />
+            {{ season }}
+            {{ year }}
+          </span>
+        </div>
+      </div>
+      <selected-requirement-editor
+        :key="courseSelectorKey"
+        :editMode="editMode"
+        :selectedRequirementIDs="selectedRequirementIDs"
+        :relatedRequirements="relatedRequirements"
+        :potentialRequirements="potentialRequirements"
+        :radioPotentialRequirements="mockRadioPotentialRequirement"
+        @on-selected-change="onSelectedChange"
+        @edit-mode="toggleEditMode"
+      />
+    </div>
   </flexible-modal>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import NewCourse from '@/components/Modals/NewCourse/NewCourse.vue';
-import { AppSemester, CornellCourseRosterCourse } from '@/user-data';
+import SelectedRequirementEditor, {
+  RequirementWithID,
+} from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
+import { FirestoreSemesterType, CornellCourseRosterCourse } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
-import { MatchingCourseSearchResult } from './CourseSelector.vue';
+import CourseSelector, {
+  MatchingCourseSearchResult,
+} from '@/components/Modals/NewCourse/CourseSelector.vue';
 
-Vue.component('newCourse', NewCourse);
+import fall from '@/assets/images/fallEmoji.svg';
+import spring from '@/assets/images/springEmoji.svg';
+import winter from '@/assets/images/winterEmoji.svg';
+import summer from '@/assets/images/summerEmoji.svg';
 
 export default Vue.extend({
+  components: { CourseSelector, SelectedRequirementEditor },
   data() {
     return {
       selectedCourse: null as MatchingCourseSearchResult | null,
+      selectedRequirementIDs: [] as readonly string[],
+      relatedRequirements: [] as readonly RequirementWithID[],
+      potentialRequirements: [] as readonly RequirementWithID[],
+      radioPotentialRequirements: [] as readonly (readonly RequirementWithID[])[],
+      editMode: false,
+      courseSelectorKey: 0,
       courseIsAddable: true,
-      isDisabled: true,
-      leftButtonText: 'CANCEL',
-      rightButtonText: 'ADD',
-      goBack: false,
-      season: '',
+      season: '' as FirestoreSemesterType,
       year: 0,
     };
   },
   props: {
-    type: String,
-    semesterID: String,
-    currentSemesters: Array as PropType<readonly AppSemester[]>,
-    isOpen: Boolean,
-    isCourseModelSelectingSemester: Boolean,
-    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
+    isCourseModelSelectingSemester: { type: Boolean, required: true },
+    reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
+  },
+  computed: {
+    leftButtonText(): string {
+      if (this.selectedCourse == null && !this.editMode) return 'CANCEL';
+      return 'BACK';
+    },
+    rightButtonText(): string {
+      return this.editMode ? 'NEXT' : 'ADD';
+    },
+    seasonImg(): Readonly<Record<FirestoreSemesterType, string>> {
+      return { Fall: fall, Spring: spring, Winter: winter, Summer: summer };
+    },
+    mockRadioPotentialRequirement(): readonly (readonly RequirementWithID[])[] {
+      return [
+        [
+          { id: '111', name: 'option 1' },
+          { id: '222', name: 'option 2' },
+        ],
+      ];
+    },
   },
   methods: {
     selectCourse(result: MatchingCourseSearchResult) {
       this.selectedCourse = result;
+      this.getReqsRelatedToCourse(result);
     },
-    disableButton(bool: boolean) {
-      this.isDisabled = bool;
-    },
-    closeCourseModal() {
-      this.$emit('close-course-modal');
+    getReqsRelatedToCourse(selectedCourse: MatchingCourseSearchResult) {
+      const relatedRequirements: RequirementWithID[] = [];
+      const potentialRequirements: RequirementWithID[] = [];
+
+      // parse through reqs object
+      for (let i = 0; i < this.reqs.length; i += 1) {
+        const subreqs = this.reqs[i].ongoing;
+        for (let j = 0; j < subreqs.length; j += 1) {
+          // requirements
+
+          const subRequirement = subreqs[j].requirement;
+          if (subRequirement.fulfilledBy === 'courses') {
+            const { courses } = subRequirement;
+            for (let k = 0; k < courses.length; k += 1) {
+              for (const [, ids] of Object.entries(courses[k])) {
+                if (ids.includes(selectedCourse.id)) {
+                  relatedRequirements.push({ id: subreqs[j].id, name: subRequirement.name });
+                  break;
+                }
+              }
+            }
+          }
+          // potential requirements
+          if (subreqs[j].fulfilledBy === 'self-check') {
+            potentialRequirements.push({ id: subreqs[j].id, name: subRequirement.name });
+          }
+          this.relatedRequirements = relatedRequirements;
+          this.potentialRequirements = potentialRequirements;
+          this.selectedRequirementIDs = relatedRequirements.map(it => it.id);
+        }
+      }
     },
     closeCurrentModal() {
-      // @ts-expect-error: TS cannot understand $ref's component.
-      this.$refs.modalBodyComponent.reset();
-      this.isDisabled = true;
+      this.reset();
       this.$emit('close-course-modal');
     },
     // Note: Currently not used
@@ -81,10 +157,8 @@ export default Vue.extend({
       this.$emit('check-course-duplicate', key);
     },
     addItem() {
-      if (this.rightButtonText === 'NEXT') {
-        this.rightButtonText = 'ADD';
-        // @ts-expect-error: TS cannot understand $ref's component.
-        this.$refs.modalBodyComponent.next();
+      if (this.editMode) {
+        this.editMode = false;
       } else {
         this.addCourse();
       }
@@ -113,39 +187,91 @@ export default Vue.extend({
           });
         });
 
-      // @ts-expect-error: TS cannot understand $ref's component.
-      this.$refs.modalBodyComponent.reset();
+      this.reset();
       this.closeCurrentModal();
     },
-    toggleLeftButton() {
-      if (this.leftButtonText === 'CANCEL') {
-        this.leftButtonText = 'BACK';
-      } else {
-        this.leftButtonText = 'CANCEL';
-      }
+    onSelectedChange(selected: readonly string[]) {
+      this.selectedRequirementIDs = selected;
+    },
+    reset() {
+      this.editMode = false;
+      this.courseSelectorKey += 1;
+      this.selectedCourse = null;
+      this.selectedRequirementIDs = [];
+      this.relatedRequirements = [];
+      this.potentialRequirements = [];
+      this.radioPotentialRequirements = [];
     },
     backOrCancel() {
       if (this.leftButtonText === 'BACK') {
-        this.goBack = !this.goBack;
-        // @ts-expect-error: TS cannot understand $ref's component.
-        this.$refs.modalBodyComponent.goBack();
+        if (this.editMode) {
+          this.editMode = false;
+        } else {
+          this.selectedCourse = null;
+          this.courseSelectorKey += 1;
+        }
       } else {
         this.closeCurrentModal();
       }
     },
-    updateSemProps(season: string, year: number) {
+    updateSemProps(season: FirestoreSemesterType, year: number) {
       this.season = season;
       this.year = year;
     },
-    editMode() {
-      this.leftButtonText = 'BACK';
-      this.rightButtonText = 'NEXT';
+    toggleEditMode() {
+      this.editMode = !this.editMode;
     },
   },
 });
 </script>
 
 <style lang="scss">
+@import '@/assets/scss/_variables.scss';
+.newCourse {
+  &-text {
+    font-size: 14px;
+    line-height: 17px;
+    color: $lightPlaceholderGray;
+  }
+  &-dropdown {
+    font-size: 14px;
+    line-height: 17px;
+    color: $lightPlaceholderGray;
+    width: 100%;
+    border-radius: 3px;
+    padding: 0.5rem;
+    border: 0.5px solid $inactiveGray;
+    &::placeholder {
+      color: $darkPlaceholderGray;
+    }
+  }
+  &-semester {
+    margin-top: 8px;
+    margin-bottom: 15px;
+    &-edit {
+      width: 50%;
+    }
+  }
+  &-name {
+    position: relative;
+    border-radius: 11px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    color: $darkGray;
+  }
+  &-season-emoji {
+    height: 18px;
+    margin-top: -4px;
+  }
+  &-title {
+    font-size: 14px;
+    line-height: 17px;
+    color: $lightPlaceholderGray;
+    margin-bottom: 6px;
+  }
+}
+
 .content-course {
   width: 27.75rem;
 }
