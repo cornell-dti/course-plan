@@ -84,8 +84,6 @@ import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
 const placeholderText = 'Select one';
 
-type DropdownSlot = { acronym: string; text: string };
-
 export default Vue.extend({
   components: { OnboardingBasicMultiDropdown, OnboardingBasicSingleDropdown },
   props: {
