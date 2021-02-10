@@ -18,7 +18,7 @@
           :toggleableRequirementChoices="toggleableRequirementChoices"
           :displayedMajorIndex="displayedMajorIndex"
           :displayedMinorIndex="displayedMinorIndex"
-          :user="user"
+          :onboardingData="onboardingData"
           :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
           :rostersFromLastTwoYears="rostersFromLastTwoYears"
           :numOfColleges="numOfColleges"
@@ -72,11 +72,11 @@ import RequirementView from '@/components/Requirements/RequirementView.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { SingleMenuRequirement, SubReqCourseSlot, CrseInfo } from '@/requirements/types';
 import {
-  AppUser,
   AppSemester,
   AppCourse,
   CornellCourseRosterCourse,
   AppToggleableRequirementChoices,
+  AppOnboardingData,
 } from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
 // emoji for clipboard
@@ -118,7 +118,7 @@ tour.setOption('exitOnOverlayClick', 'false');
 export default Vue.extend({
   props: {
     semesters: Array as PropType<readonly AppSemester[]>,
-    user: Object as PropType<AppUser>,
+    onboardingData: Object as PropType<AppOnboardingData>,
     compact: Boolean,
     startTour: Boolean,
     reqs: Array as PropType<readonly SingleMenuRequirement[]>,
@@ -151,14 +151,14 @@ export default Vue.extend({
     },
   },
   methods: {
-    showMajorOrMinorRequirements(id: number, group: string) {
+    showMajorOrMinorRequirements(id: number, group: string): boolean {
       if (group === 'MAJOR') {
         return id === this.displayedMajorIndex + this.numOfColleges;
       }
       // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
       return (
         id < this.numOfColleges ||
-        id === this.displayedMinorIndex + this.numOfColleges + this.user.major.length
+        id === this.displayedMinorIndex + this.numOfColleges + this.onboardingData.major.length
       );
     },
     chooseToggleableRequirementOption(requirementID: string, option: string): void {

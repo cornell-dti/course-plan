@@ -166,7 +166,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
-import { AppUser, FirestoreAPIBExam, CornellCourseRosterCourse } from '@/user-data';
+import { FirestoreAPIBExam, CornellCourseRosterCourse, AppOnboardingData } from '@/user-data';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
 import CourseSelector, { MatchingCourseSearchResult } from '../NewCourse/CourseSelector.vue';
@@ -210,23 +210,24 @@ export default Vue.extend({
     OnboardingTransferExamPropertyDropdown,
   },
   props: {
-    user: Object as PropType<AppUser>,
+    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
   },
   data(): Data {
     const examsAP: FirestoreAPIBExam[] = [];
     const examsIB: FirestoreAPIBExam[] = [];
-    this.user.exam.forEach(exam => {
+    this.onboardingData.exam.forEach(exam => {
       (exam.type === 'AP' ? examsAP : examsIB).push(exam);
     });
     examsAP.push({ type: 'AP', subject: placeholderText, score: 0 });
     examsIB.push({ type: 'IB', subject: placeholderText, score: 0 });
     const transferClasses: TransferClassWithOptionalCourse[] = [];
-    this.user.transferCourse.forEach(course => {
+    this.onboardingData.transferCourse.forEach(course => {
       transferClasses.push(course);
     });
     transferClasses.push({ class: placeholderText, credits: 0 });
     return {
-      tookSwimTest: typeof this.user.tookSwim !== 'undefined' ? this.user.tookSwim : 'no',
+      tookSwimTest:
+        typeof this.onboardingData.tookSwim !== 'undefined' ? this.onboardingData.tookSwim : 'no',
       scoresAP,
       scoresIB,
       subjectsAP,

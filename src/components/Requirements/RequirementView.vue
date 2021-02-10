@@ -7,7 +7,7 @@
       :displayedMinorIndex="displayedMinorIndex"
       :req="req"
       :reqGroupColorMap="reqGroupColorMap"
-      :user="user"
+      :onboardingData="onboardingData"
       :showMajorOrMinorRequirements="showMajorOrMinorRequirements"
       :numOfColleges="numOfColleges"
       @activateMajor="activateMajor"
@@ -85,7 +85,7 @@ import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppUser, AppCourse, AppSemester } from '@/user-data';
+import { AppCourse, AppOnboardingData, AppSemester } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
@@ -105,7 +105,7 @@ export default Vue.extend({
     toggleableRequirementChoices: Object as PropType<Readonly<Record<string, string>>>,
     displayedMajorIndex: Number,
     displayedMinorIndex: Number,
-    user: Object as PropType<AppUser>,
+    onboardingData: Object as PropType<AppOnboardingData>,
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number,
     rostersFromLastTwoYears: Array as PropType<readonly string[]>,

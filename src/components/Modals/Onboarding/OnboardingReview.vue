@@ -17,19 +17,19 @@
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
             <label class="onboarding-label"><span> First Name </span></label>
             <label class="onboarding-label--review"
-              ><span> {{ user.firstName }}</span></label
+              ><span> {{ userName.firstName }}</span></label
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
             <label class="onboarding-label"><span> Middle Name </span></label>
             <label class="onboarding-label--review"
-              ><span> {{ user.middleName }}</span></label
+              ><span> {{ userName.middleName }}</span></label
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
             <label class="onboarding-label"><span> Last Name </span></label>
             <label class="onboarding-label--review"
-              ><span> {{ user.lastName }}</span></label
+              ><span> {{ userName.lastName }}</span></label
             >
           </div>
         </div>
@@ -45,7 +45,7 @@
           </div>
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">Major</label>
-            <div v-for="(major, index) in user.major" :key="index">
+            <div v-for="(major, index) in onboardingData.major" :key="index">
               <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
             </div>
           </div>
@@ -55,7 +55,7 @@
         </div>
         <div class="onboarding-selectWrapper">
           <label class="onboarding-label">Minors:</label>
-          <div v-for="(minor, index) in user.minor" :key="index">
+          <div v-for="(minor, index) in onboardingData.minor" :key="index">
             <label class="onboarding-label--review">{{ getMinorFullName(minor) }}</label>
           </div>
         </div>
@@ -79,7 +79,7 @@
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">
               <img class="checkmark" src="@/assets/images/checkmark-onboarding.svg" />
-              {{ this.user.tookSwim === 'yes' ? 'Yes' : 'No' }}
+              {{ this.onboardingData.tookSwim === 'yes' ? 'Yes' : 'No' }}
             </label>
           </div>
         </div>
@@ -90,13 +90,13 @@
           <div class="onboarding-selectWrapper-reviewExam">
             <div class="alignLeft">
               <label class="onboarding-label">AP Credits</label>
-              <div v-for="(exam, index) in user.exam" :key="'AP' + index">
+              <div v-for="(exam, index) in onboardingData.exam" :key="'AP' + index">
                 <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
                   exam.subject
                 }}</label>
               </div>
               <label class="onboarding-label addSpaceTop">IB Credits</label>
-              <div v-for="(exam, index) in user.exam" :key="'IB' + index">
+              <div v-for="(exam, index) in onboardingData.exam" :key="'IB' + index">
                 <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
                   exam.subject
                 }}</label>
@@ -104,13 +104,13 @@
             </div>
             <div class="alignCenter">
               <label class="onboarding-label">Score</label>
-              <div v-for="(exam, index) in user.exam" :key="'APScore' + index">
+              <div v-for="(exam, index) in onboardingData.exam" :key="'APScore' + index">
                 <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
                   exam.score
                 }}</label>
               </div>
               <label class="onboarding-label addSpaceTop">Score</label>
-              <div v-for="(exam, index) in user.exam" :key="'IBScore' + index">
+              <div v-for="(exam, index) in onboardingData.exam" :key="'IBScore' + index">
                 <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
                   exam.score
                 }}</label>
@@ -118,13 +118,13 @@
             </div>
             <div class="alignCenter">
               <label class="onboarding-label">Credit</label>
-              <div v-for="(exam, index) in user.exam" :key="'APCredit' + index">
+              <div v-for="(exam, index) in onboardingData.exam" :key="'APCredit' + index">
                 <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
                   getExamCredit(exam)
                 }}</label>
               </div>
               <label class="onboarding-label addSpaceTop">Credit</label>
-              <div v-for="(exam, index) in user.exam" :key="'IBCredit' + index">
+              <div v-for="(exam, index) in onboardingData.exam" :key="'IBCredit' + index">
                 <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
                   getExamCredit(exam)
                 }}</label>
@@ -138,12 +138,12 @@
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-reviewExam">
             <div>
-              <div v-for="(course, index) in user.transferCourse" :key="index">
+              <div v-for="(course, index) in onboardingData.transferCourse" :key="index">
                 <label class="onboarding-label--review">{{ course.class }}</label>
               </div>
             </div>
             <div class="alignEnd">
-              <div v-for="(course, index) in user.transferCourse" :key="index">
+              <div v-for="(course, index) in onboardingData.transferCourse" :key="index">
                 <label class="onboarding-label--review"> {{ course.credits }} Credits </label>
               </div>
             </div>
@@ -164,23 +164,28 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
-import { AppUser } from '@/user-data';
+import { AppOnboardingData, FirestoreUserName } from '@/user-data';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 
 const placeholderText = 'Select one';
 
 export default Vue.extend({
-  props: { user: Object as PropType<AppUser> },
+  props: {
+    userName: { type: Object as PropType<FirestoreUserName>, required: true },
+    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+  },
   computed: {
     collegeText(): string {
-      return this.user.college !== '' ? getCollegeFullName(this.user.college) : placeholderText;
+      return this.onboardingData.college !== ''
+        ? getCollegeFullName(this.onboardingData.college)
+        : placeholderText;
     },
     totalCredits(): number {
       let count = 0;
-      this.user.exam.forEach(exam => {
+      this.onboardingData.exam.forEach(exam => {
         count += getExamCredit(exam);
       });
-      this.user.transferCourse.forEach(clas => {
+      this.onboardingData.transferCourse.forEach(clas => {
         count += clas.credits;
       });
       return count;

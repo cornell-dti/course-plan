@@ -7,24 +7,28 @@
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
         <div class="onboarding-top">
           <div v-if="!isEditingProfile" class="onboarding-header">👏 Welcome to CoursePlan</div>
-          <div v-if="isEditingProfile" class="onboarding-header">👋 Hi {{ user.firstName }}</div>
+          <div v-if="isEditingProfile" class="onboarding-header">👋 Hi {{ name.firstName }}</div>
           <div v-if="!isEditingProfile" class="onboarding-description">
             Let's get to know you first!
           </div>
           <div v-if="isEditingProfile" class="onboarding-description">Let's edit your profile!</div>
           <onboardingBasic
             v-if="currentPage == 1"
-            :user="user"
-            ref="basic"
+            :userName="name"
+            :onboardingData="onboarding"
             @updateBasic="updateBasic"
           />
           <onboardingTransfer
             v-if="currentPage == 2"
-            :user="user"
-            ref="transfer"
+            :onboardingData="onboarding"
             @updateTransfer="updateTransfer"
           />
-          <onboardingReview v-if="currentPage == 3" :user="user" @setPage="setPage" />
+          <onboardingReview
+            v-if="currentPage == 3"
+            :userName="name"
+            :onboardingData="onboarding"
+            @setPage="setPage"
+          />
         </div>
         <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">
           Please fill out all required fields and try again.
@@ -67,7 +71,7 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import {
-  AppUser,
+  AppOnboardingData,
   FirestoreAPIBExam,
   FirestoreOnboardingUserData,
   FirestoreTransferClass,
@@ -84,34 +88,40 @@ const FINAL_PAGE = 3;
 export default Vue.extend({
   props: {
     isEditingProfile: { type: Boolean, required: true },
-    userData: { type: Object as PropType<AppUser>, required: true },
+    userName: { type: Object as PropType<FirestoreUserName>, required: true },
+    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
   },
   data() {
     return {
       currentPage: 1,
       isError: false,
-      user: this.userData,
+      name: { ...this.userName },
+      onboarding: { ...this.onboardingData },
     };
   },
   methods: {
     submitOnboarding() {
       // Display error if a required field is empty, otherwise submit
-      if (this.user.firstName === '' || this.user.lastName === '' || this.user.college === '') {
+      if (
+        this.name.firstName === '' ||
+        this.name.lastName === '' ||
+        this.onboarding.college === ''
+      ) {
         this.isError = true;
       } else {
         const onboardingData: { name: FirestoreUserName; userData: FirestoreOnboardingUserData } = {
           name: {
-            firstName: this.user.firstName,
-            middleName: this.user.middleName,
-            lastName: this.user.lastName,
+            firstName: this.name.firstName,
+            middleName: this.name.middleName,
+            lastName: this.name.lastName,
           },
           userData: {
-            colleges: [{ acronym: this.user.college }],
-            majors: this.user.major.map(acronym => ({ acronym })),
-            minors: this.user.minor.map(acronym => ({ acronym })),
-            exam: this.user.exam,
-            class: this.user.transferCourse,
-            tookSwim: this.user.tookSwim,
+            colleges: [{ acronym: this.onboarding.college }],
+            majors: this.onboarding.major.map(acronym => ({ acronym })),
+            minors: this.onboarding.minor.map(acronym => ({ acronym })),
+            exam: this.onboarding.exam,
+            class: this.onboarding.transferCourse,
+            tookSwim: this.onboarding.tookSwim,
           },
         };
         this.$emit('onboard', onboardingData);
@@ -130,9 +140,10 @@ export default Vue.extend({
       college: string,
       major: readonly string[],
       minor: readonly string[],
-      { firstName, middleName, lastName }: FirestoreUserName
+      name: FirestoreUserName
     ) {
-      this.user = { ...this.user, firstName, middleName, lastName, college, major, minor };
+      this.name = name;
+      this.onboarding = { ...this.onboarding, college, major, minor };
     },
     updateTransfer(
       exams: readonly FirestoreAPIBExam[],
@@ -143,7 +154,12 @@ export default Vue.extend({
         ({ subject, score }) => score !== 0 && subject !== placeholderText
       );
       const userClasses = classes.filter(it => it.class !== placeholderText);
-      this.user = { ...this.user, exam: userExams, transferCourse: userClasses, tookSwim };
+      this.onboarding = {
+        ...this.onboarding,
+        exam: userExams,
+        transferCourse: userClasses,
+        tookSwim,
+      };
     },
     cancel() {
       this.$emit('cancelOnboarding');

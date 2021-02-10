@@ -2,7 +2,7 @@
   <div class="requirementheader">
     <!-- TODO change for multiple colleges -->
     <div
-      v-if="reqIndex <= numOfColleges || reqIndex == numOfColleges + user.major.length"
+      v-if="reqIndex <= numOfColleges || reqIndex == numOfColleges + onboardingData.major.length"
       class="row top"
     >
       <p class="name col p-0">{{ req.name }}</p>
@@ -16,7 +16,7 @@
         }"
         @click="activateMajor(id)"
         class="major-title"
-        v-for="(major, id) in user.major"
+        v-for="(major, id) in onboardingData.major"
         :key="id"
         :class="{ pointer: multipleMajors }"
       >
@@ -33,11 +33,11 @@
           :style="{ color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.group][0]}` : '' }"
           class="major-title-bottom"
         >
-          ({{ getCollegeFullName(user.college) }})
+          ({{ getCollegeFullName(onboardingData.college) }})
         </p>
       </div>
     </div>
-    <div v-if="reqIndex == numOfColleges + user.major.length" class="minor">
+    <div v-if="reqIndex == numOfColleges + onboardingData.major.length" class="minor">
       <div
         :style="{
           'border-bottom':
@@ -45,7 +45,7 @@
         }"
         @click="activateMinor(id)"
         class="major-title"
-        v-for="(minor, id) in user.minor"
+        v-for="(minor, id) in onboardingData.minor"
         :key="id"
         :class="{ pointer: multipleMinors }"
       >
@@ -117,7 +117,7 @@
 import Vue, { PropType } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppUser } from '@/user-data';
+import { AppOnboardingData } from '@/user-data';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 
 Vue.component('dropdownarrow', DropDownArrow);
@@ -130,16 +130,16 @@ export default Vue.extend({
     displayedMinorIndex: Number,
     req: Object as PropType<SingleMenuRequirement>,
     reqGroupColorMap: Object as PropType<Readonly<Record<string, string[]>>>,
-    user: Object as PropType<AppUser>,
+    onboardingData: Object as PropType<AppOnboardingData>,
     showMajorOrMinorRequirements: Boolean,
     numOfColleges: Number,
   },
   computed: {
     multipleMajors() {
-      return this.user.major.length > 1;
+      return this.onboardingData.major.length > 1;
     },
     multipleMinors() {
-      return this.user.minor.length > 1;
+      return this.onboardingData.minor.length > 1;
     },
     progressWidth() {
       if (this.req.fulfilled != null && this.req.required != null) {

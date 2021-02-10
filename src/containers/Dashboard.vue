@@ -4,7 +4,8 @@
       class="dashboard-onboarding"
       v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
-      :userData="user"
+      :userName="userName"
+      :onboardingData="onboardingData"
       @onboard="endOnboarding"
       @cancelOnboarding="cancelOnboarding"
     />
@@ -20,7 +21,7 @@
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :semesters="semesters"
-          :user="user"
+          :onboardingData="onboardingData"
           :key="requirementsKey"
           :startTour="startTour"
           :reqs="reqs"
@@ -106,12 +107,12 @@ import {
 import {
   FirestoreUserName,
   FirestoreOnboardingUserData,
-  AppUser,
   AppCourse,
+  AppOnboardingData,
   AppSemester,
   AppBottomBarCourse,
 } from '@/user-data';
-import { firestoreSemestersToAppSemesters, createAppUser } from '@/user-data-converter';
+import { firestoreSemestersToAppSemesters, createAppOnboardingData } from '@/user-data-converter';
 import computeRequirements from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
@@ -140,17 +141,19 @@ export default Vue.extend({
       loaded: false,
       compactVal: false,
       semesters: [] as readonly AppSemester[],
-      user: {
+      userName: {
         firstName: names[0],
         middleName: '',
         lastName: names[1],
+      } as FirestoreUserName,
+      onboardingData: {
         college: '',
         major: [],
         minor: [],
         exam: [],
         transferCourse: [],
         tookSwim: 'no',
-      } as AppUser,
+      } as AppOnboardingData,
       bottomCourses: [] as AppBottomBarCourse[],
       seeMoreCourses: [] as AppBottomBarCourse[],
       // Default bottombar info without info
@@ -185,7 +188,7 @@ export default Vue.extend({
     this.getInformationFromUser();
     subscribeToggleableRequirementChoicesChange(() => {
       // Avoid recomputing requirement before user data is initialized.
-      if (this.user.college !== '') this.recomputeRequirements();
+      if (this.onboardingData.college !== '') this.recomputeRequirements();
     });
   },
   destroyed() {
@@ -205,9 +208,8 @@ export default Vue.extend({
         const usernameData = usernameDoc.data();
         const semestersData = semesterDoc.data();
         const onboardingData = onboardingDataDoc.data();
-        if (usernameData != null && onboardingData != null) {
-          this.user = createAppUser(onboardingData, usernameData);
-        }
+        if (usernameData != null && onboardingData != null) this.userName = usernameData;
+        if (onboardingData != null) this.onboardingData = createAppOnboardingData(onboardingData);
         if (semestersData != null) {
           this.semesters = firestoreSemestersToAppSemesters(semestersData.semesters);
         } else {
@@ -397,9 +399,8 @@ export default Vue.extend({
       userData: FirestoreOnboardingUserData;
       name: FirestoreUserName;
     }) {
-      const user = createAppUser(onboardingData.userData, onboardingData.name);
-
-      this.user = user;
+      this.userName = onboardingData.name;
+      this.onboardingData = createAppOnboardingData(onboardingData.userData);
       this.loaded = true;
       if (!this.isMobile) {
         this.welcomeHidden = true;
@@ -470,7 +471,7 @@ export default Vue.extend({
           });
         });
       });
-      courses.push(...getCourseEquivalentsFromUserExams(this.user));
+      courses.push(...getCourseEquivalentsFromUserExams(this.onboardingData));
       return courses;
     },
 
@@ -481,9 +482,9 @@ export default Vue.extend({
     recomputeRequirements(): void {
       const groups = computeRequirements(
         this.getCourseCodesArray(),
-        this.user.college,
-        this.user.major,
-        this.user.minor
+        this.onboardingData.college,
+        this.onboardingData.major,
+        this.onboardingData.minor
       );
       // Turn result into data readable by requirements menu
       const singleMenuRequirements = groups.map(group => {

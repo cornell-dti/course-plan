@@ -1,4 +1,4 @@
-import { AppUser, FirestoreAPIBExam } from '../../../user-data';
+import { AppOnboardingData, FirestoreAPIBExam } from '../../../user-data';
 import { CourseTaken } from '../../types';
 
 export type ExamRequirements = {
@@ -469,7 +469,9 @@ function getCourseEquivalentsFromOneMajor(
   return APCourseEquivalents.concat(IBCourseEquivalents);
 }
 
-export default function getCourseEquivalentsFromUserExams(user: AppUser): readonly CourseTaken[] {
+export default function getCourseEquivalentsFromUserExams(
+  user: AppOnboardingData
+): readonly CourseTaken[] {
   const courses: CourseTaken[] = [];
   const examCourseCodeSet = new Set<string>();
   const userExamData: ExamsTaken = { AP: [], IB: [] };
