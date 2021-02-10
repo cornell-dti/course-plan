@@ -128,6 +128,7 @@ import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
+import { cornellCourseRosterCourseToAppCourse } from '@/user-data-converter';
 
 Vue.component('course', Course);
 Vue.component('new-course-modal', NewCourseModal);
@@ -304,8 +305,7 @@ export default Vue.extend({
       season: string | null = null,
       year: number | null = null
     ) {
-      // @ts-ignore
-      const newCourse = this.$parent.$parent.createAppCourseFromCornellRosterCourse(data, false);
+      const newCourse = cornellCourseRosterCourseToAppCourse(data, false);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       let confirmationMsg;
       if (season !== '' || year !== 0) {

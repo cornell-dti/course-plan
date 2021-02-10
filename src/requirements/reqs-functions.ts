@@ -1,3 +1,4 @@
+import store from '@/store';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
 import {
   CourseTaken,
@@ -108,7 +109,6 @@ type RequirementWithIDSourceType = DecoratedCollegeOrMajorRequirement & {
 
 function computeFulfillmentCoursesAndStatistics(
   requirement: RequirementWithIDSourceType,
-  toggleableRequirementChoices: Readonly<Record<string, string>>,
   coursesTaken: readonly CourseTaken[]
 ): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
   switch (requirement.fulfilledBy) {
@@ -126,7 +126,7 @@ function computeFulfillmentCoursesAndStatistics(
     case 'toggleable': {
       const option =
         requirement.fulfillmentOptions[
-          toggleableRequirementChoices[requirement.id] ||
+          store.state.toggleableRequirementChoices[requirement.id] ||
             Object.keys(requirement.fulfillmentOptions)[0]
         ];
       return computeFulfillmentStatisticsFromCourses(
@@ -145,7 +145,6 @@ function computeFulfillmentCoursesAndStatistics(
 /**
  * @param coursesTaken a list of classes taken by the user, with some metadata (e.g. no. of credits)
  * helping to compute requirement progress.
- * @param toggleableRequirementChoices an object map from toggleable requirement IDs to choices
  * @param college user's college.
  * @param majors user's list of majors.
  * @param minors user's list of minors.
@@ -153,14 +152,12 @@ function computeFulfillmentCoursesAndStatistics(
  */
 export default function computeRequirements(
   coursesTaken: readonly CourseTaken[],
-  toggleableRequirementChoices: Readonly<Record<string, string>>,
   college: string,
   majors: readonly string[] | null,
   minors: readonly string[] | null
 ): readonly GroupedRequirementFulfillmentReport[] {
   const { requirementFulfillmentGraph } = buildRequirementFulfillmentGraphFromUserData(
     coursesTaken,
-    toggleableRequirementChoices,
     college,
     majors,
     minors
@@ -179,7 +176,7 @@ export default function computeRequirements(
     const fulfillmentStatistics = {
       id: requirement.id,
       requirement,
-      ...computeFulfillmentCoursesAndStatistics(requirement, toggleableRequirementChoices, courses),
+      ...computeFulfillmentCoursesAndStatistics(requirement, courses),
     };
 
     switch (requirement.sourceType) {

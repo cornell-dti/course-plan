@@ -121,6 +121,7 @@ import {
 import { clickOutside } from '@/utilities';
 
 import { CornellCourseRosterCourse, AppCourse, AppSemester } from '@/user-data';
+import { cornellCourseRosterCourseToAppCourse } from '@/user-data-converter';
 
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
@@ -320,11 +321,8 @@ export default Vue.extend({
         .then(result => {
           fetchedCourses = result.data.courses;
           fetchedCourses.forEach((course: CornellCourseRosterCourse) => {
+            const createdCourse = cornellCourseRosterCourseToAppCourse(course, true);
             // @ts-ignore
-            const createdCourse = this.$parent.$parent.$parent.createAppCourseFromCornellRosterCourse(
-              course,
-              true
-            );
             createdCourse.compact = true;
             this.subReqFetchedCourseObjectsNotTakenArray.push(createdCourse);
           });
