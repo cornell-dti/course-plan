@@ -32,7 +32,7 @@
             <div
               v-bind:class="{ warning: isDuplicate }"
               v-for="season in seasons"
-              :key="seasonValue(season)"
+              :key="season[1]"
               class="newSemester-dropdown-content-item"
               @click="selectSeason(season[1])"
             >
@@ -93,14 +93,6 @@ import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import { inactiveGray, yuxuanBlue, darkPlaceholderGray } from '@/assets/scss/_variables.scss';
 import { FirestoreSemesterType, AppSemester } from '@/user-data';
-
-// enum to define seasons as integers in season order
-const SeasonsEnum = Object.freeze({
-  winter: 0,
-  spring: 1,
-  summer: 2,
-  fall: 3,
-});
 
 type DisplayOption = {
   shown: boolean;
@@ -187,10 +179,6 @@ export default Vue.extend({
     this.$emit('updateSemProps', this.seasonPlaceholder, this.yearPlaceholder);
   },
   methods: {
-    seasonValue(season: readonly [string, string]): number {
-      // @ts-expect-error: TS cannot understand lowercasing the string produces the right field name.
-      return SeasonsEnum[season[1].toLowerCase()];
-    },
     getCurrentSeason(): FirestoreSemesterType {
       let currentSeason: FirestoreSemesterType;
       const currentMonth = new Date().getMonth();
