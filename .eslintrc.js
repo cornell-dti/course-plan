@@ -29,24 +29,10 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': ['warn'],
     // TODO: change no-console to error out for prod
     'no-console': ['warn'],
-    // TODO: fix copied js code that makes this warn necessary
-    'no-use-before-define': ['warn'],
-    'linebreak-style': 0,
-    //TODO: make requests asynchronous
     'no-await-in-loop': ['error'],
-    // don't require .vue extension when importing
-    'import/extensions': [
-      'error',
-      'always',
-      {
-        js: 'never',
-        ts: 'never',
-        vue: 'never',
-      },
-    ],
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
-    'no-param-reassign': [2, { props: false }],
+    'no-param-reassign': ['error', { props: false }],
     // allow optionalDependencies
     'import/no-extraneous-dependencies': [
       'error',
@@ -70,7 +56,6 @@ module.exports = {
       },
     ],
     'max-classes-per-file': ['off'],
-    'max-len': ['error', { code: 200 }],
     'no-unused-vars': ['off'],
     'no-use-before-define': ['off'],
     'vue/no-mutating-props': ['warn'],
