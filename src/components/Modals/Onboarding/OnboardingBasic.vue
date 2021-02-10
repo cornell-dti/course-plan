@@ -78,7 +78,7 @@
 import Vue, { PropType } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import { clickOutside } from '@/utilities';
-import { AppUser } from '@/user-data';
+import { AppOnboardingData, FirestoreUserName } from '@/user-data';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -87,19 +87,20 @@ const placeholderText = 'Select one';
 export default Vue.extend({
   components: { OnboardingBasicMultiDropdown, OnboardingBasicSingleDropdown },
   props: {
-    user: Object as PropType<AppUser>,
+    userName: { type: Object as PropType<FirestoreUserName>, required: true },
+    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
   },
   data() {
-    const majorAcronyms = [...this.user.major];
-    const minorAcronyms = [...this.user.minor];
+    const majorAcronyms = [...this.onboardingData.major];
+    const minorAcronyms = [...this.onboardingData.minor];
     if (majorAcronyms.length === 0) majorAcronyms.push('');
     if (minorAcronyms.length === 0) minorAcronyms.push('');
     return {
-      firstName: this.user.firstName,
-      middleName: this.user.middleName,
-      lastName: this.user.lastName,
+      firstName: this.userName.firstName,
+      middleName: this.userName.middleName,
+      lastName: this.userName.lastName,
       placeholderText,
-      collegeAcronym: this.user.college,
+      collegeAcronym: this.onboardingData.college,
       majorAcronyms,
       minorAcronyms,
     };

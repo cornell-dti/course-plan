@@ -1,13 +1,12 @@
 import { getOrAllocateSubjectColor, incrementUniqueID } from './global-firestore-data';
 import {
   AppCourse,
+  AppOnboardingData,
   AppSemester,
-  AppUser,
   CornellCourseRosterCourse,
   FirestoreOnboardingUserData,
   FirestoreSemester,
   FirestoreSemesterCourse,
-  FirestoreUserName,
 } from './user-data';
 
 /**
@@ -170,21 +169,12 @@ export const firestoreSemestersToAppSemesters = (
   firestoreSemesters: readonly FirestoreSemester[]
 ): AppSemester[] => firestoreSemesters.map(firestoreSemesterToAppSemester);
 
-export const createAppUser = (
-  data: FirestoreOnboardingUserData,
-  name: FirestoreUserName
-): AppUser => {
-  const user: AppUser = {
-    // TODO: take into account multiple colleges
-    college: data.colleges[0].acronym,
-    firstName: name.firstName,
-    middleName: name.middleName,
-    lastName: name.lastName,
-    major: data.majors.map(({ acronym }) => acronym),
-    minor: data.minors.map(({ acronym }) => acronym),
-    exam: 'exam' in data ? [...data.exam] : [],
-    transferCourse: 'class' in data ? [...data.class] : [],
-    tookSwim: data.tookSwim,
-  };
-  return user;
-};
+export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardingData => ({
+  // TODO: take into account multiple colleges
+  college: data.colleges[0].acronym,
+  major: data.majors.map(({ acronym }) => acronym),
+  minor: data.minors.map(({ acronym }) => acronym),
+  exam: 'exam' in data ? [...data.exam] : [],
+  transferCourse: 'class' in data ? [...data.class] : [],
+  tookSwim: data.tookSwim,
+});

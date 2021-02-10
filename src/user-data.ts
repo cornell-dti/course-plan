@@ -91,7 +91,7 @@ export type CornellCourseRosterCourse = {
   readonly roster: string;
 };
 
-export type AppUser = FirestoreUserName & {
+export type AppOnboardingData = {
   readonly college: string;
   readonly major: readonly string[];
   readonly minor: readonly string[];
