@@ -2,7 +2,7 @@
   <div class="requirementheader">
     <!-- TODO change for multiple colleges -->
     <div
-      v-if="reqIndex <= numOfColleges || reqIndex == numOfColleges + majors.length"
+      v-if="reqIndex <= numOfColleges || reqIndex == numOfColleges + user.major.length"
       class="row top"
     >
       <p class="name col p-0">{{ req.name }}</p>
@@ -16,7 +16,7 @@
         }"
         @click="activateMajor(id)"
         class="major-title"
-        v-for="(major, id) in majors"
+        v-for="(major, id) in user.major"
         :key="id"
         :class="{ pointer: multipleMajors }"
       >
@@ -27,17 +27,17 @@
           }"
           class="major-title-top"
         >
-          {{ major.majorFN }}
+          {{ getMajorFullName(major) }}
         </p>
         <p
           :style="{ color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.group][0]}` : '' }"
           class="major-title-bottom"
         >
-          ({{ user.collegeFN }})
+          ({{ getCollegeFullName(user.college) }})
         </p>
       </div>
     </div>
-    <div v-if="reqIndex == numOfColleges + majors.length" class="minor">
+    <div v-if="reqIndex == numOfColleges + user.major.length" class="minor">
       <div
         :style="{
           'border-bottom':
@@ -45,7 +45,7 @@
         }"
         @click="activateMinor(id)"
         class="major-title"
-        v-for="(minor, id) in minors"
+        v-for="(minor, id) in user.minor"
         :key="id"
         :class="{ pointer: multipleMinors }"
       >
@@ -56,7 +56,7 @@
           }"
           class="minor-title-top"
         >
-          {{ minor.minorFN }}
+          {{ getMinorFullName(minor) }}
         </p>
         <!-- <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> Change for multiple colleges -->
       </div>
@@ -117,15 +117,14 @@
 import Vue, { PropType } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppUser, AppMajor, AppMinor } from '@/user-data';
+import { AppUser } from '@/user-data';
+import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 
 Vue.component('dropdownarrow', DropDownArrow);
 
 export default Vue.extend({
   props: {
     reqIndex: Number,
-    majors: Array as PropType<readonly AppMajor[]>,
-    minors: Array as PropType<readonly AppMinor[]>,
     displayDetails: Boolean,
     displayedMajorIndex: Number,
     displayedMinorIndex: Number,
@@ -137,10 +136,10 @@ export default Vue.extend({
   },
   computed: {
     multipleMajors() {
-      return this.majors.length > 1;
+      return this.user.major.length > 1;
     },
     multipleMinors() {
-      return this.minors.length > 1;
+      return this.user.minor.length > 1;
     },
     progressWidth() {
       if (this.req.fulfilled != null && this.req.required != null) {
@@ -156,6 +155,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    getCollegeFullName,
+    getMajorFullName,
+    getMinorFullName,
     toggleDetails() {
       this.$emit('toggleDetails');
     },

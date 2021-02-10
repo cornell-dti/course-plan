@@ -2,8 +2,6 @@
   <div class="requirementview">
     <requirementheader
       :reqIndex="reqIndex"
-      :majors="majors"
-      :minors="minors"
       :displayDetails="displayDetails"
       :displayedMajorIndex="displayedMajorIndex"
       :displayedMinorIndex="displayedMinorIndex"
@@ -87,7 +85,7 @@ import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppUser, AppMajor, AppMinor, AppCourse, AppSemester } from '@/user-data';
+import { AppUser, AppCourse, AppSemester } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
@@ -104,8 +102,6 @@ export default Vue.extend({
     reqs: Array as PropType<readonly SingleMenuRequirement[]>,
     req: Object as PropType<SingleMenuRequirement>,
     reqIndex: Number, // Index of this req in reqs array
-    majors: Array as PropType<readonly AppMajor[]>,
-    minors: Array as PropType<readonly AppMinor[]>,
     toggleableRequirementChoices: Object as PropType<Readonly<Record<string, string>>>,
     displayedMajorIndex: Number,
     displayedMinorIndex: Number,

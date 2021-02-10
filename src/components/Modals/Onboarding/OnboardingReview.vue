@@ -45,8 +45,8 @@
           </div>
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">Major</label>
-            <div v-for="(major, index) in user.majorFN" :key="index">
-              <label class="onboarding-label--review">{{ major }}</label>
+            <div v-for="(major, index) in user.major" :key="index">
+              <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
             </div>
           </div>
         </div>
@@ -55,8 +55,8 @@
         </div>
         <div class="onboarding-selectWrapper">
           <label class="onboarding-label">Minors:</label>
-          <div v-for="(minor, index) in user.minorFN" :key="index">
-            <label class="onboarding-label--review">{{ minor }}</label>
+          <div v-for="(minor, index) in user.minor" :key="index">
+            <label class="onboarding-label--review">{{ getMinorFullName(minor) }}</label>
           </div>
         </div>
       </div>
@@ -165,6 +165,7 @@
 import Vue, { PropType } from 'vue';
 import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { AppUser } from '@/user-data';
+import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 
 const placeholderText = 'Select one';
 
@@ -172,7 +173,7 @@ export default Vue.extend({
   props: { user: Object as PropType<AppUser> },
   computed: {
     collegeText(): string {
-      return this.user.college !== '' ? this.user.collegeFN : placeholderText;
+      return this.user.college !== '' ? getCollegeFullName(this.user.college) : placeholderText;
     },
     totalCredits(): number {
       let count = 0;
@@ -187,6 +188,8 @@ export default Vue.extend({
   },
   methods: {
     getExamCredit,
+    getMajorFullName,
+    getMinorFullName,
     setPage(page: number): void {
       this.$emit('setPage', page);
     },

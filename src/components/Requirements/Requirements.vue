@@ -15,8 +15,6 @@
           :reqs="reqs"
           :req="req"
           :reqIndex="index"
-          :majors="majors"
-          :minors="minors"
           :toggleableRequirementChoices="toggleableRequirementChoices"
           :displayedMajorIndex="displayedMajorIndex"
           :displayedMinorIndex="displayedMinorIndex"
@@ -75,8 +73,6 @@ import DropDownArrow from '@/components/DropDownArrow.vue';
 import { SingleMenuRequirement, SubReqCourseSlot, CrseInfo } from '@/requirements/types';
 import {
   AppUser,
-  AppMajor,
-  AppMinor,
   AppSemester,
   AppCourse,
   CornellCourseRosterCourse,
@@ -150,24 +146,6 @@ export default Vue.extend({
     toggleableRequirementChoices(): AppToggleableRequirementChoices {
       return store.state.toggleableRequirementChoices;
     },
-    majors() {
-      const majors: AppMajor[] = [];
-      if (this.user.major != null) {
-        for (let i = 0; i < this.user.major.length; i += 1) {
-          majors.push({ major: this.user.major[i], majorFN: this.user.majorFN[i] });
-        }
-      }
-      return majors;
-    },
-    minors() {
-      const minors: AppMinor[] = [];
-      if (this.user.minor != null) {
-        for (let i = 0; i < this.user.minor.length; i += 1) {
-          minors.push({ minor: this.user.minor[i], minorFN: this.user.minorFN[i] });
-        }
-      }
-      return minors;
-    },
     rostersFromLastTwoYears() {
       return getRostersFromLastTwoYears();
     },
@@ -180,7 +158,7 @@ export default Vue.extend({
       // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
       return (
         id < this.numOfColleges ||
-        id === this.displayedMinorIndex + this.numOfColleges + this.majors.length
+        id === this.displayedMinorIndex + this.numOfColleges + this.user.major.length
       );
     },
     chooseToggleableRequirementOption(requirementID: string, option: string): void {

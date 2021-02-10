@@ -138,20 +138,10 @@ export default Vue.extend({
     updateBasic() {
       this.$emit(
         'updateBasic',
-        { acronym: this.collegeAcronym, text: this.colleges[this.collegeAcronym] },
-        this.majorAcronyms.map(acronym => ({
-          acronym,
-          text: this.majors[acronym] || placeholderText,
-        })),
-        this.minorAcronyms.map(acronym => ({
-          acronym,
-          text: this.minors[acronym] || placeholderText,
-        })),
-        {
-          firstName: this.firstName,
-          middleName: this.middleName,
-          lastName: this.lastName,
-        }
+        this.collegeAcronym,
+        this.majorAcronyms.filter(it => it !== ''),
+        this.minorAcronyms.filter(it => it !== ''),
+        { firstName: this.firstName, middleName: this.middleName, lastName: this.lastName }
       );
     },
     // Clear a major if a new college is selected and the major is not in it
