@@ -174,36 +174,16 @@ export const createAppUser = (
   data: FirestoreOnboardingUserData,
   name: FirestoreUserName
 ): AppUser => {
-  const major: string[] = [];
-  const majorFN: string[] = [];
-  const minor: string[] = [];
-  const minorFN: string[] = [];
-  if ('majors' in data) {
-    data.majors.forEach(({ acronym, fullName }) => {
-      major.push(acronym);
-      majorFN.push(fullName);
-    });
-  }
-  if ('minors' in data) {
-    data.minors.forEach(({ acronym, fullName }) => {
-      minor.push(acronym);
-      minorFN.push(fullName);
-    });
-  }
-
   const user: AppUser = {
     // TODO: take into account multiple colleges
     college: data.colleges[0].acronym,
-    collegeFN: data.colleges[0].fullName,
     firstName: name.firstName,
     middleName: name.middleName,
     lastName: name.lastName,
-    major,
-    majorFN,
-    minor,
-    minorFN,
-    exam: 'exam' in data && data.exam.length > 0 ? [...data.exam] : [],
-    transferCourse: 'class' in data && data.class.length > 0 ? [...data.class] : [],
+    major: data.majors.map(({ acronym }) => acronym),
+    minor: data.minors.map(({ acronym }) => acronym),
+    exam: 'exam' in data ? [...data.exam] : [],
+    transferCourse: 'class' in data ? [...data.class] : [],
     tookSwim: data.tookSwim,
   };
   return user;

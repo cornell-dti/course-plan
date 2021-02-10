@@ -66,13 +66,17 @@ import Vue, { PropType } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { AppUser, FirestoreAPIBExam, FirestoreTransferClass, FirestoreUserName } from '@/user-data';
+import {
+  AppUser,
+  FirestoreAPIBExam,
+  FirestoreOnboardingUserData,
+  FirestoreTransferClass,
+  FirestoreUserName,
+} from '@/user-data';
 
 Vue.component('onboardingBasic', OnboardingBasic);
 Vue.component('onboardingTransfer', OnboardingTransfer);
 Vue.component('onboardingReview', OnboardingReview);
-
-type DropdownSlot = { acronym: string; text: string };
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -92,41 +96,26 @@ export default Vue.extend({
   methods: {
     submitOnboarding() {
       // Display error if a required field is empty, otherwise submit
-      if (
-        this.user.firstName === '' ||
-        this.user.lastName === '' ||
-        this.user.collegeFN === placeholderText
-      ) {
+      if (this.user.firstName === '' || this.user.lastName === '' || this.user.college === '') {
         this.isError = true;
       } else {
-        const onboardingData = {
+        const onboardingData: { name: FirestoreUserName; userData: FirestoreOnboardingUserData } = {
           name: {
             firstName: this.user.firstName,
             middleName: this.user.middleName,
             lastName: this.user.lastName,
           },
           userData: {
-            colleges: [{ acronym: this.user.college, fullName: this.user.collegeFN }],
-            majors: this.notPlaceholderOptions(
-              this.user.major.map((acronym, i) => ({ acronym, text: this.user.majorFN[i] }))
-            ),
-            minors: this.notPlaceholderOptions(
-              this.user.minor.map((acronym, i) => ({ acronym, text: this.user.minorFN[i] }))
-            ),
-            exam: this.user.exam.filter(exam => exam.subject !== placeholderText),
-            class: this.user.transferCourse.filter(
-              oneClass => oneClass.class !== placeholderText && oneClass.class !== null
-            ),
+            colleges: [{ acronym: this.user.college }],
+            majors: this.user.major.map(acronym => ({ acronym })),
+            minors: this.user.minor.map(acronym => ({ acronym })),
+            exam: this.user.exam,
+            class: this.user.transferCourse,
             tookSwim: this.user.tookSwim,
           },
         };
         this.$emit('onboard', onboardingData);
       }
-    },
-    notPlaceholderOptions(options: readonly DropdownSlot[]) {
-      return options
-        .filter(option => option.text !== placeholderText)
-        .map(option => ({ acronym: option.acronym, fullName: option.text }));
     },
     goBack() {
       this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
@@ -137,49 +126,13 @@ export default Vue.extend({
     goNext() {
       this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
     },
-    basicOptionsToUser(major: readonly DropdownSlot[], minor: readonly DropdownSlot[]) {
-      const userMajorsAcronym: string[] = [];
-      const userMajorsFN: string[] = [];
-      for (let i = 0; i < major.length; i += 1) {
-        if (major[i].text !== placeholderText) {
-          userMajorsAcronym.push(major[i].acronym);
-          userMajorsFN.push(major[i].text);
-        }
-      }
-      const userMinorsAcronym: string[] = [];
-      const userMinorsFN: string[] = [];
-      for (let i = 0; i < minor.length; i += 1) {
-        if (minor[i].text !== placeholderText) {
-          userMinorsAcronym.push(minor[i].acronym);
-          userMinorsFN.push(minor[i].text);
-        }
-      }
-      return { userMajorsAcronym, userMajorsFN, userMinorsAcronym, userMinorsFN };
-    },
     updateBasic(
-      { acronym: college, text: collegeFN }: DropdownSlot,
-      newMajor: readonly DropdownSlot[],
-      newMinor: readonly DropdownSlot[],
+      college: string,
+      major: readonly string[],
+      minor: readonly string[],
       { firstName, middleName, lastName }: FirestoreUserName
     ) {
-      const {
-        userMajorsAcronym: major,
-        userMajorsFN: majorFN,
-        userMinorsAcronym: minor,
-        userMinorsFN: minorFN,
-      } = this.basicOptionsToUser(newMajor, newMinor);
-      this.user = {
-        ...this.user,
-        firstName,
-        middleName,
-        lastName,
-        college,
-        collegeFN,
-        major,
-        majorFN,
-        minor,
-        minorFN,
-      };
+      this.user = { ...this.user, firstName, middleName, lastName, college, major, minor };
     },
     updateTransfer(
       exams: readonly FirestoreAPIBExam[],

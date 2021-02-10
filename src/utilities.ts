@@ -1,4 +1,5 @@
 import type { FirestoreSemesterType } from './user-data';
+import requirementJSON from './requirements/typed-requirement-json';
 
 export function checkNotNull<T>(value: T | null | undefined): T {
   if (value == null) throw new Error();
@@ -58,6 +59,18 @@ export function getRostersFromLastTwoYears(): string[] {
     mostRecentRosters.push(roster);
   }
   return mostRecentRosters;
+}
+
+export function getCollegeFullName(acronym: string): string {
+  return requirementJSON.college[acronym].name;
+}
+
+export function getMajorFullName(acronym: string): string {
+  return requirementJSON.major[acronym].name;
+}
+
+export function getMinorFullName(acronym: string): string {
+  return requirementJSON.minor[acronym].name;
 }
 
 export const clickOutside = {

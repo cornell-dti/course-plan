@@ -33,8 +33,7 @@ export type FirestoreSemester = {
   readonly courses: readonly FirestoreSemesterCourse[];
 };
 
-export type FirestoreCollege = { readonly acronym: string; readonly fullName: string };
-export type FirestoreMajorOrMinor = { readonly acronym: string; readonly fullName: string };
+export type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
 export type FirestoreAPIBExam = {
   readonly type: 'AP' | 'IB';
   readonly score: number;
@@ -47,9 +46,9 @@ export type FirestoreTransferClass = {
 };
 export type FirestoreOnboardingUserData = {
   readonly class: readonly FirestoreTransferClass[];
-  readonly colleges: readonly FirestoreCollege[];
-  readonly majors: readonly FirestoreMajorOrMinor[];
-  readonly minors: readonly FirestoreMajorOrMinor[];
+  readonly colleges: readonly FirestoreCollegeOrMajorOrMinor[];
+  readonly majors: readonly FirestoreCollegeOrMajorOrMinor[];
+  readonly minors: readonly FirestoreCollegeOrMajorOrMinor[];
   readonly exam: readonly FirestoreAPIBExam[];
   readonly tookSwim: 'yes' | 'no';
 };
@@ -92,30 +91,13 @@ export type CornellCourseRosterCourse = {
   readonly roster: string;
 };
 
-export type AppUser = {
-  readonly firstName: string;
-  readonly middleName?: string;
-  readonly lastName: string;
+export type AppUser = FirestoreUserName & {
   readonly college: string;
-  // FN === Full Name
-  readonly collegeFN: string;
   readonly major: readonly string[];
-  readonly majorFN: readonly string[];
   readonly minor: readonly string[];
-  readonly minorFN: readonly string[];
   readonly exam: readonly FirestoreAPIBExam[];
   readonly transferCourse: readonly FirestoreTransferClass[];
   readonly tookSwim: 'yes' | 'no';
-};
-
-export type AppMajor = {
-  readonly major: string;
-  readonly majorFN: string;
-};
-
-export type AppMinor = {
-  readonly minor: string;
-  readonly minorFN: string;
 };
 
 export type AppCourse = {
