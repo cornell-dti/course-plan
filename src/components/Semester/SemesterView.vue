@@ -123,10 +123,10 @@ Vue.component('editsemester', EditSemester);
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
-  winter: 0,
-  spring: 1,
-  summer: 2,
-  fall: 3,
+  Winter: 0,
+  Spring: 1,
+  Summer: 2,
+  Fall: 3,
 });
 
 export default Vue.extend({
@@ -297,8 +297,7 @@ export default Vue.extend({
       if (a.year < b.year) {
         return 1;
       }
-      // @ts-expect-error: typescript cannot understand Fall -> fall conversion by .toLowerCase()
-      if (SeasonsEnum[a.type.toLowerCase()] < SeasonsEnum[b.type.toLowerCase()]) {
+      if (SeasonsEnum[a.type] < SeasonsEnum[b.type]) {
         return 1;
       }
       return -1;
