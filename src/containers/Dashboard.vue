@@ -122,7 +122,7 @@ import {
   createAppUser,
   AppToggleableRequirementChoices,
 } from '@/user-data';
-import { computeRequirements } from '@/requirements/reqs-functions';
+import computeRequirements from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 import getCurrentSeason, { checkNotNull, getCurrentYear, getSubjectColor } from '@/utilities';
