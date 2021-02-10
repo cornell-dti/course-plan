@@ -102,7 +102,7 @@ import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 
-import { auth, semestersCollection } from '@/firebaseConfig';
+import { semestersCollection } from '@/firebaseConfig';
 import {
   AppCourse,
   AppSemester,
@@ -111,7 +111,7 @@ import {
   FirestoreSemesterType,
 } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
-import { checkNotNull } from '@/utilities';
+import store from '@/store';
 
 Vue.component('course', Course);
 Vue.component('semester', Semester);
@@ -358,7 +358,7 @@ export default Vue.extend({
      */
     updateFirebaseSemester() {
       // TODO: make user / docRef global
-      const userEmail = checkNotNull(checkNotNull(auth.currentUser).email);
+      const userEmail = store.state.currentFirebaseUser.email;
       const docRef = semestersCollection.doc(userEmail);
 
       const firebaseSemesters: FirestoreSemester[] = this.semesters.map(sem => ({

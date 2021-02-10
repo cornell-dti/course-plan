@@ -85,6 +85,9 @@ import {
 import { getRostersFromLastTwoYears } from '@/utilities';
 // emoji for clipboard
 import clipboard from '@/assets/images/clipboard.svg';
+import store from '@/store';
+import { chooseToggleableRequirementOption } from '@/global-firestore-data';
+import { cornellCourseRosterCourseToAppCourse } from '@/user-data-converter';
 
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
@@ -118,7 +121,6 @@ tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
   props: {
-    toggleableRequirementChoices: Object as PropType<AppToggleableRequirementChoices>,
     semesters: Array as PropType<readonly AppSemester[]>,
     user: Object as PropType<AppUser>,
     compact: Boolean,
@@ -145,6 +147,9 @@ export default Vue.extend({
     },
   },
   computed: {
+    toggleableRequirementChoices(): AppToggleableRequirementChoices {
+      return store.state.toggleableRequirementChoices;
+    },
     majors() {
       const majors: AppMajor[] = [];
       if (this.user.major != null) {
@@ -179,11 +184,10 @@ export default Vue.extend({
       );
     },
     chooseToggleableRequirementOption(requirementID: string, option: string): void {
-      const newToggleableRequirementChoices = {
+      chooseToggleableRequirementOption({
         ...this.toggleableRequirementChoices,
         [requirementID]: option,
-      };
-      this.$emit('on-toggleable-requirement-choices-change', newToggleableRequirementChoices);
+      });
     },
     activateMajor(id: number) {
       this.displayedMajorIndex = id;
@@ -231,11 +235,10 @@ export default Vue.extend({
         })
           .then(result => {
             result.data.courses.forEach((course: CornellCourseRosterCourse) => {
-              // @ts-ignore [We should resolve this later]
-              const createdCourse = this.$parent.createAppCourseFromCornellRosterCourse(
-                course,
-                true
-              );
+              const createdCourse = cornellCourseRosterCourseToAppCourse(course, true);
+              // compact field is implicitly used in Course.vue as a prop :(((
+              // We need to cleanup this!
+              // @ts-ignore
               createdCourse.compact = true;
               fetchedCourses.push(createdCourse);
             });

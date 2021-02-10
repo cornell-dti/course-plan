@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 
 import 'firebase/auth';
 import 'firebase/firestore';
-import {
+import type {
   FirestoreUserName,
   FirestoreSemester,
   AppToggleableRequirementChoices,
@@ -39,7 +39,6 @@ firebase.initializeApp(config);
 // firebase utils
 export const db = firebase.firestore();
 export const auth = firebase.auth();
-export const { currentUser } = auth;
 
 export const usernameCollection = db.collection('user-name').withConverter<FirestoreUserName>({
   fromFirestore(snapshot): FirestoreUserName {

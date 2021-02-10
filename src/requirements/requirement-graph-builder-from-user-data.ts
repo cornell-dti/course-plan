@@ -1,3 +1,4 @@
+import store from '../store';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraph from './requirement-graph-builder';
 import requirementJson from './typed-requirement-json';
@@ -29,7 +30,6 @@ function forfeitTransferCredit(coursesTaken: readonly CourseTaken[]): readonly C
 
 export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],
-  toggleableRequirementChoices: Readonly<Record<string, string>>,
   college: string,
   majors: readonly string[] | null,
   minors: readonly string[] | null
@@ -41,7 +41,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   readonly illegallyDoubleCountedCourses: readonly CourseTaken[];
 } {
   // check university & college & major & minor requirements
-  if (!(college in requirementJson.college)) throw new Error('College not found.');
+  if (!(college in requirementJson.college)) throw new Error(`College ${college} not found.`);
 
   const universityReqs = requirementJson.university.UNI;
   const collegeReqs = requirementJson.college[college];
@@ -106,7 +106,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         return null;
       }
       const optionName =
-        toggleableRequirementChoices[requirement.id] ||
+        store.state.toggleableRequirementChoices[requirement.id] ||
         Object.keys(requirement.fulfillmentOptions)[0];
 
       const courses: CourseTaken[] = [];

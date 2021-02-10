@@ -20,13 +20,11 @@
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :semesters="semesters"
-          :toggleableRequirementChoices="toggleableRequirementChoices"
           :user="user"
           :key="requirementsKey"
           :startTour="startTour"
           :reqs="reqs"
           @showTourEndWindow="showTourEnd"
-          @on-toggleable-requirement-choices-change="chooseToggleableRequirementOption"
           @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
@@ -100,32 +98,25 @@ import surfing from '@/assets/images/surfing.svg';
 
 import '@/vueDragulaConfig';
 import {
-  auth,
   db,
   usernameCollection,
   semestersCollection,
-  toggleableRequirementChoicesCollection,
-  subjectColorsCollection,
-  uniqueIncrementerCollection,
   onboardingDataCollection,
 } from '@/firebaseConfig';
 import {
   FirestoreUserName,
   FirestoreOnboardingUserData,
-  CornellCourseRosterCourse,
   AppUser,
   AppCourse,
   AppSemester,
   AppBottomBarCourse,
-  cornellCourseRosterCourseToAppCourse,
-  firestoreSemestersToAppSemesters,
-  createAppUser,
-  AppToggleableRequirementChoices,
 } from '@/user-data';
+import { firestoreSemestersToAppSemesters, createAppUser } from '@/user-data-converter';
 import computeRequirements from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
-import getCurrentSeason, { checkNotNull, getCurrentYear, getSubjectColor } from '@/utilities';
+import getCurrentSeason, { getCurrentYear } from '@/utilities';
+import store, { subscribeToggleableRequirementChoicesChange } from '@/store';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
@@ -144,12 +135,11 @@ tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
   data() {
-    const names = checkNotNull(checkNotNull(auth.currentUser).displayName).split(' ');
+    const names = store.state.currentFirebaseUser.displayName.split(' ');
     return {
       loaded: false,
       compactVal: false,
       semesters: [] as readonly AppSemester[],
-      toggleableRequirementChoices: {} as AppToggleableRequirementChoices,
       user: {
         major: [],
         majorFN: [],
@@ -166,8 +156,6 @@ export default Vue.extend({
       } as AppUser,
       bottomCourses: [] as AppBottomBarCourse[],
       seeMoreCourses: [] as AppBottomBarCourse[],
-      subjectColors: {} as { [subject: string]: string },
-      uniqueIncrementer: 0,
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false, bottomCourseFocus: 0 },
       requirementsKey: 0,
@@ -198,74 +186,51 @@ export default Vue.extend({
   },
   mounted() {
     this.getInformationFromUser();
+    subscribeToggleableRequirementChoicesChange(() => {
+      // Avoid recomputing requirement before user data is initialized.
+      if (this.user.college !== '') this.recomputeRequirements();
+    });
   },
   destroyed() {
     window.removeEventListener('resize', this.resizeEventHandler);
   },
   methods: {
     getUserEmail(): string {
-      return checkNotNull(checkNotNull(auth.currentUser).email);
+      return store.state.currentFirebaseUser.email;
     },
 
     getInformationFromUser() {
       Promise.all([
         usernameCollection.doc(this.getUserEmail()).get(),
         semestersCollection.doc(this.getUserEmail()).get(),
-        toggleableRequirementChoicesCollection.doc(this.getUserEmail()).get(),
-        subjectColorsCollection.doc(this.getUserEmail()).get(),
-        uniqueIncrementerCollection.doc(this.getUserEmail()).get(),
         onboardingDataCollection.doc(this.getUserEmail()).get(),
-      ]).then(
-        ([
-          usernameDoc,
-          semesterDoc,
-          toggleableRequirementChoicesDoc,
-          subjectColorsDoc,
-          uniqueIncrementerDoc,
-          onboardingDataDoc,
-        ]) => {
-          const usernameData = usernameDoc.data();
-          const semestersData = semesterDoc.data();
-          const uniqueIncrementerData = uniqueIncrementerDoc.data();
-          const onboardingData = onboardingDataDoc.data();
-          if (usernameData != null && onboardingData != null) {
-            this.user = createAppUser(onboardingData, usernameData);
-          }
-          if (semestersData != null) {
-            this.semesters = firestoreSemestersToAppSemesters(semestersData.semesters);
-          } else {
-            const newSemesterData = [
-              { type: getCurrentSeason(), year: getCurrentYear(), courses: [] },
-            ];
-            this.semesters = newSemesterData;
-            semestersCollection.doc(this.getUserEmail()).set({ semesters: newSemesterData });
-          }
-          this.toggleableRequirementChoices = toggleableRequirementChoicesDoc.data() || {};
-          this.subjectColors = subjectColorsDoc.data() || {};
-          this.uniqueIncrementer =
-            uniqueIncrementerData != null ? uniqueIncrementerData.uniqueIncrementer : 0;
-
-          if (usernameData != null && semestersData != null && onboardingData != null) {
-            this.loaded = true;
-            this.recomputeRequirements();
-          } else {
-            this.startOnboarding();
-          }
+      ]).then(([usernameDoc, semesterDoc, onboardingDataDoc]) => {
+        const usernameData = usernameDoc.data();
+        const semestersData = semesterDoc.data();
+        const onboardingData = onboardingDataDoc.data();
+        if (usernameData != null && onboardingData != null) {
+          this.user = createAppUser(onboardingData, usernameData);
         }
-      );
+        if (semestersData != null) {
+          this.semesters = firestoreSemestersToAppSemesters(semestersData.semesters);
+        } else {
+          const newSemesterData = [
+            { type: getCurrentSeason(), year: getCurrentYear(), courses: [] },
+          ];
+          this.semesters = newSemesterData;
+          semestersCollection.doc(this.getUserEmail()).set({ semesters: newSemesterData });
+        }
+        if (usernameData != null && semestersData != null && onboardingData != null) {
+          this.loaded = true;
+          this.recomputeRequirements();
+        } else {
+          this.startOnboarding();
+        }
+      });
     },
 
     editSemesters(newSemesters: readonly AppSemester[]) {
       this.semesters = newSemesters;
-      this.recomputeRequirements();
-    },
-    chooseToggleableRequirementOption(
-      toggleableRequirementChoices: AppToggleableRequirementChoices
-    ) {
-      this.toggleableRequirementChoices = toggleableRequirementChoices;
-      toggleableRequirementChoicesCollection
-        .doc(this.getUserEmail())
-        .set(toggleableRequirementChoices);
       this.recomputeRequirements();
     },
     resizeEventHandler() {
@@ -281,24 +246,6 @@ export default Vue.extend({
     toggleRequirementsBar() {
       this.isOpeningRequirements = !this.isOpeningRequirements;
     },
-
-    /**
-     * Creates a course on frontend with either user or API data
-     */
-    createAppCourseFromCornellRosterCourse(
-      course: CornellCourseRosterCourse,
-      isRequirementsCourse: boolean
-    ): AppCourse {
-      if (!isRequirementsCourse) {
-        this.recomputeRequirements();
-      }
-      return cornellCourseRosterCourseToAppCourse(
-        course,
-        isRequirementsCourse,
-        () => this.incrementID(),
-        subject => this.addColor(subject)
-      );
-    },
     updateSemesterView() {
       if (this.isMobile) {
         // Make sure semesterView is not compact by default on mobile
@@ -306,31 +253,6 @@ export default Vue.extend({
       }
     },
 
-    incrementID() {
-      // If uniqueIncrementer attribute does not exist, initialize it to 0 and populate existing courses
-      if (this.uniqueIncrementer === undefined) {
-        this.uniqueIncrementer = 0;
-        this.semesters.forEach(semester => {
-          semester.courses.forEach(course => {
-            course.uniqueID = this.uniqueIncrementer;
-            this.uniqueIncrementer += 1;
-          });
-        });
-      } else {
-        this.uniqueIncrementer += 1;
-      }
-      uniqueIncrementerCollection
-        .doc(this.getUserEmail())
-        .set({ uniqueIncrementer: this.uniqueIncrementer });
-      return this.uniqueIncrementer;
-    },
-
-    addColor(subject: string) {
-      const color = getSubjectColor(this.subjectColors, subject);
-      // Update subjectColors on Firebase with new subject color group
-      subjectColorsCollection.doc(this.getUserEmail()).set(this.subjectColors);
-      return color;
-    },
     showTourEnd() {
       if (!this.isMobile) {
         this.showTourEndWindow = true;
@@ -562,7 +484,6 @@ export default Vue.extend({
     recomputeRequirements(): void {
       const groups = computeRequirements(
         this.getCourseCodesArray(),
-        this.toggleableRequirementChoices,
         this.user.college,
         this.user.major,
         this.user.minor

@@ -233,7 +233,6 @@ export default Vue.extend({
         .then(doc => {
           if (doc.exists) {
             this.performingRequest = false;
-            this.$store.commit('setCurrentUser', user);
             this.$router.push('/');
             this.$gtag.event('login', { method: 'Google' });
           } else {

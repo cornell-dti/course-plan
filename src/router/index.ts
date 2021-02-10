@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import firebase from 'firebase/app';
 
 import Login from '@/containers/Login.vue';
 import Dashboard from '@/containers/Dashboard.vue';
 import Page404 from '@/containers/404.vue';
+import store from '@/store';
 
 Vue.use(Router);
 
@@ -36,11 +36,11 @@ router.beforeEach((to, from, next) => {
   const { matched } = to;
 
   const requiresAuth = matched.some(x => x.meta.requiresAuth);
-  const { currentUser } = firebase.auth();
+  const { currentFirebaseUser } = store.state;
 
-  if (requiresAuth && !currentUser) {
+  if (requiresAuth && !currentFirebaseUser) {
     next('/login');
-  } else if (requiresAuth && currentUser) {
+  } else if (requiresAuth && currentFirebaseUser) {
     next();
   } else {
     next();
