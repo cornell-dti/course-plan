@@ -24,11 +24,13 @@
           :rounded="true"
         />
       </div>
-      <div
+      <draggable
         v-if="displayCourses && crseInfoObjects.length > 0"
         class="draggable-requirements-courses"
-        v-dragula="courseObjects"
-        bag="first-bag"
+        group="draggable-semester-courses"
+        :value="courseObjects"
+        @start="onDrag"
+        @end="onDrop"
       >
         <div
           v-for="course in courseObjects"
@@ -44,7 +46,7 @@
             class="requirements-course"
           />
         </div>
-      </div>
+      </draggable>
       <div v-if="subReq.fulfilledBy === 'self-check'">
         <addcoursebutton :compact="true" :shouldClearPadding="true" @click="onAddCourse" />
       </div>
@@ -54,6 +56,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import draggable from 'vuedraggable';
 import VueSkeletonLoader from 'skeleton-loader-vue';
 import Course from '@/components/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
@@ -75,15 +78,9 @@ type Data = {
 };
 
 export default Vue.extend({
+  components: { draggable },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
-    const service = Vue.$dragula.$service;
-    service.eventBus.$on('drag', () => {
-      this.scrollable = true;
-    });
-    service.eventBus.$on('drop', () => {
-      this.scrollable = true;
-    });
   },
   data(): Data {
     return {
@@ -143,6 +140,12 @@ export default Vue.extend({
     },
   },
   methods: {
+    onDrag() {
+      this.scrollable = true;
+    },
+    onDrop() {
+      this.scrollable = true;
+    },
     dragListener(event: { preventDefault: () => void }) {
       if (!this.$data.scrollable) event.preventDefault();
     },

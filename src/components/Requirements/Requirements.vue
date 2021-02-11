@@ -41,7 +41,7 @@
       </div>
       <div class="see-all-padding-x py-3">
         <h1 class="title">{{ showAllCourses.name }}</h1>
-        <div v-dragula="showAllCourses.courses" bag="first-bag">
+        <draggable :value="showAllCourses.courses" group="draggable-semester-courses">
           <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
             <div class="mt-3">
               <course
@@ -54,7 +54,7 @@
               />
             </div>
           </div>
-        </div>
+        </draggable>
       </div>
     </div>
   </div>
@@ -62,6 +62,7 @@
 
 <script lang="ts">
 import firebase from 'firebase/app';
+import draggable from 'vuedraggable';
 import 'firebase/functions';
 import Vue, { PropType } from 'vue';
 import VueCollapse from 'vue2-collapse';
@@ -115,6 +116,7 @@ tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
+  components: { draggable },
   props: {
     semesters: Array as PropType<readonly FirestoreSemester[]>,
     onboardingData: Object as PropType<AppOnboardingData>,

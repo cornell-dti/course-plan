@@ -125,13 +125,21 @@ const SeasonsEnum = Object.freeze({
 
 export default Vue.extend({
   props: {
-    semesters: Array as PropType<readonly FirestoreSemester[]>,
-    compact: Boolean,
-    isBottomBar: Boolean,
-    isBottomBarExpanded: Boolean,
-    isMobile: Boolean,
-    startTour: Boolean,
-    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
+    semesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
+    compact: { type: Boolean, required: true },
+    isBottomBar: { type: Boolean, required: true },
+    isBottomBarExpanded: { type: Boolean, required: true },
+    isMobile: { type: Boolean, required: true },
+    startTour: { type: Boolean, required: true },
+    reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
+    editSemesters: {
+      type: Function as PropType<
+        (
+          updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
+        ) => void
+      >,
+      required: true,
+    },
   },
   data() {
     return {
@@ -238,22 +246,18 @@ export default Vue.extend({
       return { courses, type, year };
     },
     addSemester(type: FirestoreSemesterType, year: number) {
-      const newSem = this.createSemester([], type, year);
-      const newSemesters = [...this.semesters, newSem].sort(this.compare);
-
       this.$gtag.event('add-semester', {
         event_category: 'semester',
         event_label: 'add',
         value: 1,
       });
 
+      this.editSemesters(oldSemesters =>
+        [...oldSemesters, this.createSemester([], type, year)].sort(this.compare)
+      );
       this.openSemesterConfirmationModal(type, year, true);
-      this.$emit('edit-semesters', newSemesters);
     },
     deleteSemester(type: FirestoreSemesterType, year: number) {
-      const newSemesters = this.semesters.filter(
-        semester => semester.type !== type || semester.year !== year
-      );
       this.$gtag.event('delete-semester', {
         event_category: 'semester',
         event_label: 'delete',
@@ -264,30 +268,27 @@ export default Vue.extend({
       this.openSemesterConfirmationModal(type, year, false);
 
       // Update requirements menu from dashboard
-      this.$emit('edit-semesters', newSemesters);
+      this.editSemesters(oldSemesters =>
+        oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
+      );
     },
     addCourseToSemester(
       season: FirestoreSemesterType,
       year: number,
       newCourse: FirestoreSemesterCourse
     ) {
-      let semesterFound = false;
-      const newSemestersWithCourse = this.semesters.map(sem => {
-        if (sem.type === season && sem.year === year) {
-          semesterFound = true;
-          return { ...sem, courses: [...sem.courses, newCourse] };
-        }
-        return sem;
+      this.editSemesters(oldSemesters => {
+        let semesterFound = false;
+        const newSemestersWithCourse = oldSemesters.map(sem => {
+          if (sem.type === season && sem.year === year) {
+            semesterFound = true;
+            return { ...sem, courses: [...sem.courses, newCourse] };
+          }
+          return sem;
+        });
+        if (semesterFound) return newSemestersWithCourse;
+        return [...oldSemesters, this.createSemester([newCourse], season, year)].sort(this.compare);
       });
-
-      if (semesterFound) {
-        this.$emit('edit-semesters', newSemestersWithCourse);
-      } else {
-        const newSem = this.createSemester([], season, year);
-        newSem.courses = [newCourse];
-        const newSemesters = [...this.semesters, newSem].sort(this.compare);
-        this.$emit('edit-semesters', newSemesters);
-      }
     },
     compare(a: FirestoreSemester, b: FirestoreSemester): number {
       if (a.type === b.type && a.year === b.year) {
@@ -309,14 +310,15 @@ export default Vue.extend({
       type: FirestoreSemesterType,
       updater: (oldSemester: FirestoreSemester) => FirestoreSemester
     ) {
-      const newSemesters = this.semesters
-        .map(currentSemester =>
-          currentSemester.year === year && currentSemester.type === type
-            ? updater(currentSemester)
-            : currentSemester
-        )
-        .sort(this.compare);
-      this.$emit('edit-semesters', newSemesters);
+      this.editSemesters(oldSemesters =>
+        oldSemesters
+          .map(currentSemester =>
+            currentSemester.year === year && currentSemester.type === type
+              ? updater(currentSemester)
+              : currentSemester
+          )
+          .sort(this.compare)
+      );
     },
     updateBar(course: FirestoreSemesterCourse, colorJustChanged: string, color: string) {
       this.activatedCourse = course;
