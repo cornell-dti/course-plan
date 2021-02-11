@@ -1,10 +1,5 @@
 import { getOrAllocateSubjectColor, incrementUniqueID } from './global-firestore-data';
-import {
-  AppOnboardingData,
-  CornellCourseRosterCourse,
-  FirestoreOnboardingUserData,
-  FirestoreSemesterCourse,
-} from './user-data';
+import { CornellCourseRosterCourse, FirestoreSemesterCourse } from './user-data';
 
 /**
  * Creates credit range based on course
@@ -101,12 +96,4 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
   };
 };
 
-export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardingData => ({
-  // TODO: take into account multiple colleges
-  college: data.colleges[0].acronym,
-  major: data.majors.map(({ acronym }) => acronym),
-  minor: data.minors.map(({ acronym }) => acronym),
-  exam: 'exam' in data ? [...data.exam] : [],
-  transferCourse: 'class' in data ? [...data.class] : [],
-  tookSwim: data.tookSwim,
-});
+export default cornellCourseRosterCourseToFirebaseSemesterCourse;

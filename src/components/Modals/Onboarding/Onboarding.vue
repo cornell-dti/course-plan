@@ -73,10 +73,11 @@ import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vu
 import {
   AppOnboardingData,
   FirestoreAPIBExam,
-  FirestoreOnboardingUserData,
   FirestoreTransferClass,
   FirestoreUserName,
 } from '@/user-data';
+import { db, onboardingDataCollection, usernameCollection } from '@/firebaseConfig';
+import store from '@/store';
 
 Vue.component('onboardingBasic', OnboardingBasic);
 Vue.component('onboardingTransfer', OnboardingTransfer);
@@ -109,22 +110,22 @@ export default Vue.extend({
       ) {
         this.isError = true;
       } else {
-        const onboardingData: { name: FirestoreUserName; userData: FirestoreOnboardingUserData } = {
-          name: {
+        db.batch()
+          .set(usernameCollection.doc(store.state.currentFirebaseUser.email), {
             firstName: this.name.firstName,
             middleName: this.name.middleName,
             lastName: this.name.lastName,
-          },
-          userData: {
+          })
+          .set(onboardingDataCollection.doc(store.state.currentFirebaseUser.email), {
             colleges: [{ acronym: this.onboarding.college }],
             majors: this.onboarding.major.map(acronym => ({ acronym })),
             minors: this.onboarding.minor.map(acronym => ({ acronym })),
             exam: this.onboarding.exam,
             class: this.onboarding.transferCourse,
             tookSwim: this.onboarding.tookSwim,
-          },
-        };
-        this.$emit('onboard', onboardingData);
+          })
+          .commit();
+        this.$emit('onboard');
       }
     },
     goBack() {
