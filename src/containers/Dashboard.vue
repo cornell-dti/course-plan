@@ -99,25 +99,18 @@ import surfing from '@/assets/images/surfing.svg';
 
 import '@/vueDragulaConfig';
 import {
-  db,
-  usernameCollection,
-  semestersCollection,
-  onboardingDataCollection,
-} from '@/firebaseConfig';
-import {
   FirestoreUserName,
-  FirestoreOnboardingUserData,
   FirestoreSemester,
   AppOnboardingData,
   AppBottomBarCourse,
   FirestoreSemesterCourse,
 } from '@/user-data';
-import { createAppOnboardingData } from '@/user-data-converter';
 import computeRequirements from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
+import store, { initializeFirestoreListeners, subscribeRequirementDependencyChange } from '@/store';
+import { semestersCollection } from '@/firebaseConfig';
 import getCurrentSeason, { getCurrentYear } from '@/utilities';
-import store, { subscribeToggleableRequirementChoicesChange } from '@/store';
 
 Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
@@ -134,26 +127,15 @@ tour.setOption('skipLabel', 'Skip This Tutorial');
 tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+let listenerUnsubscriber = (): void => {};
+
 export default Vue.extend({
   data() {
-    const names = store.state.currentFirebaseUser.displayName.split(' ');
     return {
-      loaded: false,
+      loaded: true,
       compactVal: false,
       semesters: [] as readonly FirestoreSemester[],
-      userName: {
-        firstName: names[0],
-        middleName: '',
-        lastName: names[1],
-      } as FirestoreUserName,
-      onboardingData: {
-        college: '',
-        major: [],
-        minor: [],
-        exam: [],
-        transferCourse: [],
-        tookSwim: 'no',
-      } as AppOnboardingData,
       bottomCourses: [] as AppBottomBarCourse[],
       seeMoreCourses: [] as AppBottomBarCourse[],
       // Default bottombar info without info
@@ -181,53 +163,54 @@ export default Vue.extend({
       reqs: [] as readonly SingleMenuRequirement[],
     };
   },
+  computed: {
+    userName(): FirestoreUserName {
+      return store.state.userName;
+    },
+    onboardingData(): AppOnboardingData {
+      return store.state.onboardingData;
+    },
+  },
   created() {
     window.addEventListener('resize', this.resizeEventHandler);
   },
   mounted() {
-    this.getInformationFromUser();
-    subscribeToggleableRequirementChoicesChange(() => {
+    const semesterDoc = semestersCollection.doc(store.state.currentFirebaseUser.email);
+    const loadSemesterPromise = semesterDoc.get().then(snapshot => {
+      const data = snapshot.data();
+      if (data != null) {
+        this.semesters = data.semesters;
+      } else {
+        const newSemeter: FirestoreSemester = {
+          type: getCurrentSeason(),
+          year: getCurrentYear(),
+          courses: [],
+        };
+        this.semesters = [newSemeter];
+        semesterDoc.set({ semesters: [newSemeter] });
+      }
+    });
+    const loadOtherDataPromise = new Promise<void>(resolve => {
+      listenerUnsubscriber = initializeFirestoreListeners(() => resolve());
+    });
+    Promise.all([loadSemesterPromise, loadOtherDataPromise]).then(() => {
+      if (this.onboardingData.college !== '') {
+        this.loaded = true;
+        this.recomputeRequirements();
+      } else {
+        this.startOnboarding();
+      }
+    });
+    subscribeRequirementDependencyChange(() => {
       // Avoid recomputing requirement before user data is initialized.
       if (this.onboardingData.college !== '') this.recomputeRequirements();
     });
   },
   destroyed() {
     window.removeEventListener('resize', this.resizeEventHandler);
+    listenerUnsubscriber();
   },
   methods: {
-    getUserEmail(): string {
-      return store.state.currentFirebaseUser.email;
-    },
-
-    getInformationFromUser() {
-      Promise.all([
-        usernameCollection.doc(this.getUserEmail()).get(),
-        semestersCollection.doc(this.getUserEmail()).get(),
-        onboardingDataCollection.doc(this.getUserEmail()).get(),
-      ]).then(([usernameDoc, semesterDoc, onboardingDataDoc]) => {
-        const usernameData = usernameDoc.data();
-        const semestersData = semesterDoc.data();
-        const onboardingData = onboardingDataDoc.data();
-        if (usernameData != null && onboardingData != null) this.userName = usernameData;
-        if (onboardingData != null) this.onboardingData = createAppOnboardingData(onboardingData);
-        if (semestersData != null) {
-          this.semesters = semestersData.semesters;
-        } else {
-          const newSemesterData = [
-            { type: getCurrentSeason(), year: getCurrentYear(), courses: [] },
-          ];
-          this.semesters = newSemesterData;
-          semestersCollection.doc(this.getUserEmail()).set({ semesters: newSemesterData });
-        }
-        if (usernameData != null && semestersData != null && onboardingData != null) {
-          this.loaded = true;
-          this.recomputeRequirements();
-        } else {
-          this.startOnboarding();
-        }
-      });
-    },
-
     editSemesters(newSemesters: readonly FirestoreSemester[]) {
       this.semesters = newSemesters;
       this.recomputeRequirements();
@@ -396,27 +379,12 @@ export default Vue.extend({
       this.isOnboarding = true;
     },
 
-    endOnboarding(onboardingData: {
-      userData: FirestoreOnboardingUserData;
-      name: FirestoreUserName;
-    }) {
-      this.userName = onboardingData.name;
-      this.onboardingData = createAppOnboardingData(onboardingData.userData);
-      this.loaded = true;
+    endOnboarding() {
       if (!this.isMobile) {
         this.welcomeHidden = true;
       }
-
-      db.batch()
-        .set(usernameCollection.doc(this.getUserEmail()), onboardingData.name)
-        .set(onboardingDataCollection.doc(this.getUserEmail()), onboardingData.userData)
-        .commit()
-        .catch(error => {
-          console.log('Failed to write onboarding data:', error);
-        });
-
+      this.loaded = true;
       this.cancelOnboarding();
-      this.recomputeRequirements();
     },
 
     cancelOnboarding() {
