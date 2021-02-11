@@ -6,10 +6,9 @@ import {
   AppOnboardingData,
   AppToggleableRequirementChoices,
   FirestoreOnboardingUserData,
-  FirestoreSemester,
   FirestoreUserName,
 } from './user-data';
-import getCurrentSeason, { checkNotNull, getCurrentYear } from './utilities';
+import { checkNotNull } from './utilities';
 
 Vue.use(Vuex);
 
