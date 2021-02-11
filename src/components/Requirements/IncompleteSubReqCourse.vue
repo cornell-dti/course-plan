@@ -38,7 +38,7 @@
           <course
             v-bind="course"
             :courseObj="course"
-            :uniqueID="course.uniqueID"
+            :isReqCourse="true"
             :compact="true"
             :active="false"
             class="requirements-course"
@@ -62,14 +62,14 @@ import {
   SubReqCourseSlot,
   CrseInfo,
 } from '@/requirements/types';
-import { AppCourse } from '@/user-data';
+import { FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('vue-skeleton-loader', VueSkeletonLoader);
 Vue.component('course', Course);
 Vue.component('addcoursebutton', AddCourseButton);
 
 type Data = {
-  courseObjects: AppCourse[];
+  courseObjects: FirestoreSemesterCourse[];
   scrollable: boolean;
   displayCourses: boolean;
 };
@@ -99,7 +99,7 @@ export default Vue.extend({
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqCourseId: Number,
     crseInfoObjects: Array as PropType<CrseInfo[]>,
-    subReqFetchedCourseObjectsNotTakenArray: Array as PropType<AppCourse[]>,
+    subReqFetchedCourseObjectsNotTakenArray: Array as PropType<FirestoreSemesterCourse[]>,
     subReqCoursesArray: Array as PropType<SubReqCourseSlot[]>,
     dataReady: Boolean,
     displayDescription: Boolean,
@@ -147,14 +147,14 @@ export default Vue.extend({
       if (!this.$data.scrollable) event.preventDefault();
     },
     getFirstFourCourseObjects() {
-      const firstFourCourseObjects: AppCourse[] = [];
+      const firstFourCourseObjects: FirestoreSemesterCourse[] = [];
       for (
         let i = 0;
         firstFourCourseObjects.length < 4 && i < this.crseInfoObjects.length;
         i += 1
       ) {
         const crseInfoObject = this.crseInfoObjects[i];
-        const filteredCourses: AppCourse[] = this.subReqFetchedCourseObjectsNotTakenArray.filter(
+        const filteredCourses: FirestoreSemesterCourse[] = this.subReqFetchedCourseObjectsNotTakenArray.filter(
           course => crseInfoObject.crseIds.includes(course.crseId)
         );
         const numRemainingCourses = Math.min(

@@ -47,9 +47,9 @@
               <course
                 v-bind="courseData"
                 :courseObj="courseData"
-                :uniqueID="courseData.uniqueID"
                 :compact="false"
                 :active="false"
+                :isReqCourse="true"
                 class="requirements-course"
               />
             </div>
@@ -72,9 +72,8 @@ import RequirementView from '@/components/Requirements/RequirementView.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { SingleMenuRequirement, SubReqCourseSlot, CrseInfo } from '@/requirements/types';
 import {
-  AppSemester,
-  AppCourse,
-  CornellCourseRosterCourse,
+  FirestoreSemester,
+  FirestoreSemesterCourse,
   AppToggleableRequirementChoices,
   AppOnboardingData,
 } from '@/user-data';
@@ -83,7 +82,7 @@ import { getRostersFromLastTwoYears } from '@/utilities';
 import clipboard from '@/assets/images/clipboard.svg';
 import store from '@/store';
 import { chooseToggleableRequirementOption } from '@/global-firestore-data';
-import { cornellCourseRosterCourseToAppCourse } from '@/user-data-converter';
+import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
@@ -94,7 +93,7 @@ Vue.use(VueCollapse);
 
 export type ShowAllCourses = {
   readonly name: string;
-  readonly courses: AppCourse[];
+  readonly courses: FirestoreSemesterCourse[];
 };
 
 type Data = {
@@ -117,7 +116,7 @@ tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
   props: {
-    semesters: Array as PropType<readonly AppSemester[]>,
+    semesters: Array as PropType<readonly FirestoreSemester[]>,
     onboardingData: Object as PropType<AppOnboardingData>,
     compact: Boolean,
     startTour: Boolean,
@@ -178,7 +177,9 @@ export default Vue.extend({
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>`;
     },
-    getAllCrseInfoFromSemester(subReqCoursesArray: SubReqCourseSlot[]): Promise<AppCourse[]> {
+    getAllCrseInfoFromSemester(
+      subReqCoursesArray: SubReqCourseSlot[]
+    ): Promise<FirestoreSemesterCourse[]> {
       return new Promise((resolve, reject) => {
         let subReqCrseInfoObjectsToFetch: CrseInfo[] = [];
         // Used to identify index of lastLoadedSeeAll
@@ -206,20 +207,14 @@ export default Vue.extend({
             subReqCrseInfoObjectsToFetch.push(crseInfoFromSemester[0]);
           }
         });
-        const fetchedCourses: AppCourse[] = [];
         FetchCourses({
           crseInfo: subReqCrseInfoObjectsToFetch,
           allowSameCourseForDifferentRosters: false,
         })
           .then(result => {
-            result.data.courses.forEach((course: CornellCourseRosterCourse) => {
-              const createdCourse = cornellCourseRosterCourseToAppCourse(course, true);
-              // compact field is implicitly used in Course.vue as a prop :(((
-              // We need to cleanup this!
-              // @ts-ignore
-              createdCourse.compact = true;
-              fetchedCourses.push(createdCourse);
-            });
+            const fetchedCourses = result.data.courses.map(
+              cornellCourseRosterCourseToFirebaseSemesterCourse
+            );
             return resolve(fetchedCourses);
           })
           .catch(error => reject(error));

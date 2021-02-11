@@ -11,13 +11,13 @@
       <div :class="{ 'course-main--min': compact }" class="course-main">
         <div :class="{ 'course-top--min': compact }" class="course-top">
           <div :class="{ 'course-code--min': compact }" class="course-code">
-            {{ subject }} {{ number }}
+            {{ courseObj.code }}
           </div>
           <div v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
         </div>
-        <div v-if="!compact" class="course-name">{{ name }}</div>
+        <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
         <div class="course-info">
           <span v-if="!compact" class="course-credits">{{ creditString }}</span>
           <span v-if="!compact && semesterString" class="course-semesters">{{
@@ -46,50 +46,36 @@ import Vue, { PropType } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/CourseCaution.vue';
 import { clickOutside } from '@/utilities';
-import { AppCourse } from '@/user-data';
+import { FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('coursemenu', CourseMenu);
 Vue.component('course-caution', CourseCaution);
 
 export default Vue.extend({
   props: {
-    courseObj: Object as PropType<AppCourse>,
-    subject: String,
-    number: String,
-    name: String,
-    credits: Number,
-    creditRange: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
-    prereqs: String,
-    semesters: Array,
-    color: String,
-    duplicatedCourseCodeList: {
-      required: false,
-      type: Array,
-    },
-    compact: Boolean,
-    uniqueID: Number,
-    active: Boolean,
-    semesterIndex: Number,
-    isReqCourse: Boolean,
+    courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    duplicatedCourseCodeList: { type: Array, required: false },
+    compact: { type: Boolean, required: true },
+    active: { type: Boolean, required: true },
+    isReqCourse: { type: Boolean, required: true },
+    semesterIndex: { type: Number, required: false },
   },
   data() {
     return {
       menuOpen: false,
       stopCloseFlag: false,
-      getCreditRange: this.creditRange,
+      getCreditRange: this.courseObj.creditRange,
       colorJustChanged: false,
     };
   },
   computed: {
     cautionString(): string | null {
       if (this.duplicatedCourseCodeList == null) return null;
-      return this.duplicatedCourseCodeList.includes(`${this.subject} ${this.number}`)
-        ? 'Duplicate'
-        : null;
+      return this.duplicatedCourseCodeList.includes(this.courseObj.code) ? 'Duplicate' : null;
     },
     semesterString(): string {
       let semesterString = '';
-      this.semesters.forEach(semester => {
+      this.courseObj.semesters.forEach(semester => {
         semesterString += `${semester}, `;
       });
       if (semesterString.length > 0) {
@@ -100,22 +86,24 @@ export default Vue.extend({
     },
 
     creditString(): string {
-      if (this.credits === 1) {
-        return `${this.credits} credit`;
+      if (this.courseObj.credits === 1) {
+        return `${this.courseObj.credits} credit`;
       }
-      return `${this.credits} credits`;
+      return `${this.courseObj.credits} credits`;
     },
     review(): string {
-      return `https://www.cureviews.org/course/${this.subject}/${this.number}`;
+      const [subject, number] = this.courseObj.code;
+      return `https://www.cureviews.org/course/${subject}/${number}`;
     },
 
     roster(): string {
-      return `https://classes.cornell.edu/browse/roster/FA18/class/${this.subject}/${this.number}`;
+      const [subject, number] = this.courseObj.code;
+      return `https://classes.cornell.edu/browse/roster/FA18/class/${subject}/${number}`;
     },
 
     cssVars(): { '--bg-color': string } {
       return {
-        '--bg-color': `#${this.color}`,
+        '--bg-color': `#${this.courseObj.color}`,
       };
     },
   },
@@ -132,22 +120,22 @@ export default Vue.extend({
       }
     },
     deleteCourse() {
-      this.$emit('delete-course', this.subject, this.number, this.uniqueID);
+      this.$emit('delete-course', this.courseObj.code, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
     },
     colorCourse(color: string) {
-      this.$emit('color-course', color, this.uniqueID);
+      this.$emit('color-course', color, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
       this.colorJustChanged = true;
     },
     updateBar() {
       if (!this.menuOpen) {
-        this.$emit('updateBar', this.courseObj, this.colorJustChanged, this.color);
+        this.$emit('updateBar', this.courseObj, this.colorJustChanged, this.courseObj.color);
       }
       this.colorJustChanged = false;
     },
     editCourseCredit(credit: number) {
-      this.$emit('edit-course-credit', credit, this.uniqueID);
+      this.$emit('edit-course-credit', credit, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
     },
   },

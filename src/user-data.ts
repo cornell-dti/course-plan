@@ -100,33 +100,6 @@ export type AppOnboardingData = {
   readonly tookSwim: 'yes' | 'no';
 };
 
-export type AppCourse = {
-  readonly crseId: number;
-  readonly subject: string;
-  readonly number: string;
-  readonly name: string;
-  readonly description: string;
-  readonly credits: number;
-  readonly creditRange: readonly [number, number];
-  readonly semesters: readonly string[];
-  readonly prereqs: string;
-  readonly enrollment: readonly string[];
-  readonly lectureTimes: readonly string[];
-  readonly instructors: readonly string[];
-  readonly distributions: readonly string[];
-  readonly lastRoster: string;
-  readonly color: string;
-  readonly check: boolean;
-  uniqueID: number;
-  isReqCourse: boolean;
-};
-
-export type AppSemester = {
-  readonly courses: readonly AppCourse[];
-  readonly type: FirestoreSemesterType;
-  readonly year: number;
-};
-
 export type AppBottomBarCourse = {
   readonly subject: string;
   readonly number: string;
