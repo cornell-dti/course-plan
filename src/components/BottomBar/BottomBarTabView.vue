@@ -6,8 +6,7 @@
         :key="index"
         class="bottombartabview-courseWrapper"
       >
-        <bottombartab
-          v-bind="bottomCourse"
+        <bottom-bar-tab
           :subject="bottomCourse.subject"
           :number="bottomCourse.number"
           :color="bottomCourse.color"
@@ -64,22 +63,20 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import BottomBarTab from '@/components/BottomBar/BottomBarTab.vue';
-import { AppBottomBarCourse } from '@/user-data';
-
-Vue.component('bottombartab', BottomBarTab);
 
 export default Vue.extend({
+  components: { BottomBarTab },
   data() {
     return {
       seeMoreOpen: false,
     };
   },
   props: {
-    bottomCourses: Array as PropType<AppBottomBarCourse[]>,
-    seeMoreCourses: Array as PropType<AppBottomBarCourse[]>,
-    bottomCourseFocus: Number,
-    isExpanded: Boolean,
-    maxBottomBarTabs: Number,
+    bottomCourses: { type: Array as PropType<AppBottomBarCourse[]>, required: true },
+    seeMoreCourses: { type: Array as PropType<AppBottomBarCourse[]>, required: true },
+    bottomCourseFocus: { type: Number, required: true },
+    isExpanded: { type: Boolean, required: true },
+    maxBottomBarTabs: { type: Number, required: true },
   },
 
   computed: {

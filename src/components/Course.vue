@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <coursemenu
+    <course-menu
       v-if="menuOpen"
       :semesterIndex="semesterIndex"
       :isCompact="compact"
@@ -46,12 +46,9 @@ import Vue, { PropType } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/CourseCaution.vue';
 import { clickOutside } from '@/utilities';
-import { FirestoreSemesterCourse } from '@/user-data';
-
-Vue.component('coursemenu', CourseMenu);
-Vue.component('course-caution', CourseCaution);
 
 export default Vue.extend({
+  components: { CourseCaution, CourseMenu },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     duplicatedCourseCodeList: { type: Array, required: false },

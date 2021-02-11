@@ -48,7 +48,7 @@
         </div>
       </draggable>
       <div v-if="subReq.fulfilledBy === 'self-check'">
-        <addcoursebutton :compact="true" :shouldClearPadding="true" @click="onAddCourse" />
+        <add-course-button :compact="true" :shouldClearPadding="true" @click="onAddCourse" />
       </div>
     </div>
   </div>
@@ -65,11 +65,6 @@ import {
   SubReqCourseSlot,
   CrseInfo,
 } from '@/requirements/types';
-import { FirestoreSemesterCourse } from '@/user-data';
-
-Vue.component('vue-skeleton-loader', VueSkeletonLoader);
-Vue.component('course', Course);
-Vue.component('addcoursebutton', AddCourseButton);
 
 type Data = {
   courseObjects: FirestoreSemesterCourse[];
@@ -78,7 +73,7 @@ type Data = {
 };
 
 export default Vue.extend({
-  components: { draggable },
+  components: { draggable, AddCourseButton, Course, VueSkeletonLoader },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
   },
@@ -93,14 +88,17 @@ export default Vue.extend({
     this.$el.removeEventListener('touchmove', this.dragListener);
   },
   props: {
-    subReq: Object as PropType<DisplayableRequirementFulfillment>,
-    subReqCourseId: Number,
-    crseInfoObjects: Array as PropType<CrseInfo[]>,
-    subReqFetchedCourseObjectsNotTakenArray: Array as PropType<FirestoreSemesterCourse[]>,
-    subReqCoursesArray: Array as PropType<SubReqCourseSlot[]>,
-    dataReady: Boolean,
-    displayDescription: Boolean,
-    lastLoadedShowAllCourseId: Number,
+    subReq: { type: Object as PropType<DisplayableRequirementFulfillment>, required: true },
+    subReqCourseId: { type: Number, required: true },
+    crseInfoObjects: { type: Array as PropType<CrseInfo[]>, required: true },
+    subReqFetchedCourseObjectsNotTakenArray: {
+      type: Array as PropType<FirestoreSemesterCourse[]>,
+      required: true,
+    },
+    subReqCoursesArray: { type: Array as PropType<SubReqCourseSlot[]>, required: true },
+    dataReady: { type: Boolean, required: true },
+    displayDescription: { type: Boolean, required: true },
+    lastLoadedShowAllCourseId: { type: Number, required: true },
   },
   watch: {
     dataReady: {

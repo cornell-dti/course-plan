@@ -33,10 +33,10 @@ import { clickOutside } from '@/utilities';
 
 export default Vue.extend({
   props: {
-    title: String,
-    text: String,
-    exit: String,
-    buttonText: String,
+    title: { type: String, required: true },
+    text: { type: String, required: true },
+    exit: { type: String, required: true },
+    buttonText: { type: String, required: true },
   },
   data() {
     return {

@@ -24,9 +24,9 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    compact: Boolean,
-    shouldClearPadding: Boolean,
-    shouldShowWalkthrough: Boolean,
+    compact: { type: Boolean, required: true },
+    shouldClearPadding: { type: Boolean, default: false },
+    shouldShowWalkthrough: { type: Boolean, default: false },
   },
   computed: {
     addCourseText() {

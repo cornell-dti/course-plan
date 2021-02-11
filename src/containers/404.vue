@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="body-container">
-      <topbar />
+      <top-bar />
       <div class="message-container">
         <img class="img-404" src="@/assets/images/404.svg" alt="404" />
         <div class="oops-wrapper">
@@ -26,13 +26,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Footer from '@/components/Footer.vue';
+import CustomFooter from '@/components/Footer.vue';
 import TopBar from '@/components/TopBar.vue';
 
-Vue.component('custom-footer', Footer);
-Vue.component('topbar', TopBar);
-
-export default Vue.extend({});
+export default Vue.extend({
+  components: { CustomFooter, TopBar },
+});
 </script>
 
 <style scoped lang="scss">

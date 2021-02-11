@@ -1,9 +1,9 @@
 <template>
   <flexible-modal
     title="New Semester"
-    contentClass="content-semester"
-    leftButtonText="CANCEL"
-    rightButtonText="ADD"
+    content-class="content-semester"
+    left-button-text="CANCEL"
+    right-button-text="ADD"
     :rightButtonIsDisabled="isDisabled"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
@@ -24,12 +24,9 @@
 import Vue, { PropType } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
-import { FirestoreSemester } from '@/user-data';
-
-Vue.component('flexible-modal', FlexibleModal);
-Vue.component('new-semester', NewSemester);
 
 export default Vue.extend({
+  components: { FlexibleModal, NewSemester },
   data() {
     return { isDisabled: false, season: '', year: 0 };
   },

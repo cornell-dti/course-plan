@@ -15,23 +15,23 @@
       :class="{ 'confirmation-modal--flex': isConfirmationOpen }"
       :text="confirmationText"
     />
-    <deletesemester
+    <delete-semester
       class="semester-modal"
       :class="{ 'modal--block': isDeleteSemesterOpen }"
       @delete-semester="deleteSemester"
       @close-delete-modal="closeDeleteModal"
-      :deleteSemType="deleteSemType"
-      :deleteSemYear="deleteSemYear"
+      :deleteSemType="type"
+      :deleteSemYear="year"
       ref="deletesemester"
     />
-    <editsemester
+    <edit-semester
       class="semester-modal"
       :class="{ 'modal--block': isEditSemesterOpen }"
       @edit-semester="editSemester"
       @close-edit-modal="closeEditModal"
       :semesters="semesters"
-      :deleteSemType="deleteSemType"
-      :deleteSemYear="deleteSemYear"
+      :deleteSemType="type"
+      :deleteSemYear="year"
       ref="modalBodyComponent"
     />
     <button
@@ -99,14 +99,14 @@
             />
           </div>
         </draggable>
-        <addcoursebutton
+        <add-course-button
           :compact="compact"
           :shouldShowWalkthrough="true"
           @click="openCourseModal"
         />
       </div>
     </div>
-    <semestermenu
+    <semester-menu
       v-if="semesterMenuOpen"
       class="semester-menu"
       @open-delete-semester-modal="openDeleteSemesterModal"
@@ -129,7 +129,6 @@ import EditSemester from '@/components/Modals/EditSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
 import { clickOutside } from '@/utilities';
-import { FirestoreSemester, FirestoreSemesterCourse, CornellCourseRosterCourse } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
 
 import fall from '@/assets/images/fallEmoji.svg';
@@ -138,13 +137,7 @@ import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
-Vue.component('course', Course);
 Vue.component('new-course-modal', NewCourseModal);
-Vue.component('confirmation', Confirmation);
-Vue.component('semestermenu', SemesterMenu);
-Vue.component('deletesemester', DeleteSemester);
-Vue.component('editsemester', EditSemester);
-Vue.component('addcoursebutton', AddCourseButton);
 
 const pageTour = introJs();
 pageTour.setOption('exitOnEsc', 'false');
@@ -154,7 +147,15 @@ pageTour.setOption('nextLabel', 'Next');
 pageTour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
-  components: { draggable },
+  components: {
+    draggable,
+    AddCourseButton,
+    Confirmation,
+    Course,
+    DeleteSemester,
+    EditSemester,
+    SemesterMenu,
+  },
   data() {
     return {
       confirmationText: '',
@@ -163,8 +164,6 @@ export default Vue.extend({
       semesterMenuOpen: false,
       stopCloseFlag: false,
 
-      deleteSemType: '',
-      deleteSemYear: 0,
       isDeleteSemesterOpen: false,
       isEditSemesterOpen: false,
       isShadow: false,
@@ -438,8 +437,6 @@ export default Vue.extend({
       }
     },
     openDeleteSemesterModal() {
-      this.deleteSemType = this.type;
-      this.deleteSemYear = this.year;
       this.isDeleteSemesterOpen = true;
     },
     deleteSemester(type: string, year: string) {
@@ -447,9 +444,6 @@ export default Vue.extend({
       this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
     },
     openEditSemesterModal() {
-      this.deleteSemType = this.type;
-      this.deleteSemYear = this.year;
-
       this.isEditSemesterOpen = true;
     },
     editSemester(seasonInput: 'Fall' | 'Spring' | 'Winter' | 'Summer', yearInput: number) {

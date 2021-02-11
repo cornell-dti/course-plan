@@ -92,7 +92,6 @@ import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import { inactiveGray, yuxuanBlue, darkPlaceholderGray } from '@/assets/scss/_variables.scss';
-import { FirestoreSemesterType, FirestoreSemester } from '@/user-data';
 
 type DisplayOption = {
   shown: boolean;
@@ -115,12 +114,14 @@ type Data = {
 
 export default Vue.extend({
   props: {
-    currentSemesters: Array as PropType<readonly FirestoreSemester[] | null>,
-    id: Number,
-    isEdit: Boolean,
-    year: Number,
-    type: String as PropType<FirestoreSemesterType>,
-    isCourseModelSelectingSemester: Boolean,
+    currentSemesters: {
+      type: Array as PropType<readonly FirestoreSemester[] | null>,
+      default: null,
+    },
+    isEdit: { type: Boolean, default: false },
+    year: { type: Number, default: 0 },
+    type: { type: String as PropType<FirestoreSemesterType>, default: '' },
+    isCourseModelSelectingSemester: { type: Boolean, default: false },
   },
   data(): Data {
     // years

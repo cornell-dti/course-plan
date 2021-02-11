@@ -71,7 +71,11 @@ const getMatchingCourses = (
 };
 
 export default Vue.extend({
-  props: { searchBoxClassName: String, placeholder: String, autoFocus: Boolean },
+  props: {
+    searchBoxClassName: { type: String, required: true },
+    placeholder: { type: String, required: true },
+    autoFocus: { type: Boolean, required: true },
+  },
   data() {
     return {
       searchText: '',

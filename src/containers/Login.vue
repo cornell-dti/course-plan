@@ -8,7 +8,7 @@
 
     <div class="landing">
       <!--TOP BAR-->
-      <topbar />
+      <top-bar />
 
       <!--PLAN AHEAD-->
       <div class="container p-0 m-0">
@@ -172,13 +172,10 @@
 import Vue from 'vue';
 import firebase from 'firebase/app';
 
-import Footer from '@/components/Footer.vue';
+import CustomFooter from '@/components/Footer.vue';
 import TopBar from '@/components/TopBar.vue';
 
 import * as fb from '@/firebaseConfig';
-
-Vue.component('custom-footer', Footer);
-Vue.component('topbar', TopBar);
 
 const { whitelistCollection, landingEmailsCollection } = fb;
 
@@ -190,6 +187,7 @@ type Data = {
 };
 
 export default Vue.extend({
+  components: { CustomFooter, TopBar },
   data(): Data {
     return {
       loginForm: {

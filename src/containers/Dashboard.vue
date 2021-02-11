@@ -11,7 +11,7 @@
     />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
-        <navbar
+        <nav-bar
           class="dashboard-nav"
           @editProfile="editProfile"
           @toggleRequirementsBar="toggleRequirementsBar"
@@ -45,7 +45,7 @@
         @close-bar="closeBar"
       />
     </div>
-    <tourwindow
+    <tour-window
       :title="welcome"
       :text="welcomeBodytext"
       :exit="welcomeExit"
@@ -57,8 +57,8 @@
       @skip="welcomeHidden = false"
       v-if="welcomeHidden"
     >
-    </tourwindow>
-    <tourwindow
+    </tour-window>
+    <tour-window
       :title="congrats"
       :text="congratsBodytext"
       :exit="congratsExit"
@@ -66,9 +66,9 @@
       @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
     >
-    </tourwindow>
+    </tour-window>
     <div>
-      <bottombar
+      <bottom-bar
         v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
         :bottomCourses="bottomCourses"
         :seeMoreCourses="seeMoreCourses"
@@ -87,7 +87,6 @@
 import Vue from 'vue';
 
 import introJs from 'intro.js';
-import Course from '@/components/Course.vue';
 import SemesterView from '@/components/Semester/SemesterView.vue';
 import Requirements from '@/components/Requirements/Requirements.vue';
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
@@ -97,13 +96,6 @@ import TourWindow from '@/components/Modals/TourWindow.vue';
 
 import surfing from '@/assets/images/surfing.svg';
 
-import {
-  FirestoreUserName,
-  FirestoreSemester,
-  AppOnboardingData,
-  AppBottomBarCourse,
-  FirestoreSemesterCourse,
-} from '@/user-data';
 import computeRequirements from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
@@ -111,13 +103,8 @@ import store, { initializeFirestoreListeners, subscribeRequirementDependencyChan
 import { semestersCollection } from '@/firebaseConfig';
 import getCurrentSeason, { getCurrentYear } from '@/utilities';
 
-Vue.component('course', Course);
 Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
-Vue.component('bottombar', BottomBar);
-Vue.component('navbar', NavBar);
-Vue.component('onboarding', Onboarding);
-Vue.component('tourwindow', TourWindow);
 
 const tour = introJs();
 tour.setOption('exitOnEsc', 'false');
@@ -130,6 +117,7 @@ tour.setOption('exitOnOverlayClick', 'false');
 let listenerUnsubscriber = (): void => {};
 
 export default Vue.extend({
+  components: { BottomBar, NavBar, Onboarding, TourWindow },
   data() {
     return {
       loaded: true,

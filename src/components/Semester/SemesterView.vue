@@ -94,26 +94,17 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import Course from '@/components/Course.vue';
 import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Confirmation.vue';
 import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
-import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
-import EditSemester from '@/components/Modals/EditSemester.vue';
 
 import { semestersCollection } from '@/firebaseConfig';
-import { FirestoreSemester, FirestoreSemesterCourse, FirestoreSemesterType } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
 import store from '@/store';
 
-Vue.component('course', Course);
 Vue.component('semester', Semester);
-Vue.component('confirmation', Confirmation);
-Vue.component('semester-caution', SemesterCaution);
 Vue.component('new-semester-modal', NewSemesterModal);
-Vue.component('deletesemester', DeleteSemester);
-Vue.component('editsemester', EditSemester);
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -124,6 +115,7 @@ const SeasonsEnum = Object.freeze({
 });
 
 export default Vue.extend({
+  components: { Confirmation, SemesterCaution },
   props: {
     semesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
     compact: { type: Boolean, required: true },

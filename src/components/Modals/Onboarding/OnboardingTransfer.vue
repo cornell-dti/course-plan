@@ -166,7 +166,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
-import { FirestoreAPIBExam, CornellCourseRosterCourse, AppOnboardingData } from '@/user-data';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
 import CourseSelector, { MatchingCourseSearchResult } from '../NewCourse/CourseSelector.vue';

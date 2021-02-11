@@ -12,18 +12,18 @@
             Let's get to know you first!
           </div>
           <div v-if="isEditingProfile" class="onboarding-description">Let's edit your profile!</div>
-          <onboardingBasic
+          <onboarding-basic
             v-if="currentPage == 1"
             :userName="name"
             :onboardingData="onboarding"
             @updateBasic="updateBasic"
           />
-          <onboardingTransfer
+          <onboarding-transfer
             v-if="currentPage == 2"
             :onboardingData="onboarding"
             @updateTransfer="updateTransfer"
           />
-          <onboardingReview
+          <onboarding-review
             v-if="currentPage == 3"
             :userName="name"
             :onboardingData="onboarding"
@@ -70,23 +70,14 @@ import Vue, { PropType } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import {
-  AppOnboardingData,
-  FirestoreAPIBExam,
-  FirestoreTransferClass,
-  FirestoreUserName,
-} from '@/user-data';
 import { db, onboardingDataCollection, usernameCollection } from '@/firebaseConfig';
 import store from '@/store';
-
-Vue.component('onboardingBasic', OnboardingBasic);
-Vue.component('onboardingTransfer', OnboardingTransfer);
-Vue.component('onboardingReview', OnboardingReview);
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
 
 export default Vue.extend({
+  components: { OnboardingBasic, OnboardingReview, OnboardingTransfer },
   props: {
     isEditingProfile: { type: Boolean, required: true },
     userName: { type: Object as PropType<FirestoreUserName>, required: true },

@@ -1,7 +1,7 @@
 <template>
   <flexible-modal
     title="Add Course"
-    contentClass="content-course"
+    content-class="content-course"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="selectedCourse == null"
@@ -21,12 +21,12 @@
     <div v-if="isCourseModelSelectingSemester && selectedCourse == null">
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
-        <newSemester
+        <new-semester
           :type="season"
           :year="year"
           :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
           @updateSemProps="updateSemProps"
-        ></newSemester>
+        />
       </div>
     </div>
     <div v-if="selectedCourse != null">
@@ -60,8 +60,9 @@ import Vue, { PropType } from 'vue';
 import SelectedRequirementEditor, {
   RequirementWithID,
 } from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
-import { FirestoreSemesterType, CornellCourseRosterCourse } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
+import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
+import NewSemester from '@/components/Modals/NewSemester.vue';
 import CourseSelector, {
   MatchingCourseSearchResult,
 } from '@/components/Modals/NewCourse/CourseSelector.vue';
@@ -72,7 +73,7 @@ import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 
 export default Vue.extend({
-  components: { CourseSelector, SelectedRequirementEditor },
+  components: { CourseSelector, FlexibleModal, NewSemester, SelectedRequirementEditor },
   data() {
     return {
       selectedCourse: null as MatchingCourseSearchResult | null,
