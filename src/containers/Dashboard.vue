@@ -107,12 +107,12 @@ import {
 import {
   FirestoreUserName,
   FirestoreOnboardingUserData,
-  AppCourse,
+  FirestoreSemester,
   AppOnboardingData,
-  AppSemester,
   AppBottomBarCourse,
+  FirestoreSemesterCourse,
 } from '@/user-data';
-import { firestoreSemestersToAppSemesters, createAppOnboardingData } from '@/user-data-converter';
+import { createAppOnboardingData } from '@/user-data-converter';
 import computeRequirements from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
@@ -140,7 +140,7 @@ export default Vue.extend({
     return {
       loaded: false,
       compactVal: false,
-      semesters: [] as readonly AppSemester[],
+      semesters: [] as readonly FirestoreSemester[],
       userName: {
         firstName: names[0],
         middleName: '',
@@ -211,7 +211,7 @@ export default Vue.extend({
         if (usernameData != null && onboardingData != null) this.userName = usernameData;
         if (onboardingData != null) this.onboardingData = createAppOnboardingData(onboardingData);
         if (semestersData != null) {
-          this.semesters = firestoreSemestersToAppSemesters(semestersData.semesters);
+          this.semesters = semestersData.semesters;
         } else {
           const newSemesterData = [
             { type: getCurrentSeason(), year: getCurrentYear(), courses: [] },
@@ -228,7 +228,7 @@ export default Vue.extend({
       });
     },
 
-    editSemesters(newSemesters: readonly AppSemester[]) {
+    editSemesters(newSemesters: readonly FirestoreSemester[]) {
       this.semesters = newSemesters;
       this.recomputeRequirements();
     },
@@ -261,11 +261,12 @@ export default Vue.extend({
       this.bottomBar.bottomCourseFocus = newBottomCourseFocus;
     },
 
-    updateBar(course: AppCourse, colorJustChanged: string, color: string) {
+    updateBar(course: FirestoreSemesterCourse, colorJustChanged: string, color: string) {
+      const [subject, number] = course.code.split(' ');
       // Update Bar Information
       const courseToAdd: AppBottomBarCourse = {
-        subject: course.subject,
-        number: course.number,
+        subject,
+        number,
         name: course.name,
         credits: course.credits,
         semesters: this.joinOrNAString(course.semesters),
@@ -331,7 +332,7 @@ export default Vue.extend({
         this.bottomBar.bottomCourseFocus = bottomCourseIndex;
       }
 
-      this.getReviews(course.subject, course.number, review => {
+      this.getReviews(subject, number, review => {
         this.bottomCourses[bottomCourseIndex].overallRating = review.classRating;
         this.bottomCourses[bottomCourseIndex].difficulty = review.classDifficulty;
         this.bottomCourses[bottomCourseIndex].workload = review.classWorkload;
@@ -461,11 +462,12 @@ export default Vue.extend({
       const courses: CourseTaken[] = [];
       this.semesters.forEach(semester => {
         semester.courses.forEach(course => {
+          const [subject, number] = course.code.split(' ');
           courses.push({
-            code: `${course.lastRoster}: ${course.subject} ${course.number}`,
-            subject: course.subject,
+            code: `${course.lastRoster}: ${subject} ${number}`,
+            subject,
             courseId: course.crseId,
-            number: course.number,
+            number,
             credits: course.credits,
             roster: course.lastRoster,
           });

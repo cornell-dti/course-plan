@@ -120,8 +120,8 @@ import {
 } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
 
-import { CornellCourseRosterCourse, AppCourse, AppSemester } from '@/user-data';
-import { cornellCourseRosterCourseToAppCourse } from '@/user-data-converter';
+import { FirestoreSemester, FirestoreSemesterCourse } from '@/user-data';
+import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
@@ -134,7 +134,7 @@ const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
   displayDescription: boolean;
-  subReqFetchedCourseObjectsNotTakenArray: AppCourse[];
+  subReqFetchedCourseObjectsNotTakenArray: FirestoreSemesterCourse[];
   dataReady: boolean;
 };
 
@@ -151,7 +151,7 @@ export default Vue.extend({
     color: String,
     rostersFromLastTwoYears: Array as PropType<readonly string[]>,
     lastLoadedShowAllCourseId: Number,
-    semesters: Array as PropType<readonly AppSemester[]>,
+    semesters: Array as PropType<readonly FirestoreSemester[]>,
   },
   watch: {
     subReqCoursesArray: {
@@ -201,7 +201,7 @@ export default Vue.extend({
     getArrowColor() {
       return this.isCompleted ? '#979797CC' : '#979797';
     },
-    onShowAllCourses(courses: AppCourse[]) {
+    onShowAllCourses(courses: FirestoreSemesterCourse[]) {
       this.$emit('onShowAllCourses', courses);
     },
     toggleDescription() {
@@ -320,12 +320,9 @@ export default Vue.extend({
       })
         .then(result => {
           fetchedCourses = result.data.courses;
-          fetchedCourses.forEach((course: CornellCourseRosterCourse) => {
-            const createdCourse = cornellCourseRosterCourseToAppCourse(course, true);
-            // @ts-ignore
-            createdCourse.compact = true;
-            this.subReqFetchedCourseObjectsNotTakenArray.push(createdCourse);
-          });
+          this.subReqFetchedCourseObjectsNotTakenArray.push(
+            ...fetchedCourses.map(cornellCourseRosterCourseToFirebaseSemesterCourse)
+          );
           this.isDataReady();
         })
         .catch(error => {

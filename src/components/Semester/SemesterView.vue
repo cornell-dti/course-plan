@@ -103,13 +103,7 @@ import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 
 import { semestersCollection } from '@/firebaseConfig';
-import {
-  AppCourse,
-  AppSemester,
-  FirestoreSemester,
-  FirestoreSemesterCourse,
-  FirestoreSemesterType,
-} from '@/user-data';
+import { FirestoreSemester, FirestoreSemesterCourse, FirestoreSemesterType } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
 import store from '@/store';
 
@@ -131,7 +125,7 @@ const SeasonsEnum = Object.freeze({
 
 export default Vue.extend({
   props: {
-    semesters: Array as PropType<readonly AppSemester[]>,
+    semesters: Array as PropType<readonly FirestoreSemester[]>,
     compact: Boolean,
     isBottomBar: Boolean,
     isBottomBarExpanded: Boolean,
@@ -169,7 +163,7 @@ export default Vue.extend({
     this.buildDuplicateCautions();
   },
   methods: {
-    checkIfFirstSem(semester: AppSemester) {
+    checkIfFirstSem(semester: FirestoreSemester) {
       return this.semesters[0].year === semester.year && this.semesters[0].type === semester.type;
     },
     setCompact() {
@@ -198,7 +192,7 @@ export default Vue.extend({
       if (this.semesters) {
         this.semesters.forEach(semester => {
           semester.courses.forEach(course => {
-            const code = `${course.subject} ${course.number}`;
+            const { code } = course;
             if (allCourseSet.has(code)) {
               duplicatedCourseCodeList.push(code);
             } else {
@@ -236,7 +230,11 @@ export default Vue.extend({
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
     },
-    createSemester(courses: readonly AppCourse[], type: FirestoreSemesterType, year: number) {
+    createSemester(
+      courses: readonly FirestoreSemesterCourse[],
+      type: FirestoreSemesterType,
+      year: number
+    ) {
       return { courses, type, year };
     },
     addSemester(type: FirestoreSemesterType, year: number) {
@@ -268,7 +266,11 @@ export default Vue.extend({
       // Update requirements menu from dashboard
       this.$emit('edit-semesters', newSemesters);
     },
-    addCourseToSemester(season: FirestoreSemesterType, year: number, newCourse: AppCourse) {
+    addCourseToSemester(
+      season: FirestoreSemesterType,
+      year: number,
+      newCourse: FirestoreSemesterCourse
+    ) {
       let semesterFound = false;
       const newSemestersWithCourse = this.semesters.map(sem => {
         if (sem.type === season && sem.year === year) {
@@ -287,7 +289,7 @@ export default Vue.extend({
         this.$emit('edit-semesters', newSemesters);
       }
     },
-    compare(a: AppSemester, b: AppSemester): number {
+    compare(a: FirestoreSemester, b: FirestoreSemester): number {
       if (a.type === b.type && a.year === b.year) {
         return 0;
       }
@@ -305,7 +307,7 @@ export default Vue.extend({
     editSemester(
       year: number,
       type: FirestoreSemesterType,
-      updater: (oldSemester: AppSemester) => AppSemester
+      updater: (oldSemester: FirestoreSemester) => FirestoreSemester
     ) {
       const newSemesters = this.semesters
         .map(currentSemester =>
@@ -316,7 +318,7 @@ export default Vue.extend({
         .sort(this.compare);
       this.$emit('edit-semesters', newSemesters);
     },
-    updateBar(course: AppCourse, colorJustChanged: string, color: string) {
+    updateBar(course: FirestoreSemesterCourse, colorJustChanged: string, color: string) {
       this.activatedCourse = course;
       this.key += 1;
       this.$emit('updateBar', course, colorJustChanged, color);
@@ -329,30 +331,6 @@ export default Vue.extend({
       this.isCourseClicked = false;
     },
     /**
-     * Reduces course object to only information needed to be stored on Firebase
-     * Works in conjunction with addCourse()
-     * CHANGE WILL ALTER DATA STRUCTURE
-     */
-    toFirebaseCourse(course: AppCourse): FirestoreSemesterCourse {
-      return {
-        crseId: course.crseId,
-        code: `${course.subject} ${course.number}`,
-        name: course.name,
-        description: course.description,
-        credits: course.credits,
-        creditRange: course.creditRange,
-        semesters: course.semesters,
-        prereqs: course.prereqs,
-        enrollment: course.enrollment,
-        lectureTimes: course.lectureTimes,
-        instructors: course.instructors,
-        distributions: course.distributions,
-        lastRoster: course.lastRoster,
-        color: course.color,
-        uniqueID: course.uniqueID,
-      };
-    },
-    /**
      * Updates semester user data
      */
     updateFirebaseSemester() {
@@ -360,11 +338,7 @@ export default Vue.extend({
       const userEmail = store.state.currentFirebaseUser.email;
       const docRef = semestersCollection.doc(userEmail);
 
-      const firebaseSemesters: FirestoreSemester[] = this.semesters.map(sem => ({
-        ...sem,
-        courses: sem.courses.map(course => this.toFirebaseCourse(course)),
-      }));
-      docRef.set({ semesters: firebaseSemesters }).catch(error => {
+      docRef.set({ semesters: this.semesters }).catch(error => {
         console.error('Error writing document:', error);
       });
     },

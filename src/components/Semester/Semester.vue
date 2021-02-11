@@ -80,7 +80,7 @@
               v-bind="course"
               :courseObj="course"
               :duplicatedCourseCodeList="duplicatedCourseCodeList"
-              :uniqueID="course.uniqueID"
+              :isReqCourse="false"
               :compact="compact"
               :active="activatedCourse.uniqueID === course.uniqueID"
               class="semester-course"
@@ -121,14 +121,14 @@ import EditSemester from '@/components/Modals/EditSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
 import { clickOutside } from '@/utilities';
-import { AppCourse, AppSemester, CornellCourseRosterCourse } from '@/user-data';
+import { FirestoreSemester, FirestoreSemesterCourse, CornellCourseRosterCourse } from '@/user-data';
 import { SingleMenuRequirement } from '@/requirements/types';
 
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
-import { cornellCourseRosterCourseToAppCourse } from '@/user-data-converter';
+import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
 Vue.component('course', Course);
 Vue.component('new-course-modal', NewCourseModal);
@@ -175,11 +175,11 @@ export default Vue.extend({
     semesterIndex: Number,
     type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>,
     year: Number,
-    courses: Array as PropType<readonly AppCourse[]>,
+    courses: Array as PropType<readonly FirestoreSemesterCourse[]>,
     compact: Boolean,
-    activatedCourse: Object as PropType<AppCourse>,
+    activatedCourse: Object as PropType<FirestoreSemesterCourse>,
     duplicatedCourseCodeList: Array as PropType<readonly string[]>,
-    semesters: Array as PropType<readonly AppSemester[]>,
+    semesters: Array as PropType<readonly FirestoreSemester[]>,
     isFirstSem: Boolean,
     reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },
@@ -190,7 +190,7 @@ export default Vue.extend({
           'edit-semester',
           this.year,
           this.type,
-          (semester: AppSemester): AppSemester => ({
+          (semester: FirestoreSemester): FirestoreSemester => ({
             ...semester,
             courses: this.courses,
           })
@@ -254,9 +254,9 @@ export default Vue.extend({
       return `${credits.toString()} credits`;
     },
     // Note: Currently not used
-    deleteDuplicateCourses(): readonly AppCourse[] {
+    deleteDuplicateCourses(): readonly FirestoreSemesterCourse[] {
       const uniqueCoursesNames: string[] = [];
-      const uniqueCourses: AppCourse[] = [];
+      const uniqueCourses: FirestoreSemesterCourse[] = [];
       this.courses.forEach(course => {
         if (uniqueCoursesNames.indexOf(course.name) === -1) {
           uniqueCourses.push(course);
@@ -305,7 +305,7 @@ export default Vue.extend({
       season: string | null = null,
       year: number | null = null
     ) {
-      const newCourse = cornellCourseRosterCourseToAppCourse(data, false);
+      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(data);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       let confirmationMsg;
       if (season !== '' || year !== 0) {
@@ -316,7 +316,7 @@ export default Vue.extend({
           'edit-semester',
           this.year,
           this.type,
-          (semester: AppSemester): AppSemester => ({
+          (semester: FirestoreSemester): FirestoreSemester => ({
             ...semester,
             courses: [...this.courses, newCourse],
           })
@@ -330,8 +330,7 @@ export default Vue.extend({
         value: 1,
       });
     },
-    deleteCourse(subject: string, number: string, uniqueID: number) {
-      const courseCode = `${subject} ${number}`;
+    deleteCourse(courseCode: string, uniqueID: number) {
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
       this.$gtag.event('delete-course', {
         event_category: 'course',
@@ -343,7 +342,7 @@ export default Vue.extend({
         'edit-semester',
         this.year,
         this.type,
-        (semester: AppSemester): AppSemester => ({
+        (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.filter(course => course.uniqueID !== uniqueID),
         })
@@ -354,7 +353,7 @@ export default Vue.extend({
         'edit-semester',
         this.year,
         this.type,
-        (semester: AppSemester): AppSemester => ({
+        (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
             course.uniqueID === uniqueID ? { ...course, color } : course
@@ -362,7 +361,7 @@ export default Vue.extend({
         })
       );
     },
-    updateBar(course: AppCourse, colorJustChanged: string, color: string) {
+    updateBar(course: FirestoreSemesterCourse, colorJustChanged: string, color: string) {
       this.$emit('updateBar', course, colorJustChanged, color);
     },
     editCourseCredit(credit: number, uniqueID: number) {
@@ -370,7 +369,7 @@ export default Vue.extend({
         'edit-semester',
         this.year,
         this.type,
-        (semester: AppSemester): AppSemester => ({
+        (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
             course.uniqueID === uniqueID ? { ...course, credits: credit } : course
@@ -397,7 +396,7 @@ export default Vue.extend({
         // @ts-ignore
         this.$refs.modal.courseIsAddable = true;
         this.courses.forEach(course => {
-          if (`${course.subject} ${course.number}` === key) {
+          if (course.code === key) {
             // @ts-ignore
             this.$refs.modal.courseIsAddable = false;
             this.$emit('open-caution-modal');
@@ -445,7 +444,7 @@ export default Vue.extend({
         'edit-semester',
         this.year,
         this.type,
-        (oldSemester: AppSemester): AppSemester => ({
+        (oldSemester: FirestoreSemester): FirestoreSemester => ({
           ...oldSemester,
           type: seasonInput,
           year: yearInput,

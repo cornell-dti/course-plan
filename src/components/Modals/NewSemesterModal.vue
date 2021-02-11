@@ -24,7 +24,7 @@
 import Vue, { PropType } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
-import { AppSemester } from '@/user-data';
+import { FirestoreSemester } from '@/user-data';
 
 Vue.component('flexible-modal', FlexibleModal);
 Vue.component('new-semester', NewSemester);
@@ -34,7 +34,7 @@ export default Vue.extend({
     return { isDisabled: false, season: '', year: 0 };
   },
   props: {
-    currentSemesters: { type: Array as PropType<readonly AppSemester[]>, required: true },
+    currentSemesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
   },
   methods: {
     disableButton(disabled: boolean) {

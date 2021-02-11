@@ -1,11 +1,8 @@
 import { getOrAllocateSubjectColor, incrementUniqueID } from './global-firestore-data';
 import {
-  AppCourse,
   AppOnboardingData,
-  AppSemester,
   CornellCourseRosterCourse,
   FirestoreOnboardingUserData,
-  FirestoreSemester,
   FirestoreSemesterCourse,
 } from './user-data';
 
@@ -22,10 +19,9 @@ const createCourseCreditRange = (course: CornellCourseRosterCourse): readonly [n
   return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
 };
 
-export const cornellCourseRosterCourseToAppCourse = (
-  course: CornellCourseRosterCourse,
-  isRequirementsCourse: boolean
-): AppCourse => {
+export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
+  course: CornellCourseRosterCourse
+): FirestoreSemesterCourse => {
   const uniqueID = incrementUniqueID();
 
   const { subject, catalogNbr: number, titleLong: name, description, roster: lastRoster } = course;
@@ -86,12 +82,9 @@ export const cornellCourseRosterCourseToAppCourse = (
   // Create course from saved color. Otherwise, create course from subject color group
   const color = getOrAllocateSubjectColor(subject);
 
-  const isReqCourse = isRequirementsCourse;
-
   return {
     crseId: course.crseId,
-    subject,
-    number,
+    code: `${subject} ${number}`,
     name,
     description,
     credits,
@@ -104,70 +97,9 @@ export const cornellCourseRosterCourseToAppCourse = (
     distributions,
     lastRoster,
     color,
-    check: true,
     uniqueID,
-    isReqCourse,
   };
 };
-
-export const firestoreCourseToAppCourse = (
-  course: FirestoreSemesterCourse,
-  isRequirementsCourse: boolean
-): AppCourse => {
-  const {
-    uniqueID,
-    code,
-    name,
-    description,
-    credits,
-    creditRange,
-    semesters,
-    prereqs,
-    enrollment,
-    lectureTimes,
-    instructors,
-    distributions,
-    lastRoster,
-    color,
-  } = course;
-
-  const [subject, number] = code.split(' ');
-
-  return {
-    crseId: course.crseId,
-    subject,
-    number,
-    name,
-    description,
-    credits,
-    creditRange,
-    semesters,
-    prereqs,
-    enrollment,
-    lectureTimes,
-    instructors,
-    distributions,
-    lastRoster,
-    color,
-    check: true,
-    uniqueID,
-    isReqCourse: isRequirementsCourse,
-  };
-};
-
-const firestoreSemesterToAppSemester = ({
-  courses,
-  type,
-  year,
-}: FirestoreSemester): AppSemester => ({
-  courses: courses.map(course => firestoreCourseToAppCourse(course, false)),
-  type,
-  year,
-});
-
-export const firestoreSemestersToAppSemesters = (
-  firestoreSemesters: readonly FirestoreSemester[]
-): AppSemester[] => firestoreSemesters.map(firestoreSemesterToAppSemester);
 
 export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardingData => ({
   // TODO: take into account multiple colleges

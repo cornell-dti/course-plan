@@ -85,7 +85,7 @@ import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppCourse, AppOnboardingData, AppSemester } from '@/user-data';
+import { AppOnboardingData, FirestoreSemester, FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
@@ -110,7 +110,7 @@ export default Vue.extend({
     numOfColleges: Number,
     rostersFromLastTwoYears: Array as PropType<readonly string[]>,
     lastLoadedShowAllCourseId: Number,
-    semesters: Array as PropType<readonly AppSemester[]>,
+    semesters: Array as PropType<readonly FirestoreSemester[]>,
   },
   data() {
     return {
@@ -130,7 +130,7 @@ export default Vue.extend({
     activateMinor(id: number) {
       this.$emit('activateMinor', id);
     },
-    onShowAllCourses(courses: AppCourse[]) {
+    onShowAllCourses(courses: FirestoreSemesterCourse[]) {
       this.$emit('onShowAllCourses', courses);
     },
     changeToggleableRequirementChoice(requirementID: string, option: string) {

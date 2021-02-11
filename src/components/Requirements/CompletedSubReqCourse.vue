@@ -37,7 +37,7 @@
 import Vue, { PropType } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import { DisplayableRequirementFulfillment, CourseTaken } from '@/requirements/types';
-import { AppSemester, FirestoreSemesterType } from '@/user-data';
+import { FirestoreSemester, FirestoreSemesterType } from '@/user-data';
 
 Vue.component('reqcourse', ReqCourse);
 
@@ -57,7 +57,7 @@ export default Vue.extend({
     subReq: Object as PropType<DisplayableRequirementFulfillment>,
     subReqCourseId: Number,
     crsesTaken: Array as PropType<readonly CourseTaken[]>,
-    semesters: Array as PropType<readonly AppSemester[]>,
+    semesters: Array as PropType<readonly FirestoreSemester[]>,
   },
   data(): CompletedSubReq {
     return {
@@ -100,19 +100,18 @@ export default Vue.extend({
       if (!this.$data.scrollable) event.preventDefault();
     },
     setCourseAndSemesterForNonTransferCredits(crseTaken: CourseTaken) {
+      const courseTakenCode = `${crseTaken.subject} ${crseTaken.number}`;
       for (let i = 0; i < this.semesters.length; i += 1) {
         const semester = this.semesters[i];
         const filteredSemesterCourses = semester.courses.filter(
-          course =>
-            course.crseId === crseTaken.courseId &&
-            course.subject === crseTaken.subject &&
-            course.number === crseTaken.number
+          course => course.crseId === crseTaken.courseId && course.code === courseTakenCode
         );
         if (filteredSemesterCourses.length > 0) {
           const course = filteredSemesterCourses[0];
+          const [subject, number] = course.code.split(' ');
           this.color = course.color;
-          this.courseSubject = course.subject;
-          this.courseNumber = course.number;
+          this.courseSubject = subject;
+          this.courseNumber = number;
           this.courseUniqueId = course.uniqueID;
           this.semesterType = semester.type;
           this.semesterYear = semester.year;

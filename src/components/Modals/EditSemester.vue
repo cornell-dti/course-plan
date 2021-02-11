@@ -41,13 +41,13 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
-import { AppSemester } from '@/user-data';
+import { FirestoreSemester } from '@/user-data';
 
 Vue.component('newSemester', NewSemester);
 
 export default Vue.extend({
   props: {
-    semesters: Array as PropType<readonly AppSemester[]>,
+    semesters: Array as PropType<readonly FirestoreSemester[]>,
     deleteSemType: String,
     deleteSemYear: Number,
   },
