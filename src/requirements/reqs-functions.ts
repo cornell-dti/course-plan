@@ -63,8 +63,8 @@ const getTotalCreditsFulfillmentStatistics = (
         ...requirementCommon,
         id: 'College-AS-total-credits',
         description:
-          '120 academic credits are required' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits',
+          '120 academic credits are required. ' +
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11570#credit-req',
       };
       break;
@@ -73,8 +73,8 @@ const getTotalCreditsFulfillmentStatistics = (
         ...requirementCommon,
         id: 'College-HE-total-credits',
         description:
-          '120 academic credits are required' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits',
+          '120 academic credits are required. ' +
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
         source:
           'http://courses.cornell.edu/content.php?catoid=41&navoid=11600#Cornell_Credit_Requirements',
       };
@@ -84,8 +84,8 @@ const getTotalCreditsFulfillmentStatistics = (
         ...requirementCommon,
         id: 'College-IL-total-credits',
         description:
-          '120 academic credits are required' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits',
+          '120 academic credits are required. ' +
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11587',
       };
       break;
@@ -94,8 +94,8 @@ const getTotalCreditsFulfillmentStatistics = (
         ...requirementCommon,
         id: 'College-BU-total-credits',
         description:
-          '120 academic credits are required' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits',
+          '120 academic credits are required. ' +
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11715',
       };
       break;
