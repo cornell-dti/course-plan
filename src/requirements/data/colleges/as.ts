@@ -1,22 +1,7 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import {
-  courseIsFWS,
-  includesWithSingleRequirement,
-  courseIsAllEligible,
-} from '../checkers-common';
+import { courseIsFWS, includesWithSingleRequirement } from '../checkers-common';
 
 const casRequirements: readonly CollegeOrMajorRequirement[] = [
-  {
-    name: 'Total Academic Credits',
-    description:
-      '120 academic credits are required' +
-      'PE courses and courses numbered 1000-1099 do not count towards the 120 credits',
-    source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11570#credit-req',
-    checker: courseIsAllEligible,
-    subRequirementProgress: 'any-can-count',
-    fulfilledBy: 'credits',
-    minCount: 120,
-  },
   {
     name: 'A&S Credits',
     description:
