@@ -39,8 +39,8 @@
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
         :reqs="reqs"
+        :editSemesters="editSemesters"
         @compact-updated="compactVal = $event"
-        @edit-semesters="editSemesters"
         @updateBar="updateBar"
         @close-bar="closeBar"
       />
@@ -97,7 +97,6 @@ import TourWindow from '@/components/Modals/TourWindow.vue';
 
 import surfing from '@/assets/images/surfing.svg';
 
-import '@/vueDragulaConfig';
 import {
   FirestoreUserName,
   FirestoreSemester,
@@ -211,8 +210,10 @@ export default Vue.extend({
     listenerUnsubscriber();
   },
   methods: {
-    editSemesters(newSemesters: readonly FirestoreSemester[]) {
-      this.semesters = newSemesters;
+    editSemesters(
+      updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
+    ) {
+      this.semesters = updater(this.semesters);
       this.recomputeRequirements();
     },
     resizeEventHandler() {
@@ -498,13 +499,14 @@ export default Vue.extend({
       this.reqs = singleMenuRequirements;
     },
     deleteCourseFromSemesters(uniqueID: number) {
-      const updatedSemesters = this.semesters.map(semester => {
-        const coursesWithoutDeleted = semester.courses.filter(
-          course => course.uniqueID !== uniqueID
-        );
-        return { ...semester, courses: coursesWithoutDeleted };
-      });
-      this.editSemesters(updatedSemesters);
+      this.editSemesters(oldSemesters =>
+        oldSemesters.map(semester => {
+          const coursesWithoutDeleted = semester.courses.filter(
+            course => course.uniqueID !== uniqueID
+          );
+          return { ...semester, courses: coursesWithoutDeleted };
+        })
+      );
     },
   },
 });

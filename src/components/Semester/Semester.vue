@@ -68,14 +68,21 @@
         </div>
       </div>
       <div class="semester-courses">
-        <div
+        <draggable
+          ref="droppable"
           class="draggable-semester-courses"
-          v-dragula="courses"
-          bag="first-bag"
-          :semester-key="`${year}-${type}`"
+          group="draggable-semester-courses"
+          v-model="coursesForDraggable"
           :style="{ height: courseContainerHeight + 'rem' }"
+          @start="onDragStart"
+          @sort="onDropped"
+          @end="onDragEnd"
         >
-          <div v-for="course in courses" :key="course.uniqueID" class="semester-courseWrapper">
+          <div
+            v-for="course in coursesForDraggable"
+            :key="course.uniqueID"
+            class="semester-courseWrapper"
+          >
             <course
               v-bind="course"
               :courseObj="course"
@@ -91,7 +98,7 @@
               @edit-course-credit="editCourseCredit"
             />
           </div>
-        </div>
+        </draggable>
         <addcoursebutton
           :compact="compact"
           :shouldShowWalkthrough="true"
@@ -111,6 +118,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import draggable from 'vuedraggable';
 import introJs from 'intro.js';
 import Course from '@/components/Course.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
@@ -146,6 +154,7 @@ pageTour.setOption('nextLabel', 'Next');
 pageTour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
+  components: { draggable },
   data() {
     return {
       confirmationText: '',
@@ -183,51 +192,36 @@ export default Vue.extend({
     isFirstSem: Boolean,
     reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },
-  watch: {
-    courses: {
-      handler() {
+  mounted() {
+    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+    const droppable = (this.$refs.droppable as Vue).$el as HTMLDivElement;
+    droppable.addEventListener('dragenter', this.onDragEnter);
+    droppable.addEventListener('dragexit', this.onDragExit);
+  },
+  beforeDestroy() {
+    this.$el.removeEventListener('touchmove', this.dragListener);
+    const droppable = (this.$refs.droppable as Vue).$el as HTMLDivElement;
+    droppable.removeEventListener('dragenter', this.onDragEnter);
+    droppable.removeEventListener('dragexit', this.onDragExit);
+  },
+
+  computed: {
+    coursesForDraggable: {
+      get(): readonly FirestoreSemesterCourse[] {
+        return this.courses;
+      },
+      set(newCourses: readonly FirestoreSemesterCourse[]) {
         this.$emit(
           'edit-semester',
           this.year,
           this.type,
           (semester: FirestoreSemester): FirestoreSemester => ({
             ...semester,
-            courses: this.courses,
+            courses: newCourses,
           })
         );
       },
     },
-  },
-  mounted() {
-    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
-    const service = Vue.$dragula.$service;
-    service.eventBus.$on('drag', data => {
-      if (data.container.getAttribute('semester-key') === `${this.year}-${this.type}`) {
-        this.isDraggedFrom = true;
-      }
-      this.scrollable = true;
-      this.isShadow = false;
-    });
-    service.eventBus.$on('drop', () => {
-      this.scrollable = true;
-    });
-    service.eventBus.$on('shadow', data => {
-      if (data.container.getAttribute('semester-key') === `${this.year}-${this.type}`) {
-        this.isShadow = true;
-      } else {
-        this.isShadow = false;
-      }
-    });
-    service.eventBus.$on('dragend', () => {
-      this.isShadow = false;
-      this.isDraggedFrom = false;
-    });
-  },
-  beforeDestroy() {
-    this.$el.removeEventListener('touchmove', this.dragListener);
-  },
-
-  computed: {
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
     courseContainerHeight(): number {
       let factor = 6.1;
@@ -267,6 +261,25 @@ export default Vue.extend({
     },
   },
   methods: {
+    onDragStart() {
+      this.isDraggedFrom = true;
+      this.scrollable = true;
+      this.isShadow = false;
+    },
+    onDragEnter() {
+      this.isShadow = true;
+    },
+    onDragExit() {
+      this.isShadow = false;
+    },
+    onDropped() {
+      this.isShadow = false;
+    },
+    onDragEnd() {
+      this.isShadow = false;
+      this.scrollable = false;
+      this.isDraggedFrom = false;
+    },
     openCourseModal(isSelectingSemester = false) {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
