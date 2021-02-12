@@ -10,7 +10,7 @@
     @right-button-clicked="addSemester"
   >
     <new-semester
-      :currentSemesters="currentSemesters"
+      :currentSemesters="semesters"
       :isEdit="false"
       :isCourseModelSelectingSemester="false"
       @duplicateSemester="disableButton"
@@ -21,17 +21,20 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
+import store from '@/store';
 
 export default Vue.extend({
   components: { FlexibleModal, NewSemester },
   data() {
     return { isDisabled: false, season: '', year: 0 };
   },
-  props: {
-    currentSemesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
+  computed: {
+    semesters(): readonly FirestoreSemester[] {
+      return store.state.semesters;
+    },
   },
   methods: {
     disableButton(disabled: boolean) {

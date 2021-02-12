@@ -40,11 +40,11 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
+import store from '@/store';
 
 export default Vue.extend({
   components: { NewSemester },
   props: {
-    semesters: Array as PropType<readonly FirestoreSemester[]>,
     deleteSemType: { type: String as PropType<FirestoreSemesterType>, required: true },
     deleteSemYear: { type: Number, required: true },
   },
@@ -54,6 +54,11 @@ export default Vue.extend({
       season: '',
       year: '',
     };
+  },
+  computed: {
+    semesters(): readonly FirestoreSemester[] {
+      return store.state.semesters;
+    },
   },
   methods: {
     closeCurrentModal() {

@@ -12,7 +12,6 @@
     <new-semester-modal
       class="semester-modal"
       :class="{ 'modal--block': isSemesterModalOpen }"
-      :currentSemesters="semesters"
       @add-semester="addSemester"
       @close-semester-modal="closeSemesterModal"
     />
@@ -60,7 +59,6 @@
           :compact="compact"
           :activatedCourse="activatedCourse"
           :duplicatedCourseCodeList="duplicatedCourseCodeList"
-          :semesters="semesters"
           :isFirstSem="checkIfFirstSem(sem)"
           :reqs="reqs"
           @updateBar="updateBar"
@@ -99,9 +97,9 @@ import Confirmation from '@/components/Confirmation.vue';
 import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
-import { semestersCollection } from '@/firebaseConfig';
 import { SingleMenuRequirement } from '@/requirements/types';
 import store from '@/store';
+import { editSemesters } from '@/global-firestore-data';
 
 Vue.component('semester', Semester);
 Vue.component('new-semester-modal', NewSemesterModal);
@@ -117,21 +115,12 @@ const SeasonsEnum = Object.freeze({
 export default Vue.extend({
   components: { Confirmation, SemesterCaution },
   props: {
-    semesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
     isBottomBarExpanded: { type: Boolean, required: true },
     isMobile: { type: Boolean, required: true },
     startTour: { type: Boolean, required: true },
     reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
-    editSemesters: {
-      type: Function as PropType<
-        (
-          updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
-        ) => void
-      >,
-      required: true,
-    },
   },
   data() {
     return {
@@ -150,11 +139,13 @@ export default Vue.extend({
     semesters: {
       handler() {
         this.buildDuplicateCautions();
-        this.updateFirebaseSemester();
       },
     },
   },
   computed: {
+    semesters(): readonly FirestoreSemester[] {
+      return store.state.semesters;
+    },
     noSemesters(): boolean {
       return this.semesters.length === 0;
     },
@@ -244,7 +235,7 @@ export default Vue.extend({
         value: 1,
       });
 
-      this.editSemesters(oldSemesters =>
+      editSemesters(oldSemesters =>
         [...oldSemesters, this.createSemester([], type, year)].sort(this.compare)
       );
       this.openSemesterConfirmationModal(type, year, true);
@@ -260,7 +251,7 @@ export default Vue.extend({
       this.openSemesterConfirmationModal(type, year, false);
 
       // Update requirements menu from dashboard
-      this.editSemesters(oldSemesters =>
+      editSemesters(oldSemesters =>
         oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
       );
     },
@@ -269,7 +260,7 @@ export default Vue.extend({
       year: number,
       newCourse: FirestoreSemesterCourse
     ) {
-      this.editSemesters(oldSemesters => {
+      editSemesters(oldSemesters => {
         let semesterFound = false;
         const newSemestersWithCourse = oldSemesters.map(sem => {
           if (sem.type === season && sem.year === year) {
@@ -302,7 +293,7 @@ export default Vue.extend({
       type: FirestoreSemesterType,
       updater: (oldSemester: FirestoreSemester) => FirestoreSemester
     ) {
-      this.editSemesters(oldSemesters =>
+      editSemesters(oldSemesters =>
         oldSemesters
           .map(currentSemester =>
             currentSemester.year === year && currentSemester.type === type
@@ -323,18 +314,6 @@ export default Vue.extend({
         this.$emit('close-bar');
       }
       this.isCourseClicked = false;
-    },
-    /**
-     * Updates semester user data
-     */
-    updateFirebaseSemester() {
-      // TODO: make user / docRef global
-      const userEmail = store.state.currentFirebaseUser.email;
-      const docRef = semestersCollection.doc(userEmail);
-
-      docRef.set({ semesters: this.semesters }).catch(error => {
-        console.error('Error writing document:', error);
-      });
     },
   },
 });

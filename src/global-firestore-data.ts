@@ -3,11 +3,20 @@
  */
 
 import {
+  semestersCollection,
   toggleableRequirementChoicesCollection,
   subjectColorsCollection,
   uniqueIncrementerCollection,
 } from './firebaseConfig';
 import store from './store';
+
+export const editSemesters = (
+  updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
+): void => {
+  const newSemesters = updater(store.state.semesters);
+  store.commit('setSemesters', newSemesters);
+  semestersCollection.doc(store.state.currentFirebaseUser.email).set({ semesters: newSemesters });
+};
 
 export const chooseToggleableRequirementOption = (
   toggleableRequirementChoices: AppToggleableRequirementChoices

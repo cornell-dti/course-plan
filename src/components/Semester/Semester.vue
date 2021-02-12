@@ -29,7 +29,6 @@
       :class="{ 'modal--block': isEditSemesterOpen }"
       @edit-semester="editSemester"
       @close-edit-modal="closeEditModal"
-      :semesters="semesters"
       :deleteSemType="type"
       :deleteSemYear="year"
       ref="modalBodyComponent"
@@ -187,7 +186,6 @@ export default Vue.extend({
     compact: Boolean,
     activatedCourse: Object as PropType<FirestoreSemesterCourse>,
     duplicatedCourseCodeList: Array as PropType<readonly string[]>,
-    semesters: Array as PropType<readonly FirestoreSemester[]>,
     isFirstSem: Boolean,
     reqs: Array as PropType<readonly SingleMenuRequirement[]>,
   },

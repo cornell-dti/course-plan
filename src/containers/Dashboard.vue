@@ -20,9 +20,6 @@
         <requirements
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
-          :semesters="semesters"
-          :onboardingData="onboardingData"
-          :key="requirementsKey"
           :startTour="startTour"
           :reqs="reqs"
           @showTourEndWindow="showTourEnd"
@@ -32,14 +29,12 @@
       <semesterview
         v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
         ref="semesterview"
-        :semesters="semesters"
         :compact="compactVal"
         :startTour="startTour"
         :isBottomBarExpanded="bottomBar.isExpanded"
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
         :reqs="reqs"
-        :editSemesters="editSemesters"
         @compact-updated="compactVal = $event"
         @updateBar="updateBar"
         @close-bar="closeBar"
@@ -100,8 +95,7 @@ import computeRequirements from '@/requirements/reqs-functions';
 import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
 import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
 import store, { initializeFirestoreListeners, subscribeRequirementDependencyChange } from '@/store';
-import { semestersCollection } from '@/firebaseConfig';
-import getCurrentSeason, { getCurrentYear } from '@/utilities';
+import { editSemesters } from '@/global-firestore-data';
 
 Vue.component('semesterview', SemesterView);
 Vue.component('requirements', Requirements);
@@ -122,12 +116,10 @@ export default Vue.extend({
     return {
       loaded: true,
       compactVal: false,
-      semesters: [] as readonly FirestoreSemester[],
       bottomCourses: [] as AppBottomBarCourse[],
       seeMoreCourses: [] as AppBottomBarCourse[],
       // Default bottombar info without info
       bottomBar: { isPreview: false, isExpanded: false, bottomCourseFocus: 0 },
-      requirementsKey: 0,
       isOnboarding: false,
       isEditingProfile: false,
       isOpeningRequirements: false,
@@ -157,30 +149,15 @@ export default Vue.extend({
     onboardingData(): AppOnboardingData {
       return store.state.onboardingData;
     },
+    semesters(): readonly FirestoreSemester[] {
+      return store.state.semesters;
+    },
   },
   created() {
     window.addEventListener('resize', this.resizeEventHandler);
   },
   mounted() {
-    const semesterDoc = semestersCollection.doc(store.state.currentFirebaseUser.email);
-    const loadSemesterPromise = semesterDoc.get().then(snapshot => {
-      const data = snapshot.data();
-      if (data != null) {
-        this.semesters = data.semesters;
-      } else {
-        const newSemeter: FirestoreSemester = {
-          type: getCurrentSeason(),
-          year: getCurrentYear(),
-          courses: [],
-        };
-        this.semesters = [newSemeter];
-        semesterDoc.set({ semesters: [newSemeter] });
-      }
-    });
-    const loadOtherDataPromise = new Promise<void>(resolve => {
-      listenerUnsubscriber = initializeFirestoreListeners(() => resolve());
-    });
-    Promise.all([loadSemesterPromise, loadOtherDataPromise]).then(() => {
+    listenerUnsubscriber = initializeFirestoreListeners(() => {
       if (this.onboardingData.college !== '') {
         this.loaded = true;
         this.recomputeRequirements();
@@ -198,12 +175,6 @@ export default Vue.extend({
     listenerUnsubscriber();
   },
   methods: {
-    editSemesters(
-      updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
-    ) {
-      this.semesters = updater(this.semesters);
-      this.recomputeRequirements();
-    },
     resizeEventHandler() {
       this.isMobile = window.innerWidth <= 440;
       this.isTablet = window.innerWidth <= 878;
@@ -487,7 +458,7 @@ export default Vue.extend({
       this.reqs = singleMenuRequirements;
     },
     deleteCourseFromSemesters(uniqueID: number) {
-      this.editSemesters(oldSemesters =>
+      editSemesters(oldSemesters =>
         oldSemesters.map(semester => {
           const coursesWithoutDeleted = semester.courses.filter(
             course => course.uniqueID !== uniqueID
