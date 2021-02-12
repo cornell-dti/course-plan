@@ -20,7 +20,7 @@ import firebase from 'firebase/app';
 
 export default Vue.extend({
   props: {
-    isBottomPreview: Boolean,
+    isBottomPreview: { type: Boolean, required: true },
   },
 
   methods: {

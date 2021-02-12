@@ -25,9 +25,9 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    color: String,
-    name: String,
-    isExpanded: Boolean,
+    color: { type: String, required: true },
+    name: { type: String, required: true },
+    isExpanded: { type: Boolean, required: true },
   },
 });
 </script>

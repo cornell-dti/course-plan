@@ -19,18 +19,16 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { AppBottomBarCourse } from '@/user-data';
 
 export default Vue.extend({
   props: {
-    subject: String,
-    number: String,
-    color: String,
-    id: Number,
-    courseObj: Object as PropType<AppBottomBarCourse>,
-    tabIndex: Number,
-    bottomCourseFocus: Number,
-    isExpanded: Boolean,
+    subject: { type: String, required: true },
+    number: { type: String, required: true },
+    color: { type: String, required: true },
+    courseObj: { type: Object as PropType<AppBottomBarCourse>, required: true },
+    tabIndex: { type: Number, required: true },
+    bottomCourseFocus: { type: Number, required: true },
+    isExpanded: { type: Boolean, required: true },
   },
 
   methods: {

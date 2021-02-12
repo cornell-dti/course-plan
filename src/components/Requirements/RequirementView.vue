@@ -85,7 +85,6 @@ import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppOnboardingData, FirestoreSemester, FirestoreSemesterCourse } from '@/user-data';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
@@ -99,18 +98,21 @@ const reqGroupColorMap = {
 
 export default Vue.extend({
   props: {
-    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
-    req: Object as PropType<SingleMenuRequirement>,
-    reqIndex: Number, // Index of this req in reqs array
-    toggleableRequirementChoices: Object as PropType<Readonly<Record<string, string>>>,
-    displayedMajorIndex: Number,
-    displayedMinorIndex: Number,
-    onboardingData: Object as PropType<AppOnboardingData>,
-    showMajorOrMinorRequirements: Boolean,
-    numOfColleges: Number,
-    rostersFromLastTwoYears: Array as PropType<readonly string[]>,
-    lastLoadedShowAllCourseId: Number,
-    semesters: Array as PropType<readonly FirestoreSemester[]>,
+    reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
+    req: { type: Object as PropType<SingleMenuRequirement>, required: true },
+    reqIndex: { type: Number, required: true }, // Index of this req in reqs array
+    toggleableRequirementChoices: {
+      type: Object as PropType<Readonly<Record<string, string>>>,
+      required: true,
+    },
+    displayedMajorIndex: { type: Number, required: true },
+    displayedMinorIndex: { type: Number, required: true },
+    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    showMajorOrMinorRequirements: { type: Boolean, required: true },
+    numOfColleges: { type: Number, required: true },
+    rostersFromLastTwoYears: { type: Array as PropType<readonly string[]>, required: true },
+    lastLoadedShowAllCourseId: { type: Number, required: true },
+    semesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
   },
   data() {
     return {

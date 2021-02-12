@@ -2,7 +2,7 @@
   <div class="editSemesterModal">
     <div class="editSemesterModal-content">
       <div class="editSemesterModal-top">
-        <span class="editSemesterModal-title">{{ title }}</span>
+        <span class="editSemesterModal-title">Edit Semester</span>
         <img
           class="editSemesterModal-exit"
           src="@/assets/images/x.png"
@@ -10,7 +10,7 @@
         />
       </div>
       <div class="editSemesterModal-body">
-        <newSemester
+        <new-semester
           class="modal-body"
           :currentSemesters="semesters"
           :isEdit="true"
@@ -19,11 +19,10 @@
           @duplicateSemester="disableButton"
           @updateSemProps="updateSemProps"
           ref="modalBodyComponent"
-        >
-        </newSemester>
+        />
       </div>
       <div class="editSemesterModal-buttonWrapper">
-        <button class="editSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
+        <button class="editSemesterModal-button" @click="closeCurrentModal">Cancel</button>
         <div
           class="editSemesterModal-button editSemesterModal-button--delete"
           :class="{ 'editSemesterModal-button--disabled': isDisabled }"
@@ -41,15 +40,13 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
-import { FirestoreSemester } from '@/user-data';
-
-Vue.component('newSemester', NewSemester);
 
 export default Vue.extend({
+  components: { NewSemester },
   props: {
     semesters: Array as PropType<readonly FirestoreSemester[]>,
-    deleteSemType: String,
-    deleteSemYear: Number,
+    deleteSemType: { type: String as PropType<FirestoreSemesterType>, required: true },
+    deleteSemYear: { type: Number, required: true },
   },
   data() {
     return {
@@ -57,17 +54,6 @@ export default Vue.extend({
       season: '',
       year: '',
     };
-  },
-  computed: {
-    text() {
-      return 'Are you sure you want to edit this semester?';
-    },
-    cancel() {
-      return 'Cancel';
-    },
-    title() {
-      return 'Edit Semester';
-    },
   },
   methods: {
     closeCurrentModal() {

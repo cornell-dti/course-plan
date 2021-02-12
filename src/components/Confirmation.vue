@@ -12,7 +12,7 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    text: String,
+    text: { type: String, required: true },
   },
 });
 </script>

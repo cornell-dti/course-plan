@@ -2,12 +2,6 @@ import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
 import * as fb from './firebaseConfig';
-import {
-  AppOnboardingData,
-  AppToggleableRequirementChoices,
-  FirestoreOnboardingUserData,
-  FirestoreUserName,
-} from './user-data';
 import { checkNotNull } from './utilities';
 
 Vue.use(Vuex);

@@ -2,12 +2,6 @@ import firebase from 'firebase/app';
 
 import 'firebase/auth';
 import 'firebase/firestore';
-import type {
-  FirestoreUserName,
-  FirestoreSemester,
-  AppToggleableRequirementChoices,
-  FirestoreOnboardingUserData,
-} from './user-data';
 
 let config;
 if (process.env.VUE_APP_FIREBASE_MODE === 'prod') {

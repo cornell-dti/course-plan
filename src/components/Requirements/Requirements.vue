@@ -35,7 +35,7 @@
     <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses" @scroll="onScrollSeeAll">
       <div class="see-all-padding-x see-all-header pb-3">
         <span class="arrow-left">
-          <dropdownarrow :isPointingLeft="true" :fillColor="'#32A0F2'" />
+          <drop-down-arrow :isPointingLeft="true" :fillColor="'#32A0F2'" />
         </span>
         <button class="btn back-button p-0" @click="backFromSeeAll">GO BACK TO REQUIREMENTS</button>
       </div>
@@ -72,12 +72,6 @@ import Course from '@/components/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { SingleMenuRequirement, SubReqCourseSlot, CrseInfo } from '@/requirements/types';
-import {
-  FirestoreSemester,
-  FirestoreSemesterCourse,
-  AppToggleableRequirementChoices,
-  AppOnboardingData,
-} from '@/user-data';
 import { getRostersFromLastTwoYears } from '@/utilities';
 // emoji for clipboard
 import clipboard from '@/assets/images/clipboard.svg';
@@ -87,9 +81,7 @@ import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-c
 
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
-Vue.component('course', Course);
 Vue.component('requirementview', RequirementView);
-Vue.component('dropdownarrow', DropDownArrow);
 Vue.use(VueCollapse);
 
 export type ShowAllCourses = {
@@ -116,7 +108,7 @@ tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
-  components: { draggable },
+  components: { draggable, Course, DropDownArrow },
   props: {
     semesters: Array as PropType<readonly FirestoreSemester[]>,
     onboardingData: Object as PropType<AppOnboardingData>,

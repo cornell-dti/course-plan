@@ -15,9 +15,9 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    fillColor: String,
-    isFlipped: Boolean,
-    isPointingLeft: Boolean,
+    fillColor: { type: String, required: true },
+    isFlipped: { type: Boolean, default: false },
+    isPointingLeft: { type: Boolean, default: false },
   },
 });
 </script>

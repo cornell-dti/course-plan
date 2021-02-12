@@ -1,4 +1,3 @@
-import { AppOnboardingData, FirestoreAPIBExam } from '../../../user-data';
 import { CourseTaken } from '../../types';
 
 export type ExamRequirements = {

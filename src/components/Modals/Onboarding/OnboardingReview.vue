@@ -164,7 +164,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
-import { AppOnboardingData, FirestoreUserName } from '@/user-data';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 
 const placeholderText = 'Select one';

@@ -8,7 +8,6 @@ import {
   uniqueIncrementerCollection,
 } from './firebaseConfig';
 import store from './store';
-import { AppToggleableRequirementChoices } from './user-data';
 
 export const chooseToggleableRequirementOption = (
   toggleableRequirementChoices: AppToggleableRequirementChoices

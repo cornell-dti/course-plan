@@ -1,4 +1,4 @@
-import store from '@/store';
+import store from '../store';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
 import {
   CourseTaken,

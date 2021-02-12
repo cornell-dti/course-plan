@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
-        <reqcourse
+        <req-course
           :color="color"
           :subject="courseSubject"
           :number="courseNumber"
@@ -36,10 +36,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
-import { DisplayableRequirementFulfillment, CourseTaken } from '@/requirements/types';
-import { FirestoreSemester, FirestoreSemesterType } from '@/user-data';
-
-Vue.component('reqcourse', ReqCourse);
+import { CourseTaken } from '@/requirements/types';
 
 type CompletedSubReq = {
   color: string;
@@ -53,11 +50,11 @@ type CompletedSubReq = {
 };
 
 export default Vue.extend({
+  components: { ReqCourse },
   props: {
-    subReq: Object as PropType<DisplayableRequirementFulfillment>,
-    subReqCourseId: Number,
-    crsesTaken: Array as PropType<readonly CourseTaken[]>,
-    semesters: Array as PropType<readonly FirestoreSemester[]>,
+    subReqCourseId: { type: Number, required: true },
+    crsesTaken: { type: Array as PropType<readonly CourseTaken[]>, required: true },
+    semesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
   },
   data(): CompletedSubReq {
     return {

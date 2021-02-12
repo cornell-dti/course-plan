@@ -1,4 +1,3 @@
-import type { FirestoreSemesterType } from './user-data';
 import requirementJSON from './requirements/typed-requirement-json';
 
 export function checkNotNull<T>(value: T | null | undefined): T {

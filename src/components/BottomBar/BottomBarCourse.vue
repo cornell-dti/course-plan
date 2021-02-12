@@ -284,7 +284,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { reviewColors } from '@/assets/constants/colors';
-import { AppBottomBarCourse } from '@/user-data';
 
 export default Vue.extend({
   data() {
@@ -293,8 +292,7 @@ export default Vue.extend({
     };
   },
   props: {
-    courseObj: Object as PropType<AppBottomBarCourse>,
-    id: Number,
+    courseObj: { type: Object as PropType<AppBottomBarCourse>, required: true },
   },
   created() {
     window.addEventListener('resize', this.isSmallerWidthEventHandler);

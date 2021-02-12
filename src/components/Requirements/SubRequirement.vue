@@ -3,7 +3,7 @@
     <div class="row depth-req">
       <div class="col-1" @click="toggleDescription()">
         <button class="btn">
-          <dropdownarrow :isFlipped="displayDescription" :fillColor="getArrowColor()" />
+          <drop-down-arrow :isFlipped="displayDescription" :fillColor="getArrowColor()" />
         </button>
       </div>
       <div class="col-7" @click="toggleDescription()">
@@ -78,7 +78,6 @@
         <div v-for="(subReqCourseSlot, id) in subReqCoursesArray" :key="id">
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completedsubreqcourse
-              :subReq="subReq"
               :subReqCourseId="id"
               :crsesTaken="subReqCourseSlot.courses"
               :semesters="semesters"
@@ -120,12 +119,10 @@ import {
 } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
 
-import { FirestoreSemester, FirestoreSemesterCourse } from '@/user-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
 Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
-Vue.component('dropdownarrow', DropDownArrow);
 
 require('firebase/functions');
 
@@ -139,19 +136,17 @@ type Data = {
 };
 
 export default Vue.extend({
+  components: { DropDownArrow },
   props: {
-    subReq: Object as PropType<DisplayableRequirementFulfillment>,
-    subReqIndex: Number, // Subrequirement index
-    reqIndex: Number, // Requirement index
-    isCompleted: Boolean,
-    toggleableRequirementChoice: {
-      type: String,
-      required: false,
-    },
-    color: String,
-    rostersFromLastTwoYears: Array as PropType<readonly string[]>,
-    lastLoadedShowAllCourseId: Number,
-    semesters: Array as PropType<readonly FirestoreSemester[]>,
+    subReq: { type: Object as PropType<DisplayableRequirementFulfillment>, required: true },
+    subReqIndex: { type: Number, required: true }, // Subrequirement index
+    reqIndex: { type: Number, required: true }, // Requirement index
+    isCompleted: { type: Boolean, required: true },
+    toggleableRequirementChoice: { type: String, default: null },
+    color: { type: String, required: true },
+    rostersFromLastTwoYears: { type: Array as PropType<readonly string[]>, required: true },
+    lastLoadedShowAllCourseId: { type: Number, required: true },
+    semesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
   },
   watch: {
     subReqCoursesArray: {

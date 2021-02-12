@@ -2,13 +2,13 @@
 // - all the types describing data in Firestore is prefixed with Firestore.
 // - all the data describing data converted from Firestore to be used by the app is prefixed with App.
 
-export type FirestoreUserName = {
+type FirestoreUserName = {
   readonly firstName: string;
   readonly middleName?: string;
   readonly lastName: string;
 };
 
-export type FirestoreSemesterCourse = {
+type FirestoreSemesterCourse = {
   readonly crseId: number;
   readonly lastRoster: string;
   readonly uniqueID: number;
@@ -26,25 +26,25 @@ export type FirestoreSemesterCourse = {
   readonly color: string;
 };
 
-export type FirestoreSemesterType = 'Fall' | 'Spring' | 'Summer' | 'Winter';
-export type FirestoreSemester = {
+type FirestoreSemesterType = 'Fall' | 'Spring' | 'Summer' | 'Winter';
+type FirestoreSemester = {
   readonly year: number;
   readonly type: FirestoreSemesterType;
   readonly courses: readonly FirestoreSemesterCourse[];
 };
 
-export type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
-export type FirestoreAPIBExam = {
+type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
+type FirestoreAPIBExam = {
   readonly type: 'AP' | 'IB';
   readonly score: number;
   readonly subject: string;
 };
-export type FirestoreTransferClass = {
+type FirestoreTransferClass = {
   readonly class: string;
   readonly course: CornellCourseRosterCourse;
   readonly credits: number;
 };
-export type FirestoreOnboardingUserData = {
+type FirestoreOnboardingUserData = {
   readonly class: readonly FirestoreTransferClass[];
   readonly colleges: readonly FirestoreCollegeOrMajorOrMinor[];
   readonly majors: readonly FirestoreCollegeOrMajorOrMinor[];
@@ -53,7 +53,7 @@ export type FirestoreOnboardingUserData = {
   readonly tookSwim: 'yes' | 'no';
 };
 
-export type FirestoreUserData = {
+type FirestoreUserData = {
   readonly name: FirestoreUserName;
   readonly semesters: readonly FirestoreSemester[];
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
@@ -62,7 +62,7 @@ export type FirestoreUserData = {
   readonly userData: FirestoreOnboardingUserData;
 };
 
-export type CornellCourseRosterCourse = {
+type CornellCourseRosterCourse = {
   readonly crseId: number;
   readonly subject: string;
   readonly catalogNbr: string;
@@ -91,7 +91,7 @@ export type CornellCourseRosterCourse = {
   readonly roster: string;
 };
 
-export type AppOnboardingData = {
+type AppOnboardingData = {
   readonly college: string;
   readonly major: readonly string[];
   readonly minor: readonly string[];
@@ -100,7 +100,7 @@ export type AppOnboardingData = {
   readonly tookSwim: 'yes' | 'no';
 };
 
-export type AppBottomBarCourse = {
+type AppBottomBarCourse = {
   readonly subject: string;
   readonly number: string;
   readonly name: string;
@@ -121,4 +121,4 @@ export type AppBottomBarCourse = {
 };
 
 // map from requirement ID to option chosen
-export type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
+type AppToggleableRequirementChoices = Readonly<Record<string, string>>;

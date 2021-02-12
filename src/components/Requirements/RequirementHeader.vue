@@ -92,7 +92,7 @@
             class="btn"
             @click="toggleDetails()"
           >
-            <dropdownarrow
+            <drop-down-arrow
               :isFlipped="displayDetails"
               :fillColor="`#${reqGroupColorMap[req.group][0]}`"
             />
@@ -117,22 +117,23 @@
 import Vue, { PropType } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { SingleMenuRequirement } from '@/requirements/types';
-import { AppOnboardingData } from '@/user-data';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 
-Vue.component('dropdownarrow', DropDownArrow);
-
 export default Vue.extend({
+  components: { DropDownArrow },
   props: {
-    reqIndex: Number,
-    displayDetails: Boolean,
-    displayedMajorIndex: Number,
-    displayedMinorIndex: Number,
-    req: Object as PropType<SingleMenuRequirement>,
-    reqGroupColorMap: Object as PropType<Readonly<Record<string, string[]>>>,
-    onboardingData: Object as PropType<AppOnboardingData>,
-    showMajorOrMinorRequirements: Boolean,
-    numOfColleges: Number,
+    reqIndex: { type: Number, required: true },
+    displayDetails: { type: Boolean, required: true },
+    displayedMajorIndex: { type: Number, required: true },
+    displayedMinorIndex: { type: Number, required: true },
+    req: { type: Object as PropType<SingleMenuRequirement>, required: true },
+    reqGroupColorMap: {
+      type: Object as PropType<Readonly<Record<string, string[]>>>,
+      required: true,
+    },
+    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    showMajorOrMinorRequirements: { type: Boolean, required: true },
+    numOfColleges: { type: Number, required: true },
   },
   computed: {
     multipleMajors() {

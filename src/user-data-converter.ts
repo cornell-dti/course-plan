@@ -1,5 +1,4 @@
 import { getOrAllocateSubjectColor, incrementUniqueID } from './global-firestore-data';
-import { CornellCourseRosterCourse, FirestoreSemesterCourse } from './user-data';
 
 /**
  * Creates credit range based on course

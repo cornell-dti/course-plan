@@ -2,7 +2,7 @@
   <div class="bottombar">
     <div class="bottombar-tabviewTitleWrapper">
       <div class="bottombar-tabview" v-bind:class="{ expandedTabView: isExpanded }">
-        <bottombartabview
+        <bottom-bar-tab-view
           :bottomCourses="bottomCourses"
           :seeMoreCourses="seeMoreCourses"
           :bottomCourseFocus="bottomCourseFocus"
@@ -13,7 +13,7 @@
         />
       </div>
       <div class="bottombar-title" @click="toggle()">
-        <bottombartitle
+        <bottom-bar-title
           :color="bottomCourses[bottomCourseFocus].color"
           :name="bottomCourses[bottomCourseFocus].name"
           :isExpanded="isExpanded"
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div v-if="isExpanded" class="bottombar-course">
-      <bottombarcourse :courseObj="bottomCourses[bottomCourseFocus]" />
+      <bottom-bar-course :courseObj="bottomCourses[bottomCourseFocus]" />
     </div>
   </div>
 </template>
@@ -31,13 +31,9 @@ import Vue, { PropType } from 'vue';
 import BottomBarCourse from '@/components/BottomBar/BottomBarCourse.vue';
 import BottomBarTabView from '@/components/BottomBar/BottomBarTabView.vue';
 import BottomBarTitle from '@/components/BottomBar/BottomBarTitle.vue';
-import { AppBottomBarCourse } from '@/user-data';
-
-Vue.component('bottombarcourse', BottomBarCourse);
-Vue.component('bottombartabview', BottomBarTabView);
-Vue.component('bottombartitle', BottomBarTitle);
 
 export default Vue.extend({
+  components: { BottomBarCourse, BottomBarTabView, BottomBarTitle },
   props: {
     bottomCourses: Array as PropType<AppBottomBarCourse[]>,
     seeMoreCourses: Array as PropType<AppBottomBarCourse[]>,

@@ -33,11 +33,11 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    color: String,
-    subject: String,
-    number: String,
-    isCompletedReqCourse: Boolean,
-    compact: Boolean,
+    color: { type: String, required: true },
+    subject: { type: String, required: true },
+    number: { type: String, required: true },
+    isCompletedReqCourse: { type: Boolean, required: true },
+    compact: { type: Boolean, required: true },
   },
   computed: {
     borderColorCSSvar(): { '--border-color': string } {
