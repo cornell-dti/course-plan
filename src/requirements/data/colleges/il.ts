@@ -3,21 +3,9 @@ import {
   courseIsFWS,
   includesWithSingleRequirement,
   includesWithSubRequirements,
-  courseIsAllEligible,
 } from '../checkers-common';
 
 const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
-  {
-    name: 'Total Academic Credits',
-    description:
-      '120 academic credits are required' +
-      'PE courses and courses numbered 1000-1099 do not count towards the 120 credits',
-    source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11587',
-    checker: courseIsAllEligible,
-    subRequirementProgress: 'any-can-count',
-    fulfilledBy: 'credits',
-    minCount: 120,
-  },
   {
     name: 'Core Requirements',
     description:
