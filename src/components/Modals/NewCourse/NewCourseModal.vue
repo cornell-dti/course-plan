@@ -44,10 +44,10 @@
       <selected-requirement-editor
         :key="courseSelectorKey"
         :editMode="editMode"
-        :selectedRequirementIDs="selectedRequirementIDs"
+        :selectedRequirementID="selectedRequirementID"
+        :requirementsThatAllowDoubleCounting="requirementsThatAllowDoubleCounting"
         :relatedRequirements="relatedRequirements"
         :potentialRequirements="potentialRequirements"
-        :radioPotentialRequirements="mockRadioPotentialRequirement"
         @on-selected-change="onSelectedChange"
         @edit-mode="toggleEditMode"
       />
@@ -77,10 +77,10 @@ export default Vue.extend({
   data() {
     return {
       selectedCourse: null as MatchingCourseSearchResult | null,
-      selectedRequirementIDs: [] as readonly string[],
+      selectedRequirementID: '',
+      requirementsThatAllowDoubleCounting: [] as readonly string[],
       relatedRequirements: [] as readonly RequirementWithID[],
       potentialRequirements: [] as readonly RequirementWithID[],
-      radioPotentialRequirements: [] as readonly (readonly RequirementWithID[])[],
       editMode: false,
       courseSelectorKey: 0,
       courseIsAddable: true,
@@ -103,14 +103,6 @@ export default Vue.extend({
     seasonImg(): Readonly<Record<FirestoreSemesterType, string>> {
       return { Fall: fall, Spring: spring, Winter: winter, Summer: summer };
     },
-    mockRadioPotentialRequirement(): readonly (readonly RequirementWithID[])[] {
-      return [
-        [
-          { id: '111', name: 'option 1' },
-          { id: '222', name: 'option 2' },
-        ],
-      ];
-    },
   },
   methods: {
     selectCourse(result: MatchingCourseSearchResult) {
@@ -118,6 +110,7 @@ export default Vue.extend({
       this.getReqsRelatedToCourse(result);
     },
     getReqsRelatedToCourse(selectedCourse: MatchingCourseSearchResult) {
+      const requirementsThatAllowDoubleCounting: string[] = [];
       const relatedRequirements: RequirementWithID[] = [];
       const potentialRequirements: RequirementWithID[] = [];
 
@@ -133,19 +126,27 @@ export default Vue.extend({
             for (let k = 0; k < courses.length; k += 1) {
               for (const [, ids] of Object.entries(courses[k])) {
                 if (ids.includes(selectedCourse.id)) {
-                  relatedRequirements.push({ id: subreqs[j].id, name: subRequirement.name });
+                  if (subRequirement.allowCourseDoubleCounting) {
+                    requirementsThatAllowDoubleCounting.push(subRequirement.name);
+                  } else {
+                    relatedRequirements.push({ id: subreqs[j].id, name: subRequirement.name });
+                  }
                   break;
                 }
               }
             }
           }
-          // potential requirements
+          // potential self-check requirements
           if (subreqs[j].fulfilledBy === 'self-check') {
-            potentialRequirements.push({ id: subreqs[j].id, name: subRequirement.name });
+            if (!subRequirement.allowCourseDoubleCounting) {
+              potentialRequirements.push({ id: subreqs[j].id, name: subRequirement.name });
+            }
           }
+          this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;
           this.relatedRequirements = relatedRequirements;
           this.potentialRequirements = potentialRequirements;
-          this.selectedRequirementIDs = relatedRequirements.map(it => it.id);
+          this.selectedRequirementID =
+            relatedRequirements.length > 0 ? relatedRequirements[0].id : '';
         }
       }
     },
@@ -191,17 +192,16 @@ export default Vue.extend({
       this.reset();
       this.closeCurrentModal();
     },
-    onSelectedChange(selected: readonly string[]) {
-      this.selectedRequirementIDs = selected;
+    onSelectedChange(selected: string) {
+      this.selectedRequirementID = selected;
     },
     reset() {
       this.editMode = false;
       this.courseSelectorKey += 1;
       this.selectedCourse = null;
-      this.selectedRequirementIDs = [];
+      this.selectedRequirementID = '';
       this.relatedRequirements = [];
       this.potentialRequirements = [];
-      this.radioPotentialRequirements = [];
     },
     backOrCancel() {
       if (this.leftButtonText === 'BACK') {

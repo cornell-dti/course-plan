@@ -37,7 +37,7 @@ export default Vue.extend({
   },
   methods: {
     onClick() {
-      this.$emit('on-select', !this.selected);
+      this.$emit('on-select');
     },
   },
 });
