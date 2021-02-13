@@ -51,11 +51,11 @@ export default Vue.extend({
   components: { CourseCaution, CourseMenu },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
-    duplicatedCourseCodeList: { type: Array, required: false },
+    duplicatedCourseCodeList: { type: Array, required: false, default: null },
     compact: { type: Boolean, required: true },
     active: { type: Boolean, required: true },
     isReqCourse: { type: Boolean, required: true },
-    semesterIndex: { type: Number, required: false },
+    semesterIndex: { type: Number, required: false, default: 0 },
   },
   data() {
     return {

@@ -87,9 +87,12 @@ import { coursesColorSet } from '@/assets/constants/colors';
 
 export default Vue.extend({
   props: {
-    getCreditRange: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
-    semesterIndex: Number,
-    isCompact: Boolean,
+    getCreditRange: {
+      type: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
+      required: true,
+    },
+    semesterIndex: { type: Number, required: true },
+    isCompact: { type: Boolean, required: true },
   },
   data() {
     return {

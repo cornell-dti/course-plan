@@ -36,8 +36,8 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    deleteSemType: String,
-    deleteSemYear: Number,
+    deleteSemType: { type: String, required: true },
+    deleteSemYear: { type: Number, required: true },
   },
 
   computed: {

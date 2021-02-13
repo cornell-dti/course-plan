@@ -26,9 +26,12 @@ export default Vue.extend({
   components: { OnboardingBasicSingleDropdown },
   props: {
     /** Mapping from acronym to full name */
-    availableChoices: Object as PropType<Readonly<Record<string, string>>>,
-    dropdownChoices: Array as PropType<readonly string[]>,
-    addDropdownText: String,
+    availableChoices: {
+      type: Object as PropType<Readonly<Record<string, string>>>,
+      required: true,
+    },
+    dropdownChoices: { type: Array as PropType<readonly string[]>, required: true },
+    addDropdownText: { type: String, required: true },
   },
   methods: {
     onSelect(key: string, index: number) {

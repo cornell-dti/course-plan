@@ -35,11 +35,11 @@ import BottomBarTitle from '@/components/BottomBar/BottomBarTitle.vue';
 export default Vue.extend({
   components: { BottomBarCourse, BottomBarTabView, BottomBarTitle },
   props: {
-    bottomCourses: Array as PropType<AppBottomBarCourse[]>,
-    seeMoreCourses: Array as PropType<AppBottomBarCourse[]>,
-    bottomCourseFocus: Number,
-    isExpanded: Boolean,
-    maxBottomBarTabs: Number,
+    bottomCourses: { type: Array as PropType<AppBottomBarCourse[]>, required: true },
+    seeMoreCourses: { type: Array as PropType<AppBottomBarCourse[]>, required: true },
+    bottomCourseFocus: { type: Number, required: true },
+    isExpanded: { type: Boolean, required: true },
+    maxBottomBarTabs: { type: Number, required: true },
   },
 
   methods: {

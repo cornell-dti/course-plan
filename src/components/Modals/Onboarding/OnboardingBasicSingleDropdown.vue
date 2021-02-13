@@ -51,9 +51,12 @@ import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_v
 export default Vue.extend({
   props: {
     /** Mapping from acronym to full name */
-    availableChoices: Object as PropType<Readonly<Record<string, string>>>,
-    choice: String,
-    cannotBeRemoved: Boolean,
+    availableChoices: {
+      type: Object as PropType<Readonly<Record<string, string>>>,
+      required: true,
+    },
+    choice: { type: String, required: true },
+    cannotBeRemoved: { type: Boolean, required: true },
   },
   data() {
     return {

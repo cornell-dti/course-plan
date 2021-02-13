@@ -179,15 +179,15 @@ export default Vue.extend({
     };
   },
   props: {
-    semesterIndex: Number,
-    type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>,
-    year: Number,
-    courses: Array as PropType<readonly FirestoreSemesterCourse[]>,
-    compact: Boolean,
-    activatedCourse: Object as PropType<FirestoreSemesterCourse>,
-    duplicatedCourseCodeList: Array as PropType<readonly string[]>,
-    isFirstSem: Boolean,
-    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
+    semesterIndex: { type: Number, required: true },
+    type: { type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>, required: true },
+    year: { type: Number, required: true },
+    courses: { type: Array as PropType<readonly FirestoreSemesterCourse[]>, required: true },
+    compact: { type: Boolean, required: true },
+    activatedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    duplicatedCourseCodeList: { type: Array as PropType<readonly string[]>, required: true },
+    isFirstSem: { type: Boolean, required: true },
+    reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
   },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
