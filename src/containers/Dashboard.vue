@@ -366,9 +366,9 @@ export default Vue.extend({
         matches = ['N/A'];
       } else {
         for (let i = 0; i < distributions.length; i += 1) {
-          // @ts-ignore
           distributions[i].replace(/[A-Za-z0-9-]+/g, d => {
             matches.push(d);
+            return d;
           });
         }
       }
