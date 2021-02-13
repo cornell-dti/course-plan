@@ -29,7 +29,6 @@
             :isCompleted="false"
             :rostersFromLastTwoYears="rostersFromLastTwoYears"
             :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
-            :semesters="semesters"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
             @deleteCourseFromSemesters="deleteCourseFromSemesters"
@@ -64,7 +63,6 @@
               :isCompleted="true"
               :rostersFromLastTwoYears="rostersFromLastTwoYears"
               :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
-              :semesters="semesters"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @onShowAllCourses="onShowAllCourses"
               @deleteCourseFromSemesters="deleteCourseFromSemesters"
@@ -85,6 +83,7 @@ import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
 import { SingleMenuRequirement } from '@/requirements/types';
+import store from '@/store';
 
 Vue.component('requirementheader', RequirementHeader);
 Vue.component('subrequirement', SubRequirement);
@@ -107,12 +106,10 @@ export default Vue.extend({
     },
     displayedMajorIndex: { type: Number, required: true },
     displayedMinorIndex: { type: Number, required: true },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
     rostersFromLastTwoYears: { type: Array as PropType<readonly string[]>, required: true },
     lastLoadedShowAllCourseId: { type: Number, required: true },
-    semesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
   },
   data() {
     return {
@@ -121,6 +118,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    onboardingData(): AppOnboardingData {
+      return store.state.onboardingData;
+    },
     reqGroupColorMap() {
       return reqGroupColorMap;
     },

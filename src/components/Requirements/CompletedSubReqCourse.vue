@@ -37,6 +37,7 @@
 import Vue, { PropType } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import { CourseTaken } from '@/requirements/types';
+import store from '@/store';
 
 type CompletedSubReq = {
   color: string;
@@ -54,7 +55,6 @@ export default Vue.extend({
   props: {
     subReqCourseId: { type: Number, required: true },
     crsesTaken: { type: Array as PropType<readonly CourseTaken[]>, required: true },
-    semesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
   },
   data(): CompletedSubReq {
     return {
@@ -78,6 +78,9 @@ export default Vue.extend({
     }
   },
   computed: {
+    semesters(): readonly FirestoreSemester[] {
+      return store.state.semesters;
+    },
     courseLabel() {
       return `Course ${this.subReqCourseId + 1}`;
     },

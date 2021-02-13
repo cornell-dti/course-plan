@@ -80,7 +80,6 @@
             <completedsubreqcourse
               :subReqCourseId="id"
               :crsesTaken="subReqCourseSlot.courses"
-              :semesters="semesters"
               @deleteCourseFromSemesters="deleteCourseFromSemesters"
             />
           </div>
@@ -146,7 +145,6 @@ export default Vue.extend({
     color: { type: String, required: true },
     rostersFromLastTwoYears: { type: Array as PropType<readonly string[]>, required: true },
     lastLoadedShowAllCourseId: { type: Number, required: true },
-    semesters: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
   },
   watch: {
     subReqCoursesArray: {

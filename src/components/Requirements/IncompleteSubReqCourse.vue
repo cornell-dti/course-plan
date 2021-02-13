@@ -95,7 +95,7 @@ export default Vue.extend({
       type: Array as PropType<FirestoreSemesterCourse[]>,
       required: true,
     },
-    subReqCoursesArray: { type: Array as PropType<SubReqCourseSlot[]>, required: true },
+    subReqCoursesArray: { type: Array as PropType<readonly SubReqCourseSlot[]>, required: true },
     dataReady: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
     lastLoadedShowAllCourseId: { type: Number, required: true },

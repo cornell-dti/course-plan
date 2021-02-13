@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
 import * as fb from './firebaseConfig';
-import { checkNotNull } from './utilities';
+import getCurrentSeason, { checkNotNull, getCurrentYear } from './utilities';
 
 Vue.use(Vuex);
 
@@ -12,6 +12,7 @@ export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
   userName: FirestoreUserName;
   onboardingData: AppOnboardingData;
+  semesters: readonly FirestoreSemester[];
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
@@ -36,6 +37,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       transferCourse: [],
       tookSwim: 'no',
     },
+    semesters: [],
     toggleableRequirementChoices: {},
     subjectColors: {},
     uniqueIncrementer: 0,
@@ -50,6 +52,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setOnboardingData(state: VuexStoreState, onboardingData: FirestoreOnboardingUserData) {
       state.onboardingData = createAppOnboardingData(onboardingData);
+    },
+    setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
+      state.semesters = semesters;
     },
     setToggleableRequirementChoices(
       state: VuexStoreState,
@@ -72,6 +77,7 @@ export const subscribeRequirementDependencyChange = (
   store.subscribe((payload, state) => {
     if (
       payload.type === 'setOnboardingData' ||
+      payload.type === 'setSemesters' ||
       payload.type === 'setToggleableRequirementChoices'
     ) {
       handler(state);
@@ -93,18 +99,24 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
 
   let userNameInitialLoadFinished = false;
   let onboardingDataInitialLoadFinished = false;
+  let semestersInitialLoadFinished = false;
   let toggleableRequirementChoiceInitialLoadFinished = false;
   let subjectColorInitialLoadFinished = false;
   let uniqueIncrementerInitialLoadFinished = false;
+
+  let emitted = false;
 
   const emitOnLoadWhenLoaded = (): void => {
     if (
       userNameInitialLoadFinished &&
       onboardingDataInitialLoadFinished &&
+      semestersInitialLoadFinished &&
       toggleableRequirementChoiceInitialLoadFinished &&
       subjectColorInitialLoadFinished &&
-      uniqueIncrementerInitialLoadFinished
+      uniqueIncrementerInitialLoadFinished &&
+      !emitted
     ) {
+      emitted = true;
       onLoad();
     }
   };
@@ -130,6 +142,25 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         store.commit('setOnboardingData', data);
       }
       onboardingDataInitialLoadFinished = true;
+      emitOnLoadWhenLoaded();
+    });
+  fb.semestersCollection
+    .doc(simplifiedUser.email)
+    .get()
+    .then(snapshot => {
+      const data = snapshot.data();
+      if (data != null) {
+        store.commit('setSemesters', data.semesters);
+      } else {
+        const newSemeter: FirestoreSemester = {
+          type: getCurrentSeason(),
+          year: getCurrentYear(),
+          courses: [],
+        };
+        store.commit('setSemesters', [newSemeter]);
+        fb.semestersCollection.doc(simplifiedUser.email).set({ semesters: [newSemeter] });
+      }
+      semestersInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
   const toggleableRequirementChoiceUnsubscriber = fb.toggleableRequirementChoicesCollection

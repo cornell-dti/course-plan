@@ -18,12 +18,10 @@
           :toggleableRequirementChoices="toggleableRequirementChoices"
           :displayedMajorIndex="displayedMajorIndex"
           :displayedMinorIndex="displayedMinorIndex"
-          :onboardingData="onboardingData"
           :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
           :rostersFromLastTwoYears="rostersFromLastTwoYears"
           :numOfColleges="numOfColleges"
           :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
-          :semesters="semesters"
           @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
           @activateMajor="activateMajor"
           @activateMinor="activateMinor"
@@ -110,11 +108,8 @@ tour.setOption('exitOnOverlayClick', 'false');
 export default Vue.extend({
   components: { draggable, Course, DropDownArrow },
   props: {
-    semesters: Array as PropType<readonly FirestoreSemester[]>,
-    onboardingData: Object as PropType<AppOnboardingData>,
-    compact: Boolean,
-    startTour: Boolean,
-    reqs: Array as PropType<readonly SingleMenuRequirement[]>,
+    startTour: { type: Boolean, required: true },
+    reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
   },
   data(): Data {
     return {
@@ -136,6 +131,12 @@ export default Vue.extend({
     },
   },
   computed: {
+    semesters(): readonly FirestoreSemester[] {
+      return store.state.semesters;
+    },
+    onboardingData(): AppOnboardingData {
+      return store.state.onboardingData;
+    },
     toggleableRequirementChoices(): AppToggleableRequirementChoices {
       return store.state.toggleableRequirementChoices;
     },
