@@ -13,7 +13,7 @@
     <div v-if="matches.length > 0" class="autocomplete-items">
       <div
         v-for="(matchingCourse, index) in matches"
-        :key="matchingCourse.id"
+        :key="index"
         v-bind:class="['search-result', currentFocus === index ? 'autocomplete-active' : '']"
         @click="selectCourse(matchingCourse)"
       >
