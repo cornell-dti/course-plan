@@ -104,15 +104,22 @@ const getTotalCreditsFulfillmentStatistics = (
   }
 
   let minCountFulfilled = 0;
-  if (college === 'AG') {
-    courses.forEach(course => {
-      if (course.subject !== 'PE') minCountFulfilled += course.credits;
-    });
-  } else {
-    courses.forEach(course => {
-      if (courseIsAllEligible(course)) minCountFulfilled += course.credits;
-    });
-  }
+  let minCountRequired = 120;
+  const courseCodeSet = new Set<string>();
+  const eligibleCourses =
+    college === 'AG'
+      ? courses.filter(course => course.subject !== 'PE')
+      : courses.filter(courseIsAllEligible);
+
+  eligibleCourses.forEach(course => {
+    minCountFulfilled += course.credits;
+    const code = `${course.subject} ${course.number}`;
+    if (courseCodeSet.has(code)) {
+      minCountRequired += course.credits;
+    } else {
+      courseCodeSet.add(code);
+    }
+  });
 
   return {
     id: requirement.id,
@@ -120,7 +127,7 @@ const getTotalCreditsFulfillmentStatistics = (
     courses: [],
     fulfilledBy: 'credits',
     minCountFulfilled,
-    minCountRequired: 120,
+    minCountRequired,
   };
 };
 
