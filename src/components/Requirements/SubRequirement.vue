@@ -8,30 +8,27 @@
       </div>
       <div class="col-7" @click="toggleDescription()">
         <p
-          v-bind:class="[
-            { 'sup-req': !this.isFulfilled },
+          :class="[
+            { 'sup-req': !isFulfilled },
             'pointer',
-            this.isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
+            isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
           ]"
         >
           <span>{{ subReq.requirement.name }}</span>
         </p>
       </div>
       <div class="col">
-        <p v-if="!this.isCompleted" class="sup-req-progress text-right incomplete-ptext">
+        <p v-if="!isCompleted" class="sup-req-progress text-right incomplete-ptext">
           {{ subReqProgress }}
         </p>
-        <p v-if="this.isFulfilled" class="text-right completed-ptext">
+        <p v-if="isFulfilled" class="text-right completed-ptext">
           <span
             >{{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
             {{ subReq.fulfilledBy }}</span
           >
         </p>
       </div>
-      <div
-        v-if="displayDescription"
-        :class="[{ 'completed-ptext': this.isFulfilled }, 'description']"
-      >
+      <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
         {{ subReq.requirement.description }}
         <a
           class="more"
@@ -70,7 +67,7 @@
                 <span>{{ optionName }}</span>
               </div>
             </div>
-            {{ this.subReq.requirement.fulfillmentOptions[selectedFulfillmentOption].description }}
+            {{ subReq.requirement.fulfillmentOptions[selectedFulfillmentOption].description }}
           </div>
         </div>
       </div>

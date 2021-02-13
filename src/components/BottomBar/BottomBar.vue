@@ -1,7 +1,7 @@
 <template>
   <div class="bottombar">
     <div class="bottombar-tabviewTitleWrapper">
-      <div class="bottombar-tabview" v-bind:class="{ expandedTabView: isExpanded }">
+      <div class="bottombar-tabview" :class="{ expandedTabView: isExpanded }">
         <bottom-bar-tab-view
           :bottomCourses="bottomCourses"
           :seeMoreCourses="seeMoreCourses"

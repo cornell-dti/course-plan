@@ -79,7 +79,7 @@
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">
               <img class="checkmark" src="@/assets/images/checkmark-onboarding.svg" />
-              {{ this.onboardingData.tookSwim === 'yes' ? 'Yes' : 'No' }}
+              {{ onboardingData.tookSwim === 'yes' ? 'Yes' : 'No' }}
             </label>
           </div>
         </div>

@@ -38,7 +38,7 @@
         class="courseMenu-section"
         @mouseover="setDisplayEditCourseCredits(true)"
         @mouseleave="setDisplayEditCourseCredits(false)"
-        v-if="this.getCreditRange[0] != this.getCreditRange[1]"
+        v-if="getCreditRange[0] != getCreditRange[1]"
       >
         <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
         <div class="courseMenu-left">

@@ -23,12 +23,12 @@
       </div>
       <div class="onboarding-dropdown-content college-content" v-if="shown">
         <div
-          v-for="(choice, index) in availableOptions"
+          v-for="(option, index) in availableOptions"
           :key="index"
           class="onboarding-dropdown-content-item"
-          @click="selectChoice(choice)"
+          @click="selectChoice(option)"
         >
-          {{ choice }}
+          {{ option }}
         </div>
       </div>
     </div>

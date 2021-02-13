@@ -1,6 +1,6 @@
 <template>
   <div class="modal">
-    <div v-bind:class="['modal-content', contentClass]">
+    <div :class="['modal-content', contentClass]">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
         <img class="modal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />

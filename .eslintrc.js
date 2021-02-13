@@ -5,7 +5,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:vue/essential',
+    'plugin:vue/recommended',
     '@vue/airbnb',
     '@vue/typescript',
     'plugin:import/typescript',
@@ -27,6 +27,12 @@ module.exports = {
   // add your custom rules here
   rules: {
     '@typescript-eslint/ban-ts-comment': ['warn'],
+    'vue/attribute-hyphenation': ['off'],
+    // TODO: change when we migrated away all Vue.component('...', Component).
+    'vue/component-definition-name-casing': ['off'],
+    // TODO: auto-fix of this and the next rule introduces too many code changes that might cause merge conflict.
+    'vue/attributes-order': ['off'],
+    'vue/order-in-components': ['off'],
     // TODO: change no-console to error out for prod
     'no-console': ['warn'],
     'no-await-in-loop': ['error'],

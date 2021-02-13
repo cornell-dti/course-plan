@@ -2,7 +2,7 @@
   <div
     class="bottombartitle"
     :style="{ background: `#${color}` }"
-    v-bind:class="{ expandedBottomBarTitle: isExpanded }"
+    :class="{ expandedBottomBarTitle: isExpanded }"
   >
     <div class="bottombar-square-title">{{ name }}</div>
     <img

@@ -44,8 +44,8 @@
               :style="{ color: `#${reqGroupColorMap[req.group][0]}` }"
             >
               <!-- Toggle to display completed reqs -->
-              <p class="toggle" v-if="displayCompleted" v-on:click="turnCompleted(false)">HIDE</p>
-              <p class="toggle" v-else v-on:click="turnCompleted(true)">SHOW</p>
+              <p class="toggle" v-if="displayCompleted" @click="turnCompleted(false)">HIDE</p>
+              <p class="toggle" v-else @click="turnCompleted(true)">SHOW</p>
             </button>
           </div>
         </div>
