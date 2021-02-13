@@ -45,10 +45,7 @@
       :text="welcomeBodytext"
       :exit="welcomeExit"
       :buttonText="welcomeButtonText"
-      @hide="
-        welcomeHidden = false;
-        if (startTour == false) startTour = true;
-      "
+      @hide="hideWelcomeTour()"
       @skip="welcomeHidden = false"
       v-if="welcomeHidden"
     >
@@ -349,6 +346,11 @@ export default Vue.extend({
 
     cancelOnboarding() {
       this.isOnboarding = false;
+    },
+
+    hideWelcomeTour() {
+      this.welcomeHidden = false;
+      if (!this.startTour) this.startTour = true;
     },
 
     editProfile() {
