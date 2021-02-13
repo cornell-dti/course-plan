@@ -29,9 +29,7 @@ export default Vue.extend({
         .auth()
         .signOut()
         .then(
-          () => {
-            window.location.reload(false);
-          },
+          () => window.location.reload(),
           error => {
             // TODO: error
             console.log(error);
