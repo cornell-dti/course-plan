@@ -1,10 +1,28 @@
 <template>
   <div>
-    <div v-if="selectedRequirementsCommaSeparatedList.trim().length > 0">
-      <div class="newCourse-title">This class fulfills the following requirement(s):</div>
+    <div v-if="chosenRequirementText.length > 0">
+      <div class="newCourse-title">
+        You will let this class fulfill the following requirements(s):
+      </div>
+      <div class="newCourse-requirements-container">
+        <div class="newCourse-requirements">
+          {{ chosenRequirementText }}
+        </div>
+      </div>
+    </div>
+    <div v-if="requirementsThatAllowDoubleCounting.length > 0">
+      <div class="newCourse-title">This class can auto-fulfill the following requirement(s):</div>
+      <div class="newCourse-requirements-container">
+        <div class="newCourse-requirements">
+          {{ requirementsThatAllowDoubleCounting.join(', ') }}
+        </div>
+      </div>
+    </div>
+    <div v-if="relatedRequirements.length > 0">
+      <div class="newCourse-title">This class can fulfill the following requirement(s):</div>
       <div v-if="!editMode" class="newCourse-requirements-container">
         <div class="newCourse-requirements">
-          {{ selectedRequirementsCommaSeparatedList }}
+          {{ relatedRequirements.map(it => it.name).join(', ') }}
         </div>
       </div>
       <div v-else class="newCourse-requirements-edit">
@@ -12,19 +30,19 @@
           v-for="relatedRequirement in relatedRequirements"
           :key="relatedRequirement.id"
           :name="relatedRequirement.name"
-          :selected="selectedRequirementIDs.includes(relatedRequirement.id)"
+          :selected="selectedRequirementID === relatedRequirement.id"
           :isClickable="true"
-          @on-select="selected => toggleSelectRequirement(relatedRequirement.id, selected)"
+          @on-select="() => toggleSelectRequirement(relatedRequirement.id)"
         />
       </div>
     </div>
-    <div v-if="notSelectedRequirementsCommaSeparatedList.trim().length > 0">
+    <div v-if="potentialRequirements.length > 0">
       <div class="newCourse-title">
         This class could potentially fulfill the following requirement(s):
       </div>
       <div v-if="!editMode" class="newCourse-requirements-container">
         <div class="newCourse-name">
-          {{ notSelectedRequirementsCommaSeparatedList }}
+          {{ potentialRequirements.map(it => it.name).join(', ') }}
         </div>
       </div>
       <div v-else class="newCourse-requirements-edit">
@@ -32,16 +50,9 @@
           v-for="potentialRequirement in potentialRequirements"
           :key="potentialRequirement.id"
           :name="potentialRequirement.name"
-          :selected="selectedRequirementIDs.includes(potentialRequirement.id)"
+          :selected="selectedRequirementID === potentialRequirement.id"
           :isClickable="true"
-          @on-select="selected => toggleSelectRequirement(potentialRequirement.id, selected)"
-        />
-        <requirement-radio-select-button
-          v-for="(choices, index) in radioPotentialRequirements"
-          :key="index"
-          :chosenID="getChosenIDForRadioButton(choices)"
-          :choices="choices"
-          @on-select="selectRequirementFromRadioButtons"
+          @on-select="() => toggleSelectRequirement(potentialRequirement.id)"
         />
       </div>
     </div>
@@ -54,15 +65,18 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import EditSingleRequirement from '@/components/Modals/NewCourse/EditSingleRequirement.vue';
-import RequirementRadioSelectButton from '@/components/Modals/NewCourse/RequirementRadioSelectButton.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
 export default Vue.extend({
-  components: { EditSingleRequirement, RequirementRadioSelectButton },
+  components: { EditSingleRequirement },
   props: {
     editMode: { type: Boolean, required: true },
-    selectedRequirementIDs: { type: Array as PropType<readonly string[]>, required: true },
+    selectedRequirementID: { type: String, required: true },
+    requirementsThatAllowDoubleCounting: {
+      type: Array as PropType<readonly string[]>,
+      required: true,
+    },
     relatedRequirements: {
       type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
       required: true,
@@ -71,32 +85,13 @@ export default Vue.extend({
       type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
       required: true,
     },
-    radioPotentialRequirements: {
-      type: Array as PropType<
-        readonly (readonly { readonly id: string; readonly name: string }[])[]
-      >,
-      required: true,
-    },
   },
   computed: {
-    allRequirements(): readonly RequirementWithID[] {
-      return [
-        ...this.relatedRequirements,
-        ...this.potentialRequirements,
-        ...this.radioPotentialRequirements.flat(),
-      ];
-    },
-    selectedRequirementsCommaSeparatedList(): string {
-      return this.allRequirements
-        .filter(({ id }) => this.selectedRequirementIDs.includes(id))
-        .map(it => it.name)
-        .join(', ');
-    },
-    notSelectedRequirementsCommaSeparatedList(): string {
-      return this.allRequirements
-        .filter(({ id }) => !this.selectedRequirementIDs.includes(id))
-        .map(it => it.name)
-        .join(', ');
+    chosenRequirementText(): string {
+      const chosenRequirementNames = [...this.relatedRequirements, ...this.potentialRequirements]
+        .filter(it => it.id === this.selectedRequirementID)
+        .map(it => it.name);
+      return [...this.requirementsThatAllowDoubleCounting, ...chosenRequirementNames].join(', ');
     },
     editRequirementsText(): string {
       return this.potentialRequirements.length !== 0
@@ -105,26 +100,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    toggleSelectRequirement(id: string, selected: boolean) {
-      if (selected) {
-        this.$emit('on-selected-change', [...this.selectedRequirementIDs, id]);
-      } else {
-        this.$emit(
-          'on-selected-change',
-          this.selectedRequirementIDs.filter(it => it !== id)
-        );
-      }
-    },
-    getChosenIDForRadioButton(choices: readonly RequirementWithID[]): string {
-      const choice = choices.find(it => this.selectedRequirementIDs.includes(it.id));
-      return choice != null ? choice.id : '';
-    },
-    selectRequirementFromRadioButtons(id: string, choices: readonly RequirementWithID[]) {
-      const idsToRemove = new Set(choices.map(it => it.id));
-      this.$emit('on-selected-change', [
-        ...this.selectedRequirementIDs.filter(selected => !idsToRemove.has(selected)),
-        id,
-      ]);
+    toggleSelectRequirement(id: string) {
+      this.$emit('on-selected-change', id);
     },
     toggleEditMode() {
       this.$emit('edit-mode');
