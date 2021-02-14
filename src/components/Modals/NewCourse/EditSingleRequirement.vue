@@ -21,9 +21,9 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    name: String,
-    selected: Boolean,
-    isClickable: Boolean,
+    name: { type: String, required: true },
+    selected: { type: Boolean, required: true },
+    isClickable: { type: Boolean, required: true },
   },
   data() {
     return {
