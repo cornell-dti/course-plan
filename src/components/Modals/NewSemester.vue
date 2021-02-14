@@ -6,7 +6,7 @@
           >Type</label
         >
         <div
-          v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
+          :class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
           class="position-relative"
           v-click-outside="closeSeasonDropdownIfOpen"
         >
@@ -30,13 +30,13 @@
             v-if="displayOptions.season.shown"
           >
             <div
-              v-bind:class="{ warning: isDuplicate }"
+              :class="{ warning: isDuplicate }"
               v-for="season in seasons"
               :key="season[1]"
               class="newSemester-dropdown-content-item"
               @click="selectSeason(season[1])"
             >
-              <img v-bind:src="season[0]" class="newSemester-dropdown-content-season" />
+              <img :src="season[0]" class="newSemester-dropdown-content-season" />
               {{ season[1] }}
             </div>
           </div>
@@ -47,7 +47,7 @@
           >Year</label
         >
         <div
-          v-bind:class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
+          :class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
           class="position-relative"
           v-click-outside="closeYearDropdownIfOpen"
         >
@@ -68,12 +68,12 @@
             v-if="displayOptions.year.shown"
           >
             <div
-              v-for="year in years"
-              :key="year"
+              v-for="yearChoice in years"
+              :key="yearChoice"
               class="newSemester-dropdown-content-item"
-              @click="selectYear(year)"
+              @click="selectYear(yearChoice)"
             >
-              {{ year }}
+              {{ yearChoice }}
             </div>
           </div>
         </div>

@@ -3,15 +3,15 @@
     class="semester-courseWrapper semester-addWrapper"
     :class="{ 'semester-addWrapper--compact': compact, 'my-2 mx-0': shouldClearPadding }"
     @click="onClick"
-    v-bind:data-intro-group="shouldShowWalkthrough ? 'pageTour' : null"
-    v-bind:data-step="shouldShowWalkthrough ? '3' : null"
-    v-bind:data-intro="
+    :data-intro-group="shouldShowWalkthrough ? 'pageTour' : null"
+    :data-step="shouldShowWalkthrough ? '3' : null"
+    :data-intro="
       shouldShowWalkthrough
         ? `<b>Add your course in this semester!</b><br>
       <div class = &quot;introjs-bodytext&quot;>To start planning your college career, you should try adding a course in your current semester.</div>`
         : null
     "
-    v-bind:data-disable-interaction="shouldShowWalkthrough ? '1' : null"
+    :data-disable-interaction="shouldShowWalkthrough ? '1' : null"
   >
     <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">
       {{ addCourseText }}

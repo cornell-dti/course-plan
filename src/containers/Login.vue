@@ -154,7 +154,7 @@
               />
             </div>
             <div class="col-12 col-md-12 email">
-              <button class="email-button" variant="primary" v-on:click="addUser()">
+              <button class="email-button" variant="primary" @click="addUser()">
                 Join Waitlist
               </button>
             </div>

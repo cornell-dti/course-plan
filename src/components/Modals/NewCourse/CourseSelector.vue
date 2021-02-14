@@ -1,7 +1,7 @@
 <template>
   <div class="autocomplete">
     <input
-      v-bind:class="['search-box', searchBoxClassName]"
+      :class="['search-box', searchBoxClassName]"
       ref="dropdownInput"
       v-model="searchText"
       :placeholder="placeholder"
@@ -14,7 +14,7 @@
       <div
         v-for="(matchingCourse, index) in matches"
         :key="index"
-        v-bind:class="['search-result', currentFocus === index ? 'autocomplete-active' : '']"
+        :class="['search-result', currentFocus === index ? 'autocomplete-active' : '']"
         @click="selectCourse(matchingCourse)"
       >
         {{ matchingCourse.title }}
