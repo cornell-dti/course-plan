@@ -1,6 +1,6 @@
-import store from '../store';
 import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './data/exams/ExamCredit';
+import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
 
 type FulfillmentStatistics = {
@@ -195,7 +195,8 @@ type RequirementWithIDSourceType = DecoratedCollegeOrMajorRequirement & {
 
 function computeFulfillmentCoursesAndStatistics(
   requirement: RequirementWithIDSourceType,
-  coursesTaken: readonly CourseTaken[]
+  coursesTaken: readonly CourseTaken[],
+  toggleableRequirementChoices: AppToggleableRequirementChoices
 ): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
   switch (requirement.fulfilledBy) {
     case 'self-check':
@@ -212,7 +213,7 @@ function computeFulfillmentCoursesAndStatistics(
     case 'toggleable': {
       const option =
         requirement.fulfillmentOptions[
-          store.state.toggleableRequirementChoices[requirement.id] ||
+          toggleableRequirementChoices[requirement.id] ||
             Object.keys(requirement.fulfillmentOptions)[0]
         ];
       return computeFulfillmentStatisticsFromCourses(
@@ -227,9 +228,12 @@ function computeFulfillmentCoursesAndStatistics(
   }
 }
 
-function getCourseCodesArray(): readonly CourseTaken[] {
+function getCourseCodesArray(
+  semesters: readonly FirestoreSemester[],
+  onboardingData: AppOnboardingData
+): readonly CourseTaken[] {
   const courses: CourseTaken[] = [];
-  store.state.semesters.forEach(semester => {
+  semesters.forEach(semester => {
     semester.courses.forEach(course => {
       const [subject, number] = course.code.split(' ');
       courses.push({
@@ -242,24 +246,33 @@ function getCourseCodesArray(): readonly CourseTaken[] {
       });
     });
   });
-  courses.push(...getCourseEquivalentsFromUserExams(store.state.onboardingData));
+  courses.push(...getCourseEquivalentsFromUserExams(onboardingData));
   return courses;
 }
 
-/**
- * @param coursesTaken a list of classes taken by the user, with some metadata (e.g. no. of credits)
- * helping to compute requirement progress.
- * @param college user's college.
- * @param majors user's list of majors.
- * @param minors user's list of minors.
- * @returns all requirements fulfillments, grouped by University, College, Major.
- */
-export default function computeRequirements(): readonly GroupedRequirementFulfillmentReport[] {
-  const coursesTaken = getCourseCodesArray();
-  const { college } = store.state.onboardingData;
+/** Compute everything needed for displaying requirement on the frontend. */
+export default function computeGroupedRequirementFulfillmentReports(
+  semesters: readonly FirestoreSemester[],
+  onboardingData: AppOnboardingData,
+  toggleableRequirementChoices: AppToggleableRequirementChoices
+): {
+  readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<
+    RequirementWithIDSourceType,
+    CourseTaken
+  >;
+  readonly illegallyDoubleCountedCourseIDs: ReadonlySet<number>;
+  readonly groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
+} {
+  const coursesTaken = getCourseCodesArray(semesters, onboardingData);
+  const { college } = onboardingData;
 
-  const { requirementFulfillmentGraph } = buildRequirementFulfillmentGraphFromUserData(
-    coursesTaken
+  const {
+    requirementFulfillmentGraph,
+    illegallyDoubleCountedCourseIDs,
+  } = buildRequirementFulfillmentGraphFromUserData(
+    coursesTaken,
+    onboardingData,
+    toggleableRequirementChoices
   );
 
   const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];
@@ -277,7 +290,7 @@ export default function computeRequirements(): readonly GroupedRequirementFulfil
     const fulfillmentStatistics = {
       id: requirement.id,
       requirement,
-      ...computeFulfillmentCoursesAndStatistics(requirement, courses),
+      ...computeFulfillmentCoursesAndStatistics(requirement, courses, toggleableRequirementChoices),
     };
 
     switch (requirement.sourceType) {
@@ -311,7 +324,7 @@ export default function computeRequirements(): readonly GroupedRequirementFulfil
     }
   });
 
-  return [
+  const groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[] = [
     { groupName: 'College', specific: college, reqs: collegeFulfillmentStatistics },
     ...Array.from(majorFulfillmentStatisticsMap.entries()).map(
       ([majorName, fulfillmentStatistics]) =>
@@ -322,4 +335,10 @@ export default function computeRequirements(): readonly GroupedRequirementFulfil
         ({ groupName: 'Minor', specific: minorName, reqs: fulfillmentStatistics } as const)
     ),
   ];
+
+  return {
+    requirementFulfillmentGraph,
+    illegallyDoubleCountedCourseIDs,
+    groupedRequirementFulfillmentReport,
+  };
 }

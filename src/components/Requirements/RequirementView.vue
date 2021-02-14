@@ -99,10 +99,6 @@ type PartitionedRequirementsProgress = {
 export default Vue.extend({
   components: { RequirementHeader, SubRequirement },
   props: {
-    reqs: {
-      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
-      required: true,
-    },
     req: { type: Object as PropType<GroupedRequirementFulfillmentReport>, required: true },
     reqIndex: { type: Number, required: true }, // Index of this req in reqs array
     toggleableRequirementChoices: {
@@ -125,6 +121,9 @@ export default Vue.extend({
   computed: {
     onboardingData(): AppOnboardingData {
       return store.state.onboardingData;
+    },
+    reqs(): readonly GroupedRequirementFulfillmentReport[] {
+      return store.state.groupedRequirementFulfillmentReport;
     },
     reqGroupColorMap() {
       return reqGroupColorMap;

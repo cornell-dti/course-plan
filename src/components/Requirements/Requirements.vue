@@ -10,9 +10,8 @@
       data-tooltipClass="tooltipCenter"
     >
       <!-- loop through reqs array of req objects -->
-      <div class="req" v-for="(req, index) in reqs" :key="index">
+      <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
         <requirement-view
-          :reqs="reqs"
           :req="req"
           :reqIndex="index"
           :toggleableRequirementChoices="toggleableRequirementChoices"
@@ -60,7 +59,7 @@
 
 <script lang="ts">
 import draggable from 'vuedraggable';
-import Vue, { PropType } from 'vue';
+import Vue from 'vue';
 import VueCollapse from 'vue2-collapse';
 import introJs from 'intro.js';
 
@@ -105,10 +104,6 @@ export default Vue.extend({
   components: { draggable, Course, DropDownArrow, RequirementView },
   props: {
     startTour: { type: Boolean, required: true },
-    reqs: {
-      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
-      required: true,
-    },
   },
   data(): Data {
     return {
@@ -138,6 +133,9 @@ export default Vue.extend({
     },
     toggleableRequirementChoices(): AppToggleableRequirementChoices {
       return store.state.toggleableRequirementChoices;
+    },
+    groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
+      return store.state.groupedRequirementFulfillmentReport;
     },
     rostersFromLastTwoYears() {
       return getRostersFromLastTwoYears();

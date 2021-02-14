@@ -70,6 +70,7 @@ import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
+import store from '@/store';
 
 export default Vue.extend({
   components: { CourseSelector, FlexibleModal, NewSemester, SelectedRequirementEditor },
@@ -89,10 +90,6 @@ export default Vue.extend({
   },
   props: {
     isCourseModelSelectingSemester: { type: Boolean, required: true },
-    reqs: {
-      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
-      required: true,
-    },
   },
   computed: {
     leftButtonText(): string {
@@ -115,10 +112,13 @@ export default Vue.extend({
       const requirementsThatAllowDoubleCounting: string[] = [];
       const relatedRequirements: RequirementWithID[] = [];
       const potentialRequirements: RequirementWithID[] = [];
+      const groupedRequirements = store.state.groupedRequirementFulfillmentReport;
 
       // parse through reqs object
-      for (let i = 0; i < this.reqs.length; i += 1) {
-        const subreqs = this.reqs[i].reqs.filter(it => it.minCountFulfilled < it.minCountRequired);
+      for (let i = 0; i < groupedRequirements.length; i += 1) {
+        const subreqs = groupedRequirements[i].reqs.filter(
+          it => it.minCountFulfilled < it.minCountRequired
+        );
         for (let j = 0; j < subreqs.length; j += 1) {
           // requirements
 
