@@ -60,11 +60,7 @@ import draggable from 'vuedraggable';
 import VueSkeletonLoader from 'skeleton-loader-vue';
 import Course from '@/components/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
-import {
-  DisplayableRequirementFulfillment,
-  SubReqCourseSlot,
-  CrseInfo,
-} from '@/requirements/types';
+import { RequirementFulfillment, SubReqCourseSlot, CrseInfo } from '@/requirements/types';
 
 type Data = {
   courseObjects: FirestoreSemesterCourse[];
@@ -88,7 +84,7 @@ export default Vue.extend({
     this.$el.removeEventListener('touchmove', this.dragListener);
   },
   props: {
-    subReq: { type: Object as PropType<DisplayableRequirementFulfillment>, required: true },
+    subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
     subReqCourseId: { type: Number, required: true },
     crseInfoObjects: { type: Array as PropType<CrseInfo[]>, required: true },
     subReqFetchedCourseObjectsNotTakenArray: {

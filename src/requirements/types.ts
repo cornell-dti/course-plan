@@ -51,8 +51,8 @@ type RequirementCommon = {
   readonly source: string;
   /** If this is set to true, then an edge to the course doesn't count towards double counting. */
   readonly allowCourseDoubleCounting?: true;
-  readonly progressBar?: boolean;
 };
+
 /**
  * @param T additional information only attached to credits and courses type.
  */
@@ -73,20 +73,12 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
        * - When fulfilledBy === 'courses', this field stores the min number of courses.
        */
       readonly minCount: number;
-      /**
-       * Some requirements have sub-requirements.
-       *
-       * - `minCount` specifies how many types of sub-requirements needs to be satisfied.
-       * - `totalCount` specifies how many courses/credits need to be earned in total.
-       */
-      readonly totalCount?: number;
     } & T)
   | {
       readonly fulfilledBy: 'toggleable';
       readonly fulfillmentOptions: {
         readonly [optionName: string]: {
           readonly minCount: number;
-          readonly totalCount?: number;
           readonly counting: 'credits' | 'courses';
           readonly subRequirementProgress: 'every-course-needed' | 'any-can-count';
           readonly description: string;
@@ -146,45 +138,23 @@ export type DecoratedRequirementsJson = {
   readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };
 
-export type RequirementFulfillment<M extends Record<string, unknown>> = {
-  /** ID of the requirement */
-  readonly id: string;
-  /** The original requirement object. */
-  readonly requirement: DecoratedCollegeOrMajorRequirement;
-  /** A list of courses that satisfy this requirement. */
-  readonly courses: readonly (readonly CourseTaken[])[];
-} & M;
-
 export type RequirementFulfillmentStatistics = {
   readonly fulfilledBy: 'courses' | 'credits' | 'self-check';
-  /**
-   * Current fulfillment progress.
-   * When it's a number, it's either number of courses or number of credits.
-   * When it's undefined, it means that the requirement is self-check.
-   */
   readonly minCountFulfilled: number;
   readonly minCountRequired: number;
-  readonly totalCountFulfilled?: number;
-  readonly totalCountRequired?: number;
 };
+
+export type RequirementFulfillment = {
+  /** The original requirement object. */
+  readonly requirement: RequirementWithIDSourceType;
+  /** A list of courses that satisfy this requirement. */
+  readonly courses: readonly (readonly CourseTaken[])[];
+} & RequirementFulfillmentStatistics;
 
 export type GroupedRequirementFulfillmentReport = {
-  readonly groupName: 'University' | 'College' | 'Major' | 'Minor';
+  readonly groupName: 'College' | 'Major' | 'Minor';
   readonly specific: string;
-  readonly reqs: readonly RequirementFulfillment<RequirementFulfillmentStatistics>[];
-};
-
-export type DisplayableRequirementFulfillment = RequirementFulfillment<RequirementFulfillmentStatistics>;
-
-export type SingleMenuRequirement = {
-  readonly ongoing: DisplayableRequirementFulfillment[];
-  readonly completed: DisplayableRequirementFulfillment[];
-  readonly name: string;
-  readonly group: 'COLLEGE' | 'MAJOR' | 'MINOR';
-  readonly specific: string;
-  type?: string;
-  fulfilled?: number;
-  required?: number;
+  readonly reqs: readonly RequirementFulfillment[];
 };
 
 export type CrseInfo = {

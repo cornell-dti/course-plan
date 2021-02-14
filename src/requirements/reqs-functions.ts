@@ -1,5 +1,6 @@
 import store from '../store';
 import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './data/constants';
+import getCourseEquivalentsFromUserExams from './data/exams/ExamCredit';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
 import {
   CourseTaken,
@@ -10,7 +11,6 @@ import {
 } from './types';
 
 type FulfillmentStatistics = {
-  readonly id: string;
   readonly requirement: RequirementWithIDSourceType;
   readonly courses: readonly (readonly CourseTaken[])[];
 } & RequirementFulfillmentStatistics;
@@ -122,7 +122,6 @@ const getTotalCreditsFulfillmentStatistics = (
   });
 
   return {
-    id: requirement.id,
     requirement,
     courses: [],
     fulfilledBy: 'credits',
@@ -135,8 +134,7 @@ function computeFulfillmentStatisticsFromCourses(
   coursesThatFulfilledRequirement: readonly (readonly CourseTaken[])[],
   counting: 'courses' | 'credits',
   subRequirementProgress: 'every-course-needed' | 'any-can-count',
-  minCountRequired: number,
-  totalCountRequired?: number
+  minCountRequired: number
 ): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
   let minCountFulfilled = 0;
   coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
@@ -166,38 +164,10 @@ function computeFulfillmentStatisticsFromCourses(
     }
   });
 
-  if (totalCountRequired === undefined) {
-    return {
-      fulfilledBy: counting,
-      minCountFulfilled,
-      minCountRequired,
-      courses: coursesThatFulfilledRequirement,
-    };
-  }
-
-  let totalCountFulfilled = 0;
-  Array.from(new Set(coursesThatFulfilledRequirement.flat()).values()).forEach(
-    courseThatFulfilledRequirement => {
-      // depending on what it is fulfilled by, either increase the count or credits you took
-      switch (counting) {
-        case 'courses':
-          totalCountFulfilled += 1;
-          return;
-        case 'credits':
-          totalCountFulfilled += courseThatFulfilledRequirement.credits;
-          return;
-        default:
-          throw new Error('Fulfillment type unknown.');
-      }
-    }
-  );
-
   return {
     fulfilledBy: counting,
     minCountFulfilled,
     minCountRequired,
-    totalCountFulfilled,
-    totalCountRequired,
     courses: coursesThatFulfilledRequirement,
   };
 }
@@ -236,15 +206,15 @@ function computeFulfillmentCoursesAndStatistics(
 ): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
   switch (requirement.fulfilledBy) {
     case 'self-check':
-      return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 0, courses: [] };
+      // Give self-check 1 required course and 0 fulfilled to prevent it from being fulfilled.
+      return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 1, courses: [] };
     case 'courses':
     case 'credits':
       return computeFulfillmentStatisticsFromCourses(
         filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, requirement.courses),
         requirement.fulfilledBy,
         requirement.subRequirementProgress,
-        requirement.minCount,
-        requirement.totalCount
+        requirement.minCount
       );
     case 'toggleable': {
       const option =
@@ -256,13 +226,31 @@ function computeFulfillmentCoursesAndStatistics(
         filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, option.courses),
         option.counting,
         option.subRequirementProgress,
-        option.minCount,
-        option.totalCount
+        option.minCount
       );
     }
     default:
       throw new Error();
   }
+}
+
+function getCourseCodesArray(): readonly CourseTaken[] {
+  const courses: CourseTaken[] = [];
+  store.state.semesters.forEach(semester => {
+    semester.courses.forEach(course => {
+      const [subject, number] = course.code.split(' ');
+      courses.push({
+        code: `${course.lastRoster}: ${subject} ${number}`,
+        subject,
+        courseId: course.crseId,
+        number,
+        credits: course.credits,
+        roster: course.lastRoster,
+      });
+    });
+  });
+  courses.push(...getCourseEquivalentsFromUserExams(store.state.onboardingData));
+  return courses;
 }
 
 /**
@@ -273,17 +261,12 @@ function computeFulfillmentCoursesAndStatistics(
  * @param minors user's list of minors.
  * @returns all requirements fulfillments, grouped by University, College, Major.
  */
-export default function computeRequirements(
-  coursesTaken: readonly CourseTaken[],
-  college: string,
-  majors: readonly string[] | null,
-  minors: readonly string[] | null
-): readonly GroupedRequirementFulfillmentReport[] {
+export default function computeRequirements(): readonly GroupedRequirementFulfillmentReport[] {
+  const coursesTaken = getCourseCodesArray();
+  const { college } = store.state.onboardingData;
+
   const { requirementFulfillmentGraph } = buildRequirementFulfillmentGraphFromUserData(
-    coursesTaken,
-    college,
-    majors,
-    minors
+    coursesTaken
   );
 
   const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];

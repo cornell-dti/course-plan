@@ -5,14 +5,14 @@
       v-if="reqIndex <= numOfColleges || reqIndex == numOfColleges + onboardingData.major.length"
       class="row top"
     >
-      <p class="name col p-0">{{ req.name }}</p>
+      <p class="name col p-0">{{ req.groupName }} Requirements</p>
     </div>
     <!-- TODO change for multiple colleges -->
     <div v-if="reqIndex == numOfColleges" class="major">
       <div
         :style="{
           'border-bottom':
-            id === displayedMajorIndex ? `2px solid #${reqGroupColorMap[req.group][0]}` : '',
+            id === displayedMajorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
         }"
         @click="activateMajor(id)"
         class="major-title"
@@ -23,14 +23,16 @@
         <p
           :style="{
             'font-weight': id === displayedMajorIndex ? '500' : '',
-            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.group][0]}` : '',
+            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
           }"
           class="major-title-top"
         >
           {{ getMajorFullName(major) }}
         </p>
         <p
-          :style="{ color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.group][0]}` : '' }"
+          :style="{
+            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
+          }"
           class="major-title-bottom"
         >
           ({{ getCollegeFullName(onboardingData.college) }})
@@ -41,7 +43,7 @@
       <div
         :style="{
           'border-bottom':
-            id === displayedMinorIndex ? `2px solid #${reqGroupColorMap[req.group][0]}` : '',
+            id === displayedMinorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
         }"
         @click="activateMinor(id)"
         class="major-title"
@@ -52,7 +54,7 @@
         <p
           :style="{
             'font-weight': id === displayedMinorIndex ? '500' : '',
-            color: id === displayedMinorIndex ? `#${reqGroupColorMap[req.group][0]}` : '',
+            color: id === displayedMinorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
           }"
           class="minor-title-top"
         >
@@ -68,7 +70,7 @@
         <div
           class="progress-bar"
           :style="{
-            'background-color': `#${reqGroupColorMap[req.group][0]}`,
+            'background-color': `#${reqGroupColorMap[req.groupName][0]}`,
             width: progressWidth,
           }"
           role="progressbar"
@@ -80,32 +82,33 @@
       </div>
 
       <p class="progress-text">
-        <span class="progress-text-credits">{{ req.fulfilled }}/{{ req.required }}</span>
-        <span class="progress-text-text"> Total {{ req.type }} Inputted on Schedule</span>
+        <span class="progress-text-credits"
+          >{{ requirementFulfilled }}/{{ requirementTotalRequired }}</span
+        >
+        <span class="progress-text-text"> Total Requirements Inputted on Schedule</span>
       </p>
 
       <!--View more college requirements -->
       <div class="row top">
         <div class="col-1 p-0">
           <button
-            :style="{ color: `#${reqGroupColorMap[req.group][0]}` }"
+            :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
             class="btn"
             @click="toggleDetails()"
           >
             <drop-down-arrow
               :isFlipped="displayDetails"
-              :fillColor="`#${reqGroupColorMap[req.group][0]}`"
+              :fillColor="`#${reqGroupColorMap[req.groupName][0]}`"
             />
           </button>
         </div>
         <div class="col p-0">
           <button
             class="btn req-name"
-            :style="{ color: `#${reqGroupColorMap[req.group][0]}` }"
+            :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
             @click="toggleDetails()"
           >
-            {{ displayDetails ? 'Hide' : 'View' }} All
-            {{ req.group.charAt(0) + req.group.substring(1).toLowerCase() }} Requirements
+            {{ displayDetails ? 'Hide' : 'View' }} All {{ req.groupName }} Requirements
           </button>
         </div>
       </div>
@@ -116,7 +119,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import { SingleMenuRequirement } from '@/requirements/types';
+import { GroupedRequirementFulfillmentReport } from '@/requirements/types';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 
 export default Vue.extend({
@@ -126,7 +129,7 @@ export default Vue.extend({
     displayDetails: { type: Boolean, required: true },
     displayedMajorIndex: { type: Number, required: true },
     displayedMinorIndex: { type: Number, required: true },
-    req: { type: Object as PropType<SingleMenuRequirement>, required: true },
+    req: { type: Object as PropType<GroupedRequirementFulfillmentReport>, required: true },
     reqGroupColorMap: {
       type: Object as PropType<Readonly<Record<string, string[]>>>,
       required: true,
@@ -142,17 +145,21 @@ export default Vue.extend({
     multipleMinors() {
       return this.onboardingData.minor.length > 1;
     },
-    progressWidth() {
-      if (this.req.fulfilled != null && this.req.required != null) {
-        return `${(this.req.fulfilled / this.req.required) * 100}%`;
-      }
-      return undefined;
+    requirementFulfilled(): number {
+      let fulfilled = 0;
+      this.req.reqs.forEach(req => {
+        if (req.minCountFulfilled >= req.minCountRequired) fulfilled += 1;
+      });
+      return fulfilled;
     },
-    progressWidthValue() {
-      if (this.req.fulfilled != null && this.req.required != null) {
-        return ((this.req.fulfilled / this.req.required) * 100).toFixed(1);
-      }
-      return '0';
+    requirementTotalRequired(): number {
+      return this.req.reqs.length;
+    },
+    progressWidth(): string {
+      return `${(this.requirementFulfilled / this.requirementTotalRequired) * 100}%`;
+    },
+    progressWidthValue(): string {
+      return ((this.requirementFulfilled / this.requirementTotalRequired) * 100).toFixed(1);
     },
   },
   methods: {

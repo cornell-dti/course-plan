@@ -2,13 +2,7 @@ import store from '../store';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraph from './requirement-graph-builder';
 import requirementJson from './typed-requirement-json';
-import { CourseTaken, DecoratedCollegeOrMajorRequirement, EligibleCourses } from './types';
-
-export type RequirementWithIDSourceType = DecoratedCollegeOrMajorRequirement & {
-  readonly id: string;
-  readonly sourceType: 'College' | 'Major' | 'Minor';
-  readonly sourceSpecificName: string;
-};
+import { CourseTaken, RequirementWithIDSourceType, EligibleCourses } from './types';
 
 /**
  * Removes all AP/IB equivalent course credit if it's a duplicate crseId.
@@ -29,10 +23,7 @@ function forfeitTransferCredit(coursesTaken: readonly CourseTaken[]): readonly C
 }
 
 export default function buildRequirementFulfillmentGraphFromUserData(
-  coursesTaken: readonly CourseTaken[],
-  college: string,
-  majors: readonly string[] | null,
-  minors: readonly string[] | null
+  coursesTaken: readonly CourseTaken[]
 ): {
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<
     RequirementWithIDSourceType,
@@ -40,6 +31,8 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   >;
   readonly illegallyDoubleCountedCourses: readonly CourseTaken[];
 } {
+  const { college, major: majors, minor: minors } = store.state.onboardingData;
+
   // check university & college & major & minor requirements
   if (!(college in requirementJson.college)) throw new Error(`College ${college} not found.`);
 
@@ -65,7 +58,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
           sourceSpecificName: college,
         } as const)
     ),
-    ...(majors || [])
+    ...majors
       .map(major => {
         const majorRequirement = requirementJson.major[major];
         if (majorRequirement == null) return [];
@@ -80,7 +73,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         );
       })
       .flat(),
-    ...(minors || [])
+    ...minors
       .map(minor => {
         const minorRequirement = requirementJson.minor[minor];
         if (minorRequirement == null) return [];
