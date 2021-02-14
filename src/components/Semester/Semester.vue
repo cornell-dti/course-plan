@@ -128,15 +128,12 @@ import EditSemester from '@/components/Modals/EditSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
 import { clickOutside } from '@/utilities';
-import { GroupedRequirementFulfillmentReport } from '@/requirements/types';
 
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
-
-Vue.component('new-course-modal', NewCourseModal);
 
 const pageTour = introJs();
 pageTour.setOption('exitOnEsc', 'false');
@@ -153,6 +150,7 @@ export default Vue.extend({
     Course,
     DeleteSemester,
     EditSemester,
+    NewCourseModal,
     SemesterMenu,
   },
   data() {

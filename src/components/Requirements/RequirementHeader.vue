@@ -119,7 +119,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import { GroupedRequirementFulfillmentReport } from '@/requirements/types';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 
 export default Vue.extend({

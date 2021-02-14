@@ -2,7 +2,6 @@ import store from '../store';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraph from './requirement-graph-builder';
 import requirementJson from './typed-requirement-json';
-import { CourseTaken, RequirementWithIDSourceType, EligibleCourses } from './types';
 
 /**
  * Removes all AP/IB equivalent course credit if it's a duplicate crseId.

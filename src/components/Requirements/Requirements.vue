@@ -11,7 +11,7 @@
     >
       <!-- loop through reqs array of req objects -->
       <div class="req" v-for="(req, index) in reqs" :key="index">
-        <requirementview
+        <requirement-view
           :reqs="reqs"
           :req="req"
           :reqIndex="index"
@@ -69,11 +69,7 @@ import introJs from 'intro.js';
 import Course from '@/components/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import {
-  SubReqCourseSlot,
-  CrseInfo,
-  GroupedRequirementFulfillmentReport,
-} from '@/requirements/types';
+import { SubReqCourseSlot, CrseInfo } from '@/requirements/types';
 import { getRostersFromLastTwoYears } from '@/utilities';
 // emoji for clipboard
 import clipboard from '@/assets/images/clipboard.svg';
@@ -83,7 +79,6 @@ import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-c
 
 const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
-Vue.component('requirementview', RequirementView);
 Vue.use(VueCollapse);
 
 export type ShowAllCourses = {
@@ -110,7 +105,7 @@ tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
-  components: { draggable, Course, DropDownArrow },
+  components: { draggable, Course, DropDownArrow, RequirementView },
   props: {
     startTour: { type: Boolean, required: true },
     reqs: {

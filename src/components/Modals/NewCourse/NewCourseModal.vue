@@ -60,7 +60,6 @@ import Vue, { PropType } from 'vue';
 import SelectedRequirementEditor, {
   RequirementWithID,
 } from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
-import { GroupedRequirementFulfillmentReport } from '@/requirements/types';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import CourseSelector, {

@@ -1,5 +1,3 @@
-import { CourseTaken } from '../../types';
-
 export type ExamRequirements = {
   readonly name: string;
   readonly fulfillment: {
