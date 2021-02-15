@@ -60,7 +60,7 @@ import Vue, { PropType } from 'vue';
 import SelectedRequirementEditor, {
   RequirementWithID,
 } from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
-import { SingleMenuRequirement } from '@/requirements/types';
+import { GroupedRequirementFulfillmentReport } from '@/requirements/types';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import CourseSelector, {
@@ -90,7 +90,10 @@ export default Vue.extend({
   },
   props: {
     isCourseModelSelectingSemester: { type: Boolean, required: true },
-    reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
+    reqs: {
+      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
+      required: true,
+    },
   },
   computed: {
     leftButtonText(): string {
@@ -116,7 +119,7 @@ export default Vue.extend({
 
       // parse through reqs object
       for (let i = 0; i < this.reqs.length; i += 1) {
-        const subreqs = this.reqs[i].ongoing;
+        const subreqs = this.reqs[i].reqs.filter(it => it.minCountFulfilled < it.minCountRequired);
         for (let j = 0; j < subreqs.length; j += 1) {
           // requirements
 
@@ -129,7 +132,7 @@ export default Vue.extend({
                   if (subRequirement.allowCourseDoubleCounting) {
                     requirementsThatAllowDoubleCounting.push(subRequirement.name);
                   } else {
-                    relatedRequirements.push({ id: subreqs[j].id, name: subRequirement.name });
+                    relatedRequirements.push({ id: subRequirement.id, name: subRequirement.name });
                   }
                   break;
                 }
@@ -139,7 +142,7 @@ export default Vue.extend({
           // potential self-check requirements
           if (subreqs[j].fulfilledBy === 'self-check') {
             if (!subRequirement.allowCourseDoubleCounting) {
-              potentialRequirements.push({ id: subreqs[j].id, name: subRequirement.name });
+              potentialRequirements.push({ id: subRequirement.id, name: subRequirement.name });
             }
           }
           this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;

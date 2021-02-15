@@ -18,7 +18,7 @@
           :toggleableRequirementChoices="toggleableRequirementChoices"
           :displayedMajorIndex="displayedMajorIndex"
           :displayedMinorIndex="displayedMinorIndex"
-          :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.group)"
+          :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
           :rostersFromLastTwoYears="rostersFromLastTwoYears"
           :numOfColleges="numOfColleges"
           :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
@@ -69,7 +69,11 @@ import introJs from 'intro.js';
 import Course from '@/components/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import { SingleMenuRequirement, SubReqCourseSlot, CrseInfo } from '@/requirements/types';
+import {
+  SubReqCourseSlot,
+  CrseInfo,
+  GroupedRequirementFulfillmentReport,
+} from '@/requirements/types';
 import { getRostersFromLastTwoYears } from '@/utilities';
 // emoji for clipboard
 import clipboard from '@/assets/images/clipboard.svg';
@@ -109,7 +113,10 @@ export default Vue.extend({
   components: { draggable, Course, DropDownArrow },
   props: {
     startTour: { type: Boolean, required: true },
-    reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
+    reqs: {
+      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
+      required: true,
+    },
   },
   data(): Data {
     return {
@@ -146,7 +153,7 @@ export default Vue.extend({
   },
   methods: {
     showMajorOrMinorRequirements(id: number, group: string): boolean {
-      if (group === 'MAJOR') {
+      if (group === 'Major') {
         return id === this.displayedMajorIndex + this.numOfColleges;
       }
       // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES

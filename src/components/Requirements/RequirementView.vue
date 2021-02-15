@@ -19,13 +19,13 @@
       <div v-if="displayDetails">
         <p class="sub-title">In-Depth College Requirements</p>
         <div class="separator"></div>
-        <div v-for="(subReq, id) in req.ongoing" :key="id">
+        <div v-for="(subReq, id) in partitionedRequirementsProgress.ongoing" :key="id">
           <subrequirement
             :subReqIndex="id"
             :subReq="subReq"
             :reqIndex="reqIndex"
-            :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
-            :color="reqGroupColorMap[req.group][0]"
+            :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
+            :color="reqGroupColorMap[req.groupName][0]"
             :isCompleted="false"
             :rostersFromLastTwoYears="rostersFromLastTwoYears"
             :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
@@ -36,12 +36,12 @@
           <div class="separator"></div>
         </div>
 
-        <div v-if="req.completed.length > 0" class="row completed">
+        <div v-if="partitionedRequirementsProgress.completed.length > 0" class="row completed">
           <p class="col sub-title specific">Filled Requirements</p>
           <div class="col-1 text-right">
             <button
               class="btn float-right"
-              :style="{ color: `#${reqGroupColorMap[req.group][0]}` }"
+              :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
             >
               <!-- Toggle to display completed reqs -->
               <p class="toggle" v-if="displayCompleted" @click="turnCompleted(false)">HIDE</p>
@@ -52,14 +52,14 @@
 
         <!-- Completed requirements -->
         <div v-if="displayCompleted">
-          <div v-for="(subReq, id) in req.completed" :key="id">
+          <div v-for="(subReq, id) in partitionedRequirementsProgress.completed" :key="id">
             <div class="separator" v-if="reqIndex < reqs.length - 1 || displayDetails"></div>
             <subrequirement
               :subReqIndex="id"
               :subReq="subReq"
               :reqIndex="reqIndex"
-              :toggleableRequirementChoice="toggleableRequirementChoices[subReq.id]"
-              :color="reqGroupColorMap[req.group][0]"
+              :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
+              :color="reqGroupColorMap[req.groupName][0]"
               :isCompleted="true"
               :rostersFromLastTwoYears="rostersFromLastTwoYears"
               :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
@@ -82,7 +82,7 @@ import Vue, { PropType } from 'vue';
 import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
-import { SingleMenuRequirement } from '@/requirements/types';
+import { RequirementFulfillment, GroupedRequirementFulfillmentReport } from '@/requirements/types';
 import store from '@/store';
 
 Vue.component('requirementheader', RequirementHeader);
@@ -90,15 +90,23 @@ Vue.component('subrequirement', SubRequirement);
 
 // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
 const reqGroupColorMap = {
-  COLLEGE: ['4D7D92', 'sangBlue'],
-  MAJOR: ['148481', 'emGreen'],
-  MINOR: ['105351', 'chrisGreen'],
+  College: ['4D7D92', 'sangBlue'],
+  Major: ['148481', 'emGreen'],
+  Minor: ['105351', 'chrisGreen'],
+};
+
+type PartitionedRequirementsProgress = {
+  readonly ongoing: readonly RequirementFulfillment[];
+  readonly completed: readonly RequirementFulfillment[];
 };
 
 export default Vue.extend({
   props: {
-    reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
-    req: { type: Object as PropType<SingleMenuRequirement>, required: true },
+    reqs: {
+      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
+      required: true,
+    },
+    req: { type: Object as PropType<GroupedRequirementFulfillmentReport>, required: true },
     reqIndex: { type: Number, required: true }, // Index of this req in reqs array
     toggleableRequirementChoices: {
       type: Object as PropType<Readonly<Record<string, string>>>,
@@ -123,6 +131,18 @@ export default Vue.extend({
     },
     reqGroupColorMap() {
       return reqGroupColorMap;
+    },
+    partitionedRequirementsProgress(): PartitionedRequirementsProgress {
+      const ongoing: RequirementFulfillment[] = [];
+      const completed: RequirementFulfillment[] = [];
+      this.req.reqs.forEach(req => {
+        if (req.minCountFulfilled < req.minCountRequired) {
+          ongoing.push(req);
+        } else {
+          completed.push(req);
+        }
+      });
+      return { ongoing, completed };
     },
   },
   methods: {

@@ -97,7 +97,7 @@ import Confirmation from '@/components/Confirmation.vue';
 import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
-import { SingleMenuRequirement } from '@/requirements/types';
+import { GroupedRequirementFulfillmentReport } from '@/requirements/types';
 import store from '@/store';
 import { editSemesters } from '@/global-firestore-data';
 
@@ -120,7 +120,10 @@ export default Vue.extend({
     isBottomBarExpanded: { type: Boolean, required: true },
     isMobile: { type: Boolean, required: true },
     startTour: { type: Boolean, required: true },
-    reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
+    reqs: {
+      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
+      required: true,
+    },
   },
   data() {
     return {

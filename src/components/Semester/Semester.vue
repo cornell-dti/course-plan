@@ -128,7 +128,7 @@ import EditSemester from '@/components/Modals/EditSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
 import { clickOutside } from '@/utilities';
-import { SingleMenuRequirement } from '@/requirements/types';
+import { GroupedRequirementFulfillmentReport } from '@/requirements/types';
 
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
@@ -187,7 +187,10 @@ export default Vue.extend({
     activatedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     duplicatedCourseCodeList: { type: Array as PropType<readonly string[]>, required: true },
     isFirstSem: { type: Boolean, required: true },
-    reqs: { type: Array as PropType<readonly SingleMenuRequirement[]>, required: true },
+    reqs: {
+      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
+      required: true,
+    },
   },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });

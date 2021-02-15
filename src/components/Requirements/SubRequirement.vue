@@ -108,7 +108,7 @@ import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCo
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
 import {
-  DisplayableRequirementFulfillment,
+  RequirementFulfillment,
   EligibleCourses,
   SubReqCourseSlot,
   CrseInfo,
@@ -134,7 +134,7 @@ type Data = {
 export default Vue.extend({
   components: { DropDownArrow },
   props: {
-    subReq: { type: Object as PropType<DisplayableRequirementFulfillment>, required: true },
+    subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
     subReqIndex: { type: Number, required: true }, // Subrequirement index
     reqIndex: { type: Number, required: true }, // Requirement index
     isCompleted: { type: Boolean, required: true },
@@ -178,9 +178,7 @@ export default Vue.extend({
     },
     subReqProgress(): string {
       return this.subReq.fulfilledBy !== 'self-check'
-        ? `${this.subReq.totalCountFulfilled || this.subReq.minCountFulfilled}/${
-            this.subReq.totalCountRequired || this.subReq.minCountRequired
-          } ${this.subReq.fulfilledBy}`
+        ? `${this.subReq.minCountFulfilled}/${this.subReq.minCountRequired} ${this.subReq.fulfilledBy}`
         : 'self check';
     },
   },
@@ -208,7 +206,7 @@ export default Vue.extend({
     },
     chooseFulfillmentOption(option: string) {
       this.showFulfillmentOptionsDropdown = false;
-      this.$emit('changeToggleableRequirementChoice', this.subReq.id, option);
+      this.$emit('changeToggleableRequirementChoice', this.subReq.requirement.id, option);
     },
     getFulfillededByCourses() {
       switch (this.subReq.requirement.fulfilledBy) {

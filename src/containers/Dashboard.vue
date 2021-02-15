@@ -89,8 +89,7 @@ import TourWindow from '@/components/Modals/TourWindow.vue';
 import surfing from '@/assets/images/surfing.svg';
 
 import computeRequirements from '@/requirements/reqs-functions';
-import { CourseTaken, SingleMenuRequirement } from '@/requirements/types';
-import getCourseEquivalentsFromUserExams from '@/requirements/data/exams/ExamCredit';
+import { GroupedRequirementFulfillmentReport } from '@/requirements/types';
 import store, { initializeFirestoreListeners, subscribeRequirementDependencyChange } from '@/store';
 import { editSemesters } from '@/global-firestore-data';
 
@@ -136,7 +135,7 @@ export default Vue.extend({
         class = "emoji-text" alt = "surf">`,
       congratsExit: '',
       congratsButtonText: 'Start Planning',
-      reqs: [] as readonly SingleMenuRequirement[],
+      reqs: [] as readonly GroupedRequirementFulfillmentReport[],
     };
   },
   computed: {
@@ -388,76 +387,8 @@ export default Vue.extend({
       return arr && arr.length !== 0 && arr[0] !== '' ? arr : ['N/A'];
     },
 
-    getCourseCodesArray(): readonly CourseTaken[] {
-      const courses: CourseTaken[] = [];
-      this.semesters.forEach(semester => {
-        semester.courses.forEach(course => {
-          const [subject, number] = course.code.split(' ');
-          courses.push({
-            code: `${course.lastRoster}: ${subject} ${number}`,
-            subject,
-            courseId: course.crseId,
-            number,
-            credits: course.credits,
-            roster: course.lastRoster,
-          });
-        });
-      });
-      courses.push(...getCourseEquivalentsFromUserExams(this.onboardingData));
-      return courses;
-    },
-
-    getRequirementTypeDisplayName(type: string): string {
-      return type.charAt(0).toUpperCase() + type.substring(1);
-    },
-
     recomputeRequirements(): void {
-      const groups = computeRequirements(
-        this.getCourseCodesArray(),
-        this.onboardingData.college,
-        this.onboardingData.major,
-        this.onboardingData.minor
-      );
-      // Turn result into data readable by requirements menu
-      const singleMenuRequirements = groups.map(group => {
-        const singleMenuRequirement: SingleMenuRequirement = {
-          ongoing: [],
-          completed: [],
-          name: `${
-            group.groupName.charAt(0) + group.groupName.substring(1).toLowerCase()
-          } Requirements`,
-          group: group.groupName.toUpperCase() as 'COLLEGE' | 'MAJOR' | 'MINOR',
-          specific: group.specific,
-        };
-        group.reqs.forEach(req => {
-          // Create progress bar with requirement with progressBar = true
-          if (req.requirement.progressBar) {
-            singleMenuRequirement.type = this.getRequirementTypeDisplayName(
-              req.requirement.fulfilledBy
-            );
-            singleMenuRequirement.fulfilled = req.totalCountFulfilled || req.minCountFulfilled;
-            singleMenuRequirement.required =
-              (req.requirement.fulfilledBy !== 'self-check' && req.totalCountRequired) ||
-              req.minCountRequired;
-          }
-          // Default display value of false for all requirement lists
-          const displayableRequirementFulfillment = { ...req, displayDescription: false };
-          if (!req.minCountFulfilled || req.minCountFulfilled < req.minCountRequired) {
-            singleMenuRequirement.ongoing.push(displayableRequirementFulfillment);
-          } else {
-            singleMenuRequirement.completed.push(displayableRequirementFulfillment);
-          }
-        });
-        // Make number of requirements items progress bar in absense of identified progress metric
-        if (!singleMenuRequirement.type) {
-          singleMenuRequirement.type = 'Requirements';
-          singleMenuRequirement.fulfilled = singleMenuRequirement.completed.length;
-          singleMenuRequirement.required =
-            singleMenuRequirement.ongoing.length + singleMenuRequirement.completed.length;
-        }
-        return singleMenuRequirement;
-      });
-      this.reqs = singleMenuRequirements;
+      this.reqs = computeRequirements();
     },
     deleteCourseFromSemesters(uniqueID: number) {
       editSemesters(oldSemesters =>
