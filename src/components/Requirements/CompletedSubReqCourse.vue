@@ -36,7 +36,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
-import { CourseTaken } from '@/requirements/types';
 import store from '@/store';
 
 type CompletedSubReq = {

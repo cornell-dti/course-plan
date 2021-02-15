@@ -97,12 +97,8 @@ import Confirmation from '@/components/Confirmation.vue';
 import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
-import { GroupedRequirementFulfillmentReport } from '@/requirements/types';
 import store from '@/store';
 import { editSemesters } from '@/global-firestore-data';
-
-Vue.component('semester', Semester);
-Vue.component('new-semester-modal', NewSemesterModal);
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -113,7 +109,7 @@ const SeasonsEnum = Object.freeze({
 });
 
 export default Vue.extend({
-  components: { Confirmation, SemesterCaution },
+  components: { Confirmation, NewSemesterModal, Semester, SemesterCaution },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },

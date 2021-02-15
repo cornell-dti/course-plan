@@ -60,7 +60,7 @@ import draggable from 'vuedraggable';
 import VueSkeletonLoader from 'skeleton-loader-vue';
 import Course from '@/components/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
-import { RequirementFulfillment, SubReqCourseSlot, CrseInfo } from '@/requirements/types';
+import { SubReqCourseSlot, CrseInfo } from '@/requirements/types';
 
 type Data = {
   courseObjects: FirestoreSemesterCourse[];

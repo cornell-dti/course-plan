@@ -26,7 +26,7 @@
           @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
-      <semesterview
+      <semester-view
         v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
         ref="semesterview"
         :compact="compactVal"
@@ -89,12 +89,8 @@ import TourWindow from '@/components/Modals/TourWindow.vue';
 import surfing from '@/assets/images/surfing.svg';
 
 import computeRequirements from '@/requirements/reqs-functions';
-import { GroupedRequirementFulfillmentReport } from '@/requirements/types';
 import store, { initializeFirestoreListeners, subscribeRequirementDependencyChange } from '@/store';
 import { editSemesters } from '@/global-firestore-data';
-
-Vue.component('semesterview', SemesterView);
-Vue.component('requirements', Requirements);
 
 const tour = introJs();
 tour.setOption('exitOnEsc', 'false');
@@ -107,7 +103,7 @@ tour.setOption('exitOnOverlayClick', 'false');
 let listenerUnsubscriber = (): void => {};
 
 export default Vue.extend({
-  components: { BottomBar, NavBar, Onboarding, TourWindow },
+  components: { BottomBar, NavBar, Onboarding, Requirements, SemesterView, TourWindow },
   data() {
     return {
       loaded: true,

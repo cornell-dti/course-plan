@@ -1,6 +1,6 @@
 <template>
   <div class="requirementview">
-    <requirementheader
+    <requirement-header
       :reqIndex="reqIndex"
       :displayDetails="displayDetails"
       :displayedMajorIndex="displayedMajorIndex"
@@ -20,7 +20,7 @@
         <p class="sub-title">In-Depth College Requirements</p>
         <div class="separator"></div>
         <div v-for="(subReq, id) in partitionedRequirementsProgress.ongoing" :key="id">
-          <subrequirement
+          <sub-requirement
             :subReqIndex="id"
             :subReq="subReq"
             :reqIndex="reqIndex"
@@ -54,7 +54,7 @@
         <div v-if="displayCompleted">
           <div v-for="(subReq, id) in partitionedRequirementsProgress.completed" :key="id">
             <div class="separator" v-if="reqIndex < reqs.length - 1 || displayDetails"></div>
-            <subrequirement
+            <sub-requirement
               :subReqIndex="id"
               :subReq="subReq"
               :reqIndex="reqIndex"
@@ -82,11 +82,7 @@ import Vue, { PropType } from 'vue';
 import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
-import { RequirementFulfillment, GroupedRequirementFulfillmentReport } from '@/requirements/types';
 import store from '@/store';
-
-Vue.component('requirementheader', RequirementHeader);
-Vue.component('subrequirement', SubRequirement);
 
 // reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
 const reqGroupColorMap = {
@@ -101,6 +97,7 @@ type PartitionedRequirementsProgress = {
 };
 
 export default Vue.extend({
+  components: { RequirementHeader, SubRequirement },
   props: {
     reqs: {
       type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,

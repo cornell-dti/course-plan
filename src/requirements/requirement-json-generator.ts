@@ -2,8 +2,6 @@ import { writeFileSync } from 'fs';
 import {
   CollegeOrMajorRequirement,
   DecoratedRequirementsJson,
-  DecoratedCollegeOrMajorRequirement,
-  EligibleCourses,
   RequirementChecker,
   Course,
 } from './types';

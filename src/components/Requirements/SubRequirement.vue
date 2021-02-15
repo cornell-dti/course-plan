@@ -74,7 +74,7 @@
       <div v-if="displayDescription" class="subreqcourse-wrapper">
         <div v-for="(subReqCourseSlot, id) in subReqCoursesArray" :key="id">
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
-            <completedsubreqcourse
+            <completed-sub-req-course
               :subReqCourseId="id"
               :crsesTaken="subReqCourseSlot.courses"
               @deleteCourseFromSemesters="deleteCourseFromSemesters"
@@ -107,17 +107,11 @@ import CompletedSubReqCourse from '@/components/Requirements/CompletedSubReqCour
 import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCourse.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
-import {
-  RequirementFulfillment,
-  EligibleCourses,
-  SubReqCourseSlot,
-  CrseInfo,
-} from '@/requirements/types';
+import { SubReqCourseSlot, CrseInfo } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
 
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
-Vue.component('completedsubreqcourse', CompletedSubReqCourse);
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
 
 require('firebase/functions');
@@ -132,7 +126,7 @@ type Data = {
 };
 
 export default Vue.extend({
-  components: { DropDownArrow },
+  components: { CompletedSubReqCourse, DropDownArrow },
   props: {
     subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
     subReqIndex: { type: Number, required: true }, // Subrequirement index

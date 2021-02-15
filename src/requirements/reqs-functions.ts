@@ -2,13 +2,6 @@ import store from '../store';
 import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './data/exams/ExamCredit';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
-import {
-  CourseTaken,
-  EligibleCourses,
-  DecoratedCollegeOrMajorRequirement,
-  RequirementFulfillmentStatistics,
-  GroupedRequirementFulfillmentReport,
-} from './types';
 
 type FulfillmentStatistics = {
   readonly requirement: RequirementWithIDSourceType;
