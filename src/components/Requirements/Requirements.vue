@@ -59,9 +59,7 @@
 </template>
 
 <script lang="ts">
-import firebase from 'firebase/app';
 import draggable from 'vuedraggable';
-import 'firebase/functions';
 import Vue, { PropType } from 'vue';
 import VueCollapse from 'vue2-collapse';
 import introJs from 'intro.js';
@@ -76,8 +74,7 @@ import clipboard from '@/assets/images/clipboard.svg';
 import store from '@/store';
 import { chooseToggleableRequirementOption } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
-
-const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
+import { fetchCoursesFromFirebaseFunctions } from '@/firebaseConfig';
 
 Vue.use(VueCollapse);
 
@@ -204,16 +201,8 @@ export default Vue.extend({
             subReqCrseInfoObjectsToFetch.push(crseInfoFromSemester[0]);
           }
         });
-        FetchCourses({
-          crseInfo: subReqCrseInfoObjectsToFetch,
-          allowSameCourseForDifferentRosters: false,
-        })
-          .then(result => {
-            const fetchedCourses = result.data.courses.map(
-              cornellCourseRosterCourseToFirebaseSemesterCourse
-            );
-            return resolve(fetchedCourses);
-          })
+        fetchCoursesFromFirebaseFunctions(subReqCrseInfoObjectsToFetch)
+          .then(courses => resolve(courses.map(cornellCourseRosterCourseToFirebaseSemesterCourse)))
           .catch(error => reject(error));
       });
     },

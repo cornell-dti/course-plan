@@ -2,6 +2,8 @@ import firebase from 'firebase/app';
 
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/functions';
+import { CrseInfo } from './requirements/types';
 
 let config;
 if (process.env.VUE_APP_FIREBASE_MODE === 'prod') {
@@ -33,6 +35,7 @@ firebase.initializeApp(config);
 // firebase utils
 export const db = firebase.firestore();
 export const auth = firebase.auth();
+const functions = firebase.functions();
 
 export const usernameCollection = db.collection('user-name').withConverter<FirestoreUserName>({
   fromFirestore(snapshot): FirestoreUserName {
@@ -102,3 +105,11 @@ export const onboardingDataCollection = db
 
 export const whitelistCollection = db.collection('betaWhitelist');
 export const landingEmailsCollection = db.collection('landingEmails');
+
+export const fetchCoursesFromFirebaseFunctions = (
+  crseInfo: readonly CrseInfo[],
+  allowSameCourseForDifferentRosters = false
+): Promise<readonly CornellCourseRosterCourse[]> =>
+  functions
+    .httpsCallable('FetchCourses')({ crseInfo, allowSameCourseForDifferentRosters })
+    .then(result => result.data.courses);
