@@ -102,7 +102,6 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import firebase from 'firebase/app';
 import CompletedSubReqCourse from '@/components/Requirements/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCourse.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
@@ -111,12 +110,11 @@ import { SubReqCourseSlot, CrseInfo } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
 
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
+import { fetchCoursesFromFirebaseFunctions } from '@/firebaseConfig';
 
 Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
 
 require('firebase/functions');
-
-const FetchCourses = firebase.functions().httpsCallable('FetchCourses');
 
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
@@ -295,13 +293,8 @@ export default Vue.extend({
       this.subReqFetchedCourseObjectsNotTakenArray = [];
       this.dataReady = false;
       const subReqCrseInfoObjectsToFetch = this.getMaxFirstFourCrseInfoObjects();
-      let fetchedCourses;
-      FetchCourses({
-        crseInfo: subReqCrseInfoObjectsToFetch,
-        allowSameCourseForDifferentRosters: false,
-      })
-        .then(result => {
-          fetchedCourses = result.data.courses;
+      fetchCoursesFromFirebaseFunctions(subReqCrseInfoObjectsToFetch)
+        .then(fetchedCourses => {
           this.subReqFetchedCourseObjectsNotTakenArray.push(
             ...fetchedCourses.map(cornellCourseRosterCourseToFirebaseSemesterCourse)
           );
