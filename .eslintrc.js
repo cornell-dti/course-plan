@@ -28,8 +28,6 @@ module.exports = {
   rules: {
     '@typescript-eslint/ban-ts-comment': ['warn'],
     'vue/attribute-hyphenation': ['off'],
-    // TODO: change when we migrated away all Vue.component('...', Component).
-    'vue/component-definition-name-casing': ['off'],
     // TODO: auto-fix of this and the next rule introduces too many code changes that might cause merge conflict.
     'vue/attributes-order': ['off'],
     'vue/order-in-components': ['off'],

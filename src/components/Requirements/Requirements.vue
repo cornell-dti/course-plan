@@ -65,8 +65,9 @@ import introJs from 'intro.js';
 
 import Course from '@/components/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
+import { SubReqCourseSlot } from '@/components/Requirements/SubRequirement.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import { SubReqCourseSlot, CrseInfo } from '@/requirements/types';
+import { CrseInfo } from '@/requirements/types';
 import { getRostersFromLastTwoYears } from '@/utilities';
 // emoji for clipboard
 import clipboard from '@/assets/images/clipboard.svg';
