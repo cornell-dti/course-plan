@@ -76,7 +76,7 @@
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completed-sub-req-course
               :subReqCourseId="id"
-              :crsesTaken="subReqCourseSlot.courses"
+              :courseTaken="subReqCourseSlot.courses[0]"
               @deleteCourseFromSemesters="deleteCourseFromSemesters"
             />
           </div>
