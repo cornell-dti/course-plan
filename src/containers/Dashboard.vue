@@ -21,7 +21,6 @@
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :startTour="startTour"
-          :reqs="reqs"
           @showTourEndWindow="showTourEnd"
           @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
@@ -34,7 +33,6 @@
         :isBottomBarExpanded="bottomBar.isExpanded"
         :isBottomBar="bottomCourses.length > 0"
         :isMobile="isMobile"
-        :reqs="reqs"
         @compact-updated="compactVal = $event"
         @updateBar="updateBar"
         @close-bar="closeBar"
@@ -88,8 +86,7 @@ import TourWindow from '@/components/Modals/TourWindow.vue';
 
 import surfing from '@/assets/images/surfing.svg';
 
-import computeRequirements from '@/requirements/reqs-functions';
-import store, { initializeFirestoreListeners, subscribeRequirementDependencyChange } from '@/store';
+import store, { initializeFirestoreListeners } from '@/store';
 import { editSemesters } from '@/global-firestore-data';
 
 const tour = introJs();
@@ -131,7 +128,6 @@ export default Vue.extend({
         class = "emoji-text" alt = "surf">`,
       congratsExit: '',
       congratsButtonText: 'Start Planning',
-      reqs: [] as readonly GroupedRequirementFulfillmentReport[],
     };
   },
   computed: {
@@ -152,14 +148,9 @@ export default Vue.extend({
     listenerUnsubscriber = initializeFirestoreListeners(() => {
       if (this.onboardingData.college !== '') {
         this.loaded = true;
-        this.recomputeRequirements();
       } else {
         this.startOnboarding();
       }
-    });
-    subscribeRequirementDependencyChange(() => {
-      // Avoid recomputing requirement before user data is initialized.
-      if (this.onboardingData.college !== '') this.recomputeRequirements();
     });
   },
   destroyed() {
@@ -383,9 +374,6 @@ export default Vue.extend({
       return arr && arr.length !== 0 && arr[0] !== '' ? arr : ['N/A'];
     },
 
-    recomputeRequirements(): void {
-      this.reqs = computeRequirements();
-    },
     deleteCourseFromSemesters(uniqueID: number) {
       editSemesters(oldSemesters =>
         oldSemesters.map(semester => {

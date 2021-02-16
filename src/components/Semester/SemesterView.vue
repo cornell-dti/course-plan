@@ -60,7 +60,6 @@
           :activatedCourse="activatedCourse"
           :duplicatedCourseCodeList="duplicatedCourseCodeList"
           :isFirstSem="checkIfFirstSem(sem)"
-          :reqs="reqs"
           @updateBar="updateBar"
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
@@ -116,10 +115,6 @@ export default Vue.extend({
     isBottomBarExpanded: { type: Boolean, required: true },
     isMobile: { type: Boolean, required: true },
     startTour: { type: Boolean, required: true },
-    reqs: {
-      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
-      required: true,
-    },
   },
   data() {
     return {

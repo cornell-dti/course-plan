@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
 import * as fb from './firebaseConfig';
+import computeGroupedRequirementFulfillmentReports from './requirements/requirement-fronend-computation';
+import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import getCurrentSeason, { checkNotNull, getCurrentYear } from './utilities';
 
 Vue.use(Vuex);
@@ -14,6 +16,12 @@ export type VuexStoreState = {
   onboardingData: AppOnboardingData;
   semesters: readonly FirestoreSemester[];
   toggleableRequirementChoices: AppToggleableRequirementChoices;
+  requirementFulfillmentGraph: RequirementFulfillmentGraph<
+    RequirementWithIDSourceType,
+    CourseTaken
+  >;
+  groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
+  illegallyDoubleCountedCourseIDs: ReadonlySet<number>;
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
 };
@@ -39,6 +47,11 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     semesters: [],
     toggleableRequirementChoices: {},
+    // It won't be null once the app loads.
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    requirementFulfillmentGraph: null!,
+    illegallyDoubleCountedCourseIDs: new Set(),
+    groupedRequirementFulfillmentReport: [],
     subjectColors: {},
     uniqueIncrementer: 0,
   },
@@ -62,6 +75,19 @@ const store: TypedVuexStore = new TypedVuexStore({
     ) {
       state.toggleableRequirementChoices = toggleableRequirementChoices;
     },
+    setRequirementData(
+      state: VuexStoreState,
+      data: Pick<
+        VuexStoreState,
+        | 'requirementFulfillmentGraph'
+        | 'illegallyDoubleCountedCourseIDs'
+        | 'groupedRequirementFulfillmentReport'
+      >
+    ) {
+      state.requirementFulfillmentGraph = data.requirementFulfillmentGraph;
+      state.illegallyDoubleCountedCourseIDs = data.illegallyDoubleCountedCourseIDs;
+      state.groupedRequirementFulfillmentReport = data.groupedRequirementFulfillmentReport;
+    },
     setSubjectColors(state: VuexStoreState, colors: Readonly<Record<string, string>>) {
       state.subjectColors = colors;
     },
@@ -71,16 +97,23 @@ const store: TypedVuexStore = new TypedVuexStore({
   },
 });
 
-export const subscribeRequirementDependencyChange = (
-  handler: (state: VuexStoreState) => void
-): (() => void) =>
+const autoRecomputeRequirements = (): (() => void) =>
   store.subscribe((payload, state) => {
     if (
       payload.type === 'setOnboardingData' ||
       payload.type === 'setSemesters' ||
       payload.type === 'setToggleableRequirementChoices'
     ) {
-      handler(state);
+      if (state.onboardingData.college !== '') {
+        store.commit(
+          'setRequirementData',
+          computeGroupedRequirementFulfillmentReports(
+            state.semesters,
+            state.onboardingData,
+            state.toggleableRequirementChoices
+          )
+        );
+      }
     }
   });
 
@@ -187,6 +220,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       uniqueIncrementerInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
+  const requirementComputationUnsubscriber = autoRecomputeRequirements();
 
   const unsubscriber = () => {
     userNameUnsubscriber();
@@ -194,6 +228,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     toggleableRequirementChoiceUnsubscriber();
     subjectColorUnsubscriber();
     uniqueIncrementerUnsubscriber();
+    requirementComputationUnsubscriber();
   };
   return unsubscriber;
 };

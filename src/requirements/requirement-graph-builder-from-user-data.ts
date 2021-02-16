@@ -1,4 +1,3 @@
-import store from '../store';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraph from './requirement-graph-builder';
 import requirementJson from './typed-requirement-json';
@@ -22,16 +21,16 @@ function forfeitTransferCredit(coursesTaken: readonly CourseTaken[]): readonly C
 }
 
 export default function buildRequirementFulfillmentGraphFromUserData(
-  coursesTaken: readonly CourseTaken[]
+  coursesTaken: readonly CourseTaken[],
+  { college, major: majors, minor: minors }: AppOnboardingData,
+  toggleableRequirementChoices: AppToggleableRequirementChoices
 ): {
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<
     RequirementWithIDSourceType,
     CourseTaken
   >;
-  readonly illegallyDoubleCountedCourses: readonly CourseTaken[];
+  readonly illegallyDoubleCountedCourseIDs: ReadonlySet<number>;
 } {
-  const { college, major: majors, minor: minors } = store.state.onboardingData;
-
   // check university & college & major & minor requirements
   if (!(college in requirementJson.college)) throw new Error(`College ${college} not found.`);
 
@@ -98,7 +97,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         return null;
       }
       const optionName =
-        store.state.toggleableRequirementChoices[requirement.id] ||
+        toggleableRequirementChoices[requirement.id] ||
         Object.keys(requirement.fulfillmentOptions)[0];
 
       const courses: CourseTaken[] = [];
@@ -122,7 +121,10 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     })
     .filter((it): it is UserChoiceOnFulfillmentStrategy => it != null);
 
-  return buildRequirementFulfillmentGraph<
+  const {
+    requirementFulfillmentGraph,
+    illegallyDoubleCountedCourses,
+  } = buildRequirementFulfillmentGraph<
     RequirementWithIDSourceType,
     CourseTaken,
     UserChoiceOnFulfillmentStrategy
@@ -183,4 +185,9 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       return requirement.allowCourseDoubleCounting || false;
     },
   });
+
+  return {
+    requirementFulfillmentGraph,
+    illegallyDoubleCountedCourseIDs: new Set(illegallyDoubleCountedCourses.map(it => it.courseId)),
+  };
 }

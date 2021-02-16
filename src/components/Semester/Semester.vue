@@ -4,7 +4,6 @@
       class="semester-modal"
       :class="{ 'modal--block': isCourseModalOpen }"
       :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
-      :reqs="reqs"
       @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
@@ -185,10 +184,6 @@ export default Vue.extend({
     activatedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     duplicatedCourseCodeList: { type: Array as PropType<readonly string[]>, required: true },
     isFirstSem: { type: Boolean, required: true },
-    reqs: {
-      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
-      required: true,
-    },
   },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
