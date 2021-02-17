@@ -12,7 +12,7 @@
           {{ seeAll }}
         </div>
       </div>
-      <div v-if="!dataReady && crseInfoObjects.length > 0" class="loading-requirements-courses">
+      <div v-if="!dataReady && courseIDs.length > 0" class="loading-requirements-courses">
         <vue-skeleton-loader
           v-for="n in defaultNumberofLoadingCards"
           :key="n"
@@ -25,15 +25,15 @@
         />
       </div>
       <draggable
-        v-if="displayCourses && crseInfoObjects.length > 0"
+        v-if="displayCourses && courseIDs.length > 0"
         class="draggable-requirements-courses"
         group="draggable-semester-courses"
-        :value="courseObjects"
+        :value="firstFourCourseObjects"
         @start="onDrag"
         @end="onDrop"
       >
         <div
-          v-for="course in courseObjects"
+          v-for="course in firstFourCourseObjects"
           :key="course.uniqueID"
           class="requirements-courseWrapper"
         >
@@ -60,22 +60,14 @@ import draggable from 'vuedraggable';
 import VueSkeletonLoader from 'skeleton-loader-vue';
 import Course from '@/components/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
-import { SubReqCourseSlot, CrseInfo } from '@/requirements/types';
-
-type Data = {
-  courseObjects: FirestoreSemesterCourse[];
-  scrollable: boolean;
-  displayCourses: boolean;
-};
 
 export default Vue.extend({
   components: { draggable, AddCourseButton, Course, VueSkeletonLoader },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
   },
-  data(): Data {
+  data() {
     return {
-      courseObjects: [],
       scrollable: false,
       displayCourses: false,
     };
@@ -86,12 +78,11 @@ export default Vue.extend({
   props: {
     subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
     subReqCourseId: { type: Number, required: true },
-    crseInfoObjects: { type: Array as PropType<CrseInfo[]>, required: true },
+    courseIDs: { type: Array as PropType<readonly (readonly number[])[]>, required: true },
     subReqFetchedCourseObjectsNotTakenArray: {
       type: Array as PropType<FirestoreSemesterCourse[]>,
       required: true,
     },
-    subReqCoursesArray: { type: Array as PropType<readonly SubReqCourseSlot[]>, required: true },
     dataReady: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
     lastLoadedShowAllCourseId: { type: Number, required: true },
@@ -101,7 +92,6 @@ export default Vue.extend({
       immediate: true,
       handler(dataReady) {
         if (dataReady && this.subReqFetchedCourseObjectsNotTakenArray.length > 0) {
-          this.getFirstFourCourseObjects();
           this.displayCourses = true;
         }
       },
@@ -129,8 +119,23 @@ export default Vue.extend({
     },
     showSeeAllLabel() {
       // Only show See all label when there are more than 4 courses
-      const allCrseIds = this.crseInfoObjects.map(crseInfoObject => crseInfoObject.crseIds).flat();
+      const allCrseIds = this.courseIDs.flat();
       return allCrseIds.length > 4;
+    },
+    firstFourCourseObjects(): readonly FirestoreSemesterCourse[] {
+      const firstFourCourseObjects: FirestoreSemesterCourse[] = [];
+      for (let i = 0; firstFourCourseObjects.length < 4 && i < this.courseIDs.length; i += 1) {
+        const currentSlotCourseIDs = this.courseIDs[i];
+        const filteredCourses: FirestoreSemesterCourse[] = this.subReqFetchedCourseObjectsNotTakenArray.filter(
+          course => currentSlotCourseIDs.includes(course.crseId)
+        );
+        const numRemainingCourses = Math.min(
+          4 - firstFourCourseObjects.length,
+          filteredCourses.length
+        );
+        firstFourCourseObjects.push(...filteredCourses.slice(0, numRemainingCourses));
+      }
+      return firstFourCourseObjects;
     },
   },
   methods: {
@@ -141,32 +146,10 @@ export default Vue.extend({
       this.scrollable = true;
     },
     dragListener(event: { preventDefault: () => void }) {
-      if (!this.$data.scrollable) event.preventDefault();
-    },
-    getFirstFourCourseObjects() {
-      const firstFourCourseObjects: FirestoreSemesterCourse[] = [];
-      for (
-        let i = 0;
-        firstFourCourseObjects.length < 4 && i < this.crseInfoObjects.length;
-        i += 1
-      ) {
-        const crseInfoObject = this.crseInfoObjects[i];
-        const filteredCourses: FirestoreSemesterCourse[] = this.subReqFetchedCourseObjectsNotTakenArray.filter(
-          course => crseInfoObject.crseIds.includes(course.crseId)
-        );
-        const numRemainingCourses = Math.min(
-          4 - firstFourCourseObjects.length,
-          filteredCourses.length
-        );
-        firstFourCourseObjects.push(...filteredCourses.slice(0, numRemainingCourses));
-      }
-      this.courseObjects = firstFourCourseObjects;
+      if (!this.scrollable) event.preventDefault();
     },
     onShowAllCourses() {
-      this.$emit('onShowAllCourses', {
-        requirementName: this.subReq.requirement.name,
-        subReqCoursesArray: this.subReqCoursesArray,
-      });
+      this.$emit('onShowAllCourses');
     },
     onAddCourse() {
       const dashboardRef = this.$parent.$parent.$parent.$parent as any;

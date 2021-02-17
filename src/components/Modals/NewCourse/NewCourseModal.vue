@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue from 'vue';
 import SelectedRequirementEditor, {
   RequirementWithID,
 } from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
