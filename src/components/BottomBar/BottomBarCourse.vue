@@ -1,7 +1,13 @@
 <template>
   <div class="bottombarcourse">
     <div class="bottombarcourse-wrapper">
-      <div class="bottombarcourse-bar-info-overflow" v-if="!isSmallerWidth">
+      <div
+        :class="
+          isSmallerWidth
+            ? 'bottombarcourse-bar-info-noOverflow'
+            : 'bottombarcourse-bar-info-overflow'
+        "
+      >
         <div class="info">
           <div class="info-section-wrapper">
             <div>
@@ -11,17 +17,17 @@
               </div>
               <div class="section">
                 <h1 class="info-head">Offered</h1>
-                <p class="info-fact">{{ courseObj.semesters }}</p>
+                <p class="info-fact">{{ courseSemesters }}</p>
               </div>
             </div>
             <div>
               <div class="section">
                 <h1 class="info-head">Instructors</h1>
-                <p class="info-fact">{{ courseObj.instructors }}</p>
+                <p class="info-fact">{{ courseInstructors }}</p>
               </div>
               <div class="section">
                 <h1 class="info-head">Enrollment Information</h1>
-                <p class="info-fact">{{ courseObj.enrollmentInfo }}</p>
+                <p class="info-fact">{{ courseEnrollment }}</p>
               </div>
             </div>
             <div>
@@ -29,17 +35,17 @@
                 <h1 class="info-head">Distribution Category</h1>
                 <p
                   class="info-fact"
-                  v-for="distributionCategory in courseObj.distributionCategories"
+                  v-for="distributionCategory in courseDistributions"
                   :key="distributionCategory"
                 >
                   {{ distributionCategory }}
                 </p>
               </div>
               <div class="section">
-                <h1 class="info-head">{{ courseObj.latestSem }} Lecture Information</h1>
+                <h1 class="info-head">{{ courseObj.lastRoster }} Lecture Information</h1>
                 <p
                   class="info-fact"
-                  v-for="latestLecInfo in courseObj.latestLecInfo"
+                  v-for="latestLecInfo in courseLectureTimes"
                   :key="latestLecInfo"
                 >
                   {{ latestLecInfo }}
@@ -48,11 +54,7 @@
             </div>
           </div>
           <div class="info-link">
-            <a
-              :href="`https://classes.cornell.edu/browse/roster/${courseObj.latestSem}/class/${courseObj.subject}/${courseObj.number}`"
-              class="info-link-blue"
-              target="_blank"
-            >
+            <a :href="rosterLink" class="info-link-blue" target="_blank">
               View Course Information on Roster
               <span class="info-link-blue-img"
                 ><img src="@/assets/images/link-blue.svg" alt="link arrow"
@@ -61,15 +63,16 @@
           </div>
         </div>
       </div>
-      <div class="bottombarcourse-bar-details-overflow" v-if="!isSmallerWidth">
+      <div
+        :class="
+          isSmallerWidth
+            ? 'bottombarcourse-bar-details-noOverflow'
+            : 'bottombarcourse-bar-details-overflow'
+        "
+      >
         <div class="details">
           <div class="details-ratings-link-wrapper">
-            <a
-              :href="`https://www.cureviews.org/course/${courseObj.subject}/${courseObj.number}`"
-              class="details-ratings-link"
-              target="_blank"
-              >See All Reviews</a
-            >
+            <a :href="CURLink" class="details-ratings-link" target="_blank">See All Reviews</a>
           </div>
           <div class="details-ratings-wrapper">
             <div class="details-ratings">
@@ -94,8 +97,8 @@
             </div>
             <div class="details-ratings">
               <p class="details-ratings-title">
-                <span class="details-ratings-title-strong">Difficulty:</span
-                ><span class="details-ratings-strong"> {{ CURDifficulty }}</span>
+                <span class="details-ratings-title-strong">Difficulty: </span>
+                <span class="details-ratings-strong"> {{ CURDifficulty }}</span>
               </p>
               <div class="progress rating">
                 <div
@@ -134,147 +137,9 @@
             </div>
           </div>
           <div class="details-head">Prerequisites</div>
-          <p class="info-fact">{{ courseObj.prerequisites }}</p>
+          <p class="info-fact">{{ coursePrereqs }}</p>
           <div class="details-head">Description</div>
           <p class="info-fact">{{ courseObj.description }}</p>
-        </div>
-      </div>
-      <div class="bottombarcourse-bar-details-noOverflow" v-if="isSmallerWidth">
-        <div class="details">
-          <div class="details-ratings-link-wrapper">
-            <a
-              :href="`https://www.cureviews.org/course/${courseObj.subject}/${courseObj.number}`"
-              class="details-ratings-link"
-              target="_blank"
-              >See All Reviews</a
-            >
-          </div>
-          <div class="details-ratings-wrapper">
-            <div class="details-ratings">
-              <p class="details-ratings-title">
-                <span class="details-ratings-title-strong">Overall: </span>
-                <span class="details-ratings-strong">{{ CUROverallRating }}</span>
-              </p>
-              <div class="progress rating">
-                <div
-                  class="progress-bar"
-                  role="progressbar"
-                  :style="{
-                    width: `${(courseObj.overallRating / 5) * 100}%`,
-                    background: reviewsColor(courseObj.overallRating),
-                  }"
-                  aria-label="Overall Rating"
-                  :aria-valuenow="(courseObj.overallRating / 5) * 100"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                ></div>
-              </div>
-            </div>
-            <div class="details-ratings">
-              <p class="details-ratings-title">
-                <span class="details-ratings-title-strong">Difficulty: </span
-                ><span class="details-ratings-strong"> {{ CURDifficulty }}</span>
-              </p>
-              <div class="progress rating">
-                <div
-                  class="progress-bar"
-                  role="progressbar"
-                  :style="{
-                    width: `${(courseObj.difficulty / 5) * 100}%`,
-                    background: reviewsColor(courseObj.difficulty, true),
-                  }"
-                  aria-label="Difficulty Rating"
-                  :aria-valuenow="(courseObj.difficulty / 5) * 100"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                ></div>
-              </div>
-            </div>
-            <div class="details-ratings">
-              <p class="details-ratings-title">
-                <span class="details-ratings-title-strong">Workload: </span>
-                <span class="details-ratings-strong">{{ CURWorkload }}</span>
-              </p>
-              <div class="progress rating">
-                <div
-                  class="progress-bar"
-                  role="progressbar"
-                  :style="{
-                    width: `${(courseObj.workload / 5) * 100}%`,
-                    background: reviewsColor(courseObj.workload, true),
-                  }"
-                  aria-label="Workload Rating"
-                  :aria-valuenow="(courseObj.workload / 5) * 100"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                ></div>
-              </div>
-            </div>
-          </div>
-          <div class="details-head">Prerequisites</div>
-          <p class="info-fact">{{ courseObj.prerequisites }}</p>
-          <div class="details-head">Description</div>
-          <p class="info-fact">{{ courseObj.description }}</p>
-        </div>
-      </div>
-      <div class="bottombarcourse-bar-info-noOverflow" v-if="isSmallerWidth">
-        <div class="info">
-          <div class="info-section-wrapper">
-            <div>
-              <div class="section">
-                <h1 class="info-head">Credits</h1>
-                <p class="info-fact">{{ courseObj.credits }}</p>
-              </div>
-              <div class="section">
-                <h1 class="info-head">Offered</h1>
-                <p class="info-fact">{{ courseObj.semesters }}</p>
-              </div>
-            </div>
-            <div>
-              <div class="section">
-                <h1 class="info-head">Instructors</h1>
-                <p class="info-fact">{{ courseObj.instructors }}</p>
-              </div>
-              <div class="section">
-                <h1 class="info-head">Enrollment Information</h1>
-                <p class="info-fact">{{ courseObj.enrollmentInfo }}</p>
-              </div>
-            </div>
-            <div>
-              <div class="section">
-                <h1 class="info-head">Distribution Category</h1>
-                <p
-                  class="info-fact"
-                  v-for="distributionCategory in courseObj.distributionCategories"
-                  :key="distributionCategory"
-                >
-                  {{ distributionCategory }}
-                </p>
-              </div>
-              <div class="section">
-                <h1 class="info-head">{{ courseObj.latestSem }} Lecture Information</h1>
-                <p
-                  class="info-fact"
-                  v-for="latestLecInfo in courseObj.latestLecInfo"
-                  :key="latestLecInfo"
-                >
-                  {{ latestLecInfo }}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="info-link">
-            <a
-              :href="`https://classes.cornell.edu/browse/roster/${courseObj.latestSem}/class/${courseObj.subject}/${courseObj.number}`"
-              class="info-link-blue"
-              target="_blank"
-            >
-              View Course Information on Roster
-              <span class="info-link-blue-img"
-                ><img src="@/assets/images/link-blue.svg" alt="link arrow"
-              /></span>
-            </a>
-          </div>
         </div>
       </div>
     </div>
@@ -284,6 +149,32 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { reviewColors } from '@/assets/constants/colors';
+
+const joinOrNAString = (arr: readonly string[]): string =>
+  arr.length !== 0 && arr[0] !== '' ? arr.join(', ') : 'N/A';
+
+const noneIfEmpty = (str: string): string => (str && str.length !== 0 ? str : 'None');
+
+const naIfEmptyStringArray = (arr: readonly string[]): readonly string[] =>
+  arr && arr.length !== 0 && arr[0] !== '' ? arr : ['N/A'];
+
+const cleanCourseDistributionsArray = (distributions: readonly string[]): readonly string[] => {
+  // Iterates over distributions array and cleans every entry
+  // Removes stray parentheses, spaces, and commas
+  let matches: string[] = [];
+  if (distributions[0] === '') {
+    matches = ['N/A'];
+  } else {
+    for (let i = 0; i < distributions.length; i += 1) {
+      distributions[i].replace(/[A-Za-z0-9-]+/g, d => {
+        matches.push(d);
+        return d;
+      });
+    }
+  }
+
+  return matches;
+};
 
 export default Vue.extend({
   data() {
@@ -326,18 +217,44 @@ export default Vue.extend({
   },
 
   computed: {
+    courseSemesters(): string {
+      return joinOrNAString(this.courseObj.semesters);
+    },
+    courseInstructors(): string {
+      return joinOrNAString(this.courseObj.instructors);
+    },
+    courseEnrollment(): string {
+      return joinOrNAString(this.courseObj.enrollment);
+    },
+    coursePrereqs(): string {
+      return noneIfEmpty(this.courseObj.prereqs);
+    },
+    courseLectureTimes(): readonly string[] {
+      return naIfEmptyStringArray(this.courseObj.lectureTimes);
+    },
+    courseSubjectAndNumber(): { readonly subject: string; readonly number: string } {
+      const [subject, number] = this.courseObj.code.split(' ');
+      return { subject, number };
+    },
+    courseDistributions(): readonly string[] {
+      return cleanCourseDistributionsArray(this.courseObj.distributions);
+    },
+    rosterLink(): string {
+      return `https://classes.cornell.edu/browse/roster/${this.courseObj.lastRoster}/class/${this.courseSubjectAndNumber.subject}/${this.courseSubjectAndNumber.number}`;
+    },
+    CURLink(): string {
+      return `https://www.cureviews.org/course/${this.courseSubjectAndNumber.subject}/${this.courseSubjectAndNumber.number}`;
+    },
     CUROverallRating() {
       if (this.courseObj.overallRating === 0) return '';
       if (!this.courseObj.overallRating) return 'N/A';
       return Math.round(this.courseObj.overallRating * 10) / 10;
     },
-
     CURDifficulty() {
       if (this.courseObj.difficulty === 0) return '';
       if (!this.courseObj.difficulty) return 'N/A';
       return Math.round(this.courseObj.difficulty * 10) / 10;
     },
-
     CURWorkload() {
       if (this.courseObj.workload === 0) return '';
       if (!this.courseObj.workload) return 'N/A';

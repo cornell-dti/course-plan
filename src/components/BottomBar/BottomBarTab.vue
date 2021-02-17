@@ -6,7 +6,7 @@
     @click="bottomBarTabToggle(courseObj)"
   >
     <div class="bottombartab-wrapper">
-      <div class="bottombartab-name">{{ subject }} {{ number }}</div>
+      <div class="bottombartab-name">{{ courseObj.code }}</div>
     </div>
     <img
       class="bottombartab-delete"
@@ -22,8 +22,6 @@ import Vue, { PropType } from 'vue';
 
 export default Vue.extend({
   props: {
-    subject: { type: String, required: true },
-    number: { type: String, required: true },
     color: { type: String, required: true },
     courseObj: { type: Object as PropType<AppBottomBarCourse>, required: true },
     tabIndex: { type: Number, required: true },
