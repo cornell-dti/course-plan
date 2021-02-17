@@ -309,9 +309,6 @@ export default Vue.extend({
           );
           this.isDataReady();
         })
-        .catch(error => {
-          console.log('FetchCourses() Error: ', error);
-        });
     },
     deleteCourseFromSemesters(uniqueId: number) {
       this.$emit('deleteCourseFromSemesters', uniqueId);

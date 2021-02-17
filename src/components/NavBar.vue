@@ -30,10 +30,6 @@ export default Vue.extend({
         .signOut()
         .then(
           () => window.location.reload(),
-          error => {
-            // TODO: error
-            console.log(error);
-          }
         );
     },
     editProfile() {

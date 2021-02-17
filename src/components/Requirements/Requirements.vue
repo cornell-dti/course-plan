@@ -217,9 +217,6 @@ export default Vue.extend({
           this.lastLoadedShowAllCourseId = lastCourse.crseId;
           this.showAllCourses = { name: showAllCourses.requirementName, courses: fetchedCourses };
         })
-        .catch(err => {
-          console.log('Fetch Error: ', err);
-        });
     },
     onScrollSeeAll(event: Event) {
       const { target } = event;
@@ -232,9 +229,6 @@ export default Vue.extend({
               courses: [...this.showAllCourses.courses, ...fetchedCourses],
             };
           })
-          .catch(err => {
-            console.log('Fetch error: ', err);
-          });
       }
     },
     backFromSeeAll() {
