@@ -58,7 +58,11 @@ export default Vue.extend({
       return 'Reset';
     },
     isTransferCredit(): boolean {
-      return this.courseTaken.subject === 'AP' || this.courseTaken.subject === 'IB';
+      return (
+        this.courseTaken.subject === 'AP' ||
+        this.courseTaken.subject === 'IB' ||
+        this.courseTaken.subject === 'Swim'
+      );
     },
     courseInfoAndSemesterLabel(): {
       readonly semesterLabel: string;
