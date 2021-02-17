@@ -1,9 +1,5 @@
-import {
-  CREDITS_COURSE_ID,
-  FWS_COURSE_ID,
-  SWIM_TEST_COURSE_ID,
-  ALL_ROSTERS,
-} from './data/constants';
+import rosters from '../assets/courses/rosters.json';
+import { CREDITS_COURSE_ID, FWS_COURSE_ID, SWIM_TEST_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './data/exams/ExamCredit';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
@@ -142,7 +138,7 @@ const getSwimTestFulfillmentStatistics = (
       'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming ' +
       'and water safety competency requirement for all entering first-year undergraduate students.',
     source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11637',
-    courses: [Object.fromEntries(ALL_ROSTERS.map(roster => [roster, [SWIM_TEST_COURSE_ID]]))],
+    courses: [Object.fromEntries(rosters.map(roster => [roster, [SWIM_TEST_COURSE_ID]]))],
     subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
@@ -150,7 +146,7 @@ const getSwimTestFulfillmentStatistics = (
   const swimClasses = courses.filter(it => it.courseId === SWIM_TEST_COURSE_ID);
   if (tookSwimTest) {
     swimClasses.push({
-      roster: 'SP21',
+      roster: rosters[rosters.length - 1],
       courseId: SWIM_TEST_COURSE_ID,
       code: 'Swim Test',
       subject: 'Swim',
