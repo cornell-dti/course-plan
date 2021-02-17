@@ -40,8 +40,8 @@ export default Vue.extend({
     text: { type: String, required: true },
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
-    alt: { type: String, required: false, default: ''  },
-    image: { type: Object, required: false, default: null  },
+    alt: { type: String, required: false, default: '' },
+    image: { type: String, required: false, default: null },
   },
   data() {
     return {

@@ -125,7 +125,8 @@ export default Vue.extend({
       startTour: false,
       showTourEndWindow: false,
       congrats: 'Congratulations! That’s a wrap',
-      congratsBodytext: 'Other than this, there is more you can explore, so feel free to surf through CoursePlan',
+      congratsBodytext:
+        'Other than this, there is more you can explore, so feel free to surf through CoursePlan',
       congratsBodyImage: surfing,
       congratsBodyAlt: 'surf',
       congratsExit: '',
