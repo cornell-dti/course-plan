@@ -81,17 +81,18 @@
             />
           </div>
           <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
-            <incompletesubreqcourse
+            <incomplete-sub-req-course
               :subReq="subReq"
               :subReqCourseId="id"
-              :crseInfoObjects="subReqCourseSlot.courses"
+              :courseIDs="subReqCourseSlot.courses.map(it => it.crseIds)"
               :subReqFetchedCourseObjectsNotTakenArray="subReqFetchedCourseObjectsNotTakenArray"
-              :subReqCoursesArray="subReqCoursesArray"
               :dataReady="dataReady"
               :displayDescription="displayDescription"
               :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
               @isDataReady="isDataReady"
-              @onShowAllCourses="onShowAllCourses"
+              @onShowAllCourses="
+                () => onShowAllCourses(subReq.requirement.name, subReqCoursesArray)
+              "
             />
           </div>
         </div>
@@ -106,15 +107,23 @@ import CompletedSubReqCourse from '@/components/Requirements/CompletedSubReqCour
 import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCourse.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
-import { SubReqCourseSlot, CrseInfo } from '@/requirements/types';
+import { CrseInfo } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
 
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 import { fetchCoursesFromFirebaseFunctions } from '@/firebaseConfig';
 
-Vue.component('incompletesubreqcourse', IncompleteSubReqCourse);
+type CompletedSubReqCourseSlot = {
+  readonly isCompleted: true;
+  readonly courses: readonly CourseTaken[];
+};
 
-require('firebase/functions');
+type IncompleteSubReqCourseSlot = {
+  readonly isCompleted: false;
+  readonly courses: readonly CrseInfo[];
+};
+
+export type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
@@ -124,7 +133,7 @@ type Data = {
 };
 
 export default Vue.extend({
-  components: { CompletedSubReqCourse, DropDownArrow },
+  components: { CompletedSubReqCourse, DropDownArrow, IncompleteSubReqCourse },
   props: {
     subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
     subReqIndex: { type: Number, required: true }, // Subrequirement index
@@ -181,8 +190,8 @@ export default Vue.extend({
     getArrowColor() {
       return this.isCompleted ? '#979797CC' : '#979797';
     },
-    onShowAllCourses(courses: FirestoreSemesterCourse[]) {
-      this.$emit('onShowAllCourses', courses);
+    onShowAllCourses(requirementName: string, subReqCoursesArray: readonly SubReqCourseSlot[]) {
+      this.$emit('onShowAllCourses', { requirementName, subReqCoursesArray });
     },
     toggleDescription() {
       this.displayDescription = !this.displayDescription;
