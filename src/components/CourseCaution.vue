@@ -7,7 +7,7 @@
         alt="caution sign"
       />
     </div>
-    <div class="course-tooltiptext course-tooltiptext--caution" v-html="cautionString"></div>
+    <div class="course-tooltiptext course-tooltiptext--caution">{{ cautionString }}</div>
   </div>
 </template>
 
