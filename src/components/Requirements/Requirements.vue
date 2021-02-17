@@ -211,24 +211,22 @@ export default Vue.extend({
     }) {
       this.shouldShowAllCourses = true;
       this.showAllSubReqCourses = showAllCourses.subReqCoursesArray;
-      this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray)
-        .then(fetchedCourses => {
-          const lastCourse = fetchedCourses[fetchedCourses.length - 1];
-          this.lastLoadedShowAllCourseId = lastCourse.crseId;
-          this.showAllCourses = { name: showAllCourses.requirementName, courses: fetchedCourses };
-        })
+      this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray).then(fetchedCourses => {
+        const lastCourse = fetchedCourses[fetchedCourses.length - 1];
+        this.lastLoadedShowAllCourseId = lastCourse.crseId;
+        this.showAllCourses = { name: showAllCourses.requirementName, courses: fetchedCourses };
+      });
     },
     onScrollSeeAll(event: Event) {
       const { target } = event;
       const { scrollTop, clientHeight, scrollHeight } = target as HTMLDivElement;
       if (scrollTop + clientHeight >= scrollHeight) {
-        this.getAllCrseInfoFromSemester(this.showAllSubReqCourses)
-          .then(fetchedCourses => {
-            this.showAllCourses = {
-              ...this.showAllCourses,
-              courses: [...this.showAllCourses.courses, ...fetchedCourses],
-            };
-          })
+        this.getAllCrseInfoFromSemester(this.showAllSubReqCourses).then(fetchedCourses => {
+          this.showAllCourses = {
+            ...this.showAllCourses,
+            courses: [...this.showAllCourses.courses, ...fetchedCourses],
+          };
+        });
       }
     },
     backFromSeeAll() {
