@@ -18,7 +18,7 @@
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
-          :color="courseColorAndSemesterLabel.color"
+          :color="courseInfoAndSemesterLabel.color"
           :subject="courseTaken.subject"
           :number="courseTaken.number"
           :compact="true"
@@ -26,7 +26,7 @@
           class="completed-reqCourses-course-object"
         />
         <div class="completed-reqCourses-course-object-semester">
-          in {{ courseColorAndSemesterLabel.semesterLabel }}
+          in {{ courseInfoAndSemesterLabel.semesterLabel }}
         </div>
       </div>
     </div>
@@ -64,9 +64,13 @@ export default Vue.extend({
         this.courseTaken.subject === 'Swim'
       );
     },
-    courseColorAndSemesterLabel(): { readonly semesterLabel: string; readonly color: string } {
+    courseInfoAndSemesterLabel(): {
+      readonly semesterLabel: string;
+      readonly uniqueID: number;
+      readonly color: string;
+    } {
       if (this.isTransferCredit) {
-        return { semesterLabel: 'Transfer Credits', color: transferCreditColor };
+        return { semesterLabel: 'Transfer Credits', color: transferCreditColor, uniqueID: 0 };
       }
       const courseTakenCode = `${this.courseTaken.subject} ${this.courseTaken.number}`;
       for (let i = 0; i < this.semesters.length; i += 1) {
@@ -77,19 +81,17 @@ export default Vue.extend({
         if (filteredSemesterCourses.length > 0) {
           return {
             semesterLabel: `${semester.type} ${semester.year}`,
+            uniqueID: filteredSemesterCourses[0].uniqueID,
             color: filteredSemesterCourses[0].color,
           };
         }
       }
-      return { semesterLabel: `${getCurrentSeason()} ${getCurrentYear()}`, color: '' };
+      return { semesterLabel: `${getCurrentSeason()} ${getCurrentYear()}`, uniqueID: 0, color: '' };
     },
   },
   methods: {
     onReset() {
-      this.$emit(
-        'deleteCourseFromSemesters',
-        this.isTransferCredit ? 0 : this.courseTaken.courseId
-      );
+      this.$emit('deleteCourseFromSemesters', this.courseInfoAndSemesterLabel.uniqueID);
     },
   },
 });
