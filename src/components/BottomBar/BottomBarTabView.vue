@@ -7,8 +7,6 @@
         class="bottombartabview-courseWrapper"
       >
         <bottom-bar-tab
-          :subject="bottomCourse.subject"
-          :number="bottomCourse.number"
           :color="bottomCourse.color"
           :courseObj="bottomCourse"
           :tabIndex="index"
@@ -44,9 +42,9 @@
             :key="index"
             class="seeMoreCourse-option"
           >
-            <span class="seeMoreCourse-option-text" @click="moveToBottomBar(seeMoreCourse)"
-              >{{ seeMoreCourse.subject }} {{ seeMoreCourse.number }}</span
-            >
+            <span class="seeMoreCourse-option-text" @click="moveToBottomBar(seeMoreCourse)">{{
+              seeMoreCourse.code
+            }}</span>
             <img
               class="seeMoreCourse-option-delete"
               src="@/assets/images/x-blue.svg"

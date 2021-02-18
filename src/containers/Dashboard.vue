@@ -90,6 +90,7 @@ import surfing from '@/assets/images/surfing.svg';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { editSemesters } from '@/global-firestore-data';
+import { firestoreSemesterCourseToBottomBarCourse } from '@/user-data-converter';
 
 const tour = introJs();
 tour.setOption('exitOnEsc', 'false');
@@ -193,26 +194,7 @@ export default Vue.extend({
     updateBar(course: FirestoreSemesterCourse, colorJustChanged: string, color: string) {
       const [subject, number] = course.code.split(' ');
       // Update Bar Information
-      const courseToAdd: AppBottomBarCourse = {
-        subject,
-        number,
-        name: course.name,
-        credits: course.credits,
-        semesters: this.joinOrNAString(course.semesters),
-        color: course.color,
-        latestSem: course.lastRoster,
-        // Array data
-        instructors: this.joinOrNAString(course.instructors),
-        distributionCategories: this.cleanCourseDistributionsArray(course.distributions),
-        enrollmentInfo: this.joinOrNAString(course.enrollment),
-        latestLecInfo: this.naIfEmptyStringArray(course.lectureTimes),
-        overallRating: 0,
-        difficulty: 0,
-        workload: 0,
-        prerequisites: this.noneIfEmpty(course.prereqs),
-        description: course.description,
-        uniqueID: course.uniqueID,
-      };
+      const courseToAdd = firestoreSemesterCourseToBottomBarCourse(course);
 
       // expand bottombar if first course added
       if (this.bottomCourses.length === 0) {
@@ -345,36 +327,6 @@ export default Vue.extend({
     editProfile() {
       this.isOnboarding = true;
       this.isEditingProfile = true;
-    },
-
-    cleanCourseDistributionsArray(distributions: readonly string[]) {
-      // Iterates over distributions array and cleans every entry
-      // Removes stray parentheses, spaces, and commas
-      let matches: string[] = [];
-      if (distributions[0] === '') {
-        matches = ['N/A'];
-      } else {
-        for (let i = 0; i < distributions.length; i += 1) {
-          distributions[i].replace(/[A-Za-z0-9-]+/g, d => {
-            matches.push(d);
-            return d;
-          });
-        }
-      }
-
-      return matches;
-    },
-
-    joinOrNAString(arr: readonly unknown[]) {
-      return arr.length !== 0 && arr[0] !== '' ? arr.join(', ') : 'N/A';
-    },
-
-    noneIfEmpty(str: string) {
-      return str && str.length !== 0 ? str : 'None';
-    },
-
-    naIfEmptyStringArray(arr: readonly string[]) {
-      return arr && arr.length !== 0 && arr[0] !== '' ? arr : ['N/A'];
     },
 
     deleteCourseFromSemesters(uniqueID: number) {

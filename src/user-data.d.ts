@@ -101,23 +101,22 @@ type AppOnboardingData = {
 };
 
 type AppBottomBarCourse = {
-  readonly subject: string;
-  readonly number: string;
+  readonly code: string;
   readonly name: string;
   readonly credits: number;
-  readonly semesters: string;
+  readonly semesters: readonly string[];
   color: string;
-  readonly latestSem: string;
-  readonly instructors: string;
-  readonly distributionCategories: readonly string[];
-  readonly enrollmentInfo: string;
-  readonly latestLecInfo: readonly string[];
+  readonly lastRoster: string;
+  readonly instructors: readonly string[];
+  readonly distributions: readonly string[];
+  readonly enrollment: readonly string[];
+  readonly lectureTimes: readonly string[];
+  readonly prereqs: string;
+  readonly description: string;
+  readonly uniqueID: number;
   overallRating: number;
   difficulty: number;
   workload: number;
-  readonly prerequisites: string;
-  readonly description: string;
-  readonly uniqueID: number;
 };
 
 // map from requirement ID to option chosen
