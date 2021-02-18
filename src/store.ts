@@ -16,6 +16,7 @@ export type VuexStoreState = {
   onboardingData: AppOnboardingData;
   semesters: readonly FirestoreSemester[];
   toggleableRequirementChoices: AppToggleableRequirementChoices;
+  selectableRequirementChoices: AppSelectableRequirementChoices;
   requirementFulfillmentGraph: RequirementFulfillmentGraph<
     RequirementWithIDSourceType,
     CourseTaken
@@ -47,6 +48,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     semesters: [],
     toggleableRequirementChoices: {},
+    selectableRequirementChoices: {},
     // It won't be null once the app loads.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     requirementFulfillmentGraph: null!,
@@ -74,6 +76,12 @@ const store: TypedVuexStore = new TypedVuexStore({
       toggleableRequirementChoices: AppToggleableRequirementChoices
     ) {
       state.toggleableRequirementChoices = toggleableRequirementChoices;
+    },
+    setUserRequirementChoices(
+      state: VuexStoreState,
+      selectableRequirementChoices: AppSelectableRequirementChoices
+    ) {
+      state.selectableRequirementChoices = selectableRequirementChoices;
     },
     setRequirementData(
       state: VuexStoreState,
@@ -110,7 +118,8 @@ const autoRecomputeRequirements = (): (() => void) =>
           computeGroupedRequirementFulfillmentReports(
             state.semesters,
             state.onboardingData,
-            state.toggleableRequirementChoices
+            state.toggleableRequirementChoices,
+            state.selectableRequirementChoices
           )
         );
       }

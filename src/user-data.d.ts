@@ -121,3 +121,6 @@ type AppBottomBarCourse = {
 
 // map from requirement ID to option chosen
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
+
+// map from course ID to requirement ID
+type AppSelectableRequirementChoices = Readonly<Record<string, string>>;

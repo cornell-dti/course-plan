@@ -236,7 +236,8 @@ type RequirementWithIDSourceType = DecoratedCollegeOrMajorRequirement & {
 function computeFulfillmentCoursesAndStatistics(
   requirement: RequirementWithIDSourceType,
   coursesTaken: readonly CourseTaken[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  selectableRequirementChoices: AppSelectableRequirementChoices
 ): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
   switch (requirement.fulfilledBy) {
     case 'self-check':
@@ -294,7 +295,8 @@ function getCourseCodesArray(
 export default function computeGroupedRequirementFulfillmentReports(
   semesters: readonly FirestoreSemester[],
   onboardingData: AppOnboardingData,
-  toggleableRequirementChoices: AppToggleableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  selectableRequirementChoices: AppSelectableRequirementChoices
 ): {
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<
     RequirementWithIDSourceType,
@@ -312,7 +314,8 @@ export default function computeGroupedRequirementFulfillmentReports(
   } = buildRequirementFulfillmentGraphFromUserData(
     coursesTaken,
     onboardingData,
-    toggleableRequirementChoices
+    toggleableRequirementChoices,
+    selectableRequirementChoices
   );
 
   const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];
@@ -333,7 +336,12 @@ export default function computeGroupedRequirementFulfillmentReports(
     const fulfillmentStatistics = {
       id: requirement.id,
       requirement,
-      ...computeFulfillmentCoursesAndStatistics(requirement, courses, toggleableRequirementChoices),
+      ...computeFulfillmentCoursesAndStatistics(
+        requirement,
+        courses,
+        toggleableRequirementChoices,
+        selectableRequirementChoices
+      ),
     };
 
     switch (requirement.sourceType) {

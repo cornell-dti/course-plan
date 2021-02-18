@@ -23,7 +23,8 @@ function forfeitTransferCredit(coursesTaken: readonly CourseTaken[]): readonly C
 export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],
   { college, major: majors, minor: minors }: AppOnboardingData,
-  toggleableRequirementChoices: AppToggleableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  selectableRequirementChoices: AppSelectableRequirementChoices
 ): {
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<
     RequirementWithIDSourceType,
