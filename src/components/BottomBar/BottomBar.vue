@@ -1,56 +1,50 @@
 <template>
-  <div class="bottombar">
+  <div class="bottombar" v-if="hasBottomBarCourses">
     <div class="bottombar-tabviewTitleWrapper">
       <div class="bottombar-tabview" :class="{ expandedTabView: isExpanded }">
-        <bottom-bar-tab-view
-          :bottomCourses="bottomCourses"
-          :seeMoreCourses="seeMoreCourses"
-          :bottomCourseFocus="bottomCourseFocus"
-          :isExpanded="isExpanded"
-          :maxBottomBarTabs="maxBottomBarTabs"
-          @bottomBarTabToggle="bottomBarTabToggle"
-          @toggleFromTab="toggle"
-        />
+        <bottom-bar-tab-view :maxBottomBarTabs="maxBottomBarTabs" />
       </div>
-      <div class="bottombar-title" @click="toggle()">
+      <div class="bottombar-title" @click="toggleBottomBar()">
         <bottom-bar-title
-          :color="bottomCourses[bottomCourseFocus].color"
-          :name="bottomCourses[bottomCourseFocus].name"
+          :color="focusedBottomBarCourse.color"
+          :name="focusedBottomBarCourse.name"
           :isExpanded="isExpanded"
         />
       </div>
     </div>
     <div v-if="isExpanded" class="bottombar-course">
-      <bottom-bar-course :courseObj="bottomCourses[bottomCourseFocus]" />
+      <bottom-bar-course :courseObj="focusedBottomBarCourse" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue from 'vue';
 import BottomBarCourse from '@/components/BottomBar/BottomBarCourse.vue';
 import BottomBarTabView from '@/components/BottomBar/BottomBarTabView.vue';
 import BottomBarTitle from '@/components/BottomBar/BottomBarTitle.vue';
+import { immutableBottomBarState, toggleBottomBar } from '@/components/BottomBar/BottomBarState';
 
 export default Vue.extend({
   components: { BottomBarCourse, BottomBarTabView, BottomBarTitle },
   props: {
-    bottomCourses: { type: Array as PropType<AppBottomBarCourse[]>, required: true },
-    seeMoreCourses: { type: Array as PropType<AppBottomBarCourse[]>, required: true },
-    bottomCourseFocus: { type: Number, required: true },
-    isExpanded: { type: Boolean, required: true },
     maxBottomBarTabs: { type: Number, required: true },
   },
 
+  computed: {
+    hasBottomBarCourses(): boolean {
+      return immutableBottomBarState.bottomCourses.length > 0;
+    },
+    isExpanded(): boolean {
+      return immutableBottomBarState.isExpanded;
+    },
+    focusedBottomBarCourse(): AppBottomBarCourse {
+      return immutableBottomBarState.bottomCourses[immutableBottomBarState.bottomCourseFocus];
+    },
+  },
+
   methods: {
-    toggle() {
-      if (this.isExpanded) this.$emit('close-bar');
-      else this.$emit('open-bar');
-    },
-    bottomBarTabToggle(courseObj: AppBottomBarCourse) {
-      const newBottomCourseFocus = this.bottomCourses.indexOf(courseObj);
-      this.$emit('change-focus', newBottomCourseFocus);
-    },
+    toggleBottomBar,
   },
 });
 </script>
