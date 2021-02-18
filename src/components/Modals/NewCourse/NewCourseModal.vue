@@ -47,7 +47,7 @@
         :selectedRequirementID="selectedRequirementID"
         :requirementsThatAllowDoubleCounting="requirementsThatAllowDoubleCounting"
         :relatedRequirements="relatedRequirements"
-        :potentialRequirements="potentialRequirements"
+        :potentialRequirements="selfCheckRequirements"
         @on-selected-change="onSelectedChange"
         @edit-mode="toggleEditMode"
       />
@@ -57,9 +57,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import SelectedRequirementEditor, {
-  RequirementWithID,
-} from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
+import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import CourseSelector, {
@@ -71,6 +69,7 @@ import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import store from '@/store';
+import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
 export default Vue.extend({
   components: { CourseSelector, FlexibleModal, NewSemester, SelectedRequirementEditor },
@@ -79,8 +78,8 @@ export default Vue.extend({
       selectedCourse: null as MatchingCourseSearchResult | null,
       selectedRequirementID: '',
       requirementsThatAllowDoubleCounting: [] as readonly string[],
-      relatedRequirements: [] as readonly RequirementWithID[],
-      potentialRequirements: [] as readonly RequirementWithID[],
+      relatedRequirements: [] as readonly RequirementWithIDSourceType[],
+      selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
       editMode: false,
       courseSelectorKey: 0,
       courseIsAddable: true,
@@ -109,48 +108,29 @@ export default Vue.extend({
       this.getReqsRelatedToCourse(result);
     },
     getReqsRelatedToCourse(selectedCourse: MatchingCourseSearchResult) {
+      const {
+        directlyRelatedRequirements,
+        selfCheckRequirements,
+      } = getRelatedUnfulfilledRequirements(
+        selectedCourse.id,
+        store.state.groupedRequirementFulfillmentReport,
+        store.state.toggleableRequirementChoices
+      );
+
       const requirementsThatAllowDoubleCounting: string[] = [];
-      const relatedRequirements: RequirementWithID[] = [];
-      const potentialRequirements: RequirementWithID[] = [];
-      const groupedRequirements = store.state.groupedRequirementFulfillmentReport;
-
-      // parse through reqs object
-      for (let i = 0; i < groupedRequirements.length; i += 1) {
-        const subreqs = groupedRequirements[i].reqs.filter(
-          it => it.minCountFulfilled < it.minCountRequired
-        );
-        for (let j = 0; j < subreqs.length; j += 1) {
-          // requirements
-
-          const subRequirement = subreqs[j].requirement;
-          if (subRequirement.fulfilledBy === 'courses') {
-            const { courses } = subRequirement;
-            for (let k = 0; k < courses.length; k += 1) {
-              for (const [, ids] of Object.entries(courses[k])) {
-                if (ids.includes(selectedCourse.id)) {
-                  if (subRequirement.allowCourseDoubleCounting) {
-                    requirementsThatAllowDoubleCounting.push(subRequirement.name);
-                  } else {
-                    relatedRequirements.push({ id: subRequirement.id, name: subRequirement.name });
-                  }
-                  break;
-                }
-              }
-            }
-          }
-          // potential self-check requirements
-          if (subreqs[j].fulfilledBy === 'self-check') {
-            if (!subRequirement.allowCourseDoubleCounting) {
-              potentialRequirements.push({ id: subRequirement.id, name: subRequirement.name });
-            }
-          }
-          this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;
-          this.relatedRequirements = relatedRequirements;
-          this.potentialRequirements = potentialRequirements;
-          this.selectedRequirementID =
-            relatedRequirements.length > 0 ? relatedRequirements[0].id : '';
+      const relatedRequirements: RequirementWithIDSourceType[] = [];
+      directlyRelatedRequirements.forEach(it => {
+        if (it.allowCourseDoubleCounting) {
+          requirementsThatAllowDoubleCounting.push(it.name);
+        } else {
+          relatedRequirements.push(it);
         }
-      }
+      });
+
+      this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;
+      this.relatedRequirements = relatedRequirements;
+      this.selfCheckRequirements = selfCheckRequirements;
+      this.selectedRequirementID = relatedRequirements.length > 0 ? relatedRequirements[0].id : '';
     },
     closeCurrentModal() {
       this.reset();
@@ -203,7 +183,7 @@ export default Vue.extend({
       this.selectedCourse = null;
       this.selectedRequirementID = '';
       this.relatedRequirements = [];
-      this.potentialRequirements = [];
+      this.selfCheckRequirements = [];
     },
     backOrCancel() {
       if (this.leftButtonText === 'BACK') {
