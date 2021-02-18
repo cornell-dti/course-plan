@@ -28,13 +28,7 @@ export default Vue.extend({
       firebase
         .auth()
         .signOut()
-        .then(
-          () => window.location.reload(),
-          error => {
-            // TODO: error
-            console.log(error);
-          }
-        );
+        .then(() => window.location.reload());
     },
     editProfile() {
       this.$emit('editProfile');

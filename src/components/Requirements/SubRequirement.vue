@@ -302,16 +302,12 @@ export default Vue.extend({
       this.subReqFetchedCourseObjectsNotTakenArray = [];
       this.dataReady = false;
       const subReqCrseInfoObjectsToFetch = this.getMaxFirstFourCrseInfoObjects();
-      fetchCoursesFromFirebaseFunctions(subReqCrseInfoObjectsToFetch)
-        .then(fetchedCourses => {
-          this.subReqFetchedCourseObjectsNotTakenArray.push(
-            ...fetchedCourses.map(cornellCourseRosterCourseToFirebaseSemesterCourse)
-          );
-          this.isDataReady();
-        })
-        .catch(error => {
-          console.log('FetchCourses() Error: ', error);
-        });
+      fetchCoursesFromFirebaseFunctions(subReqCrseInfoObjectsToFetch).then(fetchedCourses => {
+        this.subReqFetchedCourseObjectsNotTakenArray.push(
+          ...fetchedCourses.map(cornellCourseRosterCourseToFirebaseSemesterCourse)
+        );
+        this.isDataReady();
+      });
     },
     deleteCourseFromSemesters(uniqueId: number) {
       this.$emit('deleteCourseFromSemesters', uniqueId);
