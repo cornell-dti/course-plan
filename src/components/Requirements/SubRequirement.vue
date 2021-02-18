@@ -71,7 +71,7 @@
           </div>
         </div>
       </div>
-      <div v-if="displayDescription" class="subreqcourse-wrapper">
+      <div v-if="displayDescription && subReq.requirement.fulfilledBy !== 'self-check'" class="subreqcourse-wrapper">
         <div v-for="(subReqCourseSlot, id) in subReqCoursesArray" :key="id">
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completed-sub-req-course
@@ -97,6 +97,9 @@
           </div>
         </div>
       </div>
+      <div v-if="displayDescription && subReq.requirement.fulfilledBy === 'self-check'" class="subreqcourse-wrapper">
+        <incomplete-self-check />
+      </div>
     </div>
   </div>
 </template>
@@ -105,6 +108,7 @@
 import Vue, { PropType } from 'vue';
 import CompletedSubReqCourse from '@/components/Requirements/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCourse.vue';
+import IncompleteSelfCheck from '@/components/Requirements/IncompleteSelfCheck.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
 import { CrseInfo } from '@/requirements/types';
@@ -133,7 +137,7 @@ type Data = {
 };
 
 export default Vue.extend({
-  components: { CompletedSubReqCourse, DropDownArrow, IncompleteSubReqCourse },
+  components: { CompletedSubReqCourse, DropDownArrow, IncompleteSubReqCourse, IncompleteSelfCheck },
   props: {
     subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
     subReqIndex: { type: Number, required: true }, // Subrequirement index
