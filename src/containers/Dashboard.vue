@@ -15,7 +15,6 @@
           class="dashboard-nav"
           @editProfile="editProfile"
           @toggleRequirementsBar="toggleRequirementsBar"
-          :isBottomPreview="false"
         />
         <requirements
           class="dashboard-reqs"
