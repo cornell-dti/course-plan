@@ -10,20 +10,14 @@
       data-tooltipClass="tooltipCenter"
     >
       <!-- loop through reqs array of req objects -->
-      <div
-        class="req"
-        v-for="(req, index) in groupedRequirementFulfillmentReports"
-        :key="index"
-      >
+      <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
         <requirement-view
           :req="req"
           :reqIndex="index"
           :toggleableRequirementChoices="toggleableRequirementChoices"
           :displayedMajorIndex="displayedMajorIndex"
           :displayedMinorIndex="displayedMinorIndex"
-          :showMajorOrMinorRequirements="
-            showMajorOrMinorRequirements(index, req.groupName)
-          "
+          :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
           :rostersFromLastTwoYears="rostersFromLastTwoYears"
           :numOfColleges="numOfColleges"
           :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
@@ -35,29 +29,17 @@
         />
       </div>
     </div>
-    <div
-      class="fixed see-all-padding-y"
-      v-if="shouldShowAllCourses"
-      @scroll="onScrollSeeAll"
-    >
+    <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses" @scroll="onScrollSeeAll">
       <div class="see-all-padding-x see-all-header pb-3">
         <span class="arrow-left">
           <drop-down-arrow :isPointingLeft="true" :fillColor="'#32A0F2'" />
         </span>
-        <button class="btn back-button p-0" @click="backFromSeeAll">
-          GO BACK TO REQUIREMENTS
-        </button>
+        <button class="btn back-button p-0" @click="backFromSeeAll">GO BACK TO REQUIREMENTS</button>
       </div>
       <div class="see-all-padding-x py-3">
         <h1 class="title">{{ showAllCourses.name }}</h1>
-        <draggable
-          :value="showAllCourses.courses"
-          group="draggable-semester-courses"
-        >
-          <div
-            v-for="(courseData, index) in showAllCourses.courses"
-            :key="index"
-          >
+        <draggable :value="showAllCourses.courses" group="draggable-semester-courses">
+          <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
             <div class="mt-3">
               <course
                 v-bind="courseData"
@@ -168,16 +150,10 @@ export default Vue.extend({
       // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
       return (
         id < this.numOfColleges ||
-        id ===
-          this.displayedMinorIndex +
-            this.numOfColleges +
-            this.onboardingData.major.length
+        id === this.displayedMinorIndex + this.numOfColleges + this.onboardingData.major.length
       );
     },
-    chooseToggleableRequirementOption(
-      requirementID: string,
-      option: string
-    ): void {
+    chooseToggleableRequirementOption(requirementID: string, option: string): void {
       chooseToggleableRequirementOption({
         ...this.toggleableRequirementChoices,
         [requirementID]: option,
@@ -206,9 +182,7 @@ export default Vue.extend({
           if (!subReqCourseSlot.isCompleted) {
             const crseInfoFromSemester: CrseInfo[] = [];
             subReqCourseSlot.courses.forEach((crseInfo: CrseInfo) => {
-              const lastLoadedIndexOf = crseInfo.crseIds.indexOf(
-                this.lastLoadedShowAllCourseId
-              );
+              const lastLoadedIndexOf = crseInfo.crseIds.indexOf(this.lastLoadedShowAllCourseId);
               if (lastLoadedIndexOf !== -1) {
                 subReqCrseInfoObjectsToFetch = [];
                 crseInfo.crseIds.splice(0, lastLoadedIndexOf + 1);
@@ -227,11 +201,7 @@ export default Vue.extend({
           }
         });
         fetchCoursesFromFirebaseFunctions(subReqCrseInfoObjectsToFetch)
-          .then(courses =>
-            resolve(
-              courses.map(cornellCourseRosterCourseToFirebaseSemesterCourse)
-            )
-          )
+          .then(courses => resolve(courses.map(cornellCourseRosterCourseToFirebaseSemesterCourse)))
           .catch(error => reject(error));
       });
     },
@@ -241,33 +211,25 @@ export default Vue.extend({
     }) {
       this.shouldShowAllCourses = true;
       this.showAllSubReqCourses = showAllCourses.subReqCoursesArray;
-      this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray).then(
-        fetchedCourses => {
-          const lastCourse = fetchedCourses[fetchedCourses.length - 1];
-          this.lastLoadedShowAllCourseId = lastCourse.crseId;
-          this.showAllCourses = {
-            name: showAllCourses.requirementName,
-            courses: fetchedCourses,
-          };
-        }
-      );
+      this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray).then(fetchedCourses => {
+        const lastCourse = fetchedCourses[fetchedCourses.length - 1];
+        this.lastLoadedShowAllCourseId = lastCourse.crseId;
+        this.showAllCourses = {
+          name: showAllCourses.requirementName,
+          courses: fetchedCourses,
+        };
+      });
     },
     onScrollSeeAll(event: Event) {
       const { target } = event;
-      const {
-        scrollTop,
-        clientHeight,
-        scrollHeight,
-      } = target as HTMLDivElement;
+      const { scrollTop, clientHeight, scrollHeight } = target as HTMLDivElement;
       if (scrollTop + clientHeight >= scrollHeight) {
-        this.getAllCrseInfoFromSemester(this.showAllSubReqCourses).then(
-          fetchedCourses => {
-            this.showAllCourses = {
-              ...this.showAllCourses,
-              courses: [...this.showAllCourses.courses, ...fetchedCourses],
-            };
-          }
-        );
+        this.getAllCrseInfoFromSemester(this.showAllSubReqCourses).then(fetchedCourses => {
+          this.showAllCourses = {
+            ...this.showAllCourses,
+            courses: [...this.showAllCourses.courses, ...fetchedCourses],
+          };
+        });
       }
     },
     backFromSeeAll() {

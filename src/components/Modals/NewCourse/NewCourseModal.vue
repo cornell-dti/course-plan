@@ -200,10 +200,7 @@ export default Vue.extend({
       this.reset();
       this.closeCurrentModal();
     },
-    chooseSelectableRequirementOption(
-      courseID: string,
-      requirementID: string
-    ): void {
+    chooseSelectableRequirementOption(courseID: string, requirementID: string): void {
       if (courseID && requirementID) {
         chooseSelectableRequirementOption({
           ...this.selectableRequirementChoices,
