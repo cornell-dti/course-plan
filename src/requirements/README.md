@@ -1,4 +1,4 @@
-# Requirements Data
+# Requirement Computation Overview
 
 The requirements data and its interpreting algorithm is uniquely developed by and for CoursePlan.
 This document aims to give you a high level overview of how it works.
