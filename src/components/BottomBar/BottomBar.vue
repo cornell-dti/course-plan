@@ -39,7 +39,9 @@ export default Vue.extend({
       return immutableBottomBarState.isExpanded;
     },
     focusedBottomBarCourse(): AppBottomBarCourse {
-      return immutableBottomBarState.bottomCourses[immutableBottomBarState.bottomCourseFocus];
+      const focus = immutableBottomBarState.bottomCourseFocus;
+      const normalizedFocus = focus < this.maxBottomBarTabs ? focus : this.maxBottomBarTabs - 1;
+      return immutableBottomBarState.bottomCourses[normalizedFocus];
     },
   },
 
