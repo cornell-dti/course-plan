@@ -3,7 +3,7 @@
     <div
       class="fixed"
       data-intro-group="req-tooltip"
-      :v-bind:class="{ 'd-none': !shouldShowAllCourses }"
+      :class="{ 'd-none': shouldShowAllCourses }"
       :data-intro="getRequirementsTooltipText()"
       data-disable-interaction="1"
       data-step="1"
@@ -42,7 +42,6 @@
           <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
             <div class="mt-3">
               <course
-                v-bind="courseData"
                 :courseObj="courseData"
                 :compact="false"
                 :active="false"
