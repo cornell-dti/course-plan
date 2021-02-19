@@ -3,7 +3,7 @@
     class="bottombartab"
     :style="{ background: `#${color}` }"
     :class="{ inactive: !isBottomCourseFocus }"
-    @click="bottomBarTabToggle(courseObj)"
+    @click="$emit('on-change-focus')"
   >
     <div class="bottombartab-wrapper">
       <div class="bottombartab-name">{{ courseObj.code }}</div>
@@ -11,7 +11,7 @@
     <img
       class="bottombartab-delete"
       src="@/assets/images/x-white.svg"
-      @click.stop="deleteBottomTab(courseObj)"
+      @click.stop="$emit('on-delete')"
       alt="x"
     />
   </div>
@@ -29,25 +29,8 @@ export default Vue.extend({
     isExpanded: { type: Boolean, required: true },
   },
 
-  methods: {
-    bottomBarTabToggle(courseObj: AppBottomBarCourse) {
-      this.$emit('bottomBarTabToggle', courseObj);
-      this.toggleFromTab();
-    },
-
-    deleteBottomTab(courseObj: AppBottomBarCourse) {
-      this.$emit('deleteBottomTab', courseObj);
-    },
-
-    toggleFromTab() {
-      if (this.tabIndex === this.bottomCourseFocus || !this.isExpanded) {
-        this.$emit('toggleFromTab');
-      }
-    },
-  },
-
   computed: {
-    isBottomCourseFocus() {
+    isBottomCourseFocus(): boolean {
       return this.tabIndex === this.bottomCourseFocus;
     },
   },

@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'course--min': compact, active: active }" class="course" @click="updateBar()">
+  <div :class="{ 'course--min': compact, active: active }" class="course" @click="courseOnClick()">
     <div
       class="course-color"
       :style="cssVars"
@@ -45,6 +45,10 @@
 import Vue, { PropType } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/CourseCaution.vue';
+import {
+  addCourseToBottomBar,
+  reportCourseColorChange,
+} from '@/components/BottomBar/BottomBarState';
 import { clickOutside } from '@/utilities';
 
 export default Vue.extend({
@@ -62,7 +66,6 @@ export default Vue.extend({
       menuOpen: false,
       stopCloseFlag: false,
       getCreditRange: this.courseObj.creditRange,
-      colorJustChanged: false,
     };
   },
   computed: {
@@ -122,14 +125,14 @@ export default Vue.extend({
     },
     colorCourse(color: string) {
       this.$emit('color-course', color, this.courseObj.uniqueID);
+      reportCourseColorChange(this.courseObj.uniqueID, color);
       this.closeMenuIfOpen();
-      this.colorJustChanged = true;
     },
-    updateBar() {
+    courseOnClick() {
       if (!this.menuOpen) {
-        this.$emit('updateBar', this.courseObj, this.colorJustChanged, this.courseObj.color);
+        this.$emit('course-on-click', this.courseObj);
+        addCourseToBottomBar(this.courseObj);
       }
-      this.colorJustChanged = false;
     },
     editCourseCredit(credit: number) {
       this.$emit('edit-course-credit', credit, this.courseObj.uniqueID);
