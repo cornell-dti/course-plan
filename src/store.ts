@@ -83,12 +83,6 @@ const store: TypedVuexStore = new TypedVuexStore({
     ) {
       state.selectableRequirementChoices = selectableRequirementChoices;
     },
-    setUserRequirementChoices(
-      state: VuexStoreState,
-      selectableRequirementChoices: AppSelectableRequirementChoices
-    ) {
-      state.selectableRequirementChoices = selectableRequirementChoices;
-    },
     setRequirementData(
       state: VuexStoreState,
       data: Pick<
