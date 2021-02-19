@@ -27,7 +27,6 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf',
     checker: includesWithSingleRequirement('GOVT 2***'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 28,
   },
@@ -38,7 +37,6 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf',
     checker: includesWithSingleRequirement('GOVT ****'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },

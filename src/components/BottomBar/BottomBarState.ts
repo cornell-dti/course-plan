@@ -1,5 +1,6 @@
-import { firestoreSemesterCourseToBottomBarCourse } from '@/user-data-converter';
 import Vue from 'vue';
+
+import { firestoreSemesterCourseToBottomBarCourse } from '../../user-data-converter';
 
 export type BottomBarState = {
   bottomCourses: readonly AppBottomBarCourse[];

@@ -15,7 +15,6 @@ const calsCreditsRequirement: CollegeOrMajorRequirement = {
     ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(
       course.subject
     ),
-  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 55,
 };
@@ -99,7 +98,6 @@ const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequiremen
     'STS 2871',
     'VIEN 2204'
   ),
-  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 6,
 };
@@ -121,7 +119,6 @@ const calsChemistryOrPhysicsRequiement: CollegeOrMajorRequirement = {
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: (course: Course): boolean => ['CHEM', 'CHEME', 'PHYS'].includes(course.subject),
-  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 3,
 };
@@ -187,7 +184,6 @@ const calsWrittenAndOralExpressionRequirement: CollegeOrMajorRequirement = {
     ['written expression', 'oral expression', 'First-Year Writing Seminar'].some(
       keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
     ),
-  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 9,
 };
@@ -201,7 +197,6 @@ const calsWrittenExpressionRequirement: CollegeOrMajorRequirement = {
     ['written expression', 'First-Year Writing Seminar'].some(
       keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
     ),
-  subRequirementProgress: 'any-can-count',
   fulfilledBy: 'credits',
   minCount: 6,
 };
