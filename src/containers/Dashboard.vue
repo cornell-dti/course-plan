@@ -36,26 +36,24 @@
       />
     </div>
     <tour-window
-      :title="welcome"
-      :text="welcomeBodytext"
-      :exit="welcomeExit"
-      :buttonText="welcomeButtonText"
+      title="Welcome Cornellian!"
+      text="View your college requirements, plan your semesters and courses, and more."
+      exit="No, I want to skip this"
+      button-text="Start Tutorial"
       @hide="hideWelcomeTour()"
       @skip="welcomeHidden = false"
       v-if="welcomeHidden"
-    >
-    </tour-window>
+    />
     <tour-window
-      :title="congrats"
-      :text="congratsBodytext"
-      :exit="congratsExit"
-      :buttonText="congratsButtonText"
+      title="Congratulations! That’s a wrap"
+      text="Other than this, there is more you can explore, so feel free to surf through CoursePlan"
+      exit=""
+      button-text="Start Planning"
       :image="congratsBodyImage"
-      :alt="congratsBodyAlt"
+      alt="surf"
       @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
-    >
-    </tour-window>
+    />
     <div>
       <bottom-bar
         v-if="(!isOpeningRequirements && isTablet) || !isTablet"
@@ -105,23 +103,15 @@ export default Vue.extend({
       isTablet: window.innerWidth <= 878,
       isMobile: window.innerWidth <= 440,
       maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4,
-      welcome: 'Welcome Cornellian!',
-      welcomeBodytext: 'View your college requirements, plan your semesters and courses, and more.',
-      welcomeExit: 'No, I want to skip this',
-      welcomeButtonText: 'Start Tutorial',
       welcomeHidden: false,
       startTour: false,
       showTourEndWindow: false,
-      congrats: 'Congratulations! That’s a wrap',
-      congratsBodytext:
-        'Other than this, there is more you can explore, so feel free to surf through CoursePlan',
-      congratsBodyImage: surfing,
-      congratsBodyAlt: 'surf',
-      congratsExit: '',
-      congratsButtonText: 'Start Planning',
     };
   },
   computed: {
+    congratsBodyImage(): string {
+      return surfing;
+    },
     userName(): FirestoreUserName {
       return store.state.userName;
     },
