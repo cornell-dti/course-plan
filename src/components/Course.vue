@@ -1,18 +1,12 @@
 <template>
   <div :class="{ 'course--min': compact, active: active }" class="course" @click="courseOnClick()">
-    <div
-      class="course-color"
-      :style="cssVars"
-      :class="{ 'course-color--active': active, 'course-color--min': compact }"
-    >
+    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
       <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
     </div>
-    <div :class="{ 'course-content--min': compact }" class="course-content">
-      <div :class="{ 'course-main--min': compact }" class="course-main">
-        <div :class="{ 'course-top--min': compact }" class="course-top">
-          <div :class="{ 'course-code--min': compact }" class="course-code">
-            {{ courseObj.code }}
-          </div>
+    <div class="course-content">
+      <div class="course-main">
+        <div class="course-top">
+          <div class="course-code">{{ courseObj.code }}</div>
           <div v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
@@ -170,20 +164,18 @@ export default Vue.extend({
   &--min {
     width: 10rem;
     height: 2.125rem;
+
+    & .course-content {
+      margin: 0 0.5em;
+    }
   }
 
   &-main {
-    &--min {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      justify-content: space-between;
-    }
+    width: 100%;
   }
 
   &-color {
     width: 1.25rem;
-    height: 5.625rem;
     border-radius: 0.42rem 0 0 0.42rem;
     background-color: var(--bg-color);
     display: flex;
@@ -191,16 +183,7 @@ export default Vue.extend({
     justify-content: center;
 
     &--active {
-      width: 19px;
-      height: 5.5rem;
-    }
-
-    &--min {
-      height: 2.125rem;
-
-      &.course-color--active {
-        height: 2rem;
-      }
+      width: 1.188rem;
     }
   }
 
@@ -216,41 +199,25 @@ export default Vue.extend({
   }
 
   &-content {
-    width: 18rem;
+    flex: 1 1 auto;
     margin: 0 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    &--min {
-      width: 9.25rem;
-      margin-bottom: 0;
-      margin-top: 0;
-      margin-right: 0.5rem;
-      margin-left: 0.5rem;
-    }
   }
 
   &-top {
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
-
-    &--min {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-    }
   }
 
   &-code {
+    flex: 1 1 auto;
     font-size: 14px;
     line-height: 17px;
     color: $primaryGray;
-
-    &--min {
-      color: $primaryGray;
-    }
   }
 
   &-name {
@@ -308,13 +275,6 @@ export default Vue.extend({
 
 .active {
   border: 1px solid $yuxuanBlue;
-  height: 5.625rem;
-  width: 21.375rem;
-
-  &.course--min {
-    height: 2.125rem;
-    width: 10rem;
-  }
 }
 
 @media only screen and (max-width: 878px) {
@@ -324,53 +284,9 @@ export default Vue.extend({
       width: 10rem;
       height: 2.125rem;
     }
-    &-main {
-      &--min {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        justify-content: space-between;
-      }
-    }
     &-color {
-      width: 1.25rem;
-      height: 5.625rem;
-      border-radius: 0.42rem 0 0 0.42rem;
-      background-color: var(--bg-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
       &--active {
-        width: 19px;
-        height: 5.5rem;
-      }
-
-      &--min {
-        height: 2.125rem;
-
-        &.course-color--active {
-          height: 2rem;
-        }
-      }
-    }
-
-    &-content {
-      width: 17rem;
-      &--min {
-        width: 9.25rem;
-        margin-bottom: 0;
-        margin-top: 0;
-        margin-right: 0.5rem;
-      }
-    }
-
-    &-top {
-      width: 14rem;
-      &--min {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
+        width: 1.188rem;
       }
     }
 
@@ -380,16 +296,6 @@ export default Vue.extend({
 
     &-menu {
       right: -1rem;
-    }
-  }
-  .active {
-    border: 1px solid $yuxuanBlue;
-    height: 5.625rem;
-    width: 17rem;
-
-    &.course--min {
-      height: 2.125rem;
-      width: 10rem;
     }
   }
 }
