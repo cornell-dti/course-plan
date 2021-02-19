@@ -53,8 +53,10 @@
         :class="{ 'semesterView-wrapper--compact': compact }"
       >
         <semester
-          v-bind="sem"
           ref="semester"
+          :type="sem.type"
+          :year="sem.year"
+          :courses="sem.courses"
           :semesterIndex="semesterIndex"
           :compact="compact"
           :activatedCourse="activatedCourse"
@@ -122,7 +124,7 @@ export default Vue.extend({
       confirmationText: '',
       cautionText: '',
       key: 0,
-      activatedCourse: {},
+      activatedCourse: {} as FirestoreSemesterCourse,
       duplicatedCourseCodeList: [] as readonly string[],
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,

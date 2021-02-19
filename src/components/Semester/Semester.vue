@@ -82,7 +82,6 @@
             class="semester-courseWrapper"
           >
             <course
-              v-bind="course"
               :courseObj="course"
               :duplicatedCourseCodeList="duplicatedCourseCodeList"
               :isReqCourse="false"
