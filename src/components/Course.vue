@@ -179,7 +179,7 @@ export default Vue.extend({
     justify-content: center;
 
     &--active {
-      width: 19px;
+      width: 1.188rem;
     }
   }
 
@@ -282,7 +282,7 @@ export default Vue.extend({
     }
     &-color {
       &--active {
-        width: 19px;
+        width: 1.188rem;
       }
     }
 
