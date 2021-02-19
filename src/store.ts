@@ -77,6 +77,12 @@ const store: TypedVuexStore = new TypedVuexStore({
     ) {
       state.toggleableRequirementChoices = toggleableRequirementChoices;
     },
+    setSelectableRequirementChoices(
+      state: VuexStoreState,
+      selectableRequirementChoices: AppSelectableRequirementChoices
+    ) {
+      state.selectableRequirementChoices = selectableRequirementChoices;
+    },
     setUserRequirementChoices(
       state: VuexStoreState,
       selectableRequirementChoices: AppSelectableRequirementChoices
@@ -110,7 +116,8 @@ const autoRecomputeRequirements = (): (() => void) =>
     if (
       payload.type === 'setOnboardingData' ||
       payload.type === 'setSemesters' ||
-      payload.type === 'setToggleableRequirementChoices'
+      payload.type === 'setToggleableRequirementChoices' ||
+      payload.type === 'setSelectableRequirementChoices'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -143,6 +150,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   let onboardingDataInitialLoadFinished = false;
   let semestersInitialLoadFinished = false;
   let toggleableRequirementChoiceInitialLoadFinished = false;
+  let selectableRequirementChoiceInitialLoadFinished = false;
   let subjectColorInitialLoadFinished = false;
   let uniqueIncrementerInitialLoadFinished = false;
 
@@ -154,6 +162,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       onboardingDataInitialLoadFinished &&
       semestersInitialLoadFinished &&
       toggleableRequirementChoiceInitialLoadFinished &&
+      selectableRequirementChoiceInitialLoadFinished &&
       subjectColorInitialLoadFinished &&
       uniqueIncrementerInitialLoadFinished &&
       !emitted
@@ -213,6 +222,14 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       toggleableRequirementChoiceInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
+  const selectableRequirementChoiceUnsubscriber = fb.selectableRequirementChoicesCollection
+    .doc(simplifiedUser.email)
+    .onSnapshot(snapshot => {
+      const selectableRequirementChoices = snapshot.data() || {};
+      store.commit('setSelectableRequirementChoices', selectableRequirementChoices);
+      selectableRequirementChoiceInitialLoadFinished = true;
+      emitOnLoadWhenLoaded();
+    });
   const subjectColorUnsubscriber = fb.subjectColorsCollection
     .doc(simplifiedUser.email)
     .onSnapshot(snapshot => {
@@ -235,6 +252,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     userNameUnsubscriber();
     onboardingDataUnsubscriber();
     toggleableRequirementChoiceUnsubscriber();
+    selectableRequirementChoiceUnsubscriber();
     subjectColorUnsubscriber();
     uniqueIncrementerUnsubscriber();
     requirementComputationUnsubscriber();

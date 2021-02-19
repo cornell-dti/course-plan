@@ -153,9 +153,6 @@ export default Vue.extend({
     toggleableRequirementChoices(): AppToggleableRequirementChoices {
       return store.state.toggleableRequirementChoices;
     },
-    selectableRequirementChoices(): AppSelectableRequirementChoices {
-      return store.state.selectableRequirementChoices;
-    },
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },

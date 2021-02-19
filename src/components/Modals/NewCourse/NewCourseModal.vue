@@ -71,6 +71,7 @@ import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import store from '@/store';
+import { chooseSelectableRequirementOption } from '@/global-firestore-data';
 
 export default Vue.extend({
   components: { CourseSelector, FlexibleModal, NewSemester, SelectedRequirementEditor },
@@ -101,6 +102,9 @@ export default Vue.extend({
     },
     seasonImg(): Readonly<Record<FirestoreSemesterType, string>> {
       return { Fall: fall, Spring: spring, Winter: winter, Summer: summer };
+    },
+    selectableRequirementChoices(): AppSelectableRequirementChoices {
+      return store.state.selectableRequirementChoices;
     },
   },
   methods: {
@@ -170,6 +174,7 @@ export default Vue.extend({
     addCourse() {
       if (this.selectedCourse == null) return;
       const { roster, title } = this.selectedCourse;
+      const requirementID = this.selectedRequirementID;
 
       const courseCode = title.substring(0, title.indexOf(':'));
       const subject = courseCode.split(' ')[0];
@@ -186,6 +191,7 @@ export default Vue.extend({
               const course = { ...resultJSONclass, roster };
               if (this.courseIsAddable) {
                 this.$emit('add-course', course, this.season, this.year);
+                this.chooseSelectableRequirementOption(course.crseId.toString(), requirementID);
               }
             }
           });
@@ -193,6 +199,17 @@ export default Vue.extend({
 
       this.reset();
       this.closeCurrentModal();
+    },
+    chooseSelectableRequirementOption(
+      courseID: string,
+      requirementID: string
+    ): void {
+      if (courseID && requirementID) {
+        chooseSelectableRequirementOption({
+          ...this.selectableRequirementChoices,
+          [courseID]: requirementID,
+        });
+      }
     },
     onSelectedChange(selected: string) {
       this.selectedRequirementID = selected;
