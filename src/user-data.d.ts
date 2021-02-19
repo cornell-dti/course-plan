@@ -105,7 +105,7 @@ type AppBottomBarCourse = {
   readonly name: string;
   readonly credits: number;
   readonly semesters: readonly string[];
-  color: string;
+  readonly color: string;
   readonly lastRoster: string;
   readonly instructors: readonly string[];
   readonly distributions: readonly string[];

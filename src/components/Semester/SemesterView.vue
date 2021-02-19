@@ -60,7 +60,7 @@
           :activatedCourse="activatedCourse"
           :duplicatedCourseCodeList="duplicatedCourseCodeList"
           :isFirstSem="checkIfFirstSem(sem)"
-          @updateBar="updateBar"
+          @course-onclick="courseOnClick"
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
@@ -98,6 +98,7 @@ import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
 import { editSemesters } from '@/global-firestore-data';
+import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -297,15 +298,14 @@ export default Vue.extend({
           .sort(this.compare)
       );
     },
-    updateBar(course: FirestoreSemesterCourse, colorJustChanged: string, color: string) {
+    courseOnClick(course: FirestoreSemesterCourse) {
       this.activatedCourse = course;
       this.key += 1;
-      this.$emit('updateBar', course, colorJustChanged, color);
       this.isCourseClicked = true;
     },
     closeBar() {
       if (!this.isCourseClicked) {
-        this.$emit('close-bar');
+        closeBottomBar();
       }
       this.isCourseClicked = false;
     },

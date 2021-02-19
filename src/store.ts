@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
 import * as fb from './firebaseConfig';
-import computeGroupedRequirementFulfillmentReports from './requirements/requirement-fronend-computation';
+import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import getCurrentSeason, { checkNotNull, getCurrentYear } from './utilities';
 

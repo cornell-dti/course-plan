@@ -92,7 +92,7 @@
               :semesterIndex="semesterIndex + 1"
               @delete-course="deleteCourse"
               @color-course="colorCourse"
-              @updateBar="updateBar"
+              @course-on-click="courseOnClick"
               @edit-course-credit="editCourseCredit"
             />
           </div>
@@ -367,8 +367,8 @@ export default Vue.extend({
         })
       );
     },
-    updateBar(course: FirestoreSemesterCourse, colorJustChanged: string, color: string) {
-      this.$emit('updateBar', course, colorJustChanged, color);
+    courseOnClick(course: FirestoreSemesterCourse) {
+      this.$emit('course-onclick', course);
     },
     editCourseCredit(credit: number, uniqueID: number) {
       this.$emit(
