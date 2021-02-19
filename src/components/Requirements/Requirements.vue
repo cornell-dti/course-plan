@@ -214,7 +214,10 @@ export default Vue.extend({
       this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray).then(fetchedCourses => {
         const lastCourse = fetchedCourses[fetchedCourses.length - 1];
         this.lastLoadedShowAllCourseId = lastCourse.crseId;
-        this.showAllCourses = { name: showAllCourses.requirementName, courses: fetchedCourses };
+        this.showAllCourses = {
+          name: showAllCourses.requirementName,
+          courses: fetchedCourses,
+        };
       });
     },
     onScrollSeeAll(event: Event) {
