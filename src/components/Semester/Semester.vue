@@ -4,6 +4,7 @@
       class="semester-modal"
       :class="{ 'modal--block': isCourseModalOpen }"
       :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
+      :isSelfCheck="false"
       @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"

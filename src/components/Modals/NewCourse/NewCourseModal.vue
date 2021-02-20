@@ -90,6 +90,7 @@ export default Vue.extend({
   },
   props: {
     isCourseModelSelectingSemester: { type: Boolean, required: true },
+    isSelfCheck: { type: Boolean, required: true },
   },
   computed: {
     leftButtonText(): string {
@@ -109,6 +110,10 @@ export default Vue.extend({
   methods: {
     selectCourse(result: MatchingCourseSearchResult) {
       this.selectedCourse = result;
+      if(this.isSelfCheck) {
+        this.addCourse();
+        return;
+      }
       this.getReqsRelatedToCourse(result);
     },
     getReqsRelatedToCourse(selectedCourse: MatchingCourseSearchResult) {

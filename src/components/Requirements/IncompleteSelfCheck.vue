@@ -1,6 +1,15 @@
-<!-- Add Course 1 text like other things, Dropdown like SubRequirement.vue, + Add course to schedule option -->
 <template>
   <div class="incompleteselfcheck">
+    <new-course-modal
+      class="incompleteselfcheck-modal"
+      :class="{ 'incompleteselfcheck-modal--block': isCourseModalOpen }"
+      :isCourseModelSelectingSemester="true"
+      :isSelfCheck="true"
+      @check-course-duplicate="checkCourseDuplicate"
+      @close-course-modal="closeCourseModal"
+      @add-course="addNewCourse"
+      ref="modal"
+    />
     <div class="dropdown-select-wrapper">
       <div
         class="dropdown-select dropdown-input"
@@ -24,9 +33,15 @@
           v-for="optionName in Object.keys(selfCheckCourses)"
           :key="optionName"
           class="dropdown-content-item"
-          @click="addCourse(optionName)"
+          @click="addExistingCourse(optionName)"
         >
           <span>{{ optionName }}</span>
+        </div>
+        <div
+          class="dropdown-content-item"
+          @click="openCourseModal()"
+        >
+          <span>{{ '+ Add new course to schedule' }}</span>
         </div>
       </div>
     </div>
@@ -38,18 +53,34 @@ import Vue, { PropType } from 'vue';
 
 import { clickOutside } from '@/utilities';
 import store, { initializeFirestoreListeners } from '@/store';
+import { editSemesters } from '@/global-firestore-data';
+import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
+import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
+
+// enum to define seasons as integers in season order
+const SeasonsEnum = Object.freeze({
+  Winter: 0,
+  Spring: 1,
+  Summer: 2,
+  Fall: 3,
+});
 
 type Data = {
   showDropdown: boolean;
+  isCourseModalOpen: boolean;
 };
 
 export default Vue.extend({
+  components: {
+    NewCourseModal,
+  },
   props: {
   },
   data(): Data {
     return {
-      showDropdown: false
+      showDropdown: false,
+      isCourseModalOpen: false
     };
   },
   computed: {
@@ -71,11 +102,76 @@ export default Vue.extend({
     closeMenuIfOpen() {
       this.showDropdown = false;
     },
-    addCourse(option: string) {
+    addExistingCourse(option: string) {
       this.showDropdown = false;
       this.$emit('addCourse', this.selfCheckCourses[option]);
     },
-    // TODO: open add modal for couse not in list
+    addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterType, year: number) {
+      this.showDropdown = false;
+      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(course);
+      this.addCourseToSemester(season, year, newCourse);
+      this.$emit('addCourse', newCourse);
+    },
+    openCourseModal() {
+      this.isCourseModalOpen = true;
+    },
+    closeCourseModal() {
+      this.isCourseModalOpen = false;
+    },
+    checkCourseDuplicate(key: string) {
+      // if (this.courses) {
+      //   // @ts-ignore
+      //   this.$refs.modal.courseIsAddable = true;
+      //   this.courses.forEach(course => {
+      //     if (course.code === key) {
+      //       // @ts-ignore
+      //       this.$refs.modal.courseIsAddable = false;
+      //       this.$emit('open-caution-modal');
+      //     }
+      //   });
+      // }
+    },
+    
+    addCourseToSemester(
+      season: FirestoreSemesterType,
+      year: number,
+      newCourse: FirestoreSemesterCourse
+    ) {
+      editSemesters(oldSemesters => {
+        let semesterFound = false;
+        const newSemestersWithCourse = oldSemesters.map(sem => {
+          if (sem.type === season && sem.year === year) {
+            semesterFound = true;
+            return { ...sem, courses: [...sem.courses, newCourse] };
+          }
+          return sem;
+        });
+        if (semesterFound) return newSemestersWithCourse;
+        return [...oldSemesters, this.createSemester([newCourse], season, year)].sort(this.compare);
+      });
+    },
+    createSemester(
+      courses: readonly FirestoreSemesterCourse[],
+      type: FirestoreSemesterType,
+      year: number
+    ) {
+      return { courses, type, year };
+    },
+    compare(a: FirestoreSemester, b: FirestoreSemester): number {
+      if (a.type === b.type && a.year === b.year) {
+        return 0;
+      }
+      if (a.year > b.year) {
+        return -1;
+      }
+      if (a.year < b.year) {
+        return 1;
+      }
+      if (SeasonsEnum[a.type] < SeasonsEnum[b.type]) {
+        return 1;
+      }
+      return -1;
+    },
   }
 });
 </script>
@@ -130,8 +226,6 @@ export default Vue.extend({
   }
   &-content {
     z-index: 2;
-    position: absolute;
-    width: 88%;
     background: $white;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 7px;
@@ -160,4 +254,23 @@ export default Vue.extend({
     width: 100%;
   }
 }
+
+  /* The Modal (background) */
+.incompleteselfcheck-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+
+  &--block {
+    display: block;
+  }
+}
+
 </style>

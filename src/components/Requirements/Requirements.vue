@@ -257,9 +257,7 @@ export default Vue.extend({
   background-color: $white;
 }
 .fixed {
-  position: fixed;
   top: 0;
-  left: 4.5rem;
   overflow-y: scroll;
   overflow-x: hidden;
 }
