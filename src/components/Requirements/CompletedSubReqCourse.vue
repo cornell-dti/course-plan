@@ -17,10 +17,18 @@
         </div>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
-        <req-course
+        <req-course v-if="!isSelfCheck"
           :color="courseInfoAndSemesterLabel.color"
           :subject="courseTaken.subject"
           :number="courseTaken.number"
+          :compact="true"
+          :isCompletedReqCourse="true"
+          class="completed-reqCourses-course-object"
+        />
+        <req-course v-else
+          :color="courseInfoAndSemesterLabel.color"
+          :subject="selfCheckCourse.code.split(' ')[0]"
+          :number="selfCheckCourse.code.split(' ')[1]"
           :compact="true"
           :isCompletedReqCourse="true"
           class="completed-reqCourses-course-object"
@@ -45,7 +53,9 @@ export default Vue.extend({
   components: { ReqCourse },
   props: {
     subReqCourseId: { type: Number, required: true },
-    courseTaken: { type: Object as PropType<CourseTaken>, required: true },
+    courseTaken: { type: Object as PropType<CourseTaken>, required: false, default: null },
+    selfCheckCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: false, default: null },
+    isSelfCheck: { type: Boolean, required: true },
   },
   computed: {
     semesters(): readonly FirestoreSemester[] {
@@ -59,9 +69,9 @@ export default Vue.extend({
     },
     isTransferCredit(): boolean {
       return (
-        this.courseTaken.subject === 'AP' ||
-        this.courseTaken.subject === 'IB' ||
-        this.courseTaken.subject === 'Swim'
+        (!this.isSelfCheck && this.courseTaken.subject === 'AP') ||
+        (!this.isSelfCheck && this.courseTaken.subject === 'IB') ||
+        (!this.isSelfCheck && this.courseTaken.subject === 'Swim')
       );
     },
     courseInfoAndSemesterLabel(): {
@@ -72,11 +82,21 @@ export default Vue.extend({
       if (this.isTransferCredit) {
         return { semesterLabel: 'Transfer Credits', color: transferCreditColor, uniqueID: 0 };
       }
-      const courseTakenCode = `${this.courseTaken.subject} ${this.courseTaken.number}`;
+      
+      let courseTakenCode : string; 
+      let courseId : number;
+      if(this.isSelfCheck) {
+        courseTakenCode = this.selfCheckCourse.code;
+        courseId = this.selfCheckCourse.crseId;
+      } else {
+        courseTakenCode = `${this.courseTaken.subject} ${this.courseTaken.number}`;
+        courseId = this.courseTaken.courseId;
+      }
+
       for (let i = 0; i < this.semesters.length; i += 1) {
         const semester = this.semesters[i];
         const filteredSemesterCourses = semester.courses.filter(
-          course => course.crseId === this.courseTaken.courseId && course.code === courseTakenCode
+          course => course.crseId === courseId && course.code === courseTakenCode
         );
         if (filteredSemesterCourses.length > 0) {
           return {

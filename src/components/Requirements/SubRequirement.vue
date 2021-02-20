@@ -77,6 +77,7 @@
             <completed-sub-req-course
               :subReqCourseId="id"
               :courseTaken="subReqCourseSlot.courses[0]"
+              :isSelfCheck="false"
               @deleteCourseFromSemesters="deleteCourseFromSemesters"
             />
           </div>
@@ -98,7 +99,18 @@
         </div>
       </div>
       <div v-if="displayDescription && subReq.requirement.fulfilledBy === 'self-check'" class="subreqcourse-wrapper">
-        <incomplete-self-check />
+        <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
+          <completed-sub-req-course
+            :subReqCourseId="id"
+            :selfCheckCourse="selfCheckCourse"
+            :isSelfCheck="true"
+            @deleteCourseFromSemesters="deleteCourseFromSemesters"
+          />
+        </div>
+        <!-- TODO: only show incomplete-self-check if all courses not added -->
+        <incomplete-self-check
+          @addCourse="addSelfCheckCourse"
+        />
       </div>
     </div>
   </div>
@@ -134,6 +146,7 @@ type Data = {
   displayDescription: boolean;
   subReqFetchedCourseObjectsNotTakenArray: FirestoreSemesterCourse[];
   dataReady: boolean;
+  fulfilledSelfCheckCourses: FirestoreSemesterCourse[];
 };
 
 export default Vue.extend({
@@ -163,6 +176,7 @@ export default Vue.extend({
       displayDescription: false,
       subReqFetchedCourseObjectsNotTakenArray: [], // array of fetched course objects
       dataReady: false, // true if dataReady for all subReqCourses. false otherwise
+      fulfilledSelfCheckCourses: [],
     };
   },
   computed: {
@@ -224,6 +238,9 @@ export default Vue.extend({
         default:
           return this.subReq.requirement.courses;
       }
+    },
+    addSelfCheckCourse(course : FirestoreSemesterCourse) {
+      this.fulfilledSelfCheckCourses.push(course);
     },
     generateSubReqCoursesArray(): SubReqCourseSlot[] {
       const subReqCoursesArray: SubReqCourseSlot[] = [];
@@ -314,6 +331,18 @@ export default Vue.extend({
       });
     },
     deleteCourseFromSemesters(uniqueId: number) {
+      // find and remove self-check course on sidebar
+      let indexToRemove = -1;
+      if(this.subReq.requirement.fulfilledBy === 'self-check') {
+        for(let i = 0; i < this.fulfilledSelfCheckCourses.length; i+=1) {
+          if(this.fulfilledSelfCheckCourses[i].uniqueID === uniqueId) {
+            indexToRemove = i;
+          }
+        }
+      }
+      if(indexToRemove !== -1) {
+        this.fulfilledSelfCheckCourses.splice(indexToRemove, 1);
+      }
       this.$emit('deleteCourseFromSemesters', uniqueId);
     },
   },

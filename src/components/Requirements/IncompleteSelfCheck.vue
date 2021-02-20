@@ -21,7 +21,7 @@
         v-if="showDropdown"
       >
         <div
-          v-for="optionName in selfCheckCourses"
+          v-for="optionName in Object.keys(selfCheckCourses)"
           :key="optionName"
           class="dropdown-content-item"
           @click="addCourse(optionName)"
@@ -53,11 +53,12 @@ export default Vue.extend({
     };
   },
   computed: {
-    selfCheckCourses(): string[] {
-      const courses:string[] = [];
+    selfCheckCourses(): Record<string, FirestoreSemesterCourse> {
+      // TODO - limit to courses that don't have requirements they are fulfilling
+      const courses:Record<string, FirestoreSemesterCourse> = {}
       store.state.semesters.forEach((semester) => {
         semester.courses.forEach((course) => {
-          courses.push(course.code);
+          courses[course.code] = course;
         });
       });
       return courses;
@@ -72,8 +73,9 @@ export default Vue.extend({
     },
     addCourse(option: string) {
       this.showDropdown = false;
-      // TODO: open add modal for this course
+      this.$emit('addCourse', this.selfCheckCourses[option]);
     },
+    // TODO: open add modal for couse not in list
   }
 });
 </script>
