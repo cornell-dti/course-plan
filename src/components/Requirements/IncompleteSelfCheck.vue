@@ -21,7 +21,7 @@
         v-if="showDropdown"
       >
         <div
-          v-for="optionName in testCourseList"
+          v-for="optionName in selfCheckCourses"
           :key="optionName"
           class="dropdown-content-item"
           @click="addCourse(optionName)"
@@ -37,11 +37,11 @@
 import Vue, { PropType } from 'vue';
 
 import { clickOutside } from '@/utilities';
+import store, { initializeFirestoreListeners } from '@/store';
 
 
 type Data = {
   showDropdown: boolean;
-  testCourseList: Array<string>;
 };
 
 export default Vue.extend({
@@ -49,11 +49,19 @@ export default Vue.extend({
   },
   data(): Data {
     return {
-      showDropdown: false,
-      testCourseList: ["CS 3152", "INFO 3300"]
+      showDropdown: false
     };
   },
   computed: {
+    selfCheckCourses(): string[] {
+      const courses:string[] = [];
+      store.state.semesters.forEach((semester) => {
+        semester.courses.forEach((course) => {
+          courses.push(course.code);
+        });
+      });
+      return courses;
+    },
   },
   directives: {
     'click-outside': clickOutside,
