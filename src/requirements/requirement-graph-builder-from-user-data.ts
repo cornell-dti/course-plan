@@ -1,3 +1,4 @@
+import { requirementAllowDoubleCounting } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraph from './requirement-graph-builder';
 import requirementJson from './typed-requirement-json';
@@ -23,7 +24,8 @@ function forfeitTransferCredit(coursesTaken: readonly CourseTaken[]): readonly C
 export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],
   { college, major: majors, minor: minors }: AppOnboardingData,
-  toggleableRequirementChoices: AppToggleableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  selectableRequirementChoices: AppSelectableRequirementChoices
 ): {
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<
     RequirementWithIDSourceType,
@@ -86,7 +88,10 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         );
       })
       .flat(),
-  ];
+  ].map(requirement => ({
+    ...requirement,
+    allowCourseDoubleCounting: requirementAllowDoubleCounting(requirement, majors) || undefined,
+  }));
   type UserChoiceOnFulfillmentStrategy = {
     readonly correspondingRequirement: RequirementWithIDSourceType;
     readonly coursesOfChosenFulfillmentStrategy: readonly CourseTaken[];
@@ -174,16 +179,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         .flat();
     },
     getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy: it => it,
-    allowDoubleCounting: requirement => {
-      // All minor requirements are automatically double-countable.
-      if (requirement.sourceType === 'Minor') return true;
-      if (requirement.sourceType === 'Major') {
-        if (majors == null) throw new Error("shouldn't get here since we have major requirements!");
-        // If it's not the first major, then it's double countable.
-        if (requirement.sourceSpecificName !== majors[0]) return true;
-      }
-      return requirement.allowCourseDoubleCounting || false;
-    },
+    allowDoubleCounting: requirement => requirement.allowCourseDoubleCounting || false,
   });
 
   return {

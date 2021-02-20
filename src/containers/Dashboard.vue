@@ -15,7 +15,6 @@
           class="dashboard-nav"
           @editProfile="editProfile"
           @toggleRequirementsBar="toggleRequirementsBar"
-          :isBottomPreview="bottomBar.isPreview"
         />
         <requirements
           class="dashboard-reqs"
@@ -30,46 +29,36 @@
         ref="semesterview"
         :compact="compactVal"
         :startTour="startTour"
-        :isBottomBarExpanded="bottomBar.isExpanded"
-        :isBottomBar="bottomCourses.length > 0"
+        :isBottomBarExpanded="bottomBarIsExpanded"
+        :isBottomBar="hasBottomCourses"
         :isMobile="isMobile"
         @compact-updated="compactVal = $event"
-        @updateBar="updateBar"
-        @close-bar="closeBar"
       />
     </div>
     <tour-window
-      :title="welcome"
-      :text="welcomeBodytext"
-      :exit="welcomeExit"
-      :buttonText="welcomeButtonText"
+      title="Welcome Cornellian!"
+      text="View your college requirements, plan your semesters and courses, and more."
+      exit="No, I want to skip this"
+      button-text="Start Tutorial"
       @hide="hideWelcomeTour()"
       @skip="welcomeHidden = false"
       v-if="welcomeHidden"
-    >
-    </tour-window>
+    />
     <tour-window
-      :title="congrats"
-      :text="congratsBodytext"
-      :exit="congratsExit"
-      :buttonText="congratsButtonText"
+      title="Congratulations! That’s a wrap"
+      text="Other than this, there is more you can explore, so feel free to surf through CoursePlan"
+      exit=""
+      button-text="Start Planning"
       :image="congratsBodyImage"
-      :alt="congratsBodyAlt"
+      alt="surf"
       @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
-    >
-    </tour-window>
+    />
     <div>
       <bottom-bar
-        v-if="bottomCourses.length > 0 && ((!isOpeningRequirements && isTablet) || !isTablet)"
-        :bottomCourses="bottomCourses"
-        :seeMoreCourses="seeMoreCourses"
-        :bottomCourseFocus="bottomBar.bottomCourseFocus"
-        :isExpanded="bottomBar.isExpanded"
+        v-if="(!isOpeningRequirements && isTablet) || !isTablet"
+        :isExpanded="bottomBarIsExpanded"
         :maxBottomBarTabs="maxBottomBarTabs"
-        @close-bar="closeBar"
-        @open-bar="openBar"
-        @change-focus="changeBottomCourseFocus"
       />
     </div>
   </div>
@@ -90,7 +79,7 @@ import surfing from '@/assets/images/surfing.svg';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { editSemesters } from '@/global-firestore-data';
-import { firestoreSemesterCourseToBottomBarCourse } from '@/user-data-converter';
+import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
 
 const tour = introJs();
 tour.setOption('exitOnEsc', 'false');
@@ -108,33 +97,21 @@ export default Vue.extend({
     return {
       loaded: true,
       compactVal: false,
-      bottomCourses: [] as AppBottomBarCourse[],
-      seeMoreCourses: [] as AppBottomBarCourse[],
-      // Default bottombar info without info
-      bottomBar: { isPreview: false, isExpanded: false, bottomCourseFocus: 0 },
       isOnboarding: false,
       isEditingProfile: false,
       isOpeningRequirements: false,
       isTablet: window.innerWidth <= 878,
       isMobile: window.innerWidth <= 440,
       maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4,
-      welcome: 'Welcome Cornellian!',
-      welcomeBodytext: 'View your college requirements, plan your semesters and courses, and more.',
-      welcomeExit: 'No, I want to skip this',
-      welcomeButtonText: 'Start Tutorial',
       welcomeHidden: false,
       startTour: false,
       showTourEndWindow: false,
-      congrats: 'Congratulations! That’s a wrap',
-      congratsBodytext:
-        'Other than this, there is more you can explore, so feel free to surf through CoursePlan',
-      congratsBodyImage: surfing,
-      congratsBodyAlt: 'surf',
-      congratsExit: '',
-      congratsButtonText: 'Start Planning',
     };
   },
   computed: {
+    congratsBodyImage(): string {
+      return surfing;
+    },
     userName(): FirestoreUserName {
       return store.state.userName;
     },
@@ -143,6 +120,12 @@ export default Vue.extend({
     },
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
+    },
+    hasBottomCourses(): boolean {
+      return immutableBottomBarState.bottomCourses.length > 0;
+    },
+    bottomBarIsExpanded(): boolean {
+      return immutableBottomBarState.isExpanded;
     },
   },
   created() {
@@ -166,10 +149,6 @@ export default Vue.extend({
       this.isMobile = window.innerWidth <= 440;
       this.isTablet = window.innerWidth <= 878;
       this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
-      if (this.bottomBar.bottomCourseFocus >= this.maxBottomBarTabs) {
-        this.changeBottomCourseFocus(this.maxBottomBarTabs - 1);
-      }
-      this.updateBarTabs();
       this.updateSemesterView();
     },
     toggleRequirementsBar() {
@@ -186,121 +165,6 @@ export default Vue.extend({
       if (!this.isMobile) {
         this.showTourEndWindow = true;
       }
-    },
-    changeBottomCourseFocus(newBottomCourseFocus: number) {
-      this.bottomBar.bottomCourseFocus = newBottomCourseFocus;
-    },
-
-    updateBar(course: FirestoreSemesterCourse, colorJustChanged: string, color: string) {
-      const [subject, number] = course.code.split(' ');
-      // Update Bar Information
-      const courseToAdd = firestoreSemesterCourseToBottomBarCourse(course);
-
-      // expand bottombar if first course added
-      if (this.bottomCourses.length === 0) {
-        this.bottomBar.bottomCourseFocus = 0;
-        this.openBar();
-      }
-
-      let bottomCourseIndex = -1;
-      // if course already exists in bottomCourses, first remove course
-      for (let i = 0; i < this.bottomCourses.length; i += 1) {
-        // if colorJustChanged and course already exists, just update course color
-        if (this.bottomCourses[i].uniqueID === course.uniqueID) {
-          if (colorJustChanged) {
-            this.bottomCourses[i].color = color;
-          } else {
-            bottomCourseIndex = i;
-          }
-        }
-      }
-
-      if (bottomCourseIndex < 0) {
-        // Prepending bottomCourse to front of bottom courses array if bottomCourses < this.maxBottomBarTabs
-        // Do not add course to bottomCourses if color was only changed
-        if (this.bottomCourses.length < this.maxBottomBarTabs && !colorJustChanged) {
-          this.bottomCourses.unshift(courseToAdd);
-        } else {
-          // else check no dupe in seeMoreCourses and add to seeMoreCourses
-          for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-            // if colorJustChanged and course already exists in seeMoreCourses, just update course color
-            if (this.seeMoreCourses[i].uniqueID === course.uniqueID && colorJustChanged) {
-              this.seeMoreCourses[i].color = color;
-            } else if (this.seeMoreCourses[i].uniqueID === course.uniqueID && !colorJustChanged) {
-              this.seeMoreCourses.splice(i, 1);
-            }
-          }
-          // Do not move courses around from bottomCourses to seeMoreCourses if only color changed
-          if (!colorJustChanged) {
-            this.bottomCourses.unshift(courseToAdd);
-            this.seeMoreCourses.unshift(this.bottomCourses[this.bottomCourses.length - 1]);
-            this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
-          }
-        }
-        bottomCourseIndex = 0;
-      }
-      if (!colorJustChanged) {
-        this.bottomBar.bottomCourseFocus = bottomCourseIndex;
-      }
-
-      this.getReviews(subject, number, review => {
-        this.bottomCourses[bottomCourseIndex].overallRating = review.classRating;
-        this.bottomCourses[bottomCourseIndex].difficulty = review.classDifficulty;
-        this.bottomCourses[bottomCourseIndex].workload = review.classWorkload;
-      });
-    },
-
-    getReviews(
-      subject: string,
-      number: string,
-      callback: (review: {
-        classRating: number;
-        classDifficulty: number;
-        classWorkload: number;
-      }) => void
-    ) {
-      fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(
-        res => {
-          res.json().then(reviews => {
-            callback(reviews[0]);
-          });
-        }
-      );
-    },
-
-    updateBarTabs() {
-      // Move courses from see more to bottom tab to fulfill increased bottom tab capacity
-      if (
-        this.maxBottomBarTabs === 4 &&
-        this.bottomCourses.length < 4 &&
-        this.seeMoreCourses.length > 0
-      ) {
-        while (this.bottomCourses.length < 4) {
-          // if any See More courses exist, move first See More Course to end of tab
-          if (this.seeMoreCourses.length > 0) {
-            const seeMoreCourseToMove = this.seeMoreCourses[0];
-            // remove course from See More Courses
-            this.seeMoreCourses.splice(0, 1);
-
-            // add course to end of bottomCourses
-            this.bottomCourses.push(seeMoreCourseToMove);
-          }
-        }
-      } else if (this.maxBottomBarTabs === 2 && this.bottomCourses.length > 2) {
-        // Move courses from bottom tab to see more for decreased max of 2
-        while (this.bottomCourses.length > 2) {
-          const bottomCourseToMove = this.bottomCourses.pop()!;
-          this.seeMoreCourses.unshift(bottomCourseToMove);
-        }
-      }
-    },
-
-    openBar() {
-      this.bottomBar.isExpanded = true;
-    },
-
-    closeBar() {
-      this.bottomBar.isExpanded = false;
     },
 
     startOnboarding() {

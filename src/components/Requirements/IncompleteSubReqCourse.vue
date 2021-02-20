@@ -38,7 +38,6 @@
           class="requirements-courseWrapper"
         >
           <course
-            v-bind="course"
             :courseObj="course"
             :isReqCourse="true"
             :compact="true"

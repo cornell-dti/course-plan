@@ -3,7 +3,7 @@
     <div
       class="fixed"
       data-intro-group="req-tooltip"
-      :v-bind:class="{ 'd-none': !shouldShowAllCourses }"
+      :class="{ 'd-none': shouldShowAllCourses }"
       :data-intro="getRequirementsTooltipText()"
       data-disable-interaction="1"
       data-step="1"
@@ -42,7 +42,6 @@
           <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
             <div class="mt-3">
               <course
-                v-bind="courseData"
                 :courseObj="courseData"
                 :compact="false"
                 :active="false"
@@ -214,7 +213,10 @@ export default Vue.extend({
       this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray).then(fetchedCourses => {
         const lastCourse = fetchedCourses[fetchedCourses.length - 1];
         this.lastLoadedShowAllCourseId = lastCourse.crseId;
-        this.showAllCourses = { name: showAllCourses.requirementName, courses: fetchedCourses };
+        this.showAllCourses = {
+          name: showAllCourses.requirementName,
+          courses: fetchedCourses,
+        };
       });
     },
     onScrollSeeAll(event: Event) {

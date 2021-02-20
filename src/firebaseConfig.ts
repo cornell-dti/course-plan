@@ -69,6 +69,17 @@ export const toggleableRequirementChoicesCollection = db
     },
   });
 
+export const selectableRequirementChoicesCollection = db
+  .collection('user-selectable-requirement-choices')
+  .withConverter<AppSelectableRequirementChoices>({
+    fromFirestore(snapshot): AppSelectableRequirementChoices {
+      return snapshot.data() as AppSelectableRequirementChoices;
+    },
+    toFirestore(userData: AppSelectableRequirementChoices) {
+      return userData;
+    },
+  });
+
 export const subjectColorsCollection = db
   .collection('user-subject-colors')
   .withConverter<Readonly<Record<string, string>>>({

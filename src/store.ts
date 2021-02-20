@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
 import * as fb from './firebaseConfig';
-import computeGroupedRequirementFulfillmentReports from './requirements/requirement-fronend-computation';
+import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import getCurrentSeason, { checkNotNull, getCurrentYear } from './utilities';
 
@@ -16,6 +16,7 @@ export type VuexStoreState = {
   onboardingData: AppOnboardingData;
   semesters: readonly FirestoreSemester[];
   toggleableRequirementChoices: AppToggleableRequirementChoices;
+  selectableRequirementChoices: AppSelectableRequirementChoices;
   requirementFulfillmentGraph: RequirementFulfillmentGraph<
     RequirementWithIDSourceType,
     CourseTaken
@@ -47,6 +48,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     semesters: [],
     toggleableRequirementChoices: {},
+    selectableRequirementChoices: {},
     // It won't be null once the app loads.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     requirementFulfillmentGraph: null!,
@@ -75,6 +77,12 @@ const store: TypedVuexStore = new TypedVuexStore({
     ) {
       state.toggleableRequirementChoices = toggleableRequirementChoices;
     },
+    setSelectableRequirementChoices(
+      state: VuexStoreState,
+      selectableRequirementChoices: AppSelectableRequirementChoices
+    ) {
+      state.selectableRequirementChoices = selectableRequirementChoices;
+    },
     setRequirementData(
       state: VuexStoreState,
       data: Pick<
@@ -102,7 +110,8 @@ const autoRecomputeRequirements = (): (() => void) =>
     if (
       payload.type === 'setOnboardingData' ||
       payload.type === 'setSemesters' ||
-      payload.type === 'setToggleableRequirementChoices'
+      payload.type === 'setToggleableRequirementChoices' ||
+      payload.type === 'setSelectableRequirementChoices'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -110,7 +119,8 @@ const autoRecomputeRequirements = (): (() => void) =>
           computeGroupedRequirementFulfillmentReports(
             state.semesters,
             state.onboardingData,
-            state.toggleableRequirementChoices
+            state.toggleableRequirementChoices,
+            state.selectableRequirementChoices
           )
         );
       }
@@ -134,6 +144,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   let onboardingDataInitialLoadFinished = false;
   let semestersInitialLoadFinished = false;
   let toggleableRequirementChoiceInitialLoadFinished = false;
+  let selectableRequirementChoiceInitialLoadFinished = false;
   let subjectColorInitialLoadFinished = false;
   let uniqueIncrementerInitialLoadFinished = false;
 
@@ -145,6 +156,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       onboardingDataInitialLoadFinished &&
       semestersInitialLoadFinished &&
       toggleableRequirementChoiceInitialLoadFinished &&
+      selectableRequirementChoiceInitialLoadFinished &&
       subjectColorInitialLoadFinished &&
       uniqueIncrementerInitialLoadFinished &&
       !emitted
@@ -204,6 +216,14 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       toggleableRequirementChoiceInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
+  const selectableRequirementChoiceUnsubscriber = fb.selectableRequirementChoicesCollection
+    .doc(simplifiedUser.email)
+    .onSnapshot(snapshot => {
+      const selectableRequirementChoices = snapshot.data() || {};
+      store.commit('setSelectableRequirementChoices', selectableRequirementChoices);
+      selectableRequirementChoiceInitialLoadFinished = true;
+      emitOnLoadWhenLoaded();
+    });
   const subjectColorUnsubscriber = fb.subjectColorsCollection
     .doc(simplifiedUser.email)
     .onSnapshot(snapshot => {
@@ -226,6 +246,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     userNameUnsubscriber();
     onboardingDataUnsubscriber();
     toggleableRequirementChoiceUnsubscriber();
+    selectableRequirementChoiceUnsubscriber();
     subjectColorUnsubscriber();
     uniqueIncrementerUnsubscriber();
     requirementComputationUnsubscriber();

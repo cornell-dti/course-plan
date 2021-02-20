@@ -105,7 +105,7 @@ type AppBottomBarCourse = {
   readonly name: string;
   readonly credits: number;
   readonly semesters: readonly string[];
-  color: string;
+  readonly color: string;
   readonly lastRoster: string;
   readonly instructors: readonly string[];
   readonly distributions: readonly string[];
@@ -121,3 +121,6 @@ type AppBottomBarCourse = {
 
 // map from requirement ID to option chosen
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
+
+// map from course ID to requirement ID
+type AppSelectableRequirementChoices = Readonly<Record<string, string>>;
