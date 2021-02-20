@@ -95,4 +95,35 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
   };
 };
 
-export default cornellCourseRosterCourseToFirebaseSemesterCourse;
+export const firestoreSemesterCourseToBottomBarCourse = ({
+  code,
+  name,
+  credits,
+  semesters,
+  color,
+  lastRoster,
+  instructors,
+  distributions,
+  enrollment,
+  lectureTimes,
+  prereqs,
+  description,
+  uniqueID,
+}: FirestoreSemesterCourse): AppBottomBarCourse => ({
+  code,
+  name,
+  credits,
+  semesters,
+  color,
+  lastRoster,
+  instructors,
+  distributions,
+  enrollment,
+  lectureTimes,
+  prereqs,
+  description,
+  uniqueID,
+  overallRating: 0,
+  difficulty: 0,
+  workload: 0,
+});

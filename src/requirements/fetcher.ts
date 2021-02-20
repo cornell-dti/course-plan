@@ -125,6 +125,7 @@ const generateSemesterJSONs = async (
 ): Promise<void> => {
   const startTime = new Date().getTime();
   const semesters = await getSemesters();
+  writeFileSync('src/assets/courses/rosters.json', JSON.stringify(semesters));
   if (doPrintDebuggingInfo) {
     console.log(`We have ${semesters.length} semesters in total.`);
   }

@@ -112,7 +112,6 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSingleRequirement('HADM 3***'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 14,
   },
@@ -132,7 +131,6 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: courseIsFWS,
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },

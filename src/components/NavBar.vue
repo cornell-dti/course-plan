@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar" :class="{ bottomPreview: isBottomPreview }">
+  <div class="navbar">
     <div class="navbar-top">
       <div class="navbar-iconWrapper">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
@@ -19,22 +19,12 @@ import Vue from 'vue';
 import firebase from 'firebase/app';
 
 export default Vue.extend({
-  props: {
-    isBottomPreview: { type: Boolean, required: true },
-  },
-
   methods: {
     logout() {
       firebase
         .auth()
         .signOut()
-        .then(
-          () => window.location.reload(),
-          error => {
-            // TODO: error
-            console.log(error);
-          }
-        );
+        .then(() => window.location.reload());
     },
     editProfile() {
       this.$emit('editProfile');
@@ -116,10 +106,6 @@ export default Vue.extend({
   &:active {
     background-image: url('~@/assets/images/navbar/logoutBlue.svg');
   }
-}
-
-.bottomPreview {
-  padding-bottom: calc(2.25rem + 15px);
 }
 
 .mobile {

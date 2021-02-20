@@ -3,7 +3,7 @@
     <div
       class="fixed"
       data-intro-group="req-tooltip"
-      :v-bind:class="{ 'd-none': !shouldShowAllCourses }"
+      :class="{ 'd-none': shouldShowAllCourses }"
       :data-intro="getRequirementsTooltipText()"
       data-disable-interaction="1"
       data-step="1"
@@ -42,7 +42,6 @@
           <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
             <div class="mt-3">
               <course
-                v-bind="courseData"
                 :courseObj="courseData"
                 :compact="false"
                 :active="false"
@@ -211,30 +210,25 @@ export default Vue.extend({
     }) {
       this.shouldShowAllCourses = true;
       this.showAllSubReqCourses = showAllCourses.subReqCoursesArray;
-      this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray)
-        .then(fetchedCourses => {
-          const lastCourse = fetchedCourses[fetchedCourses.length - 1];
-          this.lastLoadedShowAllCourseId = lastCourse.crseId;
-          this.showAllCourses = { name: showAllCourses.requirementName, courses: fetchedCourses };
-        })
-        .catch(err => {
-          console.log('Fetch Error: ', err);
-        });
+      this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray).then(fetchedCourses => {
+        const lastCourse = fetchedCourses[fetchedCourses.length - 1];
+        this.lastLoadedShowAllCourseId = lastCourse.crseId;
+        this.showAllCourses = {
+          name: showAllCourses.requirementName,
+          courses: fetchedCourses,
+        };
+      });
     },
     onScrollSeeAll(event: Event) {
       const { target } = event;
       const { scrollTop, clientHeight, scrollHeight } = target as HTMLDivElement;
       if (scrollTop + clientHeight >= scrollHeight) {
-        this.getAllCrseInfoFromSemester(this.showAllSubReqCourses)
-          .then(fetchedCourses => {
-            this.showAllCourses = {
-              ...this.showAllCourses,
-              courses: [...this.showAllCourses.courses, ...fetchedCourses],
-            };
-          })
-          .catch(err => {
-            console.log('Fetch error: ', err);
-          });
+        this.getAllCrseInfoFromSemester(this.showAllSubReqCourses).then(fetchedCourses => {
+          this.showAllCourses = {
+            ...this.showAllCourses,
+            courses: [...this.showAllCourses.courses, ...fetchedCourses],
+          };
+        });
       }
     },
     backFromSeeAll() {

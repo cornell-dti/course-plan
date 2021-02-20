@@ -9,7 +9,10 @@
           <div class="title">
             {{ title }}
           </div>
-          <div class="body" v-html="text"></div>
+          <div class="body">
+            {{ text }}
+            <img v-if="image" :src="image" class="emoji-text" :alt="alt" />
+          </div>
           <button
             @click="
               $emit('hide');
@@ -37,6 +40,8 @@ export default Vue.extend({
     text: { type: String, required: true },
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
+    alt: { type: String, required: false, default: '' },
+    image: { type: String, required: false, default: null },
   },
   data() {
     return {

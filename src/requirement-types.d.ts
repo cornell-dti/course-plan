@@ -26,24 +26,30 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
   | ({
       /** Defines how courses in a sub-requirement can be all counted towards a stat. */
       readonly subRequirementProgress: 'every-course-needed' | 'any-can-count';
-      readonly fulfilledBy: 'credits' | 'courses';
-      /**
-       * The minimum count required to fulfill this requirement.
-       *
-       * - When fulfilledBy === 'credits', this field stores the min number of credits.
-       * - When fulfilledBy === 'courses', this field stores the min number of courses.
-       */
+      readonly fulfilledBy: 'courses';
+      /** The minimum number of courses required to fulfill this requirement. */
+      readonly minCount: number;
+    } & T)
+  | ({
+      readonly fulfilledBy: 'credits';
+      /** The minimum number of credits required to fulfill this requirement. */
       readonly minCount: number;
     } & T)
   | {
       readonly fulfilledBy: 'toggleable';
       readonly fulfillmentOptions: {
-        readonly [optionName: string]: {
-          readonly minCount: number;
-          readonly counting: 'credits' | 'courses';
-          readonly subRequirementProgress: 'every-course-needed' | 'any-can-count';
-          readonly description: string;
-        } & T;
+        readonly [optionName: string]:
+          | ({
+              readonly minCount: number;
+              readonly counting: 'courses';
+              readonly subRequirementProgress: 'every-course-needed' | 'any-can-count';
+              readonly description: string;
+            } & T)
+          | ({
+              readonly minCount: number;
+              readonly counting: 'credits';
+              readonly description: string;
+            } & T);
       };
     };
 

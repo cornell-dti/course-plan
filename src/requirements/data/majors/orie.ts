@@ -26,7 +26,6 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'At least 9 credits of ORIE electives at the 4000 level or above',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
     checker: includesWithSingleRequirement('ORIE 4***', 'ORIE 5***', 'ORIE 6***'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 9,
   },

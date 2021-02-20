@@ -5,6 +5,7 @@
 import {
   semestersCollection,
   toggleableRequirementChoicesCollection,
+  selectableRequirementChoicesCollection,
   subjectColorsCollection,
   uniqueIncrementerCollection,
 } from './firebaseConfig';
@@ -24,6 +25,14 @@ export const chooseToggleableRequirementOption = (
   toggleableRequirementChoicesCollection
     .doc(store.state.currentFirebaseUser.email)
     .set(toggleableRequirementChoices);
+};
+
+export const chooseSelectableRequirementOption = (
+  selectableRequirementChoices: AppSelectableRequirementChoices
+): void => {
+  selectableRequirementChoicesCollection
+    .doc(store.state.currentFirebaseUser.email)
+    .set(selectableRequirementChoices);
 };
 
 const getSubjectColor = (subjectColors: Record<string, string>, subject: string): string => {

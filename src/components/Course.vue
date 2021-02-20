@@ -1,18 +1,12 @@
 <template>
-  <div :class="{ 'course--min': compact, active: active }" class="course" @click="updateBar()">
-    <div
-      class="course-color"
-      :style="cssVars"
-      :class="{ 'course-color--active': active, 'course-color--min': compact }"
-    >
+  <div :class="{ 'course--min': compact, active: active }" class="course" @click="courseOnClick()">
+    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
       <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
     </div>
-    <div :class="{ 'course-content--min': compact }" class="course-content">
-      <div :class="{ 'course-main--min': compact }" class="course-main">
-        <div :class="{ 'course-top--min': compact }" class="course-top">
-          <div :class="{ 'course-code--min': compact }" class="course-code">
-            {{ courseObj.code }}
-          </div>
+    <div class="course-content">
+      <div class="course-main">
+        <div class="course-top">
+          <div class="course-code">{{ courseObj.code }}</div>
           <div v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
@@ -45,13 +39,21 @@
 import Vue, { PropType } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/CourseCaution.vue';
+import {
+  addCourseToBottomBar,
+  reportCourseColorChange,
+} from '@/components/BottomBar/BottomBarState';
 import { clickOutside } from '@/utilities';
 
 export default Vue.extend({
   components: { CourseCaution, CourseMenu },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
-    duplicatedCourseCodeList: { type: Array, required: false, default: null },
+    duplicatedCourseCodeList: {
+      type: Array as PropType<readonly string[]>,
+      required: false,
+      default: null,
+    },
     compact: { type: Boolean, required: true },
     active: { type: Boolean, required: true },
     isReqCourse: { type: Boolean, required: true },
@@ -62,7 +64,6 @@ export default Vue.extend({
       menuOpen: false,
       stopCloseFlag: false,
       getCreditRange: this.courseObj.creditRange,
-      colorJustChanged: false,
     };
   },
   computed: {
@@ -122,14 +123,14 @@ export default Vue.extend({
     },
     colorCourse(color: string) {
       this.$emit('color-course', color, this.courseObj.uniqueID);
+      reportCourseColorChange(this.courseObj.uniqueID, color);
       this.closeMenuIfOpen();
-      this.colorJustChanged = true;
     },
-    updateBar() {
+    courseOnClick() {
       if (!this.menuOpen) {
-        this.$emit('updateBar', this.courseObj, this.colorJustChanged, this.courseObj.color);
+        this.$emit('course-on-click', this.courseObj);
+        addCourseToBottomBar(this.courseObj);
       }
-      this.colorJustChanged = false;
     },
     editCourseCredit(credit: number) {
       this.$emit('edit-course-credit', credit, this.courseObj.uniqueID);
@@ -163,20 +164,18 @@ export default Vue.extend({
   &--min {
     width: 10rem;
     height: 2.125rem;
+
+    & .course-content {
+      margin: 0 0.5em;
+    }
   }
 
   &-main {
-    &--min {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      justify-content: space-between;
-    }
+    width: 100%;
   }
 
   &-color {
     width: 1.25rem;
-    height: 5.625rem;
     border-radius: 0.42rem 0 0 0.42rem;
     background-color: var(--bg-color);
     display: flex;
@@ -184,16 +183,7 @@ export default Vue.extend({
     justify-content: center;
 
     &--active {
-      width: 19px;
-      height: 5.5rem;
-    }
-
-    &--min {
-      height: 2.125rem;
-
-      &.course-color--active {
-        height: 2rem;
-      }
+      width: 1.188rem;
     }
   }
 
@@ -209,41 +199,25 @@ export default Vue.extend({
   }
 
   &-content {
-    width: 18rem;
+    flex: 1 1 auto;
     margin: 0 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    &--min {
-      width: 9.25rem;
-      margin-bottom: 0;
-      margin-top: 0;
-      margin-right: 0.5rem;
-      margin-left: 0.5rem;
-    }
   }
 
   &-top {
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
-
-    &--min {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-    }
   }
 
   &-code {
+    flex: 1 1 auto;
     font-size: 14px;
     line-height: 17px;
     color: $primaryGray;
-
-    &--min {
-      color: $primaryGray;
-    }
   }
 
   &-name {
@@ -301,13 +275,6 @@ export default Vue.extend({
 
 .active {
   border: 1px solid $yuxuanBlue;
-  height: 5.625rem;
-  width: 21.375rem;
-
-  &.course--min {
-    height: 2.125rem;
-    width: 10rem;
-  }
 }
 
 @media only screen and (max-width: 878px) {
@@ -317,53 +284,9 @@ export default Vue.extend({
       width: 10rem;
       height: 2.125rem;
     }
-    &-main {
-      &--min {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        justify-content: space-between;
-      }
-    }
     &-color {
-      width: 1.25rem;
-      height: 5.625rem;
-      border-radius: 0.42rem 0 0 0.42rem;
-      background-color: var(--bg-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
       &--active {
-        width: 19px;
-        height: 5.5rem;
-      }
-
-      &--min {
-        height: 2.125rem;
-
-        &.course-color--active {
-          height: 2rem;
-        }
-      }
-    }
-
-    &-content {
-      width: 17rem;
-      &--min {
-        width: 9.25rem;
-        margin-bottom: 0;
-        margin-top: 0;
-        margin-right: 0.5rem;
-      }
-    }
-
-    &-top {
-      width: 14rem;
-      &--min {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
+        width: 1.188rem;
       }
     }
 
@@ -373,16 +296,6 @@ export default Vue.extend({
 
     &-menu {
       right: -1rem;
-    }
-  }
-  .active {
-    border: 1px solid $yuxuanBlue;
-    height: 5.625rem;
-    width: 17rem;
-
-    &.course--min {
-      height: 2.125rem;
-      width: 10rem;
     }
   }
 }

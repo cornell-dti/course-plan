@@ -31,7 +31,7 @@ module.exports = {
     // TODO: auto-fix of this and the next rule introduces too many code changes that might cause merge conflict.
     'vue/attributes-order': ['off'],
     'vue/order-in-components': ['off'],
-    // TODO: change no-console to error out for prod
+    'vue/no-v-html': ['error'],
     'no-console': ['warn'],
     'no-await-in-loop': ['error'],
     // disallow reassignment of function parameters

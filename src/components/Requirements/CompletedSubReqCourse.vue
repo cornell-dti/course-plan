@@ -18,15 +18,15 @@
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
-          :color="color"
-          :subject="courseSubject"
-          :number="courseNumber"
+          :color="courseInfoAndSemesterLabel.color"
+          :subject="courseTaken.subject"
+          :number="courseTaken.number"
           :compact="true"
           :isCompletedReqCourse="true"
           class="completed-reqCourses-course-object"
         />
         <div class="completed-reqCourses-course-object-semester">
-          {{ semesterLabel }}
+          in {{ courseInfoAndSemesterLabel.semesterLabel }}
         </div>
       </div>
     </div>
@@ -37,94 +37,61 @@
 import Vue, { PropType } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import store from '@/store';
+import getCurrentSeason, { getCurrentYear } from '@/utilities';
 
-type CompletedSubReq = {
-  color: string;
-  transferCreditColor: string;
-  courseSubject: string;
-  courseNumber: string;
-  courseUniqueId: number;
-  isTransferCredit: boolean;
-  semesterType: FirestoreSemesterType;
-  semesterYear: number;
-};
+const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default Vue.extend({
   components: { ReqCourse },
   props: {
     subReqCourseId: { type: Number, required: true },
-    crsesTaken: { type: Array as PropType<readonly CourseTaken[]>, required: true },
-  },
-  data(): CompletedSubReq {
-    return {
-      semesterType: 'Fall', // 'Fall' is an arbitrary FirestoreSemesterType value that user will never see
-      semesterYear: 0,
-      color: '',
-      transferCreditColor: 'DA4A4A', // Arbitrary color for transfer credit
-      courseSubject: '',
-      courseNumber: '',
-      courseUniqueId: 0,
-      isTransferCredit: false,
-    };
-  },
-  mounted() {
-    const crseTaken = this.crsesTaken[0];
-    this.isTransferCredit = crseTaken.subject === 'AP' || crseTaken.subject === 'IB';
-    if (!this.isTransferCredit) {
-      this.setCourseAndSemesterForNonTransferCredits(crseTaken);
-    } else {
-      this.setCourseAndSemesterForTransferCredits(crseTaken);
-    }
+    courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
   computed: {
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
     },
-    courseLabel() {
+    courseLabel(): string {
       return `Course ${this.subReqCourseId + 1}`;
     },
-    resetText() {
+    resetText(): string {
       return 'Reset';
     },
-    semesterLabel() {
-      let label = `in ${this.$data.semesterType} ${this.$data.semesterYear}`;
+    isTransferCredit(): boolean {
+      return (
+        this.courseTaken.subject === 'AP' ||
+        this.courseTaken.subject === 'IB' ||
+        this.courseTaken.subject === 'Swim'
+      );
+    },
+    courseInfoAndSemesterLabel(): {
+      readonly semesterLabel: string;
+      readonly uniqueID: number;
+      readonly color: string;
+    } {
       if (this.isTransferCredit) {
-        label = 'in Transfer Credits';
+        return { semesterLabel: 'Transfer Credits', color: transferCreditColor, uniqueID: 0 };
       }
-      return label;
-    },
-  },
-  methods: {
-    dragListener(event: { preventDefault: () => void }) {
-      if (!this.$data.scrollable) event.preventDefault();
-    },
-    setCourseAndSemesterForNonTransferCredits(crseTaken: CourseTaken) {
-      const courseTakenCode = `${crseTaken.subject} ${crseTaken.number}`;
+      const courseTakenCode = `${this.courseTaken.subject} ${this.courseTaken.number}`;
       for (let i = 0; i < this.semesters.length; i += 1) {
         const semester = this.semesters[i];
         const filteredSemesterCourses = semester.courses.filter(
-          course => course.crseId === crseTaken.courseId && course.code === courseTakenCode
+          course => course.crseId === this.courseTaken.courseId && course.code === courseTakenCode
         );
         if (filteredSemesterCourses.length > 0) {
-          const course = filteredSemesterCourses[0];
-          const [subject, number] = course.code.split(' ');
-          this.color = course.color;
-          this.courseSubject = subject;
-          this.courseNumber = number;
-          this.courseUniqueId = course.uniqueID;
-          this.semesterType = semester.type;
-          this.semesterYear = semester.year;
-          break;
+          return {
+            semesterLabel: `${semester.type} ${semester.year}`,
+            uniqueID: filteredSemesterCourses[0].uniqueID,
+            color: filteredSemesterCourses[0].color,
+          };
         }
       }
+      return { semesterLabel: `${getCurrentSeason()} ${getCurrentYear()}`, uniqueID: 0, color: '' };
     },
-    setCourseAndSemesterForTransferCredits(crseTaken: CourseTaken) {
-      this.color = this.transferCreditColor;
-      this.courseSubject = crseTaken.subject;
-      this.courseNumber = crseTaken.number;
-    },
+  },
+  methods: {
     onReset() {
-      this.$emit('deleteCourseFromSemesters', this.courseUniqueId);
+      this.$emit('deleteCourseFromSemesters', this.courseInfoAndSemesterLabel.uniqueID);
     },
   },
 });

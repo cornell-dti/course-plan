@@ -2,28 +2,24 @@
   <div class="bottombartabview">
     <div class="bottombartabview-bottomCourseWrapper">
       <div
-        v-for="(bottomCourse, index) in bottomCourses"
+        v-for="(bottomCourse, index) in firstFewCourses"
         :key="index"
         class="bottombartabview-courseWrapper"
       >
         <bottom-bar-tab
-          :subject="bottomCourse.subject"
-          :number="bottomCourse.number"
           :color="bottomCourse.color"
           :courseObj="bottomCourse"
           :tabIndex="index"
           :bottomCourseFocus="bottomCourseFocus"
           :isExpanded="isExpanded"
-          @bottomBarTabToggle="bottomBarTabToggle"
-          @deleteBottomTab="deleteBottomTab"
-          @toggleFromTab="toggleFromTab"
-          @updateBarTabs="updateBarTabs"
+          @on-change-focus="() => changeBottomBarCourseFocus(index)"
+          @on-delete="() => deleteBottomBarCourse(index)"
         />
       </div>
     </div>
     <div v-if="seeMoreCourses.length > 0" class="bottombartabview-seeMoreWrapper">
       <div class="bottombarSeeMoreTab" @click="bottomBarSeeMoreToggle">
-        <div class="bottombarSeeMoreTab-name">{{ seeMoreString }}</div>
+        <div class="bottombarSeeMoreTab-name">See More</div>
         <img
           v-if="!seeMoreOpen"
           class="bottombarSeeMoreTab-arrow"
@@ -44,13 +40,15 @@
             :key="index"
             class="seeMoreCourse-option"
           >
-            <span class="seeMoreCourse-option-text" @click="moveToBottomBar(seeMoreCourse)"
-              >{{ seeMoreCourse.subject }} {{ seeMoreCourse.number }}</span
+            <span
+              class="seeMoreCourse-option-text"
+              @click="moveBottomBarCourseToFirst(index + maxBottomBarTabs)"
+              >{{ seeMoreCourse.code }}</span
             >
             <img
               class="seeMoreCourse-option-delete"
               src="@/assets/images/x-blue.svg"
-              @click="deleteSeeMoreCourse(seeMoreCourse)"
+              @click="deleteBottomBarCourse(index + maxBottomBarTabs)"
               alt="x"
             />
           </div>
@@ -61,8 +59,14 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue from 'vue';
 import BottomBarTab from '@/components/BottomBar/BottomBarTab.vue';
+import {
+  immutableBottomBarState,
+  changeBottomBarCourseFocus,
+  deleteBottomBarCourse,
+  moveBottomBarCourseToFirst,
+} from '@/components/BottomBar/BottomBarState';
 
 export default Vue.extend({
   components: { BottomBarTab },
@@ -72,96 +76,32 @@ export default Vue.extend({
     };
   },
   props: {
-    bottomCourses: { type: Array as PropType<AppBottomBarCourse[]>, required: true },
-    seeMoreCourses: { type: Array as PropType<AppBottomBarCourse[]>, required: true },
-    bottomCourseFocus: { type: Number, required: true },
-    isExpanded: { type: Boolean, required: true },
     maxBottomBarTabs: { type: Number, required: true },
   },
 
   computed: {
-    seeMoreString() {
-      return 'See More';
+    bottomCourseFocus(): number {
+      const focus = immutableBottomBarState.bottomCourseFocus;
+      return focus < this.maxBottomBarTabs ? focus : this.maxBottomBarTabs - 1;
+    },
+    isExpanded(): boolean {
+      return immutableBottomBarState.isExpanded;
+    },
+    /** The first few courses that can fit in the bottom bar tabs without see more. */
+    firstFewCourses(): readonly AppBottomBarCourse[] {
+      return immutableBottomBarState.bottomCourses.slice(0, this.maxBottomBarTabs);
+    },
+    seeMoreCourses(): readonly AppBottomBarCourse[] {
+      return immutableBottomBarState.bottomCourses.slice(this.maxBottomBarTabs);
     },
   },
 
   methods: {
-    bottomBarTabToggle(courseObj: AppBottomBarCourse) {
-      this.$emit('bottomBarTabToggle', courseObj);
-    },
-
-    deleteBottomTab(courseObj: AppBottomBarCourse) {
-      let focusedCourse: AppBottomBarCourse | undefined = this.bottomCourses[
-        this.bottomCourseFocus
-      ];
-      let focusedCourseIndex = 0;
-
-      for (let i = 0; i < this.bottomCourses.length; i += 1) {
-        if (this.bottomCourses[i].uniqueID === courseObj.uniqueID) {
-          this.bottomCourses.splice(i, 1);
-          if (i === this.bottomCourseFocus) {
-            focusedCourse = undefined;
-            focusedCourseIndex = i;
-          }
-        }
-      }
-
-      // if any See More courses exist, move first See More Course to end of tab
-      if (this.seeMoreCourses.length > 0) {
-        const seeMoreCourseToMove = this.seeMoreCourses[0];
-        // remove course from See More Courses
-        this.seeMoreCourses.splice(0, 1);
-
-        // add course to end of bottomCourses
-        this.bottomCourses.push(seeMoreCourseToMove);
-      }
-
-      // update focused course
-      if (focusedCourse) {
-        this.bottomBarTabToggle(focusedCourse);
-      } else if (focusedCourseIndex < this.bottomCourses.length) {
-        this.bottomBarTabToggle(this.bottomCourses[focusedCourseIndex]);
-      } else {
-        this.bottomBarTabToggle(this.bottomCourses[this.bottomCourses.length - 1]);
-      }
-    },
-
+    changeBottomBarCourseFocus,
+    deleteBottomBarCourse,
+    moveBottomBarCourseToFirst,
     bottomBarSeeMoreToggle() {
       this.seeMoreOpen = !this.seeMoreOpen;
-    },
-
-    moveToBottomBar(course: AppBottomBarCourse) {
-      if (this.bottomCourses.length >= this.maxBottomBarTabs) {
-        const bottomCourseToMove = this.bottomCourses[this.bottomCourses.length - 1];
-        // remove bottomCourseToMove from bottomCourses
-        this.bottomCourses.splice(this.bottomCourses.length - 1, 1);
-
-        // add bottomCourseToMove to seeMoreCourses
-        this.seeMoreCourses.unshift(bottomCourseToMove);
-      }
-      // add course to bottomCourses
-      this.bottomCourses.unshift(course);
-      this.bottomBarTabToggle(this.bottomCourses[0]);
-      // remove course from seeMoreCourses
-      this.deleteSeeMoreCourse(course);
-    },
-
-    deleteSeeMoreCourse(course: AppBottomBarCourse) {
-      // remove course from seeMoreCourses
-      for (let i = 0; i < this.seeMoreCourses.length; i += 1) {
-        if (this.seeMoreCourses[i].uniqueID === course.uniqueID) {
-          this.seeMoreCourses.splice(i, 1);
-        }
-      }
-      this.updateBarTabs();
-    },
-
-    toggleFromTab() {
-      this.$emit('toggleFromTab');
-    },
-
-    updateBarTabs() {
-      this.$emit('updateBarTabs');
     },
   },
 });
