@@ -170,7 +170,6 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       ['PBS', 'BIOLS-AG', 'BIONLS-AG '].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },
@@ -184,7 +183,6 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       ['PBS', 'BIOLS-AG', 'BIONLS-AG', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 6,
   },

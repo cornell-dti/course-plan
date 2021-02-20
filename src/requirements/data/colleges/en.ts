@@ -66,7 +66,6 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: (course: Course): boolean => course.subject === 'ENGRI',
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },
@@ -107,7 +106,6 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA', 'FL', 'CE'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 18,
   },

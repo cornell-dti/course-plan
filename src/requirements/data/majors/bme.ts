@@ -63,7 +63,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
           ['BME 4190'],
           ['BME 5830', 'BME 5850', 'BTRY 4381', 'BTRY 4840', 'CHEM 4810', 'CHEME 5430', 'CS 4780']
         ),
-        counting: 'credits',
+        counting: 'courses',
         subRequirementProgress: 'any-can-count',
         minCount: 13,
       },
