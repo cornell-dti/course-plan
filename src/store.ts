@@ -10,11 +10,24 @@ Vue.use(Vuex);
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
+/**
+ * Some course data that can be derived from semesters, but added to the global store for efficiency
+ * and ease of access.
+ */
+type DerivedCoursesData = {
+  readonly duplicatedCourseCodeSet: ReadonlySet<string>;
+  // Mapping from course's unique ID to the full course object.
+  readonly courseMap: Readonly<Record<number, FirestoreSemesterCourse>>;
+  // Mapping from course's unique ID to the semester object.
+  readonly courseToSemesterMap: Readonly<Record<number, FirestoreSemester>>;
+};
+
 export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
   userName: FirestoreUserName;
   onboardingData: AppOnboardingData;
   semesters: readonly FirestoreSemester[];
+  derivedCoursesData: DerivedCoursesData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   selectableRequirementChoices: AppSelectableRequirementChoices;
   requirementFulfillmentGraph: RequirementFulfillmentGraph<
@@ -47,6 +60,11 @@ const store: TypedVuexStore = new TypedVuexStore({
       tookSwim: 'no',
     },
     semesters: [],
+    derivedCoursesData: {
+      duplicatedCourseCodeSet: new Set(),
+      courseMap: {},
+      courseToSemesterMap: {},
+    },
     toggleableRequirementChoices: {},
     selectableRequirementChoices: {},
     // It won't be null once the app loads.
@@ -70,6 +88,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
       state.semesters = semesters;
+    },
+    setDerivedCourseData(state: VuexStoreState, data: DerivedCoursesData) {
+      state.derivedCoursesData = data;
     },
     setToggleableRequirementChoices(
       state: VuexStoreState,
@@ -105,8 +126,34 @@ const store: TypedVuexStore = new TypedVuexStore({
   },
 });
 
-const autoRecomputeRequirements = (): (() => void) =>
+const autoRecomputeDerivedData = (): (() => void) =>
   store.subscribe((payload, state) => {
+    // Recompute courses
+    if (payload.type === 'setSemesters') {
+      const allCourseSet = new Set<string>();
+      const duplicatedCourseCodeSet = new Set<string>();
+      const courseMap: Record<number, FirestoreSemesterCourse> = {};
+      const courseToSemesterMap: Record<number, FirestoreSemester> = {};
+      state.semesters.forEach(semester => {
+        semester.courses.forEach(course => {
+          const { code } = course;
+          if (allCourseSet.has(code)) {
+            duplicatedCourseCodeSet.add(code);
+          } else {
+            allCourseSet.add(code);
+          }
+          courseMap[course.uniqueID] = course;
+          courseToSemesterMap[course.uniqueID] = semester;
+        });
+      });
+      const derivedCourseData: DerivedCoursesData = {
+        duplicatedCourseCodeSet,
+        courseMap,
+        courseToSemesterMap,
+      };
+      store.commit('setDerivedCourseData', derivedCourseData);
+    }
+    // Recompute requirements
     if (
       payload.type === 'setOnboardingData' ||
       payload.type === 'setSemesters' ||
@@ -240,7 +287,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       uniqueIncrementerInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
-  const requirementComputationUnsubscriber = autoRecomputeRequirements();
+  const derivedDataComputationUnsubscriber = autoRecomputeDerivedData();
 
   const unsubscriber = () => {
     userNameUnsubscriber();
@@ -249,7 +296,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     selectableRequirementChoiceUnsubscriber();
     subjectColorUnsubscriber();
     uniqueIncrementerUnsubscriber();
-    requirementComputationUnsubscriber();
+    derivedDataComputationUnsubscriber();
   };
   return unsubscriber;
 };
