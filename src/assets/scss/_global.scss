@@ -43,10 +43,6 @@ html {
 * {
   font-family: 'ProximaNova', sans-serif;
   box-sizing: border-box;
-
-  &:focus {
-    outline: none;
-  }
 }
 h1,
 h2,
@@ -95,12 +91,6 @@ a {
 
 button:hover {
   opacity: 0.95;
-}
-
-button:focus {
-  outline: none;
-  box-shadow: none;
-  opacity: 0.9;
 }
 
 // globals
@@ -160,7 +150,6 @@ section {
 .button {
   background: $primary;
   border: 0;
-  outline: 0;
   color: $white;
   padding: 0.8rem 1rem;
   min-width: 150px;
@@ -211,7 +200,6 @@ form {
     margin-bottom: 1rem;
     font-size: 16px;
     padding: 10px;
-    outline: 0;
     border: 1px solid #e6ecf0;
     border-radius: 3px;
 
@@ -223,7 +211,6 @@ form {
   textarea {
     resize: none;
     border: 1px solid #e6ecf0;
-    outline: 0;
     height: 100px;
     width: 100%;
     padding: 10px;

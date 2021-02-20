@@ -2,7 +2,10 @@
   <div class="requirementheader">
     <!-- TODO change for multiple colleges -->
     <div
-      v-if="reqIndex <= numOfColleges || reqIndex == numOfColleges + onboardingData.major.length"
+      v-if="
+        reqIndex <= numOfColleges ||
+        reqIndex == numOfColleges + onboardingData.major.length
+      "
       class="row top"
     >
       <p class="name col p-0">{{ req.groupName }} Requirements</p>
@@ -12,7 +15,9 @@
       <div
         :style="{
           'border-bottom':
-            id === displayedMajorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
+            id === displayedMajorIndex
+              ? `2px solid #${reqGroupColorMap[req.groupName][0]}`
+              : '',
         }"
         @click="activateMajor(id)"
         class="major-title"
@@ -23,7 +28,10 @@
         <p
           :style="{
             'font-weight': id === displayedMajorIndex ? '500' : '',
-            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
+            color:
+              id === displayedMajorIndex
+                ? `#${reqGroupColorMap[req.groupName][0]}`
+                : '',
           }"
           class="major-title-top"
         >
@@ -31,7 +39,10 @@
         </p>
         <p
           :style="{
-            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
+            color:
+              id === displayedMajorIndex
+                ? `#${reqGroupColorMap[req.groupName][0]}`
+                : '',
           }"
           class="major-title-bottom"
         >
@@ -39,11 +50,16 @@
         </p>
       </div>
     </div>
-    <div v-if="reqIndex == numOfColleges + onboardingData.major.length" class="minor">
+    <div
+      v-if="reqIndex == numOfColleges + onboardingData.major.length"
+      class="minor"
+    >
       <div
         :style="{
           'border-bottom':
-            id === displayedMinorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
+            id === displayedMinorIndex
+              ? `2px solid #${reqGroupColorMap[req.groupName][0]}`
+              : '',
         }"
         @click="activateMinor(id)"
         class="major-title"
@@ -54,7 +70,10 @@
         <p
           :style="{
             'font-weight': id === displayedMinorIndex ? '500' : '',
-            color: id === displayedMinorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
+            color:
+              id === displayedMinorIndex
+                ? `#${reqGroupColorMap[req.groupName][0]}`
+                : '',
           }"
           class="minor-title-top"
         >
@@ -85,7 +104,9 @@
         <span class="progress-text-credits"
           >{{ requirementFulfilled }}/{{ requirementTotalRequired }}</span
         >
-        <span class="progress-text-text"> Total Requirements Inputted on Schedule</span>
+        <span class="progress-text-text">
+          Total Requirements Inputted on Schedule</span
+        >
       </p>
 
       <!--View more college requirements -->
@@ -108,7 +129,8 @@
             :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
             @click="toggleDetails()"
           >
-            {{ displayDetails ? 'Hide' : 'View' }} All {{ req.groupName }} Requirements
+            {{ displayDetails ? 'Hide' : 'View' }} All
+            {{ req.groupName }} Requirements
           </button>
         </div>
       </div>
@@ -119,7 +141,11 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
+import {
+  getCollegeFullName,
+  getMajorFullName,
+  getMinorFullName,
+} from '@/utilities';
 
 export default Vue.extend({
   components: { DropDownArrow },
@@ -128,12 +154,18 @@ export default Vue.extend({
     displayDetails: { type: Boolean, required: true },
     displayedMajorIndex: { type: Number, required: true },
     displayedMinorIndex: { type: Number, required: true },
-    req: { type: Object as PropType<GroupedRequirementFulfillmentReport>, required: true },
+    req: {
+      type: Object as PropType<GroupedRequirementFulfillmentReport>,
+      required: true,
+    },
     reqGroupColorMap: {
       type: Object as PropType<Readonly<Record<string, string[]>>>,
       required: true,
     },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
   },
@@ -155,10 +187,15 @@ export default Vue.extend({
       return this.req.reqs.length;
     },
     progressWidth(): string {
-      return `${(this.requirementFulfilled / this.requirementTotalRequired) * 100}%`;
+      return `${
+        (this.requirementFulfilled / this.requirementTotalRequired) * 100
+      }%`;
     },
     progressWidthValue(): string {
-      return ((this.requirementFulfilled / this.requirementTotalRequired) * 100).toFixed(1);
+      return (
+        (this.requirementFulfilled / this.requirementTotalRequired) *
+        100
+      ).toFixed(1);
     },
   },
   methods: {
@@ -221,9 +258,11 @@ export default Vue.extend({
     margin: 0px;
   }
 }
-.btn:focus,
-.btn:active {
+.btn:focus {
   outline: none !important;
+  box-shadow: none;
+}
+.btn:active {
   box-shadow: none;
 }
 .row {
