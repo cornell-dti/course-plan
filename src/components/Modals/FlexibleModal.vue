@@ -1,13 +1,19 @@
 <template>
-  <div class="modal">
-    <div :class="['modal-content', contentClass]">
+  <div class="modal" @click="modalClicked">
+    <div :class="['modal-content', contentClass]" ref="modalContent">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
-        <img class="modal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
+        <img
+          class="modal-exit"
+          src="@/assets/images/x.png"
+          @click="closeCurrentModal"
+        />
       </div>
       <slot class="modal-body"></slot>
       <div class="modal-buttonWrapper">
-        <button class="modal-button" @click="leftButtonClicked">{{ leftButtonText }}</button>
+        <button class="modal-button" @click="leftButtonClicked">
+          {{ leftButtonText }}
+        </button>
         <button
           class="modal-button modal-button--add"
           :class="{ 'modal-button--disabled': rightButtonIsDisabled }"
@@ -22,6 +28,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { shouldModalClose } from '@/utilities';
 
 export default Vue.extend({
   props: {
@@ -34,6 +41,10 @@ export default Vue.extend({
   methods: {
     closeCurrentModal(): void {
       this.$emit('modal-closed');
+    },
+    modalClicked(e: MouseEvent): void {
+      if (shouldModalClose(e, this.$refs.modalContent as Element))
+        this.closeCurrentModal();
     },
     leftButtonClicked(): void {
       this.$emit('left-button-clicked');

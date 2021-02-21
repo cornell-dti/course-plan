@@ -1,17 +1,27 @@
 <template>
-  <div class="onboarding">
-    <div class="onboarding-main">
+  <div class="onboarding" @click="modalClicked">
+    <div class="onboarding-main" ref="modalContent">
       <div v-if="isEditingProfile" class="onboarding-cancel" @click="cancel">
-        <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="X" />
+        <img
+          class="onboarding-cancel-icon"
+          src="@/assets/images/x.svg"
+          alt="X"
+        />
       </div>
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
         <div class="onboarding-top">
-          <div v-if="!isEditingProfile" class="onboarding-header">👏 Welcome to CoursePlan</div>
-          <div v-if="isEditingProfile" class="onboarding-header">👋 Hi {{ name.firstName }}</div>
+          <div v-if="!isEditingProfile" class="onboarding-header">
+            👏 Welcome to CoursePlan
+          </div>
+          <div v-if="isEditingProfile" class="onboarding-header">
+            👋 Hi {{ name.firstName }}
+          </div>
           <div v-if="!isEditingProfile" class="onboarding-description">
             Let's get to know you first!
           </div>
-          <div v-if="isEditingProfile" class="onboarding-description">Let's edit your profile!</div>
+          <div v-if="isEditingProfile" class="onboarding-description">
+            Let's edit your profile!
+          </div>
           <onboarding-basic
             v-if="currentPage == 1"
             :userName="name"
@@ -30,12 +40,17 @@
             @setPage="setPage"
           />
         </div>
-        <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">
+        <div
+          class="onboarding-error"
+          :class="{ 'onboarding--hidden': !isError }"
+        >
           Please fill out all required fields and try again.
         </div>
       </div>
       <div class="onboarding-bottom">
-        <div class="onboarding-bottom--section onboarding-bottom--section---center">
+        <div
+          class="onboarding-bottom--section onboarding-bottom--section---center"
+        >
           <img
             class="timeline"
             :src="require(`@/assets/images/timeline${currentPage}text.svg`)"
@@ -48,13 +63,21 @@
             <label class="onboarding-bottom--text">Skip for now</label>
           </div> -->
           <div class="onboarding-bottom--contents">
-            <button class="onboarding-button-previous" @click="goBack">&lt; Previous</button>
-            <button class="onboarding-button" @click="submitOnboarding">Finish</button>
+            <button class="onboarding-button-previous" @click="goBack">
+              &lt; Previous
+            </button>
+            <button class="onboarding-button" @click="submitOnboarding">
+              Finish
+            </button>
           </div>
         </div>
         <div v-else class="onboarding-bottom--section">
           <div class="onboarding-bottom--contents">
-            <button v-if="currentPage != 1" class="onboarding-button-previous" @click="goBack">
+            <button
+              v-if="currentPage != 1"
+              class="onboarding-button-previous"
+              @click="goBack"
+            >
               &lt; Previous
             </button>
             <button class="onboarding-button" @click="goNext">Next &gt;</button>
@@ -70,8 +93,13 @@ import Vue, { PropType } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { db, onboardingDataCollection, usernameCollection } from '@/firebaseConfig';
+import {
+  db,
+  onboardingDataCollection,
+  usernameCollection,
+} from '@/firebaseConfig';
 import store from '@/store';
+import { shouldModalClose } from '@/utilities';
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -81,7 +109,10 @@ export default Vue.extend({
   props: {
     isEditingProfile: { type: Boolean, required: true },
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
   },
   data() {
     return {
@@ -107,14 +138,17 @@ export default Vue.extend({
             middleName: this.name.middleName,
             lastName: this.name.lastName,
           })
-          .set(onboardingDataCollection.doc(store.state.currentFirebaseUser.email), {
-            colleges: [{ acronym: this.onboarding.college }],
-            majors: this.onboarding.major.map(acronym => ({ acronym })),
-            minors: this.onboarding.minor.map(acronym => ({ acronym })),
-            exam: this.onboarding.exam,
-            class: this.onboarding.transferCourse,
-            tookSwim: this.onboarding.tookSwim,
-          })
+          .set(
+            onboardingDataCollection.doc(store.state.currentFirebaseUser.email),
+            {
+              colleges: [{ acronym: this.onboarding.college }],
+              majors: this.onboarding.major.map(acronym => ({ acronym })),
+              minors: this.onboarding.minor.map(acronym => ({ acronym })),
+              exam: this.onboarding.exam,
+              class: this.onboarding.transferCourse,
+              tookSwim: this.onboarding.tookSwim,
+            }
+          )
           .commit();
         this.$emit('onboard');
       }
@@ -126,7 +160,8 @@ export default Vue.extend({
       this.currentPage = page;
     },
     goNext() {
-      this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+      this.currentPage =
+        this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
     },
     updateBasic(
       college: string,
@@ -155,6 +190,10 @@ export default Vue.extend({
     },
     cancel() {
       this.$emit('cancelOnboarding');
+    },
+    modalClicked(e: MouseEvent): void {
+      if (shouldModalClose(e, this.$refs.modalContent as Element))
+        this.cancel();
     },
   },
 });
