@@ -17,7 +17,8 @@
         </div>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
-        <req-course v-if="!isSelfCheck"
+        <req-course
+          v-if="!isSelfCheck"
           :color="courseInfoAndSemesterLabel.color"
           :subject="courseTaken.subject"
           :number="courseTaken.number"
@@ -25,7 +26,8 @@
           :isCompletedReqCourse="true"
           class="completed-reqCourses-course-object"
         />
-        <req-course v-else
+        <req-course
+          v-else
           :color="courseInfoAndSemesterLabel.color"
           :subject="selfCheckCourse.code.split(' ')[0]"
           :number="selfCheckCourse.code.split(' ')[1]"
@@ -54,7 +56,11 @@ export default Vue.extend({
   props: {
     subReqCourseId: { type: Number, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: false, default: null },
-    selfCheckCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: false, default: null },
+    selfCheckCourse: {
+      type: Object as PropType<FirestoreSemesterCourse>,
+      required: false,
+      default: null,
+    },
     isSelfCheck: { type: Boolean, required: true },
   },
   computed: {
@@ -82,10 +88,10 @@ export default Vue.extend({
       if (this.isTransferCredit) {
         return { semesterLabel: 'Transfer Credits', color: transferCreditColor, uniqueID: 0 };
       }
-      
-      let courseTakenCode : string; 
-      let courseId : number;
-      if(this.isSelfCheck) {
+
+      let courseTakenCode: string;
+      let courseId: number;
+      if (this.isSelfCheck) {
         courseTakenCode = this.selfCheckCourse.code;
         courseId = this.selfCheckCourse.crseId;
       } else {

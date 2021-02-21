@@ -110,7 +110,7 @@ export default Vue.extend({
   methods: {
     selectCourse(result: MatchingCourseSearchResult) {
       this.selectedCourse = result;
-      if(this.isSelfCheck) {
+      if (this.isSelfCheck) {
         this.addCourse();
         return;
       }

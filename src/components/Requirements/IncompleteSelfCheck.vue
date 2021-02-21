@@ -11,24 +11,13 @@
       ref="modal"
     />
     <div class="dropdown-select-wrapper">
-      <div
-        class="dropdown-select dropdown-input"
-        v-click-outside="closeMenuIfOpen"
-      >
-        <div
-          class="dropdown-placeholder dropdown-wrapper"
-          @click="showDropdown = !showDropdown"
-        >
+      <div class="dropdown-select dropdown-input" v-click-outside="closeMenuIfOpen">
+        <div class="dropdown-placeholder dropdown-wrapper" @click="showDropdown = !showDropdown">
           <span>Select Course</span>
         </div>
-        <div
-          class="dropdown-placeholder dropdown-arrow"
-        ></div>
+        <div class="dropdown-placeholder dropdown-arrow"></div>
       </div>
-      <div
-        class="dropdown-content"
-        v-if="showDropdown"
-      >
+      <div class="dropdown-content" v-if="showDropdown">
         <div
           v-for="optionName in Object.keys(selfCheckCourses)"
           :key="optionName"
@@ -37,10 +26,7 @@
         >
           <span>{{ optionName }}</span>
         </div>
-        <div
-          class="dropdown-content-item"
-          @click="openCourseModal()"
-        >
+        <div class="dropdown-content-item" @click="openCourseModal()">
           <span>{{ '+ Add new course to schedule' }}</span>
         </div>
       </div>
@@ -75,20 +61,19 @@ export default Vue.extend({
   components: {
     NewCourseModal,
   },
-  props: {
-  },
+  props: {},
   data(): Data {
     return {
       showDropdown: false,
-      isCourseModalOpen: false
+      isCourseModalOpen: false,
     };
   },
   computed: {
     selfCheckCourses(): Record<string, FirestoreSemesterCourse> {
       // TODO - limit to courses that don't have requirements they are fulfilling
-      const courses:Record<string, FirestoreSemesterCourse> = {}
-      store.state.semesters.forEach((semester) => {
-        semester.courses.forEach((course) => {
+      const courses: Record<string, FirestoreSemesterCourse> = {};
+      store.state.semesters.forEach(semester => {
+        semester.courses.forEach(course => {
           courses[course.code] = course;
         });
       });
@@ -131,7 +116,7 @@ export default Vue.extend({
       //   });
       // }
     },
-    
+
     addCourseToSemester(
       season: FirestoreSemesterType,
       year: number,
@@ -172,7 +157,7 @@ export default Vue.extend({
       }
       return -1;
     },
-  }
+  },
 });
 </script>
 
@@ -192,7 +177,7 @@ export default Vue.extend({
     line-height: 17px;
     color: $darkPlaceholderGray;
     position: relative;
-    
+
     &:not(:first-child) {
       margin-top: 0.5rem;
     }
@@ -255,7 +240,7 @@ export default Vue.extend({
   }
 }
 
-  /* The Modal (background) */
+/* The Modal (background) */
 .incompleteselfcheck-modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -272,5 +257,4 @@ export default Vue.extend({
     display: block;
   }
 }
-
 </style>

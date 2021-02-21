@@ -71,7 +71,10 @@
           </div>
         </div>
       </div>
-      <div v-if="displayDescription && subReq.requirement.fulfilledBy !== 'self-check'" class="subreqcourse-wrapper">
+      <div
+        v-if="displayDescription && subReq.requirement.fulfilledBy !== 'self-check'"
+        class="subreqcourse-wrapper"
+      >
         <div v-for="(subReqCourseSlot, id) in subReqCoursesArray" :key="id">
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completed-sub-req-course
@@ -98,7 +101,10 @@
           </div>
         </div>
       </div>
-      <div v-if="displayDescription && subReq.requirement.fulfilledBy === 'self-check'" class="subreqcourse-wrapper">
+      <div
+        v-if="displayDescription && subReq.requirement.fulfilledBy === 'self-check'"
+        class="subreqcourse-wrapper"
+      >
         <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
           <completed-sub-req-course
             :subReqCourseId="id"
@@ -108,9 +114,7 @@
           />
         </div>
         <!-- TODO: only show incomplete-self-check if all courses not added -->
-        <incomplete-self-check
-          @addCourse="addSelfCheckCourse"
-        />
+        <incomplete-self-check @addCourse="addSelfCheckCourse" />
       </div>
     </div>
   </div>
@@ -239,7 +243,7 @@ export default Vue.extend({
           return this.subReq.requirement.courses;
       }
     },
-    addSelfCheckCourse(course : FirestoreSemesterCourse) {
+    addSelfCheckCourse(course: FirestoreSemesterCourse) {
       this.fulfilledSelfCheckCourses.push(course);
     },
     generateSubReqCoursesArray(): SubReqCourseSlot[] {
@@ -333,14 +337,14 @@ export default Vue.extend({
     deleteCourseFromSemesters(uniqueId: number) {
       // find and remove self-check course on sidebar
       let indexToRemove = -1;
-      if(this.subReq.requirement.fulfilledBy === 'self-check') {
-        for(let i = 0; i < this.fulfilledSelfCheckCourses.length; i+=1) {
-          if(this.fulfilledSelfCheckCourses[i].uniqueID === uniqueId) {
+      if (this.subReq.requirement.fulfilledBy === 'self-check') {
+        for (let i = 0; i < this.fulfilledSelfCheckCourses.length; i += 1) {
+          if (this.fulfilledSelfCheckCourses[i].uniqueID === uniqueId) {
             indexToRemove = i;
           }
         }
       }
-      if(indexToRemove !== -1) {
+      if (indexToRemove !== -1) {
         this.fulfilledSelfCheckCourses.splice(indexToRemove, 1);
       }
       this.$emit('deleteCourseFromSemesters', uniqueId);
