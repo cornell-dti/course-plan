@@ -3,11 +3,7 @@
     <div :class="['modal-content', contentClass]" ref="modalContent">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
-        <img
-          class="modal-exit"
-          src="@/assets/images/x.png"
-          @click="closeCurrentModal"
-        />
+        <img class="modal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
       </div>
       <slot class="modal-body"></slot>
       <div class="modal-buttonWrapper">
@@ -43,8 +39,7 @@ export default Vue.extend({
       this.$emit('modal-closed');
     },
     modalClicked(e: MouseEvent): void {
-      if (shouldModalClose(e, this.$refs.modalContent as Element))
-        this.closeCurrentModal();
+      if (shouldModalClose(e, this.$refs.modalContent as Element)) this.closeCurrentModal();
     },
     leftButtonClicked(): void {
       this.$emit('left-button-clicked');

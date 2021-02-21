@@ -90,10 +90,8 @@ export const clickOutside = {
 
 export function shouldModalClose(e: MouseEvent, elemRef: Element) {
   const rect = elemRef.getBoundingClientRect();
-  return !( // Test if mouse clicked inside the modal's bounds
-    e.x >= rect.x &&
-    e.x <= rect.x + rect.width &&
-    e.y >= rect.y &&
-    e.y <= rect.y + rect.height
+  return !(
+    // Test if mouse clicked inside the modal's bounds
+    (e.x >= rect.x && e.x <= rect.x + rect.width && e.y >= rect.y && e.y <= rect.y + rect.height)
   );
 }
