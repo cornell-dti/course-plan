@@ -12,6 +12,7 @@ const totalAcademicCreditsRequirement: CollegeOrMajorRequirement = {
   operator: 'or',
   fulfilledBy: 'credits',
   minCount: 120,
+  allowCourseDoubleCounting: true,
 };
 
 const calsCreditsRequirement: CollegeOrMajorRequirement = {
@@ -19,58 +20,56 @@ const calsCreditsRequirement: CollegeOrMajorRequirement = {
   description:
     '55 CALS credits are required for graduation. ' +
     'CALS credits include all courses from departments within CALS and courses offered in Applied Economics and Management, ' +
-    'Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Information Science, Nutritional Science, ' +
+    'Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Environment and Sustainability, Information Science, Nutritional Science, ' +
     'and The Department of Statistics and Data Science.',
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements',
   checker: (course: Course): boolean =>
     ['AG'].includes(course.acadGroup) ||
-    ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(
-      course.subject
-    ),
+    [
+      'AEM',
+      'BIOEE',
+      'BIOMG',
+      'BIOMI',
+      'BIONB',
+      'BSOC',
+      'EAS',
+      'ESS',
+      'INFO',
+      'NS',
+      'STSCI',
+    ].includes(course.subject),
   operator: 'or',
   fulfilledBy: 'credits',
   minCount: 55,
+  allowCourseDoubleCounting: true,
 };
 
 const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequirement = {
   name: 'Introductory Life Sciences/Biology',
   description:
-    'Students must complete at least six academic credits from the list of courses that fulfill distribution requirements.',
+    'At least six academic credits from the list of courses that fulfill distribution requirements.',
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: includesWithSingleRequirement(
     'ANSC 1100',
     'BIOAP 1100',
+    'BIOEE 1180',
     'BIOEE 1560',
     'BIOEE 1610',
-    'BIOEE 1610',
-    'BIOEE 1610',
-    'BIOEE 1610',
-    'BIOEE 1780',
-    'BIOEE 1780',
     'BIOEE 1780',
     'BIOEE 2070',
     'BIOEE 2526',
     'BIOG 1106',
     'BIOG 1140',
-    'BIOG 1140',
     'BIOG 1191',
     'BIOG 1440',
-    'BIOG 1440',
-    'BIOG 1440',
     'BIOG 1445',
-    'BIOG 1445',
-    'BIOG 1500',
-    'BIOG 1500',
     'BIOG 1500',
     'BIOMG 1150',
     'BIOMG 1290',
     'BIOMG 1350',
-    'BIOMG 1350',
-    'BIOMG 1350',
     'BIOMI 1100',
-    'BIOMI 1120',
     'BIOPL 1120',
     'BIOPL 1130',
     'BIOPL 2400',
@@ -89,6 +88,7 @@ const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequiremen
     'FDSC 2204',
     'HORT 1115',
     'HORT 2204',
+    'PLBIO 1130',
     'PLBIO 2100',
     'PLBIO 2400',
     'PLBIO 2410',
@@ -104,6 +104,7 @@ const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequiremen
     'PLPPM 2013',
     'PLPPM 2015',
     'PLPPM 2900',
+    'PLSCI 1115',
     'PLSCI 1150',
     'PLSCI 1300',
     'PLSCI 1420',
@@ -115,15 +116,6 @@ const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequiremen
   operator: 'or',
   fulfilledBy: 'credits',
   minCount: 6,
-};
-
-const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
-  name: 'Physical and Life Sciences',
-  description:
-    '18 credits in at least three disciplines of which six credits must be introductory life sciences/biology and three credits in chemistry or physics and a quantitative literacy course.',
-  source:
-    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  fulfilledBy: 'self-check',
 };
 
 const calsChemistryOrPhysicsRequiement: CollegeOrMajorRequirement = {
@@ -142,12 +134,66 @@ const calsChemistryOrPhysicsRequiement: CollegeOrMajorRequirement = {
 const calsQuantitativeLiteracyRequirement: CollegeOrMajorRequirement = {
   name: 'Quantitative Literacy',
   description:
-    'Faculty legislation requires minimum competency in quantitative literacy. ' +
     'This requirement can be satisfied by earning a score of 4 or 5 on the AP Calculus exam or a score of 5 on the AP Statistics exam, ' +
     'or transfer an approved calculus or statistics course with a minimum letter grade of “C” or better; or take an approved calculus or statistics course at Cornell.',
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  checker: (course: Course): boolean => ['MATH', 'STSCI'].includes(course.subject),
+  checker: includesWithSingleRequirement(
+    'AEM 2100',
+    'BTRY 3010',
+    'BTRY 3020',
+    'CEE 3040',
+    'CRP 3210',
+    'ENTOM 3030',
+    'HADM 2010',
+    'ILRST 2100',
+    'MATH 1105',
+    'MATH 1106',
+    'MATH 1110',
+    'MATH 1220',
+    'MATH 1340',
+    'MATH 1350',
+    'MATH 1710',
+    'MATH 1910',
+    'MATH 1920',
+    'MATH 2130',
+    'MATH 2210',
+    'MATH 2220',
+    'MATH 2230',
+    'MATH 2240',
+    'MATH 2310',
+    'MATH 2930',
+    'MATH 2940',
+    'MATH 3040',
+    'MATH 3110',
+    'MATH 3210',
+    'MATH 3320',
+    'MATH 3360',
+    'MATH 4130',
+    'MATH 4140',
+    'MATH 4180',
+    'MATH 4200',
+    'MATH 4250',
+    'MATH 4280',
+    'MATH 4310',
+    'MATH 4320',
+    'MATH 4330',
+    'MATH 4340',
+    'MATH 4370',
+    'MATH 4530',
+    'MATH 4540',
+    'MATH 4710',
+    'MATH 4720',
+    'NTRES 3130',
+    'PAM 2100',
+    'PSYCH 2500',
+    'PSYCH 3500',
+    'SOC 3010',
+    'SOC 6010',
+    'STSCI 2100',
+    'STSCI 2150',
+    'STSCI 2200'
+  ),
   operator: 'or',
   fulfilledBy: 'courses',
   minCount: 1,
@@ -158,31 +204,24 @@ const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
   description:
     'Students must complete four courses of 3 or more credits each from the following seven categories of courses in the humanities and social sciences. ' +
     'At least one course category MUST be completed in three different categories. ' +
-    'No more than two courses in the same department will be counted toward the distribution requirement. ' +
-    'To view a searchable list of courses, please search for courses that fulfill distribution requirements.',
+    'No more than two courses in the same department will be counted toward the distribution requirement.',
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  checker: [
-    (course: Course): boolean => course.catalogDistr?.includes('(CA-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('(D-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('(FL-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('(HA-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('(KCM-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('(LA-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('(SBA-') ?? false,
-  ],
+  checker: (course: Course): boolean =>
+    ['CA', 'D', 'FL', 'HA', 'KCM', 'LA', 'SBA'].some(
+      distribution => course.catalogDistr?.includes(distribution) ?? false
+    ),
   operator: 'and',
   fulfilledBy: 'courses',
-  minCount: 4,
+  minCount: 3,
 };
 
 const calsHumanDiversityRequirement: CollegeOrMajorRequirement = {
-  name: 'Human Diversity (D)',
-  description:
-    'At least one course category MUST be completed in three different categories. Human Diversity (D) is a required category and MUST be completed.',
+  name: 'Social Sciences and Humanities: Human Diversity (D)',
+  description: 'One course must be in the Human Diversity (D) category.',
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  checker: (course: Course): boolean => course.catalogDistr?.includes('(D-') ?? false,
+  checker: (course: Course): boolean => course.catalogDistr?.includes('D-') ?? false,
   operator: 'or',
   fulfilledBy: 'courses',
   minCount: 1,
@@ -223,7 +262,6 @@ const calsRequirements: readonly CollegeOrMajorRequirement[] = [
   totalAcademicCreditsRequirement,
   calsCreditsRequirement,
   calsIntroductoryLifeSciencesOrBiologyRequirement,
-  calsPhysicalAndLifeSciencesRequirement,
   calsChemistryOrPhysicsRequiement,
   calsQuantitativeLiteracyRequirement,
   calsSocialSciencesAndHumanitiesRequiement,

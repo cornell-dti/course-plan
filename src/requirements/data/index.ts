@@ -2,7 +2,8 @@ import { RequirementsJson } from '../types';
 import universityRequirements from './university';
 import calsRequirements from './colleges/ag';
 import aapRequirements from './colleges/ar';
-import casRequirements from './colleges/as';
+import casPreFA2020Requirements from './colleges/asPreFA2020';
+import casRequirements from './colleges/asFA2020';
 import businessRequirements from './colleges/bu';
 import engineeringRequirements from './colleges/en';
 import humanEcologyRequirements from './colleges/he';
@@ -53,8 +54,12 @@ const json: RequirementsJson = {
       name: 'Architecture, Art and Planning',
       requirements: aapRequirements,
     },
-    AS: {
-      name: 'Arts and Sciences',
+    AS1: {
+      name: 'Arts and Sciences pre Fall 2020',
+      requirements: casPreFA2020Requirements,
+    },
+    AS2: {
+      name: 'Arts and Sciences Fall 2020',
       requirements: casRequirements,
     },
     EN: {
@@ -82,7 +87,7 @@ const json: RequirementsJson = {
     },
     BIO: {
       name: 'Biological Sciences',
-      schools: ['AG', 'AS'],
+      schools: ['AG', 'AS1', 'AS2'],
       requirements: bioRequirements,
     },
     BME: {
@@ -117,7 +122,7 @@ const json: RequirementsJson = {
     },
     CS: {
       name: 'Computer Science',
-      schools: ['EN', 'AS'],
+      schools: ['EN', 'AS1', 'AS2'],
       requirements: csRequirements,
     },
     DEA: {
@@ -127,17 +132,17 @@ const json: RequirementsJson = {
     },
     ECON: {
       name: 'Economics',
-      schools: ['AS'],
+      schools: ['AS1', 'AS2'],
       requirements: economicsRequirements,
     },
     ENGL: {
       name: 'English',
-      schools: ['AS'],
+      schools: ['AS1', 'AS2'],
       requirements: englishRequirements,
     },
     GOVT: {
       name: 'Government',
-      schools: ['AS'],
+      schools: ['AS1', 'AS2'],
       requirements: governmentRequirements,
     },
     HADM: {
@@ -147,12 +152,12 @@ const json: RequirementsJson = {
     },
     HIST: {
       name: 'History',
-      schools: ['AS'],
+      schools: ['AS1', 'AS2'],
       requirements: historyRequirements,
     },
     INFO: {
       name: 'Information Science',
-      schools: ['AS', 'AG'],
+      schools: ['AS1', 'AS2', 'AG'],
       requirements: infoRequirements,
     },
     ISST: {
@@ -179,12 +184,12 @@ const json: RequirementsJson = {
     },
     COGSCI: {
       name: 'Cognitive Science',
-      schools: ['AS'],
+      schools: ['AS1'],
       requirements: cogsciMinorRequirements,
     },
     CS: {
       name: 'Computer Science',
-      schools: ['EN', 'AS'],
+      schools: ['EN', 'AS1', 'AS2'],
       requirements: csMinorRequirements,
     },
     DBME: {
@@ -209,7 +214,7 @@ const json: RequirementsJson = {
     },
     PSYCH: {
       name: 'Psychology',
-      schools: ['AS'],
+      schools: ['AS1', 'AS2'],
       requirements: psychMinorRequirements,
     },
   },
