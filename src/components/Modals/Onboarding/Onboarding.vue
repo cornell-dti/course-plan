@@ -1,5 +1,5 @@
 <template>
-  <div class="onboarding">
+  <div class="onboarding" @click="checkClickOutside" ref="modalBackground">
     <div class="onboarding-main">
       <div v-if="isEditingProfile" class="onboarding-cancel" @click="cancel">
         <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="X" />
@@ -155,6 +155,9 @@ export default Vue.extend({
     },
     cancel() {
       this.$emit('cancelOnboarding');
+    },
+    checkClickOutside(e: MouseEvent) {
+      if (e.target === this.$refs.modalBackground) this.cancel();
     },
   },
 });
