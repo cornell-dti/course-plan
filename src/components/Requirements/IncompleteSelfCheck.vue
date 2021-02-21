@@ -35,10 +35,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue from 'vue';
 
 import { clickOutside } from '@/utilities';
-import store, { initializeFirestoreListeners } from '@/store';
+import store from '@/store';
 import { editSemesters } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
