@@ -83,7 +83,6 @@
           >
             <course
               :courseObj="course"
-              :duplicatedCourseCodeList="duplicatedCourseCodeList"
               :isReqCourse="false"
               :compact="compact"
               :active="activatedCourse.uniqueID === course.uniqueID"
@@ -117,7 +116,7 @@
 import Vue, { PropType } from 'vue';
 import draggable from 'vuedraggable';
 import introJs from 'intro.js';
-import Course from '@/components/Course.vue';
+import Course from '@/components/Course/Course.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import Confirmation from '@/components/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
@@ -186,14 +185,7 @@ export default Vue.extend({
       required: true,
     },
     compact: { type: Boolean, required: true },
-    activatedCourse: {
-      type: Object as PropType<FirestoreSemesterCourse>,
-      required: true,
-    },
-    duplicatedCourseCodeList: {
-      type: Array as PropType<readonly string[]>,
-      required: true,
-    },
+    activatedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     isFirstSem: { type: Boolean, required: true },
   },
   mounted() {

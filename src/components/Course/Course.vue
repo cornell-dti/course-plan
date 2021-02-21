@@ -17,7 +17,7 @@
           <span v-if="!compact && semesterString" class="course-semesters">{{
             semesterString
           }}</span>
-          <course-caution v-if="cautionString" :compact="compact" :cautionString="cautionString" />
+          <course-caution v-if="!compact" :course="courseObj" />
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
-import CourseCaution from '@/components/CourseCaution.vue';
+import CourseCaution from '@/components/Course/CourseCaution.vue';
 import {
   addCourseToBottomBar,
   reportCourseColorChange,
@@ -48,15 +48,7 @@ import { clickOutside } from '@/utilities';
 export default Vue.extend({
   components: { CourseCaution, CourseMenu },
   props: {
-    courseObj: {
-      type: Object as PropType<FirestoreSemesterCourse>,
-      required: true,
-    },
-    duplicatedCourseCodeList: {
-      type: Array as PropType<readonly string[]>,
-      required: false,
-      default: null,
-    },
+    courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     compact: { type: Boolean, required: true },
     active: { type: Boolean, required: true },
     isReqCourse: { type: Boolean, required: true },
@@ -70,10 +62,6 @@ export default Vue.extend({
     };
   },
   computed: {
-    cautionString(): string | null {
-      if (this.duplicatedCourseCodeList == null) return null;
-      return this.duplicatedCourseCodeList.includes(this.courseObj.code) ? 'Duplicate' : null;
-    },
     semesterString(): string {
       let semesterString = '';
       this.courseObj.semesters.forEach(semester => {

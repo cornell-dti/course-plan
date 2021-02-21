@@ -60,7 +60,6 @@
           :semesterIndex="semesterIndex"
           :compact="compact"
           :activatedCourse="activatedCourse"
-          :duplicatedCourseCodeList="duplicatedCourseCodeList"
           :isFirstSem="checkIfFirstSem(sem)"
           @course-onclick="courseOnClick"
           @new-semester="openSemesterModal"
@@ -125,19 +124,11 @@ export default Vue.extend({
       cautionText: '',
       key: 0,
       activatedCourse: {} as FirestoreSemesterCourse,
-      duplicatedCourseCodeList: [] as readonly string[],
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
       isCautionModalOpen: false,
     };
-  },
-  watch: {
-    semesters: {
-      handler() {
-        this.buildDuplicateCautions();
-      },
-    },
   },
   computed: {
     semesters(): readonly FirestoreSemester[] {
@@ -146,9 +137,6 @@ export default Vue.extend({
     noSemesters(): boolean {
       return this.semesters.length === 0;
     },
-  },
-  mounted() {
-    this.buildDuplicateCautions();
   },
   methods: {
     checkIfFirstSem(semester: FirestoreSemester) {
@@ -173,23 +161,6 @@ export default Vue.extend({
           value: 1,
         });
       }
-    },
-    buildDuplicateCautions() {
-      const allCourseSet = new Set<string>();
-      const duplicatedCourseCodeList: string[] = [];
-      if (this.semesters) {
-        this.semesters.forEach(semester => {
-          semester.courses.forEach(course => {
-            const { code } = course;
-            if (allCourseSet.has(code)) {
-              duplicatedCourseCodeList.push(code);
-            } else {
-              allCourseSet.add(code);
-            }
-          });
-        });
-      }
-      this.duplicatedCourseCodeList = duplicatedCourseCodeList;
     },
     openSemesterConfirmationModal(type: FirestoreSemesterType, year: number, isAdd: boolean) {
       if (isAdd) {

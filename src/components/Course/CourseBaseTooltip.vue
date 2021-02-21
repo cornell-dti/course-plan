@@ -1,23 +1,34 @@
 <template>
-  <div class="course-outerWrapper course-tooltip">
-    <div v-if="!compact" class="course-iconWrapper course-iconWrapper--caution">
+  <div class="course-tooltip">
+    <div class="course-iconWrapper course-iconWrapper--caution">
       <img
         class="course-icon course-icon--caution"
         src="@/assets/images/caution.svg"
         alt="caution sign"
       />
     </div>
-    <div class="course-tooltiptext course-tooltiptext--caution">{{ cautionString }}</div>
+    <div class="course-tooltiptext">
+      <slot />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import info from '@/assets/images/info.svg';
+import caution from '@/assets/images/caution.svg';
 
 export default Vue.extend({
   props: {
-    compact: { type: Boolean, required: true },
-    cautionString: { type: String, required: true },
+    isInformation: { type: Boolean, required: true },
+  },
+  computed: {
+    icon(): string {
+      return this.isInformation ? info : caution;
+    },
+    alt(): string {
+      return this.isInformation ? 'information sign' : 'caution sign';
+    },
   },
 });
 </script>
@@ -32,15 +43,6 @@ export default Vue.extend({
     margin-left: 0.2rem;
     align-items: center;
 
-    // TODO: styling for info icon on course card
-    // &--info {
-    //   &:before {
-    //     margin-right: 0.2rem;
-    //     font-style: normal;
-    //     content: '|';
-    //   }
-    // }
-
     &--caution {
       &:before {
         margin-right: 0.2rem;
@@ -51,11 +53,7 @@ export default Vue.extend({
   }
 
   &-icon {
-    width: 13px;
-
-    &--info {
-      margin-right: 4px;
-    }
+    width: 0.875rem;
   }
 }
 
@@ -64,29 +62,24 @@ export default Vue.extend({
 .course-tooltip {
   position: relative;
   display: inline-block;
-  // border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
 /* Tooltip text */
 .course-tooltip .course-tooltiptext {
   visibility: hidden;
-  width: 120px;
+  width: 10rem;
   color: $medGray;
   background-color: $white;
-  text-align: center;
+  text-align: left;
   padding: 0.5rem;
   border-radius: 6px;
-  left: -5.2rem;
+  left: -0.25rem;
   border: 0.75px solid #a7a7a7;
   top: 1.25rem;
 
   /* Position the tooltip text */
   position: absolute;
   z-index: 1;
-
-  &--caution {
-    width: 7.5rem;
-  }
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
@@ -94,36 +87,33 @@ export default Vue.extend({
   visibility: visible;
 }
 
+/**
+ * The element that produces a white triangle,
+ * which hides most of the gray triangle below except a 1px border.
+ */
 .course-tooltip .course-tooltiptext::after {
   content: ' ';
   position: absolute;
   bottom: 100%; /* At the top of the tooltip */
-  right: 14px;
-  margin-left: -10px;
-  border-width: 5px;
+  left: 0.875rem;
+  margin-right: -0.625rem;
+  border-width: 0.313rem;
   border-style: solid;
   border-color: transparent transparent white transparent;
   z-index: 3;
 }
 
+/** The element that produces a gray triangle */
 .course-tooltip .course-tooltiptext::before {
   content: ' ';
   position: absolute;
   bottom: 100%; /* At the top of the tooltip */
-  right: 12px;
-  margin-left: -2px;
-  border-width: 7px;
+  left: 0.75rem;
+  margin-right: -0.125rem;
+  border-width: 0.438rem;
   border-style: solid;
   border-color: transparent transparent #a7a7a7 transparent;
 
   z-index: 2;
-}
-
-.course-tooltip .course-tooltiptext--info::after {
-  right: 10px;
-}
-
-.course-tooltip .course-tooltiptext--info::before {
-  right: 8px;
 }
 </style>
