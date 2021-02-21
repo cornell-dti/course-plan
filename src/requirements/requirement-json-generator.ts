@@ -176,7 +176,9 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
 };
 
 const decoratedRequirementString = JSON.stringify(
-  produceSatisfiableCoursesAttachedRequirementJson()
+  produceSatisfiableCoursesAttachedRequirementJson(),
+  undefined,
+  2
 );
 
 writeFileSync('src/requirements/decorated-requirements.json', decoratedRequirementString);
