@@ -145,10 +145,6 @@ export default Vue.extend({
       this.reset();
       this.$emit('close-course-modal');
     },
-    // Note: Currently not used
-    checkCourseDuplicate(key: string) {
-      this.$emit('check-course-duplicate', key);
-    },
     addItem() {
       if (this.editMode) {
         this.editMode = false;

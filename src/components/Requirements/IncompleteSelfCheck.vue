@@ -5,7 +5,6 @@
       :class="{ 'incompleteselfcheck-modal--block': isCourseModalOpen }"
       :isCourseModelSelectingSemester="true"
       :isSelfCheck="true"
-      @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
       @add-course="addNewCourse"
       ref="modal"
@@ -103,20 +102,6 @@ export default Vue.extend({
     closeCourseModal() {
       this.isCourseModalOpen = false;
     },
-    checkCourseDuplicate(key: string) {
-      // if (this.courses) {
-      //   // @ts-ignore
-      //   this.$refs.modal.courseIsAddable = true;
-      //   this.courses.forEach(course => {
-      //     if (course.code === key) {
-      //       // @ts-ignore
-      //       this.$refs.modal.courseIsAddable = false;
-      //       this.$emit('open-caution-modal');
-      //     }
-      //   });
-      // }
-    },
-
     addCourseToSemester(
       season: FirestoreSemesterType,
       year: number,
