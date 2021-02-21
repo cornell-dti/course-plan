@@ -8,7 +8,7 @@
       <p class="name col p-0">{{ req.groupName }} Requirements</p>
     </div>
     <!-- TODO change for multiple colleges -->
-    <div v-if="reqIndex == numOfColleges" class="major">
+    <div v-if="reqIndex == numOfColleges && !multipleMajors" class="major">
       <div
         :style="{
           'border-bottom':
@@ -16,6 +16,36 @@
         }"
         @click="activateMajor(id)"
         class="major-title"
+        v-for="(major, id) in onboardingData.major"
+        :key="id"
+      >
+        <p
+          :style="{
+            'font-weight': id === displayedMajorIndex ? '500' : '',
+            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
+          }"
+          class="major-title-top"
+        >
+          {{ getMajorFullName(major) }}
+        </p>
+        <p
+          :style="{
+            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
+          }"
+          class="major-title-bottom"
+        >
+          ({{ getCollegeFullName(onboardingData.college) }})
+        </p>
+      </div>
+    </div>
+    <div v-if="reqIndex == numOfColleges && multipleMajors" class="major">
+      <button
+        :style="{
+          'border-bottom':
+            id === displayedMajorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
+        }"
+        @click="activateMajor(id)"
+        class="major-title-button major-title"
         v-for="(major, id) in onboardingData.major"
         :key="id"
         :class="{ pointer: multipleMajors }"
@@ -37,7 +67,7 @@
         >
           ({{ getCollegeFullName(onboardingData.college) }})
         </p>
-      </div>
+      </button>
     </div>
     <div v-if="reqIndex == numOfColleges + onboardingData.major.length" class="minor">
       <div
@@ -89,29 +119,26 @@
       </p>
 
       <!--View more college requirements -->
-      <div class="row top">
-        <div class="col-1 p-0">
-          <button
-            :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
-            class="btn"
-            @click="toggleDetails()"
-          >
-            <drop-down-arrow
-              :isFlipped="displayDetails"
-              :fillColor="`#${reqGroupColorMap[req.groupName][0]}`"
-            />
-          </button>
+      <button
+        class="btn w-full row top"
+        @click="toggleDetails()"
+        aria-haspopup="true"
+        data-toggle="dropdown"
+      >
+        <div
+          class="col-1 p-0 btn left"
+          :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
+        >
+          <drop-down-arrow
+            :isFlipped="displayDetails"
+            :fillColor="`#${reqGroupColorMap[req.groupName][0]}`"
+            :isHeader="true"
+          />
         </div>
-        <div class="col p-0">
-          <button
-            class="btn req-name"
-            :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
-            @click="toggleDetails()"
-          >
-            {{ displayDetails ? 'Hide' : 'View' }} All {{ req.groupName }} Requirements
-          </button>
+        <div class="req-name col p-0" :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }">
+          {{ displayDetails ? 'Hide' : 'View' }} All {{ req.groupName }} Requirements
         </div>
-      </div>
+      </button>
     </div>
   </div>
 </template>
@@ -198,6 +225,16 @@ export default Vue.extend({
     text-align: center;
     color: $lightPlaceholderGray;
     padding-bottom: 6px;
+    &-button {
+      border: none;
+      background: none;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      p {
+        flex-direction: column;
+      }
+    }
     &-top {
       text-align: center;
       font-style: normal;
@@ -228,10 +265,7 @@ export default Vue.extend({
   }
 }
 .btn:focus {
-  outline: none !important;
-  box-shadow: none;
-}
-.btn:active {
+  outline: 1px solid $yuxuanBlue;
   box-shadow: none;
 }
 .row {
@@ -265,6 +299,7 @@ export default Vue.extend({
   font-size: 14px;
   line-height: 17px;
   color: $darkGray;
+
   &-college {
     font-style: normal;
     font-weight: normal;
@@ -318,9 +353,16 @@ button.view {
     font-size: 14px;
     line-height: 14px;
     align-self: center;
+    width: 100%;
   }
   .pointer {
     cursor: pointer;
   }
+}
+.w-full {
+  width: 100%;
+}
+.left {
+  justify-content: flex-start;
 }
 </style>

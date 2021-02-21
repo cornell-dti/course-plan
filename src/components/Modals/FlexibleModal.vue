@@ -1,5 +1,5 @@
 <template>
-  <div class="modal">
+  <div class="modal" aria-modal="true">
     <div :class="['modal-content', contentClass]">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
@@ -7,7 +7,9 @@
       </div>
       <slot class="modal-body"></slot>
       <div class="modal-buttonWrapper">
-        <button class="modal-button" @click="leftButtonClicked">{{ leftButtonText }}</button>
+        <button class="modal-button" @click="leftButtonClicked">
+          {{ leftButtonText }}
+        </button>
         <button
           class="modal-button modal-button--add"
           :class="{ 'modal-button--disabled': rightButtonIsDisabled }"

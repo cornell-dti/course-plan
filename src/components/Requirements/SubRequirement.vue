@@ -1,21 +1,24 @@
 <template>
   <div class="subrequirement">
-    <div class="row depth-req">
-      <div class="col-1" @click="toggleDescription()">
-        <button class="btn">
-          <drop-down-arrow :isFlipped="displayDescription" :fillColor="getArrowColor()" />
-        </button>
-      </div>
-      <div class="col-7" @click="toggleDescription()">
-        <p
-          :class="[
-            { 'sup-req': !isFulfilled },
-            'pointer',
-            isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
-          ]"
-        >
-          <span>{{ subReq.requirement.name }}</span>
-        </p>
+    <button @click="toggleDescription()" class="dropdown row">
+      <div class="row depth-req left col-8">
+        <div class="btn right-margin">
+          <drop-down-arrow
+            :isFlipped="displayDescription"
+            :fillColor="getArrowColor()"
+            :isSubReq="true"
+          />
+        </div>
+        <div class="subreq-name">
+          <p
+            :class="[
+              { 'sup-req': !isFulfilled },
+              isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
+            ]"
+          >
+            <span>{{ subReq.requirement.name }}</span>
+          </p>
+        </div>
       </div>
       <div class="col">
         <p v-if="!isCompleted" class="sup-req-progress text-right incomplete-ptext">
@@ -28,73 +31,71 @@
           >
         </p>
       </div>
-      <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
-        {{ subReq.requirement.description }}
-        <a
-          class="more"
-          :style="{ color: `#${color}` }"
-          :href="subReq.requirement.source"
-          target="_blank"
-        >
-          <strong>Learn More</strong></a
-        >
-        <div v-if="subReq.requirement.fulfilledBy === 'toggleable'">
-          <div class="toggleable-requirements-select-wrapper">
+    </button>
+    <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
+      {{ subReq.requirement.description }}
+      <a
+        class="more"
+        :style="{ color: `#${color}` }"
+        :href="subReq.requirement.source"
+        target="_blank"
+      >
+        <strong>Learn More</strong></a
+      >
+      <div v-if="subReq.requirement.fulfilledBy === 'toggleable'">
+        <div class="toggleable-requirements-select-wrapper">
+          <div
+            class="toggleable-requirements-select toggleable-requirements-input"
+            v-click-outside="closeMenuIfOpen"
+          >
             <div
-              class="toggleable-requirements-select toggleable-requirements-input"
-              v-click-outside="closeMenuIfOpen"
+              class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-wrapper"
+              @click="showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown"
             >
-              <div
-                class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-wrapper"
-                @click="showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown"
-              >
-                <span>{{ selectedFulfillmentOption }}</span>
-              </div>
-              <div
-                class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"
-              ></div>
+              <span>{{ selectedFulfillmentOption }}</span>
             </div>
             <div
-              class="toggleable-requirements-dropdown-content"
-              v-if="showFulfillmentOptionsDropdown"
-            >
-              <div
-                v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
-                :key="optionName"
-                class="toggleable-requirements-dropdown-content-item"
-                @click="chooseFulfillmentOption(optionName)"
-              >
-                <span>{{ optionName }}</span>
-              </div>
-            </div>
-            {{ subReq.requirement.fulfillmentOptions[selectedFulfillmentOption].description }}
+              class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"
+            ></div>
           </div>
+          <div
+            class="toggleable-requirements-dropdown-content"
+            v-if="showFulfillmentOptionsDropdown"
+          >
+            <div
+              v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
+              :key="optionName"
+              class="toggleable-requirements-dropdown-content-item"
+              @click="chooseFulfillmentOption(optionName)"
+            >
+              <span>{{ optionName }}</span>
+            </div>
+          </div>
+          {{ subReq.requirement.fulfillmentOptions[selectedFulfillmentOption].description }}
         </div>
       </div>
-      <div v-if="displayDescription" class="subreqcourse-wrapper">
-        <div v-for="(subReqCourseSlot, id) in subReqCoursesArray" :key="id">
-          <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
-            <completed-sub-req-course
-              :subReqCourseId="id"
-              :courseTaken="subReqCourseSlot.courses[0]"
-              @deleteCourseFromSemesters="deleteCourseFromSemesters"
-            />
-          </div>
-          <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
-            <incomplete-sub-req-course
-              :subReq="subReq"
-              :subReqCourseId="id"
-              :courseIDs="subReqCourseSlot.courses.map(it => it.crseIds)"
-              :subReqFetchedCourseObjectsNotTakenArray="subReqFetchedCourseObjectsNotTakenArray"
-              :dataReady="dataReady"
-              :displayDescription="displayDescription"
-              :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
-              @isDataReady="isDataReady"
-              @onShowAllCourses="
-                () => onShowAllCourses(subReq.requirement.name, subReqCoursesArray)
-              "
-            />
-          </div>
+    </div>
+    <div v-if="displayDescription" class="subreqcourse-wrapper">
+      <div v-for="(subReqCourseSlot, id) in subReqCoursesArray" :key="id">
+        <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
+          <completed-sub-req-course
+            :subReqCourseId="id"
+            :courseTaken="subReqCourseSlot.courses[0]"
+            @deleteCourseFromSemesters="deleteCourseFromSemesters"
+          />
+        </div>
+        <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
+          <incomplete-sub-req-course
+            :subReq="subReq"
+            :subReqCourseId="id"
+            :courseIDs="subReqCourseSlot.courses.map(it => it.crseIds)"
+            :subReqFetchedCourseObjectsNotTakenArray="subReqFetchedCourseObjectsNotTakenArray"
+            :dataReady="dataReady"
+            :displayDescription="displayDescription"
+            :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
+            @isDataReady="isDataReady"
+            @onShowAllCourses="() => onShowAllCourses(subReq.requirement.name, subReqCoursesArray)"
+          />
         </div>
       </div>
     </div>
@@ -135,13 +136,19 @@ type Data = {
 export default Vue.extend({
   components: { CompletedSubReqCourse, DropDownArrow, IncompleteSubReqCourse },
   props: {
-    subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
+    subReq: {
+      type: Object as PropType<RequirementFulfillment>,
+      required: true,
+    },
     subReqIndex: { type: Number, required: true }, // Subrequirement index
     reqIndex: { type: Number, required: true }, // Requirement index
     isCompleted: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
     color: { type: String, required: true },
-    rostersFromLastTwoYears: { type: Array as PropType<readonly string[]>, required: true },
+    rostersFromLastTwoYears: {
+      type: Array as PropType<readonly string[]>,
+      required: true,
+    },
     lastLoadedShowAllCourseId: { type: Number, required: true },
   },
   watch: {
@@ -231,17 +238,26 @@ export default Vue.extend({
         const subReqCourseSlot = this.subReq.courses[i];
         if (subReqCourseSlot.length > 0) {
           subReqCourseSlot.forEach(subReqCourse => {
-            subReqCoursesArray.push({ isCompleted: true, courses: [subReqCourse] });
+            subReqCoursesArray.push({
+              isCompleted: true,
+              courses: [subReqCourse],
+            });
           });
           // Create new IncompletedSubReqCourse slot if all credits or courses not met
           // but only one CompletedSubReqCourse slot exists
           if (this.subReq.courses.length === 1 && !this.isCompleted) {
             const crseInfoArray = this.generateSubReqIncompleteCrseInfoArray(subReqCourses, i);
-            subReqCoursesArray.push({ isCompleted: false, courses: crseInfoArray });
+            subReqCoursesArray.push({
+              isCompleted: false,
+              courses: crseInfoArray,
+            });
           }
         } else {
           const crseInfoArray = this.generateSubReqIncompleteCrseInfoArray(subReqCourses, i);
-          subReqCoursesArray.push({ isCompleted: false, courses: crseInfoArray });
+          subReqCoursesArray.push({
+            isCompleted: false,
+            courses: crseInfoArray,
+          });
         }
       }
       return subReqCoursesArray;
@@ -272,7 +288,10 @@ export default Vue.extend({
           const filteredSubReqCrseIds = subReqCrseIds.filter(
             crseIds => this.isCompleted || !allTakenCourseIds.includes(crseIds)
           );
-          const crseInfoObject = { roster: subReqRoster, crseIds: filteredSubReqCrseIds };
+          const crseInfoObject = {
+            roster: subReqRoster,
+            crseIds: filteredSubReqCrseIds,
+          };
           subReqIncompleteCrseInfoArray.push(crseInfoObject);
           subReqCrseIds.forEach(subReqCrseId => seenCrseIds.add(subReqCrseId));
         }
@@ -318,6 +337,19 @@ export default Vue.extend({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
+.dropdown {
+  background: none;
+  width: 100%;
+  border: none;
+  justify-content: space-between;
+  padding: 0;
+  align-items: center;
+  &:focus {
+    outline: 1px solid $yuxuanBlue;
+    box-shadow: none;
+  }
+}
 
 .btn {
   padding: 0;
@@ -498,5 +530,16 @@ button.view {
   &-wrapper {
     width: 100%;
   }
+}
+.left {
+  justify-content: flex-start;
+  align-items: center;
+}
+.subreq-name {
+  text-align: left;
+  margin-left: 11px;
+}
+.right-margin {
+  margin: 0px;
 }
 </style>
