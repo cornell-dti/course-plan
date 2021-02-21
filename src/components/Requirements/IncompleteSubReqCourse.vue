@@ -57,7 +57,7 @@
 import Vue, { PropType } from 'vue';
 import draggable from 'vuedraggable';
 import VueSkeletonLoader from 'skeleton-loader-vue';
-import Course from '@/components/Course.vue';
+import Course from '@/components/Course/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
 export default Vue.extend({
