@@ -1,8 +1,13 @@
 <template>
   <div class="subrequirement">
-    <button @click="toggleDescription()" class="dropdown row">
-      <div class="row depth-req left col-8">
-        <div class="btn right-margin">
+    <button
+      @click="toggleDescription()"
+      class="dropdown row"
+      aria-haspopup="true"
+      data-toggle="dropdown"
+    >
+      <div class="row depth-req">
+        <div class="btn">
           <drop-down-arrow
             :isFlipped="displayDescription"
             :fillColor="getArrowColor()"
@@ -345,10 +350,6 @@ export default Vue.extend({
   justify-content: space-between;
   padding: 0;
   align-items: center;
-  &:focus {
-    outline: 1px solid $yuxuanBlue;
-    box-shadow: none;
-  }
 }
 
 .btn {
@@ -376,6 +377,11 @@ export default Vue.extend({
 .depth-req {
   margin: 0.5rem 0 0.1rem 0;
   min-height: 14px;
+  justify-content: flex-start;
+  align-items: center;
+  div:first-child {
+    margin: 0px;
+  }
 }
 .sub-req-div {
   padding-left: 30px;
@@ -538,8 +544,5 @@ button.view {
 .subreq-name {
   text-align: left;
   margin-left: 11px;
-}
-.right-margin {
-  margin: 0px;
 }
 </style>

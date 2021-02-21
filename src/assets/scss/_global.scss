@@ -1,5 +1,6 @@
 // imports
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import './variables';
 
 // fonts
 @font-face {
@@ -167,6 +168,11 @@ section {
       background: $primary;
     }
   }
+}
+
+button:focus {
+  outline: 1px solid $yuxuanBlue;
+  box-shadow: none;
 }
 
 .text-center {

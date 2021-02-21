@@ -120,15 +120,12 @@
 
       <!--View more college requirements -->
       <button
-        class="btn w-full row top"
+        class="btn row top view-more-dropdown"
         @click="toggleDetails()"
         aria-haspopup="true"
         data-toggle="dropdown"
       >
-        <div
-          class="col-1 p-0 btn left"
-          :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
-        >
+        <div class="col-1 p-0 btn" :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }">
           <drop-down-arrow
             :isFlipped="displayDetails"
             :fillColor="`#${reqGroupColorMap[req.groupName][0]}`"
@@ -264,10 +261,6 @@ export default Vue.extend({
     margin: 0px;
   }
 }
-.btn:focus {
-  outline: 1px solid $yuxuanBlue;
-  box-shadow: none;
-}
 .row {
   margin: 0;
 }
@@ -359,10 +352,10 @@ button.view {
     cursor: pointer;
   }
 }
-.w-full {
+.view-more-dropdown {
   width: 100%;
-}
-.left {
-  justify-content: flex-start;
+  div:first-child {
+    justify-content: flex-start;
+  }
 }
 </style>
