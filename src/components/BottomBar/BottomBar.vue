@@ -23,10 +23,7 @@ import Vue from 'vue';
 import BottomBarCourse from '@/components/BottomBar/BottomBarCourse.vue';
 import BottomBarTabView from '@/components/BottomBar/BottomBarTabView.vue';
 import BottomBarTitle from '@/components/BottomBar/BottomBarTitle.vue';
-import {
-  immutableBottomBarState,
-  toggleBottomBar,
-} from '@/components/BottomBar/BottomBarState';
+import { immutableBottomBarState, toggleBottomBar } from '@/components/BottomBar/BottomBarState';
 
 export default Vue.extend({
   components: { BottomBarCourse, BottomBarTabView, BottomBarTitle },
@@ -43,8 +40,7 @@ export default Vue.extend({
     },
     focusedBottomBarCourse(): AppBottomBarCourse {
       const focus = immutableBottomBarState.bottomCourseFocus;
-      const normalizedFocus =
-        focus < this.maxBottomBarTabs ? focus : this.maxBottomBarTabs - 1;
+      const normalizedFocus = focus < this.maxBottomBarTabs ? focus : this.maxBottomBarTabs - 1;
       return immutableBottomBarState.bottomCourses[normalizedFocus];
     },
   },

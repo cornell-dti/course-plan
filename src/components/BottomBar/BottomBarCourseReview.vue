@@ -1,9 +1,7 @@
 <template>
   <div class="details">
     <div class="details-ratings-link-wrapper">
-      <a :href="CURLink" class="details-ratings-link" target="_blank"
-        >See All Reviews</a
-      >
+      <a :href="CURLink" class="details-ratings-link" target="_blank">See All Reviews</a>
     </div>
     <div class="details-ratings-wrapper">
       <div class="details-ratings">
@@ -78,8 +76,7 @@
 import Vue, { PropType } from 'vue';
 import { reviewColors } from '@/assets/constants/colors';
 
-const noneIfEmpty = (str: string): string =>
-  str && str.length !== 0 ? str : 'None';
+const noneIfEmpty = (str: string): string => (str && str.length !== 0 ? str : 'None');
 
 export default Vue.extend({
   props: {

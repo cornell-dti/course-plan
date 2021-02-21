@@ -2,28 +2,13 @@
   <div class="navbar">
     <div class="navbar-top">
       <div class="navbar-iconWrapper">
-        <img
-          class="navbar-icon"
-          src="@/assets/images/branding/logo.svg"
-          alt="Courseplan logo"
-        />
+        <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
       </div>
-      <div
-        class="navbar-iconWrapper desktop"
-        id="profileIcon"
-        @click="editProfile"
-      ></div>
+      <div class="navbar-iconWrapper desktop" id="profileIcon" @click="editProfile"></div>
     </div>
     <div class="navbar-bottom">
-      <div
-        class="navbar-iconWrapper mobile requirementsBar"
-        @click="toggleRequirementsBar"
-      ></div>
-      <div
-        class="navbar-iconWrapper mobile"
-        id="profileIcon"
-        @click="editProfile"
-      ></div>
+      <div class="navbar-iconWrapper mobile requirementsBar" @click="toggleRequirementsBar"></div>
+      <div class="navbar-iconWrapper mobile" id="profileIcon" @click="editProfile"></div>
       <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
     </div>
   </div>

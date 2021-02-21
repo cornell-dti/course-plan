@@ -1,14 +1,6 @@
 <template>
-  <div
-    :class="{ 'course--min': compact, active: active }"
-    class="course"
-    @click="courseOnClick()"
-  >
-    <div
-      class="course-color"
-      :style="cssVars"
-      :class="{ 'course-color--active': active }"
-    >
+  <div :class="{ 'course--min': compact, active: active }" class="course" @click="courseOnClick()">
+    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
       <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
     </div>
     <div class="course-content">
@@ -25,11 +17,7 @@
           <span v-if="!compact && semesterString" class="course-semesters">{{
             semesterString
           }}</span>
-          <course-caution
-            v-if="cautionString"
-            :compact="compact"
-            :cautionString="cautionString"
-          />
+          <course-caution v-if="cautionString" :compact="compact" :cautionString="cautionString" />
         </div>
       </div>
     </div>
@@ -84,9 +72,7 @@ export default Vue.extend({
   computed: {
     cautionString(): string | null {
       if (this.duplicatedCourseCodeList == null) return null;
-      return this.duplicatedCourseCodeList.includes(this.courseObj.code)
-        ? 'Duplicate'
-        : null;
+      return this.duplicatedCourseCodeList.includes(this.courseObj.code) ? 'Duplicate' : null;
     },
     semesterString(): string {
       let semesterString = '';

@@ -15,15 +15,8 @@
       @add-semester="addSemester"
       @close-semester-modal="closeSemesterModal"
     />
-    <div
-      class="semesterView-settings"
-      :class="{ 'semesterView-settings--two': noSemesters }"
-    >
-      <button
-        v-if="noSemesters"
-        class="semesterView-addSemesterButton"
-        @click="openSemesterModal"
-      >
+    <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
+      <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">
         + New Semester
       </button>
       <div class="semesterView-switch">
@@ -159,10 +152,7 @@ export default Vue.extend({
   },
   methods: {
     checkIfFirstSem(semester: FirestoreSemester) {
-      return (
-        this.semesters[0].year === semester.year &&
-        this.semesters[0].type === semester.type
-      );
+      return this.semesters[0].year === semester.year && this.semesters[0].type === semester.type;
     },
     setCompact() {
       if (!this.compact) {
@@ -201,11 +191,7 @@ export default Vue.extend({
       }
       this.duplicatedCourseCodeList = duplicatedCourseCodeList;
     },
-    openSemesterConfirmationModal(
-      type: FirestoreSemesterType,
-      year: number,
-      isAdd: boolean
-    ) {
+    openSemesterConfirmationModal(type: FirestoreSemesterType, year: number, isAdd: boolean) {
       if (isAdd) {
         this.confirmationText = `Added ${type} ${year} to plan`;
       } else {
@@ -247,9 +233,7 @@ export default Vue.extend({
       });
 
       editSemesters(oldSemesters =>
-        [...oldSemesters, this.createSemester([], type, year)].sort(
-          this.compare
-        )
+        [...oldSemesters, this.createSemester([], type, year)].sort(this.compare)
       );
       this.openSemesterConfirmationModal(type, year, true);
     },
@@ -265,9 +249,7 @@ export default Vue.extend({
 
       // Update requirements menu from dashboard
       editSemesters(oldSemesters =>
-        oldSemesters.filter(
-          semester => semester.type !== type || semester.year !== year
-        )
+        oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
       );
     },
     addCourseToSemester(
@@ -285,10 +267,7 @@ export default Vue.extend({
           return sem;
         });
         if (semesterFound) return newSemestersWithCourse;
-        return [
-          ...oldSemesters,
-          this.createSemester([newCourse], season, year),
-        ].sort(this.compare);
+        return [...oldSemesters, this.createSemester([newCourse], season, year)].sort(this.compare);
       });
     },
     compare(a: FirestoreSemester, b: FirestoreSemester): number {

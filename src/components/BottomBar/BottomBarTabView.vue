@@ -17,10 +17,7 @@
         />
       </div>
     </div>
-    <div
-      v-if="seeMoreCourses.length > 0"
-      class="bottombartabview-seeMoreWrapper"
-    >
+    <div v-if="seeMoreCourses.length > 0" class="bottombartabview-seeMoreWrapper">
       <div class="bottombarSeeMoreTab" @click="bottomBarSeeMoreToggle">
         <div class="bottombarSeeMoreTab-name">See More</div>
         <img
@@ -92,10 +89,7 @@ export default Vue.extend({
     },
     /** The first few courses that can fit in the bottom bar tabs without see more. */
     firstFewCourses(): readonly AppBottomBarCourse[] {
-      return immutableBottomBarState.bottomCourses.slice(
-        0,
-        this.maxBottomBarTabs
-      );
+      return immutableBottomBarState.bottomCourses.slice(0, this.maxBottomBarTabs);
     },
     seeMoreCourses(): readonly AppBottomBarCourse[] {
       return immutableBottomBarState.bottomCourses.slice(this.maxBottomBarTabs);

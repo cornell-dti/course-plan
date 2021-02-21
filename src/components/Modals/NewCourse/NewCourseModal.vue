@@ -19,9 +19,7 @@
       @on-select="selectCourse"
     />
     <div v-if="isCourseModelSelectingSemester && selectedCourse == null">
-      <div class="newCourse-title">
-        Add this class to the following semester
-      </div>
+      <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
         <new-semester
           :type="season"
@@ -37,11 +35,7 @@
         <div class="newCourse-text">Selected Semester</div>
         <div class="newCourse-semester">
           <span class="newCourse-name">
-            <img
-              class="newCourse-season-emoji"
-              :src="seasonImg[season]"
-              alt="season-emoji"
-            />
+            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="season-emoji" />
             {{ season }}
             {{ year }}
           </span>
@@ -51,9 +45,7 @@
         :key="courseSelectorKey"
         :editMode="editMode"
         :selectedRequirementID="selectedRequirementID"
-        :requirementsThatAllowDoubleCounting="
-          requirementsThatAllowDoubleCounting
-        "
+        :requirementsThatAllowDoubleCounting="requirementsThatAllowDoubleCounting"
         :relatedRequirements="relatedRequirements"
         :potentialRequirements="selfCheckRequirements"
         @on-selected-change="onSelectedChange"
@@ -147,8 +139,7 @@ export default Vue.extend({
       this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;
       this.relatedRequirements = relatedRequirements;
       this.selfCheckRequirements = selfCheckRequirements;
-      this.selectedRequirementID =
-        relatedRequirements.length > 0 ? relatedRequirements[0].id : '';
+      this.selectedRequirementID = relatedRequirements.length > 0 ? relatedRequirements[0].id : '';
     },
     closeCurrentModal() {
       this.reset();
@@ -180,29 +171,21 @@ export default Vue.extend({
         .then(res => res.json())
         .then(resultJSON => {
           // check catalogNbr of resultJSON class matches number of course to add
-          resultJSON.data.classes.forEach(
-            (resultJSONclass: CornellCourseRosterCourse) => {
-              if (resultJSONclass.catalogNbr === number) {
-                const course = { ...resultJSONclass, roster };
-                if (this.courseIsAddable) {
-                  this.$emit('add-course', course, this.season, this.year);
-                  this.chooseSelectableRequirementOption(
-                    course.crseId.toString(),
-                    requirementID
-                  );
-                }
+          resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
+            if (resultJSONclass.catalogNbr === number) {
+              const course = { ...resultJSONclass, roster };
+              if (this.courseIsAddable) {
+                this.$emit('add-course', course, this.season, this.year);
+                this.chooseSelectableRequirementOption(course.crseId.toString(), requirementID);
               }
             }
-          );
+          });
         });
 
       this.reset();
       this.closeCurrentModal();
     },
-    chooseSelectableRequirementOption(
-      courseID: string,
-      requirementID: string
-    ): void {
+    chooseSelectableRequirementOption(courseID: string, requirementID: string): void {
       if (courseID && requirementID) {
         chooseSelectableRequirementOption({
           ...this.selectableRequirementChoices,

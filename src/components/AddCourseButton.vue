@@ -16,10 +16,7 @@
     "
     :data-disable-interaction="shouldShowWalkthrough ? '1' : null"
   >
-    <span
-      class="semester-buttonText"
-      :class="{ 'semester-buttonText--compact': compact }"
-    >
+    <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">
       {{ addCourseText }}
     </span>
   </div>
