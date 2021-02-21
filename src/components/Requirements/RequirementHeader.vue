@@ -8,37 +8,7 @@
       <p class="name col p-0">{{ req.groupName }} Requirements</p>
     </div>
     <!-- TODO change for multiple colleges -->
-    <div v-if="reqIndex == numOfColleges && !multipleMajors" class="major">
-      <div
-        :style="{
-          'border-bottom':
-            id === displayedMajorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
-        }"
-        @click="activateMajor(id)"
-        class="major-title"
-        v-for="(major, id) in onboardingData.major"
-        :key="id"
-      >
-        <p
-          :style="{
-            'font-weight': id === displayedMajorIndex ? '500' : '',
-            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
-          }"
-          class="major-title-top"
-        >
-          {{ getMajorFullName(major) }}
-        </p>
-        <p
-          :style="{
-            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
-          }"
-          class="major-title-bottom"
-        >
-          ({{ getCollegeFullName(onboardingData.college) }})
-        </p>
-      </div>
-    </div>
-    <div v-if="reqIndex == numOfColleges && multipleMajors" class="major">
+    <div v-if="reqIndex == numOfColleges" class="major">
       <button
         :style="{
           'border-bottom':
@@ -48,7 +18,7 @@
         class="major-title-button major-title"
         v-for="(major, id) in onboardingData.major"
         :key="id"
-        :class="{ pointer: multipleMajors }"
+        :disabled="id === displayedMajorIndex"
       >
         <p
           :style="{
@@ -70,16 +40,16 @@
       </button>
     </div>
     <div v-if="reqIndex == numOfColleges + onboardingData.major.length" class="minor">
-      <div
+      <button
         :style="{
           'border-bottom':
             id === displayedMinorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
         }"
         @click="activateMinor(id)"
-        class="major-title"
+        class="major-title major-title-button"
         v-for="(minor, id) in onboardingData.minor"
         :key="id"
-        :class="{ pointer: multipleMinors }"
+        :disabled="id === displayedMinorIndex"
       >
         <p
           :style="{
@@ -91,7 +61,7 @@
           {{ getMinorFullName(minor) }}
         </p>
         <!-- <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> Change for multiple colleges -->
-      </div>
+      </button>
     </div>
 
     <!-- progress bar settings -->
@@ -168,12 +138,6 @@ export default Vue.extend({
     numOfColleges: { type: Number, required: true },
   },
   computed: {
-    multipleMajors() {
-      return this.onboardingData.major.length > 1;
-    },
-    multipleMinors() {
-      return this.onboardingData.minor.length > 1;
-    },
     requirementFulfilled(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
@@ -347,9 +311,6 @@ button.view {
     line-height: 14px;
     align-self: center;
     width: 100%;
-  }
-  .pointer {
-    cursor: pointer;
   }
 }
 .view-more-dropdown {
