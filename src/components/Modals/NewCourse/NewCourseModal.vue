@@ -73,7 +73,12 @@ import { chooseSelectableRequirementOption } from '@/global-firestore-data';
 import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
 export default Vue.extend({
-  components: { CourseSelector, FlexibleModal, NewSemester, SelectedRequirementEditor },
+  components: {
+    CourseSelector,
+    FlexibleModal,
+    NewSemester,
+    SelectedRequirementEditor,
+  },
   data() {
     return {
       selectedCourse: null as MatchingCourseSearchResult | null,
@@ -273,7 +278,7 @@ export default Vue.extend({
   width: 27.75rem;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: $small-medium-breakpoint) {
   .content-course {
     width: 100%;
   }

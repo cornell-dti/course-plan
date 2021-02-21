@@ -268,7 +268,7 @@ export default Vue.extend({
   border: 1px solid $yuxuanBlue;
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .course {
     width: 17rem;
     &--min {

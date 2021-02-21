@@ -175,15 +175,23 @@ export default Vue.extend({
   },
   props: {
     semesterIndex: { type: Number, required: true },
-    type: { type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>, required: true },
+    type: {
+      type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>,
+      required: true,
+    },
     year: { type: Number, required: true },
-    courses: { type: Array as PropType<readonly FirestoreSemesterCourse[]>, required: true },
+    courses: {
+      type: Array as PropType<readonly FirestoreSemesterCourse[]>,
+      required: true,
+    },
     compact: { type: Boolean, required: true },
     activatedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     isFirstSem: { type: Boolean, required: true },
   },
   mounted() {
-    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+    this.$el.addEventListener('touchmove', this.dragListener, {
+      passive: false,
+    });
     const droppable = (this.$refs.droppable as Vue).$el as HTMLDivElement;
     droppable.addEventListener('dragenter', this.onDragEnter);
     droppable.addEventListener('dragexit', this.onDragExit);
@@ -674,7 +682,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .semester {
     &-menu {
       right: 0rem;

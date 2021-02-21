@@ -89,7 +89,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 976px) {
+@media only screen and (max-width: $large-breakpoint) {
   .bottombarcourse {
     left: 25.5rem;
     width: calc(100vw - 25.5rem);
@@ -132,14 +132,14 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .bottombarcourse {
     left: 0rem;
     width: 100%;
   }
 }
 
-@media only screen and (max-width: 440px) {
+@media only screen and (max-width: $small-breakpoint) {
   .bottombarcourse {
     &-wrapper {
       height: 9.25rem;

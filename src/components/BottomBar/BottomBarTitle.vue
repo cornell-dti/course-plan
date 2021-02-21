@@ -33,6 +33,7 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
 .bottombartitle {
   padding-left: 0.5rem;
   height: 2.5rem;
@@ -73,21 +74,21 @@ export default Vue.extend({
   bottom: 16.25rem;
 }
 
-@media only screen and (max-width: 976px) {
+@media only screen and (max-width: $large-breakpoint) {
   .bottombartitle {
     left: 25.5rem;
     width: calc(100vw - 25.5rem);
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .bottombartitle {
     left: 0rem;
     width: 100%;
   }
 }
 
-@media only screen and (max-width: 440px) {
+@media only screen and (max-width: $small-breakpoint) {
   .expandedBottomBarTitle {
     bottom: 9.25rem;
   }
