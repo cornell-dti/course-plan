@@ -80,7 +80,6 @@
             <completed-sub-req-course
               :subReqCourseId="id"
               :courseTaken="subReqCourseSlot.courses[0]"
-              :isSelfCheck="false"
               @deleteCourseFromSemesters="deleteCourseFromSemesters"
             />
           </div>
@@ -108,8 +107,7 @@
         <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
           <completed-sub-req-course
             :subReqCourseId="id"
-            :selfCheckCourse="selfCheckCourse"
-            :isSelfCheck="true"
+            :courseTaken="convertCourse(selfCheckCourse)"
             @deleteCourseFromSemesters="deleteCourseFromSemesters"
           />
         </div>
@@ -129,7 +127,7 @@ import DropDownArrow from '@/components/DropDownArrow.vue';
 
 import { CrseInfo } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
-
+import { convertFirestoreSemesterCourseToCourseTaken } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 import { fetchCoursesFromFirebaseFunctions } from '@/firebaseConfig';
 
@@ -203,7 +201,7 @@ export default Vue.extend({
       return this.subReq.fulfilledBy !== 'self-check'
         ? `${this.subReq.minCountFulfilled}/${this.subReq.minCountRequired} ${this.subReq.fulfilledBy}`
         : 'self check';
-    },
+    }
   },
   directives: {
     'click-outside': clickOutside,
@@ -245,6 +243,9 @@ export default Vue.extend({
     },
     addSelfCheckCourse(course: FirestoreSemesterCourse) {
       this.fulfilledSelfCheckCourses.push(course);
+    },
+    convertCourse(course: FirestoreSemesterCourse): CourseTaken {
+      return convertFirestoreSemesterCourseToCourseTaken(course);
     },
     generateSubReqCoursesArray(): SubReqCourseSlot[] {
       const subReqCoursesArray: SubReqCourseSlot[] = [];

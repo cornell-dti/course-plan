@@ -3,6 +3,24 @@
  * that might be useful for both frontend components and requirement graph computation
  */
 
+/**
+ * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase 
+ * user data, into a CourseTaken type used throughout the requirements sidebar. 
+ */
+export function convertFirestoreSemesterCourseToCourseTaken(
+  course: FirestoreSemesterCourse,
+): CourseTaken {
+  const [subject, number] = course.code.split(' ');
+  return {
+    code: `${course.lastRoster}: ${subject} ${number}`,
+    subject,
+    courseId: course.crseId,
+    number,
+    credits: course.credits,
+    roster: course.lastRoster,
+  };
+}
+
 export function requirementAllowDoubleCounting(
   requirement: RequirementWithIDSourceType,
   majors: readonly string[]
