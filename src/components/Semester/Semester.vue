@@ -4,10 +4,8 @@
       class="semester-modal"
       :class="{ 'modal--block': isCourseModalOpen }"
       :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
-      @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
-      ref="modal"
     />
     <confirmation
       class="confirmation-modal"
@@ -390,30 +388,6 @@ export default Vue.extend({
     },
     dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
-    },
-    // TODO: unused
-    buildIncorrectPlacementCautions() {
-      if (this.courses) {
-        this.courses.forEach(course => {
-          if (!course.semesters.includes(this.type))
-            // @ts-ignore
-            course.alerts.caution = `Course unavailable in the ${this.type}`;
-        });
-      }
-    },
-
-    checkCourseDuplicate(key: string) {
-      if (this.courses) {
-        // @ts-ignore
-        this.$refs.modal.courseIsAddable = true;
-        this.courses.forEach(course => {
-          if (course.code === key) {
-            // @ts-ignore
-            this.$refs.modal.courseIsAddable = false;
-            this.$emit('open-caution-modal');
-          }
-        });
-      }
     },
     seasonMessage() {
       return `<b>This is a Semester Card of your current semester!
