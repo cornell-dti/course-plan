@@ -65,7 +65,6 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'BTRY 3010',
       'CS 2800'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },

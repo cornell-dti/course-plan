@@ -36,7 +36,6 @@ const getTotalCreditsFulfillmentStatistics = (
     sourceSpecificName: college,
     name: 'Total Academic Credits',
     courses: [],
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 120,
   } as const;
@@ -184,14 +183,9 @@ function computeFulfillmentStatisticsFromCourses(
             : 1;
         break;
       case 'credits':
-        minCountFulfilled +=
-          subRequirementProgress === 'any-can-count'
-            ? coursesThatFulfilledSubRequirement
-                .map(course => course.credits)
-                .reduce((a, b) => a + b, 0)
-            : coursesThatFulfilledSubRequirement
-                .map(course => course.credits)
-                .reduce((a, b) => a + b);
+        minCountFulfilled += coursesThatFulfilledSubRequirement
+          .map(course => course.credits)
+          .reduce((a, b) => a + b, 0);
         break;
       default:
         throw new Error('Fulfillment type unknown.');

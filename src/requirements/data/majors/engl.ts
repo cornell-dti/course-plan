@@ -21,7 +21,6 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
         'ENGL 6***',
       ]);
     },
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 40,
   },
@@ -35,7 +34,6 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: (course: Course): boolean =>
       (course.catalogComments?.includes('pre-1800') ?? false) ||
       (course.catalogSatisfiesReq?.includes('pre-1800') ?? false),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 12,
   },
@@ -45,7 +43,6 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('ENGL 4***'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 8,
   },

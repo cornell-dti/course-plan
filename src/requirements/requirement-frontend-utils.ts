@@ -37,11 +37,17 @@ export function getMatchedRequirementFulfillmentSpecification(
     case 'self-check':
       return null;
     case 'courses':
-    case 'credits':
       return {
         fulfilledBy: requirement.fulfilledBy,
         eligibleCourses: requirement.courses,
         subRequirementProgress: requirement.subRequirementProgress,
+        minCount: requirement.minCount,
+      };
+    case 'credits':
+      return {
+        fulfilledBy: requirement.fulfilledBy,
+        eligibleCourses: requirement.courses,
+        subRequirementProgress: 'any-can-count',
         minCount: requirement.minCount,
       };
     case 'toggleable': {
@@ -53,7 +59,8 @@ export function getMatchedRequirementFulfillmentSpecification(
       return {
         fulfilledBy: option.counting,
         eligibleCourses: option.courses,
-        subRequirementProgress: option.subRequirementProgress,
+        subRequirementProgress:
+          option.counting === 'courses' ? option.subRequirementProgress : 'any-can-count',
         minCount: option.minCount,
       };
     }

@@ -34,7 +34,6 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements',
     checker: courseIsFWS,
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },

@@ -20,7 +20,20 @@ npm run serve
 
 Then access http://localhost:8080/
 
-## Contributers
+## Contributors
+
+### SP21
+
+- **Hahnbee Lee** - Developer
+- **Will Spencer** - Developer
+- **Jason Tung** - Developer
+- **Nikita Kasumov** - Developer
+- **Sam Zhou** - Developer
+- **Ben Shen** - Developer
+- **Yuxuan Chen** - Designer
+- **Cristie Huang** - Designer
+- **Theresa Cho** - TPM
+- **Ein Chang** - PM
 
 ### FA2020
 

@@ -15,7 +15,6 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(
         course.subject
       ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 55,
   },
@@ -91,7 +90,6 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       'ILRST 2110',
       'ILRST 3110'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'credits',
     minCount: 3,
   },
