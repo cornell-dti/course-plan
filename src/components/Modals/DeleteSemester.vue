@@ -13,7 +13,9 @@
         <div class="deleteSemesterModal-body-text">{{ text }}</div>
       </div>
       <div class="deleteSemesterModal-buttonWrapper">
-        <button class="deleteSemesterModal-button" @click="closeCurrentModal">{{ cancel }}</button>
+        <button class="deleteSemesterModal-button" @click="closeCurrentModal">
+          {{ cancel }}
+        </button>
         <div
           class="deleteSemesterModal-button deleteSemesterModal-button--delete"
           @click="deleteSemester"
@@ -149,7 +151,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: $small-medium-breakpoint) {
   .deleteSemesterModal {
     &-content {
       width: 100%;

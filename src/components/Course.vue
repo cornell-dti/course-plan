@@ -1,6 +1,14 @@
 <template>
-  <div :class="{ 'course--min': compact, active: active }" class="course" @click="courseOnClick()">
-    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
+  <div
+    :class="{ 'course--min': compact, active: active }"
+    class="course"
+    @click="courseOnClick()"
+  >
+    <div
+      class="course-color"
+      :style="cssVars"
+      :class="{ 'course-color--active': active }"
+    >
       <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
     </div>
     <div class="course-content">
@@ -17,7 +25,11 @@
           <span v-if="!compact && semesterString" class="course-semesters">{{
             semesterString
           }}</span>
-          <course-caution v-if="cautionString" :compact="compact" :cautionString="cautionString" />
+          <course-caution
+            v-if="cautionString"
+            :compact="compact"
+            :cautionString="cautionString"
+          />
         </div>
       </div>
     </div>
@@ -48,7 +60,10 @@ import { clickOutside } from '@/utilities';
 export default Vue.extend({
   components: { CourseCaution, CourseMenu },
   props: {
-    courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    courseObj: {
+      type: Object as PropType<FirestoreSemesterCourse>,
+      required: true,
+    },
     duplicatedCourseCodeList: {
       type: Array as PropType<readonly string[]>,
       required: false,
@@ -69,7 +84,9 @@ export default Vue.extend({
   computed: {
     cautionString(): string | null {
       if (this.duplicatedCourseCodeList == null) return null;
-      return this.duplicatedCourseCodeList.includes(this.courseObj.code) ? 'Duplicate' : null;
+      return this.duplicatedCourseCodeList.includes(this.courseObj.code)
+        ? 'Duplicate'
+        : null;
     },
     semesterString(): string {
       let semesterString = '';
@@ -277,7 +294,7 @@ export default Vue.extend({
   border: 1px solid $yuxuanBlue;
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .course {
     width: 17rem;
     &--min {

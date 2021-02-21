@@ -23,7 +23,10 @@ import Vue from 'vue';
 import BottomBarCourse from '@/components/BottomBar/BottomBarCourse.vue';
 import BottomBarTabView from '@/components/BottomBar/BottomBarTabView.vue';
 import BottomBarTitle from '@/components/BottomBar/BottomBarTitle.vue';
-import { immutableBottomBarState, toggleBottomBar } from '@/components/BottomBar/BottomBarState';
+import {
+  immutableBottomBarState,
+  toggleBottomBar,
+} from '@/components/BottomBar/BottomBarState';
 
 export default Vue.extend({
   components: { BottomBarCourse, BottomBarTabView, BottomBarTitle },
@@ -40,7 +43,8 @@ export default Vue.extend({
     },
     focusedBottomBarCourse(): AppBottomBarCourse {
       const focus = immutableBottomBarState.bottomCourseFocus;
-      const normalizedFocus = focus < this.maxBottomBarTabs ? focus : this.maxBottomBarTabs - 1;
+      const normalizedFocus =
+        focus < this.maxBottomBarTabs ? focus : this.maxBottomBarTabs - 1;
       return immutableBottomBarState.bottomCourses[normalizedFocus];
     },
   },
@@ -52,6 +56,8 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .bottombar {
   display: flex;
   flex-direction: column;
@@ -69,7 +75,7 @@ export default Vue.extend({
   bottom: 18.75rem;
 }
 
-@media only screen and (max-width: 976px) {
+@media only screen and (max-width: $large-breakpoint) {
   .bottombar {
     &-tabview {
       left: 25.5rem;
@@ -77,7 +83,7 @@ export default Vue.extend({
     }
   }
 }
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .bottombar {
     &-tabview {
       left: 0rem;
@@ -86,7 +92,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 440px) {
+@media only screen and (max-width: $small-breakpoint) {
   .expandedTabView {
     bottom: 11.75rem;
   }

@@ -53,13 +53,20 @@
       data-disable-interaction="1"
     >
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
-        <div class="semester-left" :class="{ 'semester-left--compact': compact }">
+        <div
+          class="semester-left"
+          :class="{ 'semester-left--compact': compact }"
+        >
           <span class="semester-name"
-            ><img class="season-emoji" :src="seasonImg[type]" alt="" /> {{ type }} {{ year }}</span
+            ><img class="season-emoji" :src="seasonImg[type]" alt="" />
+            {{ type }} {{ year }}</span
           >
           <span class="semester-credits">{{ creditString }}</span>
         </div>
-        <div class="semester-right" :class="{ 'semester-right--compact': compact }">
+        <div
+          class="semester-right"
+          :class="{ 'semester-right--compact': compact }"
+        >
           <div class="semester-dotRow" @click="openSemesterMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
@@ -176,16 +183,30 @@ export default Vue.extend({
   },
   props: {
     semesterIndex: { type: Number, required: true },
-    type: { type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>, required: true },
+    type: {
+      type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>,
+      required: true,
+    },
     year: { type: Number, required: true },
-    courses: { type: Array as PropType<readonly FirestoreSemesterCourse[]>, required: true },
+    courses: {
+      type: Array as PropType<readonly FirestoreSemesterCourse[]>,
+      required: true,
+    },
     compact: { type: Boolean, required: true },
-    activatedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
-    duplicatedCourseCodeList: { type: Array as PropType<readonly string[]>, required: true },
+    activatedCourse: {
+      type: Object as PropType<FirestoreSemesterCourse>,
+      required: true,
+    },
+    duplicatedCourseCodeList: {
+      type: Array as PropType<readonly string[]>,
+      required: true,
+    },
     isFirstSem: { type: Boolean, required: true },
   },
   mounted() {
-    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+    this.$el.addEventListener('touchmove', this.dragListener, {
+      passive: false,
+    });
     const droppable = (this.$refs.droppable as Vue).$el as HTMLDivElement;
     droppable.addEventListener('dragenter', this.onDragEnter);
     droppable.addEventListener('dragexit', this.onDragExit);
@@ -336,7 +357,9 @@ export default Vue.extend({
       });
     },
     deleteCourse(courseCode: string, uniqueID: number) {
-      this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
+      this.openConfirmationModal(
+        `Removed ${courseCode} from ${this.type} ${this.year}`
+      );
       this.$gtag.event('delete-course', {
         event_category: 'course',
         event_label: 'delete',
@@ -377,7 +400,9 @@ export default Vue.extend({
         (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
-            course.uniqueID === uniqueID ? { ...course, credits: credit } : course
+            course.uniqueID === uniqueID
+              ? { ...course, credits: credit }
+              : course
           ),
         })
       );
@@ -439,7 +464,10 @@ export default Vue.extend({
     openEditSemesterModal() {
       this.isEditSemesterOpen = true;
     },
-    editSemester(seasonInput: 'Fall' | 'Spring' | 'Winter' | 'Summer', yearInput: number) {
+    editSemester(
+      seasonInput: 'Fall' | 'Spring' | 'Winter' | 'Summer',
+      yearInput: number
+    ) {
       this.$emit(
         'edit-semester',
         this.year,
@@ -676,7 +704,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .semester {
     &-menu {
       right: 0rem;

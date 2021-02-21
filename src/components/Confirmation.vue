@@ -1,7 +1,11 @@
 <template>
   <div class="confirmation">
     <div class="confirmation-left">
-      <img class="confirmation-icon" src="@/assets/images/checkmark.svg" alt="checkmark" />
+      <img
+        class="confirmation-icon"
+        src="@/assets/images/checkmark.svg"
+        alt="checkmark"
+      />
     </div>
     <div class="confirmation-text">{{ text }}</div>
   </div>
@@ -18,6 +22,8 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .confirmation {
   position: fixed;
   z-index: 10;
@@ -88,19 +94,19 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 976px) {
+@media only screen and (max-width: $large-breakpoint) {
   .confirmation {
     left: 25.5rem;
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .confirmation {
     left: 0;
   }
 }
 
-@media only screen and (max-width: 440px) {
+@media only screen and (max-width: $small-breakpoint) {
   .confirmation {
     width: 75%;
     &-left {

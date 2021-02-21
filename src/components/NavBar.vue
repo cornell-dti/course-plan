@@ -2,13 +2,28 @@
   <div class="navbar">
     <div class="navbar-top">
       <div class="navbar-iconWrapper">
-        <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
+        <img
+          class="navbar-icon"
+          src="@/assets/images/branding/logo.svg"
+          alt="Courseplan logo"
+        />
       </div>
-      <div class="navbar-iconWrapper desktop" id="profileIcon" @click="editProfile"></div>
+      <div
+        class="navbar-iconWrapper desktop"
+        id="profileIcon"
+        @click="editProfile"
+      ></div>
     </div>
     <div class="navbar-bottom">
-      <div class="navbar-iconWrapper mobile requirementsBar" @click="toggleRequirementsBar"></div>
-      <div class="navbar-iconWrapper mobile" id="profileIcon" @click="editProfile"></div>
+      <div
+        class="navbar-iconWrapper mobile requirementsBar"
+        @click="toggleRequirementsBar"
+      ></div>
+      <div
+        class="navbar-iconWrapper mobile"
+        id="profileIcon"
+        @click="editProfile"
+      ></div>
       <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
     </div>
   </div>
@@ -37,6 +52,8 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .navbar {
   background-color: #f7f7f7;
   width: 4.5rem;
@@ -112,7 +129,7 @@ export default Vue.extend({
   display: none;
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .navbar {
     &-top {
       display: flex;
@@ -142,7 +159,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: $small-medium-breakpoint) {
   .navbar {
     .requirementsBar {
       cursor: pointer;

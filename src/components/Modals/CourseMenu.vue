@@ -6,12 +6,20 @@
         @mouseover="setDisplayColors(true)"
         @mouseleave="setDisplayColors(false)"
       >
-        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
+        <img
+          v-if="isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrowleft.svg"
+        />
         <div class="courseMenu-left">
           <img class="courseMenu-icon" src="@/assets/images/paint.svg" />
           <span class="courseMenu-text">Edit Color</span>
         </div>
-        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+        <img
+          v-if="!isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrow.svg"
+        />
 
         <div
           v-if="displayColors"
@@ -40,7 +48,11 @@
         @mouseleave="setDisplayEditCourseCredits(false)"
         v-if="getCreditRange[0] != getCreditRange[1]"
       >
-        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
+        <img
+          v-if="isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrowleft.svg"
+        />
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -49,7 +61,11 @@
           />
           <span class="courseMenu-text">Edit Credits</span>
         </div>
-        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+        <img
+          v-if="!isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrow.svg"
+        />
         <div
           v-if="displayEditCourseCredits"
           class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
@@ -88,7 +104,9 @@ import { coursesColorSet } from '@/assets/constants/colors';
 export default Vue.extend({
   props: {
     getCreditRange: {
-      type: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
+      type: (Array as PropType<readonly number[]>) as PropType<
+        readonly [number, number]
+      >,
       required: true,
     },
     semesterIndex: { type: Number, required: true },
@@ -115,7 +133,9 @@ export default Vue.extend({
       const grid = document.getElementsByClassName('semesterView-content')[0];
       const gridStyle = window.getComputedStyle(grid);
       const gridWidth =
-        grid.clientWidth - (parseFloat(gridStyle.paddingLeft) + parseFloat(gridStyle.paddingRight));
+        grid.clientWidth -
+        (parseFloat(gridStyle.paddingLeft) +
+          parseFloat(gridStyle.paddingRight));
 
       let numPerRow = 0;
       if (this.isCompact) {
@@ -253,7 +273,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .courseMenu {
     &-arrow {
       display: none;
