@@ -1,7 +1,10 @@
 import rosters from '../assets/courses/rosters.json';
 import { CREDITS_COURSE_ID, FWS_COURSE_ID, SWIM_TEST_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './data/exams/ExamCredit';
-import { convertFirestoreSemesterCourseToCourseTaken, getMatchedRequirementFulfillmentSpecification } from './requirement-frontend-utils';
+import {
+  convertFirestoreSemesterCourseToCourseTaken,
+  getMatchedRequirementFulfillmentSpecification,
+} from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
 

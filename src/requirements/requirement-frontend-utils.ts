@@ -4,11 +4,11 @@
  */
 
 /**
- * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase 
- * user data, into a CourseTaken type used throughout the requirements sidebar. 
+ * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase
+ * user data, into a CourseTaken type used throughout the requirements sidebar.
  */
 export function convertFirestoreSemesterCourseToCourseTaken(
-  course: FirestoreSemesterCourse,
+  course: FirestoreSemesterCourse
 ): CourseTaken {
   const [subject, number] = course.code.split(' ');
   return {

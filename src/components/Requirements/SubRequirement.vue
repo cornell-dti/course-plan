@@ -201,7 +201,7 @@ export default Vue.extend({
       return this.subReq.fulfilledBy !== 'self-check'
         ? `${this.subReq.minCountFulfilled}/${this.subReq.minCountRequired} ${this.subReq.fulfilledBy}`
         : 'self check';
-    }
+    },
   },
   directives: {
     'click-outside': clickOutside,

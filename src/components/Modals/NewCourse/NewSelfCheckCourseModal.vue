@@ -46,7 +46,6 @@ export default Vue.extend({
     return {
       selectedCourse: null as MatchingCourseSearchResult | null,
       courseSelectorKey: 0,
-      courseIsAddable: true,
       season: '' as FirestoreSemesterType,
       year: 0,
     };
@@ -85,9 +84,7 @@ export default Vue.extend({
           resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
             if (resultJSONclass.catalogNbr === number) {
               const course = { ...resultJSONclass, roster };
-              if (this.courseIsAddable) {
-                this.$emit('add-course', course, this.season, this.year);
-              }
+              this.$emit('add-course', course, this.season, this.year);
             }
           });
         });
