@@ -199,7 +199,7 @@ export default Vue.extend({
     }
   }
 }
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: $small-medium-breakpoint) {
   .bottombartabview {
     &-seeMoreWrapper {
       .bottombarSeeMoreTab {

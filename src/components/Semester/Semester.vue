@@ -5,7 +5,6 @@
       :class="{ 'modal--block': isCourseModalOpen }"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
-      ref="modal"
     />
     <confirmation
       class="confirmation-modal"
@@ -161,7 +160,6 @@ export default Vue.extend({
       isShadow: false,
       isDraggedFrom: false,
       isCourseModalOpen: false,
-      isCourseModelSelectingSemester: false,
 
       seasonImg: {
         Fall: fall,
@@ -173,15 +171,23 @@ export default Vue.extend({
   },
   props: {
     semesterIndex: { type: Number, required: true },
-    type: { type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>, required: true },
+    type: {
+      type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>,
+      required: true,
+    },
     year: { type: Number, required: true },
-    courses: { type: Array as PropType<readonly FirestoreSemesterCourse[]>, required: true },
+    courses: {
+      type: Array as PropType<readonly FirestoreSemesterCourse[]>,
+      required: true,
+    },
     compact: { type: Boolean, required: true },
     activatedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     isFirstSem: { type: Boolean, required: true },
   },
   mounted() {
-    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+    this.$el.addEventListener('touchmove', this.dragListener, {
+      passive: false,
+    });
     const droppable = (this.$refs.droppable as Vue).$el as HTMLDivElement;
     droppable.addEventListener('dragenter', this.onDragEnter);
     droppable.addEventListener('dragexit', this.onDragExit);
@@ -272,7 +278,6 @@ export default Vue.extend({
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.isCourseModalOpen = true;
-      this.isCourseModelSelectingSemester = isSelectingSemester;
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
@@ -380,16 +385,6 @@ export default Vue.extend({
     },
     dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
-    },
-    // TODO: unused
-    buildIncorrectPlacementCautions() {
-      if (this.courses) {
-        this.courses.forEach(course => {
-          if (!course.semesters.includes(this.type))
-            // @ts-ignore
-            course.alerts.caution = `Course unavailable in the ${this.type}`;
-        });
-      }
     },
     seasonMessage() {
       return `<b>This is a Semester Card of your current semester!
@@ -658,7 +653,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .semester {
     &-menu {
       right: 0rem;

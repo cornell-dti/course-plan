@@ -309,14 +309,14 @@ h1.title {
   transform: rotate(90deg);
 }
 
-@media only screen and (max-width: 976px) {
+@media only screen and (max-width: $large-breakpoint) {
   .requirements,
   .fixed {
     width: 21rem;
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .requirements {
     width: 100%;
     padding-left: 0.5rem;

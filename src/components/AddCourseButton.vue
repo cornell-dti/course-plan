@@ -1,7 +1,10 @@
 <template>
   <div
     class="semester-courseWrapper semester-addWrapper"
-    :class="{ 'semester-addWrapper--compact': compact, 'my-2 mx-0': shouldClearPadding }"
+    :class="{
+      'semester-addWrapper--compact': compact,
+      'my-2 mx-0': shouldClearPadding,
+    }"
     @click="onClick"
     :data-intro-group="shouldShowWalkthrough ? 'pageTour' : null"
     :data-step="shouldShowWalkthrough ? '3' : null"
@@ -101,7 +104,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .semester {
     &-addWrapper {
       width: 17rem;

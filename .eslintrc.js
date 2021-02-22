@@ -26,7 +26,7 @@ module.exports = {
   },
   // add your custom rules here
   rules: {
-    '@typescript-eslint/ban-ts-comment': ['warn'],
+    '@typescript-eslint/ban-ts-comment': ['error'],
     'vue/attribute-hyphenation': ['off'],
     // TODO: auto-fix of this and the next rule introduces too many code changes that might cause merge conflict.
     'vue/attributes-order': ['off'],

@@ -253,7 +253,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .courseMenu {
     &-arrow {
       display: none;

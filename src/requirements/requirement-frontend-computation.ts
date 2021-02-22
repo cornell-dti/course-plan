@@ -228,8 +228,7 @@ function filterAndPartitionCoursesThatFulfillRequirement(
 function computeFulfillmentCoursesAndStatistics(
   requirement: RequirementWithIDSourceType,
   coursesTaken: readonly CourseTaken[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices,
-  selectableRequirementChoices: AppSelectableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices
 ): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
   const spec = getMatchedRequirementFulfillmentSpecification(
     requirement,
@@ -307,12 +306,7 @@ export default function computeGroupedRequirementFulfillmentReports(
     const fulfillmentStatistics = {
       id: requirement.id,
       requirement,
-      ...computeFulfillmentCoursesAndStatistics(
-        requirement,
-        courses,
-        toggleableRequirementChoices,
-        selectableRequirementChoices
-      ),
+      ...computeFulfillmentCoursesAndStatistics(requirement, courses, toggleableRequirementChoices),
     };
 
     switch (requirement.sourceType) {

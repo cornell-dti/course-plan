@@ -387,7 +387,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .semesterView {
     margin-top: 5.5rem;
     margin-left: 2.5rem;

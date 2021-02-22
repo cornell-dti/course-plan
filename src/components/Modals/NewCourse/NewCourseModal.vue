@@ -57,7 +57,6 @@ export default Vue.extend({
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
       editMode: false,
       courseSelectorKey: 0,
-      courseIsAddable: true,
       season: '' as FirestoreSemesterType,
       year: 0,
     };
@@ -133,10 +132,8 @@ export default Vue.extend({
           resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
             if (resultJSONclass.catalogNbr === number) {
               const course = { ...resultJSONclass, roster };
-              if (this.courseIsAddable) {
-                this.$emit('add-course', course, this.season, this.year);
-                this.chooseSelectableRequirementOption(course.crseId.toString(), requirementID);
-              }
+              this.$emit('add-course', course, this.season, this.year);
+              this.chooseSelectableRequirementOption(course.crseId.toString(), requirementID);
             }
           });
         });
@@ -222,7 +219,7 @@ export default Vue.extend({
   width: 27.75rem;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: $small-medium-breakpoint) {
   .content-course {
     width: 100%;
   }
