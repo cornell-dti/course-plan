@@ -80,15 +80,6 @@ export default Vue.extend({
       }
       return `${this.courseObj.credits} credits`;
     },
-    review(): string {
-      const [subject, number] = this.courseObj.code;
-      return `https://www.cureviews.org/course/${subject}/${number}`;
-    },
-
-    roster(): string {
-      const [subject, number] = this.courseObj.code;
-      return `https://classes.cornell.edu/browse/roster/FA18/class/${subject}/${number}`;
-    },
 
     cssVars(): { '--bg-color': string } {
       return {
