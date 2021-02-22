@@ -36,18 +36,10 @@ import Vue from 'vue';
 
 import { clickOutside } from '@/utilities';
 import store from '@/store';
-import { editSemesters } from '@/global-firestore-data';
+import { addCourseToSemester } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
-
-// enum to define seasons as integers in season order
-const SeasonsEnum = Object.freeze({
-  Winter: 0,
-  Spring: 1,
-  Summer: 2,
-  Fall: 3,
-});
 
 type Data = {
   showDropdown: boolean;
@@ -91,7 +83,7 @@ export default Vue.extend({
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterType, year: number) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(course);
-      this.addCourseToSemester(season, year, newCourse);
+      addCourseToSemester(season, year, newCourse);
       this.$emit('addCourse', newCourse);
     },
     openCourseModal() {
@@ -99,46 +91,6 @@ export default Vue.extend({
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
-    },
-    addCourseToSemester(
-      season: FirestoreSemesterType,
-      year: number,
-      newCourse: FirestoreSemesterCourse
-    ) {
-      editSemesters(oldSemesters => {
-        let semesterFound = false;
-        const newSemestersWithCourse = oldSemesters.map(sem => {
-          if (sem.type === season && sem.year === year) {
-            semesterFound = true;
-            return { ...sem, courses: [...sem.courses, newCourse] };
-          }
-          return sem;
-        });
-        if (semesterFound) return newSemestersWithCourse;
-        return [...oldSemesters, this.createSemester([newCourse], season, year)].sort(this.compare);
-      });
-    },
-    createSemester(
-      courses: readonly FirestoreSemesterCourse[],
-      type: FirestoreSemesterType,
-      year: number
-    ) {
-      return { courses, type, year };
-    },
-    compare(a: FirestoreSemester, b: FirestoreSemester): number {
-      if (a.type === b.type && a.year === b.year) {
-        return 0;
-      }
-      if (a.year > b.year) {
-        return -1;
-      }
-      if (a.year < b.year) {
-        return 1;
-      }
-      if (SeasonsEnum[a.type] < SeasonsEnum[b.type]) {
-        return 1;
-      }
-      return -1;
     },
   },
 });

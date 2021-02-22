@@ -40,8 +40,6 @@ import CourseSelector, {
   MatchingCourseSearchResult,
 } from '@/components/Modals/NewCourse/CourseSelector.vue';
 
-import store from '@/store';
-
 export default Vue.extend({
   components: { CourseSelector, FlexibleModal, NewSemester },
   data() {
