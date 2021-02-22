@@ -5,6 +5,23 @@ import {
   includesWithSubRequirements,
 } from '../checkers-common';
 
+const engineeringLiberalArtsDistributions: readonly string[] = [
+  'CA',
+  'HA',
+  'LA',
+  'LAD',
+  'KCM',
+  'SBA',
+  'FL',
+  'CE',
+  'ALC',
+  'SCD',
+  'HST',
+  'ETM',
+  'SSC',
+  'GLC',
+];
+
 const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Mathematics',
@@ -80,21 +97,40 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     minCount: 2,
   },
-  // TODO: Check for categories & handle changed requirements for those entering in 2020 and later
   {
     name: 'Liberal Studies Distribution: 6 courses',
     description:
       'Liberal arts commonly include courses in the humanities. A minimum of six courses must be taken. ' +
-      ' These courses must come from some different groups and at least two courses must be at the 2000 level or higher.',
+      'At least two courses must be at the 2000 level or higher.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
     checker: (course: Course): boolean =>
-      ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA', 'FL', 'CE'].some(
+      engineeringLiberalArtsDistributions.some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
     subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 6,
+  },
+  {
+    name: 'Liberal Studies Distribution: 3 categories',
+    description:
+      'In addition to six courses, the liberal studies courses must be from 3 categories.',
+    source:
+      'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
+    checker: [
+      (course: Course): boolean =>
+        (course.catalogDistr?.includes('LA') || course.catalogDistr?.includes('LAD')) ?? false,
+      ...engineeringLiberalArtsDistributions
+        .filter(it => it !== 'LA' && it !== 'LAD')
+        .map(distribution => (course: Course): boolean =>
+          course.catalogDistr?.includes(distribution) ?? false
+        ),
+    ],
+    subRequirementProgress: 'every-course-needed',
+    fulfilledBy: 'courses',
+    allowCourseDoubleCounting: true,
+    minCount: 3,
   },
   {
     name: 'Liberal Studies Distribution: 18 credits',
@@ -103,10 +139,11 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
     checker: (course: Course): boolean =>
-      ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA', 'FL', 'CE'].some(
+      engineeringLiberalArtsDistributions.some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
     fulfilledBy: 'credits',
+    allowCourseDoubleCounting: true,
     minCount: 18,
   },
   {

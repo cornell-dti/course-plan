@@ -10,7 +10,10 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       'they can also take all their credits in Arts & Sciences and accumulate more than 120. ' +
       'Note: AP, IB, and A-Level credits count toward the 120 total credits but not toward the 100 A&S credits.',
     source: 'https://as.cornell.edu/degree-requirements',
-    checker: (course: Course): boolean => course.catalogDistr?.includes('-AS') ?? false,
+    checker: (course: Course): boolean =>
+      course.acadGroup.includes('AS') ||
+      course.subject === 'CS' ||
+      (course.catalogDistr?.includes('-AS') ?? false),
     fulfilledBy: 'credits',
     minCount: 100,
   },
@@ -112,7 +115,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       'Four courses in Physical & Biological Sciences (PBS-AS/PBSS-AS), and Mathematics & Quantitative Reasoning (MQR-AS).',
     source: 'https://as.cornell.edu/degree-requirements',
     checker: (course: Course): boolean =>
-      ['(PBS-AS)', '(PBSS-AS)', '(MQR-AS)'].some(
+      ['PBS-AS', 'PBSS-AS', 'MQR-AS'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
     subRequirementProgress: 'any-can-count',
@@ -124,7 +127,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'Students must take 2 courses in Physical & Biological Sciences (PBS).',
     source: 'https://as.cornell.edu/degree-requirements',
     checker: (course: Course): boolean =>
-      ['(PBS-AS)', '(PBSS-AS)'].some(
+      ['PBS-AS', 'PBSS-AS'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
     subRequirementProgress: 'any-can-count',
@@ -135,7 +138,7 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Mathematics & Quantitative Reasoning (MQR-AS)',
     description: 'Students must take 1 in Mathematics & Quantitative Reasoning (MQR).',
     source: 'https://as.cornell.edu/degree-requirements',
-    checker: (course: Course): boolean => course.catalogDistr?.includes('(MQR-AS)') ?? false,
+    checker: (course: Course): boolean => course.catalogDistr?.includes('MQR-AS') ?? false,
     subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
@@ -146,11 +149,11 @@ const casRequirements: readonly CollegeOrMajorRequirement[] = [
       'Five Arts & Sciences courses of 3 or more credits from at least 4 of the following social sciences, humanities, and arts categories:',
     source: 'https://as.cornell.edu/degree-requirements',
     checker: [
-      (course: Course): boolean => course.catalogDistr?.includes('(CA-AS)') ?? false,
-      (course: Course): boolean => course.catalogDistr?.includes('(HA-AS)') ?? false,
-      (course: Course): boolean => course.catalogDistr?.includes('(KCM-AS)') ?? false,
-      (course: Course): boolean => course.catalogDistr?.includes('(LA-AS)') ?? false,
-      (course: Course): boolean => course.catalogDistr?.includes('(SBA-AS)') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('CA-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('HA-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('KCM-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('LA-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('SBA-AS') ?? false,
     ],
     subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
