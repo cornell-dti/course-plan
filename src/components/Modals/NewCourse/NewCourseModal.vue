@@ -88,7 +88,6 @@ export default Vue.extend({
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
       editMode: false,
       courseSelectorKey: 0,
-      courseIsAddable: true,
       season: '' as FirestoreSemesterType,
       year: 0,
     };
@@ -145,10 +144,6 @@ export default Vue.extend({
       this.reset();
       this.$emit('close-course-modal');
     },
-    // Note: Currently not used
-    checkCourseDuplicate(key: string) {
-      this.$emit('check-course-duplicate', key);
-    },
     addItem() {
       if (this.editMode) {
         this.editMode = false;
@@ -174,10 +169,8 @@ export default Vue.extend({
           resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
             if (resultJSONclass.catalogNbr === number) {
               const course = { ...resultJSONclass, roster };
-              if (this.courseIsAddable) {
-                this.$emit('add-course', course, this.season, this.year);
-                this.chooseSelectableRequirementOption(course.crseId.toString(), requirementID);
-              }
+              this.$emit('add-course', course, this.season, this.year);
+              this.chooseSelectableRequirementOption(course.crseId.toString(), requirementID);
             }
           });
         });
