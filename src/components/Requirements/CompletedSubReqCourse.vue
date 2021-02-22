@@ -72,7 +72,9 @@ export default Vue.extend({
       if (this.isTransferCredit) {
         return { semesterLabel: 'Transfer Credits', color: transferCreditColor, uniqueID: 0 };
       }
+
       const courseTakenCode = `${this.courseTaken.subject} ${this.courseTaken.number}`;
+
       for (let i = 0; i < this.semesters.length; i += 1) {
         const semester = this.semesters[i];
         const filteredSemesterCourses = semester.courses.filter(

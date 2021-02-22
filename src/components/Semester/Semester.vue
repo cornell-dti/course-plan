@@ -3,7 +3,6 @@
     <new-course-modal
       class="semester-modal"
       :class="{ 'modal--block': isCourseModalOpen }"
-      :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
     />
@@ -161,7 +160,6 @@ export default Vue.extend({
       isShadow: false,
       isDraggedFrom: false,
       isCourseModalOpen: false,
-      isCourseModelSelectingSemester: false,
 
       seasonImg: {
         Fall: fall,
@@ -276,11 +274,10 @@ export default Vue.extend({
       this.scrollable = false;
       this.isDraggedFrom = false;
     },
-    openCourseModal(isSelectingSemester = false) {
+    openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.isCourseModalOpen = true;
-      this.isCourseModelSelectingSemester = isSelectingSemester;
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
@@ -309,29 +306,22 @@ export default Vue.extend({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    addCourse(
-      data: CornellCourseRosterCourse,
-      season: string | null = null,
-      year: number | null = null
-    ) {
+    addCourse(data: CornellCourseRosterCourse) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(data);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
-      let confirmationMsg;
-      if (season !== '' || year !== 0) {
-        this.$emit('add-course-to-semester', season, year, newCourse);
-        confirmationMsg = `Added ${courseCode} to ${season} ${year}`;
-      } else {
-        this.$emit(
-          'edit-semester',
-          this.year,
-          this.type,
-          (semester: FirestoreSemester): FirestoreSemester => ({
-            ...semester,
-            courses: [...this.courses, newCourse],
-          })
-        );
-        confirmationMsg = `Added ${courseCode} to ${this.type} ${this.year}`;
-      }
+
+      this.$emit(
+        'edit-semester',
+        this.year,
+        this.type,
+        (semester: FirestoreSemester): FirestoreSemester => ({
+          ...semester,
+          courses: [...this.courses, newCourse],
+        })
+      );
+
+      const confirmationMsg = `Added ${courseCode} to ${this.type} ${this.year}`;
+
       this.openConfirmationModal(confirmationMsg);
       this.$gtag.event('add-course', {
         event_category: 'course',
@@ -454,7 +444,7 @@ export default Vue.extend({
     color: #ffffff;
     border: none;
     position: absolute;
-    top: -3.5rem;
+    top: -3.3rem;
   }
 
   &-content {

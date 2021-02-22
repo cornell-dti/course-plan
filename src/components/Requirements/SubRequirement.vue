@@ -71,7 +71,10 @@
           </div>
         </div>
       </div>
-      <div v-if="displayDescription" class="subreqcourse-wrapper">
+      <div
+        v-if="displayDescription && subReq.requirement.fulfilledBy !== 'self-check'"
+        class="subreqcourse-wrapper"
+      >
         <div v-for="(subReqCourseSlot, id) in subReqCoursesArray" :key="id">
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completed-sub-req-course
@@ -97,6 +100,20 @@
           </div>
         </div>
       </div>
+      <div
+        v-if="displayDescription && subReq.requirement.fulfilledBy === 'self-check'"
+        class="subreqcourse-wrapper"
+      >
+        <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
+          <completed-sub-req-course
+            :subReqCourseId="id"
+            :courseTaken="convertCourse(selfCheckCourse)"
+            @deleteCourseFromSemesters="deleteCourseFromSemesters"
+          />
+        </div>
+        <!-- TODO: only show incomplete-self-check if all courses not added -->
+        <incomplete-self-check @addCourse="addSelfCheckCourse" />
+      </div>
     </div>
   </div>
 </template>
@@ -105,11 +122,12 @@
 import Vue, { PropType } from 'vue';
 import CompletedSubReqCourse from '@/components/Requirements/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCourse.vue';
+import IncompleteSelfCheck from '@/components/Requirements/IncompleteSelfCheck.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
 import { CrseInfo } from '@/requirements/types';
 import { clickOutside } from '@/utilities';
-
+import { convertFirestoreSemesterCourseToCourseTaken } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 import { fetchCoursesFromFirebaseFunctions } from '@/firebaseConfig';
 
@@ -130,10 +148,11 @@ type Data = {
   displayDescription: boolean;
   subReqFetchedCourseObjectsNotTakenArray: FirestoreSemesterCourse[];
   dataReady: boolean;
+  fulfilledSelfCheckCourses: FirestoreSemesterCourse[];
 };
 
 export default Vue.extend({
-  components: { CompletedSubReqCourse, DropDownArrow, IncompleteSubReqCourse },
+  components: { CompletedSubReqCourse, DropDownArrow, IncompleteSubReqCourse, IncompleteSelfCheck },
   props: {
     subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
     subReqIndex: { type: Number, required: true }, // Subrequirement index
@@ -159,6 +178,7 @@ export default Vue.extend({
       displayDescription: false,
       subReqFetchedCourseObjectsNotTakenArray: [], // array of fetched course objects
       dataReady: false, // true if dataReady for all subReqCourses. false otherwise
+      fulfilledSelfCheckCourses: [],
     };
   },
   computed: {
@@ -220,6 +240,12 @@ export default Vue.extend({
         default:
           return this.subReq.requirement.courses;
       }
+    },
+    addSelfCheckCourse(course: FirestoreSemesterCourse) {
+      this.fulfilledSelfCheckCourses.push(course);
+    },
+    convertCourse(course: FirestoreSemesterCourse): CourseTaken {
+      return convertFirestoreSemesterCourseToCourseTaken(course);
     },
     generateSubReqCoursesArray(): SubReqCourseSlot[] {
       const subReqCoursesArray: SubReqCourseSlot[] = [];
@@ -310,6 +336,18 @@ export default Vue.extend({
       });
     },
     deleteCourseFromSemesters(uniqueId: number) {
+      // find and remove self-check course on sidebar
+      let indexToRemove = -1;
+      if (this.subReq.requirement.fulfilledBy === 'self-check') {
+        for (let i = 0; i < this.fulfilledSelfCheckCourses.length; i += 1) {
+          if (this.fulfilledSelfCheckCourses[i].uniqueID === uniqueId) {
+            indexToRemove = i;
+          }
+        }
+      }
+      if (indexToRemove !== -1) {
+        this.fulfilledSelfCheckCourses.splice(indexToRemove, 1);
+      }
       this.$emit('deleteCourseFromSemesters', uniqueId);
     },
   },
@@ -463,8 +501,6 @@ button.view {
     }
     &-content {
       z-index: 2;
-      position: absolute;
-      width: 80%;
       background: $white;
       box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
       border-radius: 7px;

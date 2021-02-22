@@ -1,7 +1,10 @@
 import rosters from '../assets/courses/rosters.json';
 import { CREDITS_COURSE_ID, FWS_COURSE_ID, SWIM_TEST_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './data/exams/ExamCredit';
-import { getMatchedRequirementFulfillmentSpecification } from './requirement-frontend-utils';
+import {
+  convertFirestoreSemesterCourseToCourseTaken,
+  getMatchedRequirementFulfillmentSpecification,
+} from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
 
@@ -251,15 +254,7 @@ function getCourseCodesArray(
   const courses: CourseTaken[] = [];
   semesters.forEach(semester => {
     semester.courses.forEach(course => {
-      const [subject, number] = course.code.split(' ');
-      courses.push({
-        code: `${course.lastRoster}: ${subject} ${number}`,
-        subject,
-        courseId: course.crseId,
-        number,
-        credits: course.credits,
-        roster: course.lastRoster,
-      });
+      courses.push(convertFirestoreSemesterCourseToCourseTaken(course));
     });
   });
   courses.push(...getCourseEquivalentsFromUserExams(onboardingData));

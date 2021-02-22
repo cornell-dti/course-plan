@@ -46,9 +46,6 @@
           />
         </div>
       </draggable>
-      <div v-if="subReq.fulfilledBy === 'self-check'">
-        <add-course-button :compact="true" :shouldClearPadding="true" @click="onAddCourse" />
-      </div>
     </div>
   </div>
 </template>
@@ -58,10 +55,9 @@ import Vue, { PropType } from 'vue';
 import draggable from 'vuedraggable';
 import VueSkeletonLoader from 'skeleton-loader-vue';
 import Course from '@/components/Course/Course.vue';
-import AddCourseButton from '@/components/AddCourseButton.vue';
 
 export default Vue.extend({
-  components: { draggable, AddCourseButton, Course, VueSkeletonLoader },
+  components: { draggable, Course, VueSkeletonLoader },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
   },
@@ -149,10 +145,6 @@ export default Vue.extend({
     },
     onShowAllCourses() {
       this.$emit('onShowAllCourses');
-    },
-    onAddCourse() {
-      const dashboardRef = this.$parent.$parent.$parent.$parent as any;
-      dashboardRef.$refs.semesterview.$refs.semester[0].openCourseModal(true);
     },
   },
 });
