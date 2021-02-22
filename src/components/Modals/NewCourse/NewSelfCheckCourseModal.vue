@@ -144,7 +144,7 @@ export default Vue.extend({
   width: 27.75rem;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: $small-medium-breakpoint) {
   .content-course {
     width: 100%;
   }
