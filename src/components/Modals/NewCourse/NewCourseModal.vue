@@ -57,8 +57,6 @@ export default Vue.extend({
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
       editMode: false,
       courseSelectorKey: 0,
-      season: '' as FirestoreSemesterType,
-      year: 0,
     };
   },
   computed: {
@@ -132,7 +130,7 @@ export default Vue.extend({
           resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
             if (resultJSONclass.catalogNbr === number) {
               const course = { ...resultJSONclass, roster };
-              this.$emit('add-course', course, this.season, this.year);
+              this.$emit('add-course', course);
               this.chooseSelectableRequirementOption(course.crseId.toString(), requirementID);
             }
           });

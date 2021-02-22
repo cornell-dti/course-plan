@@ -224,6 +224,7 @@ export default Vue.extend({
   &-mainView {
     display: flex;
     background-color: $backgroundBlue;
+    overflow-x: hidden;
   }
 
   &-menus {

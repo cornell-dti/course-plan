@@ -252,7 +252,7 @@ export default Vue.extend({
 }
 .requirements,
 .fixed {
-  height: 100vh;
+  height: 100%;
   width: 25rem;
   background-color: $white;
 }
