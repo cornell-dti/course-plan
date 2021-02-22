@@ -103,7 +103,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: (course: Course): boolean =>
-      ['CA', 'HA', 'LA/LAD'].some(
+      ['CA', 'HA', 'LA', 'LAD'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
     subRequirementProgress: 'any-can-count',

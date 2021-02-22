@@ -26,7 +26,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'At least one class must be classified as MQR or PBS',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
     checker: (course: Course): boolean =>
-      ['(PBS-AS)', '(PBSS-AS)', '(MQR-AS)'].some(
+      ['PBS-AS', 'PBSS-AS', 'MQR-AS'].some(
         distribution => course.catalogDistr?.includes(distribution) ?? false
       ),
     subRequirementProgress: 'any-can-count',
