@@ -1,10 +1,8 @@
 <template>
   <div class="incompleteselfcheck">
-    <new-course-modal
+    <new-self-check-course-modal
       class="incompleteselfcheck-modal"
       :class="{ 'incompleteselfcheck-modal--block': isCourseModalOpen }"
-      :isCourseModelSelectingSemester="true"
-      :isSelfCheck="true"
       @close-course-modal="closeCourseModal"
       @add-course="addNewCourse"
       ref="modal"
@@ -41,7 +39,7 @@ import store from '@/store';
 import { editSemesters } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
-import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
+import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
 
 // enum to define seasons as integers in season order
 const SeasonsEnum = Object.freeze({
@@ -58,7 +56,7 @@ type Data = {
 
 export default Vue.extend({
   components: {
-    NewCourseModal,
+    NewSelfCheckCourseModal,
   },
   props: {},
   data(): Data {

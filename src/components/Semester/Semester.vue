@@ -3,8 +3,6 @@
     <new-course-modal
       class="semester-modal"
       :class="{ 'modal--block': isCourseModalOpen }"
-      :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
-      :isSelfCheck="false"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
       ref="modal"

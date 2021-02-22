@@ -18,29 +18,8 @@
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
     />
-    <div v-if="isCourseModelSelectingSemester && selectedCourse == null">
-      <div class="newCourse-title">Add this class to the following semester</div>
-      <div class="newCourse-semester-edit">
-        <new-semester
-          :type="season"
-          :year="year"
-          :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
-          @updateSemProps="updateSemProps"
-        />
-      </div>
-    </div>
     <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
-      <div v-if="isCourseModelSelectingSemester">
-        <div class="newCourse-text">Selected Semester</div>
-        <div class="newCourse-semester">
-          <span class="newCourse-name">
-            <img class="newCourse-season-emoji" :src="seasonImg[season]" alt="season-emoji" />
-            {{ season }}
-            {{ year }}
-          </span>
-        </div>
-      </div>
       <selected-requirement-editor
         :key="courseSelectorKey"
         :editMode="editMode"
@@ -59,21 +38,16 @@
 import Vue from 'vue';
 import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
-import NewSemester from '@/components/Modals/NewSemester.vue';
 import CourseSelector, {
   MatchingCourseSearchResult,
 } from '@/components/Modals/NewCourse/CourseSelector.vue';
 
-import fall from '@/assets/images/fallEmoji.svg';
-import spring from '@/assets/images/springEmoji.svg';
-import winter from '@/assets/images/winterEmoji.svg';
-import summer from '@/assets/images/summerEmoji.svg';
 import store from '@/store';
 import { chooseSelectableRequirementOption } from '@/global-firestore-data';
 import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
 export default Vue.extend({
-  components: { CourseSelector, FlexibleModal, NewSemester, SelectedRequirementEditor },
+  components: { CourseSelector, FlexibleModal, SelectedRequirementEditor },
   data() {
     return {
       selectedCourse: null as MatchingCourseSearchResult | null,
@@ -88,10 +62,6 @@ export default Vue.extend({
       year: 0,
     };
   },
-  props: {
-    isCourseModelSelectingSemester: { type: Boolean, required: true },
-    isSelfCheck: { type: Boolean, required: true },
-  },
   computed: {
     leftButtonText(): string {
       if (this.selectedCourse == null && !this.editMode) return 'CANCEL';
@@ -100,9 +70,6 @@ export default Vue.extend({
     rightButtonText(): string {
       return this.editMode ? 'NEXT' : 'ADD';
     },
-    seasonImg(): Readonly<Record<FirestoreSemesterType, string>> {
-      return { Fall: fall, Spring: spring, Winter: winter, Summer: summer };
-    },
     selectableRequirementChoices(): AppSelectableRequirementChoices {
       return store.state.selectableRequirementChoices;
     },
@@ -110,10 +77,6 @@ export default Vue.extend({
   methods: {
     selectCourse(result: MatchingCourseSearchResult) {
       this.selectedCourse = result;
-      if (this.isSelfCheck) {
-        this.addCourse();
-        return;
-      }
       this.getReqsRelatedToCourse(result);
     },
     getReqsRelatedToCourse(selectedCourse: MatchingCourseSearchResult) {
@@ -212,10 +175,6 @@ export default Vue.extend({
         this.closeCurrentModal();
       }
     },
-    updateSemProps(season: FirestoreSemesterType, year: number) {
-      this.season = season;
-      this.year = year;
-    },
     toggleEditMode() {
       this.editMode = !this.editMode;
     },
@@ -243,13 +202,6 @@ export default Vue.extend({
       color: $darkPlaceholderGray;
     }
   }
-  &-semester {
-    margin-top: 8px;
-    margin-bottom: 15px;
-    &-edit {
-      width: 50%;
-    }
-  }
   &-name {
     position: relative;
     border-radius: 11px;
@@ -257,10 +209,6 @@ export default Vue.extend({
     font-size: 14px;
     line-height: 14px;
     color: $darkGray;
-  }
-  &-season-emoji {
-    height: 18px;
-    margin-top: -4px;
   }
   &-title {
     font-size: 14px;
