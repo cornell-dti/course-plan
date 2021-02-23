@@ -13,11 +13,11 @@ const createCourseCreditRange = (course: CornellCourseRosterCourse): readonly [n
   return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
 };
 
-export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
-  course: CornellCourseRosterCourse
+export const cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor = (
+  course: CornellCourseRosterCourse,
+  uniqueID: number,
+  color: string
 ): FirestoreSemesterCourse => {
-  const uniqueID = incrementUniqueID();
-
   const { subject, catalogNbr: number, titleLong: name, roster: lastRoster } = course;
 
   // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
@@ -30,9 +30,6 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
       ? []
       : course.catalogWhenOffered.replace(/\./g, '').split(', ');
   const semesters = alternateSemesters;
-
-  // Create course from saved color. Otherwise, create course from subject color group
-  const color = getOrAllocateSubjectColor(subject);
 
   return {
     crseId: course.crseId,
@@ -47,8 +44,17 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
   };
 };
 
-export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation = (
+export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
   course: CornellCourseRosterCourse
+): FirestoreSemesterCourse =>
+  cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
+    course,
+    incrementUniqueID(),
+    getOrAllocateSubjectColor(course.subject)
+  );
+
+export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation = (
+  course: CornellCourseRosterCourseFullDetail
 ): Pick<
   AppBottomBarCourse,
   'description' | 'prereqs' | 'enrollment' | 'lectureTimes' | 'instructors' | 'distributions'

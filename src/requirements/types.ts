@@ -55,8 +55,3 @@ export type DecoratedRequirementsJson = {
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };
-
-export type CrseInfo = {
-  readonly roster: string;
-  readonly crseIds: number[];
-};

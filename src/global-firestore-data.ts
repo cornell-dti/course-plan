@@ -91,8 +91,12 @@ export const chooseSelectableRequirementOption = (
     .set(selectableRequirementChoices);
 };
 
-const getSubjectColor = (subjectColors: Record<string, string>, subject: string): string => {
-  if (subjectColors[subject]) return subjectColors[subject];
+/** @returns a tuple [color of the subject, whether new colors are added] */
+const getSubjectColor = (
+  subjectColors: Record<string, string>,
+  subject: string
+): readonly [string, boolean] => {
+  if (subjectColors[subject]) return [subjectColors[subject], false];
 
   const colors = [
     {
@@ -144,15 +148,26 @@ const getSubjectColor = (subjectColors: Record<string, string>, subject: string)
   }
 
   subjectColors[subject] = randomColor;
-  return randomColor;
+  return [randomColor, true];
 };
 
 export const getOrAllocateSubjectColor = (subject: string): string => {
   const subjectsColorCopy = { ...store.state.subjectColors };
-  const color = getSubjectColor(subjectsColorCopy, subject);
+  const [color, changed] = getSubjectColor(subjectsColorCopy, subject);
   // Update subjectColors on Firebase with new subject color group
-  subjectColorsCollection.doc(store.state.currentFirebaseUser.email).set(subjectsColorCopy);
+  if (changed) {
+    subjectColorsCollection.doc(store.state.currentFirebaseUser.email).set(subjectsColorCopy);
+  }
   return color;
+};
+
+export const allocateSubjectColors = (
+  subjects: ReadonlySet<string>
+): Readonly<Record<string, string>> => {
+  const subjectsColorCopy = { ...store.state.subjectColors };
+  subjects.forEach(subject => getSubjectColor(subjectsColorCopy, subject));
+  subjectColorsCollection.doc(store.state.currentFirebaseUser.email).set(subjectsColorCopy);
+  return subjectsColorCopy;
 };
 
 export const incrementUniqueID = (amount = 1): number => {
