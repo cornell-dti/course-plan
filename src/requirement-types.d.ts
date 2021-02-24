@@ -51,10 +51,22 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
 type DecoratedCollegeOrMajorRequirement = RequirementCommon &
   RequirementFulfillmentInformation<{ readonly courses: readonly (readonly number[])[] }>;
 
+/**
+ * CourseTaken is the data type used in requirement computation.
+ * It's a significantly simplified version of FirestoreSemesterCourse to make it easy to mock for
+ * the purpose of requirement computation.
+ */
 type CourseTaken = {
+  /** The course ID from course roster, or our dummy id to denote special courses like FWS equiv. */
   readonly courseId: number;
-  readonly subject: string;
-  readonly number: string;
+  /** Using the unique ID of firestore course for real course, and -1 for AP/IB/Swim */
+  readonly uniqueId: number;
+  /**
+   * Course code like 'CS 2112', 'AP CS'.
+   * It's mostly unused except for displaying completed courses, or calculating total credits.
+   */
+  readonly code: string;
+  /** The number of credits taken, which is used to calculate fulfillment progress. */
   readonly credits: number;
 };
 

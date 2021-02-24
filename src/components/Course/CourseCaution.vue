@@ -44,7 +44,7 @@ const getCourseCautions = (course: FirestoreSemesterCourse): CourseCautions => {
   if (illegallyDoubleCountedCourseIDs.has(course.crseId)) {
     illegallyDoubleCountedCourseIDs.forEach(courseId => {
       doubleCountingRequirementWarning = requirementFulfillmentGraph
-        .getConnectedRequirementsFromCourse({ courseId, subject: '', number: '', credits: 0 })
+        .getConnectedRequirementsFromCourse({ courseId, uniqueId: -1, code: '', credits: 0 })
         .filter(id => !userRequirementsMap[id].allowCourseDoubleCounting)
         .map(id => userRequirementsMap[id].name);
     });

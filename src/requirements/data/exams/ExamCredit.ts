@@ -422,8 +422,8 @@ function userDataToCourses(
           const courseId = courseEquivalents[0];
           courses.push({
             courseId,
-            subject: examType,
-            number: exam.name,
+            uniqueId: -1,
+            code: `${examType} ${exam.name}`,
             credits: exam.fulfillment.credits,
           });
         } else {
@@ -431,15 +431,15 @@ function userDataToCourses(
           courseEquivalents.forEach(courseId => {
             courses.push({
               courseId,
-              subject: examType,
-              number: exam.name,
+              uniqueId: -1,
+              code: `${examType} ${exam.name}`,
               credits: 0,
             });
           });
           courses.push({
             courseId: 10,
-            subject: 'CREDITS',
-            number: exam.fulfillment.credits.toString(),
+            uniqueId: -1,
+            code: `CREDITS ${exam.fulfillment.credits}`,
             credits: exam.fulfillment.credits,
           });
         }
@@ -471,9 +471,8 @@ export default function getCourseEquivalentsFromUserExams(
   });
   user.major.forEach((major: string) =>
     getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
-      const syntheticCourseCode = `${course.subject} ${course.number}`;
-      if (!examCourseCodeSet.has(syntheticCourseCode)) {
-        examCourseCodeSet.add(syntheticCourseCode);
+      if (!examCourseCodeSet.has(course.code)) {
+        examCourseCodeSet.add(course.code);
         courses.push(course);
       }
     })

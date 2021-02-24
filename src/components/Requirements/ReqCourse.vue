@@ -17,10 +17,10 @@
         <div :class="{ 'reqcourse-top--min': compact }" class="reqcourse-top">
           <div
             :class="{ 'reqcourse-code--min': compact }"
-            :title="courseCodeLabel"
+            :title="courseCode"
             class="reqcourse-code"
           >
-            {{ courseCodeLabel }}
+            {{ courseCode }}
           </div>
         </div>
       </div>
@@ -34,8 +34,7 @@ import Vue from 'vue';
 export default Vue.extend({
   props: {
     color: { type: String, required: true },
-    subject: { type: String, required: true },
-    number: { type: String, required: true },
+    courseCode: { type: String, required: true },
     isCompletedReqCourse: { type: Boolean, required: true },
     compact: { type: Boolean, required: true },
   },
@@ -45,9 +44,6 @@ export default Vue.extend({
     },
     courseColorCSSvar(): { '--bg-color': string } {
       return { '--bg-color': `#${this.color}` };
-    },
-    courseCodeLabel(): string {
-      return `${this.subject} ${this.number}`;
     },
   },
 });
