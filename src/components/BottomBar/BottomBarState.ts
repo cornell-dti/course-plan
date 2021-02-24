@@ -1,6 +1,11 @@
 import Vue from 'vue';
 
-import { firestoreSemesterCourseToBottomBarCourse } from '../../user-data-converter';
+import { checkNotNull } from '../../utilities';
+
+import {
+  cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
+  firestoreSemesterCourseToBottomBarCourse,
+} from '../../user-data-converter';
 
 export type BottomBarState = {
   bottomCourses: readonly AppBottomBarCourse[];
@@ -21,6 +26,21 @@ export const immutableBottomBarState: Readonly<BottomBarState> = vueForBottomBar
 export const reportCourseColorChange = (courseUniqueID: number, color: string): void => {
   vueForBottomBar.bottomCourses = vueForBottomBar.bottomCourses.map(course =>
     course.uniqueID === courseUniqueID ? { ...course, color } : course
+  );
+};
+
+const getDetailedInformationForBottomBar = async (
+  roster: string,
+  subject: string,
+  number: string
+) => {
+  const courses: readonly CornellCourseRosterCourse[] = (
+    await fetch(
+      `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`
+    ).then(response => response.json())
+  ).data.classes;
+  return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
+    checkNotNull(courses.find(it => it.catalogNbr === number))
   );
 };
 
@@ -56,6 +76,16 @@ export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
     bottomBarCourse.difficulty = classDifficulty;
     bottomBarCourse.workload = classWorkload;
   });
+  getDetailedInformationForBottomBar(course.lastRoster, subject, number).then(
+    ({ description, prereqs, enrollment, lectureTimes, instructors, distributions }) => {
+      bottomBarCourse.description = description;
+      bottomBarCourse.prereqs = prereqs;
+      bottomBarCourse.enrollment = enrollment;
+      bottomBarCourse.lectureTimes = lectureTimes;
+      bottomBarCourse.instructors = instructors;
+      bottomBarCourse.distributions = distributions;
+    }
+  );
 
   vueForBottomBar.bottomCourses = [bottomBarCourse, ...vueForBottomBar.bottomCourses];
   vueForBottomBar.bottomCourseFocus = 0;

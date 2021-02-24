@@ -14,15 +14,9 @@ type FirestoreSemesterCourse = {
   readonly uniqueID: number;
   readonly code: string;
   readonly name: string;
-  readonly description: string;
   readonly credits: number;
   readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[];
-  readonly prereqs: string;
-  readonly enrollment: readonly string[];
-  readonly lectureTimes: readonly string[];
-  readonly instructors: readonly string[];
-  readonly distributions: readonly string[];
   readonly color: string;
 };
 
@@ -101,19 +95,19 @@ type AppOnboardingData = {
 };
 
 type AppBottomBarCourse = {
+  readonly uniqueID: number;
   readonly code: string;
   readonly name: string;
   readonly credits: number;
-  readonly semesters: readonly string[];
   readonly color: string;
   readonly lastRoster: string;
-  readonly instructors: readonly string[];
-  readonly distributions: readonly string[];
-  readonly enrollment: readonly string[];
-  readonly lectureTimes: readonly string[];
-  readonly prereqs: string;
-  readonly description: string;
-  readonly uniqueID: number;
+  readonly semesters: readonly string[];
+  description: string;
+  prereqs: string;
+  enrollment: readonly string[];
+  lectureTimes: readonly string[];
+  distributions: readonly string[];
+  instructors: readonly string[];
   overallRating: number;
   difficulty: number;
   workload: number;

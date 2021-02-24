@@ -31,13 +31,10 @@ const courseFieldFilter = ({
   crseId,
   catalogNbr,
   titleLong,
-  description,
   enrollGroups,
   catalogWhenOffered,
-  catalogPrereqCoreq,
   catalogBreadth,
   catalogDistr,
-  catalogAttribute,
   catalogComments,
   catalogSatisfiesReq,
   catalogCourseSubfield,
@@ -48,29 +45,13 @@ const courseFieldFilter = ({
   crseId,
   catalogNbr,
   titleLong,
-  description,
-  enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum, classSections }) => ({
+  enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum }) => ({
     unitsMaximum,
     unitsMinimum,
-    classSections: classSections.map(({ ssrComponent, meetings }) => ({
-      ssrComponent,
-      meetings: meetings.map(({ pattern, timeStart, timeEnd, instructors }) => ({
-        pattern,
-        timeStart,
-        timeEnd,
-        instructors: instructors.map(({ netid, firstName, lastName }) => ({
-          netid,
-          firstName,
-          lastName,
-        })),
-      })),
-    })),
   })),
-  catalogWhenOffered: catalogWhenOffered || undefined,
-  catalogPrereqCoreq: catalogPrereqCoreq || undefined,
+  catalogWhenOffered,
   catalogBreadth: catalogBreadth || undefined,
   catalogDistr: catalogDistr || undefined,
-  catalogAttribute,
   catalogComments: catalogComments || undefined,
   catalogSatisfiesReq: catalogSatisfiesReq || undefined,
   catalogCourseSubfield: catalogCourseSubfield || undefined,
@@ -124,8 +105,11 @@ const generateSemesterJSONs = async (
   doPrintDebuggingInfo = true
 ): Promise<void> => {
   const startTime = new Date().getTime();
-  const semesters = await getSemesters();
-  writeFileSync('src/assets/courses/rosters.json', JSON.stringify(semesters));
+  // Filter away all semester data before 2017
+  const semesters = (await getSemesters()).filter(
+    semester => parseInt(semester.substring(2), 10) >= 17
+  );
+  writeFileSync('src/assets/courses/rosters.json', `${JSON.stringify(semesters)}\n`);
   if (doPrintDebuggingInfo) {
     console.log(`We have ${semesters.length} semesters in total.`);
   }
