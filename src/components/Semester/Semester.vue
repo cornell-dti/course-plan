@@ -69,6 +69,7 @@
           group="draggable-semester-courses"
           v-model="coursesForDraggable"
           :style="{ height: courseContainerHeight + 'rem' }"
+          :move="onDraggedCourseMove"
           @start="onDragStart"
           @sort="onDropped"
           @end="onDragEnd"
@@ -121,7 +122,7 @@ import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
-import { clickOutside } from '@/utilities';
+import { onDraggedCourseMove, clickOutside } from '@/utilities';
 
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
@@ -255,6 +256,7 @@ export default Vue.extend({
     },
   },
   methods: {
+    onDraggedCourseMove,
     onDragStart() {
       this.isDraggedFrom = true;
       this.scrollable = true;

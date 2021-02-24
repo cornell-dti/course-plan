@@ -43,6 +43,19 @@ export function getMinorFullName(acronym: string): string {
   return requirementJSON.minor[acronym].name;
 }
 
+/**
+ * The function to be passed to move prop for <draggable /> to prevent a course being dropped into
+ * requirement course container.
+ */
+export function onDraggedCourseMove(event: { to?: HTMLElement }): boolean {
+  const target = event.to;
+  if (target == null) return true;
+  // Use this data on the DOM to denote that it's not a droppable target.
+  // This is the recommended way according to
+  // https://github.com/SortableJS/Vue.Draggable/issues/897
+  return target.getAttribute('data-not-droppable') !== 'true';
+}
+
 export const clickOutside = {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
   bind(el: any, binding: any, vnode: any): void {
