@@ -1,5 +1,6 @@
 import { writeFileSync } from 'fs';
-import filteredAllCourses from './filtered-all-courses';
+import { courseCodeToDataAndOfferedMap } from './filtered-course-data';
+import { Course } from './types';
 
 export type CourseJson = {
   [courseCode: string]: {
@@ -10,17 +11,26 @@ export type CourseJson = {
 };
 
 const courseJson: CourseJson = Object.fromEntries(
-  Object.entries(filteredAllCourses)
-    .map(([semester, courses]) =>
-      courses.map(
-        course =>
-          [
-            `${course.subject} ${course.catalogNbr}`,
-            { i: course.crseId, t: course.titleLong, r: semester },
-          ] as const
-      )
-    )
-    .flat()
+  Array.from(courseCodeToDataAndOfferedMap.values()).map(
+    ([semester, course]) =>
+      [
+        `${course.subject} ${course.catalogNbr}`,
+        { i: course.crseId, t: course.titleLong, r: semester },
+      ] as const
+  )
 );
 
+const fullCourseJson = (() => {
+  const json: Record<number, Course & { roster: string }[]> = {};
+
+  courseCodeToDataAndOfferedMap.forEach(([roster, course]) => {
+    const existingArray = json[course.crseId] || [];
+    existingArray.push({ ...course, roster });
+    json[course.crseId] = existingArray;
+  });
+
+  return json;
+})();
+
 writeFileSync('src/assets/courses/courses.json', JSON.stringify(courseJson));
+writeFileSync('src/assets/courses/full-courses.json', JSON.stringify(fullCourseJson));

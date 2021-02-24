@@ -7,7 +7,7 @@ import {
 } from './types';
 import sourceRequirements from './data';
 import { FWS_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
-import filteredAllCourses from './filtered-all-courses';
+import filteredAllCourses from './filtered-course-data';
 
 /**
  * Special (synthetic) courses, as used in AP/IB equivalent courses generation.
