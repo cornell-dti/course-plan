@@ -18,7 +18,6 @@
           :displayedMajorIndex="displayedMajorIndex"
           :displayedMinorIndex="displayedMinorIndex"
           :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
-          :rostersFromLastTwoYears="rostersFromLastTwoYears"
           :numOfColleges="numOfColleges"
           :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
           @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
@@ -29,7 +28,7 @@
         />
       </div>
     </div>
-    <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses" @scroll="onScrollSeeAll">
+    <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses">
       <div class="see-all-padding-x see-all-header pb-3">
         <span class="arrow-left">
           <drop-down-arrow :isPointingLeft="true" :fillColor="'#32A0F2'" />
@@ -38,7 +37,11 @@
       </div>
       <div class="see-all-padding-x py-3">
         <h1 class="title">{{ showAllCourses.name }}</h1>
-        <draggable :value="showAllCourses.courses" group="draggable-semester-courses">
+        <draggable
+          :value="showAllCourses.courses"
+          :clone="cloneCourse"
+          group="draggable-semester-courses"
+        >
           <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
             <div class="mt-3">
               <course
@@ -66,14 +69,10 @@ import Course from '@/components/Course/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
 import { SubReqCourseSlot } from '@/components/Requirements/SubRequirement.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import { CrseInfo } from '@/requirements/types';
-import { getRostersFromLastTwoYears } from '@/utilities';
 // emoji for clipboard
 import clipboard from '@/assets/images/clipboard.svg';
 import store from '@/store';
-import { chooseToggleableRequirementOption } from '@/global-firestore-data';
-import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
-import { fetchCoursesFromFirebaseFunctions } from '@/firebaseConfig';
+import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-firestore-data';
 
 Vue.use(VueCollapse);
 
@@ -88,7 +87,6 @@ type Data = {
   numOfColleges: number;
   showAllCourses: ShowAllCourses;
   shouldShowAllCourses: boolean;
-  showAllSubReqCourses: SubReqCourseSlot[];
   lastLoadedShowAllCourseId: number;
 };
 
@@ -113,7 +111,6 @@ export default Vue.extend({
       showAllCourses: { name: '', courses: [] },
       shouldShowAllCourses: false,
       lastLoadedShowAllCourseId: 0,
-      showAllSubReqCourses: [],
     };
   },
   watch: {
@@ -136,9 +133,6 @@ export default Vue.extend({
     },
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
-    },
-    rostersFromLastTwoYears() {
-      return getRostersFromLastTwoYears();
     },
   },
   methods: {
@@ -169,72 +163,27 @@ export default Vue.extend({
           <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
           requirements based on your college and major :)</div>`;
     },
-    getAllCrseInfoFromSemester(
-      subReqCoursesArray: SubReqCourseSlot[]
-    ): Promise<FirestoreSemesterCourse[]> {
-      return new Promise((resolve, reject) => {
-        let subReqCrseInfoObjectsToFetch: CrseInfo[] = [];
-        // Used to identify index of lastLoadedSeeAll
-        const subReqCourses = subReqCoursesArray;
-        let coursesCount = 0;
-        subReqCourses.forEach(subReqCourseSlot => {
-          if (!subReqCourseSlot.isCompleted) {
-            const crseInfoFromSemester: CrseInfo[] = [];
-            subReqCourseSlot.courses.forEach((crseInfo: CrseInfo) => {
-              const lastLoadedIndexOf = crseInfo.crseIds.indexOf(this.lastLoadedShowAllCourseId);
-              if (lastLoadedIndexOf !== -1) {
-                subReqCrseInfoObjectsToFetch = [];
-                crseInfo.crseIds.splice(0, lastLoadedIndexOf + 1);
-              }
-              if (coursesCount + crseInfo.crseIds.length >= 24) {
-                const remainingCount = 24 - coursesCount;
-                return crseInfoFromSemester.push({
-                  ...crseInfo,
-                  crseIds: crseInfo.crseIds.slice(0, remainingCount),
-                });
-              }
-              coursesCount += crseInfo.crseIds.length;
-              return crseInfoFromSemester.push(crseInfo);
-            });
-            subReqCrseInfoObjectsToFetch.push(crseInfoFromSemester[0]);
-          }
-        });
-        fetchCoursesFromFirebaseFunctions(subReqCrseInfoObjectsToFetch)
-          .then(courses => resolve(courses.map(cornellCourseRosterCourseToFirebaseSemesterCourse)))
-          .catch(error => reject(error));
-      });
-    },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
       subReqCoursesArray: SubReqCourseSlot[];
     }) {
       this.shouldShowAllCourses = true;
-      this.showAllSubReqCourses = showAllCourses.subReqCoursesArray;
-      this.getAllCrseInfoFromSemester(showAllCourses.subReqCoursesArray).then(fetchedCourses => {
-        const lastCourse = fetchedCourses[fetchedCourses.length - 1];
-        this.lastLoadedShowAllCourseId = lastCourse.crseId;
-        this.showAllCourses = {
-          name: showAllCourses.requirementName,
-          courses: fetchedCourses,
-        };
-      });
-    },
-    onScrollSeeAll(event: Event) {
-      const { target } = event;
-      const { scrollTop, clientHeight, scrollHeight } = target as HTMLDivElement;
-      if (scrollTop + clientHeight >= scrollHeight) {
-        this.getAllCrseInfoFromSemester(this.showAllSubReqCourses).then(fetchedCourses => {
-          this.showAllCourses = {
-            ...this.showAllCourses,
-            courses: [...this.showAllCourses.courses, ...fetchedCourses],
-          };
-        });
-      }
+      const allPotentialCourses = showAllCourses.subReqCoursesArray
+        .flatMap(slot => (slot.isCompleted ? [] : slot.courses))
+        .slice(0, 24);
+      const lastCourse = allPotentialCourses[allPotentialCourses.length - 1];
+      this.lastLoadedShowAllCourseId = lastCourse.crseId;
+      this.showAllCourses = {
+        name: showAllCourses.requirementName,
+        courses: allPotentialCourses,
+      };
     },
     backFromSeeAll() {
       this.shouldShowAllCourses = false;
       this.showAllCourses = { name: '', courses: [] };
-      this.showAllSubReqCourses = [];
+    },
+    cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
+      return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
     deleteCourseFromSemesters(uniqueId: number) {
       this.$emit('deleteCourseFromSemesters', uniqueId);

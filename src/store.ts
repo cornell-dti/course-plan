@@ -30,10 +30,8 @@ export type VuexStoreState = {
   derivedCoursesData: DerivedCoursesData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   selectableRequirementChoices: AppSelectableRequirementChoices;
-  requirementFulfillmentGraph: RequirementFulfillmentGraph<
-    RequirementWithIDSourceType,
-    CourseTaken
-  >;
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
+  requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
   illegallyDoubleCountedCourseIDs: ReadonlySet<number>;
   subjectColors: Readonly<Record<string, string>>;
@@ -67,6 +65,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     toggleableRequirementChoices: {},
     selectableRequirementChoices: {},
+    userRequirementsMap: {},
     // It won't be null once the app loads.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     requirementFulfillmentGraph: null!,
@@ -108,11 +107,13 @@ const store: TypedVuexStore = new TypedVuexStore({
       state: VuexStoreState,
       data: Pick<
         VuexStoreState,
+        | 'userRequirementsMap'
         | 'requirementFulfillmentGraph'
         | 'illegallyDoubleCountedCourseIDs'
         | 'groupedRequirementFulfillmentReport'
       >
     ) {
+      state.userRequirementsMap = data.userRequirementsMap;
       state.requirementFulfillmentGraph = data.requirementFulfillmentGraph;
       state.illegallyDoubleCountedCourseIDs = data.illegallyDoubleCountedCourseIDs;
       state.groupedRequirementFulfillmentReport = data.groupedRequirementFulfillmentReport;

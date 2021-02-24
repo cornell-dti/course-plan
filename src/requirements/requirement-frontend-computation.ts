@@ -1,4 +1,3 @@
-import rosters from '../assets/courses/rosters.json';
 import { CREDITS_COURSE_ID, FWS_COURSE_ID, SWIM_TEST_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './data/exams/ExamCredit';
 import {
@@ -141,7 +140,7 @@ const getSwimTestFulfillmentStatistics = (
       'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming ' +
       'and water safety competency requirement for all entering first-year undergraduate students.',
     source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11637',
-    courses: [Object.fromEntries(rosters.map(roster => [roster, [SWIM_TEST_COURSE_ID]]))],
+    courses: [[SWIM_TEST_COURSE_ID]],
     subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
@@ -149,9 +148,7 @@ const getSwimTestFulfillmentStatistics = (
   const swimClasses = courses.filter(it => it.courseId === SWIM_TEST_COURSE_ID);
   if (tookSwimTest) {
     swimClasses.push({
-      roster: rosters[rosters.length - 1],
       courseId: SWIM_TEST_COURSE_ID,
-      code: 'Swim Test',
       subject: 'Swim',
       number: 'Test',
       credits: 0,
@@ -210,13 +207,13 @@ function computeFulfillmentStatisticsFromCourses(
  */
 function filterAndPartitionCoursesThatFulfillRequirement(
   coursesTaken: readonly CourseTaken[],
-  requirementCourses: readonly EligibleCourses[]
+  requirementCourses: readonly (readonly number[])[]
 ): CourseTaken[][] {
   const coursesThatFulfilledRequirement: CourseTaken[][] = requirementCourses.map(() => []);
   coursesTaken.forEach(courseTaken => {
-    const { roster, courseId } = courseTaken;
+    const { courseId } = courseTaken;
     requirementCourses.forEach((subRequirementCourses, subRequirementIndex) => {
-      if (subRequirementCourses[roster] && subRequirementCourses[roster].includes(courseId)) {
+      if (subRequirementCourses.includes(courseId)) {
         // add the course to the list of courses used to fulfill that one sub-requirement
         coursesThatFulfilledRequirement[subRequirementIndex].push(courseTaken);
       }
@@ -268,10 +265,8 @@ export default function computeGroupedRequirementFulfillmentReports(
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   selectableRequirementChoices: AppSelectableRequirementChoices
 ): {
-  readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<
-    RequirementWithIDSourceType,
-    CourseTaken
-  >;
+  readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
+  readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly illegallyDoubleCountedCourseIDs: ReadonlySet<number>;
   readonly groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
 } {
@@ -279,6 +274,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   const { college } = onboardingData;
 
   const {
+    userRequirements,
     requirementFulfillmentGraph,
     illegallyDoubleCountedCourseIDs,
   } = buildRequirementFulfillmentGraphFromUserData(
@@ -301,8 +297,8 @@ export default function computeGroupedRequirementFulfillmentReports(
   );
   const majorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
   const minorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
-  requirementFulfillmentGraph.getAllRequirements().forEach(requirement => {
-    const courses = requirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement);
+  userRequirements.forEach(requirement => {
+    const courses = requirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement.id);
     const fulfillmentStatistics = {
       id: requirement.id,
       requirement,
@@ -353,6 +349,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   ];
 
   return {
+    userRequirementsMap: Object.fromEntries(userRequirements.map(it => [it.id, it])),
     requirementFulfillmentGraph,
     illegallyDoubleCountedCourseIDs,
     groupedRequirementFulfillmentReport,

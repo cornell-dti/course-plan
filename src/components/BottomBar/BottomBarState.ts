@@ -34,7 +34,7 @@ const getDetailedInformationForBottomBar = async (
   subject: string,
   number: string
 ) => {
-  const courses: readonly CornellCourseRosterCourse[] = (
+  const courses: readonly CornellCourseRosterCourseFullDetail[] = (
     await fetch(
       `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`
     ).then(response => response.json())

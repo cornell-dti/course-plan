@@ -21,13 +21,10 @@
         <div class="separator"></div>
         <div v-for="(subReq, id) in partitionedRequirementsProgress.ongoing" :key="id">
           <sub-requirement
-            :subReqIndex="id"
             :subReq="subReq"
-            :reqIndex="reqIndex"
             :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
             :color="reqGroupColorMap[req.groupName][0]"
             :isCompleted="false"
-            :rostersFromLastTwoYears="rostersFromLastTwoYears"
             :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
@@ -55,13 +52,10 @@
           <div v-for="(subReq, id) in partitionedRequirementsProgress.completed" :key="id">
             <div class="separator" v-if="reqIndex < reqs.length - 1 || displayDetails"></div>
             <sub-requirement
-              :subReqIndex="id"
               :subReq="subReq"
-              :reqIndex="reqIndex"
               :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
               :color="reqGroupColorMap[req.groupName][0]"
               :isCompleted="true"
-              :rostersFromLastTwoYears="rostersFromLastTwoYears"
               :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @onShowAllCourses="onShowAllCourses"
@@ -109,7 +103,6 @@ export default Vue.extend({
     displayedMinorIndex: { type: Number, required: true },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
-    rostersFromLastTwoYears: { type: Array as PropType<readonly string[]>, required: true },
     lastLoadedShowAllCourseId: { type: Number, required: true },
   },
   data() {

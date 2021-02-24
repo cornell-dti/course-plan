@@ -12,31 +12,16 @@
           {{ seeAll }}
         </div>
       </div>
-      <div v-if="!dataReady && courseIDs.length > 0" class="loading-requirements-courses">
-        <vue-skeleton-loader
-          v-for="n in defaultNumberofLoadingCards"
-          :key="n"
-          class="loading-courseWrapper"
-          type="rect"
-          :width="loadingCoursePixelWidth"
-          :height="loadingCoursePixelHeight"
-          animation="fade"
-          :rounded="true"
-        />
-      </div>
       <draggable
-        v-if="displayCourses && courseIDs.length > 0"
+        v-if="courses.length > 0"
         class="draggable-requirements-courses"
         group="draggable-semester-courses"
-        :value="firstFourCourseObjects"
+        :value="courses"
+        :clone="cloneCourse"
         @start="onDrag"
         @end="onDrop"
       >
-        <div
-          v-for="course in firstFourCourseObjects"
-          :key="course.uniqueID"
-          class="requirements-courseWrapper"
-        >
+        <div v-for="(course, index) in courses" :key="index" class="requirements-courseWrapper">
           <course
             :courseObj="course"
             :isReqCourse="true"
@@ -53,18 +38,17 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import draggable from 'vuedraggable';
-import VueSkeletonLoader from 'skeleton-loader-vue';
 import Course from '@/components/Course/Course.vue';
+import { incrementUniqueID } from '@/global-firestore-data';
 
 export default Vue.extend({
-  components: { draggable, Course, VueSkeletonLoader },
+  components: { draggable, Course },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
   },
   data() {
     return {
       scrollable: false,
-      displayCourses: false,
     };
   },
   beforeDestroy() {
@@ -73,24 +57,10 @@ export default Vue.extend({
   props: {
     subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
     subReqCourseId: { type: Number, required: true },
-    courseIDs: { type: Array as PropType<readonly (readonly number[])[]>, required: true },
-    subReqFetchedCourseObjectsNotTakenArray: {
-      type: Array as PropType<FirestoreSemesterCourse[]>,
-      required: true,
-    },
-    dataReady: { type: Boolean, required: true },
+    courses: { type: Array as PropType<readonly FirestoreSemesterCourse[]>, required: true },
+    showSeeAllLabel: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
     lastLoadedShowAllCourseId: { type: Number, required: true },
-  },
-  watch: {
-    dataReady: {
-      immediate: true,
-      handler(dataReady) {
-        if (dataReady && this.subReqFetchedCourseObjectsNotTakenArray.length > 0) {
-          this.displayCourses = true;
-        }
-      },
-    },
   },
   computed: {
     addCourseLabel() {
@@ -112,26 +82,6 @@ export default Vue.extend({
     seeAll() {
       return 'See all >';
     },
-    showSeeAllLabel() {
-      // Only show See all label when there are more than 4 courses
-      const allCrseIds = this.courseIDs.flat();
-      return allCrseIds.length > 4;
-    },
-    firstFourCourseObjects(): readonly FirestoreSemesterCourse[] {
-      const firstFourCourseObjects: FirestoreSemesterCourse[] = [];
-      for (let i = 0; firstFourCourseObjects.length < 4 && i < this.courseIDs.length; i += 1) {
-        const currentSlotCourseIDs = this.courseIDs[i];
-        const filteredCourses: FirestoreSemesterCourse[] = this.subReqFetchedCourseObjectsNotTakenArray.filter(
-          course => currentSlotCourseIDs.includes(course.crseId)
-        );
-        const numRemainingCourses = Math.min(
-          4 - firstFourCourseObjects.length,
-          filteredCourses.length
-        );
-        firstFourCourseObjects.push(...filteredCourses.slice(0, numRemainingCourses));
-      }
-      return firstFourCourseObjects;
-    },
   },
   methods: {
     onDrag() {
@@ -142,6 +92,9 @@ export default Vue.extend({
     },
     dragListener(event: { preventDefault: () => void }) {
       if (!this.scrollable) event.preventDefault();
+    },
+    cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
+      return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
     onShowAllCourses() {
       this.$emit('onShowAllCourses');

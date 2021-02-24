@@ -56,11 +56,20 @@ type FirestoreUserData = {
   readonly userData: FirestoreOnboardingUserData;
 };
 
-type CornellCourseRosterCourse = {
+interface CornellCourseRosterCourse {
   readonly crseId: number;
   readonly subject: string;
   readonly catalogNbr: string;
   readonly titleLong: string;
+  readonly enrollGroups: readonly {
+    readonly unitsMinimum: number;
+    readonly unitsMaximum: number;
+  }[];
+  readonly catalogWhenOffered?: string | null;
+  readonly roster: string;
+}
+
+interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse {
   readonly description: string;
   readonly enrollGroups: readonly {
     readonly unitsMinimum: number;
@@ -79,11 +88,9 @@ type CornellCourseRosterCourse = {
       }[];
     }[];
   }[];
-  readonly catalogWhenOffered?: string;
   readonly catalogPrereqCoreq?: string;
   readonly catalogDistr?: string;
-  readonly roster: string;
-};
+}
 
 type AppOnboardingData = {
   readonly college: string;
