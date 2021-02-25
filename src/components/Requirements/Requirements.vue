@@ -69,7 +69,6 @@ import introJs from 'intro.js';
 
 import Course from '@/components/Course/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
-import { SubReqCourseSlot } from '@/components/Requirements/SubRequirement.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 // emoji for clipboard
 import clipboard from '@/assets/images/clipboard.svg';
@@ -172,9 +171,20 @@ export default Vue.extend({
       subReqCoursesArray: CourseTaken[];
     }) {
       this.shouldShowAllCourses = true;
-      const allPotentialCourses = showAllCourses.subReqCoursesArray.slice(0, 24); // limited to 24 courses
-      const lastCourse = allPotentialCourses[allPotentialCourses.length - 1];
-      this.lastLoadedShowAllCourseId = lastCourse.crseId;
+
+      // limited to 24 courses
+      const allPotentialCourses = showAllCourses.subReqCoursesArray.slice(
+        this.lastLoadedShowAllCourseId,
+        this.lastLoadedShowAllCourseId + 24
+      );
+
+      // next time see all is open, show next 24 courses (unless already reached the end)
+      if (this.lastLoadedShowAllCourseId + 24 > showAllCourses.subReqCoursesArray.length) {
+        this.lastLoadedShowAllCourseId = 0;
+      } else {
+        this.lastLoadedShowAllCourseId += 24;
+      }
+
       this.showAllCourses = {
         name: showAllCourses.requirementName,
         courses: allPotentialCourses,
