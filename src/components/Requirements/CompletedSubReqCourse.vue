@@ -18,15 +18,13 @@
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
-          :color="courseInfoAndSemesterLabel.color"
+          :color="courseColor"
           :courseCode="courseTaken.code"
           :compact="true"
           :isCompletedReqCourse="true"
           class="completed-reqCourses-course-object"
         />
-        <div class="completed-reqCourses-course-object-semester">
-          in {{ courseInfoAndSemesterLabel.semesterLabel }}
-        </div>
+        <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
       </div>
     </div>
   </div>
@@ -59,30 +57,23 @@ export default Vue.extend({
     isTransferCredit(): boolean {
       return this.courseTaken.uniqueId === -1;
     },
-    courseInfoAndSemesterLabel(): {
-      readonly semesterLabel: string;
-      readonly uniqueID: number;
-      readonly color: string;
-    } {
-      if (this.isTransferCredit) {
-        return { semesterLabel: 'Transfer Credits', color: transferCreditColor, uniqueID: 0 };
-      }
-
-      const course = store.state.derivedCoursesData.courseMap[this.courseTaken.uniqueId];
+    semesterLabel(): string {
+      if (this.isTransferCredit) return 'Transfer Credits';
       const courseSemester =
         store.state.derivedCoursesData.courseToSemesterMap[this.courseTaken.uniqueId];
-      const courseColor = course != null ? course.color : '';
-      const semesterLabel =
-        courseSemester != null
-          ? `${courseSemester.type} ${courseSemester.year}`
-          : `${getCurrentSeason()} ${getCurrentYear()}`;
-
-      return { semesterLabel, uniqueID: this.courseTaken.uniqueId, color: courseColor };
+      return courseSemester != null
+        ? `${courseSemester.type} ${courseSemester.year}`
+        : `${getCurrentSeason()} ${getCurrentYear()}`;
+    },
+    courseColor(): string {
+      if (this.isTransferCredit) return transferCreditColor;
+      const course = store.state.derivedCoursesData.courseMap[this.courseTaken.uniqueId];
+      return course != null ? course.color : '';
     },
   },
   methods: {
     onReset() {
-      this.$emit('deleteCourseFromSemesters', this.courseInfoAndSemesterLabel.uniqueID);
+      this.$emit('deleteCourseFromSemesters', this.courseTaken.uniqueId);
     },
   },
 });
