@@ -101,7 +101,7 @@ export default Vue.extend({
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
     onShowAllCourses() {
-      this.$emit('onShowAllCourses');
+      this.$emit('onShowAllCourses', this.subReqCourseId);
     },
   },
 });

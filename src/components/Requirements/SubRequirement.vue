@@ -241,10 +241,10 @@ export default Vue.extend({
     getArrowColor() {
       return this.isCompleted ? '#979797CC' : '#979797';
     },
-    onShowAllCourses() {
+    onShowAllCourses(subReqIndex: number) {
       this.$emit('onShowAllCourses', {
         requirementName: this.subReq.requirement.name,
-        subReqCoursesArray: this.subReqCoursesSlots,
+        subReqCoursesArray: this.subReqCoursesSlots[subReqIndex].courses,
       });
     },
     toggleDescription() {

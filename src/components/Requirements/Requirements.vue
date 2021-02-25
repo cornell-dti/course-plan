@@ -81,7 +81,7 @@ Vue.use(VueCollapse);
 
 export type ShowAllCourses = {
   readonly name: string;
-  readonly courses: FirestoreSemesterCourse[];
+  readonly courses: CourseTaken[];
 };
 
 type Data = {
@@ -169,12 +169,10 @@ export default Vue.extend({
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
-      subReqCoursesArray: SubReqCourseSlot[];
+      subReqCoursesArray: CourseTaken[];
     }) {
       this.shouldShowAllCourses = true;
-      const allPotentialCourses = showAllCourses.subReqCoursesArray
-        .flatMap(slot => (slot.isCompleted ? [] : slot.courses))
-        .slice(0, 24);
+      const allPotentialCourses = showAllCourses.subReqCoursesArray.slice(0, 24); // limited to 24 courses
       const lastCourse = allPotentialCourses[allPotentialCourses.length - 1];
       this.lastLoadedShowAllCourseId = lastCourse.crseId;
       this.showAllCourses = {
