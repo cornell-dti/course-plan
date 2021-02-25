@@ -16,6 +16,8 @@
         v-if="courses.length > 0"
         class="draggable-requirements-courses"
         group="draggable-semester-courses"
+        :move="onDraggedCourseMove"
+        data-not-droppable="true"
         :value="courses"
         :clone="cloneCourse"
         @start="onDrag"
@@ -40,6 +42,7 @@ import Vue, { PropType } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import { incrementUniqueID } from '@/global-firestore-data';
+import { onDraggedCourseMove } from '@/utilities';
 
 export default Vue.extend({
   components: { draggable, Course },
@@ -84,6 +87,7 @@ export default Vue.extend({
     },
   },
   methods: {
+    onDraggedCourseMove,
     onDrag() {
       this.scrollable = true;
     },
