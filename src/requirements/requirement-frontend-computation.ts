@@ -18,16 +18,19 @@ type FulfillmentStatistics = {
  */
 const courseIsAPIB = (course: CourseTaken): boolean =>
   [CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
-  ['AP', 'IB', 'CREDITS'].includes(course.subject);
+  ['AP', 'IB', 'CREDITS'].includes(course.code.split(' ')[0]);
 
 /**
  * Used for total academic credit requirements for all colleges except EN and AR
  * @param course course object with useful information retrived from Cornell courses API.
  * @returns true if the course is not PE or 10** level
  */
-const courseIsAllEligible = (course: CourseTaken): boolean =>
-  course.courseId === CREDITS_COURSE_ID ||
-  (!courseIsAPIB(course) && course.subject !== 'PE' && !course.number.startsWith('10'));
+const courseIsAllEligible = (course: CourseTaken): boolean => {
+  if (course.courseId === CREDITS_COURSE_ID) return true;
+  if (courseIsAPIB(course)) return false;
+  const [subject, number] = course.code.split(' ');
+  return subject !== 'PE' && !number.startsWith('10');
+};
 
 const getTotalCreditsFulfillmentStatistics = (
   college: string,
@@ -104,16 +107,15 @@ const getTotalCreditsFulfillmentStatistics = (
   const courseCodeSet = new Set<string>();
   const eligibleCourses =
     college === 'AG'
-      ? courses.filter(course => course.subject !== 'PE')
+      ? courses.filter(course => !course.code.startsWith('PE '))
       : courses.filter(courseIsAllEligible);
 
   eligibleCourses.forEach(course => {
     minCountFulfilled += course.credits;
-    const code = `${course.subject} ${course.number}`;
-    if (courseCodeSet.has(code)) {
+    if (courseCodeSet.has(course.code)) {
       minCountRequired += course.credits;
     } else {
-      courseCodeSet.add(code);
+      courseCodeSet.add(course.code);
     }
   });
 
@@ -149,8 +151,8 @@ const getSwimTestFulfillmentStatistics = (
   if (tookSwimTest) {
     swimClasses.push({
       courseId: SWIM_TEST_COURSE_ID,
-      subject: 'Swim',
-      number: 'Test',
+      uniqueId: -1,
+      code: 'Swim Test',
       credits: 0,
     });
   }

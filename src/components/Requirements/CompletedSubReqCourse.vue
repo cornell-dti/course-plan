@@ -18,16 +18,13 @@
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
-          :color="courseInfoAndSemesterLabel.color"
-          :subject="courseTaken.subject"
-          :number="courseTaken.number"
+          :color="courseColor"
+          :courseCode="courseTaken.code"
           :compact="true"
           :isCompletedReqCourse="true"
           class="completed-reqCourses-course-object"
         />
-        <div class="completed-reqCourses-course-object-semester">
-          in {{ courseInfoAndSemesterLabel.semesterLabel }}
-        </div>
+        <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
       </div>
     </div>
   </div>
@@ -58,42 +55,25 @@ export default Vue.extend({
       return 'Reset';
     },
     isTransferCredit(): boolean {
-      return (
-        this.courseTaken.subject === 'AP' ||
-        this.courseTaken.subject === 'IB' ||
-        this.courseTaken.subject === 'Swim'
-      );
+      return this.courseTaken.uniqueId === -1;
     },
-    courseInfoAndSemesterLabel(): {
-      readonly semesterLabel: string;
-      readonly uniqueID: number;
-      readonly color: string;
-    } {
-      if (this.isTransferCredit) {
-        return { semesterLabel: 'Transfer Credits', color: transferCreditColor, uniqueID: 0 };
-      }
-
-      const courseTakenCode = `${this.courseTaken.subject} ${this.courseTaken.number}`;
-
-      for (let i = 0; i < this.semesters.length; i += 1) {
-        const semester = this.semesters[i];
-        const filteredSemesterCourses = semester.courses.filter(
-          course => course.crseId === this.courseTaken.courseId && course.code === courseTakenCode
-        );
-        if (filteredSemesterCourses.length > 0) {
-          return {
-            semesterLabel: `${semester.type} ${semester.year}`,
-            uniqueID: filteredSemesterCourses[0].uniqueID,
-            color: filteredSemesterCourses[0].color,
-          };
-        }
-      }
-      return { semesterLabel: `${getCurrentSeason()} ${getCurrentYear()}`, uniqueID: 0, color: '' };
+    semesterLabel(): string {
+      if (this.isTransferCredit) return 'Transfer Credits';
+      const courseSemester =
+        store.state.derivedCoursesData.courseToSemesterMap[this.courseTaken.uniqueId];
+      return courseSemester != null
+        ? `${courseSemester.type} ${courseSemester.year}`
+        : `${getCurrentSeason()} ${getCurrentYear()}`;
+    },
+    courseColor(): string {
+      if (this.isTransferCredit) return transferCreditColor;
+      const course = store.state.derivedCoursesData.courseMap[this.courseTaken.uniqueId];
+      return course != null ? course.color : '';
     },
   },
   methods: {
     onReset() {
-      this.$emit('deleteCourseFromSemesters', this.courseInfoAndSemesterLabel.uniqueID);
+      this.$emit('deleteCourseFromSemesters', this.courseTaken.uniqueId);
     },
   },
 });

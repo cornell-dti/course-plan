@@ -9,11 +9,13 @@ import requirementJson from './typed-requirement-json';
  * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase
  * user data, into a CourseTaken type used throughout the requirements sidebar.
  */
-export function convertFirestoreSemesterCourseToCourseTaken(
-  course: FirestoreSemesterCourse
-): CourseTaken {
-  const [subject, number] = course.code.split(' ');
-  return { subject, courseId: course.crseId, number, credits: course.credits };
+export function convertFirestoreSemesterCourseToCourseTaken({
+  crseId,
+  uniqueID,
+  code,
+  credits,
+}: FirestoreSemesterCourse): CourseTaken {
+  return { courseId: crseId, uniqueId: uniqueID, code, credits };
 }
 
 export function requirementAllowDoubleCounting(
@@ -176,7 +178,6 @@ export function getRelatedUnfulfilledRequirements(
         const allEligibleCourses = requirementSpec.eligibleCourses.flat();
         if (allEligibleCourses.includes(courseID)) {
           directlyRelatedRequirements.push(subRequirement);
-          break;
         }
       }
     }

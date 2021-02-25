@@ -11,9 +11,9 @@ import buildRequirementFulfillmentGraph from './requirement-graph-builder';
  * helping to compute requirement progress.
  */
 function forfeitTransferCredit(coursesTaken: readonly CourseTaken[]): readonly CourseTaken[] {
-  const equivalentCourses = coursesTaken.filter(course => course.subject !== 'CREDITS');
+  const equivalentCourses = coursesTaken.filter(course => !course.code.startsWith('CREDITS '));
   const equivalentCourseIds = new Set(equivalentCourses.map(({ courseId }) => courseId));
-  let transferCreditCourses = coursesTaken.filter(course => course.subject === 'CREDITS');
+  let transferCreditCourses = coursesTaken.filter(course => course.code.startsWith('CREDITS'));
   transferCreditCourses = transferCreditCourses.filter(
     ({ courseId }) => !equivalentCourseIds.has(courseId)
   );
@@ -48,7 +48,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         courseIds =>
           // Only courseId are used for equality comparison,
           // so other dummy values doesn't matter.
-          courseIds.map(courseId => ({ courseId, subject: 'DUMMY', number: 'DUMMY', credits: 0 }))
+          courseIds.map(courseId => ({ courseId, uniqueId: -1, code: 'DUMMY', credits: 0 }))
       );
       return {
         correspondingRequirement: requirement.id,
@@ -64,7 +64,14 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     requirements: userRequirements.map(it => it.id),
     userCourses: forfeitTransferCredit(coursesTaken),
     userChoiceOnFulfillmentStrategy,
-    userChoiceOnDoubleCountingElimiation: [],
+    userChoiceOnDoubleCountingElimiation: Object.entries(selectableRequirementChoices)
+      .map(([courseIDString, requirementID]) => {
+        const courseID = parseInt(courseIDString, 10);
+        const courseTaken = coursesTaken.find(it => it.courseId === courseID);
+        if (courseTaken == null) return null;
+        return [requirementID, courseTaken] as const;
+      })
+      .filter((it): it is readonly [string, CourseTaken] => it != null),
     getRequirementUniqueID: id => id,
     getCourseUniqueID: course => String(course.courseId),
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirementID => {
@@ -89,7 +96,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         .map((courseIds): readonly CourseTaken[] =>
           // Only courseId are used for equality comparison,
           // so other dummy values doesn't matter.
-          courseIds.map(courseId => ({ courseId, subject: 'DUMMY', number: 'DUMMY', credits: 0 }))
+          courseIds.map(courseId => ({ courseId, uniqueId: -1, code: 'DUMMY', credits: 0 }))
         )
         .flat();
     },
