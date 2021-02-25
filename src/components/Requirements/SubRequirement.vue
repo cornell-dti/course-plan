@@ -338,7 +338,6 @@ export default Vue.extend({
   margin: 0px;
 }
 .description {
-  margin: 0 0 0.5rem 1.8rem;
   color: #4f4f4f;
   font-size: 14px;
 }
