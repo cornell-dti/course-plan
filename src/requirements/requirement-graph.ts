@@ -10,28 +10,16 @@ import { HashMap, HashSet } from './util/collections';
  * We keep type of `Requirement` and `Course` generic, so that they can be easily mocked during
  * testing and make this basic graph implementation not tied to anything specific representation.
  */
-export default class RequirementFulfillmentGraph<Requirement, Course> {
+export default class RequirementFulfillmentGraph<Requirement extends string, Course> {
   // Internally, we use a two hash map to represent the bidirection relation
   // between requirement and courses.
 
-  private readonly requirementToCoursesMap: HashMap<Requirement, HashSet<Course>>;
+  private readonly requirementToCoursesMap: Map<Requirement, HashSet<Course>> = new Map();
 
-  private readonly courseToRequirementsMap: HashMap<Course, HashSet<Requirement>>;
+  private readonly courseToRequirementsMap: HashMap<Course, Set<Requirement>>;
 
-  constructor(
-    private readonly getRequirementUniqueID: (r: Requirement) => string,
-    private readonly getCourseUniqueID: (c: Course) => string
-  ) {
-    this.requirementToCoursesMap = new HashMap(getRequirementUniqueID);
+  constructor(private readonly getCourseUniqueID: (c: Course) => string | number) {
     this.courseToRequirementsMap = new HashMap(getCourseUniqueID);
-  }
-
-  public getAllRequirements(): readonly Requirement[] {
-    return this.requirementToCoursesMap.keys();
-  }
-
-  public getAllCourses(): readonly Course[] {
-    return this.courseToRequirementsMap.keys();
   }
 
   public getAllEdges(): readonly (readonly [Requirement, Course])[] {
@@ -58,7 +46,7 @@ export default class RequirementFulfillmentGraph<Requirement, Course> {
 
     let existingRequirementsLinkedToCourse = this.courseToRequirementsMap.get(course);
     if (existingRequirementsLinkedToCourse == null) {
-      existingRequirementsLinkedToCourse = new HashSet(this.getRequirementUniqueID);
+      existingRequirementsLinkedToCourse = new Set();
       this.courseToRequirementsMap.set(course, existingRequirementsLinkedToCourse);
     }
     existingRequirementsLinkedToCourse.add(requirement);
@@ -85,13 +73,6 @@ export default class RequirementFulfillmentGraph<Requirement, Course> {
   public getConnectedRequirementsFromCourse(course: Course): readonly Requirement[] {
     const requirementSet = this.courseToRequirementsMap.get(course);
     if (requirementSet == null) return [];
-    return requirementSet.toArray();
-  }
-
-  public existsEdge(requirement: Requirement, course: Course): boolean {
-    const existingCoursesLinkedToRequirement = this.requirementToCoursesMap.get(requirement);
-    return (
-      existingCoursesLinkedToRequirement != null && existingCoursesLinkedToRequirement.has(course)
-    );
+    return Array.from(requirementSet);
   }
 }

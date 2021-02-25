@@ -33,38 +33,30 @@ export default function buildRequirementFulfillmentGraphFromUserData(
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
-  type UserChoiceOnFulfillmentStrategy = {
-    readonly correspondingRequirement: string;
-    readonly coursesOfChosenFulfillmentStrategy: readonly CourseTaken[];
-  };
-  const userChoiceOnFulfillmentStrategy = userRequirements
-    .map((requirement): UserChoiceOnFulfillmentStrategy | null => {
-      if (requirement.fulfilledBy !== 'toggleable') return null;
-      const optionName =
-        toggleableRequirementChoices[requirement.id] ||
-        Object.keys(requirement.fulfillmentOptions)[0];
-
-      const courses: CourseTaken[] = requirement.fulfillmentOptions[optionName].courses.flatMap(
-        courseIds =>
-          // Only courseId are used for equality comparison,
-          // so other dummy values doesn't matter.
-          courseIds.map(courseId => ({ courseId, uniqueId: -1, code: 'DUMMY', credits: 0 }))
-      );
-      return {
-        correspondingRequirement: requirement.id,
-        coursesOfChosenFulfillmentStrategy: courses,
-      };
-    })
-    .filter((it): it is UserChoiceOnFulfillmentStrategy => it != null);
 
   const {
     requirementFulfillmentGraph,
     illegallyDoubleCountedCourses,
-  } = buildRequirementFulfillmentGraph<string, CourseTaken, UserChoiceOnFulfillmentStrategy>({
+  } = buildRequirementFulfillmentGraph<string, CourseTaken>({
     requirements: userRequirements.map(it => it.id),
     userCourses: forfeitTransferCredit(coursesTaken),
-    userChoiceOnFulfillmentStrategy,
-    userChoiceOnDoubleCountingElimiation: Object.entries(selectableRequirementChoices)
+    userChoiceOnFulfillmentStrategy: Object.fromEntries(
+      userRequirements
+        .map(requirement => {
+          if (requirement.fulfilledBy !== 'toggleable') return null;
+          const optionName =
+            toggleableRequirementChoices[requirement.id] ||
+            Object.keys(requirement.fulfillmentOptions)[0];
+          const courses = requirement.fulfillmentOptions[optionName].courses.flatMap(courseIds =>
+            // Only courseId are used for equality comparison,
+            // so other dummy values doesn't matter.
+            courseIds.map(courseId => ({ courseId, uniqueId: -1, code: 'DUMMY', credits: 0 }))
+          );
+          return [requirement.id, courses] as const;
+        })
+        .filter((it): it is [string, CourseTaken[]] => it != null)
+    ),
+    userChoiceOnDoubleCountingElimination: Object.entries(selectableRequirementChoices)
       .map(([courseIDString, requirementID]) => {
         const courseID = parseInt(courseIDString, 10);
         const courseTaken = coursesTaken.find(it => it.courseId === courseID);
@@ -72,8 +64,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         return [requirementID, courseTaken] as const;
       })
       .filter((it): it is readonly [string, CourseTaken] => it != null),
-    getRequirementUniqueID: id => id,
-    getCourseUniqueID: course => String(course.courseId),
+    getCourseUniqueID: course => course.courseId,
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirementID => {
       const requirement = userRequirementsMap[requirementID];
       let eligibleCoursesList: readonly (readonly number[])[];
@@ -100,7 +91,6 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         )
         .flat();
     },
-    getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy: it => it,
     allowDoubleCounting: requirementID =>
       userRequirementsMap[requirementID].allowCourseDoubleCounting || false,
   });
