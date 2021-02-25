@@ -1,4 +1,6 @@
-import { HashMap, HashSet } from './util/collections';
+export interface CourseWithUniqueId {
+  readonly uniqueId: number;
+}
 
 /**
  * A mutable graph data structure that represents the mathematically relation between requirement
@@ -10,17 +12,16 @@ import { HashMap, HashSet } from './util/collections';
  * We keep type of `Requirement` and `Course` generic, so that they can be easily mocked during
  * testing and make this basic graph implementation not tied to anything specific representation.
  */
-export default class RequirementFulfillmentGraph<Requirement extends string, Course> {
+export default class RequirementFulfillmentGraph<
+  Requirement extends string,
+  Course extends CourseWithUniqueId
+> {
   // Internally, we use a two hash map to represent the bidirection relation
   // between requirement and courses.
 
-  private readonly requirementToCoursesMap: Map<Requirement, HashSet<Course>> = new Map();
+  private readonly requirementToCoursesMap: Map<Requirement, Map<number, Course>> = new Map();
 
-  private readonly courseToRequirementsMap: HashMap<Course, Set<Requirement>>;
-
-  constructor(private readonly getCourseUniqueID: (c: Course) => string | number) {
-    this.courseToRequirementsMap = new HashMap(getCourseUniqueID);
-  }
+  private readonly courseToRequirementsMap: Map<number, Set<Requirement>> = new Map();
 
   public getAllEdges(): readonly (readonly [Requirement, Course])[] {
     const edges: (readonly [Requirement, Course])[] = [];
@@ -32,33 +33,33 @@ export default class RequirementFulfillmentGraph<Requirement extends string, Cou
 
   public addRequirementNode(requirement: Requirement): void {
     if (!this.requirementToCoursesMap.has(requirement)) {
-      this.requirementToCoursesMap.set(requirement, new HashSet(this.getCourseUniqueID));
+      this.requirementToCoursesMap.set(requirement, new Map());
     }
   }
 
   public addEdge(requirement: Requirement, course: Course): void {
     let existingCoursesLinkedToRequirement = this.requirementToCoursesMap.get(requirement);
     if (existingCoursesLinkedToRequirement == null) {
-      existingCoursesLinkedToRequirement = new HashSet(this.getCourseUniqueID);
+      existingCoursesLinkedToRequirement = new Map();
       this.requirementToCoursesMap.set(requirement, existingCoursesLinkedToRequirement);
     }
-    existingCoursesLinkedToRequirement.add(course);
+    existingCoursesLinkedToRequirement.set(course.uniqueId, course);
 
-    let existingRequirementsLinkedToCourse = this.courseToRequirementsMap.get(course);
+    let existingRequirementsLinkedToCourse = this.courseToRequirementsMap.get(course.uniqueId);
     if (existingRequirementsLinkedToCourse == null) {
       existingRequirementsLinkedToCourse = new Set();
-      this.courseToRequirementsMap.set(course, existingRequirementsLinkedToCourse);
+      this.courseToRequirementsMap.set(course.uniqueId, existingRequirementsLinkedToCourse);
     }
     existingRequirementsLinkedToCourse.add(requirement);
   }
 
-  public removeEdge(requirement: Requirement, course: Course): void {
+  public removeEdge(requirement: Requirement, course: CourseWithUniqueId): void {
     const existingCoursesLinkedToRequirement = this.requirementToCoursesMap.get(requirement);
     if (existingCoursesLinkedToRequirement != null) {
-      existingCoursesLinkedToRequirement.delete(course);
+      existingCoursesLinkedToRequirement.delete(course.uniqueId);
     }
 
-    const existingRequirementsLinkedToCourse = this.courseToRequirementsMap.get(course);
+    const existingRequirementsLinkedToCourse = this.courseToRequirementsMap.get(course.uniqueId);
     if (existingRequirementsLinkedToCourse != null) {
       existingRequirementsLinkedToCourse.delete(requirement);
     }
@@ -67,11 +68,11 @@ export default class RequirementFulfillmentGraph<Requirement extends string, Cou
   public getConnectedCoursesFromRequirement(requirement: Requirement): readonly Course[] {
     const courseSet = this.requirementToCoursesMap.get(requirement);
     if (courseSet == null) return [];
-    return courseSet.toArray();
+    return Array.from(courseSet.values());
   }
 
-  public getConnectedRequirementsFromCourse(course: Course): readonly Requirement[] {
-    const requirementSet = this.courseToRequirementsMap.get(course);
+  public getConnectedRequirementsFromCourse(course: CourseWithUniqueId): readonly Requirement[] {
+    const requirementSet = this.courseToRequirementsMap.get(course.uniqueId);
     if (requirementSet == null) return [];
     return Array.from(requirementSet);
   }

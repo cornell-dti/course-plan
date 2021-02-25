@@ -128,7 +128,9 @@ import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
+import { chooseSelectableRequirementOption } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
+import store from '@/store';
 
 const pageTour = introJs();
 pageTour.setOption('exitOnEsc', 'false');
@@ -308,8 +310,12 @@ export default Vue.extend({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    addCourse(data: CornellCourseRosterCourse) {
+    addCourse(data: CornellCourseRosterCourse, requirementID: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(data);
+      chooseSelectableRequirementOption({
+        ...store.state.selectableRequirementChoices,
+        [newCourse.uniqueID]: requirementID,
+      });
       const courseCode = `${data.subject} ${data.catalogNbr}`;
 
       this.$emit(

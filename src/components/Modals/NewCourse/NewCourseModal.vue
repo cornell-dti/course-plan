@@ -43,7 +43,6 @@ import CourseSelector, {
 } from '@/components/Modals/NewCourse/CourseSelector.vue';
 
 import store from '@/store';
-import { chooseSelectableRequirementOption } from '@/global-firestore-data';
 import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
 export default Vue.extend({
@@ -130,22 +129,13 @@ export default Vue.extend({
           resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
             if (resultJSONclass.catalogNbr === number) {
               const course = { ...resultJSONclass, roster };
-              this.$emit('add-course', course);
-              this.chooseSelectableRequirementOption(course.crseId.toString(), requirementID);
+              this.$emit('add-course', course, requirementID);
             }
           });
         });
 
       this.reset();
       this.closeCurrentModal();
-    },
-    chooseSelectableRequirementOption(courseID: string, requirementID: string): void {
-      if (courseID && requirementID) {
-        chooseSelectableRequirementOption({
-          ...this.selectableRequirementChoices,
-          [courseID]: requirementID,
-        });
-      }
     },
     onSelectedChange(selected: string) {
       this.selectedRequirementID = selected;
