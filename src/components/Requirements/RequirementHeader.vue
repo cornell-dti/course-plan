@@ -303,8 +303,8 @@ button.view {
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
-    align-self: center;
     width: 100%;
+    text-align: left;
   }
 }
 .view-more-dropdown {
