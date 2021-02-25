@@ -80,15 +80,6 @@ export default Vue.extend({
       }
       return `${this.courseObj.credits} credits`;
     },
-    review(): string {
-      const [subject, number] = this.courseObj.code;
-      return `https://www.cureviews.org/course/${subject}/${number}`;
-    },
-
-    roster(): string {
-      const [subject, number] = this.courseObj.code;
-      return `https://classes.cornell.edu/browse/roster/FA18/class/${subject}/${number}`;
-    },
 
     cssVars(): { '--bg-color': string } {
       return {
@@ -268,7 +259,7 @@ export default Vue.extend({
   border: 1px solid $yuxuanBlue;
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .course {
     width: 17rem;
     &--min {

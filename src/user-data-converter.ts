@@ -13,12 +13,12 @@ const createCourseCreditRange = (course: CornellCourseRosterCourse): readonly [n
   return [Math.min(...courseCreditRange), Math.max(...courseCreditRange)];
 };
 
-export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
-  course: CornellCourseRosterCourse
+export const cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor = (
+  course: CornellCourseRosterCourse,
+  uniqueID: number,
+  color: string
 ): FirestoreSemesterCourse => {
-  const uniqueID = incrementUniqueID();
-
-  const { subject, catalogNbr: number, titleLong: name, description, roster: lastRoster } = course;
+  const { subject, catalogNbr: number, titleLong: name, roster: lastRoster } = course;
 
   // TODO Credits: Which enroll group, and min or max credits? And how is it stored for users
   const credits = course.enrollGroups[0].unitsMaximum;
@@ -31,10 +31,35 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
       : course.catalogWhenOffered.replace(/\./g, '').split(', ');
   const semesters = alternateSemesters;
 
-  // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
-  const prereqs = course.catalogPrereqCoreq || '';
+  return {
+    crseId: course.crseId,
+    lastRoster,
+    code: `${subject} ${number}`,
+    name,
+    credits,
+    creditRange,
+    semesters,
+    color,
+    uniqueID,
+  };
+};
 
-  // If new course, iterate through enrollment groups to retrieve enrollment info, lecture times, and instructors
+export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
+  course: CornellCourseRosterCourse
+): FirestoreSemesterCourse =>
+  cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
+    course,
+    incrementUniqueID(),
+    getOrAllocateSubjectColor(course.subject)
+  );
+
+export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation = (
+  course: CornellCourseRosterCourseFullDetail
+): Pick<
+  AppBottomBarCourse,
+  'description' | 'prereqs' | 'enrollment' | 'lectureTimes' | 'instructors' | 'distributions'
+> => {
+  const { description } = course;
 
   // Hash maps used to remove redundancies
   const enrollmentMap: Record<string, boolean> = {};
@@ -59,6 +84,8 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
     });
   });
 
+  // Get prereqs of course as string (). '' if neither available because '' is interpreted as false
+  const prereqs = course.catalogPrereqCoreq || '';
   const enrollment = Object.keys(enrollmentMap);
   const lectureTimes = Object.keys(lectureTimesMap);
   const instructors = Object.keys(instructorsMap).map(
@@ -67,61 +94,35 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
 
   // Distribution of course (e.g. MQR-AS)
   // alternateDistributions option in case catalogDistr for the course is null, undef, ''
-  const alternateDistributions =
+  const distributions =
     !course.catalogDistr || course.catalogDistr === ''
       ? ['']
       : (/\(([^)]+)\)/.exec(course.catalogDistr) || [])[1].split(', ');
-  const distributions = alternateDistributions;
 
-  // Create course from saved color. Otherwise, create course from subject color group
-  const color = getOrAllocateSubjectColor(subject);
-
-  return {
-    crseId: course.crseId,
-    code: `${subject} ${number}`,
-    name,
-    description,
-    credits,
-    creditRange,
-    semesters,
-    prereqs,
-    enrollment,
-    lectureTimes,
-    instructors,
-    distributions,
-    lastRoster,
-    color,
-    uniqueID,
-  };
+  return { description, prereqs, enrollment, lectureTimes, instructors, distributions };
 };
 
 export const firestoreSemesterCourseToBottomBarCourse = ({
   code,
   name,
   credits,
-  semesters,
   color,
   lastRoster,
-  instructors,
-  distributions,
-  enrollment,
-  lectureTimes,
-  prereqs,
-  description,
+  semesters,
   uniqueID,
 }: FirestoreSemesterCourse): AppBottomBarCourse => ({
   code,
   name,
   credits,
-  semesters,
-  color,
   lastRoster,
-  instructors,
-  distributions,
-  enrollment,
-  lectureTimes,
-  prereqs,
-  description,
+  color,
+  semesters,
+  instructors: [],
+  distributions: [],
+  enrollment: [],
+  lectureTimes: [],
+  prereqs: '',
+  description: '',
   uniqueID,
   overallRating: 0,
   difficulty: 0,

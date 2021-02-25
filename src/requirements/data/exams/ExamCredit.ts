@@ -410,7 +410,6 @@ function userDataToCourses(
     }, undefined);
     // generate the equivalent course
     if (exam) {
-      const roster = 'FA20'; // TODO this is hardcoded
       const courseEquivalents =
         (exam.fulfillment.courseEquivalents &&
           (exam.fulfillment.courseEquivalents[college] ||
@@ -422,9 +421,7 @@ function userDataToCourses(
         if (courseEquivalents.length === 1) {
           const courseId = courseEquivalents[0];
           courses.push({
-            roster,
             courseId,
-            code: `${examType} ${exam.name}`,
             subject: examType,
             number: exam.name,
             credits: exam.fulfillment.credits,
@@ -433,18 +430,14 @@ function userDataToCourses(
           // separate credits from equivalent course
           courseEquivalents.forEach(courseId => {
             courses.push({
-              roster,
               courseId,
-              code: `${examType} ${exam.name}`,
               subject: examType,
               number: exam.name,
               credits: 0,
             });
           });
           courses.push({
-            roster,
             courseId: 10,
-            code: `CREDITS ${examType} ${exam.name}`,
             subject: 'CREDITS',
             number: exam.fulfillment.credits.toString(),
             credits: exam.fulfillment.credits,
@@ -478,8 +471,9 @@ export default function getCourseEquivalentsFromUserExams(
   });
   user.major.forEach((major: string) =>
     getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
-      if (!examCourseCodeSet.has(course.code)) {
-        examCourseCodeSet.add(course.code);
+      const syntheticCourseCode = `${course.subject} ${course.number}`;
+      if (!examCourseCodeSet.has(syntheticCourseCode)) {
+        examCourseCodeSet.add(syntheticCourseCode);
         courses.push(course);
       }
     })

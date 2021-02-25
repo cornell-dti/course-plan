@@ -14,15 +14,9 @@ type FirestoreSemesterCourse = {
   readonly uniqueID: number;
   readonly code: string;
   readonly name: string;
-  readonly description: string;
   readonly credits: number;
   readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[];
-  readonly prereqs: string;
-  readonly enrollment: readonly string[];
-  readonly lectureTimes: readonly string[];
-  readonly instructors: readonly string[];
-  readonly distributions: readonly string[];
   readonly color: string;
 };
 
@@ -62,11 +56,20 @@ type FirestoreUserData = {
   readonly userData: FirestoreOnboardingUserData;
 };
 
-type CornellCourseRosterCourse = {
+interface CornellCourseRosterCourse {
   readonly crseId: number;
   readonly subject: string;
   readonly catalogNbr: string;
   readonly titleLong: string;
+  readonly enrollGroups: readonly {
+    readonly unitsMinimum: number;
+    readonly unitsMaximum: number;
+  }[];
+  readonly catalogWhenOffered?: string | null;
+  readonly roster: string;
+}
+
+interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse {
   readonly description: string;
   readonly enrollGroups: readonly {
     readonly unitsMinimum: number;
@@ -85,11 +88,9 @@ type CornellCourseRosterCourse = {
       }[];
     }[];
   }[];
-  readonly catalogWhenOffered?: string;
   readonly catalogPrereqCoreq?: string;
   readonly catalogDistr?: string;
-  readonly roster: string;
-};
+}
 
 type AppOnboardingData = {
   readonly college: string;
@@ -101,19 +102,19 @@ type AppOnboardingData = {
 };
 
 type AppBottomBarCourse = {
+  readonly uniqueID: number;
   readonly code: string;
   readonly name: string;
   readonly credits: number;
-  readonly semesters: readonly string[];
   readonly color: string;
   readonly lastRoster: string;
-  readonly instructors: readonly string[];
-  readonly distributions: readonly string[];
-  readonly enrollment: readonly string[];
-  readonly lectureTimes: readonly string[];
-  readonly prereqs: string;
-  readonly description: string;
-  readonly uniqueID: number;
+  readonly semesters: readonly string[];
+  description: string;
+  prereqs: string;
+  enrollment: readonly string[];
+  lectureTimes: readonly string[];
+  distributions: readonly string[];
+  instructors: readonly string[];
   overallRating: number;
   difficulty: number;
   workload: number;

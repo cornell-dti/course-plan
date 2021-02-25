@@ -33,6 +33,11 @@ $darkPlaceholderGray: #b6b6b6;
 
 $boxShadowGray: #efefef;
 
+$small-breakpoint: 440px;
+$small-medium-breakpoint: 600px;
+$medium-breakpoint: 878px;
+$large-breakpoint: 976px;
+
 // Export for javascript
 :export {
   yuxuanBlue: $yuxuanBlue;

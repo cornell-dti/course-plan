@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" aria-modal="true">
+  <div class="modal" @click="checkClickOutside" ref="modalBackground" aria-modal="true">
     <div :class="['modal-content', contentClass]">
       <div class="modal-top">
         <span class="modal-title">{{ title }}</span>
@@ -42,6 +42,9 @@ export default Vue.extend({
     },
     rightButtonClicked(): void {
       this.$emit('right-button-clicked');
+    },
+    checkClickOutside(e: MouseEvent) {
+      if (e.target === this.$refs.modalBackground) this.closeCurrentModal();
     },
   },
 });

@@ -66,7 +66,7 @@
           @delete-semester="deleteSemester"
           @edit-semester="editSemester"
           @open-caution-modal="openCautionModal"
-          @add-course-to-semester="addCourseToSemester"
+          @add-course-to-semester="addNewCourse"
         />
       </div>
       <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
@@ -98,16 +98,13 @@ import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
-import { editSemesters } from '@/global-firestore-data';
+import {
+  addCourseToSemester,
+  compareFirestoreSemesters,
+  createSemester,
+  editSemesters,
+} from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
-
-// enum to define seasons as integers in season order
-const SeasonsEnum = Object.freeze({
-  Winter: 0,
-  Spring: 1,
-  Summer: 2,
-  Fall: 3,
-});
 
 export default Vue.extend({
   components: { Confirmation, NewSemesterModal, Semester, SemesterCaution },
@@ -189,12 +186,8 @@ export default Vue.extend({
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
     },
-    createSemester(
-      courses: readonly FirestoreSemesterCourse[],
-      type: FirestoreSemesterType,
-      year: number
-    ) {
-      return { courses, type, year };
+    addNewCourse(season: FirestoreSemesterType, year: number, course: FirestoreSemesterCourse) {
+      addCourseToSemester(season, year, course);
     },
     addSemester(type: FirestoreSemesterType, year: number) {
       this.$gtag.event('add-semester', {
@@ -204,7 +197,7 @@ export default Vue.extend({
       });
 
       editSemesters(oldSemesters =>
-        [...oldSemesters, this.createSemester([], type, year)].sort(this.compare)
+        [...oldSemesters, createSemester([], type, year)].sort(compareFirestoreSemesters)
       );
       this.openSemesterConfirmationModal(type, year, true);
     },
@@ -223,39 +216,6 @@ export default Vue.extend({
         oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
       );
     },
-    addCourseToSemester(
-      season: FirestoreSemesterType,
-      year: number,
-      newCourse: FirestoreSemesterCourse
-    ) {
-      editSemesters(oldSemesters => {
-        let semesterFound = false;
-        const newSemestersWithCourse = oldSemesters.map(sem => {
-          if (sem.type === season && sem.year === year) {
-            semesterFound = true;
-            return { ...sem, courses: [...sem.courses, newCourse] };
-          }
-          return sem;
-        });
-        if (semesterFound) return newSemestersWithCourse;
-        return [...oldSemesters, this.createSemester([newCourse], season, year)].sort(this.compare);
-      });
-    },
-    compare(a: FirestoreSemester, b: FirestoreSemester): number {
-      if (a.type === b.type && a.year === b.year) {
-        return 0;
-      }
-      if (a.year > b.year) {
-        return -1;
-      }
-      if (a.year < b.year) {
-        return 1;
-      }
-      if (SeasonsEnum[a.type] < SeasonsEnum[b.type]) {
-        return 1;
-      }
-      return -1;
-    },
     editSemester(
       year: number,
       type: FirestoreSemesterType,
@@ -268,7 +228,7 @@ export default Vue.extend({
               ? updater(currentSemester)
               : currentSemester
           )
-          .sort(this.compare)
+          .sort(compareFirestoreSemesters)
       );
     },
     courseOnClick(course: FirestoreSemesterCourse) {
@@ -427,7 +387,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .semesterView {
     margin-top: 5.5rem;
     margin-left: 2.5rem;

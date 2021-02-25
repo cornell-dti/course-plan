@@ -92,7 +92,14 @@ tour.setOption('exitOnOverlayClick', 'false');
 let listenerUnsubscriber = (): void => {};
 
 export default Vue.extend({
-  components: { BottomBar, NavBar, Onboarding, Requirements, SemesterView, TourWindow },
+  components: {
+    BottomBar,
+    NavBar,
+    Onboarding,
+    Requirements,
+    SemesterView,
+    TourWindow,
+  },
   data() {
     return {
       loaded: true,
@@ -217,6 +224,7 @@ export default Vue.extend({
   &-mainView {
     display: flex;
     background-color: $backgroundBlue;
+    overflow-x: hidden;
   }
 
   &-menus {
@@ -250,7 +258,7 @@ export default Vue.extend({
   height: 12.12rem;
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .dashboard {
     &-nav {
       width: 100%;

@@ -29,6 +29,7 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
 .caution {
   position: fixed;
   z-index: 10;
@@ -98,7 +99,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 440px) {
+@media only screen and (max-width: $small-breakpoint) {
   .caution {
     width: 75%;
     &-left {

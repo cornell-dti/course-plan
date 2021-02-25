@@ -7,7 +7,7 @@ import {
 } from './types';
 import sourceRequirements from './data';
 import { FWS_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
-import filteredAllCourses from './filtered-all-courses';
+import { coursesWithLastOfferingData } from './filtered-course-data';
 
 /**
  * Special (synthetic) courses, as used in AP/IB equivalent courses generation.
@@ -18,9 +18,7 @@ const specialCourses: Course[] = [
     crseId: CREDITS_COURSE_ID,
     catalogNbr: '',
     titleLong: '',
-    description: '',
     enrollGroups: [],
-    catalogAttribute: '',
     acadCareer: '',
     acadGroup: '',
   },
@@ -29,9 +27,7 @@ const specialCourses: Course[] = [
     crseId: FWS_COURSE_ID,
     catalogNbr: '',
     titleLong: '',
-    description: '',
     enrollGroups: [],
-    catalogAttribute: '',
     acadCareer: '',
     acadGroup: '',
   },
@@ -39,21 +35,15 @@ const specialCourses: Course[] = [
 
 const getEligibleCoursesFromRequirementCheckers = (
   checkers: readonly RequirementChecker[]
-): readonly EligibleCourses[] =>
+): readonly (readonly number[])[] =>
   checkers.map(oneRequirementChecker => {
-    const eligibleCoursesMap: { [semester: string]: number[] } = {};
-    Object.entries(filteredAllCourses).forEach(([semester, courses]) => {
-      const courseIdSet = new Set(
-        [...courses, ...specialCourses]
-          .filter(course => oneRequirementChecker(course))
-          .map(course => course.crseId)
-      );
-      if (courseIdSet.size > 0) {
-        // Do not include empty semesters.
-        eligibleCoursesMap[semester] = Array.from(courseIdSet);
-      }
-    });
-    return eligibleCoursesMap;
+    const courseIdSet = new Set(
+      [...coursesWithLastOfferingData, ...specialCourses]
+        .filter(course => oneRequirementChecker(course))
+        .map(course => course.crseId)
+    );
+    // Sort by course ID to get a more stable ordered json
+    return Array.from(courseIdSet).sort((a, b) => a - b);
   });
 
 const decorateRequirementWithCourses = (
@@ -176,7 +166,9 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
 };
 
 const decoratedRequirementString = JSON.stringify(
-  produceSatisfiableCoursesAttachedRequirementJson()
+  produceSatisfiableCoursesAttachedRequirementJson(),
+  undefined,
+  2
 );
 
 writeFileSync('src/requirements/decorated-requirements.json', decoratedRequirementString);

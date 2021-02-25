@@ -1,7 +1,20 @@
+import requirementJson from './typed-requirement-json';
+
 /**
  * A collection of helper functions
  * that might be useful for both frontend components and requirement graph computation
  */
+
+/**
+ * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase
+ * user data, into a CourseTaken type used throughout the requirements sidebar.
+ */
+export function convertFirestoreSemesterCourseToCourseTaken(
+  course: FirestoreSemesterCourse
+): CourseTaken {
+  const [subject, number] = course.code.split(' ');
+  return { subject, courseId: course.crseId, number, credits: course.credits };
+}
 
 export function requirementAllowDoubleCounting(
   requirement: RequirementWithIDSourceType,
@@ -17,6 +30,72 @@ export function requirementAllowDoubleCounting(
   return requirement.allowCourseDoubleCounting || false;
 }
 
+export function getUserRequirements({
+  college,
+  major: majors,
+  minor: minors,
+}: AppOnboardingData): readonly RequirementWithIDSourceType[] {
+  // check university & college & major & minor requirements
+  if (!(college in requirementJson.college)) throw new Error(`College ${college} not found.`);
+
+  const universityReqs = requirementJson.university.UNI;
+  const collegeReqs = requirementJson.college[college];
+
+  return [
+    ...universityReqs.requirements.map(
+      it =>
+        ({
+          ...it,
+          id: `College-UNI-${it.name}`,
+          sourceType: 'College',
+          sourceSpecificName: college,
+        } as const)
+    ),
+    ...collegeReqs.requirements.map(
+      it =>
+        ({
+          ...it,
+          id: `College-${college}-${it.name}`,
+          sourceType: 'College',
+          sourceSpecificName: college,
+        } as const)
+    ),
+    ...majors
+      .map(major => {
+        const majorRequirement = requirementJson.major[major];
+        if (majorRequirement == null) return [];
+        return majorRequirement.requirements.map(
+          it =>
+            ({
+              ...it,
+              id: `Major-${major}-${it.name}`,
+              sourceType: 'Major',
+              sourceSpecificName: major,
+            } as const)
+        );
+      })
+      .flat(),
+    ...minors
+      .map(minor => {
+        const minorRequirement = requirementJson.minor[minor];
+        if (minorRequirement == null) return [];
+        return minorRequirement.requirements.map(
+          it =>
+            ({
+              ...it,
+              id: `Minor-${minor}-${it.name}`,
+              sourceType: 'Minor',
+              sourceSpecificName: minor,
+            } as const)
+        );
+      })
+      .flat(),
+  ].map(requirement => ({
+    ...requirement,
+    allowCourseDoubleCounting: requirementAllowDoubleCounting(requirement, majors) || undefined,
+  }));
+}
+
 /**
  * The function respects the user choice on toggleable requirement, and provides the already decided
  * fulfillment strategy to follow.
@@ -29,7 +108,7 @@ export function getMatchedRequirementFulfillmentSpecification(
   toggleableRequirementChoices: AppToggleableRequirementChoices
 ): {
   readonly fulfilledBy: 'courses' | 'credits';
-  readonly eligibleCourses: readonly EligibleCourses[];
+  readonly eligibleCourses: readonly (readonly number[])[];
   readonly subRequirementProgress: 'every-course-needed' | 'any-can-count';
   readonly minCount: number;
 } | null {
@@ -94,14 +173,10 @@ export function getRelatedUnfulfilledRequirements(
         selfCheckRequirements.push(subRequirement);
       }
       if (requirementSpec != null) {
-        const { eligibleCourses } = requirementSpec;
-        for (let k = 0; k < eligibleCourses.length; k += 1) {
-          for (const [, ids] of Object.entries(eligibleCourses[k])) {
-            if (ids.includes(courseID)) {
-              directlyRelatedRequirements.push(subRequirement);
-              break;
-            }
-          }
+        const allEligibleCourses = requirementSpec.eligibleCourses.flat();
+        if (allEligibleCourses.includes(courseID)) {
+          directlyRelatedRequirements.push(subRequirement);
+          break;
         }
       }
     }

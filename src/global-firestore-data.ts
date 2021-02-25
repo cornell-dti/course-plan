@@ -11,12 +11,68 @@ import {
 } from './firebaseConfig';
 import store from './store';
 
+// enum to define seasons as integers in season order
+export const SeasonsEnum = Object.freeze({
+  Winter: 0,
+  Spring: 1,
+  Summer: 2,
+  Fall: 3,
+});
+
 export const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
   const newSemesters = updater(store.state.semesters);
   store.commit('setSemesters', newSemesters);
   semestersCollection.doc(store.state.currentFirebaseUser.email).set({ semesters: newSemesters });
+};
+
+// compare function for FirestoreSemester to determine which comes first by year and type/season
+export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSemester): number => {
+  if (a.type === b.type && a.year === b.year) {
+    return 0;
+  }
+  if (a.year > b.year) {
+    return -1;
+  }
+  if (a.year < b.year) {
+    return 1;
+  }
+  if (SeasonsEnum[a.type] < SeasonsEnum[b.type]) {
+    return 1;
+  }
+  return -1;
+};
+
+export const createSemester = (
+  courses: readonly FirestoreSemesterCourse[],
+  type: FirestoreSemesterType,
+  year: number
+): { courses: readonly FirestoreSemesterCourse[]; type: FirestoreSemesterType; year: number } => ({
+  courses,
+  type,
+  year,
+});
+
+export const addCourseToSemester = (
+  season: FirestoreSemesterType,
+  year: number,
+  newCourse: FirestoreSemesterCourse
+): void => {
+  editSemesters(oldSemesters => {
+    let semesterFound = false;
+    const newSemestersWithCourse = oldSemesters.map(sem => {
+      if (sem.type === season && sem.year === year) {
+        semesterFound = true;
+        return { ...sem, courses: [...sem.courses, newCourse] };
+      }
+      return sem;
+    });
+    if (semesterFound) return newSemestersWithCourse;
+    return [...oldSemesters, createSemester([newCourse], season, year)].sort(
+      compareFirestoreSemesters
+    );
+  });
 };
 
 export const chooseToggleableRequirementOption = (
@@ -35,8 +91,12 @@ export const chooseSelectableRequirementOption = (
     .set(selectableRequirementChoices);
 };
 
-const getSubjectColor = (subjectColors: Record<string, string>, subject: string): string => {
-  if (subjectColors[subject]) return subjectColors[subject];
+/** @returns a tuple [color of the subject, whether new colors are added] */
+const getSubjectColor = (
+  subjectColors: Record<string, string>,
+  subject: string
+): readonly [string, boolean] => {
+  if (subjectColors[subject]) return [subjectColors[subject], false];
 
   const colors = [
     {
@@ -88,15 +148,26 @@ const getSubjectColor = (subjectColors: Record<string, string>, subject: string)
   }
 
   subjectColors[subject] = randomColor;
-  return randomColor;
+  return [randomColor, true];
 };
 
 export const getOrAllocateSubjectColor = (subject: string): string => {
   const subjectsColorCopy = { ...store.state.subjectColors };
-  const color = getSubjectColor(subjectsColorCopy, subject);
+  const [color, changed] = getSubjectColor(subjectsColorCopy, subject);
   // Update subjectColors on Firebase with new subject color group
-  subjectColorsCollection.doc(store.state.currentFirebaseUser.email).set(subjectsColorCopy);
+  if (changed) {
+    subjectColorsCollection.doc(store.state.currentFirebaseUser.email).set(subjectsColorCopy);
+  }
   return color;
+};
+
+export const allocateSubjectColors = (
+  subjects: ReadonlySet<string>
+): Readonly<Record<string, string>> => {
+  const subjectsColorCopy = { ...store.state.subjectColors };
+  subjects.forEach(subject => getSubjectColor(subjectsColorCopy, subject));
+  subjectColorsCollection.doc(store.state.currentFirebaseUser.email).set(subjectsColorCopy);
+  return subjectsColorCopy;
 };
 
 export const incrementUniqueID = (amount = 1): number => {

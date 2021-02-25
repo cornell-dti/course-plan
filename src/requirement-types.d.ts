@@ -9,11 +9,6 @@ type RequirementCommon = {
   readonly allowCourseDoubleCounting?: true;
 };
 
-type EligibleCourses = {
-  // "FA20": [123456, 42, 65536, /* and another crseId */]
-  readonly [semester: string]: readonly number[];
-};
-
 /**
  * @param T additional information only attached to credits and courses type.
  */
@@ -54,12 +49,10 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
     };
 
 type DecoratedCollegeOrMajorRequirement = RequirementCommon &
-  RequirementFulfillmentInformation<{ readonly courses: readonly EligibleCourses[] }>;
+  RequirementFulfillmentInformation<{ readonly courses: readonly (readonly number[])[] }>;
 
 type CourseTaken = {
-  readonly roster: string;
   readonly courseId: number;
-  readonly code: string;
   readonly subject: string;
   readonly number: string;
   readonly credits: number;

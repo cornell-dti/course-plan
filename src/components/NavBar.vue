@@ -37,6 +37,8 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .navbar {
   background-color: #f7f7f7;
   width: 4.5rem;
@@ -112,7 +114,7 @@ export default Vue.extend({
   display: none;
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .navbar {
     &-top {
       display: flex;
@@ -142,7 +144,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: $small-medium-breakpoint) {
   .navbar {
     .requirementsBar {
       cursor: pointer;

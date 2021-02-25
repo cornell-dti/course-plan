@@ -38,6 +38,8 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .bottombartab {
   position: relative;
   width: 11.5rem;
@@ -91,13 +93,13 @@ export default Vue.extend({
   opacity: 0.8;
 }
 
-@media only screen and (max-width: 976px) {
+@media only screen and (max-width: $large-breakpoint) {
   .bottombartab {
     width: 10.5rem;
   }
 }
 
-@media only screen and (max-width: 440px) {
+@media only screen and (max-width: $small-breakpoint) {
   .bottombartab {
     width: 100%;
     height: 100%;

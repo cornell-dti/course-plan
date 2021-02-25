@@ -189,7 +189,7 @@ export default Vue.extend({
   border-radius: 100px;
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .details {
     &-ratings {
       width: 60%;

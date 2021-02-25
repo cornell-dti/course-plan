@@ -3,29 +3,13 @@ export type Course = {
   readonly crseId: number;
   readonly catalogNbr: string;
   readonly titleLong: string;
-  readonly description: string;
   readonly enrollGroups: readonly {
     readonly unitsMinimum: number;
     readonly unitsMaximum: number;
-    readonly classSections: readonly {
-      readonly ssrComponent: string;
-      readonly meetings: readonly {
-        readonly pattern: unknown;
-        readonly timeStart: unknown;
-        readonly timeEnd: unknown;
-        readonly instructors: readonly {
-          readonly netid: string;
-          readonly firstName: string;
-          readonly lastName: string;
-        }[];
-      }[];
-    }[];
   }[];
   readonly catalogWhenOffered?: string;
-  readonly catalogPrereqCoreq?: string;
   readonly catalogBreadth?: string;
   readonly catalogDistr?: string;
-  readonly catalogAttribute: string;
   readonly catalogComments?: string;
   readonly catalogSatisfiesReq?: string;
   readonly catalogCourseSubfield?: string;
@@ -70,9 +54,4 @@ export type DecoratedRequirementsJson = {
   readonly college: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
-};
-
-export type CrseInfo = {
-  readonly roster: string;
-  readonly crseIds: number[];
 };

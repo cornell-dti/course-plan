@@ -3,11 +3,8 @@
     <new-course-modal
       class="semester-modal"
       :class="{ 'modal--block': isCourseModalOpen }"
-      :isCourseModelSelectingSemester="isCourseModelSelectingSemester"
-      @check-course-duplicate="checkCourseDuplicate"
       @close-course-modal="closeCourseModal"
       @add-course="addCourse"
-      ref="modal"
     />
     <confirmation
       class="confirmation-modal"
@@ -163,7 +160,6 @@ export default Vue.extend({
       isShadow: false,
       isDraggedFrom: false,
       isCourseModalOpen: false,
-      isCourseModelSelectingSemester: false,
 
       seasonImg: {
         Fall: fall,
@@ -175,15 +171,23 @@ export default Vue.extend({
   },
   props: {
     semesterIndex: { type: Number, required: true },
-    type: { type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>, required: true },
+    type: {
+      type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>,
+      required: true,
+    },
     year: { type: Number, required: true },
-    courses: { type: Array as PropType<readonly FirestoreSemesterCourse[]>, required: true },
+    courses: {
+      type: Array as PropType<readonly FirestoreSemesterCourse[]>,
+      required: true,
+    },
     compact: { type: Boolean, required: true },
     activatedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     isFirstSem: { type: Boolean, required: true },
   },
   mounted() {
-    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+    this.$el.addEventListener('touchmove', this.dragListener, {
+      passive: false,
+    });
     const droppable = (this.$refs.droppable as Vue).$el as HTMLDivElement;
     droppable.addEventListener('dragenter', this.onDragEnter);
     droppable.addEventListener('dragexit', this.onDragExit);
@@ -270,11 +274,10 @@ export default Vue.extend({
       this.scrollable = false;
       this.isDraggedFrom = false;
     },
-    openCourseModal(isSelectingSemester = false) {
+    openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.isCourseModalOpen = true;
-      this.isCourseModelSelectingSemester = isSelectingSemester;
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
@@ -303,29 +306,22 @@ export default Vue.extend({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    addCourse(
-      data: CornellCourseRosterCourse,
-      season: string | null = null,
-      year: number | null = null
-    ) {
+    addCourse(data: CornellCourseRosterCourse) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(data);
       const courseCode = `${data.subject} ${data.catalogNbr}`;
-      let confirmationMsg;
-      if (season !== '' || year !== 0) {
-        this.$emit('add-course-to-semester', season, year, newCourse);
-        confirmationMsg = `Added ${courseCode} to ${season} ${year}`;
-      } else {
-        this.$emit(
-          'edit-semester',
-          this.year,
-          this.type,
-          (semester: FirestoreSemester): FirestoreSemester => ({
-            ...semester,
-            courses: [...this.courses, newCourse],
-          })
-        );
-        confirmationMsg = `Added ${courseCode} to ${this.type} ${this.year}`;
-      }
+
+      this.$emit(
+        'edit-semester',
+        this.year,
+        this.type,
+        (semester: FirestoreSemester): FirestoreSemester => ({
+          ...semester,
+          courses: [...this.courses, newCourse],
+        })
+      );
+
+      const confirmationMsg = `Added ${courseCode} to ${this.type} ${this.year}`;
+
       this.openConfirmationModal(confirmationMsg);
       this.$gtag.event('add-course', {
         event_category: 'course',
@@ -382,30 +378,6 @@ export default Vue.extend({
     },
     dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
-    },
-    // TODO: unused
-    buildIncorrectPlacementCautions() {
-      if (this.courses) {
-        this.courses.forEach(course => {
-          if (!course.semesters.includes(this.type))
-            // @ts-ignore
-            course.alerts.caution = `Course unavailable in the ${this.type}`;
-        });
-      }
-    },
-
-    checkCourseDuplicate(key: string) {
-      if (this.courses) {
-        // @ts-ignore
-        this.$refs.modal.courseIsAddable = true;
-        this.courses.forEach(course => {
-          if (course.code === key) {
-            // @ts-ignore
-            this.$refs.modal.courseIsAddable = false;
-            this.$emit('open-caution-modal');
-          }
-        });
-      }
     },
     seasonMessage() {
       return `<b>This is a Semester Card of your current semester!
@@ -472,7 +444,7 @@ export default Vue.extend({
     color: #ffffff;
     border: none;
     position: absolute;
-    top: -3.5rem;
+    top: -3.3rem;
   }
 
   &-content {
@@ -674,7 +646,7 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .semester {
     &-menu {
       right: 0rem;

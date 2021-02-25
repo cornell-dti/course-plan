@@ -31,35 +31,6 @@ export function getCurrentYearSuffix(): string {
   return currentYear.toString().substring(2);
 }
 
-export function getRostersFromLastTwoYears(): string[] {
-  // If current roster is FA20, get all rosters thru FA18
-  const currentType = getCurrentType();
-  const currentYearSuffix = getCurrentYearSuffix();
-
-  const currentRoster = currentType + currentYearSuffix;
-  const numRosters = 9; // Number of most recent rosters we want
-  const mostRecentRosters = [currentRoster];
-  let roster = currentRoster;
-  while (mostRecentRosters.length < numRosters) {
-    // Go backwards until we hit 2 years and add to list of rosters
-    let rosterType = roster.substring(0, 2);
-    let rosterYear = roster.substring(2);
-    if (rosterType === 'FA') {
-      rosterType = 'SU';
-    } else if (rosterType === 'SU') {
-      rosterType = 'SP';
-    } else if (rosterType === 'SP') {
-      rosterType = 'WI';
-    } else if (rosterType === 'WI') {
-      rosterType = 'FA';
-      rosterYear = (parseInt(rosterYear, 10) - 1).toString();
-    }
-    roster = rosterType + rosterYear;
-    mostRecentRosters.push(roster);
-  }
-  return mostRecentRosters;
-}
-
 export function getCollegeFullName(acronym: string): string {
   return requirementJSON.college[acronym].name;
 }
