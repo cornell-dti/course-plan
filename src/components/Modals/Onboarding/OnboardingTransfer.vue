@@ -192,6 +192,12 @@ type Data = {
 
 const scoresAP = [1, 2, 3, 4, 5];
 const scoresIB = [1, 2, 3, 4, 5, 6, 7];
+const existingAP : Record<string, boolean> = {}
+reqsData.AP = reqsData.AP.filter((ap) => {
+  const inExisting = ap.name in existingAP;
+  existingAP[ap.name] = true;
+  return !inExisting;
+})
 const subjectsAP = reqsData.AP.map(it => it.name);
 const subjectsIB = reqsData.IB.map(it => it.name);
 
