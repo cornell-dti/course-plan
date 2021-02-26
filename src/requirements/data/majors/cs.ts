@@ -83,7 +83,13 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Technical Electives',
     description: 'Three 3000-level or above (3+ credits each) courses with technical content',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor/technicalelectives',
-    fulfilledBy: 'self-check',
+    checker: (course: Course): boolean => {
+      const { catalogNbr } = course;
+      return catalogNbr.startsWith('3');
+    },
+    checkerWarning: 'We do not check that the courses are considered technical.',
+    fulfilledBy: 'courses',
+    subRequirementProgress: 'any-can-count',
     minCount: 3,
   },
   {
