@@ -1,7 +1,7 @@
 export class HashMap<K, V> {
-  private readonly backingMap: Map<string, readonly [K, V]>;
+  private readonly backingMap: Map<string | number, readonly [K, V]>;
 
-  constructor(private readonly getUniqueHash: (key: K) => string) {
+  constructor(private readonly getUniqueHash: (key: K) => string | number) {
     this.backingMap = new Map();
   }
 
@@ -49,9 +49,9 @@ export class HashMap<K, V> {
 }
 
 export class HashSet<T> {
-  private readonly backingMap: Map<string, T>;
+  private readonly backingMap: Map<string | number, T>;
 
-  constructor(private readonly getUniqueHash: (value: T) => string) {
+  constructor(private readonly getUniqueHash: (value: T) => string | number) {
     this.backingMap = new Map();
   }
 

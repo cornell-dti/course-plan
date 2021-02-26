@@ -16,24 +16,15 @@ const getAllCoursesThatCanPotentiallySatisfyRequirement = (
       throw new Error('Should not get here!');
   }
 };
-// If choice is 1, pick 3410 fulfillment strategy, else, choose 3420
-const getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy = (
-  choice: 1 | 2
-) => ({
-  correspondingRequirement: 'CS3410/CS3420',
-  coursesOfChosenFulfillmentStrategy: [choice === 1 ? 'CS3410' : 'CS3420'],
-});
 
 it('buildRequirementFulfillmentGraph phase 1 test 1', () => {
   const { requirementFulfillmentGraph: graph } = buildRequirementFulfillmentGraph({
     requirements,
     userCourses: ['CS3410', 'CS3420', 'MATH4710'],
-    userChoiceOnFulfillmentStrategy: [],
-    userChoiceOnDoubleCountingElimiation: [],
-    getRequirementUniqueID: getUniqueID,
+    userChoiceOnFulfillmentStrategy: {},
+    userChoiceOnDoubleCountingElimination: [],
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
-    getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
     allowDoubleCounting: () => false,
   });
 
@@ -52,12 +43,10 @@ it('buildRequirementFulfillmentGraph phase 1 test 2', () => {
   const { requirementFulfillmentGraph: graph } = buildRequirementFulfillmentGraph({
     requirements,
     userCourses: ['CS3410', 'MATH4710'],
-    userChoiceOnFulfillmentStrategy: [],
-    userChoiceOnDoubleCountingElimiation: [],
-    getRequirementUniqueID: getUniqueID,
+    userChoiceOnFulfillmentStrategy: {},
+    userChoiceOnDoubleCountingElimination: [],
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
-    getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
     allowDoubleCounting: () => false,
   });
 
@@ -68,19 +57,13 @@ it('buildRequirementFulfillmentGraph phase 1 test 2', () => {
 
 // Following two tests test how we are removing edges depending on user choices on fulfillment strategy.
 it('buildRequirementFulfillmentGraph phase 2-1 test', () => {
-  const { requirementFulfillmentGraph: graph } = buildRequirementFulfillmentGraph<
-    string,
-    string,
-    1 | 2
-  >({
+  const { requirementFulfillmentGraph: graph } = buildRequirementFulfillmentGraph<string, string>({
     requirements,
     userCourses: ['CS3410', 'CS3420', 'MATH4710'],
-    userChoiceOnFulfillmentStrategy: [1],
-    userChoiceOnDoubleCountingElimiation: [],
-    getRequirementUniqueID: getUniqueID,
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': ['CS3410'] },
+    userChoiceOnDoubleCountingElimination: [],
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
-    getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
     allowDoubleCounting: () => false,
   });
 
@@ -95,19 +78,13 @@ it('buildRequirementFulfillmentGraph phase 2-1 test', () => {
 });
 
 it('buildRequirementFulfillmentGraph phase 2-2 test', () => {
-  const { requirementFulfillmentGraph: graph } = buildRequirementFulfillmentGraph<
-    string,
-    string,
-    1 | 2
-  >({
+  const { requirementFulfillmentGraph: graph } = buildRequirementFulfillmentGraph<string, string>({
     requirements,
     userCourses: ['CS3410', 'CS3420', 'MATH4710'],
-    userChoiceOnFulfillmentStrategy: [2],
-    userChoiceOnDoubleCountingElimiation: [],
-    getRequirementUniqueID: getUniqueID,
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': ['CS3420'] },
+    userChoiceOnDoubleCountingElimination: [],
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
-    getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
     allowDoubleCounting: () => false,
   });
 
@@ -123,19 +100,13 @@ it('buildRequirementFulfillmentGraph phase 2-2 test', () => {
 
 // The following two tests test that we will remove edges incompatible with user supplied choices.
 it('buildRequirementFulfillmentGraph phase 3 test 1', () => {
-  const { requirementFulfillmentGraph: graph } = buildRequirementFulfillmentGraph<
-    string,
-    string,
-    1 | 2
-  >({
+  const { requirementFulfillmentGraph: graph } = buildRequirementFulfillmentGraph<string, string>({
     requirements,
     userCourses: ['CS3410', 'CS3420', 'MATH4710'],
-    userChoiceOnFulfillmentStrategy: [1],
-    userChoiceOnDoubleCountingElimiation: [['Probability', 'MATH4710']],
-    getRequirementUniqueID: getUniqueID,
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': ['CS3410'] },
+    userChoiceOnDoubleCountingElimination: [['Probability', 'MATH4710']],
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
-    getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
     allowDoubleCounting: () => false,
   });
 
@@ -146,19 +117,13 @@ it('buildRequirementFulfillmentGraph phase 3 test 1', () => {
 });
 
 it('buildRequirementFulfillmentGraph phase 3 test 2', () => {
-  const { requirementFulfillmentGraph: graph } = buildRequirementFulfillmentGraph<
-    string,
-    string,
-    1 | 2
-  >({
+  const { requirementFulfillmentGraph: graph } = buildRequirementFulfillmentGraph<string, string>({
     requirements,
     userCourses: ['CS3410', 'CS3420', 'MATH4710'],
-    userChoiceOnFulfillmentStrategy: [1],
-    userChoiceOnDoubleCountingElimiation: [['Elective', 'MATH4710']],
-    getRequirementUniqueID: getUniqueID,
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': ['CS3410'] },
+    userChoiceOnDoubleCountingElimination: [['Elective', 'MATH4710']],
     getCourseUniqueID: getUniqueID,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
-    getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
     allowDoubleCounting: () => false,
   });
 
@@ -174,41 +139,33 @@ it('buildRequirementFulfillmentGraph phase 3 test 2', () => {
 
 // The following 3 tests test that we will detect all double counted courses.
 it('buildRequirementFulfillmentGraph phase 4 test 1', () => {
-  const { illegallyDoubleCountedCourses } = buildRequirementFulfillmentGraph<string, string, 1 | 2>(
-    {
-      requirements,
-      userCourses: ['CS3410', 'CS3420', 'MATH4710'],
-      userChoiceOnFulfillmentStrategy: [1],
-      userChoiceOnDoubleCountingElimiation: [
-        ['CS3410/CS3420', 'CS3410'],
-        ['Probability', 'MATH4710'],
-      ],
-      getRequirementUniqueID: getUniqueID,
-      getCourseUniqueID: getUniqueID,
-      getAllCoursesThatCanPotentiallySatisfyRequirement,
-      getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-      allowDoubleCounting: () => false,
-    }
-  );
+  const { illegallyDoubleCountedCourses } = buildRequirementFulfillmentGraph<string, string>({
+    requirements,
+    userCourses: ['CS3410', 'CS3420', 'MATH4710'],
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': ['CS3410'] },
+    userChoiceOnDoubleCountingElimination: [
+      ['CS3410/CS3420', 'CS3410'],
+      ['Probability', 'MATH4710'],
+    ],
+    getCourseUniqueID: getUniqueID,
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+    allowDoubleCounting: () => false,
+  });
 
   // User specified how to break tie for every double-counted courses, so we are happy here.
   expect(illegallyDoubleCountedCourses).toEqual([]);
 });
 
 it('buildRequirementFulfillmentGraph phase 4 test 2', () => {
-  const { illegallyDoubleCountedCourses } = buildRequirementFulfillmentGraph<string, string, 1 | 2>(
-    {
-      requirements,
-      userCourses: ['CS3410', 'CS3420', 'MATH4710'],
-      userChoiceOnFulfillmentStrategy: [1],
-      userChoiceOnDoubleCountingElimiation: [['CS3410/CS3420', 'CS3410']],
-      getRequirementUniqueID: getUniqueID,
-      getCourseUniqueID: getUniqueID,
-      getAllCoursesThatCanPotentiallySatisfyRequirement,
-      getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-      allowDoubleCounting: () => false,
-    }
-  );
+  const { illegallyDoubleCountedCourses } = buildRequirementFulfillmentGraph<string, string>({
+    requirements,
+    userCourses: ['CS3410', 'CS3420', 'MATH4710'],
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': ['CS3410'] },
+    userChoiceOnDoubleCountingElimination: [['CS3410/CS3420', 'CS3410']],
+    getCourseUniqueID: getUniqueID,
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+    allowDoubleCounting: () => false,
+  });
 
   // User doesn't specify whether to use MATH4710 to fulfill elective or probability, so MATH4710
   // appears in the double counted list.
@@ -216,19 +173,15 @@ it('buildRequirementFulfillmentGraph phase 4 test 2', () => {
 });
 
 it('buildRequirementFulfillmentGraph phase 4 test 3', () => {
-  const { illegallyDoubleCountedCourses } = buildRequirementFulfillmentGraph<string, string, 1 | 2>(
-    {
-      requirements,
-      userCourses: ['CS3410', 'CS3420', 'MATH4710'],
-      userChoiceOnFulfillmentStrategy: [1],
-      userChoiceOnDoubleCountingElimiation: [['CS3410/CS3420', 'CS3410']],
-      getRequirementUniqueID: getUniqueID,
-      getCourseUniqueID: getUniqueID,
-      getAllCoursesThatCanPotentiallySatisfyRequirement,
-      getCorrespondingRequirementAndAllRelevantCoursesUnderFulfillmentStrategy,
-      allowDoubleCounting: requirement => requirement === 'Probability',
-    }
-  );
+  const { illegallyDoubleCountedCourses } = buildRequirementFulfillmentGraph<string, string>({
+    requirements,
+    userCourses: ['CS3410', 'CS3420', 'MATH4710'],
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': ['CS3410'] },
+    userChoiceOnDoubleCountingElimination: [['CS3410/CS3420', 'CS3410']],
+    getCourseUniqueID: getUniqueID,
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+    allowDoubleCounting: requirement => requirement === 'Probability',
+  });
 
   // Similar to the test case above, but we allowed Probability to be double-counted, so the list is
   // empty.
