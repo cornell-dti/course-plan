@@ -1,21 +1,29 @@
 <template>
   <div class="subrequirement">
-    <div class="row depth-req">
-      <div class="col-1" @click="toggleDescription()">
-        <button class="btn">
-          <drop-down-arrow :isFlipped="displayDescription" :fillColor="getArrowColor()" />
-        </button>
-      </div>
-      <div class="col-7" @click="toggleDescription()">
-        <p
-          :class="[
-            { 'sup-req': !isFulfilled },
-            'pointer',
-            isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
-          ]"
-        >
-          <span>{{ subReq.requirement.name }}</span>
-        </p>
+    <button
+      @click="toggleDescription()"
+      class="dropdown row"
+      aria-haspopup="true"
+      data-toggle="dropdown"
+    >
+      <div class="row depth-req">
+        <div class="btn">
+          <drop-down-arrow
+            :isFlipped="displayDescription"
+            :fillColor="getArrowColor()"
+            :isSubReq="true"
+          />
+        </div>
+        <div class="subreq-name">
+          <p
+            :class="[
+              { 'sup-req': !isFulfilled },
+              isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
+            ]"
+          >
+            <span>{{ subReq.requirement.name }}</span>
+          </p>
+        </div>
       </div>
       <div class="col">
         <p v-if="!isCompleted" class="sup-req-progress text-right incomplete-ptext">
@@ -28,47 +36,47 @@
           >
         </p>
       </div>
-      <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
-        {{ subReq.requirement.description }}
-        <a
-          class="more"
-          :style="{ color: `#${color}` }"
-          :href="subReq.requirement.source"
-          target="_blank"
-        >
-          <strong>Learn More</strong></a
-        >
-        <div v-if="subReq.requirement.fulfilledBy === 'toggleable'">
-          <div class="toggleable-requirements-select-wrapper">
+    </button>
+    <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
+      {{ subReq.requirement.description }}
+      <a
+        class="more"
+        :style="{ color: `#${color}` }"
+        :href="subReq.requirement.source"
+        target="_blank"
+      >
+        <strong>Learn More</strong></a
+      >
+      <div v-if="subReq.requirement.fulfilledBy === 'toggleable'">
+        <div class="toggleable-requirements-select-wrapper">
+          <div
+            class="toggleable-requirements-select toggleable-requirements-input"
+            v-click-outside="closeMenuIfOpen"
+          >
             <div
-              class="toggleable-requirements-select toggleable-requirements-input"
-              v-click-outside="closeMenuIfOpen"
+              class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-wrapper"
+              @click="showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown"
             >
-              <div
-                class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-wrapper"
-                @click="showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown"
-              >
-                <span>{{ selectedFulfillmentOption }}</span>
-              </div>
-              <div
-                class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"
-              ></div>
+              <span>{{ selectedFulfillmentOption }}</span>
             </div>
             <div
-              class="toggleable-requirements-dropdown-content"
-              v-if="showFulfillmentOptionsDropdown"
-            >
-              <div
-                v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
-                :key="optionName"
-                class="toggleable-requirements-dropdown-content-item"
-                @click="chooseFulfillmentOption(optionName)"
-              >
-                <span>{{ optionName }}</span>
-              </div>
-            </div>
-            {{ subReq.requirement.fulfillmentOptions[selectedFulfillmentOption].description }}
+              class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"
+            ></div>
           </div>
+          <div
+            class="toggleable-requirements-dropdown-content"
+            v-if="showFulfillmentOptionsDropdown"
+          >
+            <div
+              v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
+              :key="optionName"
+              class="toggleable-requirements-dropdown-content-item"
+              @click="chooseFulfillmentOption(optionName)"
+            >
+              <span>{{ optionName }}</span>
+            </div>
+          </div>
+          {{ subReq.requirement.fulfillmentOptions[selectedFulfillmentOption].description }}
         </div>
       </div>
       <div
@@ -285,6 +293,15 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
+.dropdown {
+  background: none;
+  width: 100%;
+  border: none;
+  justify-content: space-between;
+  padding: 0;
+  align-items: center;
+}
+
 .btn {
   padding: 0;
   display: flex;
@@ -310,13 +327,17 @@ export default Vue.extend({
 .depth-req {
   margin: 0.5rem 0 0.1rem 0;
   min-height: 14px;
+  justify-content: flex-start;
+  align-items: center;
+  div:first-child {
+    margin: 0px;
+  }
 }
 .sub-req-div {
   padding-left: 30px;
   margin: 0px;
 }
 .description {
-  margin: 0 0 0.5rem 1.8rem;
   color: #4f4f4f;
   font-size: 14px;
 }
@@ -462,5 +483,13 @@ button.view {
   &-wrapper {
     width: 100%;
   }
+}
+.left {
+  justify-content: flex-start;
+  align-items: center;
+}
+.subreq-name {
+  text-align: left;
+  margin-left: 11px;
 }
 </style>

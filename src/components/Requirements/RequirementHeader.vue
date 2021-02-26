@@ -9,16 +9,16 @@
     </div>
     <!-- TODO change for multiple colleges -->
     <div v-if="reqIndex == numOfColleges" class="major">
-      <div
+      <button
         :style="{
           'border-bottom':
             id === displayedMajorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
         }"
         @click="activateMajor(id)"
-        class="major-title"
+        class="major-title-button major-title"
         v-for="(major, id) in onboardingData.major"
         :key="id"
-        :class="{ pointer: multipleMajors }"
+        :disabled="id === displayedMajorIndex"
       >
         <p
           :style="{
@@ -37,19 +37,19 @@
         >
           ({{ getCollegeFullName(onboardingData.college) }})
         </p>
-      </div>
+      </button>
     </div>
     <div v-if="reqIndex == numOfColleges + onboardingData.major.length" class="minor">
-      <div
+      <button
         :style="{
           'border-bottom':
             id === displayedMinorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
         }"
         @click="activateMinor(id)"
-        class="major-title"
+        class="major-title major-title-button"
         v-for="(minor, id) in onboardingData.minor"
         :key="id"
-        :class="{ pointer: multipleMinors }"
+        :disabled="id === displayedMinorIndex"
       >
         <p
           :style="{
@@ -61,7 +61,7 @@
           {{ getMinorFullName(minor) }}
         </p>
         <!-- <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> Change for multiple colleges -->
-      </div>
+      </button>
     </div>
 
     <!-- progress bar settings -->
@@ -89,29 +89,23 @@
       </p>
 
       <!--View more college requirements -->
-      <div class="row top">
-        <div class="col-1 p-0">
-          <button
-            :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
-            class="btn"
-            @click="toggleDetails()"
-          >
-            <drop-down-arrow
-              :isFlipped="displayDetails"
-              :fillColor="`#${reqGroupColorMap[req.groupName][0]}`"
-            />
-          </button>
+      <button
+        class="btn row top view-more-dropdown"
+        @click="toggleDetails()"
+        aria-haspopup="true"
+        data-toggle="dropdown"
+      >
+        <div class="col-1 p-0 btn" :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }">
+          <drop-down-arrow
+            :isFlipped="displayDetails"
+            :fillColor="`#${reqGroupColorMap[req.groupName][0]}`"
+            :isHeader="true"
+          />
         </div>
-        <div class="col p-0">
-          <button
-            class="btn req-name"
-            :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
-            @click="toggleDetails()"
-          >
-            {{ displayDetails ? 'Hide' : 'View' }} All {{ req.groupName }} Requirements
-          </button>
+        <div class="req-name col p-0" :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }">
+          {{ displayDetails ? 'Hide' : 'View' }} All {{ req.groupName }} Requirements
         </div>
-      </div>
+      </button>
     </div>
   </div>
 </template>
@@ -138,12 +132,6 @@ export default Vue.extend({
     numOfColleges: { type: Number, required: true },
   },
   computed: {
-    multipleMajors() {
-      return this.onboardingData.major.length > 1;
-    },
-    multipleMinors() {
-      return this.onboardingData.minor.length > 1;
-    },
     requirementFulfilled(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
@@ -192,6 +180,16 @@ export default Vue.extend({
     text-align: center;
     color: $lightPlaceholderGray;
     padding-bottom: 6px;
+    &-button {
+      border: none;
+      background: none;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      p {
+        flex-direction: column;
+      }
+    }
     &-top {
       text-align: center;
       font-style: normal;
@@ -220,11 +218,6 @@ export default Vue.extend({
     padding-top: 0px;
     margin: 0px;
   }
-}
-.btn:focus,
-.btn:active {
-  outline: none !important;
-  box-shadow: none;
 }
 .row {
   margin: 0;
@@ -257,6 +250,7 @@ export default Vue.extend({
   font-size: 14px;
   line-height: 17px;
   color: $darkGray;
+
   &-college {
     font-style: normal;
     font-weight: normal;
@@ -309,10 +303,14 @@ button.view {
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
-    align-self: center;
+    width: 100%;
+    text-align: left;
   }
-  .pointer {
-    cursor: pointer;
+}
+.view-more-dropdown {
+  width: 100%;
+  div:first-child {
+    justify-content: flex-start;
   }
 }
 </style>

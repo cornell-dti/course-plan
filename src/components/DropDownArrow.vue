@@ -1,7 +1,13 @@
 <template>
   <svg
     viewBox="0 0 15 15"
-    :class="{ 'arrow-up': isFlipped, 'arrow-left': isPointingLeft }"
+    :class="{
+      'arrow-up': isFlipped,
+      'arrow-left': isPointingLeft,
+      'arrow-up-header': isHeader && isFlipped,
+      subreq: isSubReq && !isFlipped,
+      'subreq-flipped': isSubReq && isFlipped,
+    }"
     class="arrow"
     :fill="fillColor"
     xmlns="http://www.w3.org/2000/svg"
@@ -18,6 +24,8 @@ export default Vue.extend({
     fillColor: { type: String, required: true },
     isFlipped: { type: Boolean, default: false },
     isPointingLeft: { type: Boolean, default: false },
+    isHeader: { type: Boolean, default: false },
+    isSubReq: { type: Boolean, default: false },
   },
 });
 </script>
@@ -38,6 +46,16 @@ export default Vue.extend({
     width: 14px;
     margin-top: 1px;
     transform: rotate(180deg);
+    &-header {
+      margin-top: 0;
+      margin-bottom: -6px;
+    }
+  }
+}
+.subreq {
+  margin-top: -14px;
+  &-flipped {
+    margin-top: -4px;
   }
 }
 </style>
