@@ -386,12 +386,18 @@ button.view {
     line-height: 17px;
     color: $darkPlaceholderGray;
     position: relative;
+
     &:not(:first-child) {
       margin-top: 0.5rem;
     }
+
     &--disabled {
       opacity: 0.3;
       pointer-events: none;
+    }
+
+    &-wrapper {
+      position: relative;
     }
   }
   &-dropdown {
@@ -430,7 +436,7 @@ button.view {
     &-content {
       z-index: 2;
       position: absolute;
-      width: 80%;
+      width: 100%;
       background: $white;
       box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
       border-radius: 7px;
