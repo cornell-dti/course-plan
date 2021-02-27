@@ -272,6 +272,10 @@ export default Vue.extend({
       position: fixed;
       z-index: 1;
     }
+
+    &-reqs {
+      margin-left: 0;
+    }
   }
 }
 </style>

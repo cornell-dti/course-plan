@@ -279,8 +279,11 @@ h1.title {
 
 @media only screen and (max-width: $medium-breakpoint) {
   .requirements {
+    position: fixed;
     width: 100%;
     padding-left: 0.5rem;
+    top: 4.5rem;
+    z-index: 1;
   }
 
   .fixed {
