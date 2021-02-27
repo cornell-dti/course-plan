@@ -29,7 +29,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   readonly userRequirements: readonly RequirementWithIDSourceType[];
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
-  readonly illegallyDoubleCountedCourseIDs: ReadonlySet<number>;
+  readonly illegallyDoubleCountedCourseUniqueIDs: ReadonlySet<number>;
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
@@ -47,24 +47,17 @@ export default function buildRequirementFulfillmentGraphFromUserData(
           const optionName =
             toggleableRequirementChoices[requirement.id] ||
             Object.keys(requirement.fulfillmentOptions)[0];
-          const courses = requirement.fulfillmentOptions[optionName].courses.flatMap(courseIds =>
-            // Only courseId are used for equality comparison,
-            // so other dummy values doesn't matter.
-            courseIds.map(courseId => ({ courseId, uniqueId: -1, code: 'DUMMY', credits: 0 }))
-          );
+          const courses = requirement.fulfillmentOptions[optionName].courses.flat();
           return [requirement.id, courses] as const;
         })
-        .filter((it): it is [string, CourseTaken[]] => it != null)
+        .filter((it): it is [string, number[]] => it != null)
     ),
-    userChoiceOnDoubleCountingElimination: Object.entries(selectableRequirementChoices)
-      .map(([courseIDString, requirementID]) => {
-        const courseID = parseInt(courseIDString, 10);
-        const courseTaken = coursesTaken.find(it => it.courseId === courseID);
-        if (courseTaken == null) return null;
-        return [requirementID, courseTaken] as const;
+    userChoiceOnDoubleCountingElimination: Object.fromEntries(
+      Object.entries(selectableRequirementChoices).map(([uniqueIDString, requirementID]) => {
+        const uniqueId = parseInt(uniqueIDString, 10);
+        return [uniqueId, requirementID] as const;
       })
-      .filter((it): it is readonly [string, CourseTaken] => it != null),
-    getCourseUniqueID: course => course.courseId,
+    ),
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirementID => {
       const requirement = userRequirementsMap[requirementID];
       let eligibleCoursesList: readonly (readonly number[])[];
@@ -76,20 +69,14 @@ export default function buildRequirementFulfillmentGraphFromUserData(
           eligibleCoursesList = requirement.courses;
           break;
         case 'toggleable':
-          eligibleCoursesList = Object.values(requirement.fulfillmentOptions)
-            .map(it => it.courses)
-            .flat();
+          eligibleCoursesList = Object.values(requirement.fulfillmentOptions).flatMap(
+            it => it.courses
+          );
           break;
         default:
           throw new Error();
       }
-      return eligibleCoursesList
-        .map((courseIds): readonly CourseTaken[] =>
-          // Only courseId are used for equality comparison,
-          // so other dummy values doesn't matter.
-          courseIds.map(courseId => ({ courseId, uniqueId: -1, code: 'DUMMY', credits: 0 }))
-        )
-        .flat();
+      return eligibleCoursesList.flat();
     },
     allowDoubleCounting: requirementID =>
       userRequirementsMap[requirementID].allowCourseDoubleCounting || false,
@@ -99,6 +86,8 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     userRequirements,
     userRequirementsMap,
     requirementFulfillmentGraph,
-    illegallyDoubleCountedCourseIDs: new Set(illegallyDoubleCountedCourses.map(it => it.courseId)),
+    illegallyDoubleCountedCourseUniqueIDs: new Set(
+      illegallyDoubleCountedCourses.map(it => it.uniqueId)
+    ),
   };
 }

@@ -120,8 +120,8 @@ type AppBottomBarCourse = {
   workload: number;
 };
 
-// map from requirement ID to option chosen
+/** Map from requirement ID to option chosen */
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 
-// map from course ID to requirement ID
+/** Map from course's unique ID to requirement ID */
 type AppSelectableRequirementChoices = Readonly<Record<string, string>>;

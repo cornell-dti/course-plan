@@ -38,13 +38,13 @@ const getCourseCautions = (course: FirestoreSemesterCourse): CourseCautions => {
     derivedCoursesData: { duplicatedCourseCodeSet, courseToSemesterMap },
     userRequirementsMap,
     requirementFulfillmentGraph,
-    illegallyDoubleCountedCourseIDs,
+    illegallyDoubleCountedCourseUniqueIDs,
   } = store.state;
   let doubleCountingRequirementWarning: readonly string[] | undefined;
-  if (illegallyDoubleCountedCourseIDs.has(course.crseId)) {
-    illegallyDoubleCountedCourseIDs.forEach(courseId => {
+  if (illegallyDoubleCountedCourseUniqueIDs.has(course.uniqueID)) {
+    illegallyDoubleCountedCourseUniqueIDs.forEach(uniqueId => {
       doubleCountingRequirementWarning = requirementFulfillmentGraph
-        .getConnectedRequirementsFromCourse({ courseId, uniqueId: -1, code: '', credits: 0 })
+        .getConnectedRequirementsFromCourse({ uniqueId })
         .filter(id => !userRequirementsMap[id].allowCourseDoubleCounting)
         .map(id => userRequirementsMap[id].name);
     });
