@@ -80,7 +80,7 @@ Vue.use(VueCollapse);
 
 export type ShowAllCourses = {
   readonly name: string;
-  readonly courses: CourseTaken[];
+  readonly courses: FirestoreSemesterCourse[];
 };
 
 type Data = {
@@ -168,7 +168,7 @@ export default Vue.extend({
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
-      subReqCoursesArray: CourseTaken[];
+      subReqCoursesArray: FirestoreSemesterCourse[];
     }) {
       this.shouldShowAllCourses = true;
 
