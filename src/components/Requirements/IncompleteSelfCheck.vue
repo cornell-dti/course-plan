@@ -146,6 +146,8 @@ export default Vue.extend({
   }
   &-content {
     z-index: 2;
+    position: absolute;
+    width: 88%;
     background: $white;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 7px;

@@ -429,6 +429,8 @@ button.view {
     }
     &-content {
       z-index: 2;
+      position: absolute;
+      width: 80%;
       background: $white;
       box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
       border-radius: 7px;

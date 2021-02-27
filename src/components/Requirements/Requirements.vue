@@ -213,11 +213,14 @@ export default Vue.extend({
 }
 .requirements,
 .fixed {
+  z-index: 1;
   height: 100%;
   width: 25rem;
   background-color: $white;
 }
 .fixed {
+  position: fixed;
+  left: 4.5rem;
   top: 0;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -283,7 +286,6 @@ h1.title {
     width: 100%;
     padding-left: 0.5rem;
     top: 4.5rem;
-    z-index: 1;
   }
 
   .fixed {
