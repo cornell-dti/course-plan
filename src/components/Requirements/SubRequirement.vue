@@ -38,15 +38,25 @@
       </div>
     </button>
     <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
-      {{ subReq.requirement.description }}
-      <a
-        class="more"
-        :style="{ color: `#${color}` }"
-        :href="subReq.requirement.source"
-        target="_blank"
-      >
-        <strong>Learn More</strong></a
-      >
+      <div>
+        {{ subReq.requirement.description }}
+        <a
+          class="more"
+          :style="{ color: `#${color}` }"
+          :href="subReq.requirement.source"
+          target="_blank"
+        >
+          <strong>Learn More</strong></a
+        >
+      </div>
+      <div v-if="subReq.requirement.checkerWarning" class="requirement-checker-warning">
+        <img
+          class="requirement-checker-warning-icon"
+          src="@/assets/images/warning.svg"
+          alt="warning-icon"
+        />
+        {{ subReq.requirement.checkerWarning }}
+      </div>
       <div v-if="subReq.requirement.fulfilledBy === 'toggleable'">
         <div class="toggleable-requirements-select-wrapper">
           <div
@@ -400,6 +410,18 @@ button.view {
   height: 1px;
   width: 100%;
   background-color: $inactiveGray;
+}
+
+.requirement-checker-warning {
+  color: $warning;
+  margin-top: 0.25rem;
+
+  &-icon {
+    float: left;
+    margin: 0.125rem 0.25rem 0 0;
+    width: 14px;
+    height: 14px;
+  }
 }
 
 .toggleable-requirements {
