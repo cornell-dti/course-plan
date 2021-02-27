@@ -80,7 +80,11 @@
         </div>
       </div>
       <div
-        v-if="displayDescription && subReq.requirement.fulfilledBy !== 'self-check'"
+        v-if="
+          displayDescription &&
+          subReq.requirement.fulfilledBy !== 'self-check' &&
+          subReq.requirement.checkerWarning == null
+        "
         class="subreqcourse-wrapper"
       >
         <div v-for="(subReqCourseSlot, id) in subReqCoursesSlots" :key="id">
@@ -105,7 +109,11 @@
         </div>
       </div>
       <div
-        v-if="displayDescription && subReq.requirement.fulfilledBy === 'self-check'"
+        v-if="
+          displayDescription &&
+          (subReq.requirement.fulfilledBy === 'self-check' ||
+            subReq.requirement.checkerWarning != null)
+        "
         class="subreqcourse-wrapper"
       >
         <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
