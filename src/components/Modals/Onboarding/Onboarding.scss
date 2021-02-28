@@ -80,6 +80,12 @@ input {
     font-weight: bold;
     font-size: 38px;
     color: #4f4f4f;
+
+    &-emoji {
+      margin: -0.875rem 0 0 0;
+      width: 35px;
+      height: 35px;
+    }
   }
 
   &-description {
