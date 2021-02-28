@@ -7,7 +7,9 @@
       <div class="onboarding-inputs onboarding-inputs--name">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font"> First Name* </span></label
+            ><span class="onboarding-subHeader--font">
+              First Name<span class="required-star">*</span>
+            </span></label
           >
           <input class="onboarding-input" v-model="firstName" />
         </div>
@@ -19,7 +21,9 @@
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font"> Last Name* </span></label
+            ><span class="onboarding-subHeader--font">
+              Last Name<span class="required-star">*</span>
+            </span></label
           >
           <input class="onboarding-input" v-model="lastName" />
         </div>
@@ -32,7 +36,7 @@
       </div>
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <label class="onboarding-label">College*</label>
+          <label class="onboarding-label">College<span class="required-star">*</span></label>
           <div class="onboarding-selectWrapper">
             <onboarding-basic-single-dropdown
               :availableChoices="colleges"
@@ -117,11 +121,15 @@ export default Vue.extend({
       const majors: Record<string, string> = {};
       const majorJSON = reqsData.major;
       Object.keys(majorJSON).forEach(key => {
-        // only show majors for schools the user is in
-        if (majorJSON[key].schools.includes(this.collegeAcronym)) {
+        // only show majors for schools the user is in and is not already selected
+        if (
+          majorJSON[key].schools.includes(this.collegeAcronym) &&
+          !this.majorAcronyms.includes(key)
+        ) {
           majors[key] = majorJSON[key].name;
         }
       });
+      console.log(this.majorAcronyms, majors);
       return majors;
     },
     minors(): Readonly<Record<string, string>> {
