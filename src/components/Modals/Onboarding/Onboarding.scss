@@ -463,6 +463,10 @@ input {
   &--hidden {
     display: none;
   }
+
+  &-required-star {
+    color: $emGreen;
+  }
 }
 
 .editing {
@@ -511,8 +515,4 @@ select option[disabled]:first-child {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-}
-
-.required-star {
-  color: $emGreen;
 }
