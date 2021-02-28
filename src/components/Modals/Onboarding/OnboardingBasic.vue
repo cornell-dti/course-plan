@@ -117,11 +117,15 @@ export default Vue.extend({
       const majors: Record<string, string> = {};
       const majorJSON = reqsData.major;
       Object.keys(majorJSON).forEach(key => {
-        // only show majors for schools the user is in
-        if (majorJSON[key].schools.includes(this.collegeAcronym)) {
+        // only show majors for schools the user is in and is not already selected
+        if (
+          majorJSON[key].schools.includes(this.collegeAcronym) &&
+          !this.majorAcronyms.includes(key)
+        ) {
           majors[key] = majorJSON[key].name;
         }
       });
+      console.log(this.majorAcronyms, majors);
       return majors;
     },
     minors(): Readonly<Record<string, string>> {
