@@ -193,8 +193,10 @@ type Data = {
 const scoresAP = [1, 2, 3, 4, 5];
 const scoresIB = [1, 2, 3, 4, 5, 6, 7];
 const existingAP: Record<string, boolean> = {};
+const selectedAP: Record<string, boolean> = {};
+// filter duplicate exam names and ones already selected
 reqsData.AP = reqsData.AP.filter(ap => {
-  const inExisting = ap.name in existingAP;
+  const inExisting = ap.name in existingAP || ap.name in selectedAP;
   existingAP[ap.name] = true;
   return !inExisting;
 });
@@ -271,6 +273,9 @@ export default Vue.extend({
     },
     selectAPSubject(subject: string, i: number) {
       this.examsAP = this.examsAP.map((exam, index) => (index === i ? { ...exam, subject } : exam));
+      this.examsAP.forEach(exam => {
+        selectedAP[exam.subject] = true;
+      });
       this.updateTransfer();
     },
     selectIBSubject(subject: string, i: number) {
