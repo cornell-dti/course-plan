@@ -50,7 +50,9 @@ export default Vue.extend({
           selectableOptions[key] = this.availableChoices[key];
         }
       }
-      selectableOptions[choice] = this.availableChoices[choice];
+      if (choice !== '') {
+        selectableOptions[choice] = this.availableChoices[choice];
+      }
       return selectableOptions;
     },
   },
