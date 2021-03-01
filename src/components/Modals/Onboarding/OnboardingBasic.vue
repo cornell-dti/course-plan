@@ -7,7 +7,9 @@
       <div class="onboarding-inputs onboarding-inputs--name">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font"> First Name* </span></label
+            ><span class="onboarding-subHeader--font">
+              First Name<span class="onboarding-required-star">*</span>
+            </span></label
           >
           <input class="onboarding-input" v-model="firstName" />
         </div>
@@ -19,7 +21,9 @@
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font"> Last Name* </span></label
+            ><span class="onboarding-subHeader--font">
+              Last Name<span class="onboarding-required-star">*</span>
+            </span></label
           >
           <input class="onboarding-input" v-model="lastName" />
         </div>
@@ -32,7 +36,9 @@
       </div>
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <label class="onboarding-label">College*</label>
+          <label class="onboarding-label"
+            >College<span class="onboarding-required-star">*</span></label
+          >
           <div class="onboarding-selectWrapper">
             <onboarding-basic-single-dropdown
               :availableChoices="colleges"

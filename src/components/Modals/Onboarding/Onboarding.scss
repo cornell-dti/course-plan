@@ -5,6 +5,7 @@ input {
 }
 .onboarding {
   padding: 1rem;
+  width: 100%;
 
   &-selectWrapperRow {
     margin-top: 15px;
@@ -461,6 +462,10 @@ input {
 
   &--hidden {
     display: none;
+  }
+
+  &-required-star {
+    color: $emGreen;
   }
 }
 
