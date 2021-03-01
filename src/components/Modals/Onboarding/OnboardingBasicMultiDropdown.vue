@@ -3,7 +3,7 @@
     <onboarding-basic-single-dropdown
       v-for="(choice, index) in dropdownChoices"
       :key="choice"
-      :availableChoices="availableChoices"
+      :availableChoices="getRemainingChoicesAfterChoice(choice)"
       :choice="choice"
       :cannotBeRemoved="dropdownChoices.length === 1 && choice === ''"
       @on-select="choice => onSelect(choice, index)"
@@ -33,6 +33,12 @@ export default Vue.extend({
     dropdownChoices: { type: Array as PropType<readonly string[]>, required: true },
     addDropdownText: { type: String, required: true },
   },
+  data() {
+    const remainingAvailableChoices = { ...this.availableChoices };
+    return {
+      remainingAvailableChoices,
+    };
+  },
   methods: {
     onSelect(key: string, index: number) {
       this.$emit('on-select', key, index);
@@ -42,6 +48,11 @@ export default Vue.extend({
     },
     addDropdown() {
       this.$emit('on-add');
+    },
+    getRemainingChoicesAfterChoice(removeChoice: string) {
+      const returnValue = { ...this.remainingAvailableChoices };
+      delete this.remainingAvailableChoices[removeChoice];
+      return returnValue;
     },
   },
 });
