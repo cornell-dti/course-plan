@@ -9,19 +9,19 @@
           <label class="onboarding-label"
             ><span class="onboarding-subHeader--font"> First Name* </span></label
           >
-          <input class="onboarding-input" v-model="firstName" />
+          <input class="onboarding-input" v-model="firstName" @input="updateBasic()" />
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
             ><span class="onboarding-subHeader--font"> Middle Name </span></label
           >
-          <input class="onboarding-input" v-model="middleName" />
+          <input class="onboarding-input" v-model="middleName" @input="updateBasic()" />
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
             ><span class="onboarding-subHeader--font"> Last Name* </span></label
           >
-          <input class="onboarding-input" v-model="lastName" />
+          <input class="onboarding-input" v-model="lastName" @input="updateBasic()" />
         </div>
       </div>
     </div>
