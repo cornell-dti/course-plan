@@ -45,11 +45,14 @@ export default Vue.extend({
     },
     getSelectableOptions(choice: string) {
       const selectableOptions: Record<string, string> = {};
+      // copy availableChoices but don't include ones that are already selected
       for (const key of Object.keys(this.availableChoices)) {
+        // don't include selected ones
         if (!this.dropdownChoices.includes(key)) {
           selectableOptions[key] = this.availableChoices[key];
         }
       }
+      // add the current selection associated with this input into the availableChoices
       if (choice !== '') {
         selectableOptions[choice] = this.availableChoices[choice];
       }

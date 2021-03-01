@@ -199,6 +199,13 @@ reqsData.AP = reqsData.AP.filter(ap => {
   existingAP[ap.name] = true;
   return !inExisting;
 });
+const existingIB: Record<string, boolean> = {};
+// filter duplicate exam names and ones already selected
+reqsData.IB = reqsData.IB.filter(ib => {
+  const inExisting = ib.name in existingIB;
+  existingIB[ib.name] = true;
+  return !inExisting;
+});
 const subjectsAP = reqsData.AP.map(it => it.name);
 const subjectsIB = reqsData.IB.map(it => it.name);
 
