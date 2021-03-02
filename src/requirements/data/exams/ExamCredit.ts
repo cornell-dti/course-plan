@@ -89,7 +89,8 @@ export const examData: ExamData = {
       name: 'English Literature and Composition',
       fulfillment: {
         courseEquivalents: {
-          AS: [11], // FWS
+          AS1: [11], // FWS
+          // AS2: [11], // FWS
           EN: [11], // FWS
         },
         minimumScore: 4,
@@ -100,7 +101,8 @@ export const examData: ExamData = {
       name: 'English Language and Composition',
       fulfillment: {
         courseEquivalents: {
-          AS: [11], // FWS
+          AS1: [11], // FWS
+          // AS2: [11], // FWS
           EN: [11], // FWS
         },
         minimumScore: 4,
