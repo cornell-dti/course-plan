@@ -19,7 +19,7 @@
                 <onboarding-transfer-exam-property-dropdown
                   property-name="Subject"
                   :columnWide="true"
-                  :availableOptions="getSelectableOptions(examsAP,exam.subject)"
+                  :availableOptions="getSelectableOptions(examsAP, exam.subject)"
                   :choice="exam.subject"
                   @on-select="subject => selectAPSubject(subject, index)"
                 />
@@ -61,7 +61,7 @@
                 <onboarding-transfer-exam-property-dropdown
                   property-name="Subject"
                   :columnWide="true"
-                  :availableOptions="getSelectableOptions(examsIB,exam.subject)"
+                  :availableOptions="getSelectableOptions(examsIB, exam.subject)"
                   :choice="exam.subject"
                   @on-select="subject => selectIBSubject(subject, index)"
                 />
@@ -344,18 +344,18 @@ export default Vue.extend({
         });
     },
     getSelectableOptions(exams: FirestoreAPIBExam[], choice: string) {
-      const selectedExams = exams.map((exam) => exam.subject)
+      const selectedExams = exams.map(exam => exam.subject);
       const selectableOptions: string[] = [];
       // copy subjectsAP but don't include ones that are already selected
       for (const subject of subjectsAP) {
         // don't include selected ones
         if (!selectedExams.includes(subject)) {
-          selectableOptions.push(subject)
+          selectableOptions.push(subject);
         }
       }
       // add the current selection associated with this input into the availableChoices
       if (choice !== placeholderText) {
-        selectableOptions.push(choice)
+        selectableOptions.push(choice);
       }
       return selectableOptions;
     },
