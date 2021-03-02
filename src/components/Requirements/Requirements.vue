@@ -40,9 +40,7 @@
         <draggable
           :value="showAllCourses.courses"
           :clone="cloneCourse"
-          :move="onDraggedCourseMove"
-          data-not-droppable="true"
-          group="draggable-semester-courses"
+          :group="{ name: 'draggable-semester-courses', put: false }"
         >
           <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
             <div class="mt-3">
@@ -75,7 +73,6 @@ import DropDownArrow from '@/components/DropDownArrow.vue';
 import clipboard from '@/assets/images/clipboard.svg';
 import store from '@/store';
 import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-firestore-data';
-import { onDraggedCourseMove } from '@/utilities';
 
 Vue.use(VueCollapse);
 
@@ -139,7 +136,6 @@ export default Vue.extend({
     },
   },
   methods: {
-    onDraggedCourseMove,
     showMajorOrMinorRequirements(id: number, group: string): boolean {
       if (group === 'Major') {
         return id === this.displayedMajorIndex + this.numOfColleges;
