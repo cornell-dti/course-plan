@@ -42,12 +42,10 @@ const getCourseCautions = (course: FirestoreSemesterCourse): CourseCautions => {
   } = store.state;
   let doubleCountingRequirementWarning: readonly string[] | undefined;
   if (illegallyDoubleCountedCourseUniqueIDs.has(course.uniqueID)) {
-    illegallyDoubleCountedCourseUniqueIDs.forEach(uniqueId => {
-      doubleCountingRequirementWarning = requirementFulfillmentGraph
-        .getConnectedRequirementsFromCourse({ uniqueId })
-        .filter(id => !userRequirementsMap[id].allowCourseDoubleCounting)
-        .map(id => userRequirementsMap[id].name);
-    });
+    doubleCountingRequirementWarning = requirementFulfillmentGraph
+      .getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
+      .filter(id => !userRequirementsMap[id].allowCourseDoubleCounting)
+      .map(id => userRequirementsMap[id].name);
   }
   const semesterOfUserCourse = courseToSemesterMap[course.uniqueID];
   const typicallyOfferedWarning =
