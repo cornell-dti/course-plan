@@ -160,7 +160,9 @@ export default Vue.extend({
 
       isDeleteSemesterOpen: false,
       isEditSemesterOpen: false,
-      isShadow: false,
+      // Keep track of how many levels has a card enters in the droppable zone.
+      // Inspired by https://stackoverflow.com/a/21002544
+      isShadowCounter: 0,
       isDraggedFrom: false,
       isCourseModalOpen: false,
 
@@ -193,13 +195,13 @@ export default Vue.extend({
     });
     const droppable = (this.$refs.droppable as Vue).$el as HTMLDivElement;
     droppable.addEventListener('dragenter', this.onDragEnter);
-    droppable.addEventListener('dragexit', this.onDragExit);
+    droppable.addEventListener('dragleave', this.onDragExit);
   },
   beforeDestroy() {
     this.$el.removeEventListener('touchmove', this.dragListener);
     const droppable = (this.$refs.droppable as Vue).$el as HTMLDivElement;
     droppable.removeEventListener('dragenter', this.onDragEnter);
-    droppable.removeEventListener('dragexit', this.onDragExit);
+    droppable.removeEventListener('dragleave', this.onDragExit);
   },
 
   computed: {
@@ -223,7 +225,7 @@ export default Vue.extend({
     courseContainerHeight(): number {
       let factor = 6.1;
       let extraIncrementer = 0;
-      if (this.isShadow) {
+      if (this.isShadowCounter > 0) {
         extraIncrementer += 1;
       }
       if (this.isDraggedFrom) {
@@ -262,19 +264,19 @@ export default Vue.extend({
     onDragStart() {
       this.isDraggedFrom = true;
       this.scrollable = true;
-      this.isShadow = false;
+      this.isShadowCounter = 0;
     },
     onDragEnter() {
-      this.isShadow = true;
+      this.isShadowCounter += 1;
     },
     onDragExit() {
-      this.isShadow = false;
+      this.isShadowCounter -= 1;
     },
     onDropped() {
-      this.isShadow = false;
+      this.isShadowCounter = 0;
     },
     onDragEnd() {
-      this.isShadow = false;
+      this.isShadowCounter = 0;
       this.scrollable = false;
       this.isDraggedFrom = false;
     },
