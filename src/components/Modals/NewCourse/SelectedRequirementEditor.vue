@@ -1,17 +1,9 @@
 <template>
   <div>
-    <div v-if="chosenRequirementText.length > 0">
-      <div class="newCourse-title">
-        You will let this class fulfill the following requirements(s):
-      </div>
-      <div class="newCourse-requirements-container">
-        <div class="newCourse-requirements">
-          {{ chosenRequirementText }}
-        </div>
-      </div>
-    </div>
     <div v-if="requirementsThatAllowDoubleCounting.length > 0">
-      <div class="newCourse-title">This class can auto-fulfill the following requirement(s):</div>
+      <div class="newCourse-title">
+        This class automatically fulfills the following requirement(s):
+      </div>
       <div class="newCourse-requirements-container">
         <div class="newCourse-requirements">
           {{ requirementsThatAllowDoubleCounting.join(', ') }}
