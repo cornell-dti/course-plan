@@ -10773,7 +10773,7 @@
         },
         {
           "name": "Mathematics & Quantitative Reasoning (MQR-AS)",
-          "description": "Students must take 1 in Mathematics & Quantitative Reasoning (MQR-AS).",
+          "description": "Students must take 1 course in Mathematics & Quantitative Reasoning (MQR-AS).",
           "source": "https://as.cornell.edu/education/old-degree-requirements",
           "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
@@ -10892,7 +10892,6 @@
           "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
           "minCount": 1,
-          "allowCourseDoubleCounting": true,
           "courses": [
             [
               350154,

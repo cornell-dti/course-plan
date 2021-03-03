@@ -132,7 +132,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Mathematics & Quantitative Reasoning (MQR-AS)',
-    description: 'Students must take 1 in Mathematics & Quantitative Reasoning (MQR-AS).',
+    description: 'Students must take 1 course in Mathematics & Quantitative Reasoning (MQR-AS).',
     source: 'https://as.cornell.edu/education/old-degree-requirements',
     checker: (course: Course): boolean => course.catalogDistr?.includes('MQR-AS') ?? false,
     subRequirementProgress: 'any-can-count',
@@ -151,7 +151,6 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
     minCount: 1,
-    allowCourseDoubleCounting: true,
   },
   {
     name: 'Distribution Requirement',
