@@ -1,5 +1,9 @@
 <template>
-  <div :class="{ 'course--min': compact, active: active }" class="course" @click="courseOnClick()">
+  <div
+    :class="{ 'course--min': compact, active: active, 'course--reqs': isReqCourse && !compact }"
+    class="course"
+    @click="courseOnClick()"
+  >
     <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
       <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
     </div>
@@ -138,9 +142,16 @@ export default Vue.extend({
   box-shadow: 0px 0px 10px 4px $boxShadowGray;
   position: relative;
   height: 5.625rem;
+  touch-action: none;
+  cursor: grab;
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
+  }
+
+  &:active:hover {
+    touch-action: none;
+    cursor: grabbing;
   }
 
   &--min {
@@ -216,6 +227,7 @@ export default Vue.extend({
   }
 
   &-info {
+    max-width: 18rem;
     font-size: 14px;
     line-height: 17px;
     color: $lightPlaceholderGray;
@@ -276,7 +288,38 @@ export default Vue.extend({
       width: 14rem;
     }
 
+    &-info {
+      max-width: 14rem;
+    }
+
     &-menu {
+      right: -1rem;
+    }
+  }
+}
+
+@media only screen and (max-width: $large-breakpoint) {
+  .course--reqs {
+    width: 17rem;
+    .course--min {
+      width: 10rem;
+      height: 2.125rem;
+    }
+    .course-color {
+      &--active {
+        width: 1.188rem;
+      }
+    }
+
+    .course-name {
+      width: 14rem;
+    }
+
+    .course-info {
+      max-width: 14rem;
+    }
+
+    .course-menu {
       right: -1rem;
     }
   }
