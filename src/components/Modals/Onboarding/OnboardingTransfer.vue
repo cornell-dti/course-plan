@@ -347,7 +347,7 @@ export default Vue.extend({
       // exams already picked
       selectedExams: FirestoreAPIBExam[],
       // array of ap/ib exams
-      allSubjects: string[],
+      allSubjects: readonly string[],
       choice: string
     ) {
       const selectedExamsNames = selectedExams.map(exam => exam.subject);
