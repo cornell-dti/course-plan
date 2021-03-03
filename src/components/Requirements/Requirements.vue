@@ -90,7 +90,7 @@ Vue.use(VueCollapse);
 
 export type ShowAllCourses = {
   readonly name: string;
-  readonly shownCourses: FirestoreSemesterCourse[];
+  shownCourses: FirestoreSemesterCourse[];
   readonly allCourses: FirestoreSemesterCourse[];
 };
 
@@ -154,7 +154,7 @@ export default Vue.extend({
       return Math.ceil(this.showAllCourses.allCourses.length / this.maxSeeAllCoursesPerPage);
     },
     hasNextPage(): boolean {
-      return this.showAllPage * this.maxSeeAllCoursesPerPage < this.numPages;
+      return this.showAllPage + 1 < this.numPages;
     },
     hasPrevPage(): boolean {
       return this.showAllPage > 0;
