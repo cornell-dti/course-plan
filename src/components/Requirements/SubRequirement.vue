@@ -90,7 +90,6 @@
               :courses="subReqCourseSlot.courses.slice(0, 4)"
               :displayDescription="displayDescription"
               :showSeeAllLabel="subReqCourseSlot.courses.length > 4"
-              :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
               @onShowAllCourses="onShowAllCourses"
             />
           </div>
@@ -172,7 +171,6 @@ export default Vue.extend({
     isCompleted: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
     color: { type: String, required: true },
-    lastLoadedShowAllCourseId: { type: Number, required: true },
   },
   data(): Data {
     return {

@@ -63,7 +63,6 @@ export default Vue.extend({
     courses: { type: Array as PropType<readonly FirestoreSemesterCourse[]>, required: true },
     showSeeAllLabel: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
-    lastLoadedShowAllCourseId: { type: Number, required: true },
   },
   computed: {
     addCourseLabel() {

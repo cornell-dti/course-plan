@@ -19,7 +19,6 @@
           :displayedMinorIndex="displayedMinorIndex"
           :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
           :numOfColleges="numOfColleges"
-          :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
           @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
           @activateMajor="activateMajor"
           @activateMinor="activateMinor"
@@ -37,14 +36,25 @@
       </div>
       <div class="see-all-padding-x py-3">
         <h1 class="title">{{ showAllCourses.name }}</h1>
+        <div class="see-all-pages">
+          <span class="see-all-pageCount">{{ pageText }}</span>
+          <div class="see-all-buttonWrapper">
+            <button class="see-all-button" :class="{ 'see-all-button--disabled': !hasPrevPage }">
+              <span class="see-all-button-text" @click="prevPage()">PREV</span>
+            </button>
+            <button class="see-all-button" :class="{ 'see-all-button--disabled': !hasNextPage }">
+              <span class="see-all-button-text" @click="nextPage()">NEXT</span>
+            </button>
+          </div>
+        </div>
         <draggable
-          :value="showAllCourses.courses"
+          :value="showAllCourses.shownCourses"
           :clone="cloneCourse"
           :move="onDraggedCourseMove"
           data-not-droppable="true"
           group="draggable-semester-courses"
         >
-          <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
+          <div v-for="(courseData, index) in showAllCourses.shownCourses" :key="index">
             <div class="mt-3">
               <course
                 :courseObj="courseData"
@@ -80,7 +90,8 @@ Vue.use(VueCollapse);
 
 export type ShowAllCourses = {
   readonly name: string;
-  readonly courses: FirestoreSemesterCourse[];
+  readonly shownCourses: FirestoreSemesterCourse[];
+  readonly allCourses: FirestoreSemesterCourse[];
 };
 
 type Data = {
@@ -89,7 +100,7 @@ type Data = {
   numOfColleges: number;
   showAllCourses: ShowAllCourses;
   shouldShowAllCourses: boolean;
-  lastLoadedShowAllCourseId: number;
+  showAllPage: number;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -110,9 +121,9 @@ export default Vue.extend({
       displayedMajorIndex: 0,
       displayedMinorIndex: 0,
       numOfColleges: 1,
-      showAllCourses: { name: '', courses: [] },
+      showAllCourses: { name: '', shownCourses: [], allCourses: [] },
       shouldShowAllCourses: false,
-      lastLoadedShowAllCourseId: 0,
+      showAllPage: 0,
     };
   },
   watch: {
@@ -135,6 +146,21 @@ export default Vue.extend({
     },
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
+    },
+    maxSeeAllCoursesPerPage(): number {
+      return 24;
+    },
+    numPages(): number {
+      return Math.ceil(this.showAllCourses.allCourses.length / this.maxSeeAllCoursesPerPage);
+    },
+    hasNextPage(): boolean {
+      return this.showAllPage * this.maxSeeAllCoursesPerPage < this.numPages;
+    },
+    hasPrevPage(): boolean {
+      return this.showAllPage > 0;
+    },
+    pageText(): string {
+      return `Page ${this.showAllPage + 1}/${this.numPages}`;
     },
   },
   methods: {
@@ -172,27 +198,43 @@ export default Vue.extend({
     }) {
       this.shouldShowAllCourses = true;
 
-      // limited to 24 courses
-      const allPotentialCourses = showAllCourses.subReqCoursesArray.slice(
-        this.lastLoadedShowAllCourseId,
-        this.lastLoadedShowAllCourseId + 24
-      );
-
-      // next time see all is open, show next 24 courses (unless already reached the end)
-      if (this.lastLoadedShowAllCourseId + 24 > showAllCourses.subReqCoursesArray.length) {
-        this.lastLoadedShowAllCourseId = 0;
-      } else {
-        this.lastLoadedShowAllCourseId += 24;
-      }
-
       this.showAllCourses = {
         name: showAllCourses.requirementName,
-        courses: allPotentialCourses,
+        shownCourses: this.findPotentialSeeAllCourses(showAllCourses.subReqCoursesArray),
+        allCourses: showAllCourses.subReqCoursesArray,
       };
+    },
+    nextPage() {
+      if (!this.hasNextPage) {
+        return;
+      }
+
+      this.showAllPage += 1;
+      this.showAllCourses.shownCourses = this.findPotentialSeeAllCourses(
+        this.showAllCourses.allCourses
+      );
+    },
+    prevPage() {
+      if (!this.hasPrevPage) {
+        return;
+      }
+
+      this.showAllPage -= 1;
+      this.showAllCourses.shownCourses = this.findPotentialSeeAllCourses(
+        this.showAllCourses.allCourses
+      );
+    },
+    // return an array consisting of the courses to display on the see all menu, depending on the showAllPage and maxSeeAllCoursesPerPage
+    findPotentialSeeAllCourses(courses: FirestoreSemesterCourse[]): FirestoreSemesterCourse[] {
+      const allPotentialCourses = courses.slice(
+        this.showAllPage * this.maxSeeAllCoursesPerPage,
+        (this.showAllPage + 1) * this.maxSeeAllCoursesPerPage
+      );
+      return allPotentialCourses;
     },
     backFromSeeAll() {
       this.shouldShowAllCourses = false;
-      this.showAllCourses = { name: '', courses: [] };
+      this.showAllCourses = { name: '', shownCourses: [], allCourses: [] };
     },
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
@@ -238,6 +280,54 @@ export default Vue.extend({
 .see-all-header {
   box-shadow: 0 4px 8px -8px gray;
 }
+.see-all-pages {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 21.375rem;
+}
+.see-all-pageCount {
+  font-size: 16px;
+  line-height: 19px;
+  color: $primaryGray;
+}
+.see-all-buttonWrapper {
+  display: flex;
+}
+.see-all-button {
+  width: 4.75rem;
+  height: 2rem;
+  color: $sangBlue;
+  border-radius: 3px;
+  border: 1px solid $sangBlue;
+  background-color: $white;
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: auto;
+
+  &:first-child {
+    margin-right: 1rem;
+  }
+
+  &-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  &-text {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  &--disabled {
+    opacity: 0.3;
+    border: 1px solid $sangBlue;
+    background-color: $disabledGray;
+  }
+}
+
 h1.title {
   font-style: normal;
   font-weight: 550;
@@ -277,6 +367,9 @@ h1.title {
   .requirements,
   .fixed {
     width: 21rem;
+  }
+  .see-all-pages {
+    width: 17rem;
   }
 }
 
