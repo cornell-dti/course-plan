@@ -34,9 +34,7 @@
               </div>
             </div>
           </div>
-          <div
-            class="col-12 col-md-6 top-section image-wrapper image-wrapper--laptop"
-          >
+          <div class="col-12 col-md-6 top-section image-wrapper image-wrapper--laptop">
             <img
               style="position: relative"
               class="laptop"
@@ -57,9 +55,7 @@
                 <img src="@/assets/images/Task1.svg" alt="checklist" />
               </div>
               <div class="col-11">
-                <p class="sub sub--task">
-                  Fully personalized to track your requirements
-                </p>
+                <p class="sub sub--task">Fully personalized to track your requirements</p>
               </div>
             </div>
             <div class="row tasks">
@@ -67,9 +63,7 @@
                 <img src="@/assets/images/Task2.svg" alt="browser" />
               </div>
               <div class="col-11">
-                <p class="sub sub--task">
-                  Customizable interface to view your courses
-                </p>
+                <p class="sub sub--task">Customizable interface to view your courses</p>
               </div>
             </div>
             <div class="row tasks">
@@ -77,9 +71,7 @@
                 <img src="@/assets/images/Task3.svg" alt="Network" />
               </div>
               <div class="col-11">
-                <p class="sub sub--task">
-                  Built-in system to check your progress
-                </p>
+                <p class="sub sub--task">Built-in system to check your progress</p>
               </div>
             </div>
             <div class="row tasks">
@@ -87,9 +79,7 @@
                 <img src="@/assets/images/Task4.svg" alt="Starred comment" />
               </div>
               <div class="col-11">
-                <p class="sub sub--task">
-                  Recommends courses based on your needs
-                </p>
+                <p class="sub sub--task">Recommends courses based on your needs</p>
               </div>
             </div>
           </div>
@@ -117,9 +107,8 @@
           <div class="col-12 col-md-6 comment">
             <h1 class="head">Drag Your Course In</h1>
             <p class="sub">
-              CoursePlan’s intuitive interface recommends courses based on
-              unfulfilled requirements and allows you to easily drag and drop
-              them into your planner
+              CoursePlan’s intuitive interface recommends courses based on unfulfilled requirements
+              and allows you to easily drag and drop them into your planner
             </p>
           </div>
         </div>
@@ -131,16 +120,12 @@
           <div class="col-12 col-md-5 comment">
             <h1 class="head">Plan Your Semesters</h1>
             <p class="sub">
-              Use CoursePlan’s semesterly planner to choose courses well in
-              advance and ensure that you never miss a requirement
+              Use CoursePlan’s semesterly planner to choose courses well in advance and ensure that
+              you never miss a requirement
             </p>
           </div>
           <div class="col-md-7 image-wrapper image-wrapper--semester">
-            <img
-              class="hide schedule"
-              src="@/assets/images/schedule.svg"
-              alt="Plan preview"
-            />
+            <img class="hide schedule" src="@/assets/images/schedule.svg" alt="Plan preview" />
           </div>
         </div>
       </div>
@@ -150,12 +135,10 @@
         <div class="container inside">
           <div class="row justify-content-center">
             <div class="col justify-content-center">
-              <h1 class="head-center text-center">
-                Be The First One To Use It
-              </h1>
+              <h1 class="head-center text-center">Be The First One To Use It</h1>
               <p class="sub text-center" style="padding: 30px">
-                Gain early access by filling out your email below and help us
-                grow into what you need!
+                Gain early access by filling out your email below and help us grow into what you
+                need!
               </p>
             </div>
           </div>
@@ -280,14 +263,9 @@ export default Vue.extend({
       return major.trim().length > 0;
     },
     addUser() {
-      if (
-        this.validateEmail(this.waitlist.email) &&
-        this.validateMajor(this.waitlist.major)
-      ) {
+      if (this.validateEmail(this.waitlist.email) && this.validateMajor(this.waitlist.major)) {
         // eslint-disable-next-line no-alert
-        alert(
-          "You have been added to the waitlist. We'll be in touch shortly!"
-        );
+        alert("You have been added to the waitlist. We'll be in touch shortly!");
 
         // Add timestamp to data in YYYY-MM-DD hh:mm:ss
         const dt = new Date();

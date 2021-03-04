@@ -15,15 +15,8 @@
       @add-semester="addSemester"
       @close-semester-modal="closeSemesterModal"
     />
-    <div
-      class="semesterView-settings"
-      :class="{ 'semesterView-settings--two': noSemesters }"
-    >
-      <button
-        v-if="noSemesters"
-        class="semesterView-addSemesterButton"
-        @click="openSemesterModal"
-      >
+    <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
+      <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">
         + New Semester
       </button>
       <div class="semesterView-switch">
@@ -105,11 +98,7 @@ import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
 import { GTagEvent } from '@/gtag';
-import {
-  addSemester,
-  deleteSemester,
-  addCourseToSemester,
-} from '@/global-firestore-data';
+import { addSemester, deleteSemester, addCourseToSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 
 export default Vue.extend({
@@ -143,10 +132,7 @@ export default Vue.extend({
   },
   methods: {
     checkIfFirstSem(semester: FirestoreSemester) {
-      return (
-        this.semesters[0].year === semester.year &&
-        this.semesters[0].type === semester.type
-      );
+      return this.semesters[0].year === semester.year && this.semesters[0].type === semester.type;
     },
     setCompact() {
       if (!this.compact) {
@@ -160,11 +146,7 @@ export default Vue.extend({
         GTagEvent(this.$gtag, 'to-not-compact');
       }
     },
-    openSemesterConfirmationModal(
-      type: FirestoreSemesterType,
-      year: number,
-      isAdd: boolean
-    ) {
+    openSemesterConfirmationModal(type: FirestoreSemesterType, year: number, isAdd: boolean) {
       if (isAdd) {
         this.confirmationText = `Added ${type} ${year} to plan`;
       } else {
@@ -191,11 +173,7 @@ export default Vue.extend({
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
     },
-    addNewCourse(
-      season: FirestoreSemesterType,
-      year: number,
-      course: FirestoreSemesterCourse
-    ) {
+    addNewCourse(season: FirestoreSemesterType, year: number, course: FirestoreSemesterCourse) {
       addCourseToSemester(season, year, course);
     },
     addSemester(type: FirestoreSemesterType, year: number) {

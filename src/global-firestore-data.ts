@@ -73,14 +73,14 @@ export const addSemester = (
   gtag?: GTag,
   courses: readonly FirestoreSemesterCourse[] = []
 ): void => {
-  GTagEvent(gtag, "add-semester");
+  GTagEvent(gtag, 'add-semester');
   editSemesters(oldSemesters =>
     [...oldSemesters, createSemester(type, year, courses)].sort(compareFirestoreSemesters)
   );
 };
 
 export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
-  GTagEvent(gtag, "add-semester");
+  GTagEvent(gtag, 'add-semester');
   editSemesters(oldSemesters =>
     oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
   );
@@ -92,7 +92,7 @@ export const addCourseToSemester = (
   newCourse: FirestoreSemesterCourse,
   gtag?: GTag
 ): void => {
-  GTagEvent(gtag, "add-course");
+  GTagEvent(gtag, 'add-course');
   editSemesters(oldSemesters => {
     let semesterFound = false;
     const newSemestersWithCourse = oldSemesters.map(sem => {
@@ -115,7 +115,7 @@ export const deleteCourseFromSemester = (
   courseUniqueID: number,
   gtag?: GTag
 ): void => {
-  GTagEvent(gtag, "delete-course");
+  GTagEvent(gtag, 'delete-course');
   editSemesters(oldSemesters => {
     let semesterFound = false;
     const newSemestersWithoutCourse = oldSemesters.map(sem => {

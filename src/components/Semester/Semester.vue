@@ -50,20 +50,13 @@
       data-disable-interaction="1"
     >
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
-        <div
-          class="semester-left"
-          :class="{ 'semester-left--compact': compact }"
-        >
+        <div class="semester-left" :class="{ 'semester-left--compact': compact }">
           <span class="semester-name"
-            ><img class="season-emoji" :src="seasonImg[type]" alt="" />
-            {{ type }} {{ year }}</span
+            ><img class="season-emoji" :src="seasonImg[type]" alt="" /> {{ type }} {{ year }}</span
           >
           <span class="semester-credits">{{ creditString }}</span>
         </div>
-        <div
-          class="semester-right"
-          :class="{ 'semester-right--compact': compact }"
-        >
+        <div class="semester-right" :class="{ 'semester-right--compact': compact }">
           <div class="semester-dotRow" @click="openSemesterMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
           </div>
@@ -338,9 +331,7 @@ export default Vue.extend({
     deleteCourse(courseCode: string, uniqueID: number) {
       deleteCourseFromSemester(this.type, this.year, uniqueID);
       // Update requirements menu
-      this.openConfirmationModal(
-        `Removed ${courseCode} from ${this.type} ${this.year}`
-      );
+      this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
     },
     colorCourse(color: string, uniqueID: number) {
       editSemester(
@@ -364,9 +355,7 @@ export default Vue.extend({
         (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
-            course.uniqueID === uniqueID
-              ? { ...course, credits: credit }
-              : course
+            course.uniqueID === uniqueID ? { ...course, credits: credit } : course
           ),
         })
       );
@@ -404,10 +393,7 @@ export default Vue.extend({
     openEditSemesterModal() {
       this.isEditSemesterOpen = true;
     },
-    editSemester(
-      seasonInput: 'Fall' | 'Spring' | 'Winter' | 'Summer',
-      yearInput: number
-    ) {
+    editSemester(seasonInput: 'Fall' | 'Spring' | 'Winter' | 'Summer', yearInput: number) {
       editSemester(
         this.year,
         this.type,
