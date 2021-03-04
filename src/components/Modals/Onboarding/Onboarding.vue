@@ -6,8 +6,26 @@
       </div>
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
         <div class="onboarding-top">
-          <div v-if="!isEditingProfile" class="onboarding-header">👏 Welcome to CoursePlan</div>
-          <div v-if="isEditingProfile" class="onboarding-header">👋 Hi {{ name.firstName }}</div>
+          <div v-if="!isEditingProfile" class="onboarding-header">
+            <span
+              ><img
+                class="onboarding-header-emoji"
+                src="@/assets/images/clapEmoji.svg"
+                alt="clap"
+              />
+              Welcome to CoursePlan</span
+            >
+          </div>
+          <div v-if="isEditingProfile" class="onboarding-header">
+            <span
+              ><img
+                class="onboarding-header-emoji"
+                src="@/assets/images/waveEmoji.svg"
+                alt="wave"
+              />
+              Hi {{ name.firstName }}</span
+            >
+          </div>
           <div v-if="!isEditingProfile" class="onboarding-description">
             Let's get to know you first!
           </div>
