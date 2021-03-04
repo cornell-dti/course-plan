@@ -80,7 +80,7 @@ export const addSemester = (
 };
 
 export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
-  GTagEvent(gtag, 'add-semester');
+  GTagEvent(gtag, 'delete-semester');
   editSemesters(oldSemesters =>
     oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
   );
