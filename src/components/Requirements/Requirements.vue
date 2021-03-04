@@ -36,14 +36,24 @@
       </div>
       <div class="see-all-padding-x py-3">
         <h1 class="title">{{ showAllCourses.name }}</h1>
-        <div class="see-all-pages">
+        <div class="see-all-pages" v-if="numPages > 1">
           <span class="see-all-pageCount">{{ pageText }}</span>
           <div class="see-all-buttonWrapper">
-            <button class="see-all-button" :class="{ 'see-all-button--disabled': !hasPrevPage }">
-              <span class="see-all-button-text" @click="prevPage()">PREV</span>
+            <button
+              class="see-all-button"
+              :class="{ 'see-all-button--disabled': !hasPrevPage }"
+              :disabled="!hasPrevPage"
+              @click="prevPage()"
+            >
+              <span class="see-all-button-text">PREV</span>
             </button>
-            <button class="see-all-button" :class="{ 'see-all-button--disabled': !hasNextPage }">
-              <span class="see-all-button-text" @click="nextPage()">NEXT</span>
+            <button
+              class="see-all-button"
+              :class="{ 'see-all-button--disabled': !hasNextPage }"
+              :disabled="!hasNextPage"
+              @click="nextPage()"
+            >
+              <span class="see-all-button-text">NEXT</span>
             </button>
           </div>
         </div>
@@ -111,6 +121,9 @@ tour.setOption('skipLabel', 'Skip This Tutorial');
 tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
+// show 24 courses per page of the see all menu
+const maxSeeAllCoursesPerPage = 24;
+
 export default Vue.extend({
   components: { draggable, Course, DropDownArrow, RequirementView },
   props: {
@@ -147,11 +160,8 @@ export default Vue.extend({
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
-    maxSeeAllCoursesPerPage(): number {
-      return 24;
-    },
     numPages(): number {
-      return Math.ceil(this.showAllCourses.allCourses.length / this.maxSeeAllCoursesPerPage);
+      return Math.ceil(this.showAllCourses.allCourses.length / maxSeeAllCoursesPerPage);
     },
     hasNextPage(): boolean {
       return this.showAllPage + 1 < this.numPages;
@@ -227,14 +237,15 @@ export default Vue.extend({
     // return an array consisting of the courses to display on the see all menu, depending on the showAllPage and maxSeeAllCoursesPerPage
     findPotentialSeeAllCourses(courses: FirestoreSemesterCourse[]): FirestoreSemesterCourse[] {
       const allPotentialCourses = courses.slice(
-        this.showAllPage * this.maxSeeAllCoursesPerPage,
-        (this.showAllPage + 1) * this.maxSeeAllCoursesPerPage
+        this.showAllPage * maxSeeAllCoursesPerPage,
+        (this.showAllPage + 1) * maxSeeAllCoursesPerPage
       );
       return allPotentialCourses;
     },
     backFromSeeAll() {
       this.shouldShowAllCourses = false;
       this.showAllCourses = { name: '', shownCourses: [], allCourses: [] };
+      this.showAllPage = 0;
     },
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
