@@ -5,7 +5,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'A&S Credits',
     description:
-      '100 credits in Arts & Sciences are required.' +
+      '100 credits in Arts & Sciences are required. ' +
       'Students can take more than 20 credits outside of the College as long as they take 100 credits within; ' +
       'they can also take all their credits in Arts & Sciences and accumulate more than 120. ' +
       'Note: AP, IB, and A-Level credits count toward the 120 total credits but not toward the 100 A&S credits.',
@@ -155,7 +155,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Distribution Requirement',
     description:
-      'Five Arts & Sciences courses of 3 or more credits from at least 4 of the following social sciences, humanities, and arts categories:' +
+      'Five Arts & Sciences courses of 3 or more credits from at least 4 of the following social sciences, humanities, and arts categories: ' +
       'CA-AS, HA-AS, KCM-AS, LA-AS, SBA-AS',
     source: 'https://as.cornell.edu/education/old-degree-requirements',
     checker: [
