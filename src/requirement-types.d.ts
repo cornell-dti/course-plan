@@ -24,32 +24,21 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
       readonly minCount?: number;
     }
   | ({
-      /** Defines how courses in a sub-requirement can be all counted towards a stat. */
-      readonly subRequirementProgress: 'every-course-needed' | 'any-can-count';
-      readonly fulfilledBy: 'courses';
-      /** The minimum number of courses required to fulfill this requirement. */
-      readonly minCount: number;
-    } & T)
-  | ({
-      readonly fulfilledBy: 'credits';
-      /** The minimum number of credits required to fulfill this requirement. */
-      readonly minCount: number;
+      readonly fulfilledBy: 'courses' | 'credits';
+      /** The minimum number of courses/credits required to fulfill each sub-requirement. */
+      readonly perSlotMinCount: readonly number[];
+      /** When we care more about how many slots are filled with some courses */
+      readonly minNumberOfSlots?: number;
     } & T)
   | {
       readonly fulfilledBy: 'toggleable';
       readonly fulfillmentOptions: {
-        readonly [optionName: string]:
-          | ({
-              readonly minCount: number;
-              readonly counting: 'courses';
-              readonly subRequirementProgress: 'every-course-needed' | 'any-can-count';
-              readonly description: string;
-            } & T)
-          | ({
-              readonly minCount: number;
-              readonly counting: 'credits';
-              readonly description: string;
-            } & T);
+        readonly [optionName: string]: {
+          readonly counting: 'courses' | 'credits';
+          readonly perSlotMinCount: readonly number[];
+          readonly minNumberOfSlots?: number;
+          readonly description: string;
+        } & T;
       };
     };
 

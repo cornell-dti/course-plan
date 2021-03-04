@@ -9,20 +9,24 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
       'All 2000-level ENGL courses (with the exception of 2800-2810 and 2880-2890) count for the major, as do all 3000-and 4000-level courses.',
     source:
       'https://english.cornell.edu/majoring-and-minoring-english-cornell#requirements-for-the-major',
-    checker: (course: Course): boolean => {
-      if (courseMatchesCodeOptions(course, ['ENGL 2800', 'ENGL 2810', 'ENGL 2880', 'ENGL 2890'])) {
-        return false;
-      }
-      return courseMatchesCodeOptions(course, [
-        'ENGL 2***',
-        'ENGL 3***',
-        'ENGL 4***',
-        'ENGL 5***',
-        'ENGL 6***',
-      ]);
-    },
+    checker: [
+      (course: Course): boolean => {
+        if (
+          courseMatchesCodeOptions(course, ['ENGL 2800', 'ENGL 2810', 'ENGL 2880', 'ENGL 2890'])
+        ) {
+          return false;
+        }
+        return courseMatchesCodeOptions(course, [
+          'ENGL 2***',
+          'ENGL 3***',
+          'ENGL 4***',
+          'ENGL 5***',
+          'ENGL 6***',
+        ]);
+      },
+    ],
     fulfilledBy: 'credits',
-    minCount: 40,
+    perSlotMinCount: [40],
   },
   {
     name: 'Pre-1800',
@@ -31,11 +35,13 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
       'before 1800 (such courses are indicated in the English course listings)',
     source:
       'https://english.cornell.edu/majoring-and-minoring-english-cornell#requirements-for-the-major',
-    checker: (course: Course): boolean =>
-      (course.catalogComments?.includes('pre-1800') ?? false) ||
-      (course.catalogSatisfiesReq?.includes('pre-1800') ?? false),
+    checker: [
+      (course: Course): boolean =>
+        (course.catalogComments?.includes('pre-1800') ?? false) ||
+        (course.catalogSatisfiesReq?.includes('pre-1800') ?? false),
+    ],
     fulfilledBy: 'credits',
-    minCount: 12,
+    perSlotMinCount: [12],
   },
   {
     name: '4000 or Above',
@@ -44,7 +50,7 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('ENGL 4***'),
     fulfilledBy: 'credits',
-    minCount: 8,
+    perSlotMinCount: [8],
   },
   {
     name: 'Concentration',

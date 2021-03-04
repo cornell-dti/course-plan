@@ -12,9 +12,8 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ENGRD 2020'],
       ['ENGRD 2610', 'ENGRD 2210', 'ENGRD 2110', 'ENGRD 2510']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
     allowCourseDoubleCounting: true,
   },
   {
@@ -34,9 +33,8 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CEE 3610'],
       ['CEE 3710']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 9,
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1],
   },
   {
     name: 'Capstone Design Elective',
@@ -55,9 +53,8 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
       'CEE 4660',
       'CEE 4740',
     ]),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Two Design Electives',
@@ -76,9 +73,8 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
       'CEE 6370',
       'MSE 5150',
     ]),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [2],
   },
   {
     name: 'Two Major-Approved Electives',
@@ -118,9 +114,8 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
       'MSE 5550',
       'CEE 3720',
     ]),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [2],
   },
 ];
 

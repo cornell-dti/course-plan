@@ -8,9 +8,8 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
       'Before applying for admission to the Economics Major, students must complete ECON 1110, ECON 1120, and MATH 1110 (or equivalents).',
     source: 'https://economics.cornell.edu/major',
     checker: includesWithSubRequirements(['ECON 1110'], ['ECON 1120'], ['MATH 1110']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [1, 1, 1],
   },
   {
     name: 'Core Economics',
@@ -23,18 +22,16 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ECON 3110', 'ECON 3130'],
       ['ECON 3120', 'ECON 3140']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 4,
+    perSlotMinCount: [1, 1, 1, 1],
   },
   {
     name: '4000-level Courses',
     description: 'All students must take at least three courses at the 4000-level or higher.',
     source: 'https://economics.cornell.edu/major',
     checker: includesWithSingleRequirement('ECON 4***'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'Basic Requirements',
@@ -42,9 +39,8 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
       'Twelve courses listed by the Department of Economics, or approved by the student’s major advisor',
     source: 'https://economics.cornell.edu/major',
     checker: includesWithSingleRequirement('ECON 1110', 'ECON 1120', 'ECON 3***', 'ECON 4***'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 12,
+    perSlotMinCount: [12],
   },
 ];
 

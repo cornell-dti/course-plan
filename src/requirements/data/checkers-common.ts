@@ -1,4 +1,4 @@
-import { Course } from '../types';
+import { Course, RequirementChecker } from '../types';
 import { FWS_COURSE_ID } from './constants';
 
 /**
@@ -66,11 +66,14 @@ export const courseIsFWS = (course: Course): boolean =>
  * ```
  *
  * @param includes a list of course code pattern to check against.
- * @returns a checker that can be directly assigned to requirement object.
+ * @returns a list with a single checker that checks whether this single sub-requirement can be
+ * fulfilled by courses.
  */
-export const includesWithSingleRequirement = (...includes: readonly string[]) => (
-  course: Course
-): boolean => courseMatchesCodeOptions(course, includes);
+export const includesWithSingleRequirement = (
+  ...includes: readonly string[]
+): readonly RequirementChecker[] => [
+  (course: Course): boolean => courseMatchesCodeOptions(course, includes),
+];
 
 /**
  * This function returns an array of checkers.

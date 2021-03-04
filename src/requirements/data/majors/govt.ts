@@ -16,9 +16,8 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
       'GOVT 1817',
       'GOVT 1827'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [2],
   },
   {
     name: 'Government Coursework',
@@ -28,7 +27,7 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf',
     checker: includesWithSingleRequirement('GOVT 2***'),
     fulfilledBy: 'credits',
-    minCount: 28,
+    perSlotMinCount: [28],
   },
   {
     name: 'Tenth Government Course',
@@ -38,7 +37,7 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf',
     checker: includesWithSingleRequirement('GOVT ****'),
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'Government Seminar',

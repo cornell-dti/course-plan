@@ -17,7 +17,7 @@ const psychMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'PSYCH 6***'
     ),
     fulfilledBy: 'credits',
-    minCount: 18,
+    perSlotMinCount: [18],
   },
 ];
 

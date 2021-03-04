@@ -23,9 +23,8 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ILRLR 2050'],
       ['ILRLE 2400']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 9,
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1],
   },
   {
     name: 'First-Year Writing Seminars',
@@ -33,9 +32,9 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
       'Students are required to fulfill the following writing requirements for a letter grade:',
     source:
       'https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements',
-    checker: courseIsFWS,
+    checker: [courseIsFWS],
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'ILR Advance Writing',
@@ -54,9 +53,8 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
       'ENGL 2880',
       'ENGL 2890'
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Distribution Requirements',
