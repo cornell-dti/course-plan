@@ -57,16 +57,26 @@ const getTotalCreditsFulfillmentStatistics = (
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11561',
       };
       break;
-    case 'AS':
+    case 'AS1':
       requirement = {
         ...requirementCommon,
-        id: 'College-AS-total-credits',
+        id: 'College-AS1-total-credits',
         description:
           '120 academic credits are required. ' +
           'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11570#credit-req',
       };
       break;
+    // case 'AS2':
+    //   requirement = {
+    //     ...requirementCommon,
+    //     id: 'College-AS2-total-credits',
+    //     description:
+    //       '120 academic credits are required. ' +
+    //       'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
+    //     source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11570#credit-req',
+    //   };
+    //   break;
     case 'HE':
       requirement = {
         ...requirementCommon,
