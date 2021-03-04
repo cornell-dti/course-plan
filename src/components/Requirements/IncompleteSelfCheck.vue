@@ -116,6 +116,10 @@ export default Vue.extend({
     &:not(:first-child) {
       margin-top: 0.5rem;
     }
+
+    &-wrapper {
+      position: relative;
+    }
   }
   &-placeholder {
     height: 100%;
@@ -146,6 +150,8 @@ export default Vue.extend({
   }
   &-content {
     z-index: 2;
+    position: absolute;
+    width: 100%;
     background: $white;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 7px;
