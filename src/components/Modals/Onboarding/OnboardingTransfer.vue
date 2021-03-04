@@ -19,7 +19,7 @@
                 <onboarding-transfer-exam-property-dropdown
                   property-name="Subject"
                   :columnWide="true"
-                  :availableOptions="subjectsAP"
+                  :availableOptions="getSelectableOptions(examsAP, subjectsAP, exam.subject)"
                   :choice="exam.subject"
                   @on-select="subject => selectAPSubject(subject, index)"
                 />
@@ -61,7 +61,7 @@
                 <onboarding-transfer-exam-property-dropdown
                   property-name="Subject"
                   :columnWide="true"
-                  :availableOptions="subjectsIB"
+                  :availableOptions="getSelectableOptions(examsIB, subjectsIB, exam.subject)"
                   :choice="exam.subject"
                   @on-select="subject => selectIBSubject(subject, index)"
                 />
@@ -192,6 +192,20 @@ type Data = {
 
 const scoresAP = [1, 2, 3, 4, 5];
 const scoresIB = [1, 2, 3, 4, 5, 6, 7];
+const existingAP: Record<string, boolean> = {};
+// filter duplicate exam names and ones already selected
+reqsData.AP = reqsData.AP.filter(ap => {
+  const inExisting = ap.name in existingAP;
+  existingAP[ap.name] = true;
+  return !inExisting;
+});
+const existingIB: Record<string, boolean> = {};
+// filter duplicate exam names and ones already selected
+reqsData.IB = reqsData.IB.filter(ib => {
+  const inExisting = ib.name in existingIB;
+  existingIB[ib.name] = true;
+  return !inExisting;
+});
 const subjectsAP = reqsData.AP.map(it => it.name);
 const subjectsIB = reqsData.IB.map(it => it.name);
 
@@ -328,6 +342,28 @@ export default Vue.extend({
             }
           });
         });
+    },
+    getSelectableOptions(
+      // exams already picked
+      selectedExams: FirestoreAPIBExam[],
+      // array of ap/ib exams
+      allSubjects: readonly string[],
+      choice: string
+    ) {
+      const selectedExamsNames = selectedExams.map(exam => exam.subject);
+      const selectableOptions: string[] = [];
+      // copy all of the possible options over but exclude already selected ones
+      for (const subject of allSubjects) {
+        // don't include selected ones
+        if (!selectedExamsNames.includes(subject)) {
+          selectableOptions.push(subject);
+        }
+      }
+      // add the current selection associated with this input into the availableChoices
+      if (choice !== placeholderText) {
+        selectableOptions.push(choice);
+      }
+      return selectableOptions;
     },
   },
 });
