@@ -10,6 +10,7 @@ import {
   uniqueIncrementerCollection,
 } from './firebaseConfig';
 import store from './store';
+import { GTag, GTagEvent } from './gtag';
 
 // enum to define seasons as integers in season order
 export const SeasonsEnum = Object.freeze({
@@ -69,24 +70,17 @@ const createSemester = (
 export const addSemester = (
   type: FirestoreSemesterType,
   year: number,
+  gtag?: GTag,
   courses: readonly FirestoreSemesterCourse[] = []
 ): void => {
-  // this.$gtag.event('add-semester', {
-  //   event_category: 'semester',
-  //   event_label: 'add',
-  //   value: 1,
-  // });
+  GTagEvent(gtag, "add-semester");
   editSemesters(oldSemesters =>
     [...oldSemesters, createSemester(type, year, courses)].sort(compareFirestoreSemesters)
   );
 };
 
-export const deleteSemester = (type: FirestoreSemesterType, year: number): void => {
-  // this.$gtag.event('delete-semester', {
-  //   event_category: 'semester',
-  //   event_label: 'delete',
-  //   value: 1,
-  // });
+export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
+  GTagEvent(gtag, "add-semester");
   editSemesters(oldSemesters =>
     oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
   );
@@ -95,13 +89,10 @@ export const deleteSemester = (type: FirestoreSemesterType, year: number): void 
 export const addCourseToSemester = (
   season: FirestoreSemesterType,
   year: number,
-  newCourse: FirestoreSemesterCourse
+  newCourse: FirestoreSemesterCourse,
+  gtag?: GTag
 ): void => {
-  // this.$gtag.event('add-course', {
-  //   event_category: 'course',
-  //   event_label: 'add',
-  //   value: 1,
-  // });
+  GTagEvent(gtag, "add-course");
   editSemesters(oldSemesters => {
     let semesterFound = false;
     const newSemestersWithCourse = oldSemesters.map(sem => {
@@ -121,13 +112,10 @@ export const addCourseToSemester = (
 export const deleteCourseFromSemester = (
   season: FirestoreSemesterType,
   year: number,
-  courseUniqueID: number
+  courseUniqueID: number,
+  gtag?: GTag
 ): void => {
-  // this.$gtag.event('delete-course', {
-  //   event_category: 'course',
-  //   event_label: 'delete',
-  //   value: 1,
-  // });
+  GTagEvent(gtag, "delete-course");
   editSemesters(oldSemesters => {
     let semesterFound = false;
     const newSemestersWithoutCourse = oldSemesters.map(sem => {

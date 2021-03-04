@@ -104,6 +104,7 @@ import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
+import { GTagEvent } from '@/gtag';
 import {
   addSemester,
   deleteSemester,
@@ -150,21 +151,13 @@ export default Vue.extend({
     setCompact() {
       if (!this.compact) {
         this.$emit('compact-updated', !this.compact);
-        this.$gtag.event('to-compact', {
-          event_category: 'views',
-          event_label: 'compact',
-          value: 1,
-        });
+        GTagEvent(this.$gtag, 'to-compact');
       }
     },
     setNotCompact() {
       if (this.compact) {
         this.$emit('compact-updated', !this.compact);
-        this.$gtag.event('to-not-compact', {
-          event_category: 'views',
-          event_label: 'not-compact',
-          value: 1,
-        });
+        GTagEvent(this.$gtag, 'to-not-compact');
       }
     },
     openSemesterConfirmationModal(
