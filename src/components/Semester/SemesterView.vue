@@ -15,8 +15,15 @@
       @add-semester="addSemester"
       @close-semester-modal="closeSemesterModal"
     />
-    <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
-      <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">
+    <div
+      class="semesterView-settings"
+      :class="{ 'semesterView-settings--two': noSemesters }"
+    >
+      <button
+        v-if="noSemesters"
+        class="semesterView-addSemesterButton"
+        @click="openSemesterModal"
+      >
         + New Semester
       </button>
       <div class="semesterView-switch">
@@ -64,7 +71,6 @@
           @course-onclick="courseOnClick"
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
-          @edit-semester="editSemester"
           @open-caution-modal="openCautionModal"
           @add-course-to-semester="addNewCourse"
         />
@@ -99,10 +105,9 @@ import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
 import {
+  addSemester,
+  deleteSemester,
   addCourseToSemester,
-  compareFirestoreSemesters,
-  createSemester,
-  editSemesters,
 } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 
@@ -137,7 +142,10 @@ export default Vue.extend({
   },
   methods: {
     checkIfFirstSem(semester: FirestoreSemester) {
-      return this.semesters[0].year === semester.year && this.semesters[0].type === semester.type;
+      return (
+        this.semesters[0].year === semester.year &&
+        this.semesters[0].type === semester.type
+      );
     },
     setCompact() {
       if (!this.compact) {
@@ -159,7 +167,11 @@ export default Vue.extend({
         });
       }
     },
-    openSemesterConfirmationModal(type: FirestoreSemesterType, year: number, isAdd: boolean) {
+    openSemesterConfirmationModal(
+      type: FirestoreSemesterType,
+      year: number,
+      isAdd: boolean
+    ) {
       if (isAdd) {
         this.confirmationText = `Added ${type} ${year} to plan`;
       } else {
@@ -186,50 +198,20 @@ export default Vue.extend({
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
     },
-    addNewCourse(season: FirestoreSemesterType, year: number, course: FirestoreSemesterCourse) {
+    addNewCourse(
+      season: FirestoreSemesterType,
+      year: number,
+      course: FirestoreSemesterCourse
+    ) {
       addCourseToSemester(season, year, course);
     },
     addSemester(type: FirestoreSemesterType, year: number) {
-      this.$gtag.event('add-semester', {
-        event_category: 'semester',
-        event_label: 'add',
-        value: 1,
-      });
-
-      editSemesters(oldSemesters =>
-        [...oldSemesters, createSemester([], type, year)].sort(compareFirestoreSemesters)
-      );
+      addSemester(type, year);
       this.openSemesterConfirmationModal(type, year, true);
     },
     deleteSemester(type: FirestoreSemesterType, year: number) {
-      this.$gtag.event('delete-semester', {
-        event_category: 'semester',
-        event_label: 'delete',
-        value: 1,
-      });
-
-      // Confirm success with alert
+      deleteSemester(type, year);
       this.openSemesterConfirmationModal(type, year, false);
-
-      // Update requirements menu from dashboard
-      editSemesters(oldSemesters =>
-        oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
-      );
-    },
-    editSemester(
-      year: number,
-      type: FirestoreSemesterType,
-      updater: (oldSemester: FirestoreSemester) => FirestoreSemester
-    ) {
-      editSemesters(oldSemesters =>
-        oldSemesters
-          .map(currentSemester =>
-            currentSemester.year === year && currentSemester.type === type
-              ? updater(currentSemester)
-              : currentSemester
-          )
-          .sort(compareFirestoreSemesters)
-      );
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.activatedCourse = course;
