@@ -1,11 +1,7 @@
 <template>
   <div class="course-tooltip">
     <div class="course-iconWrapper course-iconWrapper--caution">
-      <img
-        class="course-icon course-icon--caution"
-        src="@/assets/images/caution.svg"
-        alt="caution sign"
-      />
+      <img class="course-icon course-icon--caution" :src="icon" :alt="alt" />
     </div>
     <div class="course-tooltiptext">
       <slot />
