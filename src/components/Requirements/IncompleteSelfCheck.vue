@@ -50,7 +50,9 @@ export default Vue.extend({
   components: {
     NewSelfCheckCourseModal,
   },
-  props: {},
+  props: {
+    subReqId: { type: String, required: true },
+  },
   data(): Data {
     return {
       showDropdown: false,
@@ -78,13 +80,13 @@ export default Vue.extend({
     },
     addExistingCourse(option: string) {
       this.showDropdown = false;
-      this.$emit('addCourse', this.selfCheckCourses[option]);
+      this.$emit('addCourse', this.selfCheckCourses[option], this.subReqId);
     },
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterType, year: number) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(course);
       addCourseToSemester(season, year, newCourse);
-      this.$emit('addCourse', newCourse);
+      this.$emit('addCourse', newCourse, this.subReqId);
     },
     openCourseModal() {
       this.isCourseModalOpen = true;

@@ -181,7 +181,7 @@ export default Vue.extend({
   props: {
     semesterIndex: { type: Number, required: true },
     type: {
-      type: String as PropType<'Fall' | 'Spring' | 'Winter' | 'Summer'>,
+      type: String as PropType<FirestoreSemesterType>,
       required: true,
     },
     year: { type: Number, required: true },
@@ -320,10 +320,12 @@ export default Vue.extend({
     addCourse(data: CornellCourseRosterCourse, requirementID: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(data);
       addCourseToSemester(this.type, this.year, newCourse);
-      chooseSelectableRequirementOption({
-        ...store.state.selectableRequirementChoices,
-        [newCourse.uniqueID]: requirementID,
-      });
+      if (requirementID) {
+        chooseSelectableRequirementOption({
+          ...store.state.selectableRequirementChoices,
+          [newCourse.uniqueID]: requirementID,
+        });
+      }
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
@@ -393,7 +395,7 @@ export default Vue.extend({
     openEditSemesterModal() {
       this.isEditSemesterOpen = true;
     },
-    editSemester(seasonInput: 'Fall' | 'Spring' | 'Winter' | 'Summer', yearInput: number) {
+    editSemester(seasonInput: FirestoreSemesterType, yearInput: number) {
       editSemester(
         this.year,
         this.type,

@@ -133,7 +133,7 @@
           />
         </div>
         <!-- TODO: only show incomplete-self-check if all courses not added -->
-        <incomplete-self-check @addCourse="addSelfCheckCourse" />
+        <incomplete-self-check :subReqId="subReq.requirement.id" @addCourse="addSelfCheckCourse" />
       </div>
     </div>
   </div>
@@ -146,6 +146,7 @@ import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCo
 import IncompleteSelfCheck from '@/components/Requirements/IncompleteSelfCheck.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
+import store from '@/store';
 import { clickOutside } from '@/utilities';
 import {
   convertFirestoreSemesterCourseToCourseTaken,
@@ -153,7 +154,7 @@ import {
 } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 import fullCoursesJson from '@/assets/courses/typed-full-courses';
-import { allocateSubjectColors } from '@/global-firestore-data';
+import { allocateSubjectColors, chooseSelectableRequirementOption } from '@/global-firestore-data';
 
 type CompletedSubReqCourseSlot = {
   readonly isCompleted: true;
@@ -281,8 +282,14 @@ export default Vue.extend({
       this.showFulfillmentOptionsDropdown = false;
       this.$emit('changeToggleableRequirementChoice', this.subReq.requirement.id, option);
     },
-    addSelfCheckCourse(course: FirestoreSemesterCourse) {
+    addSelfCheckCourse(course: FirestoreSemesterCourse, requirementID: string) {
       this.fulfilledSelfCheckCourses.push(course);
+      if (requirementID) {
+        chooseSelectableRequirementOption({
+          ...store.state.selectableRequirementChoices,
+          [course.uniqueID]: requirementID,
+        });
+      }
     },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);
