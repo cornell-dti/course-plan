@@ -10,58 +10,38 @@
         </div>
       </div>
     </div>
-    <div v-if="relatedRequirements.length > 0">
+    <div v-if="nonAutoRequirements.length > 0">
       <div class="newCourse-title">This class can fulfill the following requirement(s):</div>
-      <div v-if="!editMode" class="newCourse-requirements-container">
-        <div class="newCourse-requirements">
-          {{ relatedRequirements.map(it => it.name).join(', ') }}
+      <div v-if="!editMode">
+        <div class="newCourse-requirements-container">
+          <div class="newCourse-name">
+            {{ nonAutoRequirements.map(it => it.name).join(', ') }}
+          </div>
+        </div>
+        <div class="warning">
+          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
+          We cannot check these requirements, so double check before selecting
         </div>
       </div>
-      <div v-else class="newCourse-requirements-edit">
-        <edit-single-requirement
-          v-for="relatedRequirement in relatedRequirements"
-          :key="relatedRequirement.id"
-          :name="relatedRequirement.name"
-          :selected="selectedRequirementID === relatedRequirement.id"
-          :isClickable="true"
-          @on-select="() => toggleSelectRequirement(relatedRequirement.id)"
-        />
-      </div>
+      <dropdown
+        v-else
+        :options="nonAutoRequirements"
+        :selectedID="selectedRequirementID"
+        @on-selected-change="toggleSelectRequirement"
+      />
     </div>
-    <div v-if="potentialRequirements.length > 0">
-      <div class="newCourse-title">
-        This class could potentially fulfill the following requirement(s):
-      </div>
-      <div v-if="!editMode" class="newCourse-requirements-container">
-        <div class="newCourse-name">
-          {{ potentialRequirements.map(it => it.name).join(', ') }}
-        </div>
-      </div>
-      <div v-else class="newCourse-requirements-edit">
-        <edit-single-requirement
-          v-for="potentialRequirement in potentialRequirements"
-          :key="potentialRequirement.id"
-          :name="potentialRequirement.name"
-          :selected="selectedRequirementID === potentialRequirement.id"
-          :isClickable="true"
-          @on-select="() => toggleSelectRequirement(potentialRequirement.id)"
-        />
-      </div>
-    </div>
-    <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">
-      {{ editRequirementsText }}
-    </div>
+    <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">Edit Requirements</div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import EditSingleRequirement from '@/components/Modals/NewCourse/EditSingleRequirement.vue';
+import Dropdown from '@/components/Modals/NewCourse/Dropdown.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
 export default Vue.extend({
-  components: { EditSingleRequirement },
+  components: { Dropdown },
   props: {
     editMode: { type: Boolean, required: true },
     selectedRequirementID: { type: String, required: true },
@@ -85,10 +65,8 @@ export default Vue.extend({
         .map(it => it.name);
       return [...this.requirementsThatAllowDoubleCounting, ...chosenRequirementNames].join(', ');
     },
-    editRequirementsText(): string {
-      return this.potentialRequirements.length !== 0
-        ? 'Add these Requirements'
-        : 'Edit Requirements';
+    nonAutoRequirements(): { readonly id: string; readonly name: string }[] {
+      return this.relatedRequirements.concat(this.potentialRequirements);
     },
   },
   methods: {
@@ -128,7 +106,7 @@ export default Vue.extend({
     &-container {
       display: flex;
       flex-direction: row;
-      margin-bottom: 13px;
+      margin-bottom: 12px;
     }
     &-edit {
       display: flex;
@@ -145,6 +123,18 @@ export default Vue.extend({
     text-decoration-line: underline;
     color: $yuxuanBlue;
     cursor: pointer;
+    margin-top: 8px;
+  }
+}
+.warning {
+  color: $warning;
+  font-size: 14px;
+  line-height: 17px;
+  &-icon {
+    float: left;
+    margin: 0.125rem 0.25rem 0 0;
+    width: 14px;
+    height: 14px;
   }
 }
 </style>
