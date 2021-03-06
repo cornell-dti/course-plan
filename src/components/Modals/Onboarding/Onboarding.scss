@@ -81,6 +81,12 @@ input {
     font-weight: bold;
     font-size: 38px;
     color: #4f4f4f;
+
+    &-emoji {
+      width: 38px;
+      height: 38px;
+      vertical-align: text-top;
+    }
   }
 
   &-description {

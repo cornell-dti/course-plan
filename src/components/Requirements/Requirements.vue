@@ -19,7 +19,6 @@
           :displayedMinorIndex="displayedMinorIndex"
           :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
           :numOfColleges="numOfColleges"
-          :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
           @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
           @activateMajor="activateMajor"
           @activateMinor="activateMinor"
@@ -37,12 +36,33 @@
       </div>
       <div class="see-all-padding-x py-3">
         <h1 class="title">{{ showAllCourses.name }}</h1>
+        <div class="see-all-pages" v-if="numPages > 1">
+          <span class="see-all-pageCount">{{ pageText }}</span>
+          <div class="see-all-buttonWrapper">
+            <button
+              class="see-all-button"
+              :class="{ 'see-all-button--disabled': !hasPrevPage }"
+              :disabled="!hasPrevPage"
+              @click="prevPage()"
+            >
+              <span class="see-all-button-text">PREV</span>
+            </button>
+            <button
+              class="see-all-button"
+              :class="{ 'see-all-button--disabled': !hasNextPage }"
+              :disabled="!hasNextPage"
+              @click="nextPage()"
+            >
+              <span class="see-all-button-text">NEXT</span>
+            </button>
+          </div>
+        </div>
         <draggable
-          :value="showAllCourses.courses"
+          :value="showAllCourses.shownCourses"
           :clone="cloneCourse"
           :group="{ name: 'draggable-semester-courses', put: false }"
         >
-          <div v-for="(courseData, index) in showAllCourses.courses" :key="index">
+          <div v-for="(courseData, index) in showAllCourses.shownCourses" :key="index">
             <div class="mt-3">
               <course
                 :courseObj="courseData"
@@ -67,7 +87,6 @@ import introJs from 'intro.js';
 
 import Course from '@/components/Course/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
-import { SubReqCourseSlot } from '@/components/Requirements/SubRequirement.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 // emoji for clipboard
 import clipboard from '@/assets/images/clipboard.svg';
@@ -78,7 +97,8 @@ Vue.use(VueCollapse);
 
 export type ShowAllCourses = {
   readonly name: string;
-  readonly courses: FirestoreSemesterCourse[];
+  shownCourses: FirestoreSemesterCourse[];
+  readonly allCourses: FirestoreSemesterCourse[];
 };
 
 type Data = {
@@ -87,7 +107,7 @@ type Data = {
   numOfColleges: number;
   showAllCourses: ShowAllCourses;
   shouldShowAllCourses: boolean;
-  lastLoadedShowAllCourseId: number;
+  showAllPage: number;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -97,6 +117,9 @@ tour.setOption('doneLabel', 'Finish');
 tour.setOption('skipLabel', 'Skip This Tutorial');
 tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
+
+// show 24 courses per page of the see all menu
+const maxSeeAllCoursesPerPage = 24;
 
 export default Vue.extend({
   components: { draggable, Course, DropDownArrow, RequirementView },
@@ -108,9 +131,9 @@ export default Vue.extend({
       displayedMajorIndex: 0,
       displayedMinorIndex: 0,
       numOfColleges: 1,
-      showAllCourses: { name: '', courses: [] },
+      showAllCourses: { name: '', shownCourses: [], allCourses: [] },
       shouldShowAllCourses: false,
-      lastLoadedShowAllCourseId: 0,
+      showAllPage: 0,
     };
   },
   watch: {
@@ -133,6 +156,18 @@ export default Vue.extend({
     },
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
+    },
+    numPages(): number {
+      return Math.ceil(this.showAllCourses.allCourses.length / maxSeeAllCoursesPerPage);
+    },
+    hasNextPage(): boolean {
+      return this.showAllPage + 1 < this.numPages;
+    },
+    hasPrevPage(): boolean {
+      return this.showAllPage > 0;
+    },
+    pageText(): string {
+      return `Page ${this.showAllPage + 1}/${this.numPages}`;
     },
   },
   methods: {
@@ -165,22 +200,48 @@ export default Vue.extend({
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
-      subReqCoursesArray: SubReqCourseSlot[];
+      subReqCoursesArray: FirestoreSemesterCourse[];
     }) {
       this.shouldShowAllCourses = true;
-      const allPotentialCourses = showAllCourses.subReqCoursesArray
-        .flatMap(slot => (slot.isCompleted ? [] : slot.courses))
-        .slice(0, 24);
-      const lastCourse = allPotentialCourses[allPotentialCourses.length - 1];
-      this.lastLoadedShowAllCourseId = lastCourse.crseId;
+
       this.showAllCourses = {
         name: showAllCourses.requirementName,
-        courses: allPotentialCourses,
+        shownCourses: this.findPotentialSeeAllCourses(showAllCourses.subReqCoursesArray),
+        allCourses: showAllCourses.subReqCoursesArray,
       };
+    },
+    nextPage() {
+      if (!this.hasNextPage) {
+        return;
+      }
+
+      this.showAllPage += 1;
+      this.showAllCourses.shownCourses = this.findPotentialSeeAllCourses(
+        this.showAllCourses.allCourses
+      );
+    },
+    prevPage() {
+      if (!this.hasPrevPage) {
+        return;
+      }
+
+      this.showAllPage -= 1;
+      this.showAllCourses.shownCourses = this.findPotentialSeeAllCourses(
+        this.showAllCourses.allCourses
+      );
+    },
+    // return an array consisting of the courses to display on the see all menu, depending on the showAllPage and maxSeeAllCoursesPerPage
+    findPotentialSeeAllCourses(courses: FirestoreSemesterCourse[]): FirestoreSemesterCourse[] {
+      const allPotentialCourses = courses.slice(
+        this.showAllPage * maxSeeAllCoursesPerPage,
+        (this.showAllPage + 1) * maxSeeAllCoursesPerPage
+      );
+      return allPotentialCourses;
     },
     backFromSeeAll() {
       this.shouldShowAllCourses = false;
-      this.showAllCourses = { name: '', courses: [] };
+      this.showAllCourses = { name: '', shownCourses: [], allCourses: [] };
+      this.showAllPage = 0;
     },
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
@@ -201,11 +262,14 @@ export default Vue.extend({
 }
 .requirements,
 .fixed {
+  z-index: 1;
   height: 100%;
   width: 25rem;
   background-color: $white;
 }
 .fixed {
+  position: fixed;
+  left: 4.5rem;
   top: 0;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -223,6 +287,54 @@ export default Vue.extend({
 .see-all-header {
   box-shadow: 0 4px 8px -8px gray;
 }
+.see-all-pages {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 21.375rem;
+}
+.see-all-pageCount {
+  font-size: 16px;
+  line-height: 19px;
+  color: $primaryGray;
+}
+.see-all-buttonWrapper {
+  display: flex;
+}
+.see-all-button {
+  width: 4.75rem;
+  height: 2rem;
+  color: $sangBlue;
+  border-radius: 3px;
+  border: 1px solid $sangBlue;
+  background-color: $white;
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: auto;
+
+  &:first-child {
+    margin-right: 1rem;
+  }
+
+  &-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  &-text {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  &--disabled {
+    opacity: 0.3;
+    border: 1px solid $sangBlue;
+    background-color: $disabledGray;
+  }
+}
+
 h1.title {
   font-style: normal;
   font-weight: 550;
@@ -263,12 +375,17 @@ h1.title {
   .fixed {
     width: 21rem;
   }
+  .see-all-pages {
+    width: 17rem;
+  }
 }
 
 @media only screen and (max-width: $medium-breakpoint) {
   .requirements {
+    position: fixed;
     width: 100%;
     padding-left: 0.5rem;
+    top: 4.5rem;
   }
 
   .fixed {

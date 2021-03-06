@@ -10,6 +10,7 @@ import {
   uniqueIncrementerCollection,
 } from './firebaseConfig';
 import store from './store';
+import { GTag, GTagEvent } from './gtag';
 
 // enum to define seasons as integers in season order
 export const SeasonsEnum = Object.freeze({
@@ -18,14 +19,6 @@ export const SeasonsEnum = Object.freeze({
   Summer: 2,
   Fall: 3,
 });
-
-export const editSemesters = (
-  updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
-): void => {
-  const newSemesters = updater(store.state.semesters);
-  store.commit('setSemesters', newSemesters);
-  semestersCollection.doc(store.state.currentFirebaseUser.email).set({ semesters: newSemesters });
-};
 
 // compare function for FirestoreSemester to determine which comes first by year and type/season
 export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSemester): number => {
@@ -44,21 +37,62 @@ export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSeme
   return -1;
 };
 
-export const createSemester = (
-  courses: readonly FirestoreSemesterCourse[],
+export const editSemesters = (
+  updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
+): void => {
+  const newSemesters = updater(store.state.semesters);
+  store.commit('setSemesters', newSemesters);
+  semestersCollection.doc(store.state.currentFirebaseUser.email).set({ semesters: newSemesters });
+};
+
+export const editSemester = (
+  year: number,
   type: FirestoreSemesterType,
-  year: number
-): { courses: readonly FirestoreSemesterCourse[]; type: FirestoreSemesterType; year: number } => ({
+  updater: (oldSemester: FirestoreSemester) => FirestoreSemester
+): void => {
+  editSemesters(oldSemesters =>
+    oldSemesters
+      .map(sem => (sem.year === year && sem.type === type ? updater(sem) : sem))
+      .sort(compareFirestoreSemesters)
+  );
+};
+
+const createSemester = (
+  type: FirestoreSemesterType,
+  year: number,
+  courses: readonly FirestoreSemesterCourse[]
+): { type: FirestoreSemesterType; year: number; courses: readonly FirestoreSemesterCourse[] } => ({
   courses,
   type,
   year,
 });
 
+export const addSemester = (
+  type: FirestoreSemesterType,
+  year: number,
+  gtag?: GTag,
+  courses: readonly FirestoreSemesterCourse[] = []
+): void => {
+  GTagEvent(gtag, 'add-semester');
+  editSemesters(oldSemesters =>
+    [...oldSemesters, createSemester(type, year, courses)].sort(compareFirestoreSemesters)
+  );
+};
+
+export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
+  GTagEvent(gtag, 'delete-semester');
+  editSemesters(oldSemesters =>
+    oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
+  );
+};
+
 export const addCourseToSemester = (
   season: FirestoreSemesterType,
   year: number,
-  newCourse: FirestoreSemesterCourse
+  newCourse: FirestoreSemesterCourse,
+  gtag?: GTag
 ): void => {
+  GTagEvent(gtag, 'add-course');
   editSemesters(oldSemesters => {
     let semesterFound = false;
     const newSemestersWithCourse = oldSemesters.map(sem => {
@@ -69,9 +103,33 @@ export const addCourseToSemester = (
       return sem;
     });
     if (semesterFound) return newSemestersWithCourse;
-    return [...oldSemesters, createSemester([newCourse], season, year)].sort(
+    return [...oldSemesters, createSemester(season, year, [newCourse])].sort(
       compareFirestoreSemesters
     );
+  });
+};
+
+export const deleteCourseFromSemester = (
+  season: FirestoreSemesterType,
+  year: number,
+  courseUniqueID: number,
+  gtag?: GTag
+): void => {
+  GTagEvent(gtag, 'delete-course');
+  editSemesters(oldSemesters => {
+    let semesterFound = false;
+    const newSemestersWithoutCourse = oldSemesters.map(sem => {
+      if (sem.type === season && sem.year === year) {
+        semesterFound = true;
+        return {
+          ...sem,
+          courses: sem.courses.filter(course => course.uniqueID !== courseUniqueID),
+        };
+      }
+      return sem;
+    });
+    if (semesterFound) return newSemestersWithoutCourse;
+    return oldSemesters;
   });
 };
 

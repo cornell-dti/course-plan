@@ -112,7 +112,6 @@
               :courses="subReqCourseSlot.courses.slice(0, 4)"
               :displayDescription="displayDescription"
               :showSeeAllLabel="subReqCourseSlot.courses.length > 4"
-              :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
               @onShowAllCourses="onShowAllCourses"
             />
           </div>
@@ -198,7 +197,6 @@ export default Vue.extend({
     isCompleted: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
     color: { type: String, required: true },
-    lastLoadedShowAllCourseId: { type: Number, required: true },
   },
   data(): Data {
     return {
@@ -267,10 +265,10 @@ export default Vue.extend({
     getArrowColor() {
       return this.isCompleted ? '#979797CC' : '#979797';
     },
-    onShowAllCourses() {
+    onShowAllCourses(subReqIndex: number) {
       this.$emit('onShowAllCourses', {
         requirementName: this.subReq.requirement.name,
-        subReqCoursesArray: this.subReqCoursesSlots,
+        subReqCoursesArray: this.subReqCoursesSlots[subReqIndex].courses,
       });
     },
     toggleDescription() {
@@ -437,12 +435,18 @@ button.view {
     line-height: 17px;
     color: $darkPlaceholderGray;
     position: relative;
+
     &:not(:first-child) {
       margin-top: 0.5rem;
     }
+
     &--disabled {
       opacity: 0.3;
       pointer-events: none;
+    }
+
+    &-wrapper {
+      position: relative;
     }
   }
   &-dropdown {
@@ -480,6 +484,8 @@ button.view {
     }
     &-content {
       z-index: 2;
+      position: absolute;
+      width: 100%;
       background: $white;
       box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
       border-radius: 7px;

@@ -51,19 +51,25 @@
         <div class="row new no-gutters">
           <div class="col-12 col-md-6 tasks-wrapper">
             <div class="row tasks">
-              <div class="col-1 tasks"><img src="@/assets/images/Task1.svg" alt="checklist" /></div>
+              <div class="col-1 tasks">
+                <img src="@/assets/images/Task1.svg" alt="checklist" />
+              </div>
               <div class="col-11">
                 <p class="sub sub--task">Fully personalized to track your requirements</p>
               </div>
             </div>
             <div class="row tasks">
-              <div class="col-1 tasks"><img src="@/assets/images/Task2.svg" alt="browser" /></div>
+              <div class="col-1 tasks">
+                <img src="@/assets/images/Task2.svg" alt="browser" />
+              </div>
               <div class="col-11">
                 <p class="sub sub--task">Customizable interface to view your courses</p>
               </div>
             </div>
             <div class="row tasks">
-              <div class="col-1 tasks"><img src="@/assets/images/Task3.svg" alt="Network" /></div>
+              <div class="col-1 tasks">
+                <img src="@/assets/images/Task3.svg" alt="Network" />
+              </div>
               <div class="col-11">
                 <p class="sub sub--task">Built-in system to check your progress</p>
               </div>
@@ -175,6 +181,7 @@ import firebase from 'firebase/app';
 import CustomFooter from '@/components/Footer.vue';
 import TopBar from '@/components/TopBar.vue';
 
+import { GTagLoginEvent } from '@/gtag';
 import * as fb from '@/firebaseConfig';
 
 const { whitelistCollection, landingEmailsCollection } = fb;
@@ -232,7 +239,7 @@ export default Vue.extend({
           if (doc.exists) {
             this.performingRequest = false;
             this.$router.push('/');
-            this.$gtag.event('login', { method: 'Google' });
+            GTagLoginEvent(this.$gtag, 'Google');
           } else {
             this.handleUserWithoutAccess();
           }

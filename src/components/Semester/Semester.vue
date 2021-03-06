@@ -127,7 +127,12 @@ import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
-import { chooseSelectableRequirementOption } from '@/global-firestore-data';
+import {
+  editSemester,
+  addCourseToSemester,
+  deleteCourseFromSemester,
+  chooseSelectableRequirementOption,
+} from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 import store from '@/store';
 
@@ -185,7 +190,10 @@ export default Vue.extend({
       required: true,
     },
     compact: { type: Boolean, required: true },
-    activatedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    activatedCourse: {
+      type: Object as PropType<FirestoreSemesterCourse>,
+      required: true,
+    },
     isFirstSem: { type: Boolean, required: true },
   },
   mounted() {
@@ -209,8 +217,7 @@ export default Vue.extend({
         return this.courses;
       },
       set(newCourses: readonly FirestoreSemesterCourse[]) {
-        this.$emit(
-          'edit-semester',
+        editSemester(
           this.year,
           this.type,
           (semester: FirestoreSemester): FirestoreSemester => ({
@@ -312,52 +319,22 @@ export default Vue.extend({
     },
     addCourse(data: CornellCourseRosterCourse, requirementID: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(data);
+      addCourseToSemester(this.type, this.year, newCourse);
       chooseSelectableRequirementOption({
         ...store.state.selectableRequirementChoices,
         [newCourse.uniqueID]: requirementID,
       });
+
       const courseCode = `${data.subject} ${data.catalogNbr}`;
-
-      this.$emit(
-        'edit-semester',
-        this.year,
-        this.type,
-        (semester: FirestoreSemester): FirestoreSemester => ({
-          ...semester,
-          courses: [...this.courses, newCourse],
-        })
-      );
-
-      const confirmationMsg = `Added ${courseCode} to ${this.type} ${this.year}`;
-
-      this.openConfirmationModal(confirmationMsg);
-      this.$gtag.event('add-course', {
-        event_category: 'course',
-        event_label: 'add',
-        value: 1,
-      });
+      this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
-      this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
-      this.$gtag.event('delete-course', {
-        event_category: 'course',
-        event_label: 'delete',
-        value: 1,
-      });
+      deleteCourseFromSemester(this.type, this.year, uniqueID);
       // Update requirements menu
-      this.$emit(
-        'edit-semester',
-        this.year,
-        this.type,
-        (semester: FirestoreSemester): FirestoreSemester => ({
-          ...semester,
-          courses: this.courses.filter(course => course.uniqueID !== uniqueID),
-        })
-      );
+      this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
     },
     colorCourse(color: string, uniqueID: number) {
-      this.$emit(
-        'edit-semester',
+      editSemester(
         this.year,
         this.type,
         (semester: FirestoreSemester): FirestoreSemester => ({
@@ -372,8 +349,7 @@ export default Vue.extend({
       this.$emit('course-onclick', course);
     },
     editCourseCredit(credit: number, uniqueID: number) {
-      this.$emit(
-        'edit-semester',
+      editSemester(
         this.year,
         this.type,
         (semester: FirestoreSemester): FirestoreSemester => ({
@@ -418,8 +394,7 @@ export default Vue.extend({
       this.isEditSemesterOpen = true;
     },
     editSemester(seasonInput: 'Fall' | 'Spring' | 'Winter' | 'Summer', yearInput: number) {
-      this.$emit(
-        'edit-semester',
+      editSemester(
         this.year,
         this.type,
         (oldSemester: FirestoreSemester): FirestoreSemester => ({

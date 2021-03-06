@@ -1,18 +1,21 @@
 <template>
   <course-base-tooltip v-if="hasCourseCautions" :isInformation="false">
     <div v-if="singleWarning">
+      <div v-if="courseCautions.doubleCountingRequirementWarning">
+        This class is counted for these requirements:
+        <b>{{ doubleCountingRequirementWarning.join(', ') }}</b
+        >.
+      </div>
       <div v-if="courseCautions.typicallyOfferedWarning">
         This class is typically offered in {{ courseCautions.typicallyOfferedWarning.join(', ') }}.
       </div>
       <div v-if="courseCautions.isCourseDuplicate">Duplicate</div>
     </div>
     <ul v-if="!singleWarning" class="warning-list">
-      <li
-        class="warning-item"
-        v-for="(requirement, index) in doubleCountingRequirementWarning"
-        :key="index"
-      >
-        This class is double-counted for <b>{{ requirement }}</b> requirement.
+      <li class="warning-item" v-if="courseCautions.doubleCountingRequirementWarning">
+        This class is counted for these requirements:
+        <b>{{ doubleCountingRequirementWarning.join(', ') }}</b
+        >.
       </li>
       <li class="warning-item" v-if="courseCautions.typicallyOfferedWarning">
         This class is typically offered in {{ courseCautions.typicallyOfferedWarning.join(', ') }}.
@@ -81,11 +84,11 @@ export default Vue.extend({
       );
     },
     singleWarning(): boolean {
-      return (
-        this.doubleCountingRequirementWarning.length === 0 &&
-        (this.courseCautions.typicallyOfferedWarning == null ||
-          !this.courseCautions.isCourseDuplicate)
-      );
+      let warningCounter = 0;
+      if (this.doubleCountingRequirementWarning.length > 0) warningCounter += 1;
+      if (this.courseCautions.typicallyOfferedWarning != null) warningCounter += 1;
+      if (this.courseCautions.isCourseDuplicate) warningCounter += 1;
+      return warningCounter === 1;
     },
   },
 });

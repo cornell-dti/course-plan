@@ -25,7 +25,6 @@
             :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
             :color="reqGroupColorMap[req.groupName][0]"
             :isCompleted="false"
-            :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
             @deleteCourseFromSemesters="deleteCourseFromSemesters"
@@ -56,7 +55,6 @@
               :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
               :color="reqGroupColorMap[req.groupName][0]"
               :isCompleted="true"
-              :lastLoadedShowAllCourseId="lastLoadedShowAllCourseId"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @onShowAllCourses="onShowAllCourses"
               @deleteCourseFromSemesters="deleteCourseFromSemesters"
@@ -103,7 +101,6 @@ export default Vue.extend({
     displayedMinorIndex: { type: Number, required: true },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
-    lastLoadedShowAllCourseId: { type: Number, required: true },
   },
   data() {
     return {
