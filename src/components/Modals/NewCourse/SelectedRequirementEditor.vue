@@ -14,21 +14,23 @@
       <div class="newCourse-title">This class can fulfill the following requirement(s):</div>
       <div v-if="!editMode">
         <div class="newCourse-requirements-container">
-          <div class="newCourse-name">
-            {{ nonAutoRequirements.map(it => it.name).join(', ') }}
-          </div>
-        </div>
-        <div class="warning">
-          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
-          We cannot check these requirements, so double check before selecting
+          <!-- eslint-disable-next-line vue/no-v-html  -->
+          <div class="newCourse-title" v-html="nonAutoRequirementsText"></div>
         </div>
       </div>
-      <dropdown
-        v-else
-        :options="nonAutoRequirements"
-        :selectedID="selectedRequirementID"
-        @on-selected-change="toggleSelectRequirement"
-      />
+      <div v-else>
+        <div v-if="potentialRequirements.length > 0" class="warning">
+          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
+          We cannot check the requirements marked with a warning sign, so double check before
+          selecting
+        </div>
+        <requirements-dropdown
+          :relatedRequirements="relatedRequirements"
+          :potentialRequirements="potentialRequirements"
+          :selectedID="selectedRequirementID"
+          @on-selected-change="toggleSelectRequirement"
+        />
+      </div>
     </div>
     <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">Edit Requirements</div>
   </div>
@@ -36,12 +38,12 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import Dropdown from '@/components/Modals/NewCourse/Dropdown.vue';
+import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
 export default Vue.extend({
-  components: { Dropdown },
+  components: { RequirementsDropdown },
   props: {
     editMode: { type: Boolean, required: true },
     selectedRequirementID: { type: String, required: true },
@@ -60,6 +62,7 @@ export default Vue.extend({
   },
   computed: {
     chosenRequirementText(): string {
+      if (this.selectedRequirementID === '') return '';
       const chosenRequirementNames = [...this.relatedRequirements, ...this.potentialRequirements]
         .filter(it => it.id === this.selectedRequirementID)
         .map(it => it.name);
@@ -67,6 +70,23 @@ export default Vue.extend({
     },
     nonAutoRequirements(): { readonly id: string; readonly name: string }[] {
       return this.relatedRequirements.concat(this.potentialRequirements);
+    },
+    nonAutoRequirementsText(): string {
+      if (this.selectedRequirementID === '') this.nonAutoRequirements.map(it => it.name).join(', ');
+      return this.nonAutoRequirements
+        .map(it => it.name)
+        .join(', ')
+        .replace(
+          this.selectedCourseName,
+          `<strong class="newCourse-name">${this.selectedCourseName}</strong>`
+        );
+    },
+    selectedCourseName(): string {
+      if (this.selectedRequirementID === '') return '';
+      const requirements = [...this.relatedRequirements, ...this.potentialRequirements].filter(
+        it => it.id === this.selectedRequirementID
+      );
+      return requirements[0].name;
     },
   },
   methods: {
@@ -86,7 +106,6 @@ export default Vue.extend({
   &-name {
     position: relative;
     border-radius: 11px;
-    font-weight: 600;
     font-size: 14px;
     line-height: 14px;
     color: $darkGray;
@@ -130,6 +149,7 @@ export default Vue.extend({
   color: $warning;
   font-size: 14px;
   line-height: 17px;
+  margin-bottom: 8px;
   &-icon {
     float: left;
     margin: 0.125rem 0.25rem 0 0;

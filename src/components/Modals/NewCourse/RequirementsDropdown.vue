@@ -7,18 +7,53 @@
       data-toggle="dropdown"
       aria-haspopup="true"
       :aria-expanded="showDropdown"
+      v-if="potentialRequirements.some(req => req.id === selectedID)"
+    >
+      <div class="warning-row">
+        <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
+        {{ selected }}
+      </div>
+      <drop-down-arrow :isFlipped="showDropdown" fillColor="#148481" />
+    </button>
+    <button
+      v-else
+      class="dropdown"
+      type="button"
+      @click="showDropdown = !showDropdown"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      :aria-expanded="showDropdown"
     >
       {{ selected }}
       <drop-down-arrow :isFlipped="showDropdown" fillColor="#148481" />
     </button>
     <ul v-if="showDropdown" class="dropdown-content">
-      <li v-for="option in options" :key="option.id">
+      <li v-for="option in relatedRequirements" :key="option.id">
         <a
           @click="toggleSelectRequirement(option.id)"
           @keyup.enter="toggleSelectRequirement(option.id)"
           tabindex="0"
           >{{ option.name }}</a
         >
+      </li>
+      <li v-for="option in potentialRequirements" :key="option.id">
+        <a
+          @click="toggleSelectRequirement(option.id)"
+          @keyup.enter="toggleSelectRequirement(option.id)"
+          tabindex="0"
+        >
+          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
+          {{ option.name }}
+        </a>
+      </li>
+      <li>
+        <a
+          @click="toggleSelectRequirement('')"
+          @keyup.enter="toggleSelectRequirement('')"
+          tabindex="0"
+        >
+          Add none of the above
+        </a>
       </li>
     </ul>
   </div>
@@ -36,7 +71,11 @@ export default Vue.extend({
   components: { DropDownArrow },
   props: {
     selectedID: { type: String, required: true },
-    options: {
+    relatedRequirements: {
+      type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
+      required: true,
+    },
+    potentialRequirements: {
       type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
       required: true,
     },
@@ -48,7 +87,11 @@ export default Vue.extend({
   },
   computed: {
     selected(): string {
-      return this.options.find(option => option.id === this.selectedID).name;
+      if (this.selectedID === '') return '';
+      const chosenRequirement = [...this.relatedRequirements, ...this.potentialRequirements].filter(
+        it => it.id === this.selectedID
+      );
+      return chosenRequirement[0].name;
     },
   },
   methods: {
@@ -102,7 +145,26 @@ export default Vue.extend({
           background: rgba(50, 160, 242, 0.1);
           border: 0;
         }
+        .warning-icon {
+          float: left;
+          margin: 0.125rem 0.25rem 0 0;
+          width: 14px;
+          height: 14px;
+        }
       }
+    }
+  }
+  .warning {
+    &-icon {
+      float: left;
+      margin-right: 0.25rem;
+      width: 14px;
+      height: 14px;
+    }
+    &-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
   }
 }

@@ -98,7 +98,7 @@ export default Vue.extend({
       this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;
       this.relatedRequirements = relatedRequirements;
       this.selfCheckRequirements = selfCheckRequirements;
-      this.selectedRequirementID = relatedRequirements.length > 0 ? relatedRequirements[0].id : '';
+      this.selectedRequirementID = '';
     },
     closeCurrentModal() {
       this.reset();
