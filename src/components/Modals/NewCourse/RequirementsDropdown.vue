@@ -13,7 +13,7 @@
         <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
         {{ selected }}
       </div>
-      <drop-down-arrow :isFlipped="showDropdown" fillColor="#148481" />
+      <drop-down-arrow :isFlipped="showDropdown" :fillColor="'#148481'" />
     </button>
     <button
       v-else
@@ -25,7 +25,7 @@
       :aria-expanded="showDropdown"
     >
       {{ selected }}
-      <drop-down-arrow :isFlipped="showDropdown" fillColor="#148481" />
+      <drop-down-arrow :isFlipped="showDropdown" :fillColor="'#148481'" />
     </button>
     <ul v-if="showDropdown" class="dropdown-content">
       <li v-for="option in relatedRequirements" :key="option.id">
