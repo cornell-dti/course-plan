@@ -9,8 +9,11 @@
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addItem"
   >
-    <div class="newCourse-text">Search Course Roster</div>
+    <div class="newCourse-text">
+      {{ selectedCourse === null ? 'Search Course Roster' : 'Selected Course' }}
+    </div>
     <course-selector
+      v-if="selectedCourse === null"
       search-box-class-name="newCourse-dropdown"
       :key="courseSelectorKey"
       placeholder='"CS1110", "Multivariable Calculus", etc'
@@ -18,6 +21,9 @@
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
     />
+    <div v-else class="selected-course">
+      {{ selectedCourse.title }}
+    </div>
     <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
       <selected-requirement-editor
@@ -201,6 +207,16 @@ export default Vue.extend({
     color: $lightPlaceholderGray;
     margin-bottom: 6px;
   }
+}
+
+.selected-course {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 14px;
+  color: $black;
+  margin-bottom: 20px;
+  margin-top: 8px;
 }
 
 .content-course {
