@@ -10,6 +10,9 @@
         </div>
       </div>
     </div>
+    <div v-else class="newCourse-requirements-container newCourse-requirements">
+      This class does not automatically fulfill any requirements
+    </div>
     <div v-if="nonAutoRequirements.length > 0">
       <div class="newCourse-title">This class can fulfill the following requirement(s):</div>
       <div v-if="!editMode">

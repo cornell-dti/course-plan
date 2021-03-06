@@ -52,7 +52,7 @@
           @keyup.enter="toggleSelectRequirement('')"
           tabindex="0"
         >
-          Add none of the above
+          None of the above
         </a>
       </li>
     </ul>
