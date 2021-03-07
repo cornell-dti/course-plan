@@ -324,7 +324,7 @@ export default Vue.extend({
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
-      deleteCourseFromSemester(this.type, this.year, uniqueID);
+      deleteCourseFromSemester(this.type, this.year, uniqueID, this.gtag);
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
     },

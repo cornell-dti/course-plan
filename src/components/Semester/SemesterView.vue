@@ -177,7 +177,7 @@ export default Vue.extend({
       this.openSemesterConfirmationModal(type, year, true);
     },
     deleteSemester(type: FirestoreSemesterType, year: number) {
-      deleteSemester(type, year);
+      deleteSemester(type, year, this.gtag);
       this.openSemesterConfirmationModal(type, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
