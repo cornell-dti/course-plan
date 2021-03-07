@@ -78,7 +78,7 @@ import TourWindow from '@/components/Modals/TourWindow.vue';
 import surfing from '@/assets/images/surfing.svg';
 
 import store, { initializeFirestoreListeners } from '@/store';
-import { editSemesters } from '@/global-firestore-data';
+// import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
 
 const tour = introJs();

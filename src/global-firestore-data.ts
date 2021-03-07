@@ -37,7 +37,7 @@ export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSeme
   return -1;
 };
 
-export const editSemesters = (
+const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
   const newSemesters = updater(store.state.semesters);
@@ -131,6 +131,18 @@ export const deleteCourseFromSemester = (
     if (semesterFound) return newSemestersWithoutCourse;
     return oldSemesters;
   });
+  deleteCourseFromSelectableRequirements(courseUniqueID);
+};
+
+export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): void => {
+  chooseSelectableRequirementOption(
+    Object.assign(
+      {},
+      ...Object.entries(store.state.selectableRequirementChoices)
+        .filter(([k, _]) => parseInt(k, 10) !== courseUniqueID)
+        .map(([k, v]) => ({ [k]: v }))
+    )
+  );
 };
 
 export const chooseToggleableRequirementOption = (
