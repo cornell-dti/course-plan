@@ -191,14 +191,6 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: $medium-breakpoint) {
-  .onboarding {
-    &-label {
-      line-height: 20px;
-    }
-  }
-}
-
 @media only screen and (max-width: $small-medium-breakpoint) {
   .onboarding {
     &-header {
