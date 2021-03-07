@@ -21,7 +21,6 @@
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
-          @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
       <semester-view
@@ -78,7 +77,6 @@ import TourWindow from '@/components/Modals/TourWindow.vue';
 import surfing from '@/assets/images/surfing.svg';
 
 import store, { initializeFirestoreListeners } from '@/store';
-// import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
 
 const tour = introJs();
@@ -198,17 +196,6 @@ export default Vue.extend({
     editProfile() {
       this.isOnboarding = true;
       this.isEditingProfile = true;
-    },
-
-    deleteCourseFromSemesters(uniqueID: number) {
-      editSemesters(oldSemesters =>
-        oldSemesters.map(semester => {
-          const coursesWithoutDeleted = semester.courses.filter(
-            course => course.uniqueID !== uniqueID
-          );
-          return { ...semester, courses: coursesWithoutDeleted };
-        })
-      );
     },
   },
 });

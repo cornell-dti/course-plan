@@ -121,7 +121,6 @@
             <completed-sub-req-course
               :subReqCourseId="id"
               :courseTaken="subReqCourseSlot.courses[0]"
-              @deleteCourseFromSemesters="deleteCourseFromSemesters"
             />
           </div>
           <div
@@ -154,7 +153,6 @@
           <completed-sub-req-course
             :subReqCourseId="id"
             :courseTaken="convertCourse(selfCheckCourse)"
-            @deleteCourseFromSemesters="deleteCourseFromSemesters"
           />
         </div>
         <!-- TODO: only show incomplete-self-check if all courses not added -->
@@ -353,24 +351,6 @@ export default Vue.extend({
     },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);
-    },
-    deleteCourseFromSemesters(uniqueId: number) {
-      // TODO
-      /*
-      // find and remove self-check course on sidebar
-      let indexToRemove = -1;
-      if (this.subReq.requirement.fulfilledBy === 'self-check') {
-        for (let i = 0; i < this.fulfilledSelfCheckCourses.length; i += 1) {
-          if (this.fulfilledSelfCheckCourses[i].uniqueID === uniqueId) {
-            indexToRemove = i;
-          }
-        }
-      }
-      if (indexToRemove !== -1) {
-        this.fulfilledSelfCheckCourses.splice(indexToRemove, 1);
-      }
-      */
-      this.$emit('deleteCourseFromSemesters', uniqueId);
     },
   },
 });
