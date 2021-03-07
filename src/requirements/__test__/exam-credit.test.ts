@@ -113,22 +113,22 @@ it('Different colleges have different equivalent courses', () => {
     ],
   };
   let courseEquivalents = getCourseEquivalentsFromOneMajor('EN', 'CS', exams);
-  const equivalentCourseId_EN = courseEquivalents[0].courseId;
-  const expectedCourseId_EN = 359187;
+  const equivalentCourseIdEN = courseEquivalents[0].courseId;
+  const expectedCourseIdEN = 359187;
   // If this fails, first check if the AP/IB equivalent course logic has changed.
-  expect(equivalentCourseId_EN).toBe(expectedCourseId_EN);
+  expect(equivalentCourseIdEN).toBe(expectedCourseIdEN);
 
   courseEquivalents = getCourseEquivalentsFromOneMajor('AS', 'CS', exams);
-  const equivalentCourseId_AS = courseEquivalents[0].courseId;
-  const expectedCourseId_AS = 351265;
+  const equivalentCourseIdAS = courseEquivalents[0].courseId;
+  const expectedCourseIdAS = 351265;
   // If this fails, first check if the AP/IB equivalent course logic has changed.
-  expect(equivalentCourseId_AS).toBe(expectedCourseId_AS);
+  expect(equivalentCourseIdAS).toBe(expectedCourseIdAS);
 
-  expect(equivalentCourseId_EN).not.toBe(equivalentCourseId_AS);
+  expect(equivalentCourseIdEN).not.toBe(equivalentCourseIdAS);
 });
 
 it("Some colleges don't have an equivalent course", () => {
-  let exams: ExamsTaken = {
+  const exams: ExamsTaken = {
     AP: [
       {
         subject: 'English',

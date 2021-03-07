@@ -12,9 +12,9 @@ import buildRequirementFulfillmentGraph from './requirement-graph-builder';
  * helping to compute requirement progress.
  */
 function forfeitTransferCredit(coursesTaken: readonly CourseTaken[]): readonly CourseTaken[] {
-  const equivalentCourses = coursesTaken.filter(course => course.courseId != CREDITS_COURSE_ID);
+  const equivalentCourses = coursesTaken.filter(course => course.courseId !== CREDITS_COURSE_ID);
   const equivalentCourseIds = new Set(equivalentCourses.map(({ courseId }) => courseId));
-  let transferCreditCourses = coursesTaken.filter(course => course.courseId == CREDITS_COURSE_ID);
+  let transferCreditCourses = coursesTaken.filter(course => course.courseId === CREDITS_COURSE_ID);
   transferCreditCourses = transferCreditCourses.filter(
     ({ courseId }) => !equivalentCourseIds.has(courseId)
   );
