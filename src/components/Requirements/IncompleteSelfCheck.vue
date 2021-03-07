@@ -65,7 +65,10 @@ export default Vue.extend({
       const courses: Record<string, FirestoreSemesterCourse> = {};
       store.state.semesters.forEach(semester => {
         semester.courses.forEach(course => {
-          courses[course.code] = course;
+          const selectableRequirementCourses =
+            store.state.derivedSelectableRequirementData.requirementToCoursesMap[this.subReqId];
+          if (!(selectableRequirementCourses && selectableRequirementCourses.includes(course)))
+            courses[course.code] = course;
         });
       });
       return courses;
@@ -80,7 +83,12 @@ export default Vue.extend({
     },
     addExistingCourse(option: string) {
       this.showDropdown = false;
-      this.$emit('addCourse', this.selfCheckCourses[option], this.subReqId);
+      if (this.subReqId) {
+        chooseSelectableRequirementOption({
+          ...store.state.selectableRequirementChoices,
+          [this.selfCheckCourses[option].uniqueID]: this.subReqId,
+        });
+      }
     },
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterType, year: number) {
       this.showDropdown = false;
