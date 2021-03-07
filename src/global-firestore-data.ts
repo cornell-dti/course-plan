@@ -183,7 +183,7 @@ export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): 
     Object.assign(
       {},
       ...Object.entries(store.state.selectableRequirementChoices)
-        .filter(([k, _]) => parseInt(k, 10) !== courseUniqueID)
+        .filter(([k]) => parseInt(k, 10) !== courseUniqueID)
         .map(([k, v]) => ({ [k]: v }))
     )
   );

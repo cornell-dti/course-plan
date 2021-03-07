@@ -133,7 +133,6 @@ import {
   deleteCourseFromSemester,
 } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
-import store from '@/store';
 
 const pageTour = introJs();
 pageTour.setOption('exitOnEsc', 'false');

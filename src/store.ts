@@ -25,10 +25,11 @@ type DerivedCoursesData = {
 /**
  * Some course data that can be derived from selectable requirement choices, but added to the global store
  * for efficiency and ease of access.
+ * This should be used for self-check requirements and are not used in the requirement graph.
  */
 type DerivedSelectableRequirementData = {
   // Mapping from requirement ID to the user-selected courses that fulfill the requirement.
-  readonly requirementToCoursesMap: Readonly<Record<string, FirestoreSemesterCourse[]>>;
+  readonly requirementToCoursesMap: Readonly<Record<string, readonly FirestoreSemesterCourse[]>>;
 };
 
 export type VuexStoreState = {
