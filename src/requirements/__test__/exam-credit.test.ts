@@ -1,6 +1,12 @@
-import { ExamsTaken, getCourseEquivalentsFromOneMajor } from '../data/exams/ExamCredit';
+import getCourseEquivalentsFromUserExams, {
+  ExamsTaken,
+  getCourseEquivalentsFromOneMajor,
+} from '../data/exams/ExamCredit';
 import { FWS_COURSE_ID } from '../data/constants';
 
+/**
+ * Tests for getCourseEquivalentsFromOneMajor
+ */
 it('Exam is converted to correct course', () => {
   const exams: ExamsTaken = {
     AP: [
@@ -149,4 +155,59 @@ it("Some colleges don't have an equivalent course", () => {
     // If this fails, first check if the AP/IB equivalent course logic has changed.
     expect(courseIds).not.toContain(FWS_COURSE_ID);
   }
+});
+
+/**
+ * Tests for getCourseEquivalentsFromUserExams
+ */
+it("Exam is counted correctly for one major", () => {
+  const exams: ExamsTaken = {
+    AP: [
+      {
+        subject: 'English',
+        score: 5,
+      },
+    ],
+    IB: [],
+  };
+  // TODO
+});
+
+it("Two exams are counted correctly for one major", () => {
+  const exams: ExamsTaken = {
+    AP: [
+      {
+        subject: 'English',
+        score: 5,
+      },
+    ],
+    IB: [],
+  };
+  // TODO
+});
+
+it("One exam is only counted once for multiple majors", () => {
+  const exams: ExamsTaken = {
+    AP: [
+      {
+        subject: 'English',
+        score: 5,
+      },
+    ],
+    IB: [],
+  };
+  // TODO
+});
+
+it("Equivalent course appears if it matches one major but not the other", () => {
+  const exams: ExamsTaken = {
+    AP: [
+      {
+        subject: 'English',
+        score: 5,
+      },
+    ],
+    IB: [],
+  };
+  // TODO
 });
