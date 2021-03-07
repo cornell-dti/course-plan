@@ -8,10 +8,9 @@ const universityRequirements: readonly CollegeOrMajorRequirement[] = [
       'one credit each semester of the first year on campus.',
     source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11637',
     allowCourseDoubleCounting: true,
-    checker: (course: Course): boolean => 'PE'.includes(course.subject),
-    subRequirementProgress: 'any-can-count',
+    checker: [(course: Course): boolean => 'PE'.includes(course.subject)],
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [2],
   },
 ];
 

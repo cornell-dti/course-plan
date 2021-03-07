@@ -8,9 +8,8 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
     checker: includesWithSubRequirements(['ENGRD 2020'], ['ENGRD 2600', 'ENGRD 2510']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'Intro Bio',
@@ -24,9 +23,8 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'BIOG 1445',
       'BIOEE/BIOSM 1610'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [2],
   },
   {
     name: 'Required Major Courses',
@@ -42,9 +40,8 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BEE 3600'],
       ['BEE 4500']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 6,
+    perSlotMinCount: [1, 1, 1, 1, 1, 1],
   },
   {
     name: 'Biochemistry',
@@ -55,9 +52,8 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BIOMG 3300', 'BIOMG 3330', 'BIOMG 3350', 'BIOMG 3310'],
       ['BIOMG 3320']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'Upper-level Biology',
@@ -82,9 +78,8 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BEE 2220', 'ENGRD 2210', 'CHEME 3130', 'MSE 3030'],
       ['CEE 3040', 'ENGRD 2700']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'BE Focus Area Elective',
@@ -155,9 +150,8 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'BEE 4880',
       'BEE 7540'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 4,
+    perSlotMinCount: [4],
   },
 ];
 

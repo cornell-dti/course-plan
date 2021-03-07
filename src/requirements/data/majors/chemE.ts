@@ -16,15 +16,13 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
         description: 'CHEM 2090 AND CHEM 2080',
         checker: includesWithSubRequirements(['CHEM 2090'], ['CHEM 2080']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 2,
+        perSlotMinCount: [1, 1],
       },
       'Option 2': {
         description: 'CHEM 2150 with AP credit',
         checker: includesWithSubRequirements(['CHEM 2150']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 1,
+        perSlotMinCount: [1],
       },
     },
     allowCourseDoubleCounting: true,
@@ -39,9 +37,8 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEM 3890'],
       ['ENGRD 2190']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 4,
+    perSlotMinCount: [1, 1, 1, 1],
     allowCourseDoubleCounting: true,
   },
   {
@@ -54,9 +51,8 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEM 3090'],
       ['CHEM 2900']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 4,
+    perSlotMinCount: [1, 1, 1, 1],
     allowCourseDoubleCounting: true,
   },
   {
@@ -72,54 +68,49 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
           'A score of 5 on the CEEB AP Biology exam or a score of 7 on the IB Higher Level exam',
         checker: includesWithSubRequirements(['BIOG 1105'], ['BIOG 1107'], ['BIOG 1500']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 3,
+        perSlotMinCount: [1, 1, 1],
       },
       'CHEME 2880': {
         description: 'CHEME 2880',
         checker: includesWithSubRequirements(['CHEME 2880']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 1,
+        perSlotMinCount: [1],
       },
       'CHEME 5430': {
         description: 'CHEME 5430',
         checker: includesWithSubRequirements(['CHEME 5430']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 1,
+        perSlotMinCount: [1],
       },
-      '8 credits of pre-med biology sequence': {
-        description:
-          'Take BIOG 1500, BIOMG 1350, and BIOG 1440. Or take BIOG 1107, BIOG 1108, and BIOG 1500',
-        checker: includesWithSubRequirements(
-          ['BIOG 1500', 'BIOMG 1350', 'BIOG 1440'],
-          ['BIOG 1107', 'BIOG 1108', 'BIOG 1500']
-        ),
+      '8 credits of pre-med biology sequence: option 1': {
+        description: 'Take BIOG 1500, BIOMG 1350, and BIOG 1440',
+        checker: includesWithSubRequirements(['BIOG 1500', 'BIOMG 1350', 'BIOG 1440']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 3,
+        perSlotMinCount: [3],
+      },
+      '8 credits of pre-med biology sequence: option 2': {
+        description: 'Take BIOG 1107, BIOG 1108, and BIOG 1500',
+        checker: includesWithSubRequirements(['BIOG 1107', 'BIOG 1108', 'BIOG 1500']),
+        counting: 'courses',
+        perSlotMinCount: [3],
       },
       'BIOMI 2900': {
         description: 'BIOMI 2900',
         checker: includesWithSubRequirements(['BIOMI 2900']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 1,
+        perSlotMinCount: [1],
       },
       'BIOMG 3300 or BIOMG 3350': {
         description: 'BIOMG 3300 or BIOMG 3350',
         checker: includesWithSubRequirements(['BIOMG 3300', 'BIOMG 3350']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 1,
+        perSlotMinCount: [1],
       },
       'BIOMG 3310 and BIOMG 3320': {
         description: 'BIOMG 3310 and BIOMG 3320',
         checker: includesWithSubRequirements(['BIOMG 3310'], ['BIOMG 3320']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 2,
+        perSlotMinCount: [1, 1],
       },
     },
   },
@@ -135,9 +126,8 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEME 3130'],
       ['CHEME 3240']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 5,
+    perSlotMinCount: [1, 1, 1, 1, 1],
     allowCourseDoubleCounting: true,
   },
   {
@@ -175,9 +165,8 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEME 3720'],
       ['CHEME 3900']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 5,
+    perSlotMinCount: [1, 1, 1, 1, 1],
   },
   {
     name: 'Semester 7',
@@ -210,9 +199,8 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
         'CHEME 6800',
       ]
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'Semester 8',
@@ -225,9 +213,8 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEME 3130'],
       ['CHEME 3240']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 5,
+    perSlotMinCount: [1, 1, 1, 1, 1],
   },
   {
     name: 'Major-Approved Electives',

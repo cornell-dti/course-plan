@@ -15,9 +15,8 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       ['INFO 2450'],
       ['INFO 2950']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 5,
+    perSlotMinCount: [1, 1, 1, 1, 1],
   },
   {
     name: 'Programming and Math Requirements',
@@ -50,9 +49,8 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
         'STSCI 2200',
       ]
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [1, 1, 1],
   },
   {
     name: 'Concentration',
@@ -82,9 +80,8 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       'INFO 5***',
       'INFO 6***'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
 ];
 

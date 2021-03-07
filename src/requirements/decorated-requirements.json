@@ -8,9 +8,10 @@
           "description": "All incoming freshmen are required to take two credits (two courses) of Physical Education, one credit each semester of the first year on campus.",
           "source": "http://courses.cornell.edu/content.php?catoid=41&navoid=11637",
           "allowCourseDoubleCounting": true,
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            2
+          ],
           "courses": [
             [
               350002,
@@ -245,7 +246,9 @@
           "description": "55 CALS credits are required for graduation. CALS credits include all courses from departments within CALS and courses offered in Applied Economics and Management, Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Information Science, Nutritional Science, and The Department of Statistics and Data Science.",
           "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements",
           "fulfilledBy": "credits",
-          "minCount": 55,
+          "perSlotMinCount": [
+            55
+          ],
           "courses": [
             [
               350010,
@@ -2113,7 +2116,9 @@
           "description": "Students must complete at least six academic credits from the list of courses that fulfill distribution requirements.",
           "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
           "fulfilledBy": "credits",
-          "minCount": 6,
+          "perSlotMinCount": [
+            6
+          ],
           "courses": [
             [
               352133,
@@ -2166,7 +2171,9 @@
           "description": "Complete a minimum of three academic credits of chemistry or physics. Includes all Cornell courses with the CHEM or PHYS prefix at Cornell (excluding courses that are supplemental, independent study, research, TA, internship, and First-Year Writing Seminar).",
           "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350174,
@@ -2413,9 +2420,10 @@
           "name": "Quantitative Literacy",
           "description": "Faculty legislation requires minimum competency in quantitative literacy. This requirement can be satisfied by earning a score of 4 or 5 on the AP Calculus exam or a score of 5 on the AP Statistics exam, or transfer an approved calculus or statistics course with a minimum letter grade of “C” or better; or take an approved calculus or statistics course at Cornell.",
           "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350154,
@@ -2605,9 +2613,17 @@
           "name": "Social Sciences and Humanities",
           "description": "Students must complete four courses of 3 or more credits each from the following seven categories of courses in the humanities and social sciences. At least one course category MUST be completed in three different categories. No more than two courses in the same department will be counted toward the distribution requirement. To view a searchable list of courses, please search for courses that fulfill distribution requirements.",
           "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 4,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "minNumberOfSlots": 4,
           "courses": [
             [
               350234,
@@ -4769,9 +4785,10 @@
           "name": "Human Diversity (D)",
           "description": "At least one course category MUST be completed in three different categories. Human Diversity (D) is a required category and MUST be completed.",
           "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350010,
@@ -4835,7 +4852,9 @@
           "description": "9 credits total, of which at least six must be in written expression. Oral expression is not required by the college, but may be required for some majors. If not required, all nine credits may be in written expression. Writing in the Majors courses do not count towards the writing requirement.",
           "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
           "fulfilledBy": "credits",
-          "minCount": 9,
+          "perSlotMinCount": [
+            9
+          ],
           "courses": [
             [
               350160,
@@ -5028,7 +5047,10 @@
           "description": "At least six credits must be in written expression.",
           "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
           "fulfilledBy": "credits",
-          "minCount": 6,
+          "perSlotMinCount": [
+            6
+          ],
+          "allowCourseDoubleCounting": true,
           "courses": [
             [
               350160,
@@ -5229,7 +5251,9 @@
           "description": "100 credits in Arts & Sciences are required. Students can take more than 20 credits outside of the College as long as they take 100 credits within; they can also take all their credits in Arts & Sciences and accumulate more than 120. Note: AP, IB, and A-Level credits count toward the 120 total credits but not toward the 100 A&S credits.",
           "source": "https://as.cornell.edu/education/old-degree-requirements",
           "fulfilledBy": "credits",
-          "minCount": 100,
+          "perSlotMinCount": [
+            100
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -9466,7 +9490,9 @@
           "description": "A 5 on either the AP English Composition or Literature exam, or a 7 on the IB HL English Literature or Language exam will count towards one of these seminars. First-year students should plan to take an FWS during their first semester at Cornell.",
           "source": "https://as.cornell.edu/education/old-degree-requirements",
           "fulfilledBy": "credits",
-          "minCount": 6,
+          "perSlotMinCount": [
+            6
+          ],
           "courses": [
             [
               11,
@@ -9710,8 +9736,9 @@
             "Option 1": {
               "description": "Complete one intermediate course of 3 or more credits at Cornell at the 2000 level or above.",
               "counting": "courses",
-              "subRequirementProgress": "any-can-count",
-              "minCount": 1,
+              "perSlotMinCount": [
+                1
+              ],
               "courses": [
                 [
                   351028,
@@ -9840,7 +9867,9 @@
             "Option 2": {
               "description": "Complete at least 11 credits of study (2 or 3 semesters) in a single foreign language taken in the appropriate sequence at Cornell.",
               "counting": "credits",
-              "minCount": 11,
+              "perSlotMinCount": [
+                11
+              ],
               "courses": [
                 [
                   351015,
@@ -10502,12 +10531,15 @@
           }
         },
         {
-          "name": "Physical & Biological Sceiences (PBS-AS/PBSS-AS)",
-          "description": "Students must take 2 courses in Physical & Biological Sciences (PBS/PBSS-AS).",
+          "name": "PBS and MQR courses",
+          "description": "Students must take 2 courses in Physical & Biological Sciences (PBS/PBSS-AS). Students must take 1 course in Mathematics & Quantitative Reasoning (MQR-AS). Students must take 1 course that is either in PBS-AS or MQR-AS.",
           "source": "https://as.cornell.edu/education/old-degree-requirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            2,
+            1,
+            1
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -10768,18 +10800,7 @@
               371143,
               371360,
               371370
-            ]
-          ]
-        },
-        {
-          "name": "Mathematics & Quantitative Reasoning (MQR-AS)",
-          "description": "Students must take 1 course in Mathematics & Quantitative Reasoning (MQR-AS).",
-          "source": "https://as.cornell.edu/education/old-degree-requirements",
-          "subRequirementProgress": "any-can-count",
-          "fulfilledBy": "courses",
-          "minCount": 1,
-          "allowCourseDoubleCounting": true,
-          "courses": [
+            ],
             [
               350154,
               350163,
@@ -10882,17 +10903,7 @@
               370800,
               371315,
               371479
-            ]
-          ]
-        },
-        {
-          "name": "PBS-AS or MQR-AS",
-          "description": "Students must take 1 course that is either in PBS-AS or MQR-AS",
-          "source": "https://as.cornell.edu/education/old-degree-requirements",
-          "subRequirementProgress": "any-can-count",
-          "fulfilledBy": "courses",
-          "minCount": 1,
-          "courses": [
+            ],
             [
               350154,
               350163,
@@ -11259,9 +11270,14 @@
           "name": "Distribution Requirement",
           "description": "Five Arts & Sciences courses of 3 or more credits from at least 4 of the following social sciences, humanities, and arts categories: CA-AS, HA-AS, KCM-AS, LA-AS, SBA-AS",
           "source": "https://as.cornell.edu/education/old-degree-requirements",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 5,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -12801,9 +12817,10 @@
           "name": "Geographic Breadth Requirement (GB)",
           "description": "One course that focuses on an area or a people other than those of the United States, Canada, or Europe. Courses fulfilling this requirement are marked with a GB/GHB in the Class Roster.",
           "source": "https://as.cornell.edu/education/old-degree-requirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -13332,9 +13349,10 @@
           "name": "Historic Breadth Requirement (HB)",
           "description": "One course that focuses on an historic period before the 20th century. Courses fulfilling this requirement are marked with an HB/GHB in the Class Roster.",
           "source": "https://as.cornell.edu/education/old-degree-requirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -13776,9 +13794,12 @@
           "name": "Mathematics",
           "description": "MATH 1910, 1920, 2930 or 2940, and a mathematics course chosen by the Major.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               352255
@@ -13796,9 +13817,11 @@
           "name": "Physics",
           "description": "PHYS 1112 and 2213, and, depending on the Major, either PHYS 2214 or a designated mathematics or science course.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               355146
@@ -13812,9 +13835,10 @@
           "name": "Chemistry",
           "description": "CHEM 2090. Majors in Chemical Engineering or those planning on a health-related career should take CHEM 2090 and then 2080.  Students in Environmental Engineering should take CHEM 2090 and CHEM 1570/3570.  Earth and Atmospheric Sciences majors should take CHEM 2090 and then 2080/1570.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               359187
@@ -13825,9 +13849,10 @@
           "name": "First-Year Writing Seminars",
           "description": "All students are required to take two first-year writing seminars.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            2
+          ],
           "courses": [
             [
               11,
@@ -14066,9 +14091,10 @@
           "name": "Computing",
           "description": "CS 1110, 1112, 1114, or 1115.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               358525,
@@ -14081,7 +14107,9 @@
           "description": "One introduction to engineering (ENGRI) course.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               354919,
@@ -14111,9 +14139,10 @@
           "name": "Engineering Distribution",
           "description": "Two different category distribution courses (ENGRD), one of which may be required by the Major.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            2
+          ],
           "courses": [
             [
               352313,
@@ -14145,9 +14174,10 @@
           "name": "Liberal Studies Distribution: 6 courses",
           "description": "Liberal arts commonly include courses in the humanities. A minimum of six courses must be taken. At least two courses must be at the 2000 level or higher.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 6,
+          "perSlotMinCount": [
+            6
+          ],
           "courses": [
             [
               350010,
@@ -15985,10 +16015,24 @@
           "name": "Liberal Studies Distribution: 3 categories",
           "description": "In addition to six courses, the liberal studies courses must be from 3 categories.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "minNumberOfSlots": 3,
           "allowCourseDoubleCounting": true,
-          "minCount": 3,
           "courses": [
             [
               350636,
@@ -18946,8 +18990,10 @@
           "description": "In addition to six courses, the liberal studies distribution must total a minimum of 18 credits.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies",
           "fulfilledBy": "credits",
+          "perSlotMinCount": [
+            18
+          ],
           "allowCourseDoubleCounting": true,
-          "minCount": 18,
           "courses": [
             [
               350010,
@@ -20792,80 +20838,35 @@
           "name": "Engineering Communications",
           "description": "An engineering communications course must be taken as an engineering distribution, liberal studies, Advisor-approved Elective, or Major course. Students can fulfill the upper-level engineering communications requirement in one of the six ways.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/engineering-communications-program/technical",
-          "allowCourseDoubleCounting": true,
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
+          "allowCourseDoubleCounting": true,
           "courses": [
             [
-              355623
-            ],
-            [
-              360971
-            ],
-            [
-              355624
-            ],
-            [
-              355625
-            ],
-            [
-              358553
-            ],
-            [
-              358553
-            ],
-            [
-              350255
-            ],
-            [
-              354942
-            ],
-            [
-              352156
-            ],
-            [
-              352183
-            ],
-            [
-              355233
-            ],
-            [
-              371145
-            ],
-            [],
-            [
-              366630
-            ],
-            [],
-            [
-              354831
-            ],
-            [
-              361548
-            ],
-            [
-              367481
-            ],
-            [
-              367848
-            ],
-            [],
-            [
-              367847
-            ],
-            [
-              367922
-            ],
-            [
-              367485
-            ],
-            [
-              353896
-            ],
-            [
+              350255,
+              352156,
+              352183,
+              353896,
               353898,
-              353899
+              353899,
+              354831,
+              354942,
+              355233,
+              355623,
+              355624,
+              355625,
+              358553,
+              360971,
+              361548,
+              366630,
+              367481,
+              367485,
+              367847,
+              367848,
+              367922,
+              371145
             ]
           ]
         }
@@ -20879,7 +20880,9 @@
           "description": "Students must complete a minimum of 43 Human Ecology credits from College Distribution, Major Requirements and electives.",
           "source": "https://www.human.cornell.edu/academics/policies/requirements",
           "fulfilledBy": "credits",
-          "minCount": 43,
+          "perSlotMinCount": [
+            43
+          ],
           "courses": [
             [
               350003,
@@ -21465,9 +21468,18 @@
           "name": "Core Requirements",
           "description": "Students are required to fulfill the following core requirements for a letter grade:",
           "source": "https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 9,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               358955
@@ -21503,7 +21515,9 @@
           "description": "Students are required to fulfill the following writing requirements for a letter grade:",
           "source": "https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               11,
@@ -21742,9 +21756,10 @@
           "name": "ILR Advance Writing",
           "description": "Courses must be taken for a letter grade in order to count toward the ILR Requirements",
           "source": "https://www.ilr.cornell.edu/student-experience/curriculum-requirements/undergraduate-requirements/ilr-advanced-writing-courses",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               352758,
@@ -21785,7 +21800,9 @@
           "description": "55 CALS credits are required for graduation. CALS credits include all courses from departments within CALS and courses offered in Applied Economics and Management, Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Information Science, Nutritional Science, and The Department of Statistics and Data Science.",
           "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/distribution/",
           "fulfilledBy": "credits",
-          "minCount": 55,
+          "perSlotMinCount": [
+            55
+          ],
           "courses": [
             [
               350010,
@@ -23658,9 +23675,16 @@
           "name": "Management Requirements",
           "description": "AEM 3200 and AEM 3230 are optional for the following three concentrations: applied economics; environmental, energy, and resource economics; and international trade and development.",
           "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 7,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               364642
@@ -23689,9 +23713,12 @@
           "name": "Economics Requirements",
           "description": "ECON 1110, ECON 1120, AND AEM 2600. For students concentrating in environmental, energy, and resource economics, ECON 3030 is required instead of AEM 2600.",
           "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               350025
@@ -23709,9 +23736,12 @@
           "name": "Quantitative Methods Requirements",
           "description": "AEM 2100, MATH 1110 OR MATH 1120, AND AEM 2010",
           "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               350500
@@ -23730,7 +23760,9 @@
           "description": "At least 3 elective credits from the following.",
           "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350163,
@@ -23761,9 +23793,10 @@
           "name": "Grand Challenges Reqiurement Part 1: Written expression course",
           "description": "Sophomore year: 3 credits. Focus: Critical thinking. These course options are centered around contemporary global issues and will help you learn communication, business analysis, and critical thinking skills as you develop cultural awareness. Available courses may vary per semester. You’ll choose one of the following:",
           "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350489,
@@ -23778,9 +23811,10 @@
           "name": "Grand Challenges Reqiurement Part 2: Pre-Project Weekend Immersion",
           "description": "Junior year: 1.5 credits. Focus: Working as part of a team",
           "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               370844
@@ -23791,9 +23825,10 @@
           "name": "Grand Challenges Reqiurement Part 3: Project Course",
           "description": "Senior year, 3 credits. Focus: Local and global community involvement",
           "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               370852
@@ -23813,9 +23848,13 @@
           "name": "Introductory Biology Cluster",
           "description": "Take 2 of the following 3: BIOMG 1350, BIOG 1440 OR BIOG 1445, BIOEE 1610 OR BIOSM 1610",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
+          "minNumberOfSlots": 2,
           "courses": [
             [
               363586
@@ -23834,9 +23873,10 @@
           "name": "Investigative Laboratory",
           "description": "BIOG 1500 OR BIOSM 1500",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               363759,
@@ -23848,9 +23888,10 @@
           "name": "Evolutionary Biology and Diversity",
           "description": "BIOEE 1780 OR BIOEE 1781 OR BIOSM 1780",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               354153,
@@ -23868,8 +23909,10 @@
             "Option 1": {
               "description": "CHEM 2070 AND CHEM 2080",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 2,
+              "perSlotMinCount": [
+                1,
+                1
+              ],
               "courses": [
                 [
                   351265
@@ -23882,8 +23925,9 @@
             "Option 2": {
               "description": "CHEM 2150",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 1,
+              "perSlotMinCount": [
+                1
+              ],
               "courses": [
                 [
                   351273
@@ -23896,9 +23940,11 @@
           "name": "College Mathematics",
           "description": "Two courses. One semester of calculus (MATH 1106 OR MATH 1110) Another course selected from: (MATH 1120 OR MATH 1910) OR MATH 1105 OR one course in statistics (STSCI 2150 OR BTRY 3010 are preferred)",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               352111,
@@ -23922,9 +23968,14 @@
           "name": "Organic Chemistry",
           "description": "CHEM 1570 OR CHEM 3570 & 3580 OR CHEM 3590 & 3600 OR CHEM 3530",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            2,
+            2,
+            1
+          ],
+          "minNumberOfSlots": 1,
           "courses": [
             [
               359185
@@ -23946,9 +23997,13 @@
           "name": "Physics",
           "description": "PHYS 1101 & 1102 OR PHYS 2207 & 2208 OR PHY 1112 & 2213",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            2,
+            2,
+            2
+          ],
+          "minNumberOfSlots": 1,
           "courses": [
             [
               355142,
@@ -23968,9 +24023,11 @@
           "name": "Genetics and Genomics",
           "description": "Lecture must be taken either concurrently or before the laboratory",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               353121
@@ -23984,9 +24041,10 @@
           "name": "Biochemistry and Molecular Biology Part 1",
           "description": "BIOMG 3300 OR BIOMG 3350 OR BIOMG 3310",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               353357,
@@ -23999,9 +24057,10 @@
           "name": "Biochemistry and Molecular Biology Part 2",
           "description": "BIOMG 3300 OR BIOMG 3350 OR BIOMG 3320",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               353357,
@@ -24028,9 +24087,10 @@
           "name": "Engineering Distriubtions",
           "description": "ENGRD 2202. ENGRD 2020 is recommended and satisfies the Common Curriculum distribution requirement and also fulfills a required Major course. It is best taken during semester 3 and must be completed before semester 5",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19808",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -24042,9 +24102,15 @@
           "name": "Core Courses Part 1",
           "description": "BIOMG 1350, BME 2010, BME 2110, BME 2210, BME 2310, ENGRD 2020, and BTRY 3010. CEE 3040 or ENGRD 2700 can be taken instead of BTRY 3010.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19808",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 6,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               363586
@@ -24072,9 +24138,16 @@
           "name": "Core Courses Part 2",
           "description": "BME 3010, BME 3020, BME 3030, BME 4010, BME 4020, BME 4080, BME 4090",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19808",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 7,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               361173
@@ -24108,8 +24181,12 @@
             "Molecular, Cellular, and Systems Engineering (MCSE)": {
               "description": "Must take CHEM 1570, BME 3110, BME 4190, and take 6 elective courses from the following courses.",
               "counting": "courses",
-              "subRequirementProgress": "any-can-count",
-              "minCount": 13,
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                6
+              ],
               "courses": [
                 [
                   359185
@@ -24134,8 +24211,12 @@
             "Biomedical Materials and Drug Delivery (BMDD)": {
               "description": "Must take BME 3210, BME 4190 or BME 4490, CHEM 1570, and take 6 elective courses from the following courses.",
               "counting": "courses",
-              "subRequirementProgress": "any-can-count",
-              "minCount": 13,
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                6
+              ],
               "courses": [
                 [
                   367708
@@ -24164,8 +24245,12 @@
             "Biomedical Imaging and Instrumentation (BMII)": {
               "description": "Must take BME 3310, BME 4390, PHYS 2214, and take 6 elective courses from the following courses.",
               "counting": "courses",
-              "subRequirementProgress": "any-can-count",
-              "minCount": 13,
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                6
+              ],
               "courses": [
                 [
                   368737
@@ -24191,8 +24276,12 @@
             "Biomedical Mechanics and Mechanobiology (BMMB)": {
               "description": "Must take BME 3410, BME 4490, PHYS 2214, and take 6 elective courses from the following courses.",
               "counting": "courses",
-              "subRequirementProgress": "any-can-count",
-              "minCount": 13,
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                6
+              ],
               "courses": [
                 [
                   368742
@@ -24229,9 +24318,11 @@
           "name": "Engineering Distriubtions",
           "description": "ENGRD 2020 and ENGRD 2600 or ENGRD 2510",
           "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               358608
@@ -24246,9 +24337,10 @@
           "name": "Intro Bio",
           "description": "Choose 2 of the following 4: BIOMG 1350, BIOG 1440, BIOG 1445, and BIOEE/BIOSM 1610",
           "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            2
+          ],
           "courses": [
             [
               363586,
@@ -24261,9 +24353,15 @@
           "name": "Required Major Courses",
           "description": "Major requirements for BE: BIOG/BIOSM 1500, BEE 3500, BEE 3310, BEE 3400, BEE 3600, and BEE 4500",
           "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 6,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [],
             [
@@ -24287,9 +24385,11 @@
           "name": "Biochemistry",
           "description": "BIOMG 3300, BIOMG 3330, BIOMG 3350, or BIOMG 3310 and BIOMG 3320",
           "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               353357,
@@ -24312,9 +24412,11 @@
           "name": "Engineering Statistics",
           "description": "BEE 2220 or ENGRD 2210 or CHEME 3130 or MSE 3030 and engineering statistics preferably before semester 6. CEE 3040 is the preferred version of statistics.",
           "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               350193,
@@ -24332,9 +24434,10 @@
           "name": "BE Focus Area Elective",
           "description": "BE Focus Area Electives must include a BEE capstone design course. See beadvised.bee.cornell.edu for a current list of approved courses. In place of one focus area course, students may use up to 4 credits of research, project team, teaching, or independent study taken in an engineering department towards the engineering credits in category 8.",
           "source": "https://beadvised.bee.cornell.edu/full-list-of-focus-area-courses/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 4,
+          "perSlotMinCount": [
+            4
+          ],
           "courses": [
             [
               350174,
@@ -24386,9 +24489,11 @@
           "name": "Engineering Distribution",
           "description": "ENGRD 2020 is required. For the second  engineering distribution course, one of the following is recommended: ENGRD 2610, ENGRD 2210, ENGRD 2110, ENGRD 2510",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19826",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -24406,9 +24511,18 @@
           "name": "Core Courses",
           "description": "MAE 2030 or CEE 4780, ENGRD 3200, CEE 3040, CEE 3230, CEE 3310, CEE 3410, BEE 2510, CEE 3610, and CEE 3710.ENGRD 2610, ENGRD 2210, ENGRD 2110, ENGRD 2510",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19826",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 9,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               358610,
@@ -24444,9 +24558,10 @@
           "name": "Capstone Design Elective",
           "description": "Take CEE 4400, CEE 4640, CEE 4730, CEE 4350, CEE 4410, CEE 4590, CEE 4650, CEE 4660, or CEE 4740.",
           "source": "https://www.cee.cornell.edu/cee/programs/undergraduate-programs/civil-engineering-major/design-courses-and-major-approved",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350788,
@@ -24464,9 +24579,10 @@
           "name": "Two Design Electives",
           "description": "Take 2 of the following electives: CEE 4210, CEE 4565, BEE 4730, CEE 4110, CEE 4520, BEE 4760, CEE 4750, CEE 6370, MSE 5150",
           "source": "https://www.cee.cornell.edu/cee/programs/undergraduate-programs/civil-engineering-major/design-courses-and-major-approved",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            2
+          ],
           "courses": [
             [
               352156,
@@ -24485,9 +24601,10 @@
           "name": "Two Major-Approved Electives",
           "description": "Take 2 of the following electives",
           "source": "https://www.cee.cornell.edu/cee/programs/undergraduate-programs/civil-engineering-major/design-courses-and-major-approved",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            2
+          ],
           "courses": [
             [
               350753,
@@ -24539,8 +24656,10 @@
             "Option 1": {
               "description": "CHEM 2090 AND CHEM 2080",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 2,
+              "perSlotMinCount": [
+                1,
+                1
+              ],
               "courses": [
                 [
                   359187
@@ -24553,8 +24672,9 @@
             "Option 2": {
               "description": "CHEM 2150 with AP credit",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 1,
+              "perSlotMinCount": [
+                1
+              ],
               "courses": [
                 [
                   351273
@@ -24568,9 +24688,13 @@
           "name": "Semester 3",
           "description": "MATH 2930, PHYS 2213, CHEM 3890, and ENGRD 2190",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 4,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -24591,9 +24715,13 @@
           "name": "Semester 4",
           "description": "MATH 2940 or CEE 3040 or ENGRD 2700, CHEME 3230, CHEM 3090, and CHEM 2900.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 4,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -24619,8 +24747,11 @@
             "AP/IB Credit": {
               "description": "A score of 5 on the CEEB AP Biology exam or a score of 7 on the IB Higher Level exam",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 3,
+              "perSlotMinCount": [
+                1,
+                1,
+                1
+              ],
               "courses": [
                 [],
                 [],
@@ -24632,8 +24763,9 @@
             "CHEME 2880": {
               "description": "CHEME 2880",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 1,
+              "perSlotMinCount": [
+                1
+              ],
               "courses": [
                 [
                   358533
@@ -24643,25 +24775,36 @@
             "CHEME 5430": {
               "description": "CHEME 5430",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 1,
+              "perSlotMinCount": [
+                1
+              ],
               "courses": [
                 [
                   350174
                 ]
               ]
             },
-            "8 credits of pre-med biology sequence": {
-              "description": "Take BIOG 1500, BIOMG 1350, and BIOG 1440. Or take BIOG 1107, BIOG 1108, and BIOG 1500",
+            "8 credits of pre-med biology sequence: option 1": {
+              "description": "Take BIOG 1500, BIOMG 1350, and BIOG 1440",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 3,
+              "perSlotMinCount": [
+                3
+              ],
               "courses": [
                 [
                   363586,
                   363758,
                   363759
-                ],
+                ]
+              ]
+            },
+            "8 credits of pre-med biology sequence: option 2": {
+              "description": "Take BIOG 1107, BIOG 1108, and BIOG 1500",
+              "counting": "courses",
+              "perSlotMinCount": [
+                3
+              ],
+              "courses": [
                 [
                   363759
                 ]
@@ -24670,8 +24813,9 @@
             "BIOMI 2900": {
               "description": "BIOMI 2900",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 1,
+              "perSlotMinCount": [
+                1
+              ],
               "courses": [
                 [
                   353707
@@ -24681,8 +24825,9 @@
             "BIOMG 3300 or BIOMG 3350": {
               "description": "BIOMG 3300 or BIOMG 3350",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 1,
+              "perSlotMinCount": [
+                1
+              ],
               "courses": [
                 [
                   353357,
@@ -24693,8 +24838,10 @@
             "BIOMG 3310 and BIOMG 3320": {
               "description": "BIOMG 3310 and BIOMG 3320",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 2,
+              "perSlotMinCount": [
+                1,
+                1
+              ],
               "courses": [
                 [
                   354876
@@ -24710,9 +24857,14 @@
           "name": "Semester 5",
           "description": "CS 1112, CHEM 3570 or CHEM 3530 or CHEM 3590, CHEM 2510, CHEME 3130, and CHEME 3240.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 5,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -24738,9 +24890,14 @@
           "name": "Semester 6",
           "description": "Three credits of advanced CHEME electives, CHEME 3010, CHEME 3320, CHEME 3720, CHEME 3900",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 5,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               350174,
@@ -24779,9 +24936,11 @@
           "name": "Semester 7",
           "description": "CHEME 4320 and three credits of advanced CHEME electives",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               350255
@@ -24813,9 +24972,14 @@
           "name": "Semester 8",
           "description": "CHEME 4620 or CHEME 4930",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 5,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               358525
@@ -24856,8 +25020,13 @@
           "description": "COMM 1101, COMM 1300, COMM 2010, COMM 2310, COMM 2820",
           "source": "https://communication.cals.cornell.edu/undergraduate-program/major-requirements/",
           "fulfilledBy": "courses",
-          "subRequirementProgress": "every-course-needed",
-          "minCount": 5,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               360988
@@ -24881,8 +25050,9 @@
           "description": "6 credits/2 courses in COMM 2200, COMM 2450, COMM 2760, or COMM 2850",
           "source": "https://communication.cals.cornell.edu/undergraduate-program/major-requirements/",
           "fulfilledBy": "courses",
-          "subRequirementProgress": "any-can-count",
-          "minCount": 2,
+          "perSlotMinCount": [
+            2
+          ],
           "courses": [
             [
               352879,
@@ -24897,7 +25067,9 @@
           "description": "Students must take six credits (two courses) of coursework within their declared Focus Area at the 3100+ level.",
           "source": "https://communication.cals.cornell.edu/undergraduate-program/major-requirements/",
           "fulfilledBy": "credits",
-          "minCount": 6,
+          "perSlotMinCount": [
+            6
+          ],
           "courses": [
             [
               352898,
@@ -24971,7 +25143,9 @@
           "description": "Students must complete 9 additional credit hours at the 3100+ level.* Electives can come from any of the focus area lists. A student may elect to fulfill 3 of these credit hours by taking a third focus area introductory course. A maximum of 3 credits in either 4970 or 4990 (combined) can be counted toward the upper level major requirements. Refer to the Course and Time Roster for the most up-to-date offerings. ",
           "source": "https://communication.cals.cornell.edu/undergraduate-program/major-requirements/",
           "fulfilledBy": "credits",
-          "minCount": 15,
+          "perSlotMinCount": [
+            15
+          ],
           "courses": [
             [
               352898,
@@ -25019,7 +25193,9 @@
           "description": "Three credits in the COMM 30XX range courses",
           "source": "https://communication.cals.cornell.edu/undergraduate-program/major-requirements/",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               352940,
@@ -25036,9 +25212,10 @@
           "name": "Introductory Statistics Class",
           "description": "Students must take an introductory statistics class, such as PAM 2100, AEM 2100, ILRST 2100, etc. or a score of 5 in AP statistics",
           "source": "https://communication.cals.cornell.edu/undergraduate-program/major-requirements/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350154,
@@ -25064,127 +25241,19 @@
       ],
       "requirements": [
         {
-          "name": "Distribution Requirements: MQR",
-          "description": "At least one class must be classified as mathematics and quantitative reasoning (MQR)",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145",
-          "subRequirementProgress": "any-can-count",
+          "name": "PBS and MQR courses",
+          "description": "Students must take 2 courses in Physical & Biological Sciences (PBS/PBSS-AS). Students must take 1 course in Mathematics & Quantitative Reasoning (MQR-AS). Students must take 1 course that is either in PBS-AS or MQR-AS.",
+          "source": "https://as.cornell.edu/education/old-degree-requirements",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            2,
+            1,
+            1
+          ],
+          "allowCourseDoubleCounting": true,
           "courses": [
             [
-              350154,
-              350163,
-              350173,
-              350359,
-              350429,
-              350486,
-              350842,
-              350862,
-              351674,
-              352104,
-              352107,
-              352111,
-              352116,
-              352120,
-              352240,
-              352245,
-              352255,
-              352257,
-              352259,
-              352260,
-              352263,
-              352270,
-              352274,
-              352284,
-              352288,
-              352295,
-              352307,
-              352308,
-              352319,
-              352337,
-              352338,
-              352340,
-              352359,
-              352361,
-              352363,
-              352367,
-              352371,
-              352378,
-              352385,
-              352387,
-              352393,
-              352396,
-              352403,
-              352408,
-              352413,
-              352417,
-              352428,
-              352433,
-              352440,
-              352443,
-              352450,
-              352453,
-              352495,
-              353732,
-              353862,
-              354066,
-              354067,
-              354665,
-              355025,
-              355653,
-              357513,
-              357514,
-              357900,
-              358525,
-              358526,
-              358546,
-              358552,
-              358556,
-              358808,
-              358881,
-              358896,
-              359058,
-              359061,
-              359062,
-              359438,
-              359541,
-              360952,
-              362277,
-              364154,
-              364513,
-              364531,
-              365098,
-              365141,
-              365785,
-              365790,
-              365817,
-              367041,
-              367628,
-              368194,
-              368472,
-              368700,
-              369395,
-              369675,
-              369746,
-              370151,
-              370307,
-              370464,
-              370579,
-              370800,
-              371315,
-              371479
-            ]
-          ]
-        },
-        {
-          "name": "Distribution Requirements: PBS",
-          "description": "At least two classes must be classified as PBS",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145",
-          "subRequirementProgress": "any-can-count",
-          "fulfilledBy": "courses",
-          "minCount": 2,
-          "courses": [
-            [
+              350215,
               350710,
               350718,
               350726,
@@ -25197,6 +25266,7 @@
               351133,
               351138,
               351139,
+              351246,
               351265,
               351269,
               351273,
@@ -25212,12 +25282,16 @@
               351357,
               351360,
               351363,
+              351490,
               351591,
+              351619,
+              351649,
               351661,
               351716,
               351750,
               351757,
               351766,
+              351914,
               352133,
               352525,
               352526,
@@ -25335,7 +25409,9 @@
               357656,
               357658,
               357679,
+              357754,
               357827,
+              358165,
               358839,
               358840,
               358841,
@@ -25352,6 +25428,7 @@
               360929,
               360930,
               360933,
+              360955,
               360974,
               361023,
               361059,
@@ -25361,6 +25438,7 @@
               361108,
               361175,
               361187,
+              361224,
               361466,
               361625,
               361722,
@@ -25370,10 +25448,13 @@
               363210,
               363471,
               363472,
+              363551,
               363586,
               363618,
               363667,
+              363722,
               363758,
+              363836,
               363899,
               364016,
               364290,
@@ -25411,10 +25492,13 @@
               367841,
               367845,
               367858,
+              367910,
               368418,
+              368631,
               368688,
               368751,
               368762,
+              368892,
               369090,
               369181,
               369496,
@@ -25424,18 +25508,112 @@
               370286,
               370415,
               371143,
+              371360,
               371370
-            ]
-          ]
-        },
-        {
-          "name": "Distribution Requirements: MQR OR PBS",
-          "description": "At least one class must be classified as MQR or PBS",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145",
-          "subRequirementProgress": "any-can-count",
-          "fulfilledBy": "courses",
-          "minCount": 1,
-          "courses": [
+            ],
+            [
+              350154,
+              350163,
+              350173,
+              350359,
+              350429,
+              350486,
+              350842,
+              350862,
+              351674,
+              352104,
+              352107,
+              352111,
+              352116,
+              352120,
+              352240,
+              352245,
+              352255,
+              352257,
+              352259,
+              352260,
+              352263,
+              352270,
+              352274,
+              352284,
+              352288,
+              352295,
+              352307,
+              352308,
+              352319,
+              352337,
+              352338,
+              352340,
+              352359,
+              352361,
+              352363,
+              352367,
+              352371,
+              352378,
+              352385,
+              352387,
+              352393,
+              352396,
+              352403,
+              352408,
+              352413,
+              352417,
+              352428,
+              352433,
+              352440,
+              352443,
+              352450,
+              352453,
+              352495,
+              353732,
+              353862,
+              354066,
+              354067,
+              354665,
+              355025,
+              355653,
+              357513,
+              357514,
+              357900,
+              358525,
+              358526,
+              358546,
+              358552,
+              358556,
+              358808,
+              358881,
+              358896,
+              359058,
+              359061,
+              359062,
+              359438,
+              359541,
+              360952,
+              362277,
+              364154,
+              364513,
+              364531,
+              365098,
+              365141,
+              365785,
+              365790,
+              365817,
+              367041,
+              367628,
+              368194,
+              368472,
+              368700,
+              369395,
+              369675,
+              369746,
+              370151,
+              370307,
+              370464,
+              370579,
+              370800,
+              371315,
+              371479
+            ],
             [
               350154,
               350163,
@@ -25802,9 +25980,10 @@
           "name": "Distribution Requirements: 5 Courses",
           "description": "Must be selected from at least four of these five categories (i.e., CA, HA, KCM, LA, and SBA).No more than three of these five courses can be taken in any one department.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 5,
+          "perSlotMinCount": [
+            5
+          ],
           "courses": [
             [
               350010,
@@ -27139,9 +27318,14 @@
           "name": "Core Classes",
           "description": "CRP 1100, CRP 1101, CRP 2000, CRP 2010, CRP 3210",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 5,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               350054
@@ -27164,9 +27348,10 @@
           "name": "Microeconomics",
           "description": "Choose one course: AEM 2500 OR CRP 4040 OR ECON 1110 OR ECON 3030 OR PAM 2000",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350025,
@@ -27181,9 +27366,10 @@
           "name": "Statistics",
           "description": "Choose one course: AEM 2100, AEM 3100, AEM 4100, ECON 3130, ECON 3140, ILRST 2100, MATH 1710MATH 4710, PAM 2100, PAM 2101, STSCI 2100, STSCI 3080",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350154,
@@ -27204,9 +27390,10 @@
           "name": "Five CRP Classes",
           "description": "Take five additional CRP classes at the 3000-level or higher, for a minimum of 3 credits each",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 5,
+          "perSlotMinCount": [
+            5
+          ],
           "courses": [
             [
               350119,
@@ -27345,9 +27532,11 @@
           "description": "CS 111x (CS 1110, 1112, 1114, or 1115) and CS 2110 (or CS 2112) or equivalent.",
           "source": "https://www.cs.cornell.edu/undergrad/csmajor",
           "allowCourseDoubleCounting": true,
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               358525,
@@ -27363,9 +27552,14 @@
           "name": "Computer Science Core",
           "description": "CS 2800 or CS 2802, CS 3110, CS 3410 or CS 3420, CS 4410, and CS 4820",
           "source": "https://www.cs.cornell.edu/undergrad/csmajor",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 5,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               358552,
@@ -27390,9 +27584,10 @@
           "name": "CS Electives",
           "description": "Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4998 are NOT allowed.",
           "source": "http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               352385,
@@ -27442,9 +27637,10 @@
           "name": "CS Practicum or Project",
           "description": "CS practicums (CS 4xx1) or CS 3152, CS 4152, CS 4154, CS 4740, CS 4752, CS 5150, CS 5152, CS 5412, CS 5414, CS 5431, CS 5625, or CS 5643.",
           "source": "http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               358571,
@@ -27471,8 +27667,9 @@
           "source": "https://www.cs.cornell.edu/undergrad/csmajor/technicalelectives",
           "checkerWarning": "We do not check that the courses are considered technical.",
           "fulfilledBy": "courses",
-          "subRequirementProgress": "any-can-count",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350014,
@@ -28811,9 +29008,10 @@
           "description": "Must take BTRY 3080, CS 4850, ECE 3100, ECON 3130, ENGRD 2700, or MATH 4710.",
           "source": "https://www.cs.cornell.edu/undergrad/csmajor",
           "allowCourseDoubleCounting": true,
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350359,
@@ -28837,9 +29035,20 @@
           "name": "Core Courses",
           "description": "Take all of the following: DEA 1050, DEA 1101, DEA 1110, DEA 1150, DEA 1500, DEA 2030, DEA 2510, DEA 2730, DEA 3590, DEA 4040, DEA 5304",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 11,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               366899
@@ -28880,9 +29089,10 @@
           "name": "DEA Thematic Courses",
           "description": "Three out of the 9 must be studio thematic courses. Students must take at least one 2000-level studio. Students may not take more than 2 studios in one semester, this includes both DEA and non-DEA studios. Enrollment in 2 studios simultaneously requires  approval from both studio instructors. DEA 4990 can fall under any of the three DEA Thematics.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 9,
+          "perSlotMinCount": [
+            9
+          ],
           "courses": [
             [
               351518,
@@ -28920,9 +29130,10 @@
           "name": "Research Methods Course",
           "description": "Choose one of the following courses: DEA 3550, ILROB 4710, PAM 3120",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               351497,
@@ -28935,9 +29146,10 @@
           "name": "Human Development or Psychology",
           "description": "Choose one of the following courses: HD 1150, HC 1170, PSYCH 1101",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               351438,
@@ -28949,9 +29161,10 @@
           "name": "Introductory Microeconomics",
           "description": "ECON 1110",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350025
@@ -28962,9 +29175,10 @@
           "name": "Humanities",
           "description": "Choose any course with the Course Distribution HA, LA or CA.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350010,
@@ -30276,9 +30490,10 @@
           "name": "Statistics",
           "description": "Must be taken at Cornell, AP Statistics is not accepted. Choose one of the following: PAM 2100, AEM 2100, ILRST/STSCI 2100, or PSYCH 2500",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350154,
@@ -30297,8 +30512,9 @@
             "Biology": {
               "description": "Take 1: BIOG 1140, BIOG 1440, BIOMG 1350, BIOEE 1610, BIOG 1445, or 5 on AP Biology",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 1,
+              "perSlotMinCount": [
+                1
+              ],
               "courses": [
                 [
                   354148,
@@ -30312,8 +30528,9 @@
             "Chemistry": {
               "description": "Take 1: CHEM 1560, CHEM 2070, CHEM 2080, or 5 on AP Chemistry",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 1,
+              "perSlotMinCount": [
+                1
+              ],
               "courses": [
                 [
                   351265,
@@ -30325,8 +30542,9 @@
             "Physics": {
               "description": "Take 1: PHYS 1101, PHYS 2207, PHYS 1102, PHYS 2208, or 5 on AP Physics",
               "counting": "courses",
-              "subRequirementProgress": "every-course-needed",
-              "minCount": 1,
+              "perSlotMinCount": [
+                1
+              ],
               "courses": [
                 [
                   355142,
@@ -30343,7 +30561,9 @@
           "description": "Choose any 3 credit course with a PBS, BIOLS-AG, or BIONLS-AG Course Distribution.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350215,
@@ -30640,7 +30860,9 @@
           "description": "Any course with the Course Distribution PBS, BIOLS-AG, BIONLS-AG, SBA, KCM, MQR, LA, CA, or HA. Language courses may count here.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements",
           "fulfilledBy": "credits",
-          "minCount": 6,
+          "perSlotMinCount": [
+            6
+          ],
           "courses": [
             [
               350010,
@@ -32835,9 +33057,12 @@
           "name": "Admission to the Major",
           "description": "Before applying for admission to the Economics Major, students must complete ECON 1110, ECON 1120, and MATH 1110 (or equivalents).",
           "source": "https://economics.cornell.edu/major",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               350025
@@ -32854,9 +33079,13 @@
           "name": "Core Economics",
           "description": "All students must take four core economics courses: ECON 3030, ECON 3040, ECON 3110 or ECON 3130, and ECON 3120 or ECON 3140.",
           "source": "https://economics.cornell.edu/major",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 4,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               350335
@@ -32878,9 +33107,10 @@
           "name": "4000-level Courses",
           "description": "All students must take at least three courses at the 4000-level or higher.",
           "source": "https://economics.cornell.edu/major",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350486,
@@ -32920,9 +33150,10 @@
           "name": "Basic Requirements",
           "description": "Twelve courses listed by the Department of Economics, or approved by the student’s major advisor",
           "source": "https://economics.cornell.edu/major",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 12,
+          "perSlotMinCount": [
+            12
+          ],
           "courses": [
             [
               350025,
@@ -33013,7 +33244,9 @@
           "description": "To graduate with a major in English, a student must complete with a grade of C or better 40 credit hours approved for the English major. All 2000-level ENGL courses (with the exception of 2800-2810 and 2880-2890) count for the major, as do all 3000-and 4000-level courses.",
           "source": "https://english.cornell.edu/majoring-and-minoring-english-cornell#requirements-for-the-major",
           "fulfilledBy": "credits",
-          "minCount": 40,
+          "perSlotMinCount": [
+            40
+          ],
           "courses": [
             [
               350636,
@@ -33320,7 +33553,9 @@
           "description": "12 credits (normally 3 courses) must be from courses in which 50% or more of the material consists of literature originally written in English before 1800 (such courses are indicated in the English course listings)",
           "source": "https://english.cornell.edu/majoring-and-minoring-english-cornell#requirements-for-the-major",
           "fulfilledBy": "credits",
-          "minCount": 12,
+          "perSlotMinCount": [
+            12
+          ],
           "courses": [
             [
               352694,
@@ -33360,7 +33595,9 @@
           "description": "8 credits (2 courses) must be at the 4000 level or above",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
           "fulfilledBy": "credits",
-          "minCount": 8,
+          "perSlotMinCount": [
+            8
+          ],
           "courses": [
             [
               352935,
@@ -33464,9 +33701,10 @@
           "name": "Introductory Government Courses",
           "description": "Pass two of the introductory government courses in the subfields of American Government (AM), Comparative Politics (CP), Political Theory (PT), and International Relations (IR)",
           "source": "https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            2
+          ],
           "courses": [
             [
               351395,
@@ -33482,7 +33720,9 @@
           "description": "Accumulate an additional 28 credits of government course work at the 2000-level or above.",
           "source": "https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf",
           "fulfilledBy": "credits",
-          "minCount": 28,
+          "perSlotMinCount": [
+            28
+          ],
           "courses": [
             [
               353989,
@@ -33514,7 +33754,9 @@
           "description": "The tenth GOVT course: must be worth a minimum of three credits, can be taken at any level. First-Year Writing Seminars cannot be used.",
           "source": "https://government.cornell.edu/sites/govt/files/Majorchecklist%202017_2018%20rv%20untrckd.pdf",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               351195,
@@ -33766,9 +34008,13 @@
           "name": "Accounting; Real Estate Development",
           "description": "HADM 1210, HADM 2210, HADM 2220, HADM 3210",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 4,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               351502
@@ -33788,9 +34034,12 @@
           "name": "Employment Relations; HR; Law",
           "description": "HADM 1150, HADM 2810, HADM 3870",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               351489
@@ -33807,9 +34056,11 @@
           "name": "Food and Beverage Management",
           "description": "HADM 2360, HADM 3350",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               351542
@@ -33823,9 +34074,10 @@
           "name": "Information Systems",
           "description": "HADM 1740",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               351483
@@ -33836,9 +34088,11 @@
           "name": "Management Communication",
           "description": "HADM 1650, HADM 3650",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               351477
@@ -33852,9 +34106,13 @@
           "name": "Operations",
           "description": "HADM 1350, HADM 1360, HADM 2010, HADM 3010",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 4,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               351465
@@ -33874,9 +34132,11 @@
           "name": "Properties Development and Management",
           "description": "HADM 2550, HADM 3550",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               351562
@@ -33890,9 +34150,11 @@
           "name": "Services Marketing",
           "description": "HADM 1410, HADM 2430",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               351468
@@ -33906,9 +34168,10 @@
           "name": "Strategy",
           "description": "HADM 4410",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               351829
@@ -33920,7 +34183,9 @@
           "description": "A minimum of 14 credits, 3000-level or higher, in SHA.",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
           "fulfilledBy": "credits",
-          "minCount": 14,
+          "perSlotMinCount": [
+            14
+          ],
           "courses": [
             [
               351552,
@@ -33964,7 +34229,9 @@
           "description": "A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.",
           "source": "https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               11,
@@ -34225,9 +34492,10 @@
           "name": "Pre 1800 Classes",
           "description": "3 of the nine courses must be in history before 1800 (Courses that fulfill the Arts & Sciences historical breadth requirement do not necessarily fulfill the History pre-1800 requirement.)",
           "source": "https://history.cornell.edu/undergraduate",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               352559,
@@ -34305,9 +34573,14 @@
           "name": "Core Courses",
           "description": "Students are required to complete five core courses: INFO 1200, INFO 1300, INFO 2040, INFO 2450, and INFO 2950.",
           "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements/core",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 5,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               366630
@@ -34330,9 +34603,12 @@
           "name": "Programming and Math Requirements",
           "description": "All Information Science majors are required to take CS 1110, Introduction to Computing Using Python, Calculus I, and a Statistics course. The list of approved Calculus I and Statistics is provided below. All classes used to complete major requirements must be taken for a letter grade. Advanced Placement credits may not be used to fulfill the Statistics requirement for students matriculating as of or after Fall 2015, however, they may be used to fulfill the Calculus requirement. Students that have taken CS 1112 should take CS 1133, Transition to Python, to be prepared for INFO 2950, Introduction to Data Science.",
           "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-cals/degree-requirements/programming-and-math",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               358526
@@ -34369,9 +34645,10 @@
           "name": "Electives",
           "description": "All students are required to complete three electives that are chosen from the following options: INFO 2300, CS 2110, CS 3110, CS 3410 or any INFO 3000+ or higher course including INFO 4900 (except INFO 4998). These courses must be taken for a letter grade, each must earn three or more credit hours, and all must be completed with a grade of C- or higher.Students may only fulfill one of their electives with INFO 4900 (3 credits or more).",
           "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350641,
@@ -34493,9 +34770,11 @@
           "name": "Probability, Statistics, and Optimization",
           "description": "ORIE 3300: Optimization I, ORIE 3500: Engineering Probability and Statistics II",
           "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               351723
@@ -34509,9 +34788,12 @@
           "name": "Information Systems",
           "description": "INFO 2300: Intermediate Design and Programming for the Web, ORIE 3800: Information Systems and Analysis or ORIE 3120: Practical Tools for Operations Research, Machine Learning and Data Science, one of -- INFO 3300: Data-Driven Web Applications, INFO 4300: Language and Information",
           "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               358551
@@ -34529,9 +34811,11 @@
           "name": "Economic, Organization, and Social Context",
           "description": "INFO 2040: Networks, one of -- INFO 2450: Communication and Technology, ENGRC 3350: Communications for Engineering Managers",
           "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               359378
@@ -34546,9 +34830,13 @@
           "name": "Engineering Mathematics",
           "description": "For majors in ISST, the sequence of required mathematics courses is MATH 1910, MATH 1920, MATH 2940, and finally, one of MATH 2930 or MATH 3040 or CS 2800.",
           "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/math",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 4,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               352255
@@ -34570,9 +34858,11 @@
           "name": "Engineering Distributions",
           "description": "The major requires ENGRD 2700 as an Engineering Distribution course. ENGRD 2110 is also required by the major and it is recommended that this course be taken as an Engineering Distribution course.",
           "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/math",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               358546
@@ -34594,9 +34884,10 @@
           "name": "Engineering Distriubtions",
           "description": "ENGRD 2020",
           "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               358608
@@ -34607,9 +34898,19 @@
           "name": "Required Major Courses",
           "description": "MAE 2210, MAE 2030, MAE 2250, MAE 3230, MAE 3240, MAE 3260, MAE 3270, (MAE 3780, ENGRD 2100, or PHYS 3360), MAE 4272, and MAE 4300",
           "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 10,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               358617
@@ -34662,7 +34963,9 @@
           "description": "Must be an upper-level mathematics course, which includes statistics, taken after Math 2940. A list of approved math electives is available online at www.mae.cornell.edu",
           "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350659,
@@ -34698,9 +35001,16 @@
           "name": "Major Required Classes",
           "description": "The following courses may be substituted for ORIE 3150, if not used to meet other require- ments: MATH 3110 (Introduction to Analysis), MATH 4130 (Honors Real Analysis), MATH 4310 (Linear Algebra), MATH 4330 (Honors Linear Algebra), any 600 level ORIE course.",
           "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 7,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               358529
@@ -34730,7 +35040,9 @@
           "description": "At least 9 credits of ORIE electives at the 4000 level or above",
           "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
           "fulfilledBy": "credits",
-          "minCount": 9,
+          "perSlotMinCount": [
+            9
+          ],
           "courses": [
             [
               352140,
@@ -34834,9 +35146,12 @@
           "name": "Engineering Distribution Courses",
           "description": "ENGRI 1xxx, ENGRD 2700, and ENGRD 2xxx. ENGRD 2110 is recommended",
           "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
           "courses": [
             [
               358622
@@ -34915,9 +35230,10 @@
           "name": "Statistics Prerequisite",
           "description": "Choose one: AEM 1200, BTRY 3010, BTRY 3080, CEE 3040, ECON 3110, ECON 3120, ECON 3130, ENGRD 2700ILRST 2100, ILRST 3080, ILRST 3110, MATH 1710, MATH 4710, MATH 4720, PAM 2100, PAM 2101, PSYCH 2500STSCI 2100, STSCI 2150, STSCI 2200, STSCI 3080, STSCI 3110, SOC 3010",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350154,
@@ -34944,9 +35260,10 @@
           "name": "Microeconomics Prerequisite",
           "description": "Choose one: ECON 1110 or ECON 3030 or PAM 2000",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350025,
@@ -34959,9 +35276,10 @@
           "name": "Introduction to Management",
           "description": "Choose one: AEM 1200, ILRID 1700, NCC 5540",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350811,
@@ -34974,9 +35292,10 @@
           "name": "Introduction to Marketing",
           "description": "Choose one: AEM 2400, NCC 5530, HADM 2410",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350542,
@@ -34989,9 +35308,10 @@
           "name": "Financial Accounting",
           "description": "Choose one: AEM 2210, HADM 2230, NCC 5500",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350518,
@@ -35004,9 +35324,10 @@
           "name": "Finance",
           "description": "Choose one: AEM 2241/5241, HADM 2250, NCC 5560",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business/",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               350814,
@@ -35028,9 +35349,10 @@
           "name": "Introductory Requirement",
           "description": "Choose COGST 1101 or COGST 2200",
           "source": "https://cogsci.cornell.edu/undergraduate-minor",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               351444,
@@ -35042,9 +35364,10 @@
           "name": "Lab Requirement",
           "description": "Choose COGST 4700 or COGST 4710",
           "source": "https://cogsci.cornell.edu/undergraduate-minor",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               353573,
@@ -35056,9 +35379,10 @@
           "name": "Three Courses at the 3000 or 4000 Level",
           "description": "Three courses at the 3000- and 4000-level in at least two departments (or certain suitable 2000- level courses by petition)",
           "source": "https://cogsci.cornell.edu/undergraduate-minor",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350841,
@@ -35104,9 +35428,10 @@
           "name": "Requirement 1",
           "description": "CS/ENGRD 2110 or 2112 or ENGRD 2140 or ECE 2400",
           "source": "https://www.cs.cornell.edu/undergrad/csminor",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               358546,
@@ -35119,9 +35444,10 @@
           "name": "Requirement 2",
           "description": "CS 3110 or CS 3410 or CS 3420/ECE 3140",
           "source": "https://www.cs.cornell.edu/undergrad/csminor",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 1,
+          "perSlotMinCount": [
+            1
+          ],
           "courses": [
             [
               358556,
@@ -35134,9 +35460,10 @@
           "name": "4 CS courses numbered 3000 or higher",
           "description": "CS 4090, CS 4997, CS 4998, CS 4999 and seminars are excluded. CS 2800 is allowed",
           "source": "https://www.cs.cornell.edu/undergrad/csminor",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 4,
+          "perSlotMinCount": [
+            4
+          ],
           "courses": [
             [
               352385,
@@ -35313,7 +35640,9 @@
           "description": "ECON 1100 or ECON 3030 or HADM 1410 or PAM 2000",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business-engineers/",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350335,
@@ -35327,7 +35656,9 @@
           "description": "Choose one: AEM 1200, AEM 2400, HADM 2410, ENGRI 1270, ILRD 1700, NCC 5530, NCC 5580ORIE 4152, ENGRG 4610, MAE 4610",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business-engineers/",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350542,
@@ -35345,7 +35676,9 @@
           "description": "AEM 2210 or HADM 2230 or NCC 5500 or ORIE 3150",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business-engineers/",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350518,
@@ -35360,7 +35693,9 @@
           "description": "AEM 2241/5241 OR HADM 2250 OR NCC 5560",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business-engineers/",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350814,
@@ -35375,7 +35710,9 @@
           "description": "AEM 4660",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business-engineers/",
           "fulfilledBy": "credits",
-          "minCount": 1.5,
+          "perSlotMinCount": [
+            1.5
+          ],
           "courses": [
             [
               364250
@@ -35387,7 +35724,9 @@
           "description": "Choose a course that will expand your business management skills in a field of your choice from the following.",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business-engineers/",
           "fulfilledBy": "credits",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               350563,
@@ -35443,9 +35782,10 @@
           "name": "Required Courses",
           "description": "ENGRD 2700, ORIE 3120, ORIE 4800",
           "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               358529,
@@ -35457,9 +35797,10 @@
           "name": "3 Courses from the following",
           "description": "ORIE 3150, ORIE 3300, ORIE 4150, ORIE 4580, ORIE 4810, ORIE 4850, ORIE 5100, ORIE 5120, ORIE 5770",
           "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               351710,
@@ -35482,9 +35823,11 @@
           "name": "MATH 2930 and MATH 2940",
           "description": "MATH 2930 and 2940",
           "source": "https://www.mae.cornell.edu/mae/programs/undergraduate-programs/minors",
-          "subRequirementProgress": "every-course-needed",
           "fulfilledBy": "courses",
-          "minCount": 2,
+          "perSlotMinCount": [
+            1,
+            1
+          ],
           "courses": [
             [
               352295
@@ -35512,9 +35855,10 @@
           "name": "3 courses from the following",
           "description": "ENGRD 2700, ORIE 3300, ORIE 3310, ORIE 3500, ORIE 3510, ORIE 4580",
           "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               351723,
@@ -35530,9 +35874,10 @@
           "name": "Three 3000 level or higher ORIE courses",
           "description": "Any ORIE courses at the 3000 level or higher.",
           "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors",
-          "subRequirementProgress": "any-can-count",
           "fulfilledBy": "courses",
-          "minCount": 3,
+          "perSlotMinCount": [
+            3
+          ],
           "courses": [
             [
               351710,
@@ -35629,7 +35974,9 @@
           "description": "A total of 18 credits in psychology. First-year seminars or AP courses cannot be counted towards the credit requirementsIt is strongly recommended that students take at least one course from each of the following three areas of psychology: PCD, BEN, S&P.",
           "source": "https://psychology.cornell.edu/minor",
           "fulfilledBy": "credits",
-          "minCount": 18,
+          "perSlotMinCount": [
+            18
+          ],
           "courses": [
             [
               351438,

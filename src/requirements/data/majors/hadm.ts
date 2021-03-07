@@ -17,9 +17,8 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 2220'],
       ['HADM 3210']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 4,
+    perSlotMinCount: [1, 1, 1, 1],
   },
   {
     name: 'Employment Relations; HR; Law',
@@ -27,9 +26,8 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSubRequirements(['HADM 1150'], ['HADM 2810'], ['HADM 3870']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [1, 1, 1],
   },
   {
     name: 'Food and Beverage Management',
@@ -37,9 +35,8 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSubRequirements(['HADM 2360'], ['HADM 3350']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'Information Systems',
@@ -47,9 +44,8 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSingleRequirement('HADM 1740'),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Management Communication',
@@ -57,9 +53,8 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSubRequirements(['HADM 1650'], ['HADM 3650']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'Operations',
@@ -72,9 +67,8 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 2010'],
       ['HADM 3010']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 4,
+    perSlotMinCount: [1, 1, 1, 1],
   },
   {
     name: 'Properties Development and Management',
@@ -82,9 +76,8 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSubRequirements(['HADM 2550'], ['HADM 3550']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'Services Marketing',
@@ -92,9 +85,8 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSubRequirements(['HADM 1410'], ['HADM 2430']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'Strategy',
@@ -102,9 +94,8 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSingleRequirement('HADM 4410'),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'SHA Electives',
@@ -113,7 +104,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
     checker: includesWithSingleRequirement('HADM 3***'),
     fulfilledBy: 'credits',
-    minCount: 14,
+    perSlotMinCount: [14],
   },
   {
     name: 'Non-HADM Electives',
@@ -130,9 +121,9 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       'A minimum of 18 credits, to be taken outside SHA. 3 of these 18 credits must be FWS.',
     source:
       'https://sha.cornell.edu/current-students/handbook/2015-2016-handbook/curriculum-requirements/',
-    checker: courseIsFWS,
+    checker: [courseIsFWS],
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'Free Electives',

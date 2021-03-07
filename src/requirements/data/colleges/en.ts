@@ -29,9 +29,8 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSubRequirements(['MATH 1910'], ['MATH 1920'], ['MATH 2930', 'MATH 2940']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [1, 1, 1],
   },
   {
     name: 'Physics',
@@ -40,9 +39,8 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSubRequirements(['PHYS 1112'], ['PHYS 2213']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'Chemistry',
@@ -53,19 +51,17 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CHEM 2090'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'First-Year Writing Seminars',
     description: 'All students are required to take two first-year writing seminars.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: courseIsFWS,
-    subRequirementProgress: 'any-can-count',
+    checker: [courseIsFWS],
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [2],
   },
   {
     name: 'Computing',
@@ -73,18 +69,17 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: includesWithSingleRequirement('CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Introduction to Engineering',
     description: 'One introduction to engineering (ENGRI) course.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: (course: Course): boolean => course.subject === 'ENGRI',
+    checker: [(course: Course): boolean => course.subject === 'ENGRI'],
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'Engineering Distribution',
@@ -92,10 +87,9 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'Two different category distribution courses (ENGRD), one of which may be required by the Major.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: (course: Course): boolean => course.subject === 'ENGRD',
-    subRequirementProgress: 'any-can-count',
+    checker: [(course: Course): boolean => course.subject === 'ENGRD'],
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [2],
   },
   {
     name: 'Liberal Studies Distribution: 6 courses',
@@ -104,13 +98,14 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'At least two courses must be at the 2000 level or higher.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
-    checker: (course: Course): boolean =>
-      engineeringLiberalArtsDistributions.some(
-        distribution => course.catalogDistr?.includes(distribution) ?? false
-      ),
-    subRequirementProgress: 'any-can-count',
+    checker: [
+      (course: Course): boolean =>
+        engineeringLiberalArtsDistributions.some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+    ],
     fulfilledBy: 'courses',
-    minCount: 6,
+    perSlotMinCount: [6],
   },
   {
     name: 'Liberal Studies Distribution: 3 categories',
@@ -127,10 +122,10 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
           course.catalogDistr?.includes(distribution) ?? false
         ),
     ],
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    minNumberOfSlots: 3,
     allowCourseDoubleCounting: true,
-    minCount: 3,
   },
   {
     name: 'Liberal Studies Distribution: 18 credits',
@@ -138,13 +133,15 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'In addition to six courses, the liberal studies distribution must total a minimum of 18 credits.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
-    checker: (course: Course): boolean =>
-      engineeringLiberalArtsDistributions.some(
-        distribution => course.catalogDistr?.includes(distribution) ?? false
-      ),
+    checker: [
+      (course: Course): boolean =>
+        engineeringLiberalArtsDistributions.some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+    ],
     fulfilledBy: 'credits',
+    perSlotMinCount: [18],
     allowCourseDoubleCounting: true,
-    minCount: 18,
   },
   {
     name: 'Advisor-Approved Electives',
@@ -162,37 +159,38 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/engineering-communications-program/technical',
-    allowCourseDoubleCounting: true,
-    checker: includesWithSubRequirements(
-      ['ENGRC 3500'],
-      ['ENGRC 3020'],
-      ['ENGRC 3350'],
-      ['ENGRC 3340'],
-      ['ENGRD 2640'],
-      ['AEP 2640'],
-      ['CHEME 4320'],
-      ['MAE 4272'],
-      ['BEE 4730'],
-      ['BEE 4890'],
-      ['BEE 4530'],
-      ['BEE 4590'],
-      ['CIS 3000'],
-      ['INFO 1200'],
-      ['COMM 3030'],
-      ['COMM 3020'],
-      ['ENGRC 3023'],
-      ['ENGRC 2640'],
-      ['ENGRC 3152'],
-      ['ENGRC 3160'],
-      ['ENGRC 4152'],
-      ['ENGRC 4530'],
-      ['ENGRC 4890'],
-      ['MSE 4030', 'MSE 4040'],
-      ['MSE 4050', 'MSE 4060']
+    checker: includesWithSingleRequirement(
+      'ENGRC 3500',
+      'ENGRC 3020',
+      'ENGRC 3350',
+      'ENGRC 3340',
+      'ENGRD 2640',
+      'AEP 2640',
+      'CHEME 4320',
+      'MAE 4272',
+      'BEE 4730',
+      'BEE 4890',
+      'BEE 4530',
+      'BEE 4590',
+      'CIS 3000',
+      'INFO 1200',
+      'COMM 3030',
+      'COMM 3020',
+      'ENGRC 3023',
+      'ENGRC 2640',
+      'ENGRC 3152',
+      'ENGRC 3160',
+      'ENGRC 4152',
+      'ENGRC 4530',
+      'ENGRC 4890',
+      'MSE 4030',
+      'MSE 4040',
+      'MSE 4050',
+      'MSE 4060'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
+    allowCourseDoubleCounting: true,
   },
 ];
 
