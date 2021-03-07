@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-click-outside="closeDropdownIfOpen">
     <button
       class="dropdown"
       type="button"
@@ -13,7 +13,7 @@
         <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
         {{ selected }}
       </div>
-      <drop-down-arrow :isFlipped="showDropdown" :fillColor="'#148481'" />
+      <drop-down-arrow :isFlipped="showDropdown" :fillColor="emGreen" />
     </button>
     <button
       v-else
@@ -24,8 +24,8 @@
       aria-haspopup="true"
       :aria-expanded="showDropdown"
     >
-      {{ selected }}
-      <drop-down-arrow :isFlipped="showDropdown" :fillColor="'#148481'" />
+      {{ selected === '' ? 'Select one (optional)' : selected }}
+      <drop-down-arrow :isFlipped="showDropdown" :fillColor="emGreen" />
     </button>
     <ul v-if="showDropdown" class="dropdown-content">
       <li v-for="option in relatedRequirements" :key="option.id">
@@ -52,7 +52,7 @@
           @keyup.enter="toggleSelectRequirement('')"
           tabindex="0"
         >
-          None of the above
+          None
         </a>
       </li>
     </ul>
@@ -61,10 +61,14 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+
+import { clickOutside } from '@/utilities';
 import DropDownArrow from '@/components/DropDownArrow.vue';
+import { emGreen } from '@/assets/scss/_variables.scss';
 
 type Data = {
   showDropdown: boolean;
+  emGreen: string;
 };
 
 export default Vue.extend({
@@ -83,6 +87,7 @@ export default Vue.extend({
   data(): Data {
     return {
       showDropdown: false,
+      emGreen,
     };
   },
   computed: {
@@ -94,10 +99,16 @@ export default Vue.extend({
       return chosenRequirement[0].name;
     },
   },
+  directives: {
+    'click-outside': clickOutside,
+  },
   methods: {
     toggleSelectRequirement(id: string) {
       this.showDropdown = !this.showDropdown;
       this.$emit('on-selected-change', id);
+    },
+    closeDropdownIfOpen() {
+      this.showDropdown = false;
     },
   },
 });
@@ -166,6 +177,12 @@ export default Vue.extend({
       flex-direction: row;
       align-items: center;
     }
+  }
+}
+
+@media only screen and (max-width: $small-breakpoint) {
+  .dropdown-content {
+    width: 90.5%;
   }
 }
 </style>

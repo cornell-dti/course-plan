@@ -11,7 +11,7 @@
       </div>
     </div>
     <div v-else class="newCourse-requirements-container newCourse-requirements">
-      This class does not automatically fulfill any requirements
+      This class does not automatically fulfill any requirements.
     </div>
     <div v-if="nonAutoRequirements.length > 0">
       <div class="newCourse-title">This class can fulfill the following requirement(s):</div>
@@ -24,8 +24,8 @@
       <div v-else>
         <div v-if="potentialRequirements.length > 0" class="warning">
           <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
-          We cannot check the requirements marked with a warning sign, so double check before
-          selecting
+          We cannot accurately check the requirements marked with the warning icon, so double check
+          before selecting.
         </div>
         <requirements-dropdown
           :relatedRequirements="relatedRequirements"
@@ -75,7 +75,9 @@ export default Vue.extend({
       return this.relatedRequirements.concat(this.potentialRequirements);
     },
     nonAutoRequirementsText(): string {
-      if (this.selectedRequirementID === '') this.nonAutoRequirements.map(it => it.name).join(', ');
+      if (this.selectedRequirementID === '') {
+        return this.nonAutoRequirements.map(it => it.name).join(', ');
+      }
       return this.nonAutoRequirements
         .map(it => it.name)
         .join(', ')
