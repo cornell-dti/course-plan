@@ -108,7 +108,7 @@ export default Vue.extend({
       return noneIfEmpty(this.courseObj.prereqs);
     },
     CURLink(): string {
-      const [subject, number] = this.courseObj.code.split(" ");
+      const [subject, number] = this.courseObj.code.split(' ');
       return `https://www.cureviews.org/course/${subject}/${number}`;
     },
     CUROverallRating() {
