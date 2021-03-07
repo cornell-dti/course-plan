@@ -34,7 +34,7 @@
 import Vue, { PropType } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import store from '@/store';
-import {deleteCourseFromSemesters} from '@/global-firestore-data';
+import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import getCurrentSeason, { getCurrentYear } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit

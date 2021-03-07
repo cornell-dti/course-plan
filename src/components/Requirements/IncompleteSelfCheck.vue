@@ -36,7 +36,7 @@ import Vue from 'vue';
 
 import { clickOutside } from '@/utilities';
 import store from '@/store';
-import { addCourseToSemester } from '@/global-firestore-data';
+import { addCourseToSemester, chooseSelectableRequirementOption } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
@@ -86,7 +86,12 @@ export default Vue.extend({
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(course);
       addCourseToSemester(season, year, newCourse);
-      this.$emit('addCourse', newCourse, this.subReqId);
+      if (this.subReqId) {
+        chooseSelectableRequirementOption({
+          ...store.state.selectableRequirementChoices,
+          [course.uniqueID]: this.subReqId,
+        });
+      }
     },
     openCourseModal() {
       this.isCourseModalOpen = true;

@@ -180,7 +180,8 @@ const autoRecomputeDerivedData = (): (() => void) =>
         .forEach(([courseUniqueId, reqId]) => {
           const course: FirestoreSemesterCourse =
             state.derivedCoursesData.courseMap[parseInt(courseUniqueId, 10)];
-          if (course) requirementToCoursesMap[reqId] = [...(requirementToCoursesMap[reqId] || []), course];
+          if (course)
+            requirementToCoursesMap[reqId] = [...(requirementToCoursesMap[reqId] || []), course];
         });
       const derivedSelectableRequirementData: DerivedSelectableRequirementData = {
         requirementToCoursesMap,

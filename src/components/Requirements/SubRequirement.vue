@@ -26,10 +26,7 @@
         </div>
       </div>
       <div class="col">
-        <p
-          v-if="!isCompleted"
-          class="sup-req-progress text-right incomplete-ptext"
-        >
+        <p v-if="!isCompleted" class="sup-req-progress text-right incomplete-ptext">
           {{ subReqProgress }}
         </p>
         <p v-if="isFulfilled" class="text-right completed-ptext">
@@ -40,10 +37,7 @@
         </p>
       </div>
     </button>
-    <div
-      v-if="displayDescription"
-      :class="[{ 'completed-ptext': isFulfilled }, 'description']"
-    >
+    <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
       <div>
         {{ subReq.requirement.description }}
         <a
@@ -55,10 +49,7 @@
           <strong>Learn More</strong></a
         >
       </div>
-      <div
-        v-if="subReq.requirement.checkerWarning"
-        class="requirement-checker-warning"
-      >
+      <div v-if="subReq.requirement.checkerWarning" class="requirement-checker-warning">
         <img
           class="requirement-checker-warning-icon"
           src="@/assets/images/warning.svg"
@@ -74,9 +65,7 @@
           >
             <div
               class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-wrapper"
-              @click="
-                showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown
-              "
+              @click="showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown"
             >
               <span>{{ selectedFulfillmentOption }}</span>
             </div>
@@ -89,9 +78,7 @@
             v-if="showFulfillmentOptionsDropdown"
           >
             <div
-              v-for="optionName in Object.keys(
-                subReq.requirement.fulfillmentOptions
-              )"
+              v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
               :key="optionName"
               class="toggleable-requirements-dropdown-content-item"
               @click="chooseFulfillmentOption(optionName)"
@@ -99,10 +86,7 @@
               <span>{{ optionName }}</span>
             </div>
           </div>
-          {{
-            subReq.requirement.fulfillmentOptions[selectedFulfillmentOption]
-              .description
-          }}
+          {{ subReq.requirement.fulfillmentOptions[selectedFulfillmentOption].description }}
         </div>
       </div>
       <div
@@ -114,19 +98,13 @@
         class="subreqcourse-wrapper"
       >
         <div v-for="(subReqCourseSlot, id) in subReqCoursesSlots" :key="id">
-          <div
-            v-if="subReqCourseSlot.isCompleted"
-            class="completedsubreqcourse-wrapper"
-          >
+          <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completed-sub-req-course
               :subReqCourseId="id"
               :courseTaken="subReqCourseSlot.courses[0]"
             />
           </div>
-          <div
-            v-if="!subReqCourseSlot.isCompleted"
-            class="incompletesubreqcourse-wrapper"
-          >
+          <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
             <incomplete-sub-req-course
               :subReq="subReq"
               :subReqCourseId="id"
@@ -146,20 +124,14 @@
         "
         class="subreqcourse-wrapper"
       >
-        <div
-          v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses"
-          :key="id"
-        >
+        <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
           <completed-sub-req-course
             :subReqCourseId="id"
             :courseTaken="convertCourse(selfCheckCourse)"
           />
         </div>
         <!-- TODO: only show incomplete-self-check if all courses not added -->
-        <incomplete-self-check
-          :subReqId="subReq.requirement.id"
-          @addCourse="addSelfCheckCourse"
-        />
+        <incomplete-self-check :subReqId="subReq.requirement.id" />
       </div>
     </div>
   </div>
@@ -180,10 +152,7 @@ import {
 } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 import fullCoursesJson from '@/assets/courses/typed-full-courses';
-import {
-  allocateSubjectColors,
-  chooseSelectableRequirementOption,
-} from '@/global-firestore-data';
+import { allocateSubjectColors, chooseSelectableRequirementOption } from '@/global-firestore-data';
 
 type CompletedSubReqCourseSlot = {
   readonly isCompleted: true;
@@ -195,9 +164,7 @@ type IncompleteSubReqCourseSlot = {
   readonly courses: readonly FirestoreSemesterCourse[];
 };
 
-export type SubReqCourseSlot =
-  | CompletedSubReqCourseSlot
-  | IncompleteSubReqCourseSlot;
+export type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
@@ -211,9 +178,7 @@ const generateSubReqIncompleteCourses = (
   const rosterCourses = eligibleCourseIds
     .filter(courseID => !allTakenCourseIds.has(courseID))
     .flatMap(courseID => fullCoursesJson[courseID] || []);
-  const subjectColors = allocateSubjectColors(
-    new Set(rosterCourses.map(it => it.subject))
-  );
+  const subjectColors = allocateSubjectColors(new Set(rosterCourses.map(it => it.subject)));
   return rosterCourses.map(rosterCourse =>
     cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
       rosterCourse,
@@ -259,18 +224,13 @@ export default Vue.extend({
       );
     },
     subReqCoursesSlots(): SubReqCourseSlot[] {
-      const subReqSpec = getMatchedRequirementFulfillmentSpecification(
-        this.subReq.requirement,
-        {
-          [this.subReq.requirement.id]: this.toggleableRequirementChoice,
-        }
-      );
+      const subReqSpec = getMatchedRequirementFulfillmentSpecification(this.subReq.requirement, {
+        [this.subReq.requirement.id]: this.toggleableRequirementChoice,
+      });
       if (subReqSpec === null) return [];
       const subReqEligibleCourses = subReqSpec.eligibleCourses;
 
-      const allTakenCourseIds = new Set(
-        this.subReq.courses.flat().map(course => course.courseId)
-      );
+      const allTakenCourseIds = new Set(this.subReq.courses.flat().map(course => course.courseId));
       const slots: SubReqCourseSlot[] = [];
 
       const coursesTaken = this.subReq.courses;
@@ -285,19 +245,13 @@ export default Vue.extend({
           if (coursesTaken.length === 1 && !this.isCompleted) {
             slots.push({
               isCompleted: false,
-              courses: generateSubReqIncompleteCourses(
-                allTakenCourseIds,
-                subReqEligibleCourses[i]
-              ),
+              courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[i]),
             });
           }
         } else {
           slots.push({
             isCompleted: false,
-            courses: generateSubReqIncompleteCourses(
-              allTakenCourseIds,
-              subReqEligibleCourses[i]
-            ),
+            courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[i]),
           });
         }
       });
@@ -334,20 +288,7 @@ export default Vue.extend({
     },
     chooseFulfillmentOption(option: string) {
       this.showFulfillmentOptionsDropdown = false;
-      this.$emit(
-        'changeToggleableRequirementChoice',
-        this.subReq.requirement.id,
-        option
-      );
-    },
-    addSelfCheckCourse(course: FirestoreSemesterCourse, requirementID: string) {
-      // TODO this.fulfilledSelfCheckCourses.push(course);
-      if (requirementID) {
-        chooseSelectableRequirementOption({
-          ...store.state.selectableRequirementChoices,
-          [course.uniqueID]: requirementID,
-        });
-      }
+      this.$emit('changeToggleableRequirementChoice', this.subReq.requirement.id, option);
     },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);
