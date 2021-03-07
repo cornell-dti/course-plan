@@ -22,12 +22,22 @@ type DerivedCoursesData = {
   readonly courseToSemesterMap: Readonly<Record<number, FirestoreSemester>>;
 };
 
+/**
+ * Some course data that can be derived from selectable requirement choices, but added to the global store
+ * for efficiency and ease of access.
+ */
+type DerivedSelectableRequirementData = {
+  // Mapping from requirement ID to the user-selected courses that fulfill the requirement.
+  readonly requirementToCoursesMap: Readonly<Record<string, FirestoreSemesterCourse[]>>;
+};
+
 export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
   userName: FirestoreUserName;
   onboardingData: AppOnboardingData;
   semesters: readonly FirestoreSemester[];
   derivedCoursesData: DerivedCoursesData;
+  derivedSelectableRequirementData: DerivedSelectableRequirementData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   selectableRequirementChoices: AppSelectableRequirementChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
@@ -63,6 +73,9 @@ const store: TypedVuexStore = new TypedVuexStore({
       courseMap: {},
       courseToSemesterMap: {},
     },
+    derivedSelectableRequirementData: {
+      requirementToCoursesMap: {},
+    },
     toggleableRequirementChoices: {},
     selectableRequirementChoices: {},
     userRequirementsMap: {},
@@ -90,6 +103,12 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setDerivedCourseData(state: VuexStoreState, data: DerivedCoursesData) {
       state.derivedCoursesData = data;
+    },
+    setDerivedSelectableRequirementData(
+      state: VuexStoreState,
+      data: DerivedSelectableRequirementData
+    ) {
+      state.derivedSelectableRequirementData = data;
     },
     setToggleableRequirementChoices(
       state: VuexStoreState,
@@ -153,6 +172,20 @@ const autoRecomputeDerivedData = (): (() => void) =>
         courseToSemesterMap,
       };
       store.commit('setDerivedCourseData', derivedCourseData);
+    }
+    if (payload.type === 'setSelectableRequirementChoices') {
+      const requirementToCoursesMap: Record<string, FirestoreSemesterCourse[]> = {};
+      Object.entries(state.selectableRequirementChoices)
+        .sort((a, b) => parseInt(a[1], 10) - parseInt(b[1], 10))
+        .forEach(([courseUniqueId, reqId]) => {
+          const course: FirestoreSemesterCourse =
+            state.derivedCoursesData.courseMap[parseInt(courseUniqueId, 10)];
+          if (course) requirementToCoursesMap[reqId] = [...(requirementToCoursesMap[reqId] || []), course];
+        });
+      const derivedSelectableRequirementData: DerivedSelectableRequirementData = {
+        requirementToCoursesMap,
+      };
+      store.commit('setDerivedSelectableRequirementData', derivedSelectableRequirementData);
     }
     // Recompute requirements
     if (

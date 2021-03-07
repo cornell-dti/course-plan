@@ -312,14 +312,7 @@ export default Vue.extend({
     },
     fulfilledSelfCheckCourses(): FirestoreSemesterCourse[] {
       const reqId = this.subReq.requirement.id;
-      const temp = Object.entries(store.state.selectableRequirementChoices)
-        .filter(([_, v]) => v === reqId)
-        .map(
-          ([k, _]) => store.state.derivedCoursesData.courseMap[parseInt(k, 10)]
-        )
-        .filter(course => !!course);
-      console.log(temp);
-      return temp;
+      return store.state.derivedSelectableRequirementData.requirementToCoursesMap[reqId];
     },
   },
   directives: {
