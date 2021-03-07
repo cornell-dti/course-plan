@@ -9,7 +9,9 @@
         <span class="onboarding-subHeader--font"> Transfer Credits (Optional)</span>
       </div>
       <div class="onboarding-inputs">
-        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
+        <div
+          class="onboarding-inputWrapper onboarding-inputWrapper--college onboarding-inputWrapper--description"
+        >
           <div class="onboarding-subHeader">
             <span class="onboarding-subHeader--font">AP Credits</span>
           </div>
@@ -30,10 +32,12 @@
                   :choice="exam.score"
                   @on-select="score => selectAPScore(score, index)"
                 />
+                <!-- 
+                TODO: BRING THIS BACK POST-LAUNCH
                 <div class="onboarding-select--columnCenter">
                   <label class="onboarding-label">Credits</label>
                   <label class="college-major-minor-placeholder">{{ getExamCredit(exam) }}</label>
-                </div>
+                </div> -->
                 <div class="onboarding-select--column-removeExam">
                   <div
                     class="onboarding-remove"
@@ -72,10 +76,12 @@
                   :choice="exam.score"
                   @on-select="score => selectIBScore(score, index)"
                 />
+                <!-- 
+                TODO: BRING THIS BACK POST-LAUNCH
                 <div class="onboarding-select--columnCenter">
                   <label class="onboarding-label">Credits</label>
                   <label class="college-major-minor-placeholder">{{ getExamCredit(exam) }}</label>
-                </div>
+                </div> -->
                 <div class="onboarding-select--column-removeExam">
                   <div
                     class="onboarding-remove"
@@ -95,6 +101,15 @@
             </div>
           </div>
         </div>
+        <div class="onboarding-transferCreditDescription">
+          *To add credit from external institutions, please add the equivalent Cornell course to
+          your schedule later. Learn more about Transfer Credits
+          <a target="_blank" href="https://courses.cornell.edu/content.php?catoid=41&navoid=11629"
+            >here</a
+          >.
+        </div>
+        <!-- 
+        TODO: BRING THIS BACK POST-LAUNCH
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
           <div class="onboarding-subHeader">
             <span class="onboarding-subHeader--font">Transferred Course Credits</span>
@@ -157,7 +172,7 @@
             </label>
             <label class="onboarding-label"> Credits</label>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -168,7 +183,7 @@ import Vue, { PropType } from 'vue';
 import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
-import CourseSelector, { MatchingCourseSearchResult } from '../NewCourse/CourseSelector.vue';
+import { MatchingCourseSearchResult } from '../NewCourse/CourseSelector.vue';
 
 const placeholderText = 'Select one';
 
@@ -218,7 +233,7 @@ export const getExamCredit = (exam: FirestoreAPIBExam): number => {
 
 export default Vue.extend({
   components: {
-    CourseSelector,
+    // CourseSelector,
     OnboardingTransferSwimming,
     OnboardingTransferExamPropertyDropdown,
   },

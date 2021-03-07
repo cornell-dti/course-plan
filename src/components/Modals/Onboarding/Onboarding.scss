@@ -195,6 +195,10 @@ input {
     color: $darkGray2;
     margin-bottom: 0.5rem;
 
+    &--header {
+      font-weight: 800;
+    }
+
     &--bottom {
       display: flex;
       justify-self: end;
@@ -237,6 +241,7 @@ input {
         margin-right: 1.5rem;
       }
     }
+
     &--college {
       &:not(:last-child) {
         margin-bottom: 1.5rem;
@@ -244,6 +249,10 @@ input {
       &:first-child {
         margin-bottom: 2rem;
       }
+    }
+
+    &--description {
+      margin-bottom: 1rem !important;
     }
   }
 
@@ -473,6 +482,14 @@ input {
   &-required-star {
     color: $emGreen;
   }
+
+  &-transferCreditDescription {
+    font-size: 14px;
+    color: $secondaryGray;
+    a {
+      color: $yuxuanBlue;
+    }
+  }
 }
 
 .editing {
@@ -509,6 +526,8 @@ select option[disabled]:first-child {
   margin-top: 30px;
 }
 .alignCenter {
+  // onboarding-label height + padding
+  padding-top: 27px;
   display: flex;
   flex-direction: column;
   align-items: center;

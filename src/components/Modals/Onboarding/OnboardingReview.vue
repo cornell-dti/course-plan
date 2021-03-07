@@ -89,13 +89,16 @@
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-reviewExam">
             <div class="alignLeft">
-              <label class="onboarding-label">AP Credits</label>
+              <label class="onboarding-label onboarding-label--header">AP Credits</label>
+              <label class="onboarding-label">Subject</label>
               <div v-for="(exam, index) in onboardingData.exam" :key="'AP' + index">
                 <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
                   exam.subject
                 }}</label>
               </div>
-              <label class="onboarding-label addSpaceTop">IB Credits</label>
+              <label class="onboarding-label addSpaceTop onboarding-label--header"
+                >IB Credits</label
+              >
               <div v-for="(exam, index) in onboardingData.exam" :key="'IB' + index">
                 <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
                   exam.subject
@@ -116,6 +119,8 @@
                 }}</label>
               </div>
             </div>
+            <!-- 
+              TODO: BRING THIS BACK POSTLAUNCH
             <div class="alignCenter">
               <label class="onboarding-label">Credit</label>
               <div v-for="(exam, index) in onboardingData.exam" :key="'APCredit' + index">
@@ -129,9 +134,11 @@
                   getExamCredit(exam)
                 }}</label>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
+        <!-- 
+        TODO: BRING THIS BACK POSTLAUNCH
         <div class="onboarding-subHeader2-fillRow">
           <span class="onboarding-subHeader2-review"> Transferred Course Credits</span>
         </div>
@@ -149,6 +156,7 @@
             </div>
           </div>
         </div>
+        -->
         <div class="onboarding-bottomWrapper">
           <label class="onboarding-subHeader2-review">Total Transfer Credits:</label>
           <div class="onboarding-label--bottom">
