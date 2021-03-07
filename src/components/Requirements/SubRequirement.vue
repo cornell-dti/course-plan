@@ -262,7 +262,7 @@ export default Vue.extend({
         ? `${this.subReq.minCountFulfilled}/${this.subReq.minCountRequired} ${this.subReq.fulfilledBy}`
         : 'self check';
     },
-    fulfilledSelfCheckCourses(): FirestoreSemesterCourse[] {
+    fulfilledSelfCheckCourses(): readonly FirestoreSemesterCourse[] {
       const reqId = this.subReq.requirement.id;
       return store.state.derivedSelectableRequirementData.requirementToCoursesMap[reqId];
     },
