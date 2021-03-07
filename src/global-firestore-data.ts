@@ -137,6 +137,7 @@ export const deleteCourseFromSemester = (
   });
   deleteCourseFromSelectableRequirements(courseUniqueID);
 };
+
 export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: GTag): void => {
   GTagEvent(gtag, 'delete-course');
   editSemesters(oldSemesters =>
