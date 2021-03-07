@@ -152,7 +152,7 @@ import {
 } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 import fullCoursesJson from '@/assets/courses/typed-full-courses';
-import { allocateSubjectColors, chooseSelectableRequirementOption } from '@/global-firestore-data';
+import { allocateSubjectColors } from '@/global-firestore-data';
 
 type CompletedSubReqCourseSlot = {
   readonly isCompleted: true;

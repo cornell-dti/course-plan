@@ -131,7 +131,6 @@ import {
   editSemester,
   addCourseToSemester,
   deleteCourseFromSemester,
-  chooseSelectableRequirementOption,
 } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 import store from '@/store';
@@ -319,13 +318,7 @@ export default Vue.extend({
     },
     addCourse(data: CornellCourseRosterCourse, requirementID: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(data);
-      addCourseToSemester(this.type, this.year, newCourse);
-      if (requirementID) {
-        chooseSelectableRequirementOption({
-          ...store.state.selectableRequirementChoices,
-          [newCourse.uniqueID]: requirementID,
-        });
-      }
+      addCourseToSemester(this.type, this.year, newCourse, requirementID, this.gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);

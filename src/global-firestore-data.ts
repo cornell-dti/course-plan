@@ -90,6 +90,7 @@ export const addCourseToSemester = (
   season: FirestoreSemesterType,
   year: number,
   newCourse: FirestoreSemesterCourse,
+  requirementID?: string,
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'add-course');
@@ -107,6 +108,9 @@ export const addCourseToSemester = (
       compareFirestoreSemesters
     );
   });
+  if (requirementID) {
+    addCourseToSelectableRequirements(newCourse.uniqueID, requirementID);
+  }
 };
 
 export const deleteCourseFromSemester = (
@@ -146,6 +150,33 @@ export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: GTag): 
   deleteCourseFromSelectableRequirements(courseUniqueID);
 };
 
+export const chooseToggleableRequirementOption = (
+  toggleableRequirementChoices: AppToggleableRequirementChoices
+): void => {
+  toggleableRequirementChoicesCollection
+    .doc(store.state.currentFirebaseUser.email)
+    .set(toggleableRequirementChoices);
+};
+
+const chooseSelectableRequirementOption = (
+  selectableRequirementChoices: AppSelectableRequirementChoices
+): void => {
+  selectableRequirementChoicesCollection
+    .doc(store.state.currentFirebaseUser.email)
+    .set(selectableRequirementChoices);
+};
+
+export const addCourseToSelectableRequirements = (
+  courseUniqueID: number,
+  requirementID: string
+): void => {
+  if (!requirementID) return;
+  chooseSelectableRequirementOption({
+    ...store.state.selectableRequirementChoices,
+    [courseUniqueID]: requirementID,
+  });
+};
+
 export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): void => {
   chooseSelectableRequirementOption(
     Object.assign(
@@ -155,22 +186,6 @@ export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): 
         .map(([k, v]) => ({ [k]: v }))
     )
   );
-};
-
-export const chooseToggleableRequirementOption = (
-  toggleableRequirementChoices: AppToggleableRequirementChoices
-): void => {
-  toggleableRequirementChoicesCollection
-    .doc(store.state.currentFirebaseUser.email)
-    .set(toggleableRequirementChoices);
-};
-
-export const chooseSelectableRequirementOption = (
-  selectableRequirementChoices: AppSelectableRequirementChoices
-): void => {
-  selectableRequirementChoicesCollection
-    .doc(store.state.currentFirebaseUser.email)
-    .set(selectableRequirementChoices);
 };
 
 /** @returns a tuple [color of the subject, whether new colors are added] */

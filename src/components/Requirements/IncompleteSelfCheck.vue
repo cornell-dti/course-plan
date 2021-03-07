@@ -36,7 +36,7 @@ import Vue from 'vue';
 
 import { clickOutside } from '@/utilities';
 import store from '@/store';
-import { addCourseToSemester, chooseSelectableRequirementOption } from '@/global-firestore-data';
+import { addCourseToSemester, addCourseToSelectableRequirements } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
@@ -83,23 +83,12 @@ export default Vue.extend({
     },
     addExistingCourse(option: string) {
       this.showDropdown = false;
-      if (this.subReqId) {
-        chooseSelectableRequirementOption({
-          ...store.state.selectableRequirementChoices,
-          [this.selfCheckCourses[option].uniqueID]: this.subReqId,
-        });
-      }
+      addCourseToSelectableRequirements(this.selfCheckCourses[option].uniqueID, this.subReqId);
     },
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterType, year: number) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(course);
-      addCourseToSemester(season, year, newCourse);
-      if (this.subReqId) {
-        chooseSelectableRequirementOption({
-          ...store.state.selectableRequirementChoices,
-          [course.uniqueID]: this.subReqId,
-        });
-      }
+      addCourseToSemester(season, year, newCourse, this.subReqId, this.gtag);
     },
     openCourseModal() {
       this.isCourseModalOpen = true;

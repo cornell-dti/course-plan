@@ -65,7 +65,6 @@
           @new-semester="openSemesterModal"
           @delete-semester="deleteSemester"
           @open-caution-modal="openCautionModal"
-          @add-course-to-semester="addNewCourse"
         />
       </div>
       <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
@@ -98,7 +97,7 @@ import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
 import { GTagEvent } from '@/gtag';
-import { addSemester, deleteSemester, addCourseToSemester } from '@/global-firestore-data';
+import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 
 export default Vue.extend({
@@ -173,11 +172,8 @@ export default Vue.extend({
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
     },
-    addNewCourse(season: FirestoreSemesterType, year: number, course: FirestoreSemesterCourse) {
-      addCourseToSemester(season, year, course);
-    },
     addSemester(type: FirestoreSemesterType, year: number) {
-      addSemester(type, year);
+      addSemester(type, year, this.gtag);
       this.openSemesterConfirmationModal(type, year, true);
     },
     deleteSemester(type: FirestoreSemesterType, year: number) {
