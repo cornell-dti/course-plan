@@ -74,7 +74,7 @@ export default Vue.extend({
   },
   methods: {
     onReset() {
-      deleteCourseFromSemesters(this.courseTaken.uniqueId, this.gtag);
+      deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
     },
   },
 });

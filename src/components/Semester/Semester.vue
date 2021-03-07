@@ -318,13 +318,13 @@ export default Vue.extend({
     },
     addCourse(data: CornellCourseRosterCourse, requirementID: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(data);
-      addCourseToSemester(this.type, this.year, newCourse, requirementID, this.gtag);
+      addCourseToSemester(this.type, this.year, newCourse, requirementID, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
-      deleteCourseFromSemester(this.type, this.year, uniqueID, this.gtag);
+      deleteCourseFromSemester(this.type, this.year, uniqueID, this.$gtag);
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
     },

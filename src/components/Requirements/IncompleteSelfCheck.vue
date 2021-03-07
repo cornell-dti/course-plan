@@ -88,7 +88,7 @@ export default Vue.extend({
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterType, year: number) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(course);
-      addCourseToSemester(season, year, newCourse, this.subReqId, this.gtag);
+      addCourseToSemester(season, year, newCourse, this.subReqId, this.$gtag);
     },
     openCourseModal() {
       this.isCourseModalOpen = true;
