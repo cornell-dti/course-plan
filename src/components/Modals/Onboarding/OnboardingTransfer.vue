@@ -165,7 +165,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
+import { examData as reqsData, ExamRequirements } from '@/requirements/data/exams/ExamCredit';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
 import CourseSelector, { MatchingCourseSearchResult } from '../NewCourse/CourseSelector.vue';
@@ -193,6 +193,7 @@ type Data = {
 const scoresAP = [1, 2, 3, 4, 5];
 const scoresIB = [1, 2, 3, 4, 5, 6, 7];
 const existingAP: Record<string, boolean> = {};
+const unmodifiedReqsData = { ...reqsData };
 // filter duplicate exam names and ones already selected
 reqsData.AP = reqsData.AP.filter(ap => {
   const inExisting = ap.name in existingAP;
@@ -210,10 +211,16 @@ const subjectsAP = reqsData.AP.map(it => it.name);
 const subjectsIB = reqsData.IB.map(it => it.name);
 
 export const getExamCredit = (exam: FirestoreAPIBExam): number => {
-  const relevantExamFromExamData = reqsData[exam.type].find(it => it.name === exam.subject);
-  if (relevantExamFromExamData == null) return 0;
-  const { fulfillment } = relevantExamFromExamData;
-  return exam.score < fulfillment.minimumScore ? 0 : fulfillment.credits;
+  const allExamsWithSameName: ExamRequirements[] = unmodifiedReqsData[exam.type].filter(
+    it => it.name === exam.subject
+  );
+  let mostPossibleCredit = 0;
+  for (const examWithSameName of allExamsWithSameName) {
+    if (exam.score >= examWithSameName.fulfillment.minimumScore) {
+      mostPossibleCredit = Math.max(mostPossibleCredit, examWithSameName.fulfillment.credits);
+    }
+  }
+  return mostPossibleCredit;
 };
 
 export default Vue.extend({
