@@ -80,7 +80,7 @@ export default Vue.extend({
         directlyRelatedRequirements,
         selfCheckRequirements,
       } = getRelatedUnfulfilledRequirements(
-        selectedCourse.id,
+        selectedCourse,
         store.state.groupedRequirementFulfillmentReport,
         store.state.toggleableRequirementChoices
       );
@@ -113,15 +113,12 @@ export default Vue.extend({
     },
     addCourse() {
       if (this.selectedCourse == null) return;
-      const { roster, title } = this.selectedCourse;
+      const { roster, code } = this.selectedCourse;
       const requirementID = this.selectedRequirementID;
-
-      const courseCode = title.substring(0, title.indexOf(':'));
-      const subject = courseCode.split(' ')[0];
-      const number = courseCode.split(' ')[1];
+      const [subject, number] = code.split(' ');
 
       fetch(
-        `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`
+        `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${code}`
       )
         .then(res => res.json())
         .then(resultJSON => {

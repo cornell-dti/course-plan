@@ -188,7 +188,7 @@ export function computeFulfillmentCoursesAndStatistics(
 
   if (minNumberOfSlots != null) {
     const minCountFulfilled = subRequirementProgress.reduce(
-      (acc, progress, index) => acc + (progress > perSlotMinCount[index] ? 1 : 0),
+      (acc, progress, index) => acc + (progress >= perSlotMinCount[index] ? 1 : 0),
       0
     );
     return {
@@ -210,7 +210,7 @@ export function computeFulfillmentCoursesAndStatistics(
 }
 
 export function getRelatedUnfulfilledRequirements(
-  courseID: number,
+  { courseId, code, credits }: Readonly<{ courseId: number; code: string; credits: number }>,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
   toggleableRequirementChoices: AppToggleableRequirementChoices
 ): {
@@ -224,7 +224,12 @@ export function getRelatedUnfulfilledRequirements(
       it => it.minCountFulfilled < it.minCountRequired
     );
     for (let j = 0; j < subreqs.length; j += 1) {
-      const subRequirement = subreqs[j].requirement;
+      const {
+        requirement: subRequirement,
+        courses: existingCoursesInSlots,
+        minCountFulfilled: existingMinCountFulfilled,
+      } = subreqs[j];
+      const existingCourses = existingCoursesInSlots.flat();
       const requirementSpec = getMatchedRequirementFulfillmentSpecification(
         subRequirement,
         toggleableRequirementChoices
@@ -238,8 +243,15 @@ export function getRelatedUnfulfilledRequirements(
       }
       if (requirementSpec != null && subRequirement.checkerWarning == null) {
         const allEligibleCourses = requirementSpec.eligibleCourses.flat();
-        if (allEligibleCourses.includes(courseID)) {
-          directlyRelatedRequirements.push(subRequirement);
+        if (allEligibleCourses.includes(courseId)) {
+          const fulfillmentStatisticsWithNewCourse = computeFulfillmentCoursesAndStatistics(
+            subRequirement,
+            [...existingCourses, { uniqueId: -1, courseId, code, credits }],
+            toggleableRequirementChoices
+          );
+          if (fulfillmentStatisticsWithNewCourse.minCountFulfilled > existingMinCountFulfilled) {
+            directlyRelatedRequirements.push(subRequirement);
+          }
         }
       }
     }

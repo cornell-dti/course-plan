@@ -17,8 +17,7 @@
         :class="['search-result', currentFocus === index ? 'autocomplete-active' : '']"
         @click="selectCourse(matchingCourse)"
       >
-        {{ matchingCourse.title }}
-        <input type="hidden" :value="matchingCourse.title" :name="matchingCourse.roster" />
+        {{ matchingCourse.code }}: {{ matchingCourse.title }}
       </div>
     </div>
   </div>
@@ -26,38 +25,36 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import coursesJSON from '@/assets/courses/courses.json';
-
-import { CourseJson } from '@/requirements/courses-json-generator';
+import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
 export type MatchingCourseSearchResult = {
+  readonly courseId: number;
+  readonly code: string;
   readonly title: string;
   readonly roster: string;
-  readonly id: number;
+  readonly credits: number;
 };
 
-const getMatchingCourses = (
-  searchText: string,
-  courses: CourseJson
-): readonly MatchingCourseSearchResult[] => {
+const getMatchingCourses = (searchText: string): readonly MatchingCourseSearchResult[] => {
   // search after value length of 2 to reduce search times of courses
   if (!searchText || searchText.length < 2) return [];
   /* code array for results that contain course code and title array for results that contain title */
   const code: MatchingCourseSearchResult[] = [];
   const title: MatchingCourseSearchResult[] = [];
 
-  for (const attr in courses) {
-    if (courses[attr]) {
-      const result = {
-        title: `${attr}: ${courses[attr].t}`,
-        roster: courses[attr].r,
-        id: courses[attr].i,
-      };
-      if (attr.toUpperCase().includes(searchText) && attr !== 'lastScanned') {
-        code.push(result);
-      } else if (courses[attr].t && courses[attr].t.toUpperCase().includes(searchText)) {
-        title.push(result);
-      }
+  for (const course of fullCoursesArray) {
+    const courseCode = `${course.subject} ${course.catalogNbr}`;
+    const result = {
+      courseId: course.crseId,
+      code: courseCode,
+      title: course.titleLong,
+      roster: course.roster,
+      credits: course.enrollGroups[0].unitsMaximum,
+    };
+    if (courseCode.toUpperCase().includes(searchText)) {
+      code.push(result);
+    } else if (course.titleLong.toUpperCase().includes(searchText)) {
+      title.push(result);
     }
   }
 
@@ -84,7 +81,7 @@ export default Vue.extend({
   },
   computed: {
     matches(): readonly MatchingCourseSearchResult[] {
-      return getMatchingCourses(this.searchText.toUpperCase(), coursesJSON);
+      return getMatchingCourses(this.searchText.toUpperCase());
     },
   },
   mounted() {
@@ -105,7 +102,7 @@ export default Vue.extend({
     },
     selectCourse(result: MatchingCourseSearchResult) {
       this.$emit('on-select', result);
-      this.searchText = result.title;
+      this.searchText = `${result.code}: ${result.title}`;
       this.currentFocus = -1;
     },
     onEnter() {
