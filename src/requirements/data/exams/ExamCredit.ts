@@ -293,7 +293,7 @@ export const examData: ExamData = {
   ],
   IB: [
     {
-      name: 'Chemical And Physical Systems',
+      name: 'Chemical and Physical Systems',
       fulfillment: {
         courseEquivalents: {
           DEFAULT: [355142, 355143], // PHYS 1101, PHYS 1102
@@ -441,7 +441,7 @@ function userDataToCourses(
           courses.push({
             courseId: 10,
             uniqueId: -1,
-            code: `CREDITS ${exam.fulfillment.credits}`,
+            code: `${examType} ${exam.name}`,
             credits: exam.fulfillment.credits,
           });
         }
@@ -451,7 +451,7 @@ function userDataToCourses(
   return courses;
 }
 
-function getCourseEquivalentsFromOneMajor(
+export function getCourseEquivalentsFromOneMajor(
   college: string,
   major: string,
   userData: ExamsTaken
