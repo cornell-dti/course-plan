@@ -58,6 +58,7 @@ export default Vue.extend({
       selectedCourse: null as MatchingCourseSearchResult | null,
       selectedRequirementID: '',
       requirementsThatAllowDoubleCounting: [] as readonly string[],
+      // relatedRequirements : the requirements that don't allow double counting
       relatedRequirements: [] as readonly RequirementWithIDSourceType[],
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
       editMode: false,

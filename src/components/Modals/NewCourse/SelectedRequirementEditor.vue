@@ -35,7 +35,15 @@
         />
       </div>
     </div>
-    <div v-if="!editMode" class="newCourse-link" @click="toggleEditMode()">Edit Requirements</div>
+    <a
+      v-if="!editMode"
+      class="newCourse-link"
+      @click="toggleEditMode()"
+      @keyup.enter="toggleEditMode()"
+      tabindex="0"
+    >
+      Edit Requirements
+    </a>
   </div>
 </template>
 
@@ -54,11 +62,13 @@ export default Vue.extend({
       type: Array as PropType<readonly string[]>,
       required: true,
     },
-    relatedRequirements: {
+    // self check requirements
+    potentialRequirements: {
       type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
       required: true,
     },
-    potentialRequirements: {
+    // all the other ones that don’t allow double counting
+    relatedRequirements: {
       type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
       required: true,
     },
@@ -71,6 +81,8 @@ export default Vue.extend({
         .map(it => it.name);
       return [...this.requirementsThatAllowDoubleCounting, ...chosenRequirementNames].join(', ');
     },
+    // nonAutoRequirements = relatedRequirements + potentialRequirements
+    // All the requirements that are not automatically associated with the course
     nonAutoRequirements(): { readonly id: string; readonly name: string }[] {
       return this.relatedRequirements.concat(this.potentialRequirements);
     },
