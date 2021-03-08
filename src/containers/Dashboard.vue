@@ -179,7 +179,7 @@ export default Vue.extend({
     },
 
     endOnboarding() {
-      if (!this.isMobile) {
+      if (!this.isMobile && !this.isEditingProfile) {
         this.welcomeHidden = true;
       }
       this.loaded = true;
