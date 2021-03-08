@@ -93,9 +93,7 @@ export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?:
       )
     );
   }
-  editSemesters(oldSemesters =>
-    oldSemesters.filter(sem => sem.type !== type || sem.year !== year)
-  );
+  editSemesters(oldSemesters => oldSemesters.filter(sem => sem.type !== type || sem.year !== year));
 };
 
 export const addCourseToSemester = (

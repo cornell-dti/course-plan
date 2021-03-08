@@ -17,7 +17,7 @@
         <div class="subreq-name">
           <p
             :class="[
-              { 'sup-req': !isFulfilled },
+              { 'sub-req': !isFulfilled },
               isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
             ]"
           >
@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="col">
-        <p v-if="!isCompleted" class="sup-req-progress text-right incomplete-ptext">
+        <p v-if="!isCompleted" class="sub-req-progress text-right incomplete-ptext">
           {{ subReqProgress }}
         </p>
         <p v-if="isFulfilled" class="text-right completed-ptext">
@@ -384,7 +384,7 @@ button.view {
     color: $lightPlaceholderGray;
   }
 }
-.sup-req {
+.sub-req {
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
