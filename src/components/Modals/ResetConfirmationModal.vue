@@ -26,10 +26,11 @@
     </flexible-modal>
   </div>
 </template>
-<script>
+<script lang="ts">
 import FlexibleModal from './FlexibleModal.vue';
+import Vue from 'vue';
 
-export default {
+export default Vue.extend({
   components: { FlexibleModal },
   props: {
     reqName: { type: String, required: true },
@@ -37,19 +38,19 @@ export default {
     value: { type: Boolean, required: true },
   },
   methods: {
-    closeCurrentModal() {
+    closeCurrentModal(): void {
       this.$emit('input', false);
     },
-    resetClicked() {
+    resetClicked(): void {
       this.closeCurrentModal();
       this.$emit('close-reset-modal', true);
     },
-    closeClicked() {
+    closeClicked(): void {
       this.closeCurrentModal();
       this.$emit('close-reset-modal', false);
     },
   },
-};
+});
 </script>
 <style scoped lang="scss">
 .content-confirmation {
