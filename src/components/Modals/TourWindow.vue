@@ -60,9 +60,9 @@ export default Vue.extend({
 .blackout {
   z-index: 100;
   background-color: rgba(0, 0, 0, 0.5);
-  position: absolute;
+  position: fixed;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   left: 0px;
   bottom: 0px;
   display: flex;

@@ -225,6 +225,7 @@ export default Vue.extend({
     display: flex;
     background-color: $backgroundBlue;
     overflow-x: hidden;
+    min-height: 100vh;
   }
 
   &-menus {
