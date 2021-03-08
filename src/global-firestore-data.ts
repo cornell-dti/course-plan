@@ -81,8 +81,20 @@ export const addSemester = (
 
 export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
   GTagEvent(gtag, 'delete-semester');
+  const semester = store.state.semesters.find(sem => sem.type === type && sem.year === year);
+  if (semester) {
+    const courseUniqueIds = new Set(semester.courses.map(course => course.uniqueID));
+    chooseSelectableRequirementOption(
+      Object.assign(
+        {},
+        ...Object.entries(store.state.selectableRequirementChoices)
+          .filter(([k]) => !courseUniqueIds.has(parseInt(k, 10)))
+          .map(([k, v]) => ({ [k]: v }))
+      )
+    );
+  }
   editSemesters(oldSemesters =>
-    oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
+    oldSemesters.filter(sem => sem.type !== type || sem.year !== year)
   );
 };
 
