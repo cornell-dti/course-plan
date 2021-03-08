@@ -53,13 +53,11 @@
       @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
     />
-    <div>
-      <bottom-bar
-        v-if="(!isOpeningRequirements && isTablet) || !isTablet"
-        :isExpanded="bottomBarIsExpanded"
-        :maxBottomBarTabs="maxBottomBarTabs"
-      />
-    </div>
+    <bottom-bar
+      v-if="(!isOpeningRequirements && isTablet) || !isTablet"
+      :isExpanded="bottomBarIsExpanded"
+      :maxBottomBarTabs="maxBottomBarTabs"
+    />
   </div>
 </template>
 

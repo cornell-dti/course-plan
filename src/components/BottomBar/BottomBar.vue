@@ -1,16 +1,18 @@
 <template>
   <div class="bottombar" v-if="hasBottomBarCourses">
-    <div class="bottombar-tabviewTitleWrapper">
-      <div class="bottombar-tabview" :class="{ expandedTabView: isExpanded }">
-        <bottom-bar-tab-view :maxBottomBarTabs="maxBottomBarTabs" />
-      </div>
-      <div class="bottombar-title" @click="toggleBottomBar()">
-        <bottom-bar-title
-          :color="focusedBottomBarCourse.color"
-          :name="focusedBottomBarCourse.name"
-          :isExpanded="isExpanded"
-        />
-      </div>
+    <div class="bottombar-tabview" :class="{ expandedTabView: isExpanded }">
+      <bottom-bar-tab-view :maxBottomBarTabs="maxBottomBarTabs" />
+    </div>
+    <div
+      class="bottombar-title"
+      :class="{ expandedBottomBarTitle: isExpanded }"
+      @click="toggleBottomBar()"
+    >
+      <bottom-bar-title
+        :color="focusedBottomBarCourse.color"
+        :name="focusedBottomBarCourse.name"
+        :isExpanded="isExpanded"
+      />
     </div>
     <div v-if="isExpanded" class="bottombar-course">
       <bottom-bar-course :courseObj="focusedBottomBarCourse" />
@@ -65,32 +67,68 @@ export default Vue.extend({
     left: 29.5rem;
     width: calc(100vw - 29.5rem);
   }
+
+  &-title {
+    position: fixed;
+    bottom: 0;
+    left: 29.5rem;
+    height: 2.5rem;
+    width: calc(100vw - 29.5rem);
+  }
+
+  &-course {
+    position: fixed;
+    bottom: 0;
+    left: 29.5rem;
+    width: 100%;
+    background-color: $white;
+    width: calc(100vw - 29.5rem);
+    height: 16.5rem;
+  }
 }
+
 .expandedTabView {
   position: fixed;
-  bottom: 18.75rem;
+  bottom: 19rem;
+}
+.expandedBottomBarTitle {
+  position: fixed;
+  bottom: 16.5rem;
 }
 
 @media only screen and (max-width: $large-breakpoint) {
   .bottombar {
-    &-tabview {
+    &-tabview,
+    &-title,
+    &-course {
       left: 25.5rem;
       width: calc(100vw - 25.5rem);
     }
   }
 }
+
 @media only screen and (max-width: $medium-breakpoint) {
   .bottombar {
-    &-tabview {
-      left: 0rem;
-      width: 100%;
+    &-tabview,
+    &-title,
+    &-course {
+      left: 0;
+      width: 100vw;
+    }
+
+    &-course {
+      height: calc(100vh - 14rem);
     }
   }
-}
 
-@media only screen and (max-width: $small-breakpoint) {
   .expandedTabView {
-    bottom: 11.75rem;
+    position: fixed;
+    bottom: calc(100vh - 11.5rem);
+  }
+
+  .expandedBottomBarTitle {
+    position: fixed;
+    bottom: calc(100vh - 14rem);
   }
 }
 </style>
