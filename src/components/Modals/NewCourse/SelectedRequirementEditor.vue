@@ -17,8 +17,20 @@
       <div class="newCourse-title">This class can fulfill the following requirement(s):</div>
       <div v-if="!editMode">
         <div class="newCourse-requirements-container">
-          <!-- eslint-disable-next-line vue/no-v-html  -->
-          <div class="newCourse-title" v-html="nonAutoRequirementsText"></div>
+          <div class="newCourse-title">
+            <span v-for="(reqName, index) in nonAutoRequirementsTextArray" :key="index">
+              <strong v-if="reqName.selected" class="newCourse-name">{{
+                index === nonAutoRequirementsTextArray.length - 1
+                  ? reqName.name
+                  : reqName.name + ', '
+              }}</strong>
+              <span v-else>{{
+                index === nonAutoRequirementsTextArray.length - 1
+                  ? reqName.name
+                  : reqName.name + ', '
+              }}</span>
+            </span>
+          </div>
         </div>
       </div>
       <div v-else>
@@ -86,19 +98,13 @@ export default Vue.extend({
     nonAutoRequirements(): { readonly id: string; readonly name: string }[] {
       return this.relatedRequirements.concat(this.potentialRequirements);
     },
-    nonAutoRequirementsText(): string {
-      if (this.selectedRequirementID === '') {
-        return this.nonAutoRequirements.map(it => it.name).join(', ');
-      }
-      return this.nonAutoRequirements
-        .map(it => it.name)
-        .join(', ')
-        .replace(
-          this.selectedCourseName,
-          `<strong class="newCourse-name">${this.selectedCourseName}</strong>`
-        );
+    nonAutoRequirementsTextArray(): { readonly name: string; readonly selected: boolean }[] {
+      return this.nonAutoRequirements.map(it => ({
+        name: it.name,
+        selected: it.name === this.selectedRequirementName,
+      }));
     },
-    selectedCourseName(): string {
+    selectedRequirementName(): string {
       if (this.selectedRequirementID === '') return '';
       const requirements = [...this.relatedRequirements, ...this.potentialRequirements].filter(
         it => it.id === this.selectedRequirementID
