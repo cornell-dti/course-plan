@@ -27,8 +27,8 @@
   </div>
 </template>
 <script lang="ts">
-import FlexibleModal from './FlexibleModal.vue';
 import Vue from 'vue';
+import FlexibleModal from './FlexibleModal.vue';
 
 export default Vue.extend({
   components: { FlexibleModal },
