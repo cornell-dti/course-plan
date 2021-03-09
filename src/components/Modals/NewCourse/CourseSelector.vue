@@ -17,7 +17,7 @@
         :class="['search-result', currentFocus === index ? 'autocomplete-active' : '']"
         @click="selectCourse(matchingCourse)"
       >
-        {{ matchingCourse.code }}: {{ matchingCourse.title }}
+        {{ matchingCourse.subject }} {{ matchingCourse.catalogNbr }}: {{ matchingCourse.titleLong }}
       </div>
     </div>
   </div>
@@ -27,40 +27,25 @@
 import Vue from 'vue';
 import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
-export type MatchingCourseSearchResult = {
-  readonly courseId: number;
-  readonly code: string;
-  readonly title: string;
-  readonly roster: string;
-  readonly credits: number;
-};
-
-const getMatchingCourses = (searchText: string): readonly MatchingCourseSearchResult[] => {
+const getMatchingCourses = (searchText: string): readonly CornellCourseRosterCourse[] => {
   // search after value length of 2 to reduce search times of courses
   if (!searchText || searchText.length < 2) return [];
   /* code array for results that contain course code and title array for results that contain title */
-  const code: MatchingCourseSearchResult[] = [];
-  const title: MatchingCourseSearchResult[] = [];
+  const code: CornellCourseRosterCourse[] = [];
+  const title: CornellCourseRosterCourse[] = [];
 
   for (const course of fullCoursesArray) {
     const courseCode = `${course.subject} ${course.catalogNbr}`;
-    const result = {
-      courseId: course.crseId,
-      code: courseCode,
-      title: course.titleLong,
-      roster: course.roster,
-      credits: course.enrollGroups[0].unitsMaximum,
-    };
     if (courseCode.toUpperCase().includes(searchText)) {
-      code.push(result);
+      code.push(course);
     } else if (course.titleLong.toUpperCase().includes(searchText)) {
-      title.push(result);
+      title.push(course);
     }
   }
 
   // Sort both results by title
-  code.sort((first, second) => first.title.localeCompare(second.title));
-  title.sort((first, second) => first.title.localeCompare(second.title));
+  code.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
+  title.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
 
   /* prioritize code matches over title matches */
   // limit the number of results to 10
@@ -80,7 +65,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    matches(): readonly MatchingCourseSearchResult[] {
+    matches(): readonly CornellCourseRosterCourse[] {
       return getMatchingCourses(this.searchText.toUpperCase());
     },
   },
@@ -100,9 +85,9 @@ export default Vue.extend({
       const wraparoundLimit = this.matches.length;
       this.currentFocus = ((newFocusIndex % wraparoundLimit) + wraparoundLimit) % wraparoundLimit;
     },
-    selectCourse(result: MatchingCourseSearchResult) {
+    selectCourse(result: CornellCourseRosterCourse) {
       this.$emit('on-select', result);
-      this.searchText = `${result.code}: ${result.title}`;
+      this.searchText = `${result.subject} ${result.catalogNbr}: ${result.titleLong}`;
       this.currentFocus = -1;
     },
     onEnter() {

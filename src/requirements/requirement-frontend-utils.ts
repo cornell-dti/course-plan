@@ -210,13 +210,19 @@ export function computeFulfillmentCoursesAndStatistics(
 }
 
 export function getRelatedUnfulfilledRequirements(
-  { courseId, code, credits }: Readonly<{ courseId: number; code: string; credits: number }>,
+  {
+    crseId: courseId,
+    subject,
+    catalogNbr,
+    enrollGroups: [{ unitsMaximum: credits }],
+  }: CornellCourseRosterCourse,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
   toggleableRequirementChoices: AppToggleableRequirementChoices
 ): {
   readonly directlyRelatedRequirements: readonly RequirementWithIDSourceType[];
   readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
 } {
+  const code = `${subject} ${catalogNbr}`;
   const directlyRelatedRequirements: RequirementWithIDSourceType[] = [];
   const selfCheckRequirements: RequirementWithIDSourceType[] = [];
   for (let i = 0; i < groupedRequirements.length; i += 1) {

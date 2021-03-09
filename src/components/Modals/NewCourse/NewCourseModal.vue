@@ -38,9 +38,7 @@
 import Vue from 'vue';
 import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
-import CourseSelector, {
-  MatchingCourseSearchResult,
-} from '@/components/Modals/NewCourse/CourseSelector.vue';
+import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
 import store from '@/store';
 import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
@@ -49,7 +47,7 @@ export default Vue.extend({
   components: { CourseSelector, FlexibleModal, SelectedRequirementEditor },
   data() {
     return {
-      selectedCourse: null as MatchingCourseSearchResult | null,
+      selectedCourse: null as CornellCourseRosterCourse | null,
       selectedRequirementID: '',
       requirementsThatAllowDoubleCounting: [] as readonly string[],
       relatedRequirements: [] as readonly RequirementWithIDSourceType[],
@@ -71,11 +69,11 @@ export default Vue.extend({
     },
   },
   methods: {
-    selectCourse(result: MatchingCourseSearchResult) {
+    selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.getReqsRelatedToCourse(result);
     },
-    getReqsRelatedToCourse(selectedCourse: MatchingCourseSearchResult) {
+    getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
         directlyRelatedRequirements,
         selfCheckRequirements,
@@ -113,24 +111,7 @@ export default Vue.extend({
     },
     addCourse() {
       if (this.selectedCourse == null) return;
-      const { roster, code } = this.selectedCourse;
-      const requirementID = this.selectedRequirementID;
-      const [subject, number] = code.split(' ');
-
-      fetch(
-        `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${code}`
-      )
-        .then(res => res.json())
-        .then(resultJSON => {
-          // check catalogNbr of resultJSON class matches number of course to add
-          resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
-            if (resultJSONclass.catalogNbr === number) {
-              const course = { ...resultJSONclass, roster };
-              this.$emit('add-course', course, requirementID);
-            }
-          });
-        });
-
+      this.$emit('add-course', this.selectedCourse, this.selectedRequirementID);
       this.reset();
       this.closeCurrentModal();
     },
