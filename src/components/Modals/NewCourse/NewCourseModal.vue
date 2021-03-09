@@ -13,7 +13,7 @@
     <course-selector
       search-box-class-name="newCourse-dropdown"
       :key="courseSelectorKey"
-      placeholder='"CS1110", "Multivariable Calculus", etc'
+      placeholder='"CS 1110", "Multivariable Calculus", etc'
       :autoFocus="true"
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
