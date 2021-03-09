@@ -41,6 +41,7 @@ import Vue, { PropType } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import ResetConfirmationModal from '@/components/Modals/ResetConfirmationModal.vue';
 import store from '@/store';
+import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import getCurrentSeason, { getCurrentYear } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
@@ -82,11 +83,11 @@ export default Vue.extend({
     },
   },
   methods: {
-    onReset() {
+    onReset(): void {
       this.resetConfirmVisible = true;
     },
-    onResetConfirmClosed(isReset: boolean) {
-      if (isReset) this.$emit('deleteCourseFromSemesters', this.courseTaken.uniqueId);
+    onResetConfirmClosed(isReset: boolean): void {
+      if (isReset) deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
     },
   },
 });

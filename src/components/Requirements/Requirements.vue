@@ -23,7 +23,6 @@
           @activateMajor="activateMajor"
           @activateMinor="activateMinor"
           @onShowAllCourses="onShowAllCourses"
-          @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
     </div>
@@ -245,9 +244,6 @@ export default Vue.extend({
     },
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
-    },
-    deleteCourseFromSemesters(uniqueId: number) {
-      this.$emit('deleteCourseFromSemesters', uniqueId);
     },
   },
 });
