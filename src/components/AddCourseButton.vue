@@ -10,8 +10,8 @@
     :data-step="shouldShowWalkthrough ? '3' : null"
     :data-intro="
       shouldShowWalkthrough
-        ? `<b>Add your course in this semester!</b><br>
-      <div class = &quot;introjs-bodytext&quot;>To start planning your college career, you should try adding a course in your current semester.</div>`
+        ? `<b>Add Classes to your Schedule</b><br>
+      <div class = &quot;introjs-bodytext&quot;>Press “+ Course” to add classes! Edit semesters using the ellipses on the top right and drag courses between semesters.</div>`
         : null
     "
     :data-disable-interaction="shouldShowWalkthrough ? '1' : null"

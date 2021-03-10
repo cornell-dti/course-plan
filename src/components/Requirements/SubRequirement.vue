@@ -37,7 +37,15 @@
         </p>
       </div>
     </button>
-    <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
+    <div
+      v-if="displayDescription"
+      :class="[{ 'completed-ptext': isFulfilled }, 'description']"
+      data-intro-group="pagetour"
+      :data-intro="getCoursesTooltipText()"
+      data-step="2"
+      data-disable-interaction="1"
+      data-tooltipClass="tooltipCenter"
+    >
       <div>
         {{ subReq.requirement.description }}
         <a
@@ -301,6 +309,10 @@ export default Vue.extend({
         this.fulfilledSelfCheckCourses.splice(indexToRemove, 1);
       }
       this.$emit('deleteCourseFromSemesters', uniqueId);
+    },
+    getCoursesTooltipText() {
+      return `<b>These are your Courses.</b><br><div class = "introjs-bodytext">Drag and drop courses into your schedule!
+      Click on them to learn more information like their descriptions.</div>`;
     },
   },
 });

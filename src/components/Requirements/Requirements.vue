@@ -88,8 +88,9 @@ import introJs from 'intro.js';
 import Course from '@/components/Course/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-// emoji for clipboard
+
 import clipboard from '@/assets/images/clipboard.svg';
+import warning from '@/assets/images/warning.svg';
 import store from '@/store';
 import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-firestore-data';
 
@@ -112,11 +113,6 @@ type Data = {
 
 // This section will be revisited when we try to make first-time tooltips
 const tour = introJs().start();
-tour.setOption('exitOnEsc', 'false');
-tour.setOption('doneLabel', 'Finish');
-tour.setOption('skipLabel', 'Skip This Tutorial');
-tour.setOption('nextLabel', 'Next');
-tour.setOption('exitOnOverlayClick', 'false');
 
 // show 24 courses per page of the see all menu
 const maxSeeAllCoursesPerPage = 24;
@@ -194,9 +190,10 @@ export default Vue.extend({
       this.displayedMinorIndex = id;
     },
     getRequirementsTooltipText() {
-      return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
-          <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
-          requirements based on your college and major :)</div>`;
+      return `<b>Meet your Requirements Bar <img src="${clipboard}" class = "newSemester-emoji-text" alt="clipboard-icon"/>
+          </b><br><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and 
+          required courses. <img src="${warning}" class = "newSemester-emoji-text" alt="warning-icon"/> Some requirements 
+          aren’t fully tracked by us yet, so pay attention to the warnings.</div>`;
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;

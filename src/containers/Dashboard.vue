@@ -36,8 +36,8 @@
       />
     </div>
     <tour-window
-      title="Welcome Cornellian!"
-      text="View your college requirements, plan your semesters and courses, and more."
+      title="Hello Cornellian!"
+      text="Track your college requirements, plan your semesters and courses, and more."
       exit="No, I want to skip this"
       button-text="Start Tutorial"
       @hide="hideWelcomeTour()"
@@ -45,8 +45,8 @@
       v-if="welcomeHidden"
     />
     <tour-window
-      title="Congratulations! That’s a wrap"
-      text="Other than this, there is more you can explore, so feel free to surf through CoursePlan"
+      title="Let's get CoursePlanning!"
+      text="TODO"
       exit=""
       button-text="Start Planning"
       :image="congratsBodyImage"
