@@ -168,7 +168,7 @@ import Vue, { PropType } from 'vue';
 import { examData as reqsData, ExamRequirements } from '@/requirements/data/exams/ExamCredit';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
-import CourseSelector, { MatchingCourseSearchResult } from '../NewCourse/CourseSelector.vue';
+import CourseSelector from '../NewCourse/CourseSelector.vue';
 
 const placeholderText = 'Select one';
 
@@ -328,27 +328,13 @@ export default Vue.extend({
         this.tookSwimTest
       );
     },
-    onCourseSelection(id: number, { title }: MatchingCourseSearchResult) {
-      const courseCode = title.substring(0, title.indexOf(':'));
-      const subject = courseCode.split(' ')[0];
-      const number = courseCode.split(' ')[1];
-      fetch(
-        `https://classes.cornell.edu/api/2.0/search/classes.json?roster=FA14&subject=${subject}&q=${courseCode}`
-      ) // should be removed later
-        .then(res => res.json())
-        .then(resultJSON => {
-          // check catalogNbr of resultJSON class matches number of course to add
-          resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
-            if (resultJSONclass.catalogNbr === number) {
-              const course = resultJSONclass;
-              const creditsC = course.enrollGroups[0].unitsMaximum;
-              const classes = [...this.classes];
-              classes[id] = { class: courseCode, course, credits: creditsC };
-              this.classes = classes;
-              this.updateTransfer();
-            }
-          });
-        });
+    onCourseSelection(id: number, course: CornellCourseRosterCourse) {
+      const courseCode = `${course.subject} ${course.catalogNbr}`;
+      const creditsC = course.enrollGroups[0].unitsMaximum;
+      const classes = [...this.classes];
+      classes[id] = { class: courseCode, course, credits: creditsC };
+      this.classes = classes;
+      this.updateTransfer();
     },
     getSelectableOptions(
       // exams already picked

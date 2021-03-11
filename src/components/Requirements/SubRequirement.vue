@@ -151,7 +151,7 @@ import {
   getMatchedRequirementFulfillmentSpecification,
 } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
-import fullCoursesJson from '@/assets/courses/typed-full-courses';
+import { fullCoursesJson } from '@/assets/courses/typed-full-courses';
 import { allocateSubjectColors } from '@/global-firestore-data';
 
 type CompletedSubReqCourseSlot = {
