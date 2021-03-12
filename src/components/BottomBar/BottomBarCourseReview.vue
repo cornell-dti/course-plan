@@ -134,7 +134,7 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 
 .details {
-  margin: 20px;
+  padding: 20px;
 
   &-head {
     margin-top: 10px;
