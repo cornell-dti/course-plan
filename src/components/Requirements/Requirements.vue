@@ -125,8 +125,7 @@ type Data = {
 // This section will be revisited when we try to make first-time tooltips
 const tour = introJs().start();
 tour.setOption('exitOnEsc', 'false');
-tour.setOption('doneLabel', 'Finish');
-tour.setOption('skipLabel', 'Skip This Tutorial');
+tour.setOption('doneLabel', 'Next');
 tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
@@ -215,14 +214,14 @@ export default Vue.extend({
       this.displayedMinorIndex = id;
     },
     getRequirementsTooltipText() {
-      return `<b>Meet your Requirements Bar <img src="${clipboard}" class = "newSemester-emoji-text" alt="clipboard-icon"/>
-          </b><br><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and
-          required courses. <img src="${warning}" class = "newSemester-emoji-text" alt="warning-icon"/> Some requirements
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Meet your Requirements Bar <img src="${clipboard}" class = "introjs-emoji newSemester-emoji-text" alt="clipboard-icon"/>
+          </div><div class="introjs-customProgress">1/3</div></div><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and
+          required courses.<br><img src="${warning}" class = "newSemester-emoji-text" alt="warning-icon"/> Some requirements
           aren’t fully tracked by us yet, so pay attention to the warnings.</div>`;
     },
     getCoursesTooltipText() {
-      return `<b>These are your Courses.</b><br><div class = "introjs-bodytext">Drag and drop courses into your schedule!
-      Click on them to learn more information like their descriptions.</div>`;
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">These are your Courses</div><div class="introjs-customProgress">2/3</div>
+      </div><div class = "introjs-bodytext">Drag and drop courses into your schedule! Click on them to learn more information like their descriptions.</div>`;
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;

@@ -2,16 +2,29 @@
   <div class="tour">
     <div class="blackout">
       <div class="intropage">
-        <div class="picture">
-          <img src="@/assets/images/Person_planning.svg" alt="person planning" />
+        <div class="top">
+          <div class="text">
+            <span class="maintitle">Welcome to CoursePlan!</span>
+            <span class="subtitle">created by Cornell Design &amp; Tech Initiative</span>
+          </div>
+          <div class="picture">
+            <img
+              class="image"
+              src="@/assets/images/branding/walkthrough.png"
+              alt="people planning"
+            />
+          </div>
         </div>
         <div class="content">
           <div class="title">
             {{ title }}
           </div>
-          <div class="body">
+          <div v-if="secondText == ''" class="body">
             {{ text }}
-            <img v-if="image" :src="image" class="emoji-text" :alt="alt" />
+          </div>
+          <div v-else class="body body--left">
+            <div class="body-topText">{{ text }}</div>
+            <div>{{ secondText }}</div>
           </div>
           <button
             @click="
@@ -38,10 +51,9 @@ export default Vue.extend({
   props: {
     title: { type: String, required: true },
     text: { type: String, required: true },
+    secondText: { type: String, required: false, default: '' },
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
-    alt: { type: String, required: false, default: '' },
-    image: { type: String, required: false, default: null },
   },
   data() {
     return {
@@ -72,28 +84,48 @@ export default Vue.extend({
 .intropage {
   z-index: 200;
   width: 40vw;
-  height: 80vh;
-  background-color: white;
+  background-color: $white;
   opacity: 1;
   position: absolute;
   border-radius: 9px;
   padding: 0px;
 }
-.picture {
+.top {
   width: 100%;
-  height: 66%;
+  height: 25.25rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   background-color: $emGreen;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
-  img {
-    height: 100%;
-  }
+}
+.text {
+  margin-top: 2.25rem;
+  margin-bottom: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.maintitle {
+  color: $white;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 36px;
+}
+.subtitle {
+  margin-top: 1.75rem;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 18px;
+  color: $primaryGray;
+}
+.image {
+  height: 100%;
 }
 .content {
   width: 100%;
-  height: 34%;
+  height: 15.25rem;
   border-radius: 9px;
   display: flex;
   justify-content: space-evenly;
@@ -103,16 +135,25 @@ export default Vue.extend({
   padding-bottom: 2%;
   .title {
     font-weight: 600;
+    color: $primaryGray;
   }
   .body {
     font-size: 0.9em;
     text-align: center;
-    color: #757575;
+    color: $lightPlaceholderGray;
     width: 90%;
+
+    &-topText {
+      margin-bottom: 1rem;
+    }
+
+    &--left {
+      text-align: left;
+    }
   }
   button {
     background-color: $sangBlue;
-    color: white;
+    color: $white;
     border: none;
     padding-right: 0.7em;
     padding-left: 0.7em;
@@ -124,6 +165,7 @@ export default Vue.extend({
   }
   a {
     font-weight: normal;
+    color: $sangBlue;
   }
 }
 </style>

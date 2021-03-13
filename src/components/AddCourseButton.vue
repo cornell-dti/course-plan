@@ -8,13 +8,9 @@
     @click="onClick"
     :data-intro-group="shouldShowWalkthrough ? 'pageTour' : null"
     :data-step="shouldShowWalkthrough ? '3' : null"
-    :data-intro="
-      shouldShowWalkthrough
-        ? `<b>Add Classes to your Schedule</b><br>
-      <div class = &quot;introjs-bodytext&quot;>Press “+ Course” to add classes! Edit semesters using the ellipses on the top right and drag courses between semesters.</div>`
-        : null
-    "
+    :data-intro="shouldShowWalkthrough ? walkthroughText() : null"
     :data-disable-interaction="shouldShowWalkthrough ? '1' : null"
+    :data-tooltipClass="shouldShowWalkthrough ? 'tooltipCenter' : null"
   >
     <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">
       {{ addCourseText }}
@@ -39,6 +35,10 @@ export default Vue.extend({
   methods: {
     onClick() {
       this.$emit('click');
+    },
+    walkthroughText() {
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Add Classes to your Schedule</div><div class="introjs-customProgress">3/3</div>
+      </div><div class = "introjs-bodytext">Press "+ Course" to add classes! Edit semesters using the ellipses on the top right and drag courses between semesters.</div>`;
     },
   },
 });
