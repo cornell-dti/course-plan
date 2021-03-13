@@ -37,15 +37,7 @@
         </p>
       </div>
     </button>
-    <div
-      v-if="displayDescription"
-      :class="[{ 'completed-ptext': isFulfilled }, 'description']"
-      data-intro-group="pagetour"
-      :data-intro="getCoursesTooltipText()"
-      data-step="2"
-      data-disable-interaction="1"
-      data-tooltipClass="tooltipCenter"
-    >
+    <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
       <div>
         {{ subReq.requirement.description }}
         <a
@@ -177,7 +169,7 @@ export type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCours
 
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
-  displayDescription: boolean;
+  showDescription: boolean;
   fulfilledSelfCheckCourses: FirestoreSemesterCourse[];
 };
 
@@ -205,15 +197,23 @@ export default Vue.extend({
     isCompleted: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
     color: { type: String, required: true },
+    tourStep: { type: Number, required: true },
   },
   data(): Data {
     return {
       showFulfillmentOptionsDropdown: false,
-      displayDescription: false,
+      showDescription: false,
       fulfilledSelfCheckCourses: [],
     };
   },
   computed: {
+    displayDescription(): boolean {
+      return this.showDescription || this.shouldShowWalkthrough;
+    },
+    // true if the walkthrough is on step 2 and this subreq represents the PE requirement
+    shouldShowWalkthrough(): boolean {
+      return this.tourStep === 1 && this.subReq.requirement.id === 'College-UNI-Physical Education';
+    },
     isFulfilled(): boolean {
       return false;
     },
@@ -280,7 +280,7 @@ export default Vue.extend({
       });
     },
     toggleDescription() {
-      this.displayDescription = !this.displayDescription;
+      this.showDescription = !this.showDescription;
     },
     closeMenuIfOpen() {
       this.showFulfillmentOptionsDropdown = false;
@@ -309,10 +309,6 @@ export default Vue.extend({
         this.fulfilledSelfCheckCourses.splice(indexToRemove, 1);
       }
       this.$emit('deleteCourseFromSemesters', uniqueId);
-    },
-    getCoursesTooltipText() {
-      return `<b>These are your Courses.</b><br><div class = "introjs-bodytext">Drag and drop courses into your schedule!
-      Click on them to learn more information like their descriptions.</div>`;
     },
   },
 });

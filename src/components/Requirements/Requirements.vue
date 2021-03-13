@@ -1,30 +1,40 @@
 <template v-if="semesters">
   <div class="requirements">
     <div
-      class="fixed"
+      class="requirements-wrapper"
       data-intro-group="req-tooltip"
-      :class="{ 'd-none': shouldShowAllCourses }"
       :data-intro="getRequirementsTooltipText()"
       data-disable-interaction="1"
       data-step="1"
       data-tooltipClass="tooltipCenter"
     >
       <!-- loop through reqs array of req objects -->
-      <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
-        <requirement-view
-          :req="req"
-          :reqIndex="index"
-          :toggleableRequirementChoices="toggleableRequirementChoices"
-          :displayedMajorIndex="displayedMajorIndex"
-          :displayedMinorIndex="displayedMinorIndex"
-          :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
-          :numOfColleges="numOfColleges"
-          @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
-          @activateMajor="activateMajor"
-          @activateMinor="activateMinor"
-          @onShowAllCourses="onShowAllCourses"
-          @deleteCourseFromSemesters="deleteCourseFromSemesters"
-        />
+      <div
+        class="fixed"
+        :class="{ 'd-none': shouldShowAllCourses }"
+        data-intro-group="req-tooltip"
+        :data-intro="getCoursesTooltipText()"
+        data-disable-interaction="1"
+        data-step="2"
+        data-tooltipClass="tooltipCenter"
+      >
+        <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
+          <requirement-view
+            :req="req"
+            :reqIndex="index"
+            :toggleableRequirementChoices="toggleableRequirementChoices"
+            :displayedMajorIndex="displayedMajorIndex"
+            :displayedMinorIndex="displayedMinorIndex"
+            :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
+            :numOfColleges="numOfColleges"
+            :tourStep="tourStep"
+            @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
+            @activateMajor="activateMajor"
+            @activateMinor="activateMinor"
+            @onShowAllCourses="onShowAllCourses"
+            @deleteCourseFromSemesters="deleteCourseFromSemesters"
+          />
+        </div>
       </div>
     </div>
     <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses">
@@ -109,10 +119,16 @@ type Data = {
   showAllCourses: ShowAllCourses;
   shouldShowAllCourses: boolean;
   showAllPage: number;
+  tourStep: number;
 };
 
 // This section will be revisited when we try to make first-time tooltips
 const tour = introJs().start();
+tour.setOption('exitOnEsc', 'false');
+tour.setOption('doneLabel', 'Finish');
+tour.setOption('skipLabel', 'Skip This Tutorial');
+tour.setOption('nextLabel', 'Next');
+tour.setOption('exitOnOverlayClick', 'false');
 
 // show 24 courses per page of the see all menu
 const maxSeeAllCoursesPerPage = 24;
@@ -130,6 +146,7 @@ export default Vue.extend({
       showAllCourses: { name: '', shownCourses: [], allCourses: [] },
       shouldShowAllCourses: false,
       showAllPage: 0,
+      tourStep: 0,
     };
   },
   watch: {
@@ -137,6 +154,14 @@ export default Vue.extend({
       tour.start();
       tour.oncomplete(() => {
         this.$emit('showTourEndWindow');
+      });
+      tour.onbeforechange(() => {
+        // eslint-disable-next-line no-underscore-dangle
+        this.tourStep = tour._currentStep;
+      });
+      tour.onexit(() => {
+        // resets tourStep in case skipped at step = 1
+        this.tourStep = 0;
       });
     },
   },
@@ -191,9 +216,13 @@ export default Vue.extend({
     },
     getRequirementsTooltipText() {
       return `<b>Meet your Requirements Bar <img src="${clipboard}" class = "newSemester-emoji-text" alt="clipboard-icon"/>
-          </b><br><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and 
-          required courses. <img src="${warning}" class = "newSemester-emoji-text" alt="warning-icon"/> Some requirements 
+          </b><br><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and
+          required courses. <img src="${warning}" class = "newSemester-emoji-text" alt="warning-icon"/> Some requirements
           aren’t fully tracked by us yet, so pay attention to the warnings.</div>`;
+    },
+    getCoursesTooltipText() {
+      return `<b>These are your Courses.</b><br><div class = "introjs-bodytext">Drag and drop courses into your schedule!
+      Click on them to learn more information like their descriptions.</div>`;
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
@@ -256,6 +285,10 @@ export default Vue.extend({
   height: 1px;
   width: 100%;
   background-color: $inactiveGray;
+}
+.requirements-wrapper {
+  width: 100%;
+  height: 100%;
 }
 .requirements,
 .fixed {
