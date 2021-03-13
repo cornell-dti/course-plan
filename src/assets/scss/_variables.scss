@@ -38,6 +38,7 @@ $small-breakpoint: 440px;
 $small-medium-breakpoint: 600px;
 $medium-breakpoint: 878px;
 $large-breakpoint: 976px;
+$very-large-breakpoint: 1347px;
 
 // Export for javascript
 :export {
@@ -48,6 +49,12 @@ $large-breakpoint: 976px;
   secondaryGray: $secondaryGray;
   lightPlaceholderGray: $lightPlaceholderGray;
   darkPlaceholderGray: $darkPlaceholderGray;
+  emGreen: $emGreen;
+  smallBreakpoint: $small-breakpoint;
+  smallMediumBreakpoint: $small-medium-breakpoint;
+  mediumBreakpoint: $medium-breakpoint;
+  largeBreakpoint: $large-breakpoint;
+  veryLargeBreakpoint: $very-large-breakpoint;
 }
 
 // To import into <script>

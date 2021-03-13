@@ -20,11 +20,12 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
       '3 of the nine courses must be in history before 1800 ' +
       '(Courses that fulfill the Arts & Sciences historical breadth requirement do not necessarily fulfill the History pre-1800 requirement.)',
     source: 'https://history.cornell.edu/undergraduate',
-    checker: (course: Course): boolean =>
-      course.catalogCourseSubfield != null && course.catalogCourseSubfield.includes('HPE'),
-    subRequirementProgress: 'any-can-count',
+    checker: [
+      (course: Course): boolean =>
+        course.catalogCourseSubfield != null && course.catalogCourseSubfield.includes('HPE'),
+    ],
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'Seminars',

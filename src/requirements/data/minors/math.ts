@@ -7,9 +7,8 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'MATH 2930 and 2940',
     source: 'https://www.mae.cornell.edu/mae/programs/undergraduate-programs/minors',
     checker: includesWithSubRequirements(['MATH 2930'], ['MATH 2940']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   // FIX: don't currently have a way to show the groups
   {

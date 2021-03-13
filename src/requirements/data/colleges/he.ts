@@ -6,9 +6,9 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'Students must complete a minimum of 43 Human Ecology credits from College Distribution, Major Requirements and electives.',
     source: 'https://www.human.cornell.edu/academics/policies/requirements',
-    checker: (course: Course): boolean => course.acadGroup.includes('HE'),
+    checker: [(course: Course): boolean => course.acadGroup.includes('HE')],
     fulfilledBy: 'credits',
-    minCount: 43,
+    perSlotMinCount: [43],
   },
   {
     name: 'Technical Communication',

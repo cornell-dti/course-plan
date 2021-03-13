@@ -17,7 +17,7 @@
         <div class="subreq-name">
           <p
             :class="[
-              { 'sup-req': !isFulfilled },
+              { 'sub-req': !isFulfilled },
               isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
             ]"
           >
@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="col">
-        <p v-if="!isCompleted" class="sup-req-progress text-right incomplete-ptext">
+        <p v-if="!isCompleted" class="sub-req-progress text-right incomplete-ptext">
           {{ subReqProgress }}
         </p>
         <p v-if="isFulfilled" class="text-right completed-ptext">
@@ -102,7 +102,6 @@
             <completed-sub-req-course
               :subReqCourseId="id"
               :courseTaken="subReqCourseSlot.courses[0]"
-              @deleteCourseFromSemesters="deleteCourseFromSemesters"
             />
           </div>
           <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
@@ -129,11 +128,10 @@
           <completed-sub-req-course
             :subReqCourseId="id"
             :courseTaken="convertCourse(selfCheckCourse)"
-            @deleteCourseFromSemesters="deleteCourseFromSemesters"
           />
         </div>
         <!-- TODO: only show incomplete-self-check if all courses not added -->
-        <incomplete-self-check @addCourse="addSelfCheckCourse" />
+        <incomplete-self-check :subReqId="subReq.requirement.id" />
       </div>
     </div>
   </div>
@@ -146,13 +144,14 @@ import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCo
 import IncompleteSelfCheck from '@/components/Requirements/IncompleteSelfCheck.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
+import store from '@/store';
 import { clickOutside } from '@/utilities';
 import {
   convertFirestoreSemesterCourseToCourseTaken,
   getMatchedRequirementFulfillmentSpecification,
 } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
-import fullCoursesJson from '@/assets/courses/typed-full-courses';
+import { fullCoursesJson } from '@/assets/courses/typed-full-courses';
 import { allocateSubjectColors } from '@/global-firestore-data';
 
 type CompletedSubReqCourseSlot = {
@@ -170,7 +169,6 @@ export type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCours
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
   displayDescription: boolean;
-  fulfilledSelfCheckCourses: FirestoreSemesterCourse[];
 };
 
 const generateSubReqIncompleteCourses = (
@@ -191,9 +189,17 @@ const generateSubReqIncompleteCourses = (
 };
 
 export default Vue.extend({
-  components: { CompletedSubReqCourse, DropDownArrow, IncompleteSubReqCourse, IncompleteSelfCheck },
+  components: {
+    CompletedSubReqCourse,
+    DropDownArrow,
+    IncompleteSubReqCourse,
+    IncompleteSelfCheck,
+  },
   props: {
-    subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
+    subReq: {
+      type: Object as PropType<RequirementFulfillment>,
+      required: true,
+    },
     isCompleted: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
     color: { type: String, required: true },
@@ -202,7 +208,6 @@ export default Vue.extend({
     return {
       showFulfillmentOptionsDropdown: false,
       displayDescription: false,
-      fulfilledSelfCheckCourses: [],
     };
   },
   computed: {
@@ -257,6 +262,10 @@ export default Vue.extend({
         ? `${this.subReq.minCountFulfilled}/${this.subReq.minCountRequired} ${this.subReq.fulfilledBy}`
         : 'self check';
     },
+    fulfilledSelfCheckCourses(): readonly FirestoreSemesterCourse[] {
+      const reqId = this.subReq.requirement.id;
+      return store.state.derivedSelectableRequirementData.requirementToCoursesMap[reqId];
+    },
   },
   directives: {
     'click-outside': clickOutside,
@@ -281,26 +290,8 @@ export default Vue.extend({
       this.showFulfillmentOptionsDropdown = false;
       this.$emit('changeToggleableRequirementChoice', this.subReq.requirement.id, option);
     },
-    addSelfCheckCourse(course: FirestoreSemesterCourse) {
-      this.fulfilledSelfCheckCourses.push(course);
-    },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);
-    },
-    deleteCourseFromSemesters(uniqueId: number) {
-      // find and remove self-check course on sidebar
-      let indexToRemove = -1;
-      if (this.subReq.requirement.fulfilledBy === 'self-check') {
-        for (let i = 0; i < this.fulfilledSelfCheckCourses.length; i += 1) {
-          if (this.fulfilledSelfCheckCourses[i].uniqueID === uniqueId) {
-            indexToRemove = i;
-          }
-        }
-      }
-      if (indexToRemove !== -1) {
-        this.fulfilledSelfCheckCourses.splice(indexToRemove, 1);
-      }
-      this.$emit('deleteCourseFromSemesters', uniqueId);
     },
   },
 });
@@ -393,7 +384,7 @@ button.view {
     color: $lightPlaceholderGray;
   }
 }
-.sup-req {
+.sub-req {
   font-style: normal;
   font-weight: normal;
   font-size: 14px;

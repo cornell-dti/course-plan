@@ -15,9 +15,11 @@ jobs:
       - name: Build
         run: npm run build:staging
       - uses: FirebaseExtended/action-hosting-deploy@v0
+        if: env.SECRET != null
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CORNELLDTI_COURSEPLAN_DEV }}'
           projectId: cornelldti-courseplan-dev
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
+          SECRET: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CORNELLDTI_COURSEPLAN_DEV }}

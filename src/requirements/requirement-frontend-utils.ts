@@ -111,25 +111,19 @@ export function getMatchedRequirementFulfillmentSpecification(
 ): {
   readonly fulfilledBy: 'courses' | 'credits';
   readonly eligibleCourses: readonly (readonly number[])[];
-  readonly subRequirementProgress: 'every-course-needed' | 'any-can-count';
-  readonly minCount: number;
+  readonly perSlotMinCount: readonly number[];
+  readonly minNumberOfSlots?: number;
 } | null {
   switch (requirement.fulfilledBy) {
     case 'self-check':
       return null;
     case 'courses':
-      return {
-        fulfilledBy: requirement.fulfilledBy,
-        eligibleCourses: requirement.courses,
-        subRequirementProgress: requirement.subRequirementProgress,
-        minCount: requirement.minCount,
-      };
     case 'credits':
       return {
         fulfilledBy: requirement.fulfilledBy,
         eligibleCourses: requirement.courses,
-        subRequirementProgress: 'any-can-count',
-        minCount: requirement.minCount,
+        perSlotMinCount: requirement.perSlotMinCount,
+        minNumberOfSlots: requirement.minNumberOfSlots,
       };
     case 'toggleable': {
       const option =
@@ -140,9 +134,8 @@ export function getMatchedRequirementFulfillmentSpecification(
       return {
         fulfilledBy: option.counting,
         eligibleCourses: option.courses,
-        subRequirementProgress:
-          option.counting === 'courses' ? option.subRequirementProgress : 'any-can-count',
-        minCount: option.minCount,
+        perSlotMinCount: option.perSlotMinCount,
+        minNumberOfSlots: option.minNumberOfSlots,
       };
     }
     default:
@@ -150,14 +143,86 @@ export function getMatchedRequirementFulfillmentSpecification(
   }
 }
 
+/**
+ * @param requirement the requirement which we want sub-requirement progress report.
+ * @param coursesTaken a list of courses that are associated with the requirement in the graph.
+ * @param toggleableRequirementChoices user's choices on toggleable requirements.
+ * @returns requirement fulfillment stat, and partitioned courses into sub-requirement slots.
+ */
+export function computeFulfillmentCoursesAndStatistics(
+  requirement: RequirementWithIDSourceType,
+  coursesTaken: readonly CourseTaken[],
+  toggleableRequirementChoices: AppToggleableRequirementChoices
+): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
+  const spec = getMatchedRequirementFulfillmentSpecification(
+    requirement,
+    toggleableRequirementChoices
+  );
+  if (spec == null) {
+    // Give self-check 1 required course and 0 fulfilled to prevent it from being fulfilled.
+    return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 1, courses: [] };
+  }
+  const { fulfilledBy, eligibleCourses, perSlotMinCount, minNumberOfSlots } = spec;
+
+  const coursesThatFulfilledSubRequirements: CourseTaken[][] = eligibleCourses.map(() => []);
+  const subRequirementProgress: number[] = eligibleCourses.map(() => 0);
+  coursesTaken.forEach(courseTaken => {
+    const { courseId } = courseTaken;
+    for (
+      let subRequirementIndex = 0;
+      subRequirementIndex < eligibleCourses.length;
+      subRequirementIndex += 1
+    ) {
+      if (
+        eligibleCourses[subRequirementIndex].includes(courseId) &&
+        subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
+      ) {
+        // add the course to the list of courses used to fulfill that one sub-requirement
+        coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+        subRequirementProgress[subRequirementIndex] +=
+          fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+        break;
+      }
+    }
+  });
+
+  if (minNumberOfSlots != null) {
+    const minCountFulfilled = subRequirementProgress.reduce(
+      (acc, progress, index) => acc + (progress >= perSlotMinCount[index] ? 1 : 0),
+      0
+    );
+    return {
+      fulfilledBy,
+      minCountFulfilled,
+      minCountRequired: minNumberOfSlots,
+      courses: coursesThatFulfilledSubRequirements,
+    };
+  }
+
+  const minCountFulfilled = subRequirementProgress.reduce((acc, progress) => acc + progress, 0);
+  const minCountRequired = perSlotMinCount.reduce((acc, progress) => acc + progress, 0);
+  return {
+    fulfilledBy,
+    minCountFulfilled,
+    minCountRequired,
+    courses: coursesThatFulfilledSubRequirements,
+  };
+}
+
 export function getRelatedUnfulfilledRequirements(
-  courseID: number,
+  {
+    crseId: courseId,
+    subject,
+    catalogNbr,
+    enrollGroups: [{ unitsMaximum: credits }],
+  }: CornellCourseRosterCourse,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
   toggleableRequirementChoices: AppToggleableRequirementChoices
 ): {
   readonly directlyRelatedRequirements: readonly RequirementWithIDSourceType[];
   readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
 } {
+  const code = `${subject} ${catalogNbr}`;
   const directlyRelatedRequirements: RequirementWithIDSourceType[] = [];
   const selfCheckRequirements: RequirementWithIDSourceType[] = [];
   for (let i = 0; i < groupedRequirements.length; i += 1) {
@@ -165,7 +230,12 @@ export function getRelatedUnfulfilledRequirements(
       it => it.minCountFulfilled < it.minCountRequired
     );
     for (let j = 0; j < subreqs.length; j += 1) {
-      const subRequirement = subreqs[j].requirement;
+      const {
+        requirement: subRequirement,
+        courses: existingCoursesInSlots,
+        minCountFulfilled: existingMinCountFulfilled,
+      } = subreqs[j];
+      const existingCourses = existingCoursesInSlots.flat();
       const requirementSpec = getMatchedRequirementFulfillmentSpecification(
         subRequirement,
         toggleableRequirementChoices
@@ -179,8 +249,15 @@ export function getRelatedUnfulfilledRequirements(
       }
       if (requirementSpec != null && subRequirement.checkerWarning == null) {
         const allEligibleCourses = requirementSpec.eligibleCourses.flat();
-        if (allEligibleCourses.includes(courseID)) {
-          directlyRelatedRequirements.push(subRequirement);
+        if (allEligibleCourses.includes(courseId)) {
+          const fulfillmentStatisticsWithNewCourse = computeFulfillmentCoursesAndStatistics(
+            subRequirement,
+            [...existingCourses, { uniqueId: -1, courseId, code, credits }],
+            toggleableRequirementChoices
+          );
+          if (fulfillmentStatisticsWithNewCourse.minCountFulfilled > existingMinCountFulfilled) {
+            directlyRelatedRequirements.push(subRequirement);
+          }
         }
       }
     }

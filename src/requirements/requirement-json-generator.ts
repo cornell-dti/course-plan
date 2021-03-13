@@ -57,9 +57,7 @@ const decorateRequirementWithCourses = (
       const { checker, ...rest } = requirement;
       return {
         ...rest,
-        courses: getEligibleCoursesFromRequirementCheckers(
-          typeof checker === 'function' ? [checker] : checker
-        ),
+        courses: getEligibleCoursesFromRequirementCheckers(checker),
       };
     }
     case 'toggleable': {
@@ -69,9 +67,7 @@ const decorateRequirementWithCourses = (
         fulfillmentOptions: Object.fromEntries(
           Object.entries(fulfillmentOptions).map(([optionName, option]) => {
             const { checker, ...rest } = option;
-            const courses = getEligibleCoursesFromRequirementCheckers(
-              typeof checker === 'function' ? [checker] : checker
-            );
+            const courses = getEligibleCoursesFromRequirementCheckers(checker);
             return [optionName, { ...rest, courses }];
           })
         ),

@@ -14,18 +14,16 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ENGRD 2140',
       'ECE 2400'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Requirement 2',
     description: 'CS 3110 or CS 3410 or CS 3420/ECE 3140',
     source: 'https://www.cs.cornell.edu/undergrad/csminor',
     checker: includesWithSingleRequirement('CS 3110', 'CS 3410', 'CS 3420', 'ECE 3140'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   // TODO: Needs excludes for certain classes
   {
@@ -33,9 +31,8 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'CS 4090, CS 4997, CS 4998, CS 4999 and seminars are excluded. CS 2800 is allowed',
     source: 'https://www.cs.cornell.edu/undergrad/csminor',
     checker: includesWithSingleRequirement('CS 2800', 'CS 3***', 'CS 4***', 'CS 5***', 'CS 6***'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 4,
+    perSlotMinCount: [4],
   },
 ];
 

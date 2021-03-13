@@ -3,35 +3,26 @@ import { includesWithSingleRequirement, includesWithSubRequirements } from '../c
 
 const crpRequirements: readonly CollegeOrMajorRequirement[] = [
   {
-    name: 'Distribution Requirements: MQR',
+    name: 'PBS and MQR courses',
     description:
-      'At least one class must be classified as mathematics and quantitative reasoning (MQR)',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: (course: Course): boolean => course.catalogDistr?.includes('MQR-AS') ?? false,
-    subRequirementProgress: 'any-can-count',
+      'Students must take 2 courses in Physical & Biological Sciences (PBS/PBSS-AS). ' +
+      'Students must take 1 course in Mathematics & Quantitative Reasoning (MQR-AS). ' +
+      'Students must take 1 course that is either in PBS-AS or MQR-AS.',
+    source: 'https://as.cornell.edu/education/old-degree-requirements',
+    checker: [
+      (course: Course): boolean =>
+        ['PBS-AS', 'PBSS-AS'].some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+      (course: Course): boolean => course.catalogDistr?.includes('MQR-AS') ?? false,
+      (course: Course): boolean =>
+        ['PBS-AS', 'PBSS-AS', 'MQR-AS'].some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+    ],
     fulfilledBy: 'courses',
-    minCount: 1,
-  },
-  {
-    name: 'Distribution Requirements: PBS',
-    description: 'At least two classes must be classified as PBS',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: (course: Course): boolean => course.catalogDistr?.includes('PBS-AS') ?? false,
-    subRequirementProgress: 'any-can-count',
-    fulfilledBy: 'courses',
-    minCount: 2,
-  },
-  {
-    name: 'Distribution Requirements: MQR OR PBS',
-    description: 'At least one class must be classified as MQR or PBS',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: (course: Course): boolean =>
-      ['PBS-AS', 'PBSS-AS', 'MQR-AS'].some(
-        distribution => course.catalogDistr?.includes(distribution) ?? false
-      ),
-    subRequirementProgress: 'any-can-count',
-    fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [2, 1, 1],
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'Distribution Requirements: 5 Courses',
@@ -39,13 +30,14 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
       'Must be selected from at least four of these five categories (i.e., CA, HA, KCM, LA, and SBA).' +
       'No more than three of these five courses can be taken in any one department.',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: (course: Course): boolean =>
-      ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA'].some(
-        distribution => course.catalogDistr?.includes(distribution) ?? false
-      ),
-    subRequirementProgress: 'any-can-count',
+    checker: [
+      (course: Course): boolean =>
+        ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA'].some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+    ],
     fulfilledBy: 'courses',
-    minCount: 5,
+    perSlotMinCount: [5],
   },
   {
     name: 'Core Classes',
@@ -58,9 +50,8 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CRP 2010'],
       ['CRP 3210']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 5,
+    perSlotMinCount: [1, 1, 1, 1, 1],
   },
   {
     name: 'Microeconomics',
@@ -73,9 +64,8 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
       'ECON 3030',
       'PAM 2000',
     ]),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Statistics',
@@ -97,9 +87,8 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
       'STSCI 2100',
       'STSCI 3080',
     ]),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Five CRP Classes',
@@ -107,9 +96,8 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
       'Take five additional CRP classes at the 3000-level or higher, for a minimum of 3 credits each',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
     checker: includesWithSingleRequirement('CRP 3***', 'CRP 4***', 'CRP 5***', 'CRP 6***'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 5,
+    perSlotMinCount: [5],
   },
 ];
 

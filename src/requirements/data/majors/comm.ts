@@ -14,8 +14,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       ['COMM 2820']
     ),
     fulfilledBy: 'courses',
-    subRequirementProgress: 'every-course-needed',
-    minCount: 5,
+    perSlotMinCount: [1, 1, 1, 1, 1],
   },
   {
     name: 'Focus Area',
@@ -23,8 +22,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSingleRequirement('COMM 2200', 'COMM 2450', 'COMM 2760', 'COMM 2850'),
     fulfilledBy: 'courses',
-    subRequirementProgress: 'any-can-count',
-    minCount: 2,
+    perSlotMinCount: [2],
   },
   {
     name: 'Focus Area Upper Level',
@@ -46,7 +44,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'COMM 6***'
     ),
     fulfilledBy: 'credits',
-    minCount: 6,
+    perSlotMinCount: [6],
   },
   {
     name: 'Upper-Level COMM',
@@ -100,7 +98,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'COMM 4990'
     ),
     fulfilledBy: 'credits',
-    minCount: 15,
+    perSlotMinCount: [15],
   },
   {
     name: 'Communication Practica',
@@ -108,7 +106,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSingleRequirement('COMM 30**'),
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'Introductory Statistics Class',
@@ -132,9 +130,8 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'PSYCH 2500',
       'SOC 3010'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
 ];
 
