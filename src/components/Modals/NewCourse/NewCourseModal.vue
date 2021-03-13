@@ -22,7 +22,7 @@
       @on-select="selectCourse"
     />
     <div v-else class="selected-course">
-      {{ selectedCourse.title }}
+      {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}: {{ selectedCourse.titleLong }}
     </div>
     <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
