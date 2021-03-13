@@ -96,8 +96,8 @@ const veryLargeBreakpointPixels = parseInt(
 );
 
 const getMaxButtonBarTabs = () => {
-  if (window.innerWidth <= smallBreakpointPixels) {
-    return window.innerWidth <= veryLargeBreakpointPixels ? 1 : 2;
+  if (window.innerWidth <= veryLargeBreakpointPixels) {
+    return window.innerWidth <= smallBreakpointPixels ? 1 : 2;
   }
   return 4;
 };
