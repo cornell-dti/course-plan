@@ -151,7 +151,11 @@ export default Vue.extend({
     resizeEventHandler() {
       this.isMobile = window.innerWidth <= 440;
       this.isTablet = window.innerWidth <= 878;
-      this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
+      if (window.innerWidth <= 1347) {
+        this.maxBottomBarTabs = window.innerWidth <= 480 ? 1 : 2;
+      } else {
+        this.maxBottomBarTabs = 4;
+      }
       this.updateSemesterView();
     },
     toggleRequirementsBar() {
