@@ -19,9 +19,11 @@
     "format": "prettier --write \"**/*.{js,ts,css,scss,html,vue}\"",
     "format:check": "prettier --check \"**/*.{js,ts,css,scss,html,vue}\"",
     "format:check:full": "prettier --check \"**/*.{js,ts,vue,scss,css,html}\"",
-    "test": "jest"
+    "test": "jest",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
+    "@cypress/vue": "^2.0.2",
     "@firebase/analytics": "^0.6.2",
     "@types/intro.js": "^2.4.6",
     "bootstrap": "^4.4.1",
@@ -29,6 +31,7 @@
     "firebase": "^8.2.4",
     "intro.js": "^2.9.3",
     "node-fetch": "^2.6.1",
+    "puppeteer": "^8.0.0",
     "skeleton-loader-vue": "^1.0.6",
     "vue": "^2.6.12",
     "vue-gtag": "^1.10.0",
@@ -52,6 +55,8 @@
     "@vue/eslint-config-typescript": "^7.0.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
+    "cypress": "^6.6.0",
+    "cypress-social-logins": "^1.11.2",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-vue": "^7.5.0",
