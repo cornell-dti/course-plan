@@ -18,12 +18,16 @@
           <div class="title">
             {{ title }}
           </div>
-          <div v-if="secondText == ''" class="body">
+          <div v-if="!isFinalStep" class="body">
             {{ text }}
           </div>
           <div v-else class="body body--left">
             <div class="body-topText">{{ text }}</div>
-            <div>{{ secondText }}</div>
+            <div>
+              Submit bugs &amp; feature requests using the Feedback button found on the right side
+              of the page or contact us at
+              <a href="mailto:courseplan@cornelldti.org">courseplan@cornelldti.org</a>.
+            </div>
           </div>
           <button
             @click="
@@ -50,7 +54,7 @@ export default Vue.extend({
   props: {
     title: { type: String, required: true },
     text: { type: String, required: true },
-    secondText: { type: String, required: false, default: '' },
+    isFinalStep: { type: Boolean, required: false, default: false },
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
     image: { type: String, required: true },

@@ -49,8 +49,7 @@
       title="Let's get CoursePlanning!"
       text="There’s more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and 
       also consult your advisors for more up to date information!"
-      secondText="Submit bugs &amp; feature requests using the Feedback button 
-      found on the right side of the page or contact us at courseplan@cornelldti.org."
+      :isFinalStep="true"
       exit=""
       button-text="Get Started"
       :image="finalTourImage"
