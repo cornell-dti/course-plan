@@ -122,7 +122,7 @@ type Data = {
 };
 
 // This section will be revisited when we try to make first-time tooltips
-const tour = introJs().start();
+const tour: any = introJs().start();
 tour.setOption('exitOnEsc', 'false');
 tour.setOption('doneLabel', 'Next');
 tour.setOption('nextLabel', 'Next');

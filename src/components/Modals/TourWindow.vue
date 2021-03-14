@@ -11,7 +11,18 @@
             />
           </div>
           <div class="picture">
-            <img class="image" :src="image" alt="person planning" />
+            <img
+              v-if="!isFinalStep"
+              class="image"
+              src="@/assets/images/walkthrough/walkthrough-start.png"
+              alt="person planning"
+            />
+            <img
+              v-else
+              class="image"
+              src="@/assets/images/walkthrough/walkthrough-end.png"
+              alt="person planning"
+            />
           </div>
         </div>
         <div class="content">
@@ -57,7 +68,6 @@ export default Vue.extend({
     isFinalStep: { type: Boolean, required: false, default: false },
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
-    image: { type: String, required: true },
   },
   data() {
     return {

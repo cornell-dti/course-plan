@@ -39,7 +39,6 @@
       text="View your college requirements, plan your semesters and courses, and more."
       exit="No, I want to skip this"
       button-text="Start Tutorial"
-      :image="firstTourImage"
       @hide="hideWelcomeTour()"
       @skip="welcomeHidden = false"
       v-if="welcomeHidden"
@@ -51,7 +50,6 @@
       :isFinalStep="true"
       exit=""
       button-text="Get Started"
-      :image="finalTourImage"
       @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
     />
@@ -73,9 +71,6 @@ import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
-
-import walkthroughImageStart from '@/assets/images/walkthrough/walkthrough-start.png';
-import walkthroughImageEnd from '@/assets/images/walkthrough/walkthrough-end.png';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
@@ -139,12 +134,6 @@ export default Vue.extend({
     };
   },
   computed: {
-    firstTourImage(): string {
-      return walkthroughImageStart;
-    },
-    finalTourImage(): string {
-      return walkthroughImageEnd;
-    },
     userName(): FirestoreUserName {
       return store.state.userName;
     },
