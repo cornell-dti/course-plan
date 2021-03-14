@@ -215,12 +215,12 @@ export default Vue.extend({
     },
     getRequirementsTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Meet your Requirements Bar <img src="${clipboard}" class = "introjs-emoji newSemester-emoji-text" alt="clipboard-icon"/>
-          </div><div class="introjs-customProgress">1/3</div></div><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and
+          </div><div class="introjs-customProgress">1/4</div></div><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and
           required courses.<br><img src="${warning}" class = "newSemester-emoji-text" alt="warning-icon"/> Some requirements
           aren’t fully tracked by us yet, so pay attention to the warnings.</div>`;
     },
     getCoursesTooltipText() {
-      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">These are your Courses</div><div class="introjs-customProgress">2/3</div>
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">These are your Courses</div><div class="introjs-customProgress">2/4</div>
       </div><div class = "introjs-bodytext">Drag and drop courses into your schedule! Click on them to learn more information like their descriptions.</div>`;
     },
     onShowAllCourses(showAllCourses: {

@@ -36,10 +36,11 @@
       />
     </div>
     <tour-window
-      title="Hello Cornellian!"
-      text="Track your college requirements, plan your semesters and courses, and more."
+      title="Welcome to CoursePlan!"
+      text="View your college requirements, plan your semesters and courses, and more."
       exit="No, I want to skip this"
       button-text="Start Tutorial"
+      :image="firstTourImage"
       @hide="hideWelcomeTour()"
       @skip="welcomeHidden = false"
       v-if="welcomeHidden"
@@ -52,6 +53,7 @@
       found on the right side of the page or contact us at courseplan@cornelldti.org."
       exit=""
       button-text="Get Started"
+      :image="finalTourImage"
       @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
     />
@@ -76,7 +78,8 @@ import NavBar from '@/components/NavBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 
-import surfing from '@/assets/images/surfing.svg';
+import walkthroughImageStart from '@/assets/images/walkthrough/walkthrough-start.png';
+import walkthroughImageEnd from '@/assets/images/walkthrough/walkthrough-end.png';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { editSemesters } from '@/global-firestore-data';
@@ -116,8 +119,11 @@ export default Vue.extend({
     };
   },
   computed: {
-    congratsBodyImage(): string {
-      return surfing;
+    firstTourImage(): string {
+      return walkthroughImageStart;
+    },
+    finalTourImage(): string {
+      return walkthroughImageEnd;
     },
     userName(): FirestoreUserName {
       return store.state.userName;

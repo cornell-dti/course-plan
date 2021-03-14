@@ -3,16 +3,15 @@
     <div class="blackout">
       <div class="intropage">
         <div class="top">
-          <div class="text">
-            <span class="maintitle">Welcome to CoursePlan!</span>
-            <span class="subtitle">created by Cornell Design &amp; Tech Initiative</span>
+          <div class="dtiLogoWrapper">
+            <img
+              class="dtiLogo"
+              src="@/assets/images/walkthrough/dti-wordmark.png"
+              alt="dti logo"
+            />
           </div>
           <div class="picture">
-            <img
-              class="image"
-              src="@/assets/images/branding/walkthrough.png"
-              alt="people planning"
-            />
+            <img class="image" :src="image" alt="person planning" />
           </div>
         </div>
         <div class="content">
@@ -54,6 +53,7 @@ export default Vue.extend({
     secondText: { type: String, required: false, default: '' },
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
+    image: { type: String, required: true },
   },
   data() {
     return {
@@ -95,46 +95,35 @@ export default Vue.extend({
   height: 25.25rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
   background-color: $emGreen;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
+  padding: 1rem 1.5rem;
 }
-.text {
-  margin-top: 2.25rem;
-  margin-bottom: 2.25rem;
+.dtiLogoWrapper {
+  margin-bottom: 1rem;
+}
+.picture {
   display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-.maintitle {
-  color: $white;
-  font-weight: 600;
-  font-size: 36px;
-  line-height: 36px;
-}
-.subtitle {
-  margin-top: 1.75rem;
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 18px;
-  color: $primaryGray;
+  justify-content: center;
 }
 .image {
   height: 100%;
 }
 .content {
   width: 100%;
-  height: 15.25rem;
+  min-height: 15.25rem;
+  padding-top: 1.75rem;
+  padding-bottom: 1.25rem;
   border-radius: 9px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
-  padding-top: 2%;
-  padding-bottom: 2%;
   .title {
     font-weight: 600;
+    font-size: 24px;
+    line-height: 24px;
     color: $primaryGray;
   }
   .body {
@@ -149,6 +138,8 @@ export default Vue.extend({
 
     &--left {
       text-align: left;
+      margin-top: 1.75rem;
+      margin-bottom: 1.25rem;
     }
   }
   button {
