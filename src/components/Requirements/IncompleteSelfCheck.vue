@@ -36,7 +36,7 @@ import Vue from 'vue';
 
 import { clickOutside } from '@/utilities';
 import store from '@/store';
-import { addCourseToSemester } from '@/global-firestore-data';
+import { addCourseToSemester, addCourseToSelectableRequirements } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
@@ -50,7 +50,9 @@ export default Vue.extend({
   components: {
     NewSelfCheckCourseModal,
   },
-  props: {},
+  props: {
+    subReqId: { type: String, required: true },
+  },
   data(): Data {
     return {
       showDropdown: false,
@@ -63,7 +65,10 @@ export default Vue.extend({
       const courses: Record<string, FirestoreSemesterCourse> = {};
       store.state.semesters.forEach(semester => {
         semester.courses.forEach(course => {
-          courses[course.code] = course;
+          const selectableRequirementCourses =
+            store.state.derivedSelectableRequirementData.requirementToCoursesMap[this.subReqId];
+          if (!(selectableRequirementCourses && selectableRequirementCourses.includes(course)))
+            courses[course.code] = course;
         });
       });
       return courses;
@@ -78,13 +83,12 @@ export default Vue.extend({
     },
     addExistingCourse(option: string) {
       this.showDropdown = false;
-      this.$emit('addCourse', this.selfCheckCourses[option]);
+      addCourseToSelectableRequirements(this.selfCheckCourses[option].uniqueID, this.subReqId);
     },
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterType, year: number) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(course);
-      addCourseToSemester(season, year, newCourse);
-      this.$emit('addCourse', newCourse);
+      addCourseToSemester(season, year, newCourse, this.subReqId, this.$gtag);
     },
     openCourseModal() {
       this.isCourseModalOpen = true;

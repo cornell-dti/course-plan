@@ -101,8 +101,7 @@ export default Vue.extend({
 
 @media only screen and (max-width: $small-breakpoint) {
   .bottombartab {
-    width: 100%;
-    height: 100%;
+    width: 9rem;
 
     &-arrow {
       margin-top: auto;

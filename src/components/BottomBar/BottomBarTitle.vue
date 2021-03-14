@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="bottombartitle"
-    :style="{ background: `#${color}` }"
-    :class="{ expandedBottomBarTitle: isExpanded }"
-  >
+  <div class="bottombartitle" :style="{ background: `#${color}` }">
     <div class="bottombar-square-title">{{ name }}</div>
     <img
       v-if="!isExpanded"
@@ -36,20 +32,12 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 .bottombartitle {
   padding-left: 0.5rem;
-  height: 2.5rem;
   line-height: 40px;
   background-color: #25a2aa;
   color: #fff;
   font-size: 16px;
   cursor: pointer;
   filter: brightness(100%);
-
-  position: fixed;
-  bottom: 0rem;
-  width: 100%;
-
-  left: 29.5rem;
-  width: calc(100vw - 29.5rem);
 
   &:hover {
     filter: brightness(95%);
@@ -67,30 +55,5 @@ export default Vue.extend({
   position: absolute;
   right: 2%;
   top: 40%;
-}
-
-.expandedBottomBarTitle {
-  position: fixed;
-  bottom: 16.25rem;
-}
-
-@media only screen and (max-width: $large-breakpoint) {
-  .bottombartitle {
-    left: 25.5rem;
-    width: calc(100vw - 25.5rem);
-  }
-}
-
-@media only screen and (max-width: $medium-breakpoint) {
-  .bottombartitle {
-    left: 0rem;
-    width: 100%;
-  }
-}
-
-@media only screen and (max-width: $small-breakpoint) {
-  .expandedBottomBarTitle {
-    bottom: 9.25rem;
-  }
 }
 </style>

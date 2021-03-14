@@ -21,7 +21,6 @@
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
-          @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
       <semester-view
@@ -56,13 +55,11 @@
       @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
     />
-    <div>
-      <bottom-bar
-        v-if="(!isOpeningRequirements && isTablet) || !isTablet"
-        :isExpanded="bottomBarIsExpanded"
-        :maxBottomBarTabs="maxBottomBarTabs"
-      />
-    </div>
+    <bottom-bar
+      v-if="(!isOpeningRequirements && isTablet) || !isTablet"
+      :isExpanded="bottomBarIsExpanded"
+      :maxBottomBarTabs="maxBottomBarTabs"
+    />
   </div>
 </template>
 
@@ -81,8 +78,32 @@ import walkthroughImageStart from '@/assets/images/walkthrough/walkthrough-start
 import walkthroughImageEnd from '@/assets/images/walkthrough/walkthrough-end.png';
 
 import store, { initializeFirestoreListeners } from '@/store';
-import { editSemesters } from '@/global-firestore-data';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
+import {
+  smallBreakpoint,
+  mediumBreakpoint,
+  veryLargeBreakpoint,
+} from '@/assets/scss/_variables.scss';
+
+const smallBreakpointPixels = parseInt(
+  smallBreakpoint.substring(0, smallBreakpoint.length - 2),
+  10
+);
+const mediumBreakpointPixels = parseInt(
+  mediumBreakpoint.substring(0, mediumBreakpoint.length - 2),
+  10
+);
+const veryLargeBreakpointPixels = parseInt(
+  veryLargeBreakpoint.substring(0, veryLargeBreakpoint.length - 2),
+  10
+);
+
+const getMaxButtonBarTabs = () => {
+  if (window.innerWidth <= veryLargeBreakpointPixels) {
+    return window.innerWidth <= smallBreakpointPixels ? 1 : 2;
+  }
+  return 4;
+};
 
 const tour = introJs();
 tour.setOption('exitOnEsc', 'false');
@@ -109,9 +130,9 @@ export default Vue.extend({
       isOnboarding: false,
       isEditingProfile: false,
       isOpeningRequirements: false,
-      isTablet: window.innerWidth <= 878,
-      isMobile: window.innerWidth <= 440,
-      maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4,
+      isTablet: window.innerWidth <= mediumBreakpointPixels,
+      isMobile: window.innerWidth <= smallBreakpointPixels,
+      maxBottomBarTabs: getMaxButtonBarTabs(),
       welcomeHidden: false,
       startTour: false,
       showTourEndWindow: false,
@@ -158,9 +179,9 @@ export default Vue.extend({
   },
   methods: {
     resizeEventHandler() {
-      this.isMobile = window.innerWidth <= 440;
-      this.isTablet = window.innerWidth <= 878;
-      this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
+      this.isMobile = window.innerWidth <= smallBreakpointPixels;
+      this.isTablet = window.innerWidth <= mediumBreakpointPixels;
+      this.maxBottomBarTabs = getMaxButtonBarTabs();
       this.updateSemesterView();
     },
     toggleRequirementsBar() {
@@ -203,17 +224,6 @@ export default Vue.extend({
     editProfile() {
       this.isOnboarding = true;
       this.isEditingProfile = true;
-    },
-
-    deleteCourseFromSemesters(uniqueID: number) {
-      editSemesters(oldSemesters =>
-        oldSemesters.map(semester => {
-          const coursesWithoutDeleted = semester.courses.filter(
-            course => course.uniqueID !== uniqueID
-          );
-          return { ...semester, courses: coursesWithoutDeleted };
-        })
-      );
     },
   },
 });

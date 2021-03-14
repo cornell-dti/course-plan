@@ -63,4 +63,13 @@ export default Vue.extend({
 .content-semester {
   width: 15.5rem;
 }
+
+.modal {
+  &--block {
+    display: block;
+  }
+  &--flex {
+    display: flex;
+  }
+}
 </style>

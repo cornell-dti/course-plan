@@ -108,7 +108,7 @@ export default Vue.extend({
       return noneIfEmpty(this.courseObj.prereqs);
     },
     CURLink(): string {
-      const [subject, number] = this.courseObj.code;
+      const [subject, number] = this.courseObj.code.split(' ');
       return `https://www.cureviews.org/course/${subject}/${number}`;
     },
     CUROverallRating() {
@@ -134,7 +134,7 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 
 .details {
-  margin: 20px;
+  padding: 20px;
 
   &-head {
     margin-top: 10px;
