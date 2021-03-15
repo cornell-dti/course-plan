@@ -26,6 +26,14 @@
         <div class="navbar-iconWrapper logout-mobile-icon" />
         <span class="nav-mobile-button-text">Log Out</span>
       </button>
+      <div class="nav-menu-spacing" />
+      <a
+        class="nav-menu-dti-link"
+        href="https://www.cornelldti.org/projects/courseplan/"
+        target="_black"
+        rel="noopener noreferrer"
+        >Cornell DTI @ 2021</a
+      >
     </div>
   </div>
 </template>
@@ -144,9 +152,20 @@ $mobile-navbar-height: 4.5rem;
     left: 0;
     width: 16.5rem;
     top: $mobile-navbar-height;
+    padding-top: 2rem;
     bottom: 0;
     display: none;
-    background: $offWhite;
+    background: $navMenuGray;
+
+    .nav-menu-spacing {
+      flex: 1 1 auto;
+    }
+
+    .nav-menu-dti-link {
+      color: $lightPlaceholderGray;
+      padding: 1rem;
+      text-align: center;
+    }
   }
 
   .profile-mobile-icon {
@@ -211,13 +230,14 @@ $mobile-navbar-height: 4.5rem;
     }
 
     .hamburger,
-    .requirements-bar {
+    .requirements-bar,
+    .navbar-menu-background-shadow {
       display: block;
     }
 
-    .navbar-menu-background-shadow,
     .navbar-menu {
-      display: block;
+      display: flex;
+      flex-direction: column;
     }
   }
 
