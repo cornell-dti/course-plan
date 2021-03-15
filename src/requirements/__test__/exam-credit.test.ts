@@ -160,54 +160,62 @@ it("Some colleges don't have an equivalent course", () => {
 /**
  * Tests for getCourseEquivalentsFromUserExams
  */
-it("Exam is counted correctly for one major", () => {
-  const exams: ExamsTaken = {
-    AP: [
-      {
-        subject: 'English',
-        score: 5,
-      },
-    ],
-    IB: [],
+it('Exam is counted correctly for one major', () => {
+  const userData = {
+    college: 'EN',
+    major: ['CS'],
+    exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
   };
-  // TODO
+  const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
+  const courseCodes = new Set(courseEquivalents.map(c => c.code));
+  const expected = new Set(['AP Computer Science A']);
+  expect(courseCodes).toEqual(expected);
 });
 
-it("Two exams are counted correctly for one major", () => {
-  const exams: ExamsTaken = {
-    AP: [
-      {
-        subject: 'English',
-        score: 5,
-      },
+it('Two exams are counted correctly for one major', () => {
+  const userData = {
+    college: 'EN',
+    major: ['CS'],
+    exam: [
+      { type: 'AP', score: 5, subject: 'Computer Science A' },
+      { type: 'AP', score: 5, subject: 'Chemistry' },
     ],
-    IB: [],
   };
-  // TODO
+  const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
+  const courseCodes = new Set(courseEquivalents.map(c => c.code));
+  const expected = new Set(['AP Computer Science A', 'AP Chemistry']);
+  expect(courseCodes).toEqual(expected);
 });
 
-it("One exam is only counted once for multiple majors", () => {
-  const exams: ExamsTaken = {
-    AP: [
-      {
-        subject: 'English',
-        score: 5,
-      },
-    ],
-    IB: [],
+it('One exam is only counted once for multiple majors', () => {
+  const userData = {
+    college: 'EN',
+    major: ['CS', 'Biological Sciences'],
+    exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
   };
-  // TODO
+  const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
+  expect(courseEquivalents.length).toBe(1);
+  const courseCodes = new Set(courseEquivalents.map(c => c.code));
+  const expected = new Set(['AP Computer Science A']);
+  expect(courseCodes).toEqual(expected);
 });
 
-it("Equivalent course appears if it matches one major but not the other", () => {
-  const exams: ExamsTaken = {
-    AP: [
-      {
-        subject: 'English',
-        score: 5,
-      },
-    ],
-    IB: [],
+it('Equivalent course appears if it matches one major but not the other', () => {
+  let userData = {
+    college: 'EN',
+    major: ['Biological Sciences'],
+    exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],
   };
-  // TODO
+  let courseEquivalents = getCourseEquivalentsFromUserExams(userData);
+  expect(courseEquivalents.length).toBe(0);
+
+  userData = {
+    college: 'EN',
+    major: ['CS', 'Biological Sciences'],
+    exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],
+  };
+  courseEquivalents = getCourseEquivalentsFromUserExams(userData);
+  const courseCodes = new Set(courseEquivalents.map(c => c.code));
+  const expected = new Set(['AP Statistics']);
+  expect(courseCodes).toEqual(expected);
 });
