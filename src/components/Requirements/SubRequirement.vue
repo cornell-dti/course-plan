@@ -233,28 +233,34 @@ export default Vue.extend({
       const allTakenCourseIds = new Set(this.subReq.courses.flat().map(course => course.courseId));
       const slots: SubReqCourseSlot[] = [];
 
-      const coursesTaken = this.subReq.courses;
-
-      coursesTaken.forEach((subReqCourseSlot, i) => {
-        if (subReqCourseSlot.length > 0) {
-          subReqCourseSlot.forEach(subReqCourse => {
-            slots.push({ isCompleted: true, courses: [subReqCourse] });
-          });
-          // Create new IncompletedSubReqCourse slot if all credits or courses not met
-          // but only one CompletedSubReqCourse slot exists
-          if (coursesTaken.length === 1 && !this.isCompleted) {
-            slots.push({
-              isCompleted: false,
-              courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[i]),
-            });
-          }
+      if (subReqSpec.fulfilledBy === 'credits') {
+        if (this.isCompleted) {
+          slots.push({ isCompleted: true, courses: this.subReq.courses[0] });
         } else {
           slots.push({
             isCompleted: false,
-            courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[i]),
+            courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[0]),
           });
         }
-      });
+      } else {
+        this.subReq.courses.forEach((subReqCourseSlot, i) => {
+          const slotMinCount = subReqSpec.perSlotMinCount[i];
+          for (let j = 0; j < slotMinCount; j += 1) {
+            if (j < subReqCourseSlot.length) {
+              slots.push({ isCompleted: true, courses: [subReqCourseSlot[j]] });
+            } else {
+              slots.push({
+                isCompleted: false,
+                courses: generateSubReqIncompleteCourses(
+                  allTakenCourseIds,
+                  subReqEligibleCourses[i]
+                ),
+              });
+            }
+          }
+        });
+      }
+
       return slots;
     },
     subReqProgress(): string {

@@ -46,4 +46,22 @@ allRequirementsWithIDs.forEach(({ id, requirement }) => {
         throw new Error();
     }
   });
+
+  it(`If ${id} is fulfilled by credits, then there is only one checker.`, () => {
+    switch (requirement.fulfilledBy) {
+      case 'self-check':
+      case 'courses':
+        return;
+      case 'credits':
+        expect(requirement.checker.length).toBe(1);
+        return;
+      case 'toggleable':
+        Object.values(requirement.fulfillmentOptions).forEach(option => {
+          if (option.counting === 'credits') expect(option.checker.length).toBe(1);
+        });
+        return;
+      default:
+        throw new Error();
+    }
+  });
 });
