@@ -1,15 +1,39 @@
 <template>
   <div class="navbar">
+    <div class="navbar-iconWrapper hamburger" @click="menuOpen = !menuOpen"></div>
     <div class="navbar-top">
-      <div class="navbar-iconWrapper">
+      <div class="navbar-iconWrapper course-plan-logo">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
       </div>
-      <div class="navbar-iconWrapper desktop" id="profileIcon" @click="editProfile"></div>
+      <div class="navbar-iconWrapper desktop profile-icon" @click="editProfile"></div>
     </div>
     <div class="navbar-bottom">
-      <div class="navbar-iconWrapper mobile requirementsBar" @click="toggleRequirementsBar"></div>
-      <div class="navbar-iconWrapper mobile" id="profileIcon" @click="editProfile"></div>
-      <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
+      <div class="navbar-iconWrapper desktop logout-icon" @click="logout"></div>
+    </div>
+    <div v-if="menuOpen" class="navbar-menu-background-shadow" @click="editProfile" />
+    <div v-if="menuOpen" class="navbar-menu">
+      <button class="nav-mobile-button" @click="toggleRequirementsBar">
+        <div class="navbar-iconWrapper requirements-bar" />
+        <span class="nav-mobile-button-text">
+          {{ isOpeningRequirements ? 'View Schedule' : 'View Requirements' }}
+        </span>
+      </button>
+      <button class="nav-mobile-button" @click="editProfile">
+        <div class="navbar-iconWrapper profile-mobile-icon" />
+        <span class="nav-mobile-button-text">Edit Profile</span>
+      </button>
+      <button class="nav-mobile-button" @click="logout">
+        <div class="navbar-iconWrapper logout-mobile-icon" />
+        <span class="nav-mobile-button-text">Log Out</span>
+      </button>
+      <div class="nav-menu-spacing" />
+      <a
+        class="nav-menu-dti-link"
+        href="https://www.cornelldti.org/projects/courseplan/"
+        target="_black"
+        rel="noopener noreferrer"
+        >Cornell DTI @ 2021</a
+      >
     </div>
   </div>
 </template>
@@ -19,6 +43,12 @@ import Vue from 'vue';
 import firebase from 'firebase/app';
 
 export default Vue.extend({
+  props: {
+    isOpeningRequirements: { type: Boolean, required: true },
+  },
+  data() {
+    return { menuOpen: false };
+  },
   methods: {
     logout() {
       firebase
@@ -27,9 +57,11 @@ export default Vue.extend({
         .then(() => window.location.reload());
     },
     editProfile() {
+      this.menuOpen = false;
       this.$emit('editProfile');
     },
     toggleRequirementsBar() {
+      this.menuOpen = false;
       this.$emit('toggleRequirementsBar');
     },
   },
@@ -39,20 +71,25 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
+$icon-size: 2.5rem;
+$mobile-navbar-height: 4.5rem;
+
 .navbar {
   background-color: #f7f7f7;
   width: 4.5rem;
   height: 100vh;
   display: flex;
   position: fixed;
+  z-index: 2;
   flex-direction: column;
   justify-content: space-between;
   padding-top: 2.25rem;
   padding-bottom: 2rem;
 
   &-iconWrapper {
-    height: 2.5rem;
-    width: 2.5rem;
+    width: $icon-size;
+    height: $icon-size;
+    cursor: pointer;
     background-repeat: no-repeat;
     background-size: auto;
     background-position: center;
@@ -61,52 +98,82 @@ export default Vue.extend({
       margin-top: 2.25rem;
     }
   }
-}
 
-.pointer {
-  cursor: pointer;
-}
-#profileIcon {
-  cursor: pointer;
-  background-image: url('~@/assets/images/navbar/profileIcon.svg');
+  .profile-icon {
+    background-image: url('~@/assets/images/navbar/profileIcon.svg');
 
-  &:hover,
-  &:focus,
-  &:active {
-    background-image: url('~@/assets/images/navbar/profileIconBlue.svg');
+    &:hover,
+    &:focus,
+    &:active {
+      background-image: url('~@/assets/images/navbar/profileIconBlue.svg');
+    }
   }
-}
 
-.requirementsBar {
-  cursor: pointer;
-  background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
-
-  &:hover,
-  &:focus,
-  &:active {
-    background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
+  .requirements-bar {
+    display: none;
+    background-image: url('~@/assets/images/navbar/requirement-toggle.svg');
   }
-}
 
-#star {
-  cursor: pointer;
-  background-image: url('~@/assets/images/navbar/star.svg');
+  .hamburger {
+    display: none;
+    background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
 
-  &:hover,
-  &:focus,
-  &:active {
-    background-image: url('~@/assets/images/navbar/starBlue.svg');
+    &:hover,
+    &:focus,
+    &:active {
+      background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
+    }
   }
-}
 
-#logout {
-  cursor: pointer;
-  background-image: url('~@/assets/images/navbar/logout.svg');
+  .logout-icon {
+    background-image: url('~@/assets/images/navbar/logout.svg');
 
-  &:hover,
-  &:focus,
-  &:active {
-    background-image: url('~@/assets/images/navbar/logoutBlue.svg');
+    &:hover,
+    &:focus,
+    &:active {
+      background-image: url('~@/assets/images/navbar/logoutBlue.svg');
+    }
+  }
+
+  .navbar-menu-background-shadow {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    right: 0;
+    top: $mobile-navbar-height;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .navbar-menu {
+    position: fixed;
+    z-index: 3;
+    left: 0;
+    width: 16.5rem;
+    top: $mobile-navbar-height;
+    padding-top: 2rem;
+    bottom: 0;
+    display: none;
+    background: $navMenuGray;
+
+    .nav-menu-spacing {
+      flex: 1 1 auto;
+    }
+
+    .nav-menu-dti-link {
+      color: $lightPlaceholderGray;
+      padding: 1rem;
+      text-align: center;
+    }
+  }
+
+  .profile-mobile-icon {
+    background-image: url('~@/assets/images/navbar/profile-mobile-icon.svg');
+  }
+
+  .logout-mobile-icon {
+    background-image: url('~@/assets/images/navbar/logout-mobile-icon.svg');
   }
 }
 
@@ -116,22 +183,61 @@ export default Vue.extend({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .navbar {
+    width: 100%;
+    flex-direction: row;
+    height: 4.5rem;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    display: flex;
+    flex-direction: row;
+
+    .nav-mobile-button {
+      border: 0;
+      display: flex;
+      width: 100%;
+      margin: 0.5rem;
+      align-items: center;
+      background: transparent;
+      color: $darkGray;
+
+      .nav-mobile-button-text {
+        text-align: left;
+        margin: 0 0.5rem;
+        line-height: $icon-size;
+        flex: 1 1 auto;
+        border-bottom: 1px solid $inactiveGray;
+      }
+    }
+
     &-top {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
     }
+
     &-bottom {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      min-width: 35%;
+      // Give the RHS section the same width as left side icon, so that the logo can be centered.
+      // --------------------------------------------
+      // | hamburger | icon | empty but dummy width |
+      // --------------------------------------------
+      width: $icon-size;
     }
 
     &-iconWrapper {
       &:not(:first-child) {
         margin-top: 0rem;
       }
+    }
+
+    .hamburger,
+    .requirements-bar,
+    .navbar-menu-background-shadow {
+      display: block;
+    }
+
+    .navbar-menu {
+      display: flex;
+      flex-direction: column;
     }
   }
 
@@ -141,24 +247,6 @@ export default Vue.extend({
 
   .mobile {
     display: flex;
-  }
-}
-
-@media only screen and (max-width: $small-medium-breakpoint) {
-  .navbar {
-    .requirementsBar {
-      cursor: pointer;
-      background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
-
-      &:hover {
-        background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
-      }
-
-      &:focus,
-      &:active {
-        background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
-      }
-    }
   }
 }
 </style>
