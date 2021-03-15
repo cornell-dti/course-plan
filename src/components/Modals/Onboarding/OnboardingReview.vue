@@ -40,13 +40,17 @@
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">College*</label>
             <div>
-              <label class="onboarding-label--review">{{ collegeText }}</label>
+              <label id="onboarding-college" class="onboarding-label--review">{{
+                collegeText
+              }}</label>
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">Major</label>
             <div v-for="(major, index) in onboardingData.major" :key="index">
-              <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
+              <label id="onboarding-major" class="onboarding-label--review">{{
+                getMajorFullName(major)
+              }}</label>
             </div>
           </div>
         </div>
@@ -56,7 +60,9 @@
         <div class="onboarding-selectWrapper">
           <label class="onboarding-label">Minors:</label>
           <div v-for="(minor, index) in onboardingData.minor" :key="index">
-            <label class="onboarding-label--review">{{ getMinorFullName(minor) }}</label>
+            <label id="onboarding-minor" class="onboarding-label--review">{{
+              getMinorFullName(minor)
+            }}</label>
           </div>
         </div>
       </div>
