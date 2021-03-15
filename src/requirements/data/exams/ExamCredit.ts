@@ -1,4 +1,4 @@
-import { CREDITS_COURSE_ID, FWS_COURSE_ID } from "../constants";
+import { CREDITS_COURSE_ID, FWS_COURSE_ID } from '../constants';
 
 export type ExamRequirements = {
   readonly name: string;
