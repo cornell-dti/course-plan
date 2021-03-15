@@ -181,6 +181,8 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       },
       'Interactive Technologies': {
         description:
+          // TODO: make each item in toggleable requirement annotate allowDoubleCounting
+          'Required Course: CS 2110 ' +
           'A. Building with Hardware (choose one), ' +
           'B. Working with Data/Software (choose one), ' +
           'C. Context/Application Domains (choose one)',
