@@ -234,9 +234,10 @@ export default Vue.extend({
       const slots: SubReqCourseSlot[] = [];
 
       if (subReqSpec.fulfilledBy === 'credits') {
-        if (this.isCompleted) {
-          slots.push({ isCompleted: true, courses: this.subReq.courses[0] });
-        } else {
+        this.subReq.courses[0].forEach(completedCourse =>
+          slots.push({ isCompleted: true, courses: [completedCourse] })
+        );
+        if (!this.isCompleted) {
           slots.push({
             isCompleted: false,
             courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[0]),
