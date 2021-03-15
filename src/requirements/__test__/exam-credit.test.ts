@@ -161,7 +161,7 @@ it("Some colleges don't have an equivalent course", () => {
  * Tests for getCourseEquivalentsFromUserExams
  */
 it('Exam is counted correctly for one major', () => {
-  const userData = {
+  const userData: AppOnboardingData = {
     college: 'EN',
     major: ['CS'],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
@@ -176,7 +176,7 @@ it('Exam is counted correctly for one major', () => {
 });
 
 it('Two exams are counted correctly for one major', () => {
-  const userData = {
+  const userData: AppOnboardingData = {
     college: 'EN',
     major: ['CS'],
     exam: [
@@ -194,7 +194,7 @@ it('Two exams are counted correctly for one major', () => {
 });
 
 it('One exam is only counted once for multiple majors', () => {
-  const userData = {
+  const userData: AppOnboardingData = {
     college: 'EN',
     major: ['CS', 'Biological Sciences'],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
@@ -210,7 +210,7 @@ it('One exam is only counted once for multiple majors', () => {
 });
 
 it('Equivalent course appears if it matches one major but not the other', () => {
-  let userData = {
+  let userData: AppOnboardingData = {
     college: 'EN',
     major: ['Biological Sciences'],
     exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],
