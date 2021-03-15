@@ -89,7 +89,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
             'SOC 3350',
             'INFO 3450',
             'INFO 4240',
-            '​INFO 4400',
+            'INFO 4400',
           ]
         ),
         perSlotMinCount: [2, 1, 1],
@@ -128,7 +128,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['INFO 2921', 'INFO 3200', 'INFO 3561', 'STS 3440', 'STS 4040'],
-          ['​INFO 2300', 'INFO 3152', 'INFO 3300', 'INFO 4320', 'CS 3758', 'CS 4620'],
+          ['INFO 2300', 'INFO 3152', 'INFO 3300', 'INFO 4320', 'CS 3758', 'CS 4620'],
           [
             // A
             'INFO 2921',
@@ -144,13 +144,12 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4240',
             'INFO 4400',
             'INFO 4420',
-            '​INFO 4940',
-            '​INFO 4940',
+            'INFO 4940',
             'ART 3705',
             'ARTH 4151',
             'ARTH 4154',
             'COML 3115',
-            '​ENGL 3741',
+            'ENGL 3741',
             'HIST 2293',
           ]
         ),
@@ -165,7 +164,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['INFO 4113', 'INFO 4200', 'INFO 4250', 'INFO 4301', 'HADM 4890', 'STS 2761'],
-          ['INFO 4240', 'INFO 4800', '​INFO 4940', 'COMM 4242', 'CRP 3210', 'PAM 2300'],
+          ['INFO 4240', 'INFO 4800', 'INFO 4940', 'COMM 4242', 'CRP 3210', 'PAM 2300'],
           [
             'INFO 3200',
             'INFO 3460',
@@ -187,7 +186,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
           'C. Context/Application Domains (choose one)',
         counting: 'courses',
         checker: includesWithSubRequirements(
-          ['INFO 4120', 'INFO 4320', '​CS 3758'],
+          ['INFO 4120', 'INFO 4320', 'CS 3758'],
           [
             'INFO 3300',
             'INFO 4340',
@@ -230,7 +229,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
             'SOC 3080',
           ],
           ['INFO 3300', 'INFO 4300', 'CS 4740', 'CS 4780', 'CS 4786', 'ECON 3120', 'ECON 3140'],
-          ['INFO 3561', 'INFO 4200', 'INFO 4240', 'INFO 4250', '​INFO 4940', 'STS 3440']
+          ['INFO 3561', 'INFO 4200', 'INFO 4240', 'INFO 4250', 'INFO 4940', 'STS 3440']
         ),
         perSlotMinCount: [2, 1, 1],
       },
@@ -243,7 +242,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['INFO 3450', 'INFO 4400', 'INFO 4410'],
-          ['INFO 2921', 'INFO 4240', 'INFO 4420', 'INFO 4940', '​ENGL 3741'],
+          ['INFO 2921', 'INFO 4240', 'INFO 4420', 'INFO 4940', 'ENGL 3741'],
           ['INFO 3400', 'INFO 3460', 'INFO 4430', 'INFO 4450', 'COMM 4380', 'PSYCH 3420'],
           [
             'INFO 3152',
