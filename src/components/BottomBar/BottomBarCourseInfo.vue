@@ -111,10 +111,10 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 
 .info {
-  margin: 20px;
+  width: 100%;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  height: 90%;
   justify-content: space-between;
   margin-bottom: 0rem;
 

@@ -165,10 +165,10 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { examData as reqsData } from '@/requirements/data/exams/ExamCredit';
+import { examData as reqsData, ExamRequirements } from '@/requirements/data/exams/ExamCredit';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
-import CourseSelector, { MatchingCourseSearchResult } from '../NewCourse/CourseSelector.vue';
+import CourseSelector from '../NewCourse/CourseSelector.vue';
 
 const placeholderText = 'Select one';
 
@@ -193,6 +193,7 @@ type Data = {
 const scoresAP = [1, 2, 3, 4, 5];
 const scoresIB = [1, 2, 3, 4, 5, 6, 7];
 const existingAP: Record<string, boolean> = {};
+const unmodifiedReqsData = { ...reqsData };
 // filter duplicate exam names and ones already selected
 reqsData.AP = reqsData.AP.filter(ap => {
   const inExisting = ap.name in existingAP;
@@ -210,10 +211,16 @@ const subjectsAP = reqsData.AP.map(it => it.name);
 const subjectsIB = reqsData.IB.map(it => it.name);
 
 export const getExamCredit = (exam: FirestoreAPIBExam): number => {
-  const relevantExamFromExamData = reqsData[exam.type].find(it => it.name === exam.subject);
-  if (relevantExamFromExamData == null) return 0;
-  const { fulfillment } = relevantExamFromExamData;
-  return exam.score < fulfillment.minimumScore ? 0 : fulfillment.credits;
+  const allExamsWithSameName: ExamRequirements[] = unmodifiedReqsData[exam.type].filter(
+    it => it.name === exam.subject
+  );
+  let mostPossibleCredit = 0;
+  for (const examWithSameName of allExamsWithSameName) {
+    if (exam.score >= examWithSameName.fulfillment.minimumScore) {
+      mostPossibleCredit = Math.max(mostPossibleCredit, examWithSameName.fulfillment.credits);
+    }
+  }
+  return mostPossibleCredit;
 };
 
 export default Vue.extend({
@@ -321,27 +328,13 @@ export default Vue.extend({
         this.tookSwimTest
       );
     },
-    onCourseSelection(id: number, { title }: MatchingCourseSearchResult) {
-      const courseCode = title.substring(0, title.indexOf(':'));
-      const subject = courseCode.split(' ')[0];
-      const number = courseCode.split(' ')[1];
-      fetch(
-        `https://classes.cornell.edu/api/2.0/search/classes.json?roster=FA14&subject=${subject}&q=${courseCode}`
-      ) // should be removed later
-        .then(res => res.json())
-        .then(resultJSON => {
-          // check catalogNbr of resultJSON class matches number of course to add
-          resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
-            if (resultJSONclass.catalogNbr === number) {
-              const course = resultJSONclass;
-              const creditsC = course.enrollGroups[0].unitsMaximum;
-              const classes = [...this.classes];
-              classes[id] = { class: courseCode, course, credits: creditsC };
-              this.classes = classes;
-              this.updateTransfer();
-            }
-          });
-        });
+    onCourseSelection(id: number, course: CornellCourseRosterCourse) {
+      const courseCode = `${course.subject} ${course.catalogNbr}`;
+      const creditsC = course.enrollGroups[0].unitsMaximum;
+      const classes = [...this.classes];
+      classes[id] = { class: courseCode, course, credits: creditsC };
+      this.classes = classes;
+      this.updateTransfer();
     },
     getSelectableOptions(
       // exams already picked

@@ -7,9 +7,8 @@ const isstMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'ENGRD 2700, ORIE 3120, ORIE 4800',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors',
     checker: includesWithSingleRequirement('ENGRD 2700', 'ORIE 3120', 'ORIE 4800'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: '3 Courses from the following',
@@ -27,9 +26,8 @@ const isstMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ORIE 5120',
       'ORIE 5770'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
 ];
 

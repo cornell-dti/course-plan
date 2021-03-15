@@ -10,13 +10,15 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       'Biological Sciences, Biology & Society, Earth and Atmospheric Sciences, Information Science, Nutritional Science, ' +
       'and The Department of Statistics and Data Science.',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/distribution/',
-    checker: (course: Course): boolean =>
-      ['AG'].includes(course.acadGroup) ||
-      ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(
-        course.subject
-      ),
+    checker: [
+      (course: Course): boolean =>
+        ['AG'].includes(course.acadGroup) ||
+        ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(
+          course.subject
+        ),
+    ],
     fulfilledBy: 'credits',
-    minCount: 55,
+    perSlotMinCount: [55],
   },
   {
     name: 'AEM Concentration Requirement',
@@ -44,9 +46,8 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       ['AEM 3200'],
       ['AEM 3230']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 7,
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
   },
   {
     name: 'Economics Requirements',
@@ -54,18 +55,16 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       'ECON 1110, ECON 1120, AND AEM 2600. For students concentrating in environmental, energy, and resource economics, ECON 3030 is required instead of AEM 2600.',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: includesWithSubRequirements(['ECON 1110'], ['ECON 1120'], ['AEM 2600', 'ECON 3030']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [1, 1, 1],
   },
   {
     name: 'Quantitative Methods Requirements',
     description: 'AEM 2100, MATH 1110 OR MATH 1120, AND AEM 2010',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: includesWithSubRequirements(['AEM 2100'], ['MATH 1110', 'MATH 1120'], ['AEM 2010']),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [1, 1, 1],
   },
   {
     name: 'Quantitative Methods Elective Requirements',
@@ -91,7 +90,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       'ILRST 3110'
     ),
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'Applied Economics Requirements',
@@ -116,27 +115,24 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       'AEM 2805',
       'AEM 4940'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Grand Challenges Reqiurement Part 2: Pre-Project Weekend Immersion',
     description: 'Junior year: 1.5 credits. Focus: Working as part of a team',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: includesWithSingleRequirement('AEM 3000'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Grand Challenges Reqiurement Part 3: Project Course',
     description: 'Senior year, 3 credits. Focus: Local and global community involvement',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: includesWithSingleRequirement('AEM 4000'),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
 ];
 

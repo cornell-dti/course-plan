@@ -2,7 +2,7 @@ import { CREDITS_COURSE_ID, FWS_COURSE_ID, SWIM_TEST_COURSE_ID } from './data/co
 import getCourseEquivalentsFromUserExams from './data/exams/ExamCredit';
 import {
   convertFirestoreSemesterCourseToCourseTaken,
-  getMatchedRequirementFulfillmentSpecification,
+  computeFulfillmentCoursesAndStatistics,
 } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
@@ -42,7 +42,7 @@ const getTotalCreditsFulfillmentStatistics = (
     name: 'Total Academic Credits',
     courses: [],
     fulfilledBy: 'credits',
-    minCount: 120,
+    perSlotMinCount: [120],
   } as const;
   let requirement: RequirementWithIDSourceType;
   switch (college) {
@@ -153,9 +153,8 @@ const getSwimTestFulfillmentStatistics = (
       'and water safety competency requirement for all entering first-year undergraduate students.',
     source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11637',
     courses: [[SWIM_TEST_COURSE_ID]],
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   };
   const swimClasses = courses.filter(it => it.courseId === SWIM_TEST_COURSE_ID);
   if (tookSwimTest) {
@@ -174,87 +173,6 @@ const getSwimTestFulfillmentStatistics = (
     minCountRequired: 1,
   };
 };
-
-function computeFulfillmentStatisticsFromCourses(
-  coursesThatFulfilledRequirement: readonly (readonly CourseTaken[])[],
-  counting: 'courses' | 'credits',
-  subRequirementProgress: 'every-course-needed' | 'any-can-count',
-  minCountRequired: number
-): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
-  let minCountFulfilled = 0;
-  coursesThatFulfilledRequirement.forEach(coursesThatFulfilledSubRequirement => {
-    if (coursesThatFulfilledSubRequirement.length === 0) {
-      return;
-    }
-
-    switch (counting) {
-      case 'courses':
-        minCountFulfilled +=
-          subRequirementProgress === 'any-can-count'
-            ? coursesThatFulfilledSubRequirement.length
-            : 1;
-        break;
-      case 'credits':
-        minCountFulfilled += coursesThatFulfilledSubRequirement
-          .map(course => course.credits)
-          .reduce((a, b) => a + b, 0);
-        break;
-      default:
-        throw new Error('Fulfillment type unknown.');
-    }
-  });
-
-  return {
-    fulfilledBy: counting,
-    minCountFulfilled,
-    minCountRequired,
-    courses: coursesThatFulfilledRequirement,
-  };
-}
-
-/**
- * @param coursesTaken a list of all taken courses.
- * @param requirementCourses a list of eligible courses from requirement data.
- * @returns a naively computed list of courses that fulfill the requirement, partitioned into sub-requirement filfillment.
- */
-function filterAndPartitionCoursesThatFulfillRequirement(
-  coursesTaken: readonly CourseTaken[],
-  requirementCourses: readonly (readonly number[])[]
-): CourseTaken[][] {
-  const coursesThatFulfilledRequirement: CourseTaken[][] = requirementCourses.map(() => []);
-  coursesTaken.forEach(courseTaken => {
-    const { courseId } = courseTaken;
-    requirementCourses.forEach((subRequirementCourses, subRequirementIndex) => {
-      if (subRequirementCourses.includes(courseId)) {
-        // add the course to the list of courses used to fulfill that one sub-requirement
-        coursesThatFulfilledRequirement[subRequirementIndex].push(courseTaken);
-      }
-    });
-  });
-  return coursesThatFulfilledRequirement;
-}
-
-function computeFulfillmentCoursesAndStatistics(
-  requirement: RequirementWithIDSourceType,
-  coursesTaken: readonly CourseTaken[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices
-): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
-  const spec = getMatchedRequirementFulfillmentSpecification(
-    requirement,
-    toggleableRequirementChoices
-  );
-  if (spec == null) {
-    // Give self-check 1 required course and 0 fulfilled to prevent it from being fulfilled.
-    return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 1, courses: [] };
-  }
-  const { fulfilledBy, eligibleCourses, subRequirementProgress, minCount } = spec;
-  return computeFulfillmentStatisticsFromCourses(
-    filterAndPartitionCoursesThatFulfillRequirement(coursesTaken, eligibleCourses),
-    fulfilledBy,
-    subRequirementProgress,
-    minCount
-  );
-}
 
 function getCourseCodesArray(
   semesters: readonly FirestoreSemester[],

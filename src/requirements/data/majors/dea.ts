@@ -21,9 +21,8 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       ['DEA 4040'],
       ['DEA 5304']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 11,
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   },
   {
     name: 'DEA Thematic Courses',
@@ -63,9 +62,8 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       'DEA 5305',
       'DEA 5560',
     ]),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 9,
+    perSlotMinCount: [9],
   },
   {
     name: 'Research Methods Course',
@@ -73,9 +71,8 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: includesWithSubRequirements(['DEA 3550', 'ILROB 4710', 'PAM 3120']),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Human Development or Psychology',
@@ -83,9 +80,8 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: includesWithSubRequirements(['HD 1150', 'HC 1170', 'PSYCH 1101']),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Introductory Microeconomics',
@@ -93,22 +89,22 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: includesWithSubRequirements(['ECON 1110']),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Humanities',
     description: 'Choose any course with the Course Distribution HA, LA or CA.',
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
-    checker: (course: Course): boolean =>
-      ['CA', 'HA', 'LA', 'LAD'].some(
-        distribution => course.catalogDistr?.includes(distribution) ?? false
-      ),
-    subRequirementProgress: 'any-can-count',
+    checker: [
+      (course: Course): boolean =>
+        ['CA', 'HA', 'LA', 'LAD'].some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+    ],
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Statistics',
@@ -118,9 +114,8 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: includesWithSubRequirements(['PAM 2100', 'AEM 2100', 'ILRST 2100', 'PSYCH 2500']),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Natural Science I',
@@ -141,22 +136,19 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
           'BIOG 1445',
         ]),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 1,
+        perSlotMinCount: [1],
       },
       Chemistry: {
         description: 'Take 1: CHEM 1560, CHEM 2070, CHEM 2080, or 5 on AP Chemistry',
         checker: includesWithSubRequirements(['CHEM 1560', 'CHEM 2070', 'CHEM 2080']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 1,
+        perSlotMinCount: [1],
       },
       Physics: {
         description: 'Take 1: PHYS 1101, PHYS 2207, PHYS 1102, PHYS 2208, or 5 on AP Physics',
         checker: includesWithSubRequirements(['PHYS 1101', 'PHYS 2207', 'PHYS 1102', 'PHYS 2208']),
         counting: 'courses',
-        subRequirementProgress: 'every-course-needed',
-        minCount: 1,
+        perSlotMinCount: [1],
       },
     },
   },
@@ -166,12 +158,14 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       'Choose any 3 credit course with a PBS, BIOLS-AG, or BIONLS-AG Course Distribution.',
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
-    checker: (course: Course): boolean =>
-      ['PBS', 'BIOLS-AG', 'BIONLS-AG '].some(
-        distribution => course.catalogDistr?.includes(distribution) ?? false
-      ),
+    checker: [
+      (course: Course): boolean =>
+        ['PBS', 'BIOLS-AG', 'BIONLS-AG '].some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+    ],
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'DEA Additional Requirements',
@@ -179,12 +173,14 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       'Any course with the Course Distribution PBS, BIOLS-AG, BIONLS-AG, SBA, KCM, MQR, LA, CA, or HA. Language courses may count here.',
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
-    checker: (course: Course): boolean =>
-      ['PBS', 'BIOLS-AG', 'BIONLS-AG', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
-        distribution => course.catalogDistr?.includes(distribution) ?? false
-      ),
+    checker: [
+      (course: Course): boolean =>
+        ['PBS', 'BIOLS-AG', 'BIONLS-AG', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+    ],
     fulfilledBy: 'credits',
-    minCount: 6,
+    perSlotMinCount: [6],
   },
 ];
 

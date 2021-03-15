@@ -13,7 +13,7 @@
     <course-selector
       search-box-class-name="newCourse-dropdown"
       :key="courseSelectorKey"
-      placeholder='"CS1110", "Multivariable Calculus", etc'
+      placeholder='"CS 1110", "Multivariable Calculus", etc'
       :autoFocus="true"
       @on-escape="closeCurrentModal"
       @on-select="setCourse"
@@ -36,15 +36,13 @@
 import Vue from 'vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
-import CourseSelector, {
-  MatchingCourseSearchResult,
-} from '@/components/Modals/NewCourse/CourseSelector.vue';
+import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
 export default Vue.extend({
   components: { CourseSelector, FlexibleModal, NewSemester },
   data() {
     return {
-      selectedCourse: null as MatchingCourseSearchResult | null,
+      selectedCourse: null as CornellCourseRosterCourse | null,
       courseSelectorKey: 0,
       season: '' as FirestoreSemesterType,
       year: 0,
@@ -63,32 +61,12 @@ export default Vue.extend({
       this.reset();
       this.$emit('close-course-modal');
     },
-    setCourse(result: MatchingCourseSearchResult) {
+    setCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
     },
     addCourse() {
       if (this.selectedCourse == null) return;
-
-      const { roster, title } = this.selectedCourse;
-
-      const courseCode = title.substring(0, title.indexOf(':'));
-      const subject = courseCode.split(' ')[0];
-      const number = courseCode.split(' ')[1];
-
-      fetch(
-        `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}&q=${courseCode}`
-      )
-        .then(res => res.json())
-        .then(resultJSON => {
-          // check catalogNbr of resultJSON class matches number of course to add
-          resultJSON.data.classes.forEach((resultJSONclass: CornellCourseRosterCourse) => {
-            if (resultJSONclass.catalogNbr === number) {
-              const course = { ...resultJSONclass, roster };
-              this.$emit('add-course', course, this.season, this.year);
-            }
-          });
-        });
-
+      this.$emit('add-course', this.selectedCourse, this.season, this.year);
       this.reset();
       this.closeCurrentModal();
     },

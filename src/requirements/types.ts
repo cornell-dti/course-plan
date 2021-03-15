@@ -22,7 +22,7 @@ export type BaseRequirement = RequirementCommon & RequirementFulfillmentInformat
 export type RequirementChecker = (course: Course) => boolean;
 export type CollegeOrMajorRequirement = RequirementCommon &
   RequirementFulfillmentInformation<{
-    readonly checker: RequirementChecker | readonly RequirementChecker[];
+    readonly checker: readonly RequirementChecker[];
   }>;
 
 export type CollegeRequirements<R> = {
