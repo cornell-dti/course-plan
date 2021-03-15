@@ -165,6 +165,9 @@ it('Exam is counted correctly for one major', () => {
     college: 'EN',
     major: ['CS'],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
+    minor: [],
+    transferCourse: [],
+    tookSwim: 'no',
   };
   const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
   const courseCodes = new Set(courseEquivalents.map(c => c.code));
@@ -180,6 +183,9 @@ it('Two exams are counted correctly for one major', () => {
       { type: 'AP', score: 5, subject: 'Computer Science A' },
       { type: 'AP', score: 5, subject: 'Chemistry' },
     ],
+    minor: [],
+    transferCourse: [],
+    tookSwim: 'no',
   };
   const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
   const courseCodes = new Set(courseEquivalents.map(c => c.code));
@@ -192,6 +198,9 @@ it('One exam is only counted once for multiple majors', () => {
     college: 'EN',
     major: ['CS', 'Biological Sciences'],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
+    minor: [],
+    transferCourse: [],
+    tookSwim: 'no',
   };
   const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
   expect(courseEquivalents.length).toBe(1);
@@ -205,17 +214,25 @@ it('Equivalent course appears if it matches one major but not the other', () => 
     college: 'EN',
     major: ['Biological Sciences'],
     exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],
+    minor: [],
+    transferCourse: [],
+    tookSwim: 'no',
   };
   let courseEquivalents = getCourseEquivalentsFromUserExams(userData);
+  // If this fails, first check if the AP/IB equivalent course logic has changed.
   expect(courseEquivalents.length).toBe(0);
 
   userData = {
     college: 'EN',
     major: ['CS', 'Biological Sciences'],
     exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],
+    minor: [],
+    transferCourse: [],
+    tookSwim: 'no',
   };
   courseEquivalents = getCourseEquivalentsFromUserExams(userData);
   const courseCodes = new Set(courseEquivalents.map(c => c.code));
   const expected = new Set(['AP Statistics']);
+  // If this fails, first check if the AP/IB equivalent course logic has changed.
   expect(courseCodes).toEqual(expected);
 });
