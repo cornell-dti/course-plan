@@ -97,7 +97,7 @@
         "
         class="subreqcourse-wrapper"
       >
-        <div v-for="(subReqCourseSlot, id) in subReqCoursesSlots" :key="id">
+        <div v-for="(subReqCourseSlot, id) in requirementCoursesSlots" :key="id">
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completed-sub-req-course
               :subReqCourseId="id"
@@ -223,7 +223,14 @@ export default Vue.extend({
         Object.keys(this.subReq.requirement.fulfillmentOptions)[0]
       );
     },
-    subReqCoursesSlots(): SubReqCourseSlot[] {
+    /**
+     * A list of "slots" for a requirement's fulfillment courses, completed or incomplete.
+     * Note that it is different from the concept of slot in `perSlotMinCount`.
+     * In `perSlotMinCount`, each slot can hold multiple courses, but here, each slot can only hold
+     * one course at a time. If `perSlotMinCount`'s slot i has minCount x, then x corresponding slots
+     * will be generated here.
+     */
+    requirementCoursesSlots(): SubReqCourseSlot[] {
       const subReqSpec = getMatchedRequirementFulfillmentSpecification(this.subReq.requirement, {
         [this.subReq.requirement.id]: this.toggleableRequirementChoice,
       });
@@ -284,7 +291,7 @@ export default Vue.extend({
     onShowAllCourses(subReqIndex: number) {
       this.$emit('onShowAllCourses', {
         requirementName: this.subReq.requirement.name,
-        subReqCoursesArray: this.subReqCoursesSlots[subReqIndex].courses,
+        subReqCoursesArray: this.requirementCoursesSlots[subReqIndex].courses,
       });
     },
     toggleDescription() {
