@@ -92,7 +92,6 @@
 import draggable from 'vuedraggable';
 import Vue from 'vue';
 import VueCollapse from 'vue2-collapse';
-import introJs from 'intro.js';
 
 import Course from '@/components/Course/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
@@ -102,6 +101,9 @@ import clipboard from '@/assets/images/clipboard.svg';
 import warning from '@/assets/images/warning.svg';
 import store from '@/store';
 import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-firestore-data';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const introJs = require('intro.js');
 
 Vue.use(VueCollapse);
 
@@ -122,7 +124,7 @@ type Data = {
 };
 
 // This section will be revisited when we try to make first-time tooltips
-const tour: any = introJs().start();
+const tour = introJs().start();
 tour.setOption('exitOnEsc', 'false');
 tour.setOption('doneLabel', 'Next');
 tour.setOption('nextLabel', 'Next');

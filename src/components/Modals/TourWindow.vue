@@ -41,6 +41,7 @@
             </div>
           </div>
           <button
+            class="startButton"
             @click="
               $emit('hide');
               $emit('startTour');
@@ -48,9 +49,7 @@
           >
             {{ buttonText }}
           </button>
-          <a @click="$emit('skip')">
-            {{ exit }}
-          </a>
+          <button class="skipButton" @click="$emit('skip')">{{ exit }}</button>
         </div>
       </div>
     </div>
@@ -156,7 +155,7 @@ export default Vue.extend({
       margin-bottom: 1.25rem;
     }
   }
-  button {
+  .startButton {
     background-color: $sangBlue;
     color: $white;
     border: none;
@@ -167,6 +166,14 @@ export default Vue.extend({
     font-style: normal;
     font-weight: normal;
     border-radius: 3px;
+  }
+  .skipButton {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font-weight: normal;
+    color: $sangBlue;
   }
   a {
     font-weight: normal;

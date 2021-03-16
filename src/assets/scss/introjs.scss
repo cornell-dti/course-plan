@@ -21,12 +21,16 @@
 .introjs-helperLayer {
   border-radius: 9px;
 }
+.introjs-button:focus {
+  outline: 1px solid $yuxuanBlue;
+  box-shadow: none;
+}
 .introjs-skipbutton {
   display: none;
 }
 .introjs-nextbutton,
 .introjs-donebutton {
-  color: $white !important;
+  color: $white;
   background-image: none;
   background-color: $sangBlue;
   text-shadow: none;
@@ -44,16 +48,20 @@
   &:active,
   &:focus,
   &:hover {
-    color: $white !important;
+    color: $white;
     background-color: $sangBlue;
     background-image: none;
   }
 }
 .introjs-prevbutton {
-  display: none !important;
+  display: none;
 }
 a:not([href]) {
-  color: $sangBlue;
+  color: $white;
+
+  &:hover {
+    color: $white;
+  }
 }
 .introjs-bullets {
   display: none;
@@ -65,6 +73,7 @@ a:not([href]) {
   display: flex;
   align-items: center;
   font-weight: 600;
+  color: $primaryGray;
 }
 .introjs-bodytext {
   color: $lightPlaceholderGray;
@@ -73,7 +82,7 @@ a:not([href]) {
   line-height: 17px;
 }
 .introjs-disabled {
-  display: none !important;
+  display: none;
 }
 .tooltipCenter {
   align-self: center;
@@ -81,33 +90,4 @@ a:not([href]) {
 }
 .introjs-tooltipReferenceLayer {
   display: flex;
-}
-// Styling fix so that walkthrough tooltips can show on a fixed menu like requirements
-.introjs-helperLayer {
-  background: transparent;
-}
-
-.introjs-overlay {
-  display: none;
-}
-
-.introjs-helperLayer:before {
-  opacity: 0;
-  content: '';
-  position: fixed;
-  width: inherit;
-  height: inherit;
-  border-radius: 0.5em;
-  box-shadow: 0 0 0 1000em rgba(0, 0, 0, 0.7);
-  opacity: 1;
-}
-
-.introjs-helperLayer:after {
-  content: '';
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  position: fixed;
-  z-index: 1000;
 }

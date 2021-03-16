@@ -1,5 +1,13 @@
 <template>
-  <div class="semester" :class="{ 'semester--compact': compact }">
+  <div
+    class="semester"
+    :class="{ 'semester--compact': compact }"
+    data-intro-group="pageTour"
+    data-step="3"
+    :data-intro="walkthroughText()"
+    data-disable-interaction="1"
+    data-tooltipClass="tooltipCenter"
+  >
     <new-course-modal
       class="semester-modal"
       :class="{ 'modal--block': isCourseModalOpen }"
@@ -76,11 +84,7 @@
             />
           </div>
         </draggable>
-        <add-course-button
-          :compact="compact"
-          :shouldShowWalkthrough="true"
-          @click="openCourseModal"
-        />
+        <add-course-button :compact="compact" @click="openCourseModal" />
       </div>
     </div>
     <semester-menu
@@ -364,6 +368,10 @@ export default Vue.extend({
           year: yearInput,
         })
       );
+    },
+    walkthroughText() {
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Add Classes to your Schedule</div><div class="introjs-customProgress">3/4</div>
+      </div><div class = "introjs-bodytext">Press "+ Course" to add classes! Edit semesters using the ellipses on the top right and drag courses between semesters.</div>`;
     },
   },
   directives: {
