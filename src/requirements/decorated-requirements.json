@@ -34638,8 +34638,305 @@
           "name": "Concentration",
           "description": "Students are required to complete AT LEAST one concentration from the seven concentrations available",
           "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-0",
-          "fulfilledBy": "self-check",
-          "minCount": 1
+          "fulfilledBy": "toggleable",
+          "fulfillmentOptions": {
+            "Behavioral Science": {
+              "description": "A. Understanding Social Behavior (choose two), B. Social Data Analytics (choose one), C. Behavior in Sociological, Network, and Design Contexts (choose one)",
+              "counting": "courses",
+              "perSlotMinCount": [
+                2,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  351675,
+                  360995,
+                  362976,
+                  364529,
+                  367429,
+                  368973,
+                  370763
+                ],
+                [
+                  358565,
+                  358578,
+                  358589,
+                  358592,
+                  370219,
+                  371471
+                ],
+                [
+                  352898,
+                  354593,
+                  359460,
+                  361468,
+                  362957,
+                  365928,
+                  366983,
+                  370809
+                ]
+              ]
+            },
+            "Data Science": {
+              "description": "A. Data Analysis (choose one), B. Domain Expertise (choose one), C. Big Data Ethics, Policy and Society (choose one), D. Data Communication (choose one)",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  353163,
+                  358529,
+                  358565,
+                  358592,
+                  364588,
+                  366997,
+                  370464
+                ],
+                [
+                  358578,
+                  358589,
+                  365657,
+                  366043,
+                  366237,
+                  367628,
+                  370219
+                ],
+                [
+                  352898,
+                  359460,
+                  364529,
+                  364949,
+                  365928,
+                  368323,
+                  368546,
+                  369207,
+                  369785,
+                  370809,
+                  371471
+                ],
+                [
+                  353448,
+                  353457,
+                  353501,
+                  365789,
+                  369514,
+                  370059,
+                  370665
+                ]
+              ]
+            },
+            "Digital Culture and Production": {
+              "description": "A. Digital Culture and History, B. Digital Production, C. Media, Art, Design. One course each from A and B; 2 additional courses from A or C.",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                2
+              ],
+              "courses": [
+                [
+                  352898,
+                  359460,
+                  362654,
+                  370769,
+                  370809
+                ],
+                [
+                  354881,
+                  358551,
+                  358565,
+                  363542,
+                  363681,
+                  365610
+                ],
+                [
+                  350933,
+                  352898,
+                  354593,
+                  359460,
+                  361468,
+                  362654,
+                  364136,
+                  364529,
+                  364902,
+                  365350,
+                  365611,
+                  365928,
+                  367375,
+                  370148,
+                  370769,
+                  370809
+                ]
+              ]
+            },
+            "Information Ethics, Law, and Policy": {
+              "description": "A. Frameworks and Institutions (choose one), B. Methods and Analysis (choose one), C. Cases/Topics (choose one), D. Tools and Technical Domains (choose one)",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  351890,
+                  364949,
+                  365490,
+                  368323,
+                  369968
+                ],
+                [
+                  351538,
+                  355262,
+                  364529,
+                  365928,
+                  370763,
+                  371471
+                ],
+                [
+                  352898,
+                  359460,
+                  364529,
+                  368546,
+                  369207,
+                  370769,
+                  370809
+                ],
+                [
+                  358565,
+                  358578,
+                  365657,
+                  366043,
+                  367628
+                ]
+              ]
+            },
+            "Interactive Technologies": {
+              "description": "Required Course: CS 2110. A. Building with Hardware (choose one), B. Working with Data/Software (choose one), C. Context/Application Domains (choose one)",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  363542,
+                  363681,
+                  365657
+                ],
+                [
+                  353163,
+                  358529,
+                  358565,
+                  358592,
+                  358601,
+                  364588,
+                  366997,
+                  369914,
+                  370440
+                ],
+                [
+                  364529,
+                  365611,
+                  366043,
+                  366870,
+                  367112,
+                  367429,
+                  369514,
+                  370458
+                ]
+              ]
+            },
+            "Networks, Crowds, and Markets": {
+              "description": "A. Models (choose two), B. Data (choose one), C. Policy/Values (choose one)",
+              "counting": "courses",
+              "perSlotMinCount": [
+                2,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  350827,
+                  350842,
+                  350862,
+                  352158,
+                  353448,
+                  355617,
+                  365608,
+                  366983,
+                  370034,
+                  371479
+                ],
+                [
+                  350429,
+                  358565,
+                  358578,
+                  358589,
+                  358592,
+                  365790,
+                  366997
+                ],
+                [
+                  359460,
+                  364529,
+                  364949,
+                  365928,
+                  368323,
+                  370809
+                ]
+              ]
+            },
+            "UX (User Experience)": {
+              "description": "A. Core Principles of Design (choose one), B. Design in Context (choose one), C. Knowing the User (choose one), D. Knowing the Technology (choose one) ",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  354593,
+                  361468,
+                  367112
+                ],
+                [
+                  362654,
+                  364529,
+                  365350,
+                  365928,
+                  370148
+                ],
+                [
+                  351670,
+                  360995,
+                  362976,
+                  367429,
+                  368973
+                ],
+                [
+                  358601,
+                  363542,
+                  365610,
+                  365611,
+                  366043,
+                  366870,
+                  369514,
+                  369914,
+                  370458
+                ]
+              ]
+            }
+          }
         },
         {
           "name": "Electives",
