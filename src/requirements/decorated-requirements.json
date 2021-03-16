@@ -34709,6 +34709,7 @@
                 [
                   352898,
                   359460,
+                  364529,
                   364949,
                   365928,
                   368323,
@@ -34817,7 +34818,7 @@
               ]
             },
             "Interactive Technologies": {
-              "description": "A. Building with Hardware (choose one), B. Working with Data/Software (choose one), C. Context/Application Domains (choose one)",
+              "description": "Required Course: CS 2110. A. Building with Hardware (choose one), B. Working with Data/Software (choose one), C. Context/Application Domains (choose one)",
               "counting": "courses",
               "perSlotMinCount": [
                 1,

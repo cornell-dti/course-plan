@@ -112,7 +112,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4250',
             'INFO 4270',
             'INFO 4561',
-            '​INFO 4940',
+            'INFO 4940',
             'COMM 4242',
             'ENGL 3778',
             'STS 3440',
@@ -182,7 +182,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       'Interactive Technologies': {
         description:
           // TODO: make each item in toggleable requirement annotate allowDoubleCounting
-          'Required Course: CS 2110 ' +
+          'Required Course: CS 2110. ' +
           'A. Building with Hardware (choose one), ' +
           'B. Working with Data/Software (choose one), ' +
           'C. Context/Application Domains (choose one)',
