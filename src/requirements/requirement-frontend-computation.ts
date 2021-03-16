@@ -18,7 +18,7 @@ type FulfillmentStatistics = {
  */
 const courseIsAPIB = (course: CourseTaken): boolean =>
   [CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
-  ['AP', 'IB', 'CREDITS'].includes(course.code.split(' ')[0]);
+  ['AP', 'IB'].includes(course.code.split(' ')[0]);
 
 /**
  * Used for total academic credit requirements for all colleges except EN and AR

@@ -1,3 +1,5 @@
+import { CREDITS_COURSE_ID, FWS_COURSE_ID } from '../constants';
+
 export type ExamRequirements = {
   readonly name: string;
   readonly fulfillment: {
@@ -89,9 +91,9 @@ export const examData: ExamData = {
       name: 'English Literature and Composition',
       fulfillment: {
         courseEquivalents: {
-          AS1: [11], // FWS
-          // AS2: [11], // FWS
-          EN: [11], // FWS
+          AS1: [FWS_COURSE_ID], // FWS
+          // AS2: [FWS_COURSE_ID], // FWS
+          EN: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 4,
         credits: 3,
@@ -101,9 +103,9 @@ export const examData: ExamData = {
       name: 'English Language and Composition',
       fulfillment: {
         courseEquivalents: {
-          AS1: [11], // FWS
-          // AS2: [11], // FWS
-          EN: [11], // FWS
+          AS1: [FWS_COURSE_ID], // FWS
+          // AS2: [FWS_COURSE_ID], // FWS
+          EN: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 4,
         credits: 3,
@@ -293,7 +295,7 @@ export const examData: ExamData = {
   ],
   IB: [
     {
-      name: 'Chemical And Physical Systems',
+      name: 'Chemical and Physical Systems',
       fulfillment: {
         courseEquivalents: {
           DEFAULT: [355142, 355143], // PHYS 1101, PHYS 1102
@@ -337,8 +339,8 @@ export const examData: ExamData = {
       name: 'English Literature A',
       fulfillment: {
         courseEquivalents: {
-          AS: [11], // FWS
-          EN: [11], // FWS
+          AS: [FWS_COURSE_ID], // FWS
+          EN: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -348,8 +350,8 @@ export const examData: ExamData = {
       name: 'English Language and Literature',
       fulfillment: {
         courseEquivalents: {
-          AS: [11], // FWS
-          EN: [11], // FWS
+          AS: [FWS_COURSE_ID], // FWS
+          EN: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -439,9 +441,9 @@ function userDataToCourses(
             });
           });
           courses.push({
-            courseId: 10,
+            courseId: CREDITS_COURSE_ID,
             uniqueId: -1,
-            code: `CREDITS ${exam.fulfillment.credits}`,
+            code: `${examType} ${exam.name}`,
             credits: exam.fulfillment.credits,
           });
         }
@@ -451,7 +453,7 @@ function userDataToCourses(
   return courses;
 }
 
-function getCourseEquivalentsFromOneMajor(
+export function getCourseEquivalentsFromOneMajor(
   college: string,
   major: string,
   userData: ExamsTaken

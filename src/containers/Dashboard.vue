@@ -13,6 +13,7 @@
       <div class="dashboard-menus">
         <nav-bar
           class="dashboard-nav"
+          :isOpeningRequirements="isOpeningRequirements"
           @editProfile="editProfile"
           @toggleRequirementsBar="toggleRequirementsBar"
         />
@@ -248,7 +249,7 @@ export default Vue.extend({
   /* The Modal (background) */
   &-onboarding {
     position: fixed; /* Stay in place */
-    z-index: 2; /* Sit on top */
+    z-index: 3; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -270,19 +271,6 @@ export default Vue.extend({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .dashboard {
-    &-nav {
-      width: 100%;
-      flex-direction: row;
-      height: 4.5rem;
-      padding-top: 0rem;
-      padding-bottom: 0rem;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      position: fixed;
-      z-index: 1;
-    }
-
     &-reqs {
       margin-left: 0;
     }

@@ -97,7 +97,7 @@
         "
         class="subreqcourse-wrapper"
       >
-        <div v-for="(subReqCourseSlot, id) in subReqCoursesSlots" :key="id">
+        <div v-for="(subReqCourseSlot, id) in requirementCoursesSlots" :key="id">
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completed-sub-req-course
               :subReqCourseId="id"
@@ -223,7 +223,14 @@ export default Vue.extend({
         Object.keys(this.subReq.requirement.fulfillmentOptions)[0]
       );
     },
-    subReqCoursesSlots(): SubReqCourseSlot[] {
+    /**
+     * A list of "slots" for a requirement's fulfillment courses, completed or incomplete.
+     * Note that it is different from the concept of slot in `perSlotMinCount`.
+     * In `perSlotMinCount`, each slot can hold multiple courses, but here, each slot can only hold
+     * one course at a time. If `perSlotMinCount`'s slot i has minCount x, then x corresponding slots
+     * will be generated here.
+     */
+    requirementCoursesSlots(): SubReqCourseSlot[] {
       const subReqSpec = getMatchedRequirementFulfillmentSpecification(this.subReq.requirement, {
         [this.subReq.requirement.id]: this.toggleableRequirementChoice,
       });
@@ -233,28 +240,35 @@ export default Vue.extend({
       const allTakenCourseIds = new Set(this.subReq.courses.flat().map(course => course.courseId));
       const slots: SubReqCourseSlot[] = [];
 
-      const coursesTaken = this.subReq.courses;
-
-      coursesTaken.forEach((subReqCourseSlot, i) => {
-        if (subReqCourseSlot.length > 0) {
-          subReqCourseSlot.forEach(subReqCourse => {
-            slots.push({ isCompleted: true, courses: [subReqCourse] });
-          });
-          // Create new IncompletedSubReqCourse slot if all credits or courses not met
-          // but only one CompletedSubReqCourse slot exists
-          if (coursesTaken.length === 1 && !this.isCompleted) {
-            slots.push({
-              isCompleted: false,
-              courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[i]),
-            });
-          }
-        } else {
+      if (subReqSpec.fulfilledBy === 'credits') {
+        this.subReq.courses[0].forEach(completedCourse =>
+          slots.push({ isCompleted: true, courses: [completedCourse] })
+        );
+        if (!this.isCompleted) {
           slots.push({
             isCompleted: false,
-            courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[i]),
+            courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[0]),
           });
         }
-      });
+      } else {
+        this.subReq.courses.forEach((subReqCourseSlot, i) => {
+          const slotMinCount = subReqSpec.perSlotMinCount[i];
+          for (let j = 0; j < slotMinCount; j += 1) {
+            if (j < subReqCourseSlot.length) {
+              slots.push({ isCompleted: true, courses: [subReqCourseSlot[j]] });
+            } else {
+              slots.push({
+                isCompleted: false,
+                courses: generateSubReqIncompleteCourses(
+                  allTakenCourseIds,
+                  subReqEligibleCourses[i]
+                ),
+              });
+            }
+          }
+        });
+      }
+
       return slots;
     },
     subReqProgress(): string {
@@ -277,7 +291,7 @@ export default Vue.extend({
     onShowAllCourses(subReqIndex: number) {
       this.$emit('onShowAllCourses', {
         requirementName: this.subReq.requirement.name,
-        subReqCoursesArray: this.subReqCoursesSlots[subReqIndex].courses,
+        subReqCoursesArray: this.requirementCoursesSlots[subReqIndex].courses,
       });
     },
     toggleDescription() {
