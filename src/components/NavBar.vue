@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <nav class="navbar">
     <div class="navbar-iconWrapper hamburger" @click="menuOpen = !menuOpen"></div>
     <div class="navbar-top">
       <div class="navbar-iconWrapper course-plan-logo">
@@ -35,7 +35,7 @@
         >Cornell DTI @ 2021</a
       >
     </div>
-  </div>
+  </nav>
 </template>
 
 <script lang="ts">

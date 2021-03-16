@@ -1,5 +1,5 @@
 <template>
-  <div
+  <main
     class="semesterView"
     :class="{
       bottomBar: isBottomBar && isBottomBarExpanded,
@@ -85,7 +85,7 @@
       ></div>
       <div v-if="compact"><div v-if="compact"></div></div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script lang="ts">
