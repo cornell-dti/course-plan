@@ -1,5 +1,5 @@
 <template v-if="semesters">
-  <div class="requirements">
+  <aside class="requirements">
     <div
       class="fixed"
       data-intro-group="req-tooltip"
@@ -75,7 +75,7 @@
         </draggable>
       </div>
     </div>
-  </div>
+  </aside>
 </template>
 
 <script lang="ts">

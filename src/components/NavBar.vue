@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <nav class="navbar">
     <div class="navbar-top">
       <div class="navbar-iconWrapper">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
@@ -11,7 +11,7 @@
       <div class="navbar-iconWrapper mobile" id="profileIcon" @click="editProfile"></div>
       <div class="navbar-iconWrapper" id="logout" @click="logout"></div>
     </div>
-  </div>
+  </nav>
 </template>
 
 <script lang="ts">
