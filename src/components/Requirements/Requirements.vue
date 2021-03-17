@@ -92,6 +92,7 @@
 import draggable from 'vuedraggable';
 import Vue from 'vue';
 import VueCollapse from 'vue2-collapse';
+import introJs from 'intro.js';
 
 import Course from '@/components/Course/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
@@ -101,9 +102,6 @@ import clipboard from '@/assets/images/clipboard.svg';
 import warning from '@/assets/images/warning.svg';
 import store from '@/store';
 import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-firestore-data';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const introJs = require('intro.js');
 
 Vue.use(VueCollapse);
 
@@ -156,8 +154,9 @@ export default Vue.extend({
         this.$emit('showTourEndWindow');
       });
       tour.onbeforechange(() => {
-        // eslint-disable-next-line no-underscore-dangle
-        this.tourStep = tour._currentStep;
+        if (tour.currentStep()) {
+          this.tourStep = tour.currentStep() as number;
+        }
       });
       tour.onexit(() => {
         // resets tourStep in case skipped at step = 1
