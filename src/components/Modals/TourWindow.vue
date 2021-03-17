@@ -84,7 +84,7 @@ export default Vue.extend({
 
 .blackout {
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4);
   position: fixed;
   width: 100vw;
   height: 100%;
