@@ -6,15 +6,6 @@
       'my-2 mx-0': shouldClearPadding,
     }"
     @click="onClick"
-    :data-intro-group="shouldShowWalkthrough ? 'pageTour' : null"
-    :data-step="shouldShowWalkthrough ? '3' : null"
-    :data-intro="
-      shouldShowWalkthrough
-        ? `<b>Add your course in this semester!</b><br>
-      <div class = &quot;introjs-bodytext&quot;>To start planning your college career, you should try adding a course in your current semester.</div>`
-        : null
-    "
-    :data-disable-interaction="shouldShowWalkthrough ? '1' : null"
   >
     <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">
       {{ addCourseText }}
@@ -29,7 +20,6 @@ export default Vue.extend({
   props: {
     compact: { type: Boolean, required: true },
     shouldClearPadding: { type: Boolean, default: false },
-    shouldShowWalkthrough: { type: Boolean, default: false },
   },
   computed: {
     addCourseText() {

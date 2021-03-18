@@ -23,11 +23,11 @@
   },
   "dependencies": {
     "@firebase/analytics": "^0.6.2",
-    "@types/intro.js": "^2.4.6",
+    "@types/intro.js": "^3.0.0",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.13.0",
     "firebase": "^8.2.4",
-    "intro.js": "^2.9.3",
+    "intro.js": "^3.3.1",
     "node-fetch": "^2.6.1",
     "skeleton-loader-vue": "^1.0.6",
     "vue": "^2.6.12",
