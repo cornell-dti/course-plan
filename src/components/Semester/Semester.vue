@@ -384,7 +384,8 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 
 .semester {
-  width: fit-content;
+  width: 24rem;
+  box-sizing: border-box;
   position: relative;
   border-radius: 11px;
 
@@ -406,6 +407,7 @@ export default Vue.extend({
   }
 
   &--compact {
+    width: 16rem;
     padding: 0.875rem 1.125rem;
   }
 
@@ -486,37 +488,6 @@ export default Vue.extend({
     cursor: grabbing;
   }
 
-  &-addWrapper {
-    margin-top: -5rem;
-    width: 21.375rem;
-    height: 4.625rem;
-    border-radius: 0.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px dashed #d8d8d8;
-    color: $medGray;
-    margin-left: 1.125rem;
-    margin-right: 1.125rem;
-
-    &--compact {
-      margin-top: -1.2rem;
-      width: 10rem;
-      height: 2rem;
-    }
-  }
-
-  &-buttonText {
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 20px;
-
-    &--compact {
-      font-size: 14px;
-      line-height: 17px;
-    }
-  }
-
   .season-emoji {
     height: 18px;
     margin-top: -4px;
@@ -540,30 +511,6 @@ export default Vue.extend({
     padding-top: 5px;
     padding-left: 1.125rem;
     padding-right: 1.125rem;
-  }
-
-  //Styling for drag and drop components and movement
-  .gu-mirror {
-    position: fixed !important;
-    margin: 0 !important;
-    z-index: 9999 !important;
-    opacity: 0.8;
-    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';
-    filter: alpha(opacity=80);
-  }
-  .gu-hide {
-    display: none !important;
-  }
-  .gu-unselectable {
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-  }
-  .gu-transit {
-    opacity: 0.2;
-    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)';
-    filter: alpha(opacity=20);
   }
 
   .semester-modal {
@@ -600,15 +547,10 @@ export default Vue.extend({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .semester {
+    width: 16rem;
+
     &-menu {
       right: 0rem;
-    }
-    &-addWrapper {
-      width: 17rem;
-      &--compact {
-        width: 10rem;
-        height: 2rem;
-      }
     }
   }
 }

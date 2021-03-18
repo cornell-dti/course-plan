@@ -148,6 +148,7 @@ export default Vue.extend({
 .loading {
   &-courseWrapper {
     padding: 0.2rem;
+    width: 50%;
     max-width: 50%;
   }
   &-course {

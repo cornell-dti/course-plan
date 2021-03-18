@@ -1,6 +1,6 @@
 <template>
   <div
-    class="semester-courseWrapper semester-addWrapper"
+    class="semester-addWrapper"
     :class="{
       'semester-addWrapper--compact': compact,
       'my-2 mx-0': shouldClearPadding,
@@ -45,32 +45,21 @@ export default Vue.extend({
 }
 
 .semester {
-  width: fit-content;
-  position: relative;
-  border-radius: 11px;
-
-  &--compact {
-    padding: 0.875rem 1.125rem;
-  }
-
-  &-courseWrapper {
-    margin: 0.5rem 0 0.5rem 0;
-  }
-
   &-addWrapper {
     margin-top: -5rem;
-    width: 21.375rem;
+    margin-bottom: 0.5rem;
     height: 4.625rem;
     border-radius: 0.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 2px dashed #d8d8d8;
+    color: $medGray;
     margin-left: 1.125rem;
     margin-right: 1.125rem;
 
     &--compact {
       margin-top: -1.2rem;
-      width: 10rem;
       height: 2rem;
     }
 
@@ -90,18 +79,6 @@ export default Vue.extend({
     &--compact {
       font-size: 14px;
       line-height: 17px;
-    }
-  }
-}
-
-@media only screen and (max-width: $medium-breakpoint) {
-  .semester {
-    &-addWrapper {
-      width: 17rem;
-      &--compact {
-        width: 10rem;
-        height: 2rem;
-      }
     }
   }
 }
