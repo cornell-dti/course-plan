@@ -3,6 +3,7 @@
     <new-self-check-course-modal
       class="incompleteselfcheck-modal"
       :class="{ 'incompleteselfcheck-modal--block': isCourseModalOpen }"
+      :subReqName="subReqName"
       @close-course-modal="closeCourseModal"
       @add-course="addNewCourse"
       ref="modal"
@@ -52,6 +53,7 @@ export default Vue.extend({
   },
   props: {
     subReqId: { type: String, required: true },
+    subReqName: { type: String, required: true },
   },
   data(): Data {
     return {

@@ -131,7 +131,10 @@
           />
         </div>
         <!-- TODO: only show incomplete-self-check if all courses not added -->
-        <incomplete-self-check :subReqId="subReq.requirement.id" />
+        <incomplete-self-check
+          :subReqId="subReq.requirement.id"
+          :subReqName="subReq.requirement.name"
+        />
       </div>
     </div>
   </div>
