@@ -167,6 +167,7 @@ export default Vue.extend({
     margin-top: 8px;
     &:hover {
       text-decoration-line: underline;
+      color: $yuxuanBlue;
     }
   }
 }
