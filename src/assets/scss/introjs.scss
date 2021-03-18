@@ -15,6 +15,12 @@
   display: flex;
   justify-content: space-between;
 }
+.introjs-tooltiptext {
+  padding: 0;
+}
+.introjs-tooltip-header {
+  display: none;
+}
 .introjs-customProgress {
   font-size: 14px;
   color: $lightPlaceholderGray;
@@ -25,9 +31,14 @@
 .introjs-helperLayer {
   border-radius: 9px;
 }
+.introjs-tooltipbuttons {
+  border: 0;
+  padding: 0;
+}
 .introjs-button:focus {
   outline: 1px solid $yuxuanBlue;
   box-shadow: none;
+  border: 0;
 }
 .introjs-skipbutton {
   display: none;
