@@ -46,16 +46,16 @@
           @on-selected-change="toggleSelectRequirement"
         />
       </div>
+      <a
+        v-if="!editMode"
+        class="newCourse-link"
+        @click="toggleEditMode()"
+        @keyup.enter="toggleEditMode()"
+        tabindex="0"
+      >
+        Edit Requirements
+      </a>
     </div>
-    <a
-      v-if="!editMode"
-      class="newCourse-link"
-      @click="toggleEditMode()"
-      @keyup.enter="toggleEditMode()"
-      tabindex="0"
-    >
-      Edit Requirements
-    </a>
   </div>
 </template>
 
