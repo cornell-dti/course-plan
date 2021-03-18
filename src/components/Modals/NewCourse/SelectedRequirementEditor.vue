@@ -52,7 +52,6 @@
         @click="toggleEditMode()"
         @keyup.enter="toggleEditMode()"
         tabindex="0"
-        href="#"
       >
         Edit Requirements
       </a>
@@ -163,10 +162,12 @@ export default Vue.extend({
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
-    text-decoration-line: underline;
     color: $yuxuanBlue;
     cursor: pointer;
     margin-top: 8px;
+    &:hover {
+      text-decoration-line: underline;
+    }
   }
 }
 .warning {
