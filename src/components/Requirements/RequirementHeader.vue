@@ -1,12 +1,12 @@
 <template>
   <div class="requirementheader">
     <!-- TODO change for multiple colleges -->
-    <div
+    <h1
       v-if="reqIndex <= numOfColleges || reqIndex == numOfColleges + onboardingData.major.length"
-      class="row top"
+      class="col top p-0"
     >
-      <p class="name col p-0">{{ req.groupName }} Requirements</p>
-    </div>
+      {{ req.groupName }} Requirements
+    </h1>
     <!-- TODO change for multiple colleges -->
     <div v-if="reqIndex == numOfColleges" class="major">
       <button
@@ -234,15 +234,6 @@ export default Vue.extend({
   &-small {
     margin: 0px;
   }
-}
-.name {
-  margin-top: auto;
-  margin-bottom: auto;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 16px;
-  color: $darkGray;
 }
 .major {
   font-style: normal;

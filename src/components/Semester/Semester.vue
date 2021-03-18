@@ -422,6 +422,7 @@ export default Vue.extend({
     border: none;
     position: absolute;
     top: -3.3rem;
+    font-size: 16px;
   }
 
   &-content {

@@ -2,7 +2,7 @@
   <div class="editSemesterModal">
     <div class="editSemesterModal-content">
       <div class="editSemesterModal-top">
-        <span class="editSemesterModal-title">Edit Semester</span>
+        <h1>Edit Semester</h1>
         <img
           class="editSemesterModal-exit"
           src="@/assets/images/x.png"
@@ -113,13 +113,6 @@ export default Vue.extend({
     cursor: pointer;
   }
 
-  &-title {
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 24px;
-    color: $primaryGray;
-  }
-
   &-text {
     font-weight: normal;
     font-size: 14px;
@@ -135,13 +128,14 @@ export default Vue.extend({
 
   &-button {
     width: 4.75rem;
-    height: 2rem;
-    color: $sangBlue;
+    height: 1.8rem;
+    color: $activeGray;
     border-radius: 3px;
-    border: 1px solid $sangBlue;
+    border: 1px solid $primaryGray;
     background-color: $white;
     display: flex;
     justify-content: center;
+    align-items: center;
 
     &-left {
       display: flex;
