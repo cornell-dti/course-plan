@@ -16,7 +16,7 @@
     />
     <div v-if="showMajorOrMinorRequirements">
       <!--Show more of completed requirements -->
-      <div v-if="displayDetails">
+      <div v-if="displayDetails || tourStep === 1">
         <p class="sub-title">In-Depth College Requirements</p>
         <div class="separator"></div>
         <div v-for="(subReq, id) in partitionedRequirementsProgress.ongoing" :key="id">
@@ -25,6 +25,7 @@
             :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
             :color="reqGroupColorMap[req.groupName][0]"
             :isCompleted="false"
+            :tourStep="tourStep"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
           />
@@ -54,6 +55,7 @@
               :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
               :color="reqGroupColorMap[req.groupName][0]"
               :isCompleted="true"
+              :tourStep="tourStep"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @onShowAllCourses="onShowAllCourses"
             />
@@ -99,6 +101,7 @@ export default Vue.extend({
     displayedMinorIndex: { type: Number, required: true },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
+    tourStep: { type: Number, required: true },
   },
   data() {
     return {
