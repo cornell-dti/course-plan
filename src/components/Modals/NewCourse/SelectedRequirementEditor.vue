@@ -52,6 +52,7 @@
         @click="toggleEditMode()"
         @keyup.enter="toggleEditMode()"
         tabindex="0"
+        href="#"
       >
         Edit Requirements
       </a>

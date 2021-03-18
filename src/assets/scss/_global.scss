@@ -84,10 +84,6 @@ a {
   color: $primary;
   margin: 0;
   cursor: pointer;
-
-  &:hover {
-    color: lighten($primary, 5%);
-  }
 }
 
 button:hover {
