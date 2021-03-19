@@ -1,5 +1,5 @@
 <template>
-  <div class="incompletesubreqcourse">
+  <div class="incompletesubreqcourse" v-if="courses.length > 0">
     <div class="draggable-requirements-wrapper" v-if="displayDescription">
       <div class="separator"></div>
       <div class="draggable-requirements-heading">
@@ -13,7 +13,6 @@
         </div>
       </div>
       <draggable
-        v-if="courses.length > 0"
         class="draggable-requirements-courses"
         :group="{ name: 'draggable-semester-courses', put: false }"
         :value="courses"
