@@ -84,7 +84,12 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean => {
         const { catalogNbr } = course;
-        return catalogNbr.startsWith('3');
+        return (
+          ifCodeMatch(catalogNbr, '3***') ||
+          ifCodeMatch(catalogNbr, '4***') ||
+          ifCodeMatch(catalogNbr, '5***') ||
+          ifCodeMatch(catalogNbr, '6***')
+        );
       },
     ],
     checkerWarning: 'We do not check that the courses are considered technical.',
