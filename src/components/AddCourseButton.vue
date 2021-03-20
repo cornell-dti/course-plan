@@ -53,7 +53,7 @@ export default Vue.extend({
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px dashed #d8d8d8;
+    border: 2px dashed $borderGray;
     color: $medGray;
     margin-left: 1.125rem;
     margin-right: 1.125rem;

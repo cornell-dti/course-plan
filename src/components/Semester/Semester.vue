@@ -402,7 +402,7 @@ export default Vue.extend({
 
   &-content {
     padding: 0.875rem 0;
-    border: 2px solid #d8d8d8;
+    border: 2px solid $borderGray;
     border-radius: 11px;
   }
 
