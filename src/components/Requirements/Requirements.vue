@@ -396,12 +396,20 @@ h1.title {
   transform: rotate(90deg);
 }
 
+.requirements-course {
+  width: 21.375rem;
+}
+
 @media only screen and (max-width: $large-breakpoint) {
   .requirements,
   .fixed {
     width: 21rem;
   }
   .see-all-pages {
+    width: 17rem;
+  }
+
+  .requirements-course {
     width: 17rem;
   }
 }
