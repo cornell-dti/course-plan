@@ -195,7 +195,7 @@ export default Vue.extend({
       get(): readonly FirestoreSemesterCourse[] {
         return this.courses;
       },
-      set(newCourses: readonly SubRequirementFirestoreSemesterCourseWithRequirementID[]) {
+      set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
         const courses = newCourses.map(({ requirementID, ...rest }) => rest);
         editSemester(
           this.year,

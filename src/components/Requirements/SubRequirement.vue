@@ -161,7 +161,7 @@ type CompletedSubReqCourseSlot = {
 
 type IncompleteSubReqCourseSlot = {
   readonly isCompleted: false;
-  readonly courses: readonly FirestoreSemesterCourse[];
+  readonly courses: readonly AppFirestoreSemesterCourseWithRequirementID[];
 };
 
 export type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
