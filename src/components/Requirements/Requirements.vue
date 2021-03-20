@@ -396,6 +396,10 @@ h1.title {
   transform: rotate(90deg);
 }
 
+.requirements-course {
+  width: 17rem;
+}
+
 @media only screen and (max-width: $large-breakpoint) {
   .requirements,
   .fixed {
