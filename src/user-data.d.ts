@@ -20,6 +20,12 @@ type FirestoreSemesterCourse = {
   readonly color: string;
 };
 
+// This should only be used in Semester.vue and SubRequirement.vue
+// for dragging from SubRequirement and dropping in Semester
+type SubRequirementFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
+  readonly requirementID?: string;
+};
+
 type FirestoreSemesterType = 'Fall' | 'Spring' | 'Summer' | 'Winter';
 type FirestoreSemester = {
   readonly year: number;

@@ -255,7 +255,13 @@ export default Vue.extend({
         if (!this.isCompleted) {
           slots.push({
             isCompleted: false,
-            courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[0]),
+            courses: generateSubReqIncompleteCourses(
+              allTakenCourseIds,
+              subReqEligibleCourses[0]
+            ).map(course => ({
+              ...course,
+              requirementID: this.subReq.requirement.id,
+            })),
           });
         }
       } else {
@@ -270,7 +276,10 @@ export default Vue.extend({
                 courses: generateSubReqIncompleteCourses(
                   allTakenCourseIds,
                   subReqEligibleCourses[i]
-                ),
+                ).map(course => ({
+                  ...course,
+                  requirementID: this.subReq.requirement.id,
+                })),
               });
             }
           }

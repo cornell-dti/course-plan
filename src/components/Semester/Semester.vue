@@ -118,6 +118,7 @@ import {
   editSemester,
   addCourseToSemester,
   deleteCourseFromSemester,
+  addCourseToSelectableRequirements,
 } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
@@ -194,14 +195,18 @@ export default Vue.extend({
       get(): readonly FirestoreSemesterCourse[] {
         return this.courses;
       },
-      set(newCourses: readonly FirestoreSemesterCourse[]) {
+      set(newCourses: readonly SubRequirementFirestoreSemesterCourseWithRequirementID[]) {
+        const courses = newCourses.map(({ requirementID, ...rest }) => rest);
         editSemester(
           this.year,
           this.type,
           (semester: FirestoreSemester): FirestoreSemester => ({
             ...semester,
-            courses: newCourses,
+            courses,
           })
+        );
+        newCourses.forEach(({ uniqueID, requirementID }) =>
+          addCourseToSelectableRequirements(uniqueID, requirementID)
         );
       },
     },
