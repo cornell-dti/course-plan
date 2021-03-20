@@ -397,7 +397,7 @@ h1.title {
 }
 
 .requirements-course {
-  width: 17rem;
+  width: 21.375rem;
 }
 
 @media only screen and (max-width: $large-breakpoint) {
@@ -406,6 +406,10 @@ h1.title {
     width: 21rem;
   }
   .see-all-pages {
+    width: 17rem;
+  }
+
+  .requirements-course {
     width: 17rem;
   }
 }
