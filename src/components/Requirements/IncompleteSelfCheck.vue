@@ -8,6 +8,8 @@
       @add-course="addNewCourse"
       ref="modal"
     />
+    <div class="separator"></div>
+    <div class="top">Add Course</div>
     <div class="dropdown-select-wrapper">
       <div class="dropdown-select dropdown-input" v-click-outside="closeMenuIfOpen">
         <div class="dropdown-placeholder dropdown-wrapper" @click="showDropdown = !showDropdown">
@@ -105,10 +107,25 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
+.separator {
+  height: 1px;
+  width: 100%;
+  background-color: $inactiveGray;
+  margin-top: 1rem;
+}
+
+.top {
+  font-size: 14px;
+  line-height: 17px;
+  color: #757575;
+  margin: 0.75rem 0;
+}
+
 .dropdown {
   &-select {
     display: flex;
     flex-direction: row;
+    align-items: center;
     background: $white;
     border: 0.5px solid $inactiveGray;
     box-sizing: border-box;
@@ -118,6 +135,7 @@ export default Vue.extend({
     line-height: 17px;
     color: $darkPlaceholderGray;
     position: relative;
+    min-height: 1.625rem;
 
     &:not(:first-child) {
       margin-top: 0.5rem;
@@ -125,16 +143,17 @@ export default Vue.extend({
 
     &-wrapper {
       position: relative;
+      margin-bottom: 1rem;
     }
   }
   &-placeholder {
     height: 100%;
     font-size: 14px;
     line-height: 17px;
-    margin-left: 0.25rem;
+    margin-left: 0.5rem;
     display: flex;
     align-items: center;
-    color: $darkPlaceholderGray;
+    color: $lightPlaceholderGray;
     background: transparent;
     cursor: pointer;
   }
@@ -151,7 +170,7 @@ export default Vue.extend({
     background: transparent;
     margin-right: 8.7px;
     margin-left: 5px;
-    margin-top: 5px;
+    margin-top: auto;
     margin-bottom: auto;
   }
   &-content {

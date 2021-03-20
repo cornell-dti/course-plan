@@ -120,17 +120,17 @@ export default Vue.extend({
   &-heading {
     display: flex;
     justify-content: space-between;
-    margin-top: 0.2rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
     &-label {
       font-size: 14px;
       line-height: 17px;
-      color: $lightPlaceholderGray;
+      color: #757575;
     }
     &-seeAll {
       font-size: 14px;
       line-height: 15px;
       color: $yuxuanBlue;
-      padding: 0.2rem;
       cursor: pointer;
     }
   }

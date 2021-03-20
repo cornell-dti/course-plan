@@ -418,6 +418,8 @@ button.view {
   &-progress {
     font-size: 14px;
     line-height: 14px;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 }
 .separator {
@@ -442,6 +444,7 @@ button.view {
   &-select {
     display: flex;
     flex-direction: row;
+    align-items: center;
     background: $white;
     border: 0.5px solid $inactiveGray;
     box-sizing: border-box;
@@ -451,6 +454,7 @@ button.view {
     line-height: 17px;
     color: $darkPlaceholderGray;
     position: relative;
+    min-height: 1.625rem;
 
     &:not(:first-child) {
       margin-top: 0.5rem;
@@ -463,6 +467,7 @@ button.view {
 
     &-wrapper {
       position: relative;
+      margin-bottom: 1rem;
     }
   }
   &-dropdown {
@@ -470,7 +475,7 @@ button.view {
       height: 100%;
       font-size: 14px;
       line-height: 17px;
-      margin-left: 0.25rem;
+      margin-left: 0.5rem;
       display: flex;
       align-items: center;
       color: $darkPlaceholderGray;
@@ -495,7 +500,7 @@ button.view {
       background: transparent;
       margin-right: 8.7px;
       margin-left: 5px;
-      margin-top: 5px;
+      margin-top: auto;
       margin-bottom: auto;
     }
     &-content {
