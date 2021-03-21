@@ -196,7 +196,7 @@ export default Vue.extend({
         return this.courses;
       },
       set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
-        const courses = newCourses.map(({ requirementID, ...rest }) => rest);
+        const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
         editSemester(
           this.year,
           this.type,

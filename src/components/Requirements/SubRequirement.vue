@@ -174,7 +174,7 @@ type Data = {
 const generateSubReqIncompleteCourses = (
   allTakenCourseIds: ReadonlySet<number>,
   eligibleCourseIds: readonly number[],
-  requirementID: number
+  requirementID: string
 ): readonly AppFirestoreSemesterCourseWithRequirementID[] => {
   const rosterCourses = eligibleCourseIds
     .filter(courseID => !allTakenCourseIds.has(courseID))
