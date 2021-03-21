@@ -20,16 +20,13 @@
             <span
               ><img
                 class="onboarding-header-emoji"
-                src="@/assets/images/waveEmoji.svg"
-                alt="wave"
+                src="@/assets/images/clapEmoji.svg"
+                alt="clap"
               />
-              Hi {{ name.firstName }}</span
+              Welcome to CoursePlan</span
             >
           </div>
-          <div v-if="!isEditingProfile" class="onboarding-description">
-            Let's get to know you first!
-          </div>
-          <div v-if="isEditingProfile" class="onboarding-description">Let's edit your profile!</div>
+          <div class="onboarding-description">Let's get to know you first</div>
           <onboarding-basic
             v-if="currentPage == 1"
             :userName="name"

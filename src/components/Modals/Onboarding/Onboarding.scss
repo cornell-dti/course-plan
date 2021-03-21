@@ -8,7 +8,7 @@ input {
   width: 100%;
 
   &-selectWrapperRow {
-    margin-top: 15px;
+    margin-top: 4px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -23,7 +23,6 @@ input {
     }
   }
   &-selectWrapper {
-    margin-top: 15px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -93,7 +92,7 @@ input {
     font-weight: 300;
     font-size: 20px;
     line-height: 24px;
-    color: $lightPlaceholderGray;
+    color: #4f4f4f;
   }
 
   &-section {
@@ -181,8 +180,10 @@ input {
       width: 100%;
       border-bottom-color: #c4c4c4;
       margin-bottom: 1.5rem;
+      margin-top: 20px;
     }
     &-review {
+      color: #4f4f4f;
       font-weight: 600;
       font-size: 16px;
     }
@@ -193,7 +194,7 @@ input {
     font-size: 16px;
     line-height: 19px;
     color: $darkGray2;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
 
     &--header {
       font-weight: 800;
@@ -252,7 +253,7 @@ input {
     }
 
     &--description {
-      margin-bottom: 1rem !important;
+      margin-bottom: 1rem;
     }
   }
 
@@ -374,7 +375,8 @@ input {
     &--column {
       display: flex;
       flex-direction: column;
-      margin-right: 20px;
+      margin-right: 4px;
+      margin-left: 32px;
     }
     &--columnCenter {
       display: flex;
@@ -393,8 +395,7 @@ input {
     &--columnWide {
       display: flex;
       flex-direction: column;
-      padding-right: 20px;
-      width: 250px;
+      width: 380px;
     }
     &--columnFill {
       display: flex;
@@ -489,6 +490,15 @@ input {
     a {
       color: $yuxuanBlue;
     }
+  }
+
+  &-transferCredits {
+    padding-top: 0;
+  }
+
+  &-transferCreditsSection {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 

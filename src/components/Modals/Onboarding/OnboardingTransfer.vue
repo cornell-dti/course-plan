@@ -8,14 +8,14 @@
       <div class="onboarding-subHeader">
         <span class="onboarding-subHeader--font"> Transfer Credits (Optional)</span>
       </div>
-      <div class="onboarding-inputs">
+      <div class="onboarding-transferCredits onboarding-inputs">
         <div
           class="onboarding-inputWrapper onboarding-inputWrapper--college onboarding-inputWrapper--description"
         >
           <div class="onboarding-subHeader">
             <span class="onboarding-subHeader--font">AP Credits</span>
           </div>
-          <div class="onboarding-subsection">
+          <div class="onboarding-subsection onboarding-transferCreditsSection">
             <div class="onboarding-section" v-for="(exam, index) in examsAP" :key="index">
               <div class="onboarding-selectWrapperRow">
                 <onboarding-transfer-exam-property-dropdown
@@ -53,7 +53,7 @@
           <div class="onboarding-subHeader">
             <span class="onboarding-subHeader--font">IB Credits</span>
           </div>
-          <div class="onboarding-inputs">
+          <div class="onboarding-inputs onboarding-transferCreditsSection">
             <div class="onboarding-section" v-for="(exam, index) in examsIB" :key="index">
               <div class="onboarding-selectWrapperRow">
                 <onboarding-transfer-exam-property-dropdown
