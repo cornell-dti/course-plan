@@ -66,15 +66,53 @@ export default Vue.extend({
     };
   },
   computed: {
+    // limit self check course options to courses not already added to this requirement
+    // and courses that are not already assigned to non-double countable requirements, if this req is not double countable
+    // TODO: restrict courses that also do not fulfill the checker for this requirement
     selfCheckCourses(): Record<string, FirestoreSemesterCourse> {
-      // TODO - limit to courses that don't have requirements they are fulfilling
       const courses: Record<string, FirestoreSemesterCourse> = {};
       store.state.semesters.forEach(semester => {
         semester.courses.forEach(course => {
           const selectableRequirementCourses =
             store.state.derivedSelectableRequirementData.requirementToCoursesMap[this.subReqId];
-          if (!(selectableRequirementCourses && selectableRequirementCourses.includes(course)))
-            courses[course.code] = course;
+
+          // if course is mapped to another req(s), only allow it if all other reqs are double countable
+          let isAddable = true;
+          const otherReqsMappedTo = store.state.requirementFulfillmentGraph.getConnectedRequirementsFromCourse(
+            { uniqueId: course.uniqueID }
+          );
+
+          let allOtherReqsDoubleCountableIfAny = true;
+          let thisReqDoubleCountable = false;
+
+          // loop through all reqs and determine if all other reqs this course is assigned to are
+          // double countable (if any exist) and whether or not this req itself is double countable
+          const collegesMajorsMinors = store.state.groupedRequirementFulfillmentReport;
+          collegesMajorsMinors.forEach(reqGroup => {
+            reqGroup.reqs.forEach(req => {
+              if (
+                otherReqsMappedTo.includes(req.requirement.id) &&
+                !req.requirement.allowCourseDoubleCounting
+              ) {
+                allOtherReqsDoubleCountableIfAny = false;
+              } else if (
+                req.requirement.id === this.subReqId &&
+                req.requirement.allowCourseDoubleCounting
+              ) {
+                thisReqDoubleCountable = true;
+              }
+            });
+          });
+
+          // if neither the current req or all other assigned reqs are not double countable, restrict from adding
+          if (!(allOtherReqsDoubleCountableIfAny || thisReqDoubleCountable)) {
+            isAddable = false;
+          }
+
+          const isAlreadyAddedToReq =
+            selectableRequirementCourses && selectableRequirementCourses.includes(course);
+
+          if (!isAlreadyAddedToReq && isAddable) courses[course.code] = course;
         });
       });
       return courses;
