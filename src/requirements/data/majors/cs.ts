@@ -37,17 +37,24 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'CS Electives',
     description:
-      'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4998 are NOT allowed.',
+      'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4999 are NOT allowed.',
     source:
       'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: [
       (course: Course): boolean => {
         if (
-          courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4998', 'CS 4410', 'CS 4820'])
+          courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4999', 'CS 4410', 'CS 4820'])
         ) {
           return false;
         }
-        return ifCodeMatch(course.subject, 'CS') && ifCodeMatch(course.catalogNbr, '4***');
+        return (
+          ifCodeMatch(course.subject, 'CS') &&
+          !(
+            ifCodeMatch(course.catalogNbr, '1***') ||
+            ifCodeMatch(course.catalogNbr, '2***') ||
+            ifCodeMatch(course.catalogNbr, '3***')
+          )
+        );
       },
     ],
     fulfilledBy: 'courses',
@@ -84,7 +91,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean => {
         const { catalogNbr } = course;
-        return catalogNbr.startsWith('3');
+        return !(ifCodeMatch(catalogNbr, '1***') || ifCodeMatch(catalogNbr, '2***'));
       },
     ],
     checkerWarning: 'We do not check that the courses are considered technical.',
