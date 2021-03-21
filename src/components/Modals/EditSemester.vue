@@ -142,7 +142,7 @@ export default Vue.extend({
     background-color: $white;
     display: flex;
     justify-content: center;
-
+    align-items: center;
     &-left {
       display: flex;
       flex-direction: row;
