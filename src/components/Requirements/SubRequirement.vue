@@ -173,19 +173,24 @@ type Data = {
 
 const generateSubReqIncompleteCourses = (
   allTakenCourseIds: ReadonlySet<number>,
-  eligibleCourseIds: readonly number[]
-): readonly FirestoreSemesterCourse[] => {
+  eligibleCourseIds: readonly number[],
+  requirementID: number
+): readonly AppFirestoreSemesterCourseWithRequirementID[] => {
   const rosterCourses = eligibleCourseIds
     .filter(courseID => !allTakenCourseIds.has(courseID))
     .flatMap(courseID => fullCoursesJson[courseID] || []);
   const subjectColors = allocateSubjectColors(new Set(rosterCourses.map(it => it.subject)));
-  return rosterCourses.map(rosterCourse =>
+  const coursesWithDummyUniqueID = rosterCourses.map(rosterCourse =>
     cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
       rosterCourse,
       -1,
       subjectColors[rosterCourse.subject]
     )
   );
+  return coursesWithDummyUniqueID.map(course => ({
+    ...course,
+    requirementID,
+  }));
 };
 
 export default Vue.extend({
@@ -245,7 +250,9 @@ export default Vue.extend({
       if (subReqSpec === null) return [];
       const subReqEligibleCourses = subReqSpec.eligibleCourses;
 
-      const allTakenCourseIds = new Set(this.subReq.courses.flat().map(course => course.courseId));
+      const allTakenCourseIds: ReadonlySet<number> = new Set(
+        this.subReq.courses.flat().map(course => course.courseId)
+      );
       const slots: SubReqCourseSlot[] = [];
 
       if (subReqSpec.fulfilledBy === 'credits') {
@@ -257,11 +264,9 @@ export default Vue.extend({
             isCompleted: false,
             courses: generateSubReqIncompleteCourses(
               allTakenCourseIds,
-              subReqEligibleCourses[0]
-            ).map(course => ({
-              ...course,
-              requirementID: this.subReq.requirement.id,
-            })),
+              subReqEligibleCourses[0],
+              this.subReq.requirement.id
+            ),
           });
         }
       } else {
@@ -275,11 +280,9 @@ export default Vue.extend({
                 isCompleted: false,
                 courses: generateSubReqIncompleteCourses(
                   allTakenCourseIds,
-                  subReqEligibleCourses[i]
-                ).map(course => ({
-                  ...course,
-                  requirementID: this.subReq.requirement.id,
-                })),
+                  subReqEligibleCourses[i],
+                  this.subReq.requirement.id
+                ),
               });
             }
           }

@@ -89,7 +89,7 @@ export default Vue.extend({
       return 'See all >';
     },
     coursesWithoutRequirementID() {
-      return this.courses.map(({ requirementID, ...rest }) => rest);
+      return this.courses.map(({ requirementID: _, ...rest }) => rest);
     },
   },
   methods: {
@@ -105,7 +105,6 @@ export default Vue.extend({
     cloneCourse(
       courseWithDummyUniqueID: AppFirestoreSemesterCourseWithRequirementID
     ): AppFirestoreSemesterCourseWithRequirementID {
-      console.log(this.coursesWithoutRequirementID);
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
     onShowAllCourses() {
