@@ -32,12 +32,6 @@
                   :choice="exam.score"
                   @on-select="score => selectAPScore(score, index)"
                 />
-                <!-- 
-                TODO: BRING THIS BACK POST-LAUNCH
-                <div class="onboarding-select--columnCenter">
-                  <label class="onboarding-label">Credits</label>
-                  <label class="college-major-minor-placeholder">{{ getExamCredit(exam) }}</label>
-                </div> -->
                 <div class="onboarding-select--column-removeExam">
                   <div
                     class="onboarding-remove"
@@ -76,12 +70,6 @@
                   :choice="exam.score"
                   @on-select="score => selectIBScore(score, index)"
                 />
-                <!-- 
-                TODO: BRING THIS BACK POST-LAUNCH
-                <div class="onboarding-select--columnCenter">
-                  <label class="onboarding-label">Credits</label>
-                  <label class="college-major-minor-placeholder">{{ getExamCredit(exam) }}</label>
-                </div> -->
                 <div class="onboarding-select--column-removeExam">
                   <div
                     class="onboarding-remove"
@@ -108,71 +96,6 @@
             >here</a
           >.
         </div>
-        <!-- 
-        TODO: BRING THIS BACK POST-LAUNCH
-        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <div class="onboarding-subHeader">
-            <span class="onboarding-subHeader--font">Transferred Course Credits</span>
-          </div>
-          <div class="onboarding-inputs">
-            <label class="onboarding-label">Equivalent Cornell Class</label>
-            <div
-              v-for="(options, index) in classes"
-              :key="index"
-              class="onboarding-selectWrapperRow"
-            >
-              <div class="onboarding-select--columnFill">
-                <course-selector
-                  :searchBoxClassName="transferClassSearchboxClassname(options.class)"
-                  :placeholder="getTransferClassSearchboxPlaceholder(options.class)"
-                  :autoFocus="false"
-                  @on-select="course => onCourseSelection(index, course)"
-                />
-              </div>
-              <div class="onboarding-select--column-remove">
-                <div
-                  class="onboarding-remove"
-                  @click="removeTransfer(index)"
-                  :class="{
-                    'onboarding--hidden':
-                      classes.length === 1 &&
-                      (options.class == placeholderText || options.class == null),
-                  }"
-                >
-                  <img src="@/assets/images/x-green.svg" alt="x" />
-                </div>
-              </div>
-            </div>
-            <div class="onboarding-addRemoveWrapper">
-              <div class="onboarding-add" @click="addTransfer">+ add another subject</div>
-            </div>
-          </div>
-          <div class="onboarding-addRemoveWrapper">
-            <div class="onboarding-add" @click="addTransfer">Add</div>
-          </div>
-        </div>
-        <div class="onboarding-bottomWrapper">
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label">Total Non-Cornell Credits</label>
-          </div>
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label onboarding-label--bottom---bold"
-              >{{ totalCredits }}
-            </label>
-            <label class="onboarding-label"> Credits</label>
-          </div>
-        </div>
-        <div class="onboarding-bottomWrapper">
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label">Total Transfer Credits:</label>
-          </div>
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label onboarding-label--bottom---bold"
-              >{{ totalCredits }}
-            </label>
-            <label class="onboarding-label"> Credits</label>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
