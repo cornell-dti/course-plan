@@ -3,6 +3,7 @@ import universityRequirements from './university';
 import calsRequirements from './colleges/ag';
 import aapRequirements from './colleges/ar';
 import casPreFA2020Requirements from './colleges/asPreFA2020';
+import casFA2020Requirements from './colleges/asFA2020';
 import businessRequirements from './colleges/bu';
 import engineeringRequirements from './colleges/en';
 import humanEcologyRequirements from './colleges/he';
@@ -57,10 +58,10 @@ const json: RequirementsJson = {
       name: 'Arts and Sciences [before Fall 2020]',
       requirements: casPreFA2020Requirements,
     },
-    // AS2: {
-    //   name: 'Arts and Sciences [Fall 2020 and later]',
-    //   requirements: ,
-    // },
+    AS2: {
+      name: 'Arts and Sciences [Fall 2020 and later]',
+      requirements: casFA2020Requirements,
+    },
     EN: {
       name: 'Engineering',
       requirements: engineeringRequirements,

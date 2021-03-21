@@ -1,7 +1,7 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { courseIsFWS, includesWithSingleRequirement } from '../checkers-common';
 
-const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
+const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'A&S Credits',
     description:
@@ -9,7 +9,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
       'Students can take more than 20 credits outside of the College as long as they take 100 credits within; ' +
       'they can also take all their credits in Arts & Sciences and accumulate more than 120. ' +
       'Note: AP, IB, and A-Level credits count toward the 120 total credits but not toward the 100 A&S credits.',
-    source: 'https://as.cornell.edu/education/old-degree-requirements',
+    source: 'https://as.cornell.edu/education/degree-requirements',
     checker: [
       (course: Course): boolean =>
         course.acadGroup.includes('AS') ||
@@ -25,7 +25,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'A 5 on either the AP English Composition or Literature exam, or a 7 on the IB HL English Literature or Language exam will count towards one of these seminars. ' +
       'First-year students should plan to take an FWS during their first semester at Cornell.',
-    source: 'https://as.cornell.edu/education/old-degree-requirements',
+    source: 'https://as.cornell.edu/education/degree-requirements',
     checker: [courseIsFWS],
     fulfilledBy: 'credits',
     perSlotMinCount: [6],
@@ -35,7 +35,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'AP and IB credits cannot complete this requirement, but usually indicate that a student can place into a higher level course. ' +
       'Note: Native speakers of a foreign language may be exempted from this requirement.',
-    source: 'https://as.cornell.edu/education/old-degree-requirements',
+    source: 'https://as.cornell.edu/education/degree-requirements',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Option 1': {
@@ -121,72 +121,46 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   },
   // TODO: AP/Test Credit cannot be applied to Distribution Requirements
   {
-    name: 'PBS and MQR courses',
+    name: 'Distribution Requirements',
     description:
-      'Students must take 2 courses in Physical & Biological Sciences (PBS/PBSS-AS). ' +
-      'Students must take 1 course in Mathematics & Quantitative Reasoning (MQR-AS). ' +
-      'Students must take 1 course that is either in PBS-AS or MQR-AS.',
-    source: 'https://as.cornell.edu/education/old-degree-requirements',
+      'A minimum of 8 courses must be taken to fulfill all distribution categories:' +
+      ' ALC-AS, BIO-AS, ETM-AS, GLC-AS, HST-AS, PHS-AS, SCD-AS, SSC-AS, SMR-AS. ' +
+      'A course may satisfy a maximum of two distribution categories. ' +
+      'Students can only double-count distribution requirements on a maximum of two courses.',
+    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12685',
     checker: [
-      (course: Course): boolean =>
-        ['PBS-AS', 'PBSS-AS'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
-      (course: Course): boolean => course.catalogDistr?.includes('MQR-AS') ?? false,
-      (course: Course): boolean =>
-        ['PBS-AS', 'PBSS-AS', 'MQR-AS'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+      (course: Course): boolean => course.catalogDistr?.includes('ALC-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('BIO-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('ETM-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('GLC-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('HST-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('PHS-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('SCD-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('SSC-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('SMR-AS') ?? false,
     ],
     fulfilledBy: 'courses',
-    perSlotMinCount: [2, 1, 1],
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1],
     allowCourseDoubleCounting: true,
   },
   {
-    name: 'Distribution Requirement',
-    description:
-      'Five Arts & Sciences courses of 3 or more credits from at least 4 of the following social sciences, humanities, and arts categories: ' +
-      'CA-AS, HA-AS, KCM-AS, LA-AS, SBA-AS',
-    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12684',
-    checker: [
-      (course: Course): boolean => course.catalogDistr?.includes('CA-AS') ?? false,
-      (course: Course): boolean => course.catalogDistr?.includes('HA-AS') ?? false,
-      (course: Course): boolean => course.catalogDistr?.includes('KCM-AS') ?? false,
-      (course: Course): boolean => course.catalogDistr?.includes('LA-AS') ?? false,
-      (course: Course): boolean => course.catalogDistr?.includes('SBA-AS') ?? false,
-    ],
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 1, 1],
-    allowCourseDoubleCounting: true,
-  },
-  {
-    name: 'Geographic Breadth Requirement (GB)',
-    description:
-      'One course that focuses on an area or a people other than those of the United States, Canada, or Europe. ' +
-      'Courses fulfilling this requirement are marked with a GB/GHB in the Class Roster.',
-    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12684',
-    checker: [
-      (course: Course): boolean =>
-        ['GB', 'GHB'].some(breadth => course.catalogBreadth?.includes(breadth) ?? false),
-    ],
+    name: 'Arts, Literature, and Culture (ALC-AS)',
+    description: 'An ALC-AS distribution course',
+    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12685',
+    checker: [(course: Course): boolean => course.catalogDistr?.includes('ALC-AS') ?? false],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     allowCourseDoubleCounting: true,
   },
   {
-    name: 'Historic Breadth Requirement (HB)',
-    description:
-      'One course that focuses on an historic period before the 20th century. ' +
-      'Courses fulfilling this requirement are marked with an HB/GHB in the Class Roster.',
-    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12684',
-    checker: [
-      (course: Course): boolean =>
-        ['HB', 'GHB'].some(breadth => course.catalogBreadth?.includes(breadth) ?? false),
-    ],
+    name: 'Biological Sciences (BIO-AS)',
+    description: 'A BIO-AS distribution course',
+    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12685',
+    checker: [(course: Course): boolean => course.catalogDistr?.includes('BIO-AS') ?? false],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     allowCourseDoubleCounting: true,
   },
 ];
 
-export default casPreFA2020Requirements;
+export default casFA2020Requirements;
