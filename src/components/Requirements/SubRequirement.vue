@@ -130,10 +130,12 @@
             :courseTaken="convertCourse(selfCheckCourse)"
           />
         </div>
-        <!-- TODO: only show incomplete-self-check if all courses not added -->
         <incomplete-self-check
+          v-if="subReq.minCountFulfilled < subReq.minCountRequired"
           :subReqId="subReq.requirement.id"
           :subReqName="subReq.requirement.name"
+          :subReqFulfillment="subReq.fulfilledBy"
+          :subReqCourseId="subReq.minCountFulfilled"
         />
       </div>
     </div>
@@ -455,6 +457,7 @@ button.view {
     color: $darkPlaceholderGray;
     position: relative;
     min-height: 1.625rem;
+    margin: 0.75rem 0;
 
     &:not(:first-child) {
       margin-top: 0.5rem;
@@ -478,7 +481,7 @@ button.view {
       margin-left: 0.5rem;
       display: flex;
       align-items: center;
-      color: $darkPlaceholderGray;
+      color: $lightPlaceholderGray;
       background: transparent;
       cursor: pointer;
     }

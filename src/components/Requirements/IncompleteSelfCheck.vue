@@ -9,7 +9,7 @@
       ref="modal"
     />
     <div class="separator"></div>
-    <div class="top">Add Course</div>
+    <div class="top">{{ addCourseLabel }}</div>
     <div class="dropdown-select-wrapper">
       <div class="dropdown-select dropdown-input" v-click-outside="closeMenuIfOpen">
         <div class="dropdown-placeholder dropdown-wrapper" @click="showDropdown = !showDropdown">
@@ -56,6 +56,8 @@ export default Vue.extend({
   props: {
     subReqId: { type: String, required: true },
     subReqName: { type: String, required: true },
+    subReqFulfillment: { type: String, required: true },
+    subReqCourseId: { type: Number, required: true },
   },
   data(): Data {
     return {
@@ -76,6 +78,13 @@ export default Vue.extend({
         });
       });
       return courses;
+    },
+    addCourseLabel() {
+      let label = 'Add Course';
+      if (this.subReqFulfillment === 'courses') {
+        label = `Add Course ${this.subReqCourseId + 1}`;
+      }
+      return label;
     },
   },
   directives: {
