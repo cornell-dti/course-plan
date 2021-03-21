@@ -17,8 +17,8 @@
         <div class="subreq-name">
           <p
             :class="[
-              { 'sub-req': !isFulfilled },
-              isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
+              { 'sub-req': !isCompleted },
+              isCompleted ? 'completed-ptext' : 'incomplete-ptext',
             ]"
           >
             <span>{{ subReq.requirement.name }}</span>
@@ -29,7 +29,7 @@
         <p v-if="!isCompleted" class="sub-req-progress text-right incomplete-ptext">
           {{ subReqProgress }}
         </p>
-        <p v-if="isFulfilled" class="text-right completed-ptext">
+        <p v-if="isCompleted" class="text-right completed-ptext">
           <span
             >{{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
             {{ subReq.fulfilledBy }}</span
@@ -37,7 +37,7 @@
         </p>
       </div>
     </button>
-    <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
+    <div v-if="displayDescription" :class="[{ 'completed-ptext': isCompleted }, 'description']">
       <div>
         {{ subReq.requirement.description }}
         <a
@@ -131,7 +131,7 @@
           />
         </div>
         <incomplete-self-check
-          v-if="subReq.minCountFulfilled < subReq.minCountRequired"
+          v-if="!isCompleted"
           :subReqId="subReq.requirement.id"
           :subReqName="subReq.requirement.name"
           :subReqFulfillment="subReq.fulfilledBy"
@@ -223,9 +223,6 @@ export default Vue.extend({
     // true if the walkthrough is on step 2 and this subreq represents the PE requirement
     shouldShowWalkthrough(): boolean {
       return this.tourStep === 1 && this.subReq.requirement.id === 'College-UNI-Physical Education';
-    },
-    isFulfilled(): boolean {
-      return false;
     },
     selectedFulfillmentOption(): string {
       if (this.subReq.requirement.fulfilledBy !== 'toggleable') {
