@@ -19,7 +19,14 @@
       <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">
         + New Semester
       </button>
-      <div class="semesterView-switch">
+      <div
+        class="semesterView-switch"
+        data-intro-group="req-tooltip"
+        :data-intro="getToggleTooltipText()"
+        data-disable-interaction="1"
+        data-step="4"
+        data-tooltipClass="tooltipCenter"
+      >
         <span v-if="!isMobile" class="semesterView-switchText">View:</span>
         <div
           class="semesterView-switchImage semesterView-twoColumn"
@@ -190,6 +197,10 @@ export default Vue.extend({
         closeBottomBar();
       }
       this.isCourseClicked = false;
+    },
+    getToggleTooltipText() {
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Toggle between Views</div><div class="introjs-customProgress">4/4</div>
+      </div><div class = "introjs-bodytext">View semesters and courses in full or compact mode.</div>`;
     },
   },
 });

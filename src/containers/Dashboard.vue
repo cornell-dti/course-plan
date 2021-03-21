@@ -36,7 +36,7 @@
       />
     </div>
     <tour-window
-      title="Welcome Cornellian!"
+      title="Welcome to CoursePlan!"
       text="View your college requirements, plan your semesters and courses, and more."
       exit="No, I want to skip this"
       button-text="Start Tutorial"
@@ -45,12 +45,12 @@
       v-if="welcomeHidden"
     />
     <tour-window
-      title="Congratulations! That’s a wrap"
-      text="Other than this, there is more you can explore, so feel free to surf through CoursePlan"
+      title="Let's get CoursePlanning!"
+      text="There’s more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and 
+      also consult your advisors for more up to date information!"
+      :isFinalStep="true"
       exit=""
-      button-text="Start Planning"
-      :image="congratsBodyImage"
-      alt="surf"
+      button-text="Get Started"
       @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
     />
@@ -72,8 +72,6 @@ import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
-
-import surfing from '@/assets/images/surfing.svg';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
@@ -105,8 +103,7 @@ const getMaxButtonBarTabs = () => {
 
 const tour = introJs();
 tour.setOption('exitOnEsc', 'false');
-tour.setOption('doneLabel', 'Finish');
-tour.setOption('skipLabel', 'Skip This Tutorial');
+tour.setOption('doneLabel', 'Next');
 tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
@@ -138,9 +135,6 @@ export default Vue.extend({
     };
   },
   computed: {
-    congratsBodyImage(): string {
-      return surfing;
-    },
     userName(): FirestoreUserName {
       return store.state.userName;
     },
@@ -201,7 +195,7 @@ export default Vue.extend({
     },
 
     endOnboarding() {
-      if (!this.isMobile) {
+      if (!this.isMobile && !this.isEditingProfile) {
         this.welcomeHidden = true;
       }
       this.loaded = true;
@@ -236,6 +230,7 @@ export default Vue.extend({
     display: flex;
     background-color: $backgroundBlue;
     overflow-x: hidden;
+    min-height: 100vh;
   }
 
   &-menus {

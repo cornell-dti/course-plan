@@ -1,5 +1,13 @@
 <template>
-  <div class="semester" :class="{ 'semester--compact': compact }">
+  <div
+    class="semester"
+    :class="{ 'semester--compact': compact }"
+    data-intro-group="pageTour"
+    data-step="3"
+    :data-intro="walkthroughText()"
+    data-disable-interaction="1"
+    data-tooltipClass="tooltipCenter"
+  >
     <new-course-modal
       class="semester-modal"
       :class="{ 'modal--block': isCourseModalOpen }"
@@ -29,26 +37,10 @@
       :deleteSemYear="year"
       ref="modalBodyComponent"
     />
-    <button
-      v-if="isFirstSem"
-      class="semester-addSemesterButton"
-      @click="openSemesterModal"
-      data-intro-group="pageTour"
-      data-intro='<b>Add your past and future Semester Cards</b><br>
-      <div class = "introjs-bodytext">Once you’re done setting up your current semester,
-      feel free to add both past and future semesters. Try to utilize your requirements bar</div>'
-      data-step="4"
-      data-disable-interaction="1"
-    >
+    <button v-if="isFirstSem" class="semester-addSemesterButton" @click="openSemesterModal">
       + New Semester
     </button>
-    <div
-      class="semester-content"
-      data-intro-group="pageTour"
-      data-step="2"
-      :data-intro="seasonMessage()"
-      data-disable-interaction="1"
-    >
+    <div class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
           <span class="semester-name"
@@ -92,11 +84,7 @@
             />
           </div>
         </draggable>
-        <add-course-button
-          :compact="compact"
-          :shouldShowWalkthrough="true"
-          @click="openCourseModal"
-        />
+        <add-course-button :compact="compact" @click="openCourseModal" />
       </div>
     </div>
     <semester-menu
@@ -112,7 +100,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import draggable from 'vuedraggable';
-import introJs from 'intro.js';
 import Course from '@/components/Course/Course.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import Confirmation from '@/components/Confirmation.vue';
@@ -133,13 +120,6 @@ import {
   deleteCourseFromSemester,
 } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
-
-const pageTour = introJs();
-pageTour.setOption('exitOnEsc', 'false');
-pageTour.setOption('doneLabel', 'Finish');
-pageTour.setOption('skipLabel', 'Skip This Tutorial');
-pageTour.setOption('nextLabel', 'Next');
-pageTour.setOption('exitOnOverlayClick', 'false');
 
 export default Vue.extend({
   components: {
@@ -357,15 +337,6 @@ export default Vue.extend({
     dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
     },
-    seasonMessage() {
-      return `<b>This is a Semester Card of your current semester!
-      <img src="${fall}"class = "newSemester-emoji-text">
-      <img src="${spring}"class = "newSemester-emoji-text">
-      <img src="${summer}"class = "newSemester-emoji-text">
-      <img src="${winter}"class = "newSemester-emoji-text">
-      </b><div
-      class = "introjs-bodytext"> You can add all courses here in the following semester.</div>`;
-    },
     openSemesterMenu() {
       this.stopCloseFlag = true;
       this.semesterMenuOpen = true;
@@ -398,6 +369,10 @@ export default Vue.extend({
         })
       );
     },
+    walkthroughText() {
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Add Classes to your Schedule</div><div class="introjs-customProgress">3/4</div>
+      </div><div class = "introjs-bodytext">Press "+ Course" to add classes! Edit semesters using the ellipses on the top right and drag courses between semesters.</div>`;
+    },
   },
   directives: {
     'click-outside': clickOutside,
@@ -409,7 +384,8 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 
 .semester {
-  width: fit-content;
+  width: 24rem;
+  box-sizing: border-box;
   position: relative;
   border-radius: 11px;
 
@@ -427,11 +403,12 @@ export default Vue.extend({
 
   &-content {
     padding: 0.875rem 0;
-    border: 2px solid #d8d8d8;
+    border: 2px solid $borderGray;
     border-radius: 11px;
   }
 
   &--compact {
+    width: 16rem;
     padding: 0.875rem 1.125rem;
   }
 
@@ -512,37 +489,6 @@ export default Vue.extend({
     cursor: grabbing;
   }
 
-  &-addWrapper {
-    margin-top: -5rem;
-    width: 21.375rem;
-    height: 4.625rem;
-    border-radius: 0.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px dashed #d8d8d8;
-    color: $medGray;
-    margin-left: 1.125rem;
-    margin-right: 1.125rem;
-
-    &--compact {
-      margin-top: -1.2rem;
-      width: 10rem;
-      height: 2rem;
-    }
-  }
-
-  &-buttonText {
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 20px;
-
-    &--compact {
-      font-size: 14px;
-      line-height: 17px;
-    }
-  }
-
   .season-emoji {
     height: 18px;
     margin-top: -4px;
@@ -566,30 +512,6 @@ export default Vue.extend({
     padding-top: 5px;
     padding-left: 1.125rem;
     padding-right: 1.125rem;
-  }
-
-  //Styling for drag and drop components and movement
-  .gu-mirror {
-    position: fixed !important;
-    margin: 0 !important;
-    z-index: 9999 !important;
-    opacity: 0.8;
-    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';
-    filter: alpha(opacity=80);
-  }
-  .gu-hide {
-    display: none !important;
-  }
-  .gu-unselectable {
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-  }
-  .gu-transit {
-    opacity: 0.2;
-    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)';
-    filter: alpha(opacity=20);
   }
 
   .semester-modal {
@@ -626,15 +548,10 @@ export default Vue.extend({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .semester {
+    width: 16rem;
+
     &-menu {
       right: 0rem;
-    }
-    &-addWrapper {
-      width: 17rem;
-      &--compact {
-        width: 10rem;
-        height: 2rem;
-      }
     }
   }
 }

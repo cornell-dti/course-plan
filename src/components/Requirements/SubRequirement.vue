@@ -166,7 +166,7 @@ export type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCours
 
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
-  displayDescription: boolean;
+  showDescription: boolean;
 };
 
 const generateSubReqIncompleteCourses = (
@@ -201,14 +201,22 @@ export default Vue.extend({
     isCompleted: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
     color: { type: String, required: true },
+    tourStep: { type: Number, required: true },
   },
   data(): Data {
     return {
       showFulfillmentOptionsDropdown: false,
-      displayDescription: false,
+      showDescription: false,
     };
   },
   computed: {
+    displayDescription(): boolean {
+      return this.showDescription || this.shouldShowWalkthrough;
+    },
+    // true if the walkthrough is on step 2 and this subreq represents the PE requirement
+    shouldShowWalkthrough(): boolean {
+      return this.tourStep === 1 && this.subReq.requirement.id === 'College-UNI-Physical Education';
+    },
     isFulfilled(): boolean {
       return false;
     },
@@ -293,7 +301,7 @@ export default Vue.extend({
       });
     },
     toggleDescription() {
-      this.displayDescription = !this.displayDescription;
+      this.showDescription = !this.showDescription;
     },
     closeMenuIfOpen() {
       this.showFulfillmentOptionsDropdown = false;
