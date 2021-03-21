@@ -71,6 +71,12 @@
 .introjs-prevbutton {
   display: none;
 }
+a:not([href]) {
+  color: $white;
+  &:hover {
+    color: $white;
+  }
+}
 .introjs-bullets {
   display: none;
 }

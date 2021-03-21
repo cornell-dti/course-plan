@@ -46,7 +46,7 @@
           @on-selected-change="toggleSelectRequirement"
         />
       </div>
-      <a
+      <button
         v-if="!editMode"
         class="newCourse-link"
         @click="toggleEditMode()"
@@ -54,7 +54,7 @@
         tabindex="0"
       >
         Edit Requirements
-      </a>
+      </button>
     </div>
   </div>
 </template>
@@ -158,6 +158,10 @@ export default Vue.extend({
     }
   }
   &-link {
+    margin: 0;
+    padding: 0;
+    background-color: $white;
+    border: none;
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
