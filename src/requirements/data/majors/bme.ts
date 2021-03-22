@@ -9,9 +9,8 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
       'Curriculum distribution requirement and also fulfills a required Major course. It is best taken during semester 3 and must be completed before semester 5',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19808',
     checker: includesWithSingleRequirement('ENGRD 2202'),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
     allowCourseDoubleCounting: true,
   },
   {
@@ -27,9 +26,8 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
       ['ENGRD 2020'],
       ['BTRY 3010', 'CEE 3040', 'ENGRD 2700']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 6,
+    perSlotMinCount: [1, 1, 1, 1, 1, 1],
   },
   {
     name: 'Core Courses Part 2',
@@ -44,9 +42,8 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
       ['BME 4080'],
       ['BME 4090']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 7,
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
   },
   {
     name: 'Biomedical Engineering Concentrations',
@@ -64,8 +61,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
           ['BME 5830', 'BME 5850', 'BTRY 4381', 'BTRY 4840', 'CHEM 4810', 'CHEME 5430', 'CS 4780']
         ),
         counting: 'courses',
-        subRequirementProgress: 'any-can-count',
-        minCount: 13,
+        perSlotMinCount: [1, 1, 1, 6],
       },
       'Biomedical Materials and Drug Delivery (BMDD)': {
         description:
@@ -89,8 +85,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
           ]
         ),
         counting: 'courses',
-        subRequirementProgress: 'any-can-count',
-        minCount: 13,
+        perSlotMinCount: [1, 1, 1, 6],
       },
       'Biomedical Imaging and Instrumentation (BMII)': {
         description:
@@ -111,8 +106,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
           ]
         ),
         counting: 'courses',
-        subRequirementProgress: 'any-can-count',
-        minCount: 13,
+        perSlotMinCount: [1, 1, 1, 6],
       },
       'Biomedical Mechanics and Mechanobiology (BMMB)': {
         description:
@@ -133,8 +127,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
           ]
         ),
         counting: 'courses',
-        subRequirementProgress: 'any-can-count',
-        minCount: 13,
+        perSlotMinCount: [1, 1, 1, 6],
       },
     },
   },

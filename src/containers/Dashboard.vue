@@ -13,6 +13,7 @@
       <div class="dashboard-menus">
         <nav-bar
           class="dashboard-nav"
+          :isOpeningRequirements="isOpeningRequirements"
           @editProfile="editProfile"
           @toggleRequirementsBar="toggleRequirementsBar"
         />
@@ -21,7 +22,6 @@
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
-          @deleteCourseFromSemesters="deleteCourseFromSemesters"
         />
       </div>
       <semester-view
@@ -36,7 +36,7 @@
       />
     </div>
     <tour-window
-      title="Welcome Cornellian!"
+      title="Welcome to CoursePlan!"
       text="View your college requirements, plan your semesters and courses, and more."
       exit="No, I want to skip this"
       button-text="Start Tutorial"
@@ -45,22 +45,20 @@
       v-if="welcomeHidden"
     />
     <tour-window
-      title="Congratulations! That’s a wrap"
-      text="Other than this, there is more you can explore, so feel free to surf through CoursePlan"
+      title="Let's get CoursePlanning!"
+      text="There’s more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and 
+      also consult your advisors for more up to date information!"
+      :isFinalStep="true"
       exit=""
-      button-text="Start Planning"
-      :image="congratsBodyImage"
-      alt="surf"
+      button-text="Get Started"
       @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
     />
-    <div>
-      <bottom-bar
-        v-if="(!isOpeningRequirements && isTablet) || !isTablet"
-        :isExpanded="bottomBarIsExpanded"
-        :maxBottomBarTabs="maxBottomBarTabs"
-      />
-    </div>
+    <bottom-bar
+      v-if="(!isOpeningRequirements && isTablet) || !isTablet"
+      :isExpanded="bottomBarIsExpanded"
+      :maxBottomBarTabs="maxBottomBarTabs"
+    />
   </div>
 </template>
 
@@ -75,16 +73,37 @@ import NavBar from '@/components/NavBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 
-import surfing from '@/assets/images/surfing.svg';
-
 import store, { initializeFirestoreListeners } from '@/store';
-import { editSemesters } from '@/global-firestore-data';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
+import {
+  smallBreakpoint,
+  mediumBreakpoint,
+  veryLargeBreakpoint,
+} from '@/assets/scss/_variables.scss';
+
+const smallBreakpointPixels = parseInt(
+  smallBreakpoint.substring(0, smallBreakpoint.length - 2),
+  10
+);
+const mediumBreakpointPixels = parseInt(
+  mediumBreakpoint.substring(0, mediumBreakpoint.length - 2),
+  10
+);
+const veryLargeBreakpointPixels = parseInt(
+  veryLargeBreakpoint.substring(0, veryLargeBreakpoint.length - 2),
+  10
+);
+
+const getMaxButtonBarTabs = () => {
+  if (window.innerWidth <= veryLargeBreakpointPixels) {
+    return window.innerWidth <= smallBreakpointPixels ? 1 : 2;
+  }
+  return 4;
+};
 
 const tour = introJs();
 tour.setOption('exitOnEsc', 'false');
-tour.setOption('doneLabel', 'Finish');
-tour.setOption('skipLabel', 'Skip This Tutorial');
+tour.setOption('doneLabel', 'Next');
 tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
@@ -107,18 +126,15 @@ export default Vue.extend({
       isOnboarding: false,
       isEditingProfile: false,
       isOpeningRequirements: false,
-      isTablet: window.innerWidth <= 878,
-      isMobile: window.innerWidth <= 440,
-      maxBottomBarTabs: window.innerWidth <= 1347 ? 2 : 4,
+      isTablet: window.innerWidth <= mediumBreakpointPixels,
+      isMobile: window.innerWidth <= smallBreakpointPixels,
+      maxBottomBarTabs: getMaxButtonBarTabs(),
       welcomeHidden: false,
       startTour: false,
       showTourEndWindow: false,
     };
   },
   computed: {
-    congratsBodyImage(): string {
-      return surfing;
-    },
     userName(): FirestoreUserName {
       return store.state.userName;
     },
@@ -153,9 +169,9 @@ export default Vue.extend({
   },
   methods: {
     resizeEventHandler() {
-      this.isMobile = window.innerWidth <= 440;
-      this.isTablet = window.innerWidth <= 878;
-      this.maxBottomBarTabs = window.innerWidth <= 1347 ? 2 : 4;
+      this.isMobile = window.innerWidth <= smallBreakpointPixels;
+      this.isTablet = window.innerWidth <= mediumBreakpointPixels;
+      this.maxBottomBarTabs = getMaxButtonBarTabs();
       this.updateSemesterView();
     },
     toggleRequirementsBar() {
@@ -179,7 +195,7 @@ export default Vue.extend({
     },
 
     endOnboarding() {
-      if (!this.isMobile) {
+      if (!this.isMobile && !this.isEditingProfile) {
         this.welcomeHidden = true;
       }
       this.loaded = true;
@@ -199,17 +215,6 @@ export default Vue.extend({
       this.isOnboarding = true;
       this.isEditingProfile = true;
     },
-
-    deleteCourseFromSemesters(uniqueID: number) {
-      editSemesters(oldSemesters =>
-        oldSemesters.map(semester => {
-          const coursesWithoutDeleted = semester.courses.filter(
-            course => course.uniqueID !== uniqueID
-          );
-          return { ...semester, courses: coursesWithoutDeleted };
-        })
-      );
-    },
   },
 });
 </script>
@@ -225,6 +230,7 @@ export default Vue.extend({
     display: flex;
     background-color: $backgroundBlue;
     overflow-x: hidden;
+    min-height: 100vh;
   }
 
   &-menus {
@@ -238,7 +244,7 @@ export default Vue.extend({
   /* The Modal (background) */
   &-onboarding {
     position: fixed; /* Stay in place */
-    z-index: 2; /* Sit on top */
+    z-index: 3; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -260,19 +266,6 @@ export default Vue.extend({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .dashboard {
-    &-nav {
-      width: 100%;
-      flex-direction: row;
-      height: 4.5rem;
-      padding-top: 0rem;
-      padding-bottom: 0rem;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      position: fixed;
-      z-index: 1;
-    }
-
     &-reqs {
       margin-left: 0;
     }

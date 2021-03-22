@@ -37,7 +37,7 @@ export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSeme
   return -1;
 };
 
-export const editSemesters = (
+const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
   const newSemesters = updater(store.state.semesters);
@@ -81,15 +81,26 @@ export const addSemester = (
 
 export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
   GTagEvent(gtag, 'delete-semester');
-  editSemesters(oldSemesters =>
-    oldSemesters.filter(semester => semester.type !== type || semester.year !== year)
-  );
+  const semester = store.state.semesters.find(sem => sem.type === type && sem.year === year);
+  if (semester) {
+    const courseUniqueIds = new Set(semester.courses.map(course => course.uniqueID));
+    chooseSelectableRequirementOption(
+      Object.assign(
+        {},
+        ...Object.entries(store.state.selectableRequirementChoices)
+          .filter(([k]) => !courseUniqueIds.has(parseInt(k, 10)))
+          .map(([k, v]) => ({ [k]: v }))
+      )
+    );
+  }
+  editSemesters(oldSemesters => oldSemesters.filter(sem => sem.type !== type || sem.year !== year));
 };
 
 export const addCourseToSemester = (
   season: FirestoreSemesterType,
   year: number,
   newCourse: FirestoreSemesterCourse,
+  requirementID?: string,
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'add-course');
@@ -107,6 +118,9 @@ export const addCourseToSemester = (
       compareFirestoreSemesters
     );
   });
+  if (requirementID) {
+    addCourseToSelectableRequirements(newCourse.uniqueID, requirementID);
+  }
 };
 
 export const deleteCourseFromSemester = (
@@ -131,6 +145,20 @@ export const deleteCourseFromSemester = (
     if (semesterFound) return newSemestersWithoutCourse;
     return oldSemesters;
   });
+  deleteCourseFromSelectableRequirements(courseUniqueID);
+};
+
+export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: GTag): void => {
+  GTagEvent(gtag, 'delete-course');
+  editSemesters(oldSemesters =>
+    oldSemesters.map(semester => {
+      const coursesWithoutDeleted = semester.courses.filter(
+        course => course.uniqueID !== courseUniqueID
+      );
+      return { ...semester, courses: coursesWithoutDeleted };
+    })
+  );
+  deleteCourseFromSelectableRequirements(courseUniqueID);
 };
 
 export const chooseToggleableRequirementOption = (
@@ -141,12 +169,34 @@ export const chooseToggleableRequirementOption = (
     .set(toggleableRequirementChoices);
 };
 
-export const chooseSelectableRequirementOption = (
+const chooseSelectableRequirementOption = (
   selectableRequirementChoices: AppSelectableRequirementChoices
 ): void => {
   selectableRequirementChoicesCollection
     .doc(store.state.currentFirebaseUser.email)
     .set(selectableRequirementChoices);
+};
+
+export const addCourseToSelectableRequirements = (
+  courseUniqueID: number,
+  requirementID: string
+): void => {
+  if (!requirementID) return;
+  chooseSelectableRequirementOption({
+    ...store.state.selectableRequirementChoices,
+    [courseUniqueID]: requirementID,
+  });
+};
+
+export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): void => {
+  chooseSelectableRequirementOption(
+    Object.assign(
+      {},
+      ...Object.entries(store.state.selectableRequirementChoices)
+        .filter(([k]) => parseInt(k, 10) !== courseUniqueID)
+        .map(([k, v]) => ({ [k]: v }))
+    )
+  );
 };
 
 /** @returns a tuple [color of the subject, whether new colors are added] */

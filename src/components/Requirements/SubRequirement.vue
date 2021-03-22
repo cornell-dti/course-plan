@@ -17,7 +17,7 @@
         <div class="subreq-name">
           <p
             :class="[
-              { 'sup-req': !isFulfilled },
+              { 'sub-req': !isFulfilled },
               isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
             ]"
           >
@@ -25,16 +25,14 @@
           </p>
         </div>
       </div>
-      <div class="col">
-        <p v-if="!isCompleted" class="sup-req-progress text-right incomplete-ptext">
-          {{ subReqProgress }}
-        </p>
-        <p v-if="isFulfilled" class="text-right completed-ptext">
-          <span
-            >{{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
-            {{ subReq.fulfilledBy }}</span
-          >
-        </p>
+      <div v-if="!isCompleted" class="col sub-req-progress text-right incomplete-ptext">
+        {{ subReqProgress }}
+      </div>
+      <div v-if="isFulfilled" class="col text-right completed-ptext">
+        <span
+          >{{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
+          {{ subReq.fulfilledBy }}</span
+        >
       </div>
     </button>
     <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
@@ -97,12 +95,11 @@
         "
         class="subreqcourse-wrapper"
       >
-        <div v-for="(subReqCourseSlot, id) in subReqCoursesSlots" :key="id">
+        <div v-for="(subReqCourseSlot, id) in requirementCoursesSlots" :key="id">
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completed-sub-req-course
               :subReqCourseId="id"
               :courseTaken="subReqCourseSlot.courses[0]"
-              @deleteCourseFromSemesters="deleteCourseFromSemesters"
             />
           </div>
           <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
@@ -129,11 +126,10 @@
           <completed-sub-req-course
             :subReqCourseId="id"
             :courseTaken="convertCourse(selfCheckCourse)"
-            @deleteCourseFromSemesters="deleteCourseFromSemesters"
           />
         </div>
         <!-- TODO: only show incomplete-self-check if all courses not added -->
-        <incomplete-self-check @addCourse="addSelfCheckCourse" />
+        <incomplete-self-check :subReqId="subReq.requirement.id" />
       </div>
     </div>
   </div>
@@ -146,13 +142,14 @@ import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCo
 import IncompleteSelfCheck from '@/components/Requirements/IncompleteSelfCheck.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
+import store from '@/store';
 import { clickOutside } from '@/utilities';
 import {
   convertFirestoreSemesterCourseToCourseTaken,
   getMatchedRequirementFulfillmentSpecification,
 } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
-import fullCoursesJson from '@/assets/courses/typed-full-courses';
+import { fullCoursesJson } from '@/assets/courses/typed-full-courses';
 import { allocateSubjectColors } from '@/global-firestore-data';
 
 type CompletedSubReqCourseSlot = {
@@ -169,8 +166,7 @@ export type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCours
 
 type Data = {
   showFulfillmentOptionsDropdown: boolean;
-  displayDescription: boolean;
-  fulfilledSelfCheckCourses: FirestoreSemesterCourse[];
+  showDescription: boolean;
 };
 
 const generateSubReqIncompleteCourses = (
@@ -191,21 +187,36 @@ const generateSubReqIncompleteCourses = (
 };
 
 export default Vue.extend({
-  components: { CompletedSubReqCourse, DropDownArrow, IncompleteSubReqCourse, IncompleteSelfCheck },
+  components: {
+    CompletedSubReqCourse,
+    DropDownArrow,
+    IncompleteSubReqCourse,
+    IncompleteSelfCheck,
+  },
   props: {
-    subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
+    subReq: {
+      type: Object as PropType<RequirementFulfillment>,
+      required: true,
+    },
     isCompleted: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
     color: { type: String, required: true },
+    tourStep: { type: Number, required: true },
   },
   data(): Data {
     return {
       showFulfillmentOptionsDropdown: false,
-      displayDescription: false,
-      fulfilledSelfCheckCourses: [],
+      showDescription: false,
     };
   },
   computed: {
+    displayDescription(): boolean {
+      return this.showDescription || this.shouldShowWalkthrough;
+    },
+    // true if the walkthrough is on step 2 and this subreq represents the PE requirement
+    shouldShowWalkthrough(): boolean {
+      return this.tourStep === 1 && this.subReq.requirement.id === 'College-UNI-Physical Education';
+    },
     isFulfilled(): boolean {
       return false;
     },
@@ -218,7 +229,14 @@ export default Vue.extend({
         Object.keys(this.subReq.requirement.fulfillmentOptions)[0]
       );
     },
-    subReqCoursesSlots(): SubReqCourseSlot[] {
+    /**
+     * A list of "slots" for a requirement's fulfillment courses, completed or incomplete.
+     * Note that it is different from the concept of slot in `perSlotMinCount`.
+     * In `perSlotMinCount`, each slot can hold multiple courses, but here, each slot can only hold
+     * one course at a time. If `perSlotMinCount`'s slot i has minCount x, then x corresponding slots
+     * will be generated here.
+     */
+    requirementCoursesSlots(): SubReqCourseSlot[] {
       const subReqSpec = getMatchedRequirementFulfillmentSpecification(this.subReq.requirement, {
         [this.subReq.requirement.id]: this.toggleableRequirementChoice,
       });
@@ -228,34 +246,45 @@ export default Vue.extend({
       const allTakenCourseIds = new Set(this.subReq.courses.flat().map(course => course.courseId));
       const slots: SubReqCourseSlot[] = [];
 
-      const coursesTaken = this.subReq.courses;
-
-      coursesTaken.forEach((subReqCourseSlot, i) => {
-        if (subReqCourseSlot.length > 0) {
-          subReqCourseSlot.forEach(subReqCourse => {
-            slots.push({ isCompleted: true, courses: [subReqCourse] });
-          });
-          // Create new IncompletedSubReqCourse slot if all credits or courses not met
-          // but only one CompletedSubReqCourse slot exists
-          if (coursesTaken.length === 1 && !this.isCompleted) {
-            slots.push({
-              isCompleted: false,
-              courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[i]),
-            });
-          }
-        } else {
+      if (subReqSpec.fulfilledBy === 'credits') {
+        this.subReq.courses[0].forEach(completedCourse =>
+          slots.push({ isCompleted: true, courses: [completedCourse] })
+        );
+        if (!this.isCompleted) {
           slots.push({
             isCompleted: false,
-            courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[i]),
+            courses: generateSubReqIncompleteCourses(allTakenCourseIds, subReqEligibleCourses[0]),
           });
         }
-      });
+      } else {
+        this.subReq.courses.forEach((subReqCourseSlot, i) => {
+          const slotMinCount = subReqSpec.perSlotMinCount[i];
+          for (let j = 0; j < slotMinCount; j += 1) {
+            if (j < subReqCourseSlot.length) {
+              slots.push({ isCompleted: true, courses: [subReqCourseSlot[j]] });
+            } else {
+              slots.push({
+                isCompleted: false,
+                courses: generateSubReqIncompleteCourses(
+                  allTakenCourseIds,
+                  subReqEligibleCourses[i]
+                ),
+              });
+            }
+          }
+        });
+      }
+
       return slots;
     },
     subReqProgress(): string {
       return this.subReq.fulfilledBy !== 'self-check'
         ? `${this.subReq.minCountFulfilled}/${this.subReq.minCountRequired} ${this.subReq.fulfilledBy}`
         : 'self check';
+    },
+    fulfilledSelfCheckCourses(): readonly FirestoreSemesterCourse[] {
+      const reqId = this.subReq.requirement.id;
+      return store.state.derivedSelectableRequirementData.requirementToCoursesMap[reqId];
     },
   },
   directives: {
@@ -268,11 +297,11 @@ export default Vue.extend({
     onShowAllCourses(subReqIndex: number) {
       this.$emit('onShowAllCourses', {
         requirementName: this.subReq.requirement.name,
-        subReqCoursesArray: this.subReqCoursesSlots[subReqIndex].courses,
+        subReqCoursesArray: this.requirementCoursesSlots[subReqIndex].courses,
       });
     },
     toggleDescription() {
-      this.displayDescription = !this.displayDescription;
+      this.showDescription = !this.showDescription;
     },
     closeMenuIfOpen() {
       this.showFulfillmentOptionsDropdown = false;
@@ -281,26 +310,8 @@ export default Vue.extend({
       this.showFulfillmentOptionsDropdown = false;
       this.$emit('changeToggleableRequirementChoice', this.subReq.requirement.id, option);
     },
-    addSelfCheckCourse(course: FirestoreSemesterCourse) {
-      this.fulfilledSelfCheckCourses.push(course);
-    },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);
-    },
-    deleteCourseFromSemesters(uniqueId: number) {
-      // find and remove self-check course on sidebar
-      let indexToRemove = -1;
-      if (this.subReq.requirement.fulfilledBy === 'self-check') {
-        for (let i = 0; i < this.fulfilledSelfCheckCourses.length; i += 1) {
-          if (this.fulfilledSelfCheckCourses[i].uniqueID === uniqueId) {
-            indexToRemove = i;
-          }
-        }
-      }
-      if (indexToRemove !== -1) {
-        this.fulfilledSelfCheckCourses.splice(indexToRemove, 1);
-      }
-      this.$emit('deleteCourseFromSemesters', uniqueId);
     },
   },
 });
@@ -393,7 +404,7 @@ button.view {
     color: $lightPlaceholderGray;
   }
 }
-.sup-req {
+.sub-req {
   font-style: normal;
   font-weight: normal;
   font-size: 14px;

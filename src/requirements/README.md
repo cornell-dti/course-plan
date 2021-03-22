@@ -98,24 +98,12 @@ To reiterate, this phase computes a list of satisfying courses for each requirem
 4. Now we created [`decorated-requirements.json`](./decorated-requirements.json).
    Pre-computation is done.
 
-Each checker is either:
+Each checker is a list of functions `(course: Course) => boolean`, where each function checks
+whether the course satisfies one of the sub-requirements that this checker correspond to.
 
-- a TypeScript function `(course: Course) => boolean` that directly tells whether the course
-  satisfies the requirement that this checker correspond to.
-- or a list of such functions, where each function checks whether the course satisfies one of the
-  sub-requirements that this checker correspond to.
-
-This is how you should use your checkers:
-
-- Case 1: the requirement contains no sub-requirement. Use option 1. Example: CS major practicum.
-- Case 2: the requirement contains sub-requirements. Use option 2. Example: CS Core requirement.
-
-Also consider the cases of computing the progress with `subRequirementProgress`:
-
-- Operator type 'every-course-needed' indicates that all instances of a sub-requirement is necessary.
-  Example: CS Introductory Programming
-- Operator type 'any-can-count' indicates that only one instance of a sub-requirement can be used.
-  Example: ENGL Four 4000 Levels
+For each checker, there is an associated minimal number of course/credit required for that
+sub-requirement stored in `perSlotMinCount`. There can also be a `minNumberOfSlots` field, which
+specifies that we don't need to fulfill every slot, but only `minNumberOfSlots` of sub-requirements.
 
 ### Frontend Computation Phase
 

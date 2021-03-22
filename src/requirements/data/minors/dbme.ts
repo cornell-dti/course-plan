@@ -8,7 +8,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
     checker: includesWithSingleRequirement('ECON 1100', 'ECON 3030', 'HADM 1410', 'PAM 2000'),
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'Introduction to basic business concepts',
@@ -29,7 +29,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'MAE 4610'
     ),
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   // TODO: restrictions + additional class for ORIE majors
   {
@@ -38,7 +38,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
     checker: includesWithSingleRequirement('AEM 2210', 'HADM 2230', 'NCC 5500', 'ORIE 3150'),
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'Finance',
@@ -46,7 +46,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
     checker: includesWithSingleRequirement('AEM 2241', 'AEM 5241', 'HADM 2250', 'NCC 5560'),
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'Capstone course',
@@ -54,7 +54,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
     checker: includesWithSingleRequirement('AEM 4660'),
     fulfilledBy: 'credits',
-    minCount: 1.5,
+    perSlotMinCount: [1.5],
   },
   {
     name: 'Career goals',
@@ -105,7 +105,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'AEM 4550'
     ),
     fulfilledBy: 'credits',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
 ];
 

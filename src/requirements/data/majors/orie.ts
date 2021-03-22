@@ -17,9 +17,8 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ORIE 3510'],
       ['ORIE 4580']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 7,
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
   },
   {
     name: 'ORIE Electives',
@@ -27,7 +26,7 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
     checker: includesWithSingleRequirement('ORIE 4***', 'ORIE 5***', 'ORIE 6***'),
     fulfilledBy: 'credits',
-    minCount: 9,
+    perSlotMinCount: [9],
   },
   {
     name: 'Engineering Distribution Courses',
@@ -38,9 +37,8 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ENGRD 2***', 'ENGRD 3***'],
       ['ENGRI 1***']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [1, 1, 1],
   },
   {
     name: 'Major Approved Electives (Non–ORIE)',

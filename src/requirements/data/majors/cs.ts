@@ -17,9 +17,8 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'],
       ['CS 2110', 'CS 2112']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 2,
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'Computer Science Core',
@@ -32,27 +31,34 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 4820'],
       ['CS 4410']
     ),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 5,
+    perSlotMinCount: [1, 1, 1, 1, 1],
   },
   {
     name: 'CS Electives',
     description:
-      'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4998 are NOT allowed.',
+      'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4999 are NOT allowed.',
     source:
       'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    checker: (course: Course): boolean => {
-      if (
-        courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4998', 'CS 4410', 'CS 4820'])
-      ) {
-        return false;
-      }
-      return ifCodeMatch(course.subject, 'CS') && ifCodeMatch(course.catalogNbr, '4***');
-    },
-    subRequirementProgress: 'any-can-count',
+    checker: [
+      (course: Course): boolean => {
+        if (
+          courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4999', 'CS 4410', 'CS 4820'])
+        ) {
+          return false;
+        }
+        return (
+          ifCodeMatch(course.subject, 'CS') &&
+          !(
+            ifCodeMatch(course.catalogNbr, '1***') ||
+            ifCodeMatch(course.catalogNbr, '2***') ||
+            ifCodeMatch(course.catalogNbr, '3***')
+          )
+        );
+      },
+    ],
     fulfilledBy: 'courses',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'CS Practicum or Project',
@@ -75,22 +81,22 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'CS 5625',
       'CS 5643'
     ),
-    subRequirementProgress: 'any-can-count',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
   {
     name: 'Technical Electives',
     description: 'Three 3000-level or above (3+ credits each) courses with technical content',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor/technicalelectives',
-    checker: (course: Course): boolean => {
-      const { catalogNbr } = course;
-      return catalogNbr.startsWith('3');
-    },
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return !(ifCodeMatch(catalogNbr, '1***') || ifCodeMatch(catalogNbr, '2***'));
+      },
+    ],
     checkerWarning: 'We do not check that the courses are considered technical.',
     fulfilledBy: 'courses',
-    subRequirementProgress: 'any-can-count',
-    minCount: 3,
+    perSlotMinCount: [3],
   },
   {
     name: 'External Specialization',
@@ -125,9 +131,8 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'ENGRD 2700',
       'MATH 4710',
     ]),
-    subRequirementProgress: 'every-course-needed',
     fulfilledBy: 'courses',
-    minCount: 1,
+    perSlotMinCount: [1],
   },
 ];
 

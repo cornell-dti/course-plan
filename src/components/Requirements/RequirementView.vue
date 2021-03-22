@@ -16,8 +16,8 @@
     />
     <div v-if="showMajorOrMinorRequirements">
       <!--Show more of completed requirements -->
-      <div v-if="displayDetails">
-        <p class="sub-title">In-Depth College Requirements</p>
+      <div v-if="displayDetails || tourStep === 1">
+        <h2>In-Depth College Requirements</h2>
         <div class="separator"></div>
         <div v-for="(subReq, id) in partitionedRequirementsProgress.ongoing" :key="id">
           <sub-requirement
@@ -25,15 +25,15 @@
             :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
             :color="reqGroupColorMap[req.groupName][0]"
             :isCompleted="false"
+            :tourStep="tourStep"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
-            @deleteCourseFromSemesters="deleteCourseFromSemesters"
           />
           <div class="separator"></div>
         </div>
 
         <div v-if="partitionedRequirementsProgress.completed.length > 0" class="row completed">
-          <p class="col sub-title specific">Filled Requirements</p>
+          <h2 class="col specific">Filled Requirements</h2>
           <div class="col-1 text-right">
             <button
               class="btn float-right"
@@ -55,9 +55,9 @@
               :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
               :color="reqGroupColorMap[req.groupName][0]"
               :isCompleted="true"
+              :tourStep="tourStep"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @onShowAllCourses="onShowAllCourses"
-              @deleteCourseFromSemesters="deleteCourseFromSemesters"
             />
           </div>
         </div>
@@ -101,6 +101,7 @@ export default Vue.extend({
     displayedMinorIndex: { type: Number, required: true },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
+    tourStep: { type: Number, required: true },
   },
   data() {
     return {
@@ -150,9 +151,6 @@ export default Vue.extend({
     turnCompleted(bool: boolean) {
       this.displayCompleted = bool;
     },
-    deleteCourseFromSemesters(uniqueId: number) {
-      this.$emit('deleteCourseFromSemesters', uniqueId);
-    },
   },
 });
 </script>
@@ -183,14 +181,6 @@ export default Vue.extend({
 }
 .specific {
   color: $lightPlaceholderGray;
-}
-.sub-title {
-  padding: 0;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 14px;
-  color: $darkGray;
 }
 button.active {
   color: $sangBlue;

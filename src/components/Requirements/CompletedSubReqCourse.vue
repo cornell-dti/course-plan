@@ -1,5 +1,11 @@
 <template>
   <div class="completedsubreqcourse">
+    <reset-confirmation-modal
+      :isTestReq="isTransferCredit"
+      :reqName="courseTaken.code"
+      v-model="resetConfirmVisible"
+      @close-reset-modal="onResetConfirmClosed"
+    />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
@@ -33,17 +39,23 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
+import ResetConfirmationModal from '@/components/Modals/ResetConfirmationModal.vue';
 import store from '@/store';
+import { deleteCourseFromSemesters } from '@/global-firestore-data';
+import { onboardingDataCollection } from '@/firebaseConfig';
 import getCurrentSeason, { getCurrentYear } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default Vue.extend({
-  components: { ReqCourse },
+  components: { ReqCourse, ResetConfirmationModal },
   props: {
     subReqCourseId: { type: Number, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
+  data: () => ({
+    resetConfirmVisible: false,
+  }),
   computed: {
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
@@ -72,8 +84,22 @@ export default Vue.extend({
     },
   },
   methods: {
-    onReset() {
-      this.$emit('deleteCourseFromSemesters', this.courseTaken.uniqueId);
+    onReset(): void {
+      this.resetConfirmVisible = true;
+    },
+    onResetConfirmClosed(isReset: boolean): void {
+      if (isReset) {
+        if (this.isTransferCredit) {
+          const type = this.courseTaken.code.substr(0, 2);
+          const name = this.courseTaken.code.substr(3);
+
+          const onBoardingData = store.state.onboardingData;
+
+          onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
+            exam: onBoardingData.exam.filter(e => !(e.type === type && e.subject === name)),
+          });
+        } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
+      }
     },
   },
 });

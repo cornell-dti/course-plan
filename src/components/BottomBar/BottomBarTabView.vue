@@ -203,7 +203,7 @@ export default Vue.extend({
   .bottombartabview {
     &-seeMoreWrapper {
       .bottombarSeeMoreTab {
-        width: 100%;
+        width: 7rem;
         height: fit-content;
       }
     }
