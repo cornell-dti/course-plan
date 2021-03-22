@@ -7,6 +7,9 @@ type RequirementCommon = {
   readonly source: string;
   /** If this is set to true, then an edge to the course doesn't count towards double counting. */
   readonly allowCourseDoubleCounting?: true;
+  /** If this is set to true, then AP/IB credits cannot be applied towards this requirement. */
+  readonly disallowTransferCredit?: true;
+
   /**
    * If this field exists with string,
    * then a warning will show in sidebar and it will be treated mostly as a self-check.

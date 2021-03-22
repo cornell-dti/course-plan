@@ -1,9 +1,18 @@
+import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './data/constants';
 import requirementJson from './typed-requirement-json';
 
 /**
  * A collection of helper functions
  * that might be useful for both frontend components and requirement graph computation
  */
+
+/**
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @returns true if the course is AP/IB equivalent course or credit
+ */
+const courseIsAPIB = (course: CourseTaken): boolean =>
+  [CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
+  ['AP', 'IB'].includes(course.code.split(' ')[0]);
 
 /**
  * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase
@@ -168,20 +177,23 @@ export function computeFulfillmentCoursesAndStatistics(
   const subRequirementProgress: number[] = eligibleCourses.map(() => 0);
   coursesTaken.forEach(courseTaken => {
     const { courseId } = courseTaken;
-    for (
-      let subRequirementIndex = 0;
-      subRequirementIndex < eligibleCourses.length;
-      subRequirementIndex += 1
-    ) {
-      if (
-        eligibleCourses[subRequirementIndex].includes(courseId) &&
-        subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
+    const transferCourse = courseIsAPIB(courseTaken);
+    if (!(transferCourse && requirement.disallowTransferCredit)) {
+      for (
+        let subRequirementIndex = 0;
+        subRequirementIndex < eligibleCourses.length;
+        subRequirementIndex += 1
       ) {
-        // add the course to the list of courses used to fulfill that one sub-requirement
-        coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
-        subRequirementProgress[subRequirementIndex] +=
-          fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-        break;
+        if (
+          eligibleCourses[subRequirementIndex].includes(courseId) &&
+          subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
+        ) {
+          // add the course to the list of courses used to fulfill that one sub-requirement
+          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+          subRequirementProgress[subRequirementIndex] +=
+            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+          break;
+        }
       }
     }
   });
