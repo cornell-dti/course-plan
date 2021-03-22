@@ -177,8 +177,7 @@ export function computeFulfillmentCoursesAndStatistics(
   const subRequirementProgress: number[] = eligibleCourses.map(() => 0);
   coursesTaken.forEach(courseTaken => {
     const { courseId } = courseTaken;
-    const transferCourse = courseIsAPIB(courseTaken);
-    if (!(transferCourse && requirement.disallowTransferCredit)) {
+    if (!(requirement.disallowTransferCredit && courseIsAPIB(courseTaken))) {
       for (
         let subRequirementIndex = 0;
         subRequirementIndex < eligibleCourses.length;
