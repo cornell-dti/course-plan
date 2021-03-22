@@ -10,7 +10,7 @@ import requirementJson from './typed-requirement-json';
  * @param course course object with useful information retrived from Cornell courses API.
  * @returns true if the course is AP/IB equivalent course or credit
  */
-const courseIsAPIB = (course: CourseTaken): boolean =>
+export const courseIsAPIB = (course: CourseTaken): boolean =>
   [CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
   ['AP', 'IB'].includes(course.code.split(' ')[0]);
 
