@@ -179,7 +179,7 @@ const chooseSelectableRequirementOption = (
 
 export const addCourseToSelectableRequirements = (
   courseUniqueID: number,
-  requirementID: string
+  requirementID: string | undefined
 ): void => {
   if (!requirementID) return;
   chooseSelectableRequirementOption({
