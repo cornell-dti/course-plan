@@ -182,4 +182,23 @@ export default Vue.extend({
 </script>
 <style scoped lang="scss">
 @import '@/components/Modals/Onboarding/Onboarding.scss';
+
+@media only screen and (max-width: $large-breakpoint) {
+  .onboarding {
+    &-main {
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: $small-medium-breakpoint) {
+  .onboarding {
+    &-header {
+      text-align: center;
+    }
+    &-inputWrapper {
+      text-align: center;
+    }
+  }
+}
 </style>
