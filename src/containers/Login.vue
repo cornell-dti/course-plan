@@ -6,20 +6,20 @@
       </div>
     </transition>
 
-    <div class="landing">
-      <!--TOP BAR-->
-      <top-bar />
-
+    <div class="landing top-sec">
       <!--PLAN AHEAD-->
       <div class="container p-0 m-0">
         <div class="row top-bar phonepad no-gutters">
           <div class="col">
             <div class="row no-gutters top-section">
-              <h1 class="plan-head mt-5">Plan Your Courses Ahead</h1>
+              <h1 class="plan-head mt-5">
+                Schedule Smarter <br />
+                Plan Ahead
+              </h1>
             </div>
             <div class="row no-gutters top-section">
               <p class="plan-subhead">
-                Introducing the new and easiest way to plan courses at Cornell
+                Introducing the newest and easiest way to plan courses at Cornell
               </p>
             </div>
             <div class="row justify-content-center">
@@ -29,7 +29,7 @@
                   class="email-button email-button--top"
                   variant="primary"
                 >
-                  ACCESS BETA
+                  GET STARTED
                 </button>
               </div>
             </div>
@@ -38,7 +38,7 @@
             <img
               style="position: relative"
               class="laptop"
-              src="@/assets/images/laptop.png"
+              src="@/assets/images/landing_new/laptop.svg"
               alt="laptop preview"
             />
           </div>
@@ -46,67 +46,51 @@
       </div>
 
       <!--NEW WAY-->
-      <div class="new container p-0">
-        <h1 class="new-1 phonepad head">New Way to Track Your Requirements</h1>
+      <div class="new container p-0 new-way">
         <div class="row new no-gutters">
-          <div class="col-12 col-md-6 tasks-wrapper">
-            <div class="row tasks">
-              <div class="col-1 tasks">
-                <img src="@/assets/images/Task1.svg" alt="checklist" />
-              </div>
-              <div class="col-11">
-                <p class="sub sub--task">Fully personalized to track your requirements</p>
-              </div>
-            </div>
-            <div class="row tasks">
-              <div class="col-1 tasks">
-                <img src="@/assets/images/Task2.svg" alt="browser" />
-              </div>
-              <div class="col-11">
-                <p class="sub sub--task">Customizable interface to view your courses</p>
-              </div>
-            </div>
-            <div class="row tasks">
-              <div class="col-1 tasks">
-                <img src="@/assets/images/Task3.svg" alt="Network" />
-              </div>
-              <div class="col-11">
-                <p class="sub sub--task">Built-in system to check your progress</p>
-              </div>
-            </div>
-            <div class="row tasks">
-              <div class="col-1 tasks">
-                <img src="@/assets/images/Task4.svg" alt="Starred comment" />
-              </div>
-              <div class="col-11">
-                <p class="sub sub--task">Recommends courses based on your needs</p>
-              </div>
-            </div>
+          <div class="col tasks">
+            <figure class="figure">
+              <img src="@/assets/images/landing_new/icon1.svg" class="sub--task" alt="checklist" />
+              <figcaption class="sub">Fully personalized to track your requirements</figcaption>
+            </figure>
           </div>
-          <div class="col-6 col-md-6 image-wrapper women-wrapper">
-            <img
-              class="hide women"
-              src="@/assets/images/Person_planning.svg"
-              alt="women planning"
-            />
+          <div class="col tasks">
+            <figure class="figure">
+              <img src="@/assets/images/landing_new/icon2.svg" class="sub--task" alt="browser" />
+              <figcaption class="sub">Customizable interface to view your courses</figcaption>
+            </figure>
+          </div>
+          <div class="col tasks">
+            <figure class="figure">
+              <img src="@/assets/images/landing_new/icon3.svg" class="sub--task" alt="Network" />
+              <figcaption class="sub">Built-in system to check your progress</figcaption>
+            </figure>
+          </div>
+          <div class="col tasks">
+            <figure class="figure">
+              <img
+                src="@/assets/images/landing_new/icon4.svg"
+                class="sub--task"
+                alt="Starred comment"
+              />
+              <figcaption class="sub">View course information all in one place</figcaption>
+            </figure>
           </div>
         </div>
       </div>
 
       <!-- DRAG -->
-      <div class="container-fluid plan p-0">
+      <div class="container-fluid plan p-0 center">
         <div class="drag phonepad row no-gutters">
-          <div class="col-md-6 image-wrapper image-wrapper--drag">
-            <img
-              style="position: relative"
-              class="hide preview"
-              src="@/assets/images/drag.svg"
-              alt="Dragging preview"
-            />
-          </div>
-          <div class="col-12 col-md-6 comment">
-            <h1 class="head">Drag Your Course In</h1>
-            <p class="sub">
+          <img
+            class="hide preview"
+            src="@/assets/images/landing_new/img1.svg"
+            alt="Dragging preview"
+            style="position: absolute"
+          />
+          <div class="comment comment-drag">
+            <h1 class="head">Drag and Drop Courses</h1>
+            <p class="sub-text">
               CoursePlan’s intuitive interface recommends courses based on unfulfilled requirements
               and allows you to easily drag and drop them into your planner
             </p>
@@ -115,58 +99,23 @@
       </div>
 
       <!-- SEMESTERS -->
-      <div class="container-fluid p-0 small">
-        <div class="row semester phonepad m-0">
-          <div class="col-12 col-md-5 comment">
+      <div class="container-fluid p-0 center">
+        <div class="semester phonepad row no-gutters float-right">
+          <div class="comment comment-sem">
             <h1 class="head">Plan Your Semesters</h1>
-            <p class="sub">
+            <p class="sub-text">
               Use CoursePlan’s semesterly planner to choose courses well in advance and ensure that
               you never miss a requirement
             </p>
           </div>
-          <div class="col-md-7 image-wrapper image-wrapper--semester">
-            <img class="hide schedule" src="@/assets/images/schedule.svg" alt="Plan preview" />
-          </div>
+          <img
+            class="hide schedule"
+            src="@/assets/images/landing_new/img2.svg"
+            alt="Plan preview"
+          />
         </div>
       </div>
-
-      <!-- FIRST -->
-      <div class="container justify-content-center phonepad first m-0">
-        <div class="container inside">
-          <div class="row justify-content-center">
-            <div class="col justify-content-center">
-              <h1 class="head-center text-center">Be The First One To Use It</h1>
-              <p class="sub text-center" style="padding: 30px">
-                Gain early access by filling out your email below and help us grow into what you
-                need!
-              </p>
-            </div>
-          </div>
-          <div class="row justify-content-center">
-            <div class="col-12 col-md-12 email m-0 pb-0">
-              <input
-                class="waitlist-info"
-                type="text"
-                placeholder="Your Email Address"
-                v-model="waitlist.email"
-              />
-            </div>
-            <div class="col-12 col-md-12 email m-0">
-              <input
-                class="waitlist-info"
-                type="text"
-                placeholder="Your Major"
-                v-model="waitlist.major"
-              />
-            </div>
-            <div class="col-12 col-md-12 email">
-              <button class="email-button" variant="primary" @click="addUser()">
-                Join Waitlist
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <br style="clear: both" />
 
       <!--FOOTER-->
       <custom-footer />
@@ -179,7 +128,6 @@ import Vue from 'vue';
 import firebase from 'firebase/app';
 
 import CustomFooter from '@/components/Footer.vue';
-import TopBar from '@/components/TopBar.vue';
 
 import { GTagLoginEvent } from '@/gtag';
 import * as fb from '@/firebaseConfig';
@@ -194,7 +142,7 @@ type Data = {
 };
 
 export default Vue.extend({
-  components: { CustomFooter, TopBar },
+  components: { CustomFooter },
   data(): Data {
     return {
       loginForm: {
@@ -310,6 +258,18 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
+.top-sec {
+  background-image: url('../assets/images/landing_new/top_rect.svg');
+  background-repeat: no-repeat;
+  background-size: 100vw 900px;
+  overflow: hidden;
+  padding-top: 100px;
+
+  @media (max-width: 1154px) {
+    padding-top: 0;
+  }
+}
+
 .logo {
   width: 12rem;
 }
@@ -322,10 +282,10 @@ export default Vue.extend({
   max-width: 100%;
 }
 .top-bar {
-  padding: 59px 0px 0px 104px;
+  padding: 29px 0px 0px 104px;
 
   @media (max-width: 1154px) {
-    padding: 59px 104px 0px 104px;
+    padding: 29px 104px 0px 104px;
     display: flex;
     flex-direction: column;
   }
@@ -345,22 +305,19 @@ export default Vue.extend({
   padding: 10px 30px;
   border-radius: 6px;
 }
-.plan {
-  padding: 59px 0px 59px 104px;
-}
 .plan-head {
   padding-bottom: 30px;
   font-size: 60px;
   line-height: 60px;
-  color: #4f4f4f;
+  color: white;
 }
 .plan-subhead {
   padding-bottom: 30px;
   font-style: normal;
-  font-weight: 300;
+  font-weight: 100;
   font-size: 25px;
   line-height: 35px;
-  color: $black;
+  color: white;
 }
 input {
   width: 100%;
@@ -379,7 +336,7 @@ input {
 }
 .email-button {
   border: 0;
-  background-color: $emGreen;
+  background-color: #539d9b;
   border-radius: 6px;
   border-color: $emGreen;
   width: 100%;
@@ -403,7 +360,6 @@ input {
   padding: 20px 20px 20px 20px;
 }
 .image-wrapper {
-  overflow: hidden;
   @media (max-width: 1154px) {
     display: none;
   }
@@ -413,10 +369,6 @@ input {
   &--laptop {
     display: block;
   }
-  &--semester {
-    display: flex;
-    justify-content: flex-end;
-  }
 }
 .laptop {
   position: relative;
@@ -425,16 +377,14 @@ input {
     max-width: inherit;
   }
 }
-.women {
-  position: relative;
-}
-.women-wrapper {
-  margin-top: -120px;
+
+.new-way {
+  margin-top: 350px;
 }
 
 .new {
-  background-color: $emGreen;
-  padding: 50px 0px 96px 104px;
+  padding: 50px 104px 96px 104px;
+  color: black;
   @media (min-width: 1155px) {
     margin-bottom: -120px;
   }
@@ -448,6 +398,7 @@ input {
   align-items: center;
   justify-content: center;
   padding: 10px;
+  color: black;
 }
 .tasks-wrapper {
   @media (max-width: 1154px) {
@@ -455,27 +406,51 @@ input {
     flex: unset;
   }
 }
+
+figure {
+  text-align: center;
+}
+
+.sub-text {
+  font-weight: normal;
+  font-size: 32px;
+  text-align: left;
+  color: black;
+  margin-top: 32px;
+  max-width: 425px;
+  @media (max-width: 1154px) {
+    text-align: left;
+  }
+}
+
 .sub {
   font-weight: normal;
   font-size: 24px;
-  color: #ffffff;
+  text-align: center;
+  color: black;
   margin: 0;
 
   &--task {
-    margin-left: 2rem;
+    vertical-align: middle;
+    padding-bottom: 38px;
   }
 }
 .head {
   font-weight: 600;
+  line-height: 38px;
   font-size: 40px;
-  color: #ffffff;
+  color: black;
   padding-bottom: 0px;
 }
 .head-center {
   font-weight: 600;
   font-size: 40px;
-  color: #ffffff;
+  color: black;
   padding-bottom: 0px;
+}
+
+.hidden {
+  opacity: 0;
 }
 
 .women {
@@ -484,39 +459,58 @@ input {
   }
 }
 .drag {
-  background-color: $chrisGreen;
-  padding: 59px 104px 0px 104px;
+  padding: 104px 104px 0px 104px;
   @media (max-width: 1154px) {
-    display: flex;
-    justify-content: center;
+    padding-left: 64px;
   }
 }
 .preview {
   position: relative;
-
+  left: -50px;
+  margin-right: -32px;
+  width: 900px;
   @media (max-width: 1274px) {
+    margin-left: 0px;
     width: 62vw;
   }
 }
 .schedule {
-  margin-top: 16px;
-  width: 650px;
+  position: relative;
+  width: 1050px;
+  margin-left: -100px;
+  margin-right: -280px;
 
   @media (max-width: 1274px) {
+    margin-right: 0;
     width: 50vw;
   }
 }
 .comment {
+  padding: 170px 50px 250px 50px;
   text-align: left;
-  padding: 170px 30px 250px 30px;
   @media (max-width: 1154px) {
+    text-align: center;
     max-width: 100%;
     flex: unset;
   }
+  &-drag {
+    margin-left: 750px;
+    @media (max-width: 1154px) {
+      margin-left: 0;
+    }
+  }
+  &-sem {
+    margin: 0;
+    margin-top: 200px;
+    margin-right: -50px;
+    @media (max-width: 1154px) {
+      margin-right: 0;
+    }
+  }
 }
 .semester {
-  background-color: $einBlue;
   padding: 0px 0px 0px 104px;
+  overflow: hidden;
   @media (max-width: 1154px) {
     display: flex;
     justify-content: center;
@@ -541,6 +535,7 @@ input:focus::placeholder {
 button {
   outline: none;
 }
+
 p {
   padding: 0;
 }
