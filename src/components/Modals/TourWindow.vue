@@ -40,10 +40,25 @@
               <a href="mailto:courseplan@cornelldti.org">courseplan@cornelldti.org</a>.
             </div>
           </div>
-          <button class="startButton" @click="startTour()">
+          <button
+            class="startButton"
+            @click="
+              $emit('hide');
+              $emit('startTour');
+              startTour();
+            "
+          >
             {{ buttonText }}
           </button>
-          <button class="skipButton" @click="skipTour()">{{ exit }}</button>
+          <button
+            class="skipButton"
+            @click="
+              $emit('skip');
+              skipTour();
+            "
+          >
+            {{ exit }}
+          </button>
         </div>
       </div>
     </div>
@@ -73,12 +88,9 @@ export default Vue.extend({
   },
   methods: {
     startTour(): void {
-      this.$emit('hide');
-      this.$emit('startTour');
       GTagEvent(this.$gtag, 'start-walkthrough');
     },
     skipTour(): void {
-      this.$emit('skip');
       GTagEvent(this.$gtag, 'skip-walkthrough');
     },
   },

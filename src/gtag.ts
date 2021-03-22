@@ -15,6 +15,13 @@ export const GTagEvent = (gtag: GTag | undefined, eventType: string): void => {
   if (!gtag) return;
   let eventPayload: EventPayload | undefined;
   switch (eventType) {
+    case 'logout':
+      eventPayload = {
+        event_category: 'engagement',
+        event_label: 'logout',
+        value: 1,
+      };
+      break;
     case 'to-compact':
       eventPayload = {
         event_category: 'views',
@@ -131,6 +138,27 @@ export const GTagEvent = (gtag: GTag | undefined, eventType: string): void => {
       eventPayload = {
         event_category: 'bottom-bar',
         event_label: 'close',
+        value: 1,
+      };
+      break;
+    case 'add-modal-edit-requirements':
+      eventPayload = {
+        event_category: 'add-modal',
+        event_label: 'edit-requirements',
+        value: 1,
+      };
+      break;
+    case 'requirements-bar-filled-requirements-toggle':
+      eventPayload = {
+        event_category: 'requirements-bar',
+        event_label: 'filled-requirements-toggle',
+        value: 1,
+      };
+      break;
+    case 'requirements-bar-course-drag-and-drop':
+      eventPayload = {
+        event_category: 'requirements-bar',
+        event_label: 'course-drag-and-drop',
         value: 1,
       };
       break;

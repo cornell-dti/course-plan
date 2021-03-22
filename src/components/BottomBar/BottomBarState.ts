@@ -1,13 +1,11 @@
 import Vue from 'vue';
-
+import { GTag, GTagEvent } from '@/gtag';
 import { checkNotNull } from '../../utilities';
 
 import {
   cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
   firestoreSemesterCourseToBottomBarCourse,
 } from '../../user-data-converter';
-
-import { GTag, GTagEvent } from '@/gtag';
 
 export type BottomBarState = {
   bottomCourses: readonly AppBottomBarCourse[];

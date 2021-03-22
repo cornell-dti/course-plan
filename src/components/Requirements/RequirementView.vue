@@ -71,6 +71,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { GTagEvent } from '@/gtag';
 import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
@@ -149,6 +150,7 @@ export default Vue.extend({
       this.displayDetails = !this.displayDetails;
     },
     turnCompleted(bool: boolean) {
+      GTagEvent(this.$gtag, 'requirements-bar-filled-requirements-toggle');
       this.displayCompleted = bool;
     },
   },

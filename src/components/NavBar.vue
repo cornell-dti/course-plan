@@ -41,6 +41,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import firebase from 'firebase/app';
+import { GTagEvent } from '@/gtag';
 
 export default Vue.extend({
   props: {
@@ -51,6 +52,7 @@ export default Vue.extend({
   },
   methods: {
     logout() {
+      GTagEvent(this.$gtag, 'logout');
       firebase
         .auth()
         .signOut()
