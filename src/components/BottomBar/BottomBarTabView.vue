@@ -13,7 +13,7 @@
           :bottomCourseFocus="bottomCourseFocus"
           :isExpanded="isExpanded"
           @on-change-focus="() => changeBottomBarCourseFocus(index)"
-          @on-delete="() => deleteBottomBarCourse(index)"
+          @on-delete="() => deleteBottomBarCourse(index, this.$gtag)"
         />
       </div>
     </div>
@@ -48,7 +48,7 @@
             <img
               class="seeMoreCourse-option-delete"
               src="@/assets/images/x-blue.svg"
-              @click="deleteBottomBarCourse(index + maxBottomBarTabs)"
+              @click="deleteBottomBarCourse(index + maxBottomBarTabs, this.$gtag)"
               alt="x"
             />
           </div>
@@ -67,6 +67,7 @@ import {
   deleteBottomBarCourse,
   moveBottomBarCourseToFirst,
 } from '@/components/BottomBar/BottomBarState';
+import { GTagEvent } from '@/gtag';
 
 export default Vue.extend({
   components: { BottomBarTab },
@@ -102,6 +103,7 @@ export default Vue.extend({
     moveBottomBarCourseToFirst,
     bottomBarSeeMoreToggle() {
       this.seeMoreOpen = !this.seeMoreOpen;
+      GTagEvent(this.$gtag, 'bottom-bar-see-more');
     },
   },
 });

@@ -4,7 +4,7 @@
       <div class="onboarding-subHeader">
         <span class="onboarding-subHeader--font"> Basic Information</span>
         <span>
-          <button class="onboarding-button-previous" @click="setPage(1)">
+          <button class="onboarding-button-previous" @click="editBasicInformation()">
             <img src="@/assets/images/edit-review.svg" alt="edit" />
           </button>
         </span>
@@ -66,7 +66,7 @@
       <div class="onboarding-subHeader">
         <span class="onboarding-subHeader--font"> Transfer Credits</span>
         <span>
-          <button class="onboarding-button-previous" @click="setPage(2)">
+          <button class="onboarding-button-previous" @click="editTransferCredits()">
             <img src="@/assets/images/edit-review.svg" />
           </button>
         </span>
@@ -165,6 +165,7 @@
 import Vue, { PropType } from 'vue';
 import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
+import { GTagEvent } from '@/gtag';
 
 const placeholderText = 'Select one';
 
@@ -191,6 +192,14 @@ export default Vue.extend({
     },
   },
   methods: {
+    editBasicInformation(): void {
+      this.setPage(1);
+      GTagEvent(this.$gtag, 'onboarding-edit-basic-information');
+    },
+    editTransferCredits(): void {
+      this.setPage(2);
+      GTagEvent(this.$gtag, 'onboarding-edit-transfer-credits');
+    },
     getExamCredit,
     getMajorFullName,
     getMinorFullName,

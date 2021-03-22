@@ -57,6 +57,83 @@ export const GTagEvent = (gtag: GTag | undefined, eventType: string): void => {
         value: 1,
       };
       break;
+    case 'course-edit-color':
+      eventPayload = {
+        event_category: 'course',
+        event_label: 'edit-color',
+        value: 1,
+      };
+      break;
+    case 'start-walkthrough':
+      eventPayload = {
+        event_category: 'walkthrough',
+        event_label: 'start',
+        value: 1,
+      };
+      break;
+    case 'skip-walkthrough':
+      eventPayload = {
+        event_category: 'walkthrough',
+        event_label: 'skip',
+        value: 1,
+      };
+      break;
+    case 'onboarding-edit-basic-information':
+      eventPayload = {
+        event_category: 'onboarding',
+        event_label: 'edit-basic-information',
+        value: 1,
+      };
+      break;
+    case 'onboarding-edit-transfer-credits':
+      eventPayload = {
+        event_category: 'onboarding',
+        event_label: 'edit-transfer-credits',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-see-all-reviews':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'see-all-reviews',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-view-course-information-on-roster':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'view-course-information-on-roster',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-see-more':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'see-more',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-delete-tab':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'delete-tab',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-open':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'open',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-close':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'close',
+        value: 1,
+      };
+      break;
     default:
       return;
   }

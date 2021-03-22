@@ -40,16 +40,10 @@
               <a href="mailto:courseplan@cornelldti.org">courseplan@cornelldti.org</a>.
             </div>
           </div>
-          <button
-            class="startButton"
-            @click="
-              $emit('hide');
-              $emit('startTour');
-            "
-          >
+          <button class="startButton" @click="startTour()">
             {{ buttonText }}
           </button>
-          <button class="skipButton" @click="$emit('skip')">{{ exit }}</button>
+          <button class="skipButton" @click="skipTour()">{{ exit }}</button>
         </div>
       </div>
     </div>
@@ -59,6 +53,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { clickOutside } from '@/utilities';
+import { GTagEvent } from '@/gtag';
 
 export default Vue.extend({
   props: {
@@ -75,6 +70,17 @@ export default Vue.extend({
   },
   directives: {
     'click-outside': clickOutside,
+  },
+  methods: {
+    startTour(): void {
+      this.$emit('hide');
+      this.$emit('startTour');
+      GTagEvent(this.$gtag, 'start-walkthrough');
+    },
+    skipTour(): void {
+      this.$emit('skip');
+      GTagEvent(this.$gtag, 'skip-walkthrough');
+    },
   },
 });
 </script>

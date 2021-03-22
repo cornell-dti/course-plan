@@ -84,6 +84,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
+import { GTagEvent } from '@/gtag';
 
 export default Vue.extend({
   props: {
@@ -132,6 +133,7 @@ export default Vue.extend({
     },
     colorCourse(color: { hex: string }) {
       this.$emit('color-course', color.hex.substring(1));
+      GTagEvent(this.$gtag, 'course-edit-color');
     },
     setDisplayColors(bool: boolean) {
       this.displayColors = bool;
