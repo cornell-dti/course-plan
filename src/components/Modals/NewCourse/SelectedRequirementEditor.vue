@@ -16,21 +16,15 @@
     <div v-if="nonAutoRequirements.length > 0">
       <div class="newCourse-title">This class can fulfill the following requirement(s):</div>
       <div v-if="!editMode">
-        <div class="newCourse-requirements-container">
-          <div class="newCourse-title">
-            <span v-for="(reqName, index) in nonAutoRequirementsTextArray" :key="index">
-              <strong v-if="reqName.selected" class="newCourse-name">{{
-                index === nonAutoRequirementsTextArray.length - 1
-                  ? reqName.name
-                  : reqName.name + ', '
-              }}</strong>
-              <span v-else>{{
-                index === nonAutoRequirementsTextArray.length - 1
-                  ? reqName.name
-                  : reqName.name + ', '
-              }}</span>
-            </span>
-          </div>
+        <div class="newCourse-title">
+          <span v-for="(reqName, index) in nonAutoRequirementsTextArray" :key="index">
+            <strong v-if="reqName.selected" class="newCourse-name">{{
+              index === nonAutoRequirementsTextArray.length - 1 ? reqName.name : reqName.name + ', '
+            }}</strong>
+            <span v-else>{{
+              index === nonAutoRequirementsTextArray.length - 1 ? reqName.name : reqName.name + ', '
+            }}</span>
+          </span>
         </div>
       </div>
       <div v-else>
@@ -46,16 +40,15 @@
           @on-selected-change="toggleSelectRequirement"
         />
       </div>
+      <button
+        v-if="!editMode"
+        class="newCourse-link"
+        @click="toggleEditMode()"
+        @keyup.enter="toggleEditMode()"
+      >
+        Edit Requirements
+      </button>
     </div>
-    <a
-      v-if="!editMode"
-      class="newCourse-link"
-      @click="toggleEditMode()"
-      @keyup.enter="toggleEditMode()"
-      tabindex="0"
-    >
-      Edit Requirements
-    </a>
   </div>
 </template>
 
@@ -148,7 +141,7 @@ export default Vue.extend({
     &-container {
       display: flex;
       flex-direction: row;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     &-edit {
       display: flex;
@@ -158,14 +151,19 @@ export default Vue.extend({
     }
   }
   &-link {
+    padding: 0;
+    background-color: $white;
+    border: none;
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
-    text-decoration-line: underline;
     color: $yuxuanBlue;
     cursor: pointer;
-    margin-top: 8px;
+    &:hover {
+      text-decoration-line: underline;
+      color: $yuxuanBlue;
+    }
   }
 }
 .warning {
