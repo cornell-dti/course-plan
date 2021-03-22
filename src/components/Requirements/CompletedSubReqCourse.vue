@@ -42,7 +42,7 @@ import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import ResetConfirmationModal from '@/components/Modals/ResetConfirmationModal.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
-import { db, onboardingDataCollection } from '@/firebaseConfig';
+import { onboardingDataCollection } from '@/firebaseConfig';
 import getCurrentSeason, { getCurrentYear } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
@@ -95,16 +95,9 @@ export default Vue.extend({
 
           const onBoardingData = store.state.onboardingData;
 
-          db.batch()
-            .set(onboardingDataCollection.doc(store.state.currentFirebaseUser.email), {
-              tookSwim: onBoardingData.tookSwim,
-              colleges: [{ acronym: onBoardingData.college }],
-              class: onBoardingData.transferCourse,
-              majors: onBoardingData.major.map(m => ({ acronym: m })),
-              minors: onBoardingData.minor.map(m => ({ acronym: m })),
-              exam: onBoardingData.exam.filter(e => !(e.type === type && e.subject === name)),
-            } as FirestoreOnboardingUserData)
-            .commit();
+          onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
+            exam: onBoardingData.exam.filter(e => !(e.type === type && e.subject === name)),
+          });
         } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
       }
     },
