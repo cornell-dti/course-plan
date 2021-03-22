@@ -106,11 +106,7 @@ import Vue, { PropType } from 'vue';
 import { examData as reqsData, ExamRequirements } from '@/requirements/data/exams/ExamCredit';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
-<<<<<<< HEAD
-import { MatchingCourseSearchResult } from '../NewCourse/CourseSelector.vue';
-=======
 import CourseSelector from '../NewCourse/CourseSelector.vue';
->>>>>>> master
 
 const placeholderText = 'Select one';
 
