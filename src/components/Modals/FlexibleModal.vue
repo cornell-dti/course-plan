@@ -2,7 +2,7 @@
   <div class="modal" @click="checkClickOutside" ref="modalBackground" aria-modal="true">
     <div :class="['modal-content', contentClass]">
       <div class="modal-top">
-        <span class="modal-title">{{ title }}</span>
+        <h1>{{ title }}</h1>
         <img class="modal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
       </div>
       <slot class="modal-body"></slot>
@@ -78,13 +78,6 @@ export default Vue.extend({
     cursor: pointer;
     width: 10.5px;
     height: 10.5px;
-  }
-
-  &-title {
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 20px;
-    color: $primaryGray;
   }
 
   &-buttonWrapper {

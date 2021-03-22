@@ -17,7 +17,7 @@
     <div v-if="showMajorOrMinorRequirements">
       <!--Show more of completed requirements -->
       <div v-if="displayDetails || tourStep === 1">
-        <p class="sub-title">In-Depth College Requirements</p>
+        <h2>In-Depth College Requirements</h2>
         <div class="separator"></div>
         <div v-for="(subReq, id) in partitionedRequirementsProgress.ongoing" :key="id">
           <sub-requirement
@@ -33,7 +33,7 @@
         </div>
 
         <div v-if="partitionedRequirementsProgress.completed.length > 0" class="row completed">
-          <p class="col sub-title specific">Filled Requirements</p>
+          <h2 class="col specific">Filled Requirements</h2>
           <div class="col-1 text-right">
             <button
               class="btn float-right"
@@ -181,14 +181,6 @@ export default Vue.extend({
 }
 .specific {
   color: $lightPlaceholderGray;
-}
-.sub-title {
-  padding: 0;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 14px;
-  color: $darkGray;
 }
 button.active {
   color: $sangBlue;

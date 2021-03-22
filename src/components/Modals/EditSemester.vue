@@ -2,7 +2,7 @@
   <div class="editSemesterModal">
     <div class="editSemesterModal-content">
       <div class="editSemesterModal-top">
-        <span class="editSemesterModal-title">Edit Semester</span>
+        <h1>Edit Semester</h1>
         <img
           class="editSemesterModal-exit"
           src="@/assets/images/x.png"
@@ -111,13 +111,6 @@ export default Vue.extend({
     width: 10.5px;
     height: 10.5px;
     cursor: pointer;
-  }
-
-  &-title {
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 24px;
-    color: $primaryGray;
   }
 
   &-text {
