@@ -25,16 +25,14 @@
           </p>
         </div>
       </div>
-      <div class="col">
-        <p v-if="!isCompleted" class="sub-req-progress text-right incomplete-ptext">
-          {{ subReqProgress }}
-        </p>
-        <p v-if="isCompleted" class="text-right completed-ptext">
-          <span
-            >{{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
-            {{ subReq.fulfilledBy }}</span
-          >
-        </p>
+      <div v-if="!isCompleted" class="col sub-req-progress text-right incomplete-ptext">
+        {{ subReqProgress }}
+      </div>
+      <div v-if="isCompleted" class="col text-right completed-ptext">
+        <span
+          >{{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
+          {{ subReq.fulfilledBy }}</span
+        >
       </div>
     </button>
     <div v-if="displayDescription" :class="[{ 'completed-ptext': isCompleted }, 'description']">

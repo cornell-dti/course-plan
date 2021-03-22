@@ -1,5 +1,9 @@
-import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { Course, CollegeOrMajorRequirement } from '../../types';
+import {
+  includesWithSubRequirements,
+  courseMatchesCodeOptions,
+  ifCodeMatch,
+} from '../checkers-common';
 
 const infoRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -271,16 +275,20 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
       'Students may only fulfill one of their electives with INFO 4900 (3 credits or more).',
     source:
       'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements-2',
-    checker: includesWithSingleRequirement(
-      'INFO 2300',
-      'CS 2110',
-      'CS 3110',
-      'CS 3410',
-      'INFO 3***',
-      'INFO 4***',
-      'INFO 5***',
-      'INFO 6***'
-    ),
+    checker: [
+      (course: Course): boolean => {
+        if (courseMatchesCodeOptions(course, ['INFO 2300', 'CS 2110', 'CS 3110', 'CS 3410'])) {
+          return true;
+        }
+        if (courseMatchesCodeOptions(course, ['INFO 4998'])) {
+          return false;
+        }
+        return (
+          ifCodeMatch(course.subject, 'INFO') &&
+          !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***'))
+        );
+      },
+    ],
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
   },

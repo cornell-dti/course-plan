@@ -167,6 +167,11 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 
 .courseMenu {
+  position: absolute;
+  right: -3rem;
+  top: 2rem;
+  z-index: 1;
+
   &-content {
     background: $white;
     border: 1px solid #acacac;
@@ -255,6 +260,8 @@ export default Vue.extend({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .courseMenu {
+    right: -1rem;
+
     &-arrow {
       display: none;
     }

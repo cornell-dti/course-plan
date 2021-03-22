@@ -34,6 +34,8 @@ body {
   margin: 0;
   color: $dark;
   background: #fbfbfb;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 html {
@@ -45,8 +47,7 @@ html {
   font-family: 'ProximaNova', sans-serif;
   box-sizing: border-box;
 }
-h1,
-h2,
+
 h3,
 h4,
 h5,
@@ -55,11 +56,19 @@ p {
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  color: $darkGray;
+  font-weight: bold;
+  line-height: 20px;
 }
 
 h2 {
-  font-size: 1.8rem;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  color: $darkGray;
 }
 
 h3 {
@@ -88,6 +97,11 @@ a {
   &:hover {
     color: lighten($primary, 5%);
   }
+}
+
+button {
+  background: none;
+  border: none;
 }
 
 button:hover {

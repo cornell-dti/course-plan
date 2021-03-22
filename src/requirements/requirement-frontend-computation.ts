@@ -40,7 +40,7 @@ const getTotalCreditsFulfillmentStatistics = (
     sourceType: 'College',
     sourceSpecificName: college,
     name: 'Total Academic Credits',
-    courses: [],
+    courses: [[]],
     fulfilledBy: 'credits',
     perSlotMinCount: [120],
   } as const;
@@ -131,7 +131,7 @@ const getTotalCreditsFulfillmentStatistics = (
 
   return {
     requirement,
-    courses: [],
+    courses: [[]],
     fulfilledBy: 'credits',
     minCountFulfilled,
     minCountRequired,
