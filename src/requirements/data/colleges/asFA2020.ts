@@ -144,10 +144,11 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean => course.catalogDistr?.includes('PHS-AS') ?? false,
       (course: Course): boolean => course.catalogDistr?.includes('SCD-AS') ?? false,
       (course: Course): boolean => course.catalogDistr?.includes('SSC-AS') ?? false,
+      (course: Course): boolean => course.catalogDistr?.includes('SDS-AS') ?? false,
       (course: Course): boolean => course.catalogDistr?.includes('SMR-AS') ?? false,
     ],
     fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1],
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     allowCourseDoubleCounting: true,
     minNumberOfSlots: 8,
     // disallowTransferCredit: true
