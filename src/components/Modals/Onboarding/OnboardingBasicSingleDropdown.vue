@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div
+    <button
       class="onboarding-remove"
       @click="onRemove()"
       :class="{
@@ -39,7 +39,7 @@
       }"
     >
       <img src="@/assets/images/x-green.svg" alt="x" />
-    </div>
+    </button>
   </div>
 </template>
 

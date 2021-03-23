@@ -1,8 +1,10 @@
 <template>
   <div class="onboarding" @click="checkClickOutside" ref="modalBackground">
     <div class="onboarding-main">
-      <div v-if="isEditingProfile" class="onboarding-cancel" @click="cancel">
-        <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="X" />
+      <div v-if="isEditingProfile" class="onboarding-cancel">
+        <button @click="cancel">
+          <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="X" />
+        </button>
       </div>
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
         <div class="onboarding-top">
