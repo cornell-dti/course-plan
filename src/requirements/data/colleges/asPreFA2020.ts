@@ -1,5 +1,38 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { courseIsFWS, includesWithSingleRequirement } from '../checkers-common';
+import { courseIsFWS, ifCodeMatch } from '../checkers-common';
+
+const FLcourses: readonly string[] = [
+  'ARAB',
+  'BENGL',
+  'BURM',
+  'CHIN',
+  'FREN',
+  'GERST',
+  'GREEK',
+  'HEBRW',
+  'HINDI',
+  'INDO',
+  'ITAL',
+  'JAPAN',
+  'KHMER',
+  'KOREA',
+  'LATIN',
+  'NEPAL',
+  'PERSN',
+  'POLSH',
+  'PORT',
+  'RUSSA',
+  'SANSK',
+  'SINHA',
+  'SPAN',
+  'SWAHL',
+  'TAG',
+  'THAI',
+  'TURK',
+  'VIET',
+  'YORUB',
+  'ZULU',
+];
 
 const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -42,79 +75,18 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
       'Option 1': {
         description:
           'Complete one intermediate course of 3 or more credits at Cornell at the 2000 level or above.',
-        checker: includesWithSingleRequirement(
-          'ARAB 2***',
-          'BENGL 2***',
-          'BURM 2***',
-          'CHIN 2***',
-          'FREN 2***',
-          'GERST 2***',
-          'GREEK 2***',
-          'HEBRW 2***',
-          'HINDI 2***',
-          'INDO 2***',
-          'ITAL 2***',
-          'JAPAN 2***',
-          'KHMER 2***',
-          'KOREA 2***',
-          'LATIN 2***',
-          'NEPAL 2***',
-          'PERSN 2***',
-          'POLSH 2***',
-          'PORT 2***',
-          'RUSSA 2***',
-          'SANSK 2***',
-          'SINHA 2***',
-          'SPAN 2***',
-          'SWAHL 2***',
-          'TAG 2***',
-          'THAI 2***',
-          'TURK 2***',
-          'VIET 2***',
-          'YORUB 2***',
-          'ZULU 2***'
-        ),
+        checker: [
+          (course: Course): boolean =>
+            FLcourses.some(language => course.subject?.includes(language) ?? false) &&
+            !ifCodeMatch(course.catalogNbr, '1***'),
+        ],
         counting: 'courses',
         perSlotMinCount: [1],
       },
       'Option 2': {
         description:
           'Complete at least 11 credits of study (2 or 3 semesters) in a single foreign language taken in the appropriate sequence at Cornell.',
-        checker: [
-          (course: Course): boolean =>
-            [
-              'ARAB',
-              'BENGL',
-              'BURM',
-              'CHIN',
-              'FREN',
-              'GERST',
-              'GREEK',
-              'HEBRW',
-              'HINDI',
-              'INDO',
-              'ITAL',
-              'JAPAN',
-              'KHMER',
-              'KOREA',
-              'LATIN',
-              'NEPAL',
-              'PERSN',
-              'POLSH',
-              'PORT',
-              'RUSSA',
-              'SANSK',
-              'SINHA',
-              'SPAN',
-              'SWAHL',
-              'TAG',
-              'THAI',
-              'TURK',
-              'VIET',
-              'YORUB',
-              'ZULU',
-            ].includes(course.subject),
-        ],
+        checker: [(course: Course): boolean => FLcourses.includes(course.subject)],
         counting: 'credits',
         perSlotMinCount: [11],
       },
@@ -155,7 +127,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'Five Arts & Sciences courses of 3 or more credits from at least 4 of the following social sciences, humanities, and arts categories: ' +
       'CA-AS, HA-AS, KCM-AS, LA-AS, SBA-AS',
-    source: 'https://as.cornell.edu/education/old-degree-requirements',
+    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12684',
     checker: [
       (course: Course): boolean => course.catalogDistr?.includes('CA-AS') ?? false,
       (course: Course): boolean => course.catalogDistr?.includes('HA-AS') ?? false,
@@ -173,7 +145,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'One course that focuses on an area or a people other than those of the United States, Canada, or Europe. ' +
       'Courses fulfilling this requirement are marked with a GB/GHB in the Class Roster.',
-    source: 'https://as.cornell.edu/education/old-degree-requirements',
+    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12684',
     checker: [
       (course: Course): boolean =>
         ['GB', 'GHB'].some(breadth => course.catalogBreadth?.includes(breadth) ?? false),
@@ -188,7 +160,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'One course that focuses on an historic period before the 20th century. ' +
       'Courses fulfilling this requirement are marked with an HB/GHB in the Class Roster.',
-    source: 'https://as.cornell.edu/education/old-degree-requirements',
+    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12684',
     checker: [
       (course: Course): boolean =>
         ['HB', 'GHB'].some(breadth => course.catalogBreadth?.includes(breadth) ?? false),

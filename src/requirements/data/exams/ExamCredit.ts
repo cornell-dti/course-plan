@@ -92,7 +92,7 @@ export const examData: ExamData = {
       fulfillment: {
         courseEquivalents: {
           AS1: [FWS_COURSE_ID], // FWS
-          // AS2: [FWS_COURSE_ID], // FWS
+          AS2: [FWS_COURSE_ID], // FWS
           EN: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 4,
@@ -104,7 +104,7 @@ export const examData: ExamData = {
       fulfillment: {
         courseEquivalents: {
           AS1: [FWS_COURSE_ID], // FWS
-          // AS2: [FWS_COURSE_ID], // FWS
+          AS2: [FWS_COURSE_ID], // FWS
           EN: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 4,
