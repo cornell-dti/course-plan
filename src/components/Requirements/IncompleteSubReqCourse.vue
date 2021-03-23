@@ -4,13 +4,13 @@
       <div class="separator"></div>
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
-        <div
+        <button
           v-if="showSeeAllLabel"
           class="draggable-requirements-heading-seeAll"
           @click="onShowAllCourses"
         >
           {{ seeAll }}
-        </div>
+        </button>
       </div>
       <draggable
         class="draggable-requirements-courses"

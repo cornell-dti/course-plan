@@ -26,20 +26,19 @@
         data-disable-interaction="1"
         data-step="4"
         data-tooltipClass="tooltipCenter"
+        v-if="!isMobile"
       >
-        <span v-if="!isMobile" class="semesterView-switchText">View:</span>
-        <div
+        <span class="semesterView-switchText">View:</span>
+        <button
           class="semesterView-switchImage semesterView-twoColumn"
-          v-if="!isMobile"
           @click="setNotCompact"
           :class="{ 'semesterView-twoColumn--active': !compact }"
-        ></div>
-        <div
+        />
+        <button
           class="semesterView-switchImage semesterView-fourColumn"
-          v-if="!isMobile"
           @click="setCompact"
           :class="{ 'semesterView-fourColumn--active': compact }"
-        ></div>
+        />
       </div>
     </div>
     <confirmation

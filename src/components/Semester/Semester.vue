@@ -49,9 +49,9 @@
           <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
-          <div class="semester-dotRow" @click="openSemesterMenu">
+          <button class="semester-dotRow" @click="openSemesterMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
-          </div>
+          </button>
         </div>
       </div>
       <div class="semester-courses">

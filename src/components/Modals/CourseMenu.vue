@@ -18,7 +18,7 @@
           class="courseMenu-content courseMenu-colors"
           :class="{ 'courseMenu-colors--left': isLeft }"
         >
-          <div
+          <button
             v-for="(color, index) in colors"
             :key="index"
             class="courseMenu-section"
@@ -31,7 +31,7 @@
               ></div>
               <span class="courseMenu-text">{{ color.text }}</span>
             </div>
-          </div>
+          </button>
         </div>
       </div>
       <div
@@ -67,7 +67,7 @@
           </div>
         </div>
       </div>
-      <div
+      <button
         class="courseMenu-section"
         :class="{ 'courseMenu-section--left': isLeft }"
         @click="deleteCourse"
@@ -76,7 +76,7 @@
           <img class="courseMenu-icon" src="@/assets/images/trash.svg" />
           <span class="courseMenu-text">Delete</span>
         </div>
-      </div>
+      </button>
     </div>
   </div>
 </template>
@@ -188,6 +188,7 @@ export default Vue.extend({
     padding: 0.5rem 1rem;
     position: relative;
     cursor: pointer;
+    width: 100%;
     &:hover,
     &:active,
     &:focus {
