@@ -15,19 +15,23 @@
         </div>
         <div class="onboarding-selectWrapperRow-review">
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"><span> First Name </span></label>
+            <label class="onboarding-label"
+              ><span> First Name<span class="onboarding-required-star">*</span></span></label
+            >
             <label class="onboarding-label--review"
               ><span> {{ userName.firstName }}</span></label
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"><span> Middle Name </span></label>
+            <label class="onboarding-label"><span> Middle Name</span></label>
             <label class="onboarding-label--review"
               ><span> {{ userName.middleName }}</span></label
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"><span> Last Name </span></label>
+            <label class="onboarding-label"
+              ><span>Last Name<span class="onboarding-required-star">*</span></span></label
+            >
             <label class="onboarding-label--review"
               ><span> {{ userName.lastName }}</span></label
             >
@@ -38,13 +42,17 @@
         </div>
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label">College*</label>
+            <label class="onboarding-label"
+              >College<span class="onboarding-required-star">*</span></label
+            >
             <div>
               <label class="onboarding-label--review">{{ collegeText }}</label>
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label">Major</label>
+            <label class="onboarding-label"
+              >Major<span class="onboarding-required-star">*</span></label
+            >
             <div v-for="(major, index) in onboardingData.major" :key="index">
               <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
             </div>
