@@ -148,7 +148,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [2, 1, 1],
     allowCourseDoubleCounting: true,
-    // disallowTransferCredit: true
+    disallowTransferCredit: true,
   },
   {
     name: 'Distribution Requirement',
@@ -166,7 +166,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
     allowCourseDoubleCounting: true,
-    // disallowTransferCredit: true
+    disallowTransferCredit: true,
   },
   {
     name: 'Geographic Breadth Requirement (GB)',
@@ -181,7 +181,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     allowCourseDoubleCounting: true,
-    // disallowTransferCredit: true
+    disallowTransferCredit: true,
   },
   {
     name: 'Historic Breadth Requirement (HB)',
@@ -196,7 +196,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     allowCourseDoubleCounting: true,
-    // disallowTransferCredit: true
+    disallowTransferCredit: true,
   },
 ];
 
