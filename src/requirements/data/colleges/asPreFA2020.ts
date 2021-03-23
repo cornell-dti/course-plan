@@ -34,7 +34,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Foreign Language',
     description:
-      'AP and IB credits cannot complete this requirement, but usually indicate that a student can place into a higher level course. ' +
+      'Pass an intermediate Cornell language course at the 2000-level or above or complete at least 11 credits in a single foreign language at Cornell. ' +
       'Note: Native speakers of a foreign language may be exempted from this requirement.',
     source: 'https://as.cornell.edu/education/old-degree-requirements',
     fulfilledBy: 'toggleable',
@@ -118,6 +118,13 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
         counting: 'credits',
         perSlotMinCount: [11],
       },
+      // TODO:
+      // 'Option 3': {
+      //   description:
+      //     'Exemptions may be granted for completion of secondary education at a foreign institution where the language of instruction was not English '
+      //     + 'or native or near-native proficiency in speaking, reading, and writing a second language, as determined by examination.',
+      //   fulfilledBy: 'self-check',
+      // },
     },
   },
   {
@@ -141,6 +148,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [2, 1, 1],
     allowCourseDoubleCounting: true,
+    disallowTransferCredit: true,
   },
   {
     name: 'Distribution Requirement',
@@ -158,6 +166,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
     allowCourseDoubleCounting: true,
+    disallowTransferCredit: true,
   },
   {
     name: 'Geographic Breadth Requirement (GB)',
@@ -172,6 +181,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     allowCourseDoubleCounting: true,
+    disallowTransferCredit: true,
   },
   {
     name: 'Historic Breadth Requirement (HB)',
@@ -186,6 +196,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     allowCourseDoubleCounting: true,
+    disallowTransferCredit: true,
   },
 ];
 
