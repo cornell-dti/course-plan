@@ -20,7 +20,11 @@
         @start="onDrag"
         @end="onDrop"
       >
-        <div v-for="(course, index) in courses" :key="index" class="requirements-courseWrapper">
+        <div
+          v-for="(course, index) in coursesWithoutRequirementID"
+          :key="index"
+          class="requirements-courseWrapper"
+        >
           <course
             :courseObj="course"
             :isReqCourse="true"
@@ -56,7 +60,10 @@ export default Vue.extend({
   props: {
     subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
     subReqCourseId: { type: Number, required: true },
-    courses: { type: Array as PropType<readonly FirestoreSemesterCourse[]>, required: true },
+    courses: {
+      type: Array as PropType<readonly AppFirestoreSemesterCourseWithRequirementID[]>,
+      required: true,
+    },
     showSeeAllLabel: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
   },
@@ -80,6 +87,9 @@ export default Vue.extend({
     seeAll() {
       return 'See all >';
     },
+    coursesWithoutRequirementID() {
+      return this.courses.map(({ requirementID: _, ...rest }) => rest);
+    },
   },
   methods: {
     onDrag() {
@@ -91,7 +101,9 @@ export default Vue.extend({
     dragListener(event: { preventDefault: () => void }) {
       if (!this.scrollable) event.preventDefault();
     },
-    cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
+    cloneCourse(
+      courseWithDummyUniqueID: AppFirestoreSemesterCourseWithRequirementID
+    ): AppFirestoreSemesterCourseWithRequirementID {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
     onShowAllCourses() {

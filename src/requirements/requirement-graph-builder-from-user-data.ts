@@ -30,15 +30,11 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   readonly userRequirements: readonly RequirementWithIDSourceType[];
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
-  readonly illegallyDoubleCountedCourseUniqueIDs: ReadonlySet<number>;
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
 
-  const {
-    requirementFulfillmentGraph,
-    illegallyDoubleCountedCourses,
-  } = buildRequirementFulfillmentGraph<string, CourseTaken>({
+  const requirementFulfillmentGraph = buildRequirementFulfillmentGraph<string, CourseTaken>({
     requirements: userRequirements.map(it => it.id),
     userCourses: forfeitTransferCredit(coursesTaken),
     userChoiceOnFulfillmentStrategy: Object.fromEntries(
@@ -83,12 +79,5 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       userRequirementsMap[requirementID].allowCourseDoubleCounting || false,
   });
 
-  return {
-    userRequirements,
-    userRequirementsMap,
-    requirementFulfillmentGraph,
-    illegallyDoubleCountedCourseUniqueIDs: new Set(
-      illegallyDoubleCountedCourses.map(it => it.uniqueId)
-    ),
-  };
+  return { userRequirements, userRequirementsMap, requirementFulfillmentGraph };
 }

@@ -49,17 +49,18 @@ type BuildRequirementFulfillmentGraphParameters<
 const buildRequirementFulfillmentGraph = <
   Requirement extends string,
   Course extends CourseForRequirementGraph
->({
-  requirements,
-  userCourses,
-  userChoiceOnFulfillmentStrategy,
-  userChoiceOnDoubleCountingElimination,
-  getAllCoursesThatCanPotentiallySatisfyRequirement,
-  allowDoubleCounting,
-}: BuildRequirementFulfillmentGraphParameters<Requirement, Course>): {
-  readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<Requirement, Course>;
-  readonly illegallyDoubleCountedCourses: readonly Course[];
-} => {
+>(
+  {
+    requirements,
+    userCourses,
+    userChoiceOnFulfillmentStrategy,
+    userChoiceOnDoubleCountingElimination,
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+    allowDoubleCounting,
+  }: BuildRequirementFulfillmentGraphParameters<Requirement, Course>,
+  /** A flag for testing. Prod code should never use this */
+  keepCoursesWithoutDoubleCountingEliminationChoice = false
+): RequirementFulfillmentGraph<Requirement, Course> => {
   const graph = new RequirementFulfillmentGraph<Requirement, Course>();
   const userCourseCourseIDToCourseMap = new Map<number, Course[]>();
   userCourses.forEach(course => {
@@ -100,27 +101,22 @@ const buildRequirementFulfillmentGraph = <
   );
 
   // Phase 3: Respect user's choices on double-counted courses.
-  Object.entries(userChoiceOnDoubleCountingElimination).forEach(([key, chosenRequirement]) => {
-    const courseUniqueID = parseInt(key, 10);
-    graph
-      .getConnectedRequirementsFromCourse({ uniqueId: courseUniqueID })
-      .forEach(connectedRequirement => {
-        if (allowDoubleCounting(connectedRequirement)) return;
-        if (connectedRequirement !== chosenRequirement) {
-          graph.removeEdge(connectedRequirement, { uniqueId: courseUniqueID });
-        }
-      });
+  userCourses.forEach(({ uniqueId }) => {
+    const chosenRequirement = userChoiceOnDoubleCountingElimination[uniqueId];
+    graph.getConnectedRequirementsFromCourse({ uniqueId }).forEach(connectedRequirement => {
+      if (allowDoubleCounting(connectedRequirement)) return;
+      // keepCoursesWithoutDoubleCountingEliminationChoice is used to avoid removing edges when
+      // the user choice is null on the course. It is used to test phase-1 and phase-2 output
+      // independently.
+      if (keepCoursesWithoutDoubleCountingEliminationChoice && chosenRequirement == null) return;
+      if (connectedRequirement !== chosenRequirement) {
+        graph.removeEdge(connectedRequirement, { uniqueId });
+      }
+    });
   });
 
-  // Phase 4: Detect illegally double counted courses.
-  const illegallyDoubleCountedCourses = userCourses.filter(
-    course =>
-      graph.getConnectedRequirementsFromCourse(course).filter(it => !allowDoubleCounting(it))
-        .length > 1
-  );
-
   // Phase MAX_INT: PROFIT!
-  return { requirementFulfillmentGraph: graph, illegallyDoubleCountedCourses };
+  return graph;
 };
 
 export default buildRequirementFulfillmentGraph;
