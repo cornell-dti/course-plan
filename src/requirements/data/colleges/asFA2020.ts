@@ -117,9 +117,16 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
         counting: 'credits',
         perSlotMinCount: [11],
       },
+      // TODO:
+      // 'Option 3': {
+      //   description:
+      //     'Exemptions may be granted for completion of secondary education at a foreign institution where the language of instruction was not English '
+      //     + 'or native or near-native proficiency in speaking, reading, and writing a second language, as determined by examination.',
+      //   fulfilledBy: 'self-check',
+      // },
     },
   },
-  // TODO: AP/Test Credit cannot be applied to Distribution Requirements
+  // TODO: do not check students can only double-count distribution requirements on a maximum of two courses
   {
     name: 'Distribution Requirements',
     description:
@@ -142,24 +149,8 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1],
     allowCourseDoubleCounting: true,
-  },
-  {
-    name: 'Arts, Literature, and Culture (ALC-AS)',
-    description: 'An ALC-AS distribution course',
-    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12685',
-    checker: [(course: Course): boolean => course.catalogDistr?.includes('ALC-AS') ?? false],
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1],
-    allowCourseDoubleCounting: true,
-  },
-  {
-    name: 'Biological Sciences (BIO-AS)',
-    description: 'A BIO-AS distribution course',
-    source: 'https://courses.cornell.edu/content.php?catoid=41&navoid=12685',
-    checker: [(course: Course): boolean => course.catalogDistr?.includes('BIO-AS') ?? false],
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1],
-    allowCourseDoubleCounting: true,
+    minNumberOfSlots: 8,
+    // disallowTransferCredit: true
   },
 ];
 
