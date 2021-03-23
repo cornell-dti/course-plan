@@ -106,7 +106,6 @@ const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
   checker: includesWithSingleRequirement(
     'AEM 2100',
     'AEM 3100',
-    'AEM 3100',
     'ALS 3601',
     'ANSC 1100',
     'ANSC 2120',
@@ -232,13 +231,16 @@ const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
     'CHEM 2080',
     'CHEM 2090',
     'CHEM 2150',
+    'CHEM 2510',
     'CHEM 2870',
+    'CHEM 2880',
     'CHEM 2900',
     'CHEM 3010',
     'CHEM 3020',
     'CHEM 3030',
     'CHEM 3570',
     'CHEM 3580',
+    'CHEM 3600',
     'CHEM 3890',
     'CHEM 3900',
     'CHEME 3010',
@@ -264,6 +266,7 @@ const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
     'EAS 1190',
     'EAS 1220',
     'EAS 1310',
+    'EAS 1330',
     'EAS 1340',
     'EAS 1540',
     'EAS 1560',
@@ -326,6 +329,7 @@ const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
     'HORT 2240',
     'HORT 3600',
     'HORT 4260',
+    'HORT 4400',
     'HORT 4730',
     'IARD 1000',
     'IARD 1100',
@@ -333,15 +337,12 @@ const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
     'IARD 4050',
     'IARD 4140',
     'ILRST 2100',
-    'ILRST 2100',
-    'ILRST 2100',
     'ILRST 2110',
     'ILRST 3100',
     'ILRST 5110',
     'MAE 4120',
     'MAE 4121',
     'MATH 1105',
-    'MATH 1106',
     'MATH 1106',
     'MATH 1110',
     'MATH 1120',
@@ -354,6 +355,7 @@ const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
     'MATH 2130',
     'MATH 2210',
     'MATH 2220',
+    'MATH 2230',
     'MATH 2240',
     'MATH 2310',
     'MATH 2930',
@@ -572,7 +574,7 @@ const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
   name: 'Social Sciences and Humanities',
   description:
     'Students must complete four courses of 3 or more credits each from the following seven categories of courses in the humanities and social sciences (' +
-    'CA, FL, D-AG, HA, KCM, LA, SBA. ' +
+    'CA, FL, D-AG, HA, KCM, LA, SBA). ' +
     'At least one course category MUST be completed in three different categories. ' +
     'No more than two courses in the same department will be counted toward the distribution requirement. ' +
     'To view a searchable list of courses, please search for courses that fulfill distribution requirements.',
