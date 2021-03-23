@@ -19,6 +19,7 @@ import crpRequirements from './majors/crp';
 import csRequirements from './majors/cs';
 import deaRequirements from './majors/dea';
 import economicsRequirements from './majors/econ';
+import eceRequirements from './majors/ece';
 import englishRequirements from './majors/engl';
 import governmentRequirements from './majors/govt';
 import hotelAdminRequirements from './majors/hadm';
@@ -133,6 +134,11 @@ const json: RequirementsJson = {
       name: 'Economics',
       schools: ['AS1'],
       requirements: economicsRequirements,
+    },
+    ECE: {
+      name: 'Electrical and Computer Engineering',
+      schools: ['EN'],
+      requirements: eceRequirements,
     },
     ENGL: {
       name: 'English',
