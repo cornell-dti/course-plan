@@ -44,7 +44,9 @@ const getCourseCautions = (course: FirestoreSemesterCourse): CourseCautions => {
       .length === 0;
   const semesterOfUserCourse = courseToSemesterMap[course.uniqueID];
   const typicallyOfferedWarning =
-    semesterOfUserCourse != null && !course.semesters.includes(semesterOfUserCourse.type)
+    semesterOfUserCourse != null &&
+    course.semesters.length > 0 &&
+    !course.semesters.includes(semesterOfUserCourse.type)
       ? course.semesters
       : undefined;
   const isCourseDuplicate = duplicatedCourseCodeSet.has(course.code);
