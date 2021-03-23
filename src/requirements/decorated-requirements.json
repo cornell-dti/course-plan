@@ -18039,7 +18039,6 @@
           ],
           "courses": [
             [
-              11,
               350089,
               350160,
               350190,
@@ -19093,6 +19092,7 @@
           ],
           "allowCourseDoubleCounting": true,
           "minNumberOfSlots": 8,
+          "disallowTransferCredit": true,
           "courses": [
             [
               350262,

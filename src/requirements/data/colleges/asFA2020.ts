@@ -151,7 +151,7 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     allowCourseDoubleCounting: true,
     minNumberOfSlots: 8,
-    // disallowTransferCredit: true
+    disallowTransferCredit: true,
   },
 ];
 
