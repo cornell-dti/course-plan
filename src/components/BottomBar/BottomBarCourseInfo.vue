@@ -41,7 +41,12 @@
       </div>
     </div>
     <div class="info-link">
-      <a :href="rosterLink" class="info-link-blue" target="_blank" @click="clickViewCourseInformationOnRoster()">
+      <a
+        :href="rosterLink"
+        class="info-link-blue"
+        target="_blank"
+        @click="clickViewCourseInformationOnRoster()"
+      >
         View Course Information on Roster
         <span class="info-link-blue-img"
           ><img src="@/assets/images/link-blue.svg" alt="link arrow"
@@ -109,8 +114,8 @@ export default Vue.extend({
   methods: {
     clickViewCourseInformationOnRoster(): void {
       GTagEvent(this.$gtag, 'bottom-bar-view-course-information-on-roster');
-    }
-  }
+    },
+  },
 });
 </script>
 
