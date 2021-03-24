@@ -12,53 +12,35 @@ export const GTagLoginEvent = (gtag: GTag | undefined, method: string): void => 
   gtag.event('login', { method });
 };
 
+type EventType =
+  | 'logout' // User logs out
+  | 'to-compact' // User sets the semester view to compact
+  | 'to-not-compact' // User sets the semester view to default
+  | 'add-semester' // User adds a semester
+  | 'delete-semester' // User deletes a semester
+  | 'add-course' // User adds a course
+  | 'delete-course' // User deletes a course
+  | 'course-edit-color' // User edits the course color
+  | 'start-walkthrough' // User clicks to start the walkthrough
+  | 'skip-walkthrough' // User clicks to skip the walkthrough
+  | 'onboarding-edit-basic-information' // User clicks to edit basic info on the review page of Onboarding
+  | 'onboarding-edit-transfer-credits' // User clicks to edit transfer credits on the review page of Onboarding
+  | 'bottom-bar-see-all-reviews' // User clicks See All Reviews link on Bottom Bar
+  | 'bottom-bar-view-course-information-on-roster' // User clicks View Course Information on Roster link on Bottom Bar
+  | 'bottom-bar-see-more' // User clicks on the See More tab of the Bottom Bar
+  | 'bottom-bar-delete-tab' // User deletes a tab on the Bottom Bar
+  | 'bottom-bar-open' // User opens or expands the Bottom Bar
+  | 'bottom-bar-close' // User collapses or closes the Bottom Bar
+  | 'add-modal-edit-requirements' // User clicks Edit Requirements on Add Modal
+  | 'requirements-bar-filled-requirements-toggle' // User toggles the SHOW/HIDE of Filled Requirements section on Requirements Bar
+  | 'requirements-bar-course-drag-and-drop'; // User drags and drops a course from the Requirements Bar
+
 /**
  * GTagEvent represents a gtag event.
  * @param gtag is the global site tag that sends events to Google Analytics
  * @param eventType specifies the type of event that the gtag sends
- * eventType === 'logout': User logs out
- *
- * eventType === 'to-compact': User sets the semester view to compact
- *
- * eventType === 'to-not-compact': User sets the semester view to default
- *
- * eventType === 'add-semester': User adds a semester
- *
- * eventType === 'delete-semester': User deletes a semester
- *
- * eventType === 'add-course': User adds a course
- *
- * eventType === 'delete-course': User deletes a course
- *
- * eventType === 'course-edit-color': User edits the course color
- *
- * eventType === 'start-walkthrough': User clicks to start the walkthrough
- *
- * eventType === 'skip-walkthrough': User clicks to skip the walkthrough
- *
- * eventType === 'onboarding-edit-basic-information': User clicks to edit basic info on the review page of Onboarding
- *
- * eventType === 'onboarding-edit-transfer-credits': User clicks to edit transfer credits on the review page of Onboarding
- *
- * eventType === 'bottom-bar-see-all-reviews': User clicks See All Reviews link on Bottom Bar
- *
- * eventType === 'bottom-bar-view-course-information-on-roster': User clicks View Course Information on Roster link on Bottom Bar
- *
- * eventType === 'bottom-bar-see-more': User clicks on the See More tab of the Bottom Bar
- *
- * eventType === 'bottom-bar-delete-tab': User deletes a tab on the Bottom Bar
- *
- * eventType === 'bottom-bar-open': User opens or expands the Bottom Bar
- *
- * eventType === 'bottom-bar-close': User collapses or closes the Bottom Bar
- *
- * eventType === 'add-modal-edit-requirements': User clicks Edit Requirements on Add Modal
- *
- * eventType === 'requirements-bar-filled-requirements-toggle': User toggles the SHOW/HIDE of Filled Requirements section on Requirements Bar
- *
- * eventType === 'requirements-bar-course-drag-and-drop': User drags and drops a course from the Requirements Bar
  */
-export const GTagEvent = (gtag: GTag | undefined, eventType: string): void => {
+export const GTagEvent = (gtag: GTag | undefined, eventType: EventType): void => {
   if (!gtag) return;
   let eventPayload: EventPayload | undefined;
   switch (eventType) {
