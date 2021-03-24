@@ -1,5 +1,4 @@
 import { Course, RequirementChecker } from '../types';
-import { FWS_COURSE_ID } from './constants';
 
 /**
  * @param courseName name of the course (as a code)
@@ -39,7 +38,6 @@ export const courseMatchesCodeOptions = (course: Course, codeOptions: readonly s
  * @returns if the course satisfies FWS requirement.
  */
 export const courseIsFWS = (course: Course): boolean =>
-  course.crseId === FWS_COURSE_ID ||
   course.titleLong.includes('FWS:') ||
   (course.catalogSatisfiesReq?.includes('First-Year Writing Seminar') ?? false);
 

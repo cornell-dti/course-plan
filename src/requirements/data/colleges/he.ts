@@ -20,7 +20,7 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: '9 Credits In HE Outside Major',
     description:
-      'Students must earn 9 credits in Human Ecology departments outside their major department with rules:',
+      'Students must earn 9 credits in Human Ecology departments outside their major department with rules',
     source: 'https://www.human.cornell.edu/academics/policies/requirements',
     checkerWarning: 'We do not check that the credits are outside your major',
     checker: [(course: Course): boolean => course.acadGroup.includes('HE')],

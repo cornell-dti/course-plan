@@ -370,7 +370,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
     },
   },
   {
-    name: 'Two major approved electives',
+    name: 'Two Major Approved Electives',
     description:
       'Select two major-approved elective courses from any concentration. INFO 4900 may be used to fulfill one major-approved elective.',
     source:

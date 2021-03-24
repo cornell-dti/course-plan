@@ -1,6 +1,7 @@
-import { CREDITS_COURSE_ID, FWS_COURSE_ID, SWIM_TEST_COURSE_ID } from './data/constants';
+import { SWIM_TEST_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './data/exams/ExamCredit';
 import {
+  courseIsAPIB,
   convertFirestoreSemesterCourseToCourseTaken,
   computeFulfillmentCoursesAndStatistics,
 } from './requirement-frontend-utils';
@@ -13,21 +14,12 @@ type FulfillmentStatistics = {
 } & RequirementFulfillmentStatistics;
 
 /**
- * @param course course object with useful information retrived from Cornell courses API.
- * @returns true if the course is AP/IB equivalent course or credit
- */
-const courseIsAPIB = (course: CourseTaken): boolean =>
-  [CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
-  ['AP', 'IB'].includes(course.code.split(' ')[0]);
-
-/**
  * Used for total academic credit requirements for all colleges except EN and AR
  * @param course course object with useful information retrived from Cornell courses API.
  * @returns true if the course is not PE or 10** level
  */
 const courseIsAllEligible = (course: CourseTaken): boolean => {
-  if (course.courseId === CREDITS_COURSE_ID) return true;
-  if (courseIsAPIB(course)) return false;
+  if (courseIsAPIB(course)) return true;
   const [subject, number] = course.code.split(' ');
   return subject !== 'PE' && !number.startsWith('10');
 };
