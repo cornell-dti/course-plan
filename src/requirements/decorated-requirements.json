@@ -20832,6 +20832,7 @@
           "description": "Six credits of electives are required and must be approved by the student’s faculty advisor.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
           "fulfilledBy": "self-check",
+          "allowCourseDoubleCounting": true,
           "minCount": 6
         },
         {
@@ -20842,7 +20843,6 @@
           "perSlotMinCount": [
             1
           ],
-          "allowCourseDoubleCounting": true,
           "courses": [
             [
               350255,
@@ -51413,69 +51413,52 @@
       ],
       "requirements": [
         {
-          "name": "Probability, Statistics, and Optimization",
-          "description": "ORIE 3300: Optimization I, ORIE 3500: Engineering Probability and Statistics II",
-          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
+          "name": "Core Courses",
+          "description": "7 required courses",
+          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
             1,
             1
           ],
           "courses": [
             [
-              351723
+              366630,
+              370603
             ],
             [
               351755
-            ]
-          ]
-        },
-        {
-          "name": "Information Systems",
-          "description": "INFO 2300: Intermediate Design and Programming for the Web, ORIE 3800: Information Systems and Analysis or ORIE 3120: Practical Tools for Operations Research, Machine Learning and Data Science, one of -- INFO 3300: Data-Driven Web Applications, INFO 4300: Language and Information",
-          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
-          "fulfilledBy": "courses",
-          "perSlotMinCount": [
-            1,
-            1,
-            1
-          ],
-          "courses": [
+            ],
             [
               358551
             ],
             [
-              351771
+              358529
             ],
-            [
-              358565,
-              358578
-            ]
-          ]
-        },
-        {
-          "name": "Economic, Organization, and Social Context",
-          "description": "INFO 2040: Networks, one of -- INFO 2450: Communication and Technology, ENGRC 3350: Communications for Engineering Managers",
-          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/core",
-          "fulfilledBy": "courses",
-          "perSlotMinCount": [
-            1,
-            1
-          ],
-          "courses": [
             [
               359378
             ],
             [
-              355624,
               360989
+            ],
+            [
+              353163,
+              358592,
+              364588,
+              366997
             ]
           ]
         },
         {
           "name": "Engineering Mathematics",
-          "description": "For majors in ISST, the sequence of required mathematics courses is MATH 1910, MATH 1920, MATH 2940, and finally, one of MATH 2930 or MATH 3040 or CS 2800.",
-          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/math",
+          "description": "MATH 1910, MATH 1920, MATH 2940, and MATH 2930 or MATH 3040 or CS 2800.",
+          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements",
+          "allowCourseDoubleCounting": true,
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -51503,18 +51486,529 @@
         {
           "name": "Engineering Distributions",
           "description": "The major requires ENGRD 2700 as an Engineering Distribution course. ENGRD 2110 is also required by the major and it is recommended that this course be taken as an Engineering Distribution course.",
-          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements/math",
+          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
             1
           ],
+          "allowCourseDoubleCounting": true,
           "courses": [
             [
               358546
             ],
             [
               358622
+            ]
+          ]
+        },
+        {
+          "name": "Primary Concentration",
+          "description": "Select one concentration from Data Science, Interactive Technologies, or Networks, Crowds, and Markets",
+          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements-1",
+          "fulfilledBy": "toggleable",
+          "fulfillmentOptions": {
+            "Data Science": {
+              "description": "A. Data Analysis (choose one), B. Domain Expertise (choose one), C. Big Data Ethics, Policy and Society (choose one), D. Data Communication (choose one)",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  353163,
+                  358529,
+                  358565,
+                  358592,
+                  364588,
+                  366997,
+                  370464
+                ],
+                [
+                  358578,
+                  358589,
+                  365657,
+                  366043,
+                  366237,
+                  367628,
+                  370219
+                ],
+                [
+                  352898,
+                  359460,
+                  364529,
+                  364949,
+                  365928,
+                  368323,
+                  368546,
+                  369207,
+                  369785,
+                  370809,
+                  371471
+                ],
+                [
+                  353448,
+                  353457,
+                  353501,
+                  365789,
+                  369514,
+                  370059,
+                  370665
+                ]
+              ]
+            },
+            "Interactive Technologies": {
+              "description": "Required Course: CS 2110. A. Building with Hardware (choose one), B. Working with Data/Software (choose one), C. Context/Application Domains (choose one) D. One additional course from any of the three categories",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  363542,
+                  363681,
+                  365657
+                ],
+                [
+                  353163,
+                  358529,
+                  358565,
+                  358592,
+                  358601,
+                  364588,
+                  366997,
+                  369914,
+                  370440
+                ],
+                [
+                  364529,
+                  365611,
+                  366043,
+                  366870,
+                  367112,
+                  367429,
+                  369514,
+                  370458
+                ],
+                [
+                  353163,
+                  358529,
+                  358565,
+                  358592,
+                  358601,
+                  363542,
+                  363681,
+                  364529,
+                  364588,
+                  365611,
+                  365657,
+                  366043,
+                  366870,
+                  366997,
+                  367112,
+                  367429,
+                  369514,
+                  369914,
+                  370440,
+                  370458
+                ]
+              ]
+            },
+            "Networks, Crowds, and Markets": {
+              "description": "A. Models (choose two), B. Data (choose one), C. Policy/Values (choose one)",
+              "counting": "courses",
+              "perSlotMinCount": [
+                2,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  350827,
+                  350842,
+                  350862,
+                  352158,
+                  353448,
+                  355617,
+                  365608,
+                  366983,
+                  370034,
+                  371479
+                ],
+                [
+                  350429,
+                  358565,
+                  358578,
+                  358589,
+                  358592,
+                  365790,
+                  366997
+                ],
+                [
+                  359460,
+                  364529,
+                  364949,
+                  365928,
+                  368323,
+                  370809
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "name": "Secondary Concentration",
+          "description": "Select one secondary concentration (different than your primary concentration) from the seven options",
+          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements-1",
+          "fulfilledBy": "toggleable",
+          "fulfillmentOptions": {
+            "Behavioral Science": {
+              "description": "Choose three courses",
+              "counting": "courses",
+              "perSlotMinCount": [
+                3
+              ],
+              "courses": [
+                [
+                  351675,
+                  352898,
+                  354593,
+                  358565,
+                  358578,
+                  358589,
+                  358592,
+                  359460,
+                  360995,
+                  361468,
+                  362957,
+                  362976,
+                  364529,
+                  365928,
+                  366983,
+                  367429,
+                  368973,
+                  370219,
+                  370763,
+                  370809,
+                  371471
+                ]
+              ]
+            },
+            "Data Science": {
+              "description": "A. Domain Expertise (choose one) B. Big Data Ethics, Policy and Society (choose one), C. Data Communication (choose one)",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  358578,
+                  358589,
+                  365657,
+                  366043,
+                  366237,
+                  367628,
+                  370219
+                ],
+                [
+                  352898,
+                  359460,
+                  364529,
+                  364949,
+                  365928,
+                  368323,
+                  368546,
+                  369207,
+                  369785,
+                  370809,
+                  371471
+                ],
+                [
+                  353448,
+                  353457,
+                  353501,
+                  365789,
+                  369514,
+                  370059,
+                  370665
+                ]
+              ]
+            },
+            "Digital Culture and Production": {
+              "description": "A. Digital Culture and History (choose one) B. Digital Production (choose one). C. Choose one more course from A or B",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  352898,
+                  359460,
+                  362654,
+                  370769,
+                  370809
+                ],
+                [
+                  350933,
+                  354593,
+                  361468,
+                  364136,
+                  364529,
+                  364902,
+                  365350,
+                  365611,
+                  365928,
+                  367375,
+                  370148
+                ],
+                [
+                  350933,
+                  352898,
+                  354593,
+                  359460,
+                  361468,
+                  362654,
+                  364136,
+                  364529,
+                  364902,
+                  365350,
+                  365611,
+                  365928,
+                  367375,
+                  370148,
+                  370769,
+                  370809
+                ]
+              ]
+            },
+            "Information Ethics, Law, and Policy": {
+              "description": "A. Frameworks and Institutions (choose one) B. Methods and Analysis (choose one) C. Cases/Topics (choose one) ",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  351890,
+                  364949,
+                  365490,
+                  368323,
+                  369968
+                ],
+                [
+                  351538,
+                  355262,
+                  364529,
+                  365928,
+                  370763,
+                  371471
+                ],
+                [
+                  352898,
+                  359460,
+                  364529,
+                  368546,
+                  369207,
+                  370769,
+                  370809
+                ]
+              ]
+            },
+            "Interactive Technologies": {
+              "description": "A. Building with Hardware (choose one), B. Working with Data/Software (choose one), C. Context/Application Domains (choose one)",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  363542,
+                  363681,
+                  365657
+                ],
+                [
+                  353163,
+                  358529,
+                  358565,
+                  358592,
+                  358601,
+                  364588,
+                  366997,
+                  369914,
+                  370440
+                ],
+                [
+                  364529,
+                  365611,
+                  366043,
+                  366870,
+                  367112,
+                  367429,
+                  369514,
+                  370458
+                ]
+              ]
+            },
+            "Networks, Crowds, and Markets": {
+              "description": "A. Models (choose one), B. Data (choose one), C. Policy/Values (choose one)",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  350827,
+                  350842,
+                  350862,
+                  352158,
+                  353448,
+                  355617,
+                  365608,
+                  366983,
+                  370034,
+                  371479
+                ],
+                [
+                  350429,
+                  358565,
+                  358578,
+                  358589,
+                  358592,
+                  365790,
+                  366997
+                ],
+                [
+                  359460,
+                  364529,
+                  364949,
+                  365928,
+                  368323,
+                  370809
+                ]
+              ]
+            },
+            "UX (User Experience)": {
+              "description": "A. Core Principles of Design (choose one) B. Design in Context (choose one) C. Knowing the User (choose one) ",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  354593,
+                  361468,
+                  367112
+                ],
+                [
+                  362654,
+                  364529,
+                  365350,
+                  365928,
+                  370148
+                ],
+                [
+                  351670,
+                  360995,
+                  362976,
+                  367429,
+                  368973
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "name": "Two major approved electives",
+          "description": "Select two major-approved elective courses from any concentration. INFO 4900 may be used to fulfill one major-approved elective.",
+          "source": "https://infosci.cornell.edu/undergraduate/info-sci-majors/bs-information-science-systems-and-technology/degree-requirements",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            2
+          ],
+          "courses": [
+            [
+              350429,
+              350842,
+              350862,
+              350933,
+              351500,
+              351670,
+              351675,
+              351710,
+              351777,
+              351890,
+              352158,
+              352187,
+              352898,
+              353163,
+              353271,
+              354593,
+              354881,
+              358556,
+              358560,
+              358565,
+              358578,
+              358580,
+              358585,
+              358589,
+              358592,
+              358599,
+              358601,
+              358613,
+              358814,
+              359460,
+              360209,
+              360995,
+              361468,
+              362655,
+              362957,
+              362976,
+              363542,
+              364529,
+              364949,
+              365350,
+              365490,
+              365608,
+              365610,
+              365611,
+              365657,
+              365790,
+              365928,
+              366043,
+              366870,
+              366983,
+              366997,
+              367112,
+              367429,
+              367628,
+              368323,
+              368546,
+              368973,
+              369207,
+              369514,
+              369914,
+              370219,
+              370440,
+              370458,
+              370464
             ]
           ]
         }

@@ -150,6 +150,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     fulfilledBy: 'self-check',
+    allowCourseDoubleCounting: true,
     minCount: 6,
   },
   {
@@ -190,7 +191,6 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
-    allowCourseDoubleCounting: true,
   },
 ];
 
