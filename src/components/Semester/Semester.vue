@@ -560,4 +560,12 @@ export default Vue.extend({
     }
   }
 }
+
+@media only screen and (max-width: $small-breakpoint) {
+  .semester,
+  .semester--compact {
+    width: calc(100vw - 4rem);
+    padding: 0;
+  }
+}
 </style>

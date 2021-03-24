@@ -360,4 +360,21 @@ export default Vue.extend({
     }
   }
 }
+
+@media only screen and (max-width: $small-breakpoint) {
+  .semesterView {
+    margin-top: 5.5rem;
+    margin-left: 0;
+    margin-right: 0;
+
+    &-content {
+      margin: 0;
+    }
+
+    &-wrapper {
+      flex: 1 1 auto;
+      padding: 0 2rem;
+    }
+  }
+}
 </style>
