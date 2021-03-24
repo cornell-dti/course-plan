@@ -26,6 +26,7 @@ import hotelAdminRequirements from './majors/hadm';
 import historyRequirements from './majors/hist';
 import infoRequirements from './majors/info';
 import isstRequirements from './majors/isst';
+import oldIsstRequirements from './majors/oldIsst';
 import mechnicalEngineeringRequirements from './majors/me';
 import orieRequirements from './majors/orie';
 
@@ -33,6 +34,7 @@ import buMinorRequirements from './minors/bu';
 import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
+import deaMinorRequirements from './minors/dea';
 import isstMinorRequirements from './minors/isst';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
@@ -165,8 +167,13 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AG'],
       requirements: infoRequirements,
     },
+    ISST1: {
+      name: 'Information Science, Systems, and Technology [before Fall 2020]',
+      schools: ['EN'],
+      requirements: oldIsstRequirements,
+    },
     ISST: {
-      name: 'Information Science, Systems, and Technology',
+      name: 'Information Science, Systems, and Technology [Fall 2020 and after]',
       schools: ['EN'],
       requirements: isstRequirements,
     },
@@ -201,6 +208,11 @@ const json: RequirementsJson = {
       name: 'Dyson Business Minor for Engineers',
       schools: ['BU'],
       requirements: dbmeMinorRequirements,
+    },
+    DEA: {
+      name: 'Design and Environmental Analysis',
+      schools: ['HE'],
+      requirements: deaMinorRequirements,
     },
     ISST: {
       name: 'Industrial Systems and Information Technology',
