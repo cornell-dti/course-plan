@@ -192,7 +192,7 @@ export default Vue.extend({
     },
     closeBar() {
       if (!this.isCourseClicked) {
-        closeBottomBar();
+        closeBottomBar(this.$gtag);
       }
       this.isCourseClicked = false;
     },
