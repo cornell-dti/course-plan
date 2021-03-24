@@ -110,11 +110,11 @@ export const changeBottomBarCourseFocus = (index: number): void => {
 };
 
 export const deleteBottomBarCourse = (index: number, gtag?: GTag): void => {
+  GTagEvent(gtag, 'bottom-bar-delete-tab');
   vueForBottomBar.bottomCourses = vueForBottomBar.bottomCourses.filter((_, i) => i !== index);
   if (vueForBottomBar.bottomCourseFocus >= vueForBottomBar.bottomCourses.length) {
     vueForBottomBar.bottomCourseFocus = vueForBottomBar.bottomCourses.length - 1;
   }
-  GTagEvent(gtag, 'bottom-bar-delete-tab');
 };
 
 export const moveBottomBarCourseToFirst = (index: number): void => {

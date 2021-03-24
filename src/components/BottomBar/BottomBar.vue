@@ -6,7 +6,7 @@
     <div
       class="bottombar-title"
       :class="{ expandedBottomBarTitle: isExpanded }"
-      @click="toggleBottomBar(this.$gtag)"
+      @click="toggleBottomBar($gtag)"
     >
       <bottom-bar-title
         :color="focusedBottomBarCourse.color"

@@ -13,7 +13,7 @@
           :bottomCourseFocus="bottomCourseFocus"
           :isExpanded="isExpanded"
           @on-change-focus="() => changeBottomBarCourseFocus(index)"
-          @on-delete="() => deleteBottomBarCourse(index, this.$gtag)"
+          @on-delete="() => deleteBottomBarCourse(index, $gtag)"
         />
       </div>
     </div>
@@ -48,7 +48,7 @@
             <img
               class="seeMoreCourse-option-delete"
               src="@/assets/images/x-blue.svg"
-              @click="deleteBottomBarCourse(index + maxBottomBarTabs, this.$gtag)"
+              @click="deleteBottomBarCourse(index + maxBottomBarTabs, $gtag)"
               alt="x"
             />
           </div>
