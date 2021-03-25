@@ -5,7 +5,7 @@
         <span class="onboarding-subHeader--font"> Basic Information</span>
         <span>
           <button class="onboarding-button-previous" @click="editBasicInformation()">
-            <img src="@/assets/images/edit-review.svg" alt="edit" />
+            <img src="@/assets/images/edit-review.svg" alt="edit icon" />
           </button>
         </span>
       </div>
@@ -75,7 +75,7 @@
         <span class="onboarding-subHeader--font"> Transfer Credits</span>
         <span>
           <button class="onboarding-button-previous" @click="editTransferCredits()">
-            <img src="@/assets/images/edit-review.svg" />
+            <img src="@/assets/images/edit-review.svg" alt="edit icon" />
           </button>
         </span>
       </div>
@@ -86,7 +86,11 @@
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">
-              <img class="checkmark" src="@/assets/images/checkmark-onboarding.svg" />
+              <img
+                class="checkmark"
+                src="@/assets/images/checkmark-onboarding.svg"
+                alt="checkmark"
+              />
               {{ onboardingData.tookSwim === 'yes' ? 'Yes' : 'No' }}
             </label>
           </div>

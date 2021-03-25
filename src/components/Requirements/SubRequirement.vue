@@ -51,7 +51,7 @@
         <img
           class="requirement-checker-warning-icon"
           src="@/assets/images/warning.svg"
-          alt="warning-icon"
+          alt="warning icon"
         />
         {{ subReq.requirement.checkerWarning }}
       </div>

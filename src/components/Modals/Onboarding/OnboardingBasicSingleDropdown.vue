@@ -38,7 +38,7 @@
         'onboarding--hidden': cannotBeRemoved,
       }"
     >
-      <img src="@/assets/images/x-green.svg" alt="x" />
+      <img src="@/assets/images/x-green.svg" alt="x to delete dropdown" />
     </div>
   </div>
 </template>

@@ -52,7 +52,7 @@
           <div class="col-12 col-md-6 tasks-wrapper">
             <div class="row tasks">
               <div class="col-1 tasks">
-                <img src="@/assets/images/Task1.svg" alt="checklist" />
+                <img src="@/assets/images/Task1.svg" alt="checklist icon" />
               </div>
               <div class="col-11">
                 <p class="sub sub--task">Fully personalized to track your requirements</p>
@@ -60,7 +60,7 @@
             </div>
             <div class="row tasks">
               <div class="col-1 tasks">
-                <img src="@/assets/images/Task2.svg" alt="browser" />
+                <img src="@/assets/images/Task2.svg" alt="browser icon" />
               </div>
               <div class="col-11">
                 <p class="sub sub--task">Customizable interface to view your courses</p>
@@ -68,7 +68,7 @@
             </div>
             <div class="row tasks">
               <div class="col-1 tasks">
-                <img src="@/assets/images/Task3.svg" alt="Network" />
+                <img src="@/assets/images/Task3.svg" alt="Network icon" />
               </div>
               <div class="col-11">
                 <p class="sub sub--task">Built-in system to check your progress</p>
@@ -76,7 +76,7 @@
             </div>
             <div class="row tasks">
               <div class="col-1 tasks">
-                <img src="@/assets/images/Task4.svg" alt="Starred comment" />
+                <img src="@/assets/images/Task4.svg" alt="Starred comment icon" />
               </div>
               <div class="col-11">
                 <p class="sub sub--task">Recommends courses based on your needs</p>
