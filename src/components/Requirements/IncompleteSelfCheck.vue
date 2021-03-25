@@ -83,7 +83,10 @@ export default Vue.extend({
             { uniqueId: course.uniqueID }
           );
 
+          // true if all other requirements (if any) the course is assigned to are double countable, false otherwise
           let allOtherReqsDoubleCountableIfAny = true;
+
+          // true if this requirement is double countable, false otherwise.
           let thisReqDoubleCountable = false;
 
           // loop through all reqs and determine if all other reqs this course is assigned to are
@@ -229,6 +232,8 @@ export default Vue.extend({
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 7px;
     margin-top: 3px;
+    max-height: 9rem;
+    overflow-y: overlay;
     &-item {
       height: 2.25rem;
       font-size: 14px;
