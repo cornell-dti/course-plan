@@ -3,6 +3,7 @@
     <new-self-check-course-modal
       class="incompleteselfcheck-modal"
       :class="{ 'incompleteselfcheck-modal--block': isCourseModalOpen }"
+      :requirementId="subReqId"
       @close-course-modal="closeCourseModal"
       @add-course="addNewCourse"
       ref="modal"

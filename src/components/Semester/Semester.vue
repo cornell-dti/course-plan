@@ -50,7 +50,7 @@
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
           <button class="semester-dotRow" @click="openSemesterMenu">
-            <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
+            <img src="@/assets/images/dots/threeDots.svg" alt="open menu for semester" />
           </button>
         </div>
       </div>

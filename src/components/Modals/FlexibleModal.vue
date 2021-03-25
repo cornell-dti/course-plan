@@ -4,7 +4,7 @@
       <div class="modal-top">
         <h1>{{ title }}</h1>
         <button @click="closeCurrentModal">
-          <img class="modal-exit" src="@/assets/images/x.png" />
+          <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
         </button>
       </div>
       <slot class="modal-body"></slot>

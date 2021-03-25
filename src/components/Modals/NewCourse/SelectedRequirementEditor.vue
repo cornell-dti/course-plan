@@ -29,7 +29,7 @@
       </div>
       <div v-else>
         <div v-if="potentialRequirements.length > 0" class="warning">
-          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
+          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
           We cannot accurately check the requirements marked with the warning icon, so double check
           before selecting.
         </div>
@@ -54,6 +54,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { GTagEvent } from '@/gtag';
 import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
@@ -110,6 +111,7 @@ export default Vue.extend({
       this.$emit('on-selected-change', id);
     },
     toggleEditMode() {
+      GTagEvent(this.$gtag, 'add-modal-edit-requirements');
       this.$emit('edit-mode');
     },
   },

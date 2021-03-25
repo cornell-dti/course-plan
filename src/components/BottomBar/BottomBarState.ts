@@ -1,5 +1,5 @@
 import Vue from 'vue';
-
+import { GTag, GTagEvent } from '@/gtag';
 import { checkNotNull } from '../../utilities';
 
 import {
@@ -91,19 +91,26 @@ export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
   vueForBottomBar.bottomCourseFocus = 0;
 };
 
-export const toggleBottomBar = (): void => {
+export const toggleBottomBar = (gtag?: GTag): void => {
   vueForBottomBar.isExpanded = !vueForBottomBar.isExpanded;
+  if (vueForBottomBar.isExpanded) {
+    GTagEvent(gtag, 'bottom-bar-open');
+  } else {
+    GTagEvent(gtag, 'bottom-bar-close');
+  }
 };
 
-export const closeBottomBar = (): void => {
+export const closeBottomBar = (gtag?: GTag): void => {
   vueForBottomBar.isExpanded = false;
+  GTagEvent(gtag, 'bottom-bar-close');
 };
 
 export const changeBottomBarCourseFocus = (index: number): void => {
   vueForBottomBar.bottomCourseFocus = index;
 };
 
-export const deleteBottomBarCourse = (index: number): void => {
+export const deleteBottomBarCourse = (index: number, gtag?: GTag): void => {
+  GTagEvent(gtag, 'bottom-bar-delete-tab');
   vueForBottomBar.bottomCourses = vueForBottomBar.bottomCourses.filter((_, i) => i !== index);
   if (vueForBottomBar.bottomCourseFocus >= vueForBottomBar.bottomCourses.length) {
     vueForBottomBar.bottomCourseFocus = vueForBottomBar.bottomCourses.length - 1;

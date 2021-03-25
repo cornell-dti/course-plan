@@ -13,7 +13,7 @@
           :bottomCourseFocus="bottomCourseFocus"
           :isExpanded="isExpanded"
           @on-change-focus="() => changeBottomBarCourseFocus(index)"
-          @on-delete="() => deleteBottomBarCourse(index)"
+          @on-delete="() => deleteBottomBarCourse(index, $gtag)"
         />
       </div>
     </div>
@@ -24,13 +24,13 @@
           v-if="!seeMoreOpen"
           class="bottombarSeeMoreTab-arrow"
           src="@/assets/images/uparrow-white.svg"
-          alt="expand see more"
+          alt="expand see more bottom bar tabs"
         />
         <img
           v-if="seeMoreOpen"
           class="bottombarSeeMoreTab-arrow"
           src="@/assets/images/downarrow-white.svg"
-          alt="collapse see more"
+          alt="collapse see more bottom bar tabs"
         />
       </div>
       <div v-if="seeMoreOpen" class="bottombarSeeMoreOptions">
@@ -48,8 +48,8 @@
             <img
               class="seeMoreCourse-option-delete"
               src="@/assets/images/x-blue.svg"
-              @click="deleteBottomBarCourse(index + maxBottomBarTabs)"
-              alt="x"
+              @click="deleteBottomBarCourse(index + maxBottomBarTabs, $gtag)"
+              alt="x to delete bottom bar tab"
             />
           </div>
         </div>
@@ -67,6 +67,7 @@ import {
   deleteBottomBarCourse,
   moveBottomBarCourseToFirst,
 } from '@/components/BottomBar/BottomBarState';
+import { GTagEvent } from '@/gtag';
 
 export default Vue.extend({
   components: { BottomBarTab },
@@ -102,6 +103,7 @@ export default Vue.extend({
     moveBottomBarCourseToFirst,
     bottomBarSeeMoreToggle() {
       this.seeMoreOpen = !this.seeMoreOpen;
+      GTagEvent(this.$gtag, 'bottom-bar-see-more');
     },
   },
 });
