@@ -9,7 +9,11 @@
       <div class="bottombartab-name">{{ courseObj.code }}</div>
     </div>
     <button @click.stop="$emit('on-delete')">
-      <img class="bottombartab-delete" src="@/assets/images/x-white.svg" alt="x to delete bottom bar tab" />
+      <img
+        class="bottombartab-delete"
+        src="@/assets/images/x-white.svg"
+        alt="x to delete bottom bar tab"
+      />
     </button>
   </div>
 </template>

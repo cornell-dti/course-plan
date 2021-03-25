@@ -43,7 +43,10 @@
                         examsAP.length === 1 && exam.subject === placeholderText,
                     }"
                   >
-                    <img src="@/assets/images/x-green.svg" :alt="`x to remove AP exam ${exam.type} ${exam.subject}`" />
+                    <img
+                      src="@/assets/images/x-green.svg"
+                      :alt="`x to remove AP exam ${exam.type} ${exam.subject}`"
+                    />
                   </button>
                 </div>
               </div>
@@ -85,7 +88,10 @@
                         examsIB.length === 1 && exam.subject === placeholderText,
                     }"
                   >
-                    <img src="@/assets/images/x-green.svg" :alt="`x to remove IB exam ${exam.type} ${exam.subject}`" />
+                    <img
+                      src="@/assets/images/x-green.svg"
+                      :alt="`x to remove IB exam ${exam.type} ${exam.subject}`"
+                    />
                   </button>
                 </div>
               </div>

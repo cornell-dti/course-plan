@@ -3,7 +3,11 @@
     <div class="onboarding-main">
       <div v-if="isEditingProfile" class="onboarding-cancel">
         <button @click="cancel">
-          <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="x to close onboarding modal" />
+          <img
+            class="onboarding-cancel-icon"
+            src="@/assets/images/x.svg"
+            alt="x to close onboarding modal"
+          />
         </button>
       </div>
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
