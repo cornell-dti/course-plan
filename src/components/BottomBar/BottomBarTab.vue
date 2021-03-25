@@ -12,7 +12,7 @@
       class="bottombartab-delete"
       src="@/assets/images/x-white.svg"
       @click.stop="$emit('on-delete')"
-      alt="x"
+      alt="x to delete bottom bar tab"
     />
   </div>
 </template>

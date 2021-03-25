@@ -50,7 +50,7 @@
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
           <div class="semester-dotRow" @click="openSemesterMenu">
-            <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
+            <img src="@/assets/images/dots/threeDots.svg" alt="open menu for semester" />
           </div>
         </div>
       </div>
@@ -118,6 +118,7 @@ import {
   editSemester,
   addCourseToSemester,
   deleteCourseFromSemester,
+  addCourseToSelectableRequirements,
 } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
@@ -194,14 +195,18 @@ export default Vue.extend({
       get(): readonly FirestoreSemesterCourse[] {
         return this.courses;
       },
-      set(newCourses: readonly FirestoreSemesterCourse[]) {
+      set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
+        const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
         editSemester(
           this.year,
           this.type,
           (semester: FirestoreSemester): FirestoreSemester => ({
             ...semester,
-            courses: newCourses,
+            courses,
           })
+        );
+        newCourses.forEach(({ uniqueID, requirementID }) =>
+          addCourseToSelectableRequirements(uniqueID, requirementID)
         );
       },
     },
@@ -553,6 +558,14 @@ export default Vue.extend({
     &-menu {
       right: 0rem;
     }
+  }
+}
+
+@media only screen and (max-width: $small-breakpoint) {
+  .semester,
+  .semester--compact {
+    width: calc(100vw - 4rem);
+    padding: 0;
   }
 }
 </style>

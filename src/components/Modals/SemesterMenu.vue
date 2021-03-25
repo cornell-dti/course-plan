@@ -4,7 +4,11 @@
       <div class="semesterMenu-content">
         <div class="semesterMenu-content" @click="openEditSemesterModal">
           <div class="semesterMenu-left">
-            <img class="semesterMenu-icon" src="@/assets/images/edit.svg" />
+            <img
+              class="semesterMenu-icon"
+              src="@/assets/images/edit.svg"
+              alt="edit semester pencil icon"
+            />
             <span class="semesterMenu-edit">Edit Semester</span>
           </div>
         </div>
@@ -14,7 +18,11 @@
       <div class="semesterMenu-content">
         <div class="semesterMenu-content" @click="openDeleteSemesterModal">
           <div class="semesterMenu-left">
-            <img class="semesterMenu-icon" src="@/assets/images/trash.svg" />
+            <img
+              class="semesterMenu-icon"
+              src="@/assets/images/trash.svg"
+              alt="delete semester trashcan icon"
+            />
             <span class="semesterMenu-delete">Delete Semester</span>
           </div>
         </div>

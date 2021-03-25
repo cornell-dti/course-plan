@@ -4,6 +4,7 @@
       class="incompleteselfcheck-modal"
       :class="{ 'incompleteselfcheck-modal--block': isCourseModalOpen }"
       :subReqName="subReqName"
+      :requirementId="subReqId"
       @close-course-modal="closeCourseModal"
       @add-course="addNewCourse"
       ref="modal"

@@ -2,7 +2,11 @@
   <div class="onboarding" @click="checkClickOutside" ref="modalBackground">
     <div class="onboarding-main">
       <div v-if="isEditingProfile" class="onboarding-cancel" @click="cancel">
-        <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="X" />
+        <img
+          class="onboarding-cancel-icon"
+          src="@/assets/images/x.svg"
+          alt="x to close onboarding modal"
+        />
       </div>
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
         <div class="onboarding-top">
@@ -57,7 +61,7 @@
           <img
             class="timeline"
             :src="require(`@/assets/images/timeline${currentPage}text.svg`)"
-            alt="X"
+            alt="onboarding progress timeline"
           />
         </div>
         <div v-if="currentPage === 3" class="onboarding-bottom--section">
@@ -182,4 +186,23 @@ export default Vue.extend({
 </script>
 <style scoped lang="scss">
 @import '@/components/Modals/Onboarding/Onboarding.scss';
+
+@media only screen and (max-width: $large-breakpoint) {
+  .onboarding {
+    &-main {
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: $small-medium-breakpoint) {
+  .onboarding {
+    &-header {
+      text-align: center;
+    }
+    &-inputWrapper {
+      text-align: center;
+    }
+  }
+}
 </style>

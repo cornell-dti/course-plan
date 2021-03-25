@@ -1,14 +1,14 @@
 <template>
   <div :class="{ 'course--min': compact, active: active }" class="course" @click="courseOnClick()">
     <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
-      <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
+      <img src="@/assets/images/dots/sixDots.svg" alt="" />
     </div>
     <div class="course-content">
       <div class="course-main">
         <div class="course-top">
           <div class="course-code">{{ courseObj.code }}</div>
           <div v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
-            <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
+            <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
           </div>
         </div>
         <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
