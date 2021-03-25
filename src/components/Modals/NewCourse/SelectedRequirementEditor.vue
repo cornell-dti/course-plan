@@ -29,7 +29,7 @@
       </div>
       <div v-else>
         <div v-if="potentialRequirements.length > 0" class="warning">
-          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
+          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
           We cannot accurately check the requirements marked with the warning icon, so double check
           before selecting.
         </div>

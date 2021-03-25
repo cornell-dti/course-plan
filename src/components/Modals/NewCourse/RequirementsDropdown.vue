@@ -10,7 +10,7 @@
       v-if="potentialRequirements.some(req => req.id === selectedID)"
     >
       <div class="warning-row">
-        <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
+        <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
         {{ selected }}
       </div>
       <drop-down-arrow :isFlipped="showDropdown" :fillColor="emGreen" />
@@ -42,7 +42,7 @@
           @keyup.enter="toggleSelectRequirement(option.id)"
           tabindex="0"
         >
-          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
+          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
           {{ option.name }}
         </a>
       </li>

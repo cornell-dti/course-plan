@@ -6,12 +6,26 @@
         @mouseover="setDisplayColors(true)"
         @mouseleave="setDisplayColors(false)"
       >
-        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
+        <img
+          v-if="isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrowleft.svg"
+          alt="arrow to expand edit course color"
+        />
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="@/assets/images/paint.svg" />
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/paint.svg"
+            alt="edit course color paint icon"
+          />
           <span class="courseMenu-text">Edit Color</span>
         </div>
-        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+        <img
+          v-if="!isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrow.svg"
+          alt="arrow to expand edit course color"
+        />
 
         <div
           v-if="displayColors"
@@ -40,16 +54,27 @@
         @mouseleave="setDisplayEditCourseCredits(false)"
         v-if="getCreditRange[0] != getCreditRange[1]"
       >
-        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
+        <img
+          v-if="isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrowleft.svg"
+          alt="arrow to expand edit course credits"
+        />
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
             :class="{ 'courseMenu-icon--left': isLeft }"
             src="@/assets/images/edit-credits.svg"
+            alt="edit course credits icon"
           />
           <span class="courseMenu-text">Edit Credits</span>
         </div>
-        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+        <img
+          v-if="!isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrow.svg"
+          alt="arrow to expand edit course credits"
+        />
         <div
           v-if="displayEditCourseCredits"
           class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
@@ -73,7 +98,11 @@
         @click="deleteCourse"
       >
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="@/assets/images/trash.svg" />
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/trash.svg"
+            alt="delete course trashcan icon"
+          />
           <span class="courseMenu-text">Delete</span>
         </div>
       </div>

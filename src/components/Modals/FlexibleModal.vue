@@ -3,7 +3,12 @@
     <div :class="['modal-content', contentClass]">
       <div class="modal-top">
         <h1>{{ title }}</h1>
-        <img class="modal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
+        <img
+          class="modal-exit"
+          src="@/assets/images/x.png"
+          @click="closeCurrentModal"
+          alt="x to close modal"
+        />
       </div>
       <slot class="modal-body"></slot>
       <div class="modal-buttonWrapper">

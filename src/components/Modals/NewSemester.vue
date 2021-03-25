@@ -36,7 +36,11 @@
               class="newSemester-dropdown-content-item"
               @click="selectSeason(season[1])"
             >
-              <img :src="season[0]" class="newSemester-dropdown-content-season" />
+              <img
+                :src="season[0]"
+                class="newSemester-dropdown-content-season"
+                :alt="`${season[1]} icon`"
+              />
               {{ season[1] }}
             </div>
           </div>

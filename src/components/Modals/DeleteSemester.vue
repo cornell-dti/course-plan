@@ -7,6 +7,7 @@
           class="deleteSemesterModal-exit"
           src="@/assets/images/x.png"
           @click="closeCurrentModal"
+          alt="x to close delete semester modal"
         />
       </div>
       <div class="deleteSemesterModal-body">
@@ -24,6 +25,7 @@
             <img
               class="deleteSemesterModal-button-left-icon"
               src="@/assets/images/trash-white.svg"
+              alt="delete semester trashcan icon"
             />
             <span class="deleteSemesterModal-button-left-text">Delete</span>
           </div>
