@@ -26,7 +26,6 @@
         data-disable-interaction="1"
         data-step="4"
         data-tooltipClass="tooltipCenter"
-        v-if="!isMobile"
       >
         <span class="semesterView-switchText">View:</span>
         <button
