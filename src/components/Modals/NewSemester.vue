@@ -74,6 +74,7 @@
             <div
               v-for="yearChoice in years"
               :key="yearChoice"
+              ref="yearRef"
               class="newSemester-dropdown-content-item"
               @click="selectYear(yearChoice)"
             >
@@ -116,6 +117,9 @@ type Data = {
   };
 };
 
+const yearScrollIndex = 4;
+const yearRange = 6;
+
 export default Vue.extend({
   props: {
     currentSemesters: {
@@ -137,8 +141,8 @@ export default Vue.extend({
       [winter, 'Winter'],
     ] as const;
     const years = [];
-    let startYear = currentYear - 10;
-    while (startYear <= currentYear + 10) {
+    let startYear = currentYear - yearRange;
+    while (startYear <= currentYear + yearRange) {
       years.push(startYear);
       startYear += 1;
     }
@@ -210,6 +214,14 @@ export default Vue.extend({
       } else {
         displayOptions.boxBorder = yuxuanBlue;
         displayOptions.arrowColor = yuxuanBlue;
+      }
+
+      // scroll to the middle of the year div after visible (on the next tick)
+      if (!contentShown && type === 'year') {
+        this.$nextTick(() => {
+          const el = (this.$refs.yearRef as Element[])[yearScrollIndex];
+          el.scrollIntoView({ behavior: 'auto' });
+        });
       }
     },
     showHideSeasonContent() {
@@ -422,7 +434,7 @@ export default Vue.extend({
   }
 
   &-dropdown-content {
-    max-height: 140px;
+    max-height: 8rem;
 
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
