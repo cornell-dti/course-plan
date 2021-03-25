@@ -162,7 +162,6 @@ export const getExamCredit = (exam: FirestoreAPIBExam): number => {
 
 export default Vue.extend({
   components: {
-    // CourseSelector,
     OnboardingTransferSwimming,
     OnboardingTransferExamPropertyDropdown,
   },

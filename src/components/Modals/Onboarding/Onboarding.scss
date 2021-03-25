@@ -79,7 +79,7 @@ input {
     // TODO: font-size is 40px on designs, but does not fit
     font-weight: bold;
     font-size: 38px;
-    color: #4f4f4f;
+    color: $onboardingGray;
 
     &-emoji {
       width: 38px;
@@ -92,7 +92,7 @@ input {
     font-weight: 300;
     font-size: 20px;
     line-height: 24px;
-    color: #4f4f4f;
+    color: $onboardingGray;
   }
 
   &-section {
@@ -183,7 +183,7 @@ input {
       margin-top: 20px;
     }
     &-review {
-      color: #4f4f4f;
+      color: $onboardingGray;
       font-weight: 600;
       font-size: 16px;
     }

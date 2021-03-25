@@ -32,7 +32,7 @@
     <div class="onboarding-section">
       <!-- TODO: Multiple colleges -->
       <div class="onboarding-subHeader">
-        <span class="onboarding-subHeader--font"> College</span>
+        <span class="onboarding-subHeader--font">Your Major</span>
       </div>
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="onboarding-subHeader">
-        <span class="onboarding-subHeader--font"> Minor</span>
+        <span class="onboarding-subHeader--font">Your Minor</span>
       </div>
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper">
