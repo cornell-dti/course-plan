@@ -179,7 +179,9 @@ export default Vue.extend({
       this.$emit('cancelOnboarding');
     },
     checkClickOutside(e: MouseEvent) {
-      if (e.target === this.$refs.modalBackground) this.cancel();
+      if (e.target === this.$refs.modalBackground && this.onboarding.college !== null) {
+        this.cancel();
+      }
     },
   },
 });
