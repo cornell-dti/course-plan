@@ -147,6 +147,11 @@ export default Vue.extend({
       startYear += 1;
     }
 
+    let placeholderColor = '';
+    if (this.isCourseModelSelectingSemester) {
+      placeholderColor = darkPlaceholderGray;
+    }
+
     return {
       seasons,
       years,
@@ -158,14 +163,14 @@ export default Vue.extend({
           stopClose: false,
           boxBorder: '',
           arrowColor: '',
-          placeholderColor: '',
+          placeholderColor,
         },
         year: {
           shown: false,
           stopClose: false,
           boxBorder: '',
           arrowColor: '',
-          placeholderColor: '',
+          placeholderColor,
         },
       },
     };
@@ -173,19 +178,25 @@ export default Vue.extend({
   computed: {
     seasonPlaceholder(): string {
       // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
-      const currentSeason = this.getCurrentSeason();
-      return this.seasonText || this.type || currentSeason;
+      let defaultSeason: string = this.getCurrentSeason();
+      if (this.isCourseModelSelectingSemester) {
+        defaultSeason = 'Select';
+      }
+      return this.seasonText || this.type || defaultSeason;
     },
-    yearPlaceholder(): number {
-      const currentYear = new Date().getFullYear();
-      return Number(this.yearText || this.year || currentYear);
+    yearPlaceholder(): string {
+      let defaultYear = String(new Date().getFullYear());
+      if (this.isCourseModelSelectingSemester) {
+        defaultYear = 'Select';
+      }
+      return String(this.yearText || this.year || defaultYear);
     },
   },
   directives: {
     'click-outside': clickOutside,
   },
   mounted(): void {
-    this.$emit('updateSemProps', this.seasonPlaceholder, this.yearPlaceholder);
+    this.$emit('updateSemProps', this.seasonPlaceholder, Number(this.yearPlaceholder));
   },
   methods: {
     getCurrentSeason(): FirestoreSemesterType {
@@ -255,7 +266,7 @@ export default Vue.extend({
       this.$emit(
         'updateSemProps',
         this.seasonText || this.seasonPlaceholder,
-        this.yearText || this.yearPlaceholder
+        this.yearText || Number(this.yearPlaceholder)
       );
     },
     selectSeason(season: string) {
@@ -292,11 +303,15 @@ export default Vue.extend({
       const semesters = this.currentSemesters;
       if (semesters != null) {
         semesters.forEach(semester => {
-          if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder) {
+          if (
+            semester.year === Number(this.yearPlaceholder) &&
+            semester.type === this.seasonPlaceholder
+          ) {
             if (
               !this.isEdit ||
               (this.isEdit &&
-                (this.yearPlaceholder !== this.year || this.seasonPlaceholder !== this.type))
+                (Number(this.yearPlaceholder) !== this.year ||
+                  this.seasonPlaceholder !== this.type))
             ) {
               isDup = true;
             }

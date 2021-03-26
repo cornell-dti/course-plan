@@ -1,10 +1,10 @@
 <template>
   <flexible-modal
-    title="Add Course"
+    :title="modalTitle"
     content-class="content-course"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
-    :rightButtonIsDisabled="selectedCourse == null"
+    :rightButtonIsDisabled="!canAddCourse"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addCourse"
@@ -61,6 +61,7 @@ const getFilter = (
 export default Vue.extend({
   components: { CourseSelector, FlexibleModal, NewSemester },
   props: {
+    subReqName: { type: String, required: true },
     requirementId: { type: String, required: true },
   },
   data() {
@@ -72,11 +73,17 @@ export default Vue.extend({
     };
   },
   computed: {
+    modalTitle(): string {
+      return `Add Course to ${this.subReqName}`;
+    },
     leftButtonText(): string {
       return 'CANCEL';
     },
     rightButtonText(): string {
       return 'ADD';
+    },
+    canAddCourse(): boolean {
+      return this.selectedCourse != null && this.year > 0 && String(this.season) !== 'Select';
     },
     courseCanAppearInSearchResult(): (course: CornellCourseRosterCourse) => boolean {
       return getFilter(store.state, this.requirementId);
@@ -93,12 +100,13 @@ export default Vue.extend({
     addCourse() {
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, this.season, this.year);
-      this.reset();
       this.closeCurrentModal();
     },
     reset() {
       this.courseSelectorKey += 1;
       this.selectedCourse = null;
+      this.year = 0;
+      this.season = '' as FirestoreSemesterType;
     },
     backOrCancel() {
       this.closeCurrentModal();
