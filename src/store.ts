@@ -4,7 +4,12 @@ import Vuex, { Store } from 'vuex';
 import * as fb from './firebaseConfig';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
-import getCurrentSeason, { checkNotNull, getCurrentYear } from './utilities';
+import getCurrentSeason, {
+  checkNotNull,
+  getAllSubjects,
+  getCurrentYear,
+  allocateSubjectColor,
+} from './utilities';
 
 Vue.use(Vuex);
 
@@ -306,8 +311,16 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   const subjectColorUnsubscriber = fb.subjectColorsCollection
     .doc(simplifiedUser.email)
     .onSnapshot(snapshot => {
-      const subjectColors = snapshot.data() || {};
-      store.commit('setSubjectColors', subjectColors);
+      const subjectColors = snapshot.data();
+      if (subjectColors == null) {
+        store.commit('setSubjectColors', subjectColors);
+      } else {
+        // Pre-allocate all subject colors during this initialization step.
+        const subjectsColorCopy = { ...store.state.subjectColors };
+        getAllSubjects().forEach(subject => allocateSubjectColor(subjectsColorCopy, subject));
+        store.commit('setSubjectColors', subjectsColorCopy);
+        fb.subjectColorsCollection.doc(simplifiedUser.email).set(subjectsColorCopy);
+      }
       subjectColorInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
