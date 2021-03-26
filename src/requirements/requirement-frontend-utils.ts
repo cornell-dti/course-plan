@@ -252,13 +252,10 @@ export function getRelatedUnfulfilledRequirements(
         toggleableRequirementChoices
       );
       // potential self-check requirements
-      if (
-        (requirementSpec == null || subRequirement.checkerWarning != null) &&
-        !subRequirement.allowCourseDoubleCounting
-      ) {
+      if (requirementSpec == null && !subRequirement.allowCourseDoubleCounting) {
         selfCheckRequirements.push(subRequirement);
       }
-      if (requirementSpec != null && subRequirement.checkerWarning == null) {
+      if (requirementSpec != null) {
         const allEligibleCourses = requirementSpec.eligibleCourses.flat();
         if (allEligibleCourses.includes(courseId)) {
           const fulfillmentStatisticsWithNewCourse = computeFulfillmentCoursesAndStatistics(
