@@ -28604,7 +28604,6 @@
           "description": "Six credits of electives are required and must be approved by the student’s faculty advisor.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements",
           "fulfilledBy": "self-check",
-          "allowCourseDoubleCounting": true,
           "minCount": 6
         },
         {
@@ -28615,6 +28614,7 @@
           "perSlotMinCount": [
             1
           ],
+          "allowCourseDoubleCounting": true,
           "courses": [
             [
               350255,
@@ -29125,7 +29125,7 @@
         },
         {
           "name": "9 Credits In HE Outside Major",
-          "description": "Students must earn 9 credits in Human Ecology departments outside their major department with rules",
+          "description": "Students must earn 9 credits in Human Ecology departments outside their major department with rules.",
           "source": "https://www.human.cornell.edu/academics/policies/requirements",
           "checkerWarning": "We do not check that the credits are outside your major",
           "fulfilledBy": "credits",
@@ -48810,6 +48810,8 @@
               358506,
               358519,
               358521,
+              358570,
+              358572,
               358896,
               358898,
               358899,
@@ -59181,7 +59183,7 @@
         }
       ]
     },
-    "ISST": {
+    "ISST2": {
       "name": "Information Science, Systems, and Technology [Fall 2020 and after]",
       "schools": [
         "EN"
@@ -60691,7 +60693,7 @@
       "requirements": [
         {
           "name": "DEA Core Courses",
-          "description": "DEA 1101, DEA 1110/DEA 1200, and DEA1500",
+          "description": "DEA 1101, DEA 1110/DEA 1200, and DEA 1500",
           "source": "https://www.human.cornell.edu/dea/academics/undergraduate/minors/dea",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -60707,7 +60709,9 @@
               351470,
               367272
             ],
-            []
+            [
+              353568
+            ]
           ]
         },
         {

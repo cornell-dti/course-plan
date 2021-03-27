@@ -152,9 +152,9 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     fulfilledBy: 'self-check',
-    allowCourseDoubleCounting: true,
     minCount: 6,
   },
+  // TODO: INFO 1200 currently fulfills Eng Comm for ISST majors but should not be double-counted
   {
     name: 'Engineering Communications',
     description:
@@ -193,6 +193,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    allowCourseDoubleCounting: true,
   },
 ];
 

@@ -4,9 +4,9 @@ import { includesWithSingleRequirement, includesWithSubRequirements } from '../c
 const deaMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'DEA Core Courses',
-    description: 'DEA 1101, DEA 1110/DEA 1200, and DEA1500',
+    description: 'DEA 1101, DEA 1110/DEA 1200, and DEA 1500',
     source: 'https://www.human.cornell.edu/dea/academics/undergraduate/minors/dea',
-    checker: includesWithSubRequirements(['DEA 1050'], ['DEA 1101', 'DEA 1200'], ['DEA1500']),
+    checker: includesWithSubRequirements(['DEA 1050'], ['DEA 1101', 'DEA 1200'], ['DEA 1500']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
   },

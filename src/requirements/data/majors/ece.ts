@@ -93,15 +93,9 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
     checker: [
-      (course: Course): boolean => {
-        if (courseMatchesCodeOptions(course, ['CS 4120', 'CS 4410'])) {
-          return false;
-        }
-        return (
-          ifCodeMatch(course.subject, 'ECE') &&
-          !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***'))
-        );
-      },
+      (course: Course): boolean =>
+        ifCodeMatch(course.subject, 'ECE') &&
+        !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***')),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -116,7 +110,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean => {
         if (courseMatchesCodeOptions(course, ['CS 4120', 'CS 4410'])) {
-          return false;
+          return true;
         }
         return (
           ifCodeMatch(course.subject, 'ECE') &&

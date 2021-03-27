@@ -173,7 +173,7 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: oldIsstRequirements,
     },
-    ISST: {
+    ISST2: {
       name: 'Information Science, Systems, and Technology [Fall 2020 and after]',
       schools: ['EN'],
       requirements: isstRequirements,
