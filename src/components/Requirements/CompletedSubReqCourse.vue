@@ -15,12 +15,12 @@
           /></span>
           {{ courseLabel }}
         </div>
-        <div
+        <button
           class="completed-reqCourses-course-heading-reset-button reqCourse-button"
           @click="onReset"
         >
           {{ resetText }}
-        </div>
+        </button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
