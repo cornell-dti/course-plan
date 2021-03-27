@@ -2,7 +2,7 @@
   <div class="subrequirement">
     <button
       @click="toggleDescription()"
-      class="dropdown row"
+      class="dropdown row subreq-button"
       aria-haspopup="true"
       data-toggle="dropdown"
     >
@@ -553,8 +553,14 @@ button.view {
   justify-content: flex-start;
   align-items: center;
 }
-.subreq-name {
-  text-align: left;
-  margin-left: 11px;
+
+.subreq {
+  &-button:hover {
+    opacity: 0.8;
+  }
+  &-name {
+    text-align: left;
+    margin-left: 11px;
+  }
 }
 </style>

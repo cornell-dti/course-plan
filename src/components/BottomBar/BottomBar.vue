@@ -76,6 +76,9 @@ export default Vue.extend({
     width: calc(100vw - 29.5rem);
     text-align: left;
     padding-left: 0;
+    &:hover {
+      opacity: 1;
+    }
   }
 
   &-course {

@@ -77,10 +77,10 @@ export default Vue.extend({
       return `Add Course to ${this.subReqName}`;
     },
     leftButtonText(): string {
-      return 'CANCEL';
+      return 'Cancel';
     },
     rightButtonText(): string {
-      return 'ADD';
+      return 'Add';
     },
     canAddCourse(): boolean {
       return this.selectedCourse != null && this.year > 0 && String(this.season) !== 'Select';

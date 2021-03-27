@@ -3,12 +3,13 @@
     <div class="editSemesterModal-content">
       <div class="editSemesterModal-top">
         <h1>Edit Semester</h1>
-        <img
-          class="editSemesterModal-exit"
-          src="@/assets/images/x.png"
-          @click="closeCurrentModal"
-          alt="x to close edit semester modal"
-        />
+        <button @click="closeCurrentModal">
+          <img
+            class="editSemesterModal-exit"
+            src="@/assets/images/x.png"
+            alt="x to close edit semester modal"
+          />
+        </button>
       </div>
       <div class="editSemesterModal-body">
         <new-semester
@@ -24,7 +25,7 @@
       </div>
       <div class="editSemesterModal-buttonWrapper">
         <button class="editSemesterModal-button" @click="closeCurrentModal">Cancel</button>
-        <div
+        <button
           class="editSemesterModal-button editSemesterModal-button--delete"
           :class="{ 'editSemesterModal-button--disabled': isDisabled }"
           @click="editSemester"
@@ -32,7 +33,7 @@
           <div class="editSemesterModal-button-left">
             <span class="editSemesterModal-button-left-text">Edit</span>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   </div>
@@ -145,7 +146,6 @@ export default Vue.extend({
       &-text {
         margin-top: auto;
         margin-bottom: auto;
-        margin-left: 0.195rem;
       }
     }
 
