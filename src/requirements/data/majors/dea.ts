@@ -94,12 +94,13 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Humanities',
-    description: 'Choose any course with the Course Distribution HA, LA or CA.',
+    description:
+      'Choose any course with the Course Distribution PBS, BIOLS-AG, BIONLS-AG, SBA, KCM, MQR, LA, CA, or HA. Language courses may count here.',
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: [
       (course: Course): boolean =>
-        ['CA', 'HA', 'LA', 'LAD'].some(
+        ['PBS', 'BIOLS', 'BIONLS', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
         ),
     ],
