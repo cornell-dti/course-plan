@@ -105,9 +105,17 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'Frequently, the three courses are from the same department.',
     source:
       'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    fulfilledBy: 'self-check',
-    minCount: 3,
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return !(ifCodeMatch(catalogNbr, '1***') || ifCodeMatch(catalogNbr, '2***'));
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are related.',
+    fulfilledBy: 'courses',
+    perSlotMinCount: [3],
   },
+  // TODO: Doesn't check for ROTC (PE) above 3000
   {
     name: 'Major-approved Elective(s)',
     description:
@@ -115,8 +123,15 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'No PE courses, courses numbered 10xx, and ROTC courses below the 3000-level allowed.',
     source:
       'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    fulfilledBy: 'self-check',
-    minCount: 3,
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return !(ifCodeMatch(course.subject, 'PE') && ifCodeMatch(catalogNbr, '10**'));
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are major approved.',
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3],
   },
   {
     name: 'Probability',
