@@ -147,10 +147,7 @@ export default Vue.extend({
       startYear += 1;
     }
 
-    let placeholderColor = '';
-    if (this.isCourseModelSelectingSemester) {
-      placeholderColor = darkPlaceholderGray;
-    }
+    const placeholderColor = darkPlaceholderGray;
 
     return {
       seasons,
