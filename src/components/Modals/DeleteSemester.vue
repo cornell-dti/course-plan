@@ -125,9 +125,10 @@ export default Vue.extend({
     color: $sangBlue;
     border-radius: 3px;
     border: 1px solid $sangBlue;
-    background-color: #ffffff;
+    background-color: $white;
     display: flex;
     justify-content: center;
+    align-items: center;
 
     &-left {
       display: flex;
@@ -142,7 +143,7 @@ export default Vue.extend({
     }
 
     &--delete {
-      color: #ffffff;
+      color: $white;
       background-color: $sangBlue;
       margin-left: 0.8rem;
       border: none;

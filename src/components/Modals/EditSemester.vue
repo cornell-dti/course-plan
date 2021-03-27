@@ -145,7 +145,6 @@ export default Vue.extend({
       &-text {
         margin-top: auto;
         margin-bottom: auto;
-        margin-left: 0.195rem;
       }
     }
 

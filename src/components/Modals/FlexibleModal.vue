@@ -94,9 +94,9 @@ export default Vue.extend({
   &-button {
     width: 4.75rem;
     height: 1.8rem;
-    color: $activeGray;
+    color: $sangBlue;
     border-radius: 3px;
-    border: 1px solid $primaryGray;
+    border: 1px solid $sangBlue;
     background-color: $white;
     display: flex;
     justify-content: center;
