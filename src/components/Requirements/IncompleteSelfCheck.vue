@@ -39,9 +39,10 @@
 import Vue from 'vue';
 
 import { clickOutside } from '@/utilities';
-import store from '@/store';
+import store, { VuexStoreState } from '@/store';
 import { addCourseToSemester, addCourseToSelectableRequirements } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
+import { getMatchedRequirementFulfillmentSpecification } from '@/requirements/requirement-frontend-utils';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
 
@@ -69,7 +70,7 @@ export default Vue.extend({
   computed: {
     // limit self check course options to courses not already added to this requirement
     // and courses that are not already assigned to non-double countable requirements, if this req is not double countable
-    // TODO: restrict courses that also do not fulfill the checker for this requirement
+    // and courses that do not fulfill the requirement checker
     selfCheckCourses(): Record<string, FirestoreSemesterCourse> {
       const courses: Record<string, FirestoreSemesterCourse> = {};
       store.state.semesters.forEach(semester => {
@@ -116,9 +117,13 @@ export default Vue.extend({
           const isAlreadyAddedToReq =
             selectableRequirementCourses && selectableRequirementCourses.includes(course);
 
-          if (!isAlreadyAddedToReq && isAddable) courses[course.code] = course;
+          // filter out courses that cannot fulfill the self-check, for self-checks with warnings
+          const canFulfillReq = this.canFulfillChecker(store.state, this.subReqId, course);
+
+          if (!isAlreadyAddedToReq && isAddable && canFulfillReq) courses[course.code] = course;
         });
       });
+
       return courses;
     },
     addCourseLabel() {
@@ -133,6 +138,24 @@ export default Vue.extend({
     'click-outside': clickOutside,
   },
   methods: {
+    // filter to check if a course fulfills a requirements checker
+    canFulfillChecker(
+      { userRequirementsMap, toggleableRequirementChoices }: VuexStoreState,
+      requirementId: string,
+      course: FirestoreSemesterCourse
+    ) {
+      const requirement = userRequirementsMap[requirementId];
+      // If we cannot find the relevant requirement, then default to true to be permissive.
+      if (requirement == null) return () => true;
+      const requirementSpec = getMatchedRequirementFulfillmentSpecification(
+        requirement,
+        toggleableRequirementChoices
+      );
+      // If a requirement is truly self-check, then all courses can be used.
+      if (requirementSpec == null) return () => true;
+      const eligibleCourseIds = new Set(requirementSpec.eligibleCourses.flat());
+      return eligibleCourseIds.has(course.crseId);
+    },
     closeMenuIfOpen() {
       this.showDropdown = false;
     },
