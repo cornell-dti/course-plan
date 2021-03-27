@@ -1,10 +1,10 @@
 <template>
   <flexible-modal
-    title="Add Course"
+    :title="modalTitle"
     content-class="content-course"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
-    :rightButtonIsDisabled="selectedCourse == null"
+    :rightButtonIsDisabled="!canAddCourse"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addCourse"
@@ -13,6 +13,7 @@
     <course-selector
       search-box-class-name="newCourse-dropdown"
       :key="courseSelectorKey"
+      :courseFilter="courseCanAppearInSearchResult"
       placeholder='"CS 1110", "Multivariable Calculus", etc'
       :autoFocus="true"
       @on-escape="closeCurrentModal"
@@ -37,9 +38,32 @@ import Vue from 'vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
+import store, { VuexStoreState } from '@/store';
+import { getMatchedRequirementFulfillmentSpecification } from '@/requirements/requirement-frontend-utils';
+
+const getFilter = (
+  { userRequirementsMap, toggleableRequirementChoices }: VuexStoreState,
+  requirementId: string
+): ((course: CornellCourseRosterCourse) => boolean) => {
+  const requirement = userRequirementsMap[requirementId];
+  // If we cannot find the relevant requirement, then default to true to be permissive.
+  if (requirement == null) return () => true;
+  const requirementSpec = getMatchedRequirementFulfillmentSpecification(
+    requirement,
+    toggleableRequirementChoices
+  );
+  // If a requirement is truly self-check, then all courses can be used.
+  if (requirementSpec == null) return () => true;
+  const eligibleCourseIds = new Set(requirementSpec.eligibleCourses.flat());
+  return course => eligibleCourseIds.has(course.crseId);
+};
 
 export default Vue.extend({
   components: { CourseSelector, FlexibleModal, NewSemester },
+  props: {
+    subReqName: { type: String, required: true },
+    requirementId: { type: String, required: true },
+  },
   data() {
     return {
       selectedCourse: null as CornellCourseRosterCourse | null,
@@ -49,11 +73,20 @@ export default Vue.extend({
     };
   },
   computed: {
+    modalTitle(): string {
+      return `Add Course to ${this.subReqName}`;
+    },
     leftButtonText(): string {
       return 'CANCEL';
     },
     rightButtonText(): string {
       return 'ADD';
+    },
+    canAddCourse(): boolean {
+      return this.selectedCourse != null && this.year > 0 && String(this.season) !== 'Select';
+    },
+    courseCanAppearInSearchResult(): (course: CornellCourseRosterCourse) => boolean {
+      return getFilter(store.state, this.requirementId);
     },
   },
   methods: {
@@ -67,12 +100,13 @@ export default Vue.extend({
     addCourse() {
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, this.season, this.year);
-      this.reset();
       this.closeCurrentModal();
     },
     reset() {
       this.courseSelectorKey += 1;
       this.selectedCourse = null;
+      this.year = 0;
+      this.season = '' as FirestoreSemesterType;
     },
     backOrCancel() {
       this.closeCurrentModal();

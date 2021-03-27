@@ -3,7 +3,9 @@
     <div :class="['modal-content', contentClass]">
       <div class="modal-top">
         <h1>{{ title }}</h1>
-        <img class="modal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
+        <button @click="closeCurrentModal">
+          <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
+        </button>
       </div>
       <slot class="modal-body"></slot>
       <div class="modal-buttonWrapper">
@@ -75,7 +77,6 @@ export default Vue.extend({
   }
 
   &-exit {
-    cursor: pointer;
     width: 10.5px;
     height: 10.5px;
   }

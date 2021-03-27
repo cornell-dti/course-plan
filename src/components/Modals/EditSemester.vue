@@ -7,6 +7,7 @@
           class="editSemesterModal-exit"
           src="@/assets/images/x.png"
           @click="closeCurrentModal"
+          alt="x to close edit semester modal"
         />
       </div>
       <div class="editSemesterModal-body">

@@ -35,7 +35,7 @@
                   <label class="college-major-minor-placeholder">{{ getExamCredit(exam) }}</label>
                 </div>
                 <div class="onboarding-select--column-removeExam">
-                  <div
+                  <button
                     class="onboarding-remove"
                     @click="removeExam('AP', index)"
                     :class="{
@@ -43,13 +43,16 @@
                         examsAP.length === 1 && exam.subject === placeholderText,
                     }"
                   >
-                    <img src="@/assets/images/x-green.svg" alt="x" />
-                  </div>
+                    <img
+                      src="@/assets/images/x-green.svg"
+                      :alt="`x to remove AP exam ${exam.type} ${exam.subject}`"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
             <div class="onboarding-addRemoveWrapper">
-              <div class="onboarding-add" @click="addExam('AP')">+ add another subject</div>
+              <button class="onboarding-add" @click="addExam('AP')">+ add another subject</button>
             </div>
           </div>
           <div class="onboarding-subHeader">
@@ -77,7 +80,7 @@
                   <label class="college-major-minor-placeholder">{{ getExamCredit(exam) }}</label>
                 </div>
                 <div class="onboarding-select--column-removeExam">
-                  <div
+                  <button
                     class="onboarding-remove"
                     @click="removeExam('IB', index)"
                     :class="{
@@ -85,13 +88,16 @@
                         examsIB.length === 1 && exam.subject === placeholderText,
                     }"
                   >
-                    <img src="@/assets/images/x-green.svg" alt="x" />
-                  </div>
+                    <img
+                      src="@/assets/images/x-green.svg"
+                      :alt="`x to remove IB exam ${exam.type} ${exam.subject}`"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
             <div class="onboarding-addRemoveWrapper">
-              <div class="onboarding-add" @click="addExam('IB')">+ add another subject</div>
+              <button class="onboarding-add" @click="addExam('IB')">+ add another subject</button>
             </div>
           </div>
         </div>
@@ -115,7 +121,7 @@
                 />
               </div>
               <div class="onboarding-select--column-remove">
-                <div
+                <button
                   class="onboarding-remove"
                   @click="removeTransfer(index)"
                   :class="{
@@ -124,16 +130,16 @@
                       (options.class == placeholderText || options.class == null),
                   }"
                 >
-                  <img src="@/assets/images/x-green.svg" alt="x" />
-                </div>
+                  <img src="@/assets/images/x-green.svg" alt="x to remove transfer class" />
+                </button>
               </div>
             </div>
             <div class="onboarding-addRemoveWrapper">
-              <div class="onboarding-add" @click="addTransfer">+ add another subject</div>
+              <button class="onboarding-add" @click="addTransfer">+ add another subject</button>
             </div>
           </div>
           <div class="onboarding-addRemoveWrapper">
-            <div class="onboarding-add" @click="addTransfer">Add</div>
+            <button class="onboarding-add" @click="addTransfer">Add</button>
           </div>
         </div>
         <div class="onboarding-bottomWrapper">
