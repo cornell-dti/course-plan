@@ -44,7 +44,7 @@ export function getMinorFullName(acronym: string): string {
   return requirementJSON.minor[acronym].name;
 }
 
-export function getAllSubjects(): ReadonlySet<string> {
+function getAllSubjects(): ReadonlySet<string> {
   const set = new Set<string>();
   fullCoursesArray.forEach(it => set.add(it.subject));
   return set;
@@ -77,15 +77,16 @@ const SUBJECT_COLORS = [
   },
 ];
 
-export function allocateSubjectColor(subjectColors: Record<string, string>, subject: string): void {
-  if (subjectColors[subject]) return;
-  const usedColors = new Set(Object.values(subjectColors));
-  // Filter out used colors
-  const unusedSubjectColors = SUBJECT_COLORS.filter(color => !usedColors.has(color.hex));
-  const subjectColorCandidates =
-    unusedSubjectColors.length !== 0 ? unusedSubjectColors : SUBJECT_COLORS;
-  subjectColors[subject] =
-    subjectColorCandidates[Math.floor(Math.random() * subjectColorCandidates.length)].hex;
+export function allocateAllSubjectColor(
+  subjectColors: Record<string, string>
+): Record<string, string> {
+  const subjectsColorsCopy = { ...subjectColors };
+  getAllSubjects().forEach(subject => {
+    if (subjectsColorsCopy[subject]) return;
+    subjectsColorsCopy[subject] =
+      SUBJECT_COLORS[Math.floor(Math.random() * SUBJECT_COLORS.length)].hex;
+  });
+  return subjectsColorsCopy;
 }
 
 export const clickOutside = {

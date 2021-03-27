@@ -6,9 +6,8 @@ import computeGroupedRequirementFulfillmentReports from './requirements/requirem
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import getCurrentSeason, {
   checkNotNull,
-  getAllSubjects,
   getCurrentYear,
-  allocateSubjectColor,
+  allocateAllSubjectColor,
 } from './utilities';
 
 Vue.use(Vuex);
@@ -312,14 +311,13 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     .doc(simplifiedUser.email)
     .onSnapshot(snapshot => {
       const subjectColors = snapshot.data();
-      if (subjectColors == null) {
+      if (subjectColors != null) {
         store.commit('setSubjectColors', subjectColors);
       } else {
         // Pre-allocate all subject colors during this initialization step.
-        const subjectsColorCopy = { ...store.state.subjectColors };
-        getAllSubjects().forEach(subject => allocateSubjectColor(subjectsColorCopy, subject));
-        store.commit('setSubjectColors', subjectsColorCopy);
-        fb.subjectColorsCollection.doc(simplifiedUser.email).set(subjectsColorCopy);
+        const newSubjectColors = allocateAllSubjectColor(store.state.subjectColors);
+        store.commit('setSubjectColors', newSubjectColors);
+        fb.subjectColorsCollection.doc(simplifiedUser.email).set(newSubjectColors);
       }
       subjectColorInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
