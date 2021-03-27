@@ -20,6 +20,12 @@
           :class="{ 'modal-button--disabled': rightButtonIsDisabled }"
           @click="rightButtonClicked"
         >
+          <img
+            v-if="rightButtonImage"
+            class="modal-icon"
+            :src="rightButtonImage"
+            :alt="rightButtonAlt"
+          />
           {{ rightButtonText }}
         </button>
       </div>
@@ -36,6 +42,8 @@ export default Vue.extend({
     contentClass: { type: String, required: true },
     leftButtonText: { type: String, required: true },
     rightButtonText: { type: String, required: true },
+    rightButtonImage: { type: String, default: '' },
+    rightButtonAlt: { type: String, default: '' },
     rightButtonIsDisabled: { type: Boolean, required: true },
   },
   methods: {
@@ -83,6 +91,10 @@ export default Vue.extend({
     cursor: pointer;
     width: 10.5px;
     height: 10.5px;
+  }
+
+  &-icon {
+    margin-right: 0.25rem;
   }
 
   &-buttonWrapper {
