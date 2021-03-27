@@ -273,6 +273,7 @@ export default Vue.extend({
     &--active {
       cursor: pointer;
       background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+      opacity: 1;
     }
   }
 
@@ -285,6 +286,7 @@ export default Vue.extend({
     &--active {
       cursor: pointer;
       background-image: url('~@/assets/images/views/fourColumnSelected.svg');
+      opacity: 1;
     }
   }
 

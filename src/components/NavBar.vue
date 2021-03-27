@@ -108,6 +108,7 @@ $mobile-navbar-height: 4.5rem;
     &:focus,
     &:active {
       background-image: url('~@/assets/images/navbar/profileIconBlue.svg');
+      opacity: 1;
     }
   }
 
@@ -124,6 +125,7 @@ $mobile-navbar-height: 4.5rem;
     &:focus,
     &:active {
       background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
+      opacity: 1;
     }
   }
 
@@ -134,6 +136,7 @@ $mobile-navbar-height: 4.5rem;
     &:focus,
     &:active {
       background-image: url('~@/assets/images/navbar/logoutBlue.svg');
+      opacity: 1;
     }
   }
 

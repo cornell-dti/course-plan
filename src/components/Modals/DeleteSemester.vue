@@ -3,12 +3,13 @@
     <div class="deleteSemesterModal-content">
       <div class="deleteSemesterModal-top">
         <span class="deleteSemesterModal-title">{{ title }}</span>
-        <img
-          class="deleteSemesterModal-exit"
-          src="@/assets/images/x.png"
-          @click="closeCurrentModal"
-          alt="x to close delete semester modal"
-        />
+        <button @click="closeCurrentModal">
+          <img
+            class="deleteSemesterModal-exit"
+            src="@/assets/images/x.png"
+            alt="x to close delete semester modal"
+          />
+        </button>
       </div>
       <div class="deleteSemesterModal-body">
         <div class="deleteSemesterModal-body-text">{{ text }}</div>
@@ -17,7 +18,7 @@
         <button class="deleteSemesterModal-button" @click="closeCurrentModal">
           {{ cancel }}
         </button>
-        <div
+        <button
           class="deleteSemesterModal-button deleteSemesterModal-button--delete"
           @click="deleteSemester"
         >
@@ -29,7 +30,7 @@
             />
             <span class="deleteSemesterModal-button-left-text">Delete</span>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   </div>
