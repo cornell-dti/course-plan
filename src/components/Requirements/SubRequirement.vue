@@ -155,7 +155,6 @@ import {
 } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 import { fullCoursesJson } from '@/assets/courses/typed-full-courses';
-import { allocateSubjectColors } from '@/global-firestore-data';
 
 type CompletedSubReqCourseSlot = {
   readonly isCompleted: true;
@@ -182,12 +181,11 @@ const generateSubReqIncompleteCourses = (
   const rosterCourses = eligibleCourseIds
     .filter(courseID => !allTakenCourseIds.has(courseID))
     .flatMap(courseID => fullCoursesJson[courseID] || []);
-  const subjectColors = allocateSubjectColors(new Set(rosterCourses.map(it => it.subject)));
   const coursesWithDummyUniqueID = rosterCourses.map(rosterCourse =>
     cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
       rosterCourse,
       -1,
-      subjectColors[rosterCourse.subject]
+      store.state.subjectColors[rosterCourse.subject]
     )
   );
   return coursesWithDummyUniqueID.map(course => ({

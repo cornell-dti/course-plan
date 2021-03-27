@@ -1,4 +1,5 @@
-import { getOrAllocateSubjectColor, incrementUniqueID } from './global-firestore-data';
+import { incrementUniqueID } from './global-firestore-data';
+import store from './store';
 
 /**
  * Creates credit range based on course
@@ -50,7 +51,7 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
   cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
     course,
     incrementUniqueID(),
-    getOrAllocateSubjectColor(course.subject)
+    store.state.subjectColors[course.subject]
   );
 
 export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation = (

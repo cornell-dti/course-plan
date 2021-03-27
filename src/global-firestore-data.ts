@@ -6,7 +6,6 @@ import {
   semestersCollection,
   toggleableRequirementChoicesCollection,
   selectableRequirementChoicesCollection,
-  subjectColorsCollection,
   uniqueIncrementerCollection,
 } from './firebaseConfig';
 import store from './store';
@@ -197,85 +196,6 @@ export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): 
         .map(([k, v]) => ({ [k]: v }))
     )
   );
-};
-
-/** @returns a tuple [color of the subject, whether new colors are added] */
-const getSubjectColor = (
-  subjectColors: Record<string, string>,
-  subject: string
-): readonly [string, boolean] => {
-  if (subjectColors[subject]) return [subjectColors[subject], false];
-
-  const colors = [
-    {
-      text: 'Red',
-      hex: 'DA4A4A',
-    },
-    {
-      text: 'Orange',
-      hex: 'FFA53C',
-    },
-    {
-      text: 'Green',
-      hex: '58C913',
-    },
-    {
-      text: 'Blue',
-      hex: '139DC9',
-    },
-    {
-      text: 'Purple',
-      hex: 'C478FF',
-    },
-    {
-      text: 'Pink',
-      hex: 'F296D3',
-    },
-  ];
-
-  // Create list of used colors
-  const colorsUsedMap: Record<string, boolean> = {};
-  for (const subjectKey of Object.keys(subjectColors)) {
-    const subjectColor = subjectColors[subjectKey];
-    colorsUsedMap[subjectColor] = true;
-  }
-
-  // Filter out used colors
-  const unusedColors = colors.filter(color => !colorsUsedMap[color.hex]);
-
-  let randomColor: string;
-
-  // pick a color from unusedColors if there are any
-  if (unusedColors.length !== 0) {
-    randomColor = unusedColors[Math.floor(Math.random() * unusedColors.length)].hex;
-    // otherwise pick a color following the random order set by the first 7 subjects
-  } else {
-    const colorIndex = Object.keys(subjectColors).length;
-    const key = Object.keys(subjectColors)[colorIndex % colors.length];
-    randomColor = subjectColors[key];
-  }
-
-  subjectColors[subject] = randomColor;
-  return [randomColor, true];
-};
-
-export const getOrAllocateSubjectColor = (subject: string): string => {
-  const subjectsColorCopy = { ...store.state.subjectColors };
-  const [color, changed] = getSubjectColor(subjectsColorCopy, subject);
-  // Update subjectColors on Firebase with new subject color group
-  if (changed) {
-    subjectColorsCollection.doc(store.state.currentFirebaseUser.email).set(subjectsColorCopy);
-  }
-  return color;
-};
-
-export const allocateSubjectColors = (
-  subjects: ReadonlySet<string>
-): Readonly<Record<string, string>> => {
-  const subjectsColorCopy = { ...store.state.subjectColors };
-  subjects.forEach(subject => getSubjectColor(subjectsColorCopy, subject));
-  subjectColorsCollection.doc(store.state.currentFirebaseUser.email).set(subjectsColorCopy);
-  return subjectsColorCopy;
 };
 
 export const incrementUniqueID = (amount = 1): number => {
