@@ -27,6 +27,7 @@
           :year="year"
           :isCourseModelSelectingSemester="true"
           @updateSemProps="updateSemProps"
+          ref="modalBodyComponent"
         />
       </div>
     </div>
@@ -93,6 +94,8 @@ export default Vue.extend({
     closeCurrentModal() {
       this.reset();
       this.$emit('close-course-modal');
+      // @ts-expect-error: TS cannot understand $ref's component.
+      this.$refs.modalBodyComponent.resetDropdowns();
     },
     setCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;

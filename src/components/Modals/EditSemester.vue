@@ -48,6 +48,8 @@ export default Vue.extend({
   methods: {
     closeCurrentModal() {
       this.$emit('close-edit-modal');
+      // @ts-expect-error: TS cannot understand $ref's component.
+      this.$refs.modalBodyComponent.resetDropdowns();
     },
     editSemester() {
       if (!this.isDisabled) {
