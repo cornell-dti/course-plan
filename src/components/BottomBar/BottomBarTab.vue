@@ -8,12 +8,13 @@
     <div class="bottombartab-wrapper">
       <div class="bottombartab-name">{{ courseObj.code }}</div>
     </div>
-    <img
-      class="bottombartab-delete"
-      src="@/assets/images/x-white.svg"
-      @click.stop="$emit('on-delete')"
-      alt="x to delete bottom bar tab"
-    />
+    <button @click.stop="$emit('on-delete')">
+      <img
+        class="bottombartab-delete"
+        src="@/assets/images/x-white.svg"
+        alt="x to delete bottom bar tab"
+      />
+    </button>
   </div>
 </template>
 
@@ -54,8 +55,6 @@ export default Vue.extend({
   justify-content: space-between;
   padding-left: 8px;
   padding-right: 8px;
-
-  cursor: pointer;
 
   &:hover {
     opacity: 1;

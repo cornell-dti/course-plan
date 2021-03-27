@@ -1,3 +1,4 @@
+import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 
 export function checkNotNull<T>(value: T | null | undefined): T {
@@ -41,6 +42,51 @@ export function getMajorFullName(acronym: string): string {
 
 export function getMinorFullName(acronym: string): string {
   return requirementJSON.minor[acronym].name;
+}
+
+function getAllSubjects(): ReadonlySet<string> {
+  const set = new Set<string>();
+  fullCoursesArray.forEach(it => set.add(it.subject));
+  return set;
+}
+
+const SUBJECT_COLORS = [
+  {
+    text: 'Red',
+    hex: 'DA4A4A',
+  },
+  {
+    text: 'Orange',
+    hex: 'FFA53C',
+  },
+  {
+    text: 'Green',
+    hex: '58C913',
+  },
+  {
+    text: 'Blue',
+    hex: '139DC9',
+  },
+  {
+    text: 'Purple',
+    hex: 'C478FF',
+  },
+  {
+    text: 'Pink',
+    hex: 'F296D3',
+  },
+];
+
+export function allocateAllSubjectColor(
+  subjectColors: Record<string, string>
+): Record<string, string> {
+  const subjectsColorsCopy = { ...subjectColors };
+  getAllSubjects().forEach(subject => {
+    if (subjectsColorsCopy[subject]) return;
+    subjectsColorsCopy[subject] =
+      SUBJECT_COLORS[Math.floor(Math.random() * SUBJECT_COLORS.length)].hex;
+  });
+  return subjectsColorsCopy;
 }
 
 export const clickOutside = {

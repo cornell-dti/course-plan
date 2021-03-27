@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO trash icon on button -->
   <flexible-modal
     title="Delete Semester"
     class="deleteSemesterModal"

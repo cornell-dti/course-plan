@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { GTag, GTagEvent } from '@/gtag';
+import { GTag, GTagEvent } from '../../gtag';
 import { checkNotNull } from '../../utilities';
 
 import {

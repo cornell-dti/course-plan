@@ -2,7 +2,7 @@
   <div class="subrequirement">
     <button
       @click="toggleDescription()"
-      class="dropdown row"
+      class="dropdown row subreq-button"
       aria-haspopup="true"
       data-toggle="dropdown"
     >
@@ -17,8 +17,8 @@
         <div class="subreq-name">
           <p
             :class="[
-              { 'sub-req': !isFulfilled },
-              isFulfilled ? 'completed-ptext' : 'incomplete-ptext',
+              { 'sub-req': !isCompleted },
+              isCompleted ? 'completed-ptext' : 'incomplete-ptext',
             ]"
           >
             <span>{{ subReq.requirement.name }}</span>
@@ -28,14 +28,14 @@
       <div v-if="!isCompleted" class="col sub-req-progress text-right incomplete-ptext">
         {{ subReqProgress }}
       </div>
-      <div v-if="isFulfilled" class="col text-right completed-ptext">
+      <div v-if="isCompleted" class="col text-right completed-ptext">
         <span
           >{{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
           {{ subReq.fulfilledBy }}</span
         >
       </div>
     </button>
-    <div v-if="displayDescription" :class="[{ 'completed-ptext': isFulfilled }, 'description']">
+    <div v-if="displayDescription" :class="[{ 'completed-ptext': isCompleted }, 'description']">
       <div>
         {{ subReq.requirement.description }}
         <a
@@ -128,8 +128,13 @@
             :courseTaken="convertCourse(selfCheckCourse)"
           />
         </div>
-        <!-- TODO: only show incomplete-self-check if all courses not added -->
-        <incomplete-self-check :subReqId="subReq.requirement.id" />
+        <incomplete-self-check
+          v-if="!isCompleted"
+          :subReqId="subReq.requirement.id"
+          :subReqName="subReq.requirement.name"
+          :subReqFulfillment="subReq.fulfilledBy"
+          :subReqCourseId="subReq.minCountFulfilled"
+        />
       </div>
     </div>
   </div>
@@ -150,7 +155,6 @@ import {
 } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 import { fullCoursesJson } from '@/assets/courses/typed-full-courses';
-import { allocateSubjectColors } from '@/global-firestore-data';
 
 type CompletedSubReqCourseSlot = {
   readonly isCompleted: true;
@@ -177,12 +181,11 @@ const generateSubReqIncompleteCourses = (
   const rosterCourses = eligibleCourseIds
     .filter(courseID => !allTakenCourseIds.has(courseID))
     .flatMap(courseID => fullCoursesJson[courseID] || []);
-  const subjectColors = allocateSubjectColors(new Set(rosterCourses.map(it => it.subject)));
   const coursesWithDummyUniqueID = rosterCourses.map(rosterCourse =>
     cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
       rosterCourse,
       -1,
-      subjectColors[rosterCourse.subject]
+      store.state.subjectColors[rosterCourse.subject]
     )
   );
   return coursesWithDummyUniqueID.map(course => ({
@@ -221,9 +224,6 @@ export default Vue.extend({
     // true if the walkthrough is on step 2 and this subreq represents the PE requirement
     shouldShowWalkthrough(): boolean {
       return this.tourStep === 1 && this.subReq.requirement.id === 'College-UNI-Physical Education';
-    },
-    isFulfilled(): boolean {
-      return false;
     },
     selectedFulfillmentOption(): string {
       if (this.subReq.requirement.fulfilledBy !== 'toggleable') {
@@ -425,6 +425,8 @@ button.view {
   &-progress {
     font-size: 14px;
     line-height: 14px;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 }
 .separator {
@@ -449,6 +451,7 @@ button.view {
   &-select {
     display: flex;
     flex-direction: row;
+    align-items: center;
     background: $white;
     border: 0.5px solid $inactiveGray;
     box-sizing: border-box;
@@ -458,6 +461,8 @@ button.view {
     line-height: 17px;
     color: $darkPlaceholderGray;
     position: relative;
+    min-height: 1.625rem;
+    margin: 0.75rem 0;
 
     &:not(:first-child) {
       margin-top: 0.5rem;
@@ -470,6 +475,7 @@ button.view {
 
     &-wrapper {
       position: relative;
+      margin-bottom: 1rem;
     }
   }
   &-dropdown {
@@ -477,10 +483,10 @@ button.view {
       height: 100%;
       font-size: 14px;
       line-height: 17px;
-      margin-left: 0.25rem;
+      margin-left: 0.5rem;
       display: flex;
       align-items: center;
-      color: $darkPlaceholderGray;
+      color: $lightPlaceholderGray;
       background: transparent;
       cursor: pointer;
     }
@@ -502,7 +508,7 @@ button.view {
       background: transparent;
       margin-right: 8.7px;
       margin-left: 5px;
-      margin-top: 5px;
+      margin-top: auto;
       margin-bottom: auto;
     }
     &-content {
@@ -547,8 +553,14 @@ button.view {
   justify-content: flex-start;
   align-items: center;
 }
-.subreq-name {
-  text-align: left;
-  margin-left: 11px;
+
+.subreq {
+  &-button:hover {
+    opacity: 0.8;
+  }
+  &-name {
+    text-align: left;
+    margin-left: 11px;
+  }
 }
 </style>
