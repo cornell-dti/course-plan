@@ -5,10 +5,10 @@
       <div class="navbar-iconWrapper course-plan-logo">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
       </div>
-      <div class="navbar-iconWrapper desktop profile-icon" @click="editProfile"></div>
+      <button class="navbar-iconWrapper desktop profile-icon" @click="editProfile"></button>
     </div>
     <div class="navbar-bottom">
-      <div class="navbar-iconWrapper desktop logout-icon" @click="logout"></div>
+      <button class="navbar-iconWrapper desktop logout-icon" @click="logout" />
     </div>
     <div v-if="menuOpen" class="navbar-menu-background-shadow" @click="editProfile" />
     <div v-if="menuOpen" class="navbar-menu">
