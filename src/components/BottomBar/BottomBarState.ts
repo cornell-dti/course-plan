@@ -52,9 +52,11 @@ const getReviews = (
   classDifficulty: number;
   classWorkload: number;
 }> =>
-  fetch(`https://www.cureviews.org/classInfo/${subject}/${number}/CY0LG2ukc2EOBRcoRbQy`).then(res =>
-    res.json().then(reviews => reviews[0])
-  );
+  fetch('https://www.cureviews.org/v2/getCourseByInfo', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ subject: subject.toLowerCase(), number: number }),
+  }).then(res => res.json().then(reviews => reviews.result));
 
 export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
   for (let i = 0; i < vueForBottomBar.bottomCourses.length; i += 1) {
