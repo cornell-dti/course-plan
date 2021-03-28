@@ -1,9 +1,9 @@
 <template>
-  <div :class="{ 'course--min': compact, active: active }" class="course" @click="courseOnClick()">
+  <div :class="{ 'course--min': compact, active: active }" class="course">
     <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
       <img src="@/assets/images/dots/sixDots.svg" alt="" />
     </div>
-    <div class="course-content">
+    <div class="course-content" @click="courseOnClick()">
       <div class="course-main">
         <div class="course-top">
           <div class="course-code">{{ courseObj.code }}</div>
