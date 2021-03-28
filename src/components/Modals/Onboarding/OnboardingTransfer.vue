@@ -50,7 +50,7 @@
               </div>
             </div>
             <div class="onboarding-addRemoveWrapper">
-              <button class="onboarding-add" @click="addExam('AP')">+ add another subject</button>
+              <button class="onboarding-add" @click="addExam('AP')">+ another subject</button>
             </div>
           </div>
           <div class="onboarding-subHeader">
@@ -91,7 +91,7 @@
               </div>
             </div>
             <div class="onboarding-addRemoveWrapper">
-              <button class="onboarding-add" @click="addExam('IB')">+ add another subject</button>
+              <button class="onboarding-add" @click="addExam('IB')">+ another subject</button>
             </div>
           </div>
         </div>
