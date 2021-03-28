@@ -99,8 +99,7 @@ export default Vue.extend({
     const majorAcronyms = [...this.onboardingData.major];
     const minorAcronyms = [...this.onboardingData.minor];
     if (majorAcronyms.length === 0) majorAcronyms.push('');
-    if (minorAcronyms.length === 0) minorAcronyms.push('', '');
-    if (minorAcronyms.length === 1) minorAcronyms.push('');
+    if (minorAcronyms.length === 0) minorAcronyms.push('');
     return {
       firstName: this.userName.firstName,
       middleName: this.userName.middleName,
