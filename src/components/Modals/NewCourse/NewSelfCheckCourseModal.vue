@@ -39,25 +39,8 @@ import Vue from 'vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
-import store, { VuexStoreState } from '@/store';
-import { getMatchedRequirementFulfillmentSpecification } from '@/requirements/requirement-frontend-utils';
-
-const getFilter = (
-  { userRequirementsMap, toggleableRequirementChoices }: VuexStoreState,
-  requirementId: string
-): ((course: CornellCourseRosterCourse) => boolean) => {
-  const requirement = userRequirementsMap[requirementId];
-  // If we cannot find the relevant requirement, then default to true to be permissive.
-  if (requirement == null) return () => true;
-  const requirementSpec = getMatchedRequirementFulfillmentSpecification(
-    requirement,
-    toggleableRequirementChoices
-  );
-  // If a requirement is truly self-check, then all courses can be used.
-  if (requirementSpec == null) return () => true;
-  const eligibleCourseIds = new Set(requirementSpec.eligibleCourses.flat());
-  return course => eligibleCourseIds.has(course.crseId);
-};
+import store from '@/store';
+import { getFilter } from '@/requirements/requirement-frontend-utils';
 
 export default Vue.extend({
   components: { CourseSelector, FlexibleModal, NewSemester },
@@ -87,7 +70,11 @@ export default Vue.extend({
       return this.selectedCourse != null && this.year > 0 && String(this.season) !== 'Select';
     },
     courseCanAppearInSearchResult(): (course: CornellCourseRosterCourse) => boolean {
-      return getFilter(store.state, this.requirementId);
+      return getFilter(
+        store.state.userRequirementsMap,
+        store.state.toggleableRequirementChoices,
+        this.requirementId
+      );
     },
   },
   methods: {

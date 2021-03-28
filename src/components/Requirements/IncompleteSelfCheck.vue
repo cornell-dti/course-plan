@@ -39,10 +39,10 @@
 import Vue from 'vue';
 
 import { clickOutside } from '@/utilities';
-import store, { VuexStoreState } from '@/store';
+import store from '@/store';
 import { addCourseToSemester, addCourseToSelectableRequirements } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
-import { getMatchedRequirementFulfillmentSpecification } from '@/requirements/requirement-frontend-utils';
+import { canFulfillChecker } from '@/requirements/requirement-frontend-utils';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
 
@@ -118,7 +118,12 @@ export default Vue.extend({
             selectableRequirementCourses && selectableRequirementCourses.includes(course);
 
           // filter out courses that cannot fulfill the self-check, for self-checks with warnings
-          const canFulfillReq = this.canFulfillChecker(store.state, this.subReqId, course);
+          const canFulfillReq = canFulfillChecker(
+            store.state.userRequirementsMap,
+            store.state.toggleableRequirementChoices,
+            this.subReqId,
+            course.crseId
+          );
 
           if (!isAlreadyAddedToReq && isAddable && canFulfillReq) courses[course.code] = course;
         });
@@ -139,23 +144,6 @@ export default Vue.extend({
   },
   methods: {
     // filter to check if a course fulfills a requirements checker
-    canFulfillChecker(
-      { userRequirementsMap, toggleableRequirementChoices }: VuexStoreState,
-      requirementId: string,
-      course: FirestoreSemesterCourse
-    ) {
-      const requirement = userRequirementsMap[requirementId];
-      // If we cannot find the relevant requirement, then default to true to be permissive.
-      if (requirement == null) return () => true;
-      const requirementSpec = getMatchedRequirementFulfillmentSpecification(
-        requirement,
-        toggleableRequirementChoices
-      );
-      // If a requirement is truly self-check, then all courses can be used.
-      if (requirementSpec == null) return () => true;
-      const eligibleCourseIds = new Set(requirementSpec.eligibleCourses.flat());
-      return eligibleCourseIds.has(course.crseId);
-    },
     closeMenuIfOpen() {
       this.showDropdown = false;
     },
