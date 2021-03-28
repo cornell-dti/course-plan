@@ -2,8 +2,8 @@
   <flexible-modal
     title="Edit Semester"
     content-class="content-semester"
-    left-button-text="CANCEL"
-    right-button-text="EDIT"
+    left-button-text="Cancel"
+    right-button-text="Edit"
     :rightButtonIsDisabled="isDisabled"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
