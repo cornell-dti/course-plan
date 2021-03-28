@@ -307,18 +307,15 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       selectableRequirementChoiceInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
-  const subjectColorUnsubscriber = fb.subjectColorsCollection
+  fb.subjectColorsCollection
     .doc(simplifiedUser.email)
-    .onSnapshot(snapshot => {
-      const subjectColors = snapshot.data();
-      if (subjectColors != null) {
-        store.commit('setSubjectColors', subjectColors);
-      } else {
-        // Pre-allocate all subject colors during this initialization step.
-        const newSubjectColors = allocateAllSubjectColor(store.state.subjectColors);
-        store.commit('setSubjectColors', newSubjectColors);
-        fb.subjectColorsCollection.doc(simplifiedUser.email).set(newSubjectColors);
-      }
+    .get()
+    .then(snapshot => {
+      const subjectColors = snapshot.data() || {};
+      // Pre-allocate all subject colors during this initialization step.
+      const newSubjectColors = allocateAllSubjectColor(subjectColors);
+      store.commit('setSubjectColors', newSubjectColors);
+      fb.subjectColorsCollection.doc(simplifiedUser.email).set(newSubjectColors);
       subjectColorInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
@@ -337,7 +334,6 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     onboardingDataUnsubscriber();
     toggleableRequirementChoiceUnsubscriber();
     selectableRequirementChoiceUnsubscriber();
-    subjectColorUnsubscriber();
     uniqueIncrementerUnsubscriber();
     derivedDataComputationUnsubscriber();
   };
