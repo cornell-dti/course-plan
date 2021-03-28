@@ -33,16 +33,16 @@
           data-tooltipClass="tooltipCenter"
         >
           <span class="semesterView-switchText">View:</span>
-          <div
+          <button
             class="semesterView-switchImage semesterView-twoColumn"
             @click="setNotCompact"
             :class="{ 'semesterView-twoColumn--active': !compact }"
-          ></div>
-          <div
+          />
+          <button
             class="semesterView-switchImage semesterView-fourColumn"
             @click="setCompact"
             :class="{ 'semesterView-fourColumn--active': compact }"
-          ></div>
+          />
         </div>
       </div>
       <confirmation
@@ -336,6 +336,7 @@ export default Vue.extend({
   }
 
   &-builtBy {
+    color: $medGray;
     text-align: right;
     font-size: 15px;
     padding: 8px 10px;
