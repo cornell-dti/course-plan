@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="bottombartab"
-    :style="{ background: `#${color}` }"
-    :class="{ inactive: !isBottomCourseFocus }"
-    @click="$emit('on-change-focus')"
-  >
+  <div class="bottombartab" :style="{ background: `#${color}` }" @click="$emit('on-change-focus')">
     <div class="bottombartab-wrapper">
       <div class="bottombartab-name">{{ courseObj.code }}</div>
     </div>
@@ -29,12 +24,6 @@ export default Vue.extend({
     bottomCourseFocus: { type: Number, required: true },
     isExpanded: { type: Boolean, required: true },
   },
-
-  computed: {
-    isBottomCourseFocus(): boolean {
-      return this.tabIndex === this.bottomCourseFocus;
-    },
-  },
 });
 </script>
 
@@ -45,7 +34,7 @@ export default Vue.extend({
   position: relative;
   width: 11.5rem;
   height: 1.75rem;
-  background-color: #25a2aa;
+  background-color: $yuxuanBlue;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   display: flex;
@@ -74,7 +63,7 @@ export default Vue.extend({
   }
 
   &-name {
-    color: white;
+    color: $white;
     font-weight: 500;
     font-size: 16px;
     line-height: 20px;
@@ -85,11 +74,6 @@ export default Vue.extend({
     height: 50%;
     cursor: pointer;
   }
-}
-
-.inactive {
-  mix-blend-mode: multiply;
-  opacity: 0.8;
 }
 
 @media only screen and (max-width: $large-breakpoint) {

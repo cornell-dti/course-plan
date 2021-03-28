@@ -119,8 +119,6 @@ export default Vue.extend({
   margin-bottom: -0.2%;
   align-items: flex-end;
 
-  justify-content: space-between;
-
   &-bottomCourseWrapper {
     display: flex;
     flex-direction: row;
@@ -133,10 +131,9 @@ export default Vue.extend({
   &-seeMoreWrapper {
     display: flex;
     flex-direction: column;
-    margin-left: auto;
     margin-right: 1%;
     .bottombarSeeMoreTab {
-      color: white;
+      color: $white;
       width: 9rem;
       height: 1.75rem;
       background-color: $sangBlue;
@@ -159,7 +156,7 @@ export default Vue.extend({
 
   .bottombarSeeMoreOptions {
     width: 9rem;
-    background-color: #ffffff;
+    background-color: $white;
     border: 1px solid rgba(218, 218, 218, 0.2);
     max-height: 6.81rem;
     overflow-y: scroll;
@@ -173,7 +170,7 @@ export default Vue.extend({
         width: 100%;
         height: 25px;
 
-        color: #757575;
+        color: $lightPlaceholderGray;
         display: flex;
         align-items: center;
 
