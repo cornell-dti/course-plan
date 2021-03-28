@@ -98,8 +98,9 @@
     </div>
     <div class="semesterView-bot">
       <div class="semesterView-builtBy">
-        Built with ❤️ by
-        <a href="https://www.cornelldti.org/projects/courseplan/">
+        Built with
+        <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" /> by
+        <a target="_blank" href="https://www.cornelldti.org/projects/courseplan/">
           Cornell Design &amp; Tech Initiative
         </a>
       </div>
@@ -339,11 +340,18 @@ export default Vue.extend({
 
     a {
       color: $medGray;
-      text-decoration: underline $medGray;
+      &:hover {
+        text-decoration: underline $medGray;
+      }
     }
   }
+
   &-emoji-text {
     height: 14px;
+  }
+
+  &-heart {
+    height: 18px;
   }
 }
 
