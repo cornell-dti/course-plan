@@ -90,7 +90,7 @@
           <div class="onboarding-selectWrapper-reviewExam">
             <div class="alignLeft">
               <label class="onboarding-label onboarding-label--header">AP Credits</label>
-              <label class="onboarding-label">Subject</label>
+              <label class="onboarding-label--subject">Subject</label>
               <div v-for="(exam, index) in onboardingData.exam" :key="'AP' + index">
                 <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
                   exam.subject
@@ -106,7 +106,7 @@
               </div>
             </div>
             <div class="alignCenter">
-              <label class="onboarding-label">Score</label>
+              <label class="onboarding-label--subject">Score</label>
               <div v-for="(exam, index) in onboardingData.exam" :key="'APScore' + index">
                 <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
                   exam.score
