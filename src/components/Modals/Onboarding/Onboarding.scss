@@ -543,6 +543,12 @@ select option[disabled]:first-child {
 }
 .addSpaceTop {
   margin-top: 30px;
+
+  &--score {
+    // add 10px for "subject" margin and 19px for IB credits line height
+    margin-top: 59px;
+    margin-bottom: 10px;
+  }
 }
 .alignCenter {
   // onboarding-label height + padding

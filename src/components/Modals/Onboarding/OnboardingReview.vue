@@ -99,6 +99,7 @@
               <label class="onboarding-label addSpaceTop onboarding-label--header"
                 >IB Credits</label
               >
+              <label class="onboarding-label--subject">Subject</label>
               <div v-for="(exam, index) in onboardingData.exam" :key="'IB' + index">
                 <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
                   exam.subject
@@ -112,7 +113,7 @@
                   exam.score
                 }}</label>
               </div>
-              <label class="onboarding-label addSpaceTop">Score</label>
+              <label class="onboarding-label addSpaceTop--score">Score</label>
               <div v-for="(exam, index) in onboardingData.exam" :key="'IBScore' + index">
                 <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
                   exam.score
