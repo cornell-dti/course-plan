@@ -178,12 +178,12 @@ export default Vue.extend({
       };
     },
     cancel() {
-      if (this.onboarding.college !== '') {
+      if (this.onboardingData.college !== '') {
         this.$emit('cancelOnboarding');
       }
     },
     checkClickOutside(e: MouseEvent) {
-      if (e.target === this.$refs.modalBackground && this.onboarding.college !== '') {
+      if (e.target === this.$refs.modalBackground && this.onboardingData.college !== '') {
         this.cancel();
       }
     },
