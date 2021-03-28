@@ -452,6 +452,22 @@ input {
         margin-right: 8.7px;
         margin-left: 5px;
       }
+
+      &.college-test-credits-arrow {
+        border-left: 6.24px solid transparent;
+        border-right: 6.24px solid transparent;
+
+        border-top: 6.24px solid #c4c4c4;
+        background: transparent;
+
+        //when clicked border-top-color: #32A0F2;
+
+        margin-top: 30px;
+        margin-bottom: 10.17px;
+
+        margin-right: 6px;
+        margin-left: 15px;
+      }
     }
   }
 
