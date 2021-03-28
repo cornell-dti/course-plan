@@ -54,7 +54,7 @@
               :disabled="!hasPrevPage"
               @click="prevPage()"
             >
-              <span class="see-all-button-text">PREV</span>
+              <span class="see-all-button-text">Prev</span>
             </button>
             <button
               class="see-all-button"
@@ -62,7 +62,7 @@
               :disabled="!hasNextPage"
               @click="nextPage()"
             >
-              <span class="see-all-button-text">NEXT</span>
+              <span class="see-all-button-text">Next</span>
             </button>
           </div>
         </div>

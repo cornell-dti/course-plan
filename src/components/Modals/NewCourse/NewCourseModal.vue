@@ -65,11 +65,11 @@ export default Vue.extend({
   },
   computed: {
     leftButtonText(): string {
-      if (this.selectedCourse == null && !this.editMode) return 'CANCEL';
-      return 'BACK';
+      if (this.selectedCourse == null && !this.editMode) return 'Cancel';
+      return 'Back';
     },
     rightButtonText(): string {
-      return this.editMode ? 'NEXT' : 'ADD';
+      return this.editMode ? 'Next' : 'Add';
     },
     selectableRequirementChoices(): AppSelectableRequirementChoices {
       return store.state.selectableRequirementChoices;
@@ -134,7 +134,7 @@ export default Vue.extend({
       this.selfCheckRequirements = [];
     },
     backOrCancel() {
-      if (this.leftButtonText === 'BACK') {
+      if (this.leftButtonText === 'Back') {
         if (this.editMode) {
           this.editMode = false;
         } else {

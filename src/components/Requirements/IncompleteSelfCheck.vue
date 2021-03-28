@@ -42,6 +42,7 @@ import { clickOutside } from '@/utilities';
 import store from '@/store';
 import { addCourseToSemester, addCourseToSelectableRequirements } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
+import { canFulfillChecker } from '@/requirements/requirement-frontend-utils';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
 
@@ -69,7 +70,7 @@ export default Vue.extend({
   computed: {
     // limit self check course options to courses not already added to this requirement
     // and courses that are not already assigned to non-double countable requirements, if this req is not double countable
-    // TODO: restrict courses that also do not fulfill the checker for this requirement
+    // and courses that do not fulfill the requirement checker
     selfCheckCourses(): Record<string, FirestoreSemesterCourse> {
       const courses: Record<string, FirestoreSemesterCourse> = {};
       store.state.semesters.forEach(semester => {
@@ -116,9 +117,18 @@ export default Vue.extend({
           const isAlreadyAddedToReq =
             selectableRequirementCourses && selectableRequirementCourses.includes(course);
 
-          if (!isAlreadyAddedToReq && isAddable) courses[course.code] = course;
+          // filter out courses that cannot fulfill the self-check, for self-checks with warnings
+          const canFulfillReq = canFulfillChecker(
+            store.state.userRequirementsMap,
+            store.state.toggleableRequirementChoices,
+            this.subReqId,
+            course.crseId
+          );
+
+          if (!isAlreadyAddedToReq && isAddable && canFulfillReq) courses[course.code] = course;
         });
       });
+
       return courses;
     },
     addCourseLabel() {
@@ -133,6 +143,7 @@ export default Vue.extend({
     'click-outside': clickOutside,
   },
   methods: {
+    // filter to check if a course fulfills a requirements checker
     closeMenuIfOpen() {
       this.showDropdown = false;
     },
