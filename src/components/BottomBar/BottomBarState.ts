@@ -59,7 +59,8 @@ const getReviews = (
 export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
   for (let i = 0; i < vueForBottomBar.bottomCourses.length; i += 1) {
     const existingCourse = vueForBottomBar.bottomCourses[i];
-    if (existingCourse.uniqueID === course.uniqueID) {
+    // Must check both uniqueID and code (e.g. CS 1110) to handle req courses that share uniqueID -1
+    if (existingCourse.uniqueID === course.uniqueID && existingCourse.code === course.code) {
       vueForBottomBar.bottomCourseFocus = i;
       return;
     }
