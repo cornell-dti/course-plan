@@ -246,20 +246,6 @@ export default Vue.extend({
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
   }
-
-  &-builtBy {
-    text-align: right;
-    font-size: 15px;
-    padding: 8px 10px;
-
-    a {
-      color: $medGray;
-      text-decoration: underline $medGray;
-    }
-  }
-  .emoji-text {
-    height: 14px;
-  }
 }
 
 .semester {
