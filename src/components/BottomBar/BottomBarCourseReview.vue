@@ -1,8 +1,8 @@
 <template>
   <div class="details">
     <div class="details-ratings-link-wrapper">
-      <a :href="CURLink" class="details-ratings-link" target="_blank" @click="clickSeeAllReviews()"
-        >See All Reviews</a
+      <a :href="CURLink" class="details-ratings-link" target="_blank" @click="clickCUReviewsLink()"
+        >Learn more on CUReviews</a
       >
     </div>
     <div class="details-ratings-wrapper">
@@ -105,8 +105,8 @@ export default Vue.extend({
       return flip ? colors[colors.length - 1 - index] : colors[index];
     },
 
-    clickSeeAllReviews(): void {
-      GTagEvent(this.$gtag, 'bottom-bar-see-all-reviews');
+    clickCUReviewsLink(): void {
+      GTagEvent(this.$gtag, 'bottom-bar-CU-reviews-link');
     },
   },
 
@@ -194,6 +194,12 @@ export default Vue.extend({
 .rating {
   width: 100%;
   border-radius: 100px;
+}
+
+.info {
+  &-fact {
+    color: $primaryGray;
+  }
 }
 
 @media only screen and (max-width: $medium-breakpoint) {

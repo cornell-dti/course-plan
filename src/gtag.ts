@@ -25,7 +25,7 @@ type EventType =
   | 'skip-walkthrough' // User clicks to skip the walkthrough
   | 'onboarding-edit-basic-information' // User clicks to edit basic info on the review page of Onboarding
   | 'onboarding-edit-transfer-credits' // User clicks to edit transfer credits on the review page of Onboarding
-  | 'bottom-bar-see-all-reviews' // User clicks See All Reviews link on Bottom Bar
+  | 'bottom-bar-CU-reviews-link' // User clicks CU Reviews link on Bottom Bar
   | 'bottom-bar-view-course-information-on-roster' // User clicks View Course Information on Roster link on Bottom Bar
   | 'bottom-bar-see-more' // User clicks on the See More tab of the Bottom Bar
   | 'bottom-bar-delete-tab' // User deletes a tab on the Bottom Bar
@@ -128,10 +128,10 @@ export const GTagEvent = (gtag: GTag | undefined, eventType: EventType): void =>
         value: 1,
       };
       break;
-    case 'bottom-bar-see-all-reviews':
+    case 'bottom-bar-CU-reviews-link':
       eventPayload = {
         event_category: 'bottom-bar',
-        event_label: 'see-all-reviews',
+        event_label: 'CU-reviews-link',
         value: 1,
       };
       break;
