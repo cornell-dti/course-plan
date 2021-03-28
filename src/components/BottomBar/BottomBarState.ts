@@ -55,7 +55,7 @@ const getReviews = (
   fetch('https://www.cureviews.org/v2/getCourseByInfo', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ subject: subject.toLowerCase(), number: number }),
+    body: JSON.stringify({ subject: subject.toLowerCase(), number }),
   }).then(res => res.json().then(reviews => reviews.result));
 
 export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
