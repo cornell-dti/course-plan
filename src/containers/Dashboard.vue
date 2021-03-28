@@ -54,12 +54,6 @@
       @hide="showTourEndWindow = false"
       v-if="showTourEndWindow"
     />
-    <div class="dashboard-builtBy">
-      Built with ❤️ by
-      <a href="https://www.cornelldti.org/projects/courseplan/">
-        Cornell Design &amp; Tech Initiative
-      </a>
-    </div>
     <bottom-bar
       v-if="(!isOpeningRequirements && isTablet) || !isTablet"
       :isExpanded="bottomBarIsExpanded"

@@ -90,6 +90,12 @@
       ></div>
       <div v-if="compact"><div v-if="compact"></div></div>
     </div>
+    <div class="dashboard-builtBy">
+      Built with ❤️ by
+      <a href="https://www.cornelldti.org/projects/courseplan/">
+        Cornell Design &amp; Tech Initiative
+      </a>
+    </div>
   </main>
 </template>
 
