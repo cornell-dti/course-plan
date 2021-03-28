@@ -13,7 +13,7 @@
       class="onboarding-addRemoveWrapper"
       :class="{ 'onboarding--hidden': dropdownChoices.length <= 0 }"
     >
-      <div class="onboarding-add" @click="addDropdown">{{ addDropdownText }}</div>
+      <button class="onboarding-add" @click="addDropdown">{{ addDropdownText }}</button>
     </div>
   </div>
 </template>

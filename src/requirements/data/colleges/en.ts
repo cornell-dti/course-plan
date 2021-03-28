@@ -154,6 +154,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'self-check',
     minCount: 6,
   },
+  // TODO: INFO 1200 currently fulfills Eng Comm for ISST majors but should not be double-counted
   {
     name: 'Engineering Communications',
     description:

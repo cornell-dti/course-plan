@@ -77,7 +77,6 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
   },
-  // TODO: problem for reqs w options and diff minCount
   {
     name: 'Organic Chemistry',
     description: 'CHEM 1570 OR CHEM 3570 & 3580 OR CHEM 3590 & 3600 OR CHEM 3530',
@@ -113,7 +112,6 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
   },
-  // TODO: temp fix for reqs w options and diff minCount
   {
     name: 'Biochemistry and Molecular Biology Part 1',
     description: 'BIOMG 3300 OR BIOMG 3350 OR BIOMG 3310',
