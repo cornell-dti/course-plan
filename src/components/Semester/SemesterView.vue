@@ -33,17 +33,67 @@
           data-tooltipClass="tooltipCenter"
         >
           <span class="semesterView-switchText">View:</span>
-          <button
+          <div
             class="semesterView-switchImage semesterView-twoColumn"
             @click="setNotCompact"
             :class="{ 'semesterView-twoColumn--active': !compact }"
-          />
-          <button
+          ></div>
+          <div
             class="semesterView-switchImage semesterView-fourColumn"
             @click="setCompact"
             :class="{ 'semesterView-fourColumn--active': compact }"
+          ></div>
+        </div>
+      </div>
+      <confirmation
+        class="semesterView-confirmation"
+        :class="{ 'modal--flex': isSemesterConfirmationOpen }"
+        :text="confirmationText"
+      />
+      <semester-caution
+        class="semesterView-caution"
+        :class="{ 'modal--flex': isCautionModalOpen }"
+        :text="cautionText"
+      />
+      <div class="semesterView-content">
+        <div
+          v-for="(sem, semesterIndex) in semesters"
+          :key="`${sem.year}-${sem.type}`"
+          class="semesterView-wrapper"
+          :class="{ 'semesterView-wrapper--compact': compact }"
+        >
+          <semester
+            ref="semester"
+            :type="sem.type"
+            :year="sem.year"
+            :courses="sem.courses"
+            :semesterIndex="semesterIndex"
+            :compact="compact"
+            :activatedCourse="activatedCourse"
+            :isFirstSem="checkIfFirstSem(sem)"
+            @course-onclick="courseOnClick"
+            @new-semester="openSemesterModal"
+            @delete-semester="deleteSemester"
+            @open-caution-modal="openCautionModal"
           />
         </div>
+        <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
+        <div
+          v-if="compact"
+          class="semesterView-empty semesterView-empty--compact"
+          aria-hidden="true"
+        ></div>
+        <div
+          v-if="compact"
+          class="semesterView-empty semesterView-empty--compact"
+          aria-hidden="true"
+        ></div>
+        <div
+          v-if="compact"
+          class="semesterView-empty semesterView-empty--compact"
+          aria-hidden="true"
+        ></div>
+        <div v-if="compact"><div v-if="compact"></div></div>
       </div>
     </div>
     <div class="semesterView-bot">
