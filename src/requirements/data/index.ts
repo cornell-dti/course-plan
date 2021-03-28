@@ -20,12 +20,14 @@ import crpRequirements from './majors/crp';
 import csRequirements from './majors/cs';
 import deaRequirements from './majors/dea';
 import economicsRequirements from './majors/econ';
+import eceRequirements from './majors/ece';
 import englishRequirements from './majors/engl';
 import governmentRequirements from './majors/govt';
 import hotelAdminRequirements from './majors/hadm';
 import historyRequirements from './majors/hist';
 import infoRequirements from './majors/info';
 import isstRequirements from './majors/isst';
+import oldIsstRequirements from './majors/oldIsst';
 import mechnicalEngineeringRequirements from './majors/me';
 import orieRequirements from './majors/orie';
 
@@ -33,6 +35,7 @@ import buMinorRequirements from './minors/bu';
 import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
+import deaMinorRequirements from './minors/dea';
 import isstMinorRequirements from './minors/isst';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
@@ -135,6 +138,11 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: economicsRequirements,
     },
+    ECE: {
+      name: 'Electrical and Computer Engineering',
+      schools: ['EN'],
+      requirements: eceRequirements,
+    },
     ENGL: {
       name: 'English',
       schools: ['AS1', 'AS2'],
@@ -160,8 +168,13 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AG', 'AS2'],
       requirements: infoRequirements,
     },
-    ISST: {
-      name: 'Information Science, Systems, and Technology',
+    ISST1: {
+      name: 'Information Science, Systems, and Technology [before Fall 2020]',
+      schools: ['EN'],
+      requirements: oldIsstRequirements,
+    },
+    ISST2: {
+      name: 'Information Science, Systems, and Technology [Fall 2020 and after]',
       schools: ['EN'],
       requirements: isstRequirements,
     },
@@ -196,6 +209,11 @@ const json: RequirementsJson = {
       name: 'Dyson Business Minor for Engineers',
       schools: ['BU'],
       requirements: dbmeMinorRequirements,
+    },
+    DEA: {
+      name: 'Design and Environmental Analysis',
+      schools: ['HE'],
+      requirements: deaMinorRequirements,
     },
     ISST: {
       name: 'Industrial Systems and Information Technology',

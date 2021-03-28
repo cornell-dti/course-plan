@@ -7,9 +7,9 @@
       <div class="course-main">
         <div class="course-top">
           <div class="course-code">{{ courseObj.code }}</div>
-          <div v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
+          <button v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
-          </div>
+          </button>
         </div>
         <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
         <div v-if="!compact" class="course-info">

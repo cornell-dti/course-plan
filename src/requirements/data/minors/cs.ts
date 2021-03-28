@@ -1,5 +1,10 @@
-import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement } from '../checkers-common';
+import { CollegeOrMajorRequirement, Course } from '../../types';
+import {
+  includesWithSingleRequirement,
+  courseMatchesCodeOptions,
+  ifCodeMatch,
+  courseMatchesCode,
+} from '../checkers-common';
 
 const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -25,12 +30,34 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
   },
-  // TODO: Needs excludes for certain classes
+  // TODO: Temp. excluding courses for Req 2
   {
     name: '4 CS courses numbered 3000 or higher',
     description: 'CS 4090, CS 4997, CS 4998, CS 4999 and seminars are excluded. CS 2800 is allowed',
     source: 'https://www.cs.cornell.edu/undergrad/csminor',
-    checker: includesWithSingleRequirement('CS 2800', 'CS 3***', 'CS 4***', 'CS 5***', 'CS 6***'),
+    checker: [
+      (course: Course): boolean => {
+        if (
+          courseMatchesCodeOptions(course, [
+            'CS 4090',
+            'CS 4997',
+            'CS 4998',
+            'CS 4999',
+            'CS 7***',
+            'CS 3110',
+            'CS 3410',
+            'CS 3420',
+          ])
+        ) {
+          return false;
+        }
+        return (
+          courseMatchesCode(course, 'CS 2800') ||
+          (ifCodeMatch(course.subject, 'CS') &&
+            !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***')))
+        );
+      },
+    ],
     fulfilledBy: 'courses',
     perSlotMinCount: [4],
   },

@@ -28,16 +28,16 @@
         data-tooltipClass="tooltipCenter"
       >
         <span class="semesterView-switchText">View:</span>
-        <div
+        <button
           class="semesterView-switchImage semesterView-twoColumn"
           @click="setNotCompact"
           :class="{ 'semesterView-twoColumn--active': !compact }"
-        ></div>
-        <div
+        />
+        <button
           class="semesterView-switchImage semesterView-fourColumn"
           @click="setCompact"
           :class="{ 'semesterView-fourColumn--active': compact }"
-        ></div>
+        />
       </div>
     </div>
     <confirmation
@@ -273,6 +273,7 @@ export default Vue.extend({
     &--active {
       cursor: pointer;
       background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+      opacity: 1;
     }
   }
 
@@ -285,6 +286,7 @@ export default Vue.extend({
     &--active {
       cursor: pointer;
       background-image: url('~@/assets/images/views/fourColumnSelected.svg');
+      opacity: 1;
     }
   }
 
