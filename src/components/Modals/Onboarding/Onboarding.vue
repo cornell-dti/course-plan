@@ -16,8 +16,8 @@
             <span
               ><img
                 class="onboarding-header-emoji"
-                src="@/assets/images/clapEmoji.svg"
-                alt="clap"
+                src="@/assets/images/waveEmoji.svg"
+                alt="wave"
               />
               Welcome to CoursePlan</span
             >
@@ -26,8 +26,8 @@
             <span
               ><img
                 class="onboarding-header-emoji"
-                src="@/assets/images/waveEmoji.svg"
-                alt="wave"
+                src="@/assets/images/clapEmoji.svg"
+                alt="clap"
               />
               Hi {{ name.firstName }}</span
             >

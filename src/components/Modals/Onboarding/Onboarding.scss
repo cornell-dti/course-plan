@@ -12,7 +12,7 @@ input {
   width: 100%;
 
   &-selectWrapperRow {
-    margin-top: 15px;
+    margin-top: 4px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -27,7 +27,6 @@ input {
     }
   }
   &-selectWrapper {
-    margin-top: 15px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -84,7 +83,7 @@ input {
     // TODO: font-size is 40px on designs, but does not fit
     font-weight: bold;
     font-size: 38px;
-    color: #4f4f4f;
+    color: $onboardingGray;
 
     &-emoji {
       width: 38px;
@@ -97,7 +96,7 @@ input {
     font-weight: 300;
     font-size: 20px;
     line-height: 24px;
-    color: $lightPlaceholderGray;
+    color: $onboardingGray;
   }
 
   &-section {
@@ -105,7 +104,7 @@ input {
   }
 
   &-inputs {
-    border: 1px solid #c4c4c4;
+    border: 1px solid $inactiveGray;
     box-sizing: border-box;
     border-radius: 9px;
 
@@ -185,8 +184,10 @@ input {
       width: 100%;
       border-bottom-color: #c4c4c4;
       margin-bottom: 1.5rem;
+      margin-top: 20px;
     }
     &-review {
+      color: $onboardingGray;
       font-weight: 600;
       font-size: 16px;
     }
@@ -197,7 +198,11 @@ input {
     font-size: 16px;
     line-height: 20px;
     color: $darkGray2;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
+
+    &--header {
+      font-weight: 800;
+    }
 
     &--bottom {
       display: flex;
@@ -215,6 +220,15 @@ input {
       background-color: white;
       color: $lightPlaceholderGray;
       font-size: 16px;
+    }
+
+    &--subject {
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 19px;
+      color: $darkGray2;
+      margin-bottom: 0;
+      margin: 10px 0;
     }
   }
 
@@ -241,13 +255,18 @@ input {
         margin-right: 1.5rem;
       }
     }
+
     &--college {
       &:not(:last-child) {
         margin-bottom: 1.5rem;
       }
       &:first-child {
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
       }
+    }
+
+    &--description {
+      margin-bottom: 1rem;
     }
   }
 
@@ -364,7 +383,8 @@ input {
     &--column {
       display: flex;
       flex-direction: column;
-      margin-right: 20px;
+      margin-right: 4px;
+      margin-left: 32px;
     }
     &--columnCenter {
       display: flex;
@@ -383,8 +403,7 @@ input {
     &--columnWide {
       display: flex;
       flex-direction: column;
-      padding-right: 20px;
-      width: 250px;
+      width: 380px;
     }
     &--columnFill {
       display: flex;
@@ -432,6 +451,22 @@ input {
         margin-right: 8.7px;
         margin-left: 5px;
       }
+
+      &.college-test-credits-arrow {
+        border-left: 6.24px solid transparent;
+        border-right: 6.24px solid transparent;
+
+        border-top: 6.24px solid #c4c4c4;
+        background: transparent;
+
+        //when clicked border-top-color: #32A0F2;
+
+        margin-top: 30px;
+        margin-bottom: 10.17px;
+
+        margin-right: 6px;
+        margin-left: 15px;
+      }
     }
   }
 
@@ -456,7 +491,7 @@ input {
 
       color: $lightPlaceholderGray;
 
-      padding-left: 10px;
+      padding-left: 8px;
     }
   }
 
@@ -472,6 +507,23 @@ input {
   &-required-star {
     color: $emGreen;
     display: contents;
+  }
+
+  &-transferCreditDescription {
+    font-size: 14px;
+    color: $secondaryGray;
+    a {
+      color: $yuxuanBlue;
+    }
+  }
+
+  &-transferCredits {
+    padding-top: 0;
+  }
+
+  &-transferCreditsSection {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 
@@ -507,8 +559,16 @@ select option[disabled]:first-child {
 }
 .addSpaceTop {
   margin-top: 30px;
+
+  &--score {
+    // add 10px for "subject" margin and 19px for IB credits line height
+    margin-top: 59px;
+    margin-bottom: 10px;
+  }
 }
 .alignCenter {
+  // onboarding-label height + padding
+  padding-top: 19px;
   display: flex;
   flex-direction: column;
   align-items: center;

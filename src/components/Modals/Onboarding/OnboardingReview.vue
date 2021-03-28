@@ -101,13 +101,17 @@
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-reviewExam">
             <div class="alignLeft">
-              <label class="onboarding-label">AP Credits</label>
+              <label class="onboarding-label onboarding-label--header">AP Credits</label>
+              <label class="onboarding-label--subject">Subject</label>
               <div v-for="(exam, index) in onboardingData.exam" :key="'AP' + index">
                 <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
                   exam.subject
                 }}</label>
               </div>
-              <label class="onboarding-label addSpaceTop">IB Credits</label>
+              <label class="onboarding-label addSpaceTop onboarding-label--header"
+                >IB Credits</label
+              >
+              <label class="onboarding-label--subject">Subject</label>
               <div v-for="(exam, index) in onboardingData.exam" :key="'IB' + index">
                 <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
                   exam.subject
@@ -115,52 +119,22 @@
               </div>
             </div>
             <div class="alignCenter">
-              <label class="onboarding-label">Score</label>
+              <label class="onboarding-label--subject">Score</label>
               <div v-for="(exam, index) in onboardingData.exam" :key="'APScore' + index">
                 <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
                   exam.score
                 }}</label>
               </div>
-              <label class="onboarding-label addSpaceTop">Score</label>
+              <label class="onboarding-label addSpaceTop--score">Score</label>
               <div v-for="(exam, index) in onboardingData.exam" :key="'IBScore' + index">
                 <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
                   exam.score
                 }}</label>
               </div>
             </div>
-            <div class="alignCenter">
-              <label class="onboarding-label">Credit</label>
-              <div v-for="(exam, index) in onboardingData.exam" :key="'APCredit' + index">
-                <label v-if="exam.type == 'AP'" class="onboarding-label--review">{{
-                  getExamCredit(exam)
-                }}</label>
-              </div>
-              <label class="onboarding-label addSpaceTop">Credit</label>
-              <div v-for="(exam, index) in onboardingData.exam" :key="'IBCredit' + index">
-                <label v-if="exam.type == 'IB'" class="onboarding-label--review">{{
-                  getExamCredit(exam)
-                }}</label>
-              </div>
-            </div>
           </div>
         </div>
-        <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2-review"> Transferred Course Credits</span>
-        </div>
-        <div class="onboarding-selectWrapper">
-          <div class="onboarding-selectWrapper-reviewExam">
-            <div>
-              <div v-for="(course, index) in onboardingData.transferCourse" :key="index">
-                <label class="onboarding-label--review">{{ course.class }}</label>
-              </div>
-            </div>
-            <div class="alignEnd">
-              <div v-for="(course, index) in onboardingData.transferCourse" :key="index">
-                <label class="onboarding-label--review"> {{ course.credits }} Credits </label>
-              </div>
-            </div>
-          </div>
-        </div>
+
         <div class="onboarding-bottomWrapper">
           <label class="onboarding-subHeader2-review">Total Transfer Credits:</label>
           <div class="onboarding-label--bottom">

@@ -32,7 +32,7 @@
     <div class="onboarding-section">
       <!-- TODO: Multiple colleges -->
       <div class="onboarding-subHeader">
-        <span class="onboarding-subHeader--font"> College</span>
+        <span class="onboarding-subHeader--font">Your Major</span>
       </div>
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
@@ -55,7 +55,7 @@
           <onboarding-basic-multi-dropdown
             :availableChoices="majors"
             :dropdownChoices="majorAcronyms"
-            add-dropdown-text="+ add another major"
+            add-dropdown-text="+ another major"
             @on-select="selectMajor"
             @on-remove="removeMajor"
             @on-add="addMajor"
@@ -68,7 +68,7 @@
         </div>
       </div>
       <div class="onboarding-subHeader">
-        <span class="onboarding-subHeader--font"> Minor</span>
+        <span class="onboarding-subHeader--font">Your Minor</span>
       </div>
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper">
@@ -76,7 +76,7 @@
           <onboarding-basic-multi-dropdown
             :availableChoices="minors"
             :dropdownChoices="minorAcronyms"
-            add-dropdown-text="+ add another minor"
+            add-dropdown-text="+ another minor"
             @on-select="selectMinor"
             @on-remove="removeMinor"
             @on-add="addMinor"
