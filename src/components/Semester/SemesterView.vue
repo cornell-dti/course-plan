@@ -27,19 +27,17 @@
         data-step="4"
         data-tooltipClass="tooltipCenter"
       >
-        <span v-if="!isMobile" class="semesterView-switchText">View:</span>
-        <div
+        <span class="semesterView-switchText">View:</span>
+        <button
           class="semesterView-switchImage semesterView-twoColumn"
-          v-if="!isMobile"
           @click="setNotCompact"
           :class="{ 'semesterView-twoColumn--active': !compact }"
-        ></div>
-        <div
+        />
+        <button
           class="semesterView-switchImage semesterView-fourColumn"
-          v-if="!isMobile"
           @click="setCompact"
           :class="{ 'semesterView-fourColumn--active': compact }"
-        ></div>
+        />
       </div>
     </div>
     <confirmation
@@ -194,7 +192,7 @@ export default Vue.extend({
     },
     closeBar() {
       if (!this.isCourseClicked) {
-        closeBottomBar();
+        closeBottomBar(this.$gtag);
       }
       this.isCourseClicked = false;
     },
@@ -275,6 +273,7 @@ export default Vue.extend({
     &--active {
       cursor: pointer;
       background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+      opacity: 1;
     }
   }
 
@@ -287,6 +286,7 @@ export default Vue.extend({
     &--active {
       cursor: pointer;
       background-image: url('~@/assets/images/views/fourColumnSelected.svg');
+      opacity: 1;
     }
   }
 
@@ -358,6 +358,23 @@ export default Vue.extend({
     &-content {
       width: 100%;
       justify-content: center;
+    }
+  }
+}
+
+@media only screen and (max-width: $small-breakpoint) {
+  .semesterView {
+    margin-top: 5.5rem;
+    margin-left: 0;
+    margin-right: 0;
+
+    &-content {
+      margin: 0;
+    }
+
+    &-wrapper {
+      flex: 1 1 auto;
+      padding: 0 2rem;
     }
   }
 }

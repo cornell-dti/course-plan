@@ -33,7 +33,7 @@
                   @on-select="score => selectAPScore(score, index)"
                 />
                 <div class="onboarding-select--column-removeExam">
-                  <div
+                  <button
                     class="onboarding-remove"
                     @click="removeExam('AP', index)"
                     :class="{
@@ -41,13 +41,16 @@
                         examsAP.length === 1 && exam.subject === placeholderText,
                     }"
                   >
-                    <img src="@/assets/images/x-green.svg" alt="x" />
-                  </div>
+                    <img
+                      src="@/assets/images/x-green.svg"
+                      :alt="`x to remove AP exam ${exam.type} ${exam.subject}`"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
             <div class="onboarding-addRemoveWrapper">
-              <div class="onboarding-add" @click="addExam('AP')">+ add another subject</div>
+              <button class="onboarding-add" @click="addExam('AP')">+ add another subject</button>
             </div>
           </div>
           <div class="onboarding-subHeader">
@@ -71,7 +74,7 @@
                   @on-select="score => selectIBScore(score, index)"
                 />
                 <div class="onboarding-select--column-removeExam">
-                  <div
+                  <button
                     class="onboarding-remove"
                     @click="removeExam('IB', index)"
                     :class="{
@@ -79,13 +82,16 @@
                         examsIB.length === 1 && exam.subject === placeholderText,
                     }"
                   >
-                    <img src="@/assets/images/x-green.svg" alt="x" />
-                  </div>
+                    <img
+                      src="@/assets/images/x-green.svg"
+                      :alt="`x to remove IB exam ${exam.type} ${exam.subject}`"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
             <div class="onboarding-addRemoveWrapper">
-              <div class="onboarding-add" @click="addExam('IB')">+ add another subject</div>
+              <button class="onboarding-add" @click="addExam('IB')">+ add another subject</button>
             </div>
           </div>
         </div>

@@ -4,8 +4,8 @@
       <div class="onboarding-subHeader">
         <span class="onboarding-subHeader--font"> Basic Information</span>
         <span>
-          <button class="onboarding-button-previous" @click="setPage(1)">
-            <img src="@/assets/images/edit-review.svg" alt="edit" />
+          <button class="onboarding-button-previous" @click="editBasicInformation()">
+            <img src="@/assets/images/edit-review.svg" alt="edit icon" />
           </button>
         </span>
       </div>
@@ -15,19 +15,23 @@
         </div>
         <div class="onboarding-selectWrapperRow-review">
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"><span> First Name </span></label>
+            <label class="onboarding-label"
+              ><span> First Name<span class="onboarding-required-star">*</span></span></label
+            >
             <label class="onboarding-label--review"
               ><span> {{ userName.firstName }}</span></label
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"><span> Middle Name </span></label>
+            <label class="onboarding-label"><span> Middle Name</span></label>
             <label class="onboarding-label--review"
               ><span> {{ userName.middleName }}</span></label
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"><span> Last Name </span></label>
+            <label class="onboarding-label"
+              ><span>Last Name<span class="onboarding-required-star">*</span></span></label
+            >
             <label class="onboarding-label--review"
               ><span> {{ userName.lastName }}</span></label
             >
@@ -38,13 +42,17 @@
         </div>
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label">College*</label>
+            <label class="onboarding-label"
+              >College<span class="onboarding-required-star">*</span></label
+            >
             <div>
               <label class="onboarding-label--review">{{ collegeText }}</label>
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label">Major</label>
+            <label class="onboarding-label"
+              >Major<span class="onboarding-required-star">*</span></label
+            >
             <div v-for="(major, index) in onboardingData.major" :key="index">
               <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
             </div>
@@ -66,8 +74,8 @@
       <div class="onboarding-subHeader">
         <span class="onboarding-subHeader--font"> Transfer Credits</span>
         <span>
-          <button class="onboarding-button-previous" @click="setPage(2)">
-            <img src="@/assets/images/edit-review.svg" />
+          <button class="onboarding-button-previous" @click="editTransferCredits()">
+            <img src="@/assets/images/edit-review.svg" alt="edit icon" />
           </button>
         </span>
       </div>
@@ -78,7 +86,11 @@
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">
-              <img class="checkmark" src="@/assets/images/checkmark-onboarding.svg" />
+              <img
+                class="checkmark"
+                src="@/assets/images/checkmark-onboarding.svg"
+                alt="checkmark"
+              />
               {{ onboardingData.tookSwim === 'yes' ? 'Yes' : 'No' }}
             </label>
           </div>
@@ -139,6 +151,7 @@
 import Vue, { PropType } from 'vue';
 import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
+import { GTagEvent } from '@/gtag';
 
 const placeholderText = 'Select one';
 
@@ -165,6 +178,14 @@ export default Vue.extend({
     },
   },
   methods: {
+    editBasicInformation(): void {
+      this.setPage(1);
+      GTagEvent(this.$gtag, 'onboarding-edit-basic-information');
+    },
+    editTransferCredits(): void {
+      this.setPage(2);
+      GTagEvent(this.$gtag, 'onboarding-edit-transfer-credits');
+    },
     getExamCredit,
     getMajorFullName,
     getMinorFullName,

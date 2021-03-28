@@ -45,11 +45,20 @@
             @click="
               $emit('hide');
               $emit('startTour');
+              startTour();
             "
           >
             {{ buttonText }}
           </button>
-          <button class="skipButton" @click="$emit('skip')">{{ exit }}</button>
+          <button
+            class="skipButton"
+            @click="
+              $emit('skip');
+              skipTour();
+            "
+          >
+            {{ exit }}
+          </button>
         </div>
       </div>
     </div>
@@ -59,6 +68,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { clickOutside } from '@/utilities';
+import { GTagEvent } from '@/gtag';
 
 export default Vue.extend({
   props: {
@@ -75,6 +85,14 @@ export default Vue.extend({
   },
   directives: {
     'click-outside': clickOutside,
+  },
+  methods: {
+    startTour(): void {
+      GTagEvent(this.$gtag, 'start-walkthrough');
+    },
+    skipTour(): void {
+      GTagEvent(this.$gtag, 'skip-walkthrough');
+    },
   },
 });
 </script>

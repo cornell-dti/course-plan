@@ -13,7 +13,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://infosci.cornell.edu/undergraduate/info-sci-majors/ba-information-science-college-arts-sciences/degree-requirements/core',
     checker: includesWithSubRequirements(
-      ['INFO 1200'],
+      ['INFO 1200', 'INFO 1260'],
       ['INFO 1300'],
       ['INFO 2040'],
       ['INFO 2450'],
@@ -25,9 +25,8 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Programming and Math Requirements',
     description:
-      'All Information Science majors are required to take CS 1110, Introduction to Computing Using Python, Calculus I, and a Statistics course. ' +
+      'All Information Science majors are required to take CS 1110, Calculus I, and a Statistics course. ' +
       'The list of approved Calculus I and Statistics is provided below. ' +
-      'All classes used to complete major requirements must be taken for a letter grade. ' +
       'Advanced Placement credits may not be used to fulfill the Statistics requirement for students matriculating as of or after Fall 2015, ' +
       'however, they may be used to fulfill the Calculus requirement. ' +
       'Students that have taken CS 1112 should take CS 1133, Transition to Python, to be prepared for INFO 2950, Introduction to Data Science.',

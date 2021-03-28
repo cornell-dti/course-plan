@@ -7,22 +7,22 @@
       <div class="onboarding-inputs onboarding-inputs--name">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font">
-              First Name<span class="onboarding-required-star">*</span>
+            ><span class="onboarding-subHeader--font"
+              >First Name<span class="onboarding-required-star">*</span>
             </span></label
           >
           <input class="onboarding-input" v-model="firstName" @input="updateBasic()" />
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font"> Middle Name </span></label
+            ><span class="onboarding-subHeader--font">Middle Name</span></label
           >
           <input class="onboarding-input" v-model="middleName" @input="updateBasic()" />
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font">
-              Last Name<span class="onboarding-required-star">*</span>
+            ><span class="onboarding-subHeader--font"
+              >Last Name<span class="onboarding-required-star">*</span>
             </span></label
           >
           <input class="onboarding-input" v-model="lastName" @input="updateBasic()" />
@@ -49,7 +49,9 @@
           </div>
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <label class="onboarding-label">Major</label>
+          <label class="onboarding-label"
+            >Major<span class="onboarding-required-star">*</span></label
+          >
           <onboarding-basic-multi-dropdown
             :availableChoices="majors"
             :dropdownChoices="majorAcronyms"
@@ -58,6 +60,11 @@
             @on-remove="removeMajor"
             @on-add="addMajor"
           />
+          <div class="requestForm">
+            *Don't see your major/minor? We are working hard to add them soon! Get updated when we
+            add it by signing up
+            <a href="https://forms.gle/MDvVDoRapUp2VeBb9" target="_blank" class="link">here</a>
+          </div>
         </div>
       </div>
       <div class="onboarding-subHeader">

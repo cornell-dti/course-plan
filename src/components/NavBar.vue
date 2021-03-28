@@ -5,10 +5,10 @@
       <div class="navbar-iconWrapper course-plan-logo">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
       </div>
-      <div class="navbar-iconWrapper desktop profile-icon" @click="editProfile"></div>
+      <button class="navbar-iconWrapper desktop profile-icon" @click="editProfile"></button>
     </div>
     <div class="navbar-bottom">
-      <div class="navbar-iconWrapper desktop logout-icon" @click="logout"></div>
+      <button class="navbar-iconWrapper desktop logout-icon" @click="logout" />
     </div>
     <div v-if="menuOpen" class="navbar-menu-background-shadow" @click="editProfile" />
     <div v-if="menuOpen" class="navbar-menu">
@@ -41,6 +41,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import firebase from 'firebase/app';
+import { GTagEvent } from '@/gtag';
 
 export default Vue.extend({
   props: {
@@ -51,6 +52,7 @@ export default Vue.extend({
   },
   methods: {
     logout() {
+      GTagEvent(this.$gtag, 'logout');
       firebase
         .auth()
         .signOut()
@@ -106,6 +108,7 @@ $mobile-navbar-height: 4.5rem;
     &:focus,
     &:active {
       background-image: url('~@/assets/images/navbar/profileIconBlue.svg');
+      opacity: 1;
     }
   }
 
@@ -122,6 +125,7 @@ $mobile-navbar-height: 4.5rem;
     &:focus,
     &:active {
       background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
+      opacity: 1;
     }
   }
 
@@ -132,6 +136,7 @@ $mobile-navbar-height: 4.5rem;
     &:focus,
     &:active {
       background-image: url('~@/assets/images/navbar/logoutBlue.svg');
+      opacity: 1;
     }
   }
 

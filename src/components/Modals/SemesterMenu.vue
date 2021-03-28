@@ -1,25 +1,41 @@
 <template>
   <div class="semesterMenu">
-    <div class="semesterMenu-section" :class="{ 'd-none': isOpenModal }">
+    <button
+      class="semesterMenu-section"
+      :class="{ 'd-none': isOpenModal }"
+      @click="openEditSemesterModal"
+    >
       <div class="semesterMenu-content">
-        <div class="semesterMenu-content" @click="openEditSemesterModal">
+        <div class="semesterMenu-content">
           <div class="semesterMenu-left">
-            <img class="semesterMenu-icon" src="@/assets/images/edit.svg" />
+            <img
+              class="semesterMenu-icon"
+              src="@/assets/images/edit.svg"
+              alt="edit semester pencil icon"
+            />
             <span class="semesterMenu-edit">Edit Semester</span>
           </div>
         </div>
       </div>
-    </div>
-    <div class="semesterMenu-section" :class="{ 'd-none': isOpenModal }">
+    </button>
+    <button
+      class="semesterMenu-section"
+      :class="{ 'd-none': isOpenModal }"
+      @click="openDeleteSemesterModal"
+    >
       <div class="semesterMenu-content">
-        <div class="semesterMenu-content" @click="openDeleteSemesterModal">
+        <div class="semesterMenu-content">
           <div class="semesterMenu-left">
-            <img class="semesterMenu-icon" src="@/assets/images/trash.svg" />
+            <img
+              class="semesterMenu-icon"
+              src="@/assets/images/trash.svg"
+              alt="delete semester trashcan icon"
+            />
             <span class="semesterMenu-delete">Delete Semester</span>
           </div>
         </div>
       </div>
-    </div>
+    </button>
   </div>
 </template>
 
@@ -65,10 +81,12 @@ export default Vue.extend({
     justify-content: space-between;
     padding: 0.5rem 1rem;
     position: relative;
+    width: 100%;
     &:hover,
     &:active,
     &:focus {
       background-color: rgba(50, 160, 242, 0.15);
+      opacity: 1;
     }
     &:first-child {
       border-top-left-radius: 9px;

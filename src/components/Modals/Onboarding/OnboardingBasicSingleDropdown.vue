@@ -31,15 +31,15 @@
         </div>
       </div>
     </div>
-    <div
+    <button
       class="onboarding-remove"
       @click="onRemove()"
       :class="{
         'onboarding--hidden': cannotBeRemoved,
       }"
     >
-      <img src="@/assets/images/x-green.svg" alt="x" />
-    </div>
+      <img src="@/assets/images/x-green.svg" alt="x to delete dropdown" />
+    </button>
   </div>
 </template>
 

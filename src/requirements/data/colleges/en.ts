@@ -45,7 +45,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Chemistry',
     description:
-      'CHEM 2090. Majors in Chemical Engineering or those planning on a health-related career should take CHEM 2090 and then 2080.  ' +
+      'CHEM 2090. Majors in Chemical Engineering or those planning on a health-related career should take CHEM 2090 and then 2080. ' +
       'Students in Environmental Engineering should take CHEM 2090 and CHEM 1570/3570.  ' +
       'Earth and Atmospheric Sciences majors should take CHEM 2090 and then 2080/1570.',
     source:
@@ -90,9 +90,10 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [(course: Course): boolean => course.subject === 'ENGRD'],
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    allowCourseDoubleCounting: true,
   },
   {
-    name: 'Liberal Studies Distribution: 6 courses',
+    name: 'Liberal Studies: 6 courses',
     description:
       'Liberal arts commonly include courses in the humanities. A minimum of six courses must be taken. ' +
       'At least two courses must be at the 2000 level or higher.',
@@ -104,6 +105,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
           distribution => course.catalogDistr?.includes(distribution) ?? false
         ),
     ],
+    checkerWarning: 'We do not check that at least two courses are at the 2000 level or higher.',
     fulfilledBy: 'courses',
     perSlotMinCount: [6],
   },
@@ -152,6 +154,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'self-check',
     minCount: 6,
   },
+  // TODO: INFO 1200 currently fulfills Eng Comm for ISST majors but should not be double-counted
   {
     name: 'Engineering Communications',
     description:

@@ -4,7 +4,11 @@ import Vuex, { Store } from 'vuex';
 import * as fb from './firebaseConfig';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
-import getCurrentSeason, { checkNotNull, getCurrentYear } from './utilities';
+import getCurrentSeason, {
+  checkNotNull,
+  getCurrentYear,
+  allocateAllSubjectColor,
+} from './utilities';
 
 Vue.use(Vuex);
 
@@ -44,7 +48,6 @@ export type VuexStoreState = {
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
-  illegallyDoubleCountedCourseUniqueIDs: ReadonlySet<number>;
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
 };
@@ -83,7 +86,6 @@ const store: TypedVuexStore = new TypedVuexStore({
     // It won't be null once the app loads.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     requirementFulfillmentGraph: null!,
-    illegallyDoubleCountedCourseUniqueIDs: new Set(),
     groupedRequirementFulfillmentReport: [],
     subjectColors: {},
     uniqueIncrementer: 0,
@@ -129,13 +131,11 @@ const store: TypedVuexStore = new TypedVuexStore({
         VuexStoreState,
         | 'userRequirementsMap'
         | 'requirementFulfillmentGraph'
-        | 'illegallyDoubleCountedCourseUniqueIDs'
         | 'groupedRequirementFulfillmentReport'
       >
     ) {
       state.userRequirementsMap = data.userRequirementsMap;
       state.requirementFulfillmentGraph = data.requirementFulfillmentGraph;
-      state.illegallyDoubleCountedCourseUniqueIDs = data.illegallyDoubleCountedCourseUniqueIDs;
       state.groupedRequirementFulfillmentReport = data.groupedRequirementFulfillmentReport;
     },
     setSubjectColors(state: VuexStoreState, colors: Readonly<Record<string, string>>) {
@@ -310,8 +310,15 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   const subjectColorUnsubscriber = fb.subjectColorsCollection
     .doc(simplifiedUser.email)
     .onSnapshot(snapshot => {
-      const subjectColors = snapshot.data() || {};
-      store.commit('setSubjectColors', subjectColors);
+      const subjectColors = snapshot.data();
+      if (subjectColors != null) {
+        store.commit('setSubjectColors', subjectColors);
+      } else {
+        // Pre-allocate all subject colors during this initialization step.
+        const newSubjectColors = allocateAllSubjectColor(store.state.subjectColors);
+        store.commit('setSubjectColors', newSubjectColors);
+        fb.subjectColorsCollection.doc(simplifiedUser.email).set(newSubjectColors);
+      }
       subjectColorInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
