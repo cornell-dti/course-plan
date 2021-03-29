@@ -20,16 +20,292 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'credits',
     perSlotMinCount: [55],
   },
+  // TODO: only supports one concentration
   {
     name: 'AEM Concentration Requirement',
     description:
       'AEM majors must choose at least one of the following eleven concentrations by the beginning of their junior year, ' +
       'and may choose no more than two. No more than one course may fulfill the elective credits of two concentrations. ' +
-      'Courses used to fulfill a core Applied Economics or Quantitative Methods requirement cannot also count towards a concentration requirement except in EERE. ' +
-      'One class from the core requirements may be taken for a S/U grade. NO S/U grades will be accepted in a declared concentration, unless a class is offered S/U only. ' +
-      'All course petitions or substitutions are managed through the Dyson Office of Student Services in consultation with a committee of faculty from each concentration',
-    source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
-    fulfilledBy: 'self-check',
+      'Courses used to fulfill a core Applied Economics or Quantitative Methods requirement cannot also count towards a concentration requirement except in EERE. ',
+    source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/concentrations/',
+    fulfilledBy: 'toggleable',
+    fulfillmentOptions: {
+      Accounting: {
+        description: 'AEM 3360, AEM 3370 and 9 credits from the list.',
+        counting: 'credits',
+        checker: includesWithSubRequirements(
+          ['AEM 3360'],
+          ['AEM 3370'],
+          [
+            'AEM 3520',
+            'AEM 4225',
+            'AEM 4520',
+            'AEM 4521',
+            'AEM 4530',
+            'AEM 4531',
+            'AEM 4532',
+            'AEM 4533',
+            'AEM 4534',
+            'AEM 4535',
+            'AEM 4560',
+            'NBA 5090',
+            'NBA 5110',
+          ]
+        ),
+        perSlotMinCount: [3, 4, 9],
+      },
+      'Agribusiness Management': {
+        description: 'AEM 3020, HADM 2810 or ILRHR 2600 and 9 credits from the list.',
+        counting: 'credits',
+        checker: includesWithSubRequirements(
+          ['AEM 3020'],
+          ['HADM 2810', 'ILRHR 2600'],
+          [
+            'AEM 3040',
+            'AEM 3260',
+            'AEM 3290',
+            'AEM 4030',
+            'AEM 4050',
+            'AEM 4070',
+            'AEM 4150',
+            'AEM 4210',
+            'AEM 4310',
+            'AEM 4510',
+            'AEM 4560',
+          ]
+        ),
+        perSlotMinCount: [4, 3, 9],
+      },
+      'Applied Economics and Management': {
+        description:
+          'ECON 3040, at least 12 credits listed under Applied Economics, and at least 3 credits listed under Quantitative Methods. ' +
+          'Must be courses that have not already been used to fulfill AEM Core Requirements.',
+        counting: 'credits',
+        checker: includesWithSubRequirements(
+          ['ECON 3040'],
+          // Applied Economics Requirement
+          [
+            'AEM 2500',
+            'AEM 4500',
+            'AEM 4510',
+            'AEM 4515',
+            'AEM 3310',
+            'AEM 4100',
+            'AEM 4140',
+            'AEM 4160',
+            'AEM 4550',
+            'AEM 2300',
+            'AEM 2350',
+            'AEM 4300',
+            'AEM 4420',
+            'AEM 4350',
+            'AEM 4420',
+            'AEM 4450',
+            'AEM 4485',
+            'AEM 4545',
+            'AEM 4150',
+            'AEM 4210',
+            'AEM 4310',
+          ],
+          // Quantitative Methods
+          [
+            'AEM 2100',
+            'AEM MATH 1110',
+            'AEM 2010',
+            'AEM 2770',
+            'AEM 2830',
+            'AEM 2840',
+            'AEM 3100',
+            'AEM 3390',
+            'AEM 4060',
+            'AEM 4110',
+            'AEM 4120',
+            'AEM 4190',
+            'BTRY 3080',
+            'ILRST 3080',
+            'STSCI 3080',
+            'ECON 3130',
+            'ECON 3140',
+            'ECON 4020',
+            'ILRST 2110',
+            'ILRST 3110',
+          ]
+        ),
+        perSlotMinCount: [4, 12, 3],
+      },
+      'Business Analytics': {
+        description:
+          'AEM 3100 or AEM 4110, AEM 2830 or AEM 2840 or CS 1112, AEM 2820 or CSS/PLSCS 4200 and 6 credits from the list.',
+        counting: 'credits',
+        checker: includesWithSubRequirements(
+          ['AEM 3100', 'AEM 4110'],
+          ['AEM 2830', 'AEM 2840', 'CS 1112'],
+          ['AEM 2820', 'CSS 4200'],
+          [
+            'INFO 3200',
+            'INFO 3460',
+            'INFO 3561',
+            'INFO 4270',
+            'INFO 4561',
+            'INFO 4940',
+            'STS 3440',
+            'STS 4040',
+          ],
+          ['INFO 3300', 'INFO 3350', 'INFO 4120', 'INFO 4130', 'INFO 4300']
+        ),
+        perSlotMinCount: [3, 3, 3, 6],
+      },
+      Entrepreneurship: {
+        description: 'Complete 15 credits from the list with at least 6 credits from AEM.',
+        counting: 'credits',
+        checker: includesWithSubRequirements([
+          'AEM 1220',
+          'AEM 2220',
+          'AEM 3110',
+          'AEM 3220',
+          'AEM 3245',
+          'AEM 3249',
+          'AEM 3250',
+          'AEM 3251',
+          'AEM 3340',
+          'AEM 3380',
+          'AEM 4080',
+          'AEM 4370',
+          'AEM 4371',
+          'AEM 4380',
+          'AEM 4390',
+          'AEM 4420',
+          'AEM 4615',
+          'HADM 4130',
+          'HADM 4211',
+          'NBA 3000',
+          'NBA 6230',
+        ]),
+        perSlotMinCount: [15],
+      },
+      'Environmental, Energy, and Resource Economics': {
+        description:
+          'ECON 3030, ECON 3040, AEM 2500, 6 credits from AEM 4500/4510/4515 and 3 credits from the list below.',
+        counting: 'credits',
+        checker: includesWithSubRequirements(
+          ['ECON 3030'],
+          ['ECON 3040'],
+          ['AEM 2500'],
+          ['AEM 4500', 'AEM 4510', 'AEM 4515'],
+          [
+            'AEM 3100',
+            'AEM 4110',
+            'ECON 3120',
+            'ECON 3140',
+            'ILRST 2110',
+            'HADM 3740',
+            'PLSCS 4200',
+            'STSCI 4060',
+            'HADM 4010',
+          ]
+        ),
+        perSlotMinCount: [4, 4, 3, 6, 3],
+      },
+      Finance: {
+        description: 'AEM 4570, AEM 4670, AEM 3520 or AEM 3360, 6 credits from the list below.',
+        counting: 'credits',
+        checker: includesWithSubRequirements(
+          ['AEM 4570'],
+          ['AEM 4670'],
+          ['AEM 3520', 'AEM 3360'],
+          [
+            'AEM 4060',
+            'AEM 4210',
+            'AEM 4230',
+            'AEM 4260',
+            'AEM 4280',
+            'AEM 4290',
+            'AEM 4590',
+            'AEM 4620',
+            'AEM 4630',
+            'AEM 4680',
+            'AEM 4681',
+          ]
+        ),
+        perSlotMinCount: [3, 3, 3, 6],
+      },
+      'Food Industry Management': {
+        description:
+          'AEM 2480, AEM 3340 or HADM 3470, AEM 4400, and 6 credits from the list below.',
+        counting: 'credits',
+        checker: includesWithSubRequirements(
+          ['AEM 2480'],
+          ['AEM 3340', 'HADM 3470'],
+          ['AEM 4400'],
+          ['AEM 3270', 'AEM 4150', 'AEM 4460']
+        ),
+        perSlotMinCount: [3, 3, 3, 6],
+      },
+      'International Trade and Development': {
+        description: 'AEM 2300 or AEM 2350 and 12 credits from the list below.',
+        counting: 'credits',
+        checker: includesWithSubRequirements(
+          ['AEM 2300', 'AEM 2350'],
+          [
+            'AEM 2110',
+            'AEM 4290',
+            'AEM 4300',
+            'AEM 4350',
+            'AEM 4420',
+            'AEM 4421',
+            'AEM 4450',
+            'AEM 4485',
+            'AEM 4545',
+            'AEM 4640',
+          ]
+        ),
+        perSlotMinCount: [3, 12],
+      },
+      Marketing: {
+        description: 'AEM 3440 or HADM 3470, AEM 4410 and 9 credits from the list below.',
+        counting: 'credits',
+        checker: includesWithSubRequirements(
+          ['AEM 3440', 'HADM 3470'],
+          ['AEM 4410'],
+          [
+            'AEM 3245',
+            'AEM 3249',
+            'AEM 3270',
+            'AEM 4015',
+            'AEM 4080',
+            'AEM 4095',
+            'AEM 4150',
+            'AEM 4160',
+            'AEM 4400',
+            'AEM 4420',
+            'AEM 4435',
+            'AEM 4495',
+            'AEM 4550',
+          ]
+        ),
+        perSlotMinCount: [3, 3, 9],
+      },
+      Strategy: {
+        description: '6 and 9 credits from the lists below.',
+        counting: 'credits',
+        checker: includesWithSubRequirements(
+          ['AEM 3220', 'AEM 4160', 'AEM 4190', 'AEM 4371', 'AEM 4380', 'AEM 4390', 'AEM 4615'],
+          [
+            'AEM 3110',
+            'AEM 3245',
+            'AEM 3260',
+            'AEM 3249',
+            'AEM 3320',
+            'AEM 4010',
+            'AEM 4015',
+            'AEM 4080',
+            'AEM 4580',
+            'AEM 4421',
+          ]
+        ),
+        perSlotMinCount: [6, 9],
+      },
+    },
   },
   {
     name: 'Management Requirements',
@@ -99,12 +375,29 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       'Courses used to fulfill a quantitative methods requirement or a concentration requirement or elective ' +
       'cannot also be counted toward a core applied economics requirement, unless that concentration is environmental, energy, and resource economics.',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
-    fulfilledBy: 'self-check',
+    checker: includesWithSubRequirements(
+      ['AEM 2500', 'AEM 4500', 'AEM 4510', 'AEM 4515'],
+      ['AEM 3310', 'AEM 4100', 'AEM 4140', 'AEM 4160', 'AEM 4550'],
+      [
+        'AEM 2300',
+        'AEM 2350',
+        'AEM 4300',
+        'AEM 4420',
+        'AEM 4350',
+        'AEM 4420',
+        'AEM 4450',
+        'AEM 4485',
+        'AEM 4545',
+      ],
+      ['AEM 4150', 'AEM 4210', 'AEM 4310']
+    ),
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3, 3],
   },
   {
     name: 'Grand Challenges Reqiurement Part 1: Written expression course',
     description:
-      'Sophomore year: 3 credits. Focus: Critical thinking. ' +
+      'Taken during Sophomore year. Focus: Critical thinking. ' +
       'These course options are centered around contemporary global issues and will help you learn communication, business analysis, and critical thinking skills as you develop cultural awareness. ' +
       'Available courses may vary per semester. You’ll choose one of the following:',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
@@ -120,7 +413,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Grand Challenges Reqiurement Part 2: Pre-Project Weekend Immersion',
-    description: 'Junior year: 1.5 credits. Focus: Working as part of a team',
+    description: 'Taking during Junior year. Focus: Working as part of a team',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: includesWithSingleRequirement('AEM 3000'),
     fulfilledBy: 'courses',
@@ -128,7 +421,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Grand Challenges Reqiurement Part 3: Project Course',
-    description: 'Senior year, 3 credits. Focus: Local and global community involvement',
+    description: 'Taking during Senior year. Focus: Local and global community involvement',
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: includesWithSingleRequirement('AEM 4000'),
     fulfilledBy: 'courses',
