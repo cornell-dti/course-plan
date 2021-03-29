@@ -309,7 +309,11 @@ export function getRelatedUnfulfilledRequirements(
             toggleableRequirementChoices
           );
           if (fulfillmentStatisticsWithNewCourse.minCountFulfilled > existingMinCountFulfilled) {
-            directlyRelatedRequirements.push(subRequirement);
+            if (subRequirement.checkerWarning == null) {
+              directlyRelatedRequirements.push(subRequirement);
+            } else {
+              selfCheckRequirements.push(subRequirement);
+            }
           }
         }
       }
