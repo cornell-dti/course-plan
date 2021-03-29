@@ -90,7 +90,7 @@ const json: RequirementsJson = {
     },
     BIO: {
       name: 'Biological Sciences',
-      schools: ['AG', 'AS1'],
+      schools: ['AG', 'AS1', 'AS2'],
       requirements: bioRequirements,
     },
     BME: {
