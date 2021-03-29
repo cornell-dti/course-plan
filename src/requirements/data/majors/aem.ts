@@ -23,6 +23,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
   // TODO: only supports one concentration
   {
     name: 'AEM Concentration Requirement',
+    // TODO: counting is temp courses. should eventually be credits
     description:
       'AEM majors must choose at least one of the following eleven concentrations by the beginning of their junior year, ' +
       'and may choose no more than two. No more than one course may fulfill the elective credits of two concentrations. ' +
@@ -32,7 +33,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfillmentOptions: {
       Accounting: {
         description: 'AEM 3360, AEM 3370 and 9 credits from the list.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements(
           ['AEM 3360'],
           ['AEM 3370'],
@@ -52,11 +53,11 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'NBA 5110',
           ]
         ),
-        perSlotMinCount: [3, 4, 9],
+        perSlotMinCount: [1, 1, 3],
       },
       'Agribusiness Management': {
         description: 'AEM 3020, HADM 2810 or ILRHR 2600 and 9 credits from the list.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements(
           ['AEM 3020'],
           ['HADM 2810', 'ILRHR 2600'],
@@ -74,13 +75,13 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4560',
           ]
         ),
-        perSlotMinCount: [4, 3, 9],
+        perSlotMinCount: [1, 1, 3],
       },
       'Applied Economics and Management': {
         description:
           'ECON 3040, at least 12 credits listed under Applied Economics, and at least 3 credits listed under Quantitative Methods. ' +
           'Must be courses that have not already been used to fulfill AEM Core Requirements.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements(
           ['ECON 3040'],
           // Applied Economics Requirement
@@ -131,33 +132,35 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'ILRST 3110',
           ]
         ),
-        perSlotMinCount: [4, 12, 3],
+        perSlotMinCount: [1, 4, 1],
       },
       'Business Analytics': {
         description:
           'AEM 3100 or AEM 4110, AEM 2830 or AEM 2840 or CS 1112, AEM 2820 or CSS/PLSCS 4200 and 6 credits from the list.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements(
           ['AEM 3100', 'AEM 4110'],
           ['AEM 2830', 'AEM 2840', 'CS 1112'],
           ['AEM 2820', 'CSS 4200'],
           [
-            'INFO 3200',
-            'INFO 3460',
-            'INFO 3561',
-            'INFO 4270',
-            'INFO 4561',
-            'INFO 4940',
-            'STS 3440',
-            'STS 4040',
-          ],
-          ['INFO 3300', 'INFO 3350', 'INFO 4120', 'INFO 4130', 'INFO 4300']
+            'AEM 2770',
+            'AEM 3460',
+            'AEM 3561',
+            'AEM ',
+            'AEM ',
+            'AEM ',
+            'AEM ',
+            'AEM ',
+            'AEM ',
+            'AEM ',
+            'AEM ',
+          ]
         ),
-        perSlotMinCount: [3, 3, 3, 6],
+        perSlotMinCount: [1, 1, 1, 2],
       },
       Entrepreneurship: {
         description: 'Complete 15 credits from the list with at least 6 credits from AEM.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements([
           'AEM 1220',
           'AEM 2220',
@@ -181,12 +184,12 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           'NBA 3000',
           'NBA 6230',
         ]),
-        perSlotMinCount: [15],
+        perSlotMinCount: [5],
       },
       'Environmental, Energy, and Resource Economics': {
         description:
           'ECON 3030, ECON 3040, AEM 2500, 6 credits from AEM 4500/4510/4515 and 3 credits from the list below.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements(
           ['ECON 3030'],
           ['ECON 3040'],
@@ -204,11 +207,11 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'HADM 4010',
           ]
         ),
-        perSlotMinCount: [4, 4, 3, 6, 3],
+        perSlotMinCount: [1, 1, 1, 2, 1],
       },
       Finance: {
         description: 'AEM 4570, AEM 4670, AEM 3520 or AEM 3360, 6 credits from the list below.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements(
           ['AEM 4570'],
           ['AEM 4670'],
@@ -227,23 +230,23 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4681',
           ]
         ),
-        perSlotMinCount: [3, 3, 3, 6],
+        perSlotMinCount: [1, 1, 1, 2],
       },
       'Food Industry Management': {
         description:
           'AEM 2480, AEM 3340 or HADM 3470, AEM 4400, and 6 credits from the list below.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements(
           ['AEM 2480'],
           ['AEM 3340', 'HADM 3470'],
           ['AEM 4400'],
           ['AEM 3270', 'AEM 4150', 'AEM 4460']
         ),
-        perSlotMinCount: [3, 3, 3, 6],
+        perSlotMinCount: [1, 1, 1, 2],
       },
       'International Trade and Development': {
         description: 'AEM 2300 or AEM 2350 and 12 credits from the list below.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements(
           ['AEM 2300', 'AEM 2350'],
           [
@@ -259,11 +262,11 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4640',
           ]
         ),
-        perSlotMinCount: [3, 12],
+        perSlotMinCount: [1, 4],
       },
       Marketing: {
         description: 'AEM 3440 or HADM 3470, AEM 4410 and 9 credits from the list below.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements(
           ['AEM 3440', 'HADM 3470'],
           ['AEM 4410'],
@@ -283,11 +286,11 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4550',
           ]
         ),
-        perSlotMinCount: [3, 3, 9],
+        perSlotMinCount: [1, 1, 3],
       },
       Strategy: {
         description: '6 and 9 credits from the lists below.',
-        counting: 'credits',
+        counting: 'courses',
         checker: includesWithSubRequirements(
           ['AEM 3220', 'AEM 4160', 'AEM 4190', 'AEM 4371', 'AEM 4380', 'AEM 4390', 'AEM 4615'],
           [
@@ -303,7 +306,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4421',
           ]
         ),
-        perSlotMinCount: [6, 9],
+        perSlotMinCount: [2, 3],
       },
     },
   },
@@ -391,8 +394,9 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       ],
       ['AEM 4150', 'AEM 4210', 'AEM 4310']
     ),
-    fulfilledBy: 'credits',
-    perSlotMinCount: [3, 3],
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1, 1, 1, 1],
+    minNumberOfSlots: 2,
   },
   {
     name: 'Grand Challenges Reqiurement Part 1: Written expression course',
