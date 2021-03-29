@@ -32931,13 +32931,14 @@
       "name": "Biological Sciences",
       "schools": [
         "AG",
-        "AS1"
+        "AS1",
+        "AS2"
       ],
       "requirements": [
         {
           "name": "Introductory Biology Cluster",
           "description": "Take 2 of the following 3: BIOMG 1350, BIOG 1440 OR BIOG 1445, BIOEE 1610 OR BIOSM 1610",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19800",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -32962,7 +32963,7 @@
         {
           "name": "Investigative Laboratory",
           "description": "BIOG 1500 OR BIOSM 1500",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19800",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
@@ -32977,7 +32978,7 @@
         {
           "name": "Evolutionary Biology and Diversity",
           "description": "BIOEE 1780 OR BIOEE 1781 OR BIOSM 1780",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19800",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
@@ -32993,7 +32994,7 @@
         {
           "name": "General Chemistry",
           "description": "Option 1: CHEM 2070 AND CHEM 2080, Option 2: CHEM 2150",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19800",
           "fulfilledBy": "toggleable",
           "fulfillmentOptions": {
             "Option 1": {
@@ -33029,7 +33030,7 @@
         {
           "name": "College Mathematics",
           "description": "Two courses. One semester of calculus (MATH 1106 OR MATH 1110) Another course selected from: (MATH 1120 OR MATH 1910) OR MATH 1105 OR one course in statistics (STSCI 2150 OR BTRY 3010 are preferred)",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19800",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -33057,7 +33058,7 @@
         {
           "name": "Organic Chemistry",
           "description": "CHEM 1570 OR CHEM 3570 & 3580 OR CHEM 3590 & 3600 OR CHEM 3530",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19800",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -33086,7 +33087,7 @@
         {
           "name": "Physics",
           "description": "PHYS 1101 & 1102 OR PHYS 2207 & 2208 OR PHY 1112 & 2213",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19800",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2,
@@ -33111,8 +33112,8 @@
         },
         {
           "name": "Genetics and Genomics",
-          "description": "Lecture must be taken either concurrently or before the laboratory",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
+          "description": "BIOMG 2800 and BIOMG 2801. It is strongly encouraged that these two course requirements be taken prior to senior year.",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19800",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -33129,32 +33130,28 @@
         },
         {
           "name": "Biochemistry and Molecular Biology Part 1",
-          "description": "BIOMG 3300 OR BIOMG 3350 OR BIOMG 3310",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
+          "description": "BIOMG 3300 OR BIOMG 3310 and BIOMG 3320 OR BIOMG 3330 OR BIOMG 3350",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19800",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
+            1,
+            2,
+            1,
             1
           ],
+          "minNumberOfSlots": 1,
           "courses": [
             [
-              353357,
-              354876,
-              363667
-            ]
-          ]
-        },
-        {
-          "name": "Biochemistry and Molecular Biology Part 2",
-          "description": "BIOMG 3300 OR BIOMG 3350 OR BIOMG 3320",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=36&poid=17535",
-          "fulfilledBy": "courses",
-          "perSlotMinCount": [
-            1
-          ],
-          "courses": [
+              353357
+            ],
             [
-              353357,
               353362,
+              354876
+            ],
+            [
+              353369
+            ],
+            [
               363667
             ]
           ]
@@ -33162,8 +33159,607 @@
         {
           "name": "Concentration",
           "description": "Requires a minimum of 13 additional credits, which must include (1) one course from each of three different concentrations in biology  (2) a course with a laboratory, (3) a minimum of two 3000-level or above courses of 2+ credits each.",
-          "source": "http://courses.cornell.edu/content.php?catoid=36&navoid=9186",
-          "fulfilledBy": "self-check"
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19800",
+          "fulfilledBy": "toggleable",
+          "fulfillmentOptions": {
+            "Animal Physiology": {
+              "description": "BIOAP 3110, BIOAP 3160, 3 credits of lecture course, and 4 credits of a laboratory course",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  352526
+                ],
+                [
+                  352530
+                ],
+                [
+                  351757,
+                  351766,
+                  351842,
+                  352203,
+                  352525,
+                  352539,
+                  353124,
+                  354567,
+                  355127,
+                  355659,
+                  355676,
+                  361059,
+                  366718
+                ],
+                [
+                  352531,
+                  352533,
+                  353455,
+                  361105
+                ]
+              ]
+            },
+            "Biochemistry": {
+              "description": "1. Organic Chemistry Lab (CHEM 2510 or CHEM 3010) 2. 5 credits of Biochemistry 3. BIOMG 4320 4. BIOMG 4400 5. Physical Chemistry 6. BIOMG 4380/BIOMG 6310/CHEM 4500/BIOG 4990",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                2,
+                1,
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  351328,
+                  351349
+                ],
+                [
+                  353357,
+                  353362,
+                  353372,
+                  354876
+                ],
+                [],
+                [
+                  353455
+                ],
+                [
+                  351334,
+                  351337,
+                  351357,
+                  357827
+                ],
+                [
+                  351363,
+                  352157,
+                  353458,
+                  361104
+                ]
+              ]
+            },
+            "Biodiversity and Systematics": {
+              "description": "7 credits from Group A, 3 from Group B, and at least 2 lab courses.",
+              "counting": "courses",
+              "perSlotMinCount": [
+                2,
+                1,
+                2
+              ],
+              "courses": [
+                [
+                  353597,
+                  353623,
+                  353707,
+                  353714,
+                  354204,
+                  354230,
+                  355093,
+                  357476,
+                  360930,
+                  363274
+                ],
+                [
+                  354181,
+                  355190,
+                  355319,
+                  355321,
+                  360950
+                ],
+                [
+                  353594,
+                  354150,
+                  354152,
+                  354208,
+                  354209,
+                  354231,
+                  355295,
+                  355300,
+                  359706,
+                  360931,
+                  360946
+                ]
+              ]
+            },
+            "Computational Biology": {
+              "description": "A. One course in computer programming B. One additional course in mathematicsC. One of the following bridging courses D. One advanced course",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  358525,
+                  358526,
+                  361477
+                ],
+                [
+                  352260,
+                  352288,
+                  352307,
+                  352371,
+                  352450,
+                  358881,
+                  362277,
+                  364513
+                ],
+                [
+                  353129,
+                  353132,
+                  353282,
+                  353300,
+                  353458,
+                  353688,
+                  353957,
+                  353959,
+                  355653,
+                  360950,
+                  360954,
+                  360955,
+                  365320,
+                  365967,
+                  368708,
+                  369911,
+                  370415
+                ],
+                [
+                  351755,
+                  351777,
+                  352287,
+                  352371,
+                  352385,
+                  358546,
+                  358881,
+                  359438,
+                  362277,
+                  364488,
+                  364513,
+                  365320
+                ]
+              ]
+            },
+            "Ecology and Evolutionary Biology": {
+              "description": "BIOEE 1610 or BIOSM 1610 and at least one course from Groups A, B, and C.",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  354148,
+                  355632
+                ],
+                [
+                  353129,
+                  353648,
+                  354181,
+                  355319,
+                  364378
+                ],
+                [
+                  353594,
+                  354152,
+                  354204,
+                  354207,
+                  354208,
+                  354209,
+                  354230,
+                  355295,
+                  355321,
+                  360930,
+                  360931,
+                  366988,
+                  368073,
+                  368376,
+                  370833,
+                  370834
+                ],
+                [
+                  353688,
+                  353957,
+                  353960,
+                  354150,
+                  354182,
+                  354199,
+                  354202,
+                  354211,
+                  354660,
+                  354752,
+                  355106,
+                  355107,
+                  355190,
+                  355641,
+                  355653,
+                  357486,
+                  360452,
+                  360929,
+                  360933,
+                  360934,
+                  360950,
+                  361224,
+                  361965,
+                  364486,
+                  366985,
+                  369445
+                ]
+              ]
+            },
+            "Genetics, Genomics and Development": {
+              "description": "13 credits from the list below",
+              "counting": "credits",
+              "perSlotMinCount": [
+                13
+              ],
+              "courses": [
+                [
+                  353124,
+                  353129,
+                  353132,
+                  353135,
+                  353466,
+                  353489,
+                  353708,
+                  354181,
+                  354201,
+                  354877,
+                  355096,
+                  355303,
+                  355312,
+                  355659,
+                  355661,
+                  360954,
+                  360955,
+                  361023,
+                  361104,
+                  361108,
+                  366991,
+                  367018,
+                  368688,
+                  369445,
+                  369707,
+                  371370
+                ]
+              ]
+            },
+            "Human Nutrition": {
+              "description": "NS 3310 and 9 credits from the list below",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                3
+              ],
+              "courses": [
+                [
+                  351842
+                ],
+                [
+                  351612,
+                  351649,
+                  351856,
+                  351879,
+                  351990,
+                  354024,
+                  361003,
+                  361005,
+                  361006,
+                  361224,
+                  362503,
+                  367007,
+                  370221,
+                  370875
+                ]
+              ]
+            },
+            "Insect Biology": {
+              "description": "ENTOM 2120 and three courses where at least one is from Group A and one is from Group B",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                2
+              ],
+              "courses": [
+                [
+                  353594
+                ],
+                [
+                  353598,
+                  353623,
+                  354379,
+                  354755,
+                  355106,
+                  369561
+                ],
+                [
+                  353638,
+                  353644,
+                  353648,
+                  354750,
+                  354753,
+                  357476,
+                  357486,
+                  358492,
+                  360949,
+                  365598,
+                  365967,
+                  369334
+                ]
+              ]
+            },
+            "Marine Biology": {
+              "description": "One introductory course and 12 credits from the list below",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                4
+              ],
+              "courses": [
+                [
+                  354148,
+                  354924,
+                  355632,
+                  363210,
+                  365794
+                ],
+                [
+                  353691,
+                  353693,
+                  353958,
+                  354152,
+                  354182,
+                  354209,
+                  355107,
+                  355182,
+                  355190,
+                  355642,
+                  359682,
+                  359683,
+                  360452,
+                  363618,
+                  364983,
+                  366988,
+                  366992,
+                  367163,
+                  367297,
+                  367360,
+                  368751,
+                  369664,
+                  370267
+                ]
+              ]
+            },
+            "Microbiology": {
+              "description": "BIOMI 2900, BIOMI 2911, and 7 credits from the list",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                3
+              ],
+              "courses": [
+                [
+                  353707
+                ],
+                [
+                  361722
+                ],
+                [
+                  353714,
+                  355094,
+                  355096,
+                  360920,
+                  360921,
+                  360922,
+                  360923,
+                  360924,
+                  360925,
+                  361229,
+                  361230,
+                  363472,
+                  363760,
+                  370221
+                ]
+              ]
+            },
+            "Molecular and Cell Biology": {
+              "description": "A. Organic Chemistry. B. 5 credits of biochemistry. C. BIOMG 4320 D. BIOMG 4400 or BIONB 4300E. At least 6 additional credits of courses that have a cell biological or molecular biological orientation.",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                2,
+                1,
+                1,
+                2
+              ],
+              "courses": [
+                [
+                  351353,
+                  351354,
+                  351355,
+                  351356,
+                  365879
+                ],
+                [
+                  353357,
+                  353362,
+                  353372,
+                  354876
+                ],
+                [
+                  353423
+                ],
+                [
+                  353455,
+                  361105
+                ],
+                [
+                  352137,
+                  353124,
+                  353129,
+                  353132,
+                  353357,
+                  353362,
+                  353372,
+                  353708,
+                  354876,
+                  354877,
+                  355096,
+                  355302,
+                  355303,
+                  355312,
+                  355318,
+                  355330,
+                  355659,
+                  360920,
+                  361059,
+                  361104,
+                  361108,
+                  363667,
+                  366991,
+                  368688
+                ]
+              ]
+            },
+            "Neurobiology and Behavior": {
+              "description": "A. BIONB 2210 and BIONB 2220 with discussion sections B. 7 additional credits from the list that includes at least one advanced BIONB course of 3 or more credits from the 3000 level or above.",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1,
+                2
+              ],
+              "courses": [
+                [
+                  351716
+                ],
+                [
+                  351750
+                ],
+                [
+                  351591,
+                  351661,
+                  351757,
+                  351766,
+                  353247,
+                  353282,
+                  353300,
+                  353671,
+                  353704,
+                  353708,
+                  353742,
+                  353808,
+                  353809,
+                  353810,
+                  353811,
+                  353834,
+                  354181,
+                  357486,
+                  358412,
+                  360929,
+                  360941,
+                  361023,
+                  361105,
+                  361200,
+                  361762,
+                  361965,
+                  365448,
+                  366718,
+                  366993,
+                  367858,
+                  369090,
+                  370415
+                ]
+              ]
+            },
+            "Plant Biology": {
+              "description": "A. (PLBIO 2410, PLBIO 3420, PLBIO 3421) OR (PLBIO 3430, PLBIO 3431, PLBIO 3420)B. Three courses from this list OR C. 7 credits from this list.",
+              "counting": "courses",
+              "perSlotMinCount": [
+                3,
+                3,
+                3,
+                3
+              ],
+              "minNumberOfSlots": 2,
+              "courses": [
+                [
+                  355295,
+                  355302,
+                  355304
+                ],
+                [
+                  355302,
+                  355303,
+                  355306
+                ],
+                [
+                  352157,
+                  354199,
+                  354202,
+                  355299,
+                  355300,
+                  355303,
+                  355305,
+                  355306,
+                  355312,
+                  355318,
+                  355319,
+                  355321,
+                  355330,
+                  360929,
+                  360950,
+                  360982,
+                  361965,
+                  366248,
+                  368420
+                ],
+                [
+                  354187,
+                  355295,
+                  355302,
+                  355304,
+                  355312,
+                  355318,
+                  355319,
+                  355330,
+                  360929,
+                  360982,
+                  361748,
+                  361965,
+                  366248
+                ]
+              ]
+            }
+          }
         }
       ]
     },
@@ -33189,11 +33785,18 @@
           ]
         },
         {
-          "name": "Core Courses Part 1",
-          "description": "BIOMG 1350, BME 2010, BME 2110, BME 2210, BME 2310, ENGRD 2020, and BTRY 3010. CEE 3040 or ENGRD 2700 can be taken instead of BTRY 3010.",
+          "name": "Core Courses",
+          "description": "BIOMG 1350, BME 2010, BME 2110, BME 2210, BME 2310, ENGRD 2020, and BTRY 3010. CEE 3040 or ENGRD 2700 can be taken instead of BTRY 3010. BME 3010, BME 3020, BME 3030, BME 4010, BME 4020, BME 4080, BME 4090.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19808",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
             1,
             1,
             1,
@@ -33221,24 +33824,7 @@
               350659,
               358622,
               360952
-            ]
-          ]
-        },
-        {
-          "name": "Core Courses Part 2",
-          "description": "BME 3010, BME 3020, BME 3030, BME 4010, BME 4020, BME 4080, BME 4090",
-          "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19808",
-          "fulfilledBy": "courses",
-          "perSlotMinCount": [
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1
-          ],
-          "courses": [
+            ],
             [
               361173
             ],
