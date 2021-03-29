@@ -14,7 +14,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
     allowCourseDoubleCounting: true,
   },
   {
-    name: 'Core Courses Part 1',
+    name: 'Core Courses',
     description:
       'BIOMG 1350, BME 2010, BME 2110, BME 2210, BME 2310, ENGRD 2020, and BTRY 3010. CEE 3040 or ENGRD 2700 can be taken instead of BTRY 3010. ' +
       'BME 3010, BME 3020, BME 3030, BME 4010, BME 4020, BME 4080, BME 4090.',

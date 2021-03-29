@@ -33785,7 +33785,7 @@
           ]
         },
         {
-          "name": "Core Courses Part 1",
+          "name": "Core Courses",
           "description": "BIOMG 1350, BME 2010, BME 2110, BME 2210, BME 2310, ENGRD 2020, and BTRY 3010. CEE 3040 or ENGRD 2700 can be taken instead of BTRY 3010. BME 3010, BME 3020, BME 3030, BME 4010, BME 4020, BME 4080, BME 4090.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19808",
           "fulfilledBy": "courses",
@@ -33992,8 +33992,8 @@
       "requirements": [
         {
           "name": "Engineering Distriubtions",
-          "description": "ENGRD 2020 and ENGRD 2210 or ENGRD 2700",
-          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
+          "description": "ENGRD 2020 and ENGRD 2600 or ENGRD 2510",
+          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -34004,60 +34004,31 @@
               358608
             ],
             [
-              358617,
-              358622
+              355157,
+              355158
             ]
           ]
         },
         {
-          "name": "Organic Chemistry",
-          "description": "CHEM 1570 or CHEM 3570 or CHEM 3530",
-          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
+          "name": "Intro Bio",
+          "description": "Choose 2 of the following 4: BIOMG 1350, BIOG 1440, BIOG 1445, and BIOEE/BIOSM 1610",
+          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
-            1
-          ],
-          "courses": [
-            [
-              351353,
-              359185,
-              365879
-            ]
-          ]
-        },
-        {
-          "name": "Biological Sciences",
-          "description": "Choose 2 of the following 4: BIOMG 1350, BIOG 1440, BIOG 1445, BIOEE/BIOSM 1610 and BIO 1500/BIOSM 1500",
-          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
-          "fulfilledBy": "courses",
-          "perSlotMinCount": [
-            1,
-            1,
-            1,
             2
           ],
-          "minNumberOfSlots": 2,
           "courses": [
             [
-              363586
-            ],
-            [
-              363758
-            ],
-            [
+              363586,
+              363758,
               365913
-            ],
-            [
-              354148,
-              363759,
-              365794
             ]
           ]
         },
         {
           "name": "Required Major Courses",
           "description": "Major requirements for BE: BIOG/BIOSM 1500, BEE 3500, BEE 3310, BEE 3400, BEE 3600, and BEE 4500",
-          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
+          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -34089,7 +34060,7 @@
         {
           "name": "Biochemistry",
           "description": "BIOMG 3300, BIOMG 3330, BIOMG 3350, or BIOMG 3310 and BIOMG 3320",
-          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
+          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -34110,8 +34081,30 @@
         {
           "name": "Upper-level Biology",
           "description": "Any biology course at the 2000-level or above which has a biology prerequisite and is taken for a letter grade. This requirement may also be satisfied by an upper-level course in a science department (excluding engineering, liberal studies, social sciences, and mathematics) which has a biology (not social science) content of 95% or greater and a biology prerequisite. Students must receive approval for these alternative courses by consulting their BE faculty advisor or the main BE Advising Office, 207 Riley-Robb Hall. One credit seminars and BIOG 2990/4990 credits may not be used to meet this requirement.",
-          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
+          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
           "fulfilledBy": "self-check"
+        },
+        {
+          "name": "Engineering Statistics",
+          "description": "BEE 2220 or ENGRD 2210 or CHEME 3130 or MSE 3030 and engineering statistics preferably before semester 6. CEE 3040 is the preferred version of statistics.",
+          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1,
+            1
+          ],
+          "courses": [
+            [
+              350193,
+              351737,
+              353883,
+              358617
+            ],
+            [
+              350659,
+              358622
+            ]
+          ]
         },
         {
           "name": "BE Focus Area Elective",
