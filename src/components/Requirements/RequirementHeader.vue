@@ -142,11 +142,21 @@ export default Vue.extend({
     requirementTotalRequired(): number {
       return this.req.reqs.length;
     },
+    // the sum of the progress of each requirement, maxed out at 1
+    totalRequirementProgress(): number {
+      let fulfilled = 0;
+      this.req.reqs.forEach(req => {
+        if (req.minCountFulfilled >= req.minCountRequired) fulfilled += 1;
+        else fulfilled += req.minCountFulfilled / req.minCountRequired;
+      });
+      return fulfilled;
+    },
+    // the sum of the progress of each requirement, divided by number of requirements
     progressWidth(): string {
-      return `${(this.requirementFulfilled / this.requirementTotalRequired) * 100}%`;
+      return `${(this.totalRequirementProgress / this.requirementTotalRequired) * 100}%`;
     },
     progressWidthValue(): string {
-      return ((this.requirementFulfilled / this.requirementTotalRequired) * 100).toFixed(1);
+      return ((this.totalRequirementProgress / this.requirementTotalRequired) * 100).toFixed(1);
     },
   },
   methods: {
