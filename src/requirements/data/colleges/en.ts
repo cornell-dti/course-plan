@@ -93,62 +93,48 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [2],
     allowCourseDoubleCounting: true,
   },
+  // TODO: check for 18 credits later
   {
-    name: 'Liberal Studies: 6 courses',
+    name: 'Liberal Studies Distribution',
     description:
-      'Liberal arts commonly include courses in the humanities and must be in certain categories. ' +
-      'At least two courses must be at the 2000 level or higher.',
+      'In addition to six courses, the liberal studies courses must be from 3 categories.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
     checker: [
       (course: Course): boolean =>
-        engineeringLiberalArtsDistributions.some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+        (course.catalogDistr?.includes('LA') || course.catalogDistr?.includes('LAD')) ?? false,
+      ...engineeringLiberalArtsDistributions
+        .filter(it => it !== 'LA' && it !== 'LAD')
+        .map(distribution => (course: Course): boolean =>
+          course.catalogDistr?.includes(distribution) ?? false
         ),
     ],
-    checkerWarning:
-      'We do not check that all categories are being met and that at least two courses are at the 2000 level or higher.',
     fulfilledBy: 'courses',
-    perSlotMinCount: [6],
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    minNumberOfSlots: 6,
+    allowCourseDoubleCounting: true,
   },
-  // TODO: Spliting Liberal Studies into 3 parts means they can all never be
-  // fulfilled using the same courses because of double counting & cannot be used for other separate requirement
-  // {
-  //   name: 'Liberal Studies Distribution: 3 categories',
-  //   description:
-  //     'In addition to six courses, the liberal studies courses must be from 3 categories.',
-  //   source:
-  //     'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
-  //   checker: [
-  //     (course: Course): boolean =>
-  //       (course.catalogDistr?.includes('LA') || course.catalogDistr?.includes('LAD')) ?? false,
-  //     ...engineeringLiberalArtsDistributions
-  //       .filter(it => it !== 'LA' && it !== 'LAD')
-  //       .map(distribution => (course: Course): boolean =>
-  //         course.catalogDistr?.includes(distribution) ?? false
-  //       ),
-  //   ],
-  //   fulfilledBy: 'courses',
-  //   perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  //   minNumberOfSlots: 3,
-  //   allowCourseDoubleCounting: true,
-  // },
-  // {
-  //   name: 'Liberal Studies Distribution: 18 credits',
-  //   description:
-  //     'In addition to six courses, the liberal studies distribution must total a minimum of 18 credits.',
-  //   source:
-  //     'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
-  //   checker: [
-  //     (course: Course): boolean =>
-  //       engineeringLiberalArtsDistributions.some(
-  //         distribution => course.catalogDistr?.includes(distribution) ?? false
-  //       ),
-  //   ],
-  //   fulfilledBy: 'credits',
-  //   perSlotMinCount: [18],
-  //   allowCourseDoubleCounting: true,
-  // },
+  {
+    name: 'Liberal Studies: 2000+ level',
+    description: 'At least two liberal arts courses must be at the 2000 level or higher.',
+    source:
+      'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return (
+          !ifCodeMatch(catalogNbr, '1***') &&
+          engineeringLiberalArtsDistributions.some(
+            category => course.catalogDistr?.includes(category) ?? false
+          )
+        );
+      },
+    ],
+    fulfilledBy: 'courses',
+    perSlotMinCount: [2],
+    allowCourseDoubleCounting: true,
+  },
+
   // TODO: Create special function for this as it is the same as Advisor-Approved Electives for CS checker
   {
     name: 'Advisor-Approved Electives',
