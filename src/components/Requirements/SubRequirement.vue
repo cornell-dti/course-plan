@@ -55,6 +55,17 @@
         />
         {{ subReq.requirement.checkerWarning }}
       </div>
+      <div
+        v-if="subReq.requirement.fulfilledBy === 'self-check'"
+        class="requirement-checker-warning"
+      >
+        <img
+          class="requirement-checker-warning-icon"
+          src="@/assets/images/warning.svg"
+          alt="warning icon"
+        />
+        {{ selfCheckWarning }}
+      </div>
       <div v-if="subReq.requirement.fulfilledBy === 'toggleable'">
         <div class="toggleable-requirements-select-wrapper">
           <div
@@ -297,6 +308,9 @@ export default Vue.extend({
     fulfilledSelfCheckCourses(): readonly FirestoreSemesterCourse[] {
       const reqId = this.subReq.requirement.id;
       return store.state.derivedSelectableRequirementData.requirementToCoursesMap[reqId];
+    },
+    selfCheckWarning(): string {
+      return 'This requirement is not included in the progress bar because we do not check if it’s completed.';
     },
   },
   directives: {
