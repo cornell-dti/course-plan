@@ -1,33 +1,56 @@
 <template>
   <div>
-    <div v-if="requirementsThatAllowDoubleCounting.length > 0">
-      <div class="newCourse-title">
-        This class automatically fulfills the following requirement(s):
-      </div>
-      <div class="newCourse-requirements-container">
-        <div class="newCourse-requirements">
-          {{ requirementsThatAllowDoubleCounting.join(', ') }}
+    <div v-if="editMode">
+      <div v-if="requirementsThatAllowDoubleCounting.length > 0">
+        <div class="newCourse-title">This class fulfills the following requirement(s):</div>
+        <div class="newCourse-requirements-container">
+          <div class="newCourse-requirements">
+            {{ requirementsThatAllowDoubleCounting.join(', ') }}
+          </div>
         </div>
       </div>
+      <div v-else class="newCourse-requirements-container newCourse-requirements">
+        This class does not automatically fulfill any requirements.
+      </div>
     </div>
-    <div v-else class="newCourse-requirements-container newCourse-requirements">
-      This class does not automatically fulfill any requirements.
+    <div v-else>
+      <div v-if="chosenRequirementText.length > 0">
+        <div class="newCourse-title">
+          This class automatically fulfills the following requirement(s):
+        </div>
+        <div class="newCourse-requirements-container">
+          <div class="newCourse-requirements">
+            {{ chosenRequirementText }}
+          </div>
+        </div>
+      </div>
+      <div v-else class="newCourse-requirements-container newCourse-requirements">
+        This class does not automatically fulfill any requirements.
+      </div>
     </div>
     <div v-if="nonAutoRequirements.length > 0">
-      <div class="newCourse-title">This class can fulfill the following requirement(s):</div>
       <div v-if="!editMode">
         <div class="newCourse-title">
-          <span v-for="(reqName, index) in nonAutoRequirementsTextArray" :key="index">
-            <strong v-if="reqName.selected" class="newCourse-name">{{
-              index === nonAutoRequirementsTextArray.length - 1 ? reqName.name : reqName.name + ', '
-            }}</strong>
-            <span v-else>{{
-              index === nonAutoRequirementsTextArray.length - 1 ? reqName.name : reqName.name + ', '
-            }}</span>
-          </span>
+          This class could potentially fulfill the following requirement(s):
+        </div>
+        <div class="newCourse-title">
+          <strong class="newCourse-name">
+            {{ nonAutoRequirementsTextArray.map(it => it.name).join(', ') }}
+          </strong>
         </div>
       </div>
       <div v-else>
+        <div v-if="selectedRequirementName === ''" class="newCourse-title">
+          {{
+            selectedRequirementName === ''
+              ? 'This class could potentially fulfill the following requirement(s):'
+              : ''
+          }}
+        </div>
+        <div v-else>
+          Instead of <span class="newCourse-requirements">{{ selectedRequirementName }}</span
+          >, this class could potentially fulfill the following requirement(s):
+        </div>
         <div v-if="potentialRequirements.length > 0" class="warning">
           <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
           We cannot accurately check the requirements marked with the warning icon, so double check
@@ -46,7 +69,7 @@
         @click="toggleEditMode()"
         @keyup.enter="toggleEditMode()"
       >
-        Edit Requirements
+        Select Requirements
       </button>
     </div>
   </div>
