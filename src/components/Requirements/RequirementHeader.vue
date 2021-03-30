@@ -132,6 +132,7 @@ export default Vue.extend({
     numOfColleges: { type: Number, required: true },
   },
   computed: {
+    // number of fully fulfilled requirements, note pure self-checks are never fulfilled
     requirementFulfilled(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
@@ -139,10 +140,11 @@ export default Vue.extend({
       });
       return fulfilled;
     },
+    // number of requirements that can be fulfilled (so no pure self-checks)
     requirementTotalRequired(): number {
-      return this.req.reqs.length;
+      return this.req.reqs.filter(req => req.fulfilledBy !== 'self-check').length;
     },
-    // the sum of the progress of each requirement, maxed out at 1
+    // the sum of the progress of each requirement (outside of pure self-check), maxed out at 1
     totalRequirementProgress(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
