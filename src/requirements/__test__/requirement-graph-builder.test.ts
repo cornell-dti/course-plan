@@ -172,20 +172,23 @@ it('buildRequirementFulfillmentGraph phase 3 test 4', () => {
 });
 
 // Normally, we will remove all edges when there is no user choice associated with a unique ID.
-//  However, there is the case when all the AP/IB equivalent courses all have the same unique ID -1.
-// If we do the same for AP/IB courses, then all these courses will never be able to fulfill anything.
+// If we do the same for AP/IB/swim courses, then all these courses will never be able to fulfill
+// anything.
 // The following test ensures that we don't regress again.
-it('AP/IB course edge is not removed in step 3', () => {
-  const graph = buildRequirementFulfillmentGraph({
-    requirements,
-    userCourses: [{ courseId: CS3410.courseId, uniqueId: -1 }], // mock an AP/IB course
-    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
-    userChoiceOnDoubleCountingElimination: {},
-    getAllCoursesThatCanPotentiallySatisfyRequirement,
-    allowDoubleCounting: r => r === 'Probability',
-  });
+it('AP/IB/swim test course edge is not removed in step 3', () => {
+  // Test this for a lot of different unique ID less than
+  for (let uniqueId = -1; uniqueId >= -10; uniqueId -= 1) {
+    const graph = buildRequirementFulfillmentGraph({
+      requirements,
+      userCourses: [{ courseId: CS3410.courseId, uniqueId }], // mock an AP/IB course
+      userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
+      userChoiceOnDoubleCountingElimination: {},
+      getAllCoursesThatCanPotentiallySatisfyRequirement,
+      allowDoubleCounting: r => r === 'Probability',
+    });
 
-  expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([
-    { courseId: CS3410.courseId, uniqueId: -1 },
-  ]);
+    expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([
+      { courseId: CS3410.courseId, uniqueId },
+    ]);
+  }
 });
