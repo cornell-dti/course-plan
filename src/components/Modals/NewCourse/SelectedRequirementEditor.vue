@@ -5,7 +5,9 @@
         editMode ? requirementsThatAllowDoubleCounting.length > 0 : chosenRequirementText.length > 0
       "
     >
-      <div class="newCourse-title">This class fulfills the following requirement(s):</div>
+      <div class="newCourse-title">
+        This class automatically fulfills the following requirement(s):
+      </div>
       <div class="newCourse-requirements-container">
         <div class="newCourse-requirements">
           {{ editMode ? requirementsThatAllowDoubleCounting.join(', ') : chosenRequirementText }}
@@ -96,7 +98,9 @@ export default Vue.extend({
   },
   computed: {
     chosenRequirementText(): string {
-      if (this.selectedRequirementID === '') return '';
+      if (this.selectedRequirementID === '') {
+        return this.requirementsThatAllowDoubleCounting.join(', ');
+      }
       const chosenRequirementNames = [...this.relatedRequirements, ...this.potentialRequirements]
         .filter(it => it.id === this.selectedRequirementID)
         .map(it => it.name);
