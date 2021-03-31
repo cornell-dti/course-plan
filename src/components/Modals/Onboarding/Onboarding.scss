@@ -52,7 +52,7 @@ input {
   }
 
   &-main {
-    background: #ffffff;
+    background: $white;
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
@@ -135,7 +135,7 @@ input {
   }
   &-subsection {
     width: 100%;
-    border: 1px solid #c4c4c4;
+    border: 1px solid $inactiveGray;
     box-sizing: border-box;
     border-radius: 9px;
     padding: 3rem;
@@ -160,13 +160,13 @@ input {
     &--font {
       color: $darkGray2;
       flex-direction: row;
-      background-color: white;
+      background-color: $white;
     }
     &--review {
       font-weight: normal;
       padding: 5px;
       margin-left: 10px;
-      background-color: white;
+      background-color: $white;
       color: $lightPlaceholderGray;
       font-size: 16px;
     }
@@ -180,9 +180,9 @@ input {
     margin-bottom: 0.75rem;
 
     &-fillRow {
-      border: 1px solid #ffffff;
+      border: 1px solid $white;
       width: 100%;
-      border-bottom-color: #c4c4c4;
+      border-bottom-color: $inactiveGray;
       margin-bottom: 1.5rem;
       margin-top: 20px;
     }
@@ -209,7 +209,7 @@ input {
       justify-self: end;
       flex-direction: row;
       &---bold {
-        color: black;
+        color: $black;
         font-weight: bold;
         margin-right: 5px;
       }
@@ -217,7 +217,7 @@ input {
 
     &--review {
       font-weight: normal;
-      background-color: white;
+      background-color: $white;
       color: $lightPlaceholderGray;
       font-size: 16px;
     }
@@ -237,10 +237,11 @@ input {
     line-height: 17px;
     color: $lightPlaceholderGray;
     width: 100%;
-    height: 1.75rem;
-    padding-left: 8px;
-    background-color: white;
-    border: 0.5px solid #c4c4c4;
+    height: auto;
+    min-height: 1.75rem;
+    padding: 5px 8px;
+    background-color: $white;
+    border: 0.5px solid $inactiveGray;
     box-sizing: border-box;
     border-radius: 2px;
   }
@@ -327,7 +328,7 @@ input {
       display: flex;
       align-items: center;
       text-align: center;
-      color: #b6b6b6;
+      color: $darkPlaceholderGray;
 
       &:hover {
         color: $darkGray2;
@@ -342,13 +343,13 @@ input {
     border-radius: 1px;
     font-size: 14px;
     line-height: 14px;
-    color: #ffffff;
+    color: $white;
     margin: 5px;
     width: 80px;
     min-height: 1.75rem;
 
     &-previous {
-      background: #ffffff;
+      background: $white;
       color: $emGreen;
       border-radius: 0px;
       border-width: 0px;
@@ -363,16 +364,17 @@ input {
     color: #d8000c;
   }
   &-select {
-    background: #ffffff;
-    border: 1px solid #c4c4c4;
+    background: $white;
+    border: 1px solid $inactiveGray;
 
     box-sizing: border-box;
     border-radius: 1px;
     width: 100%;
     font-size: 14px;
     line-height: 17px;
+    padding-left: 0;
 
-    color: #b6b6b6;
+    color: $darkPlaceholderGray;
     position: relative;
 
     &--disabled {
@@ -421,7 +423,7 @@ input {
       display: flex;
       align-items: center;
 
-      color: #b6b6b6;
+      color: $darkPlaceholderGray;
 
       background: transparent;
 
@@ -431,8 +433,6 @@ input {
       }
 
       &.college-major-minor-placeholder {
-        margin-top: 5px;
-        margin-bottom: 5px;
         width: 100%;
       }
 
@@ -440,14 +440,12 @@ input {
         border-left: 6.24px solid transparent;
         border-right: 6.24px solid transparent;
 
-        border-top: 6.24px solid #c4c4c4;
+        border-top: 6.24px solid $inactiveGray;
         background: transparent;
 
         //when clicked border-top-color: #32A0F2;
 
-        margin-top: 30px;
-        margin-bottom: 10.17px;
-
+        height: auto;
         margin-right: 8.7px;
         margin-left: 5px;
       }
@@ -456,14 +454,11 @@ input {
         border-left: 6.24px solid transparent;
         border-right: 6.24px solid transparent;
 
-        border-top: 6.24px solid #c4c4c4;
+        border-top: 6.24px solid $inactiveGray;
         background: transparent;
 
         //when clicked border-top-color: #32A0F2;
-
-        margin-top: 30px;
-        margin-bottom: 10.17px;
-
+        height: auto;
         margin-right: 6px;
         margin-left: 15px;
       }
@@ -474,13 +469,13 @@ input {
     z-index: 2;
     position: absolute;
     width: inherit;
-    background: #ffffff;
+    background: $white;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 7px;
     max-height: 150px;
     overflow: auto;
 
-    margin-top: 3px;
+    margin-top: 6px;
 
     &-item {
       height: 2.25rem;
@@ -532,7 +527,7 @@ input {
 }
 
 select option {
-  color: black;
+  color: $black;
 }
 select option:first-child {
   color: grey;
