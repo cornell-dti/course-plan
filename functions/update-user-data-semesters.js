@@ -81,7 +81,8 @@ const transformData = data => ({
 if (process.argv[2] === '--dry-run') {
   userDataCollection.get().then(userData => {
     const oldUserData = userData.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    const newUserData = oldUserData.map(transformData);
+    // Using JSON parse and stringify trick so we get a deep copy of the nested oldUserData
+    const newUserData = JSON.parse(JSON.stringify(oldUserData)).map(transformData);
     fs.writeFileSync('old-userData-semesters.json', JSON.stringify(oldUserData, undefined, 2));
     fs.writeFileSync('new-userData-semesters.json', JSON.stringify(newUserData, undefined, 2));
   });
