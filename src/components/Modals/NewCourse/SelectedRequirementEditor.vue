@@ -18,7 +18,12 @@
         </div>
         <div class="newCourse-title">
           <strong class="newCourse-name">
-            {{ nonAutoRequirementsTextArray.map(it => it.name).join(', ') }}
+            {{
+              nonAutoRequirementsTextArray
+                .filter(it => !it.selected)
+                .map(it => it.name)
+                .join(', ')
+            }}
           </strong>
         </div>
       </div>
