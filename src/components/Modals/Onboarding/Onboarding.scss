@@ -237,8 +237,9 @@ input {
     line-height: 17px;
     color: $lightPlaceholderGray;
     width: 100%;
-    height: 1.75rem;
-    padding-left: 8px;
+    height: auto;
+    min-height: 1.75rem;
+    padding: 5px 8px;
     background-color: white;
     border: 0.5px solid #c4c4c4;
     box-sizing: border-box;
@@ -431,8 +432,6 @@ input {
       }
 
       &.college-major-minor-placeholder {
-        margin-top: 5px;
-        margin-bottom: 5px;
         width: 100%;
       }
 
@@ -445,9 +444,7 @@ input {
 
         //when clicked border-top-color: #32A0F2;
 
-        margin-top: 30px;
-        margin-bottom: 10.17px;
-
+        height: auto;
         margin-right: 8.7px;
         margin-left: 5px;
       }
@@ -460,10 +457,7 @@ input {
         background: transparent;
 
         //when clicked border-top-color: #32A0F2;
-
-        margin-top: 30px;
-        margin-bottom: 10.17px;
-
+        height: auto;
         margin-right: 6px;
         margin-left: 15px;
       }
