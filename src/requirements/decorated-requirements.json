@@ -26649,7 +26649,7 @@
           "checkerWarning": "We do not check that the courses are advisor approved.",
           "fulfilledBy": "credits",
           "perSlotMinCount": [
-            3
+            6
           ],
           "courses": [
             [

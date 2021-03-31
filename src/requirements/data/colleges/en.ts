@@ -151,7 +151,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     checkerWarning: 'We do not check that the courses are advisor approved.',
     fulfilledBy: 'credits',
-    perSlotMinCount: [3],
+    perSlotMinCount: [6],
   },
   // TODO: Remove warning once we can filter reqs based on majors (ISST) and petitions
   {
