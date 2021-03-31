@@ -1,32 +1,15 @@
 <template>
   <div>
-    <div v-if="editMode">
-      <div v-if="requirementsThatAllowDoubleCounting.length > 0">
-        <div class="newCourse-title">This class fulfills the following requirement(s):</div>
-        <div class="newCourse-requirements-container">
-          <div class="newCourse-requirements">
-            {{ requirementsThatAllowDoubleCounting.join(', ') }}
-          </div>
+    <div v-if="requirementsThatAllowDoubleCounting.length > 0">
+      <div class="newCourse-title">This class fulfills the following requirement(s):</div>
+      <div class="newCourse-requirements-container">
+        <div class="newCourse-requirements">
+          {{ editMode ? requirementsThatAllowDoubleCounting.join(', ') : chosenRequirementText }}
         </div>
-      </div>
-      <div v-else class="newCourse-requirements-container newCourse-requirements">
-        This class does not automatically fulfill any requirements.
       </div>
     </div>
-    <div v-else>
-      <div v-if="chosenRequirementText.length > 0">
-        <div class="newCourse-title">
-          This class automatically fulfills the following requirement(s):
-        </div>
-        <div class="newCourse-requirements-container">
-          <div class="newCourse-requirements">
-            {{ chosenRequirementText }}
-          </div>
-        </div>
-      </div>
-      <div v-else class="newCourse-requirements-container newCourse-requirements">
-        This class does not automatically fulfill any requirements.
-      </div>
+    <div v-else class="newCourse-requirements-container newCourse-requirements">
+      This class does not automatically fulfill any requirements.
     </div>
     <div v-if="nonAutoRequirements.length > 0">
       <div v-if="!editMode">
