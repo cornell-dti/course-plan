@@ -28,7 +28,7 @@
       <drop-down-arrow :isFlipped="showDropdown" :fillColor="emGreen" />
     </button>
     <ul v-if="showDropdown" class="dropdown-content">
-      <li v-for="option in relatedRequirements" :key="option.id">
+      <li v-for="option in relatedRequirements.filter(it => it.id !== selectedID)" :key="option.id">
         <a
           @click="toggleSelectRequirement(option.id)"
           @keyup.enter="toggleSelectRequirement(option.id)"
@@ -36,7 +36,10 @@
           >{{ option.name }}</a
         >
       </li>
-      <li v-for="option in potentialRequirements" :key="option.id">
+      <li
+        v-for="option in potentialRequirements.filter(it => it.id !== selectedID)"
+        :key="option.id"
+      >
         <a
           @click="toggleSelectRequirement(option.id)"
           @keyup.enter="toggleSelectRequirement(option.id)"
