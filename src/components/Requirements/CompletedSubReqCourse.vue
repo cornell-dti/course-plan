@@ -67,7 +67,7 @@ export default Vue.extend({
       return 'Reset';
     },
     isTransferCredit(): boolean {
-      return this.courseTaken.uniqueId === -1;
+      return this.courseTaken.uniqueId < 0;
     },
     semesterLabel(): string {
       if (this.isTransferCredit) return 'Transfer Credits';

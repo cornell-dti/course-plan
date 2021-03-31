@@ -400,7 +400,7 @@ function userDataToCourses(
   const userExams = userData[examType];
   const exams = examData[examType];
   const courses: CourseTaken[] = [];
-  userExams.forEach(userExam => {
+  userExams.forEach((userExam, examIndex) => {
     // match exam to user-taken exam
     const exam = exams.reduce((prev: ExamRequirements | undefined, curr: ExamRequirements) => {
       // check if exam name matches and score is high enough
@@ -426,7 +426,7 @@ function userDataToCourses(
           const courseId = courseEquivalents[0];
           courses.push({
             courseId,
-            uniqueId: -1,
+            uniqueId: -examIndex - 2,
             code: `${examType} ${exam.name}`,
             credits: exam.fulfillment.credits,
           });
@@ -435,14 +435,14 @@ function userDataToCourses(
           courseEquivalents.forEach(courseId => {
             courses.push({
               courseId,
-              uniqueId: -1,
+              uniqueId: -examIndex - 2,
               code: `${examType} ${exam.name}`,
               credits: 0,
             });
           });
           courses.push({
             courseId: CREDITS_COURSE_ID,
-            uniqueId: -1,
+            uniqueId: -examIndex - 2,
             code: `${examType} ${exam.name}`,
             credits: exam.fulfillment.credits,
           });
