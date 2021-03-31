@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div v-if="requirementsThatAllowDoubleCounting.length > 0">
+    <div
+      v-if="
+        editMode ? requirementsThatAllowDoubleCounting.length > 0 : chosenRequirementText.length > 0
+      "
+    >
       <div class="newCourse-title">This class fulfills the following requirement(s):</div>
       <div class="newCourse-requirements-container">
         <div class="newCourse-requirements">
