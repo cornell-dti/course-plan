@@ -149,7 +149,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
         return !(ifCodeMatch(course.subject, 'PE') && ifCodeMatch(catalogNbr, '10**'));
       },
     ],
-    checkerWarning: 'We do not check that the courses are major approved.',
+    checkerWarning: 'We do not check that the courses are advisor approved.',
     fulfilledBy: 'credits',
     perSlotMinCount: [3],
   },

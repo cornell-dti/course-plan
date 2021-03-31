@@ -26646,7 +26646,7 @@
           "name": "Advisor-Approved Electives",
           "description": "At least 3 credit hours total. All academic courses count.No PE courses, courses numbered 10xx, and ROTC courses below the 3000-level allowed.",
           "source": "https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirement",
-          "checkerWarning": "We do not check that the courses are major approved.",
+          "checkerWarning": "We do not check that the courses are advisor approved.",
           "fulfilledBy": "credits",
           "perSlotMinCount": [
             3
