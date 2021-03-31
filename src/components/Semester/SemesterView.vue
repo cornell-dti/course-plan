@@ -34,12 +34,12 @@
         >
           <span class="semesterView-switchText">View:</span>
           <button
-            class="semesterView-switchImage semesterView-twoColumn"
+            class="semesterView-switchImage semesterView-twoColumn full-opacity-on-hover"
             @click="setNotCompact"
             :class="{ 'semesterView-twoColumn--active': !compact }"
           />
           <button
-            class="semesterView-switchImage semesterView-fourColumn"
+            class="semesterView-switchImage semesterView-fourColumn full-opacity-on-hover"
             @click="setCompact"
             :class="{ 'semesterView-fourColumn--active': compact }"
           />
@@ -289,7 +289,6 @@ export default Vue.extend({
     &--active {
       cursor: pointer;
       background-image: url('~@/assets/images/views/twoColumnSelected.svg');
-      opacity: 1;
     }
   }
 
@@ -302,7 +301,6 @@ export default Vue.extend({
     &--active {
       cursor: pointer;
       background-image: url('~@/assets/images/views/fourColumnSelected.svg');
-      opacity: 1;
     }
   }
 

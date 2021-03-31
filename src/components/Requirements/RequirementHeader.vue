@@ -15,7 +15,10 @@
             id === displayedMajorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
         }"
         @click="activateMajor(id)"
-        class="major-title-button major-title"
+        :class="[
+          { 'full-opacity-on-hover': onboardingData.major.length === 1 },
+          'major-title-button major-title',
+        ]"
         v-for="(major, id) in onboardingData.major"
         :key="id"
         :disabled="id === displayedMajorIndex"
@@ -46,7 +49,10 @@
             id === displayedMinorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
         }"
         @click="activateMinor(id)"
-        class="major-title major-title-button"
+        :class="[
+          { 'full-opacity-on-hover': onboardingData.minor.length === 1 },
+          'major-title major-title-button',
+        ]"
         v-for="(minor, id) in onboardingData.minor"
         :key="id"
         :disabled="id === displayedMinorIndex"

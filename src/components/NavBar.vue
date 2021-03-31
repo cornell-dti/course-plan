@@ -1,14 +1,23 @@
 <template>
   <nav class="navbar">
-    <div class="navbar-iconWrapper hamburger" @click="menuOpen = !menuOpen"></div>
+    <div
+      class="navbar-iconWrapper hamburger full-opacity-on-hover"
+      @click="menuOpen = !menuOpen"
+    ></div>
     <div class="navbar-top">
       <div class="navbar-iconWrapper course-plan-logo">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
       </div>
-      <button class="navbar-iconWrapper desktop profile-icon" @click="editProfile"></button>
+      <button
+        class="navbar-iconWrapper desktop profile-icon full-opacity-on-hover"
+        @click="editProfile"
+      ></button>
     </div>
     <div class="navbar-bottom">
-      <button class="navbar-iconWrapper desktop logout-icon" @click="logout" />
+      <button
+        class="navbar-iconWrapper desktop logout-icon full-opacity-on-hover"
+        @click="logout"
+      />
     </div>
     <div v-if="menuOpen" class="navbar-menu-background-shadow" @click="editProfile" />
     <div v-if="menuOpen" class="navbar-menu">
@@ -108,7 +117,6 @@ $mobile-navbar-height: 4.5rem;
     &:focus,
     &:active {
       background-image: url('~@/assets/images/navbar/profileIconBlue.svg');
-      opacity: 1;
     }
   }
 
@@ -125,7 +133,6 @@ $mobile-navbar-height: 4.5rem;
     &:focus,
     &:active {
       background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
-      opacity: 1;
     }
   }
 
@@ -136,7 +143,6 @@ $mobile-navbar-height: 4.5rem;
     &:focus,
     &:active {
       background-image: url('~@/assets/images/navbar/logoutBlue.svg');
-      opacity: 1;
     }
   }
 
