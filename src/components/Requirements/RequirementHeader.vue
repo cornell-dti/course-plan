@@ -13,7 +13,7 @@
         :style="{
           'border-bottom': `2px solid #${reqGroupColorMap[req.groupName][0]}`,
         }"
-        class="college-title-button college-title"
+        class="college-title-button college-title full-opacity-on-hover"
         :disabled="true"
       >
         <p
