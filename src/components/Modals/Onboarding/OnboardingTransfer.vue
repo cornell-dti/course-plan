@@ -133,8 +133,8 @@ type Data = {
   classes: TransferClassWithOptionalCourse[];
 };
 
-const scoresAP = [1, 2, 3, 4, 5];
-const scoresIB = [1, 2, 3, 4, 5, 6, 7];
+const scoresAP = [5, 4, 3, 2, 1];
+const scoresIB = [7, 6, 5, 4, 3, 2, 1];
 const existingAP: Record<string, boolean> = {};
 const unmodifiedReqsData = { ...reqsData };
 // filter duplicate exam names and ones already selected

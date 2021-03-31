@@ -8,7 +8,27 @@
       {{ req.groupName }} Requirements
     </h1>
     <!-- TODO change for multiple colleges -->
-    <div v-if="reqIndex == numOfColleges" class="major">
+    <div v-if="reqIndex === 0" class="college">
+      <button
+        :style="{
+          'border-bottom': `2px solid #${reqGroupColorMap[req.groupName][0]}`,
+        }"
+        class="college-title-button college-title"
+        :disabled="true"
+      >
+        <p
+          :style="{
+            'font-weight': '500',
+            color: `#${reqGroupColorMap[req.groupName][0]}`,
+          }"
+          class="college-title-top"
+        >
+          {{ getCollegeFullName(onboardingData.college) }}
+        </p>
+      </button>
+    </div>
+    <!-- TODO change for multiple colleges -->
+    <div v-if="reqIndex === numOfColleges" class="major">
       <button
         :style="{
           'border-bottom':
@@ -181,6 +201,7 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
+.college,
 .major,
 .minor {
   display: flex;
