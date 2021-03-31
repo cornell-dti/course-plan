@@ -99,10 +99,18 @@ export default Vue.extend({
           relatedRequirements.push(it);
         }
       });
+      const selfCheckRequirementsThatDoesNotAllowDoubleCounting: RequirementWithIDSourceType[] = [];
+      selfCheckRequirements.forEach(it => {
+        if (it.allowCourseDoubleCounting) {
+          requirementsThatAllowDoubleCounting.push(it.name);
+        } else {
+          selfCheckRequirementsThatDoesNotAllowDoubleCounting.push(it);
+        }
+      });
 
       this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;
       this.relatedRequirements = relatedRequirements;
-      this.selfCheckRequirements = selfCheckRequirements;
+      this.selfCheckRequirements = selfCheckRequirementsThatDoesNotAllowDoubleCounting;
       if (relatedRequirements.length > 0) {
         this.selectedRequirementID = relatedRequirements[0].id;
       } else {
