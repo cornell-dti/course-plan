@@ -35,7 +35,7 @@
           <button
             v-for="(color, index) in colors"
             :key="index"
-            class="courseMenu-section"
+            class="courseMenu-section full-opacity-on-hover"
             @click="colorCourse(color)"
           >
             <div class="courseMenu-left">
@@ -93,7 +93,7 @@
         </div>
       </div>
       <button
-        class="courseMenu-section"
+        class="courseMenu-section full-opacity-on-hover"
         :class="{ 'courseMenu-section--left': isLeft }"
         @click="deleteCourse"
       >
@@ -224,7 +224,6 @@ export default Vue.extend({
     &:active,
     &:focus {
       background-color: rgba(50, 160, 242, 0.15);
-      opacity: 1;
     }
 
     &:first-child {

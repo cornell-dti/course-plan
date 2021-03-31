@@ -1,7 +1,7 @@
 <template>
   <div class="semesterMenu">
     <button
-      class="semesterMenu-section"
+      class="semesterMenu-section full-opacity-on-hover"
       :class="{ 'd-none': isOpenModal }"
       @click="openEditSemesterModal"
     >
@@ -19,7 +19,7 @@
       </div>
     </button>
     <button
-      class="semesterMenu-section"
+      class="semesterMenu-section full-opacity-on-hover"
       :class="{ 'd-none': isOpenModal }"
       @click="openDeleteSemesterModal"
     >
@@ -86,7 +86,6 @@ export default Vue.extend({
     &:active,
     &:focus {
       background-color: rgba(50, 160, 242, 0.15);
-      opacity: 1;
     }
     &:first-child {
       border-top-left-radius: 9px;

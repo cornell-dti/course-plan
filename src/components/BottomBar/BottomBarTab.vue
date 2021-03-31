@@ -1,5 +1,9 @@
 <template>
-  <div class="bottombartab" :style="{ background: `#${color}` }" @click="$emit('on-change-focus')">
+  <div
+    class="bottombartab full-opacity-on-hover"
+    :style="{ background: `#${color}` }"
+    @click="$emit('on-change-focus')"
+  >
     <div class="bottombartab-wrapper">
       <div class="bottombartab-name">{{ courseObj.code }}</div>
     </div>
@@ -44,10 +48,6 @@ export default Vue.extend({
   justify-content: space-between;
   padding-left: 8px;
   padding-right: 8px;
-
-  &:hover {
-    opacity: 1;
-  }
 
   &-wrapper {
     display: flex;
