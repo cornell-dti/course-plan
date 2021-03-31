@@ -96,8 +96,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   // TODO: check for 18 credits later
   {
     name: 'Liberal Studies Distribution',
-    description:
-      'In addition to six courses, the liberal studies courses must be from 3 categories.',
+    description: 'Six liberal studies courses from 3 categories.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
     checker: [
@@ -110,7 +109,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
         ),
     ],
     fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    perSlotMinCount: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
     minNumberOfSlots: 6,
     allowCourseDoubleCounting: true,
   },

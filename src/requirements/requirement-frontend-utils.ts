@@ -244,7 +244,7 @@ export function computeFulfillmentCoursesAndStatistics(
 
   if (minNumberOfSlots != null) {
     const minCountFulfilled = subRequirementProgress.reduce(
-      (acc, progress, index) => acc + (progress >= perSlotMinCount[index] ? 1 : 0),
+      (acc, progress, index) => acc + Math.min(progress, perSlotMinCount[index]),
       0
     );
     return {
