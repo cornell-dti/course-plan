@@ -220,7 +220,7 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: isstMinorRequirements,
     },
-    APPIEDMATH: {
+    APPLIEDMATH: {
       name: 'Applied Mathematics',
       schools: ['EN'],
       requirements: appliedMathMinorRequirements,

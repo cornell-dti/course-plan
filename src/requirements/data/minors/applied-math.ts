@@ -14,8 +14,8 @@ const appliedMathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: '6 courses',
     description:
-      'At most one course may be chosen from each of groups 1 - 4 ' +
-      'At least three courses must be chosen from groups 5 and 6' +
+      'At most one course may be chosen from each of groups 1 - 4. ' +
+      'At least three courses must be chosen from groups 5 and 6. ' +
       'At most one 2000-level course may be chosen. ' +
       "At most one course may be chosen that is offered by the student's Major department.",
     source:
