@@ -31,13 +31,13 @@ import oldIsstRequirements from './majors/oldIsst';
 import mechnicalEngineeringRequirements from './majors/me';
 import orieRequirements from './majors/orie';
 
+import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
 import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
 import isstMinorRequirements from './minors/isst';
-import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
 import psychMinorRequirements from './minors/psych';
 
@@ -220,10 +220,10 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: isstMinorRequirements,
     },
-    MATH: {
+    APPIEDMATH: {
       name: 'Applied Mathematics',
       schools: ['EN'],
-      requirements: mathMinorRequirements,
+      requirements: appliedMathMinorRequirements,
     },
     ORMS: {
       name: 'Operations Research and Management Science',
