@@ -6,9 +6,9 @@ import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './constants';
  * @param code code to check courseName (can contain * to denote any value)
  * @returns if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
  */
-export const ifCodeMatch = (courseCode: string, code: string): boolean => {
-  for (let i = 0; i < courseCode.length; i += 1) {
-    if (code[i] !== '*' && courseCode[i] !== code[i]) return false;
+export const ifCodeMatch = (courseName: string, code: string): boolean => {
+  for (let i = 0; i < courseName.length; i += 1) {
+    if (code[i] !== '*' && courseName[i] !== code[i]) return false;
   }
   return true;
 };

@@ -136,13 +136,14 @@
         <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
           <completed-sub-req-course :subReqCourseId="id" :courseTaken="selfCheckCourse" />
         </div>
-        <incomplete-self-check
-          v-if="!isCompleted"
-          :subReqId="subReq.requirement.id"
-          :subReqName="subReq.requirement.name"
-          :subReqFulfillment="subReq.fulfilledBy"
-          :subReqCourseId="subReq.minCountFulfilled"
-        />
+        <div v-if="!isCompleted">
+          <incomplete-self-check
+            :subReqId="subReq.requirement.id"
+            :subReqName="subReq.requirement.name"
+            :subReqFulfillment="subReq.fulfilledBy"
+            :subReqCourseId="subReq.minCountFulfilled"
+          />
+        </div>
       </div>
     </div>
   </div>
