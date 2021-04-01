@@ -12,7 +12,8 @@ import requirementJson from './typed-requirement-json';
  */
 export const courseIsAPIB = (course: CourseTaken): boolean =>
   [CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
-  ['AP', 'IB'].includes(course.code.split(' ')[0]);
+  ['AP', 'IB'].includes(course.code.split(' ')[0]) ||
+  course.uniqueId < -1;
 
 /**
  * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase

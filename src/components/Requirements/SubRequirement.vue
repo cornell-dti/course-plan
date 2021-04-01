@@ -134,10 +134,7 @@
         class="subreqcourse-wrapper"
       >
         <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
-          <completed-sub-req-course
-            :subReqCourseId="id"
-            :courseTaken="convertCourse(selfCheckCourse)"
-          />
+          <completed-sub-req-course :subReqCourseId="id" :courseTaken="selfCheckCourse" />
         </div>
         <incomplete-self-check
           v-if="!isCompleted"
@@ -163,6 +160,7 @@ import { clickOutside } from '@/utilities';
 import {
   convertFirestoreSemesterCourseToCourseTaken,
   getMatchedRequirementFulfillmentSpecification,
+  courseIsAPIB,
 } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 import { fullCoursesJson } from '@/assets/courses/typed-full-courses';
@@ -305,9 +303,38 @@ export default Vue.extend({
         ? `${this.subReq.minCountFulfilled}/${this.subReq.minCountRequired} ${this.subReq.fulfilledBy}`
         : 'self check';
     },
-    fulfilledSelfCheckCourses(): readonly FirestoreSemesterCourse[] {
-      const reqId = this.subReq.requirement.id;
-      return store.state.derivedSelectableRequirementData.requirementToCoursesMap[reqId];
+    fulfilledSelfCheckCourses(): readonly CourseTaken[] {
+      const selectedFirestoreCourses =
+        store.state.derivedSelectableRequirementData.requirementToCoursesMap[
+          this.subReq.requirement.id
+        ];
+      const selectedCourses = selectedFirestoreCourses
+        ? selectedFirestoreCourses.map((course: FirestoreSemesterCourse) =>
+            this.convertCourse(course)
+          )
+        : [];
+
+      let fulfilledCourses: CourseTaken[] = [];
+      const subReqSpec = getMatchedRequirementFulfillmentSpecification(this.subReq.requirement, {
+        [this.subReq.requirement.id]: this.toggleableRequirementChoice,
+      });
+      if (subReqSpec !== null) {
+        if (subReqSpec.fulfilledBy === 'credits') {
+          this.subReq.courses[0].forEach(completedCourse => fulfilledCourses.push(completedCourse));
+        } else {
+          this.subReq.courses.forEach((subReqCourseSlot, i) => {
+            const slotMinCount = subReqSpec.perSlotMinCount[i];
+            for (let j = 0; j < slotMinCount; j += 1) {
+              if (j < subReqCourseSlot.length) {
+                fulfilledCourses.push(subReqCourseSlot[j]);
+              }
+            }
+          });
+        }
+      }
+      fulfilledCourses = fulfilledCourses.filter(courseIsAPIB);
+
+      return [...selectedCourses, ...fulfilledCourses];
     },
     selfCheckWarning(): string {
       return 'This requirement is not included in the progress bar because we do not check if it’s completed.';
