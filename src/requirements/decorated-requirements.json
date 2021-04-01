@@ -89550,6 +89550,38 @@
     }
   },
   "minor": {
+    "APPLIEDMATH": {
+      "name": "Applied Mathematics",
+      "schools": [
+        "EN"
+      ],
+      "requirements": [
+        {
+          "name": "MATH 2930 and MATH 2940",
+          "description": "MATH 2930 and 2940",
+          "source": "https://www.mae.cornell.edu/mae/programs/undergraduate-programs/minors",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1,
+            1
+          ],
+          "courses": [
+            [
+              352295
+            ],
+            [
+              352307
+            ]
+          ]
+        },
+        {
+          "name": "6 courses",
+          "description": "At most one course may be chosen from each of groups 1 - 4. At least three courses must be chosen from groups 5 and 6. At most one 2000-level course may be chosen. At most one course may be chosen that is offered by the student's Major department.",
+          "source": "https://www.mae.cornell.edu/sites/default/files/departments/MAE/MAE%20pdfs/Applied%20Math%20Minor%20Application%20Form%201-25-19-VD.pdf",
+          "fulfilledBy": "self-check"
+        }
+      ]
+    },
     "BU": {
       "name": "Business",
       "schools": [
@@ -90218,16 +90250,17 @@
         }
       ]
     },
-    "APPLIEDMATH": {
-      "name": "Applied Mathematics",
+    "MATH": {
+      "name": "Mathematics",
       "schools": [
-        "EN"
+        "AS1",
+        "AS2"
       ],
       "requirements": [
         {
-          "name": "MATH 2930 and MATH 2940",
-          "description": "MATH 2930 and 2940",
-          "source": "https://www.mae.cornell.edu/mae/programs/undergraduate-programs/minors",
+          "name": "Math Minor Prerequisites",
+          "description": "Students are admitted to the minor after successfully completing a semester of linear algebra and a semester of multivariable calculus.",
+          "source": "https://math.cornell.edu/minor",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -90235,18 +90268,165 @@
           ],
           "courses": [
             [
-              352295
+              352260,
+              352274,
+              352307
             ],
             [
-              352307
+              352257,
+              352263,
+              352284
             ]
           ]
         },
         {
-          "name": "6 courses",
-          "description": "At most one course may be chosen from each of groups 1 - 4. At least three courses must be chosen from groups 5 and 6. At most one 2000-level course may be chosen. At most one course may be chosen that is offered by the student's Major department.",
-          "source": "https://www.mae.cornell.edu/sites/default/files/departments/MAE/MAE%20pdfs/Applied%20Math%20Minor%20Application%20Form%201-25-19-VD.pdf",
-          "fulfilledBy": "self-check"
+          "name": "Four 3000- or 4000-level MATH courses",
+          "description": "Students must complete four 3000- or 4000-level MATH courses. Only courses with a MATH prefix or cross-listed as such are allowed; no substitutions.",
+          "source": "https://math.cornell.edu/minor",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            4
+          ],
+          "courses": [
+            [
+              352308,
+              352319,
+              352337,
+              352338,
+              352340,
+              352359,
+              352361,
+              352363,
+              352367,
+              352371,
+              352378,
+              352385,
+              352387,
+              352393,
+              352396,
+              352403,
+              352408,
+              352413,
+              352417,
+              352428,
+              352433,
+              352440,
+              352443,
+              352450,
+              352453,
+              352457,
+              352495,
+              354066,
+              355653,
+              357513,
+              357514,
+              357900,
+              358881,
+              359061,
+              359062,
+              359438,
+              362277,
+              364525,
+              365817,
+              368194,
+              368940,
+              370307,
+              371315
+            ]
+          ]
+        },
+        {
+          "name": "At least one 4000 level course",
+          "description": "At least one of the four courses must be at the 4000 level or above.",
+          "source": "https://math.cornell.edu/minor",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1
+          ],
+          "courses": [
+            [
+              352359,
+              352361,
+              352363,
+              352367,
+              352371,
+              352378,
+              352385,
+              352387,
+              352393,
+              352403,
+              352408,
+              352413,
+              352417,
+              352428,
+              352433,
+              352440,
+              352443,
+              352450,
+              352453,
+              352457,
+              352495,
+              357514,
+              357900,
+              358881,
+              359061,
+              359062,
+              359438,
+              362277,
+              364525,
+              368194,
+              368940,
+              371315
+            ]
+          ]
+        },
+        {
+          "name": "One algebra course",
+          "description": "At least one course must be in algebra.",
+          "source": "https://math.cornell.edu/minor",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1
+          ],
+          "courses": [
+            [
+              352338,
+              352340,
+              352393,
+              352396,
+              352403,
+              352408,
+              359061,
+              359062,
+              368194,
+              368940
+            ]
+          ]
+        },
+        {
+          "name": "One analysis course",
+          "description": "At least one course must be in analysis.",
+          "source": "https://math.cornell.edu/minor",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1
+          ],
+          "courses": [
+            [
+              352308,
+              352319,
+              352337,
+              352361,
+              352363,
+              352367,
+              352371,
+              352378,
+              352385,
+              352387,
+              358881,
+              359438
+            ]
+          ]
         }
       ]
     },

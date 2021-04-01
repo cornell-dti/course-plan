@@ -38,6 +38,7 @@ import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
 import isstMinorRequirements from './minors/isst';
+import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
 import psychMinorRequirements from './minors/psych';
 
@@ -190,6 +191,11 @@ const json: RequirementsJson = {
     },
   },
   minor: {
+    APPLIEDMATH: {
+      name: 'Applied Mathematics',
+      schools: ['EN'],
+      requirements: appliedMathMinorRequirements,
+    },
     BU: {
       name: 'Business',
       schools: ['BU'],
@@ -220,10 +226,10 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: isstMinorRequirements,
     },
-    APPLIEDMATH: {
-      name: 'Applied Mathematics',
-      schools: ['EN'],
-      requirements: appliedMathMinorRequirements,
+    MATH: {
+      name: 'Mathematics',
+      schools: ['AS1', 'AS2'],
+      requirements: mathMinorRequirements,
     },
     ORMS: {
       name: 'Operations Research and Management Science',
