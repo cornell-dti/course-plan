@@ -15,24 +15,17 @@
           />
         </div>
         <div class="subreq-name">
-          <p
-            :class="[
-              { 'sub-req': !isCompleted },
-              isCompleted ? 'completed-ptext' : 'incomplete-ptext',
-            ]"
-          >
-            <span>{{ subReq.requirement.name }}</span>
+          <p class="sub-req" :class="{ 'completed-ptext': isCompleted }">
+            {{ subReq.requirement.name }}
           </p>
         </div>
       </div>
-      <div v-if="!isCompleted" class="col sub-req-progress text-right incomplete-ptext">
-        {{ subReqProgress }}
+      <div v-if="isCompleted" class="col text-right completed-ptext-fraction">
+        {{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
+        {{ subReq.fulfilledBy }}
       </div>
-      <div v-if="isCompleted" class="col text-right completed-ptext">
-        <span
-          >{{ subReq.minCountFulfilled }}/{{ subReq.minCountRequired }}
-          {{ subReq.fulfilledBy }}</span
-        >
+      <div v-else class="col sub-req-progress text-right incomplete-ptext">
+        {{ subReqProgress }}
       </div>
     </button>
     <div v-if="displayDescription" :class="[{ 'completed-ptext': isCompleted }, 'description']">
@@ -414,12 +407,21 @@ button.view {
   color: $white;
   text-transform: uppercase;
 }
-.completed-ptext span {
+.completed-ptext {
   color: $lightPlaceholderGray;
-  font-size: 12px;
   opacity: 0.8;
-  font-weight: normal;
+  line-height: 14px;
+  font-size: 12px;
+  &-fraction {
+    color: $lightPlaceholderGray;
+    opacity: 0.8;
+    line-height: 14px;
+    font-size: 12px;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
 }
+
 .incomplete {
   &-ptext {
     font-size: 14px;
