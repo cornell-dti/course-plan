@@ -572,6 +572,7 @@ button.view {
   &-name {
     text-align: left;
     margin-left: 11px;
+    max-width: 14rem;
   }
 }
 </style>
