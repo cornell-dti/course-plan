@@ -1,5 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement } from '../checkers-common';
+import { courseIsFWS, includesWithSingleRequirement } from '../checkers-common';
 
 const calsCreditsRequirement: CollegeOrMajorRequirement = {
   name: 'CALS Credits',
@@ -614,10 +614,11 @@ const calsWrittenAndOralExpressionRequirement: CollegeOrMajorRequirement = {
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: [
-    (course: Course): boolean =>
-      ['written expression', 'oral expression', 'First-Year Writing Seminar'].some(
-        keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
-      ),
+    courseIsFWS ||
+      ((course: Course): boolean =>
+        ['written expression', 'oral expression', 'First-Year Writing Seminar'].some(keyword =>
+          course.catalogSatisfiesReq?.includes(keyword)
+        )),
   ],
   fulfilledBy: 'credits',
   perSlotMinCount: [9],
@@ -629,10 +630,11 @@ const calsWrittenExpressionRequirement: CollegeOrMajorRequirement = {
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: [
-    (course: Course): boolean =>
-      ['written expression', 'First-Year Writing Seminar'].some(
-        keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
-      ),
+    courseIsFWS ||
+      ((course: Course): boolean =>
+        ['written expression', 'First-Year Writing Seminar'].some(
+          keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
+        )),
   ],
   fulfilledBy: 'credits',
   perSlotMinCount: [6],
