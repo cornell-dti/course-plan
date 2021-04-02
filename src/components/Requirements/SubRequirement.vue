@@ -317,7 +317,7 @@ export default Vue.extend({
           )
         : [];
 
-      // fulfilledCourses are the courses that can fulfill this requirement
+      // fulfillableCourses are the courses that can fulfill this requirement
       // this is necessary to compute because ap/ib data is not stored in selectable requirement choices collection
       let fulfillableCourses: CourseTaken[] = [];
       const subReqSpec = getMatchedRequirementFulfillmentSpecification(this.subReq.requirement, {
@@ -339,7 +339,7 @@ export default Vue.extend({
           });
         }
       }
-      // fulfillingCourses are then filtered to be AP/IB/transfer courses only
+      // fulfillableCourses are then filtered to be AP/IB/transfer courses only
       // regular courses that are not in selectedCourses should not be displayed
       // ...because that means the user selected another requirement for the course
       // regular courses that are in selectedCourses should also not be displayed
