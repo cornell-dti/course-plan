@@ -152,6 +152,7 @@ export const examData: ExamData = {
       name: 'Mathematics BC (Engineering)',
       fulfillment: {
         courseEquivalents: {
+          DEFAULT: [],
           EN: [352255], // MATH 1910
         },
         minimumScore: 5,
