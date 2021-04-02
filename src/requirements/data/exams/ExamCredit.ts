@@ -334,8 +334,7 @@ export const examData: ExamData = {
       name: 'English Literature A',
       fulfillment: {
         courseEquivalents: {
-          AS: [FWS_COURSE_ID], // FWS
-          EN: [FWS_COURSE_ID], // FWS
+          DEFAULT: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -345,8 +344,7 @@ export const examData: ExamData = {
       name: 'English Language and Literature',
       fulfillment: {
         courseEquivalents: {
-          AS: [FWS_COURSE_ID], // FWS
-          EN: [FWS_COURSE_ID], // FWS
+          DEFAULT: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 7,
         credits: 3,
