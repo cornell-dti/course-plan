@@ -17,7 +17,7 @@
     <div v-if="showMajorOrMinorRequirements">
       <!--Show more of completed requirements -->
       <div v-if="displayDetails || tourStep === 1">
-        <h2>Ongoing College Requirements</h2>
+        <h2>Ongoing Requirements</h2>
         <div class="separator"></div>
         <div v-for="(subReq, id) in partitionedRequirementsProgress.ongoing" :key="id">
           <sub-requirement
