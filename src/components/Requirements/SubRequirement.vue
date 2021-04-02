@@ -305,6 +305,8 @@ export default Vue.extend({
         : 'self check';
     },
     fulfilledSelfCheckCourses(): readonly CourseTaken[] {
+      // selectedCourses are courses that fulfill the requirement based on user-choice
+      // they are taken from derivedSelectableRequirementData
       const selectedFirestoreCourses =
         store.state.derivedSelectableRequirementData.requirementToCoursesMap[
           this.subReq.requirement.id
@@ -315,27 +317,36 @@ export default Vue.extend({
           )
         : [];
 
-      let fulfilledCourses: CourseTaken[] = [];
+      // fulfilledCourses are the courses that can fulfill this requirement
+      // this is necessary to compute because ap/ib data is not stored in selectable requirement choices collection
+      let fulfillableCourses: CourseTaken[] = [];
       const subReqSpec = getMatchedRequirementFulfillmentSpecification(this.subReq.requirement, {
         [this.subReq.requirement.id]: this.toggleableRequirementChoice,
       });
       if (subReqSpec !== null) {
         if (subReqSpec.fulfilledBy === 'credits') {
-          this.subReq.courses[0].forEach(completedCourse => fulfilledCourses.push(completedCourse));
+          this.subReq.courses[0].forEach(completedCourse =>
+            fulfillableCourses.push(completedCourse)
+          );
         } else {
           this.subReq.courses.forEach((subReqCourseSlot, i) => {
             const slotMinCount = subReqSpec.perSlotMinCount[i];
             for (let j = 0; j < slotMinCount; j += 1) {
               if (j < subReqCourseSlot.length) {
-                fulfilledCourses.push(subReqCourseSlot[j]);
+                fulfillableCourses.push(subReqCourseSlot[j]);
               }
             }
           });
         }
       }
-      fulfilledCourses = fulfilledCourses.filter(courseIsAPIB);
+      // fulfillingCourses are then filtered to be AP/IB/transfer courses only
+      // regular courses that are not in selectedCourses should not be displayed
+      // ...because that means the user selected another requirement for the course
+      // regular courses that are in selectedCourses should also not be displayed
+      // ...because that means it will be duplicated in fulfillableCourses
+      fulfillableCourses = fulfillableCourses.filter(courseIsAPIB);
 
-      return [...selectedCourses, ...fulfilledCourses];
+      return [...selectedCourses, ...fulfillableCourses];
     },
     selfCheckWarning(): string {
       return 'This requirement is not included in the progress bar because we do not check if it’s completed.';
