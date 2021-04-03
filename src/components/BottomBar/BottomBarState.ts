@@ -66,6 +66,7 @@ export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
       vueForBottomBar.bottomCourseFocus = i;
       return;
     }
+    vueForBottomBar.isExpanded = true;
   }
 
   if (vueForBottomBar.bottomCourses.length === 0) {
