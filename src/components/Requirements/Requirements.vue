@@ -32,6 +32,7 @@
             @activateMajor="activateMajor"
             @activateMinor="activateMinor"
             @onShowAllCourses="onShowAllCourses"
+            @modal-open="modalToggled"
           />
         </div>
       </div>
@@ -270,6 +271,9 @@ export default Vue.extend({
     },
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
+    },
+    modalToggled(isOpen: boolean) {
+      this.$emit('modal-open', isOpen);
     },
   },
 });

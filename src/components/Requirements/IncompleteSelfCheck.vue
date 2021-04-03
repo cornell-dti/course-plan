@@ -158,9 +158,11 @@ export default Vue.extend({
     },
     openCourseModal() {
       this.isCourseModalOpen = true;
+      this.$emit('modal-open', true);
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
+      this.$emit('modal-open', false);
     },
   },
 });

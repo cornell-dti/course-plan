@@ -100,6 +100,7 @@
             <completed-sub-req-course
               :subReqCourseId="id"
               :courseTaken="subReqCourseSlot.courses[0]"
+              @modal-open="modalToggled"
             />
           </div>
           <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
@@ -123,7 +124,11 @@
         class="subreqcourse-wrapper"
       >
         <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
-          <completed-sub-req-course :subReqCourseId="id" :courseTaken="selfCheckCourse" />
+          <completed-sub-req-course
+            :subReqCourseId="id"
+            :courseTaken="selfCheckCourse"
+            @modal-open="modalToggled"
+          />
         </div>
         <div v-if="!isCompleted">
           <incomplete-self-check
@@ -131,6 +136,7 @@
             :subReqName="subReq.requirement.name"
             :subReqFulfillment="subReq.fulfilledBy"
             :subReqCourseId="subReq.minCountFulfilled"
+            @modal-open="modalToggled"
           />
         </div>
       </div>
@@ -366,6 +372,9 @@ export default Vue.extend({
     },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);
+    },
+    modalToggled(isOpen: boolean) {
+      this.$emit('modal-open', isOpen);
     },
   },
 });

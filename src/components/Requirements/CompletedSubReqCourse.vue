@@ -86,8 +86,10 @@ export default Vue.extend({
   methods: {
     onReset(): void {
       this.resetConfirmVisible = true;
+      this.$emit('modal-open', true);
     },
     onResetConfirmClosed(isReset: boolean): void {
+      this.$emit('modal-open', false);
       if (isReset) {
         if (this.isTransferCredit) {
           const type = this.courseTaken.code.substr(0, 2);

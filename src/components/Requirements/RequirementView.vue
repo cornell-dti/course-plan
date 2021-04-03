@@ -28,6 +28,7 @@
             :tourStep="tourStep"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
+            @modal-open="modalToggled"
           />
           <div class="separator"></div>
         </div>
@@ -152,6 +153,9 @@ export default Vue.extend({
     turnCompleted(bool: boolean) {
       GTagEvent(this.$gtag, 'requirements-bar-filled-requirements-toggle');
       this.displayCompleted = bool;
+    },
+    modalToggled(isOpen: boolean) {
+      this.$emit('modal-open', isOpen);
     },
   },
 });
