@@ -19,13 +19,13 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Core Economics',
     description:
-      'All students must take four core economics courses: ECON 3030, ECON 3040, ECON 3110 and ECON 3120 or ECON 3130 and ECON 3140.',
-    source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19868',
+      'All students must take four core economics courses: ECON 3030, ECON 3040, ECON 3110 or ECON 3130, and ECON 3120 or ECON 3140.',
+    source: 'https://economics.cornell.edu/major',
     checker: includesWithSubRequirements(
       ['ECON 3030'],
       ['ECON 3040'],
-      ['ECON 3110', 'ECON 3120'],
-      ['ECON 3130', 'ECON 3140']
+      ['ECON 3110', 'ECON 3130'],
+      ['ECON 3120', 'ECON 3140']
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
