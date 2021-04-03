@@ -102,14 +102,17 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'External Specialization',
     description:
-      'Three 3000+ related courses outside of computer science (3 credit min per course)' +
+      'Three 3000+ related courses outside of computer science (3 credit min per course). ' +
       'Frequently, the three courses are from the same department.',
     source:
       'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: [
       (course: Course): boolean => {
         const { catalogNbr } = course;
-        return !(ifCodeMatch(catalogNbr, '1***') || ifCodeMatch(catalogNbr, '2***'));
+        return (
+          !(ifCodeMatch(catalogNbr, '1***') || ifCodeMatch(catalogNbr, '2***')) &&
+          !ifCodeMatch(course.subject, 'CS')
+        );
       },
     ],
     checkerWarning: 'We do not check that the courses are related.',
