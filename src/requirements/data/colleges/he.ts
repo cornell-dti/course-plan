@@ -1,18 +1,16 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { ifCodeMatch, courseIsFWS } from '../checkers-common';
+import { courseIsFWS, ifCodeMatch } from '../checkers-common';
 
 const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
   {
-    // doublecheck--check for 3000+ level?
     name: 'Human Ecology Credits',
     description:
-      'Students must complete a minimum of 43 Human Ecology credits from College Distribution, Major Requirements and electives.' +
-      ' Human Ecology (prefix HE) courses below the 3000-level (e.g., HE 1115) do not count toward either the 43 credit requirement or the 9 credit outside-the-major requirement. These HE–prefix courses that are below 3000-level may be used as elective credit',
+      'Students must complete a minimum of 43 Human Ecology credits from College Distribution, Major Requirements and electives.',
     source: 'https://www.human.cornell.edu/academics/policies/requirements',
     checker: [
       (course: Course): boolean =>
-        course.acadGroup.includes('HE') &&
-        !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***')),
+        course.acadGroup.includes('HE') ||
+        (ifCodeMatch(course.subject, 'ECON') && ifCodeMatch(course.catalogNbr, '1110')),
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [43],
