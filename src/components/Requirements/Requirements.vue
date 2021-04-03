@@ -195,11 +195,24 @@ export default Vue.extend({
       return `Page ${this.showAllPage + 1}/${this.numPages}`;
     },
     isSafari(): boolean {
+      const htmlElement = window.HTMLElement as unknown;
+      type windowType = {
+        safari:
+          | {
+              pushNotification: boolean;
+            }
+          | unknown;
+      };
+      const initWindow = window as unknown;
+      const typedWindow = initWindow as windowType;
       return (
-        /constructor/i.test(window.HTMLElement) ||
+        /constructor/i.test(htmlElement as string) ||
         (function (p) {
           return p.toString() === '[object SafariRemoteNotification]';
-        })(!window.safari || (typeof safari !== 'undefined' && window.safari.pushNotification))
+        })(
+          !typedWindow.safari ||
+            (typeof typedWindow.safari !== 'undefined' && typedWindow.safari.pushNotification)
+        )
       );
     },
   },
@@ -287,7 +300,6 @@ export default Vue.extend({
     modalToggled(isOpen: boolean) {
       this.$emit('modal-open', isOpen);
       this.modalIsOpen = isOpen;
-      console.log(this.isSafari);
     },
   },
 });
