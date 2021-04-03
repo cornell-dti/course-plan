@@ -10,8 +10,10 @@
     >
       <!-- loop through reqs array of req objects -->
       <div
-        class="fixed"
-        :class="{ 'd-none': shouldShowAllCourses }"
+        :class="{
+          'd-none': shouldShowAllCourses,
+          fixed: !modalIsOpen,
+        }"
         data-intro-group="req-tooltip"
         :data-intro="getCoursesTooltipText()"
         data-disable-interaction="1"
@@ -120,6 +122,7 @@ type Data = {
   shouldShowAllCourses: boolean;
   showAllPage: number;
   tourStep: number;
+  modalIsOpen: boolean;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -146,6 +149,7 @@ export default Vue.extend({
       shouldShowAllCourses: false,
       showAllPage: 0,
       tourStep: 0,
+      modalIsOpen: false,
     };
   },
   watch: {
@@ -274,6 +278,7 @@ export default Vue.extend({
     },
     modalToggled(isOpen: boolean) {
       this.$emit('modal-open', isOpen);
+      this.modalIsOpen = isOpen;
     },
   },
 });
