@@ -80,8 +80,7 @@ export const examData: ExamData = {
       name: 'Macroeconomics',
       fulfillment: {
         courseEquivalents: {
-          // ECON 1120
-          DEFAULT: [350038],
+          DEFAULT: [350038], // ECON 1120
         },
         minimumScore: 4,
         credits: 3,
@@ -91,9 +90,7 @@ export const examData: ExamData = {
       name: 'English Literature and Composition',
       fulfillment: {
         courseEquivalents: {
-          AS1: [FWS_COURSE_ID], // FWS
-          AS2: [FWS_COURSE_ID], // FWS
-          EN: [FWS_COURSE_ID], // FWS
+          DEFAULT: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 4,
         credits: 3,
@@ -103,9 +100,7 @@ export const examData: ExamData = {
       name: 'English Language and Composition',
       fulfillment: {
         courseEquivalents: {
-          AS1: [FWS_COURSE_ID], // FWS
-          AS2: [FWS_COURSE_ID], // FWS
-          EN: [FWS_COURSE_ID], // FWS
+          DEFAULT: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 4,
         credits: 3,
@@ -157,6 +152,7 @@ export const examData: ExamData = {
       name: 'Mathematics BC (Engineering)',
       fulfillment: {
         courseEquivalents: {
+          DEFAULT: [],
           EN: [352255], // MATH 1910
         },
         minimumScore: 5,
@@ -339,8 +335,7 @@ export const examData: ExamData = {
       name: 'English Literature A',
       fulfillment: {
         courseEquivalents: {
-          AS: [FWS_COURSE_ID], // FWS
-          EN: [FWS_COURSE_ID], // FWS
+          DEFAULT: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -350,8 +345,7 @@ export const examData: ExamData = {
       name: 'English Language and Literature',
       fulfillment: {
         courseEquivalents: {
-          AS: [FWS_COURSE_ID], // FWS
-          EN: [FWS_COURSE_ID], // FWS
+          DEFAULT: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 7,
         credits: 3,

@@ -2,7 +2,7 @@ import getCourseEquivalentsFromUserExams, {
   ExamsTaken,
   getCourseEquivalentsFromOneMajor,
 } from '../data/exams/ExamCredit';
-import { FWS_COURSE_ID } from '../data/constants';
+import { CREDITS_COURSE_ID } from '../data/constants';
 
 /**
  * Tests for getCourseEquivalentsFromOneMajor
@@ -137,7 +137,7 @@ it("Some colleges don't have an equivalent course", () => {
   const exams: ExamsTaken = {
     AP: [
       {
-        subject: 'English',
+        subject: 'Mathematics BC (Engineering)',
         score: 5,
       },
     ],
@@ -145,16 +145,15 @@ it("Some colleges don't have an equivalent course", () => {
   };
   let courseEquivalents = getCourseEquivalentsFromOneMajor('EN', 'CS', exams);
   let courseIds = new Set(courseEquivalents.map(c => c.courseId));
-  expect(courseIds.size).toBe(1);
   // If this fails, first check if the AP/IB equivalent course logic has changed.
-  expect(courseIds.has(FWS_COURSE_ID)).toBeTruthy();
+  expect(courseIds.size).toBe(1);
+  expect(courseIds).not.toContain(CREDITS_COURSE_ID);
 
   courseEquivalents = getCourseEquivalentsFromOneMajor('AG', 'CS', exams);
   courseIds = new Set(courseEquivalents.map(c => c.courseId));
-  if (courseIds.size) {
-    // If this fails, first check if the AP/IB equivalent course logic has changed.
-    expect(courseIds).not.toContain(FWS_COURSE_ID);
-  }
+  // If this fails, first check if the AP/IB equivalent course logic has changed.
+  expect(courseIds.size).toBe(1);
+  expect(courseIds).toContain(CREDITS_COURSE_ID);
 });
 
 /**

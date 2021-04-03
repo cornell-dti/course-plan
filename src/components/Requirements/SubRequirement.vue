@@ -134,18 +134,16 @@
         class="subreqcourse-wrapper"
       >
         <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
-          <completed-sub-req-course
-            :subReqCourseId="id"
-            :courseTaken="convertCourse(selfCheckCourse)"
+          <completed-sub-req-course :subReqCourseId="id" :courseTaken="selfCheckCourse" />
+        </div>
+        <div v-if="!isCompleted">
+          <incomplete-self-check
+            :subReqId="subReq.requirement.id"
+            :subReqName="subReq.requirement.name"
+            :subReqFulfillment="subReq.fulfilledBy"
+            :subReqCourseId="subReq.minCountFulfilled"
           />
         </div>
-        <incomplete-self-check
-          v-if="!isCompleted"
-          :subReqId="subReq.requirement.id"
-          :subReqName="subReq.requirement.name"
-          :subReqFulfillment="subReq.fulfilledBy"
-          :subReqCourseId="subReq.minCountFulfilled"
-        />
       </div>
     </div>
   </div>
@@ -163,6 +161,7 @@ import { clickOutside } from '@/utilities';
 import {
   convertFirestoreSemesterCourseToCourseTaken,
   getMatchedRequirementFulfillmentSpecification,
+  courseIsAPIB,
 } from '@/requirements/requirement-frontend-utils';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 import { fullCoursesJson } from '@/assets/courses/typed-full-courses';
@@ -305,9 +304,49 @@ export default Vue.extend({
         ? `${this.subReq.minCountFulfilled}/${this.subReq.minCountRequired} ${this.subReq.fulfilledBy}`
         : 'self check';
     },
-    fulfilledSelfCheckCourses(): readonly FirestoreSemesterCourse[] {
-      const reqId = this.subReq.requirement.id;
-      return store.state.derivedSelectableRequirementData.requirementToCoursesMap[reqId];
+    fulfilledSelfCheckCourses(): readonly CourseTaken[] {
+      // selectedCourses are courses that fulfill the requirement based on user-choice
+      // they are taken from derivedSelectableRequirementData
+      const selectedFirestoreCourses =
+        store.state.derivedSelectableRequirementData.requirementToCoursesMap[
+          this.subReq.requirement.id
+        ];
+      const selectedCourses = selectedFirestoreCourses
+        ? selectedFirestoreCourses.map((course: FirestoreSemesterCourse) =>
+            this.convertCourse(course)
+          )
+        : [];
+
+      // fulfillableCourses are the courses that can fulfill this requirement
+      // this is necessary to compute because ap/ib data is not stored in selectable requirement choices collection
+      let fulfillableCourses: CourseTaken[] = [];
+      const subReqSpec = getMatchedRequirementFulfillmentSpecification(this.subReq.requirement, {
+        [this.subReq.requirement.id]: this.toggleableRequirementChoice,
+      });
+      if (subReqSpec !== null) {
+        if (subReqSpec.fulfilledBy === 'credits') {
+          this.subReq.courses[0].forEach(completedCourse =>
+            fulfillableCourses.push(completedCourse)
+          );
+        } else {
+          this.subReq.courses.forEach((subReqCourseSlot, i) => {
+            const slotMinCount = subReqSpec.perSlotMinCount[i];
+            for (let j = 0; j < slotMinCount; j += 1) {
+              if (j < subReqCourseSlot.length) {
+                fulfillableCourses.push(subReqCourseSlot[j]);
+              }
+            }
+          });
+        }
+      }
+      // fulfillableCourses are then filtered to be AP/IB/transfer courses only
+      // regular courses that are not in selectedCourses should not be displayed
+      // ...because that means the user selected another requirement for the course
+      // regular courses that are in selectedCourses should also not be displayed
+      // ...because that means it will be duplicated in fulfillableCourses
+      fulfillableCourses = fulfillableCourses.filter(courseIsAPIB);
+
+      return [...selectedCourses, ...fulfillableCourses];
     },
     selfCheckWarning(): string {
       return 'This requirement is not included in the progress bar because we do not check if it’s completed.';

@@ -4,6 +4,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
   ifCodeMatch,
+  courseIsSpecial,
 } from '../checkers-common';
 
 const engineeringLiberalArtsDistributions: readonly string[] = [
@@ -171,14 +172,15 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Advisor-Approved Electives',
     description:
-      'At least 3 credit hours total. All academic courses count.' +
+      'At least 3 credit hours total. All academic courses count. ' +
       'No PE courses, courses numbered 10xx, and ROTC courses below the 3000-level allowed.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirement',
     checker: [
       (course: Course): boolean => {
-        const { catalogNbr } = course;
-        return !(ifCodeMatch(course.subject, 'PE') && ifCodeMatch(catalogNbr, '10**'));
+        if (courseIsSpecial(course)) return false;
+        const { subject, catalogNbr } = course;
+        return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
       },
     ],
     checkerWarning: 'We do not check that the courses are advisor approved.',
