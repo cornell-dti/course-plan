@@ -93,4 +93,13 @@ export default Vue.extend({
     display: flex;
   }
 }
+
+@media only screen and (max-width: $small-medium-breakpoint) {
+  .content-confirmation {
+    width: 100%;
+  }
+  .text-width {
+    width: 100%;
+  }
+}
 </style>
