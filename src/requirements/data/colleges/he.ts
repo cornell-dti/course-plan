@@ -1,5 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { courseIsFWS, ifCodeMatch } from '../checkers-common';
+import { courseIsFWS } from '../checkers-common';
 
 const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -10,7 +10,7 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         course.acadGroup.includes('HE') ||
-        (ifCodeMatch(course.subject, 'ECON') && ifCodeMatch(course.catalogNbr, '1110')),
+        (course.subject === 'ECON' && course.catalogNbr === '1110'),
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [43],
