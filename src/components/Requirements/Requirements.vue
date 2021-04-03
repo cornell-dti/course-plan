@@ -10,9 +10,10 @@
     >
       <!-- loop through reqs array of req objects -->
       <div
+        class="fixed"
         :class="{
           'd-none': shouldShowAllCourses,
-          fixed: !(isSafari && modalIsOpen),
+          'position-fixed': !(isSafari && modalIsOpen),
         }"
         data-intro-group="req-tooltip"
         :data-intro="getCoursesTooltipText()"
@@ -322,11 +323,13 @@ export default Vue.extend({
   background-color: $white;
 }
 .fixed {
-  position: fixed;
   left: 4.5rem;
   top: 0;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+.position-fixed {
+  position: fixed;
 }
 .fixed,
 .see-all-padding {
