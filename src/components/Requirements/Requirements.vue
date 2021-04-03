@@ -12,7 +12,7 @@
       <div
         :class="{
           'd-none': shouldShowAllCourses,
-          fixed: !modalIsOpen,
+          fixed: !(isSafari && modalIsOpen),
         }"
         data-intro-group="req-tooltip"
         :data-intro="getCoursesTooltipText()"
@@ -194,6 +194,14 @@ export default Vue.extend({
     pageText(): string {
       return `Page ${this.showAllPage + 1}/${this.numPages}`;
     },
+    isSafari(): boolean {
+      return (
+        /constructor/i.test(window.HTMLElement) ||
+        (function (p) {
+          return p.toString() === '[object SafariRemoteNotification]';
+        })(!window.safari || (typeof safari !== 'undefined' && window.safari.pushNotification))
+      );
+    },
   },
   methods: {
     showMajorOrMinorRequirements(id: number, group: string): boolean {
@@ -279,6 +287,7 @@ export default Vue.extend({
     modalToggled(isOpen: boolean) {
       this.$emit('modal-open', isOpen);
       this.modalIsOpen = isOpen;
+      console.log(this.isSafari);
     },
   },
 });
