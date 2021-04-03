@@ -40,6 +40,7 @@ export default Vue.extend({
   methods: {
     closeCurrentModal(): void {
       this.$emit('input', false);
+      this.$emit('modal-open', false);
     },
     resetClicked(): void {
       this.closeCurrentModal();

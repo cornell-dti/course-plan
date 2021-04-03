@@ -5,6 +5,7 @@
       :reqName="courseTaken.code"
       v-model="resetConfirmVisible"
       @close-reset-modal="onResetConfirmClosed"
+      @modal-open="modalToggled"
     />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
@@ -102,6 +103,9 @@ export default Vue.extend({
           });
         } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
       }
+    },
+    modalToggled(isOpen: boolean) {
+      this.$emit('modal-open', isOpen);
     },
   },
 });
