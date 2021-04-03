@@ -75,6 +75,7 @@
             @new-semester="openSemesterModal"
             @delete-semester="deleteSemester"
             @open-caution-modal="openCautionModal"
+            @modal-open="modalToggle"
           />
         </div>
         <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
@@ -181,16 +182,20 @@ export default Vue.extend({
     openCautionModal() {
       this.cautionText = `Unable to add course. Already in plan.`;
       this.isCautionModalOpen = true;
+      this.$emit('modal-open', true);
 
       setTimeout(() => {
         this.isCautionModalOpen = false;
+        this.$emit('modal-open', false);
       }, 3000);
     },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
+      this.$emit('modal-open', true);
     },
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
+      this.$emit('modal-open', false);
     },
     addSemester(type: FirestoreSemesterType, year: number) {
       addSemester(type, year, this.$gtag);
@@ -214,6 +219,9 @@ export default Vue.extend({
     getToggleTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Toggle between Views</div><div class="introjs-customProgress">4/4</div>
       </div><div class = "introjs-bodytext">View semesters and courses in full or compact mode.</div>`;
+    },
+    modalToggle(isOpen: boolean) {
+      this.$emit('modal-open', isOpen);
     },
   },
 });

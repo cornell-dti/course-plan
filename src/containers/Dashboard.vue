@@ -35,6 +35,7 @@
         :isBottomBar="hasBottomCourses"
         :isMobile="isMobile"
         @compact-updated="compactVal = $event"
+        @modal-open="modalToggle"
       />
     </div>
     <tour-window
