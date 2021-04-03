@@ -197,11 +197,9 @@ export default Vue.extend({
     isSafari(): boolean {
       const htmlElement = window.HTMLElement as unknown;
       type windowType = {
-        safari:
-          | {
-              pushNotification: boolean;
-            }
-          | unknown;
+        safari: {
+          pushNotification: boolean;
+        };
       };
       const initWindow = window as unknown;
       const typedWindow = initWindow as windowType;
