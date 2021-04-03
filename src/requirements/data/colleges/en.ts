@@ -24,6 +24,39 @@ const engineeringLiberalArtsDistributions: readonly string[] = [
   'GLC',
 ];
 
+const FLcourses: readonly string[] = [
+  'ARAB',
+  'BENGL',
+  'BURM',
+  'CHIN',
+  'FREN',
+  'GERST',
+  'GREEK',
+  'HEBRW',
+  'HINDI',
+  'INDO',
+  'ITAL',
+  'JAPAN',
+  'KHMER',
+  'KOREA',
+  'LATIN',
+  'NEPAL',
+  'PERSN',
+  'POLSH',
+  'PORT',
+  'RUSSA',
+  'SANSK',
+  'SINHA',
+  'SPAN',
+  'SWAHL',
+  'TAG',
+  'THAI',
+  'TURK',
+  'VIET',
+  'YORUB',
+  'ZULU',
+];
+
 const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Mathematics',
@@ -105,7 +138,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         engineeringLiberalArtsDistributions.some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+        ) || FLcourses.some(language => course.subject?.includes(language) ?? false),
     ],
     fulfilledBy: 'courses',
     allowCourseDoubleCounting: true,
@@ -141,7 +174,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         engineeringLiberalArtsDistributions.some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+        ) || FLcourses.some(language => course.subject?.includes(language) ?? false),
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [18],
@@ -157,9 +190,10 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
         const { catalogNbr } = course;
         return (
           !ifCodeMatch(catalogNbr, '1***') &&
-          engineeringLiberalArtsDistributions.some(
+          (engineeringLiberalArtsDistributions.some(
             category => course.catalogDistr?.includes(category) ?? false
-          )
+          ) ||
+            FLcourses.some(language => course.subject?.includes(language) ?? false))
         );
       },
     ],
@@ -172,10 +206,10 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Advisor-Approved Electives',
     description:
-      'At least 3 credit hours total. All academic courses count. ' +
+      'At least 6 credit hours total. All academic courses count. ' +
       'No PE courses, courses numbered 10xx, and ROTC courses below the 3000-level allowed.',
     source:
-      'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirement',
+      'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: [
       (course: Course): boolean => {
         if (courseIsSpecial(course)) return false;
