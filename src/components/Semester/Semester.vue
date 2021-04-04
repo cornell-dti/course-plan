@@ -404,7 +404,7 @@ export default Vue.extend({
     border-radius: 8px;
     min-height: 2.5rem;
     min-width: 9rem;
-    color: #ffffff;
+    color: $white;
     border: none;
     position: absolute;
     top: -3.3rem;
@@ -527,7 +527,7 @@ export default Vue.extend({
   .semester-modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 2; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */

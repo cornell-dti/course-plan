@@ -161,6 +161,7 @@ it("Some colleges don't have an equivalent course", () => {
  */
 it('Exam is counted correctly for one major', () => {
   const userData: AppOnboardingData = {
+    gradYear: '2020',
     college: 'EN',
     major: ['CS'],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
@@ -176,6 +177,7 @@ it('Exam is counted correctly for one major', () => {
 
 it('Two exams are counted correctly for one major', () => {
   const userData: AppOnboardingData = {
+    gradYear: '2020',
     college: 'EN',
     major: ['CS'],
     exam: [
@@ -194,6 +196,7 @@ it('Two exams are counted correctly for one major', () => {
 
 it('One exam is only counted once for multiple majors', () => {
   const userData: AppOnboardingData = {
+    gradYear: '2020',
     college: 'EN',
     major: ['CS', 'Biological Sciences'],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
@@ -210,6 +213,7 @@ it('One exam is only counted once for multiple majors', () => {
 
 it('Equivalent course appears if it matches one major but not the other', () => {
   let userData: AppOnboardingData = {
+    gradYear: '2020',
     college: 'EN',
     major: ['Biological Sciences'],
     exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],
@@ -222,6 +226,7 @@ it('Equivalent course appears if it matches one major but not the other', () => 
   expect(courseEquivalents.length).toBe(0);
 
   userData = {
+    gradYear: '2020',
     college: 'EN',
     major: ['CS', 'Biological Sciences'],
     exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],

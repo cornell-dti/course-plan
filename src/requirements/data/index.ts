@@ -22,6 +22,7 @@ import deaRequirements from './majors/dea';
 import economicsRequirements from './majors/econ';
 import eceRequirements from './majors/ece';
 import englishRequirements from './majors/engl';
+import envEngineeringRequirements from './majors/envE';
 import governmentRequirements from './majors/govt';
 import hotelAdminRequirements from './majors/hadm';
 import historyRequirements from './majors/hist';
@@ -40,6 +41,7 @@ import deaMinorRequirements from './minors/dea';
 import infoENMinorRequirements from './minors/infoEN';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
+import policyMinorRequirements from './minors/policy';
 import psychMinorRequirements from './minors/psych';
 
 const json: RequirementsJson = {
@@ -149,6 +151,11 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: englishRequirements,
     },
+    ENV: {
+      name: 'Environmental Engineering',
+      schools: ['EN'],
+      requirements: envEngineeringRequirements,
+    },
     GOVT: {
       name: 'Government',
       schools: ['AS1', 'AS2'],
@@ -235,6 +242,11 @@ const json: RequirementsJson = {
       name: 'Operations Research and Management Science',
       schools: ['EN'],
       requirements: ormsMinorRequirements,
+    },
+    POLICY: {
+      name: 'Public Policy',
+      schools: ['AS1', 'AS2'],
+      requirements: policyMinorRequirements,
     },
     PSYCH: {
       name: 'Psychology',

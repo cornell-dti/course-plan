@@ -43,6 +43,14 @@
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label"
+              >Graduation Year<span class="onboarding-required-star">*</span></label
+            >
+            <div>
+              <label class="onboarding-label--review">{{ gradYearText }}</label>
+            </div>
+          </div>
+          <div class="onboarding-selectWrapper-review">
+            <label class="onboarding-label"
               >College<span class="onboarding-required-star">*</span></label
             >
             <div>
@@ -50,9 +58,7 @@
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label"
-              >Major<span class="onboarding-required-star">*</span></label
-            >
+            <label class="onboarding-label">Major</label>
             <div v-for="(major, index) in onboardingData.major" :key="index">
               <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
             </div>
@@ -165,6 +171,9 @@ export default Vue.extend({
       return this.onboardingData.college !== ''
         ? getCollegeFullName(this.onboardingData.college)
         : placeholderText;
+    },
+    gradYearText(): string {
+      return this.onboardingData.gradYear !== '' ? this.onboardingData.gradYear : placeholderText;
     },
     totalCredits(): number {
       let count = 0;

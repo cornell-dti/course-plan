@@ -22,10 +22,10 @@ export default Vue.extend({});
   max-width: 100%;
 }
 .top-bar {
-  padding: 59px 0px 0px 104px;
+  padding: 3.75rem 0px 0px 6.5rem;
 
   @media (max-width: 1154px) {
-    padding: 59px 104px 0px 104px;
+    padding: 3.75rem 6.5rem 0px 6.5rem;
     display: flex;
     flex-direction: column;
   }
@@ -33,7 +33,7 @@ export default Vue.extend({});
 
 @media (max-width: 1154px) {
   .top-bar {
-    padding: 50px;
+    padding: 3.125rem;
   }
 }
 </style>
