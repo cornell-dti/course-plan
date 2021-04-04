@@ -3,7 +3,9 @@
     <div :class="['modal-content', contentClass]">
       <div class="modal-top">
         <h1>{{ title }}</h1>
-        <img class="modal-exit" src="@/assets/images/x.png" @click="closeCurrentModal" />
+        <button @click="closeCurrentModal">
+          <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
+        </button>
       </div>
       <slot class="modal-body"></slot>
       <div class="modal-buttonWrapper">
@@ -15,6 +17,12 @@
           :class="{ 'modal-button--disabled': rightButtonIsDisabled }"
           @click="rightButtonClicked"
         >
+          <img
+            v-if="rightButtonImage"
+            class="modal-icon"
+            :src="rightButtonImage"
+            :alt="rightButtonAlt"
+          />
           {{ rightButtonText }}
         </button>
       </div>
@@ -31,6 +39,8 @@ export default Vue.extend({
     contentClass: { type: String, required: true },
     leftButtonText: { type: String, required: true },
     rightButtonText: { type: String, required: true },
+    rightButtonImage: { type: String, default: '' },
+    rightButtonAlt: { type: String, default: '' },
     rightButtonIsDisabled: { type: Boolean, required: true },
   },
   methods: {
@@ -75,9 +85,12 @@ export default Vue.extend({
   }
 
   &-exit {
-    cursor: pointer;
     width: 10.5px;
     height: 10.5px;
+  }
+
+  &-icon {
+    margin-right: 0.25rem;
   }
 
   &-buttonWrapper {
@@ -89,9 +102,9 @@ export default Vue.extend({
   &-button {
     width: 4.75rem;
     height: 1.8rem;
-    color: $activeGray;
+    color: $sangBlue;
     border-radius: 3px;
-    border: 1px solid $primaryGray;
+    border: 1px solid $sangBlue;
     background-color: $white;
     display: flex;
     justify-content: center;

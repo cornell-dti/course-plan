@@ -1,7 +1,9 @@
 <template>
   <div class="details">
     <div class="details-ratings-link-wrapper">
-      <a :href="CURLink" class="details-ratings-link" target="_blank">See All Reviews</a>
+      <a :href="CURLink" class="details-ratings-link" target="_blank" @click="clickCUReviewsLink()"
+        >Learn more on CUReviews</a
+      >
     </div>
     <div class="details-ratings-wrapper">
       <div class="details-ratings">
@@ -75,6 +77,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { reviewColors } from '@/assets/constants/colors';
+import { GTagEvent } from '@/gtag';
 
 const noneIfEmpty = (str: string): string => (str && str.length !== 0 ? str : 'None');
 
@@ -100,6 +103,10 @@ export default Vue.extend({
       }
 
       return flip ? colors[colors.length - 1 - index] : colors[index];
+    },
+
+    clickCUReviewsLink(): void {
+      GTagEvent(this.$gtag, 'bottom-bar-CU-reviews-link');
     },
   },
 
@@ -187,6 +194,12 @@ export default Vue.extend({
 .rating {
   width: 100%;
   border-radius: 100px;
+}
+
+.info {
+  &-fact {
+    color: $primaryGray;
+  }
 }
 
 @media only screen and (max-width: $medium-breakpoint) {

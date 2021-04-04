@@ -1,17 +1,17 @@
 import { Course, RequirementChecker } from '../types';
-import { FWS_COURSE_ID } from './constants';
+import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './constants';
 
 /**
  * @param courseName name of the course (as a code)
  * @param code code to check courseName (can contain * to denote any value)
  * @returns if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
  */
-export function ifCodeMatch(courseName: string, code: string): boolean {
+export const ifCodeMatch = (courseName: string, code: string): boolean => {
   for (let i = 0; i < courseName.length; i += 1) {
     if (code[i] !== '*' && courseName[i] !== code[i]) return false;
   }
   return true;
-}
+};
 
 /**
  * @param course course object with useful information retrived from Cornell courses API.
@@ -42,6 +42,15 @@ export const courseIsFWS = (course: Course): boolean =>
   course.crseId === FWS_COURSE_ID ||
   course.titleLong.includes('FWS:') ||
   (course.catalogSatisfiesReq?.includes('First-Year Writing Seminar') ?? false);
+
+/**
+ * Detects special (synthetic) courses, as defined in requirement-json-generator.ts
+ *
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @returns if the course is a special course
+ */
+export const courseIsSpecial = (course: Course): boolean =>
+  course.crseId === CREDITS_COURSE_ID || course.crseId === FWS_COURSE_ID;
 
 /**
  * This function returns a checker that checks whether a course satisfy a single requirement by

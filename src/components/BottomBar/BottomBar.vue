@@ -3,17 +3,17 @@
     <div class="bottombar-tabview" :class="{ expandedTabView: isExpanded }">
       <bottom-bar-tab-view :maxBottomBarTabs="maxBottomBarTabs" />
     </div>
-    <div
-      class="bottombar-title"
+    <button
+      class="bottombar-title full-opacity-on-hover"
       :class="{ expandedBottomBarTitle: isExpanded }"
-      @click="toggleBottomBar()"
+      @click="toggleBottomBar($gtag)"
     >
       <bottom-bar-title
         :color="focusedBottomBarCourse.color"
         :name="focusedBottomBarCourse.name"
         :isExpanded="isExpanded"
       />
-    </div>
+    </button>
     <div v-if="isExpanded" class="bottombar-course">
       <bottom-bar-course :courseObj="focusedBottomBarCourse" />
     </div>
@@ -74,6 +74,8 @@ export default Vue.extend({
     left: 29.5rem;
     height: 2.5rem;
     width: calc(100vw - 29.5rem);
+    text-align: left;
+    padding-left: 0;
   }
 
   &-course {

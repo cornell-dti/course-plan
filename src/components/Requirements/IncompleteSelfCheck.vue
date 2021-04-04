@@ -3,10 +3,14 @@
     <new-self-check-course-modal
       class="incompleteselfcheck-modal"
       :class="{ 'incompleteselfcheck-modal--block': isCourseModalOpen }"
+      :subReqName="subReqName"
+      :requirementId="subReqId"
       @close-course-modal="closeCourseModal"
       @add-course="addNewCourse"
       ref="modal"
     />
+    <div class="separator"></div>
+    <div class="top">{{ addCourseLabel }}</div>
     <div class="dropdown-select-wrapper">
       <div class="dropdown-select dropdown-input" v-click-outside="closeMenuIfOpen">
         <div class="dropdown-placeholder dropdown-wrapper" @click="showDropdown = !showDropdown">
@@ -38,6 +42,7 @@ import { clickOutside } from '@/utilities';
 import store from '@/store';
 import { addCourseToSemester, addCourseToSelectableRequirements } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
+import { canFulfillChecker } from '@/requirements/requirement-frontend-utils';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
 
@@ -52,6 +57,9 @@ export default Vue.extend({
   },
   props: {
     subReqId: { type: String, required: true },
+    subReqName: { type: String, required: true },
+    subReqFulfillment: { type: String, required: true },
+    subReqCourseId: { type: Number, required: true },
   },
   data(): Data {
     return {
@@ -60,24 +68,82 @@ export default Vue.extend({
     };
   },
   computed: {
+    // limit self check course options to courses not already added to this requirement
+    // and courses that are not already assigned to non-double countable requirements, if this req is not double countable
+    // and courses that do not fulfill the requirement checker
     selfCheckCourses(): Record<string, FirestoreSemesterCourse> {
-      // TODO - limit to courses that don't have requirements they are fulfilling
       const courses: Record<string, FirestoreSemesterCourse> = {};
       store.state.semesters.forEach(semester => {
         semester.courses.forEach(course => {
           const selectableRequirementCourses =
             store.state.derivedSelectableRequirementData.requirementToCoursesMap[this.subReqId];
-          if (!(selectableRequirementCourses && selectableRequirementCourses.includes(course)))
-            courses[course.code] = course;
+
+          // if course is mapped to another req(s), only allow it if all other reqs are double countable
+          let isAddable = true;
+          const otherReqsMappedTo = store.state.requirementFulfillmentGraph.getConnectedRequirementsFromCourse(
+            { uniqueId: course.uniqueID }
+          );
+
+          // true if all other requirements (if any) the course is assigned to are double countable, false otherwise
+          let allOtherReqsDoubleCountableIfAny = true;
+
+          // true if this requirement is double countable, false otherwise.
+          let thisReqDoubleCountable = false;
+
+          // loop through all reqs and determine if all other reqs this course is assigned to are
+          // double countable (if any exist) and whether or not this req itself is double countable
+          const collegesMajorsMinors = store.state.groupedRequirementFulfillmentReport;
+          collegesMajorsMinors.forEach(reqGroup => {
+            reqGroup.reqs.forEach(req => {
+              if (
+                otherReqsMappedTo.includes(req.requirement.id) &&
+                !req.requirement.allowCourseDoubleCounting
+              ) {
+                allOtherReqsDoubleCountableIfAny = false;
+              } else if (
+                req.requirement.id === this.subReqId &&
+                req.requirement.allowCourseDoubleCounting
+              ) {
+                thisReqDoubleCountable = true;
+              }
+            });
+          });
+
+          // if neither the current req or all other assigned reqs are not double countable, restrict from adding
+          if (!(allOtherReqsDoubleCountableIfAny || thisReqDoubleCountable)) {
+            isAddable = false;
+          }
+
+          const isAlreadyAddedToReq =
+            selectableRequirementCourses && selectableRequirementCourses.includes(course);
+
+          // filter out courses that cannot fulfill the self-check, for self-checks with warnings
+          const canFulfillReq = canFulfillChecker(
+            store.state.userRequirementsMap,
+            store.state.toggleableRequirementChoices,
+            this.subReqId,
+            course.crseId
+          );
+
+          if (!isAlreadyAddedToReq && isAddable && canFulfillReq) courses[course.code] = course;
         });
       });
+
       return courses;
+    },
+    addCourseLabel() {
+      let label = 'Add Course';
+      if (this.subReqFulfillment === 'courses') {
+        label = `Add Course ${this.subReqCourseId + 1}`;
+      }
+      return label;
     },
   },
   directives: {
     'click-outside': clickOutside,
   },
   methods: {
+    // filter to check if a course fulfills a requirements checker
     closeMenuIfOpen() {
       this.showDropdown = false;
     },
@@ -103,10 +169,25 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
+.separator {
+  height: 1px;
+  width: 100%;
+  background-color: $inactiveGray;
+  margin-top: 1rem;
+}
+
+.top {
+  font-size: 14px;
+  line-height: 17px;
+  color: #757575;
+  margin: 0.75rem 0;
+}
+
 .dropdown {
   &-select {
     display: flex;
     flex-direction: row;
+    align-items: center;
     background: $white;
     border: 0.5px solid $inactiveGray;
     box-sizing: border-box;
@@ -116,6 +197,7 @@ export default Vue.extend({
     line-height: 17px;
     color: $darkPlaceholderGray;
     position: relative;
+    min-height: 1.625rem;
 
     &:not(:first-child) {
       margin-top: 0.5rem;
@@ -123,16 +205,17 @@ export default Vue.extend({
 
     &-wrapper {
       position: relative;
+      margin-bottom: 1rem;
     }
   }
   &-placeholder {
     height: 100%;
     font-size: 14px;
     line-height: 17px;
-    margin-left: 0.25rem;
+    margin-left: 0.5rem;
     display: flex;
     align-items: center;
-    color: $darkPlaceholderGray;
+    color: $lightPlaceholderGray;
     background: transparent;
     cursor: pointer;
   }
@@ -149,7 +232,7 @@ export default Vue.extend({
     background: transparent;
     margin-right: 8.7px;
     margin-left: 5px;
-    margin-top: 5px;
+    margin-top: auto;
     margin-bottom: auto;
   }
   &-content {
@@ -160,6 +243,8 @@ export default Vue.extend({
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 7px;
     margin-top: 3px;
+    max-height: 9rem;
+    overflow-y: overlay;
     &-item {
       height: 2.25rem;
       font-size: 14px;

@@ -53,9 +53,9 @@ export default Vue.extend({
   }
 }
 .subreq {
-  margin-top: -14px;
+  margin-top: -6px;
   &-flipped {
-    margin-top: -4px;
+    margin-top: 4px;
   }
 }
 </style>

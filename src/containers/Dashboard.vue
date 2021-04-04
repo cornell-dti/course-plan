@@ -46,7 +46,7 @@
     />
     <tour-window
       title="Let's get CoursePlanning!"
-      text="There’s more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and 
+      text="There’s more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and
       also consult your advisors for more up to date information!"
       :isFinalStep="true"
       exit=""
@@ -172,16 +172,9 @@ export default Vue.extend({
       this.isMobile = window.innerWidth <= smallBreakpointPixels;
       this.isTablet = window.innerWidth <= mediumBreakpointPixels;
       this.maxBottomBarTabs = getMaxButtonBarTabs();
-      this.updateSemesterView();
     },
     toggleRequirementsBar() {
       this.isOpeningRequirements = !this.isOpeningRequirements;
-    },
-    updateSemesterView() {
-      if (this.isMobile) {
-        // Make sure semesterView is not compact by default on mobile
-        this.compactVal = false;
-      }
     },
 
     showTourEnd() {
