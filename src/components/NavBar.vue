@@ -5,7 +5,7 @@
       @click="menuOpen = !menuOpen"
     ></div>
     <div class="navbar-top">
-      <div class="navbar-iconWrapper course-plan-logo">
+      <div class="navbar-iconWrapper course-plan-logo no-hover">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
       </div>
       <button
@@ -190,6 +190,10 @@ $mobile-navbar-height: 4.5rem;
 
 .mobile {
   display: none;
+}
+
+.no-hover {
+  cursor: default;
 }
 
 @media only screen and (max-width: $medium-breakpoint) {
