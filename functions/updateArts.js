@@ -23,7 +23,7 @@ const transformData = oldColleges => {
     }
   });
 
-  return { colleges };
+  return colleges;
 };
 
 if (process.argv[2] === '--dry-run') {
