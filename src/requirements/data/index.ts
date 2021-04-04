@@ -40,6 +40,7 @@ import deaMinorRequirements from './minors/dea';
 import isstMinorRequirements from './minors/isst';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
+import policyMinorRequirements from './minors/policy';
 import psychMinorRequirements from './minors/psych';
 
 const json: RequirementsJson = {
@@ -235,6 +236,11 @@ const json: RequirementsJson = {
       name: 'Operations Research and Management Science',
       schools: ['EN'],
       requirements: ormsMinorRequirements,
+    },
+    POLICY: {
+      name: 'Public Policy',
+      schools: ['AS1', 'AS2'],
+      requirements: policyMinorRequirements,
     },
     PSYCH: {
       name: 'Psychology',
