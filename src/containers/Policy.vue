@@ -38,6 +38,7 @@
       <ul>
         <li>Name</li>
         <li>Email</li>
+        <li>Academic information, such as major, AP/IB test scores, and courses taken</li>
       </ul>
       <h4>Legitimate Reasons for Processing Your Personal Information</h4>
       <p>
