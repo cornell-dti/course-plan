@@ -47196,9 +47196,9 @@
       ],
       "requirements": [
         {
-          "name": "Engineering Distriubtions",
+          "name": "Engineering Distributions",
           "description": "ENGRD 2020 and ENGRD 2600 or ENGRD 2510",
-          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -47215,15 +47215,32 @@
           ]
         },
         {
+          "name": "Organic Chemistry",
+          "description": "CHEM 1570 or CHEM 3570 or CHEM 3530",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1
+          ],
+          "courses": [
+            [
+              351353,
+              359185,
+              365879
+            ]
+          ]
+        },
+        {
           "name": "Intro Bio",
           "description": "Choose 2 of the following 4: BIOMG 1350, BIOG 1440, BIOG 1445, and BIOEE/BIOSM 1610",
-          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
           ],
           "courses": [
             [
+              354148,
               363586,
               363758,
               365913
@@ -47231,9 +47248,45 @@
           ]
         },
         {
+          "name": "Biochemistry",
+          "description": "BIOMG 3300, BIOMG 3330, BIOMG 3350, or BIOMG 3310 and BIOMG 3320",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
+          "fulfilledBy": "toggleable",
+          "fulfillmentOptions": {
+            "Option 1": {
+              "description": "CHEM 2070 AND CHEM 2080",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                1
+              ],
+              "courses": [
+                [
+                  351265
+                ],
+                [
+                  351269
+                ]
+              ]
+            },
+            "Option 2": {
+              "description": "CHEM 2150",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1
+              ],
+              "courses": [
+                [
+                  351273
+                ]
+              ]
+            }
+          }
+        },
+        {
           "name": "Required Major Courses",
           "description": "Major requirements for BE: BIOG/BIOSM 1500, BEE 3500, BEE 3310, BEE 3400, BEE 3600, and BEE 4500",
-          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -47244,7 +47297,10 @@
             1
           ],
           "courses": [
-            [],
+            [
+              363759,
+              365794
+            ],
             [
               351760
             ],
@@ -47263,36 +47319,9 @@
           ]
         },
         {
-          "name": "Biochemistry",
-          "description": "BIOMG 3300, BIOMG 3330, BIOMG 3350, or BIOMG 3310 and BIOMG 3320",
-          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
-          "fulfilledBy": "courses",
-          "perSlotMinCount": [
-            1,
-            1
-          ],
-          "courses": [
-            [
-              353357,
-              353369,
-              354876,
-              363667
-            ],
-            [
-              353362
-            ]
-          ]
-        },
-        {
-          "name": "Upper-level Biology",
-          "description": "Any biology course at the 2000-level or above which has a biology prerequisite and is taken for a letter grade. This requirement may also be satisfied by an upper-level course in a science department (excluding engineering, liberal studies, social sciences, and mathematics) which has a biology (not social science) content of 95% or greater and a biology prerequisite. Students must receive approval for these alternative courses by consulting their BE faculty advisor or the main BE Advising Office, 207 Riley-Robb Hall. One credit seminars and BIOG 2990/4990 credits may not be used to meet this requirement.",
-          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
-          "fulfilledBy": "self-check"
-        },
-        {
           "name": "Engineering Statistics",
           "description": "BEE 2220 or ENGRD 2210 or CHEME 3130 or MSE 3030 and engineering statistics preferably before semester 6. CEE 3040 is the preferred version of statistics.",
-          "source": "http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1,
@@ -47312,9 +47341,15 @@
           ]
         },
         {
+          "name": "Focus Area",
+          "description": "Fifteen or more credits of courses chosen from one or more of the 7 focus areas: Molecular and Cellular Systems, Ecological and Microbial Systems, Nanobiotechnology, Computational Biological Engineering, Synthetic Biology, Biomaterials, or Sustainability.",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
+          "fulfilledBy": "self-check"
+        },
+        {
           "name": "BE Focus Area Elective",
           "description": "BE Focus Area Electives must include a BEE capstone design course. See beadvised.bee.cornell.edu for a current list of approved courses. In place of one focus area course, students may use up to 4 credits of research, project team, teaching, or independent study taken in an engineering department towards the engineering credits in category 8.",
-          "source": "https://beadvised.bee.cornell.edu/full-list-of-focus-area-courses/",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             4
