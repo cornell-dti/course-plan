@@ -1,10 +1,10 @@
 <template>
   <flexible-modal
-    title="Add Course"
+    :title="modalTitle"
     content-class="content-course"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
-    :rightButtonIsDisabled="selectedCourse == null"
+    :rightButtonIsDisabled="!canAddCourse"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addCourse"
@@ -13,6 +13,7 @@
     <course-selector
       search-box-class-name="newCourse-dropdown"
       :key="courseSelectorKey"
+      :courseFilter="courseCanAppearInSearchResult"
       placeholder='"CS 1110", "Multivariable Calculus", etc'
       :autoFocus="true"
       @on-escape="closeCurrentModal"
@@ -26,6 +27,7 @@
           :year="year"
           :isCourseModelSelectingSemester="true"
           @updateSemProps="updateSemProps"
+          ref="modalBodyComponent"
         />
       </div>
     </div>
@@ -37,9 +39,15 @@ import Vue from 'vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
+import store from '@/store';
+import { getFilter } from '@/requirements/requirement-frontend-utils';
 
 export default Vue.extend({
   components: { CourseSelector, FlexibleModal, NewSemester },
+  props: {
+    subReqName: { type: String, required: true },
+    requirementId: { type: String, required: true },
+  },
   data() {
     return {
       selectedCourse: null as CornellCourseRosterCourse | null,
@@ -49,17 +57,32 @@ export default Vue.extend({
     };
   },
   computed: {
+    modalTitle(): string {
+      return `Add Course to ${this.subReqName}`;
+    },
     leftButtonText(): string {
-      return 'CANCEL';
+      return 'Cancel';
     },
     rightButtonText(): string {
-      return 'ADD';
+      return 'Add';
+    },
+    canAddCourse(): boolean {
+      return this.selectedCourse != null && this.year > 0 && String(this.season) !== 'Select';
+    },
+    courseCanAppearInSearchResult(): (course: CornellCourseRosterCourse) => boolean {
+      return getFilter(
+        store.state.userRequirementsMap,
+        store.state.toggleableRequirementChoices,
+        this.requirementId
+      );
     },
   },
   methods: {
     closeCurrentModal() {
       this.reset();
       this.$emit('close-course-modal');
+      // @ts-expect-error: TS cannot understand $ref's component.
+      this.$refs.modalBodyComponent.resetDropdowns();
     },
     setCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
@@ -67,12 +90,13 @@ export default Vue.extend({
     addCourse() {
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, this.season, this.year);
-      this.reset();
       this.closeCurrentModal();
     },
     reset() {
       this.courseSelectorKey += 1;
       this.selectedCourse = null;
+      this.year = 0;
+      this.season = '' as FirestoreSemesterType;
     },
     backOrCancel() {
       this.closeCurrentModal();

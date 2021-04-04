@@ -8,12 +8,14 @@
       <div class="onboarding-subHeader">
         <span class="onboarding-subHeader--font"> Transfer Credits (Optional)</span>
       </div>
-      <div class="onboarding-inputs">
-        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
+      <div class="onboarding-transferCredits onboarding-inputs">
+        <div
+          class="onboarding-inputWrapper onboarding-inputWrapper--college onboarding-inputWrapper--description"
+        >
           <div class="onboarding-subHeader">
             <span class="onboarding-subHeader--font">AP Credits</span>
           </div>
-          <div class="onboarding-subsection">
+          <div class="onboarding-subsection onboarding-transferCreditsSection">
             <div class="onboarding-section" v-for="(exam, index) in examsAP" :key="index">
               <div class="onboarding-selectWrapperRow">
                 <onboarding-transfer-exam-property-dropdown
@@ -30,12 +32,8 @@
                   :choice="exam.score"
                   @on-select="score => selectAPScore(score, index)"
                 />
-                <div class="onboarding-select--columnCenter">
-                  <label class="onboarding-label">Credits</label>
-                  <label class="college-major-minor-placeholder">{{ getExamCredit(exam) }}</label>
-                </div>
                 <div class="onboarding-select--column-removeExam">
-                  <div
+                  <button
                     class="onboarding-remove"
                     @click="removeExam('AP', index)"
                     :class="{
@@ -43,19 +41,22 @@
                         examsAP.length === 1 && exam.subject === placeholderText,
                     }"
                   >
-                    <img src="@/assets/images/x-green.svg" alt="x" />
-                  </div>
+                    <img
+                      src="@/assets/images/x-green.svg"
+                      :alt="`x to remove AP exam ${exam.type} ${exam.subject}`"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
             <div class="onboarding-addRemoveWrapper">
-              <div class="onboarding-add" @click="addExam('AP')">+ add another subject</div>
+              <button class="onboarding-add" @click="addExam('AP')">+ another subject</button>
             </div>
           </div>
           <div class="onboarding-subHeader">
             <span class="onboarding-subHeader--font">IB Credits</span>
           </div>
-          <div class="onboarding-inputs">
+          <div class="onboarding-inputs onboarding-transferCreditsSection">
             <div class="onboarding-section" v-for="(exam, index) in examsIB" :key="index">
               <div class="onboarding-selectWrapperRow">
                 <onboarding-transfer-exam-property-dropdown
@@ -72,12 +73,8 @@
                   :choice="exam.score"
                   @on-select="score => selectIBScore(score, index)"
                 />
-                <div class="onboarding-select--columnCenter">
-                  <label class="onboarding-label">Credits</label>
-                  <label class="college-major-minor-placeholder">{{ getExamCredit(exam) }}</label>
-                </div>
                 <div class="onboarding-select--column-removeExam">
-                  <div
+                  <button
                     class="onboarding-remove"
                     @click="removeExam('IB', index)"
                     :class="{
@@ -85,78 +82,25 @@
                         examsIB.length === 1 && exam.subject === placeholderText,
                     }"
                   >
-                    <img src="@/assets/images/x-green.svg" alt="x" />
-                  </div>
+                    <img
+                      src="@/assets/images/x-green.svg"
+                      :alt="`x to remove IB exam ${exam.type} ${exam.subject}`"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
             <div class="onboarding-addRemoveWrapper">
-              <div class="onboarding-add" @click="addExam('IB')">+ add another subject</div>
+              <button class="onboarding-add" @click="addExam('IB')">+ another subject</button>
             </div>
           </div>
         </div>
-        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <div class="onboarding-subHeader">
-            <span class="onboarding-subHeader--font">Transferred Course Credits</span>
-          </div>
-          <div class="onboarding-inputs">
-            <label class="onboarding-label">Equivalent Cornell Class</label>
-            <div
-              v-for="(options, index) in classes"
-              :key="index"
-              class="onboarding-selectWrapperRow"
-            >
-              <div class="onboarding-select--columnFill">
-                <course-selector
-                  :searchBoxClassName="transferClassSearchboxClassname(options.class)"
-                  :placeholder="getTransferClassSearchboxPlaceholder(options.class)"
-                  :autoFocus="false"
-                  @on-select="course => onCourseSelection(index, course)"
-                />
-              </div>
-              <div class="onboarding-select--column-remove">
-                <div
-                  class="onboarding-remove"
-                  @click="removeTransfer(index)"
-                  :class="{
-                    'onboarding--hidden':
-                      classes.length === 1 &&
-                      (options.class == placeholderText || options.class == null),
-                  }"
-                >
-                  <img src="@/assets/images/x-green.svg" alt="x" />
-                </div>
-              </div>
-            </div>
-            <div class="onboarding-addRemoveWrapper">
-              <div class="onboarding-add" @click="addTransfer">+ add another subject</div>
-            </div>
-          </div>
-          <div class="onboarding-addRemoveWrapper">
-            <div class="onboarding-add" @click="addTransfer">Add</div>
-          </div>
-        </div>
-        <div class="onboarding-bottomWrapper">
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label">Total Non-Cornell Credits</label>
-          </div>
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label onboarding-label--bottom---bold"
-              >{{ totalCredits }}
-            </label>
-            <label class="onboarding-label"> Credits</label>
-          </div>
-        </div>
-        <div class="onboarding-bottomWrapper">
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label">Total Transfer Credits:</label>
-          </div>
-          <div class="onboarding-label--bottom">
-            <label class="onboarding-label onboarding-label--bottom---bold"
-              >{{ totalCredits }}
-            </label>
-            <label class="onboarding-label"> Credits</label>
-          </div>
+        <div class="onboarding-transferCreditDescription">
+          *To add credit from external institutions, please add the equivalent Cornell course to
+          your schedule later. Learn more about Transfer Credits
+          <a target="_blank" href="https://courses.cornell.edu/content.php?catoid=41&navoid=11629"
+            >here</a
+          >.
         </div>
       </div>
     </div>
@@ -168,7 +112,6 @@ import Vue, { PropType } from 'vue';
 import { examData as reqsData, ExamRequirements } from '@/requirements/data/exams/ExamCredit';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
-import CourseSelector from '../NewCourse/CourseSelector.vue';
 
 const placeholderText = 'Select one';
 
@@ -190,8 +133,8 @@ type Data = {
   classes: TransferClassWithOptionalCourse[];
 };
 
-const scoresAP = [1, 2, 3, 4, 5];
-const scoresIB = [1, 2, 3, 4, 5, 6, 7];
+const scoresAP = [5, 4, 3, 2, 1];
+const scoresIB = [7, 6, 5, 4, 3, 2, 1];
 const existingAP: Record<string, boolean> = {};
 const unmodifiedReqsData = { ...reqsData };
 // filter duplicate exam names and ones already selected
@@ -225,7 +168,6 @@ export const getExamCredit = (exam: FirestoreAPIBExam): number => {
 
 export default Vue.extend({
   components: {
-    CourseSelector,
     OnboardingTransferSwimming,
     OnboardingTransferExamPropertyDropdown,
   },

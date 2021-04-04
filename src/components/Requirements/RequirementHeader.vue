@@ -8,14 +8,37 @@
       {{ req.groupName }} Requirements
     </h1>
     <!-- TODO change for multiple colleges -->
-    <div v-if="reqIndex == numOfColleges" class="major">
+    <div v-if="reqIndex === 0" class="college">
+      <button
+        :style="{
+          'border-bottom': `2px solid #${reqGroupColorMap[req.groupName][0]}`,
+        }"
+        class="college-title-button college-title full-opacity-on-hover"
+        :disabled="true"
+      >
+        <p
+          :style="{
+            'font-weight': '500',
+            color: `#${reqGroupColorMap[req.groupName][0]}`,
+          }"
+          class="college-title-top"
+        >
+          {{ getCollegeFullName(onboardingData.college) }}
+        </p>
+      </button>
+    </div>
+    <!-- TODO change for multiple colleges -->
+    <div v-if="reqIndex === numOfColleges" class="major">
       <button
         :style="{
           'border-bottom':
             id === displayedMajorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
         }"
         @click="activateMajor(id)"
-        class="major-title-button major-title"
+        :class="[
+          { 'full-opacity-on-hover': onboardingData.major.length === 1 },
+          'major-title-button major-title',
+        ]"
         v-for="(major, id) in onboardingData.major"
         :key="id"
         :disabled="id === displayedMajorIndex"
@@ -46,7 +69,10 @@
             id === displayedMinorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
         }"
         @click="activateMinor(id)"
-        class="major-title major-title-button"
+        :class="[
+          { 'full-opacity-on-hover': onboardingData.minor.length === 1 },
+          'major-title major-title-button',
+        ]"
         v-for="(minor, id) in onboardingData.minor"
         :key="id"
         :disabled="id === displayedMinorIndex"
@@ -132,6 +158,7 @@ export default Vue.extend({
     numOfColleges: { type: Number, required: true },
   },
   computed: {
+    // number of fully fulfilled requirements, note pure self-checks are never fulfilled
     requirementFulfilled(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
@@ -139,14 +166,25 @@ export default Vue.extend({
       });
       return fulfilled;
     },
+    // number of requirements that can be fulfilled (so no pure self-checks)
     requirementTotalRequired(): number {
-      return this.req.reqs.length;
+      return this.req.reqs.filter(req => req.fulfilledBy !== 'self-check').length;
     },
+    // the sum of the progress of each requirement (outside of pure self-check), maxed out at 1
+    totalRequirementProgress(): number {
+      let fulfilled = 0;
+      this.req.reqs.forEach(req => {
+        if (req.minCountFulfilled >= req.minCountRequired) fulfilled += 1;
+        else fulfilled += req.minCountFulfilled / req.minCountRequired;
+      });
+      return fulfilled;
+    },
+    // the sum of the progress of each requirement, divided by number of requirements
     progressWidth(): string {
-      return `${(this.requirementFulfilled / this.requirementTotalRequired) * 100}%`;
+      return `${(this.totalRequirementProgress / this.requirementTotalRequired) * 100}%`;
     },
     progressWidthValue(): string {
-      return ((this.requirementFulfilled / this.requirementTotalRequired) * 100).toFixed(1);
+      return ((this.totalRequirementProgress / this.requirementTotalRequired) * 100).toFixed(1);
     },
   },
   methods: {
@@ -169,6 +207,7 @@ export default Vue.extend({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
+.college,
 .major,
 .minor {
   display: flex;

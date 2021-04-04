@@ -4,6 +4,7 @@ import {
   includesWithSubRequirements,
   courseMatchesCodeOptions,
   ifCodeMatch,
+  courseIsSpecial,
 } from '../checkers-common';
 
 const csRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -101,22 +102,41 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'External Specialization',
     description:
-      'Three 3000+ related courses outside of computer science (3 credit min per course)' +
+      'Three 3000+ related courses outside of computer science (3 credit min per course). ' +
       'Frequently, the three courses are from the same department.',
     source:
       'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    fulfilledBy: 'self-check',
-    minCount: 3,
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return (
+          !(ifCodeMatch(catalogNbr, '1***') || ifCodeMatch(catalogNbr, '2***')) &&
+          !ifCodeMatch(course.subject, 'CS')
+        );
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are related.',
+    fulfilledBy: 'courses',
+    perSlotMinCount: [3],
   },
+  // TODO: Doesn't check for ROTC (PE) above 3000
   {
     name: 'Major-approved Elective(s)',
     description:
-      'At least 3 credit hours total. All academic courses count.' +
+      'At least 3 credit hours total. All academic courses count. ' +
       'No PE courses, courses numbered 10xx, and ROTC courses below the 3000-level allowed.',
     source:
       'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    fulfilledBy: 'self-check',
-    minCount: 3,
+    checker: [
+      (course: Course): boolean => {
+        if (courseIsSpecial(course)) return false;
+        const { subject, catalogNbr } = course;
+        return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are major approved.',
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3],
   },
   {
     name: 'Probability',

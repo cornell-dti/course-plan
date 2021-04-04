@@ -17,6 +17,10 @@
           {{ choice }}
         </div>
         <div
+          class="onboarding-dropdown-placeholder college-test-credits-arrow"
+          :style="{ borderTopColor: arrowColor }"
+        ></div>
+        <div
           class="onboarding-dropdown-placeholder college-arrow"
           :style="{ borderTopColor: arrowColor }"
         ></div>

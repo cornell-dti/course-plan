@@ -36,7 +36,11 @@
               class="newSemester-dropdown-content-item"
               @click="selectSeason(season[1])"
             >
-              <img :src="season[0]" class="newSemester-dropdown-content-season" />
+              <img
+                :src="season[0]"
+                class="newSemester-dropdown-content-season"
+                :alt="`${season[1]} icon`"
+              />
               {{ season[1] }}
             </div>
           </div>
@@ -70,6 +74,7 @@
             <div
               v-for="yearChoice in years"
               :key="yearChoice"
+              ref="yearRef"
               class="newSemester-dropdown-content-item"
               @click="selectYear(yearChoice)"
             >
@@ -112,6 +117,9 @@ type Data = {
   };
 };
 
+const yearScrollIndex = 4;
+const yearRange = 6;
+
 export default Vue.extend({
   props: {
     currentSemesters: {
@@ -133,11 +141,13 @@ export default Vue.extend({
       [winter, 'Winter'],
     ] as const;
     const years = [];
-    let startYear = currentYear - 10;
-    while (startYear <= currentYear + 10) {
+    let startYear = currentYear - yearRange;
+    while (startYear <= currentYear + yearRange) {
       years.push(startYear);
       startYear += 1;
     }
+
+    const placeholderColor = darkPlaceholderGray;
 
     return {
       seasons,
@@ -150,14 +160,14 @@ export default Vue.extend({
           stopClose: false,
           boxBorder: '',
           arrowColor: '',
-          placeholderColor: '',
+          placeholderColor,
         },
         year: {
           shown: false,
           stopClose: false,
           boxBorder: '',
           arrowColor: '',
-          placeholderColor: '',
+          placeholderColor,
         },
       },
     };
@@ -165,19 +175,25 @@ export default Vue.extend({
   computed: {
     seasonPlaceholder(): string {
       // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
-      const currentSeason = this.getCurrentSeason();
-      return this.seasonText || this.type || currentSeason;
+      let defaultSeason: string = this.getCurrentSeason();
+      if (this.isCourseModelSelectingSemester) {
+        defaultSeason = 'Select';
+      }
+      return this.seasonText || this.type || defaultSeason;
     },
-    yearPlaceholder(): number {
-      const currentYear = new Date().getFullYear();
-      return Number(this.yearText || this.year || currentYear);
+    yearPlaceholder(): string {
+      let defaultYear = String(new Date().getFullYear());
+      if (this.isCourseModelSelectingSemester) {
+        defaultYear = 'Select';
+      }
+      return String(this.yearText || this.year || defaultYear);
     },
   },
   directives: {
     'click-outside': clickOutside,
   },
   mounted(): void {
-    this.$emit('updateSemProps', this.seasonPlaceholder, this.yearPlaceholder);
+    this.$emit('updateSemProps', this.seasonPlaceholder, Number(this.yearPlaceholder));
   },
   methods: {
     getCurrentSeason(): FirestoreSemesterType {
@@ -206,6 +222,14 @@ export default Vue.extend({
       } else {
         displayOptions.boxBorder = yuxuanBlue;
         displayOptions.arrowColor = yuxuanBlue;
+      }
+
+      // scroll to the middle of the year div after visible (on the next tick)
+      if (!contentShown && type === 'year') {
+        this.$nextTick(() => {
+          const el = (this.$refs.yearRef as Element[])[yearScrollIndex];
+          el.scrollIntoView({ behavior: 'auto' });
+        });
       }
     },
     showHideSeasonContent() {
@@ -239,7 +263,7 @@ export default Vue.extend({
       this.$emit(
         'updateSemProps',
         this.seasonText || this.seasonPlaceholder,
-        this.yearText || this.yearPlaceholder
+        this.yearText || Number(this.yearPlaceholder)
       );
     },
     selectSeason(season: string) {
@@ -276,11 +300,15 @@ export default Vue.extend({
       const semesters = this.currentSemesters;
       if (semesters != null) {
         semesters.forEach(semester => {
-          if (semester.year === this.yearPlaceholder && semester.type === this.seasonPlaceholder) {
+          if (
+            semester.year === Number(this.yearPlaceholder) &&
+            semester.type === this.seasonPlaceholder
+          ) {
             if (
               !this.isEdit ||
               (this.isEdit &&
-                (this.yearPlaceholder !== this.year || this.seasonPlaceholder !== this.type))
+                (Number(this.yearPlaceholder) !== this.year ||
+                  this.seasonPlaceholder !== this.type))
             ) {
               isDup = true;
             }
@@ -418,7 +446,7 @@ export default Vue.extend({
   }
 
   &-dropdown-content {
-    max-height: 140px;
+    max-height: 8rem;
 
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);

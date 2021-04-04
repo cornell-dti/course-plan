@@ -93,10 +93,6 @@ a {
   color: $primary;
   margin: 0;
   cursor: pointer;
-
-  &:hover {
-    color: lighten($primary, 5%);
-  }
 }
 
 button {
@@ -105,7 +101,7 @@ button {
 }
 
 button:hover {
-  opacity: 0.95;
+  opacity: 0.5;
 }
 
 // globals
@@ -248,4 +244,21 @@ form {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+// full opacity on hover.
+// Intended to undo reduced opacity for button:hover
+.full-opacity-on-hover {
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// slightly lower opacity on hover.
+// Intended to have higher than the reduced opacity for button:hover but lower
+// than full opacity
+.slightly-lower-opacity-on-hover {
+  &:hover {
+    opacity: 0.8;
+  }
 }

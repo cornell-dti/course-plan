@@ -41,7 +41,12 @@
       </div>
     </div>
     <div class="info-link">
-      <a :href="rosterLink" class="info-link-blue" target="_blank">
+      <a
+        :href="rosterLink"
+        class="info-link-blue"
+        target="_blank"
+        @click="clickViewCourseInformationOnRoster()"
+      >
         View Course Information on Roster
         <span class="info-link-blue-img"
           ><img src="@/assets/images/link-blue.svg" alt="link arrow"
@@ -53,6 +58,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { GTagEvent } from '@/gtag';
 
 const joinOrNAString = (arr: readonly string[]): string =>
   arr.length !== 0 && arr[0] !== '' ? arr.join(', ') : 'N/A';
@@ -102,6 +108,12 @@ export default Vue.extend({
     rosterLink(): string {
       const [subject, number] = this.courseObj.code.split(' ');
       return `https://classes.cornell.edu/browse/roster/${this.courseObj.lastRoster}/class/${subject}/${number}`;
+    },
+  },
+
+  methods: {
+    clickViewCourseInformationOnRoster(): void {
+      GTagEvent(this.$gtag, 'bottom-bar-view-course-information-on-roster');
     },
   },
 });

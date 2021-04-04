@@ -65,11 +65,11 @@ export default Vue.extend({
   },
   computed: {
     leftButtonText(): string {
-      if (this.selectedCourse == null && !this.editMode) return 'CANCEL';
-      return 'BACK';
+      if (this.selectedCourse == null && !this.editMode) return 'Cancel';
+      return 'Back';
     },
     rightButtonText(): string {
-      return this.editMode ? 'NEXT' : 'ADD';
+      return this.editMode ? 'Next' : 'Add';
     },
     selectableRequirementChoices(): AppSelectableRequirementChoices {
       return store.state.selectableRequirementChoices;
@@ -99,11 +99,23 @@ export default Vue.extend({
           relatedRequirements.push(it);
         }
       });
+      const selfCheckRequirementsThatDoesNotAllowDoubleCounting: RequirementWithIDSourceType[] = [];
+      selfCheckRequirements.forEach(it => {
+        if (it.allowCourseDoubleCounting) {
+          requirementsThatAllowDoubleCounting.push(it.name);
+        } else {
+          selfCheckRequirementsThatDoesNotAllowDoubleCounting.push(it);
+        }
+      });
 
       this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;
       this.relatedRequirements = relatedRequirements;
-      this.selfCheckRequirements = selfCheckRequirements;
-      this.selectedRequirementID = '';
+      this.selfCheckRequirements = selfCheckRequirementsThatDoesNotAllowDoubleCounting;
+      if (relatedRequirements.length > 0) {
+        this.selectedRequirementID = relatedRequirements[0].id;
+      } else {
+        this.selectedRequirementID = '';
+      }
     },
     closeCurrentModal() {
       this.reset();
@@ -134,7 +146,7 @@ export default Vue.extend({
       this.selfCheckRequirements = [];
     },
     backOrCancel() {
-      if (this.leftButtonText === 'BACK') {
+      if (this.leftButtonText === 'Back') {
         if (this.editMode) {
           this.editMode = false;
         } else {

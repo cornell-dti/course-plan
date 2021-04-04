@@ -9,88 +9,101 @@
     @click="closeBar"
     :key="key"
   >
-    <new-semester-modal
-      class="semester-modal"
-      :class="{ 'modal--block': isSemesterModalOpen }"
-      @add-semester="addSemester"
-      @close-semester-modal="closeSemesterModal"
-    />
-    <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
-      <button v-if="noSemesters" class="semesterView-addSemesterButton" @click="openSemesterModal">
-        + New Semester
-      </button>
-      <div
-        class="semesterView-switch"
-        data-intro-group="req-tooltip"
-        :data-intro="getToggleTooltipText()"
-        data-disable-interaction="1"
-        data-step="4"
-        data-tooltipClass="tooltipCenter"
-      >
-        <span v-if="!isMobile" class="semesterView-switchText">View:</span>
+    <div class="semesterView-top">
+      <new-semester-modal
+        class="semester-modal"
+        :class="{ 'modal--block': isSemesterModalOpen }"
+        @add-semester="addSemester"
+        @close-semester-modal="closeSemesterModal"
+      />
+      <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
+        <button
+          v-if="noSemesters"
+          class="semesterView-addSemesterButton"
+          @click="openSemesterModal"
+        >
+          + New Semester
+        </button>
         <div
-          class="semesterView-switchImage semesterView-twoColumn"
-          v-if="!isMobile"
-          @click="setNotCompact"
-          :class="{ 'semesterView-twoColumn--active': !compact }"
+          class="semesterView-switch"
+          data-intro-group="req-tooltip"
+          :data-intro="getToggleTooltipText()"
+          data-disable-interaction="1"
+          data-step="4"
+          data-tooltipClass="tooltipCenter"
+        >
+          <span class="semesterView-switchText">View:</span>
+          <button
+            class="semesterView-switchImage semesterView-twoColumn full-opacity-on-hover"
+            @click="setNotCompact"
+            :class="{ 'semesterView-twoColumn--active': !compact }"
+          />
+          <button
+            class="semesterView-switchImage semesterView-fourColumn full-opacity-on-hover"
+            @click="setCompact"
+            :class="{ 'semesterView-fourColumn--active': compact }"
+          />
+        </div>
+      </div>
+      <confirmation
+        class="semesterView-confirmation"
+        :class="{ 'modal--flex': isSemesterConfirmationOpen }"
+        :text="confirmationText"
+      />
+      <semester-caution
+        class="semesterView-caution"
+        :class="{ 'modal--flex': isCautionModalOpen }"
+        :text="cautionText"
+      />
+      <div class="semesterView-content">
+        <div
+          v-for="(sem, semesterIndex) in semesters"
+          :key="`${sem.year}-${sem.type}`"
+          class="semesterView-wrapper"
+          :class="{ 'semesterView-wrapper--compact': compact }"
+        >
+          <semester
+            ref="semester"
+            :type="sem.type"
+            :year="sem.year"
+            :courses="sem.courses"
+            :semesterIndex="semesterIndex"
+            :compact="compact"
+            :activatedCourse="activatedCourse"
+            :isFirstSem="checkIfFirstSem(sem)"
+            @course-onclick="courseOnClick"
+            @new-semester="openSemesterModal"
+            @delete-semester="deleteSemester"
+            @open-caution-modal="openCautionModal"
+          />
+        </div>
+        <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
+        <div
+          v-if="compact"
+          class="semesterView-empty semesterView-empty--compact"
+          aria-hidden="true"
         ></div>
         <div
-          class="semesterView-switchImage semesterView-fourColumn"
-          v-if="!isMobile"
-          @click="setCompact"
-          :class="{ 'semesterView-fourColumn--active': compact }"
+          v-if="compact"
+          class="semesterView-empty semesterView-empty--compact"
+          aria-hidden="true"
         ></div>
+        <div
+          v-if="compact"
+          class="semesterView-empty semesterView-empty--compact"
+          aria-hidden="true"
+        ></div>
+        <div v-if="compact"><div v-if="compact"></div></div>
       </div>
     </div>
-    <confirmation
-      class="semesterView-confirmation"
-      :class="{ 'modal--flex': isSemesterConfirmationOpen }"
-      :text="confirmationText"
-    />
-    <semester-caution
-      class="semesterView-caution"
-      :class="{ 'modal--flex': isCautionModalOpen }"
-      :text="cautionText"
-    />
-    <div class="semesterView-content">
-      <div
-        v-for="(sem, semesterIndex) in semesters"
-        :key="`${sem.year}-${sem.type}`"
-        class="semesterView-wrapper"
-        :class="{ 'semesterView-wrapper--compact': compact }"
-      >
-        <semester
-          ref="semester"
-          :type="sem.type"
-          :year="sem.year"
-          :courses="sem.courses"
-          :semesterIndex="semesterIndex"
-          :compact="compact"
-          :activatedCourse="activatedCourse"
-          :isFirstSem="checkIfFirstSem(sem)"
-          @course-onclick="courseOnClick"
-          @new-semester="openSemesterModal"
-          @delete-semester="deleteSemester"
-          @open-caution-modal="openCautionModal"
-        />
+    <div class="semesterView-bot">
+      <div class="semesterView-builtBy">
+        Built with
+        <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" /> by
+        <a target="_blank" href="https://www.cornelldti.org/projects/courseplan/">
+          Cornell Design &amp; Tech Initiative
+        </a>
       </div>
-      <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
-      <div
-        v-if="compact"
-        class="semesterView-empty semesterView-empty--compact"
-        aria-hidden="true"
-      ></div>
-      <div
-        v-if="compact"
-        class="semesterView-empty semesterView-empty--compact"
-        aria-hidden="true"
-      ></div>
-      <div
-        v-if="compact"
-        class="semesterView-empty semesterView-empty--compact"
-        aria-hidden="true"
-      ></div>
-      <div v-if="compact"><div v-if="compact"></div></div>
     </div>
   </main>
 </template>
@@ -194,7 +207,7 @@ export default Vue.extend({
     },
     closeBar() {
       if (!this.isCourseClicked) {
-        closeBottomBar();
+        closeBottomBar(this.$gtag);
       }
       this.isCourseClicked = false;
     },
@@ -213,7 +226,8 @@ export default Vue.extend({
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 1.5rem 3rem 3rem;
+  justify-content: space-between;
+  margin: 1.5rem 3rem 0;
   position: relative;
 
   &-content {
@@ -318,6 +332,28 @@ export default Vue.extend({
       min-width: 14.5rem;
     }
   }
+
+  &-builtBy {
+    color: $medGray;
+    text-align: right;
+    font-size: 15px;
+    padding: 8px 10px;
+
+    a {
+      color: $medGray;
+      &:hover {
+        text-decoration: underline $medGray;
+      }
+    }
+  }
+
+  &-emoji-text {
+    height: 14px;
+  }
+
+  &-heart {
+    height: 18px;
+  }
 }
 
 /* The Modal (background) */
@@ -358,6 +394,23 @@ export default Vue.extend({
     &-content {
       width: 100%;
       justify-content: center;
+    }
+  }
+}
+
+@media only screen and (max-width: $small-breakpoint) {
+  .semesterView {
+    margin-top: 5.5rem;
+    margin-left: 0;
+    margin-right: 0;
+
+    &-content {
+      margin: 0;
+    }
+
+    &-wrapper {
+      flex: 1 1 auto;
+      padding: 0 2rem;
     }
   }
 }

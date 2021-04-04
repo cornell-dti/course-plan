@@ -1,8 +1,14 @@
 <template>
   <div class="onboarding" @click="checkClickOutside" ref="modalBackground">
     <div class="onboarding-main">
-      <div v-if="isEditingProfile" class="onboarding-cancel" @click="cancel">
-        <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="X" />
+      <div v-if="isEditingProfile" class="onboarding-cancel">
+        <button @click="cancel">
+          <img
+            class="onboarding-cancel-icon"
+            src="@/assets/images/x.svg"
+            alt="x to close onboarding modal"
+          />
+        </button>
       </div>
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
         <div class="onboarding-top">
@@ -10,8 +16,8 @@
             <span
               ><img
                 class="onboarding-header-emoji"
-                src="@/assets/images/clapEmoji.svg"
-                alt="clap"
+                src="@/assets/images/waveEmoji.svg"
+                alt="wave"
               />
               Welcome to CoursePlan</span
             >
@@ -20,8 +26,8 @@
             <span
               ><img
                 class="onboarding-header-emoji"
-                src="@/assets/images/waveEmoji.svg"
-                alt="wave"
+                src="@/assets/images/clapEmoji.svg"
+                alt="clap"
               />
               Hi {{ name.firstName }}</span
             >
@@ -57,7 +63,7 @@
           <img
             class="timeline"
             :src="require(`@/assets/images/timeline${currentPage}text.svg`)"
-            alt="X"
+            alt="onboarding progress timeline"
           />
         </div>
         <div v-if="currentPage === 3" class="onboarding-bottom--section">
@@ -172,14 +178,37 @@ export default Vue.extend({
       };
     },
     cancel() {
-      this.$emit('cancelOnboarding');
+      if (this.onboardingData.college !== '') {
+        this.$emit('cancelOnboarding');
+      }
     },
     checkClickOutside(e: MouseEvent) {
-      if (e.target === this.$refs.modalBackground) this.cancel();
+      if (e.target === this.$refs.modalBackground && this.onboardingData.college !== '') {
+        this.cancel();
+      }
     },
   },
 });
 </script>
 <style scoped lang="scss">
 @import '@/components/Modals/Onboarding/Onboarding.scss';
+
+@media only screen and (max-width: $large-breakpoint) {
+  .onboarding {
+    &-main {
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: $small-medium-breakpoint) {
+  .onboarding {
+    &-header {
+      text-align: center;
+    }
+    &-inputWrapper {
+      text-align: center;
+    }
+  }
+}
 </style>

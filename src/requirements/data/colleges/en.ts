@@ -3,6 +3,8 @@ import {
   courseIsFWS,
   includesWithSingleRequirement,
   includesWithSubRequirements,
+  ifCodeMatch,
+  courseIsSpecial,
 } from '../checkers-common';
 
 const engineeringLiberalArtsDistributions: readonly string[] = [
@@ -20,6 +22,39 @@ const engineeringLiberalArtsDistributions: readonly string[] = [
   'ETM',
   'SSC',
   'GLC',
+];
+
+const FLcourses: readonly string[] = [
+  'ARAB',
+  'BENGL',
+  'BURM',
+  'CHIN',
+  'FREN',
+  'GERST',
+  'GREEK',
+  'HEBRW',
+  'HINDI',
+  'INDO',
+  'ITAL',
+  'JAPAN',
+  'KHMER',
+  'KOREA',
+  'LATIN',
+  'NEPAL',
+  'PERSN',
+  'POLSH',
+  'PORT',
+  'RUSSA',
+  'SANSK',
+  'SINHA',
+  'SPAN',
+  'SWAHL',
+  'TAG',
+  'THAI',
+  'TURK',
+  'VIET',
+  'YORUB',
+  'ZULU',
 ];
 
 const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -45,8 +80,8 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Chemistry',
     description:
-      'CHEM 2090. Majors in Chemical Engineering or those planning on a health-related career should take CHEM 2090 and then 2080.  ' +
-      'Students in Environmental Engineering should take CHEM 2090 and CHEM 1570/3570.  ' +
+      'CHEM 2090. Majors in Chemical Engineering or those planning on a health-related career should take CHEM 2090 and then 2080. ' +
+      'Students in Environmental Engineering should take CHEM 2090 and CHEM 1570/3570. ' +
       'Earth and Atmospheric Sciences majors should take CHEM 2090 and then 2080/1570.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
@@ -90,9 +125,10 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [(course: Course): boolean => course.subject === 'ENGRD'],
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    allowCourseDoubleCounting: true,
   },
   {
-    name: 'Liberal Studies Distribution: 6 courses',
+    name: 'Liberal Studies: 6 courses',
     description:
       'Liberal arts commonly include courses in the humanities. A minimum of six courses must be taken. ' +
       'At least two courses must be at the 2000 level or higher.',
@@ -102,9 +138,10 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         engineeringLiberalArtsDistributions.some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+        ) || FLcourses.some(language => course.subject?.includes(language) ?? false),
     ],
     fulfilledBy: 'courses',
+    allowCourseDoubleCounting: true,
     perSlotMinCount: [6],
   },
   {
@@ -137,26 +174,59 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         engineeringLiberalArtsDistributions.some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+        ) || FLcourses.some(language => course.subject?.includes(language) ?? false),
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [18],
     allowCourseDoubleCounting: true,
   },
   {
+    name: 'Liberal Studies: 2000+ level',
+    description: 'At least two liberal arts courses must be at the 2000 level or higher.',
+    source:
+      'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return (
+          !ifCodeMatch(catalogNbr, '1***') &&
+          (engineeringLiberalArtsDistributions.some(
+            category => course.catalogDistr?.includes(category) ?? false
+          ) ||
+            FLcourses.some(language => course.subject?.includes(language) ?? false))
+        );
+      },
+    ],
+    fulfilledBy: 'courses',
+    perSlotMinCount: [2],
+    allowCourseDoubleCounting: true,
+  },
+
+  // TODO: Create special function for this as it is the same as Advisor-Approved Electives for CS checker
+  {
     name: 'Advisor-Approved Electives',
     description:
-      'Six credits of electives are required and must be approved by the student’s faculty advisor.',
+      'At least 6 credit hours total. All academic courses count. ' +
+      'No PE courses, courses numbered 10xx, and ROTC courses below the 3000-level allowed.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    fulfilledBy: 'self-check',
-    minCount: 6,
+    checker: [
+      (course: Course): boolean => {
+        if (courseIsSpecial(course)) return false;
+        const { subject, catalogNbr } = course;
+        return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are advisor approved.',
+    fulfilledBy: 'credits',
+    perSlotMinCount: [6],
   },
+  // TODO: Remove warning once we can filter reqs based on majors (ISST) and petitions
   {
     name: 'Engineering Communications',
     description:
-      'An engineering communications course must be taken as an engineering distribution, liberal studies, Advisor-approved Elective, or Major course. ' +
-      'Students can fulfill the upper-level engineering communications requirement in one of the six ways.',
+      'Students can fulfill the requirement in one of the six ways including taking a Engineering Communications course (ENGRC), ' +
+      'Writing-Intensive Co-op, Writing/Communication Intensive engineering course, COMM 3030/3020, ENGRC 3023, 1cr partner course, or petition for credit.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/engineering-communications-program/technical',
     checker: includesWithSingleRequirement(
@@ -190,6 +260,8 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    checkerWarning:
+      'We do check that your selected course fulfills the guidelines of this requirement.',
     allowCourseDoubleCounting: true,
   },
 ];
