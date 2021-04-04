@@ -26,7 +26,7 @@
       @delete-course="deleteCourse"
       @color-course="colorCourse"
       @edit-course-credit="editCourseCredit"
-      :getCreditRange="getCreditRange"
+      :getCreditRange="getCreditRange || []"
       v-click-outside="closeMenuIfOpen"
     />
   </div>
