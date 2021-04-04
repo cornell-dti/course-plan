@@ -152,8 +152,6 @@ import CustomFooter from '@/components/Footer.vue';
 import { GTagLoginEvent } from '@/gtag';
 import * as fb from '@/firebaseConfig';
 
-const { whitelistCollection, landingEmailsCollection } = fb;
-
 type Data = {
   loginForm: { email: string; password: string };
   waitlist: { email: string; major: string; time: string };
@@ -185,87 +183,17 @@ export default Vue.extend({
       fb.auth
         .signInWithPopup(provider)
         .then(user => {
-          // Check whitelist emails to ensure user can log in
           if (user == null) {
             return;
           }
-          this.checkEmailAccess(user);
+          this.performingRequest = false;
+          this.$router.push('/');
+          GTagLoginEvent(this.$gtag, 'Google');
         })
         .catch(err => {
           this.performingRequest = false;
           this.errorMsg = err.message;
         });
-    },
-    checkEmailAccess({ user }: { user: firebase.User | null }) {
-      if (user == null) {
-        return;
-      }
-      const docRef = whitelistCollection.doc(user.email || '');
-      docRef
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            this.performingRequest = false;
-            this.$router.push('/');
-            GTagLoginEvent(this.$gtag, 'Google');
-          } else {
-            this.handleUserWithoutAccess();
-          }
-        })
-        .catch(() => this.handleUserWithoutAccess());
-    },
-
-    handleUserWithoutAccess() {
-      this.performingRequest = false;
-      fb.auth.signOut();
-      // eslint-disable-next-line no-alert
-      alert(
-        "Sorry, but you do not have access currently.\nPlease check back April 5 for CoursePlan's public release."
-      );
-    },
-
-    validateEmail(email: string): boolean {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    },
-    validateMajor(major: string): boolean {
-      return major.trim().length > 0;
-    },
-    addUser() {
-      if (this.validateEmail(this.waitlist.email) && this.validateMajor(this.waitlist.major)) {
-        // eslint-disable-next-line no-alert
-        alert("You have been added to the waitlist. We'll be in touch shortly!");
-
-        // Add timestamp to data in YYYY-MM-DD hh:mm:ss
-        const dt = new Date();
-        this.waitlist.time = `${(dt.getMonth() + 1)
-          .toString()
-          .padStart(2, '0')}/${dt
-          .getDate()
-          .toString()
-          .padStart(2, '0')}/${dt
-          .getFullYear()
-          .toString()
-          .padStart(4, '0')} ${dt
-          .getHours()
-          .toString()
-          .padStart(2, '0')}:${dt
-          .getMinutes()
-          .toString()
-          .padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
-
-        // Add landing page data to Firebase
-        landingEmailsCollection.add(this.waitlist);
-
-        // Clear fields
-        this.waitlist.email = '';
-        this.waitlist.major = '';
-      } else if (!this.validateEmail(this.waitlist.email)) {
-        // eslint-disable-next-line no-alert
-        alert('You have entered an invalid email address!');
-      } else {
-        // eslint-disable-next-line no-alert
-        alert('You have not entered a major!');
-      }
     },
     getYear(): number {
       const today = new Date();

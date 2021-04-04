@@ -111,6 +111,3 @@ export const onboardingDataCollection = db
       return userData;
     },
   });
-
-export const whitelistCollection = db.collection('cpWhitelist');
-export const landingEmailsCollection = db.collection('landingEmails');
