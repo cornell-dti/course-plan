@@ -1,5 +1,5 @@
-import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSubRequirements } from '../checkers-common';
+import { CollegeOrMajorRequirement, Course } from '../../types';
+import { courseIsSpecial, ifCodeMatch, includesWithSubRequirements } from '../checkers-common';
 
 const chemERequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -62,14 +62,6 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
-      // TODO: Placeholder for AP/IB Credit
-      'AP/IB Credit': {
-        description:
-          'A score of 5 on the CEEB AP Biology exam or a score of 7 on the IB Higher Level exam',
-        checker: includesWithSubRequirements(['BIOG 1105'], ['BIOG 1107'], ['BIOG 1500']),
-        counting: 'courses',
-        perSlotMinCount: [1, 1, 1],
-      },
       'CHEME 2880': {
         description: 'CHEME 2880',
         checker: includesWithSubRequirements(['CHEME 2880']),
@@ -216,13 +208,22 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
   },
+  // TOOD: repeated checker
   {
     name: 'Major-Approved Electives',
     description:
       'Three credits of electives are required and must be approved by the student’s faculty advisor.',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817',
-    fulfilledBy: 'self-check',
-    minCount: 3,
+    checker: [
+      (course: Course): boolean => {
+        if (courseIsSpecial(course)) return false;
+        const { subject, catalogNbr } = course;
+        return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are major approved.',
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3],
   },
 ];
 
