@@ -121,7 +121,8 @@ export default Vue.extend({
       if (
         this.name.firstName === '' ||
         this.name.lastName === '' ||
-        this.onboarding.college === ''
+        this.onboarding.college === '' ||
+        this.onboarding.gradYear === ''
       ) {
         this.isError = true;
       } else {

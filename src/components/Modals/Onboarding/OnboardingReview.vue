@@ -58,9 +58,7 @@
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label"
-              >Major<span class="onboarding-required-star">*</span></label
-            >
+            <label class="onboarding-label">Major</label>
             <div v-for="(major, index) in onboardingData.major" :key="index">
               <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
             </div>

@@ -44,6 +44,7 @@
               :availableChoices="semesters"
               :choice="gradYear"
               :cannotBeRemoved="true"
+              :scrollToIndex="6"
               @on-select="selectGraduationYear"
             />
           </div>
@@ -62,9 +63,7 @@
           </div>
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <label class="onboarding-label"
-            >Major<span class="onboarding-required-star">*</span></label
-          >
+          <label class="onboarding-label">Major</label>
           <onboarding-basic-multi-dropdown
             :availableChoices="majors"
             :dropdownChoices="majorAcronyms"

@@ -25,6 +25,7 @@
           v-for="(fullName, key) in availableChoices"
           :key="key"
           class="onboarding-dropdown-content-item"
+          ref="scrollRef"
           @click="onSelect(key)"
         >
           {{ fullName }}
@@ -57,6 +58,7 @@ export default Vue.extend({
     },
     choice: { type: String, required: true },
     cannotBeRemoved: { type: Boolean, required: true },
+    scrollToIndex: { type: Number, default: 0 },
   },
   data() {
     return {
@@ -82,6 +84,14 @@ export default Vue.extend({
       } else {
         this.boxBorder = yuxuanBlue;
         this.arrowColor = yuxuanBlue;
+      }
+
+      // scroll to the middle of the year div after visible (on the next tick)
+      if (!contentShown && this.scrollToIndex > 0) {
+        this.$nextTick(() => {
+          const el = (this.$refs.scrollRef as Element[])[this.scrollToIndex];
+          el.scrollIntoView({ behavior: 'auto' });
+        });
       }
     },
     closeDropdownIfOpen() {
