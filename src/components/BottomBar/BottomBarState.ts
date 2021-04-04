@@ -59,6 +59,7 @@ const getReviews = (
   }).then(res => res.json().then(reviews => reviews.result));
 
 export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
+  vueForBottomBar.isExpanded = true;
   for (let i = 0; i < vueForBottomBar.bottomCourses.length; i += 1) {
     const existingCourse = vueForBottomBar.bottomCourses[i];
     // Must check both uniqueID and code (e.g. CS 1110) to handle req courses that share uniqueID -1
@@ -66,7 +67,6 @@ export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
       vueForBottomBar.bottomCourseFocus = i;
       return;
     }
-    vueForBottomBar.isExpanded = true;
   }
 
   if (vueForBottomBar.bottomCourses.length === 0) {
@@ -122,6 +122,7 @@ export const deleteBottomBarCourse = (index: number, gtag?: GTag): void => {
 };
 
 export const moveBottomBarCourseToFirst = (index: number): void => {
+  vueForBottomBar.isExpanded = true;
   const courseToMove = vueForBottomBar.bottomCourses[index];
   vueForBottomBar.bottomCourses = [
     courseToMove,
