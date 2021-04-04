@@ -1,26 +1,30 @@
-import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { CollegeOrMajorRequirement, Course } from '../../types';
+import {
+  ifCodeMatch,
+  includesWithSingleRequirement,
+  includesWithSubRequirements,
+} from '../checkers-common';
 
 const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Engineering Distriubtions',
     description: 'ENGRD 2020',
     source:
-      'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=20022#MechanicalEngineering',
     checker: includesWithSingleRequirement('ENGRD 2020'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'Required Major Courses',
     description:
-      'MAE 2210, MAE 2030, MAE 2250, MAE 3230, MAE 3240, MAE 3260, MAE 3270, (MAE 3780, ENGRD 2100, or PHYS 3360), MAE 4272, and MAE 4300',
+      'MAE 2250, MAE 2030, MAE 3230, MAE 3240, MAE 3260, MAE 3270, (MAE 3780, ENGRD 2100, or PHYS 3360), MAE 4272, and MAE 4300',
     source:
-      'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=20022#MechanicalEngineering',
     checker: includesWithSubRequirements(
-      ['MAE 2210'],
-      ['MAE 2030'],
       ['MAE 2250'],
+      ['MAE 2030'],
       ['MAE 3230'],
       ['MAE 3240'],
       ['MAE 3260'],
@@ -30,62 +34,124 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MAE 4300']
     ),
     fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1],
   },
   {
     name: 'M.E. Major Electives',
     description:
       'A list of approved Major-approved Electives is available online at www.mae.cornell.edu',
     source:
-      'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
-    fulfilledBy: 'self-check',
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=20022#MechanicalEngineering',
+    checker: includesWithSingleRequirement(
+      'MAE 3050',
+      'MAE 4060',
+      'MAE 4150',
+      'MAE 4160',
+      'MAE 4230',
+      'MAE 5070',
+      'MAE 4640',
+      'MAE 4650',
+      'MAE 4660',
+      'MAE 5680',
+      'MAE 4020',
+      'MAE 4120',
+      'MAE 4230',
+      'MAE 4580',
+      'MAE 4590',
+      'MAE 5010',
+      'MAE 5430',
+      'MAE 3120',
+      'MAE 3130',
+      'MAE 4130',
+      'MAE 4640',
+      'MAE 4700',
+      'MAE 5130',
+      'MAE 4150',
+      'MAE 4180',
+      'MAE 4320',
+      'MAE 4340',
+      'MAE 4700',
+      'MAE 4710',
+      'MAE 4730',
+      'MAE 4760',
+      'MAE 4770',
+      'MAE 4780',
+      'MAE 5120',
+      'MAE 5200',
+      'MAE 5770',
+      'MAE 5910',
+      'MAE 4230',
+      'MAE 4510',
+      'MAE 4530',
+      'MAE 5010',
+      'MAE 5430',
+      'MAE 3050',
+      'MAE 4250',
+      'MAE 4860',
+      'MAE 5070'
+    ),
+    fulfilledBy: 'credits',
+    perSlotMinCount: [9],
   },
   {
-    name: 'MAE 4xx1: Supervised Senior Design Experience',
+    name: 'Design Requirement',
     description:
-      'Can be satisfied by independent research, project team, or by designated senior design formal course, MAE 4xx1.',
+      'Each Mechanical Engineering student must complete a senior design elective. One way of satisfying this requirement is to take a 3+ credit section of MAE 4291, directed by a faculty member as an individual or team exercise. ' +
+      'The other option is to take a 4-credit senior design elective course (MAE 4021,  MAE 4121, MAE 4131 , MAE 4141,MAE 4161, MAE 4231, MAE 4341, MAE 4641, MAE 4651, MAE 4701, or MAE 4861).',
     source:
-      'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
-    fulfilledBy: 'self-check',
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=20022#MechanicalEngineering',
+    checker: includesWithSingleRequirement(
+      'MAE 4291',
+      'MAE 4021',
+      'MAE 4121',
+      'MAE 4131',
+      'MAE 4141',
+      'MAE 4161',
+      'MAE 4231',
+      'MAE 4341',
+      'MAE 4641',
+      'MAE 4651',
+      'MAE 4701',
+      'MAE 4861'
+    ),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1],
   },
   {
-    name: 'Mathematics Elective:',
+    name: 'Mathematics Elective',
     description:
       'Must be an upper-level mathematics course, which includes statistics, taken after Math 2940. A list of approved math electives is available online at www.mae.cornell.edu',
     source:
-      'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=20022#MechanicalEngineering',
     checker: includesWithSingleRequirement(
       'MAE 3100',
       'ENGRD 2700',
       'CEE 3040',
-      'ENGRD 3200',
       'ENGRD 3100',
+      'ENGRD 3200',
       'BTRY 3010',
-      'CS 2800'
+      'CS 2800',
+      'CS 4750'
     ),
-    fulfilledBy: 'credits',
-    perSlotMinCount: [3],
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1],
   },
   {
+    // TODO: update checker based on more information (ex: filter out humanities)
     name: 'Technical Elective',
     description:
-      'A Technical Elective includes technical courses at an appropriate level, ' +
-      'chosen from engineering (2000+), mathematics (beyond 2940), science (beyond Physics 2214), chemistry (2080, or beyond 2090), or biological sciences. ' +
-      'Most 2000+ technical level courses in engineering will be accepted. ' +
-      '(Note: Engineering economic, business, management, financial, or organization courses will not be accepted, with the exception of MAE 4610.). ' +
-      'The following 1000-level courses in biology are accepted: BIOG 1440; BIOG 1445; BIOMG 1350; BIOEE 1610; and BIOSM 1610. ' +
-      'In addition, credit for advanced placement biology and technical courses at the 2000+ level in biological sciences are accepted.',
+      'The technical elective may be any course at an appropriate level, chosen from engineering, math, or science (physics, chemistry, or biological sciences). Appropriate level is interpreted as being at a level beyond the required courses of the college curriculum.',
     source:
-      'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
-    fulfilledBy: 'self-check',
-  },
-  {
-    name: 'Major-approved Elective',
-    description:
-      'A list of approved Major-approved Electives is available online at www.mae.cornell.edu',
-    source:
-      'http://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/5215877281438417/MobilePagedReplica.action?pm=2&folio=12#pg14',
-    fulfilledBy: 'self-check',
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=20022#MechanicalEngineering',
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return !ifCodeMatch(catalogNbr, '1***');
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are considered technical.',
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1],
   },
 ];
 
