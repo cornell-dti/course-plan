@@ -37,6 +37,20 @@
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
           <label class="onboarding-label"
+            >Graduation Year<span class="onboarding-required-star">*</span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="semesters"
+              :choice="gradYear"
+              :cannotBeRemoved="true"
+              :scrollBottomToIndex="9"
+              @on-select="selectGraduationYear"
+            />
+          </div>
+        </div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
+          <label class="onboarding-label"
             >College<span class="onboarding-required-star">*</span></label
           >
           <div class="onboarding-selectWrapper">
@@ -49,9 +63,7 @@
           </div>
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <label class="onboarding-label"
-            >Major<span class="onboarding-required-star">*</span></label
-          >
+          <label class="onboarding-label">Major</label>
           <onboarding-basic-multi-dropdown
             :availableChoices="majors"
             :dropdownChoices="majorAcronyms"
@@ -112,6 +124,7 @@ export default Vue.extend({
       middleName: this.userName.middleName,
       lastName: this.userName.lastName,
       placeholderText,
+      gradYear: this.onboardingData.gradYear,
       collegeAcronym: this.onboardingData.college,
       majorAcronyms,
       minorAcronyms,
@@ -146,11 +159,22 @@ export default Vue.extend({
       });
       return minors;
     },
+    semesters(): Readonly<Record<string, string>> {
+      const semsDict: Record<string, string> = {};
+      const yearRange = 6;
+      const curYear = new Date().getFullYear();
+      for (let i = -yearRange; i <= yearRange; i += 1) {
+        const yr = String(curYear + i);
+        semsDict[yr] = yr;
+      }
+      return semsDict;
+    },
   },
   methods: {
     updateBasic() {
       this.$emit(
         'updateBasic',
+        this.gradYear,
         this.collegeAcronym,
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
@@ -173,6 +197,10 @@ export default Vue.extend({
           this.majorAcronyms[x] = '';
         }
       }
+    },
+    selectGraduationYear(year: string) {
+      this.gradYear = year;
+      this.updateBasic();
     },
     selectCollege(acronym: string) {
       this.collegeAcronym = acronym;

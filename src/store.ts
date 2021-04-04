@@ -64,6 +64,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     currentFirebaseUser: null!,
     userName: { firstName: '', middleName: '', lastName: '' },
     onboardingData: {
+      gradYear: '',
       college: '',
       major: [],
       minor: [],
@@ -212,6 +213,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
 
 const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardingData => ({
   // TODO: take into account multiple colleges
+  gradYear: data.gradYear ? data.gradYear : '',
   college: data.colleges[0].acronym,
   major: data.majors.map(({ acronym }) => acronym),
   minor: data.minors.map(({ acronym }) => acronym),

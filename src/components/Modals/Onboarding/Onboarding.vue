@@ -121,7 +121,8 @@ export default Vue.extend({
       if (
         this.name.firstName === '' ||
         this.name.lastName === '' ||
-        this.onboarding.college === ''
+        this.onboarding.college === '' ||
+        this.onboarding.gradYear === ''
       ) {
         this.isError = true;
       } else {
@@ -132,6 +133,7 @@ export default Vue.extend({
             lastName: this.name.lastName,
           })
           .set(onboardingDataCollection.doc(store.state.currentFirebaseUser.email), {
+            gradYear: this.onboarding.gradYear,
             colleges: [{ acronym: this.onboarding.college }],
             majors: this.onboarding.major.map(acronym => ({ acronym })),
             minors: this.onboarding.minor.map(acronym => ({ acronym })),
@@ -153,13 +155,14 @@ export default Vue.extend({
       this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
     },
     updateBasic(
+      gradYear: string,
       college: string,
       major: readonly string[],
       minor: readonly string[],
       name: FirestoreUserName
     ) {
       this.name = name;
-      this.onboarding = { ...this.onboarding, college, major, minor };
+      this.onboarding = { ...this.onboarding, gradYear, college, major, minor };
     },
     updateTransfer(
       exams: readonly FirestoreAPIBExam[],
