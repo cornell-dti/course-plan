@@ -1,65 +1,71 @@
-import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { CollegeOrMajorRequirement, Course } from '../../types';
+import { ifCodeMatch, includesWithSubRequirements } from '../checkers-common';
 
 const orieRequirements: readonly CollegeOrMajorRequirement[] = [
   {
+    name: 'Engineering Distribution Courses',
+    description:
+      'ENGRD 2700 and ENGRD 2110 is recommended as the second Engineering Distribution course. ',
+    source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
+    checker: includesWithSubRequirements(['ENGRD 2700']),
+    fulfilledBy: 'courses',
+    allowCourseDoubleCounting: true,
+    perSlotMinCount: [1],
+  },
+  {
     name: 'Major Required Classes',
-    description: 'The following courses may be substituted for ORIE 3150, if not used to meet other require- ments: '
-      + 'MATH 3110 (Introduction to Analysis), MATH 4130 (Honors Real Analysis), MATH 4310 (Linear Algebra), MATH 4330 (Honors Linear Algebra), any 600 level ORIE course.',
+    description:
+      'The following are required courses: ORIE 3120, 3150 (with possible replacements), 3300, 3310, 3500, 3510, 4580',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
     checker: includesWithSubRequirements(
       ['ORIE 3120'],
-      ['ORIE 3150'],
+      ['ORIE 3150', 'MATH 3110', 'MATH 4130', 'MATH 4310', 'MATH 4330', 'ORIE 6***'],
       ['ORIE 3300'],
       ['ORIE 3310'],
       ['ORIE 3500'],
       ['ORIE 3510'],
       ['ORIE 4580']
     ),
-    operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 7
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
   },
   {
     name: 'ORIE Electives',
     description: 'At least 9 credits of ORIE electives at the 4000 level or above',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
-    checker: includesWithSingleRequirement('ORIE 4***', 'ORIE 5***', 'ORIE 6***'),
-    operator: 'or',
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr, subject } = course;
+        return (
+          subject === 'ORIE' &&
+          !(
+            ifCodeMatch(catalogNbr, '1***') ||
+            ifCodeMatch(catalogNbr, '2***') ||
+            ifCodeMatch(catalogNbr, '3***')
+          )
+        );
+      },
+    ],
     fulfilledBy: 'credits',
-    minCount: 9
+    perSlotMinCount: [9],
   },
-  {
-    name: 'Engineering Distribution Courses',
-    description: 'ENGRI 1xxx, ENGRD 2700, and ENGRD 2xxx. ENGRD 2110 is recommended',
-    source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
-    checker: includesWithSubRequirements(
-      ['ENGRD 2700'],
-      ['ENGRD 2***', 'ENGRD 3***'],
-      ['ENGRI 1***']
-    ),
-    operator: 'and',
-    fulfilledBy: 'courses',
-    minCount: 3
-  },
+  // TODO: create special func for broad checker
   {
     name: 'Major Approved Electives (Non–ORIE)',
-    description: 'Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. '
-      + 'Technical courses in Engineering at the 2000 level or above.',
+    description:
+      'Minimum 12 credits of Major-Approved Electives, with at least 6 credits from outside of ORIE. ' +
+      'Technical courses in Engineering at the 2000 level or above.',
     source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check'
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return !ifCodeMatch(catalogNbr, '1***');
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are considered technical.',
+    fulfilledBy: 'credits',
+    perSlotMinCount: [12],
   },
-  {
-    name: 'Major Approved Elective',
-    description: 'Minimum of 9-12 credits of Major-Approved Electives 3 of which must be outside of ORIE. '
-      + 'Technical courses in Engineering at the 2000 level or above.',
-    source: 'https://www.orie.cornell.edu/orie/programs/undergraduate-programs/degree-requirements',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check'
-  }
 ];
 
 export default orieRequirements;

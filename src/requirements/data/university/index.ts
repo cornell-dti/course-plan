@@ -1,37 +1,17 @@
-import { BaseRequirement } from '../../types';
+import { Course, CollegeOrMajorRequirement } from '../../types';
 
-const universityRequirements: readonly BaseRequirement[] = [
-  {
-    name: 'Academic Credits',
-    description: 'To graduate, a student must earn a minimum of 120 academic credits. '
-      + 'Physical education credits and “10XX” courses do not count toward the 120 required credits.',
-    source: 'http://courses.cornell.edu/content.php?catoid=31&navoid=7901',
-    operator: 'or',
-    fulfilledBy: 'credits',
-    minCount: 120,
-    applies: 'all',
-    progressBar: true
-  },
+const universityRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Physical Education',
-    description: 'All incoming freshmen are required to take two credits (two courses) of Physical Education, '
-      + 'one credit each semester of the first year on campus.',
-    source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
-    operator: 'or',
+    description:
+      'All incoming freshmen are required to take two credits (two courses) of Physical Education, ' +
+      'one credit each semester of the first year on campus.',
+    source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11637',
+    allowCourseDoubleCounting: true,
+    checker: [(course: Course): boolean => 'PE'.includes(course.subject)],
     fulfilledBy: 'courses',
-    minCount: 2,
-    applies: 'all'
+    perSlotMinCount: [2],
   },
-  {
-    name: 'Swimming Test',
-    description: 'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming '
-      + 'and water safety competency requirement for all entering first-year undergraduate students.',
-    source: 'http://courses.cornell.edu/content.php?catoid=36&navoid=9249',
-    operator: null,
-    fulfilledBy: 'self-check',
-    minCount: 0,
-    applies: 'all'
-  }
 ];
 
 export default universityRequirements;

@@ -1,0 +1,107 @@
+@import '@/assets/scss/_variables.scss';
+
+.introjs-overlay {
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+.introjs-tooltip {
+  background-color: $white;
+  border-radius: 9px;
+  font-family: 'ProximaNova';
+  min-width: 25.75rem;
+  padding: 1rem 1.5rem;
+}
+.introjs-tooltipTop {
+  display: flex;
+  justify-content: space-between;
+}
+.introjs-tooltiptext {
+  padding: 0;
+}
+.introjs-tooltip-header {
+  display: none;
+}
+.introjs-customProgress {
+  font-size: 14px;
+  color: $lightPlaceholderGray;
+}
+.introjs-helperNumberLayer {
+  display: none;
+}
+.introjs-helperLayer {
+  border-radius: 9px;
+}
+.introjs-tooltipbuttons {
+  border: 0;
+  padding: 0;
+}
+.introjs-button:focus {
+  outline: 1px solid $yuxuanBlue;
+  box-shadow: none;
+  border: 0;
+}
+.introjs-skipbutton {
+  display: none;
+}
+.introjs-nextbutton,
+.introjs-donebutton {
+  color: $white;
+  background-image: none;
+  background-color: $sangBlue;
+  text-shadow: none;
+  border: none;
+  border-radius: 3px;
+  font-size: 16px;
+  height: 2.25rem;
+  width: 3.75rem;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $white;
+    background-color: $sangBlue;
+    background-image: none;
+  }
+}
+.introjs-prevbutton {
+  display: none;
+}
+a:not([href]) {
+  color: $white;
+  &:hover {
+    color: $white;
+  }
+}
+.introjs-bullets {
+  display: none;
+}
+.introjs-emoji {
+  margin-left: 0.25rem;
+}
+.introjs-customTitle {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: $primaryGray;
+}
+.introjs-bodytext {
+  color: $lightPlaceholderGray;
+  margin-top: 0.375rem;
+  font-size: 14px;
+  line-height: 17px;
+}
+.introjs-disabled {
+  display: none;
+}
+.tooltipCenter {
+  align-self: center;
+  width: 20vw;
+}
+.introjs-tooltipReferenceLayer {
+  display: flex;
+}

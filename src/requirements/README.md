@@ -1,51 +1,89 @@
-# Requirements Data
+# Requirement Computation Overview
 
 The requirements data and its interpreting algorithm is uniquely developed by and for CoursePlan.
 This document aims to give you a high level overview of how it works.
 
+## Concepts
+
+### Requirement Type
+
+Requirement type describes how a requirement can be fulfilled by classes. In the code, it is usually
+represented by the `fulfilledBy` field.
+
+There are two base types we support: fulfill by credit sum (`fulfilledBy: 'credits'`) and fulfill by
+course count (`fulfilledBy: 'courses'`).
+
+We also have toggleable requirements (`fulfilledBy: 'toggleable'`), which has multiple potential
+ways to be fulfilled, and the user must choose one of them. Each choice can be either `courses` or
+`credits`.
+
+Finally, we have a special type called self-check requirements (`fulfilledBy: 'self-check'`). You
+should think of this type as "we give up". Ideally, we should have fewer and fewer of this kind of
+requirements while our requirement infra improves.
+
+### Requirement Checker and Eligible Courses
+
+A checker is a function that takes in a course and tells whether this course can be used to fulfill
+a requirement. Note that a course doesn't need to completely check off a requirement for this
+function to `return true`. A course just needs to help fulfill the requirement. For example, if a
+requirement can be fulfilled by course A and course B together, then running on the checker on both
+courses should return true, and it should return false on all the other checkers.
+
+Eligible courses are a list of courses IDs, organized by semesters, that you can get after running
+checkers against all courses. It is used by the graph algorithm to build the requirement graph.
+
+### Requirement Fulfillment Progress
+
+The fulfillment progress can be considered as simple tuple `(# of XYZ fulfilled, # of XYZ required)`,
+where `XYZ` can be courses or credits.
+
+### Requirement Graph
+
+The requirement graph is a bipartite graph between requirements and courses. It describes how
+requirements are linked to courses, but it knows nothing about the requirement fulfillment progress.
+
+### Grouped Requirement Report
+
+It is the list of requirement fulfillment progress report, grouped into colleges, majors and minors.
+It knows nothing about the requirement graph structure.
+
+### Double Counting
+
+Double counting happens when one course is used to help fulfill two requirements. Not all double
+countings are illegal. For example, the engineering probability requirement allows it.
+
+A course `c` is double-counted if for the number of requirements connected to `c` that don't allow
+double-counting is `>= 2`.
+
+Note that allowing double counting is a property of requirement (`allowDoubleCounting` field)
+instead of a course. For example, it's correct to say that engineering probability requirement
+allows double counting, while engineering distribution does not allow double counting. It's
+incorrect to say that `MATH 4710` allows double counting.
+
+TLDR: Requirements allow or disallow double counting. Courses are double-counted or not.
+
 ## Workflow
 
-Requirement computation is split into two phases for efficiency concerns:
+Requirement computation is split into 3 phases for efficiency concerns:
 
 1. Pre-computation phase.
+
    In this phase, for each requirement (except a few that almost all classes that fulfill it), we
    enumerate all courses that can fulfill it. We store the enumeration into a "decorated" requirement
    json.
-2. Client-side computation phase.
-   In this phase, the user's course list is compared against requirement data.
 
-   - For requirements that can be satisfied by almost any course, we run a simple check in
-     `ifAllEligible` in [`req-functions.ts`](./reqs-functions.ts) to see whether it can be
-     satisfied.
-   - For requirements that can be satisfied by a pre-computed list of courses, we check whether the
-     user's course is in that list.
+2. Requirement graph building phase.
 
-   After that, we run some deduplication algorithm to filter away courses that are used to satisfy
-   more than one requirement, but it's actually only allowed to be used to fulfill one.
+   In this phase, we build the requirement graph using the graph algorithm. The algorithm will be
+   discussed in detail in later sections.
 
-## Where is the code
+3. Client-side computation phase.
 
-### Generated Data
+   In this phase, we look up the data in the requirement graph to determine the fulfillment progress
+   for each requirement. Then we produce a list of grouped requirement report to be displayed in
+   requirement bar.
 
-- [`filtered-all-courses.json`](./filtered-all-courses.json) contains course information generated
-  by `fetcher.ts`.
-- [`decorated-requirements.json`](./decorated-requirements.json) contains all requirement metadata
-  with additional list of fulfillable courses attached to each requirement. The file
-  [`filtered-all-courses.ts`](./``filtered-all-courses.ts) simply reexported a statically-typed
-  version of it.
-
-### Requirements Sources
-
-The metadata of all requirements (name, source, minimum count, etc) is stored in
-[`source-requirements-json.ts`](./source-requirements-json.ts). It's type is specified by the
-`RequirementsJson` type in [`types.ts`](./types.ts). The meanings of the field has been documented
-as JSDoc directly in type definitions.
-
-The code for precomputing a list of fulfillable courses are in the [`checkers`](./checkers) folder.
-They are organized by colleges and majors. All of those checkers are aggregated together in the
-[`checkers/all-requirements.checker.ts`](./checkers/all-requirements-checkers.ts).
-
-## Architecture
+## Detailed Architecture
 
 ### Pre-computation phase
 
@@ -60,22 +98,12 @@ To reiterate, this phase computes a list of satisfying courses for each requirem
 4. Now we created [`decorated-requirements.json`](./decorated-requirements.json).
    Pre-computation is done.
 
-Each checker is either:
+Each checker is a list of functions `(course: Course) => boolean`, where each function checks
+whether the course satisfies one of the sub-requirements that this checker correspond to.
 
-- a TypeScript function `(course: Course) => boolean` that directly tells whether the course
-  satisfies the requirement that this checker correspond to.
-- or a list of such functions, where each function checks whether the course satisfies one of the
-  sub-requirements that this checker correspond to.
-
-This is how you should use your checkers:
-
-- Case 1: the requirement contains no sub-requirement. Use option 1. Example: CS major practicum.
-- Case 2: the requirement contains sub-requirements. Use option 2. Example: CS Core requirement.
-
-Also consider the cases of double counting with `operator`:
-
-- Operator type 'and' indicates that all instances of a sub-requirement is necessary. Example: CS Introductory Programming
-- Operator type 'or' indicates that only one instance of a sub-requirement can be used. Example: ENGL Four 4000 Levels
+For each checker, there is an associated minimal number of course/credit required for that
+sub-requirement stored in `perSlotMinCount`. There can also be a `minNumberOfSlots` field, which
+specifies that we don't need to fulfill every slot, but only `minNumberOfSlots` of sub-requirements.
 
 ### Frontend Computation Phase
 
@@ -84,17 +112,82 @@ Also consider the cases of double counting with `operator`:
 Since too many courses can satisfy these requirements, the satisfying course list is not
 pre-computed to reduce the data sent from server to client.
 
-It's computed on the client side directly in `computeUniversityRequirementFulfillments` function
-inside [`reqs-functions.ts`](./reqs-functions.ts).
+It's computed on the client side directly inside
+[`requirement-fronend-computation.ts`](./requirement-fronend-computation.ts).
 
-#### College or Major Requirements
+#### College/Major/Minor Requirements
 
-1. We first naively compute whether a sub-requirement is fulfilled by checking whether any course in
-   user's list is in the pre-computed satisfying course list.
-2. Then, we run a deduplication pass to remove all courses that have been double-counted that
-   should not be. (NOTE: THIS HAS NOT BEEN IMPLEMENTED YET.)
-3. Finally, We sum up the total number of sub-requirements/credits already fulfilled for each
-   requirement, to decide whether a requirement as a whole as been satisfied.
+See the later section on requirement graph.
+
+## The Requirement Graph in Depth
+
+The core of the requirement graph building steps are follows:
+
+1. Building a rough graph. In this step, we connect requirement `r` and course `c` whenever we find
+   that `c` is in the course list of `r` in the big requirement json.
+2. Some requirements might have multiple fulfillment options and the user may choose one of them
+   Remove all the edges from requirements to courses that are not part of the user’s choice.
+3. The user might make some choices on tie-breaking for double-counted courses. Remove all the edges
+   from courses to requirements that are not the picked requirement in the choice.
+4. After that, we can inspect the graph from the courses side, and then find all the courses that
+   are connected to more than one requirement that doesn't allow double counting. We report these
+   courses are being illegally double counted.
+
+This graph algorithm allows us to elegantly deal with AP/IB credits. For each type of AP/IB credits,
+we link them to an equivalent course by giving them the same ID as the equivalent course.
+
+The graph also allows us to auto count cross-listed courses. We use the `crseId` from the course
+roster to decide whether two courses are equal. Two courses with the same `crseId` are known to be
+crosslisted.
+
+The CoursePlan DevSesh linked on the
+[dev website](https://dev.cornelldti.org/docs/resource-devsesh#subteam-architecture) provides all
+the rationale and visualization of the process. The
+[design document example](https://dev.cornelldti.org/docs/assignments-examples-cp-requirements-algo)
+on the dev website provides more technical discussion for implementation.
+
+## Where is the code
+
+### Generated Data
+
+- [`functions/filtered_courses/*.json`](../../functions/filtered_courses) contains course
+  information generated by `fetcher.ts`. The file
+  [`filtered-all-courses.ts`](./filtered-all-courses.ts) simply reexported a statically-typed
+  version of it.
+- [`decorated-requirements.json`](./decorated-requirements.json) contains all requirement metadata
+  with additional list of fulfillable courses attached to each requirement. The file
+  [`typed-requirement-json.ts`](./typed-requirement-json.ts) simply reexported a statically-typed
+  version of it.
+
+### Requirements Data Sources
+
+The metadata of all requirements (name, source, minimum count, etc) is stored in [`data`](./data).
+It's type is specified by the `RequirementsJson` type in [`types.ts`](./types.ts). The meanings of
+the field has been documented as JSDoc directly in type definitions.
+
+The code for precomputing a list of fulfillable courses are in the [`data`](./data) folder. The
+requirements are reorganized into college, major and minor folders. Each college, major and minor's
+requirement is in it's own file.
+
+### Requirement Graph Sources
+
+- [`requirement-graph.ts`](./requirement-graph.ts) is the abstract data structure about the
+  requirement graph. It does not contain any logic specific to requirement computation, other than
+  that it encodes a bidirectional graph.
+  [PR 140](https://github.com/cornell-dti/course-plan/pull/140) provides the rational behind this
+  choice.
+- [`requirement-graph-builder.ts`](./requirement-graph-builder.ts) implements the main requirement
+  graph building algorithm. It leaves out some methods abstract (e.g. how you decide whether a
+  requirement allows double counting), so that the algorithm itself can be easily tested independent
+  of the actual implementation.
+- [`./requirement-graph-builder-from-user-data`](./requirement-graph-builder-from-user-data.ts)
+  calls `requirement-graph-builder.ts`, but with all the abstract function filled in. It can take in
+  courses and user choices and produce the graph.
+
+### Final Computation for Frontend Vue Components
+
+- [`requirement-frontend-computation.ts`](./requirement-fronend-computation.ts) builds the
+  requirement graph and fulfillment progress for each requirement.
 
 ## Contributing
 

@@ -2,79 +2,78 @@
 
 module.exports = {
   root: true,
-  extends: ['eslint:recommended', 'plugin:vue/essential', '@vue/airbnb', '@vue/typescript', 'plugin:import/typescript'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:vue/recommended',
+    '@vue/airbnb',
+    '@vue/typescript',
+    'plugin:import/typescript',
+    'prettier',
+    'prettier/vue',
+  ],
   plugins: ['@typescript-eslint'],
   parserOptions: {
     parser: '@typescript-eslint/parser',
     ecmaVersion: 2020,
     sourceType: 'module',
     extraFileExtensions: ['.vue'],
-    project: ['./tsconfig.json', './tsconfig.node.json']
+    project: ['./tsconfig.json', './tsconfig.node.json'],
   },
   env: {
     browser: true,
-    node: true
+    node: true,
   },
   // add your custom rules here
   rules: {
-    // TODO: change no-console to error out for prod
+    '@typescript-eslint/ban-ts-comment': ['error'],
+    'vue/attribute-hyphenation': ['off'],
+    // TODO: auto-fix of this and the next rule introduces too many code changes that might cause merge conflict.
+    'vue/attributes-order': ['off'],
+    'vue/order-in-components': ['off'],
+    'vue/no-v-html': ['error'],
     'no-console': ['warn'],
-    // TODO: fix copied js code that makes this warn necessary
-    'no-use-before-define': ['warn'],
-    'linebreak-style': 0,
-    //TODO: make requests asynchronous
     'no-await-in-loop': ['error'],
-    // don't require .vue extension when importing
-    'import/extensions': [
-      'error',
-      'always',
-      {
-        js: 'never',
-        ts: 'never',
-        vue: 'never'
-      }
-    ],
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
-    'no-param-reassign': [2, { props: false }],
+    'no-param-reassign': ['error', { props: false }],
     // allow optionalDependencies
     'import/no-extraneous-dependencies': [
       'error',
       {
-        optionalDependencies: ['test/unit/index.js']
-      }
+        optionalDependencies: ['test/unit/index.js'],
+      },
     ],
     'no-mixed-operators': ['off'],
-    'arrow-parens': ['error', 'as-needed'],
-    'comma-dangle': ['error', 'never'],
     'no-continue': ['error'],
     'no-restricted-syntax': [
       'error',
       {
         selector: 'LabeledStatement',
         message:
-          'Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand.'
+          'Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand.',
       },
       {
         selector: 'WithStatement',
         message:
-          '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.'
-      }
+          '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.',
+      },
     ],
-    quotes: [
+    'max-classes-per-file': ['off'],
+    // TypeScript will handle it. It also doesn't work with typescript global types.
+    'no-undef': ['off'],
+    '@typescript-eslint/no-unused-vars': [
       'error',
-      'single',
-      {
-        allowTemplateLiterals: true
-      }
+      { vars: 'all', args: 'after-used', ignoreRestSiblings: true },
     ],
-    'max-len': ['error', { code: 200 }],
+    'no-use-before-define': ['off'],
+    'vue/no-mutating-props': ['warn'],
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },
   overrides: [
     {
-      files: ['*.ts', '*.tsx'],
+      files: ['*.ts', '*.tsx', '*.vue'],
       rules: {
         'import/extensions': [
           'error',
@@ -82,10 +81,10 @@ module.exports = {
           {
             js: 'never',
             ts: 'never',
-            vue: 'always'
-          }
-        ]
-      }
+            vue: 'always',
+          },
+        ],
+      },
     },
     {
       files: ['*.js'],
@@ -96,10 +95,10 @@ module.exports = {
           {
             js: 'never',
             ts: 'never',
-            vue: 'never'
-          }
-        ]
-      }
-    }
-  ]
+            vue: 'never',
+          },
+        ],
+      },
+    },
+  ],
 };

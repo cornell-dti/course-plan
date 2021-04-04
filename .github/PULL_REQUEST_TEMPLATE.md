@@ -8,7 +8,19 @@
 This pull request is the first step towards implementing feature Foo
 
 - [x] implemented X
-- [ ] fixed Y
+- [x] fixed Y
+
+<!--- Itemize any relevant remaining TODOs (especially for WIP PRs) here and on Notion -->
+
+Remaining TODOs:
+
+- [ ] resolve bug 1
+- [ ] implement Z
+
+<!--- Note dependencies on other PRs if any. -->
+
+Depends on #{number of PR}
+
 
 ### Test Plan <!-- Required -->
 
@@ -18,8 +30,15 @@ This pull request is the first step towards implementing feature Foo
 
 <!--- List any important or subtle points, future considerations, or other items of note. -->
 
+### Blockers <!-- Optional -->
+
+<!--- Note and itemize any blockers (especially for WIP PRs) here and on Notion -->
+
+- A newly discovered dependency that hasn’t been addressed
+
 ### Breaking Changes  <!-- Optional -->
 
 <!-- Keep items that apply: -->
+
 - Database schema change (anything that changes Firestore collection structure)
 - Other change that could cause problems (Detailed in notes)

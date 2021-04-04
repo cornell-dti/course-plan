@@ -1,23 +1,41 @@
 <template>
-  <div class="courseMenu" >
+  <div class="courseMenu">
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
         @mouseover="setDisplayColors(true)"
         @mouseleave="setDisplayColors(false)"
       >
-        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
+        <img
+          v-if="isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrowleft.svg"
+          alt="arrow to expand edit course color"
+        />
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="@/assets/images/paint.svg" />
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/paint.svg"
+            alt="edit course color paint icon"
+          />
           <span class="courseMenu-text">Edit Color</span>
         </div>
-        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+        <img
+          v-if="!isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrow.svg"
+          alt="arrow to expand edit course color"
+        />
 
-        <div v-if="displayColors" class="courseMenu-content courseMenu-colors" :class="{'courseMenu-colors--left': isLeft }">
-          <div
-            v-for="color in colors"
-            :key="color.id"
-            class="courseMenu-section"
+        <div
+          v-if="displayColors"
+          class="courseMenu-content courseMenu-colors"
+          :class="{ 'courseMenu-colors--left': isLeft }"
+        >
+          <button
+            v-for="(color, index) in colors"
+            :key="index"
+            class="courseMenu-section full-opacity-on-hover"
             @click="colorCourse(color)"
           >
             <div class="courseMenu-left">
@@ -27,23 +45,41 @@
               ></div>
               <span class="courseMenu-text">{{ color.text }}</span>
             </div>
-          </div>
+          </button>
         </div>
       </div>
       <div
         class="courseMenu-section"
         @mouseover="setDisplayEditCourseCredits(true)"
         @mouseleave="setDisplayEditCourseCredits(false)"
-        v-if="this.getCreditRange[0] != this.getCreditRange[1]"
-        >
-        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
+        v-if="getCreditRange[0] != getCreditRange[1]"
+      >
+        <img
+          v-if="isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrowleft.svg"
+          alt="arrow to expand edit course credits"
+        />
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" :class="{'courseMenu-icon--left': isLeft }" src="@/assets/images/edit-credits.svg" />
+          <img
+            class="courseMenu-icon"
+            :class="{ 'courseMenu-icon--left': isLeft }"
+            src="@/assets/images/edit-credits.svg"
+            alt="edit course credits icon"
+          />
           <span class="courseMenu-text">Edit Credits</span>
         </div>
-        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
-         <div v-if="displayEditCourseCredits" class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
-         :class="{'courseMenu-editCredits--left': isLeft }">
+        <img
+          v-if="!isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrow.svg"
+          alt="arrow to expand edit course credits"
+        />
+        <div
+          v-if="displayEditCourseCredits"
+          class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
+          :class="{ 'courseMenu-editCredits--left': isLeft }"
+        >
           <div
             v-for="credit in makeCreditArary()"
             :key="credit"
@@ -56,78 +92,60 @@
           </div>
         </div>
       </div>
-      <div class="courseMenu-section" :class="{'courseMenu-section--left': isLeft }" @click="deleteCourse">
+      <button
+        class="courseMenu-section full-opacity-on-hover"
+        :class="{ 'courseMenu-section--left': isLeft }"
+        @click="deleteCourse"
+      >
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="@/assets/images/trash.svg" />
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/trash.svg"
+            alt="delete course trashcan icon"
+          />
           <span class="courseMenu-text">Delete</span>
         </div>
-      </div>
+      </button>
     </div>
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
-import Course from '@/components/Course';
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+import { coursesColorSet } from '@/assets/constants/colors';
+import { GTagEvent } from '@/gtag';
 
-export default {
+export default Vue.extend({
   props: {
-    getCreditRange: Array,
-    semId: Number,
-    isCompact: Boolean
+    getCreditRange: {
+      type: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
+      required: true,
+    },
+    semesterIndex: { type: Number, required: true },
+    isCompact: { type: Boolean, required: true },
   },
   data() {
     return {
-      isLeft: (this.semId % 2 === 0 && !this.isCompact) || (this.semId % 4 === 0 && this.isCompact),
+      isLeft:
+        (this.semesterIndex % 2 === 0 && !this.isCompact) ||
+        (this.semesterIndex % 4 === 0 && this.isCompact),
       // TODO: better version for all breakpoints
       // isLeft: this.semId % numPerRow() === 0,
-      colors: [
-        {
-          text: 'Gray',
-          hex: '#C4C4C4'
-        },
-        {
-          text: 'Red',
-          hex: '#DA4A4A'
-        },
-        {
-          text: 'Orange',
-          hex: '#FFA53C'
-        },
-        {
-          text: 'Yellow',
-          hex: '#FFE142'
-        },
-        {
-          text: 'Green',
-          hex: '#58C913'
-        },
-        {
-          text: 'Blue',
-          hex: '#139DC9'
-        },
-        {
-          text: 'Purple',
-          hex: '#C478FF'
-        },
-        {
-          text: 'Pink',
-          hex: '#F296D3'
-        }
-      ],
+      colors: coursesColorSet,
       displayColors: false,
-      displayEditCourseCredits: false
+      displayEditCourseCredits: false,
     };
   },
   computed: {
     // TODO: implement this without DOM manipulation and with semID changing (right now, stays the same if a sem is added)
-    numPerRow() {
+    numPerRow(): number {
       const itemWidth = 406; // width of a semester div
       const itemWidthCompact = 232; // width of a compact semester div in px
 
       const grid = document.getElementsByClassName('semesterView-content')[0];
-      const gridStyle = grid.currentStyle || window.getComputedStyle(grid);
-      const gridWidth = grid.clientWidth - (parseFloat(gridStyle.paddingLeft) + parseFloat(gridStyle.paddingRight));
+      const gridStyle = window.getComputedStyle(grid);
+      const gridWidth =
+        grid.clientWidth - (parseFloat(gridStyle.paddingLeft) + parseFloat(gridStyle.paddingRight));
 
       let numPerRow = 0;
       if (this.isCompact) {
@@ -136,28 +154,30 @@ export default {
         numPerRow = Math.min(Math.floor(gridWidth / itemWidth), 2);
       }
       return numPerRow;
-    }
+    },
   },
   methods: {
     deleteCourse() {
       this.$emit('delete-course');
     },
-    colorCourse(color) {
+    colorCourse(color: { hex: string }) {
       this.$emit('color-course', color.hex.substring(1));
+      GTagEvent(this.$gtag, 'course-edit-color');
     },
-    setDisplayColors(bool) {
+    setDisplayColors(bool: boolean) {
       this.displayColors = bool;
     },
-    setDisplayEditCourseCredits(bool) {
+    setDisplayEditCourseCredits(bool: boolean) {
       this.displayEditCourseCredits = bool;
     },
-    editCourseCredit(credit) {
+    editCourseCredit(credit: number) {
       this.$emit('edit-course-credit', credit);
     },
     makeCreditArary() {
-      const creditArray = [];
-      let accu = (this.getCreditRange[0] < 1) ? 0 : (this.getCreditRange[0] - 1);
-      for (let i = accu; i < (this.getCreditRange[1]); i += 1) {
+      const creditArray: number[] = [];
+      let accu = this.getCreditRange[0] < 1 ? 0 : this.getCreditRange[0] - 1;
+
+      for (let i = accu; i < this.getCreditRange[1]; i += 1) {
         if (this.getCreditRange[0] < 1) {
           accu += 0.5;
           creditArray.push(accu);
@@ -169,15 +189,22 @@ export default {
         }
       }
       return creditArray;
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .courseMenu {
+  position: absolute;
+  right: -3rem;
+  top: 2rem;
+  z-index: 1;
+
   &-content {
-    background: #ffffff;
+    background: $white;
     border: 1px solid #acacac;
     box-sizing: border-box;
     border-radius: 9px;
@@ -191,7 +218,8 @@ export default {
     justify-content: space-between;
     padding: 0.5rem 1rem;
     position: relative;
-
+    cursor: pointer;
+    width: 100%;
     &:hover,
     &:active,
     &:focus {
@@ -199,13 +227,11 @@ export default {
     }
 
     &:first-child {
-      padding-top: 1rem;
       border-top-left-radius: 9px;
       border-top-right-radius: 9px;
     }
 
     &:last-child {
-      padding-bottom: 1rem;
       border-bottom-left-radius: 9px;
       border-bottom-right-radius: 9px;
     }
@@ -237,7 +263,7 @@ export default {
     }
 
     &--left {
-      margin-right: .25rem;
+      margin-right: 0.25rem;
     }
   }
   &-colors {
@@ -264,8 +290,10 @@ export default {
   }
 }
 
-@media only screen and (max-width: 878px) {
+@media only screen and (max-width: $medium-breakpoint) {
   .courseMenu {
+    right: -1rem;
+
     &-arrow {
       display: none;
     }

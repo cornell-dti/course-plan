@@ -1,15 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../types';
 
-const businessRequirements: readonly CollegeOrMajorRequirement[] = [
-  {
-    name: 'Major Requirements',
-    description:
-      'Graduation requirements depend on major. For undergraduates, it is either Dyson or SHA requirements.',
-    source: 'https://business.cornell.edu/programs/undergraduate/',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check'
-  }
-];
-
+const businessRequirements: readonly CollegeOrMajorRequirement[] = [];
+// offers two undergraduate majors: AEM and Hotel Admin
 export default businessRequirements;

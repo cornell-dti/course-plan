@@ -1,22 +1,29 @@
-import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { Course, CollegeOrMajorRequirement } from '../../types';
+import {
+  includesWithSingleRequirement,
+  includesWithSubRequirements,
+  courseMatchesCodeOptions,
+  ifCodeMatch,
+  courseIsSpecial,
+} from '../checkers-common';
 
 const csRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Introductory Programming',
     description: 'CS 111x (CS 1110, 1112, 1114, or 1115) and CS 2110 (or CS 2112) or equivalent.',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor',
+    // Allow double counting, because it overlaps with engineering's requirements.
+    allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements(
       ['CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'],
       ['CS 2110', 'CS 2112']
     ),
-    operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 2
+    perSlotMinCount: [1, 1],
   },
   {
     name: 'Computer Science Core',
-    description: 'CS 2800 (or CS 2802), CS 3110, CS 3410 or CS 3420, CS 4410, and CS 4820',
+    description: 'CS 2800 or CS 2802, CS 3110, CS 3410 or CS 3420, CS 4410, and CS 4820',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor',
     checker: includesWithSubRequirements(
       ['CS 2800', 'CS 2802'],
@@ -25,14 +32,41 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 4820'],
       ['CS 4410']
     ),
-    operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 5
+    perSlotMinCount: [1, 1, 1, 1, 1],
+  },
+  {
+    name: 'CS Electives',
+    description:
+      'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4999 are NOT allowed.',
+    source:
+      'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
+    checker: [
+      (course: Course): boolean => {
+        if (
+          courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4999', 'CS 4410', 'CS 4820'])
+        ) {
+          return false;
+        }
+        return (
+          ifCodeMatch(course.subject, 'CS') &&
+          !(
+            ifCodeMatch(course.catalogNbr, '1***') ||
+            ifCodeMatch(course.catalogNbr, '2***') ||
+            ifCodeMatch(course.catalogNbr, '3***')
+          )
+        );
+      },
+    ],
+    fulfilledBy: 'courses',
+    perSlotMinCount: [3],
   },
   {
     name: 'CS Practicum or Project',
-    description: 'CS practicums (CS 4xx1) or CS 3152, CS 4152, CS 4154, CS 4740, CS 4752, CS 5150, CS 5152, CS 5412, CS 5414, CS 5431, CS 5625, or CS 5643.',
-    source: 'https://www.cs.cornell.edu/undergrad/csmajor',
+    description:
+      'CS practicums (CS 4xx1) or CS 3152, CS 4152, CS 4154, CS 4740, CS 4752, CS 5150, CS 5152, CS 5412, CS 5414, CS 5431, CS 5625, or CS 5643.',
+    source:
+      'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: includesWithSingleRequirement(
       'CS 4**1',
       'CS 3152',
@@ -48,56 +82,78 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'CS 5625',
       'CS 5643'
     ),
-    operator: 'or',
     fulfilledBy: 'courses',
-    minCount: 1
+    perSlotMinCount: [1],
   },
   {
     name: 'Technical Electives',
-    description: 'The Technical Electives must be made up of three 3000+ level courses.  '
-      + 'These courses must be taken for a letter grade, and each must earn three or more credit hours.',
+    description: 'Three 3000-level or above (3+ credits each) courses with technical content',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor/technicalelectives',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check'
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return !(ifCodeMatch(catalogNbr, '1***') || ifCodeMatch(catalogNbr, '2***'));
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are considered technical.',
+    fulfilledBy: 'courses',
+    perSlotMinCount: [3],
   },
   {
     name: 'External Specialization',
-    description: 'The External Specialization involves nine or more credit hours at the 3000+ level. '
-      + 'Absolutely no CS courses are allowed. The three courses must be related to each other. '
-      + 'Frequently, the three courses are from the same department.',
-    source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check'
+    description:
+      'Three 3000+ related courses outside of computer science (3 credit min per course). ' +
+      'Frequently, the three courses are from the same department.',
+    source:
+      'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return (
+          !(ifCodeMatch(catalogNbr, '1***') || ifCodeMatch(catalogNbr, '2***')) &&
+          !ifCodeMatch(course.subject, 'CS')
+        );
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are related.',
+    fulfilledBy: 'courses',
+    perSlotMinCount: [3],
   },
+  // TODO: Doesn't check for ROTC (PE) above 3000
   {
     name: 'Major-approved Elective(s)',
-    description: 'The major elective is any course or courses approved by your CS major advisor. '
-      + 'This elective requirement can be met by multiple courses totalling 3 credits, or one course of 3+ credit hours. '
-      + 'Phys Ed, courses numbered 10xx, and ROTC courses below the 3000-level, do not qualify for academic credit and can not be used toward the degree requirements in CS.',
-    source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    checker: null,
-    operator: null,
-    fulfilledBy: 'self-check'
+    description:
+      'At least 3 credit hours total. All academic courses count. ' +
+      'No PE courses, courses numbered 10xx, and ROTC courses below the 3000-level allowed.',
+    source:
+      'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
+    checker: [
+      (course: Course): boolean => {
+        if (courseIsSpecial(course)) return false;
+        const { subject, catalogNbr } = course;
+        return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are major approved.',
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3],
   },
-  // TODO: Requirement whose classes can be double counted
   {
     name: 'Probability',
     description: 'Must take BTRY 3080, CS 4850, ECE 3100, ECON 3130, ENGRD 2700, or MATH 4710.',
-    source: 'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/engineeringchecklist',
-    checker: includesWithSubRequirements(
-      ['BTRY 3080',
-        'CS 4850',
-        'ECE 3100',
-        'ECON 3130',
-        'ENGRD 2700',
-        'MATH 4710']
-    ),
-    operator: 'and',
+    source: 'https://www.cs.cornell.edu/undergrad/csmajor',
+    allowCourseDoubleCounting: true,
+    checker: includesWithSubRequirements([
+      'BTRY 3080',
+      'CS 4850',
+      'ECE 3100',
+      'ECON 3130',
+      'ENGRD 2700',
+      'MATH 4710',
+    ]),
     fulfilledBy: 'courses',
-    minCount: 1
-  }
+    perSlotMinCount: [1],
+  },
 ];
 
 export default csRequirements;

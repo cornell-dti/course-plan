@@ -1,43 +1,41 @@
 // imports
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import './variables';
 
 // fonts
 @font-face {
   font-family: 'ProximaNova';
-  src: url("../../assets/fonts/ProximaNova-Regular.otf");
+  src: url('../fonts/ProximaNova-Regular.otf');
 }
 
 @font-face {
   font-family: 'ProximaNovaBold';
-  src: url("../../assets/fonts/ProximaNova-Bold.otf");
+  src: url('../fonts/ProximaNova-Bold.otf');
   font-weight: bold;
 }
 
 @font-face {
   font-family: 'ProximaNovaExtrabold';
-  src: url("../../assets/fonts/ProximaNova-Extrabold.otf");
+  src: url('../fonts/ProximaNova-Extrabold.otf');
   font-weight: 800;
 }
 
 @font-face {
   font-family: 'ProximaNovaThin';
-  src: url("../../assets/fonts/ProximaNova-Thin.otf");
+  src: url('../fonts/ProximaNova-Thin.otf');
   font-weight: 300;
 }
 
 // colors
-$primary: #f15151;
-$error: #ef5777;
-$success: #1abc9c;
-$light: #f5f8fa;
-$medium: #657786;
-$dark: #34495e;
-$white: #fff;
+@import 'variables';
+
 // resets
 body {
   margin: 0;
   color: $dark;
   background: #fbfbfb;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 html {
@@ -48,13 +46,8 @@ html {
 * {
   font-family: 'ProximaNova', sans-serif;
   box-sizing: border-box;
-
-  &:focus {
-    outline: none;
-  }
 }
-h1,
-h2,
+
 h3,
 h4,
 h5,
@@ -63,11 +56,19 @@ p {
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  color: $darkGray;
+  font-weight: bold;
+  line-height: 20px;
 }
 
 h2 {
-  font-size: 1.8rem;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  color: $darkGray;
 }
 
 h3 {
@@ -92,10 +93,15 @@ a {
   color: $primary;
   margin: 0;
   cursor: pointer;
+}
 
-  &:hover {
-    color: lighten($primary, 5%);
-  }
+button {
+  background: none;
+  border: none;
+}
+
+button:hover {
+  opacity: 0.5;
 }
 
 // globals
@@ -155,7 +161,6 @@ section {
 .button {
   background: $primary;
   border: 0;
-  outline: 0;
   color: $white;
   padding: 0.8rem 1rem;
   min-width: 150px;
@@ -173,6 +178,11 @@ section {
       background: $primary;
     }
   }
+}
+
+button:focus {
+  outline: 1px solid $yuxuanBlue;
+  box-shadow: none;
 }
 
 .text-center {
@@ -206,7 +216,6 @@ form {
     margin-bottom: 1rem;
     font-size: 16px;
     padding: 10px;
-    outline: 0;
     border: 1px solid #e6ecf0;
     border-radius: 3px;
 
@@ -218,7 +227,6 @@ form {
   textarea {
     resize: none;
     border: 1px solid #e6ecf0;
-    outline: 0;
     height: 100px;
     width: 100%;
     padding: 10px;
@@ -236,4 +244,21 @@ form {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+// full opacity on hover.
+// Intended to undo reduced opacity for button:hover
+.full-opacity-on-hover {
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// slightly lower opacity on hover.
+// Intended to have higher than the reduced opacity for button:hover but lower
+// than full opacity
+.slightly-lower-opacity-on-hover {
+  &:hover {
+    opacity: 0.8;
+  }
 }

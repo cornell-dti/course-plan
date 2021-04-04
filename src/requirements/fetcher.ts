@@ -8,7 +8,7 @@ import { Course } from './types';
 
 const PREFIX = 'https://classes.cornell.edu/api/2.0';
 
-const wait = (time: number) => new Promise(resolve => setTimeout(() => resolve(), time));
+const wait = (time: number) => new Promise<void>(resolve => setTimeout(() => resolve(), time));
 
 const getSemesters = async (): Promise<readonly string[]> => {
   const response = await fetch(`${PREFIX}/config/rosters.json`);
@@ -26,24 +26,42 @@ const getSubjects = async (semester: string): Promise<readonly string[]> => {
   }
 };
 
-type CourseFieldFilter<T extends keyof Course> = (course: Course) => Pick<Course, T>;
-
-const getCourseFieldFilter = <T extends keyof Course>(allowedFields: T[]): CourseFieldFilter<T> => (
-  course: Course
-) => {
-  const filteredCourseObject: any = {};
-  Object.entries(course).forEach(([field, value]) => {
-    if (allowedFields.includes(field as T)) {
-      filteredCourseObject[field] = value;
-    }
-  });
-  return filteredCourseObject;
-};
+const courseFieldFilter = ({
+  subject,
+  crseId,
+  catalogNbr,
+  titleLong,
+  enrollGroups,
+  catalogWhenOffered,
+  catalogBreadth,
+  catalogDistr,
+  catalogComments,
+  catalogSatisfiesReq,
+  catalogCourseSubfield,
+  acadCareer,
+  acadGroup,
+}: Course): Course => ({
+  subject,
+  crseId,
+  catalogNbr,
+  titleLong,
+  enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum }) => ({
+    unitsMaximum,
+    unitsMinimum,
+  })),
+  catalogWhenOffered,
+  catalogBreadth: catalogBreadth || undefined,
+  catalogDistr: catalogDistr || undefined,
+  catalogComments: catalogComments || undefined,
+  catalogSatisfiesReq: catalogSatisfiesReq || undefined,
+  catalogCourseSubfield: catalogCourseSubfield || undefined,
+  acadCareer,
+  acadGroup,
+});
 
 const getCoursesInSemesterAndSubject = async <T extends keyof Course>(
   semester: string,
-  subject: string,
-  courseFieldFilter: CourseFieldFilter<T>
+  subject: string
 ): Promise<readonly Pick<Course, T>[]> => {
   try {
     const response = await fetch(
@@ -56,24 +74,19 @@ const getCoursesInSemesterAndSubject = async <T extends keyof Course>(
   }
 };
 
-const getAllCoursesInSemester = async <T extends keyof Course>(
+const getAllCoursesInSemester = async (
   semester: string,
-  courseFieldFilter: CourseFieldFilter<T>,
-  coolingTimeMs: number = 50,
-  doPrintDebuggingInfo: boolean = false
-): Promise<readonly Pick<Course, T>[]> => {
-  const courses: Pick<Course, T>[] = [];
+  coolingTimeMs = 50,
+  doPrintDebuggingInfo = false
+): Promise<readonly Course[]> => {
+  const courses: Course[] = [];
   const subjects = await getSubjects(semester);
   if (doPrintDebuggingInfo) {
     console.log(`We have ${subjects.length} subjects in ${semester} total.`);
   }
   let subjectCount = 0;
   for (const subject of subjects) {
-    const semesterCourses = await getCoursesInSemesterAndSubject(
-      semester,
-      subject,
-      courseFieldFilter
-    );
+    const semesterCourses = await getCoursesInSemesterAndSubject(semester, subject);
     courses.push(...semesterCourses);
     await wait(coolingTimeMs);
     subjectCount += 1;
@@ -85,16 +98,18 @@ const getAllCoursesInSemester = async <T extends keyof Course>(
   return courses;
 };
 
-type AllCourses<T extends keyof Course> = { [semester: string]: readonly Pick<Course, T>[] };
+type AllCourses = { [semester: string]: readonly Course[] };
 
-const getAllCourses = async <T extends keyof Course>(
-  courseFieldFilter: CourseFieldFilter<T>,
-  coolingTimeMs: number = 50,
-  doPrintDebuggingInfo: boolean = true
-): Promise<AllCourses<T>> => {
+const generateSemesterJSONs = async (
+  coolingTimeMs = 50,
+  doPrintDebuggingInfo = true
+): Promise<void> => {
   const startTime = new Date().getTime();
-  const courses: AllCourses<T> = {};
-  const semesters = await getSemesters();
+  // Filter away all semester data before 2017
+  const semesters = (await getSemesters()).filter(
+    semester => parseInt(semester.substring(2), 10) >= 17
+  );
+  writeFileSync('src/assets/courses/rosters.json', `${JSON.stringify(semesters)}\n`);
   if (doPrintDebuggingInfo) {
     console.log(`We have ${semesters.length} semesters in total.`);
   }
@@ -102,11 +117,13 @@ const getAllCourses = async <T extends keyof Course>(
   for (const semester of semesters) {
     const semesterCourses = await getAllCoursesInSemester(
       semester,
-      courseFieldFilter,
       coolingTimeMs,
       doPrintDebuggingInfo
     );
+    const courses: AllCourses = {};
     courses[semester] = semesterCourses;
+    const fileFunctionsSrc = `functions/filtered_courses/filtered-${semester}-courses.json`;
+    writeFileSync(fileFunctionsSrc, JSON.stringify(courses));
     semesterCount += 1;
     if (doPrintDebuggingInfo) {
       console.log(`We fetched ${semesterCount} out of ${semesters.length} semesters.`);
@@ -115,23 +132,8 @@ const getAllCourses = async <T extends keyof Course>(
   if (doPrintDebuggingInfo) {
     console.log(`Total Running Time: ${new Date().getTime() - startTime}ms.`);
   }
-  return courses;
 };
 
-const courseFieldFilter = getCourseFieldFilter([
-  'subject',
-  'catalogNbr',
-  'titleLong',
-  'description',
-  'catalogBreadth',
-  'catalogDistr',
-  'catalogAttribute',
-  'catalogComments',
-  'catalogSatisfiesReq',
-  'acadCareer',
-  'acadGroup'
-]);
-
-getAllCourses(courseFieldFilter).then(allCourses => {
-  writeFileSync('src/requirements/filtered-all-courses.json', JSON.stringify(allCourses));
+generateSemesterJSONs().then(() => {
+  console.log('All semester JSONs generated.');
 });

@@ -1,55 +1,97 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import {
+  courseIsFWS,
+  includesWithSingleRequirement,
+  includesWithSubRequirements,
+} from '../checkers-common';
 
 const crpRequirements: readonly CollegeOrMajorRequirement[] = [
   {
-    name: 'Distribution Requirements: MQR',
-    description: 'At least one class must be classified as mathematics and quantitative reasoning (MQR)',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: (course: Course): boolean => course.catalogDistr?.includes('MQR-AS') ?? false,
-    operator: 'or',
+    name: 'First-Year Writing Seminars',
+    description: 'All students are required to take two first-year writing seminars.',
+    source:
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19824#undergraduatestudyinurbanandregionalstudies',
+    checker: [courseIsFWS],
     fulfilledBy: 'courses',
-    minCount: 1
+    perSlotMinCount: [2],
   },
   {
-    name: 'Distribution Requirements: PBS',
-    description: 'At least two classes must be classified as PBS',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: (course: Course): boolean => course.catalogDistr?.includes('PBS-AS') ?? false,
-    operator: 'or',
+    name: 'PBS and MQR courses',
+    description:
+      'Students must take 2 courses in Physical & Biological Sciences (PBS/PBSS-AS). ' +
+      'Students must take 1 course in Mathematics & Quantitative Reasoning (MQR-AS). ' +
+      'Students must take 1 course that is either in PBS-AS or MQR-AS.',
+    source:
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19824#undergraduatestudyinurbanandregionalstudies',
+    checker: [
+      (course: Course): boolean =>
+        ['PBS-AS', 'PBSS-AS', 'BIO-AG', 'BIOLS-AG', 'BIONLS-AG', 'OPHLS-AG', 'PBS', 'PBS-HE'].some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+      (course: Course): boolean =>
+        ['MQR-AS', 'MQR-AAP', 'MQR-HE'].some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+      (course: Course): boolean =>
+        [
+          'PBS-AS',
+          'PBSS-AS',
+          'BIO-AG',
+          'BIOLS-AG',
+          'BIONLS-AG',
+          'OPHLS-AG',
+          'PBS',
+          'PBS-HE',
+          'MQR-AS',
+          'MQR-AAP',
+          'MQR-HE',
+        ].some(distribution => course.catalogDistr?.includes(distribution) ?? false),
+    ],
     fulfilledBy: 'courses',
-    minCount: 2
-  },
-  {
-    name: 'Distribution Requirements: MQR OR PBS',
-    description: 'At least one class must be classified as MQR or PBS',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: (course: Course): boolean => ['(PBS-AS)', '(PBSS-AS)', '(MQR-AS)'].some(
-      distribution => course.catalogDistr?.includes(distribution) ?? false
-    ),
-    operator: 'or',
-    fulfilledBy: 'courses',
-    minCount: 1
+    perSlotMinCount: [2, 1, 1],
+    disallowTransferCredit: true,
   },
   {
     name: 'Distribution Requirements: 5 Courses',
-    description: 'Must be selected from at least four of these five categories (i.e., CA, HA, KCM, LA, and SBA).'
-    + 'No more than three of these five courses can be taken in any one department.',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: (course: Course): boolean => (
-      ['CA', 'HA', 'LA/LAD', 'KCM', 'SBA'].some(
-        distribution => course.catalogDistr?.includes(distribution) ?? false
-      )
-    ),
-    operator: 'or',
+    description:
+      'Must be selected from at least four of these five categories (i.e., CA, HA, KCM, LA, and SBA).' +
+      ' No more than three of these five courses can be taken in any one department.',
+    source:
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19824#undergraduatestudyinurbanandregionalstudies',
+    checker: [
+      (course: Course): boolean =>
+        [
+          'CA-AAP',
+          'CA-AG',
+          'CA-AS',
+          'CA-HE',
+          'HA-AAP',
+          'HA-AG',
+          'HA-AS',
+          'HA-HE',
+          'KCM-AAP',
+          'KCM-AG',
+          'KCM-AS',
+          'KCM-HE',
+          'LA-AAP',
+          'LA-AG',
+          'LA-AS',
+          'LAD-HE',
+          'SBA-AAP',
+          'SBA-AG',
+          'SBA-AS',
+          'SBA-HE',
+        ].some(distribution => course.catalogDistr?.includes(distribution) ?? false),
+    ],
     fulfilledBy: 'courses',
-    totalCount: 5,
-    minCount: 4
+    perSlotMinCount: [5],
+    disallowTransferCredit: true,
   },
   {
     name: 'Core Classes',
     description: 'CRP 1100, CRP 1101, CRP 2000, CRP 2010, CRP 3210',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
+    source:
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19824#undergraduatestudyinurbanandregionalstudies',
     checker: includesWithSubRequirements(
       ['CRP 1100'],
       ['CRP 1101'],
@@ -57,64 +99,58 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CRP 2010'],
       ['CRP 3210']
     ),
-    operator: 'and',
     fulfilledBy: 'courses',
-    minCount: 5
+    perSlotMinCount: [1, 1, 1, 1, 1],
   },
   {
     name: 'Microeconomics',
     description: 'Choose one course: AEM 2500 OR CRP 4040 OR ECON 1110 OR ECON 3030 OR PAM 2000',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: includesWithSubRequirements(
-      ['AEM 2500',
-        'CRP 4040',
-        'ECON 1110',
-        'ECON 3030',
-        'PAM 2000']
-    ),
-    operator: 'and',
+    source:
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19824#undergraduatestudyinurbanandregionalstudies',
+    checker: includesWithSubRequirements([
+      'AEM 2500',
+      'CRP 4040',
+      'ECON 1110',
+      'ECON 3030',
+      'PAM 2000',
+    ]),
     fulfilledBy: 'courses',
-    minCount: 1
+    perSlotMinCount: [1],
   },
   {
     name: 'Statistics',
-    description: 'Choose one course: AEM 2100, AEM 3100, AEM 4100, ECON 3130, ECON 3140, ILRST 2100, MATH 1710'
-    + 'MATH 4710, PAM 2100, PAM 2101, STSCI 2100, STSCI 3080',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: includesWithSubRequirements(
-      ['AEM 2100',
-        'AEM 3100',
-        'AEM 4100',
-        'ECON 3130',
-        'ECON 3140',
-        'ILRST 2100',
-        'MATH 1710',
-        'MATH 4710',
-        'PAM 2100',
-        'PAM 2101',
-        'STSCI 2100',
-        'STSCI 3080'
-      ]
-    ),
-    operator: 'and',
+    description:
+      'Choose one course: AEM 2100, AEM 3100, AEM 4100, ECON 3130, ECON 3140, ILRST 2100, MATH 1710' +
+      ', MATH 4710, PAM 2100, PAM 2101, STSCI 2100, STSCI 3080',
+    source:
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19824#undergraduatestudyinurbanandregionalstudies',
+    checker: includesWithSubRequirements([
+      'AEM 2100',
+      'AEM 3100',
+      'AEM 4100',
+      'ECON 3130',
+      'ECON 3140',
+      'ILRST 2100',
+      'MATH 1710',
+      'MATH 4710',
+      'PAM 2100',
+      'PAM 2101',
+      'STSCI 2100',
+      'STSCI 3080',
+    ]),
     fulfilledBy: 'courses',
-    minCount: 1
+    perSlotMinCount: [1],
   },
   {
     name: 'Five CRP Classes',
-    description: 'Take five additional CRP classes at the 3000-level or higher, for a minimum of 3 credits each',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=31&poid=15145',
-    checker: includesWithSingleRequirement(
-      'CRP 3***',
-      'CRP 4***',
-      'CRP 5***',
-      'CRP 6***'
-    ),
-    operator: 'or',
+    description:
+      'Take five additional CRP classes at the 3000-level or higher, for a minimum of 3 credits each',
+    source:
+      'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19824#undergraduatestudyinurbanandregionalstudies',
+    checker: includesWithSingleRequirement('CRP 3***', 'CRP 4***', 'CRP 5***', 'CRP 6***'),
     fulfilledBy: 'courses',
-    minCount: 5
-  }
-
+    perSlotMinCount: [5],
+  },
 ];
 
 export default crpRequirements;

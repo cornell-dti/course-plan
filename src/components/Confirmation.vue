@@ -1,38 +1,33 @@
-// One prop for text // Otherwise - the same for courses and semesters // Can leave as display: none
-like the 2 modals in Semester.vue until necessary? Or can itself be created from the addCourse()
-method - unsure what the right move is right now
-
 <template>
   <div class="confirmation">
     <div class="confirmation-left">
-      <img class="confirmation-icon" src="../assets/images/checkmark.svg" />
+      <img class="confirmation-icon" src="@/assets/images/checkmark.svg" alt="checkmark" />
     </div>
     <div class="confirmation-text">{{ text }}</div>
-    <div class="confirmation-right">
-      <!-- <span class="undo-buttonText">{{ undo }}</span> -->
-    </div>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    text: String
-  },
+<script lang="ts">
+import Vue from 'vue';
 
-  computed: {
-    // undo() {
-    //   return 'UNDO';
-    // }
-  }
-};
+export default Vue.extend({
+  props: {
+    text: { type: String, required: true },
+  },
+});
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .confirmation {
   position: fixed;
   z-index: 10;
   top: 16px;
+  left: 29.5rem;
+  right: 0;
+  margin: 0 auto;
+  width: max-content;
   background: #ffffff;
   border-radius: 6px;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
@@ -71,12 +66,9 @@ export default {
     display: flex;
     align-items: center;
 
-    color: #7B7D7E;
+    color: #7b7d7e;
 
-    margin-left: 8px;
-    margin-right: 16px;
-    margin-top: 13px;
-    margin-bottom: 12px;
+    margin: 14px 16px 12px 16px;
   }
 
   &-right {
@@ -98,7 +90,19 @@ export default {
   }
 }
 
-@media only screen and (max-width: 440px) {
+@media only screen and (max-width: $large-breakpoint) {
+  .confirmation {
+    left: 25.5rem;
+  }
+}
+
+@media only screen and (max-width: $medium-breakpoint) {
+  .confirmation {
+    left: 0;
+  }
+}
+
+@media only screen and (max-width: $small-breakpoint) {
   .confirmation {
     width: 75%;
     &-left {
