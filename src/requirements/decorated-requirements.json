@@ -127970,7 +127970,7 @@
         },
         {
           "name": "Introduction to Management",
-          "description": "Choose one: AEM 1200, ILRID 1700, NCC 5540",
+          "description": "Choose one: AEM 1200, HADM 1810, ILRID 1700, NCC 5540",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business/",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -127980,7 +127980,8 @@
             [
               350811,
               361209,
-              365784
+              365784,
+              367800
             ]
           ]
         },
@@ -128345,7 +128346,7 @@
         },
         {
           "name": "Introduction to basic business concepts",
-          "description": "Choose one: AEM 1200, AEM 2400, HADM 2410, ENGRI 1270, ILRD 1700, NCC 5530, NCC 5580ORIE 4152, ENGRG 4610, MAE 4610",
+          "description": "Choose one: AEM 1200, AEM 2400, HADM 1810, HADM 2410, ENGRI 1270, ILRD 1700, NCC 5530, NCC 5580ORIE 4152",
           "source": "https://business.cornell.edu/programs/undergraduate/minors/business-engineers/",
           "fulfilledBy": "credits",
           "perSlotMinCount": [
@@ -128359,7 +128360,8 @@
               354947,
               358605,
               359336,
-              361209
+              361209,
+              367800
             ]
           ]
         },
@@ -128499,7 +128501,7 @@
           "source": "https://www.human.cornell.edu/dea/academics/undergraduate/minors/dea",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
-            1
+            2
           ],
           "courses": [
             [
@@ -128544,41 +128546,418 @@
       ]
     },
     "ISST": {
-      "name": "Industrial Systems and Information Technology",
+      "name": "Information Science [Engineering]",
       "schools": [
         "EN"
       ],
       "requirements": [
         {
-          "name": "Required Courses",
-          "description": "ENGRD 2700, ORIE 3120, ORIE 4800",
-          "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors",
-          "fulfilledBy": "courses",
-          "perSlotMinCount": [
-            3
-          ],
-          "courses": [
-            [
-              358529,
-              358622
-            ]
-          ]
+          "name": "Concentration",
+          "description": "One Core course based on your concentration and three courses in the concentration. ",
+          "source": "https://infosci.cornell.edu/node/801",
+          "fulfilledBy": "toggleable",
+          "fulfillmentOptions": {
+            "Behavioral Science": {
+              "description": "Core - INFO 2450: Communication and Technology. ",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                3
+              ],
+              "courses": [
+                [
+                  360989
+                ],
+                [
+                  351675,
+                  352898,
+                  354593,
+                  358565,
+                  358578,
+                  358589,
+                  358592,
+                  359460,
+                  360995,
+                  361468,
+                  362957,
+                  362976,
+                  364529,
+                  365928,
+                  366983,
+                  367429,
+                  368973,
+                  370219,
+                  370763,
+                  370809,
+                  371471
+                ]
+              ]
+            },
+            "Data Science": {
+              "description": "Core – INFO 2950: Introduction to Data Science. ",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                3
+              ],
+              "courses": [
+                [
+                  358808
+                ],
+                [
+                  352898,
+                  353163,
+                  353448,
+                  353457,
+                  353501,
+                  358529,
+                  358565,
+                  358578,
+                  358589,
+                  358592,
+                  359460,
+                  364529,
+                  364588,
+                  364949,
+                  365657,
+                  365789,
+                  365928,
+                  366043,
+                  366237,
+                  366997,
+                  367628,
+                  368323,
+                  368546,
+                  369207,
+                  369514,
+                  369785,
+                  370059,
+                  370219,
+                  370464,
+                  370665,
+                  370809,
+                  371471
+                ]
+              ]
+            },
+            "Digital Culture and Production": {
+              "description": "Core - INFO 3561: Computing Cultures. ",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                3
+              ],
+              "courses": [
+                [
+                  359460
+                ],
+                [
+                  350933,
+                  352898,
+                  354593,
+                  354881,
+                  358551,
+                  358565,
+                  361468,
+                  362654,
+                  363542,
+                  363681,
+                  364136,
+                  364529,
+                  364902,
+                  365350,
+                  365610,
+                  365611,
+                  365928,
+                  367375,
+                  370148,
+                  370769,
+                  370809
+                ]
+              ]
+            },
+            "Information Ethics, Law, and Policy": {
+              "description": "Core - INFO 1200: Information Ethics, Law, and Policy or INFO 1260: Choices and Consequences in Computing",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                3
+              ],
+              "courses": [
+                [
+                  366630,
+                  370603
+                ],
+                [
+                  351538,
+                  351890,
+                  352898,
+                  355262,
+                  358565,
+                  358578,
+                  359460,
+                  364529,
+                  364949,
+                  365490,
+                  365657,
+                  365928,
+                  366043,
+                  367628,
+                  368323,
+                  368546,
+                  369207,
+                  369968,
+                  370763,
+                  370769,
+                  370809,
+                  371471
+                ]
+              ]
+            },
+            "Interactive Technologies": {
+              "description": "Core - INFO 4120 or INFO 4320",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                3
+              ],
+              "courses": [
+                [
+                  363542,
+                  365657
+                ],
+                [
+                  353163,
+                  358529,
+                  358565,
+                  358592,
+                  358601,
+                  363681,
+                  364529,
+                  364588,
+                  365611,
+                  366043,
+                  366870,
+                  366997,
+                  367112,
+                  367429,
+                  369514,
+                  369914,
+                  370440,
+                  370458
+                ]
+              ]
+            },
+            "Networks, Crowds, and Markets": {
+              "description": "Core - INFO 2040: Networks",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                3
+              ],
+              "courses": [
+                [
+                  359378
+                ],
+                [
+                  350429,
+                  350827,
+                  350842,
+                  350862,
+                  352158,
+                  353448,
+                  355617,
+                  358565,
+                  358578,
+                  358589,
+                  358592,
+                  359460,
+                  364529,
+                  364949,
+                  365608,
+                  365790,
+                  365928,
+                  366983,
+                  366997,
+                  368323,
+                  370034,
+                  370809,
+                  371479
+                ]
+              ]
+            },
+            "UX (User Experience)": {
+              "description": "Core - INFO 2450: Communication and Technology",
+              "counting": "courses",
+              "perSlotMinCount": [
+                1,
+                3
+              ],
+              "courses": [
+                [
+                  360989
+                ],
+                [
+                  351670,
+                  354593,
+                  358601,
+                  360995,
+                  361468,
+                  362654,
+                  362976,
+                  363542,
+                  364529,
+                  365350,
+                  365610,
+                  365611,
+                  365928,
+                  366043,
+                  366870,
+                  367112,
+                  367429,
+                  368973,
+                  369514,
+                  369914,
+                  370148,
+                  370458
+                ]
+              ]
+            }
+          }
         },
         {
-          "name": "3 Courses from the following",
-          "description": "ORIE 3150, ORIE 3300, ORIE 4150, ORIE 4580, ORIE 4810, ORIE 4850, ORIE 5100, ORIE 5120, ORIE 5770",
-          "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors",
+          "name": "Elective",
+          "description": "Choose one course from any concentration",
+          "source": "http://infosci.cornell.edu/node/801",
+          "checkerWarning": "We do not check that the course is from a concentration.",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
-            3
+            1
           ],
           "courses": [
             [
-              351710,
-              351723,
-              352140,
-              352187,
-              353194
+              350641,
+              350933,
+              351482,
+              352898,
+              353592,
+              354593,
+              358551,
+              358565,
+              358578,
+              358638,
+              358646,
+              358808,
+              358814,
+              358815,
+              358828,
+              358833,
+              358834,
+              359378,
+              359460,
+              360384,
+              360989,
+              360995,
+              360998,
+              361468,
+              362654,
+              362810,
+              362886,
+              362957,
+              362976,
+              363118,
+              363542,
+              363856,
+              364058,
+              364529,
+              364530,
+              364531,
+              364949,
+              365350,
+              365375,
+              365376,
+              365490,
+              365608,
+              365609,
+              365610,
+              365611,
+              365657,
+              365658,
+              365664,
+              365928,
+              366043,
+              366044,
+              366237,
+              366355,
+              366457,
+              366630,
+              366863,
+              366870,
+              366885,
+              366983,
+              367004,
+              367054,
+              367111,
+              367112,
+              367113,
+              367177,
+              367178,
+              367375,
+              367429,
+              367430,
+              367628,
+              367629,
+              367731,
+              367819,
+              367913,
+              367945,
+              368229,
+              368243,
+              368244,
+              368323,
+              368506,
+              368518,
+              368546,
+              368783,
+              368794,
+              369133,
+              369135,
+              369140,
+              369203,
+              369206,
+              369207,
+              369209,
+              369210,
+              369265,
+              369373,
+              369390,
+              369398,
+              369405,
+              369514,
+              369517,
+              369751,
+              369759,
+              369914,
+              369932,
+              369968,
+              370120,
+              370133,
+              370219,
+              370440,
+              370458,
+              370459,
+              370464,
+              370574,
+              370578,
+              370603,
+              370763,
+              370800,
+              371138,
+              371177,
+              371206,
+              371227,
+              371259,
+              371543
             ]
           ]
         }
@@ -128614,7 +128993,7 @@
           ]
         },
         {
-          "name": "Four 3000- or 4000-level MATH courses",
+          "name": "Four 3000 or 4000 level MATH courses",
           "description": "Students must complete four 3000- or 4000-level MATH courses. Only courses with a MATH prefix or cross-listed as such are allowed; no substitutions.",
           "source": "https://math.cornell.edu/minor",
           "fulfilledBy": "courses",
@@ -128771,8 +129150,8 @@
       ],
       "requirements": [
         {
-          "name": "3 courses from the following",
-          "description": "ENGRD 2700, ORIE 3300, ORIE 3310, ORIE 3500, ORIE 3510, ORIE 4580",
+          "name": "OR/MS Minor Requirement 1",
+          "description": "At least 3 courses from the following list. ",
           "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -128790,8 +129169,8 @@
           ]
         },
         {
-          "name": "Three 3000 level or higher ORIE courses",
-          "description": "Any ORIE courses at the 3000 level or higher.",
+          "name": "OR/MS Minor Requirement 2",
+          "description": "Any ORIE courses at the 3000 level or higher including those above.",
           "source": "https://www.orie.cornell.edu/orie/programs/undergraduate-programs/ore-minors",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -128800,16 +129179,11 @@
           "courses": [
             [
               351710,
-              351723,
-              351742,
-              351755,
               351771,
-              351777,
               352140,
               352155,
               352158,
               352163,
-              352187,
               352192,
               352214,
               353163,
@@ -128832,6 +129206,26 @@
               353363,
               353366,
               353370,
+              353385,
+              353750,
+              353751,
+              353755,
+              353757,
+              353760,
+              353762,
+              353780,
+              353783,
+              353787,
+              353788,
+              353789,
+              353790,
+              353792,
+              353793,
+              353794,
+              353795,
+              353798,
+              353799,
+              353801,
               353802,
               353803,
               353805,
@@ -128840,43 +129234,62 @@
               358529,
               358530,
               358531,
+              358532,
               358537,
+              358548,
               359475,
               359479,
               359480,
               361274,
+              361501,
               361503,
               361505,
               361506,
               361510,
               361512,
+              361834,
               362279,
               362280,
+              363251,
+              365202,
               365388,
               365597,
               365816,
               366072,
               366074,
+              366877,
               367408,
               367723,
               367833,
+              367838,
               367927,
               367928,
               367929,
               367930,
+              368490,
               368507,
               368508,
               368703,
               368707,
               368727,
+              368736,
+              368969,
               369131,
+              369200,
               369218,
+              369388,
               369518,
+              369747,
               369748,
+              369750,
               369941,
+              369942,
+              370105,
               370605,
+              370815,
               371068,
-              371169
+              371169,
+              371430
             ]
           ]
         }
@@ -137979,12 +138392,13 @@
       "requirements": [
         {
           "name": "18 Credits in Psychology",
-          "description": "A total of 18 credits in psychology. First-year seminars or AP courses cannot be counted towards the credit requirementsIt is strongly recommended that students take at least one course from each of the following three areas of psychology: PCD, BEN, S&P.",
+          "description": "A total of 18 credits in psychology. First-year seminars or AP courses cannot be counted towards the credit requirements. It is strongly recommended that students take at least one course from each of the following three areas of psychology: PCD, BEN, S&P.",
           "source": "https://psychology.cornell.edu/minor",
           "fulfilledBy": "credits",
           "perSlotMinCount": [
             18
           ],
+          "disallowTransferCredit": true,
           "courses": [
             [
               351438,

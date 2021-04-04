@@ -53,7 +53,7 @@ const deaMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'DEA 5560'
     ),
     fulfilledBy: 'courses',
-    perSlotMinCount: [1],
+    perSlotMinCount: [2],
   },
 ];
 

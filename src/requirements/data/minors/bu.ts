@@ -47,9 +47,9 @@ const buMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Introduction to Management',
-    description: 'Choose one: AEM 1200, ILRID 1700, NCC 5540',
+    description: 'Choose one: AEM 1200, HADM 1810, ILRID 1700, NCC 5540',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business/',
-    checker: includesWithSingleRequirement('AEM 1200', 'ILRID 1700', 'NCC 5540'),
+    checker: includesWithSingleRequirement('AEM 1200', 'HADM 1810', 'ILRID 1700', 'NCC 5540'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
   },
