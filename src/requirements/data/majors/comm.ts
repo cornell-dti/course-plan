@@ -1,33 +1,45 @@
 import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import {
+  courseIsFWS,
+  includesWithSingleRequirement,
+  includesWithSubRequirements,
+} from '../checkers-common';
 
 const commRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Core Courses',
-    description: 'COMM 1101, COMM 1300, COMM 2010, COMM 2310, COMM 2820',
+    description: 'COMM 1101, COMM 1300, COMM 2010, COMM 2310',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSubRequirements(
       ['COMM 1101'],
       ['COMM 1300'],
       ['COMM 2010'],
-      ['COMM 2310'],
-      ['COMM 2820']
+      ['COMM 2310']
     ),
     fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 1, 1],
+    perSlotMinCount: [1, 1, 1, 1],
   },
   {
-    name: 'Focus Area',
-    description: '6 credits/2 courses in COMM 2200, COMM 2450, COMM 2760, or COMM 2850',
+    name: 'Data Literacy Courses',
+    description:
+      'COMM 2820 and a 3-4 credit introductory statistics class, such as PAM 2100, AEM 2100, ILRST 2100',
+    source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
+    checker: includesWithSubRequirements(['COMM 2820'], ['PAM 2100', 'AEM 2100', 'ILRST 2100']),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1, 1],
+  },
+  {
+    name: 'Introduction to Concentration Courses',
+    description: '2 courses in COMM 2200, COMM 2450, COMM 2760, or COMM 2850',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSingleRequirement('COMM 2200', 'COMM 2450', 'COMM 2760', 'COMM 2850'),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
   },
   {
-    name: 'Focus Area Upper Level',
+    name: 'Upper-Level Concentration Courses',
     description:
-      'Students must take six credits (two courses) of coursework within their declared Focus Area at the 3100+ level.',
+      'Students must take six credits (two courses) of coursework within their declared Concentration at the 3100+ level',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSingleRequirement(
       'COMM 31**',
@@ -47,11 +59,10 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [6],
   },
   {
-    name: 'Upper-Level COMM',
+    name: 'Upper-Level COMM Electives',
     description:
-      'Students must complete 9 additional credit hours at the 3100+ level.* Electives can come from any of the focus area lists. ' +
-      'A student may elect to fulfill 3 of these credit hours by taking a third focus area introductory course. ' +
-      'A maximum of 3 credits in either 4970 or 4990 (combined) can be counted toward the upper level major requirements. Refer to the Course and Time Roster for the most up-to-date offerings. ',
+      'Students must complete 9 additional credit hours at the 3100+ level. Electives can come from any of the Concentrations. ' +
+      'Refer to the Course and Time Roster for the most up-to-date offerings. ',
     source: 'https://communication.cals.cornell.edu/undergraduate-program/major-requirements/',
     checker: includesWithSingleRequirement(
       'COMM 2179',
@@ -98,7 +109,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'COMM 4990'
     ),
     fulfilledBy: 'credits',
-    perSlotMinCount: [15],
+    perSlotMinCount: [9],
   },
   {
     name: 'Communication Practica',
@@ -131,7 +142,18 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'SOC 3010'
     ),
     fulfilledBy: 'courses',
+    allowCourseDoubleCounting: true,
     perSlotMinCount: [1],
+  },
+  {
+    name: 'First-Year Writing Seminars (FWS)',
+    description:
+      'One First-Year Writing Workshop (FWS). (A score of 5 on the AP English Language exam is accepted.)',
+    source: 'https://as.cornell.edu/education/degree-requirements',
+    checker: [courseIsFWS],
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3],
+    allowCourseDoubleCounting: true,
   },
 ];
 

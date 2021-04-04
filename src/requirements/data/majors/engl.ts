@@ -28,6 +28,7 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [40],
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'Pre-1800',
@@ -62,9 +63,9 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
         );
       },
     ],
+    allowCourseDoubleCounting: true,
     fulfilledBy: 'credits',
     perSlotMinCount: [8],
-    allowCourseDoubleCounting: true,
   },
   {
     // TODO: Checker should be more specific
@@ -75,7 +76,6 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'credits',
     perSlotMinCount: [12],
     checkerWarning: 'We do not check courses meet the concentration guideline',
-    allowCourseDoubleCounting: true,
     checker: [
       (course: Course): boolean => {
         const { subject, catalogNbr } = course;
