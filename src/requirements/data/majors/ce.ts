@@ -122,7 +122,7 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'This course (not physics or chemistry) may be selected from a list available in Hollister 221 or approved by petition. ',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19826',
-    fulfilledBy: 'self-check'
+    fulfilledBy: 'self-check',
   },
 ];
 
