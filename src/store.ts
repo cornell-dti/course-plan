@@ -64,6 +64,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     currentFirebaseUser: null!,
     userName: { firstName: '', middleName: '', lastName: '' },
     onboardingData: {
+      gradYear: 2020,
       college: '',
       major: [],
       minor: [],

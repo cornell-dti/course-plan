@@ -37,6 +37,19 @@
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
           <label class="onboarding-label"
+            >Graduation Year<span class="onboarding-required-star">*</span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="semesters"
+              :choice="semesters"
+              :cannotBeRemoved="true"
+              @on-select="selectGraduationYear"
+            />
+          </div>
+        </div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
+          <label class="onboarding-label"
             >College<span class="onboarding-required-star">*</span></label
           >
           <div class="onboarding-selectWrapper">
@@ -91,6 +104,7 @@
 import Vue, { PropType } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import { clickOutside } from '@/utilities';
+import store from '@/store';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -112,6 +126,7 @@ export default Vue.extend({
       middleName: this.userName.middleName,
       lastName: this.userName.lastName,
       placeholderText,
+      gradYear: this.onboardingData.gradYear,
       collegeAcronym: this.onboardingData.college,
       majorAcronyms,
       minorAcronyms,
@@ -146,11 +161,15 @@ export default Vue.extend({
       });
       return minors;
     },
+    semesters(): readonly number[] {
+      return store.state.semesters.map(sem => sem.year);
+    },
   },
   methods: {
     updateBasic() {
       this.$emit(
         'updateBasic',
+        this.gradYear,
         this.collegeAcronym,
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
@@ -173,6 +192,10 @@ export default Vue.extend({
           this.majorAcronyms[x] = '';
         }
       }
+    },
+    selectGraduationYear(year: number) {
+      this.gradYear = year;
+      this.updateBasic();
     },
     selectCollege(acronym: string) {
       this.collegeAcronym = acronym;
