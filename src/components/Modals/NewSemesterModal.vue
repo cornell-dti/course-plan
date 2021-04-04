@@ -12,6 +12,7 @@
     <new-semester
       :currentSemesters="semesters"
       :isEdit="false"
+      :isSemesterAdd="true"
       :isCourseModelSelectingSemester="false"
       @duplicateSemester="disableButton"
       @updateSemProps="updateSemProps"
