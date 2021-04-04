@@ -112,5 +112,5 @@ export const onboardingDataCollection = db
     },
   });
 
-export const whitelistCollection = db.collection('betaWhitelist');
+export const whitelistCollection = db.collection('cpWhitelist');
 export const landingEmailsCollection = db.collection('landingEmails');

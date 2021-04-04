@@ -220,7 +220,7 @@ export default Vue.extend({
       fb.auth.signOut();
       // eslint-disable-next-line no-alert
       alert(
-        'Sorry, but you do not have access currently.\nPlease sign up below for email updates on when the platform is available and for a chance to test the platform early.'
+        "Sorry, but you do not have access currently.\nPlease check back April 5 for CoursePlan's public release."
       );
     },
 
