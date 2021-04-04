@@ -5,7 +5,7 @@ import {
   includesWithSingleRequirement,
 } from '../checkers-common';
 
-const ormsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
+const orMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'OR/MS Minor Requirement 1',
     description: 'At least 3 courses from the following list. ',
@@ -49,4 +49,4 @@ const ormsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   },
 ];
 
-export default ormsMinorRequirements;
+export default orMinorRequirements;

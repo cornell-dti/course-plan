@@ -37,7 +37,7 @@ import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
-import isstMinorRequirements from './minors/isst';
+import infoENMinorRequirements from './minors/infoEN';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
 import psychMinorRequirements from './minors/psych';
@@ -222,9 +222,9 @@ const json: RequirementsJson = {
       requirements: deaMinorRequirements,
     },
     ISST: {
-      name: 'Industrial Systems and Information Technology',
+      name: 'Information Science [Engineering]',
       schools: ['EN'],
-      requirements: isstMinorRequirements,
+      requirements: infoENMinorRequirements,
     },
     MATH: {
       name: 'Mathematics',

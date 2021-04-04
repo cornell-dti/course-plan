@@ -18,6 +18,7 @@ const psychMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [18],
+    disallowTransferCredit: true,
   },
 ];
 

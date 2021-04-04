@@ -16,7 +16,7 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [1, 1],
   },
   {
-    name: 'Four 3000- or 4000-level MATH courses',
+    name: 'Four 3000 or 4000 level MATH courses',
     description:
       'Students must complete four 3000- or 4000-level MATH courses. ' +
       'Only courses with a MATH prefix or cross-listed as such are allowed; no substitutions.',
