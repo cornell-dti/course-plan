@@ -13,12 +13,7 @@
         </p>
       </div>
       <div class="col-3 footer">
-        <a
-          class="footer"
-          target="_blank"
-          href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be"
-          >Privacy Policy</a
-        >
+        <a class="footer" target="_blank" href="/policy">Privacy Policy</a>
       </div>
     </div>
   </div>
