@@ -1,11 +1,11 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" :style="{ zIndex: modalIsOpen ? 1 : 2 }">
     <div
       class="navbar-iconWrapper hamburger full-opacity-on-hover"
       @click="menuOpen = !menuOpen"
     ></div>
     <div class="navbar-top">
-      <div class="navbar-iconWrapper course-plan-logo">
+      <div class="navbar-iconWrapper course-plan-logo no-hover">
         <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
       </div>
       <button
@@ -55,9 +55,12 @@ import { GTagEvent } from '@/gtag';
 export default Vue.extend({
   props: {
     isOpeningRequirements: { type: Boolean, required: true },
+    modalIsOpen: { type: Boolean, required: true },
   },
   data() {
-    return { menuOpen: false };
+    return {
+      menuOpen: false,
+    };
   },
   methods: {
     logout() {
@@ -190,6 +193,10 @@ $mobile-navbar-height: 4.5rem;
 
 .mobile {
   display: none;
+}
+
+.no-hover {
+  cursor: default;
 }
 
 @media only screen and (max-width: $medium-breakpoint) {
