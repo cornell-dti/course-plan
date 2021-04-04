@@ -44,7 +44,7 @@ if (process.argv[2] === '--dry-run') {
     userColleges.forEach(doc => {
       const old = doc.data().colleges;
       const colleges = transformData(old);
-      doc.ref.set({ colleges });
+      doc.ref.update({ colleges });
     });
   });
 }
