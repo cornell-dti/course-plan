@@ -151,6 +151,8 @@ import CustomFooter from '@/components/Footer.vue';
 
 import { GTagLoginEvent } from '@/gtag';
 import * as fb from '@/firebaseConfig';
+import store from '@/store';
+import { checkNotNull } from '@/utilities';
 
 type Data = {
   loginForm: { email: string; password: string };
@@ -183,9 +185,14 @@ export default Vue.extend({
       fb.auth
         .signInWithPopup(provider)
         .then(user => {
-          if (user == null) {
+          if (user == null || user.user == null) {
             return;
           }
+          const simplifiedUser = {
+            displayName: checkNotNull(user.user.displayName),
+            email: checkNotNull(user.user.email),
+          };
+          store.commit('setCurrentFirebaseUser', simplifiedUser);
           this.performingRequest = false;
           this.$router.push('/');
           GTagLoginEvent(this.$gtag, 'Google');
