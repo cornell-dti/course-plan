@@ -45,7 +45,7 @@ type FirestoreTransferClass = {
 };
 type FirestoreOnboardingUserData = {
   readonly class: readonly FirestoreTransferClass[];
-  readonly gradYear: number;
+  readonly gradYear: string;
   readonly colleges: readonly FirestoreCollegeOrMajorOrMinor[];
   readonly majors: readonly FirestoreCollegeOrMajorOrMinor[];
   readonly minors: readonly FirestoreCollegeOrMajorOrMinor[];
@@ -99,7 +99,7 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
 }
 
 type AppOnboardingData = {
-  readonly gradYear: number;
+  readonly gradYear: string;
   readonly college: string;
   readonly major: readonly string[];
   readonly minor: readonly string[];

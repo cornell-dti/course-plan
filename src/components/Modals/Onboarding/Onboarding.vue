@@ -154,7 +154,7 @@ export default Vue.extend({
       this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
     },
     updateBasic(
-      gradYear: number,
+      gradYear: string,
       college: string,
       major: readonly string[],
       minor: readonly string[],

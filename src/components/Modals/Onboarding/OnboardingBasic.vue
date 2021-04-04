@@ -42,7 +42,7 @@
           <div class="onboarding-selectWrapper">
             <onboarding-basic-single-dropdown
               :availableChoices="semesters"
-              :choice="semesters"
+              :choice="gradYear"
               :cannotBeRemoved="true"
               @on-select="selectGraduationYear"
             />
@@ -104,7 +104,6 @@
 import Vue, { PropType } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import { clickOutside } from '@/utilities';
-import store from '@/store';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -161,8 +160,15 @@ export default Vue.extend({
       });
       return minors;
     },
-    semesters(): readonly number[] {
-      return store.state.semesters.map(sem => sem.year);
+    semesters(): Readonly<Record<string, string>> {
+      const semsDict: Record<string, string> = {};
+      const yearRange = 6;
+      const curYear = new Date().getFullYear();
+      for (let i = -yearRange; i <= yearRange; i += 1) {
+        const yr = String(curYear + i);
+        semsDict[yr] = yr;
+      }
+      return semsDict;
     },
   },
   methods: {
@@ -193,7 +199,7 @@ export default Vue.extend({
         }
       }
     },
-    selectGraduationYear(year: number) {
+    selectGraduationYear(year: string) {
       this.gradYear = year;
       this.updateBasic();
     },
