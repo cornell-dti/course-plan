@@ -13,7 +13,7 @@
         class="fixed"
         :class="{
           'd-none': shouldShowAllCourses,
-          'position-fixed': isSafari && modalIsOpen,
+          'position-static': isSafari && modalIsOpen,
         }"
         data-intro-group="req-tooltip"
         :data-intro="getCoursesTooltipText()"
