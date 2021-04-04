@@ -13,14 +13,15 @@
           <div class="col">
             <div class="row no-gutters top-section">
               <h1 class="plan-head mt-5">
-                Schedule Smarter <br />
-                Plan Ahead
+                <div>Schedule Smarter</div>
+                <div>Plan Ahead</div>
               </h1>
             </div>
             <div class="row no-gutters top-section">
-              <p class="plan-subhead">
-                Introducing the newest and easiest way to plan courses at Cornell
-              </p>
+              <div class="plan-subhead">
+                <div>Introducing the newest and easiest</div>
+                <div>way to plan courses at Cornell</div>
+              </div>
             </div>
             <div class="row justify-content-center">
               <div class="col top-section">
@@ -38,6 +39,7 @@
             <img
               style="position: relative"
               class="laptop"
+              aria-label="laptop"
               src="@/assets/images/landing_new/laptop.svg"
               alt="laptop preview"
             />
@@ -50,19 +52,34 @@
         <div class="row new no-gutters">
           <div class="col tasks">
             <figure class="figure">
-              <img src="@/assets/images/landing_new/icon1.svg" class="sub--task" alt="checklist" />
+              <img
+                src="@/assets/images/landing_new/icon1.svg"
+                class="sub--task"
+                alt="checklist"
+                aria-label="checklist"
+              />
               <figcaption class="sub">Fully personalized to track your requirements</figcaption>
             </figure>
           </div>
           <div class="col tasks">
             <figure class="figure">
-              <img src="@/assets/images/landing_new/icon2.svg" class="sub--task" alt="browser" />
+              <img
+                src="@/assets/images/landing_new/icon2.svg"
+                class="sub--task"
+                alt="browser"
+                aria-label="browser"
+              />
               <figcaption class="sub">Customizable interface to view your courses</figcaption>
             </figure>
           </div>
           <div class="col tasks">
             <figure class="figure">
-              <img src="@/assets/images/landing_new/icon3.svg" class="sub--task" alt="Network" />
+              <img
+                src="@/assets/images/landing_new/icon3.svg"
+                class="sub--task"
+                alt="Network"
+                aria-label="network"
+              />
               <figcaption class="sub">Built-in system to check your progress</figcaption>
             </figure>
           </div>
@@ -72,6 +89,7 @@
                 src="@/assets/images/landing_new/icon4.svg"
                 class="sub--task"
                 alt="Starred comment"
+                aria-label="starred comment"
               />
               <figcaption class="sub">View course information all in one place</figcaption>
             </figure>
@@ -86,6 +104,7 @@
             class="hide preview"
             src="@/assets/images/landing_new/img1.svg"
             alt="Dragging preview"
+            aria-label="dragging preview"
             style="position: absolute"
           />
           <div class="comment comment-drag">
@@ -100,7 +119,7 @@
 
       <!-- SEMESTERS -->
       <div class="container-fluid p-0 center">
-        <div class="semester phonepad row no-gutters float-right">
+        <div class="semester phonepad row no-gutters">
           <div class="comment comment-sem">
             <h1 class="head">Plan Your Semesters</h1>
             <p class="sub-text">
@@ -112,6 +131,7 @@
             class="hide schedule"
             src="@/assets/images/landing_new/img2.svg"
             alt="Plan preview"
+            aria-label="plan preview"
           />
         </div>
       </div>
@@ -259,13 +279,13 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 
 .top-sec {
-  background-image: url('../assets/images/landing_new/top_rect.svg');
+  background-image: url('~@/assets/images/landing_new/top_rect.svg');
   background-repeat: no-repeat;
   background-size: 100vw 900px;
   overflow: hidden;
-  padding-top: 100px;
+  padding-top: 6.25rem;
 
-  @media (max-width: 1154px) {
+  @media (max-width: $large-breakpoint) {
     padding-top: 0;
   }
 }
@@ -282,16 +302,16 @@ export default Vue.extend({
   max-width: 100%;
 }
 .top-bar {
-  padding: 29px 0px 0px 104px;
+  padding: 1.75rem 0 0 6.5rem;
 
-  @media (max-width: 1154px) {
-    padding: 29px 104px 0px 104px;
+  @media (max-width: $large-breakpoint) {
+    padding: 1.75rem 6.5rem 0px 6.5rem;
     display: flex;
     flex-direction: column;
   }
 }
 .top-section {
-  @media (max-width: 1154px) {
+  @media (max-width: $large-breakpoint) {
     display: flex;
     justify-content: center;
     text-align: center;
@@ -302,32 +322,32 @@ export default Vue.extend({
   color: $emGreen;
   font-weight: 550;
   border-color: $emGreen;
-  padding: 10px 30px;
+  padding: 0.625rem 2rem;
   border-radius: 6px;
 }
 .plan-head {
-  padding-bottom: 30px;
-  font-size: 60px;
-  line-height: 60px;
-  color: white;
+  padding-bottom: 2rem;
+  font-size: 72px;
+  line-height: 72px;
+  color: $white;
 }
 .plan-subhead {
-  padding-bottom: 30px;
+  padding-bottom: 2rem;
   font-style: normal;
-  font-weight: 100;
-  font-size: 25px;
-  line-height: 35px;
-  color: white;
+  font-weight: 10;
+  font-size: 32px;
+  line-height: 34px;
+  color: $white;
 }
 input {
   width: 100%;
   height: 100%;
   border-radius: 6px;
   border-color: $emGreen;
-  padding: 15px 30px;
+  padding: 1rem 2rem;
 }
 .email {
-  padding: 20px;
+  padding: 1.25rem;
   @media (max-width: 767px) {
     width: 350px;
     max-width: 350px;
@@ -339,9 +359,10 @@ input {
   background-color: #539d9b;
   border-radius: 6px;
   border-color: $emGreen;
+  font-size: 20px;
   width: 100%;
-  padding: 15px 30px;
-  color: white;
+  padding: 1rem 2rem;
+  color: $white;
   &:hover,
   &:focus,
   &:active {
@@ -351,16 +372,16 @@ input {
 
   &--top {
     width: 13.5rem;
-    @media (max-width: 1154px) {
+    @media (max-width: $large-breakpoint) {
       margin-bottom: 1rem;
     }
   }
 }
 .email-top {
-  padding: 20px 20px 20px 20px;
+  padding: 1.25rem;
 }
 .image-wrapper {
-  @media (max-width: 1154px) {
+  @media (max-width: $large-breakpoint) {
     display: none;
   }
   &--drag {
@@ -373,7 +394,7 @@ input {
 .laptop {
   position: relative;
   width: 900px;
-  @media (max-width: 1154px) {
+  @media (max-width: $large-breakpoint) {
     max-width: inherit;
   }
 }
@@ -383,25 +404,26 @@ input {
 }
 
 .new {
-  padding: 50px 104px 96px 104px;
-  color: black;
-  @media (min-width: 1155px) {
-    margin-bottom: -120px;
+  padding: 3.25rem 6.5rem 6rem 6.5rem;
+  color: $black;
+  display: flex;
+  @media (max-width: $large-breakpoint) {
+    flex-direction: column;
   }
 }
 .new-1 {
   text-align: left;
-  padding: 120px 0px 59px 104px;
+  padding: 7.5rem 0 3.75rem 6.5rem;
 }
 .tasks {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  color: black;
+  padding: 0.625rem;
+  color: $black;
 }
 .tasks-wrapper {
-  @media (max-width: 1154px) {
+  @media (max-width: $large-breakpoint) {
     max-width: 100%;
     flex: unset;
   }
@@ -415,11 +437,11 @@ figure {
   font-weight: normal;
   font-size: 32px;
   text-align: left;
-  color: black;
+  color: $black;
   margin-top: 32px;
   max-width: 425px;
-  @media (max-width: 1154px) {
-    text-align: left;
+  @media (max-width: $large-breakpoint) {
+    text-align: center;
   }
 }
 
@@ -427,25 +449,25 @@ figure {
   font-weight: normal;
   font-size: 24px;
   text-align: center;
-  color: black;
+  color: $black;
   margin: 0;
 
   &--task {
     vertical-align: middle;
-    padding-bottom: 38px;
+    padding-bottom: 2.5rem;
   }
 }
 .head {
   font-weight: 600;
-  line-height: 38px;
+  line-height: 42px;
   font-size: 40px;
-  color: black;
+  color: $black;
   padding-bottom: 0px;
 }
 .head-center {
   font-weight: 600;
   font-size: 40px;
-  color: black;
+  color: $black;
   padding-bottom: 0px;
 }
 
@@ -453,65 +475,57 @@ figure {
   opacity: 0;
 }
 
-.women {
-  @media (max-width: 1274px) {
-    width: 62vw;
-  }
-}
 .drag {
-  padding: 104px 104px 0px 104px;
-  @media (max-width: 1154px) {
-    padding-left: 64px;
+  padding: 6.25rem 6.25rem 0 6.25rem;
+  @media (max-width: $large-breakpoint) {
+    padding-left: 4rem;
   }
 }
 .preview {
   position: relative;
   left: -50px;
   margin-right: -32px;
-  width: 900px;
-  @media (max-width: 1274px) {
-    margin-left: 0px;
-    width: 62vw;
-  }
+  width: 700px;
 }
 .schedule {
-  position: relative;
+  justify-self: flex-end;
+  flex-shrink: 0;
+
   width: 1050px;
   margin-left: -100px;
-  margin-right: -280px;
-
-  @media (max-width: 1274px) {
-    margin-right: 0;
-    width: 50vw;
-  }
+  margin-right: -290px;
 }
 .comment {
-  padding: 170px 50px 250px 50px;
-  text-align: left;
-  @media (max-width: 1154px) {
+  @media (max-width: $large-breakpoint) {
     text-align: center;
     max-width: 100%;
     flex: unset;
   }
   &-drag {
-    margin-left: 750px;
-    @media (max-width: 1154px) {
+    padding: 12.75rem 0rem 15.75rem 3.25rem;
+    margin-left: 600px;
+    @media (max-width: $large-breakpoint) {
       margin-left: 0;
     }
   }
   &-sem {
+    padding: 8.75rem 3.25rem 15.75rem 3.25rem;
     margin: 0;
     margin-top: 200px;
-    margin-right: -50px;
-    @media (max-width: 1154px) {
+    flex-shrink: 2;
+    @media (max-width: $large-breakpoint) {
       margin-right: 0;
     }
   }
 }
 .semester {
-  padding: 0px 0px 0px 104px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  margin-top: -4rem;
   overflow: hidden;
-  @media (max-width: 1154px) {
+  @media (max-width: $large-breakpoint) {
     display: flex;
     justify-content: center;
   }
@@ -523,10 +537,10 @@ figure {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 180px 100px 104px 100px;
+  padding: 11.25rem 6.25rem 6.5rem 6.25rem;
 
   @media (max-width: 720px) {
-    padding: 40px 30px 40px 30px;
+    padding: 2.5rem 2rem 2.5rem 2rem;
   }
 }
 input:focus::placeholder {
@@ -542,23 +556,22 @@ p {
 .container.inside {
   max-width: 600px;
 }
-@media (max-width: 1154px) {
+@media (max-width: $large-breakpoint) {
   img.hide {
     display: none;
   }
   .top-bar {
-    padding: 50px;
+    padding: 3rem;
   }
   .new {
-    padding: 0px 50px 100px 50px;
+    padding: 0px 3rem 6.25rem 3rem;
   }
   .phonepad {
-    padding: 50px;
-    text-align: center;
+    padding: 3rem;
   }
   .comment {
     text-align: center;
-    padding: 100px 30px 100px 30px;
+    padding: 6.25rem 2rem 6.25rem 2rem;
   }
   .input {
     width: 200px;
