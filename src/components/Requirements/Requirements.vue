@@ -11,7 +11,10 @@
       <!-- loop through reqs array of req objects -->
       <div
         class="fixed"
-        :class="{ 'd-none': shouldShowAllCourses }"
+        :class="{
+          'd-none': shouldShowAllCourses,
+          'position-static': isSafari && modalIsOpen,
+        }"
         data-intro-group="req-tooltip"
         :data-intro="getCoursesTooltipText()"
         data-disable-interaction="1"
@@ -32,6 +35,7 @@
             @activateMajor="activateMajor"
             @activateMinor="activateMinor"
             @onShowAllCourses="onShowAllCourses"
+            @modal-open="modalToggled"
           />
         </div>
       </div>
@@ -119,6 +123,7 @@ type Data = {
   shouldShowAllCourses: boolean;
   showAllPage: number;
   tourStep: number;
+  modalIsOpen: boolean;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -145,6 +150,7 @@ export default Vue.extend({
       shouldShowAllCourses: false,
       showAllPage: 0,
       tourStep: 0,
+      modalIsOpen: false,
     };
   },
   watch: {
@@ -188,6 +194,25 @@ export default Vue.extend({
     },
     pageText(): string {
       return `Page ${this.showAllPage + 1}/${this.numPages}`;
+    },
+    isSafari(): boolean {
+      const htmlElement = window.HTMLElement as unknown;
+      type windowType = {
+        safari: {
+          pushNotification: boolean;
+        };
+      };
+      const initWindow = window as unknown;
+      const typedWindow = initWindow as windowType;
+      return (
+        /constructor/i.test(htmlElement as string) ||
+        (function (p) {
+          return p.toString() === '[object SafariRemoteNotification]';
+        })(
+          !typedWindow.safari ||
+            (typeof typedWindow.safari !== 'undefined' && typedWindow.safari.pushNotification)
+        )
+      );
     },
   },
   methods: {
@@ -271,6 +296,10 @@ export default Vue.extend({
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
+    modalToggled(isOpen: boolean) {
+      this.$emit('modal-open', isOpen);
+      this.modalIsOpen = isOpen;
+    },
   },
 });
 </script>
@@ -292,6 +321,9 @@ export default Vue.extend({
   height: 100%;
   width: 25rem;
   background-color: $white;
+}
+.position-static {
+  position: static;
 }
 .fixed {
   position: fixed;

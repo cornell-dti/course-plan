@@ -272,15 +272,19 @@ export default Vue.extend({
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.isCourseModalOpen = true;
+      this.$emit('modal-open', true);
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
+      this.$emit('modal-open', false);
     },
     closeEditModal() {
       this.isEditSemesterOpen = false;
+      this.$emit('modal-open', false);
     },
     closeDeleteModal() {
       this.isDeleteSemesterOpen = false;
+      this.$emit('modal-open', false);
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
@@ -362,6 +366,7 @@ export default Vue.extend({
     },
     openEditSemesterModal() {
       this.isEditSemesterOpen = true;
+      this.$emit('modal-open', true);
     },
     editSemester(seasonInput: FirestoreSemesterType, yearInput: number) {
       editSemester(

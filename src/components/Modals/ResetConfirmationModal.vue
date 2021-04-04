@@ -40,6 +40,7 @@ export default Vue.extend({
   methods: {
     closeCurrentModal(): void {
       this.$emit('input', false);
+      this.$emit('modal-open', false);
     },
     resetClicked(): void {
       this.closeCurrentModal();
@@ -91,6 +92,15 @@ export default Vue.extend({
   }
   &--flex {
     display: flex;
+  }
+}
+
+@media only screen and (max-width: $small-medium-breakpoint) {
+  .content-confirmation {
+    width: 100%;
+  }
+  .text-width {
+    width: 100%;
   }
 }
 </style>

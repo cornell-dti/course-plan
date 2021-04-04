@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" :style="{ zIndex: modalIsOpen ? 1 : 2 }">
     <div
       class="navbar-iconWrapper hamburger full-opacity-on-hover"
       @click="menuOpen = !menuOpen"
@@ -55,9 +55,12 @@ import { GTagEvent } from '@/gtag';
 export default Vue.extend({
   props: {
     isOpeningRequirements: { type: Boolean, required: true },
+    modalIsOpen: { type: Boolean, required: true },
   },
   data() {
-    return { menuOpen: false };
+    return {
+      menuOpen: false,
+    };
   },
   methods: {
     logout() {
