@@ -117,6 +117,13 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
   },
+  {
+    name: 'Additional Science Course',
+    description:
+      'This course (not physics or chemistry) may be selected from a list available in Hollister 221 or approved by petition. ',
+    source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19826',
+    fulfilledBy: 'self-check'
+  },
 ];
 
 export default civilRequirements;
