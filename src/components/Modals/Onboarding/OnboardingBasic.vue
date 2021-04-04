@@ -44,7 +44,7 @@
               :availableChoices="semesters"
               :choice="gradYear"
               :cannotBeRemoved="true"
-              :scrollToIndex="6"
+              :scrollBottomToIndex="9"
               @on-select="selectGraduationYear"
             />
           </div>
