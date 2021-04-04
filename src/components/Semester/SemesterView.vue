@@ -251,6 +251,7 @@ export default Vue.extend({
     min-width: 9rem;
     color: $white;
     border: none;
+    font-size: 16px;
   }
 
   &-settings {

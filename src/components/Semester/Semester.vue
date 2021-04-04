@@ -404,7 +404,7 @@ export default Vue.extend({
     border-radius: 8px;
     min-height: 2.5rem;
     min-width: 9rem;
-    color: #ffffff;
+    color: $white;
     border: none;
     position: absolute;
     top: -3.3rem;
