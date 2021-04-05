@@ -127,6 +127,7 @@ export default Vue.extend({
       default: null,
     },
     isEdit: { type: Boolean, default: false },
+    isSemesterAdd: { type: Boolean, default: false },
     year: { type: Number, default: 0 },
     type: { type: String as PropType<FirestoreSemesterType>, default: '' },
     isCourseModelSelectingSemester: { type: Boolean, default: false },
@@ -286,6 +287,10 @@ export default Vue.extend({
         this.seasonText = '';
       } else {
         this.yearText = 0;
+      }
+
+      if (this.isSemesterAdd) {
+        this.$emit('updateSemProps', this.seasonPlaceholder, Number(this.yearPlaceholder));
       }
     },
     resetDropdowns() {

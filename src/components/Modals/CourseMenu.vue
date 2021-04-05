@@ -52,7 +52,7 @@
         class="courseMenu-section"
         @mouseover="setDisplayEditCourseCredits(true)"
         @mouseleave="setDisplayEditCourseCredits(false)"
-        v-if="getCreditRange[0] != getCreditRange[1]"
+        v-if="getCreditRange && getCreditRange[0] != getCreditRange[1]"
       >
         <img
           v-if="isLeft"
