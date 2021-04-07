@@ -39,7 +39,7 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal(): void {
-      this.$emit('input', false);
+      this.$emit('update:modelValue', false);
       this.$emit('modal-open', false);
     },
     resetClicked(): void {
