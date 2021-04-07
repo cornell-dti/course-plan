@@ -15,8 +15,9 @@
       <draggable
         class="draggable-requirements-courses"
         :group="{ name: 'draggable-semester-courses', put: false }"
-        :value="courses"
+        :modelValue="courses"
         :clone="cloneCourse"
+        item-key="code"
         @start="onDrag"
         @end="onDrop"
       >

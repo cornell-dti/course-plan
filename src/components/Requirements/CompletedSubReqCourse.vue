@@ -3,6 +3,7 @@
     <reset-confirmation-modal
       :isTestReq="isTransferCredit"
       :reqName="courseTaken.code"
+      :value="false"
       v-model="resetConfirmVisible"
       @close-reset-modal="onResetConfirmClosed"
       @modal-open="modalToggled"

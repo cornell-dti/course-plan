@@ -71,8 +71,9 @@
           </div>
         </div>
         <draggable
-          :value="showAllCourses.shownCourses"
+          :modelValue="showAllCourses.shownCourses"
           :clone="cloneCourse"
+          item-key="code"
           :group="{ name: 'draggable-semester-courses', put: false }"
         >
           <template #item="{ element }">
