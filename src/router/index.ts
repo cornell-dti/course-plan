@@ -1,4 +1,4 @@
-import { Router, createRouter, createWebHashHistory } from 'vue-router';
+import { Router, createRouter, createWebHistory } from 'vue-router';
 
 import Login from '@/containers/Login.vue';
 import Dashboard from '@/containers/Dashboard.vue';
@@ -7,7 +7,7 @@ import Policy from '@/containers/Policy.vue';
 import store from '../store';
 
 const router: Router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [
     {
       path: '/login',
@@ -28,7 +28,7 @@ const router: Router = createRouter({
       component: Policy,
     },
     {
-      path: '/*',
+      path: '/:pathMatch(.*)*',
       name: '404',
       component: Page404,
     },
