@@ -25,7 +25,7 @@
           v-for="(fullName, key) in availableChoices"
           :key="key"
           class="onboarding-dropdown-content-item"
-          ref="scrollRef"
+          :ref="`scroll-ref-${key}`"
           @click="onSelect(key)"
         >
           {{ fullName }}
@@ -89,8 +89,10 @@ export default defineComponent({
       // scroll the bottom of the graduation year dropdown to scrollBottomToIndex
       if (!contentShown && this.scrollBottomToIndex > 0) {
         this.$nextTick(() => {
-          const el = (this.$refs.scrollRef as Element[])[this.scrollBottomToIndex];
-          el.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+          (this.$refs[`scroll-ref-${this.scrollBottomToIndex}`] as Element).scrollIntoView({
+            behavior: 'auto',
+            block: 'nearest',
+          });
         });
       }
     },
