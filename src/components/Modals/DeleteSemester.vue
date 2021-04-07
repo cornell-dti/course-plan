@@ -19,11 +19,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import trashIcon from '@/assets/images/trash-white.svg';
 
-export default Vue.extend({
+export default defineComponent({
   components: { FlexibleModal },
   props: {
     deleteSemType: { type: String, required: true },

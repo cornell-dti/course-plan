@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
 import introJs from 'intro.js';
 import SemesterView from '@/components/Semester/SemesterView.vue';
@@ -113,7 +113,7 @@ tour.setOption('exitOnOverlayClick', 'false');
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 let listenerUnsubscriber = (): void => {};
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     BottomBar,
     NavBar,
@@ -167,7 +167,7 @@ export default Vue.extend({
       }
     });
   },
-  destroyed() {
+  unmounted() {
     window.removeEventListener('resize', this.resizeEventHandler);
     listenerUnsubscriber();
   },

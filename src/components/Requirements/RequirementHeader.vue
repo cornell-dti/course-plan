@@ -137,11 +137,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 
-export default Vue.extend({
+export default defineComponent({
   components: { DropDownArrow },
   props: {
     reqIndex: { type: Number, required: true },

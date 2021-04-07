@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
 
 import fall from '@/assets/images/fallEmoji.svg';
@@ -120,7 +120,7 @@ type Data = {
 const yearScrollIndex = 4;
 const yearRange = 6;
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     currentSemesters: {
       type: Array as PropType<readonly FirestoreSemester[] | null>,

@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 
 import { clickOutside } from '@/utilities';
 import DropDownArrow from '@/components/DropDownArrow.vue';
@@ -74,7 +74,7 @@ type Data = {
   emGreen: string;
 };
 
-export default Vue.extend({
+export default defineComponent({
   components: { DropDownArrow },
   props: {
     selectedID: { type: String, required: true },

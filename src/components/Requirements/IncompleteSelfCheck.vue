@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
 import { clickOutside } from '@/utilities';
 import store from '@/store';
@@ -51,7 +51,7 @@ type Data = {
   isCourseModalOpen: boolean;
 };
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     NewSelfCheckCourseModal,
   },

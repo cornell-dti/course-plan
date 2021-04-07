@@ -22,12 +22,12 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import store from '@/store';
 
-export default Vue.extend({
+export default defineComponent({
   components: { FlexibleModal, NewSemester },
   props: {
     deleteSemType: { type: String as PropType<FirestoreSemesterType>, required: true },

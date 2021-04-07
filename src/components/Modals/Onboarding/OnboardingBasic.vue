@@ -100,7 +100,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import { clickOutside } from '@/utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
@@ -108,7 +108,7 @@ import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
 const placeholderText = 'Select one';
 
-export default Vue.extend({
+export default defineComponent({
   components: { OnboardingBasicMultiDropdown, OnboardingBasicSingleDropdown },
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },

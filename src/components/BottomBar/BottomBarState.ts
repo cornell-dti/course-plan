@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { reactive } from 'vue';
 import { GTag, GTagEvent } from '../../gtag';
 import { checkNotNull } from '../../utilities';
 
@@ -13,12 +13,10 @@ export type BottomBarState = {
   isExpanded: boolean;
 };
 
-const vueForBottomBar: BottomBarState & Vue = new Vue({
-  data: {
-    bottomCourses: [] as AppBottomBarCourse[],
-    bottomCourseFocus: 0,
-    isExpanded: false,
-  },
+const vueForBottomBar = reactive({
+  bottomCourses: [] as AppBottomBarCourse[],
+  bottomCourseFocus: 0,
+  isExpanded: false,
 });
 
 export const immutableBottomBarState: Readonly<BottomBarState> = vueForBottomBar;

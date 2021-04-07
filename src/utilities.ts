@@ -91,16 +91,16 @@ export function allocateAllSubjectColor(
 
 export const clickOutside = {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  bind(el: any, binding: any, vnode: any): void {
-    el.event = (event: Event) => {
+  beforeMount(el: any, binding: any): void {
+    el.clickOutsideEvent = (event: Event) => {
       if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event, binding.arg);
+        binding.value(event, el);
       }
     };
-    document.body.addEventListener('click', el.event);
+    document.body.addEventListener('click', el.clickOutsideEvent);
   },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  unbind(el: any): void {
-    document.body.removeEventListener('click', el.event);
+  unmounted(el: any): void {
+    document.body.removeEventListener('click', el.clickOutsideEvent);
   },
 };

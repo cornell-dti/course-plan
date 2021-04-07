@@ -60,29 +60,28 @@
           class="draggable-semester-courses"
           group="draggable-semester-courses"
           v-model="coursesForDraggable"
+          item-key="uniqueID"
           :style="{ height: courseContainerHeight + 'rem' }"
           @start="onDragStart"
           @sort="onDropped"
           @end="onDragEnd"
         >
-          <div
-            v-for="course in coursesForDraggable"
-            :key="course.uniqueID"
-            class="semester-courseWrapper"
-          >
-            <course
-              :courseObj="course"
-              :isReqCourse="false"
-              :compact="compact"
-              :active="activatedCourse.uniqueID === course.uniqueID"
-              class="semester-course"
-              :semesterIndex="semesterIndex + 1"
-              @delete-course="deleteCourse"
-              @color-course="colorCourse"
-              @course-on-click="courseOnClick"
-              @edit-course-credit="editCourseCredit"
-            />
-          </div>
+          <template #item="{ element }">
+            <div class="semester-courseWrapper">
+              <course
+                :courseObj="element"
+                :isReqCourse="false"
+                :compact="compact"
+                :active="activatedCourse.uniqueID === element.uniqueID"
+                class="semester-course"
+                :semesterIndex="semesterIndex + 1"
+                @delete-course="deleteCourse"
+                @color-course="colorCourse"
+                @course-on-click="courseOnClick"
+                @edit-course-credit="editCourseCredit"
+              />
+            </div>
+          </template>
         </draggable>
         <add-course-button :compact="compact" @click="openCourseModal" />
       </div>
@@ -98,7 +97,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
@@ -122,7 +121,9 @@ import {
 } from '@/global-firestore-data';
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
-export default Vue.extend({
+type ComponentRef = { $el: HTMLDivElement };
+
+export default defineComponent({
   components: {
     draggable,
     AddCourseButton,
@@ -179,13 +180,13 @@ export default Vue.extend({
     this.$el.addEventListener('touchmove', this.dragListener, {
       passive: false,
     });
-    const droppable = (this.$refs.droppable as Vue).$el as HTMLDivElement;
+    const droppable = (this.$refs.droppable as ComponentRef).$el;
     droppable.addEventListener('dragenter', this.onDragEnter);
     droppable.addEventListener('dragleave', this.onDragExit);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);
-    const droppable = (this.$refs.droppable as Vue).$el as HTMLDivElement;
+    const droppable = (this.$refs.droppable as ComponentRef).$el;
     droppable.removeEventListener('dragenter', this.onDragEnter);
     droppable.removeEventListener('dragleave', this.onDragExit);
   },

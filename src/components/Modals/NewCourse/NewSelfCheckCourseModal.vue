@@ -35,14 +35,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 import store from '@/store';
 import { getFilter } from '@/requirements/requirement-frontend-utils';
 
-export default Vue.extend({
+export default defineComponent({
   components: { CourseSelector, FlexibleModal, NewSemester },
   props: {
     subReqName: { type: String, required: true },

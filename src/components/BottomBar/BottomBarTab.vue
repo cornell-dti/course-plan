@@ -18,9 +18,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     color: { type: String, required: true },
     courseObj: { type: Object as PropType<AppBottomBarCourse>, required: true },

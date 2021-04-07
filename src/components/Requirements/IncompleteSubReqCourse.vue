@@ -20,32 +20,30 @@
         @start="onDrag"
         @end="onDrop"
       >
-        <div
-          v-for="(course, index) in coursesWithoutRequirementID"
-          :key="index"
-          class="requirements-courseWrapper"
-        >
-          <course
-            :courseObj="course"
-            :isReqCourse="true"
-            :compact="true"
-            :active="false"
-            class="requirements-course"
-          />
-        </div>
+        <template #item="{ element }">
+          <div class="requirements-courseWrapper">
+            <course
+              :courseObj="element"
+              :isReqCourse="true"
+              :compact="true"
+              :active="false"
+              class="requirements-course"
+            />
+          </div>
+        </template>
       </draggable>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import { incrementUniqueID } from '@/global-firestore-data';
 import { GTagEvent } from '@/gtag';
 
-export default Vue.extend({
+export default defineComponent({
   components: { draggable, Course },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
@@ -55,7 +53,7 @@ export default Vue.extend({
       scrollable: false,
     };
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);
   },
   props: {
@@ -69,26 +67,26 @@ export default Vue.extend({
     displayDescription: { type: Boolean, required: true },
   },
   computed: {
-    addCourseLabel() {
+    addCourseLabel(): string {
       let label = 'Add Course';
       if (this.subReq.fulfilledBy === 'courses') {
         label = `Add Course ${this.subReqCourseId + 1}`;
       }
       return label;
     },
-    defaultNumberofLoadingCards() {
+    defaultNumberofLoadingCards(): number {
       return 4;
     },
-    loadingCoursePixelWidth() {
+    loadingCoursePixelWidth(): string {
       return '160';
     },
-    loadingCoursePixelHeight() {
+    loadingCoursePixelHeight(): string {
       return '34';
     },
-    seeAll() {
+    seeAll(): string {
       return 'See all >';
     },
-    coursesWithoutRequirementID() {
+    coursesWithoutRequirementID(): readonly FirestoreSemesterCourse[] {
       return this.courses.map(({ requirementID: _, ...rest }) => rest);
     },
   },

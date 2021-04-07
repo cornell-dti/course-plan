@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import Vuex, { Store } from 'vuex';
+import { Store } from 'vuex';
 
 import * as fb from './firebaseConfig';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
@@ -9,8 +8,6 @@ import getCurrentSeason, {
   getCurrentYear,
   allocateAllSubjectColor,
 } from './utilities';
-
-Vue.use(Vuex);
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 

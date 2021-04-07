@@ -45,11 +45,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     /** Mapping from acronym to full name */
     availableChoices: {

@@ -10,6 +10,7 @@
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
     "sourceMap": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
@@ -30,7 +31,6 @@
     ]
   },
   "include": [
-    "src/**/*.js",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",

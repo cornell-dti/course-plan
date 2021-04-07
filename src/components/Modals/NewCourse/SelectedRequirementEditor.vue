@@ -70,13 +70,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
-export default Vue.extend({
+export default defineComponent({
   components: { RequirementsDropdown },
   props: {
     editMode: { type: Boolean, required: true },

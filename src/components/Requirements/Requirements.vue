@@ -75,17 +75,19 @@
           :clone="cloneCourse"
           :group="{ name: 'draggable-semester-courses', put: false }"
         >
-          <div v-for="(courseData, index) in showAllCourses.shownCourses" :key="index">
-            <div class="mt-3">
-              <course
-                :courseObj="courseData"
-                :compact="false"
-                :active="false"
-                :isReqCourse="true"
-                class="requirements-course"
-              />
+          <template #item="{ element }">
+            <div>
+              <div class="mt-3">
+                <course
+                  :courseObj="element"
+                  :compact="false"
+                  :active="false"
+                  :isReqCourse="true"
+                  class="requirements-course"
+                />
+              </div>
             </div>
-          </div>
+          </template>
         </draggable>
       </div>
     </div>
@@ -94,8 +96,7 @@
 
 <script lang="ts">
 import draggable from 'vuedraggable';
-import Vue from 'vue';
-import VueCollapse from 'vue2-collapse';
+import { defineComponent } from 'vue';
 import introJs from 'intro.js';
 
 import Course from '@/components/Course/Course.vue';
@@ -106,8 +107,6 @@ import clipboard from '@/assets/images/clipboard.svg';
 import warning from '@/assets/images/warning.svg';
 import store from '@/store';
 import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-firestore-data';
-
-Vue.use(VueCollapse);
 
 export type ShowAllCourses = {
   readonly name: string;
@@ -136,7 +135,7 @@ tour.setOption('exitOnOverlayClick', 'false');
 // show 24 courses per page of the see all menu
 const maxSeeAllCoursesPerPage = 24;
 
-export default Vue.extend({
+export default defineComponent({
   components: { draggable, Course, DropDownArrow, RequirementView },
   props: {
     startTour: { type: Boolean, required: true },
@@ -206,9 +205,7 @@ export default Vue.extend({
       const typedWindow = initWindow as windowType;
       return (
         /constructor/i.test(htmlElement as string) ||
-        (function (p) {
-          return p.toString() === '[object SafariRemoteNotification]';
-        })(
+        (p => p.toString() === '[object SafariRemoteNotification]')(
           !typedWindow.safari ||
             (typeof typedWindow.safari !== 'undefined' && typedWindow.safari.pushNotification)
         )

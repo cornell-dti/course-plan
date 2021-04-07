@@ -110,7 +110,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Confirmation.vue';
 import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
@@ -121,7 +121,7 @@ import { GTagEvent } from '@/gtag';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 
-export default Vue.extend({
+export default defineComponent({
   components: { Confirmation, NewSemesterModal, Semester, SemesterCaution },
   props: {
     compact: { type: Boolean, required: true },

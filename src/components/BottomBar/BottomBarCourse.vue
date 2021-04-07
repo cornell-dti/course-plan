@@ -10,11 +10,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import BottomBarCourseInfo from '@/components/BottomBar/BottomBarCourseInfo.vue';
 import BottomBarCourseReview from '@/components/BottomBar/BottomBarCourseReview.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: { BottomBarCourseInfo, BottomBarCourseReview },
   props: {
     courseObj: { type: Object as PropType<AppBottomBarCourse>, required: true },
