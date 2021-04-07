@@ -61,7 +61,7 @@
           group="draggable-semester-courses"
           v-model="coursesForDraggable"
           item-key="uniqueID"
-          :style="{ height: courseContainerHeight + 'rem' }"
+          :componentData="{ style: { height: courseContainerHeight + 'rem' } }"
           @start="onDragStart"
           @sort="onDropped"
           @end="onDragEnd"
