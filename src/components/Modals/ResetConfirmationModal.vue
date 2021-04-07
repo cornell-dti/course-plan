@@ -1,8 +1,8 @@
 <template>
-  <div class="reset-modal" :class="{ 'modal--block': value }">
+  <div class="reset-modal" :class="{ 'modal--block': modelValue }">
     <flexible-modal
       title="Reset Requirement"
-      :class="[{ 'modal--block': value }, 'modal-width']"
+      :class="[{ 'modal--block': modelValue }, 'modal-width']"
       content-class="content-confirmation"
       left-button-text="No"
       right-button-text="Yes"
@@ -35,7 +35,7 @@ export default defineComponent({
   props: {
     reqName: { type: String, required: true },
     isTestReq: { type: Boolean, required: true },
-    value: { type: Boolean, required: true },
+    modelValue: { type: Boolean, required: true },
   },
   methods: {
     closeCurrentModal(): void {
