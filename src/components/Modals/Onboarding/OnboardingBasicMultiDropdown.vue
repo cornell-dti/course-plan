@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import OnboardingBasicSingleDropdown from '@/components/Modals/Onboarding/OnboardingBasicSingleDropdown.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: { OnboardingBasicSingleDropdown },
   props: {
     /** Mapping from acronym to full name */

@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import CourseBaseTooltip from '@/components/Course/CourseBaseTooltip.vue';
 import store from '@/store';
 
@@ -53,7 +53,7 @@ const getCourseCautions = (course: FirestoreSemesterCourse): CourseCautions => {
   return { noMatchedRequirement, typicallyOfferedWarning, isCourseDuplicate };
 };
 
-export default Vue.extend({
+export default defineComponent({
   components: { CourseBaseTooltip },
   props: {
     course: { type: Object as PropType<FirestoreSemesterCourse>, required: true },

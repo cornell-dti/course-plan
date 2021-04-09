@@ -154,14 +154,14 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 import { GTagEvent } from '@/gtag';
 
 const placeholderText = 'Select one';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },

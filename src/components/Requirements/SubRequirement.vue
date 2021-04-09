@@ -145,7 +145,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import CompletedSubReqCourse from '@/components/Requirements/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCourse.vue';
 import IncompleteSelfCheck from '@/components/Requirements/IncompleteSelfCheck.vue';
@@ -199,7 +199,7 @@ const generateSubReqIncompleteCourses = (
   }));
 };
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     CompletedSubReqCourse,
     DropDownArrow,

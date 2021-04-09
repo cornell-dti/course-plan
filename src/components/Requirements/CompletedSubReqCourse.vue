@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import ResetConfirmationModal from '@/components/Modals/ResetConfirmationModal.vue';
 import store from '@/store';
@@ -48,7 +48,7 @@ import getCurrentSeason, { getCurrentYear } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
-export default Vue.extend({
+export default defineComponent({
   components: { ReqCourse, ResetConfirmationModal },
   props: {
     subReqCourseId: { type: Number, required: true },

@@ -22,12 +22,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import store from '@/store';
 
-export default Vue.extend({
+export default defineComponent({
   components: { FlexibleModal, NewSemester },
   data() {
     return { isDisabled: false, season: '', year: 0 };

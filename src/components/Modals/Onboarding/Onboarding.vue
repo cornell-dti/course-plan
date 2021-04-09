@@ -90,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
@@ -100,7 +100,7 @@ import store from '@/store';
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
 
-export default Vue.extend({
+export default defineComponent({
   components: { OnboardingBasic, OnboardingReview, OnboardingTransfer },
   props: {
     isEditingProfile: { type: Boolean, required: true },

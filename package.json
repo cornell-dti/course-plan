@@ -2,7 +2,6 @@
   "name": "vue-app",
   "version": "0.1.0",
   "private": true,
-  "license": "AGPL-3.0",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --mode production",
@@ -23,16 +22,16 @@
     "@types/intro.js": "^3.0.0",
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
+    "core-js": "^3.6.5",
     "firebase": "^8.3.1",
     "intro.js": "^3.3.1",
     "node-fetch": "^2.6.1",
-    "skeleton-loader-vue": "^1.0.8",
-    "vue": "^2.6.12",
-    "vue-gtag": "^1.11.0",
-    "vue-router": "^3.5.1",
+    "vue": "^3.0.0",
+    "vue-gtag-next": "^1.14.0",
+    "vue-router": "^4.0.6",
     "vue2-collapse": "^1.0.15",
-    "vuedraggable": "^2.24.3",
-    "vuex": "^3.6.2"
+    "vuedraggable": "^4.0.0",
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
@@ -42,9 +41,11 @@
     "@types/node-fetch": "^2.5.8",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
+    "@vue/cli-plugin-babel": "^4.5.12",
     "@vue/cli-plugin-eslint": "^4.5.12",
     "@vue/cli-plugin-typescript": "^4.5.12",
     "@vue/cli-service": "^4.5.12",
+    "@vue/compiler-sfc": "^3.0.11",
     "@vue/eslint-config-airbnb": "^5.3.0",
     "@vue/eslint-config-typescript": "^7.0.0",
     "babel-eslint": "^10.1.0",
@@ -58,7 +59,7 @@
     "sass-loader": "^8.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.5",
-    "vti": "0.0.24",
+    "vti": "0.1.1",
     "vue-template-compiler": "^2.6.12"
   },
   "prettier": {
@@ -74,6 +75,8 @@
   },
   "browserslist": [
     "> 1%",
-    "last 2 versions"
-  ]
+    "last 2 versions",
+    "not dead"
+  ],
+  "license": "AGPL-3.0"
 }

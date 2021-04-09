@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
@@ -90,7 +90,7 @@ type PartitionedRequirementsProgress = {
   readonly completed: readonly RequirementFulfillment[];
 };
 
-export default Vue.extend({
+export default defineComponent({
   components: { RequirementHeader, SubRequirement },
   props: {
     req: { type: Object as PropType<GroupedRequirementFulfillmentReport>, required: true },

@@ -72,9 +72,9 @@
             v-if="displayOptions.year.shown"
           >
             <div
-              v-for="yearChoice in years"
+              v-for="(yearChoice, index) in years"
               :key="yearChoice"
-              ref="yearRef"
+              :ref="`year-ref-${index}`"
               class="newSemester-dropdown-content-item"
               @click="selectYear(yearChoice)"
             >
@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
 
 import fall from '@/assets/images/fallEmoji.svg';
@@ -120,7 +120,7 @@ type Data = {
 const yearScrollIndex = 4;
 const yearRange = 6;
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     currentSemesters: {
       type: Array as PropType<readonly FirestoreSemester[] | null>,
@@ -228,8 +228,9 @@ export default Vue.extend({
       // scroll to the middle of the year div after visible (on the next tick)
       if (!contentShown && type === 'year') {
         this.$nextTick(() => {
-          const el = (this.$refs.yearRef as Element[])[yearScrollIndex];
-          el.scrollIntoView({ behavior: 'auto' });
+          (this.$refs[`year-ref-${yearScrollIndex}`] as Element).scrollIntoView({
+            behavior: 'auto',
+          });
         });
       }
     },

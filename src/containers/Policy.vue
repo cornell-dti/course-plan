@@ -228,11 +228,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
 import TopBar from '@/components/TopBar.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: { TopBar },
 });
 </script>

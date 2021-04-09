@@ -144,7 +144,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import firebase from 'firebase/app';
 
 import CustomFooter from '@/components/Footer.vue';
@@ -161,7 +161,7 @@ type Data = {
   errorMsg?: string;
 };
 
-export default Vue.extend({
+export default defineComponent({
   components: { CustomFooter },
   data(): Data {
     return {

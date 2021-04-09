@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import BottomBarTab from '@/components/BottomBar/BottomBarTab.vue';
 import {
   immutableBottomBarState,
@@ -69,7 +69,7 @@ import {
 } from '@/components/BottomBar/BottomBarState';
 import { GTagEvent } from '@/gtag';
 
-export default Vue.extend({
+export default defineComponent({
   components: { BottomBarTab },
   data() {
     return {

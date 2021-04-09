@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 
 const joinOrNAString = (arr: readonly string[]): string =>
@@ -84,7 +84,7 @@ const cleanCourseDistributionsArray = (distributions: readonly string[]): readon
   return matches;
 };
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     courseObj: { type: Object as PropType<AppBottomBarCourse>, required: true },
   },

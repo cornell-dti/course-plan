@@ -111,11 +111,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
 import { GTagEvent } from '@/gtag';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     getCreditRange: {
       type: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,

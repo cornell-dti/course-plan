@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { reactive } from 'vue';
 import { GTag, GTagEvent } from '../../gtag';
 import { checkNotNull } from '../../utilities';
 
@@ -13,12 +13,10 @@ export type BottomBarState = {
   isExpanded: boolean;
 };
 
-const vueForBottomBar: BottomBarState & Vue = new Vue({
-  data: {
-    bottomCourses: [] as AppBottomBarCourse[],
-    bottomCourseFocus: 0,
-    isExpanded: false,
-  },
+const vueForBottomBar = reactive({
+  bottomCourses: [] as AppBottomBarCourse[],
+  bottomCourseFocus: 0,
+  isExpanded: false,
 });
 
 export const immutableBottomBarState: Readonly<BottomBarState> = vueForBottomBar;
@@ -75,24 +73,26 @@ export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
 
   const bottomBarCourse = firestoreSemesterCourseToBottomBarCourse(course);
   const [subject, number] = bottomBarCourse.code.split(' ');
-  getReviews(subject, number).then(({ classRating, classDifficulty, classWorkload }) => {
-    bottomBarCourse.overallRating = classRating;
-    bottomBarCourse.difficulty = classDifficulty;
-    bottomBarCourse.workload = classWorkload;
+  Promise.all([
+    getReviews(subject, number).then(({ classRating, classDifficulty, classWorkload }) => {
+      bottomBarCourse.overallRating = classRating;
+      bottomBarCourse.difficulty = classDifficulty;
+      bottomBarCourse.workload = classWorkload;
+    }),
+    getDetailedInformationForBottomBar(course.lastRoster, subject, number).then(
+      ({ description, prereqs, enrollment, lectureTimes, instructors, distributions }) => {
+        bottomBarCourse.description = description;
+        bottomBarCourse.prereqs = prereqs;
+        bottomBarCourse.enrollment = enrollment;
+        bottomBarCourse.lectureTimes = lectureTimes;
+        bottomBarCourse.instructors = instructors;
+        bottomBarCourse.distributions = distributions;
+      }
+    ),
+  ]).then(() => {
+    vueForBottomBar.bottomCourses = [bottomBarCourse, ...vueForBottomBar.bottomCourses];
+    vueForBottomBar.bottomCourseFocus = 0;
   });
-  getDetailedInformationForBottomBar(course.lastRoster, subject, number).then(
-    ({ description, prereqs, enrollment, lectureTimes, instructors, distributions }) => {
-      bottomBarCourse.description = description;
-      bottomBarCourse.prereqs = prereqs;
-      bottomBarCourse.enrollment = enrollment;
-      bottomBarCourse.lectureTimes = lectureTimes;
-      bottomBarCourse.instructors = instructors;
-      bottomBarCourse.distributions = distributions;
-    }
-  );
-
-  vueForBottomBar.bottomCourses = [bottomBarCourse, ...vueForBottomBar.bottomCourses];
-  vueForBottomBar.bottomCourseFocus = 0;
 };
 
 export const toggleBottomBar = (gtag?: GTag): void => {

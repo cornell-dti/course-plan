@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import {
@@ -42,7 +42,7 @@ import {
 } from '@/components/BottomBar/BottomBarState';
 import { clickOutside } from '@/utilities';
 
-export default Vue.extend({
+export default defineComponent({
   components: { CourseCaution, CourseMenu },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },

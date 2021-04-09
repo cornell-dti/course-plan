@@ -25,7 +25,7 @@
           v-for="(fullName, key) in availableChoices"
           :key="key"
           class="onboarding-dropdown-content-item"
-          ref="scrollRef"
+          :ref="`scroll-ref-${key}`"
           @click="onSelect(key)"
         >
           {{ fullName }}
@@ -45,11 +45,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     /** Mapping from acronym to full name */
     availableChoices: {
@@ -89,8 +89,10 @@ export default Vue.extend({
       // scroll the bottom of the graduation year dropdown to scrollBottomToIndex
       if (!contentShown && this.scrollBottomToIndex > 0) {
         this.$nextTick(() => {
-          const el = (this.$refs.scrollRef as Element[])[this.scrollBottomToIndex];
-          el.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+          (this.$refs[`scroll-ref-${this.scrollBottomToIndex}`] as Element).scrollIntoView({
+            behavior: 'auto',
+            block: 'nearest',
+          });
         });
       }
     },
