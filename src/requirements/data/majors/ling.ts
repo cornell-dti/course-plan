@@ -11,7 +11,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Foundation Courses',
     description: 'LING 1101, LING 3302, LING 3303, and LING 3314.',
-    source: 'https://linguistics.cornell.edu/undergraduate',
+    source: 'https://linguistics.cornell.edu/undergraduate#major-requirements:',
     checker: includesWithSubRequirements(
       ['LING 1101'],
       ['LING 3302'],
@@ -24,7 +24,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Additional Courses: 3000 or above',
     description: 'At least 2 additional courses must be at the 3000 level or above.',
-    source: 'https://linguistics.cornell.edu/undergraduate',
+    source: 'https://linguistics.cornell.edu/undergraduate#major-requirements:',
     checker: [
       (course: Course): boolean =>
         ifCodeMatch(course.subject, 'LING') &&
@@ -38,7 +38,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Additional Courses: 2000 or above',
     description: 'At least 3 additional courses must be 2000 level or above.',
-    source: 'https://linguistics.cornell.edu/undergraduate',
+    source: 'https://linguistics.cornell.edu/undergraduate#major-requirements:',
     checker: [
       (course: Course): boolean =>
         ifCodeMatch(course.subject, 'LING') &&
@@ -52,7 +52,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Additional Courses: 1000 or above',
     description: 'At most 1 additional course can be 1000 level or above.',
-    source: 'https://linguistics.cornell.edu/undergraduate',
+    source: 'https://linguistics.cornell.edu/undergraduate#major-requirements:',
     checker: [
       (course: Course): boolean =>
         ifCodeMatch(course.subject, 'LING') &&
@@ -65,7 +65,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Additional Courses: 18 credits',
     description: 'Additional courses must each be 3 credits or more.',
-    source: 'https://linguistics.cornell.edu/undergraduate',
+    source: 'https://linguistics.cornell.edu/undergraduate#major-requirements:',
     checker: [
       (course: Course): boolean =>
         ifCodeMatch(course.subject, 'LING') &&
@@ -80,7 +80,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Ancillary Skills Courses',
     description:
       'Two courses (3 credits or more) must be in areas relevant to specific areas in linguistics.',
-    source: 'https://linguistics.cornell.edu/undergraduate',
+    source: 'https://linguistics.cornell.edu/undergraduate#major-requirements:',
     checker: [
       (course: Course): boolean =>
         !courseMatchesCodeOptions(course, ['LING 1101', 'LING 3302', 'LING 3303', 'LING 3314']),

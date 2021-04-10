@@ -40,6 +40,7 @@ import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
 import infoENMinorRequirements from './minors/infoEN';
+import lingMinorRequirements from './minors/ling';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
 import policyMinorRequirements from './minors/policy';
@@ -238,6 +239,11 @@ const json: RequirementsJson = {
       name: 'Information Science [Engineering]',
       schools: ['EN'],
       requirements: infoENMinorRequirements,
+    },
+    LING: {
+      name: 'Linguistics',
+      schools: ['AS1', 'AS2'],
+      requirements: lingMinorRequirements,
     },
     MATH: {
       name: 'Mathematics',
