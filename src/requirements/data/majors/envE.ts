@@ -138,7 +138,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         majorApproved.some(subject => course.subject?.includes(subject) ?? false),
     ],
-    checkerWarning: 'We do not check that the courses are major approved electives',
+    checkerWarning: 'We do not check that the courses are major approved electives.',
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
   },

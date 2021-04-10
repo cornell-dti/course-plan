@@ -32,7 +32,7 @@ export const courseMatchesCodeOptions = (course: Course, codeOptions: readonly s
   codeOptions.some(code => ifCodeMatch(`${course.subject} ${course.catalogNbr}`, code));
 
 /**
- * Almost colleges have FWS requirements. Instead of writing them from scratch each time, call this
+ * Almost all colleges have FWS requirements. Instead of writing them from scratch each time, call this
  * function.
  *
  * @param course course object with useful information retrived from Cornell courses API.

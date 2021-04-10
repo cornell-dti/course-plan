@@ -28,8 +28,9 @@ import hotelAdminRequirements from './majors/hadm';
 import historyRequirements from './majors/hist';
 import infoRequirements from './majors/info';
 import isstRequirements from './majors/isst';
-import oldIsstRequirements from './majors/oldIsst';
+import lingRequirements from './majors/ling';
 import mechnicalEngineeringRequirements from './majors/me';
+import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
 
 import appliedMathMinorRequirements from './minors/applied-math';
@@ -185,6 +186,11 @@ const json: RequirementsJson = {
       name: 'Information Science, Systems, and Technology [Fall 2020 and after]',
       schools: ['EN'],
       requirements: isstRequirements,
+    },
+    LING: {
+      name: 'Linguistics',
+      schools: ['AS1', 'AS2'],
+      requirements: lingRequirements,
     },
     ME: {
       name: 'Mechanical Engineering',
