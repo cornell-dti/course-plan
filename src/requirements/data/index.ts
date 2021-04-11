@@ -24,6 +24,7 @@ import eceRequirements from './majors/ece';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
 import governmentRequirements from './majors/govt';
+import hdRequirements from './majors/hd';
 import hotelAdminRequirements from './majors/hadm';
 import historyRequirements from './majors/hist';
 import infoRequirements from './majors/info';
@@ -166,6 +167,11 @@ const json: RequirementsJson = {
       name: 'Hotel Administration',
       schools: ['BU'],
       requirements: hotelAdminRequirements,
+    },
+    HD: {
+      name: 'Human Development',
+      schools: ['HE'],
+      requirements: hdRequirements,
     },
     HIST: {
       name: 'History',
