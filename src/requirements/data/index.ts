@@ -38,6 +38,7 @@ import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
+import hdMinorRequirements from './minors/hd';
 import infoENMinorRequirements from './minors/infoEN';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
@@ -227,6 +228,11 @@ const json: RequirementsJson = {
       name: 'Design and Environmental Analysis',
       schools: ['HE'],
       requirements: deaMinorRequirements,
+    },
+    HD: {
+      name: 'Human Development',
+      schools: ['HE'],
+      requirements: hdMinorRequirements,
     },
     ISST: {
       name: 'Information Science [Engineering]',
