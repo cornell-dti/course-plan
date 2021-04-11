@@ -185,9 +185,10 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.human.cornell.edu/sites/default/files/Academics/Registrar/Curriculum%20sheets/2020-2021/HD%20Curriculum%20Sheet%202020-2021.pdf',
     checker: [
-      (course: Course): boolean => course.catalogDistr?.includes('CA-') ?? false,
-      (course: Course): boolean => course.catalogDistr?.includes('HA-') ?? false,
-      (course: Course): boolean => course.catalogDistr?.includes('LA-') ?? false,
+      (course: Course): boolean =>
+        (course.catalogDistr?.includes('CA-') ?? false) ||
+        (course.catalogDistr?.includes('HA-') ?? false) ||
+        (course.catalogDistr?.includes('LA-') ?? false),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
