@@ -14,7 +14,6 @@
     "build:staging": "vue-cli-service build --mode staging",
     "format": "prettier --write \"**/*.{js,ts,css,scss,html,vue}\"",
     "format:check": "prettier --check \"**/*.{js,ts,css,scss,html,vue}\"",
-    "format:check:full": "prettier --check \"**/*.{js,ts,vue,scss,css,html}\"",
     "test": "jest"
   },
   "dependencies": {
