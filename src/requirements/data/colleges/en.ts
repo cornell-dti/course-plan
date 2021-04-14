@@ -5,6 +5,7 @@ import {
   includesWithSubRequirements,
   ifCodeMatch,
   courseIsSpecial,
+  courseIsForeignLang,
 } from '../checkers-common';
 
 const engineeringLiberalArtsDistributions: readonly string[] = [
@@ -22,39 +23,6 @@ const engineeringLiberalArtsDistributions: readonly string[] = [
   'ETM',
   'SSC',
   'GLC',
-];
-
-const FLcourses: readonly string[] = [
-  'ARAB',
-  'BENGL',
-  'BURM',
-  'CHIN',
-  'FREN',
-  'GERST',
-  'GREEK',
-  'HEBRW',
-  'HINDI',
-  'INDO',
-  'ITAL',
-  'JAPAN',
-  'KHMER',
-  'KOREA',
-  'LATIN',
-  'NEPAL',
-  'PERSN',
-  'POLSH',
-  'PORT',
-  'RUSSA',
-  'SANSK',
-  'SINHA',
-  'SPAN',
-  'SWAHL',
-  'TAG',
-  'THAI',
-  'TURK',
-  'VIET',
-  'YORUB',
-  'ZULU',
 ];
 
 const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -138,7 +106,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         engineeringLiberalArtsDistributions.some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ) || FLcourses.some(language => course.subject?.includes(language) ?? false),
+        ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'courses',
     allowCourseDoubleCounting: true,
@@ -174,7 +142,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         engineeringLiberalArtsDistributions.some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ) || FLcourses.some(language => course.subject?.includes(language) ?? false),
+        ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [18],
@@ -193,7 +161,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
           (engineeringLiberalArtsDistributions.some(
             category => course.catalogDistr?.includes(category) ?? false
           ) ||
-            FLcourses.some(language => course.subject?.includes(language) ?? false))
+            courseIsForeignLang(course))
         );
       },
     ],

@@ -1,6 +1,40 @@
 import { Course, RequirementChecker } from '../types';
 import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './constants';
 
+// course codes representing foreign languages
+const FLcourses: readonly string[] = [
+  'ARAB',
+  'BENGL',
+  'BURM',
+  'CHIN',
+  'FREN',
+  'GERST',
+  'GREEK',
+  'HEBRW',
+  'HINDI',
+  'INDO',
+  'ITAL',
+  'JAPAN',
+  'KHMER',
+  'KOREA',
+  'LATIN',
+  'NEPAL',
+  'PERSN',
+  'POLSH',
+  'PORT',
+  'RUSSA',
+  'SANSK',
+  'SINHA',
+  'SPAN',
+  'SWAHL',
+  'TAG',
+  'THAI',
+  'TURK',
+  'VIET',
+  'YORUB',
+  'ZULU',
+];
+
 /**
  * @param courseName name of the course (as a code)
  * @param code code to check courseName (can contain * to denote any value)
@@ -42,6 +76,16 @@ export const courseIsFWS = (course: Course): boolean =>
   course.crseId === FWS_COURSE_ID ||
   course.titleLong.includes('FWS:') ||
   (course.catalogSatisfiesReq?.includes('First-Year Writing Seminar') ?? false);
+
+/**
+ * Call this function to check if a course meets a foreign language requirement, since the 'FL'
+ * category is missing from course data
+ *
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @returns if the course could potentially be a foreign language course
+ */
+export const courseIsForeignLang = (course: Course): boolean =>
+  FLcourses.some(language => course.subject?.includes(language) ?? false);
 
 /**
  * Detects special (synthetic) courses, as defined in requirement-json-generator.ts

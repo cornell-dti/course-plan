@@ -24,6 +24,7 @@ import eceRequirements from './majors/ece';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
 import governmentRequirements from './majors/govt';
+import hdRequirements from './majors/hd';
 import hotelAdminRequirements from './majors/hadm';
 import historyRequirements from './majors/hist';
 import infoRequirements from './majors/info';
@@ -38,6 +39,7 @@ import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
+import hdMinorRequirements from './minors/hd';
 import infoENMinorRequirements from './minors/infoEN';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
@@ -166,6 +168,11 @@ const json: RequirementsJson = {
       schools: ['BU'],
       requirements: hotelAdminRequirements,
     },
+    HD: {
+      name: 'Human Development',
+      schools: ['HE'],
+      requirements: hdRequirements,
+    },
     HIST: {
       name: 'History',
       schools: ['AS1', 'AS2'],
@@ -227,6 +234,11 @@ const json: RequirementsJson = {
       name: 'Design and Environmental Analysis',
       schools: ['HE'],
       requirements: deaMinorRequirements,
+    },
+    HD: {
+      name: 'Human Development',
+      schools: ['HE'],
+      requirements: hdMinorRequirements,
     },
     ISST: {
       name: 'Information Science [Engineering]',

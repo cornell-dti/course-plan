@@ -1,5 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { includesWithSubRequirements } from '../checkers-common';
+import { courseIsForeignLang, includesWithSubRequirements } from '../checkers-common';
 
 const deaRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -102,7 +102,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         ['PBS', 'BIOLS', 'BIONLS', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+        ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
