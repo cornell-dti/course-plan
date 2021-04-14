@@ -32,6 +32,7 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [courseIsFWS],
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
 ];
 

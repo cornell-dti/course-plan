@@ -14,6 +14,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('ENGRD 2020'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
     allowCourseDoubleCounting: true,
   },
   {
@@ -35,6 +36,17 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    slotNames: [
+      'MAE 2250',
+      'MAE 2030',
+      'MAE 3230',
+      'MAE 3240',
+      'MAE 3260',
+      'MAE 3270',
+      'MAE 3780 or ENGRD 2100 or PHYS 3360',
+      'MAE 4272',
+      'MAE 4300',
+    ],
   },
   {
     name: 'M.E. Major Electives',
@@ -116,6 +128,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Mathematics Elective',
@@ -135,6 +148,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     // TODO: update checker based on more information (ex: filter out humanities)
@@ -152,6 +166,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checkerWarning: 'We do not check that the courses are considered technical.',
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
 ];
 

@@ -11,6 +11,7 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
     checkerWarning: 'We do not check which courses you add depending on your graduation year.',
     fulfilledBy: 'courses',
     perSlotMinCount: [4],
+    slotNames: ['Course'],
   },
   {
     name: 'Pre 1800 Classes',
@@ -24,6 +25,7 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   {
     name: 'Seminars',
@@ -38,6 +40,7 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
     checkerWarning: 'We do not check that the courses are seminars.',
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
 ];
 

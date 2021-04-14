@@ -9,6 +9,7 @@ const cogsciMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('COGST 1101', 'COGST 2200'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Lab Requirement',
@@ -17,6 +18,7 @@ const cogsciMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('COGST 4700', 'COGST 4710'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Three Courses at the 3000 or 4000 Level',
@@ -26,6 +28,7 @@ const cogsciMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('COGST 3***', 'COGST 4***'),
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
 ];
 

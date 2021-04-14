@@ -9,6 +9,7 @@ const deaMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['DEA 1050'], ['DEA 1101', 'DEA 1200'], ['DEA 1500']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
+    slotNames: ['DEA 1050', 'DEA 1110/1200', 'DEA 1500'],
   },
   {
     name: 'Upper level DEA thematic courses',
@@ -54,6 +55,7 @@ const deaMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
 ];
 

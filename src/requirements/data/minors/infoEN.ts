@@ -43,9 +43,10 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3],
+        slotNames: ['INFO 2450', 'Elective'],
       },
       'Data Science': {
-        description: 'Core – INFO 2950: Introduction to Data Science. ',
+        description: 'Core - INFO 2950: Introduction to Data Science. ',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['INFO 2950'],
@@ -85,6 +86,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3],
+        slotNames: ['INFO 2950', 'Elective'],
       },
       'Digital Culture and Production': {
         description: 'Core - INFO 3561: Computing Cultures. ',
@@ -120,6 +122,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3],
+        slotNames: ['INFO 3561', 'Elective'],
       },
       'Information Ethics, Law, and Policy': {
         description:
@@ -156,6 +159,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3],
+        slotNames: ['INFO 1200/1260', 'Elective'],
       },
       'Interactive Technologies': {
         description: 'Core - INFO 4120 or INFO 4320',
@@ -187,6 +191,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3],
+        slotNames: ['INFO 4120/4320', 'Elective'],
       },
       'Networks, Crowds, and Markets': {
         description: 'Core - INFO 2040: Networks',
@@ -221,6 +226,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3],
+        slotNames: ['INFO 2040', 'Elective'],
       },
       'UX (User Experience)': {
         description: 'Core - INFO 2450: Communication and Technology',
@@ -254,6 +260,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3],
+        slotNames: ['INFO 2450', 'Elective'],
       },
     },
   },
@@ -266,6 +273,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checkerWarning: 'We do not check that the course is from a concentration.',
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
 ];
 

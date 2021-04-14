@@ -34,6 +34,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['MATH 1910'], ['MATH 1920'], ['MATH 2930', 'MATH 2940']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
+    slotNames: ['MATH 1910', 'MATH 1920', 'MATH 2930 or MATH 2940'],
   },
   {
     name: 'Physics',
@@ -44,6 +45,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['PHYS 1112'], ['PHYS 2213']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['PHYS 1112', 'PHYS 2213'],
   },
   {
     name: 'Chemistry',
@@ -56,6 +58,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('CHEM 2090'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'First-Year Writing Seminars',
@@ -65,6 +68,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [courseIsFWS],
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
   {
     name: 'Computing',
@@ -74,6 +78,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Introduction to Engineering',
@@ -93,6 +98,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [(course: Course): boolean => course.subject === 'ENGRD'],
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
     allowCourseDoubleCounting: true,
   },
   {
@@ -111,6 +117,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     allowCourseDoubleCounting: true,
     perSlotMinCount: [6],
+    slotNames: ['Course'],
   },
   {
     name: 'Liberal Studies Distribution: 3 categories',
@@ -129,6 +136,10 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    slotNames: [
+      'LA',
+      ...engineeringLiberalArtsDistributions.filter(it => it !== 'LA' && it !== 'LAD'),
+    ],
     minNumberOfSlots: 3,
     allowCourseDoubleCounting: true,
   },
@@ -167,6 +178,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
     allowCourseDoubleCounting: true,
   },
 
@@ -228,6 +240,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
     checkerWarning:
       'We do check that your selected course fulfills the guidelines of this requirement.',
     allowCourseDoubleCounting: true,
