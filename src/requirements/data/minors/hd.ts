@@ -15,6 +15,8 @@ const hdMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
   },
+  // TODO - this minor has a double counting issue. Students are allowed to use introductory courses for this elective, but they are not allowed to double count.
+  // However, since all minor reqs are double countable right now, a course used to fulfill the introductory requirement will automatically fulfill this.
   {
     name: 'Human Development: 4 courses',
     description: '4 more Human Development courses.',
