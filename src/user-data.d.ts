@@ -77,6 +77,7 @@ interface CornellCourseRosterCourse {
   readonly catalogComments?: string;
   readonly catalogSatisfiesReq?: string;
   readonly catalogCourseSubfield?: string;
+  readonly catalogAttribute?: string;
   readonly roster: string;
   readonly acadCareer: string;
   readonly acadGroup: string;
