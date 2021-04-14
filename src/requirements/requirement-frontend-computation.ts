@@ -105,8 +105,7 @@ const getTotalCreditsFulfillmentStatistics = (
   }
 
   let minCountFulfilled = 0;
-  let minCountRequired = 120;
-  const courseCodeSet = new Set<string>();
+  const minCountRequired = 120;
   const eligibleCourses =
     college === 'AG'
       ? courses.filter(course => !course.code.startsWith('PE '))
@@ -114,11 +113,6 @@ const getTotalCreditsFulfillmentStatistics = (
 
   eligibleCourses.forEach(course => {
     minCountFulfilled += course.credits;
-    if (courseCodeSet.has(course.code)) {
-      minCountRequired += course.credits;
-    } else {
-      courseCodeSet.add(course.code);
-    }
   });
 
   return {
