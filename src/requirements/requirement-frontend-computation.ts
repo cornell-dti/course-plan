@@ -106,10 +106,7 @@ const getTotalCreditsFulfillmentStatistics = (
 
   let minCountFulfilled = 0;
   const minCountRequired = 120;
-  const eligibleCourses =
-    college === 'AG'
-      ? courses.filter(course => !course.code.startsWith('PE '))
-      : courses.filter(courseIsAllEligible);
+  const eligibleCourses = courses.filter(courseIsAllEligible);
 
   eligibleCourses.forEach(course => {
     minCountFulfilled += course.credits;
