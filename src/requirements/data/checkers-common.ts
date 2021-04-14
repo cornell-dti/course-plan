@@ -53,6 +53,23 @@ export const courseIsSpecial = (course: Course): boolean =>
   course.crseId === CREDITS_COURSE_ID || course.crseId === FWS_COURSE_ID;
 
 /**
+ * This function checks whether a course's maximum number of credits reaches a specified minimum
+ *
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @param minCredits number of credits to check if this course can fulfill
+ * @returns if course can possibly be taken with credits equal to or greater than minCredits
+ */
+export const courseMeetsCreditMinimum = (course: Course, minCredits: number): boolean => {
+  for (let i = 0; i < course.enrollGroups.length; i += 1) {
+    if (course.enrollGroups[i].unitsMaximum >= minCredits) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+/**
  * This function returns a checker that checks whether a course satisfy a single requirement by
  * checking whether the course code appears in the includes array.
  *
