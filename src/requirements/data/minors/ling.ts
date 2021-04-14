@@ -31,7 +31,7 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Additional Course: 3000 or above',
     description:
-      'At least 1 additional linguistics course must be at the 3000 level or above and at least 3 credits.',
+      'At least 1 additional linguistics course must be at the 3000 level or above and at least 3 credits. Language courses do not count.',
     source: 'https://linguistics.cornell.edu/undergraduate#minor-requirements:',
     checker: [
       (course: Course): boolean =>
@@ -46,7 +46,7 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Additional Course: 2000 or above',
     description:
-      'At least 1 additional linguistics course must be 2000 level or above and at least 3 credits.',
+      'At least 1 additional linguistics course must be 2000 level or above and at least 3 credits. Language courses do not count.',
     source: 'https://linguistics.cornell.edu/undergraduate#minor-requirements:',
     checker: [
       (course: Course): boolean =>
@@ -61,7 +61,7 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Additional Course: 1000 or above',
     description:
-      'At most 1 additional linguistics course can be 1000 level or above, but it must be at least 3 credits.',
+      'At most 1 additional linguistics course can be 1000 level or above, but it must be at least 3 credits. Language courses do not count.',
     source: 'https://linguistics.cornell.edu/undergraduate#minor-requirements:',
     checker: [
       (course: Course): boolean =>
