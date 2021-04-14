@@ -29,7 +29,7 @@ const hdMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Human Development: 6 credits',
-    description: 'At least 6 credits must be taken at the 3000/4000 level',
+    description: 'At least 6 credits must be taken at the 3000/4000 level.',
     source: 'https://www.human.cornell.edu/hd/academics/undergraduate/minor',
     checker: [
       (course: Course): boolean =>

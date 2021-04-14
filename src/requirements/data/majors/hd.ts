@@ -5,6 +5,7 @@ import {
   courseMatchesCodeOptions,
   includesWithSingleRequirement,
   includesWithSubRequirements,
+  courseIsForeignLang,
 } from '../checkers-common';
 
 const hdRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -116,7 +117,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'HD 4000 electives',
-    description: 'At least 6 credits must be taken at the 4000 level',
+    description: 'At least 6 credits must be taken at the 4000 level.',
     source:
       'https://www.human.cornell.edu/sites/default/files/Academics/Registrar/Curriculum%20sheets/2020-2021/HD%20Curriculum%20Sheet%202020-2021.pdf',
     checker: [
@@ -130,7 +131,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'HD 3000/4000 electives',
-    description: 'At least 12 credits must be taken at the 3000/4000 level',
+    description: 'At least 12 credits must be taken at the 3000/4000 level.',
     source:
       'https://www.human.cornell.edu/sites/default/files/Academics/Registrar/Curriculum%20sheets/2020-2021/HD%20Curriculum%20Sheet%202020-2021.pdf',
     checker: [
@@ -210,6 +211,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    disallowTransferCredit: true,
   },
   {
     name: 'Natural Science I',
@@ -235,6 +237,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    disallowTransferCredit: true,
   },
   {
     name: 'Additional Requirements',
@@ -246,7 +249,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         ['PBS', 'BIOLS-AG', 'BIONLS-AG', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+        ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [12],
