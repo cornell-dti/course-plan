@@ -72,7 +72,14 @@ interface CornellCourseRosterCourse {
     readonly unitsMaximum: number;
   }[];
   readonly catalogWhenOffered?: string | null;
+  readonly catalogBreadth?: string;
+  readonly catalogDistr?: string;
+  readonly catalogComments?: string;
+  readonly catalogSatisfiesReq?: string;
+  readonly catalogCourseSubfield?: string;
   readonly roster: string;
+  readonly acadCareer: string;
+  readonly acadGroup: string;
 }
 
 interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse {
