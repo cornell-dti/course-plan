@@ -34,7 +34,6 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         ifCodeMatch(course.subject, 'LING') &&
         !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***')) &&
-        !courseMatchesCodeOptions(course, ['LING 1101', 'LING 3302', 'LING 3303', 'LING 3314']) &&
         !courseIsFWS(course) &&
         courseMeetsCreditMinimum(course, 3),
     ],
@@ -50,7 +49,6 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         ifCodeMatch(course.subject, 'LING') &&
         !ifCodeMatch(course.catalogNbr, '1***') &&
-        !courseMatchesCodeOptions(course, ['LING 1101', 'LING 3302', 'LING 3303', 'LING 3314']) &&
         !courseIsFWS(course) &&
         courseMeetsCreditMinimum(course, 3),
     ],
@@ -65,7 +63,7 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ifCodeMatch(course.subject, 'LING') &&
-        !courseMatchesCodeOptions(course, ['LING 1101', 'LING 3302', 'LING 3303', 'LING 3314']) &&
+        !courseMatchesCodeOptions(course, ['LING 1101']) &&
         !courseIsFWS(course) &&
         courseMeetsCreditMinimum(course, 3),
     ],
