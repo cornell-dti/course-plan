@@ -22,6 +22,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
   },
+  // TODO - change this into a compounded requirement instead of 3000, 2000, 1000+ electives. Works as expected right now though.
   {
     name: 'Additional Courses: 3000 or above',
     description:

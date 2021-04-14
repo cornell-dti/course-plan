@@ -25,6 +25,9 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
   },
+  // TODO - currently has a double counting issue because this is a minor with the foundation courses that can fulfill the elective courses, so they double count.
+  // TODO - furthermore, this req is split into 3 and is a "compounded requirement." It works in the major right now, but in the minor
+  // the double counting issue means one course can fulfill each part of the compounded requirement.
   {
     name: 'Additional Course: 3000 or above',
     description:
