@@ -29,8 +29,9 @@ import hotelAdminRequirements from './majors/hadm';
 import historyRequirements from './majors/hist';
 import infoRequirements from './majors/info';
 import isstRequirements from './majors/isst';
-import oldIsstRequirements from './majors/oldIsst';
+import lingRequirements from './majors/ling';
 import mechnicalEngineeringRequirements from './majors/me';
+import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
 
 import appliedMathMinorRequirements from './minors/applied-math';
@@ -41,6 +42,7 @@ import dbmeMinorRequirements from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
 import hdMinorRequirements from './minors/hd';
 import infoENMinorRequirements from './minors/infoEN';
+import lingMinorRequirements from './minors/ling';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
 import policyMinorRequirements from './minors/policy';
@@ -193,6 +195,11 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: isstRequirements,
     },
+    LING: {
+      name: 'Linguistics',
+      schools: ['AS1', 'AS2'],
+      requirements: lingRequirements,
+    },
     ME: {
       name: 'Mechanical Engineering',
       schools: ['EN'],
@@ -244,6 +251,11 @@ const json: RequirementsJson = {
       name: 'Information Science [Engineering]',
       schools: ['EN'],
       requirements: infoENMinorRequirements,
+    },
+    LING: {
+      name: 'Linguistics',
+      schools: ['AS1', 'AS2'],
+      requirements: lingMinorRequirements,
     },
     MATH: {
       name: 'Mathematics',
