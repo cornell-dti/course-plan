@@ -32,6 +32,8 @@ Then access http://localhost:8080/
 - **Ben Shen** - Developer
 - **Yuxuan Chen** - Designer
 - **Cristie Huang** - Designer
+- **Kehui Guo** - Designer
+- **Miranda Yu** - Business
 - **Theresa Cho** - TPM
 - **Ein Chang** - PM
 
