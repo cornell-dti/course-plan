@@ -33,7 +33,7 @@ Then access http://localhost:8080/
 - **Yuxuan Chen** - Designer
 - **Cristie Huang** - Designer
 - **Kehui Guo** - Designer
-- **Miranda Yu** - Business
+- **Miranda Yu** - PMM
 - **Theresa Cho** - TPM
 - **Ein Chang** - PM
 
