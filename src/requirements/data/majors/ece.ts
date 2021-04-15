@@ -14,6 +14,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['ENGRD 2300']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Engineering Distribution',
@@ -27,6 +28,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Core Courses',
@@ -36,6 +38,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['ECE 2100'], ['ECE 2200'], ['ECE 3400']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
+    slotNames: ['ECE 2100', 'ECE 2200', 'ECE 3400'],
   },
   {
     name: 'Foundation Courses',
@@ -49,6 +52,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
+    slotNames: ['ECE 3030 or ECE 3150', 'ECE 3100 or ECE 3250', 'ECE 3140'],
   },
   {
     name: 'Advanced Programming/Computer Engineering ',
@@ -86,6 +90,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Upper-Level ECE Electives',
@@ -99,6 +104,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Upper-Level ECE Electives: 4000 level',
@@ -124,6 +130,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   {
     name: 'Culminating Design Experience (CDE)',
@@ -141,6 +148,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Outside ECE Technical Electives',

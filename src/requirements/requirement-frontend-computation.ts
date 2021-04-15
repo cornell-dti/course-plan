@@ -147,6 +147,7 @@ const getSwimTestFulfillmentStatistics = (
     courses: [[SWIM_TEST_COURSE_ID]],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   };
   const swimClasses = courses.filter(it => it.courseId === SWIM_TEST_COURSE_ID);
   if (tookSwimTest) {

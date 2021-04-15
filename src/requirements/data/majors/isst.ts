@@ -18,6 +18,15 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
+    slotNames: [
+      'INFO 1200 or INFO 1260',
+      'ORIE 3500',
+      'INFO 2300',
+      'ORIE 3120',
+      'INFO 2040',
+      'INFO 2450',
+      'ORIE 4740 or CS 4780 or CS 4786 or STSCI 4740',
+    ],
   },
   {
     name: 'Engineering Mathematics',
@@ -33,6 +42,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
     allowCourseDoubleCounting: true,
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
+    slotNames: ['MATH 1910', 'MATH 1920', 'MATH 2940', 'MATH 2930 or MATH 3040 or CS 2800'],
   },
   {
     name: 'Engineering Distributions',
@@ -44,6 +54,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['ENGRD 2110'], ['ENGRD 2700']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['ENGRD 2110', 'ENGRD 2700'],
     allowCourseDoubleCounting: true,
   },
   {
@@ -80,6 +91,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
           ['INFO 4310', 'COMM 3150', 'COMM 3189', 'COMM 4200', 'COMM 4860', 'GOVT 2169', 'SOC 3580']
         ),
         perSlotMinCount: [1, 1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],
       },
       'Interactive Technologies': {
         description:
@@ -139,6 +151,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],
       },
       'Networks, Crowds, and Markets': {
         description: 'A. Models (choose two), B. Data (choose one), C. Policy/Values (choose one)',
@@ -160,6 +173,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
           ['INFO 3561', 'INFO 4200', 'INFO 4240', 'INFO 4250', 'INFO 4940', 'STS 3440']
         ),
         perSlotMinCount: [2, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
     },
   },
@@ -202,6 +216,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
           'INFO 4400',
         ]),
         perSlotMinCount: [3],
+        slotNames: ['Course'],
       },
       'Data Science': {
         description:
@@ -227,6 +242,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
           ['INFO 4310', 'COMM 3150', 'COMM 3189', 'COMM 4200', 'COMM 4860', 'GOVT 2169', 'SOC 3580']
         ),
         perSlotMinCount: [1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
       'Digital Culture and Production': {
         description:
@@ -276,6 +292,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
       'Information Ethics, Law, and Policy': {
         description:
@@ -298,6 +315,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
       'Interactive Technologies': {
         description:
@@ -332,6 +350,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
       'Networks, Crowds, and Markets': {
         description: 'A. Models (choose one), B. Data (choose one), C. Policy/Values (choose one)',
@@ -353,6 +372,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
           ['INFO 3561', 'INFO 4200', 'INFO 4240', 'INFO 4250', 'INFO 4940', 'STS 3440']
         ),
         perSlotMinCount: [1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
       'UX (User Experience)': {
         description:
@@ -366,6 +386,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
           ['INFO 3400', 'INFO 3460', 'INFO 4430', 'INFO 4450', 'COMM 4380', 'PSYCH 3420']
         ),
         perSlotMinCount: [1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
     },
   },
@@ -435,7 +456,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       'INFO 4450',
       'INFO 4500',
       'INFO 4550',
-      '​INFO 4940',
+      'INFO 4940',
       'ART 3705',
       'ART 3706',
       'COMM 4380',
@@ -466,12 +487,13 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       'ECON 4020',
       'HADM 4890',
       'ORIE 4350',
-      '​STS 3440',
+      'STS 3440',
       // Other
       'INFO 4900'
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
 ];
 

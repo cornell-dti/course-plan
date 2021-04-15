@@ -20,6 +20,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['CS 111x', 'CS 2110 or CS 2112'],
   },
   {
     name: 'Computer Science Core',
@@ -34,6 +35,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
+    slotNames: ['CS 2800 or CS 2802', 'CS 3110', 'CS 3410 or CS 3410', 'CS 4820', 'CS 4410'],
   },
   {
     name: 'CS Electives',
@@ -60,6 +62,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   {
     name: 'CS Practicum or Project',
@@ -84,6 +87,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Technical Electives',
@@ -98,6 +102,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     checkerWarning: 'We do not check that the courses are considered technical.',
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   {
     name: 'External Specialization',
@@ -118,6 +123,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     checkerWarning: 'We do not check that the courses are related.',
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   // TODO: Doesn't check for ROTC (PE) above 3000
   {
@@ -153,6 +159,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
 ];
 

@@ -27,6 +27,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
+    slotNames: ['HADM 1210', 'HADM 2210', 'HADM 2220', 'HADM 3210'],
   },
   {
     name: 'Employment Relations; HR; Law',
@@ -35,6 +36,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['HADM 1150'], ['HADM 2810'], ['HADM 3870']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
+    slotNames: ['HADM 1150', 'HADM 2810', 'HADM 3870'],
   },
   {
     name: 'Food and Beverage Management',
@@ -43,6 +45,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['HADM 2360'], ['HADM 3350']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['HADM 2360', 'HADM 3350'],
   },
   {
     name: 'Information Systems',
@@ -51,6 +54,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('HADM 1740'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Management Communication',
@@ -59,6 +63,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['HADM 1650'], ['HADM 3650']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['HADM 1650', 'HADM 3650'],
   },
   {
     name: 'Operations',
@@ -72,6 +77,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
+    slotNames: ['HADM 1350', 'HADM 1360', 'HADM 2010', 'HADM 3010'],
   },
   {
     name: 'Properties Development and Management',
@@ -80,6 +86,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['HADM 2550'], ['HADM 3550']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['HADM 2550', 'HADM 3550'],
   },
   {
     name: 'Services Marketing',
@@ -88,6 +95,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['HADM 1410'], ['HADM 2430']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['HADM 1410', 'HADM 2430'],
   },
   {
     name: 'Strategy',
@@ -96,6 +104,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('HADM 4410'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'HADM Electives',

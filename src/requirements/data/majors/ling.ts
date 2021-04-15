@@ -22,6 +22,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
+    slotNames: ['LING 1101', 'LING 3302', 'LING 3303', 'LING 3314'],
   },
   // TODO - change this into a compounded requirement instead of 3000, 2000, 1000+ electives. Works as expected right now though.
   // TODO - "language courses" cannot be used for this requirement, but some courses with language course codes can. Unless we have a way of checking
@@ -43,6 +44,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Additional Courses: 3000 or above',
@@ -60,6 +62,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Additional Courses: 2000 or above',
@@ -77,6 +80,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   {
     name: 'Additional Courses: 1000 or above',
@@ -93,6 +97,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Ancillary Skills Courses',
@@ -107,6 +112,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
     checkerWarning: 'We do not check that the courses are from linguistics related areas.',
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
 ];
 

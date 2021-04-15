@@ -47,6 +47,7 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
         ],
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
       'Option 2': {
         description:
@@ -87,6 +88,7 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    slotNames: ['ALC', 'BIO', 'ETM', 'GLC', 'HST', 'PHS', 'SCD', 'SSC', 'SDS', 'SMR'],
     allowCourseDoubleCounting: true,
     minNumberOfSlots: 8,
     disallowTransferCredit: true,

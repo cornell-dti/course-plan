@@ -11,6 +11,7 @@ const universityRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [(course: Course): boolean => 'PE'.includes(course.subject)],
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
 ];
 

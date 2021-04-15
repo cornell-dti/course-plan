@@ -167,17 +167,26 @@ export function getMatchedRequirementFulfillmentSpecification(
   readonly fulfilledBy: 'courses' | 'credits';
   readonly eligibleCourses: readonly (readonly number[])[];
   readonly perSlotMinCount: readonly number[];
+  readonly slotNames: readonly string[];
   readonly minNumberOfSlots?: number;
 } | null {
   switch (requirement.fulfilledBy) {
     case 'self-check':
       return null;
     case 'courses':
+      return {
+        fulfilledBy: requirement.fulfilledBy,
+        eligibleCourses: requirement.courses,
+        perSlotMinCount: requirement.perSlotMinCount,
+        slotNames: requirement.slotNames,
+        minNumberOfSlots: requirement.minNumberOfSlots,
+      };
     case 'credits':
       return {
         fulfilledBy: requirement.fulfilledBy,
         eligibleCourses: requirement.courses,
         perSlotMinCount: requirement.perSlotMinCount,
+        slotNames: [],
         minNumberOfSlots: requirement.minNumberOfSlots,
       };
     case 'toggleable': {
@@ -190,6 +199,7 @@ export function getMatchedRequirementFulfillmentSpecification(
         fulfilledBy: option.counting,
         eligibleCourses: option.courses,
         perSlotMinCount: option.perSlotMinCount,
+        slotNames: option.counting === 'courses' ? option.slotNames : [],
         minNumberOfSlots: option.minNumberOfSlots,
       };
     }

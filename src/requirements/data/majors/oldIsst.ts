@@ -10,6 +10,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['ORIE 3300'], ['ORIE 3500']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['ORIE 3300', 'ORIE 3500'],
   },
   {
     name: 'Information Systems',
@@ -19,6 +20,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['INFO 2300'], ['ORIE 3800'], ['INFO 3300', 'INFO 4300']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
+    slotNames: ['INFO 2300', 'ORIE 3800', 'INFO 3300 or INFO 4300'],
   },
   {
     name: 'Economic, Organization, and Social Context',
@@ -28,6 +30,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['INFO 2040'], ['INFO 2450', 'ENGRC 3350']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['INFO 2040', 'INFO 2450 or ENGRC 3350'],
   },
   {
     name: 'Engineering Mathematics',
@@ -43,6 +46,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
     allowCourseDoubleCounting: true,
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
+    slotNames: ['MATH 1910', 'MATH 1920', 'MATH 2940', 'MATH 2930 or MATH 3040 or CS 2800'],
   },
   {
     name: 'Engineering Distributions',
@@ -53,6 +57,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
     allowCourseDoubleCounting: true,
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['ENGRD 2110', 'ENGRD 2700'],
   },
   {
     // TODO: Can't accurately track C (electives are all from one category) as this is nested toggles
@@ -118,7 +123,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4450',
             'INFO 4500',
             'INFO 4550',
-            '​INFO 4940',
+            'INFO 4940',
             'ART 3705',
             'ART 3706',
             'COMM 4380',
@@ -149,7 +154,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
             'ECON 4020',
             'HADM 4890',
             'ORIE 4350',
-            '​STS 3440',
+            'STS 3440',
           ],
           [
             // Area 1
@@ -211,7 +216,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4450',
             'INFO 4500',
             'INFO 4550',
-            '​INFO 4940',
+            'INFO 4940',
             'ART 3705',
             'ART 3706',
             'COMM 4380',
@@ -242,12 +247,13 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
             'ECON 4020',
             'HADM 4890',
             'ORIE 4350',
-            '​STS 3440',
+            'STS 3440',
             // Other
             'INFO 4900',
           ]
         ),
         perSlotMinCount: [3, 1, 3, 2],
+        slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],
       },
       'Management Science': {
         description:
@@ -346,7 +352,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4450',
             'INFO 4500',
             'INFO 4550',
-            '​INFO 4940',
+            'INFO 4940',
             'ART 3705',
             'ART 3706',
             'COMM 4380',
@@ -377,12 +383,13 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
             'ECON 4020',
             'HADM 4890',
             'ORIE 4350',
-            '​STS 3440',
+            'STS 3440',
             // Other
             'INFO 4900',
           ]
         ),
         perSlotMinCount: [4, 1, 2, 2],
+        slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],
       },
     },
   },

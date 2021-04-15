@@ -562,12 +562,13 @@ const calsQuantitativeLiteracyRequirement: CollegeOrMajorRequirement = {
   description:
     'Faculty legislation requires minimum competency in quantitative literacy. ' +
     'This requirement can be satisfied by earning a score of 4 or 5 on the AP Calculus exam or a score of 5 on the AP Statistics exam, ' +
-    'or transfer an approved calculus or statistics course with a minimum letter grade of “C” or better; or take an approved calculus or statistics course at Cornell.',
+    'or transfer an approved calculus or statistics course with a minimum letter grade of "C" or better; or take an approved calculus or statistics course at Cornell.',
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: [(course: Course): boolean => ['MATH', 'STSCI'].includes(course.subject)],
   fulfilledBy: 'courses',
   perSlotMinCount: [1],
+  slotNames: ['Course'],
 };
 
 const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
@@ -591,6 +592,7 @@ const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
   ],
   fulfilledBy: 'courses',
   perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
+  slotNames: ['CA', 'D', 'FL', 'HA', 'KCM', 'LA', 'SBA'],
   minNumberOfSlots: 4,
 };
 
@@ -602,6 +604,7 @@ const calsHumanDiversityRequirement: CollegeOrMajorRequirement = {
   checker: [(course: Course): boolean => course.catalogDistr?.includes('(D-') ?? false],
   fulfilledBy: 'courses',
   perSlotMinCount: [1],
+  slotNames: ['Course'],
   allowCourseDoubleCounting: true,
 };
 

@@ -18,6 +18,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
+    slotNames: ['COMM 1101', 'COMM 1300', 'COMM 2010', 'COMM 2310'],
   },
   {
     name: 'Data Literacy Courses',
@@ -27,6 +28,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['COMM 2820'], ['PAM 2100', 'AEM 2100', 'ILRST 2100']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['COMM 2820', 'PAM 2100 or AEM 2100 or ILRST 2100'],
   },
   {
     name: 'Introduction to Concentration Courses',
@@ -35,6 +37,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('COMM 2200', 'COMM 2450', 'COMM 2760', 'COMM 2850'),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
   {
     name: 'Upper-Level Concentration Courses',
@@ -144,6 +147,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     allowCourseDoubleCounting: true,
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'First-Year Writing Seminars (FWS)',
