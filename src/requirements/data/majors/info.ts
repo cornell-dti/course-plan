@@ -21,7 +21,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
-    slotNames: ['INFO 1200 of INFO 1260', 'INFO 1300', 'INFO 2040', 'INFO 2450', 'INFO 2950'],
+    slotNames: ['INFO 1200 or INFO 1260', 'INFO 1300', 'INFO 2040', 'INFO 2450', 'INFO 2950'],
   },
   {
     name: 'Programming and Math Requirements',
