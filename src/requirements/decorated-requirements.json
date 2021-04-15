@@ -118294,6 +118294,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               353608,
