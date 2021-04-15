@@ -290,7 +290,7 @@ export default defineComponent({
         this.yearText = 0;
       }
 
-      if (this.isSemesterAdd) {
+      if (this.isSemesterAdd || this.isEdit) {
         this.$emit('updateSemProps', this.seasonPlaceholder, Number(this.yearPlaceholder));
       }
     },
