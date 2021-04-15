@@ -14,7 +14,7 @@
           <span class="completed-reqCourses-course-heading-check"
             ><img src="@/assets/images/checkmark-green.svg" alt="checkmark"
           /></span>
-          {{ courseLabel }}
+          {{ slotName }}
         </div>
         <button
           class="completed-reqCourses-course-heading-reset-button reqCourse-button"
@@ -51,7 +51,7 @@ const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 export default defineComponent({
   components: { ReqCourse, ResetConfirmationModal },
   props: {
-    subReqCourseId: { type: Number, required: true },
+    slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
   data: () => ({
@@ -60,9 +60,6 @@ export default defineComponent({
   computed: {
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
-    },
-    courseLabel(): string {
-      return `Course ${this.subReqCourseId + 1}`;
     },
     resetText(): string {
       return 'Reset';

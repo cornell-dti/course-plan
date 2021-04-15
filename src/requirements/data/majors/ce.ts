@@ -14,6 +14,7 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['ENGRD 2020', 'One of the following course'],
     allowCourseDoubleCounting: true,
   },
   {
@@ -35,6 +36,17 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    slotNames: [
+      'MAE 2030 or CEE 4780',
+      'ENGRD 3200',
+      'CEE 3040',
+      'CEE 3230',
+      'CEE 3310',
+      'CEE 3410',
+      'BEE 2510',
+      'CEE 3610',
+      'CEE 3710',
+    ],
   },
   {
     name: 'Capstone Design Elective',
@@ -55,6 +67,7 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Two Design Electives',
@@ -75,6 +88,7 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
   {
     name: 'Two Major-Approved Electives',
@@ -116,6 +130,7 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
   {
     name: 'Additional Science Course',

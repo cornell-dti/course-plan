@@ -17,6 +17,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['HD 1150'], ['HD 1170']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['HD 1150', 'HD 1170'],
   },
   {
     name: 'Breadth Requirement',
@@ -114,6 +115,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['Mind, Health & Emotion', 'Cognition, Brain & Behavior'],
   },
   {
     name: 'HD 4000 electives',
@@ -164,6 +166,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('HD 2830', 'BIOG 1500'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Social Science',
@@ -179,6 +182,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
   {
     name: 'Humanities',
@@ -193,6 +197,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Statistics',
@@ -211,6 +216,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
     disallowTransferCredit: true,
   },
   {
@@ -222,6 +228,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('BIOG 1140', 'BIOMG 1350', 'BIOG 1440', 'BIOG 1445'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Natural Science II',
@@ -237,6 +244,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
     disallowTransferCredit: true,
   },
   {

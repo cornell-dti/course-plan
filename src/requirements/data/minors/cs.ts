@@ -21,6 +21,7 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Requirement 2',
@@ -29,6 +30,7 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('CS 3110', 'CS 3410', 'CS 3420', 'ECE 3140'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   // TODO: Temp. excluding courses for Req 2
   {
@@ -60,6 +62,7 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [4],
+    slotNames: ['Course'],
   },
 ];
 

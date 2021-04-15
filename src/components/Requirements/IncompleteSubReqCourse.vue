@@ -59,7 +59,7 @@ export default defineComponent({
   },
   props: {
     subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
-    subReqCourseId: { type: Number, required: true },
+    slotName: { type: String, required: true },
     courses: {
       type: Array as PropType<readonly AppFirestoreSemesterCourseWithRequirementID[]>,
       required: true,
@@ -71,7 +71,7 @@ export default defineComponent({
     addCourseLabel(): string {
       let label = 'Add Course';
       if (this.subReq.fulfilledBy === 'courses') {
-        label = `Add Course ${this.subReqCourseId + 1}`;
+        label = `Add ${this.slotName}`;
       }
       return label;
     },
@@ -108,7 +108,7 @@ export default defineComponent({
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
     onShowAllCourses() {
-      this.$emit('onShowAllCourses', this.subReqCourseId);
+      this.$emit('onShowAllCourses');
     },
   },
 });

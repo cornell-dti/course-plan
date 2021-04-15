@@ -98,7 +98,7 @@
         <div v-for="(subReqCourseSlot, id) in requirementCoursesSlots" :key="id">
           <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
             <completed-sub-req-course
-              :subReqCourseId="id"
+              :slotName="subReqCourseSlot.name"
               :courseTaken="subReqCourseSlot.courses[0]"
               @modal-open="modalToggled"
             />
@@ -106,11 +106,11 @@
           <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
             <incomplete-sub-req-course
               :subReq="subReq"
-              :subReqCourseId="id"
+              :slotName="subReqCourseSlot.name"
               :courses="subReqCourseSlot.courses.slice(0, 4)"
               :displayDescription="displayDescription"
               :showSeeAllLabel="subReqCourseSlot.courses.length > 4"
-              @onShowAllCourses="onShowAllCourses"
+              @onShowAllCourses="onShowAllCourses(id)"
             />
           </div>
         </div>
@@ -125,7 +125,7 @@
       >
         <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
           <completed-sub-req-course
-            :subReqCourseId="id"
+            :slotName="`Course ${id + 1}`"
             :courseTaken="selfCheckCourse"
             @modal-open="modalToggled"
           />
@@ -162,11 +162,13 @@ import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor }
 import { fullCoursesJson } from '@/assets/courses/typed-full-courses';
 
 type CompletedSubReqCourseSlot = {
+  readonly name: string;
   readonly isCompleted: true;
   readonly courses: readonly CourseTaken[];
 };
 
 type IncompleteSubReqCourseSlot = {
+  readonly name: string;
   readonly isCompleted: false;
   readonly courses: readonly AppFirestoreSemesterCourseWithRequirementID[];
 };
@@ -259,11 +261,14 @@ export default defineComponent({
       const slots: SubReqCourseSlot[] = [];
 
       if (subReqSpec.fulfilledBy === 'credits') {
-        this.subReq.courses[0].forEach(completedCourse =>
-          slots.push({ isCompleted: true, courses: [completedCourse] })
-        );
+        let slotID = 1;
+        this.subReq.courses[0].forEach(completedCourse => {
+          slots.push({ name: `Course ${slotID}`, isCompleted: true, courses: [completedCourse] });
+          slotID += 1;
+        });
         if (!this.isCompleted) {
           slots.push({
+            name: `Course ${slotID}`,
             isCompleted: false,
             courses: generateSubReqIncompleteCourses(
               allTakenCourseIds,
@@ -275,11 +280,16 @@ export default defineComponent({
       } else {
         this.subReq.courses.forEach((subReqCourseSlot, i) => {
           const slotMinCount = subReqSpec.perSlotMinCount[i];
+          const slotName = subReqSpec.slotNames[i];
+          let slotID = 1;
           for (let j = 0; j < slotMinCount; j += 1) {
+            const name = slotMinCount === 1 ? slotName : `${slotName} ${slotID}`;
+            slotID += 1;
             if (j < subReqCourseSlot.length) {
-              slots.push({ isCompleted: true, courses: [subReqCourseSlot[j]] });
+              slots.push({ name, isCompleted: true, courses: [subReqCourseSlot[j]] });
             } else {
               slots.push({
+                name,
                 isCompleted: false,
                 courses: generateSubReqIncompleteCourses(
                   allTakenCourseIds,
@@ -344,7 +354,7 @@ export default defineComponent({
       return [...selectedCourses, ...fulfillableCourses];
     },
     selfCheckWarning(): string {
-      return 'This requirement is not included in the progress bar because we do not check if it’s completed.';
+      return "This requirement is not included in the progress bar because we do not check if it's completed.";
     },
   },
   directives: {

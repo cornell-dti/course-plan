@@ -27,7 +27,16 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
       readonly minCount?: number;
     }
   | ({
-      readonly fulfilledBy: 'courses' | 'credits';
+      readonly fulfilledBy: 'courses';
+      /** The minimum number of courses/credits required to fulfill each sub-requirement. */
+      readonly perSlotMinCount: readonly number[];
+      /** The name of each slot, used for display only. */
+      readonly slotNames: readonly string[];
+      /** When we care more about how many slots are filled with some courses */
+      readonly minNumberOfSlots?: number;
+    } & T)
+  | ({
+      readonly fulfilledBy: 'credits';
       /** The minimum number of courses/credits required to fulfill each sub-requirement. */
       readonly perSlotMinCount: readonly number[];
       /** When we care more about how many slots are filled with some courses */
@@ -37,11 +46,14 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
       readonly fulfilledBy: 'toggleable';
       readonly fulfillmentOptions: {
         readonly [optionName: string]: {
-          readonly counting: 'courses' | 'credits';
           readonly perSlotMinCount: readonly number[];
           readonly minNumberOfSlots?: number;
           readonly description: string;
-        } & T;
+        } & T &
+          (
+            | { readonly counting: 'courses'; readonly slotNames: readonly string[] }
+            | { readonly counting: 'credits' }
+          );
       };
     };
 

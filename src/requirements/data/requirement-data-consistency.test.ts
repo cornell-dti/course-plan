@@ -29,17 +29,23 @@ const allRequirementsWithIDs = [
 ].sort((a, b) => a.id.localeCompare(b.id));
 
 allRequirementsWithIDs.forEach(({ id, requirement }) => {
-  it(`${id}'s checker length and perSlotMinCount length are in sync.`, () => {
+  it(`${id}'s checker length, perSlotMinCount and slotName length are in sync.`, () => {
     switch (requirement.fulfilledBy) {
       case 'self-check':
         return;
       case 'courses':
+        expect(requirement.checker.length).toBe(requirement.perSlotMinCount.length);
+        expect(requirement.checker.length).toBe(requirement.slotNames.length);
+        return;
       case 'credits':
         expect(requirement.checker.length).toBe(requirement.perSlotMinCount.length);
         return;
       case 'toggleable':
         Object.values(requirement.fulfillmentOptions).forEach(option => {
           expect(option.checker.length).toBe(option.perSlotMinCount.length);
+          if (option.counting === 'courses') {
+            expect(option.checker.length).toBe(option.slotNames.length);
+          }
         });
         return;
       default:

@@ -14,6 +14,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [courseIsFWS],
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
   {
     name: 'PBS and MQR courses',
@@ -49,6 +50,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [2, 1, 1],
+    slotNames: ['PBS', 'MQR', 'PBS or MQR'],
     disallowTransferCredit: true,
   },
   {
@@ -85,6 +87,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [5],
+    slotNames: ['Course'],
     disallowTransferCredit: true,
   },
   {
@@ -101,6 +104,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
+    slotNames: ['CRP 1100', 'CRP 1101', 'CRP 2000', 'CRP 2010', 'CRP 3210'],
   },
   {
     name: 'Microeconomics',
@@ -116,6 +120,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Statistics',
@@ -140,6 +145,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Five CRP Classes',
@@ -150,6 +156,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('CRP 3***', 'CRP 4***', 'CRP 5***', 'CRP 6***'),
     fulfilledBy: 'courses',
     perSlotMinCount: [5],
+    slotNames: ['Course'],
   },
 ];
 

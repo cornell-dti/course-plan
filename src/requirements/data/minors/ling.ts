@@ -16,6 +16,7 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('LING 1101'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Foundation Course',
@@ -24,6 +25,7 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('LING 3302', 'LING 3303', 'LING 3314'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   // TODO - currently has a double counting issue because this is a minor with the foundation courses that can fulfill the elective courses, so they double count.
   // TODO - furthermore, this req is split into 3 and is a "compounded requirement." It works in the major right now, but in the minor
@@ -42,6 +44,7 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Additional Course: 2000 or above',
@@ -57,6 +60,7 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Additional Course: 1000 or above',
@@ -72,6 +76,7 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
 ];
 

@@ -14,6 +14,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
+    slotNames: ['BIOMG 1350', 'BIOG 1440 OR BIOG 1445', 'BIOEE 1610 OR BIOSM 1610'],
     minNumberOfSlots: 2,
   },
   {
@@ -23,6 +24,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['BIOG 1500', 'BIOSM 1500']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Evolutionary Biology and Diversity',
@@ -31,6 +33,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['BIOEE 1780', 'BIOEE 1781', 'BIOSM 1780']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'General Chemistry',
@@ -43,12 +46,14 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
         checker: includesWithSubRequirements(['CHEM 2070'], ['CHEM 2080']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
+        slotNames: ['CHEM 2070', 'CHEM 2080'],
       },
       'Option 2': {
         description: 'CHEM 2150',
         checker: includesWithSubRequirements(['CHEM 2150']),
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
     },
   },
@@ -76,6 +81,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['MATH 1106 OR MATH 1110', 'Another Course'],
   },
   {
     name: 'Organic Chemistry',
@@ -89,6 +95,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 2, 2, 1],
+    slotNames: ['CHEM 1570', 'CHEM 3570 or CHEM 3580', 'CHEM 3590 or CHEM 3600', 'CHEM 3530'],
     minNumberOfSlots: 1,
   },
   {
@@ -102,6 +109,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2, 2, 2],
+    slotNames: ['PHYS 1101 & 1102', 'PHYS 2207 & 2208', 'PHY 1112 & 2213'],
     minNumberOfSlots: 1,
   },
   {
@@ -112,6 +120,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['BIOMG 2800'], ['BIOMG 2801']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['BIOMG 2800', 'BIOMG 2801'],
   },
   {
     name: 'Biochemistry and Molecular Biology Part 1',
@@ -125,6 +134,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 2, 1, 1],
+    slotNames: ['BIOMG 3300', 'BIOMG 3310 or BIOMG 3320', 'BIOMG 3330', 'BIOMG 3350'],
     minNumberOfSlots: 1,
   },
   {
@@ -161,6 +171,12 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ['BIOAP 4130', 'BIOAP 3190', 'BIOMG 4400', 'BIONB 4300']
         ),
         perSlotMinCount: [1, 1, 1, 1],
+        slotNames: [
+          'BIOAP 3110',
+          'BIOAP 3160',
+          '3 credits of lecture course',
+          '4 credits of a laboratory course',
+        ],
       },
       Biochemistry: {
         description:
@@ -180,6 +196,14 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ['BIOMG 4380', 'BIOMG 6310', 'CHEM 4500', 'BIOG 4990']
         ),
         perSlotMinCount: [1, 2, 1, 1, 1, 1],
+        slotNames: [
+          'Organic Chemistry Lab (CHEM 2510 or CHEM 3010) ',
+          '5 credits of Biochemistry ',
+          'BIOMG 4320 ',
+          'BIOMG 4400 ',
+          'Physical Chemistry ',
+          'BIOMG 4380/BIOMG 6310/CHEM 4500/BIOG 4990',
+        ],
       },
       // TODO: fulfill by credit eventually
       'Biodiversity and Systematics': {
@@ -215,6 +239,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [2, 1, 2],
+        slotNames: ['Group A', 'Group B', 'Lab Course'],
       },
       'Computational Biology': {
         description:
@@ -270,6 +295,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 1],
+        slotNames: ['Computer Programming', 'Mathematics', 'Bridging Course', 'Advanced Course'],
       },
       'Ecology and Evolutionary Biology': {
         description: 'BIOEE 1610 or BIOSM 1610 and at least one course from Groups A, B, and C.',
@@ -345,6 +371,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 1],
+        slotNames: ['BIOEE 1610 or BIOSM 1610', 'Group A', 'Group B', 'Group C'],
       },
       // TODO: this one seems too complicated to try to use includesWithSubRequirements
       // 'General Biology': {
@@ -422,6 +449,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3],
+        slotNames: ['NS 3310', '9 credits from the list below'],
       },
       // TODO: need to split into group A and B based on credits
       'Insect Biology': {
@@ -447,6 +475,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 2],
+        slotNames: ['ENTOM 2120', 'Group A', 'Group B'],
       },
       // TODO: need to split into group A and B based on credits
       'Marine Biology': {
@@ -483,6 +512,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 4],
+        slotNames: ['Introductory Course', '12 credits from the list below'],
       },
       Microbiology: {
         description: 'BIOMI 2900, BIOMI 2911, and 7 credits from the list',
@@ -509,6 +539,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 3],
+        slotNames: ['BIOMI 2900', 'BIOMI 2911', '7 credits from the list below'],
       },
       // TODO: need nested toggleable reqs option, would like to use BIOMG 3***
       'Molecular and Cell Biology': {
@@ -552,6 +583,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 2, 1, 1, 2],
+        slotNames: ['Group A', 'Group B', 'Group C', 'Group D', 'Group E'],
       },
       'Neurobiology and Behavior': {
         // TODO: doesn't check for 3000 level
@@ -561,7 +593,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['BIONB 2210'],
-          ['BIONB 2220 '],
+          ['BIONB 2220'],
           [
             'BIONB 1220',
             'BIONB 3215',
@@ -599,6 +631,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 2],
+        slotNames: ['BIONB 2210', 'BIONB 2220', '7 additional credits from the list'],
       },
       'Plant Biology': {
         description:
@@ -648,6 +681,12 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [3, 3, 3, 3],
+        slotNames: [
+          'PLBIO 2410, PLBIO 3420, PLBIO 3421',
+          'PLBIO 3430, PLBIO 3431, PLBIO 3420',
+          'Three courses from this list',
+          '7 credits from this list',
+        ],
         minNumberOfSlots: 2,
       },
     },

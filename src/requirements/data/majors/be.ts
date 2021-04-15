@@ -10,6 +10,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['ENGRD 2020'], ['ENGRD 2600', 'ENGRD 2510']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['ENGRD 2020', 'ENGRD 2600 or ENGRD 2510'],
   },
   {
     name: 'Organic Chemistry',
@@ -19,6 +20,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['CHEM 1570', 'CHEM 3570', 'CHEM 3530']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Intro Bio',
@@ -29,6 +31,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('BIOMG 1350', 'BIOG 1440', 'BIOG 1445', 'BIOEE 1610'),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
   {
     name: 'Biochemistry',
@@ -42,12 +45,14 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
         checker: includesWithSubRequirements(['CHEM 2070'], ['CHEM 2080']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
+        slotNames: ['CHEM 2070', 'CHEM 2080'],
       },
       'Option 2': {
         description: 'CHEM 2150',
         checker: includesWithSubRequirements(['CHEM 2150']),
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
     },
   },
@@ -67,6 +72,14 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1],
+    slotNames: [
+      'BIOG 1500 or BIOSM 1500',
+      'BEE 3500',
+      'BEE 3310',
+      'BEE 3400',
+      'BEE 3600',
+      'BEE 4500',
+    ],
   },
   {
     name: 'Engineering Statistics',
@@ -81,6 +94,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['BEE 2220 or ENGRD 2210 or CHEME 3130 or MSE 3030', 'CEE 3040 or ENGRD 2700'],
   },
   {
     name: 'Focus Area',
@@ -162,6 +176,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [4],
+    slotNames: ['Course'],
   },
 ];
 

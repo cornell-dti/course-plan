@@ -9,6 +9,7 @@ const appliedMathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['MATH 2930'], ['MATH 2940']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['MATH 2930', 'MATH 2940'],
   },
   // FIX: don't currently have a way to show the groups
   {

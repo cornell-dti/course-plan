@@ -12,6 +12,9 @@
           "perSlotMinCount": [
             2
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350002,
@@ -2737,11 +2740,14 @@
         },
         {
           "name": "Quantitative Literacy",
-          "description": "Faculty legislation requires minimum competency in quantitative literacy. This requirement can be satisfied by earning a score of 4 or 5 on the AP Calculus exam or a score of 5 on the AP Statistics exam, or transfer an approved calculus or statistics course with a minimum letter grade of “C” or better; or take an approved calculus or statistics course at Cornell.",
+          "description": "Faculty legislation requires minimum competency in quantitative literacy. This requirement can be satisfied by earning a score of 4 or 5 on the AP Calculus exam or a score of 5 on the AP Statistics exam, or transfer an approved calculus or statistics course with a minimum letter grade of \"C\" or better; or take an approved calculus or statistics course at Cornell.",
           "source": "https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -2941,6 +2947,15 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "CA",
+            "D",
+            "FL",
+            "HA",
+            "KCM",
+            "LA",
+            "SBA"
           ],
           "minNumberOfSlots": 4,
           "courses": [
@@ -5110,6 +5125,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "allowCourseDoubleCounting": true,
           "courses": [
@@ -10161,6 +10179,9 @@
               "perSlotMinCount": [
                 1
               ],
+              "slotNames": [
+                "Course"
+              ],
               "courses": [
                 [
                   351028,
@@ -11378,6 +11399,11 @@
             1,
             1
           ],
+          "slotNames": [
+            "PBS",
+            "MQR",
+            "PBS or MQR"
+          ],
           "allowCourseDoubleCounting": true,
           "disallowTransferCredit": true,
           "courses": [
@@ -12118,6 +12144,13 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "CA",
+            "HA",
+            "KCM",
+            "LA",
+            "SBA"
           ],
           "allowCourseDoubleCounting": true,
           "disallowTransferCredit": true,
@@ -13664,6 +13697,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "allowCourseDoubleCounting": true,
           "disallowTransferCredit": true,
           "courses": [
@@ -14196,6 +14232,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "allowCourseDoubleCounting": true,
           "disallowTransferCredit": true,
@@ -19131,6 +19170,9 @@
               "perSlotMinCount": [
                 1
               ],
+              "slotNames": [
+                "Course"
+              ],
               "courses": [
                 [
                   351028,
@@ -20354,6 +20396,18 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "ALC",
+            "BIO",
+            "ETM",
+            "GLC",
+            "HST",
+            "PHS",
+            "SCD",
+            "SSC",
+            "SDS",
+            "SMR"
           ],
           "allowCourseDoubleCounting": true,
           "minNumberOfSlots": 8,
@@ -21715,6 +21769,11 @@
             1,
             1
           ],
+          "slotNames": [
+            "MATH 1910",
+            "MATH 1920",
+            "MATH 2930 or MATH 2940"
+          ],
           "courses": [
             [
               352255
@@ -21737,6 +21796,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "PHYS 1112",
+            "PHYS 2213"
+          ],
           "courses": [
             [
               355146
@@ -21754,6 +21817,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               359187
@@ -21767,6 +21833,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -22010,6 +22079,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               358525,
@@ -22058,6 +22130,9 @@
           "perSlotMinCount": [
             2
           ],
+          "slotNames": [
+            "Course"
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -22094,6 +22169,9 @@
           "allowCourseDoubleCounting": true,
           "perSlotMinCount": [
             6
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -24390,6 +24468,21 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "LA",
+            "CA",
+            "HA",
+            "KCM",
+            "SBA",
+            "FL",
+            "CE",
+            "ALC",
+            "SCD",
+            "HST",
+            "ETM",
+            "SSC",
+            "GLC"
           ],
           "minNumberOfSlots": 3,
           "allowCourseDoubleCounting": true,
@@ -29656,6 +29749,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "allowCourseDoubleCounting": true,
           "courses": [
@@ -40537,6 +40633,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "checkerWarning": "We do check that your selected course fulfills the guidelines of this requirement.",
           "allowCourseDoubleCounting": true,
           "courses": [
@@ -41725,6 +41824,9 @@
           "perSlotMinCount": [
             2
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               11,
@@ -41976,6 +42078,13 @@
             1,
             1
           ],
+          "slotNames": [
+            "ILRID 1500 or ILRID 2500",
+            "ILROB 1220",
+            "ILRLR 1100",
+            "ECON 1110",
+            "ECON 1120"
+          ],
           "courses": [
             [
               361731,
@@ -42007,6 +42116,13 @@
             1,
             1
           ],
+          "slotNames": [
+            "ILRST 2100",
+            "ILRLR 2010",
+            "ILRHR 2600",
+            "ILRLR 2050",
+            "ILRLE 2400"
+          ],
           "courses": [
             [
               350154
@@ -42032,6 +42148,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -42275,6 +42394,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               352758,
@@ -42297,6 +42419,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -42356,6 +42481,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -42453,6 +42581,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350188,
@@ -42536,6 +42667,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350428,
@@ -42583,6 +42717,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -42638,6 +42775,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -42854,6 +42994,7 @@
               351632,
               351645,
               351667,
+              351669,
               351675,
               351710,
               351779,
@@ -45669,6 +45810,11 @@
                 1,
                 3
               ],
+              "slotNames": [
+                "AEM 3360",
+                "AEM 3370",
+                "9 credits from the list below"
+              ],
               "courses": [
                 [
                   359930
@@ -45701,6 +45847,11 @@
                 1,
                 3
               ],
+              "slotNames": [
+                "AEM 3020",
+                "HADM 2810 or ILRHR 2600",
+                "Additional AEM courses"
+              ],
               "courses": [
                 [
                   350557
@@ -45730,6 +45881,11 @@
                 1,
                 4,
                 1
+              ],
+              "slotNames": [
+                "ECON 3040",
+                "Applied Economics Requirement",
+                "Quantitative Methods"
               ],
               "courses": [
                 [
@@ -45787,6 +45943,12 @@
                 1,
                 2
               ],
+              "slotNames": [
+                "AEM 3100 or AEM 4110",
+                "AEM 2830 or AEM 2840 or CS 1112",
+                "AEM 2820 or CSS 4200",
+                "6 credits from the list"
+              ],
               "courses": [
                 [
                   351912,
@@ -45810,6 +45972,9 @@
               "counting": "courses",
               "perSlotMinCount": [
                 5
+              ],
+              "slotNames": [
+                "Course"
               ],
               "courses": [
                 [
@@ -45845,6 +46010,13 @@
                 1,
                 2,
                 1
+              ],
+              "slotNames": [
+                "ECON 3030",
+                "ECON 3040",
+                "AEM 2500",
+                "AEM 4500 or AEM 4510 or AEM 4515",
+                "3 credits from the list below"
               ],
               "courses": [
                 [
@@ -45883,6 +46055,12 @@
                 1,
                 2
               ],
+              "slotNames": [
+                "AEM 4570",
+                "AEM 4670",
+                "AEM 3520 or AEM 3360",
+                "6 credits from the list below"
+              ],
               "courses": [
                 [
                   364181
@@ -45916,6 +46094,12 @@
                 1,
                 2
               ],
+              "slotNames": [
+                "AEM 2480",
+                "AEM 3340 or HADM 3470",
+                "AEM 4400",
+                "AEM 3270 or AEM 4150 or AEM 4460"
+              ],
               "courses": [
                 [
                   352062
@@ -45940,6 +46124,10 @@
               "perSlotMinCount": [
                 1,
                 4
+              ],
+              "slotNames": [
+                "AEM 2300 or AEM 2350",
+                "12 credits from the list below"
               ],
               "courses": [
                 [
@@ -45967,6 +46155,11 @@
                 1,
                 1,
                 3
+              ],
+              "slotNames": [
+                "AEM 3440 or HADM 3470",
+                "AEM 4410",
+                "9 credits from the list below"
               ],
               "courses": [
                 [
@@ -45999,6 +46192,10 @@
               "perSlotMinCount": [
                 2,
                 3
+              ],
+              "slotNames": [
+                "6 credits from the list below",
+                "9 credits from the list below"
               ],
               "courses": [
                 [
@@ -46040,6 +46237,15 @@
             1,
             1
           ],
+          "slotNames": [
+            "AEM 2200",
+            "AEM 2225",
+            "AEM 2240",
+            "AEM 2420",
+            "AEM 2601",
+            "AEM 3200",
+            "AEM 3230"
+          ],
           "courses": [
             [
               364642
@@ -46074,6 +46280,11 @@
             1,
             1
           ],
+          "slotNames": [
+            "ECON 1110",
+            "ECON 1120",
+            "AEM 2600 or ECON 3030"
+          ],
           "courses": [
             [
               350025
@@ -46096,6 +46307,11 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "AEM 2100",
+            "MATH 1110 OR MATH 1120",
+            "AEM 2010"
           ],
           "courses": [
             [
@@ -46149,6 +46365,12 @@
             1,
             1
           ],
+          "slotNames": [
+            "Environmental, Energy, and Resource Economics",
+            "Economic Analysis",
+            "International Trade and Development",
+            "Food and Agricultural Economics"
+          ],
           "minNumberOfSlots": 2,
           "courses": [
             [
@@ -46183,11 +46405,14 @@
         },
         {
           "name": "Grand Challenges Reqiurement Part 1: Written expression course",
-          "description": "Taken during Sophomore year. Focus: Critical thinking. These course options are centered around contemporary global issues and will help you learn communication, business analysis, and critical thinking skills as you develop cultural awareness. Available courses may vary per semester. You’ll choose one of the following:",
+          "description": "Taken during Sophomore year. Focus: Critical thinking. These course options are centered around contemporary global issues and will help you learn communication, business analysis, and critical thinking skills as you develop cultural awareness. Available courses may vary per semester. You'll choose one of the following:",
           "source": "https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -46207,6 +46432,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               370844
@@ -46220,6 +46448,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -46247,6 +46478,11 @@
             1,
             1
           ],
+          "slotNames": [
+            "BIOMG 1350",
+            "BIOG 1440 OR BIOG 1445",
+            "BIOEE 1610 OR BIOSM 1610"
+          ],
           "minNumberOfSlots": 2,
           "courses": [
             [
@@ -46270,6 +46506,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               363759,
@@ -46284,6 +46523,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -46306,6 +46548,10 @@
                 1,
                 1
               ],
+              "slotNames": [
+                "CHEM 2070",
+                "CHEM 2080"
+              ],
               "courses": [
                 [
                   351265
@@ -46320,6 +46566,9 @@
               "counting": "courses",
               "perSlotMinCount": [
                 1
+              ],
+              "slotNames": [
+                "Course"
               ],
               "courses": [
                 [
@@ -46337,6 +46586,10 @@
           "perSlotMinCount": [
             1,
             1
+          ],
+          "slotNames": [
+            "MATH 1106 OR MATH 1110",
+            "Another Course"
           ],
           "courses": [
             [
@@ -46368,6 +46621,12 @@
             2,
             1
           ],
+          "slotNames": [
+            "CHEM 1570",
+            "CHEM 3570 or CHEM 3580",
+            "CHEM 3590 or CHEM 3600",
+            "CHEM 3530"
+          ],
           "minNumberOfSlots": 1,
           "courses": [
             [
@@ -46396,6 +46655,11 @@
             2,
             2
           ],
+          "slotNames": [
+            "PHYS 1101 & 1102",
+            "PHYS 2207 & 2208",
+            "PHY 1112 & 2213"
+          ],
           "minNumberOfSlots": 1,
           "courses": [
             [
@@ -46421,6 +46685,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "BIOMG 2800",
+            "BIOMG 2801"
+          ],
           "courses": [
             [
               353121
@@ -46440,6 +46708,12 @@
             2,
             1,
             1
+          ],
+          "slotNames": [
+            "BIOMG 3300",
+            "BIOMG 3310 or BIOMG 3320",
+            "BIOMG 3330",
+            "BIOMG 3350"
           ],
           "minNumberOfSlots": 1,
           "courses": [
@@ -46472,6 +46746,12 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "BIOAP 3110",
+                "BIOAP 3160",
+                "3 credits of lecture course",
+                "4 credits of a laboratory course"
               ],
               "courses": [
                 [
@@ -46514,6 +46794,14 @@
                 1,
                 1
               ],
+              "slotNames": [
+                "Organic Chemistry Lab (CHEM 2510 or CHEM 3010) ",
+                "5 credits of Biochemistry ",
+                "BIOMG 4320 ",
+                "BIOMG 4400 ",
+                "Physical Chemistry ",
+                "BIOMG 4380/BIOMG 6310/CHEM 4500/BIOG 4990"
+              ],
               "courses": [
                 [
                   351328,
@@ -46550,6 +46838,11 @@
                 2,
                 1,
                 2
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Lab Course"
               ],
               "courses": [
                 [
@@ -46594,6 +46887,12 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "Computer Programming",
+                "Mathematics",
+                "Bridging Course",
+                "Advanced Course"
               ],
               "courses": [
                 [
@@ -46654,6 +46953,12 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "BIOEE 1610 or BIOSM 1610",
+                "Group A",
+                "Group B",
+                "Group C"
               ],
               "courses": [
                 [
@@ -46759,6 +47064,10 @@
                 1,
                 3
               ],
+              "slotNames": [
+                "NS 3310",
+                "9 credits from the list below"
+              ],
               "courses": [
                 [
                   351842
@@ -46788,6 +47097,11 @@
                 1,
                 1,
                 2
+              ],
+              "slotNames": [
+                "ENTOM 2120",
+                "Group A",
+                "Group B"
               ],
               "courses": [
                 [
@@ -46823,6 +47137,10 @@
               "perSlotMinCount": [
                 1,
                 4
+              ],
+              "slotNames": [
+                "Introductory Course",
+                "12 credits from the list below"
               ],
               "courses": [
                 [
@@ -46867,6 +47185,11 @@
                 1,
                 3
               ],
+              "slotNames": [
+                "BIOMI 2900",
+                "BIOMI 2911",
+                "7 credits from the list below"
+              ],
               "courses": [
                 [
                   353707
@@ -46901,6 +47224,13 @@
                 1,
                 1,
                 2
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C",
+                "Group D",
+                "Group E"
               ],
               "courses": [
                 [
@@ -46959,6 +47289,11 @@
                 1,
                 2
               ],
+              "slotNames": [
+                "BIONB 2210",
+                "BIONB 2220",
+                "7 additional credits from the list"
+              ],
               "courses": [
                 [
                   351716
@@ -47010,6 +47345,12 @@
                 3,
                 3,
                 3
+              ],
+              "slotNames": [
+                "PLBIO 2410, PLBIO 3420, PLBIO 3421",
+                "PLBIO 3430, PLBIO 3431, PLBIO 3420",
+                "Three courses from this list",
+                "7 credits from this list"
               ],
               "minNumberOfSlots": 2,
               "courses": [
@@ -47079,6 +47420,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -47105,6 +47449,21 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "BIOMG 1350",
+            "BME 2010",
+            "BME 2110",
+            "BME 2310",
+            "ENGRD 2020",
+            "BTRY 3010 or CEE 3040 or ENGRD 2700",
+            "BME 3010",
+            "BME 3020",
+            "BME 3030",
+            "BME 4010",
+            "BME 4020",
+            "BME 4080",
+            "BME 4090"
           ],
           "courses": [
             [
@@ -47165,6 +47524,12 @@
                 1,
                 6
               ],
+              "slotNames": [
+                "CHEM 1570",
+                "BME 3020",
+                "BME 4190",
+                "6 elective courses from the list"
+              ],
               "courses": [
                 [
                   359185
@@ -47194,6 +47559,12 @@
                 1,
                 1,
                 6
+              ],
+              "slotNames": [
+                "BME 3210",
+                "BME 4190 or BME 4490",
+                "CHEM 1570",
+                "6 elective courses from the list"
               ],
               "courses": [
                 [
@@ -47229,6 +47600,12 @@
                 1,
                 6
               ],
+              "slotNames": [
+                "BME 3310",
+                "BME 4390",
+                "PHYS 2214",
+                "6 elective courses from the list"
+              ],
               "courses": [
                 [
                   368737
@@ -47259,6 +47636,12 @@
                 1,
                 1,
                 6
+              ],
+              "slotNames": [
+                "BME 3410",
+                "BME 4490",
+                "PHYS 2214",
+                "6 elective courses from the list"
               ],
               "courses": [
                 [
@@ -47301,6 +47684,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "ENGRD 2020",
+            "ENGRD 2600 or ENGRD 2510"
+          ],
           "courses": [
             [
               358608
@@ -47319,6 +47706,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               351353,
@@ -47334,6 +47724,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -47357,6 +47750,10 @@
                 1,
                 1
               ],
+              "slotNames": [
+                "CHEM 2070",
+                "CHEM 2080"
+              ],
               "courses": [
                 [
                   351265
@@ -47371,6 +47768,9 @@
               "counting": "courses",
               "perSlotMinCount": [
                 1
+              ],
+              "slotNames": [
+                "Course"
               ],
               "courses": [
                 [
@@ -47392,6 +47792,14 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "BIOG 1500 or BIOSM 1500",
+            "BEE 3500",
+            "BEE 3310",
+            "BEE 3400",
+            "BEE 3600",
+            "BEE 4500"
           ],
           "courses": [
             [
@@ -47424,6 +47832,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "BEE 2220 or ENGRD 2210 or CHEME 3130 or MSE 3030",
+            "CEE 3040 or ENGRD 2700"
+          ],
           "courses": [
             [
               350193,
@@ -47450,6 +47862,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             4
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -47507,6 +47922,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "ENGRD 2020",
+            "One of the following course"
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -47535,6 +47954,17 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "MAE 2030 or CEE 4780",
+            "ENGRD 3200",
+            "CEE 3040",
+            "CEE 3230",
+            "CEE 3310",
+            "CEE 3410",
+            "BEE 2510",
+            "CEE 3610",
+            "CEE 3710"
           ],
           "courses": [
             [
@@ -47575,6 +48005,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350788,
@@ -47595,6 +48028,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -47617,6 +48053,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -47679,6 +48118,10 @@
                 1,
                 1
               ],
+              "slotNames": [
+                "CHEM 2090",
+                "CHEM 2080"
+              ],
               "courses": [
                 [
                   359187
@@ -47693,6 +48136,9 @@
               "counting": "courses",
               "perSlotMinCount": [
                 1
+              ],
+              "slotNames": [
+                "Course"
               ],
               "courses": [
                 [
@@ -47713,6 +48159,12 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "MATH 2930",
+            "PHYS 2213",
+            "CHEM 3890",
+            "ENGRD 2190"
           ],
           "allowCourseDoubleCounting": true,
           "courses": [
@@ -47740,6 +48192,12 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "MATH 2940 or CEE 3040 or ENGRD 2700",
+            "CHEME 3230",
+            "CHEM 3090",
+            "CHEM 2900"
           ],
           "allowCourseDoubleCounting": true,
           "courses": [
@@ -47769,6 +48227,9 @@
               "perSlotMinCount": [
                 1
               ],
+              "slotNames": [
+                "Course"
+              ],
               "courses": [
                 [
                   358533
@@ -47781,6 +48242,9 @@
               "perSlotMinCount": [
                 1
               ],
+              "slotNames": [
+                "Course"
+              ],
               "courses": [
                 [
                   350174
@@ -47792,6 +48256,9 @@
               "counting": "courses",
               "perSlotMinCount": [
                 3
+              ],
+              "slotNames": [
+                "Course"
               ],
               "courses": [
                 [
@@ -47807,6 +48274,9 @@
               "perSlotMinCount": [
                 3
               ],
+              "slotNames": [
+                "Course"
+              ],
               "courses": [
                 [
                   363759
@@ -47819,6 +48289,9 @@
               "perSlotMinCount": [
                 1
               ],
+              "slotNames": [
+                "Course"
+              ],
               "courses": [
                 [
                   353707
@@ -47830,6 +48303,9 @@
               "counting": "courses",
               "perSlotMinCount": [
                 1
+              ],
+              "slotNames": [
+                "Course"
               ],
               "courses": [
                 [
@@ -47844,6 +48320,10 @@
               "perSlotMinCount": [
                 1,
                 1
+              ],
+              "slotNames": [
+                "BIOMG 3310",
+                "BIOMG 3320"
               ],
               "courses": [
                 [
@@ -47867,6 +48347,13 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "CS 1112",
+            "CHEM 3570 or CHEM 3530 or CHEM 3590",
+            "CHEM 2510",
+            "CHEME 3130",
+            "CHEME 3240"
           ],
           "allowCourseDoubleCounting": true,
           "courses": [
@@ -47901,6 +48388,13 @@
             1,
             1
           ],
+          "slotNames": [
+            "3 credits of advanced CHEME electives",
+            "CHEME 3010",
+            "CHEME 3320",
+            "CHEME 3720",
+            "CHEME 3900"
+          ],
           "courses": [
             [
               350174,
@@ -47926,7 +48420,9 @@
             [
               350176
             ],
-            [],
+            [
+              350228
+            ],
             [
               350239
             ],
@@ -47943,6 +48439,10 @@
           "perSlotMinCount": [
             1,
             1
+          ],
+          "slotNames": [
+            "CHEME 4320",
+            "3 credits of advanced CHEME electives"
           ],
           "courses": [
             [
@@ -47983,6 +48483,13 @@
             1,
             1
           ],
+          "slotNames": [
+            "CS 1112",
+            "CHEM 3570 or CHEM 3530 or CHEM 3590",
+            "CHEM 2510",
+            "CHEME 3130",
+            "CHEME 3240"
+          ],
           "courses": [
             [
               358525
@@ -48005,7 +48512,7 @@
         },
         {
           "name": "Major-Approved Electives",
-          "description": "Three credits of electives are required and must be approved by the student’s faculty advisor.",
+          "description": "Three credits of electives are required and must be approved by the student's faculty advisor.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817",
           "checkerWarning": "We do not check that the courses are major approved.",
           "fulfilledBy": "credits",
@@ -56846,6 +57353,12 @@
             1,
             1
           ],
+          "slotNames": [
+            "COMM 1101",
+            "COMM 1300",
+            "COMM 2010",
+            "COMM 2310"
+          ],
           "courses": [
             [
               360988
@@ -56870,6 +57383,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "COMM 2820",
+            "PAM 2100 or AEM 2100 or ILRST 2100"
+          ],
           "courses": [
             [
               352930
@@ -56888,6 +57405,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -57052,6 +57572,9 @@
           "allowCourseDoubleCounting": true,
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -57328,6 +57851,9 @@
           "perSlotMinCount": [
             2
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               11,
@@ -57571,6 +58097,11 @@
             2,
             1,
             1
+          ],
+          "slotNames": [
+            "PBS",
+            "MQR",
+            "PBS or MQR"
           ],
           "disallowTransferCredit": true,
           "courses": [
@@ -58550,6 +59081,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             5
+          ],
+          "slotNames": [
+            "Course"
           ],
           "disallowTransferCredit": true,
           "courses": [
@@ -60365,6 +60899,13 @@
             1,
             1
           ],
+          "slotNames": [
+            "CRP 1100",
+            "CRP 1101",
+            "CRP 2000",
+            "CRP 2010",
+            "CRP 3210"
+          ],
           "courses": [
             [
               350054
@@ -60391,6 +60932,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350025,
@@ -60408,6 +60952,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -60432,6 +60979,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             5
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -60577,6 +61127,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "CS 111x",
+            "CS 2110 or CS 2112"
+          ],
           "courses": [
             [
               358525,
@@ -60599,6 +61153,13 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "CS 2800 or CS 2802",
+            "CS 3110",
+            "CS 3410 or CS 3410",
+            "CS 4820",
+            "CS 4410"
           ],
           "courses": [
             [
@@ -60627,6 +61188,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             3
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -60808,6 +61372,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               358571,
@@ -60836,6 +61403,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             3
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -67974,6 +68544,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             3
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -83797,6 +84370,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350359,
@@ -83833,6 +84409,19 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "DEA 1050",
+            "DEA 1101",
+            "DEA 1110",
+            "DEA 1150",
+            "DEA 1500",
+            "DEA 2030",
+            "DEA 2510",
+            "DEA 2730",
+            "DEA 3590",
+            "DEA 4040",
+            "DEA 5304"
           ],
           "courses": [
             [
@@ -83878,6 +84467,9 @@
           "perSlotMinCount": [
             9
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               351518,
@@ -83919,6 +84511,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               351497,
@@ -83935,6 +84530,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               351438,
@@ -83950,6 +84548,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350025
@@ -83963,6 +84564,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -86589,7 +87193,8 @@
               371503,
               371517,
               371522,
-              371530
+              371530,
+              371566
             ]
           ]
         },
@@ -86600,6 +87205,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -86612,7 +87220,7 @@
         },
         {
           "name": "Natural Science I",
-          "description": "Choose one of the following options. If AP isn’t used to satisfy the requirement, then the course must be taken at Cornell. No lab is required.",
+          "description": "Choose one of the following options. If AP isn't used to satisfy the requirement, then the course must be taken at Cornell. No lab is required.",
           "source": "http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements",
           "fulfilledBy": "toggleable",
           "fulfillmentOptions": {
@@ -86621,6 +87229,9 @@
               "counting": "courses",
               "perSlotMinCount": [
                 1
+              ],
+              "slotNames": [
+                "Course"
               ],
               "courses": [
                 [
@@ -86638,6 +87249,9 @@
               "perSlotMinCount": [
                 1
               ],
+              "slotNames": [
+                "Course"
+              ],
               "courses": [
                 [
                   351265,
@@ -86651,6 +87265,9 @@
               "counting": "courses",
               "perSlotMinCount": [
                 1
+              ],
+              "slotNames": [
+                "Course"
               ],
               "courses": [
                 [
@@ -89174,6 +89791,11 @@
             1,
             1
           ],
+          "slotNames": [
+            "ECON 1110",
+            "ECON 1120",
+            "MATH 1110"
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -89197,6 +89819,12 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "ECON 3030",
+            "ECON 3040",
+            "ECON 3110 or ECON 3130",
+            "ECON 3120 or ECON 3140"
           ],
           "allowCourseDoubleCounting": true,
           "courses": [
@@ -89223,6 +89851,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             3
+          ],
+          "slotNames": [
+            "Course"
           ],
           "allowCourseDoubleCounting": true,
           "courses": [
@@ -89327,11 +89958,14 @@
         },
         {
           "name": "Basic Requirements",
-          "description": "Twelve courses listed by the Department of Economics, or approved by the student’s major advisor",
+          "description": "Twelve courses listed by the Department of Economics, or approved by the student's major advisor",
           "source": "https://economics.cornell.edu/major",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             12
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -89444,6 +90078,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               358618
@@ -89457,6 +90094,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -89493,6 +90133,11 @@
             1,
             1
           ],
+          "slotNames": [
+            "ECE 2100",
+            "ECE 2200",
+            "ECE 3400"
+          ],
           "courses": [
             [
               358612
@@ -89514,6 +90159,11 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "ECE 3030 or ECE 3150",
+            "ECE 3100 or ECE 3250",
+            "ECE 3140"
           ],
           "courses": [
             [
@@ -89558,6 +90208,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350659,
@@ -89575,6 +90228,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -89702,6 +90358,9 @@
           "perSlotMinCount": [
             3
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               352305,
@@ -89822,6 +90481,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -107278,6 +107940,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               351353,
@@ -107293,6 +107958,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -107312,6 +107980,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -107326,6 +107997,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -107347,6 +108021,14 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "CEE 3040",
+            "CEE 3310",
+            "CEE 3510",
+            "CEE 4510",
+            "BEE 4750",
+            "CEE 3230"
           ],
           "courses": [
             [
@@ -107377,6 +108059,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               352941,
@@ -107399,6 +108084,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               352135,
@@ -107414,6 +108102,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             3
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -107439,6 +108130,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -108703,6 +109397,9 @@
           "perSlotMinCount": [
             2
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               351395,
@@ -109194,6 +109891,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "checkerWarning": "We do not check the course is a seminar style.",
           "allowCourseDoubleCounting": true,
           "courses": [
@@ -109587,6 +110287,12 @@
             1,
             1
           ],
+          "slotNames": [
+            "HADM 1210",
+            "HADM 2210",
+            "HADM 2220",
+            "HADM 3210"
+          ],
           "courses": [
             [
               351502
@@ -109612,6 +110318,11 @@
             1,
             1
           ],
+          "slotNames": [
+            "HADM 1150",
+            "HADM 2810",
+            "HADM 3870"
+          ],
           "courses": [
             [
               351489
@@ -109633,6 +110344,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "HADM 2360",
+            "HADM 3350"
+          ],
           "courses": [
             [
               351542
@@ -109650,6 +110365,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               351483
@@ -109664,6 +110382,10 @@
           "perSlotMinCount": [
             1,
             1
+          ],
+          "slotNames": [
+            "HADM 1650",
+            "HADM 3650"
           ],
           "courses": [
             [
@@ -109684,6 +110406,12 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "HADM 1350",
+            "HADM 1360",
+            "HADM 2010",
+            "HADM 3010"
           ],
           "courses": [
             [
@@ -109709,6 +110437,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "HADM 2550",
+            "HADM 3550"
+          ],
           "courses": [
             [
               351562
@@ -109727,6 +110459,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "HADM 1410",
+            "HADM 2430"
+          ],
           "courses": [
             [
               351468
@@ -109743,6 +110479,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -109820,6 +110559,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "HD 1150",
+            "HD 1170"
+          ],
           "courses": [
             [
               351473
@@ -109837,6 +110580,10 @@
           "perSlotMinCount": [
             1,
             1
+          ],
+          "slotNames": [
+            "Mind, Health & Emotion",
+            "Cognition, Brain & Behavior"
           ],
           "courses": [
             [
@@ -110177,6 +110924,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               363759,
@@ -110191,6 +110941,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -110704,6 +111457,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350010,
@@ -111128,6 +111884,7 @@
               362498,
               362619,
               362654,
+              362665,
               362684,
               362724,
               362834,
@@ -111985,6 +112742,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "disallowTransferCredit": true,
           "courses": [
             [
@@ -112005,6 +112765,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               363586,
@@ -112021,6 +112784,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "disallowTransferCredit": true,
           "courses": [
@@ -112177,9 +112943,9 @@
               355485,
               355632,
               355633,
-              355638,
               355640,
               355641,
+              355642,
               355659,
               355664,
               357472,
@@ -112301,6 +113067,7 @@
               369181,
               369496,
               369501,
+              369664,
               370167,
               370204,
               370221,
@@ -113152,9 +113919,9 @@
               355617,
               355632,
               355633,
-              355638,
               355640,
               355641,
+              355642,
               355653,
               355659,
               355664,
@@ -113544,6 +114311,7 @@
               362649,
               362653,
               362654,
+              362665,
               362684,
               362707,
               362708,
@@ -114508,6 +115276,7 @@
               369654,
               369658,
               369660,
+              369664,
               369667,
               369671,
               369672,
@@ -114954,7 +115723,8 @@
               371503,
               371517,
               371522,
-              371530
+              371530,
+              371566
             ]
           ]
         },
@@ -114981,6 +115751,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             4
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -115321,6 +116094,9 @@
           "perSlotMinCount": [
             3
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               352559,
@@ -115386,6 +116162,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -115738,6 +116517,13 @@
             1,
             1
           ],
+          "slotNames": [
+            "INFO 1200 or INFO 1260",
+            "INFO 1300",
+            "INFO 2040",
+            "INFO 2450",
+            "INFO 2950"
+          ],
           "courses": [
             [
               366630,
@@ -115766,6 +116552,11 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "Programming",
+            "Calculus",
+            "Statistics"
           ],
           "courses": [
             [
@@ -115806,6 +116597,11 @@
                 1,
                 1
               ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
+              ],
               "courses": [
                 [
                   351675,
@@ -115844,6 +116640,12 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C",
+                "Group D"
               ],
               "courses": [
                 [
@@ -115896,6 +116698,11 @@
                 1,
                 2
               ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
+              ],
               "courses": [
                 [
                   352898,
@@ -115941,6 +116748,12 @@
                 1,
                 1
               ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C",
+                "Group D"
+              ],
               "courses": [
                 [
                   351890,
@@ -115983,6 +116796,11 @@
                 1,
                 1
               ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
+              ],
               "courses": [
                 [
                   363542,
@@ -116019,6 +116837,11 @@
                 2,
                 1,
                 1
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
               ],
               "courses": [
                 [
@@ -116060,6 +116883,12 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C",
+                "Group D"
               ],
               "courses": [
                 [
@@ -116103,6 +116932,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             3
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -116238,6 +117070,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "ORIE 3300",
+            "ORIE 3500"
+          ],
           "courses": [
             [
               351723
@@ -116256,6 +117092,11 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "INFO 2300",
+            "ORIE 3800",
+            "INFO 3300 or INFO 4300"
           ],
           "courses": [
             [
@@ -116279,6 +117120,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "INFO 2040",
+            "INFO 2450 or ENGRC 3350"
+          ],
           "courses": [
             [
               359378
@@ -116300,6 +117145,12 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "MATH 1910",
+            "MATH 1920",
+            "MATH 2940",
+            "MATH 2930 or MATH 3040 or CS 2800"
           ],
           "courses": [
             [
@@ -116328,6 +117179,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "ENGRD 2110",
+            "ENGRD 2700"
+          ],
           "courses": [
             [
               358546
@@ -116351,6 +117206,12 @@
                 1,
                 3,
                 2
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C",
+                "Group D"
               ],
               "courses": [
                 [
@@ -116422,7 +117283,8 @@
                   368973,
                   369207,
                   369914,
-                  370458
+                  370458,
+                  370809
                 ],
                 [
                   350429,
@@ -116488,7 +117350,8 @@
                   370219,
                   370440,
                   370458,
-                  370464
+                  370464,
+                  370809
                 ]
               ]
             },
@@ -116500,6 +117363,12 @@
                 1,
                 2,
                 2
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C",
+                "Group D"
               ],
               "courses": [
                 [
@@ -116604,7 +117473,8 @@
                   370219,
                   370440,
                   370458,
-                  370464
+                  370464,
+                  370809
                 ]
               ]
             }
@@ -116631,6 +117501,15 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "INFO 1200 or INFO 1260",
+            "ORIE 3500",
+            "INFO 2300",
+            "ORIE 3120",
+            "INFO 2040",
+            "INFO 2450",
+            "ORIE 4740 or CS 4780 or CS 4786 or STSCI 4740"
           ],
           "courses": [
             [
@@ -116672,6 +117551,12 @@
             1,
             1
           ],
+          "slotNames": [
+            "MATH 1910",
+            "MATH 1920",
+            "MATH 2940",
+            "MATH 2930 or MATH 3040 or CS 2800"
+          ],
           "courses": [
             [
               352255
@@ -116698,6 +117583,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "ENGRD 2110",
+            "ENGRD 2700"
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -116722,6 +117611,12 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C",
+                "Group D"
               ],
               "courses": [
                 [
@@ -116774,6 +117669,12 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C",
+                "Group D"
               ],
               "courses": [
                 [
@@ -116834,6 +117735,11 @@
                 1,
                 1
               ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
+              ],
               "courses": [
                 [
                   350827,
@@ -116880,6 +117786,9 @@
               "perSlotMinCount": [
                 3
               ],
+              "slotNames": [
+                "Course"
+              ],
               "courses": [
                 [
                   351675,
@@ -116913,6 +117822,11 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
               ],
               "courses": [
                 [
@@ -116955,6 +117869,11 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
               ],
               "courses": [
                 [
@@ -117005,6 +117924,11 @@
                 1,
                 1
               ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
+              ],
               "courses": [
                 [
                   351890,
@@ -117039,6 +117963,11 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
               ],
               "courses": [
                 [
@@ -117076,6 +118005,11 @@
                 1,
                 1,
                 1
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
               ],
               "courses": [
                 [
@@ -117117,6 +118051,11 @@
                 1,
                 1
               ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
+              ],
               "courses": [
                 [
                   354593,
@@ -117148,6 +118087,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -117214,7 +118156,8 @@
               370219,
               370440,
               370458,
-              370464
+              370464,
+              370809
             ]
           ]
         }
@@ -117238,6 +118181,12 @@
             1,
             1
           ],
+          "slotNames": [
+            "LING 1101",
+            "LING 3302",
+            "LING 3303",
+            "LING 3314"
+          ],
           "courses": [
             [
               352728
@@ -117260,6 +118209,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -117341,6 +118293,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             3
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -117433,6 +118388,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -117532,6 +118490,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -124543,6 +125504,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "allowCourseDoubleCounting": true,
           "courses": [
             [
@@ -124565,6 +125529,17 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "MAE 2250",
+            "MAE 2030",
+            "MAE 3230",
+            "MAE 3240",
+            "MAE 3260",
+            "MAE 3270",
+            "MAE 3780 or ENGRD 2100 or PHYS 3360",
+            "MAE 4272",
+            "MAE 4300"
           ],
           "courses": [
             [
@@ -124656,6 +125631,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               361299,
@@ -124680,6 +125658,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350659,
@@ -124700,6 +125681,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -132766,6 +133750,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               358622
@@ -132785,6 +133772,15 @@
             1,
             1,
             1
+          ],
+          "slotNames": [
+            "ORIE 3120",
+            "ORIE 3150 (or replacements)",
+            "ORIE 3300",
+            "ORIE 3310",
+            "ORIE 3500",
+            "ORIE 3510",
+            "ORIE 4580"
           ],
           "courses": [
             [
@@ -141037,6 +142033,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "MATH 2930",
+            "MATH 2940"
+          ],
           "courses": [
             [
               352295
@@ -141068,6 +142068,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350154,
@@ -141098,6 +142101,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350025,
@@ -141113,6 +142119,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -141131,6 +142140,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350542,
@@ -141147,6 +142159,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               350518,
@@ -141162,6 +142177,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -141189,6 +142207,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               351444,
@@ -141204,6 +142225,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               353573,
@@ -141218,6 +142242,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             3
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -141269,6 +142296,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               358546,
@@ -141285,6 +142315,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               358556,
@@ -141300,6 +142333,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             4
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -141620,6 +142656,11 @@
             1,
             1
           ],
+          "slotNames": [
+            "DEA 1050",
+            "DEA 1110/1200",
+            "DEA 1500"
+          ],
           "courses": [
             [
               366899
@@ -141640,6 +142681,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -141697,6 +142741,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               351473,
@@ -141711,6 +142758,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             4
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -141921,6 +142971,10 @@
                 1,
                 3
               ],
+              "slotNames": [
+                "INFO 2450",
+                "Elective"
+              ],
               "courses": [
                 [
                   360989
@@ -141951,11 +143005,15 @@
               ]
             },
             "Data Science": {
-              "description": "Core – INFO 2950: Introduction to Data Science. ",
+              "description": "Core - INFO 2950: Introduction to Data Science. ",
               "counting": "courses",
               "perSlotMinCount": [
                 1,
                 3
+              ],
+              "slotNames": [
+                "INFO 2950",
+                "Elective"
               ],
               "courses": [
                 [
@@ -142004,6 +143062,10 @@
                 1,
                 3
               ],
+              "slotNames": [
+                "INFO 3561",
+                "Elective"
+              ],
               "courses": [
                 [
                   359460
@@ -142039,6 +143101,10 @@
               "perSlotMinCount": [
                 1,
                 3
+              ],
+              "slotNames": [
+                "INFO 1200/1260",
+                "Elective"
               ],
               "courses": [
                 [
@@ -142078,6 +143144,10 @@
                 1,
                 3
               ],
+              "slotNames": [
+                "INFO 4120/4320",
+                "Elective"
+              ],
               "courses": [
                 [
                   363542,
@@ -142111,6 +143181,10 @@
               "perSlotMinCount": [
                 1,
                 3
+              ],
+              "slotNames": [
+                "INFO 2040",
+                "Elective"
               ],
               "courses": [
                 [
@@ -142149,6 +143223,10 @@
               "perSlotMinCount": [
                 1,
                 3
+              ],
+              "slotNames": [
+                "INFO 2450",
+                "Elective"
               ],
               "courses": [
                 [
@@ -142190,6 +143268,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -142336,6 +143417,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               352728
@@ -142349,6 +143433,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -142365,6 +143452,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -142449,6 +143539,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -142544,6 +143637,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -142656,6 +143752,10 @@
             1,
             1
           ],
+          "slotNames": [
+            "Linear Algebra",
+            "Multivariable Calculus"
+          ],
           "courses": [
             [
               352260,
@@ -142676,6 +143776,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             4
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -142733,6 +143836,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               352359,
@@ -142778,6 +143884,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               352338,
@@ -142800,6 +143909,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -142834,6 +143946,9 @@
           "perSlotMinCount": [
             3
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               351723,
@@ -142852,6 +143967,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             3
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -142988,6 +144106,9 @@
           "perSlotMinCount": [
             1
           ],
+          "slotNames": [
+            "Course"
+          ],
           "courses": [
             [
               367276
@@ -143001,6 +144122,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             1
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
@@ -143017,6 +144141,9 @@
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             3
+          ],
+          "slotNames": [
+            "Course"
           ],
           "courses": [
             [
