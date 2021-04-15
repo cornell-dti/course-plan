@@ -1,0 +1,116 @@
+import { CollegeOrMajorRequirement } from '../../types';
+import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+
+const physRequirements: readonly CollegeOrMajorRequirement[] = [
+  {
+    name: 'Physics Core',
+    description: 'A three-semester introductory physics sequence.',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
+    // Not checked:
+    // Students from life/chemical/health sciences backgrounds who decide to switch
+    // into the physics major may also use PHYS 2207 as their introductory mechanics class.
+    // Students who do not take PHYS 1116 must also complete PHYS 2216.
+    checker: includesWithSubRequirements(
+      ['PHYS 1112', 'PHYS 1116'],
+      ['PHYS 2213', 'PHYS 2217'],
+      ['PHYS 2214', 'PHYS 2218']
+    ),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1, 1, 1],
+    slotNames: ['Physics I', 'Physics II', 'Physics III'],
+  },
+  {
+    name: 'Mathematics',
+    description:
+      'Mathematics courses covering single and multivariable calculus, linear algebra, series representations, and complex analysis.',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
+    // Not checked:
+    // Inside concentrators should complete at least two semesters of advanced mathematics
+    // classes at the 3000+ level such as the AEP 3200 & AEP 4200 sequence, or other relevant classes.
+    checker: includesWithSubRequirements(
+      ['MATH 1120', 'MATH 1910', 'MATH 1220'],
+      ['MATH 1920', 'MATH 2220', 'MATH 2240'],
+      ['MATH 2930'],
+      ['MATH 2210', 'MATH 2230', 'MATH 2940']
+    ),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1, 1, 1, 1],
+    slotNames: [
+      'Single-Variable Calculus',
+      'Multivariable Calculus',
+      'Differential Equations',
+      'Linear Algebra',
+    ],
+  },
+  {
+    name: 'Modern Physics',
+    description: 'The two-course sequence in modern physics: PHYS 3316 and PHYS 3317.',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
+    checker: includesWithSingleRequirement('PHYS 3316', 'PHYS 3317'),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [2],
+    slotNames: ['Courses'],
+  },
+  {
+    name: 'Physics Lab',
+    description: 'At least three credits of laboratory work.',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
+    checker: includesWithSingleRequirement(
+      'PHYS 3310',
+      'PHYS 3330',
+      'PHYS 3360',
+      'PHYS 4410',
+      'AEP 2640',
+      'ASTRO 4410',
+      'BEE 4500'
+    ),
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3],
+  },
+  {
+    name: 'Physics Intermediate Courses',
+    description:
+      'An intermediate course in analytical mechanics and advanced electricity & magnetism.',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
+    checker: includesWithSingleRequirement('PHYS 3318', 'PHYS 3327'),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [2],
+    slotNames: ['Courses'],
+  },
+  {
+    name: 'Concentration',
+    description: 'The Physics Department offers two approaches to the major.',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
+    fulfilledBy: 'toggleable',
+    fulfillmentOptions: {
+      'Concentration "inside" Physics': {
+        description:
+          'The concentration within physics (“inside concentration”) is the principal path to ' +
+          'professional or graduate work in physics and closely related fields, and is also the best choice ' +
+          'for students who wish to obtain maximum benefit from rigorous studies in physics. The inside ' +
+          'concentration consists of the core physics courses plus electives taken within the Physics Department.',
+        counting: 'credits',
+        // TODO
+        checker: [() => true],
+        perSlotMinCount: [15],
+      },
+      'Concentration "outside" Physics': {
+        description:
+          'The concentration outside physics (“outside concentration”) provides more flexibility ' +
+          'for those want to develop skills in physics but whose career interests lie elsewhere. For example, ' +
+          'a premedical or biophysics student may concentrate in biology; a pre-law student may concentrate ' +
+          'in business, history, or public policy; and a student planning graduate work in econometrics or on ' +
+          'pursuing an M.B.A. may concentrate in economics. Students interested in education careers (and in ' +
+          'capitalizing on the critical national shortage of high school physics teachers) may concentrate in ' +
+          'education, allowing them to complete a master’s degree in physics education with New York State ' +
+          'Teacher certification in one additional year at Cornell.',
+        counting: 'credits',
+        // TODO
+        checker: [() => true],
+        perSlotMinCount: [15],
+      },
+    },
+  },
+];
+
+export default physRequirements;
