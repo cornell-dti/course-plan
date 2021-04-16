@@ -30,6 +30,7 @@ import historyRequirements from './majors/hist';
 import infoRequirements from './majors/info';
 import isstRequirements from './majors/isst';
 import lingRequirements from './majors/ling';
+import mathRequirements from './majors/math';
 import mechnicalEngineeringRequirements from './majors/me';
 import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
@@ -199,6 +200,11 @@ const json: RequirementsJson = {
       name: 'Linguistics',
       schools: ['AS1', 'AS2'],
       requirements: lingRequirements,
+    },
+    MATH: {
+      name: 'Math',
+      schools: ['AS1', 'AS2'],
+      requirements: mathRequirements,
     },
     ME: {
       name: 'Mechanical Engineering',
