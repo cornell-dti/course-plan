@@ -42,6 +42,7 @@ const courseFieldFilter = ({
   catalogComments,
   catalogSatisfiesReq,
   catalogCourseSubfield,
+  catalogAttribute,
   acadCareer,
   acadGroup,
 }: Course): Course => ({
@@ -59,6 +60,7 @@ const courseFieldFilter = ({
   catalogComments: catalogComments || undefined,
   catalogSatisfiesReq: catalogSatisfiesReq || undefined,
   catalogCourseSubfield: catalogCourseSubfield || undefined,
+  catalogAttribute: catalogAttribute || undefined,
   acadCareer,
   acadGroup,
 });
