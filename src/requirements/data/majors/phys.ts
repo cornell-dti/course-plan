@@ -113,7 +113,7 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
           'Teacher certification in one additional year at Cornell.',
         counting: 'credits',
         // This is essentially self-check; courses must be manually overwritten by the user.
-        checker: [(_: Course): boolean => false],
+        checker: [(): boolean => false],
         perSlotMinCount: [15],
       },
     },
