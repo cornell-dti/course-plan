@@ -1,17 +1,18 @@
-import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { Course, CollegeOrMajorRequirement } from '../../types';
+import {
+  includesWithSingleRequirement,
+  includesWithSubRequirements,
+  ifCodeMatch,
+} from '../checkers-common';
 
 const physRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Physics Core',
     description: 'A three-semester introductory physics sequence.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
-    // Not checked:
-    // Students from life/chemical/health sciences backgrounds who decide to switch
-    // into the physics major may also use PHYS 2207 as their introductory mechanics class.
-    // Students who do not take PHYS 1116 must also complete PHYS 2216.
+    // Not checked: Students who do not take PHYS 1116 must also complete PHYS 2216.
     checker: includesWithSubRequirements(
-      ['PHYS 1112', 'PHYS 1116'],
+      ['PHYS 1112', 'PHYS 1116', 'PHYS 2207'],
       ['PHYS 2213', 'PHYS 2217'],
       ['PHYS 2214', 'PHYS 2218']
     ),
@@ -46,10 +47,10 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Modern Physics',
     description: 'The two-course sequence in modern physics: PHYS 3316 and PHYS 3317.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
-    checker: includesWithSingleRequirement('PHYS 3316', 'PHYS 3317'),
+    checker: includesWithSubRequirements(['PHYS 3316'], ['PHYS 3317']),
     fulfilledBy: 'courses',
-    perSlotMinCount: [2],
-    slotNames: ['Courses'],
+    perSlotMinCount: [1, 1],
+    slotNames: ['PHYS 3316', 'PHYS 3317'],
   },
   {
     name: 'Physics Lab',
@@ -72,41 +73,47 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'An intermediate course in analytical mechanics and advanced electricity & magnetism.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
-    checker: includesWithSingleRequirement('PHYS 3318', 'PHYS 3327'),
+    checker: includesWithSubRequirements(['PHYS 3318'], ['PHYS 3327']),
     fulfilledBy: 'courses',
-    perSlotMinCount: [2],
-    slotNames: ['Courses'],
+    perSlotMinCount: [1, 1],
+    slotNames: ['PHYS 3318', 'PHYS 3327'],
   },
   {
     name: 'Concentration',
     description: 'The Physics Department offers two approaches to the major.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
     fulfilledBy: 'toggleable',
+    checkerWarning: 'We do not check that courses are approved by the major faculty advisor.',
     fulfillmentOptions: {
       'Concentration "inside" Physics': {
         description:
-          'The concentration within physics (“inside concentration”) is the principal path to ' +
+          'The concentration within physics ("inside concentration") is the principal path to ' +
           'professional or graduate work in physics and closely related fields, and is also the best choice ' +
           'for students who wish to obtain maximum benefit from rigorous studies in physics. The inside ' +
           'concentration consists of the core physics courses plus electives taken within the Physics Department.',
         counting: 'credits',
-        // TODO
-        checker: [() => true],
+        // "Other courses approved by the director of undergraduate studies"
+        // do not pass this checker, and must be manually overwritten by the user.
+        checker: [
+          (course: Course): boolean =>
+            ifCodeMatch(course.subject, 'PHYS') &&
+            !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***')),
+        ],
         perSlotMinCount: [15],
       },
       'Concentration "outside" Physics': {
         description:
-          'The concentration outside physics (“outside concentration”) provides more flexibility ' +
+          'The concentration outside physics ("outside concentration") provides more flexibility ' +
           'for those want to develop skills in physics but whose career interests lie elsewhere. For example, ' +
           'a premedical or biophysics student may concentrate in biology; a pre-law student may concentrate ' +
           'in business, history, or public policy; and a student planning graduate work in econometrics or on ' +
           'pursuing an M.B.A. may concentrate in economics. Students interested in education careers (and in ' +
           'capitalizing on the critical national shortage of high school physics teachers) may concentrate in ' +
-          'education, allowing them to complete a master’s degree in physics education with New York State ' +
+          "education, allowing them to complete a master's degree in physics education with New York State " +
           'Teacher certification in one additional year at Cornell.',
         counting: 'credits',
-        // TODO
-        checker: [() => true],
+        // This is essentially self-check; courses must be manually overwritten by the user.
+        checker: [(_: Course): boolean => false],
         perSlotMinCount: [15],
       },
     },
