@@ -23,6 +23,7 @@ import economicsRequirements from './majors/econ';
 import eceRequirements from './majors/ece';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
+import epRequirements from './majors/ep';
 import governmentRequirements from './majors/govt';
 import hdRequirements from './majors/hd';
 import hotelAdminRequirements from './majors/hadm';
@@ -160,6 +161,11 @@ const json: RequirementsJson = {
       name: 'Environmental Engineering',
       schools: ['EN'],
       requirements: envEngineeringRequirements,
+    },
+    EP: {
+      name: 'Engineering Physics',
+      schools: ['EN'],
+      requirements: epRequirements,
     },
     GOVT: {
       name: 'Government',
