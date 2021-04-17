@@ -264,7 +264,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Electives',
-    description: 'Any courses that are not taken in Areas 1-12 above, count as Electives.',
+    description: 'Any courses that are not applied to the requirements above count as Electives.',
     source:
       'https://www.human.cornell.edu/sites/default/files/Academics/Registrar/Curriculum%20sheets/2020-2021/HD%20Curriculum%20Sheet%202020-2021.pdf',
     fulfilledBy: 'self-check',

@@ -23,7 +23,7 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
     checkerWarning: 'We do not check that the credits are outside your major',
     checker: [(course: Course): boolean => course.acadGroup.includes('HE')],
     fulfilledBy: 'credits',
-    perSlotMinCount: [3],
+    perSlotMinCount: [9],
   },
   {
     name: 'First-Year Writing Seminars',
