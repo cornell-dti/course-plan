@@ -17,7 +17,8 @@ const materialsElectives = [
   'MSE 5550',
 ];
 
-// 2d array of the 5 application categories. The last one includes the research courses that can count
+// 2d array of the 5 application categories and the courses that apply.
+// The last one includes the research courses that can count for that category
 const applicationElectives = [
   [
     'BEE 3400',
@@ -96,12 +97,12 @@ const applicationElectives = [
 const mseRequirements: readonly CollegeOrMajorRequirement[] = [
   // TODO: Require one of these courses to be MSE, one to be ENGRD
   {
-    name: 'Engineering Distributions',
+    name: 'MSE Engineering Distributions',
     description:
       'One of MSE 2610 and MSE 2620 should be taken as an ENGRD to satisfy affiliation requirements, the other as an MSE core course.',
     source:
       'https://www.mse.cornell.edu/mse/programs/undergraduate-programs/major/major-curriculum',
-    checker: includesWithSubRequirements(['MSE 2610', 'ENGRD 2610'], ['MSE 2620', 'ENGRD 2610']),
+    checker: includesWithSubRequirements(['MSE 2610', 'ENGRD 2610'], ['MSE 2620', 'ENGRD 2620']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
     slotNames: ['MSE 2610', 'MSE 2620'],
@@ -150,8 +151,8 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
         slotNames: ['Course'],
       },
       'Thesis Project': {
-        description: 'MSE 4050 and MSE 4060',
-        checker: includesWithSubRequirements(['MSE 4050', 'MSE 4060']),
+        description: 'MSE 4050 and MSE 4060.',
+        checker: includesWithSubRequirements(['MSE 4050'], ['MSE 4060']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
         slotNames: ['MSE 4050', 'MSE 4060'],
@@ -180,7 +181,6 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [2],
     slotNames: ['Course'],
   },
-
   // TODO - We do not have a way of checking if they took only 1 course under MSE, at least for cross-listed courses
   // TODO - Limit to only 1 semester of research involvement
   {
@@ -216,23 +216,26 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.mse.cornell.edu/mse/programs/undergraduate-programs/major/major-curriculum/electives',
     checker: [
-      (course: Course): boolean => {
-        let courseApplicable = false;
-        applicationElectives.forEach(category => {
-          if (category.includes(`${course.subject} ${course.catalogNbr}`)) {
-            courseApplicable = true;
-          }
-        });
-
-        return courseApplicable;
-      },
+      (course: Course): boolean =>
+        applicationElectives[0].includes(`${course.subject} ${course.catalogNbr}`) ?? false,
+      ...applicationElectives
+        .slice(1)
+        .map(categoryCourses => (course: Course): boolean =>
+          categoryCourses?.includes(`${course.subject} ${course.catalogNbr}`) ?? false
+        ),
     ],
     fulfilledBy: 'courses',
-    perSlotMinCount: [2],
-    slotNames: ['Course'],
+    perSlotMinCount: [1, 1, 1, 1, 1],
+    slotNames: [
+      'Biotechnology and Life Sciences',
+      'Energy and the Environment',
+      'Nanotechnology',
+      'Information Science and Technology',
+      'Materials Research',
+    ],
+    minNumberOfSlots: 2,
     allowCourseDoubleCounting: true,
   },
-
   {
     name: 'Outside Technical Elective',
     description:
