@@ -149451,7 +149451,7 @@
               ]
             },
             "Concentration \"outside\" Physics": {
-              "description": "The concentration outside physics (\"outside concentration\") provides more flexibility for those want to develop skills in physics but whose career interests lie elsewhere. For example, a premedical or biophysics student may concentrate in biology; a pre-law student may concentrate in business, history, or public policy; and a student planning graduate work in econometrics or on pursuing an M.B.A. may concentrate in economics. Students interested in education careers (and in capitalizing on the critical national shortage of high school physics teachers) may concentrate in education, allowing them to complete a master's degree in physics education with New York State Teacher certification in one additional year at Cornell.",
+              "description": "The concentration outside physics (\"outside concentration\") provides more flexibility for those want to develop skills in physics but whose career interests lie elsewhere.",
               "counting": "credits",
               "perSlotMinCount": [
                 15

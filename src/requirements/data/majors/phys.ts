@@ -27,9 +27,6 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'Mathematics courses covering single and multivariable calculus, linear algebra, series representations, and complex analysis.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19990',
-    // Not checked:
-    // Inside concentrators should complete at least two semesters of advanced mathematics
-    // classes at the 3000+ level such as the AEP 3200 & AEP 4200 sequence, or other relevant classes.
     checker: includesWithSubRequirements(
       ['MATH 1120', 'MATH 1910', 'MATH 1220'],
       ['MATH 1920', 'MATH 2220', 'MATH 2240'],
@@ -96,6 +93,11 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
         counting: 'credits',
         // "Other courses approved by the director of undergraduate studies"
         // do not pass this checker, and must be manually overwritten by the user.
+        // "If this activity is done as an independent project, PHYS 4490, up to 4 credits can be applied toward the concentration"
+        // must also be manually overwritten by the user.
+        // TODO implement as compound requirement:
+        // at least two MATH classes at 3000+ level
+        // must include PHYS 4230, PHYS 4410, and another lab course listed for the core (allow double-counting)
         checker: [
           (course: Course): boolean =>
             ifCodeMatch(course.subject, 'PHYS') &&
@@ -106,13 +108,7 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
       'Concentration "outside" Physics': {
         description:
           'The concentration outside physics ("outside concentration") provides more flexibility ' +
-          'for those want to develop skills in physics but whose career interests lie elsewhere. For example, ' +
-          'a premedical or biophysics student may concentrate in biology; a pre-law student may concentrate ' +
-          'in business, history, or public policy; and a student planning graduate work in econometrics or on ' +
-          'pursuing an M.B.A. may concentrate in economics. Students interested in education careers (and in ' +
-          'capitalizing on the critical national shortage of high school physics teachers) may concentrate in ' +
-          "education, allowing them to complete a master's degree in physics education with New York State " +
-          'Teacher certification in one additional year at Cornell.',
+          'for those want to develop skills in physics but whose career interests lie elsewhere.',
         counting: 'credits',
         // This is essentially self-check; courses must be manually overwritten by the user.
         checker: [(): boolean => false],
