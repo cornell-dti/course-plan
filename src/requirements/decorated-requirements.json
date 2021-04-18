@@ -46460,6 +46460,307 @@
         }
       ]
     },
+    "ASTRO": {
+      "name": "Astronomy",
+      "schools": [
+        "AS1",
+        "AS2"
+      ],
+      "requirements": [
+        {
+          "name": "Introductory Physics Sequence",
+          "description": "Three semesters of physics including: \n    PHYS 1112 or PHYS 1116, PHYS 2213 or PHYS 2217, and PHYS 2214 or PHYS 2218.",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19789",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
+          "slotNames": [
+            "PHYS 1112 or PHYS 1116",
+            "PHYS 2213 or PHYS 2217",
+            "PHYS 2214 or PHYS 2218"
+          ],
+          "courses": [
+            [
+              355146,
+              355147
+            ],
+            [
+              355207,
+              357472
+            ],
+            [
+              355208,
+              355210
+            ]
+          ]
+        },
+        {
+          "name": "Introductory Mathematics Sequence",
+          "description": "Three semesters of math including: \n    MATH 1910, MATH 1120, or MATH 1220, MATH 1920, MATH 2220, or MATH 2240, and MATH 2930, MATH 4710, or ASTRO 3340",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19789",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
+          "slotNames": [
+            "MATH 1910, MATH 1120, or MATH 1220",
+            "MATH 1920, MATH 2220, or MATH 2240",
+            "MATH 2930, MATH 4710, or ASTRO 3340"
+          ],
+          "courses": [
+            [
+              352120,
+              352240,
+              352255
+            ],
+            [
+              352257,
+              352263,
+              352284
+            ],
+            [
+              352295,
+              352450,
+              364154
+            ]
+          ]
+        },
+        {
+          "name": "Experimental or Data Analysis Course in Astronomy",
+          "description": "One experimental or data analysis course in astronomy chosen from: \n    ASTRO 4410, ASTRO 3310, or ASTRO 3334",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19789",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1
+          ],
+          "slotNames": [
+            "ASTRO 4410, ASTRO 3310, or ASTRO 3334"
+          ],
+          "courses": [
+            [
+              351139,
+              359160
+            ]
+          ]
+        },
+        {
+          "name": "Concentration",
+          "description": "In addition to these core requirements, each Astronomy Major must complete a Concentration in either Astrophysics or General Astronomy",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19789",
+          "fulfilledBy": "toggleable",
+          "fulfillmentOptions": {
+            "Astrophysics": {
+              "description": "5 additional courses in Physics, 3 additional courses in Mathematics, and 2 additional courses in Advanced Astrophysics",
+              "counting": "courses",
+              "perSlotMinCount": [
+                2,
+                1,
+                4,
+                1,
+                2
+              ],
+              "slotNames": [
+                "Two semesters of Advanced Astrophysics",
+                "Thermodynamics",
+                "Four semesters of physics",
+                "Linear Algebra",
+                "Two additional semesters of mathematics"
+              ],
+              "courses": [
+                [
+                  350769,
+                  350775,
+                  364016
+                ],
+                [
+                  353828
+                ],
+                [
+                  355213,
+                  355215,
+                  355217,
+                  355223
+                ],
+                [
+                  352260,
+                  352274,
+                  352307
+                ],
+                [
+                  352007,
+                  352045,
+                  352051,
+                  352104,
+                  352107,
+                  352111,
+                  352116,
+                  352120,
+                  352240,
+                  352245,
+                  352248,
+                  352255,
+                  352257,
+                  352259,
+                  352260,
+                  352263,
+                  352274,
+                  352284,
+                  352288,
+                  352295,
+                  352307,
+                  352308,
+                  352319,
+                  352337,
+                  352338,
+                  352340,
+                  352359,
+                  352361,
+                  352363,
+                  352367,
+                  352371,
+                  352378,
+                  352385,
+                  352387,
+                  352393,
+                  352396,
+                  352403,
+                  352408,
+                  352413,
+                  352417,
+                  352428,
+                  352433,
+                  352440,
+                  352443,
+                  352450,
+                  352453,
+                  352457,
+                  352495,
+                  352502,
+                  352503,
+                  352504,
+                  352506,
+                  352508,
+                  352510,
+                  352511,
+                  352513,
+                  352514,
+                  352517,
+                  352518,
+                  352520,
+                  352524,
+                  352527,
+                  352532,
+                  352563,
+                  352565,
+                  352567,
+                  352569,
+                  352570,
+                  352571,
+                  352574,
+                  352576,
+                  352579,
+                  352580,
+                  352582,
+                  352583,
+                  352584,
+                  352598,
+                  352600,
+                  352602,
+                  352603,
+                  352605,
+                  352606,
+                  352614,
+                  352616,
+                  352617,
+                  352619,
+                  352620,
+                  352621,
+                  352623,
+                  354066,
+                  354067,
+                  355653,
+                  357513,
+                  357514,
+                  357516,
+                  357518,
+                  357519,
+                  357520,
+                  357522,
+                  357900,
+                  358132,
+                  358881,
+                  359058,
+                  359061,
+                  359062,
+                  359438,
+                  359709,
+                  359710,
+                  362277,
+                  363597,
+                  363842,
+                  364432,
+                  364525,
+                  364812,
+                  365241,
+                  365817,
+                  366637,
+                  367373,
+                  368194,
+                  368240,
+                  368397,
+                  368940,
+                  368941,
+                  368942,
+                  368943,
+                  368944,
+                  368989,
+                  369324,
+                  369581,
+                  369908,
+                  370307,
+                  371315
+                ]
+              ]
+            },
+            "General Astronomy": {
+              "description": "5 additional courses in Astronomy, plus an additional 15 credits in a complementary area of study",
+              "counting": "courses",
+              "perSlotMinCount": [
+                2,
+                2,
+                1
+              ],
+              "slotNames": [
+                "Group A",
+                "Group B",
+                "Group C"
+              ],
+              "courses": [
+                [
+                  350731,
+                  350738
+                ],
+                [
+                  364309,
+                  364314,
+                  365648
+                ],
+                [
+                  350760,
+                  355225,
+                  357679
+                ]
+              ]
+            }
+          }
+        }
+      ]
+    },
     "BIO": {
       "name": "Biological Sciences",
       "schools": [
