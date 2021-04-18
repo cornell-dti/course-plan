@@ -19,7 +19,7 @@ jobs:
       - name: Jest Test
         run: npm run test
       - name: Cypress Test
-        run: npm run serve && cypress:run
+        run: npm run cypress:e2e
         env:
           CYPRESS_TEST_UID: ${{ secrets.CYPRESS_TEST_UID }}
           SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CORNELLDTI_COURSEPLAN_DEV }}
