@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+// <reference types="cypress" />
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -12,7 +12,8 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-const { GoogleSocialLogin } = require('cypress-social-logins').plugins;
+const admin = require('firebase-admin');
+const cypressFirebasePlugin = require('cypress-firebase').plugin;
 
 /**
  * @type {Cypress.PluginConfig}
@@ -20,7 +21,7 @@ const { GoogleSocialLogin } = require('cypress-social-logins').plugins;
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-  on('task', {
-    GoogleSocialLogin: GoogleSocialLogin,
-  });
+  const extendedConfig = cypressFirebasePlugin(on, config, admin);
+
+  return extendedConfig;
 };

@@ -23,3 +23,24 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
+import 'firebase/firestore';
+import { attachCustomCommands } from 'cypress-firebase';
+
+// Development firebase config copied from firebaseConfig.ts
+const fbConfig = {
+  apiKey: 'AIzaSyAfePy1Tbrqm55bYR7BHHl50r-9NTVj0Rs',
+  authDomain: 'cornelldti-courseplan-dev.firebaseapp.com',
+  databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
+  projectId: 'cornelldti-courseplan-dev',
+  storageBucket: '',
+  messagingSenderId: '321304703190',
+  appId: '1:321304703190:web:2f2fefb4a0284465b99977',
+};
+
+firebase.initializeApp(fbConfig);
+
+attachCustomCommands({ Cypress, cy, firebase });

@@ -1,7 +1,10 @@
 // A test file containing a number of basic tests to confirm general frontend functionality works
 // Can and should be expanded on in more files to test more specific functionality and ensure future bugs are caught earlier
 
-it('Visit site logged in', () => {
+// Before running tests, starts on landing page, logs in with firebase oauth, then visits the dashboard
+before('Visit site logged in', () => {
+  cy.visit('localhost:8080/login');
+  cy.login(Cypress.env('TEST_UID'));
   cy.visit('localhost:8080');
 });
 
