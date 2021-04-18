@@ -14,7 +14,8 @@
     "format": "prettier --write \"**/*.{js,ts,css,scss,html,vue}\"",
     "format:check": "prettier --check \"**/*.{js,ts,css,scss,html,vue}\"",
     "test": "jest",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@cypress/vue": "^2.0.2",
