@@ -6,6 +6,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
   courseIsForeignLang,
+  courseMeetsCreditMinimum,
 } from '../checkers-common';
 
 const hdRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -240,7 +241,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         ['PBS', 'BIOLS-AG', 'BIONLS-AG'].some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+        ) && courseMeetsCreditMinimum(course, 3),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

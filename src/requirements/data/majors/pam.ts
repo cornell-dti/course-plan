@@ -32,7 +32,8 @@ const pamRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'PAM 3000/4000 Electives',
     description:
-      '18 credits of 3000 or 4000 level PAM courses. PAM 4000, 4010, 4020, 4030, 4060, 4980, and 4990 may not be used to fulfill this requirement, and a max of 3 credits from PAM 4900 can be used.',
+      '18 credits of 3000 or 4000 level PAM courses. PAM 4000, 4010, 4020, 4030, 4060, 4980, and 4990 may not be used to fulfill this requirement, ' +
+      'and a max of 3 credits from PAM 4900 can be used.',
     source:
       'https://www.human.cornell.edu/sites/default/files/Academics/Registrar/Curriculum%20sheets/2020-2021/PAM%20Curriculum%20Sheet%202020-2021.pdf',
     checker: [
@@ -158,7 +159,7 @@ const pamRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         ['PBS', 'BIOLS-AG', 'BIONLS-AG'].some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+        ) && courseMeetsCreditMinimum(course, 3),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

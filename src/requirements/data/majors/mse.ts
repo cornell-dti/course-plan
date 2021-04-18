@@ -186,7 +186,8 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Materials Applications Electives: 3 courses',
     description:
-      'Students are required to take 3 Materials Applications courses. One of these must be an MSE course and two must be taken from other departments (non-MSE number). All Materials Electives can be used, and one semester of research involvement may be used.',
+      'Students are required to take 3 Materials Applications courses. One of these must be an MSE course and two must be taken from other departments (non-MSE number). ' +
+      'All Materials Electives can be used, and one semester of research involvement may be used.',
     source:
       'https://www.mse.cornell.edu/mse/programs/undergraduate-programs/major/major-curriculum/electives',
     checker: [
@@ -212,17 +213,14 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Materials Applications Electives: 2 categories',
     description:
-      'Students are required to take Materials Applications courses from at least two different categories. One of these must be an MSE course and two must be taken from other departments (non-MSE number). One semester of research involvement may be used in the Materials Research category.',
+      'Students are required to take Materials Applications courses from at least two different categories. One of these must be an MSE course ' +
+      'and two must be taken from other departments (non-MSE number). One semester of research involvement may be used in the Materials Research category.',
     source:
       'https://www.mse.cornell.edu/mse/programs/undergraduate-programs/major/major-curriculum/electives',
     checker: [
-      (course: Course): boolean =>
-        applicationElectives[0].includes(`${course.subject} ${course.catalogNbr}`) ?? false,
-      ...applicationElectives
-        .slice(1)
-        .map(categoryCourses => (course: Course): boolean =>
-          categoryCourses?.includes(`${course.subject} ${course.catalogNbr}`) ?? false
-        ),
+      ...applicationElectives.map(categoryCourses => (course: Course): boolean =>
+        categoryCourses?.includes(`${course.subject} ${course.catalogNbr}`) ?? false
+      ),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
@@ -257,7 +255,8 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Advanced Math',
     description:
-      'At least one elective course must meet the advanced mathematics or mathematical/computational modeling requirement. Courses that count will normally be at the 3000 level or above (with some 2000 level exceptions) and are beyond MATH 2930 or 2940 (having 2930/2940 as prerequisites is common).',
+      'At least one elective course must meet the advanced mathematics or mathematical/computational modeling requirement. Courses that count will normally ' +
+      'be at the 3000 level or above (with some 2000 level exceptions) and are beyond MATH 2930 or 2940 (having 2930/2940 as prerequisites is common).',
     source:
       'https://www.mse.cornell.edu/mse/programs/undergraduate-programs/major/major-curriculum/advanced-math-requirements',
     checker: includesWithSingleRequirement(
@@ -269,6 +268,7 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
       'CEE 3040',
       'CEE 3710',
       'CS 2024',
+      'CS 2800',
       'CS 3110',
       'CS 4220',
       'CS 4780',
