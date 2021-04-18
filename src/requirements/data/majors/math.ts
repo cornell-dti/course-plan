@@ -4,7 +4,7 @@ import { includesWithSingleRequirement, includesWithSubRequirements } from '../c
 const mathRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Linear Algebra',
-    description: 'MATH 2210, 2230, or 2940',
+    description: 'MATH 2210, 2230, or 2940.',
     source: 'https://math.cornell.edu/major',
     checker: includesWithSingleRequirement('MATH 2210', 'MATH 2230', 'MATH 2940'),
     fulfilledBy: 'courses',
@@ -13,7 +13,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Multivariable Calculus',
-    description: 'MATH 2220, 2240, or 1920',
+    description: 'MATH 2220, 2240, or 1920.',
     source: 'https://math.cornell.edu/major',
     checker: includesWithSingleRequirement('MATH 2220', 'MATH 2240', 'MATH 1920'),
     fulfilledBy: 'courses',
@@ -22,7 +22,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Programming Course',
-    description: 'A 3- or 4-credit computer programming course',
+    description: 'A 3- or 4-credit computer programming course.',
     source: 'https://math.cornell.edu/major',
     checker: includesWithSingleRequirement('CS 1110', 'CS 1112', 'CS 2110', 'CS 2112'),
     fulfilledBy: 'courses',
@@ -31,7 +31,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Algebra',
-    description: 'Two Courses in Algebra',
+    description: 'Two Courses in Algebra.',
     source: 'http://pi.math.cornell.edu/files/Undergraduate/Major/worksheets/u-mathmajor-math.pdf',
     //  TODO - We don't account for forbidden overlaps
     checker: includesWithSingleRequirement(
@@ -52,7 +52,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Analysis',
-    description: 'Two Courses in Analysis',
+    description: 'Two Courses in Analysis.',
     source: 'http://pi.math.cornell.edu/files/Undergraduate/Major/worksheets/u-mathmajor-math.pdf',
     //  TODO - We don't account for forbidden overlaps
     checker: includesWithSingleRequirement(
@@ -71,20 +71,20 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
-    slotNames: ['Courses'],
+    slotNames: ['Course'],
   },
   {
     name: 'Concentration',
     // TODO - Double Concentrations?
     description:
-      'Students are required to complete AT LEAST one concentration from the eight concentrations available',
+      'Students are required to complete AT LEAST one concentration from the eight concentrations available.',
     source: 'https://math.cornell.edu/major#major-requirements',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       Mathematics: {
         description:
-          '(i) Four 3000+ MATH courses (At least one of the four courses must be among the geometry/topology courses), ' +
-          '(ii) One course dealing with mathematical models',
+          '(i) Four additional 3000+ MATH courses (At least one of the four courses must be among the geometry/topology courses) Note: MATH 3210 is eligible only if not used for the analysis requirement; MATH 4500 and MATH 4560 are eligible only if not used toward the algebra requirement, ' +
+          '(ii) One course dealing with mathematical models.',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['MATH 3***', 'MATH 4***', 'MATH 5***', 'MATH 6***', 'MATH 7***'],
@@ -100,13 +100,13 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
           ['MATH 3610', 'CS 2110', 'PHYS 1116', 'PHYS 2208', 'PHYS 2213', 'PHYS 2217']
         ),
         perSlotMinCount: [3, 1, 1],
-        slotNames: ['3000+ Math Courses', 'Geometry/Topology Course', 'Mathematical Models Course'],
+        slotNames: ['3000+ Math Course', 'Geometry/Topology Course', 'Mathematical Models Course'],
       },
       'Applied Mathematics': {
         description:
-          '5 courses from (i) and (ii): ' +
+          '5 additional courses from (i) and (ii): ' +
           '(i) At least 3 MATH courses numbered 3000 or above, ' +
-          '(ii) One course dealing with mathematical models, ',
+          '(ii) One course dealing with mathematical models.',
         // 'Of the 9 courses used to fulfill requirements of the math major, at least one course must be taken from three of the four Groups: ' +
         // 'A. Differential equations, ' +
         // 'B. Discrete mathematics and combinatorics, ' +
@@ -118,13 +118,13 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
           ['MATH 3610', 'CS 2110', 'PHYS 1116', 'PHYS 2208', 'PHYS 2213', 'PHYS 2217']
         ),
         perSlotMinCount: [4, 1],
-        slotNames: ['3000+ Math Courses', 'Mathematical Models Course'],
+        slotNames: ['3000+ Math Course', 'Mathematical Models Course'],
       },
       'Computer Science': {
         description:
-          '5 courses from (i) and (ii): ' +
+          '5 additional courses from (i) and (ii): ' +
           '(i) At least one MATH course numbered 3000 or above, ' +
-          '(ii) 3 CS courses with significant mathematical content',
+          '(ii) 3 CS courses with significant mathematical content.',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['MATH 3***', 'MATH 4***', 'MATH 5***', 'MATH 6***', 'MATH 7***'],
@@ -183,14 +183,14 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3, 1],
-        slotNames: ['3000+ Math Course', 'Mathematical CS Courses', 'MATH or CS Course'],
+        slotNames: ['3000+ Math Course', 'Mathematical CS Course', 'MATH or CS Course'],
       },
       Economics: {
         description:
-          '5 courses from (i), (ii), and (iii): ' +
+          '5 additional courses from (i), (ii), and (iii): ' +
           '(i) At least one MATH course numbered 3000 or above, ' +
           '(ii) At least three ECON courses with significant mathematical content, ' +
-          '(iii) A course in ORIE with significant mathematical content dealing with material of interest in economics',
+          '(iii) A course in ORIE with significant mathematical content dealing with material of interest in economics.',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['MATH 3***', 'MATH 4***', 'MATH 5***', 'MATH 6***', 'MATH 7***'],
@@ -207,6 +207,11 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
             'ECON 6100',
             'ECON 6130',
             'ECON 6140',
+            'ECON 6190',
+            'ECON 6200',
+            'CS 4852',
+            'INFO 4220',
+            'INFO 6220',
           ],
           [
             'ORIE 3300',
@@ -228,6 +233,11 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
             'ECON 6100',
             'ECON 6130',
             'ECON 6140',
+            'ECON 6190',
+            'ECON 6200',
+            'CS 4852',
+            'INFO 4220',
+            'INFO 6220',
             'MATH 3***',
             'MATH 4***',
             'MATH 5***',
@@ -236,12 +246,12 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3, 1],
-        slotNames: ['3000+ MATH Course', 'Mathematical ECON Courses', 'ORIE, ECON, or MATH Course'],
+        slotNames: ['3000+ MATH Course', 'Mathematical ECON Course', 'ORIE, ECON, or MATH Course'],
       },
       Biology: {
         description:
           '(i) Three biology courses that have mathematical content and provide background necessary for work at the interface between biology and mathematics, ' +
-          '(ii) Two mathematics courses numbered 3000 or above. MATH 4200 and 4710* are particularly appropriate.',
+          '(ii) Two additional mathematics courses numbered 3000 or above. MATH 4200 and 4710* are particularly appropriate.',
         counting: 'courses',
         checker: includesWithSubRequirements(
           [
@@ -252,17 +262,27 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
             'BTRY 4090',
             'BTRY 4820',
             'BTRY 4840',
-            'BTRY NTRES 4110',
+            'NTRES 4110',
             'NTRES 4120',
+            'MATH 3620',
+            'ILRST 3080',
+            'STSCI 3080',
+            'STSCI 4090',
+            'BTRY 6820',
+            'BTRY 6830',
+            'CS 4775',
+            'BTRY 6840',
+            'NTRES 6110',
+            'NTRES 6120',
           ],
           ['MATH 3***', 'MATH 4***', 'MATH 5***', 'MATH 6***', 'MATH 7***']
         ),
         perSlotMinCount: [3, 2],
-        slotNames: ['Mathematical Biology Courses', '3000+ MATH Course'],
+        slotNames: ['Mathematical Biology Course', '3000+ MATH Course'],
       },
       Physics: {
         description:
-          '5 courses from (i) and (ii): ' +
+          '5 additional courses from (i) and (ii): ' +
           '(i) At least one MATH course numbered 3000 or above, ' +
           '(ii) At least three physics courses that make significant use of advanced mathematics.',
         counting: 'courses',
@@ -305,11 +325,11 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3, 1],
-        slotNames: ['3000+ MATH Course', 'Physics Courses', 'MATH or Physics Course'],
+        slotNames: ['3000+ MATH Course', 'Physics Course', 'MATH or Physics Course'],
       },
       'Operations Research': {
         description:
-          '5 courses from (i) and (ii): ' +
+          '5 additional courses from (i) and (ii): ' +
           '(i) At least one MATH course numbered 3000 or above, ' +
           '(ii) At least three courses in ORIE in which the primary focus involves mathematical techniques.',
         counting: 'courses',
@@ -352,13 +372,13 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 3, 1],
-        slotNames: ['3000+ MATH Course', 'ORIE Courses', 'MATH or ORIE Course'],
+        slotNames: ['3000+ MATH Course', 'ORIE Course', 'MATH or ORIE Course'],
       },
       Statistics: {
         description:
           'MATH 4710, MATH 4720, ' +
           'One additional MATH course numbered 3000 or above, ' +
-          'Two courses in other departments with significant content in statistics',
+          'Two courses in other departments with significant content in statistics.',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['MATH 4710'],
@@ -387,7 +407,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 2],
-        slotNames: ['MATH 4710', 'MATH 4720', '3000+ MATH Course', 'Statistics Courses'],
+        slotNames: ['MATH 4710', 'MATH 4720', '3000+ MATH Course', 'Statistics Course'],
       },
     },
   },

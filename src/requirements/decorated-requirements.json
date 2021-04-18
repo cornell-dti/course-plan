@@ -125499,7 +125499,7 @@
       "requirements": [
         {
           "name": "Linear Algebra",
-          "description": "MATH 2210, 2230, or 2940",
+          "description": "MATH 2210, 2230, or 2940.",
           "source": "https://math.cornell.edu/major",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -125518,7 +125518,7 @@
         },
         {
           "name": "Multivariable Calculus",
-          "description": "MATH 2220, 2240, or 1920",
+          "description": "MATH 2220, 2240, or 1920.",
           "source": "https://math.cornell.edu/major",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -125537,7 +125537,7 @@
         },
         {
           "name": "Programming Course",
-          "description": "A 3- or 4-credit computer programming course",
+          "description": "A 3- or 4-credit computer programming course.",
           "source": "https://math.cornell.edu/major",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -125557,7 +125557,7 @@
         },
         {
           "name": "Algebra",
-          "description": "Two Courses in Algebra",
+          "description": "Two Courses in Algebra.",
           "source": "http://pi.math.cornell.edu/files/Undergraduate/Major/worksheets/u-mathmajor-math.pdf",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -125583,14 +125583,14 @@
         },
         {
           "name": "Analysis",
-          "description": "Two Courses in Analysis",
+          "description": "Two Courses in Analysis.",
           "source": "http://pi.math.cornell.edu/files/Undergraduate/Major/worksheets/u-mathmajor-math.pdf",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
             2
           ],
           "slotNames": [
-            "Courses"
+            "Course"
           ],
           "courses": [
             [
@@ -125611,12 +125611,12 @@
         },
         {
           "name": "Concentration",
-          "description": "Students are required to complete AT LEAST one concentration from the eight concentrations available",
+          "description": "Students are required to complete AT LEAST one concentration from the eight concentrations available.",
           "source": "https://math.cornell.edu/major#major-requirements",
           "fulfilledBy": "toggleable",
           "fulfillmentOptions": {
             "Mathematics": {
-              "description": "(i) Four 3000+ MATH courses (At least one of the four courses must be among the geometry/topology courses), (ii) One course dealing with mathematical models",
+              "description": "(i) Four additional 3000+ MATH courses (At least one of the four courses must be among the geometry/topology courses) Note: MATH 3210 is eligible only if not used for the analysis requirement; MATH 4500 and MATH 4560 are eligible only if not used toward the algebra requirement, (ii) One course dealing with mathematical models.",
               "counting": "courses",
               "perSlotMinCount": [
                 3,
@@ -125624,7 +125624,7 @@
                 1
               ],
               "slotNames": [
-                "3000+ Math Courses",
+                "3000+ Math Course",
                 "Geometry/Topology Course",
                 "Mathematical Models Course"
               ],
@@ -125756,14 +125756,14 @@
               ]
             },
             "Applied Mathematics": {
-              "description": "5 courses from (i) and (ii): (i) At least 3 MATH courses numbered 3000 or above, (ii) One course dealing with mathematical models, ",
+              "description": "5 additional courses from (i) and (ii): (i) At least 3 MATH courses numbered 3000 or above, (ii) One course dealing with mathematical models.",
               "counting": "courses",
               "perSlotMinCount": [
                 4,
                 1
               ],
               "slotNames": [
-                "3000+ Math Courses",
+                "3000+ Math Course",
                 "Mathematical Models Course"
               ],
               "courses": [
@@ -125885,7 +125885,7 @@
               ]
             },
             "Computer Science": {
-              "description": "5 courses from (i) and (ii): (i) At least one MATH course numbered 3000 or above, (ii) 3 CS courses with significant mathematical content",
+              "description": "5 additional courses from (i) and (ii): (i) At least one MATH course numbered 3000 or above, (ii) 3 CS courses with significant mathematical content.",
               "counting": "courses",
               "perSlotMinCount": [
                 1,
@@ -125894,7 +125894,7 @@
               ],
               "slotNames": [
                 "3000+ Math Course",
-                "Mathematical CS Courses",
+                "Mathematical CS Course",
                 "MATH or CS Course"
               ],
               "courses": [
@@ -126158,7 +126158,7 @@
               ]
             },
             "Economics": {
-              "description": "5 courses from (i), (ii), and (iii): (i) At least one MATH course numbered 3000 or above, (ii) At least three ECON courses with significant mathematical content, (iii) A course in ORIE with significant mathematical content dealing with material of interest in economics",
+              "description": "5 additional courses from (i), (ii), and (iii): (i) At least one MATH course numbered 3000 or above, (ii) At least three ECON courses with significant mathematical content, (iii) A course in ORIE with significant mathematical content dealing with material of interest in economics.",
               "counting": "courses",
               "perSlotMinCount": [
                 1,
@@ -126167,7 +126167,7 @@
               ],
               "slotNames": [
                 "3000+ MATH Course",
-                "Mathematical ECON Courses",
+                "Mathematical ECON Course",
                 "ORIE, ECON, or MATH Course"
               ],
               "courses": [
@@ -126288,7 +126288,10 @@
                   350867,
                   350874,
                   350875,
+                  350877,
+                  350886,
                   365608,
+                  365609,
                   368214
                 ],
                 [
@@ -126301,6 +126304,8 @@
                   350867,
                   350874,
                   350875,
+                  350877,
+                  350886,
                   351723,
                   351742,
                   352158,
@@ -126398,6 +126403,7 @@
                   364812,
                   365241,
                   365608,
+                  365609,
                   365817,
                   366637,
                   367373,
@@ -126419,23 +126425,28 @@
               ]
             },
             "Biology": {
-              "description": "(i) Three biology courses that have mathematical content and provide background necessary for work at the interface between biology and mathematics, (ii) Two mathematics courses numbered 3000 or above. MATH 4200 and 4710* are particularly appropriate.",
+              "description": "(i) Three biology courses that have mathematical content and provide background necessary for work at the interface between biology and mathematics, (ii) Two additional mathematics courses numbered 3000 or above. MATH 4200 and 4710* are particularly appropriate.",
               "counting": "courses",
               "perSlotMinCount": [
                 3,
                 2
               ],
               "slotNames": [
-                "Mathematical Biology Courses",
+                "Mathematical Biology Course",
                 "3000+ MATH Course"
               ],
               "courses": [
                 [
                   352287,
                   353300,
+                  353958,
                   353959,
+                  354008,
+                  354009,
                   355653,
                   360955,
+                  360958,
+                  360959,
                   364513,
                   368708
                 ],
@@ -126549,7 +126560,7 @@
               ]
             },
             "Physics": {
-              "description": "5 courses from (i) and (ii): (i) At least one MATH course numbered 3000 or above, (ii) At least three physics courses that make significant use of advanced mathematics.",
+              "description": "5 additional courses from (i) and (ii): (i) At least one MATH course numbered 3000 or above, (ii) At least three physics courses that make significant use of advanced mathematics.",
               "counting": "courses",
               "perSlotMinCount": [
                 1,
@@ -126558,7 +126569,7 @@
               ],
               "slotNames": [
                 "3000+ MATH Course",
-                "Physics Courses",
+                "Physics Course",
                 "MATH or Physics Course"
               ],
               "courses": [
@@ -126807,7 +126818,7 @@
               ]
             },
             "Operations Research": {
-              "description": "5 courses from (i) and (ii): (i) At least one MATH course numbered 3000 or above, (ii) At least three courses in ORIE in which the primary focus involves mathematical techniques.",
+              "description": "5 additional courses from (i) and (ii): (i) At least one MATH course numbered 3000 or above, (ii) At least three courses in ORIE in which the primary focus involves mathematical techniques.",
               "counting": "courses",
               "perSlotMinCount": [
                 1,
@@ -126816,7 +126827,7 @@
               ],
               "slotNames": [
                 "3000+ MATH Course",
-                "ORIE Courses",
+                "ORIE Course",
                 "MATH or ORIE Course"
               ],
               "courses": [
@@ -127063,7 +127074,7 @@
               ]
             },
             "Statistics": {
-              "description": "MATH 4710, MATH 4720, One additional MATH course numbered 3000 or above, Two courses in other departments with significant content in statistics",
+              "description": "MATH 4710, MATH 4720, One additional MATH course numbered 3000 or above, Two courses in other departments with significant content in statistics.",
               "counting": "courses",
               "perSlotMinCount": [
                 1,
@@ -127075,7 +127086,7 @@
                 "MATH 4710",
                 "MATH 4720",
                 "3000+ MATH Course",
-                "Statistics Courses"
+                "Statistics Course"
               ],
               "courses": [
                 [
