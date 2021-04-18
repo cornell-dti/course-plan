@@ -15,12 +15,14 @@
         :class="{ 'modal--block': isSemesterModalOpen }"
         @add-semester="addSemester"
         @close-semester-modal="closeSemesterModal"
+        data-cyId="addSemesterModal"
       />
       <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
         <button
           v-if="noSemesters"
           class="semesterView-addSemesterButton"
           @click="openSemesterModal"
+          data-cyId="semesterView-addSemesterButton"
         >
           + New Semester
         </button>

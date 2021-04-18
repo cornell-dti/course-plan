@@ -4,6 +4,7 @@
       class="semesterMenu-section full-opacity-on-hover"
       :class="{ 'd-none': isOpenModal }"
       @click="openEditSemesterModal"
+      data-cyId="semesterMenu-edit"
     >
       <div class="semesterMenu-content">
         <div class="semesterMenu-content">
@@ -22,6 +23,7 @@
       class="semesterMenu-section full-opacity-on-hover"
       :class="{ 'd-none': isOpenModal }"
       @click="openDeleteSemesterModal"
+      data-cyId="semesterMenu-delete"
     >
       <div class="semesterMenu-content">
         <div class="semesterMenu-content">

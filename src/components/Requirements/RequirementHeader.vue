@@ -49,6 +49,7 @@
             color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
           }"
           class="major-title-top"
+          data-cyId="majorTitle"
         >
           {{ getMajorFullName(major) }}
         </p>
@@ -57,6 +58,7 @@
             color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
           }"
           class="major-title-bottom"
+          data-cyId="collegeTitle"
         >
           ({{ getCollegeFullName(onboardingData.college) }})
         </p>
@@ -120,6 +122,7 @@
         @click="toggleDetails()"
         aria-haspopup="true"
         data-toggle="dropdown"
+        data-cyId="requirements-viewMore"
       >
         <div class="col-1 p-0 btn" :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }">
           <drop-down-arrow

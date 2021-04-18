@@ -5,6 +5,7 @@
       class="dropdown row subreq-button slightly-lower-opacity-on-hover"
       aria-haspopup="true"
       data-toggle="dropdown"
+      data-cyId="requirements-subreqButton"
     >
       <div class="row depth-req">
         <div class="btn">

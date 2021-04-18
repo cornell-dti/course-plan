@@ -8,6 +8,7 @@
       aria-haspopup="true"
       :aria-expanded="showDropdown"
       v-if="potentialRequirements.some(req => req.id === selectedID)"
+      data-cyId="newCourse-requirementsDropdown"
     >
       <div class="warning-row">
         <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
@@ -23,6 +24,7 @@
       data-toggle="dropdown"
       aria-haspopup="true"
       :aria-expanded="showDropdown"
+      data-cyId="newCourse-requirementsDropdown"
     >
       {{ selected === '' ? 'Select one (optional)' : selected }}
       <drop-down-arrow :isFlipped="showDropdown" :fillColor="emGreen" />
@@ -33,6 +35,7 @@
           @click="toggleSelectRequirement(option.id)"
           @keyup.enter="toggleSelectRequirement(option.id)"
           tabindex="0"
+          data-cyId="newCourse-reqOption"
           >{{ option.name }}</a
         >
       </li>
@@ -44,6 +47,7 @@
           @click="toggleSelectRequirement(option.id)"
           @keyup.enter="toggleSelectRequirement(option.id)"
           tabindex="0"
+          data-cyId="newCourse-reqOption"
         >
           <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
           {{ option.name }}
@@ -54,6 +58,7 @@
           @click="toggleSelectRequirement('')"
           @keyup.enter="toggleSelectRequirement('')"
           tabindex="0"
+          data-cyId="newCourse-reqOption"
         >
           None
         </a>

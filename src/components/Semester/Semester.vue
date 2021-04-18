@@ -37,19 +37,24 @@
       :deleteSemYear="year"
       ref="modalBodyComponent"
     />
-    <button v-if="isFirstSem" class="semester-addSemesterButton" @click="openSemesterModal">
+    <button
+      v-if="isFirstSem"
+      class="semester-addSemesterButton"
+      @click="openSemesterModal"
+      data-cyId="semester-addSemesterButton"
+    >
       + New Semester
     </button>
     <div class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
-          <span class="semester-name"
+          <span class="semester-name" data-cyId="semesterName"
             ><img class="season-emoji" :src="seasonImg[type]" alt="" /> {{ type }} {{ year }}</span
           >
           <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
-          <button class="semester-dotRow" @click="openSemesterMenu">
+          <button class="semester-dotRow" @click="openSemesterMenu" data-cyId="semesterMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="open menu for semester" />
           </button>
         </div>
@@ -83,7 +88,11 @@
             </div>
           </template>
         </draggable>
-        <add-course-button :compact="compact" @click="openCourseModal" />
+        <add-course-button
+          :compact="compact"
+          @click="openCourseModal"
+          data-cyId="semester-addCourse"
+        />
       </div>
     </div>
     <semester-menu

@@ -13,6 +13,7 @@
           <div
             class="newSemester-dropdown-placeholder season-wrapper"
             @click="showHideSeasonContent"
+            data-cyId="newSemester-seasonWrapper"
           >
             <div
               class="newSemester-dropdown-placeholder season-placeholder"
@@ -35,6 +36,7 @@
               :key="season[1]"
               class="newSemester-dropdown-content-item"
               @click="selectSeason(season[1])"
+              data-cyId="newSemester-seasonItem"
             >
               <img
                 :src="season[0]"
@@ -55,7 +57,11 @@
           class="position-relative"
           v-click-outside="closeYearDropdownIfOpen"
         >
-          <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
+          <div
+            class="newSemester-dropdown-placeholder year-wrapper"
+            @click="showHideYearContent"
+            data-cyId="newSemester-yearWrapper"
+          >
             <div
               class="newSemester-dropdown-placeholder year-placeholder"
               :style="{ color: displayOptions.year.placeholderColor }"
@@ -77,6 +83,7 @@
               :ref="`year-ref-${index}`"
               class="newSemester-dropdown-content-item"
               @click="selectYear(yearChoice)"
+              data-cyId="newSemester-yearItem"
             >
               {{ yearChoice }}
             </div>

@@ -9,7 +9,7 @@
         This class automatically fulfills the following requirement(s):
       </div>
       <div class="newCourse-requirements-container">
-        <div class="newCourse-requirements">
+        <div class="newCourse-requirements" data-cyId="newCourse-requirements">
           {{ editMode ? requirementsThatAllowDoubleCounting.join(', ') : chosenRequirementText }}
         </div>
       </div>
@@ -62,6 +62,7 @@
         class="newCourse-link"
         @click="toggleEditMode()"
         @keyup.enter="toggleEditMode()"
+        data-cyId="newCourse-link"
       >
         Select Requirements
       </button>
