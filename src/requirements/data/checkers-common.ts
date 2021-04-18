@@ -1,17 +1,51 @@
 import { Course, RequirementChecker } from '../types';
-import { FWS_COURSE_ID } from './constants';
+import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './constants';
+
+// course codes representing foreign languages
+const FLcourses: readonly string[] = [
+  'ARAB',
+  'BENGL',
+  'BURM',
+  'CHIN',
+  'FREN',
+  'GERST',
+  'GREEK',
+  'HEBRW',
+  'HINDI',
+  'INDO',
+  'ITAL',
+  'JAPAN',
+  'KHMER',
+  'KOREA',
+  'LATIN',
+  'NEPAL',
+  'PERSN',
+  'POLSH',
+  'PORT',
+  'RUSSA',
+  'SANSK',
+  'SINHA',
+  'SPAN',
+  'SWAHL',
+  'TAG',
+  'THAI',
+  'TURK',
+  'VIET',
+  'YORUB',
+  'ZULU',
+];
 
 /**
  * @param courseName name of the course (as a code)
  * @param code code to check courseName (can contain * to denote any value)
  * @returns if a code matches the course name (CS 2110 and CS 2*** returns true, AEM 3110 and AEM 32** returns false)
  */
-export function ifCodeMatch(courseName: string, code: string): boolean {
+export const ifCodeMatch = (courseName: string, code: string): boolean => {
   for (let i = 0; i < courseName.length; i += 1) {
     if (code[i] !== '*' && courseName[i] !== code[i]) return false;
   }
   return true;
-}
+};
 
 /**
  * @param course course object with useful information retrived from Cornell courses API.
@@ -32,7 +66,7 @@ export const courseMatchesCodeOptions = (course: Course, codeOptions: readonly s
   codeOptions.some(code => ifCodeMatch(`${course.subject} ${course.catalogNbr}`, code));
 
 /**
- * Almost colleges have FWS requirements. Instead of writing them from scratch each time, call this
+ * Almost all colleges have FWS requirements. Instead of writing them from scratch each time, call this
  * function.
  *
  * @param course course object with useful information retrived from Cornell courses API.
@@ -42,6 +76,52 @@ export const courseIsFWS = (course: Course): boolean =>
   course.crseId === FWS_COURSE_ID ||
   course.titleLong.includes('FWS:') ||
   (course.catalogSatisfiesReq?.includes('First-Year Writing Seminar') ?? false);
+
+/**
+ * Call this function to check if a course meets a foreign language requirement, since the 'FL'
+ * category is missing from course data
+ *
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @returns if the course could potentially be a foreign language course
+ */
+export const courseIsForeignLang = (course: Course): boolean =>
+  FLcourses.some(language => course.subject?.includes(language) ?? false);
+
+/**
+ * Detects special (synthetic) courses, as defined in requirement-json-generator.ts
+ *
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @returns if the course is a special course
+ */
+export const courseIsSpecial = (course: Course): boolean =>
+  course.crseId === CREDITS_COURSE_ID || course.crseId === FWS_COURSE_ID;
+
+/**
+ * This function checks whether a course's maximum number of credits reaches a specified minimum
+ *
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @param minCredits number of credits to check if this course can fulfill
+ * @returns if course can possibly be taken with credits equal to or greater than minCredits
+ */
+export const courseMeetsCreditMinimum = (course: Course, minCredits: number): boolean => {
+  for (let i = 0; i < course.enrollGroups.length; i += 1) {
+    if (course.enrollGroups[i].unitsMaximum >= minCredits) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+/**
+ * This function checks whether a course has a catalogAttribute of attribute
+ *
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @param attribute attribute the course object might have
+ * @returns if course has attribute in field catalogAttribute
+ */
+export const courseHasAttribute = (course: Course, attribute: string): boolean =>
+  course.catalogAttribute?.includes(attribute) ?? false;
 
 /**
  * This function returns a checker that checks whether a course satisfy a single requirement by

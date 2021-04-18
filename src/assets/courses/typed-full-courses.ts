@@ -1,8 +1,8 @@
 import json from './full-courses.json';
 
-const fullCoursesJsonWithStringKey: Readonly<
+const fullCoursesJsonWithStringKey = (json as unknown) as Readonly<
   Record<string, readonly CornellCourseRosterCourse[]>
-> = json;
+>;
 
 export type FullCourseJson = Readonly<Record<number, readonly CornellCourseRosterCourse[]>>;
 

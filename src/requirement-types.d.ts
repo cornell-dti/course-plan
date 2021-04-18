@@ -7,6 +7,9 @@ type RequirementCommon = {
   readonly source: string;
   /** If this is set to true, then an edge to the course doesn't count towards double counting. */
   readonly allowCourseDoubleCounting?: true;
+  /** If this is set to true, then AP/IB credits cannot be applied towards this requirement. */
+  readonly disallowTransferCredit?: true;
+
   /**
    * If this field exists with string,
    * then a warning will show in sidebar and it will be treated mostly as a self-check.
@@ -24,7 +27,16 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
       readonly minCount?: number;
     }
   | ({
-      readonly fulfilledBy: 'courses' | 'credits';
+      readonly fulfilledBy: 'courses';
+      /** The minimum number of courses/credits required to fulfill each sub-requirement. */
+      readonly perSlotMinCount: readonly number[];
+      /** The name of each slot, used for display only. */
+      readonly slotNames: readonly string[];
+      /** When we care more about how many slots are filled with some courses */
+      readonly minNumberOfSlots?: number;
+    } & T)
+  | ({
+      readonly fulfilledBy: 'credits';
       /** The minimum number of courses/credits required to fulfill each sub-requirement. */
       readonly perSlotMinCount: readonly number[];
       /** When we care more about how many slots are filled with some courses */
@@ -34,11 +46,14 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
       readonly fulfilledBy: 'toggleable';
       readonly fulfillmentOptions: {
         readonly [optionName: string]: {
-          readonly counting: 'courses' | 'credits';
           readonly perSlotMinCount: readonly number[];
           readonly minNumberOfSlots?: number;
           readonly description: string;
-        } & T;
+        } & T &
+          (
+            | { readonly counting: 'courses'; readonly slotNames: readonly string[] }
+            | { readonly counting: 'credits' }
+          );
       };
     };
 
@@ -53,7 +68,7 @@ type DecoratedCollegeOrMajorRequirement = RequirementCommon &
 type CourseTaken = {
   /** The course ID from course roster, or our dummy id to denote special courses like FWS equiv. */
   readonly courseId: number;
-  /** Using the unique ID of firestore course for real course, and -1 for AP/IB/Swim */
+  /** Using the unique ID of firestore course for real course, -1 for swim test and < -1 for AP/IB. */
   readonly uniqueId: number;
   /**
    * Course code like 'CS 2112', 'AP CS'.

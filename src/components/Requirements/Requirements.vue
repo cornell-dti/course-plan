@@ -1,29 +1,43 @@
 <template v-if="semesters">
-  <div class="requirements">
+  <aside class="requirements">
     <div
-      class="fixed"
+      class="requirements-wrapper"
       data-intro-group="req-tooltip"
-      :class="{ 'd-none': shouldShowAllCourses }"
       :data-intro="getRequirementsTooltipText()"
       data-disable-interaction="1"
       data-step="1"
       data-tooltipClass="tooltipCenter"
     >
       <!-- loop through reqs array of req objects -->
-      <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
-        <requirement-view
-          :req="req"
-          :reqIndex="index"
-          :toggleableRequirementChoices="toggleableRequirementChoices"
-          :displayedMajorIndex="displayedMajorIndex"
-          :displayedMinorIndex="displayedMinorIndex"
-          :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
-          :numOfColleges="numOfColleges"
-          @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
-          @activateMajor="activateMajor"
-          @activateMinor="activateMinor"
-          @onShowAllCourses="onShowAllCourses"
-        />
+      <div
+        class="fixed"
+        :class="{
+          'd-none': shouldShowAllCourses,
+          'position-static': isSafari && modalIsOpen,
+        }"
+        data-intro-group="req-tooltip"
+        :data-intro="getCoursesTooltipText()"
+        data-disable-interaction="1"
+        data-step="2"
+        data-tooltipClass="tooltipCenter"
+      >
+        <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
+          <requirement-view
+            :req="req"
+            :reqIndex="index"
+            :toggleableRequirementChoices="toggleableRequirementChoices"
+            :displayedMajorIndex="displayedMajorIndex"
+            :displayedMinorIndex="displayedMinorIndex"
+            :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
+            :numOfColleges="numOfColleges"
+            :tourStep="tourStep"
+            @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
+            @activateMajor="activateMajor"
+            @activateMinor="activateMinor"
+            @onShowAllCourses="onShowAllCourses"
+            @modal-open="modalToggled"
+          />
+        </div>
       </div>
     </div>
     <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses">
@@ -44,7 +58,7 @@
               :disabled="!hasPrevPage"
               @click="prevPage()"
             >
-              <span class="see-all-button-text">PREV</span>
+              <span class="see-all-button-text">Prev</span>
             </button>
             <button
               class="see-all-button"
@@ -52,47 +66,48 @@
               :disabled="!hasNextPage"
               @click="nextPage()"
             >
-              <span class="see-all-button-text">NEXT</span>
+              <span class="see-all-button-text">Next</span>
             </button>
           </div>
         </div>
         <draggable
-          :value="showAllCourses.shownCourses"
+          :modelValue="showAllCourses.shownCourses"
           :clone="cloneCourse"
+          item-key="code"
           :group="{ name: 'draggable-semester-courses', put: false }"
         >
-          <div v-for="(courseData, index) in showAllCourses.shownCourses" :key="index">
-            <div class="mt-3">
-              <course
-                :courseObj="courseData"
-                :compact="false"
-                :active="false"
-                :isReqCourse="true"
-                class="requirements-course"
-              />
+          <template #item="{ element }">
+            <div>
+              <div class="mt-3">
+                <course
+                  :courseObj="element"
+                  :compact="false"
+                  :active="false"
+                  :isReqCourse="true"
+                  class="requirements-course"
+                />
+              </div>
             </div>
-          </div>
+          </template>
         </draggable>
       </div>
     </div>
-  </div>
+  </aside>
 </template>
 
 <script lang="ts">
 import draggable from 'vuedraggable';
-import Vue from 'vue';
-import VueCollapse from 'vue2-collapse';
+import { defineComponent } from 'vue';
 import introJs from 'intro.js';
 
 import Course from '@/components/Course/Course.vue';
 import RequirementView from '@/components/Requirements/RequirementView.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-// emoji for clipboard
+
 import clipboard from '@/assets/images/clipboard.svg';
+import warning from '@/assets/images/warning.svg';
 import store from '@/store';
 import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-firestore-data';
-
-Vue.use(VueCollapse);
 
 export type ShowAllCourses = {
   readonly name: string;
@@ -107,20 +122,21 @@ type Data = {
   showAllCourses: ShowAllCourses;
   shouldShowAllCourses: boolean;
   showAllPage: number;
+  tourStep: number;
+  modalIsOpen: boolean;
 };
 
 // This section will be revisited when we try to make first-time tooltips
 const tour = introJs().start();
 tour.setOption('exitOnEsc', 'false');
-tour.setOption('doneLabel', 'Finish');
-tour.setOption('skipLabel', 'Skip This Tutorial');
+tour.setOption('doneLabel', 'Next');
 tour.setOption('nextLabel', 'Next');
 tour.setOption('exitOnOverlayClick', 'false');
 
 // show 24 courses per page of the see all menu
 const maxSeeAllCoursesPerPage = 24;
 
-export default Vue.extend({
+export default defineComponent({
   components: { draggable, Course, DropDownArrow, RequirementView },
   props: {
     startTour: { type: Boolean, required: true },
@@ -133,6 +149,8 @@ export default Vue.extend({
       showAllCourses: { name: '', shownCourses: [], allCourses: [] },
       shouldShowAllCourses: false,
       showAllPage: 0,
+      tourStep: 0,
+      modalIsOpen: false,
     };
   },
   watch: {
@@ -140,6 +158,15 @@ export default Vue.extend({
       tour.start();
       tour.oncomplete(() => {
         this.$emit('showTourEndWindow');
+      });
+      tour.onbeforechange(() => {
+        if (tour.currentStep()) {
+          this.tourStep = tour.currentStep() as number;
+        }
+      });
+      tour.onexit(() => {
+        // resets tourStep in case skipped at step = 1
+        this.tourStep = 0;
       });
     },
   },
@@ -168,6 +195,23 @@ export default Vue.extend({
     pageText(): string {
       return `Page ${this.showAllPage + 1}/${this.numPages}`;
     },
+    isSafari(): boolean {
+      const htmlElement = window.HTMLElement as unknown;
+      type windowType = {
+        safari: {
+          pushNotification: boolean;
+        };
+      };
+      const initWindow = window as unknown;
+      const typedWindow = initWindow as windowType;
+      return (
+        /constructor/i.test(htmlElement as string) ||
+        (p => p.toString() === '[object SafariRemoteNotification]')(
+          !typedWindow.safari ||
+            (typeof typedWindow.safari !== 'undefined' && typedWindow.safari.pushNotification)
+        )
+      );
+    },
   },
   methods: {
     showMajorOrMinorRequirements(id: number, group: string): boolean {
@@ -193,9 +237,14 @@ export default Vue.extend({
       this.displayedMinorIndex = id;
     },
     getRequirementsTooltipText() {
-      return `<b>This is your Requirements Bar <img src="${clipboard}"class = "newSemester-emoji-text"></b><br>
-          <div class = "introjs-bodytext">To ease your journey, we’ve collected a list of course
-          requirements based on your college and major :)</div>`;
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Meet your Requirements Bar <img src="${clipboard}" class = "introjs-emoji newSemester-emoji-text" alt="clipboard icon"/>
+          </div><div class="introjs-customProgress">1/4</div></div><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and
+          required courses.<br><img src="${warning}" class = "newSemester-emoji-text" alt="warning icon"/> Some requirements
+          aren’t fully tracked by us yet, so pay attention to the warnings.</div>`;
+    },
+    getCoursesTooltipText() {
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">These are your Courses</div><div class="introjs-customProgress">2/4</div>
+      </div><div class = "introjs-bodytext">Drag and drop courses into your schedule! Click on them to learn more information like their descriptions.</div>`;
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
@@ -245,6 +294,10 @@ export default Vue.extend({
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
+    modalToggled(isOpen: boolean) {
+      this.$emit('modal-open', isOpen);
+      this.modalIsOpen = isOpen;
+    },
   },
 });
 </script>
@@ -256,12 +309,19 @@ export default Vue.extend({
   width: 100%;
   background-color: $inactiveGray;
 }
+.requirements-wrapper {
+  width: 100%;
+  height: 100%;
+}
 .requirements,
 .fixed {
   z-index: 1;
   height: 100%;
   width: 25rem;
   background-color: $white;
+}
+.position-static {
+  position: static;
 }
 .fixed {
   position: fixed;
@@ -366,12 +426,20 @@ h1.title {
   transform: rotate(90deg);
 }
 
+.requirements-course {
+  width: 21.375rem;
+}
+
 @media only screen and (max-width: $large-breakpoint) {
   .requirements,
   .fixed {
     width: 21rem;
   }
   .see-all-pages {
+    width: 17rem;
+  }
+
+  .requirements-course {
     width: 17rem;
   }
 }

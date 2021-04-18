@@ -24,17 +24,21 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
-const getMatchingCourses = (searchText: string): readonly CornellCourseRosterCourse[] => {
+const getMatchingCourses = (
+  searchText: string,
+  filter?: (course: CornellCourseRosterCourse) => boolean
+): readonly CornellCourseRosterCourse[] => {
   // search after value length of 2 to reduce search times of courses
   if (!searchText || searchText.length < 2) return [];
   /* code array for results that contain course code and title array for results that contain title */
   const code: CornellCourseRosterCourse[] = [];
   const title: CornellCourseRosterCourse[] = [];
 
-  for (const course of fullCoursesArray) {
+  const filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
+  for (const course of filteredCourses) {
     const courseCode = `${course.subject} ${course.catalogNbr}`;
     if (courseCode.toUpperCase().includes(searchText)) {
       code.push(course);
@@ -52,10 +56,16 @@ const getMatchingCourses = (searchText: string): readonly CornellCourseRosterCou
   return code.concat(title).slice(0, 10);
 };
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     searchBoxClassName: { type: String, required: true },
     placeholder: { type: String, required: true },
+    courseFilter: {
+      type: (Function as unknown) as PropType<
+        ((course: CornellCourseRosterCourse) => boolean) | undefined
+      >,
+      default: undefined,
+    },
     autoFocus: { type: Boolean, required: true },
   },
   data() {
@@ -66,7 +76,7 @@ export default Vue.extend({
   },
   computed: {
     matches(): readonly CornellCourseRosterCourse[] {
-      return getMatchingCourses(this.searchText.toUpperCase());
+      return getMatchingCourses(this.searchText.toUpperCase(), this.courseFilter);
     },
   },
   mounted() {

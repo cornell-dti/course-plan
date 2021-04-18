@@ -13,20 +13,19 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Introduction to basic business concepts',
     description:
-      'Choose one: AEM 1200, AEM 2400, HADM 2410, ENGRI 1270, ILRD 1700, NCC 5530, NCC 5580' +
-      'ORIE 4152, ENGRG 4610, MAE 4610',
+      'Choose one: AEM 1200, AEM 2400, HADM 1810, HADM 2410, ENGRI 1270, ILRD 1700, NCC 5530, NCC 5580' +
+      'ORIE 4152',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
     checker: includesWithSingleRequirement(
       'AEM 1200',
       'AEM 2400',
+      'HADM 1810',
       'HADM 2410',
       'ENGRI 1270',
       'ILRD 1700',
       'NCC 5530',
       'NCC 5580',
-      'ORIE 4152',
-      'ENGRG 4610',
-      'MAE 4610'
+      'ORIE 4152'
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [3],

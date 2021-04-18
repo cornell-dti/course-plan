@@ -1,3 +1,4 @@
+import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 
 export function checkNotNull<T>(value: T | null | undefined): T {
@@ -43,18 +44,63 @@ export function getMinorFullName(acronym: string): string {
   return requirementJSON.minor[acronym].name;
 }
 
+function getAllSubjects(): ReadonlySet<string> {
+  const set = new Set<string>();
+  fullCoursesArray.forEach(it => set.add(it.subject));
+  return set;
+}
+
+const SUBJECT_COLORS = [
+  {
+    text: 'Red',
+    hex: 'DA4A4A',
+  },
+  {
+    text: 'Orange',
+    hex: 'FFA53C',
+  },
+  {
+    text: 'Green',
+    hex: '58C913',
+  },
+  {
+    text: 'Blue',
+    hex: '139DC9',
+  },
+  {
+    text: 'Purple',
+    hex: 'C478FF',
+  },
+  {
+    text: 'Pink',
+    hex: 'F296D3',
+  },
+];
+
+export function allocateAllSubjectColor(
+  subjectColors: Record<string, string>
+): Record<string, string> {
+  const subjectsColorsCopy = { ...subjectColors };
+  getAllSubjects().forEach(subject => {
+    if (subjectsColorsCopy[subject]) return;
+    subjectsColorsCopy[subject] =
+      SUBJECT_COLORS[Math.floor(Math.random() * SUBJECT_COLORS.length)].hex;
+  });
+  return subjectsColorsCopy;
+}
+
 export const clickOutside = {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  bind(el: any, binding: any, vnode: any): void {
-    el.event = (event: Event) => {
+  beforeMount(el: any, binding: any): void {
+    el.clickOutsideEvent = (event: Event) => {
       if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event, binding.arg);
+        binding.value(event, el);
       }
     };
-    document.body.addEventListener('click', el.event);
+    document.body.addEventListener('click', el.clickOutsideEvent);
   },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  unbind(el: any): void {
-    document.body.removeEventListener('click', el.event);
+  unmounted(el: any): void {
+    document.body.removeEventListener('click', el.clickOutsideEvent);
   },
 };

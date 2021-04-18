@@ -11,12 +11,14 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
     checker: includesWithSingleRequirement('ENGRD 2202'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
     allowCourseDoubleCounting: true,
   },
   {
-    name: 'Core Courses Part 1',
+    name: 'Core Courses',
     description:
-      'BIOMG 1350, BME 2010, BME 2110, BME 2210, BME 2310, ENGRD 2020, and BTRY 3010. CEE 3040 or ENGRD 2700 can be taken instead of BTRY 3010.',
+      'BIOMG 1350, BME 2010, BME 2110, BME 2210, BME 2310, ENGRD 2020, and BTRY 3010. CEE 3040 or ENGRD 2700 can be taken instead of BTRY 3010. ' +
+      'BME 3010, BME 3020, BME 3030, BME 4010, BME 4020, BME 4080, BME 4090.',
     source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19808',
     checker: includesWithSubRequirements(
       ['BIOMG 1350'],
@@ -24,16 +26,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
       ['BME 2110'],
       ['BME 2310'],
       ['ENGRD 2020'],
-      ['BTRY 3010', 'CEE 3040', 'ENGRD 2700']
-    ),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Core Courses Part 2',
-    description: 'BME 3010, BME 3020, BME 3030, BME 4010, BME 4020, BME 4080, BME 4090',
-    source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19808',
-    checker: includesWithSubRequirements(
+      ['BTRY 3010', 'CEE 3040', 'ENGRD 2700'],
       ['BME 3010'],
       ['BME 3020'],
       ['BME 3030'],
@@ -43,7 +36,22 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
       ['BME 4090']
     ),
     fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
+    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    slotNames: [
+      'BIOMG 1350',
+      'BME 2010',
+      'BME 2110',
+      'BME 2310',
+      'ENGRD 2020',
+      'BTRY 3010 or CEE 3040 or ENGRD 2700',
+      'BME 3010',
+      'BME 3020',
+      'BME 3030',
+      'BME 4010',
+      'BME 4020',
+      'BME 4080',
+      'BME 4090',
+    ],
   },
   {
     name: 'Biomedical Engineering Concentrations',
@@ -62,6 +70,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
         ),
         counting: 'courses',
         perSlotMinCount: [1, 1, 1, 6],
+        slotNames: ['CHEM 1570', 'BME 3020', 'BME 4190', '6 elective courses from the list'],
       },
       'Biomedical Materials and Drug Delivery (BMDD)': {
         description:
@@ -86,6 +95,12 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
         ),
         counting: 'courses',
         perSlotMinCount: [1, 1, 1, 6],
+        slotNames: [
+          'BME 3210',
+          'BME 4190 or BME 4490',
+          'CHEM 1570',
+          '6 elective courses from the list',
+        ],
       },
       'Biomedical Imaging and Instrumentation (BMII)': {
         description:
@@ -107,6 +122,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
         ),
         counting: 'courses',
         perSlotMinCount: [1, 1, 1, 6],
+        slotNames: ['BME 3310', 'BME 4390', 'PHYS 2214', '6 elective courses from the list'],
       },
       'Biomedical Mechanics and Mechanobiology (BMMB)': {
         description:
@@ -128,6 +144,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
         ),
         counting: 'courses',
         perSlotMinCount: [1, 1, 1, 6],
+        slotNames: ['BME 3410', 'BME 4490', 'PHYS 2214', '6 elective courses from the list'],
       },
     },
   },

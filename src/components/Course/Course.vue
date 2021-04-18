@@ -1,27 +1,21 @@
 <template>
-  <div
-    :class="{ 'course--min': compact, active: active, 'course--reqs': isReqCourse && !compact }"
-    class="course"
-    @click="courseOnClick()"
-  >
+  <div :class="{ 'course--min': compact, active: active }" class="course">
     <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
-      <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
+      <img src="@/assets/images/dots/sixDots.svg" alt="" />
     </div>
-    <div class="course-content">
+    <div class="course-content" @click="courseOnClick()">
       <div class="course-main">
         <div class="course-top">
           <div class="course-code">{{ courseObj.code }}</div>
-          <div v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
-            <img src="@/assets/images/dots/threeDots.svg" alt="dots" />
-          </div>
+          <button v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
+            <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
+          </button>
         </div>
         <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
-        <div class="course-info">
-          <span v-if="!compact" class="course-credits">{{ creditString }}</span>
-          <span v-if="!compact && semesterString" class="course-semesters">{{
-            semesterString
-          }}</span>
-          <course-caution v-if="!compact" :course="courseObj" />
+        <div v-if="!compact" class="course-info">
+          <span class="course-credits">{{ creditString }}</span>
+          <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
+          <course-caution v-if="!isReqCourse" :course="courseObj" />
         </div>
       </div>
     </div>
@@ -29,18 +23,17 @@
       v-if="menuOpen"
       :semesterIndex="semesterIndex"
       :isCompact="compact"
-      class="course-menu"
       @delete-course="deleteCourse"
       @color-course="colorCourse"
       @edit-course-credit="editCourseCredit"
-      :getCreditRange="getCreditRange"
+      :getCreditRange="getCreditRange || []"
       v-click-outside="closeMenuIfOpen"
     />
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import {
@@ -49,7 +42,7 @@ import {
 } from '@/components/BottomBar/BottomBarState';
 import { clickOutside } from '@/utilities';
 
-export default Vue.extend({
+export default defineComponent({
   components: { CourseCaution, CourseMenu },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
@@ -133,8 +126,10 @@ export default Vue.extend({
 // TODO: font families
 @import '@/assets/scss/_variables.scss';
 
+$colored-grabber-width: 1.25rem;
+
 .course {
-  width: 21.375rem;
+  box-sizing: border-box;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: row;
@@ -155,11 +150,10 @@ export default Vue.extend({
   }
 
   &--min {
-    width: 10rem;
     height: 2.125rem;
 
     & .course-content {
-      margin: 0 0.5em;
+      padding: 0 0.5em;
     }
   }
 
@@ -168,16 +162,12 @@ export default Vue.extend({
   }
 
   &-color {
-    width: 1.25rem;
+    width: $colored-grabber-width;
     border-radius: 0.42rem 0 0 0.42rem;
     background-color: var(--bg-color);
     display: flex;
     align-items: center;
     justify-content: center;
-
-    &--active {
-      width: 1.188rem;
-    }
   }
 
   &-dotRow {
@@ -192,8 +182,8 @@ export default Vue.extend({
   }
 
   &-content {
-    flex: 1 1 auto;
-    margin: 0 1rem;
+    width: calc(100% - #{$colored-grabber-width});
+    padding: 0 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -219,7 +209,6 @@ export default Vue.extend({
     color: $primaryGray;
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
-    width: 18rem;
 
     white-space: nowrap;
     overflow: hidden;
@@ -227,7 +216,6 @@ export default Vue.extend({
   }
 
   &-info {
-    max-width: 18rem;
     font-size: 14px;
     line-height: 17px;
     color: $lightPlaceholderGray;
@@ -244,7 +232,6 @@ export default Vue.extend({
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    max-width: 14rem;
 
     &:before {
       margin-right: 0.2rem;
@@ -258,70 +245,9 @@ export default Vue.extend({
     justify-content: space-around;
     margin: 0.5rem;
   }
-
-  &-menu {
-    position: absolute;
-    right: -3rem;
-    top: 2rem;
-    z-index: 1;
-  }
 }
 
 .active {
   border: 1px solid $yuxuanBlue;
-}
-
-@media only screen and (max-width: $medium-breakpoint) {
-  .course {
-    width: 17rem;
-    &--min {
-      width: 10rem;
-      height: 2.125rem;
-    }
-    &-color {
-      &--active {
-        width: 1.188rem;
-      }
-    }
-
-    &-name {
-      width: 14rem;
-    }
-
-    &-info {
-      max-width: 14rem;
-    }
-
-    &-menu {
-      right: -1rem;
-    }
-  }
-}
-
-@media only screen and (max-width: $large-breakpoint) {
-  .course--reqs {
-    width: 17rem;
-    .course--min {
-      width: 10rem;
-      height: 2.125rem;
-    }
-    .course-color {
-      &--active {
-        width: 1.188rem;
-      }
-    }
-
-    .course-name {
-      width: 14rem;
-    }
-
-    .course-info {
-      max-width: 14rem;
-    }
-
-    .course-menu {
-      right: -1rem;
-    }
-  }
 }
 </style>

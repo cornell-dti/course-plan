@@ -1,7 +1,9 @@
 <template>
   <div class="details">
     <div class="details-ratings-link-wrapper">
-      <a :href="CURLink" class="details-ratings-link" target="_blank">See All Reviews</a>
+      <a :href="CURLink" class="details-ratings-link" target="_blank" @click="clickCUReviewsLink()"
+        >Learn more on CUReviews</a
+      >
     </div>
     <div class="details-ratings-wrapper">
       <div class="details-ratings">
@@ -73,12 +75,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { reviewColors } from '@/assets/constants/colors';
+import { GTagEvent } from '@/gtag';
 
 const noneIfEmpty = (str: string): string => (str && str.length !== 0 ? str : 'None');
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     courseObj: { type: Object as PropType<AppBottomBarCourse>, required: true },
   },
@@ -101,6 +104,10 @@ export default Vue.extend({
 
       return flip ? colors[colors.length - 1 - index] : colors[index];
     },
+
+    clickCUReviewsLink(): void {
+      GTagEvent(this.$gtag, 'bottom-bar-CU-reviews-link');
+    },
   },
 
   computed: {
@@ -111,17 +118,17 @@ export default Vue.extend({
       const [subject, number] = this.courseObj.code.split(' ');
       return `https://www.cureviews.org/course/${subject}/${number}`;
     },
-    CUROverallRating() {
+    CUROverallRating(): string | number {
       if (this.courseObj.overallRating === 0) return '';
       if (!this.courseObj.overallRating) return 'N/A';
       return Math.round(this.courseObj.overallRating * 10) / 10;
     },
-    CURDifficulty() {
+    CURDifficulty(): string | number {
       if (this.courseObj.difficulty === 0) return '';
       if (!this.courseObj.difficulty) return 'N/A';
       return Math.round(this.courseObj.difficulty * 10) / 10;
     },
-    CURWorkload() {
+    CURWorkload(): string | number {
       if (this.courseObj.workload === 0) return '';
       if (!this.courseObj.workload) return 'N/A';
       return Math.round(this.courseObj.workload * 10) / 10;
@@ -187,6 +194,12 @@ export default Vue.extend({
 .rating {
   width: 100%;
   border-radius: 100px;
+}
+
+.info {
+  &-fact {
+    color: $primaryGray;
+  }
 }
 
 @media only screen and (max-width: $medium-breakpoint) {

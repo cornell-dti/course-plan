@@ -7,22 +7,22 @@
       <div class="onboarding-inputs onboarding-inputs--name">
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font">
-              First Name<span class="onboarding-required-star">*</span>
+            ><span class="onboarding-subHeader--font"
+              >First Name<span class="onboarding-required-star">*</span>
             </span></label
           >
           <input class="onboarding-input" v-model="firstName" @input="updateBasic()" />
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font"> Middle Name </span></label
+            ><span class="onboarding-subHeader--font">Middle Name</span></label
           >
           <input class="onboarding-input" v-model="middleName" @input="updateBasic()" />
         </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font">
-              Last Name<span class="onboarding-required-star">*</span>
+            ><span class="onboarding-subHeader--font"
+              >Last Name<span class="onboarding-required-star">*</span>
             </span></label
           >
           <input class="onboarding-input" v-model="lastName" @input="updateBasic()" />
@@ -32,9 +32,23 @@
     <div class="onboarding-section">
       <!-- TODO: Multiple colleges -->
       <div class="onboarding-subHeader">
-        <span class="onboarding-subHeader--font"> College</span>
+        <span class="onboarding-subHeader--font">Your Major</span>
       </div>
       <div class="onboarding-inputs">
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
+          <label class="onboarding-label"
+            >Graduation Year<span class="onboarding-required-star">*</span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="semesters"
+              :choice="gradYear"
+              :cannotBeRemoved="true"
+              :scrollBottomToIndex="2021"
+              @on-select="selectGraduationYear"
+            />
+          </div>
+        </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
           <label class="onboarding-label"
             >College<span class="onboarding-required-star">*</span></label
@@ -53,15 +67,20 @@
           <onboarding-basic-multi-dropdown
             :availableChoices="majors"
             :dropdownChoices="majorAcronyms"
-            add-dropdown-text="+ add another major"
+            add-dropdown-text="+ another major"
             @on-select="selectMajor"
             @on-remove="removeMajor"
             @on-add="addMajor"
           />
+          <div class="requestForm">
+            *Don't see your major/minor? We are working hard to add them soon! Get updated when we
+            add it by signing up
+            <a href="https://forms.gle/MDvVDoRapUp2VeBb9" target="_blank" class="link">here</a>
+          </div>
         </div>
       </div>
       <div class="onboarding-subHeader">
-        <span class="onboarding-subHeader--font"> Minor</span>
+        <span class="onboarding-subHeader--font">Your Minor</span>
       </div>
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper">
@@ -69,7 +88,7 @@
           <onboarding-basic-multi-dropdown
             :availableChoices="minors"
             :dropdownChoices="minorAcronyms"
-            add-dropdown-text="+ add another minor"
+            add-dropdown-text="+ another minor"
             @on-select="selectMinor"
             @on-remove="removeMinor"
             @on-add="addMinor"
@@ -81,7 +100,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
 import { clickOutside } from '@/utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
@@ -89,7 +108,7 @@ import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
 const placeholderText = 'Select one';
 
-export default Vue.extend({
+export default defineComponent({
   components: { OnboardingBasicMultiDropdown, OnboardingBasicSingleDropdown },
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
@@ -105,6 +124,7 @@ export default Vue.extend({
       middleName: this.userName.middleName,
       lastName: this.userName.lastName,
       placeholderText,
+      gradYear: this.onboardingData.gradYear,
       collegeAcronym: this.onboardingData.college,
       majorAcronyms,
       minorAcronyms,
@@ -139,11 +159,22 @@ export default Vue.extend({
       });
       return minors;
     },
+    semesters(): Readonly<Record<string, string>> {
+      const semsDict: Record<string, string> = {};
+      const yearRange = 6;
+      const curYear = new Date().getFullYear();
+      for (let i = -yearRange; i <= yearRange; i += 1) {
+        const yr = String(curYear + i);
+        semsDict[yr] = yr;
+      }
+      return semsDict;
+    },
   },
   methods: {
     updateBasic() {
       this.$emit(
         'updateBasic',
+        this.gradYear,
         this.collegeAcronym,
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
@@ -166,6 +197,10 @@ export default Vue.extend({
           this.majorAcronyms[x] = '';
         }
       }
+    },
+    selectGraduationYear(year: string) {
+      this.gradYear = year;
+      this.updateBasic();
     },
     selectCollege(acronym: string) {
       this.collegeAcronym = acronym;

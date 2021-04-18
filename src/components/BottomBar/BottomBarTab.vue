@@ -1,38 +1,32 @@
 <template>
   <div
-    class="bottombartab"
+    class="bottombartab full-opacity-on-hover"
     :style="{ background: `#${color}` }"
-    :class="{ inactive: !isBottomCourseFocus }"
     @click="$emit('on-change-focus')"
   >
     <div class="bottombartab-wrapper">
       <div class="bottombartab-name">{{ courseObj.code }}</div>
     </div>
-    <img
-      class="bottombartab-delete"
-      src="@/assets/images/x-white.svg"
-      @click.stop="$emit('on-delete')"
-      alt="x"
-    />
+    <button @click.stop="$emit('on-delete')">
+      <img
+        class="bottombartab-delete"
+        src="@/assets/images/x-white.svg"
+        alt="x to delete bottom bar tab"
+      />
+    </button>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     color: { type: String, required: true },
     courseObj: { type: Object as PropType<AppBottomBarCourse>, required: true },
     tabIndex: { type: Number, required: true },
     bottomCourseFocus: { type: Number, required: true },
     isExpanded: { type: Boolean, required: true },
-  },
-
-  computed: {
-    isBottomCourseFocus(): boolean {
-      return this.tabIndex === this.bottomCourseFocus;
-    },
   },
 });
 </script>
@@ -44,7 +38,7 @@ export default Vue.extend({
   position: relative;
   width: 11.5rem;
   height: 1.75rem;
-  background-color: #25a2aa;
+  background-color: $yuxuanBlue;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   display: flex;
@@ -54,12 +48,6 @@ export default Vue.extend({
   justify-content: space-between;
   padding-left: 8px;
   padding-right: 8px;
-
-  cursor: pointer;
-
-  &:hover {
-    opacity: 1;
-  }
 
   &-wrapper {
     display: flex;
@@ -75,7 +63,7 @@ export default Vue.extend({
   }
 
   &-name {
-    color: white;
+    color: $white;
     font-weight: 500;
     font-size: 16px;
     line-height: 20px;
@@ -86,11 +74,6 @@ export default Vue.extend({
     height: 50%;
     cursor: pointer;
   }
-}
-
-.inactive {
-  mix-blend-mode: multiply;
-  opacity: 0.8;
 }
 
 @media only screen and (max-width: $large-breakpoint) {

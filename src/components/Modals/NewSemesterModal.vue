@@ -2,8 +2,8 @@
   <flexible-modal
     title="New Semester"
     content-class="content-semester"
-    left-button-text="CANCEL"
-    right-button-text="ADD"
+    left-button-text="Cancel"
+    right-button-text="Add"
     :rightButtonIsDisabled="isDisabled"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
@@ -12,6 +12,7 @@
     <new-semester
       :currentSemesters="semesters"
       :isEdit="false"
+      :isSemesterAdd="true"
       :isCourseModelSelectingSemester="false"
       @duplicateSemester="disableButton"
       @updateSemProps="updateSemProps"
@@ -21,12 +22,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import store from '@/store';
 
-export default Vue.extend({
+export default defineComponent({
   components: { FlexibleModal, NewSemester },
   data() {
     return { isDisabled: false, season: '', year: 0 };

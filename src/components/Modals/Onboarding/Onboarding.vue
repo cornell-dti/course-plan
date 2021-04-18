@@ -1,8 +1,14 @@
 <template>
   <div class="onboarding" @click="checkClickOutside" ref="modalBackground">
     <div class="onboarding-main">
-      <div v-if="isEditingProfile" class="onboarding-cancel" @click="cancel">
-        <img class="onboarding-cancel-icon" src="@/assets/images/x.svg" alt="X" />
+      <div v-if="isEditingProfile" class="onboarding-cancel">
+        <button @click="cancel">
+          <img
+            class="onboarding-cancel-icon"
+            src="@/assets/images/x.svg"
+            alt="x to close onboarding modal"
+          />
+        </button>
       </div>
       <div class="onboarding-content" :class="{ editing: isEditingProfile }">
         <div class="onboarding-top">
@@ -10,8 +16,8 @@
             <span
               ><img
                 class="onboarding-header-emoji"
-                src="@/assets/images/clapEmoji.svg"
-                alt="clap"
+                src="@/assets/images/waveEmoji.svg"
+                alt="wave"
               />
               Welcome to CoursePlan</span
             >
@@ -20,8 +26,8 @@
             <span
               ><img
                 class="onboarding-header-emoji"
-                src="@/assets/images/waveEmoji.svg"
-                alt="wave"
+                src="@/assets/images/clapEmoji.svg"
+                alt="clap"
               />
               Hi {{ name.firstName }}</span
             >
@@ -57,7 +63,7 @@
           <img
             class="timeline"
             :src="require(`@/assets/images/timeline${currentPage}text.svg`)"
-            alt="X"
+            alt="onboarding progress timeline"
           />
         </div>
         <div v-if="currentPage === 3" class="onboarding-bottom--section">
@@ -84,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
@@ -94,7 +100,7 @@ import store from '@/store';
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
 
-export default Vue.extend({
+export default defineComponent({
   components: { OnboardingBasic, OnboardingReview, OnboardingTransfer },
   props: {
     isEditingProfile: { type: Boolean, required: true },
@@ -115,7 +121,8 @@ export default Vue.extend({
       if (
         this.name.firstName === '' ||
         this.name.lastName === '' ||
-        this.onboarding.college === ''
+        this.onboarding.college === '' ||
+        this.onboarding.gradYear === ''
       ) {
         this.isError = true;
       } else {
@@ -126,6 +133,7 @@ export default Vue.extend({
             lastName: this.name.lastName,
           })
           .set(onboardingDataCollection.doc(store.state.currentFirebaseUser.email), {
+            gradYear: this.onboarding.gradYear,
             colleges: [{ acronym: this.onboarding.college }],
             majors: this.onboarding.major.map(acronym => ({ acronym })),
             minors: this.onboarding.minor.map(acronym => ({ acronym })),
@@ -147,13 +155,14 @@ export default Vue.extend({
       this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
     },
     updateBasic(
+      gradYear: string,
       college: string,
       major: readonly string[],
       minor: readonly string[],
       name: FirestoreUserName
     ) {
       this.name = name;
-      this.onboarding = { ...this.onboarding, college, major, minor };
+      this.onboarding = { ...this.onboarding, gradYear, college, major, minor };
     },
     updateTransfer(
       exams: readonly FirestoreAPIBExam[],
@@ -172,14 +181,37 @@ export default Vue.extend({
       };
     },
     cancel() {
-      this.$emit('cancelOnboarding');
+      if (this.onboardingData.college !== '') {
+        this.$emit('cancelOnboarding');
+      }
     },
     checkClickOutside(e: MouseEvent) {
-      if (e.target === this.$refs.modalBackground) this.cancel();
+      if (e.target === this.$refs.modalBackground && this.onboardingData.college !== '') {
+        this.cancel();
+      }
     },
   },
 });
 </script>
 <style scoped lang="scss">
 @import '@/components/Modals/Onboarding/Onboarding.scss';
+
+@media only screen and (max-width: $large-breakpoint) {
+  .onboarding {
+    &-main {
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: $small-medium-breakpoint) {
+  .onboarding {
+    &-header {
+      text-align: center;
+    }
+    &-inputWrapper {
+      text-align: center;
+    }
+  }
+}
 </style>

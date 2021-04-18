@@ -4,15 +4,14 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'History Major Classes',
     description:
-      '9 history courses (with a grade of “C” or better). ' +
-      '4 of the nine courses must be taken from one each of the following five categories: ' +
-      'Asian, North America, European, Global South (Africa/Caribbean/Latin American and Middle East), and Transregional (Transregional, Comparative, and Methodological). ' +
-      'Note: a single course may fulfill more than one requirement as long as the total number of history courses is nine. ' +
-      'For example, a course in medieval European history that is also a seminar would count for that requirement, ' +
-      'as well as both a course in history before 1800 and as a course in European History.',
+      'For the graduating classes of 2019, 2020, and 2021, 4 History courses categorized as outside of U.S. History are required. ' +
+      'For the graduating class of 2022 and beyond: 4 History courses must be taken from one each of the following five categories: Asian, North America, European, Global South (Africa/Caribbean/Latin American and Middle East), and Transregional (Transregional, Comparative, and Methodological).',
     source: 'https://history.cornell.edu/undergraduate',
-    fulfilledBy: 'self-check',
-    minCount: 9,
+    checker: [(course: Course): boolean => course.subject === 'HIST'],
+    checkerWarning: 'We do not check which courses you add depending on your graduation year.',
+    fulfilledBy: 'courses',
+    perSlotMinCount: [4],
+    slotNames: ['Course'],
   },
   {
     name: 'Pre 1800 Classes',
@@ -26,15 +25,22 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   {
     name: 'Seminars',
     description:
-      '2 of the nine courses must be seminars, and one of these seminars must be a 4000-level seminar.  ' +
+      '2 of the nine courses must be seminars, and one of these seminars must be a 4000-level seminar. ' +
       'Service-learning 4000-level courses, HIST 4001, HIST 4002, may not be used to fulfill the 4000-level seminar requirement.',
     source: 'https://history.cornell.edu/undergraduate',
-    fulfilledBy: 'self-check',
-    minCount: 2,
+    checker: [
+      (course: Course): boolean =>
+        course.subject === 'HIST' && course.catalogNbr !== '4001' && course.catalogNbr !== '4002',
+    ],
+    checkerWarning: 'We do not check that the courses are seminars.',
+    fulfilledBy: 'courses',
+    perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
 ];
 

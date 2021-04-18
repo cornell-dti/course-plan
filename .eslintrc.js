@@ -63,7 +63,10 @@ module.exports = {
     'max-classes-per-file': ['off'],
     // TypeScript will handle it. It also doesn't work with typescript global types.
     'no-undef': ['off'],
-    'no-unused-vars': ['off'],
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { vars: 'all', args: 'after-used', ignoreRestSiblings: true },
+    ],
     'no-use-before-define': ['off'],
     'vue/no-mutating-props': ['warn'],
     // allow debugger during development

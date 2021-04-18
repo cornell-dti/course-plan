@@ -2,28 +2,63 @@
   <div class="tour">
     <div class="blackout">
       <div class="intropage">
-        <div class="picture">
-          <img src="@/assets/images/Person_planning.svg" alt="person planning" />
+        <div class="top">
+          <div class="dtiLogoWrapper">
+            <img
+              class="dtiLogo"
+              src="@/assets/images/walkthrough/dti-wordmark.png"
+              alt="dti logo"
+            />
+          </div>
+          <div class="picture">
+            <img
+              v-if="!isFinalStep"
+              class="image"
+              src="@/assets/images/walkthrough/walkthrough-start.png"
+              alt="person planning"
+            />
+            <img
+              v-else
+              class="image"
+              src="@/assets/images/walkthrough/walkthrough-end.png"
+              alt="person planning"
+            />
+          </div>
         </div>
         <div class="content">
           <div class="title">
             {{ title }}
           </div>
-          <div class="body">
+          <div v-if="!isFinalStep" class="body">
             {{ text }}
-            <img v-if="image" :src="image" class="emoji-text" :alt="alt" />
+          </div>
+          <div v-else class="body body--left">
+            <div class="body-topText">{{ text }}</div>
+            <div>
+              Submit bugs &amp; feature requests using the Feedback button found on the right side
+              of the page or contact us at
+              <a href="mailto:courseplan@cornelldti.org">courseplan@cornelldti.org</a>.
+            </div>
           </div>
           <button
+            class="startButton"
             @click="
               $emit('hide');
               $emit('startTour');
+              startTour();
             "
           >
             {{ buttonText }}
           </button>
-          <a @click="$emit('skip')">
+          <button
+            class="skipButton"
+            @click="
+              $emit('skip');
+              skipTour();
+            "
+          >
             {{ exit }}
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -31,17 +66,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
+import { GTagEvent } from '@/gtag';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     title: { type: String, required: true },
     text: { type: String, required: true },
+    isFinalStep: { type: Boolean, required: false, default: false },
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
-    alt: { type: String, required: false, default: '' },
-    image: { type: String, required: false, default: null },
   },
   data() {
     return {
@@ -51,6 +86,14 @@ export default Vue.extend({
   directives: {
     'click-outside': clickOutside,
   },
+  methods: {
+    startTour(): void {
+      GTagEvent(this.$gtag, 'start-walkthrough');
+    },
+    skipTour(): void {
+      GTagEvent(this.$gtag, 'skip-walkthrough');
+    },
+  },
 });
 </script>
 
@@ -59,10 +102,10 @@ export default Vue.extend({
 
 .blackout {
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.5);
-  position: absolute;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   left: 0px;
   bottom: 0px;
   display: flex;
@@ -72,47 +115,67 @@ export default Vue.extend({
 .intropage {
   z-index: 200;
   width: 40vw;
-  height: 80vh;
-  background-color: white;
+  background-color: $white;
   opacity: 1;
   position: absolute;
   border-radius: 9px;
   padding: 0px;
 }
-.picture {
+.top {
   width: 100%;
-  height: 66%;
+  height: 25.25rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   background-color: $emGreen;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
-  img {
-    height: 100%;
-  }
+  padding: 1rem 1.5rem;
+}
+.dtiLogoWrapper {
+  margin-bottom: 1rem;
+}
+.picture {
+  display: flex;
+  justify-content: center;
+}
+.image {
+  height: 100%;
 }
 .content {
   width: 100%;
-  height: 34%;
+  min-height: 15.25rem;
+  padding-top: 1.75rem;
+  padding-bottom: 1.25rem;
   border-radius: 9px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
-  padding-top: 2%;
-  padding-bottom: 2%;
   .title {
     font-weight: 600;
+    font-size: 24px;
+    line-height: 24px;
+    color: $primaryGray;
   }
   .body {
     font-size: 0.9em;
     text-align: center;
-    color: #757575;
+    color: $lightPlaceholderGray;
     width: 90%;
+
+    &-topText {
+      margin-bottom: 1rem;
+    }
+
+    &--left {
+      text-align: left;
+      margin-top: 1.75rem;
+      margin-bottom: 1.25rem;
+    }
   }
-  button {
+  .startButton {
     background-color: $sangBlue;
-    color: white;
+    color: $white;
     border: none;
     padding-right: 0.7em;
     padding-left: 0.7em;
@@ -122,8 +185,17 @@ export default Vue.extend({
     font-weight: normal;
     border-radius: 3px;
   }
+  .skipButton {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font-weight: normal;
+    color: $sangBlue;
+  }
   a {
     font-weight: normal;
+    color: $sangBlue;
   }
 }
 </style>

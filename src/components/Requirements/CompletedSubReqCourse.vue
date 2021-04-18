@@ -5,6 +5,7 @@
       :reqName="courseTaken.code"
       v-model="resetConfirmVisible"
       @close-reset-modal="onResetConfirmClosed"
+      @modal-open="modalToggled"
     />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
@@ -13,14 +14,14 @@
           <span class="completed-reqCourses-course-heading-check"
             ><img src="@/assets/images/checkmark-green.svg" alt="checkmark"
           /></span>
-          {{ courseLabel }}
+          {{ slotName }}
         </div>
-        <div
+        <button
           class="completed-reqCourses-course-heading-reset-button reqCourse-button"
           @click="onReset"
         >
           {{ resetText }}
-        </div>
+        </button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
@@ -37,19 +38,20 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import ResetConfirmationModal from '@/components/Modals/ResetConfirmationModal.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
+import { onboardingDataCollection } from '@/firebaseConfig';
 import getCurrentSeason, { getCurrentYear } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
-export default Vue.extend({
+export default defineComponent({
   components: { ReqCourse, ResetConfirmationModal },
   props: {
-    subReqCourseId: { type: Number, required: true },
+    slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
   data: () => ({
@@ -59,14 +61,11 @@ export default Vue.extend({
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
     },
-    courseLabel(): string {
-      return `Course ${this.subReqCourseId + 1}`;
-    },
     resetText(): string {
       return 'Reset';
     },
     isTransferCredit(): boolean {
-      return this.courseTaken.uniqueId === -1;
+      return this.courseTaken.uniqueId < 0;
     },
     semesterLabel(): string {
       if (this.isTransferCredit) return 'Transfer Credits';
@@ -85,9 +84,25 @@ export default Vue.extend({
   methods: {
     onReset(): void {
       this.resetConfirmVisible = true;
+      this.$emit('modal-open', true);
     },
     onResetConfirmClosed(isReset: boolean): void {
-      if (isReset) deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
+      this.$emit('modal-open', false);
+      if (isReset) {
+        if (this.isTransferCredit) {
+          const type = this.courseTaken.code.substr(0, 2);
+          const name = this.courseTaken.code.substr(3);
+
+          const onBoardingData = store.state.onboardingData;
+
+          onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
+            exam: onBoardingData.exam.filter(e => !(e.type === type && e.subject === name)),
+          });
+        } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
+      }
+    },
+    modalToggled(isOpen: boolean) {
+      this.$emit('modal-open', isOpen);
     },
   },
 });

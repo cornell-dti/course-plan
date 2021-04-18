@@ -36,6 +36,7 @@ const buMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Microeconomics Prerequisite',
@@ -44,14 +45,16 @@ const buMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('ECON 1110', 'ECON 3030', 'PAM 2000'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Introduction to Management',
-    description: 'Choose one: AEM 1200, ILRID 1700, NCC 5540',
+    description: 'Choose one: AEM 1200, HADM 1810, ILRID 1700, NCC 5540',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business/',
-    checker: includesWithSingleRequirement('AEM 1200', 'ILRID 1700', 'NCC 5540'),
+    checker: includesWithSingleRequirement('AEM 1200', 'HADM 1810', 'ILRID 1700', 'NCC 5540'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Introduction to Marketing',
@@ -60,6 +63,7 @@ const buMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('AEM 2400', 'NCC 5530', 'HADM 2410'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Financial Accounting',
@@ -68,6 +72,7 @@ const buMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('AEM 2210', 'HADM 2230', 'NCC 5500'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Finance',
@@ -76,6 +81,7 @@ const buMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('AEM 2241', 'AEM 5241', 'HADM 2250', 'NCC 5560'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
 ];
 

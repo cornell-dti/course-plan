@@ -10,7 +10,7 @@
       :style="courseColorCSSvar"
       :class="{ 'reqcourse-color--min': compact }"
     >
-      <img src="@/assets/images/dots/sixDots.svg" alt="dots" />
+      <img src="@/assets/images/dots/sixDots.svg" alt="" />
     </div>
     <div :class="{ 'reqcourse-content--min': compact }" class="reqcourse-content">
       <div :class="{ 'reqcourse-main--min': compact }" class="reqcourse-main">
@@ -29,9 +29,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     color: { type: String, required: true },
     courseCode: { type: String, required: true },

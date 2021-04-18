@@ -1,10 +1,9 @@
 <template>
   <course-base-tooltip v-if="hasCourseCautions" :isInformation="false">
     <div v-if="singleWarning">
-      <div v-if="courseCautions.doubleCountingRequirementWarning">
-        This class is counted for these requirements:
-        <b>{{ doubleCountingRequirementWarning.join(', ') }}</b
-        >.
+      <div v-if="courseCautions.noMatchedRequirement">
+        This class is not matched to any requirement. Re-add this course to choose a requirement to
+        bind to.
       </div>
       <div v-if="courseCautions.typicallyOfferedWarning">
         This class is typically offered in {{ courseCautions.typicallyOfferedWarning.join(', ') }}.
@@ -12,10 +11,9 @@
       <div v-if="courseCautions.isCourseDuplicate">Duplicate</div>
     </div>
     <ul v-if="!singleWarning" class="warning-list">
-      <li class="warning-item" v-if="courseCautions.doubleCountingRequirementWarning">
-        This class is counted for these requirements:
-        <b>{{ doubleCountingRequirementWarning.join(', ') }}</b
-        >.
+      <li class="warning-item" v-if="courseCautions.noMatchedRequirement">
+        This class is not matched to any requirement. Re-add this course to choose a requirement to
+        bind to.
       </li>
       <li class="warning-item" v-if="courseCautions.typicallyOfferedWarning">
         This class is typically offered in {{ courseCautions.typicallyOfferedWarning.join(', ') }}.
@@ -26,40 +24,36 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import CourseBaseTooltip from '@/components/Course/CourseBaseTooltip.vue';
 import store from '@/store';
 
 type CourseCautions = {
-  readonly doubleCountingRequirementWarning: readonly string[] | undefined;
+  readonly noMatchedRequirement: boolean;
   readonly typicallyOfferedWarning: readonly string[] | undefined;
   readonly isCourseDuplicate: boolean;
 };
 
 const getCourseCautions = (course: FirestoreSemesterCourse): CourseCautions => {
   const {
-    derivedCoursesData: { duplicatedCourseCodeSet, courseToSemesterMap },
-    userRequirementsMap,
     requirementFulfillmentGraph,
-    illegallyDoubleCountedCourseUniqueIDs,
+    derivedCoursesData: { duplicatedCourseCodeSet, courseToSemesterMap },
   } = store.state;
-  let doubleCountingRequirementWarning: readonly string[] | undefined;
-  if (illegallyDoubleCountedCourseUniqueIDs.has(course.uniqueID)) {
-    doubleCountingRequirementWarning = requirementFulfillmentGraph
-      .getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
-      .filter(id => !userRequirementsMap[id].allowCourseDoubleCounting)
-      .map(id => userRequirementsMap[id].name);
-  }
+  const noMatchedRequirement =
+    requirementFulfillmentGraph.getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
+      .length === 0;
   const semesterOfUserCourse = courseToSemesterMap[course.uniqueID];
   const typicallyOfferedWarning =
-    semesterOfUserCourse != null && !course.semesters.includes(semesterOfUserCourse.type)
+    semesterOfUserCourse != null &&
+    course.semesters.length > 0 &&
+    !course.semesters.includes(semesterOfUserCourse.type)
       ? course.semesters
       : undefined;
   const isCourseDuplicate = duplicatedCourseCodeSet.has(course.code);
-  return { doubleCountingRequirementWarning, typicallyOfferedWarning, isCourseDuplicate };
+  return { noMatchedRequirement, typicallyOfferedWarning, isCourseDuplicate };
 };
 
-export default Vue.extend({
+export default defineComponent({
   components: { CourseBaseTooltip },
   props: {
     course: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
@@ -68,24 +62,17 @@ export default Vue.extend({
     courseCautions(): CourseCautions {
       return getCourseCautions(this.course);
     },
-    doubleCountingRequirementWarning(): readonly string[] {
-      return this.courseCautions.doubleCountingRequirementWarning || [];
-    },
     hasCourseCautions(): boolean {
       const {
-        doubleCountingRequirementWarning,
+        noMatchedRequirement,
         typicallyOfferedWarning,
         isCourseDuplicate,
       } = this.courseCautions;
-      return (
-        doubleCountingRequirementWarning != null ||
-        typicallyOfferedWarning != null ||
-        isCourseDuplicate
-      );
+      return noMatchedRequirement || typicallyOfferedWarning != null || isCourseDuplicate;
     },
     singleWarning(): boolean {
       let warningCounter = 0;
-      if (this.doubleCountingRequirementWarning.length > 0) warningCounter += 1;
+      if (this.courseCautions.noMatchedRequirement) warningCounter += 1;
       if (this.courseCautions.typicallyOfferedWarning != null) warningCounter += 1;
       if (this.courseCautions.isCourseDuplicate) warningCounter += 1;
       return warningCounter === 1;

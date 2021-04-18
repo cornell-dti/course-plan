@@ -1,32 +1,48 @@
 <template>
   <div class="semesterMenu">
-    <div class="semesterMenu-section" :class="{ 'd-none': isOpenModal }">
+    <button
+      class="semesterMenu-section full-opacity-on-hover"
+      :class="{ 'd-none': isOpenModal }"
+      @click="openEditSemesterModal"
+    >
       <div class="semesterMenu-content">
-        <div class="semesterMenu-content" @click="openEditSemesterModal">
+        <div class="semesterMenu-content">
           <div class="semesterMenu-left">
-            <img class="semesterMenu-icon" src="@/assets/images/edit.svg" />
+            <img
+              class="semesterMenu-icon"
+              src="@/assets/images/edit.svg"
+              alt="edit semester pencil icon"
+            />
             <span class="semesterMenu-edit">Edit Semester</span>
           </div>
         </div>
       </div>
-    </div>
-    <div class="semesterMenu-section" :class="{ 'd-none': isOpenModal }">
+    </button>
+    <button
+      class="semesterMenu-section full-opacity-on-hover"
+      :class="{ 'd-none': isOpenModal }"
+      @click="openDeleteSemesterModal"
+    >
       <div class="semesterMenu-content">
-        <div class="semesterMenu-content" @click="openDeleteSemesterModal">
+        <div class="semesterMenu-content">
           <div class="semesterMenu-left">
-            <img class="semesterMenu-icon" src="@/assets/images/trash.svg" />
+            <img
+              class="semesterMenu-icon"
+              src="@/assets/images/trash.svg"
+              alt="delete semester trashcan icon"
+            />
             <span class="semesterMenu-delete">Delete Semester</span>
           </div>
         </div>
       </div>
-    </div>
+    </button>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   data() {
     return {
       isOpenModal: false,
@@ -65,6 +81,7 @@ export default Vue.extend({
     justify-content: space-between;
     padding: 0.5rem 1rem;
     position: relative;
+    width: 100%;
     &:hover,
     &:active,
     &:focus {

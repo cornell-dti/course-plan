@@ -1,5 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { includesWithSubRequirements } from '../checkers-common';
+import { courseIsForeignLang, includesWithSubRequirements } from '../checkers-common';
 
 const deaRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -23,6 +23,19 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    slotNames: [
+      'DEA 1050',
+      'DEA 1101',
+      'DEA 1110',
+      'DEA 1150',
+      'DEA 1500',
+      'DEA 2030',
+      'DEA 2510',
+      'DEA 2730',
+      'DEA 3590',
+      'DEA 4040',
+      'DEA 5304',
+    ],
   },
   {
     name: 'DEA Thematic Courses',
@@ -64,6 +77,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [9],
+    slotNames: ['Course'],
   },
   {
     name: 'Research Methods Course',
@@ -73,6 +87,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['DEA 3550', 'ILROB 4710', 'PAM 3120']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Human Development or Psychology',
@@ -82,6 +97,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['HD 1150', 'HC 1170', 'PSYCH 1101']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Introductory Microeconomics',
@@ -91,20 +107,23 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['ECON 1110']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Humanities',
-    description: 'Choose any course with the Course Distribution HA, LA or CA.',
+    description:
+      'Choose any course with the Course Distribution PBS, BIOLS-AG, BIONLS-AG, SBA, KCM, MQR, LA, CA, or HA. Language courses may count here.',
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     checker: [
       (course: Course): boolean =>
-        ['CA', 'HA', 'LA', 'LAD'].some(
+        ['PBS', 'BIOLS', 'BIONLS', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+        ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Statistics',
@@ -116,11 +135,13 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['PAM 2100', 'AEM 2100', 'ILRST 2100', 'PSYCH 2500']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Natural Science I',
     description:
-      'Choose one of the following options. If AP isn’t used to satisfy the requirement, then the course must be taken at Cornell. No lab is required.',
+      'Choose one of the following options. ' +
+      "If AP isn't used to satisfy the requirement, then the course must be taken at Cornell. No lab is required.",
     source:
       'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19856#deamajorrequirements',
     fulfilledBy: 'toggleable',
@@ -137,18 +158,21 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
         ]),
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
       Chemistry: {
         description: 'Take 1: CHEM 1560, CHEM 2070, CHEM 2080, or 5 on AP Chemistry',
         checker: includesWithSubRequirements(['CHEM 1560', 'CHEM 2070', 'CHEM 2080']),
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
       Physics: {
         description: 'Take 1: PHYS 1101, PHYS 2207, PHYS 1102, PHYS 2208, or 5 on AP Physics',
         checker: includesWithSubRequirements(['PHYS 1101', 'PHYS 2207', 'PHYS 1102', 'PHYS 2208']),
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
     },
   },

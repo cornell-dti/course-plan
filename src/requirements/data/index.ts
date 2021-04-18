@@ -3,6 +3,7 @@ import universityRequirements from './university';
 import calsRequirements from './colleges/ag';
 import aapRequirements from './colleges/ar';
 import casPreFA2020Requirements from './colleges/asPreFA2020';
+import casFA2020Requirements from './colleges/asFA2020';
 import businessRequirements from './colleges/bu';
 import engineeringRequirements from './colleges/en';
 import humanEcologyRequirements from './colleges/he';
@@ -19,22 +20,32 @@ import crpRequirements from './majors/crp';
 import csRequirements from './majors/cs';
 import deaRequirements from './majors/dea';
 import economicsRequirements from './majors/econ';
+import eceRequirements from './majors/ece';
 import englishRequirements from './majors/engl';
+import envEngineeringRequirements from './majors/envE';
 import governmentRequirements from './majors/govt';
+import hdRequirements from './majors/hd';
 import hotelAdminRequirements from './majors/hadm';
 import historyRequirements from './majors/hist';
 import infoRequirements from './majors/info';
 import isstRequirements from './majors/isst';
+import lingRequirements from './majors/ling';
 import mechnicalEngineeringRequirements from './majors/me';
+import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
 
+import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
 import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
-import isstMinorRequirements from './minors/isst';
+import deaMinorRequirements from './minors/dea';
+import hdMinorRequirements from './minors/hd';
+import infoENMinorRequirements from './minors/infoEN';
+import lingMinorRequirements from './minors/ling';
 import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
+import policyMinorRequirements from './minors/policy';
 import psychMinorRequirements from './minors/psych';
 
 const json: RequirementsJson = {
@@ -57,10 +68,10 @@ const json: RequirementsJson = {
       name: 'Arts and Sciences [before Fall 2020]',
       requirements: casPreFA2020Requirements,
     },
-    // AS2: {
-    //   name: 'Arts and Sciences [Fall 2020 and later]',
-    //   requirements: ,
-    // },
+    AS2: {
+      name: 'Arts and Sciences [Fall 2020 and later]',
+      requirements: casFA2020Requirements,
+    },
     EN: {
       name: 'Engineering',
       requirements: engineeringRequirements,
@@ -86,7 +97,7 @@ const json: RequirementsJson = {
     },
     BIO: {
       name: 'Biological Sciences',
-      schools: ['AG', 'AS1'],
+      schools: ['AG', 'AS1', 'AS2'],
       requirements: bioRequirements,
     },
     BME: {
@@ -121,7 +132,7 @@ const json: RequirementsJson = {
     },
     CS: {
       name: 'Computer Science',
-      schools: ['EN', 'AS1'],
+      schools: ['EN', 'AS1', 'AS2'],
       requirements: csRequirements,
     },
     DEA: {
@@ -131,17 +142,27 @@ const json: RequirementsJson = {
     },
     ECON: {
       name: 'Economics',
-      schools: ['AS1'],
+      schools: ['AS1', 'AS2'],
       requirements: economicsRequirements,
+    },
+    ECE: {
+      name: 'Electrical and Computer Engineering',
+      schools: ['EN'],
+      requirements: eceRequirements,
     },
     ENGL: {
       name: 'English',
-      schools: ['AS1'],
+      schools: ['AS1', 'AS2'],
       requirements: englishRequirements,
+    },
+    ENV: {
+      name: 'Environmental Engineering',
+      schools: ['EN'],
+      requirements: envEngineeringRequirements,
     },
     GOVT: {
       name: 'Government',
-      schools: ['AS1'],
+      schools: ['AS1', 'AS2'],
       requirements: governmentRequirements,
     },
     HADM: {
@@ -149,20 +170,35 @@ const json: RequirementsJson = {
       schools: ['BU'],
       requirements: hotelAdminRequirements,
     },
+    HD: {
+      name: 'Human Development',
+      schools: ['HE'],
+      requirements: hdRequirements,
+    },
     HIST: {
       name: 'History',
-      schools: ['AS1'],
+      schools: ['AS1', 'AS2'],
       requirements: historyRequirements,
     },
     INFO: {
       name: 'Information Science',
-      schools: ['AS1', 'AG'],
+      schools: ['AS1', 'AG', 'AS2'],
       requirements: infoRequirements,
     },
-    ISST: {
-      name: 'Information Science, Systems, and Technology',
+    ISST1: {
+      name: 'Information Science, Systems, and Technology [before Fall 2020]',
+      schools: ['EN'],
+      requirements: oldIsstRequirements,
+    },
+    ISST2: {
+      name: 'Information Science, Systems, and Technology [Fall 2020 and after]',
       schools: ['EN'],
       requirements: isstRequirements,
+    },
+    LING: {
+      name: 'Linguistics',
+      schools: ['AS1', 'AS2'],
+      requirements: lingRequirements,
     },
     ME: {
       name: 'Mechanical Engineering',
@@ -176,6 +212,11 @@ const json: RequirementsJson = {
     },
   },
   minor: {
+    APPLIEDMATH: {
+      name: 'Applied Mathematics',
+      schools: ['EN'],
+      requirements: appliedMathMinorRequirements,
+    },
     BU: {
       name: 'Business',
       schools: ['BU'],
@@ -183,12 +224,12 @@ const json: RequirementsJson = {
     },
     COGSCI: {
       name: 'Cognitive Science',
-      schools: ['AS1'],
+      schools: ['AS1', 'AS2'],
       requirements: cogsciMinorRequirements,
     },
     CS: {
       name: 'Computer Science',
-      schools: ['EN', 'AS1'],
+      schools: ['EN', 'AS1', 'AS2'],
       requirements: csMinorRequirements,
     },
     DBME: {
@@ -196,14 +237,29 @@ const json: RequirementsJson = {
       schools: ['BU'],
       requirements: dbmeMinorRequirements,
     },
+    DEA: {
+      name: 'Design and Environmental Analysis',
+      schools: ['HE'],
+      requirements: deaMinorRequirements,
+    },
+    HD: {
+      name: 'Human Development',
+      schools: ['HE'],
+      requirements: hdMinorRequirements,
+    },
     ISST: {
-      name: 'Industrial Systems and Information Technology',
+      name: 'Information Science [Engineering]',
       schools: ['EN'],
-      requirements: isstMinorRequirements,
+      requirements: infoENMinorRequirements,
+    },
+    LING: {
+      name: 'Linguistics',
+      schools: ['AS1', 'AS2'],
+      requirements: lingMinorRequirements,
     },
     MATH: {
-      name: 'Applied Mathematics',
-      schools: ['EN'],
+      name: 'Mathematics',
+      schools: ['AS1', 'AS2'],
       requirements: mathMinorRequirements,
     },
     ORMS: {
@@ -211,9 +267,14 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: ormsMinorRequirements,
     },
+    POLICY: {
+      name: 'Public Policy',
+      schools: ['AS1', 'AS2'],
+      requirements: policyMinorRequirements,
+    },
     PSYCH: {
       name: 'Psychology',
-      schools: ['AS1'],
+      schools: ['AS1', 'AS2'],
       requirements: psychMinorRequirements,
     },
   },

@@ -2,26 +2,27 @@
   <div class="container-fluid footer p-0 page_404">
     <div class="row footer justify-content-center m-0">
       <div class="col-3 footer">
-        <a href="https://www.cornelldti.org" class="footer"> Cornell DTI @ {{ getYear() }}</a>
+        <a href="https://www.cornelldti.org/projects/courseplan/" class="footer" target="_blank">
+          Cornell DTI @ {{ getYear() }}</a
+        >
       </div>
       <div class="col-3">
-        <p class="footer">Built with LOVE</p>
+        <p class="footer">
+          Built with
+          <img src="@/assets/images/landing_new/RedHeart.svg" width="24" height="24" />
+        </p>
       </div>
       <div class="col-3 footer">
-        <a
-          class="footer"
-          href="https://app.termly.io/document/privacy-policy/fcecc0e8-8af2-472d-8d27-b6b89d02a2be"
-          >Privacy Policy</a
-        >
+        <a class="footer" target="_blank" href="/policy">Privacy Policy</a>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   methods: {
     getYear() {
       const today = new Date();
@@ -59,5 +60,8 @@ a.footer {
 }
 .row.footer {
   padding: 40px;
+}
+a:hover {
+  opacity: 0.95;
 }
 </style>

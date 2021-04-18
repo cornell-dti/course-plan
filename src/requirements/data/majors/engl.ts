@@ -1,8 +1,9 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { courseMatchesCodeOptions, includesWithSingleRequirement } from '../checkers-common';
+import { courseMatchesCodeOptions, ifCodeMatch } from '../checkers-common';
 
 const englishRequirements: readonly CollegeOrMajorRequirement[] = [
   {
+    // TODO: Non english courses can also count but we need more info to update
     name: 'Total Credits',
     description:
       'To graduate with a major in English, a student must complete with a grade of C or better 40 credit hours approved for the English major. ' +
@@ -27,6 +28,7 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [40],
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'Pre-1800',
@@ -42,24 +44,44 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [12],
+    allowCourseDoubleCounting: true,
   },
   {
     name: '4000 or Above',
-    description: '8 credits (2 courses) must be at the 4000 level or above',
-    source:
-      'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: includesWithSingleRequirement('ENGL 4***'),
+    description: '8 credits must be at the 4000 level or above',
+    source: 'https://english.cornell.edu/english-major-guide#requirements-for-the-major',
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr, subject } = course;
+        return (
+          ifCodeMatch(subject, 'ENGL') &&
+          !(
+            ifCodeMatch(catalogNbr, '1***') ||
+            ifCodeMatch(catalogNbr, '2***') ||
+            ifCodeMatch(catalogNbr, '3***')
+          )
+        );
+      },
+    ],
+    allowCourseDoubleCounting: true,
     fulfilledBy: 'credits',
     perSlotMinCount: [8],
   },
   {
+    // TODO: Checker should be more specific
     name: 'Concentration',
     description:
       '12 credits (3 courses) must form an intellectually coherent concentration (see below).',
-    source:
-      'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    fulfilledBy: 'self-check',
-    minCount: 12,
+    source: 'https://english.cornell.edu/english-major-guide#requirements-for-the-major',
+    fulfilledBy: 'credits',
+    perSlotMinCount: [12],
+    checkerWarning: 'We do not check courses meet the concentration guideline',
+    checker: [
+      (course: Course): boolean => {
+        const { subject, catalogNbr } = course;
+        return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
+      },
+    ],
   },
 ];
 

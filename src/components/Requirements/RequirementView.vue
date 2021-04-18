@@ -16,8 +16,8 @@
     />
     <div v-if="showMajorOrMinorRequirements">
       <!--Show more of completed requirements -->
-      <div v-if="displayDetails">
-        <p class="sub-title">In-Depth College Requirements</p>
+      <div v-if="displayDetails || tourStep === 1">
+        <h2>Ongoing Requirements</h2>
         <div class="separator"></div>
         <div v-for="(subReq, id) in partitionedRequirementsProgress.ongoing" :key="id">
           <sub-requirement
@@ -25,14 +25,16 @@
             :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
             :color="reqGroupColorMap[req.groupName][0]"
             :isCompleted="false"
+            :tourStep="tourStep"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
+            @modal-open="modalToggled"
           />
           <div class="separator"></div>
         </div>
 
         <div v-if="partitionedRequirementsProgress.completed.length > 0" class="row completed">
-          <p class="col sub-title specific">Filled Requirements</p>
+          <h2 class="col specific">Completed Requirements</h2>
           <div class="col-1 text-right">
             <button
               class="btn float-right"
@@ -54,6 +56,7 @@
               :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
               :color="reqGroupColorMap[req.groupName][0]"
               :isCompleted="true"
+              :tourStep="tourStep"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
               @onShowAllCourses="onShowAllCourses"
             />
@@ -68,7 +71,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
+import { GTagEvent } from '@/gtag';
 import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import SubRequirement from '@/components/Requirements/SubRequirement.vue';
 
@@ -86,7 +90,7 @@ type PartitionedRequirementsProgress = {
   readonly completed: readonly RequirementFulfillment[];
 };
 
-export default Vue.extend({
+export default defineComponent({
   components: { RequirementHeader, SubRequirement },
   props: {
     req: { type: Object as PropType<GroupedRequirementFulfillmentReport>, required: true },
@@ -99,6 +103,7 @@ export default Vue.extend({
     displayedMinorIndex: { type: Number, required: true },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
+    tourStep: { type: Number, required: true },
   },
   data() {
     return {
@@ -146,7 +151,11 @@ export default Vue.extend({
       this.displayDetails = !this.displayDetails;
     },
     turnCompleted(bool: boolean) {
+      GTagEvent(this.$gtag, 'requirements-bar-filled-requirements-toggle');
       this.displayCompleted = bool;
+    },
+    modalToggled(isOpen: boolean) {
+      this.$emit('modal-open', isOpen);
     },
   },
 });
@@ -177,14 +186,7 @@ export default Vue.extend({
   padding: 0;
 }
 .specific {
-  color: $lightPlaceholderGray;
-}
-.sub-title {
-  padding: 0;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 14px;
+  padding-left: 0;
   color: $darkGray;
 }
 button.active {

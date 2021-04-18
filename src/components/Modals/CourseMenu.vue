@@ -6,22 +6,36 @@
         @mouseover="setDisplayColors(true)"
         @mouseleave="setDisplayColors(false)"
       >
-        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
+        <img
+          v-if="isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrowleft.svg"
+          alt="arrow to expand edit course color"
+        />
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="@/assets/images/paint.svg" />
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/paint.svg"
+            alt="edit course color paint icon"
+          />
           <span class="courseMenu-text">Edit Color</span>
         </div>
-        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+        <img
+          v-if="!isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrow.svg"
+          alt="arrow to expand edit course color"
+        />
 
         <div
           v-if="displayColors"
           class="courseMenu-content courseMenu-colors"
           :class="{ 'courseMenu-colors--left': isLeft }"
         >
-          <div
+          <button
             v-for="(color, index) in colors"
             :key="index"
-            class="courseMenu-section"
+            class="courseMenu-section full-opacity-on-hover"
             @click="colorCourse(color)"
           >
             <div class="courseMenu-left">
@@ -31,25 +45,36 @@
               ></div>
               <span class="courseMenu-text">{{ color.text }}</span>
             </div>
-          </div>
+          </button>
         </div>
       </div>
       <div
         class="courseMenu-section"
         @mouseover="setDisplayEditCourseCredits(true)"
         @mouseleave="setDisplayEditCourseCredits(false)"
-        v-if="getCreditRange[0] != getCreditRange[1]"
+        v-if="getCreditRange && getCreditRange[0] != getCreditRange[1]"
       >
-        <img v-if="isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrowleft.svg" />
+        <img
+          v-if="isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrowleft.svg"
+          alt="arrow to expand edit course credits"
+        />
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
             :class="{ 'courseMenu-icon--left': isLeft }"
             src="@/assets/images/edit-credits.svg"
+            alt="edit course credits icon"
           />
           <span class="courseMenu-text">Edit Credits</span>
         </div>
-        <img v-if="!isLeft" class="courseMenu-arrow" src="@/assets/images/sidearrow.svg" />
+        <img
+          v-if="!isLeft"
+          class="courseMenu-arrow"
+          src="@/assets/images/sidearrow.svg"
+          alt="arrow to expand edit course credits"
+        />
         <div
           v-if="displayEditCourseCredits"
           class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
@@ -67,25 +92,30 @@
           </div>
         </div>
       </div>
-      <div
-        class="courseMenu-section"
+      <button
+        class="courseMenu-section full-opacity-on-hover"
         :class="{ 'courseMenu-section--left': isLeft }"
         @click="deleteCourse"
       >
         <div class="courseMenu-left">
-          <img class="courseMenu-icon" src="@/assets/images/trash.svg" />
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/trash.svg"
+            alt="delete course trashcan icon"
+          />
           <span class="courseMenu-text">Delete</span>
         </div>
-      </div>
+      </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
+import { GTagEvent } from '@/gtag';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     getCreditRange: {
       type: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
@@ -132,6 +162,7 @@ export default Vue.extend({
     },
     colorCourse(color: { hex: string }) {
       this.$emit('color-course', color.hex.substring(1));
+      GTagEvent(this.$gtag, 'course-edit-color');
     },
     setDisplayColors(bool: boolean) {
       this.displayColors = bool;
@@ -167,6 +198,11 @@ export default Vue.extend({
 @import '@/assets/scss/_variables.scss';
 
 .courseMenu {
+  position: absolute;
+  right: -3rem;
+  top: 2rem;
+  z-index: 1;
+
   &-content {
     background: $white;
     border: 1px solid #acacac;
@@ -183,6 +219,7 @@ export default Vue.extend({
     padding: 0.5rem 1rem;
     position: relative;
     cursor: pointer;
+    width: 100%;
     &:hover,
     &:active,
     &:focus {
@@ -255,6 +292,8 @@ export default Vue.extend({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .courseMenu {
+    right: -1rem;
+
     &-arrow {
       display: none;
     }

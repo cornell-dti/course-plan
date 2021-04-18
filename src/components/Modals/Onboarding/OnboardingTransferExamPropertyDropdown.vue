@@ -17,6 +17,10 @@
           {{ choice }}
         </div>
         <div
+          class="onboarding-dropdown-placeholder college-test-credits-arrow"
+          :style="{ borderTopColor: arrowColor }"
+        ></div>
+        <div
           class="onboarding-dropdown-placeholder college-arrow"
           :style="{ borderTopColor: arrowColor }"
         ></div>
@@ -36,13 +40,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 const placeholderText = 'Select one';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     propertyName: { type: String, required: true },
     columnWide: { type: Boolean, required: true },

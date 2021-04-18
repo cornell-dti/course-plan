@@ -4,6 +4,7 @@ import {
   includesWithSubRequirements,
   courseMatchesCodeOptions,
   ifCodeMatch,
+  courseIsSpecial,
 } from '../checkers-common';
 
 const csRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -19,6 +20,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['CS 111x', 'CS 2110 or CS 2112'],
   },
   {
     name: 'Computer Science Core',
@@ -33,25 +35,34 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
+    slotNames: ['CS 2800 or CS 2802', 'CS 3110', 'CS 3410 or CS 3410', 'CS 4820', 'CS 4410'],
   },
   {
     name: 'CS Electives',
     description:
-      'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4998 are NOT allowed.',
+      'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4999 are NOT allowed.',
     source:
       'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: [
       (course: Course): boolean => {
         if (
-          courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4998', 'CS 4410', 'CS 4820'])
+          courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4999', 'CS 4410', 'CS 4820'])
         ) {
           return false;
         }
-        return ifCodeMatch(course.subject, 'CS') && ifCodeMatch(course.catalogNbr, '4***');
+        return (
+          ifCodeMatch(course.subject, 'CS') &&
+          !(
+            ifCodeMatch(course.catalogNbr, '1***') ||
+            ifCodeMatch(course.catalogNbr, '2***') ||
+            ifCodeMatch(course.catalogNbr, '3***')
+          )
+        );
       },
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   {
     name: 'CS Practicum or Project',
@@ -76,6 +87,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Technical Electives',
@@ -84,32 +96,53 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean => {
         const { catalogNbr } = course;
-        return catalogNbr.startsWith('3');
+        return !(ifCodeMatch(catalogNbr, '1***') || ifCodeMatch(catalogNbr, '2***'));
       },
     ],
     checkerWarning: 'We do not check that the courses are considered technical.',
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   {
     name: 'External Specialization',
     description:
-      'Three 3000+ related courses outside of computer science (3 credit min per course)' +
+      'Three 3000+ related courses outside of computer science (3 credit min per course). ' +
       'Frequently, the three courses are from the same department.',
     source:
       'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    fulfilledBy: 'self-check',
-    minCount: 3,
+    checker: [
+      (course: Course): boolean => {
+        const { catalogNbr } = course;
+        return (
+          !(ifCodeMatch(catalogNbr, '1***') || ifCodeMatch(catalogNbr, '2***')) &&
+          !ifCodeMatch(course.subject, 'CS')
+        );
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are related.',
+    fulfilledBy: 'courses',
+    perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
+  // TODO: Doesn't check for ROTC (PE) above 3000
   {
     name: 'Major-approved Elective(s)',
     description:
-      'At least 3 credit hours total. All academic courses count.' +
+      'At least 3 credit hours total. All academic courses count. ' +
       'No PE courses, courses numbered 10xx, and ROTC courses below the 3000-level allowed.',
     source:
       'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
-    fulfilledBy: 'self-check',
-    minCount: 3,
+    checker: [
+      (course: Course): boolean => {
+        if (courseIsSpecial(course)) return false;
+        const { subject, catalogNbr } = course;
+        return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are major approved.',
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3],
   },
   {
     name: 'Probability',
@@ -126,6 +159,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
 ];
 

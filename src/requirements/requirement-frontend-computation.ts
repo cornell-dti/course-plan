@@ -1,6 +1,7 @@
-import { CREDITS_COURSE_ID, FWS_COURSE_ID, SWIM_TEST_COURSE_ID } from './data/constants';
+import { SWIM_TEST_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './data/exams/ExamCredit';
 import {
+  courseIsAPIB,
   convertFirestoreSemesterCourseToCourseTaken,
   computeFulfillmentCoursesAndStatistics,
 } from './requirement-frontend-utils';
@@ -13,21 +14,12 @@ type FulfillmentStatistics = {
 } & RequirementFulfillmentStatistics;
 
 /**
- * @param course course object with useful information retrived from Cornell courses API.
- * @returns true if the course is AP/IB equivalent course or credit
- */
-const courseIsAPIB = (course: CourseTaken): boolean =>
-  [CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
-  ['AP', 'IB', 'CREDITS'].includes(course.code.split(' ')[0]);
-
-/**
  * Used for total academic credit requirements for all colleges except EN and AR
  * @param course course object with useful information retrived from Cornell courses API.
  * @returns true if the course is not PE or 10** level
  */
 const courseIsAllEligible = (course: CourseTaken): boolean => {
-  if (course.courseId === CREDITS_COURSE_ID) return true;
-  if (courseIsAPIB(course)) return false;
+  if (courseIsAPIB(course)) return true;
   const [subject, number] = course.code.split(' ');
   return subject !== 'PE' && !number.startsWith('10');
 };
@@ -40,7 +32,7 @@ const getTotalCreditsFulfillmentStatistics = (
     sourceType: 'College',
     sourceSpecificName: college,
     name: 'Total Academic Credits',
-    courses: [],
+    courses: [[]],
     fulfilledBy: 'credits',
     perSlotMinCount: [120],
   } as const;
@@ -52,8 +44,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-AG-total-credits',
         description:
           '120 academic credits are required for graduation. ' +
-          'A minimum of 100 credits must be in courses for which a letter grade was recieved. ' +
-          'PE courses do not count.',
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11561',
       };
       break;
@@ -63,7 +55,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-AS1-total-credits',
         description:
           '120 academic credits are required. ' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11570#credit-req',
       };
       break;
@@ -83,7 +76,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-HE-total-credits',
         description:
           '120 academic credits are required. ' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source:
           'http://courses.cornell.edu/content.php?catoid=41&navoid=11600#Cornell_Credit_Requirements',
       };
@@ -94,7 +88,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-IL-total-credits',
         description:
           '120 academic credits are required. ' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11587',
       };
       break;
@@ -104,7 +99,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-BU-total-credits',
         description:
           '120 academic credits are required. ' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11715',
       };
       break;
@@ -113,25 +109,16 @@ const getTotalCreditsFulfillmentStatistics = (
   }
 
   let minCountFulfilled = 0;
-  let minCountRequired = 120;
-  const courseCodeSet = new Set<string>();
-  const eligibleCourses =
-    college === 'AG'
-      ? courses.filter(course => !course.code.startsWith('PE '))
-      : courses.filter(courseIsAllEligible);
+  const minCountRequired = 120;
+  const eligibleCourses = courses.filter(courseIsAllEligible);
 
   eligibleCourses.forEach(course => {
     minCountFulfilled += course.credits;
-    if (courseCodeSet.has(course.code)) {
-      minCountRequired += course.credits;
-    } else {
-      courseCodeSet.add(course.code);
-    }
   });
 
   return {
     requirement,
-    courses: [],
+    courses: [[]],
     fulfilledBy: 'credits',
     minCountFulfilled,
     minCountRequired,
@@ -155,6 +142,7 @@ const getSwimTestFulfillmentStatistics = (
     courses: [[SWIM_TEST_COURSE_ID]],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   };
   const swimClasses = courses.filter(it => it.courseId === SWIM_TEST_COURSE_ID);
   if (tookSwimTest) {
@@ -197,7 +185,6 @@ export default function computeGroupedRequirementFulfillmentReports(
 ): {
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
-  readonly illegallyDoubleCountedCourseUniqueIDs: ReadonlySet<number>;
   readonly groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
 } {
   const coursesTaken = getCourseCodesArray(semesters, onboardingData);
@@ -206,7 +193,6 @@ export default function computeGroupedRequirementFulfillmentReports(
   const {
     userRequirements,
     requirementFulfillmentGraph,
-    illegallyDoubleCountedCourseUniqueIDs,
   } = buildRequirementFulfillmentGraphFromUserData(
     coursesTaken,
     onboardingData,
@@ -281,7 +267,6 @@ export default function computeGroupedRequirementFulfillmentReports(
   return {
     userRequirementsMap: Object.fromEntries(userRequirements.map(it => [it.id, it])),
     requirementFulfillmentGraph,
-    illegallyDoubleCountedCourseUniqueIDs,
     groupedRequirementFulfillmentReport,
   };
 }

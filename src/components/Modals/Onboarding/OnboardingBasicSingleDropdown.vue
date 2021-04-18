@@ -25,30 +25,31 @@
           v-for="(fullName, key) in availableChoices"
           :key="key"
           class="onboarding-dropdown-content-item"
+          :ref="`scroll-ref-${key}`"
           @click="onSelect(key)"
         >
           {{ fullName }}
         </div>
       </div>
     </div>
-    <div
+    <button
       class="onboarding-remove"
       @click="onRemove()"
       :class="{
         'onboarding--hidden': cannotBeRemoved,
       }"
     >
-      <img src="@/assets/images/x-green.svg" alt="x" />
-    </div>
+      <img src="@/assets/images/x-green.svg" alt="x to delete dropdown" />
+    </button>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     /** Mapping from acronym to full name */
     availableChoices: {
@@ -57,6 +58,7 @@ export default Vue.extend({
     },
     choice: { type: String, required: true },
     cannotBeRemoved: { type: Boolean, required: true },
+    scrollBottomToIndex: { type: Number, default: 0 },
   },
   data() {
     return {
@@ -82,6 +84,16 @@ export default Vue.extend({
       } else {
         this.boxBorder = yuxuanBlue;
         this.arrowColor = yuxuanBlue;
+      }
+
+      // scroll the bottom of the graduation year dropdown to scrollBottomToIndex
+      if (!contentShown && this.scrollBottomToIndex > 0) {
+        this.$nextTick(() => {
+          (this.$refs[`scroll-ref-${this.scrollBottomToIndex}`] as Element).scrollIntoView({
+            behavior: 'auto',
+            block: 'nearest',
+          });
+        });
       }
     },
     closeDropdownIfOpen() {

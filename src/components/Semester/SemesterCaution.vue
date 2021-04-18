@@ -1,7 +1,7 @@
 <template>
   <div class="caution">
     <div class="caution-left">
-      <img class="caution-icon" src="@/assets/images/caution-white.svg" />
+      <img class="caution-icon" src="@/assets/images/caution-white.svg" alt="caution icon" />
     </div>
     <div class="caution-text">{{ text }}</div>
     <div class="caution-right">
@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     text: { type: String, required: true },
   },

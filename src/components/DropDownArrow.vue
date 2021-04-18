@@ -17,9 +17,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     fillColor: { type: String, required: true },
     isFlipped: { type: Boolean, default: false },
@@ -53,9 +53,9 @@ export default Vue.extend({
   }
 }
 .subreq {
-  margin-top: -14px;
+  margin-top: -6px;
   &-flipped {
-    margin-top: -4px;
+    margin-top: 4px;
   }
 }
 </style>

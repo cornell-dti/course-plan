@@ -25,11 +25,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import CustomFooter from '@/components/Footer.vue';
 import TopBar from '@/components/TopBar.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: { CustomFooter, TopBar },
 });
 </script>

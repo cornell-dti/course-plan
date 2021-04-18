@@ -1,9 +1,19 @@
+import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './data/constants';
 import requirementJson from './typed-requirement-json';
 
 /**
  * A collection of helper functions
  * that might be useful for both frontend components and requirement graph computation
  */
+
+/**
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @returns true if the course is AP/IB equivalent course or credit
+ */
+export const courseIsAPIB = (course: CourseTaken): boolean =>
+  [CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
+  ['AP', 'IB'].includes(course.code.split(' ')[0]) ||
+  course.uniqueId < -1;
 
 /**
  * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase
@@ -16,6 +26,51 @@ export function convertFirestoreSemesterCourseToCourseTaken({
   credits,
 }: FirestoreSemesterCourse): CourseTaken {
   return { courseId: crseId, uniqueId: uniqueID, code, credits };
+}
+
+/**
+ * This returns a function that filters out courses that cannot fulfill a requirement with requirementId
+ * based on whether it is an eligible course or not. Used to filter out data for the self-check add modal.
+ */
+export const getFilter = (
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  requirementId: string
+): ((course: CornellCourseRosterCourse) => boolean) => {
+  const requirement = userRequirementsMap[requirementId];
+  // If we cannot find the relevant requirement, then default to true to be permissive.
+  if (requirement == null) return () => true;
+  const requirementSpec = getMatchedRequirementFulfillmentSpecification(
+    requirement,
+    toggleableRequirementChoices
+  );
+  // If a requirement is truly self-check, then all courses can be used.
+  if (requirementSpec == null) return () => true;
+  const eligibleCourseIds = new Set(requirementSpec.eligibleCourses.flat());
+  return course => eligibleCourseIds.has(course.crseId);
+};
+
+/**
+ * The function returns a boolean representing whether a course can fulfill requirement with requirementId based on
+ * whether or not it is eligible. Used to filter out data for the self-check dropdown, and is based on the above filter.
+ */
+export function canFulfillChecker(
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  requirementId: string,
+  crseId: number
+): boolean {
+  const requirement = userRequirementsMap[requirementId];
+  // If we cannot find the relevant requirement, then default to true to be permissive.
+  if (requirement == null) return true;
+  const requirementSpec = getMatchedRequirementFulfillmentSpecification(
+    requirement,
+    toggleableRequirementChoices
+  );
+  // If a requirement is truly self-check, then all courses can be used.
+  if (requirementSpec == null) return true;
+  const eligibleCourseIds = new Set(requirementSpec.eligibleCourses.flat());
+  return eligibleCourseIds.has(crseId);
 }
 
 export function requirementAllowDoubleCounting(
@@ -112,17 +167,26 @@ export function getMatchedRequirementFulfillmentSpecification(
   readonly fulfilledBy: 'courses' | 'credits';
   readonly eligibleCourses: readonly (readonly number[])[];
   readonly perSlotMinCount: readonly number[];
+  readonly slotNames: readonly string[];
   readonly minNumberOfSlots?: number;
 } | null {
   switch (requirement.fulfilledBy) {
     case 'self-check':
       return null;
     case 'courses':
+      return {
+        fulfilledBy: requirement.fulfilledBy,
+        eligibleCourses: requirement.courses,
+        perSlotMinCount: requirement.perSlotMinCount,
+        slotNames: requirement.slotNames,
+        minNumberOfSlots: requirement.minNumberOfSlots,
+      };
     case 'credits':
       return {
         fulfilledBy: requirement.fulfilledBy,
         eligibleCourses: requirement.courses,
         perSlotMinCount: requirement.perSlotMinCount,
+        slotNames: [],
         minNumberOfSlots: requirement.minNumberOfSlots,
       };
     case 'toggleable': {
@@ -135,6 +199,7 @@ export function getMatchedRequirementFulfillmentSpecification(
         fulfilledBy: option.counting,
         eligibleCourses: option.courses,
         perSlotMinCount: option.perSlotMinCount,
+        slotNames: option.counting === 'courses' ? option.slotNames : [],
         minNumberOfSlots: option.minNumberOfSlots,
       };
     }
@@ -168,20 +233,22 @@ export function computeFulfillmentCoursesAndStatistics(
   const subRequirementProgress: number[] = eligibleCourses.map(() => 0);
   coursesTaken.forEach(courseTaken => {
     const { courseId } = courseTaken;
-    for (
-      let subRequirementIndex = 0;
-      subRequirementIndex < eligibleCourses.length;
-      subRequirementIndex += 1
-    ) {
-      if (
-        eligibleCourses[subRequirementIndex].includes(courseId) &&
-        subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
+    if (!(requirement.disallowTransferCredit && courseIsAPIB(courseTaken))) {
+      for (
+        let subRequirementIndex = 0;
+        subRequirementIndex < eligibleCourses.length;
+        subRequirementIndex += 1
       ) {
-        // add the course to the list of courses used to fulfill that one sub-requirement
-        coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
-        subRequirementProgress[subRequirementIndex] +=
-          fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-        break;
+        if (
+          eligibleCourses[subRequirementIndex].includes(courseId) &&
+          subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
+        ) {
+          // add the course to the list of courses used to fulfill that one sub-requirement
+          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+          subRequirementProgress[subRequirementIndex] +=
+            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+          break;
+        }
       }
     }
   });
@@ -241,13 +308,10 @@ export function getRelatedUnfulfilledRequirements(
         toggleableRequirementChoices
       );
       // potential self-check requirements
-      if (
-        (requirementSpec == null || subRequirement.checkerWarning != null) &&
-        !subRequirement.allowCourseDoubleCounting
-      ) {
+      if (requirementSpec == null && !subRequirement.allowCourseDoubleCounting) {
         selfCheckRequirements.push(subRequirement);
       }
-      if (requirementSpec != null && subRequirement.checkerWarning == null) {
+      if (requirementSpec != null) {
         const allEligibleCourses = requirementSpec.eligibleCourses.flat();
         if (allEligibleCourses.includes(courseId)) {
           const fulfillmentStatisticsWithNewCourse = computeFulfillmentCoursesAndStatistics(
@@ -256,7 +320,11 @@ export function getRelatedUnfulfilledRequirements(
             toggleableRequirementChoices
           );
           if (fulfillmentStatisticsWithNewCourse.minCountFulfilled > existingMinCountFulfilled) {
-            directlyRelatedRequirements.push(subRequirement);
+            if (subRequirement.checkerWarning == null) {
+              directlyRelatedRequirements.push(subRequirement);
+            } else {
+              selfCheckRequirements.push(subRequirement);
+            }
           }
         }
       }

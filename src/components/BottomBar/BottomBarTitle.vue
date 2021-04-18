@@ -5,21 +5,21 @@
       v-if="!isExpanded"
       class="bottombartitle-arrow"
       src="@/assets/images/uparrow-white.svg"
-      alt="collapse bottom bar class"
+      alt="collapse bottom bar"
     />
     <img
       v-if="isExpanded"
       class="bottombartitle-arrow"
       src="@/assets/images/downarrow-white.svg"
-      alt="expand bottom bar class"
+      alt="expand bottom bar"
     />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     color: { type: String, required: true },
     name: { type: String, required: true },

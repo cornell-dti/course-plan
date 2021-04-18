@@ -13,7 +13,7 @@
           :bottomCourseFocus="bottomCourseFocus"
           :isExpanded="isExpanded"
           @on-change-focus="() => changeBottomBarCourseFocus(index)"
-          @on-delete="() => deleteBottomBarCourse(index)"
+          @on-delete="() => deleteBottomBarCourse(index, $gtag)"
         />
       </div>
     </div>
@@ -24,13 +24,13 @@
           v-if="!seeMoreOpen"
           class="bottombarSeeMoreTab-arrow"
           src="@/assets/images/uparrow-white.svg"
-          alt="expand see more"
+          alt="expand see more bottom bar tabs"
         />
         <img
           v-if="seeMoreOpen"
           class="bottombarSeeMoreTab-arrow"
           src="@/assets/images/downarrow-white.svg"
-          alt="collapse see more"
+          alt="collapse see more bottom bar tabs"
         />
       </div>
       <div v-if="seeMoreOpen" class="bottombarSeeMoreOptions">
@@ -48,8 +48,8 @@
             <img
               class="seeMoreCourse-option-delete"
               src="@/assets/images/x-blue.svg"
-              @click="deleteBottomBarCourse(index + maxBottomBarTabs)"
-              alt="x"
+              @click="deleteBottomBarCourse(index + maxBottomBarTabs, $gtag)"
+              alt="x to delete bottom bar tab"
             />
           </div>
         </div>
@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import BottomBarTab from '@/components/BottomBar/BottomBarTab.vue';
 import {
   immutableBottomBarState,
@@ -67,8 +67,9 @@ import {
   deleteBottomBarCourse,
   moveBottomBarCourseToFirst,
 } from '@/components/BottomBar/BottomBarState';
+import { GTagEvent } from '@/gtag';
 
-export default Vue.extend({
+export default defineComponent({
   components: { BottomBarTab },
   data() {
     return {
@@ -102,6 +103,7 @@ export default Vue.extend({
     moveBottomBarCourseToFirst,
     bottomBarSeeMoreToggle() {
       this.seeMoreOpen = !this.seeMoreOpen;
+      GTagEvent(this.$gtag, 'bottom-bar-see-more');
     },
   },
 });
@@ -117,8 +119,6 @@ export default Vue.extend({
   margin-bottom: -0.2%;
   align-items: flex-end;
 
-  justify-content: space-between;
-
   &-bottomCourseWrapper {
     display: flex;
     flex-direction: row;
@@ -131,10 +131,9 @@ export default Vue.extend({
   &-seeMoreWrapper {
     display: flex;
     flex-direction: column;
-    margin-left: auto;
     margin-right: 1%;
     .bottombarSeeMoreTab {
-      color: white;
+      color: $white;
       width: 9rem;
       height: 1.75rem;
       background-color: $sangBlue;
@@ -157,7 +156,7 @@ export default Vue.extend({
 
   .bottombarSeeMoreOptions {
     width: 9rem;
-    background-color: #ffffff;
+    background-color: $white;
     border: 1px solid rgba(218, 218, 218, 0.2);
     max-height: 6.81rem;
     overflow-y: scroll;
@@ -171,7 +170,7 @@ export default Vue.extend({
         width: 100%;
         height: 25px;
 
-        color: #757575;
+        color: $lightPlaceholderGray;
         display: flex;
         align-items: center;
 

@@ -1,5 +1,5 @@
-import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSubRequirements } from '../checkers-common';
+import { CollegeOrMajorRequirement, Course } from '../../types';
+import { courseIsSpecial, ifCodeMatch, includesWithSubRequirements } from '../checkers-common';
 
 const chemERequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -17,12 +17,14 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
         checker: includesWithSubRequirements(['CHEM 2090'], ['CHEM 2080']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
+        slotNames: ['CHEM 2090', 'CHEM 2080'],
       },
       'Option 2': {
         description: 'CHEM 2150 with AP credit',
         checker: includesWithSubRequirements(['CHEM 2150']),
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
     },
     allowCourseDoubleCounting: true,
@@ -39,6 +41,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
+    slotNames: ['MATH 2930', 'PHYS 2213', 'CHEM 3890', 'ENGRD 2190'],
     allowCourseDoubleCounting: true,
   },
   {
@@ -53,6 +56,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
+    slotNames: ['MATH 2940 or CEE 3040 or ENGRD 2700', 'CHEME 3230', 'CHEM 3090', 'CHEM 2900'],
     allowCourseDoubleCounting: true,
   },
   {
@@ -62,55 +66,54 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
-      // TODO: Placeholder for AP/IB Credit
-      'AP/IB Credit': {
-        description:
-          'A score of 5 on the CEEB AP Biology exam or a score of 7 on the IB Higher Level exam',
-        checker: includesWithSubRequirements(['BIOG 1105'], ['BIOG 1107'], ['BIOG 1500']),
-        counting: 'courses',
-        perSlotMinCount: [1, 1, 1],
-      },
       'CHEME 2880': {
         description: 'CHEME 2880',
         checker: includesWithSubRequirements(['CHEME 2880']),
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
       'CHEME 5430': {
         description: 'CHEME 5430',
         checker: includesWithSubRequirements(['CHEME 5430']),
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
       '8 credits of pre-med biology sequence: option 1': {
         description: 'Take BIOG 1500, BIOMG 1350, and BIOG 1440',
         checker: includesWithSubRequirements(['BIOG 1500', 'BIOMG 1350', 'BIOG 1440']),
         counting: 'courses',
         perSlotMinCount: [3],
+        slotNames: ['Course'],
       },
       '8 credits of pre-med biology sequence: option 2': {
         description: 'Take BIOG 1107, BIOG 1108, and BIOG 1500',
         checker: includesWithSubRequirements(['BIOG 1107', 'BIOG 1108', 'BIOG 1500']),
         counting: 'courses',
         perSlotMinCount: [3],
+        slotNames: ['Course'],
       },
       'BIOMI 2900': {
         description: 'BIOMI 2900',
         checker: includesWithSubRequirements(['BIOMI 2900']),
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
       'BIOMG 3300 or BIOMG 3350': {
         description: 'BIOMG 3300 or BIOMG 3350',
         checker: includesWithSubRequirements(['BIOMG 3300', 'BIOMG 3350']),
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
       'BIOMG 3310 and BIOMG 3320': {
         description: 'BIOMG 3310 and BIOMG 3320',
         checker: includesWithSubRequirements(['BIOMG 3310'], ['BIOMG 3320']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
+        slotNames: ['BIOMG 3310', 'BIOMG 3320'],
       },
     },
   },
@@ -128,6 +131,13 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
+    slotNames: [
+      'CS 1112',
+      'CHEM 3570 or CHEM 3530 or CHEM 3590',
+      'CHEM 2510',
+      'CHEME 3130',
+      'CHEME 3240',
+    ],
     allowCourseDoubleCounting: true,
   },
   {
@@ -161,12 +171,19 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
         'CHEME 6800',
       ],
       ['CHEME 3010'],
-      ['CHEM 3320'],
+      ['CHEME 3320'],
       ['CHEME 3720'],
       ['CHEME 3900']
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
+    slotNames: [
+      '3 credits of advanced CHEME electives',
+      'CHEME 3010',
+      'CHEME 3320',
+      'CHEME 3720',
+      'CHEME 3900',
+    ],
   },
   {
     name: 'Semester 7',
@@ -201,6 +218,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['CHEME 4320', '3 credits of advanced CHEME electives'],
   },
   {
     name: 'Semester 8',
@@ -215,14 +233,30 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
+    slotNames: [
+      'CS 1112',
+      'CHEM 3570 or CHEM 3530 or CHEM 3590',
+      'CHEM 2510',
+      'CHEME 3130',
+      'CHEME 3240',
+    ],
   },
+  // TOOD: repeated checker
   {
     name: 'Major-Approved Electives',
     description:
-      'Three credits of electives are required and must be approved by the student’s faculty advisor.',
+      "Three credits of electives are required and must be approved by the student's faculty advisor.",
     source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817',
-    fulfilledBy: 'self-check',
-    minCount: 3,
+    checker: [
+      (course: Course): boolean => {
+        if (courseIsSpecial(course)) return false;
+        const { subject, catalogNbr } = course;
+        return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
+      },
+    ],
+    checkerWarning: 'We do not check that the courses are major approved.',
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3],
   },
 ];
 

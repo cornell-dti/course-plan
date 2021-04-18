@@ -1,12 +1,16 @@
 <template>
   <div>
-    <div v-if="requirementsThatAllowDoubleCounting.length > 0">
+    <div
+      v-if="
+        editMode ? requirementsThatAllowDoubleCounting.length > 0 : chosenRequirementText.length > 0
+      "
+    >
       <div class="newCourse-title">
         This class automatically fulfills the following requirement(s):
       </div>
       <div class="newCourse-requirements-container">
         <div class="newCourse-requirements">
-          {{ requirementsThatAllowDoubleCounting.join(', ') }}
+          {{ editMode ? requirementsThatAllowDoubleCounting.join(', ') : chosenRequirementText }}
         </div>
       </div>
     </div>
@@ -14,28 +18,35 @@
       This class does not automatically fulfill any requirements.
     </div>
     <div v-if="nonAutoRequirements.length > 0">
-      <div class="newCourse-title">This class can fulfill the following requirement(s):</div>
       <div v-if="!editMode">
-        <div class="newCourse-requirements-container">
-          <div class="newCourse-title">
-            <span v-for="(reqName, index) in nonAutoRequirementsTextArray" :key="index">
-              <strong v-if="reqName.selected" class="newCourse-name">{{
-                index === nonAutoRequirementsTextArray.length - 1
-                  ? reqName.name
-                  : reqName.name + ', '
-              }}</strong>
-              <span v-else>{{
-                index === nonAutoRequirementsTextArray.length - 1
-                  ? reqName.name
-                  : reqName.name + ', '
-              }}</span>
-            </span>
-          </div>
+        <div class="newCourse-title">
+          This class could potentially fulfill the following requirement(s):
+        </div>
+        <div class="newCourse-title">
+          <strong class="newCourse-name">
+            {{
+              nonAutoRequirementsTextArray
+                .filter(it => !it.selected)
+                .map(it => it.name)
+                .join(', ')
+            }}
+          </strong>
         </div>
       </div>
       <div v-else>
+        <div v-if="selectedRequirementName === ''" class="newCourse-title">
+          {{
+            selectedRequirementName === ''
+              ? 'This class could potentially fulfill the following requirement(s):'
+              : ''
+          }}
+        </div>
+        <div v-else>
+          Instead of <span class="newCourse-requirements">{{ selectedRequirementName }}</span
+          >, this class could potentially fulfill the following requirement(s):
+        </div>
         <div v-if="potentialRequirements.length > 0" class="warning">
-          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning-icon" />
+          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
           We cannot accurately check the requirements marked with the warning icon, so double check
           before selecting.
         </div>
@@ -46,26 +57,26 @@
           @on-selected-change="toggleSelectRequirement"
         />
       </div>
+      <button
+        v-if="!editMode"
+        class="newCourse-link"
+        @click="toggleEditMode()"
+        @keyup.enter="toggleEditMode()"
+      >
+        Select Requirements
+      </button>
     </div>
-    <a
-      v-if="!editMode"
-      class="newCourse-link"
-      @click="toggleEditMode()"
-      @keyup.enter="toggleEditMode()"
-      tabindex="0"
-    >
-      Edit Requirements
-    </a>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
+import { GTagEvent } from '@/gtag';
 import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
-export default Vue.extend({
+export default defineComponent({
   components: { RequirementsDropdown },
   props: {
     editMode: { type: Boolean, required: true },
@@ -87,7 +98,9 @@ export default Vue.extend({
   },
   computed: {
     chosenRequirementText(): string {
-      if (this.selectedRequirementID === '') return '';
+      if (this.selectedRequirementID === '') {
+        return this.requirementsThatAllowDoubleCounting.join(', ');
+      }
       const chosenRequirementNames = [...this.relatedRequirements, ...this.potentialRequirements]
         .filter(it => it.id === this.selectedRequirementID)
         .map(it => it.name);
@@ -117,6 +130,7 @@ export default Vue.extend({
       this.$emit('on-selected-change', id);
     },
     toggleEditMode() {
+      GTagEvent(this.$gtag, 'add-modal-edit-requirements');
       this.$emit('edit-mode');
     },
   },
@@ -148,7 +162,7 @@ export default Vue.extend({
     &-container {
       display: flex;
       flex-direction: row;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     &-edit {
       display: flex;
@@ -158,14 +172,19 @@ export default Vue.extend({
     }
   }
   &-link {
+    padding: 0;
+    background-color: $white;
+    border: none;
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
-    text-decoration-line: underline;
     color: $yuxuanBlue;
     cursor: pointer;
-    margin-top: 8px;
+    &:hover {
+      text-decoration-line: underline;
+      color: $yuxuanBlue;
+    }
   }
 }
 .warning {
