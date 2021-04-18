@@ -34,6 +34,7 @@ import mechnicalEngineeringRequirements from './majors/me';
 import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
 
+import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
 import cogsciMinorRequirements from './minors/cogsci';
@@ -212,6 +213,11 @@ const json: RequirementsJson = {
     },
   },
   minor: {
+    AEROSPACE: {
+      name: 'Aerospace Engineering',
+      schools: ['EN'],
+      requirements: aerospaceMinorRequirements,
+    },
     APPLIEDMATH: {
       name: 'Applied Mathematics',
       schools: ['EN'],
