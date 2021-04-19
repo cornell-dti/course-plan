@@ -19,7 +19,7 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Introductory Mathematics Sequence',
     description: `Three semesters of math including: 
-    MATH 1910, MATH 1120, or MATH 1220, MATH 1920, MATH 2220, or MATH 2240, and MATH 2930, MATH 4710, or ASTRO 3340`,
+    MATH 1910, MATH 1120, or MATH 1220, MATH 1920, MATH 2220, or MATH 2240, and MATH 2930, MATH 4710, or ASTRO 3340.`,
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19789',
     checker: includesWithSubRequirements(
       ['MATH 1910', 'MATH 1120', 'MATH 1220'],
@@ -37,7 +37,7 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Experimental or Data Analysis Course in Astronomy',
     description: `One experimental or data analysis course in astronomy chosen from: 
-    ASTRO 4410, ASTRO 3310, or ASTRO 3334`,
+    ASTRO 4410, ASTRO 3310, or ASTRO 3334.`,
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19789',
     checker: includesWithSubRequirements(['ASTRO 4410', 'ASTRO 3310', 'ASTRO 3334']),
     fulfilledBy: 'courses',
@@ -47,13 +47,13 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Concentration',
     description:
-      'In addition to these core requirements, each Astronomy Major must complete a Concentration in either Astrophysics or General Astronomy',
+      'In addition to these core requirements, each Astronomy Major must complete a Concentration in either Astrophysics or General Astronomy.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19789',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       Astrophysics: {
         description:
-          '5 additional courses in Physics, 3 additional courses in Mathematics, and 2 additional courses in Advanced Astrophysics',
+          '5 additional courses in Physics, 3 additional courses in Mathematics, and 2 additional courses in Advanced Astrophysics.',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['ASTRO 4431', 'ASTRO 4432', 'ASTRO 4433'],
@@ -64,16 +64,16 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
         ),
         perSlotMinCount: [2, 1, 4, 1, 2],
         slotNames: [
-          'Two semesters of Advanced Astrophysics',
+          'Advanced Astrophysics',
           'Thermodynamics',
-          'Four semesters of physics',
+          'Physics Course',
           'Linear Algebra',
-          'Two additional semesters of mathematics',
+          'Mathematics Course',
         ],
       },
       'General Astronomy': {
         description:
-          '5 additional courses in Astronomy, plus an additional 15 credits in a complementary area of study',
+          '5 additional courses in Astronomy, plus an additional 15 credits in a complementary area of study.',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['ASTRO 2211', 'ASTRO 2212'],
