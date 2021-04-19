@@ -6,6 +6,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
   courseIsForeignLang,
+  courseMeetsCreditMinimum,
 } from '../checkers-common';
 
 const hdRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -240,7 +241,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         ['PBS', 'BIOLS-AG', 'BIONLS-AG'].some(
           distribution => course.catalogDistr?.includes(distribution) ?? false
-        ),
+        ) && courseMeetsCreditMinimum(course, 3),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -264,7 +265,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Electives',
-    description: 'Any courses that are not taken in Areas 1-12 above, count as Electives.',
+    description: 'Any courses that are not applied to the requirements above count as Electives.',
     source:
       'https://www.human.cornell.edu/sites/default/files/Academics/Registrar/Curriculum%20sheets/2020-2021/HD%20Curriculum%20Sheet%202020-2021.pdf',
     fulfilledBy: 'self-check',
