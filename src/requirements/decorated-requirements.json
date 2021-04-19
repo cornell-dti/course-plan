@@ -155751,7 +155751,7 @@
           ],
           "slotNames": [
             "MAE 3050 or MAE 4060",
-            "Group A"
+            "Other Group A Course"
           ],
           "courses": [
             [
@@ -155776,7 +155776,7 @@
         },
         {
           "name": "Group B or C",
-          "description": "Select a total of at most two courses from group B and group C: B. Courses Applicable to Aerospace Engineering,C. Fundamentals. NOTE: For ME majors, no courses from group C may be used.",
+          "description": "Select a total of at most two courses from group B and group C: B. Courses Applicable to Aerospace Engineering, C. Fundamentals. NOTE: For ME majors, no courses from group C may be used.",
           "source": "https://courses.cornell.edu/content.php?catoid=41&navoid=11649#aerospace-minor",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
