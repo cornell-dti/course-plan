@@ -32,8 +32,10 @@ import isstRequirements from './majors/isst';
 import lingRequirements from './majors/ling';
 import mathRequirements from './majors/math';
 import mechnicalEngineeringRequirements from './majors/me';
+import mseRequirements from './majors/mse';
 import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
+import pamRequirements from './majors/pam';
 
 import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
@@ -211,10 +213,20 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: mechnicalEngineeringRequirements,
     },
+    MSE: {
+      name: 'Materials Science & Engineering',
+      schools: ['EN'],
+      requirements: mseRequirements,
+    },
     ORIE: {
       name: 'Operations Research and Engineering',
       schools: ['EN'],
       requirements: orieRequirements,
+    },
+    PAM: {
+      name: 'Policy Analysis and Management',
+      schools: ['HE'],
+      requirements: pamRequirements,
     },
   },
   minor: {
