@@ -7,7 +7,7 @@ const stsScienceRequirement: readonly string[] = ['PBS', 'PBSS', 'OPHLS', 'BIOLS
 const stsRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'One S&TS course',
-    description: 'any level, excluding STS 2011',
+    description: 'Any level, excluding STS 2011.',
     source: 'https://sts.cornell.edu/sts-major',
     checker: [(course: Course): boolean => course.subject === 'STS' && course.crseId !== 2011],
     fulfilledBy: 'courses',
@@ -25,7 +25,7 @@ const stsRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: '2000 Level STS Courses',
-    description: 'Three additional 2000 level STS courses',
+    description: 'Three additional 2000 level STS courses.',
     source: 'https://sts.cornell.edu/sts-major',
     checker: includesWithSubRequirements(['STS 2***']),
     fulfilledBy: 'courses',
@@ -37,7 +37,7 @@ const stsRequirements: readonly CollegeOrMajorRequirement[] = [
   // Additional S&TS courses to total 37 credit hours in the major.
   {
     name: '3000+ STS Courses',
-    description: 'Additional 3000 level or above STS courses',
+    description: 'Additional 3000 level or above STS courses.',
     source: 'https://sts.cornell.edu/sts-major',
     checker: [
       (course: Course): boolean => {
@@ -54,7 +54,7 @@ const stsRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: '4000+ STS Courses',
-    description: 'Additional 4000 level or above STS courses',
+    description: 'Additional 4000 level or above STS courses.',
     source: 'https://sts.cornell.edu/sts-major',
     checker: [
       (course: Course): boolean => {
@@ -76,7 +76,7 @@ const stsRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Science Requirement',
     description:
-      'Two courses of at least 3 credits each in natural science or engineering (including computer science)',
+      'Two courses of at least 3 credits each in natural science or engineering (including computer science).',
     source: 'https://sts.cornell.edu/sts-major',
     checker: [
       (course: Course): boolean =>
