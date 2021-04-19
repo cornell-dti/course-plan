@@ -27,7 +27,7 @@ const aerospaceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 3],
-    slotNames: ['MAE 3050 or MAE 4060', 'Group A'],
+    slotNames: ['MAE 3050 or MAE 4060', 'Other Group A Course'],
   },
   {
     name: 'Group B or C',
