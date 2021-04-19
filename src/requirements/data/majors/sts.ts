@@ -80,9 +80,10 @@ const stsRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://sts.cornell.edu/sts-major',
     checker: [
       (course: Course): boolean =>
-        // add statement to check if the class is engineering
         stsScienceRequirement.some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution =>
+            ((course.catalogDistr?.includes(distribution) ?? false) || course.acadGroup === 'EN') &&
+            course.enrollGroups.some(group => group.unitsMinimum >= 3)
         ),
     ],
     fulfilledBy: 'courses',
