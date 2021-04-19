@@ -47406,6 +47406,409 @@
         }
       ]
     },
+    "BSOC": {
+      "name": "Biology and Society",
+      "schools": [
+        "AG",
+        "AS1",
+        "AS2"
+      ],
+      "requirements": [
+        {
+          "name": "Admission to the Major",
+          "description": "Acceptance into the major requires completion of the course sequence in introductory biology with a minimum grade of C-.",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=31&poid=15125#admissiontothemajor",
+          "fulfilledBy": "courses",
+          "minNumberOfSlots": 2,
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "slotNames": [
+            "BIOG 1440 or BIOG 1445",
+            "BIOEE 1610 or BIOSM 1610",
+            "BIOMG 1350",
+            "BIOEE 1780 or BIOSM 1780"
+          ],
+          "courses": [
+            [
+              363758,
+              365913
+            ],
+            [
+              354148,
+              355632
+            ],
+            [
+              363586
+            ],
+            [
+              354153,
+              364983
+            ]
+          ]
+        },
+        {
+          "name": "College Calculus",
+          "description": "College calculus is required for Biology & Society Majors",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=31&poid=15125#admissiontothemajor",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1
+          ],
+          "slotNames": [
+            "Calculus"
+          ],
+          "courses": [
+            [
+              352111,
+              352116,
+              352120,
+              352257,
+              352259,
+              352263,
+              352284
+            ]
+          ]
+        },
+        {
+          "name": "Ethics",
+          "description": "One course (should be completed by end of junior year).",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=36&poid=17540",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1
+          ],
+          "slotNames": [
+            "Course"
+          ],
+          "courses": [
+            [
+              351144,
+              353988,
+              358301,
+              361144
+            ]
+          ]
+        },
+        {
+          "name": "Social sciences/humanities foundation",
+          "description": "Two courses; one from any two of the following subject areas",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=36&poid=17540",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "slotNames": [
+            "History of science",
+            "Philosophy of science",
+            "Sociology of science",
+            "Politics of science",
+            "Science communication",
+            "Literature and science"
+          ],
+          "minNumberOfSlots": 2,
+          "courses": [
+            [
+              352640,
+              355099,
+              359460,
+              361143,
+              361144,
+              363662,
+              363678,
+              364303,
+              365032,
+              370714
+            ],
+            [
+              351165,
+              365819
+            ],
+            [
+              351145,
+              351165,
+              351578,
+              353682,
+              354447,
+              354699,
+              354775,
+              359846,
+              361885
+            ],
+            [
+              351195,
+              351928,
+              354704,
+              354775
+            ],
+            [
+              353461,
+              354591,
+              354831
+            ],
+            [
+              363785,
+              365814
+            ]
+          ]
+        },
+        {
+          "name": "Biology foundation (breadth)",
+          "description": "Three courses; one each from three of the following subject areas",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=36&poid=17540",
+          "minNumberOfSlots": 3,
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "slotNames": [
+            "Anatomy and physiology",
+            "Animal behavior",
+            "Biochemistry, molecular and cell biology",
+            "Biological diversity",
+            "Ecology",
+            "Genetics and development",
+            "Neurobiology",
+            "Nutrition"
+          ],
+          "courses": [
+            [
+              351879,
+              352526
+            ],
+            [
+              351716,
+              355638,
+              363836
+            ],
+            [
+              351826,
+              353357,
+              353369,
+              354876,
+              363667
+            ],
+            [
+              353594,
+              353707,
+              354152,
+              354204,
+              354207,
+              354208,
+              354209,
+              354229,
+              355295,
+              355300,
+              360930,
+              367163,
+              367297
+            ],
+            [
+              353688,
+              353960,
+              354148,
+              354412,
+              355106,
+              360934,
+              364244,
+              364378,
+              364486,
+              368988
+            ],
+            [
+              353121,
+              354183,
+              362051
+            ],
+            [
+              351750
+            ],
+            [
+              351456,
+              360496
+            ]
+          ]
+        },
+        {
+          "name": "Biology foundation (Depth requirement)",
+          "description": "One biology course for which one of the above (2c) is a prerequisite. (Contact dept for list of approved nutrition depth courses)",
+          "fulfilledBy": "self-check",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19803",
+          "checkerWarning": "We do not check prerequisites for this requirement."
+        },
+        {
+          "name": "Statistics",
+          "description": "One course. AP credit may be accepted for Statistics.",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19803",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1
+          ],
+          "slotNames": [
+            "Statistics"
+          ],
+          "courses": [
+            [
+              350154,
+              350359,
+              350500,
+              351485,
+              351674,
+              352245,
+              354665,
+              365785
+            ]
+          ]
+        },
+        {
+          "name": "Core Courses",
+          "description": "One course. Should be completed by end of junior year.",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=41&poid=19803",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1
+          ],
+          "slotNames": [
+            "Core Course"
+          ],
+          "courses": [
+            [
+              351145,
+              361143,
+              361885,
+              363678
+            ]
+          ]
+        },
+        {
+          "name": "Theme",
+          "description": "(Five courses that correspond to the theme selected by the student). These courses must be above the 1000-level, at least 3 credit hours, and taken for a letter grade. For a course to count towards the major, students must receive at least a C- as a final grade.",
+          "source": "https://courses.cornell.edu/preview_program.php?catoid=36&poid=17540",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            2,
+            2,
+            1
+          ],
+          "slotNames": [
+            "Natural science issues/biology elective",
+            "Humanities/social science elective",
+            "Senior seminars"
+          ],
+          "courses": [
+            [
+              351246,
+              351490,
+              351513,
+              351612,
+              351619,
+              351649,
+              351842,
+              351914,
+              352536,
+              353590,
+              353638,
+              353641,
+              353678,
+              354987,
+              355127,
+              355299,
+              355640,
+              357797,
+              359714,
+              361059,
+              361145,
+              361224,
+              362651,
+              363527,
+              365547,
+              366192,
+              368631
+            ],
+            [
+              350783,
+              350837,
+              351246,
+              351513,
+              351538,
+              351605,
+              351649,
+              351928,
+              351993,
+              352050,
+              353590,
+              353988,
+              354661,
+              354696,
+              354697,
+              354775,
+              358744,
+              359610,
+              359714,
+              359758,
+              360490,
+              361756,
+              362651,
+              363033,
+              363527,
+              363544,
+              364303,
+              365700,
+              365923,
+              365928,
+              366677,
+              369332
+            ],
+            [
+              350837,
+              353461,
+              353966,
+              354451,
+              357673,
+              360933,
+              361146,
+              361572,
+              362180,
+              362504,
+              363034,
+              363100,
+              363318,
+              363519,
+              363671,
+              364694,
+              365416,
+              365923,
+              366073,
+              367718,
+              368399,
+              368654,
+              369307,
+              369318,
+              369333,
+              369783,
+              370562,
+              370701,
+              370702
+            ]
+          ]
+        }
+      ]
+    },
     "BME": {
       "name": "Biomedical Engineering",
       "schools": [
@@ -109379,6 +109782,120 @@
               371559
             ]
           ]
+        }
+      ]
+    },
+    "ESS": {
+      "name": "Environment and Sustainability",
+      "schools": [
+        "AG",
+        "AS1",
+        "AS2"
+      ],
+      "requirements": [
+        {
+          "name": "Required courses",
+          "description": "Required courses",
+          "source": "https://cals.cornell.edu/environment-sustainability/education/core-curriculum",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "slotNames": [
+            "Foundation course",
+            "Social science",
+            "Biology",
+            "Chemistry/physics",
+            "Statistics",
+            "Humanities",
+            "Economics",
+            "Field/Engaged experience",
+            "Sustainability science colloquium",
+            "Capstone course"
+          ],
+          "courses": [
+            [
+              361067,
+              370765
+            ],
+            [
+              353682
+            ],
+            [
+              354148,
+              354153,
+              355632,
+              364983,
+              370239
+            ],
+            [
+              351265,
+              357658,
+              366264
+            ],
+            [
+              350154,
+              350500,
+              352245,
+              360952,
+              365785
+            ],
+            [
+              350693,
+              351144,
+              361143,
+              361144,
+              361756,
+              364303,
+              365602,
+              365701,
+              367350,
+              368127,
+              370124,
+              371307
+            ],
+            [
+              350551,
+              366612
+            ],
+            [
+              353594,
+              353681,
+              354752,
+              355667,
+              364486,
+              367359,
+              368988
+            ],
+            [
+              361065,
+              367870,
+              369443
+            ],
+            [
+              353956,
+              355642,
+              364809,
+              370622,
+              371469
+            ]
+          ]
+        },
+        {
+          "name": "Concentration",
+          "description": "The E&S major comprises an interdisciplinary core curriculum coupled with the completion of courses in a thematic concentration of your choice. All students must select one of six concentrations, consisting of six to ten additional courses beyond the core.",
+          "source": "https://cals.cornell.edu/environment-sustainability/education/concentrations",
+          "fulfilledBy": "self-check",
+          "checkerWarning": "We currently do not check fulfillment of a concentration. Please check the official CALS/A&S websites."
         }
       ]
     },

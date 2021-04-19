@@ -43,7 +43,7 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
       'MATH 2240'
     ),
     fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 1],
+    perSlotMinCount: [1],
     slotNames: ['Calculus'],
   },
   {
