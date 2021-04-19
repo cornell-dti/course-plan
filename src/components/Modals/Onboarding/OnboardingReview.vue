@@ -166,6 +166,11 @@ export default defineComponent({
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
   },
+  emits: {
+    setPage(page: number) {
+      return typeof page === 'number';
+    },
+  },
   computed: {
     collegeText(): string {
       return this.onboardingData.college !== ''

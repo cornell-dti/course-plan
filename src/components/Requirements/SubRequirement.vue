@@ -218,6 +218,18 @@ export default defineComponent({
     color: { type: String, required: true },
     tourStep: { type: Number, required: true },
   },
+  emits: {
+    'modal-open': (open: boolean) => typeof open === 'boolean',
+    changeToggleableRequirementChoice(id: string, option: string) {
+      return typeof id === 'string' && typeof option === 'string';
+    },
+    onShowAllCourses(courses: {
+      requirementName: string;
+      subReqCoursesArray: readonly FirestoreSemesterCourse[];
+    }) {
+      return typeof courses === 'object';
+    },
+  },
   data(): Data {
     return {
       showFulfillmentOptionsDropdown: false,
@@ -367,7 +379,8 @@ export default defineComponent({
     onShowAllCourses(subReqIndex: number) {
       this.$emit('onShowAllCourses', {
         requirementName: this.subReq.requirement.name,
-        subReqCoursesArray: this.requirementCoursesSlots[subReqIndex].courses,
+        subReqCoursesArray: this.requirementCoursesSlots[subReqIndex]
+          .courses as readonly FirestoreSemesterCourse[],
       });
     },
     toggleDescription() {

@@ -57,6 +57,7 @@ export default defineComponent({
     isOpeningRequirements: { type: Boolean, required: true },
     modalIsOpen: { type: Boolean, required: true },
   },
+  emits: ['editProfile', 'toggleRequirementsBar'],
   data() {
     return {
       menuOpen: false,

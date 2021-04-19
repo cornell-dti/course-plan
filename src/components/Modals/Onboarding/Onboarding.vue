@@ -107,6 +107,7 @@ export default defineComponent({
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
   },
+  emits: ['onboard', 'cancelOnboarding'],
   data() {
     return {
       currentPage: 1,

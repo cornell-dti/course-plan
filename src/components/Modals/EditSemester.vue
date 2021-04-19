@@ -33,6 +33,11 @@ export default defineComponent({
     deleteSemType: { type: String as PropType<FirestoreSemesterType>, required: true },
     deleteSemYear: { type: Number, required: true },
   },
+  emits: {
+    'close-edit-modal': () => true,
+    'edit-semester': (season: string, year: number) =>
+      typeof season === 'string' && typeof year === 'number',
+  },
   data() {
     return {
       isDisabled: false,
@@ -53,16 +58,16 @@ export default defineComponent({
     },
     editSemester() {
       if (!this.isDisabled) {
-        this.$emit('edit-semester', this.season, this.year);
+        this.$emit('edit-semester', this.season, Number(this.year));
         this.closeCurrentModal();
       }
     },
     disableButton(bool: boolean) {
       this.isDisabled = bool;
     },
-    updateSemProps(season: string, year: string) {
+    updateSemProps(season: string, year: number) {
       this.season = season;
-      this.year = year;
+      this.year = String(year);
     },
   },
 });

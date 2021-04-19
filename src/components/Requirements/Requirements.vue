@@ -111,8 +111,8 @@ import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-f
 
 export type ShowAllCourses = {
   readonly name: string;
-  shownCourses: FirestoreSemesterCourse[];
-  readonly allCourses: FirestoreSemesterCourse[];
+  shownCourses: readonly FirestoreSemesterCourse[];
+  readonly allCourses: readonly FirestoreSemesterCourse[];
 };
 
 type Data = {
@@ -140,6 +140,10 @@ export default defineComponent({
   components: { draggable, Course, DropDownArrow, RequirementView },
   props: {
     startTour: { type: Boolean, required: true },
+  },
+  emits: {
+    showTourEndWindow: () => true,
+    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data(): Data {
     return {
@@ -248,7 +252,7 @@ export default defineComponent({
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
-      subReqCoursesArray: FirestoreSemesterCourse[];
+      subReqCoursesArray: readonly FirestoreSemesterCourse[];
     }) {
       this.shouldShowAllCourses = true;
 
@@ -279,7 +283,9 @@ export default defineComponent({
       );
     },
     // return an array consisting of the courses to display on the see all menu, depending on the showAllPage and maxSeeAllCoursesPerPage
-    findPotentialSeeAllCourses(courses: FirestoreSemesterCourse[]): FirestoreSemesterCourse[] {
+    findPotentialSeeAllCourses(
+      courses: readonly FirestoreSemesterCourse[]
+    ): FirestoreSemesterCourse[] {
       const allPotentialCourses = courses.slice(
         this.showAllPage * maxSeeAllCoursesPerPage,
         (this.showAllPage + 1) * maxSeeAllCoursesPerPage

@@ -33,6 +33,12 @@ export default defineComponent({
     dropdownChoices: { type: Array as PropType<readonly string[]>, required: true },
     addDropdownText: { type: String, required: true },
   },
+  emits: {
+    'on-select': (key: string, index: number) =>
+      typeof key === 'string' && typeof index === 'number',
+    'on-remove': (index: number) => typeof index === 'number',
+    'on-add': () => true,
+  },
   methods: {
     onSelect(key: string, index: number) {
       this.$emit('on-select', key, index);

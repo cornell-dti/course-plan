@@ -68,6 +68,10 @@ export default defineComponent({
     },
     autoFocus: { type: Boolean, required: true },
   },
+  emits: {
+    'on-escape': () => true,
+    'on-select': (result: CornellCourseRosterCourse) => typeof result === 'object',
+  },
   data() {
     return {
       searchText: '',
