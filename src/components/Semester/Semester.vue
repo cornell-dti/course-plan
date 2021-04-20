@@ -176,6 +176,13 @@ export default defineComponent({
     },
     isFirstSem: { type: Boolean, required: true },
   },
+  emits: {
+    'modal-open': (open: boolean) => typeof open === 'boolean',
+    'new-semester': () => true,
+    'course-onclick': (course: FirestoreSemesterCourse) => typeof course === 'object',
+    'delete-semester': (type: string, year: number) =>
+      typeof type === 'string' && typeof year === 'number',
+  },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, {
       passive: false,
@@ -361,7 +368,7 @@ export default defineComponent({
     openDeleteSemesterModal() {
       this.isDeleteSemesterOpen = true;
     },
-    deleteSemester(type: string, year: string) {
+    deleteSemester(type: string, year: number) {
       this.$emit('delete-semester', type, year);
       this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
     },
@@ -369,13 +376,13 @@ export default defineComponent({
       this.isEditSemesterOpen = true;
       this.$emit('modal-open', true);
     },
-    editSemester(seasonInput: FirestoreSemesterType, yearInput: number) {
+    editSemester(seasonInput: string, yearInput: number) {
       editSemester(
         this.year,
         this.type,
         (oldSemester: FirestoreSemester): FirestoreSemester => ({
           ...oldSemester,
-          type: seasonInput,
+          type: seasonInput as FirestoreSemesterType,
           year: yearInput,
         })
       );

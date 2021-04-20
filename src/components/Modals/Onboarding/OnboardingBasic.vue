@@ -114,6 +114,23 @@ export default defineComponent({
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
   },
+  emits: {
+    updateBasic(
+      gradYear: string,
+      collegeAcronym: string,
+      majorAcronyms: readonly string[],
+      minorAcronyms: readonly string[],
+      name: FirestoreUserName
+    ) {
+      return (
+        typeof gradYear === 'string' &&
+        typeof collegeAcronym === 'string' &&
+        Array.isArray(majorAcronyms) &&
+        Array.isArray(minorAcronyms) &&
+        typeof name === 'object'
+      );
+    },
+  },
   data() {
     const majorAcronyms = [...this.onboardingData.major];
     const minorAcronyms = [...this.onboardingData.minor];

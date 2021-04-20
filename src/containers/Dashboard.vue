@@ -34,7 +34,7 @@
         :isBottomBarExpanded="bottomBarIsExpanded"
         :isBottomBar="hasBottomCourses"
         :isMobile="isMobile"
-        @compact-updated="compactVal = $event"
+        @compact-updated="compactUpdated"
         @modal-open="modalToggle"
       />
     </div>
@@ -49,7 +49,7 @@
     />
     <tour-window
       title="Let's get CoursePlanning!"
-      text="There’s more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and
+      text="There's more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and
       also consult your advisors for more up to date information!"
       :isFinalStep="true"
       exit=""
@@ -179,6 +179,9 @@ export default defineComponent({
     },
     toggleRequirementsBar() {
       this.isOpeningRequirements = !this.isOpeningRequirements;
+    },
+    compactUpdated(compact: boolean) {
+      this.compactVal = compact;
     },
 
     showTourEnd() {

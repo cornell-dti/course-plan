@@ -132,6 +132,11 @@ export default defineComponent({
     type: { type: String as PropType<FirestoreSemesterType>, default: '' },
     isCourseModelSelectingSemester: { type: Boolean, default: false },
   },
+  emits: {
+    updateSemProps: (season: string, year: number): boolean =>
+      typeof season === 'string' && typeof year === 'number',
+    duplicateSemester: (duplicate: boolean): boolean => typeof duplicate === 'boolean',
+  },
   data(): Data {
     // years
     const currentYear = new Date().getFullYear();
@@ -227,6 +232,7 @@ export default defineComponent({
 
       // scroll to the middle of the year div after visible (on the next tick)
       if (!contentShown && type === 'year') {
+        // @ts-expect-error: weird complaints about emit string type not assignable
         this.$nextTick(() => {
           (this.$refs[`year-ref-${yearScrollIndex}`] as Element).scrollIntoView({
             behavior: 'auto',

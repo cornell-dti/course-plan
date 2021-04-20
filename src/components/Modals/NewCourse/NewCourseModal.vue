@@ -51,6 +51,11 @@ import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-fr
 
 export default defineComponent({
   components: { CourseSelector, FlexibleModal, SelectedRequirementEditor },
+  emits: {
+    'close-course-modal': () => true,
+    'add-course': (course: CornellCourseRosterCourse, requirementID: string) =>
+      typeof course === 'object' && typeof requirementID === 'string',
+  },
   data() {
     return {
       selectedCourse: null as CornellCourseRosterCourse | null,

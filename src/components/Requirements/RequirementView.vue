@@ -105,6 +105,17 @@ export default defineComponent({
     numOfColleges: { type: Number, required: true },
     tourStep: { type: Number, required: true },
   },
+  emits: {
+    activateMajor: (id: number) => typeof id === 'number',
+    activateMinor: (id: number) => typeof id === 'number',
+    onShowAllCourses: (courses: {
+      requirementName: string;
+      subReqCoursesArray: readonly FirestoreSemesterCourse[];
+    }) => typeof courses === 'object',
+    changeToggleableRequirementChoice: (requirementID: string, option: string) =>
+      typeof requirementID === 'string' && typeof option === 'string',
+    'modal-open': (open: boolean) => typeof open === 'boolean',
+  },
   data() {
     return {
       displayDetails: false,
@@ -141,7 +152,10 @@ export default defineComponent({
     activateMinor(id: number) {
       this.$emit('activateMinor', id);
     },
-    onShowAllCourses(courses: FirestoreSemesterCourse[]) {
+    onShowAllCourses(courses: {
+      requirementName: string;
+      subReqCoursesArray: readonly FirestoreSemesterCourse[];
+    }) {
       this.$emit('onShowAllCourses', courses);
     },
     changeToggleableRequirementChoice(requirementID: string, option: string) {
