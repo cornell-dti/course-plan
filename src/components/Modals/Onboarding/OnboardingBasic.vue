@@ -38,7 +38,7 @@
               :availableChoices="semesters"
               :choice="entranceYear"
               :cannotBeRemoved="true"
-              :scrollBottomToElement="2021"
+              :scrollBottomToElement="2020"
               @on-select="selectEntranceYear"
             />
           </div>
