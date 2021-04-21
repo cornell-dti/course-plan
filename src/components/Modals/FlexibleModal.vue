@@ -43,6 +43,7 @@ export default defineComponent({
     rightButtonAlt: { type: String, default: '' },
     rightButtonIsDisabled: { type: Boolean, required: true },
   },
+  emits: ['modal-closed', 'left-button-clicked', 'right-button-clicked'],
   methods: {
     closeCurrentModal(): void {
       this.$emit('modal-closed');

@@ -54,6 +54,9 @@ export default defineComponent({
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
+  emits: {
+    'modal-open': (open: boolean) => typeof open === 'boolean',
+  },
   data: () => ({
     resetConfirmVisible: false,
   }),

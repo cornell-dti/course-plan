@@ -114,6 +114,16 @@ export const courseMeetsCreditMinimum = (course: Course, minCredits: number): bo
 };
 
 /**
+ * This function checks whether a course has a catalogAttribute of attribute
+ *
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @param attribute attribute the course object might have
+ * @returns if course has attribute in field catalogAttribute
+ */
+export const courseHasAttribute = (course: Course, attribute: string): boolean =>
+  course.catalogAttribute?.includes(attribute) ?? false;
+
+/**
  * This function returns a checker that checks whether a course satisfy a single requirement by
  * checking whether the course code appears in the includes array.
  *

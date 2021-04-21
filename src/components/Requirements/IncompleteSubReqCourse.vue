@@ -67,6 +67,7 @@ export default defineComponent({
     showSeeAllLabel: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
   },
+  emits: ['onShowAllCourses'],
   computed: {
     addCourseLabel(): string {
       let label = 'Add Course';

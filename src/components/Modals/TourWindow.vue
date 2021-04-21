@@ -78,6 +78,7 @@ export default defineComponent({
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
   },
+  emits: ['hide', 'startTour', 'skip'],
   data() {
     return {
       hideOnClick: '',

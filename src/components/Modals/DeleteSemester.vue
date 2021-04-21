@@ -29,7 +29,11 @@ export default defineComponent({
     deleteSemType: { type: String, required: true },
     deleteSemYear: { type: Number, required: true },
   },
-
+  emits: {
+    'close-delete-modal': () => true,
+    'delete-semester': (type: string, year: number) =>
+      typeof type === 'string' && typeof year === 'number',
+  },
   computed: {
     text() {
       return 'Are you sure you want to delete this semester?';

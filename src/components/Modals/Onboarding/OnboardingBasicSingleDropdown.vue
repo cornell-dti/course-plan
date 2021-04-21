@@ -60,6 +60,10 @@ export default defineComponent({
     cannotBeRemoved: { type: Boolean, required: true },
     scrollBottomToIndex: { type: Number, default: 0 },
   },
+  emits: {
+    'on-select': (acronym: string) => typeof acronym === 'string',
+    'on-remove': () => true,
+  },
   data() {
     return {
       shown: false,
@@ -88,6 +92,7 @@ export default defineComponent({
 
       // scroll the bottom of the graduation year dropdown to scrollBottomToIndex
       if (!contentShown && this.scrollBottomToIndex > 0) {
+        // @ts-expect-error: weird complaints about emit string type not assignable
         this.$nextTick(() => {
           (this.$refs[`scroll-ref-${this.scrollBottomToIndex}`] as Element).scrollIntoView({
             behavior: 'auto',

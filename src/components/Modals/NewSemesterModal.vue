@@ -29,6 +29,11 @@ import store from '@/store';
 
 export default defineComponent({
   components: { FlexibleModal, NewSemester },
+  emits: {
+    'close-semester-modal': () => true,
+    'add-semester': (season: string, year: number) =>
+      typeof season === 'string' && typeof year === 'number',
+  },
   data() {
     return { isDisabled: false, season: '', year: 0 };
   },

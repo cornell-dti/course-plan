@@ -130,6 +130,10 @@ export default defineComponent({
     isMobile: { type: Boolean, required: true },
     startTour: { type: Boolean, required: true },
   },
+  emits: {
+    'compact-updated': (compact: boolean) => typeof compact === 'boolean',
+    'modal-open': (open: boolean) => typeof open === 'boolean',
+  },
   data() {
     return {
       confirmationText: '',
@@ -197,13 +201,13 @@ export default defineComponent({
       this.isSemesterModalOpen = false;
       this.$emit('modal-open', false);
     },
-    addSemester(type: FirestoreSemesterType, year: number) {
-      addSemester(type, year, this.$gtag);
-      this.openSemesterConfirmationModal(type, year, true);
+    addSemester(type: string, year: number) {
+      addSemester(type as FirestoreSemesterType, year, this.$gtag);
+      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, true);
     },
-    deleteSemester(type: FirestoreSemesterType, year: number) {
-      deleteSemester(type, year, this.$gtag);
-      this.openSemesterConfirmationModal(type, year, false);
+    deleteSemester(type: string, year: number) {
+      deleteSemester(type as FirestoreSemesterType, year, this.$gtag);
+      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.activatedCourse = course;
