@@ -1,63 +1,13 @@
 <template>
   <div class="subrequirement">
-    <button
-      @click="toggleDescription()"
-      class="dropdown row slightly-lower-opacity-on-hover"
-      aria-haspopup="true"
-      data-toggle="dropdown"
-    >
-      <div class="row depth-req">
-        <div class="btn">
-          <drop-down-arrow
-            :isFlipped="displayDescription"
-            :fillColor="getArrowColor()"
-            :isSubReq="true"
-          />
-        </div>
-        <div class="subreq-name">
-          <p class="sub-req">
-            <span>{{ requirementFulfillment.requirement.name }}</span>
-          </p>
-        </div>
-      </div>
-      <div class="col sub-req-progress text-right">
-        {{ requirementFulfillmentProgress }}
-      </div>
-    </button>
+    <requirement-display-toggle
+      :requirementFulfillment="requirementFulfillment"
+      :isCompleted="isCompleted"
+      :displayDescription="displayDescription"
+      @on-toggle="toggleDescription()"
+    />
     <div v-if="displayDescription" class="description">
-      <div>
-        {{ requirementFulfillment.requirement.description }}
-        <a
-          class="more"
-          :style="{ color: `#${color}` }"
-          :href="requirementFulfillment.requirement.source"
-          target="_blank"
-        >
-          <strong>Learn More</strong></a
-        >
-      </div>
-      <div
-        v-if="requirementFulfillment.requirement.checkerWarning"
-        class="requirement-checker-warning"
-      >
-        <img
-          class="requirement-checker-warning-icon"
-          src="@/assets/images/warning.svg"
-          alt="warning icon"
-        />
-        {{ requirementFulfillment.requirement.checkerWarning }}
-      </div>
-      <div
-        v-if="requirementFulfillment.requirement.fulfilledBy === 'self-check'"
-        class="requirement-checker-warning"
-      >
-        <img
-          class="requirement-checker-warning-icon"
-          src="@/assets/images/warning.svg"
-          alt="warning icon"
-        />
-        {{ selfCheckWarning }}
-      </div>
+      <requirement-information :requirement="requirementFulfillment.requirement" :color="color" />
       <div v-if="requirementFulfillment.requirement.fulfilledBy === 'toggleable'">
         <div class="toggleable-requirements-select-wrapper">
           <div
@@ -163,7 +113,8 @@ import { PropType, defineComponent } from 'vue';
 import CompletedSubReqCourse from '@/components/Requirements/CompletedSubReqCourse.vue';
 import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCourse.vue';
 import IncompleteSelfCheck from '@/components/Requirements/IncompleteSelfCheck.vue';
-import DropDownArrow from '@/components/DropDownArrow.vue';
+import RequirementDisplayToggle from '@/components/Requirements/RequirementDisplayToggle.vue';
+import RequirementInformation from '@/components/Requirements/RequirementInformation.vue';
 
 import store from '@/store';
 import { clickOutside } from '@/utilities';
@@ -218,9 +169,10 @@ const generateSubReqIncompleteCourses = (
 export default defineComponent({
   components: {
     CompletedSubReqCourse,
-    DropDownArrow,
     IncompleteSubReqCourse,
     IncompleteSelfCheck,
+    RequirementDisplayToggle,
+    RequirementInformation,
   },
   props: {
     requirementFulfillment: {
@@ -340,11 +292,6 @@ export default defineComponent({
 
       return slots;
     },
-    requirementFulfillmentProgress(): string {
-      return this.requirementFulfillment.fulfilledBy !== 'self-check'
-        ? `${this.requirementFulfillment.minCountFulfilled}/${this.requirementFulfillment.minCountRequired} ${this.requirementFulfillment.fulfilledBy}`
-        : 'self check';
-    },
     fulfilledSelfCheckCourses(): readonly CourseTaken[] {
       // selectedCourses are courses that fulfill the requirement based on user-choice
       // they are taken from derivedSelectableRequirementData
@@ -392,17 +339,11 @@ export default defineComponent({
 
       return [...selectedCourses, ...fulfillableCourses];
     },
-    selfCheckWarning(): string {
-      return "This requirement is not included in the progress bar because we do not check if it's completed.";
-    },
   },
   directives: {
     'click-outside': clickOutside,
   },
   methods: {
-    getArrowColor() {
-      return this.isCompleted ? '#979797CC' : '#979797';
-    },
     onShowAllCourses(subReqIndex: number) {
       this.$emit('onShowAllCourses', {
         requirementName: this.requirementFulfillment.requirement.name,
@@ -437,49 +378,6 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
-.dropdown {
-  background: none;
-  width: 100%;
-  border: none;
-  justify-content: space-between;
-  padding: 0;
-  align-items: center;
-  min-height: 2.25rem;
-}
-
-.btn {
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &-2 {
-    padding-top: 0px;
-    margin: 0px;
-  }
-}
-.btn:focus,
-.btn:active {
-  outline: none !important;
-  box-shadow: none;
-}
-.row {
-  margin: 0;
-}
-.row > div {
-  padding: 0;
-}
-
-.depth-req {
-  justify-content: flex-start;
-  align-items: center;
-  div:first-child {
-    margin: 0px;
-  }
-}
-.sub-req-div {
-  padding-left: 30px;
-  margin: 0px;
-}
 .description {
   color: #4f4f4f;
   font-size: 14px;
@@ -504,41 +402,11 @@ button.view {
   color: $white;
   text-transform: uppercase;
 }
-.text {
-  &-right {
-    color: $lightPlaceholderGray;
-  }
-}
-.sub-req {
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 14px;
-  color: $lightPlaceholderGray;
-  margin: 0;
-  &-progress {
-    font-size: 14px;
-    line-height: 14px;
-    margin-top: auto;
-    margin-bottom: auto;
-  }
-}
+
 .separator {
   height: 1px;
   width: 100%;
   background-color: $inactiveGray;
-}
-
-.requirement-checker-warning {
-  color: $warning;
-  margin-top: 0.25rem;
-
-  &-icon {
-    float: left;
-    margin: 0.125rem 0.25rem 0 0;
-    width: 14px;
-    height: 14px;
-  }
 }
 
 .toggleable-requirements {
@@ -646,13 +514,5 @@ button.view {
 .left {
   justify-content: flex-start;
   align-items: center;
-}
-
-.subreq {
-  &-name {
-    text-align: left;
-    margin-left: 11px;
-    max-width: 11rem;
-  }
 }
 </style>
