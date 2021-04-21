@@ -110,8 +110,10 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
           'The concentration outside physics ("outside concentration") provides more flexibility ' +
           'for those want to develop skills in physics but whose career interests lie elsewhere.',
         counting: 'credits',
-        // This is essentially self-check; courses must be manually overwritten by the user.
-        checker: [(): boolean => false],
+        // This is essentially self-check with a weak checker.
+        // TODO implement as compound requirement:
+        // at least 8 credits at 3000+ level
+        checker: [(course: Course): boolean => !ifCodeMatch(course.subject, 'PHYS')],
         perSlotMinCount: [15],
       },
     },
