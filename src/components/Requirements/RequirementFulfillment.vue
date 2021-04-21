@@ -2,7 +2,7 @@
   <div class="subrequirement">
     <button
       @click="toggleDescription()"
-      class="dropdown row subreq-button slightly-lower-opacity-on-hover"
+      class="dropdown row slightly-lower-opacity-on-hover"
       aria-haspopup="true"
       data-toggle="dropdown"
     >
@@ -16,36 +16,39 @@
         </div>
         <div class="subreq-name">
           <p class="sub-req">
-            <span>{{ subReq.requirement.name }}</span>
+            <span>{{ requirementFulfillment.requirement.name }}</span>
           </p>
         </div>
       </div>
       <div class="col sub-req-progress text-right">
-        {{ subReqProgress }}
+        {{ requirementFulfillmentProgress }}
       </div>
     </button>
     <div v-if="displayDescription" class="description">
       <div>
-        {{ subReq.requirement.description }}
+        {{ requirementFulfillment.requirement.description }}
         <a
           class="more"
           :style="{ color: `#${color}` }"
-          :href="subReq.requirement.source"
+          :href="requirementFulfillment.requirement.source"
           target="_blank"
         >
           <strong>Learn More</strong></a
         >
       </div>
-      <div v-if="subReq.requirement.checkerWarning" class="requirement-checker-warning">
+      <div
+        v-if="requirementFulfillment.requirement.checkerWarning"
+        class="requirement-checker-warning"
+      >
         <img
           class="requirement-checker-warning-icon"
           src="@/assets/images/warning.svg"
           alt="warning icon"
         />
-        {{ subReq.requirement.checkerWarning }}
+        {{ requirementFulfillment.requirement.checkerWarning }}
       </div>
       <div
-        v-if="subReq.requirement.fulfilledBy === 'self-check'"
+        v-if="requirementFulfillment.requirement.fulfilledBy === 'self-check'"
         class="requirement-checker-warning"
       >
         <img
@@ -55,7 +58,7 @@
         />
         {{ selfCheckWarning }}
       </div>
-      <div v-if="subReq.requirement.fulfilledBy === 'toggleable'">
+      <div v-if="requirementFulfillment.requirement.fulfilledBy === 'toggleable'">
         <div class="toggleable-requirements-select-wrapper">
           <div
             class="toggleable-requirements-select toggleable-requirements-input"
@@ -76,7 +79,9 @@
             v-if="showFulfillmentOptionsDropdown"
           >
             <div
-              v-for="optionName in Object.keys(subReq.requirement.fulfillmentOptions)"
+              v-for="optionName in Object.keys(
+                requirementFulfillment.requirement.fulfillmentOptions
+              )"
               :key="optionName"
               class="toggleable-requirements-dropdown-content-item"
               @click="chooseFulfillmentOption(optionName)"
@@ -84,32 +89,41 @@
               <span>{{ optionName }}</span>
             </div>
           </div>
-          {{ subReq.requirement.fulfillmentOptions[selectedFulfillmentOption].description }}
+          {{
+            requirementFulfillment.requirement.fulfillmentOptions[selectedFulfillmentOption]
+              .description
+          }}
         </div>
       </div>
       <div
         v-if="
           displayDescription &&
-          subReq.requirement.fulfilledBy !== 'self-check' &&
-          subReq.requirement.checkerWarning == null
+          requirementFulfillment.requirement.fulfilledBy !== 'self-check' &&
+          requirementFulfillment.requirement.checkerWarning == null
         "
         class="subreqcourse-wrapper"
       >
-        <div v-for="(subReqCourseSlot, id) in requirementCoursesSlots" :key="id">
-          <div v-if="subReqCourseSlot.isCompleted" class="completedsubreqcourse-wrapper">
+        <div v-for="(requirementFulfillmentCourseSlot, id) in requirementCoursesSlots" :key="id">
+          <div
+            v-if="requirementFulfillmentCourseSlot.isCompleted"
+            class="completedsubreqcourse-wrapper"
+          >
             <completed-sub-req-course
-              :slotName="subReqCourseSlot.name"
-              :courseTaken="subReqCourseSlot.courses[0]"
+              :slotName="requirementFulfillmentCourseSlot.name"
+              :courseTaken="requirementFulfillmentCourseSlot.courses[0]"
               @modal-open="modalToggled"
             />
           </div>
-          <div v-if="!subReqCourseSlot.isCompleted" class="incompletesubreqcourse-wrapper">
+          <div
+            v-if="!requirementFulfillmentCourseSlot.isCompleted"
+            class="incompletesubreqcourse-wrapper"
+          >
             <incomplete-sub-req-course
-              :subReq="subReq"
-              :slotName="subReqCourseSlot.name"
-              :courses="subReqCourseSlot.courses.slice(0, 4)"
+              :subReq="requirementFulfillment"
+              :slotName="requirementFulfillmentCourseSlot.name"
+              :courses="requirementFulfillmentCourseSlot.courses.slice(0, 4)"
               :displayDescription="displayDescription"
-              :showSeeAllLabel="subReqCourseSlot.courses.length > 4"
+              :showSeeAllLabel="requirementFulfillmentCourseSlot.courses.length > 4"
               @onShowAllCourses="onShowAllCourses(id)"
             />
           </div>
@@ -118,8 +132,8 @@
       <div
         v-if="
           displayDescription &&
-          (subReq.requirement.fulfilledBy === 'self-check' ||
-            subReq.requirement.checkerWarning != null)
+          (requirementFulfillment.requirement.fulfilledBy === 'self-check' ||
+            requirementFulfillment.requirement.checkerWarning != null)
         "
         class="subreqcourse-wrapper"
       >
@@ -132,10 +146,10 @@
         </div>
         <div v-if="!isCompleted">
           <incomplete-self-check
-            :subReqId="subReq.requirement.id"
-            :subReqName="subReq.requirement.name"
-            :subReqFulfillment="subReq.fulfilledBy"
-            :subReqCourseId="subReq.minCountFulfilled"
+            :subReqId="requirementFulfillment.requirement.id"
+            :subReqName="requirementFulfillment.requirement.name"
+            :subReqFulfillment="requirementFulfillment.fulfilledBy"
+            :subReqCourseId="requirementFulfillment.minCountFulfilled"
             @modal-open="modalToggled"
           />
         </div>
@@ -209,7 +223,7 @@ export default defineComponent({
     IncompleteSelfCheck,
   },
   props: {
-    subReq: {
+    requirementFulfillment: {
       type: Object as PropType<RequirementFulfillment>,
       required: true,
     },
@@ -242,15 +256,18 @@ export default defineComponent({
     },
     // true if the walkthrough is on step 2 and this subreq represents the PE requirement
     shouldShowWalkthrough(): boolean {
-      return this.tourStep === 1 && this.subReq.requirement.id === 'College-UNI-Physical Education';
+      return (
+        this.tourStep === 1 &&
+        this.requirementFulfillment.requirement.id === 'College-UNI-Physical Education'
+      );
     },
     selectedFulfillmentOption(): string {
-      if (this.subReq.requirement.fulfilledBy !== 'toggleable') {
+      if (this.requirementFulfillment.requirement.fulfilledBy !== 'toggleable') {
         return '';
       }
       return (
         this.toggleableRequirementChoice ||
-        Object.keys(this.subReq.requirement.fulfillmentOptions)[0]
+        Object.keys(this.requirementFulfillment.requirement.fulfillmentOptions)[0]
       );
     },
     /**
@@ -261,20 +278,23 @@ export default defineComponent({
      * will be generated here.
      */
     requirementCoursesSlots(): SubReqCourseSlot[] {
-      const subReqSpec = getMatchedRequirementFulfillmentSpecification(this.subReq.requirement, {
-        [this.subReq.requirement.id]: this.toggleableRequirementChoice,
-      });
-      if (subReqSpec === null) return [];
-      const subReqEligibleCourses = subReqSpec.eligibleCourses;
+      const requirementFulfillmentSpec = getMatchedRequirementFulfillmentSpecification(
+        this.requirementFulfillment.requirement,
+        {
+          [this.requirementFulfillment.requirement.id]: this.toggleableRequirementChoice,
+        }
+      );
+      if (requirementFulfillmentSpec === null) return [];
+      const requirementFulfillmentEligibleCourses = requirementFulfillmentSpec.eligibleCourses;
 
       const allTakenCourseIds: ReadonlySet<number> = new Set(
-        this.subReq.courses.flat().map(course => course.courseId)
+        this.requirementFulfillment.courses.flat().map(course => course.courseId)
       );
       const slots: SubReqCourseSlot[] = [];
 
-      if (subReqSpec.fulfilledBy === 'credits') {
+      if (requirementFulfillmentSpec.fulfilledBy === 'credits') {
         let slotID = 1;
-        this.subReq.courses[0].forEach(completedCourse => {
+        this.requirementFulfillment.courses[0].forEach(completedCourse => {
           slots.push({ name: `Course ${slotID}`, isCompleted: true, courses: [completedCourse] });
           slotID += 1;
         });
@@ -284,29 +304,33 @@ export default defineComponent({
             isCompleted: false,
             courses: generateSubReqIncompleteCourses(
               allTakenCourseIds,
-              subReqEligibleCourses[0],
-              this.subReq.requirement.id
+              requirementFulfillmentEligibleCourses[0],
+              this.requirementFulfillment.requirement.id
             ),
           });
         }
       } else {
-        this.subReq.courses.forEach((subReqCourseSlot, i) => {
-          const slotMinCount = subReqSpec.perSlotMinCount[i];
-          const slotName = subReqSpec.slotNames[i];
+        this.requirementFulfillment.courses.forEach((requirementFulfillmentCourseSlot, i) => {
+          const slotMinCount = requirementFulfillmentSpec.perSlotMinCount[i];
+          const slotName = requirementFulfillmentSpec.slotNames[i];
           let slotID = 1;
           for (let j = 0; j < slotMinCount; j += 1) {
             const name = slotMinCount === 1 ? slotName : `${slotName} ${slotID}`;
             slotID += 1;
-            if (j < subReqCourseSlot.length) {
-              slots.push({ name, isCompleted: true, courses: [subReqCourseSlot[j]] });
+            if (j < requirementFulfillmentCourseSlot.length) {
+              slots.push({
+                name,
+                isCompleted: true,
+                courses: [requirementFulfillmentCourseSlot[j]],
+              });
             } else {
               slots.push({
                 name,
                 isCompleted: false,
                 courses: generateSubReqIncompleteCourses(
                   allTakenCourseIds,
-                  subReqEligibleCourses[i],
-                  this.subReq.requirement.id
+                  requirementFulfillmentEligibleCourses[i],
+                  this.requirementFulfillment.requirement.id
                 ),
               });
             }
@@ -316,9 +340,9 @@ export default defineComponent({
 
       return slots;
     },
-    subReqProgress(): string {
-      return this.subReq.fulfilledBy !== 'self-check'
-        ? `${this.subReq.minCountFulfilled}/${this.subReq.minCountRequired} ${this.subReq.fulfilledBy}`
+    requirementFulfillmentProgress(): string {
+      return this.requirementFulfillment.fulfilledBy !== 'self-check'
+        ? `${this.requirementFulfillment.minCountFulfilled}/${this.requirementFulfillment.minCountRequired} ${this.requirementFulfillment.fulfilledBy}`
         : 'self check';
     },
     fulfilledSelfCheckCourses(): readonly CourseTaken[] {
@@ -326,7 +350,7 @@ export default defineComponent({
       // they are taken from derivedSelectableRequirementData
       const selectedFirestoreCourses =
         store.state.derivedSelectableRequirementData.requirementToCoursesMap[
-          this.subReq.requirement.id
+          this.requirementFulfillment.requirement.id
         ];
       const selectedCourses = selectedFirestoreCourses
         ? selectedFirestoreCourses.map((course: FirestoreSemesterCourse) =>
@@ -337,20 +361,23 @@ export default defineComponent({
       // fulfillableCourses are the courses that can fulfill this requirement
       // this is necessary to compute because ap/ib data is not stored in selectable requirement choices collection
       let fulfillableCourses: CourseTaken[] = [];
-      const subReqSpec = getMatchedRequirementFulfillmentSpecification(this.subReq.requirement, {
-        [this.subReq.requirement.id]: this.toggleableRequirementChoice,
-      });
-      if (subReqSpec !== null) {
-        if (subReqSpec.fulfilledBy === 'credits') {
-          this.subReq.courses[0].forEach(completedCourse =>
+      const requirementFulfillmentSpec = getMatchedRequirementFulfillmentSpecification(
+        this.requirementFulfillment.requirement,
+        {
+          [this.requirementFulfillment.requirement.id]: this.toggleableRequirementChoice,
+        }
+      );
+      if (requirementFulfillmentSpec !== null) {
+        if (requirementFulfillmentSpec.fulfilledBy === 'credits') {
+          this.requirementFulfillment.courses[0].forEach(completedCourse =>
             fulfillableCourses.push(completedCourse)
           );
         } else {
-          this.subReq.courses.forEach((subReqCourseSlot, i) => {
-            const slotMinCount = subReqSpec.perSlotMinCount[i];
+          this.requirementFulfillment.courses.forEach((requirementFulfillmentCourseSlot, i) => {
+            const slotMinCount = requirementFulfillmentSpec.perSlotMinCount[i];
             for (let j = 0; j < slotMinCount; j += 1) {
-              if (j < subReqCourseSlot.length) {
-                fulfillableCourses.push(subReqCourseSlot[j]);
+              if (j < requirementFulfillmentCourseSlot.length) {
+                fulfillableCourses.push(requirementFulfillmentCourseSlot[j]);
               }
             }
           });
@@ -378,7 +405,7 @@ export default defineComponent({
     },
     onShowAllCourses(subReqIndex: number) {
       this.$emit('onShowAllCourses', {
-        requirementName: this.subReq.requirement.name,
+        requirementName: this.requirementFulfillment.requirement.name,
         subReqCoursesArray: this.requirementCoursesSlots[subReqIndex]
           .courses as readonly FirestoreSemesterCourse[],
       });
@@ -391,7 +418,11 @@ export default defineComponent({
     },
     chooseFulfillmentOption(option: string) {
       this.showFulfillmentOptionsDropdown = false;
-      this.$emit('changeToggleableRequirementChoice', this.subReq.requirement.id, option);
+      this.$emit(
+        'changeToggleableRequirementChoice',
+        this.requirementFulfillment.requirement.id,
+        option
+      );
     },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);

@@ -18,7 +18,7 @@
           @toggleRequirementsBar="toggleRequirementsBar"
           :modalIsOpen="modalIsOpen"
         />
-        <requirements
+        <requirement-side-bar
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :startTour="startTour"
@@ -70,7 +70,7 @@ import { defineComponent } from 'vue';
 
 import introJs from 'intro.js';
 import SemesterView from '@/components/Semester/SemesterView.vue';
-import Requirements from '@/components/Requirements/Requirements.vue';
+import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue';
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
@@ -118,7 +118,7 @@ export default defineComponent({
     BottomBar,
     NavBar,
     Onboarding,
-    Requirements,
+    RequirementSideBar,
     SemesterView,
     TourWindow,
   },
