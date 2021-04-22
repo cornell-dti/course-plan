@@ -17,6 +17,28 @@ type RequirementCommon = {
   readonly checkerWarning?: string;
 };
 
+type RequirementFulfillmentInformationCourseBase<T> = {
+  readonly fulfilledBy: 'courses';
+  /** The minimum number of courses/credits required to fulfill each sub-requirement. */
+  readonly perSlotMinCount: readonly number[];
+  /** The name of each slot, used for display only. */
+  readonly slotNames: readonly string[];
+  /** When we care more about how many slots are filled with some courses */
+  readonly minNumberOfSlots?: number;
+} & T;
+
+type RequirementFulfillmentInformationCreditBase<T> = {
+  readonly fulfilledBy: 'credits';
+  /** The minimum number of courses/credits required to fulfill each sub-requirement. */
+  readonly perSlotMinCount: readonly number[];
+  /** When we care more about how many slots are filled with some courses */
+  readonly minNumberOfSlots?: number;
+} & T;
+
+type RequirementFulfillmentInformationCourseOrCreditBase<T> =
+  | RequirementFulfillmentInformationCourseBase<T>
+  | RequirementFulfillmentInformationCreditBase<T>;
+
 /**
  * @param T additional information only attached to credits and courses type.
  */
@@ -26,21 +48,19 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
       // Currently unused.
       readonly minCount?: number;
     }
-  | ({
-      readonly fulfilledBy: 'courses';
-      /** The minimum number of courses/credits required to fulfill each sub-requirement. */
-      readonly perSlotMinCount: readonly number[];
-      /** The name of each slot, used for display only. */
-      readonly slotNames: readonly string[];
-      /** When we care more about how many slots are filled with some courses */
-      readonly minNumberOfSlots?: number;
+  | (RequirementFulfillmentInformationCourseBase<T> & {
+      /**
+       * Compound requirements only.
+       * It is a map from additional requirement name and corresponding courses/checkers.
+       */
+      readonly additionalRequirements?: {
+        readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<T>;
+      };
     } & T)
-  | ({
-      readonly fulfilledBy: 'credits';
-      /** The minimum number of courses/credits required to fulfill each sub-requirement. */
-      readonly perSlotMinCount: readonly number[];
-      /** When we care more about how many slots are filled with some courses */
-      readonly minNumberOfSlots?: number;
+  | (RequirementFulfillmentInformationCreditBase<T> & {
+      readonly additionalRequirements?: {
+        readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<T>;
+      };
     } & T)
   | {
       readonly fulfilledBy: 'toggleable';
