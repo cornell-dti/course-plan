@@ -27,6 +27,38 @@
           >
           <input class="onboarding-input" v-model="lastName" @input="updateBasic()" />
         </div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+          <label class="onboarding-label"
+            ><span class="onboarding-subHeader--font"
+              >Entrance Year<span class="onboarding-required-star">*</span>
+            </span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="semesters"
+              :choice="entranceYear"
+              :cannotBeRemoved="true"
+              :scrollBottomToElement="2020"
+              @on-select="selectEntranceYear"
+            />
+          </div>
+        </div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+          <label class="onboarding-label"
+            ><span class="onboarding-subHeader--font"
+              >Graduation Year<span class="onboarding-required-star">*</span>
+            </span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="semesters"
+              :choice="gradYear"
+              :cannotBeRemoved="true"
+              :scrollBottomToElement="2024"
+              @on-select="selectGraduationYear"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <div class="onboarding-section">
@@ -35,20 +67,6 @@
         <span class="onboarding-subHeader--font">Your Major</span>
       </div>
       <div class="onboarding-inputs">
-        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <label class="onboarding-label"
-            >Graduation Year<span class="onboarding-required-star">*</span></label
-          >
-          <div class="onboarding-selectWrapper">
-            <onboarding-basic-single-dropdown
-              :availableChoices="semesters"
-              :choice="gradYear"
-              :cannotBeRemoved="true"
-              :scrollBottomToIndex="2021"
-              @on-select="selectGraduationYear"
-            />
-          </div>
-        </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
           <label class="onboarding-label"
             >College<span class="onboarding-required-star">*</span></label
@@ -117,6 +135,7 @@ export default defineComponent({
   emits: {
     updateBasic(
       gradYear: string,
+      entranceYear: string,
       collegeAcronym: string,
       majorAcronyms: readonly string[],
       minorAcronyms: readonly string[],
@@ -124,6 +143,7 @@ export default defineComponent({
     ) {
       return (
         typeof gradYear === 'string' &&
+        typeof entranceYear === 'string' &&
         typeof collegeAcronym === 'string' &&
         Array.isArray(majorAcronyms) &&
         Array.isArray(minorAcronyms) &&
@@ -142,6 +162,7 @@ export default defineComponent({
       lastName: this.userName.lastName,
       placeholderText,
       gradYear: this.onboardingData.gradYear,
+      entranceYear: this.onboardingData.entranceYear,
       collegeAcronym: this.onboardingData.college,
       majorAcronyms,
       minorAcronyms,
@@ -192,6 +213,7 @@ export default defineComponent({
       this.$emit(
         'updateBasic',
         this.gradYear,
+        this.entranceYear,
         this.collegeAcronym,
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
@@ -217,6 +239,10 @@ export default defineComponent({
     },
     selectGraduationYear(year: string) {
       this.gradYear = year;
+      this.updateBasic();
+    },
+    selectEntranceYear(year: string) {
+      this.entranceYear = year;
       this.updateBasic();
     },
     selectCollege(acronym: string) {

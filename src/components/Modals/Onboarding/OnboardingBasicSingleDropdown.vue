@@ -58,7 +58,7 @@ export default defineComponent({
     },
     choice: { type: String, required: true },
     cannotBeRemoved: { type: Boolean, required: true },
-    scrollBottomToIndex: { type: Number, default: 0 },
+    scrollBottomToElement: { type: Number, default: 0 },
   },
   emits: {
     'on-select': (acronym: string) => typeof acronym === 'string',
@@ -90,11 +90,11 @@ export default defineComponent({
         this.arrowColor = yuxuanBlue;
       }
 
-      // scroll the bottom of the graduation year dropdown to scrollBottomToIndex
-      if (!contentShown && this.scrollBottomToIndex > 0) {
+      // scroll the bottom of the graduation year dropdown to scrollBottomToElement
+      if (!contentShown && this.scrollBottomToElement > 0) {
         // @ts-expect-error: weird complaints about emit string type not assignable
         this.$nextTick(() => {
-          (this.$refs[`scroll-ref-${this.scrollBottomToIndex}`] as Element).scrollIntoView({
+          (this.$refs[`scroll-ref-${this.scrollBottomToElement}`] as Element).scrollIntoView({
             behavior: 'auto',
             block: 'nearest',
           });
