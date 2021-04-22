@@ -1,37 +1,35 @@
 <template>
-  <div class="reset-modal" :class="{ 'modal--block': modelValue }">
-    <flexible-modal
-      title="Reset Requirement"
-      :class="[{ 'modal--block': modelValue }, 'modal-width']"
-      content-class="content-confirmation"
-      left-button-text="No"
-      right-button-text="Yes"
-      @left-button-clicked="closeClicked"
-      @right-button-clicked="resetClicked"
-      @modal-closed="closeCurrentModal"
-      :rightButtonIsDisabled="false"
-    >
-      <div v-if="isTestReq" class="text-width">
-        Are you sure you want to reset "{{ reqName }}" for this requirement? This will delete the
-        selected transfer credit from your schedule, allowing you to add a different course to
-        satisfy this requirement.
-        <br />
-        Transfer credits can be re-added in your Profile.
-      </div>
-      <div v-else class="text-width">
-        Are you sure you want to reset the "{{ reqName }}" requirement? This will delete the
-        selected course from your schedule, allowing you to add a different course to satisfy this
-        requirement.
-      </div>
-    </flexible-modal>
-  </div>
+  <teleport-modal
+    title="Reset Requirement"
+    :class="[{ 'modal--block': modelValue }, 'modal-width']"
+    content-class="content-confirmation"
+    left-button-text="No"
+    right-button-text="Yes"
+    @left-button-clicked="closeClicked"
+    @right-button-clicked="resetClicked"
+    @modal-closed="closeCurrentModal"
+    :rightButtonIsDisabled="false"
+    v-model="modelValue"
+  >
+    <div v-if="isTestReq" class="text-width">
+      Are you sure you want to reset "{{ reqName }}" for this requirement? This will delete the
+      selected transfer credit from your schedule, allowing you to add a different course to satisfy
+      this requirement.
+      <br />
+      Transfer credits can be re-added in your Profile.
+    </div>
+    <div v-else class="text-width">
+      Are you sure you want to reset the "{{ reqName }}" requirement? This will delete the selected
+      course from your schedule, allowing you to add a different course to satisfy this requirement.
+    </div>
+  </teleport-modal>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FlexibleModal from './FlexibleModal.vue';
+import TeleportModal from '@/components/TeleportModal.vue';
 
 export default defineComponent({
-  components: { FlexibleModal },
+  components: { TeleportModal },
   props: {
     reqName: { type: String, required: true },
     isTestReq: { type: Boolean, required: true },
