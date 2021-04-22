@@ -90,7 +90,7 @@ export default defineComponent({
         this.arrowColor = yuxuanBlue;
       }
 
-      // scroll the bottom of the graduation year dropdown to scrollBottomToIndex
+      // scroll the bottom of the graduation year dropdown to scrollBottomToElement
       if (!contentShown && this.scrollBottomToElement > 0) {
         // @ts-expect-error: weird complaints about emit string type not assignable
         this.$nextTick(() => {
