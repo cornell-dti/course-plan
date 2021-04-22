@@ -47,7 +47,6 @@
       </div>
       <div
         v-if="
-          displayDescription &&
           requirementFulfillment.requirement.fulfilledBy !== 'self-check' &&
           requirementFulfillment.requirement.checkerWarning == null
         "
