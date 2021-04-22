@@ -22,7 +22,7 @@
         data-tooltipClass="tooltipCenter"
       >
         <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
-          <requirement-view
+          <requirement-group
             :req="req"
             :reqIndex="index"
             :toggleableRequirementChoices="toggleableRequirementChoices"
@@ -101,7 +101,7 @@ import { defineComponent } from 'vue';
 import introJs from 'intro.js';
 
 import Course from '@/components/Course/Course.vue';
-import RequirementView from '@/components/Requirements/RequirementView.vue';
+import RequirementGroup from '@/components/Requirements/RequirementGroup.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
 import clipboard from '@/assets/images/clipboard.svg';
@@ -137,7 +137,7 @@ tour.setOption('exitOnOverlayClick', 'false');
 const maxSeeAllCoursesPerPage = 24;
 
 export default defineComponent({
-  components: { draggable, Course, DropDownArrow, RequirementView },
+  components: { draggable, Course, DropDownArrow, RequirementGroup },
   props: {
     startTour: { type: Boolean, required: true },
   },
