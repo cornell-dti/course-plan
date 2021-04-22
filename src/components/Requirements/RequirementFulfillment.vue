@@ -1,5 +1,5 @@
 <template>
-  <div class="subrequirement">
+  <div>
     <requirement-display-toggle
       :requirementFulfillment="requirementFulfillment"
       :isCompleted="isCompleted"
