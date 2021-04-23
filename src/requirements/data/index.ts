@@ -23,6 +23,7 @@ import economicsRequirements from './majors/econ';
 import eceRequirements from './majors/ece';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
+import epRequirements from './majors/ep';
 import governmentRequirements from './majors/govt';
 import hdRequirements from './majors/hd';
 import hotelAdminRequirements from './majors/hadm';
@@ -36,7 +37,7 @@ import mseRequirements from './majors/mse';
 import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
 import pamRequirements from './majors/pam';
-
+import physRequirements from './majors/phys';
 import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
@@ -164,6 +165,11 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: envEngineeringRequirements,
     },
+    EP: {
+      name: 'Engineering Physics',
+      schools: ['EN'],
+      requirements: epRequirements,
+    },
     GOVT: {
       name: 'Government',
       schools: ['AS1', 'AS2'],
@@ -228,6 +234,11 @@ const json: RequirementsJson = {
       name: 'Policy Analysis and Management',
       schools: ['HE'],
       requirements: pamRequirements,
+    },
+    PHYS: {
+      name: 'Physics',
+      schools: ['AS1', 'AS2'],
+      requirements: physRequirements,
     },
   },
   minor: {
