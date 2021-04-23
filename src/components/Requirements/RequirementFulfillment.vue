@@ -9,41 +9,11 @@
     <div v-if="displayDescription" class="description">
       <requirement-information :requirement="requirementFulfillment.requirement" :color="color" />
       <div v-if="requirementFulfillment.requirement.fulfilledBy === 'toggleable'">
-        <div class="toggleable-requirements-select-wrapper">
-          <div
-            class="toggleable-requirements-select toggleable-requirements-input"
-            v-click-outside="closeMenuIfOpen"
-          >
-            <div
-              class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-wrapper"
-              @click="showFulfillmentOptionsDropdown = !showFulfillmentOptionsDropdown"
-            >
-              <span>{{ selectedFulfillmentOption }}</span>
-            </div>
-            <div
-              class="toggleable-requirements-dropdown-placeholder toggleable-requirements-dropdown-arrow"
-            ></div>
-          </div>
-          <div
-            class="toggleable-requirements-dropdown-content"
-            v-if="showFulfillmentOptionsDropdown"
-          >
-            <div
-              v-for="optionName in Object.keys(
-                requirementFulfillment.requirement.fulfillmentOptions
-              )"
-              :key="optionName"
-              class="toggleable-requirements-dropdown-content-item"
-              @click="chooseFulfillmentOption(optionName)"
-            >
-              <span>{{ optionName }}</span>
-            </div>
-          </div>
-          {{
-            requirementFulfillment.requirement.fulfillmentOptions[selectedFulfillmentOption]
-              .description
-          }}
-        </div>
+        <toggleable-requirement-choice-dropdown
+          :toggleableRequirement="requirementFulfillment.requirement"
+          :toggleableRequirementChoice="toggleableRequirementChoice"
+          @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
+        />
       </div>
       <div
         v-if="
@@ -80,9 +50,8 @@
       </div>
       <div
         v-if="
-          displayDescription &&
-          (requirementFulfillment.requirement.fulfilledBy === 'self-check' ||
-            requirementFulfillment.requirement.checkerWarning != null)
+          requirementFulfillment.requirement.fulfilledBy === 'self-check' ||
+          requirementFulfillment.requirement.checkerWarning != null
         "
         class="subreqcourse-wrapper"
       >
@@ -114,9 +83,9 @@ import IncompleteSubReqCourse from '@/components/Requirements/IncompleteSubReqCo
 import IncompleteSelfCheck from '@/components/Requirements/IncompleteSelfCheck.vue';
 import RequirementDisplayToggle from '@/components/Requirements/RequirementDisplayToggle.vue';
 import RequirementInformation from '@/components/Requirements/RequirementInformation.vue';
+import ToggleableRequirementChoiceDropdown from '@/components/Requirements/ToggleableRequirementChoiceDropdown.vue';
 
 import store from '@/store';
-import { clickOutside } from '@/utilities';
 import {
   convertFirestoreSemesterCourseToCourseTaken,
   getMatchedRequirementFulfillmentSpecification,
@@ -138,11 +107,6 @@ type IncompleteSubReqCourseSlot = {
 };
 
 export type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
-
-type Data = {
-  showFulfillmentOptionsDropdown: boolean;
-  showDescription: boolean;
-};
 
 const generateSubReqIncompleteCourses = (
   allTakenCourseIds: ReadonlySet<number>,
@@ -172,6 +136,7 @@ export default defineComponent({
     IncompleteSelfCheck,
     RequirementDisplayToggle,
     RequirementInformation,
+    ToggleableRequirementChoiceDropdown,
   },
   props: {
     requirementFulfillment: {
@@ -195,11 +160,8 @@ export default defineComponent({
       return typeof courses === 'object';
     },
   },
-  data(): Data {
-    return {
-      showFulfillmentOptionsDropdown: false,
-      showDescription: false,
-    };
+  data() {
+    return { showDescription: false };
   },
   computed: {
     displayDescription(): boolean {
@@ -339,9 +301,6 @@ export default defineComponent({
       return [...selectedCourses, ...fulfillableCourses];
     },
   },
-  directives: {
-    'click-outside': clickOutside,
-  },
   methods: {
     onShowAllCourses(subReqIndex: number) {
       this.$emit('onShowAllCourses', {
@@ -353,16 +312,8 @@ export default defineComponent({
     toggleDescription() {
       this.showDescription = !this.showDescription;
     },
-    closeMenuIfOpen() {
-      this.showFulfillmentOptionsDropdown = false;
-    },
-    chooseFulfillmentOption(option: string) {
-      this.showFulfillmentOptionsDropdown = false;
-      this.$emit(
-        'changeToggleableRequirementChoice',
-        this.requirementFulfillment.requirement.id,
-        option
-      );
+    changeToggleableRequirementChoice(id: string, option: string) {
+      this.$emit('changeToggleableRequirementChoice', id, option);
     },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);
@@ -408,103 +359,6 @@ button.view {
   background-color: $inactiveGray;
 }
 
-.toggleable-requirements {
-  &-select {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background: $white;
-    border: 0.5px solid $inactiveGray;
-    box-sizing: border-box;
-    border-radius: 2px;
-    width: 100%;
-    font-size: 14px;
-    line-height: 17px;
-    color: $darkPlaceholderGray;
-    position: relative;
-    min-height: 1.625rem;
-    margin: 0.75rem 0;
-
-    &:not(:first-child) {
-      margin-top: 0.5rem;
-    }
-
-    &--disabled {
-      opacity: 0.3;
-      pointer-events: none;
-    }
-
-    &-wrapper {
-      position: relative;
-      margin-bottom: 1rem;
-    }
-  }
-  &-dropdown {
-    &-placeholder {
-      height: 100%;
-      font-size: 14px;
-      line-height: 17px;
-      margin-left: 0.5rem;
-      display: flex;
-      align-items: center;
-      color: $lightPlaceholderGray;
-      background: transparent;
-      cursor: pointer;
-    }
-    &-wrapper {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      height: 100%;
-    }
-    &-innerPlaceholder {
-      margin-top: 5px;
-      margin-bottom: 5px;
-      width: 100%;
-    }
-    &-arrow {
-      border-left: 6.24px solid transparent;
-      border-right: 6.24px solid transparent;
-      border-top: 6.24px solid $inactiveGray;
-      background: transparent;
-      margin-right: 8.7px;
-      margin-left: 5px;
-      margin-top: auto;
-      margin-bottom: auto;
-    }
-    &-content {
-      z-index: 2;
-      position: absolute;
-      width: 100%;
-      background: $white;
-      box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-      border-radius: 7px;
-      margin-top: 3px;
-      &-item {
-        height: 2.25rem;
-        font-size: 14px;
-        line-height: 17px;
-        display: flex;
-        align-items: center;
-        color: $lightPlaceholderGray;
-        padding-left: 10px;
-        cursor: pointer;
-
-        &:first-child {
-          border-radius: 7px 7px 0px 0px;
-        }
-
-        &:last-child {
-          border-radius: 0px 0px 7px 7px;
-        }
-      }
-    }
-  }
-  &-dropdown-content div:hover {
-    background: rgba(50, 160, 242, 0.15);
-    width: 100%;
-  }
-}
 .subreqcourse {
   &-wrapper {
     width: 100%;
