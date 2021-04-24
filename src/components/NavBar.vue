@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar" :style="{ zIndex: modalIsOpen ? 1 : 2 }">
+  <nav class="navbar">
     <div
       class="navbar-iconWrapper hamburger full-opacity-on-hover"
       @click="menuOpen = !menuOpen"
@@ -55,7 +55,6 @@ import { GTagEvent } from '@/gtag';
 export default defineComponent({
   props: {
     isOpeningRequirements: { type: Boolean, required: true },
-    modalIsOpen: { type: Boolean, required: true },
   },
   emits: ['editProfile', 'toggleRequirementsBar'],
   data() {

@@ -61,9 +61,6 @@ export default defineComponent({
     subReqFulfillment: { type: String, required: true },
     subReqCourseId: { type: Number, required: true },
   },
-  emits: {
-    'modal-open': (open: boolean) => typeof open === 'boolean',
-  },
   data(): Data {
     return {
       showDropdown: false,
@@ -161,11 +158,9 @@ export default defineComponent({
     },
     openCourseModal() {
       this.isCourseModalOpen = true;
-      this.$emit('modal-open', true);
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
-      this.$emit('modal-open', false);
     },
   },
 });

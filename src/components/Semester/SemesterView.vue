@@ -15,6 +15,7 @@
         :class="{ 'modal--block': isSemesterModalOpen }"
         @add-semester="addSemester"
         @close-semester-modal="closeSemesterModal"
+        v-model="isSemesterModalOpen"
       />
       <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
         <button
@@ -75,7 +76,6 @@
             @new-semester="openSemesterModal"
             @delete-semester="deleteSemester"
             @open-caution-modal="openCautionModal"
-            @modal-open="modalToggle"
           />
         </div>
         <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
@@ -132,7 +132,6 @@ export default defineComponent({
   },
   emits: {
     'compact-updated': (compact: boolean) => typeof compact === 'boolean',
-    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data() {
     return {
@@ -186,20 +185,16 @@ export default defineComponent({
     openCautionModal() {
       this.cautionText = `Unable to add course. Already in plan.`;
       this.isCautionModalOpen = true;
-      this.$emit('modal-open', true);
 
       setTimeout(() => {
         this.isCautionModalOpen = false;
-        this.$emit('modal-open', false);
       }, 3000);
     },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
-      this.$emit('modal-open', true);
     },
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
-      this.$emit('modal-open', false);
     },
     addSemester(type: string, year: number) {
       addSemester(type as FirestoreSemesterType, year, this.$gtag);
@@ -223,9 +218,6 @@ export default defineComponent({
     getToggleTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Toggle between Views</div><div class="introjs-customProgress">4/4</div>
       </div><div class = "introjs-bodytext">View semesters and courses in full or compact mode.</div>`;
-    },
-    modalToggle(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });

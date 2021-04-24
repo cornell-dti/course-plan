@@ -16,14 +16,12 @@
           :isOpeningRequirements="isOpeningRequirements"
           @editProfile="editProfile"
           @toggleRequirementsBar="toggleRequirementsBar"
-          :modalIsOpen="modalIsOpen"
         />
         <requirement-side-bar
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
-          @modal-open="modalToggle"
         />
       </div>
       <semester-view
@@ -35,7 +33,6 @@
         :isBottomBar="hasBottomCourses"
         :isMobile="isMobile"
         @compact-updated="compactUpdated"
-        @modal-open="modalToggle"
       />
     </div>
     <tour-window
@@ -135,7 +132,6 @@ export default defineComponent({
       welcomeHidden: false,
       startTour: false,
       showTourEndWindow: false,
-      modalIsOpen: false,
     };
   },
   computed: {
@@ -214,10 +210,6 @@ export default defineComponent({
     editProfile() {
       this.isOnboarding = true;
       this.isEditingProfile = true;
-    },
-
-    modalToggle(isOpen: boolean) {
-      this.modalIsOpen = isOpen;
     },
   },
 });

@@ -35,7 +35,6 @@
             @activateMajor="activateMajor"
             @activateMinor="activateMinor"
             @onShowAllCourses="onShowAllCourses"
-            @modal-open="modalToggled"
           />
         </div>
       </div>
@@ -143,7 +142,6 @@ export default defineComponent({
   },
   emits: {
     showTourEndWindow: () => true,
-    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data(): Data {
     return {
@@ -299,10 +297,6 @@ export default defineComponent({
     },
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
-    },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
-      this.modalIsOpen = isOpen;
     },
   },
 });

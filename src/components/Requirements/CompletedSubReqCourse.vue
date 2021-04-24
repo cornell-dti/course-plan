@@ -5,7 +5,6 @@
       :reqName="courseTaken.code"
       v-model="resetConfirmVisible"
       @close-reset-modal="onResetConfirmClosed"
-      @modal-open="modalToggled"
     />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
@@ -54,9 +53,6 @@ export default defineComponent({
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
-  emits: {
-    'modal-open': (open: boolean) => typeof open === 'boolean',
-  },
   data: () => ({
     resetConfirmVisible: false,
   }),
@@ -87,10 +83,8 @@ export default defineComponent({
   methods: {
     onReset(): void {
       this.resetConfirmVisible = true;
-      this.$emit('modal-open', true);
     },
     onResetConfirmClosed(isReset: boolean): void {
-      this.$emit('modal-open', false);
       if (isReset) {
         if (this.isTransferCredit) {
           const type = this.courseTaken.code.substr(0, 2);
@@ -103,9 +97,6 @@ export default defineComponent({
           });
         } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
       }
-    },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });

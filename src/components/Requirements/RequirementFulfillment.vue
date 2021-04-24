@@ -61,7 +61,6 @@
             <completed-sub-req-course
               :slotName="requirementFulfillmentCourseSlot.name"
               :courseTaken="requirementFulfillmentCourseSlot.courses[0]"
-              @modal-open="modalToggled"
             />
           </div>
           <div
@@ -88,11 +87,7 @@
         class="subreqcourse-wrapper"
       >
         <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
-          <completed-sub-req-course
-            :slotName="`Course ${id + 1}`"
-            :courseTaken="selfCheckCourse"
-            @modal-open="modalToggled"
-          />
+          <completed-sub-req-course :slotName="`Course ${id + 1}`" :courseTaken="selfCheckCourse" />
         </div>
         <div v-if="!isCompleted">
           <incomplete-self-check
@@ -100,7 +95,6 @@
             :subReqName="requirementFulfillment.requirement.name"
             :subReqFulfillment="requirementFulfillment.fulfilledBy"
             :subReqCourseId="requirementFulfillment.minCountFulfilled"
-            @modal-open="modalToggled"
           />
         </div>
       </div>
@@ -185,7 +179,6 @@ export default defineComponent({
     tourStep: { type: Number, required: true },
   },
   emits: {
-    'modal-open': (open: boolean) => typeof open === 'boolean',
     changeToggleableRequirementChoice(id: string, option: string) {
       return typeof id === 'string' && typeof option === 'string';
     },
@@ -367,9 +360,6 @@ export default defineComponent({
     },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);
-    },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });

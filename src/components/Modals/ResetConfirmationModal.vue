@@ -37,13 +37,11 @@ export default defineComponent({
   },
   emits: {
     'update:modelValue': (value: boolean) => typeof value === 'boolean',
-    'modal-open': (value: boolean) => typeof value === 'boolean',
     'close-reset-modal': (value: boolean) => typeof value === 'boolean',
   },
   methods: {
     closeCurrentModal(): void {
       this.$emit('update:modelValue', false);
-      this.$emit('modal-open', false);
     },
     resetClicked(): void {
       this.closeCurrentModal();
