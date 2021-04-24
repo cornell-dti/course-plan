@@ -26,7 +26,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TeleportModal from '@/components/TeleportModal.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 export default defineComponent({
   components: { TeleportModal },

@@ -87,11 +87,10 @@ export default defineComponent({
   min-height: 100vh;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 3;
+  padding: 1rem;
 }
 
 .modal {
-  padding: 1rem;
-
   &-content {
     background: $white;
     border-radius: 9px;
