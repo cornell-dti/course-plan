@@ -10,10 +10,9 @@
     @right-button-clicked="addSemester"
     v-model="modelValue"
   >
-    <new-semester
+    <select-semester
       :currentSemesters="semesters"
       :isEdit="false"
-      :isSemesterAdd="true"
       :isCourseModelSelectingSemester="false"
       @duplicateSemester="disableButton"
       @updateSemProps="updateSemProps"
@@ -24,12 +23,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import NewSemester from '@/components/Modals/NewSemester.vue';
+import SelectSemester from '@/components/Modals/SelectSemester.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import store from '@/store';
 
 export default defineComponent({
-  components: { TeleportModal, NewSemester },
+  components: { TeleportModal, SelectSemester },
   props: {
     modelValue: { type: Boolean, required: true },
   },
@@ -54,9 +53,6 @@ export default defineComponent({
     closeCurrentModal() {
       this.$emit('close-semester-modal');
       this.$emit('update:modelValue', false);
-
-      // @ts-expect-error: TS cannot understand $ref's component.
-      this.$refs.modalBodyComponent.resetDropdowns();
     },
     addSemester() {
       if (!this.isDisabled) {

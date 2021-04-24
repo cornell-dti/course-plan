@@ -22,7 +22,7 @@
     <div>
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
-        <new-semester
+        <select-semester
           :type="season"
           :year="year"
           :isCourseModelSelectingSemester="true"
@@ -37,13 +37,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
-import NewSemester from '@/components/Modals/NewSemester.vue';
+import SelectSemester from '@/components/Modals/SelectSemester.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 import store from '@/store';
 import { getFilter } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
-  components: { CourseSelector, FlexibleModal, NewSemester },
+  components: { CourseSelector, FlexibleModal, SelectSemester },
   props: {
     subReqName: { type: String, required: true },
     requirementId: { type: String, required: true },

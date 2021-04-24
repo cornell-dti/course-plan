@@ -1,44 +1,44 @@
 <template>
   <div>
-    <div class="newSemester">
-      <div class="newSemester-section newSemester-type">
-        <label v-if="!isCourseModelSelectingSemester" class="newSemester-label" for="type"
+    <div class="selectSemester">
+      <div class="selectSemester-section selectSemester-type">
+        <label v-if="!isCourseModelSelectingSemester" class="selectSemester-label" for="type"
           >Type</label
         >
         <div
-          :class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
+          :class="[{ duplicate: isDuplicate() }, { 'selectSemester-select': !isDuplicate() }]"
           class="position-relative"
           v-click-outside="closeSeasonDropdownIfOpen"
         >
           <div
-            class="newSemester-dropdown-placeholder season-wrapper"
+            class="selectSemester-dropdown-placeholder season-wrapper"
             @click="showHideSeasonContent"
           >
             <div
-              class="newSemester-dropdown-placeholder season-placeholder"
+              class="selectSemester-dropdown-placeholder season-placeholder"
               :style="{ color: displayOptions.season.placeholderColor }"
             >
               {{ seasonPlaceholder }}
             </div>
             <div
-              class="newSemester-dropdown-placeholder season-arrow"
+              class="selectSemester-dropdown-placeholder season-arrow"
               :style="{ borderTopColor: displayOptions.season.arrowColor }"
             ></div>
           </div>
           <div
-            class="newSemester-dropdown-content season-content position-absolute w-100"
+            class="selectSemester-dropdown-content season-content position-absolute w-100"
             v-if="displayOptions.season.shown"
           >
             <div
               :class="{ warning: isDuplicate }"
               v-for="season in seasons"
               :key="season[1]"
-              class="newSemester-dropdown-content-item"
+              class="selectSemester-dropdown-content-item"
               @click="selectSeason(season[1])"
             >
               <img
                 :src="season[0]"
-                class="newSemester-dropdown-content-season"
+                class="selectSemester-dropdown-content-season"
                 :alt="`${season[1]} icon`"
               />
               {{ season[1] }}
@@ -46,36 +46,39 @@
           </div>
         </div>
       </div>
-      <div class="newSemester-section newSemester-year">
-        <label v-if="!isCourseModelSelectingSemester" class="newSemester-label" for="year"
+      <div class="selectSemester-section selectSemester-year">
+        <label v-if="!isCourseModelSelectingSemester" class="selectSemester-label" for="year"
           >Year</label
         >
         <div
-          :class="[{ duplicate: isDuplicate() }, { 'newSemester-select': !isDuplicate() }]"
+          :class="[{ duplicate: isDuplicate() }, { 'selectSemester-select': !isDuplicate() }]"
           class="position-relative"
           v-click-outside="closeYearDropdownIfOpen"
         >
-          <div class="newSemester-dropdown-placeholder year-wrapper" @click="showHideYearContent">
+          <div
+            class="selectSemester-dropdown-placeholder year-wrapper"
+            @click="showHideYearContent"
+          >
             <div
-              class="newSemester-dropdown-placeholder year-placeholder"
+              class="selectSemester-dropdown-placeholder year-placeholder"
               :style="{ color: displayOptions.year.placeholderColor }"
             >
               {{ yearPlaceholder }}
             </div>
             <div
-              class="newSemester-dropdown-placeholder year-arrow"
+              class="selectSemester-dropdown-placeholder year-arrow"
               :style="{ borderTopColor: displayOptions.year.arrowColor }"
             ></div>
           </div>
           <div
-            class="newSemester-dropdown-content year-content position-absolute"
+            class="selectSemester-dropdown-content year-content position-absolute"
             v-if="displayOptions.year.shown"
           >
             <div
               v-for="yearChoice in years"
               :key="yearChoice"
               :ref="`year-ref-${yearChoice}`"
-              class="newSemester-dropdown-content-item"
+              class="selectSemester-dropdown-content-item"
               @click="selectYear(yearChoice)"
             >
               {{ yearChoice }}
@@ -84,7 +87,7 @@
         </div>
       </div>
     </div>
-    <div v-if="isDuplicate()" class="newSemester-duplicate">Duplicate Semester</div>
+    <div v-if="isDuplicate()" class="selectSemester-duplicate">Duplicate Semester</div>
   </div>
 </template>
 
@@ -127,7 +130,6 @@ export default defineComponent({
       default: null,
     },
     isEdit: { type: Boolean, default: false },
-    isSemesterAdd: { type: Boolean, default: false },
     year: { type: Number, default: 0 },
     type: { type: String as PropType<FirestoreSemesterType>, default: '' },
     isCourseModelSelectingSemester: { type: Boolean, default: false },
@@ -289,31 +291,6 @@ export default defineComponent({
       this.yearText = year;
       this.selectOption('year');
     },
-    resetDropdown(type: 'season' | 'year') {
-      const displayOptions = this.displayOptions[type];
-      displayOptions.shown = false;
-      displayOptions.stopClose = false;
-      displayOptions.boxBorder = inactiveGray;
-      displayOptions.arrowColor = inactiveGray;
-      displayOptions.placeholderColor = darkPlaceholderGray;
-
-      if (type === 'season') {
-        this.seasonText = '';
-      } else {
-        this.yearText = 0;
-      }
-
-      if (this.isSemesterAdd || this.isEdit) {
-        this.$emit('updateSemProps', this.seasonPlaceholder, Number(this.yearPlaceholder));
-      }
-    },
-    resetDropdowns() {
-      // reset season dropdown
-      this.resetDropdown('season');
-
-      // reset year dropdown
-      this.resetDropdown('year');
-    },
     isDuplicate(): boolean {
       let isDup = false;
       const semesters = this.currentSemesters;
@@ -349,7 +326,7 @@ export default defineComponent({
   border-radius: 3px;
   border: 1px solid red;
 }
-.newSemester {
+.selectSemester {
   display: flex;
   flex-direction: row;
   &-duplicate {

@@ -10,7 +10,7 @@
     @right-button-clicked="editSemester"
     v-model="modelValue"
   >
-    <new-semester
+    <select-semester
       :currentSemesters="semesters"
       :isEdit="true"
       :year="deleteSemYear"
@@ -24,12 +24,12 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import NewSemester from '@/components/Modals/NewSemester.vue';
+import SelectSemester from '@/components/Modals/SelectSemester.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import store from '@/store';
 
 export default defineComponent({
-  components: { TeleportModal, NewSemester },
+  components: { TeleportModal, SelectSemester },
   props: {
     deleteSemType: { type: String as PropType<FirestoreSemesterType>, required: true },
     deleteSemYear: { type: Number, required: true },
@@ -57,9 +57,6 @@ export default defineComponent({
     closeCurrentModal() {
       this.$emit('close-edit-modal');
       this.$emit('update:modelValue', false);
-
-      // @ts-expect-error: TS cannot understand $ref's component.
-      this.$refs.modalBodyComponent.resetDropdowns();
     },
     editSemester() {
       if (!this.isDisabled) {
