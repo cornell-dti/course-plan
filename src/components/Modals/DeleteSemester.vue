@@ -11,7 +11,7 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="deleteSemester"
-    v-model="modelValue"
+    :modelValue="modelValue"
   >
     <div class="deleteSemesterModal-body">
       <div class="deleteSemesterModal-body-text">{{ text }}</div>
@@ -32,7 +32,6 @@ export default defineComponent({
     modelValue: { type: Boolean, required: true },
   },
   emits: {
-    'close-delete-modal': () => true,
     'delete-semester': (type: string, year: number) =>
       typeof type === 'string' && typeof year === 'number',
     'update:modelValue': (value: boolean) => typeof value === 'boolean',
@@ -47,7 +46,6 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal() {
-      this.$emit('close-delete-modal');
       this.$emit('update:modelValue', false);
     },
     deleteSemester() {

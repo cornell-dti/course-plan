@@ -8,7 +8,7 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="addSemester"
-    v-model="modelValue"
+    :modelValue="modelValue"
   >
     <select-semester
       :currentSemesters="semesters"
@@ -33,7 +33,6 @@ export default defineComponent({
     modelValue: { type: Boolean, required: true },
   },
   emits: {
-    'close-semester-modal': () => true,
     'add-semester': (season: string, year: number) =>
       typeof season === 'string' && typeof year === 'number',
     'update:modelValue': (value: boolean) => typeof value === 'boolean',
@@ -51,7 +50,6 @@ export default defineComponent({
       this.isDisabled = disabled;
     },
     closeCurrentModal() {
-      this.$emit('close-semester-modal');
       this.$emit('update:modelValue', false);
     },
     addSemester() {

@@ -22,7 +22,6 @@
     <delete-semester
       class="semester-modal"
       @delete-semester="deleteSemester"
-      @close-delete-modal="closeDeleteModal"
       :deleteSemType="type"
       :deleteSemYear="year"
       ref="deletesemester"
@@ -31,7 +30,6 @@
     <edit-semester
       class="semester-modal"
       @edit-semester="editSemester"
-      @close-edit-modal="closeEditModal"
       :deleteSemType="type"
       :deleteSemYear="year"
       ref="modalBodyComponent"
@@ -280,14 +278,9 @@ export default defineComponent({
       this.closeConfirmationModal();
       this.isCourseModalOpen = true;
     },
+    // TODO: delete this method when course modal is converted to use teleportModal
     closeCourseModal() {
       this.isCourseModalOpen = false;
-    },
-    closeEditModal() {
-      this.isEditSemesterOpen = false;
-    },
-    closeDeleteModal() {
-      this.isDeleteSemesterOpen = false;
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively

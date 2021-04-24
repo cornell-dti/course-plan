@@ -9,7 +9,7 @@
     @right-button-clicked="resetClicked"
     @modal-closed="closeCurrentModal"
     :rightButtonIsDisabled="false"
-    v-model="modelValue"
+    :modelValue="modelValue"
   >
     <div v-if="isTestReq" class="text-width">
       Are you sure you want to reset "{{ reqName }}" for this requirement? This will delete the

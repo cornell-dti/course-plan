@@ -14,7 +14,6 @@
         class="semester-modal"
         :class="{ 'modal--block': isSemesterModalOpen }"
         @add-semester="addSemester"
-        @close-semester-modal="closeSemesterModal"
         v-model="isSemesterModalOpen"
       />
       <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
@@ -192,9 +191,6 @@ export default defineComponent({
     },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
-    },
-    closeSemesterModal() {
-      this.isSemesterModalOpen = false;
     },
     addSemester(type: string, year: number) {
       addSemester(type as FirestoreSemesterType, year, this.$gtag);

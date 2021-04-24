@@ -51,12 +51,12 @@ export default defineComponent({
     rightButtonAlt: { type: String, default: '' },
     rightButtonIsDisabled: { type: Boolean, required: true },
   },
-  emits: ['left-button-clicked', 'right-button-clicked', 'update:modelValue'],
+  emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed'],
   setup(props, { emit }) {
     const modalBackground = ref((null as unknown) as HTMLDivElement);
 
     const close = () => {
-      emit('update:modelValue', false);
+      emit('modal-closed', true);
     };
 
     const closeOnClickOutside = (e: MouseEvent) => {
