@@ -1,8 +1,8 @@
 <template>
   <div class="semesterMenu">
     <button
+      v-if="!isOpenModal"
       class="semesterMenu-section full-opacity-on-hover"
-      :class="{ 'd-none': isOpenModal }"
       @click="openEditSemesterModal"
     >
       <div class="semesterMenu-content">
@@ -19,8 +19,8 @@
       </div>
     </button>
     <button
+      v-if="!isOpenModal"
       class="semesterMenu-section full-opacity-on-hover"
-      :class="{ 'd-none': isOpenModal }"
       @click="openDeleteSemesterModal"
     >
       <div class="semesterMenu-content">
