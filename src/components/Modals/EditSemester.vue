@@ -1,5 +1,5 @@
 <template>
-  <flexible-modal
+  <teleport-modal
     title="Edit Semester"
     content-class="content-semester"
     left-button-text="Cancel"
@@ -8,6 +8,7 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="editSemester"
+    v-model="modelValue"
   >
     <new-semester
       :currentSemesters="semesters"
@@ -18,25 +19,27 @@
       @updateSemProps="updateSemProps"
       ref="modalBodyComponent"
     />
-  </flexible-modal>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
-import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import store from '@/store';
 
 export default defineComponent({
-  components: { FlexibleModal, NewSemester },
+  components: { TeleportModal, NewSemester },
   props: {
     deleteSemType: { type: String as PropType<FirestoreSemesterType>, required: true },
     deleteSemYear: { type: Number, required: true },
+    modelValue: { type: Boolean, required: true },
   },
   emits: {
     'close-edit-modal': () => true,
     'edit-semester': (season: string, year: number) =>
       typeof season === 'string' && typeof year === 'number',
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
   },
   data() {
     return {
@@ -53,6 +56,8 @@ export default defineComponent({
   methods: {
     closeCurrentModal() {
       this.$emit('close-edit-modal');
+      this.$emit('update:modelValue', false);
+
       // @ts-expect-error: TS cannot understand $ref's component.
       this.$refs.modalBodyComponent.resetDropdowns();
     },

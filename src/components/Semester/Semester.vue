@@ -21,21 +21,21 @@
     />
     <delete-semester
       class="semester-modal"
-      :class="{ 'modal--block': isDeleteSemesterOpen }"
       @delete-semester="deleteSemester"
       @close-delete-modal="closeDeleteModal"
       :deleteSemType="type"
       :deleteSemYear="year"
       ref="deletesemester"
+      v-model="isDeleteSemesterOpen"
     />
     <edit-semester
       class="semester-modal"
-      :class="{ 'modal--block': isEditSemesterOpen }"
       @edit-semester="editSemester"
       @close-edit-modal="closeEditModal"
       :deleteSemType="type"
       :deleteSemYear="year"
       ref="modalBodyComponent"
+      v-model="isEditSemesterOpen"
     />
     <button v-if="isFirstSem" class="semester-addSemesterButton" @click="openSemesterModal">
       + New Semester
@@ -177,7 +177,6 @@ export default defineComponent({
     isFirstSem: { type: Boolean, required: true },
   },
   emits: {
-    'modal-open': (open: boolean) => typeof open === 'boolean',
     'new-semester': () => true,
     'course-onclick': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'delete-semester': (type: string, year: number) =>
@@ -280,19 +279,15 @@ export default defineComponent({
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.isCourseModalOpen = true;
-      this.$emit('modal-open', true);
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
-      this.$emit('modal-open', false);
     },
     closeEditModal() {
       this.isEditSemesterOpen = false;
-      this.$emit('modal-open', false);
     },
     closeDeleteModal() {
       this.isDeleteSemesterOpen = false;
-      this.$emit('modal-open', false);
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
@@ -374,7 +369,6 @@ export default defineComponent({
     },
     openEditSemesterModal() {
       this.isEditSemesterOpen = true;
-      this.$emit('modal-open', true);
     },
     editSemester(seasonInput: string, yearInput: number) {
       editSemester(
