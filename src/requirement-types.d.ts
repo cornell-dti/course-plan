@@ -39,6 +39,21 @@ type RequirementFulfillmentInformationCourseOrCreditBase<T> =
   | RequirementFulfillmentInformationCourseBase<T>
   | RequirementFulfillmentInformationCreditBase<T>;
 
+type ToggleableRequirementFulfillmentInformation<T = Record<string, unknown>> = {
+  readonly fulfilledBy: 'toggleable';
+  readonly fulfillmentOptions: {
+    readonly [optionName: string]: {
+      readonly perSlotMinCount: readonly number[];
+      readonly minNumberOfSlots?: number;
+      readonly description: string;
+    } & T &
+      (
+        | { readonly counting: 'courses'; readonly slotNames: readonly string[] }
+        | { readonly counting: 'credits' }
+      );
+  };
+};
+
 /**
  * @param T additional information only attached to credits and courses type.
  */
@@ -62,20 +77,7 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
         readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<T>;
       };
     } & T)
-  | {
-      readonly fulfilledBy: 'toggleable';
-      readonly fulfillmentOptions: {
-        readonly [optionName: string]: {
-          readonly perSlotMinCount: readonly number[];
-          readonly minNumberOfSlots?: number;
-          readonly description: string;
-        } & T &
-          (
-            | { readonly counting: 'courses'; readonly slotNames: readonly string[] }
-            | { readonly counting: 'credits' }
-          );
-      };
-    };
+  | ToggleableRequirementFulfillmentInformation<T>;
 
 type DecoratedCollegeOrMajorRequirement = RequirementCommon &
   RequirementFulfillmentInformation<{ readonly courses: readonly (readonly number[])[] }>;
