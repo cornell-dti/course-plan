@@ -12,7 +12,7 @@ const stsRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [(course: Course): boolean => course.subject === 'STS' && course.crseId !== 2011],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
-    slotNames: ['S&TS Course'],
+    slotNames: ['Course'],
   },
   {
     name: 'Core Course',
@@ -21,7 +21,7 @@ const stsRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['STS 2011']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
-    slotNames: ['STS 2011'],
+    slotNames: ['Course'],
   },
   {
     name: '2000 Level STS Courses',
