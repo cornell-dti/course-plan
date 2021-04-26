@@ -61,6 +61,9 @@ export default defineComponent({
     subReqFulfillment: { type: String, required: true },
     subReqCourseId: { type: Number, required: true },
   },
+  emits: {
+    'modal-open': (open: boolean) => typeof open === 'boolean',
+  },
   data(): Data {
     return {
       showDropdown: false,

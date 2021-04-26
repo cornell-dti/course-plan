@@ -107,6 +107,7 @@ export default defineComponent({
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
   },
+  emits: ['onboard', 'cancelOnboarding'],
   data() {
     return {
       currentPage: 1,
@@ -122,7 +123,8 @@ export default defineComponent({
         this.name.firstName === '' ||
         this.name.lastName === '' ||
         this.onboarding.college === '' ||
-        this.onboarding.gradYear === ''
+        this.onboarding.gradYear === '' ||
+        this.onboarding.entranceYear === ''
       ) {
         this.isError = true;
       } else {
@@ -134,6 +136,7 @@ export default defineComponent({
           })
           .set(onboardingDataCollection.doc(store.state.currentFirebaseUser.email), {
             gradYear: this.onboarding.gradYear,
+            entranceYear: this.onboarding.entranceYear,
             colleges: [{ acronym: this.onboarding.college }],
             majors: this.onboarding.major.map(acronym => ({ acronym })),
             minors: this.onboarding.minor.map(acronym => ({ acronym })),
@@ -156,13 +159,14 @@ export default defineComponent({
     },
     updateBasic(
       gradYear: string,
+      entranceYear: string,
       college: string,
       major: readonly string[],
       minor: readonly string[],
       name: FirestoreUserName
     ) {
       this.name = name;
-      this.onboarding = { ...this.onboarding, gradYear, college, major, minor };
+      this.onboarding = { ...this.onboarding, gradYear, entranceYear, college, major, minor };
     },
     updateTransfer(
       exams: readonly FirestoreAPIBExam[],

@@ -28,6 +28,7 @@ export default defineComponent({
     bottomCourseFocus: { type: Number, required: true },
     isExpanded: { type: Boolean, required: true },
   },
+  emits: ['on-change-focus', 'on-delete'],
 });
 </script>
 

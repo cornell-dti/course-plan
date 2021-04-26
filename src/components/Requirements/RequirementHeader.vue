@@ -157,6 +157,17 @@ export default defineComponent({
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
   },
+  emits: {
+    activateMajor(id: number) {
+      return typeof id === 'number';
+    },
+    activateMinor(id: number) {
+      return typeof id === 'number';
+    },
+    toggleDetails() {
+      return true;
+    },
+  },
   computed: {
     // number of fully fulfilled requirements, note pure self-checks are never fulfilled
     requirementFulfilled(): number {

@@ -48,6 +48,14 @@ export default defineComponent({
     subReqName: { type: String, required: true },
     requirementId: { type: String, required: true },
   },
+  emits: {
+    'close-course-modal': () => true,
+    'add-course': (
+      selected: CornellCourseRosterCourse,
+      season: FirestoreSemesterType,
+      year: number
+    ) => typeof selected === 'object' && typeof season === 'string' && typeof year === 'number',
+  },
   data() {
     return {
       selectedCourse: null as CornellCourseRosterCourse | null,
@@ -101,8 +109,8 @@ export default defineComponent({
     backOrCancel() {
       this.closeCurrentModal();
     },
-    updateSemProps(season: FirestoreSemesterType, year: number) {
-      this.season = season;
+    updateSemProps(season: string, year: number) {
+      this.season = season as FirestoreSemesterType;
       this.year = year;
     },
   },
