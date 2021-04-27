@@ -376,10 +376,6 @@ export default defineComponent({
     width: 12px;
     height: 12px;
   }
-  &-emoji-text {
-    height: 14px;
-    padding: 0px;
-  }
   &-dropdown {
     &-placeholder {
       font-style: normal;
