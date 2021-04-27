@@ -6,16 +6,20 @@
     ref="modalBackground"
     aria-modal="true"
   >
-    <div class="teleport" @click="closeOnClickOutside">
-      <div :class="['modal-content', contentClass]">
-        <div class="modal-top">
+    <div
+      class="teleport"
+      :class="{ 'teleport-simple': isSimpleModal }"
+      @click="closeOnClickOutside"
+    >
+      <div :class="['modal-content', contentClass, { 'modal-simple': isSimpleModal }]">
+        <div v-if="!isSimpleModal" class="modal-top">
           <h1>{{ title }}</h1>
           <button @click="close">
             <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
           </button>
         </div>
         <slot class="modal-body"></slot>
-        <div class="modal-buttonWrapper">
+        <div v-if="!isSimpleModal" class="modal-buttonWrapper">
           <button class="modal-button" @click="leftButtonClicked">
             {{ leftButtonText }}
           </button>
@@ -43,13 +47,14 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   props: {
     modelValue: { required: true, type: Boolean },
-    title: { type: String, required: true },
+    title: { type: String, default: '' },
     contentClass: { type: String, required: true },
-    leftButtonText: { type: String, required: true },
-    rightButtonText: { type: String, required: true },
+    leftButtonText: { type: String, default: '' },
+    rightButtonText: { type: String, default: '' },
     rightButtonImage: { type: String, default: '' },
     rightButtonAlt: { type: String, default: '' },
-    rightButtonIsDisabled: { type: Boolean, required: true },
+    rightButtonIsDisabled: { type: Boolean, default: false },
+    isSimpleModal: { type: Boolean, default: false },
   },
   emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed'],
   setup(props, { emit }) {
@@ -88,6 +93,10 @@ export default defineComponent({
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 3;
   padding: 1rem;
+
+  &-simple {
+    padding: 0rem;
+  }
 }
 
 .modal {
@@ -97,6 +106,12 @@ export default defineComponent({
     margin-left: auto;
     margin-right: auto;
     padding: 1rem;
+  }
+
+  &-simple {
+    background: none;
+    padding: 0;
+    min-height: 100vh;
   }
 
   &-body {

@@ -40,9 +40,8 @@
       text="View your college requirements, plan your semesters and courses, and more."
       exit="No, I want to skip this"
       button-text="Start Tutorial"
-      @hide="hideWelcomeTour()"
-      @skip="welcomeHidden = false"
-      v-if="welcomeHidden"
+      @startTour="startWelcomeTour()"
+      v-model="welcomeHidden"
     />
     <tour-window
       title="Let's get CoursePlanning!"
@@ -51,8 +50,7 @@
       :isFinalStep="true"
       exit=""
       button-text="Get Started"
-      @hide="showTourEndWindow = false"
-      v-if="showTourEndWindow"
+      v-model="showTourEndWindow"
     />
     <bottom-bar
       v-if="(!isOpeningRequirements && isTablet) || !isTablet"
@@ -202,8 +200,7 @@ export default defineComponent({
       this.isOnboarding = false;
     },
 
-    hideWelcomeTour() {
-      this.welcomeHidden = false;
+    startWelcomeTour() {
       if (!this.startTour) this.startTour = true;
     },
 
