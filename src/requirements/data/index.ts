@@ -38,6 +38,7 @@ import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
 import pamRequirements from './majors/pam';
 import physRequirements from './majors/phys';
+import stsRequirements from './majors/sts';
 import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
@@ -239,6 +240,11 @@ const json: RequirementsJson = {
       name: 'Physics',
       schools: ['AS1', 'AS2'],
       requirements: physRequirements,
+    },
+    STS: {
+      name: 'Science & Technology Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: stsRequirements,
     },
   },
   minor: {
