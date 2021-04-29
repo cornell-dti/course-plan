@@ -29,7 +29,7 @@ const updateNames = doc => {
   for (const [key, value] of Object.entries(doc)) {
     const nameInDB = isChangingSlotName ? key[1] : key[0];
     if (nameInDB === oldName) {
-      const newKey = isChangingSlotName ? [key[0], newName] : [newName, key[1]]; // TODO - factor out
+      const newKey = isChangingSlotName ? [key[0], newName] : [newName, key[1]];
       newDoc[newKey] = value;
     } else {
       newDoc[key] = value;
@@ -57,12 +57,38 @@ const transformOnboardingData = doc => ({
 });
 
 if (process.argv[2] === '--dry-run') {
-  userDataCollection.get().then(userData => {
-    const oldUserData = userData.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    // Using JSON parse and stringify trick so we get a deep copy of the nested oldUserData
-    const newUserData = JSON.parse(JSON.stringify(oldUserData)).map(transformData);
-    fs.writeFileSync('old-userData-semesters.json', JSON.stringify(oldUserData, undefined, 2));
-    fs.writeFileSync('new-userData-semesters.json', JSON.stringify(newUserData, undefined, 2));
+  userOverriddenReqsCollection.get().then(userOverriddenReqsData => {
+    const oldUserOverriddenReqsData = userOverriddenReqsData.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    // Using JSON parse and stringify trick so we get a deep copy of the nested oldUserOverriddenReqsData
+    const newUserOverriddenReqs = JSON.parse(JSON.stringify(oldUserOverriddenReqsData)).map(
+      transformOverriddenReqsCollection
+    );
+    fs.writeFileSync(
+      'old-userOverriddenReqsData.json',
+      JSON.stringify(oldUserOverriddenReqsData, undefined, 2)
+    );
+    fs.writeFileSync(
+      'new-userOverriddenReqs.json',
+      JSON.stringify(newUserOverriddenReqs, undefined, 2)
+    );
+  });
+  userOnboardingData.get().then(userOnboarding => {
+    const oldUserOnboardingData = userOnboarding.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    // Using JSON parse and stringify trick so we get a deep copy of the nested oldUserOnboarding
+    const newUserOnboardingData = JSON.parse(JSON.stringify(oldUserOnboarding)).map(
+      transformOnboardingData
+    );
+    fs.writeFileSync(
+      'old-userOnboardingData.json',
+      JSON.stringify(oldUserOnboardingData, undefined, 2)
+    );
+    fs.writeFileSync(
+      'new-userOnboardingData.json',
+      JSON.stringify(newUserOnboardingData, undefined, 2)
+    );
   });
   return;
 } else {
