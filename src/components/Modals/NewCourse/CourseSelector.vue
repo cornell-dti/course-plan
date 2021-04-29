@@ -34,21 +34,23 @@ const getMatchingCourses = (
 ): readonly CornellCourseRosterCourse[] => {
   interface SearchableCourse extends CornellCourseRosterCourse {
     courseCode?: string;
+    fullCourseString?: string;
   }
 
   const courses: readonly SearchableCourse[] =
     filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
   courses.map((course: SearchableCourse) => {
     course.courseCode = `${course.subject} ${course.catalogNbr}`;
+    course.fullCourseString = `${course.subject} ${course.catalogNbr} ${course.titleLong}`;
     return course;
   });
   const options = {
-    minMatchCharLength: 1,
     keys: [
       { name: 'courseCode', weight: 2 },
-      { name: 'subject', weight: 2 },
+      { name: 'subject', weight: 3 },
+      { name: 'fullCourseString', weight: 2.5 },
       { name: 'catalogNbr', weight: 1.5 },
-      { name: 'titleLong', weight: 0.3 },
+      { name: 'titleLong', weight: 1 },
     ],
   };
 
@@ -57,9 +59,9 @@ const getMatchingCourses = (
     .search(searchText, { limit: 10 })
     .map(elem => {
       delete elem.item.courseCode;
+      delete elem.item.fullCourseString;
       return elem.item;
     });
-  console.log(result);
   return result;
 };
 
