@@ -25,35 +25,42 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import Fuse from 'fuse.js';
 import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
 const getMatchingCourses = (
   searchText: string,
   filter?: (course: CornellCourseRosterCourse) => boolean
 ): readonly CornellCourseRosterCourse[] => {
-  // search after value length of 2 to reduce search times of courses
-  if (!searchText || searchText.length < 2) return [];
-  /* code array for results that contain course code and title array for results that contain title */
-  const code: CornellCourseRosterCourse[] = [];
-  const title: CornellCourseRosterCourse[] = [];
-
-  const filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
-  for (const course of filteredCourses) {
-    const courseCode = `${course.subject} ${course.catalogNbr}`;
-    if (courseCode.toUpperCase().includes(searchText)) {
-      code.push(course);
-    } else if (course.titleLong.toUpperCase().includes(searchText)) {
-      title.push(course);
-    }
+  interface SearchableCourse extends CornellCourseRosterCourse {
+    courseCode?: string;
   }
 
-  // Sort both results by title
-  code.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
-  title.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
+  const courses: readonly SearchableCourse[] =
+    filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
+  courses.map((course: SearchableCourse) => {
+    course.courseCode = `${course.subject} ${course.catalogNbr}`;
+    return course;
+  });
+  const options = {
+    minMatchCharLength: 1,
+    keys: [
+      { name: 'courseCode', weight: 2 },
+      { name: 'subject', weight: 2 },
+      { name: 'catalogNbr', weight: 1.5 },
+      { name: 'titleLong', weight: 0.3 },
+    ],
+  };
 
-  /* prioritize code matches over title matches */
-  // limit the number of results to 10
-  return code.concat(title).slice(0, 10);
+  const fuse = new Fuse(courses, options);
+  const result: readonly CornellCourseRosterCourse[] = fuse
+    .search(searchText, { limit: 10 })
+    .map(elem => {
+      delete elem.item.courseCode;
+      return elem.item;
+    });
+  console.log(result);
+  return result;
 };
 
 export default defineComponent({
@@ -80,7 +87,7 @@ export default defineComponent({
   },
   computed: {
     matches(): readonly CornellCourseRosterCourse[] {
-      return getMatchingCourses(this.searchText.toUpperCase(), this.courseFilter);
+      return getMatchingCourses(this.searchText, this.courseFilter);
     },
   },
   mounted() {
