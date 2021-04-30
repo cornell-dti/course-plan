@@ -1,8 +1,10 @@
 import { Course, RequirementChecker } from '../types';
 import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './constants';
 
-// course codes representing foreign languages
+// course codes representing foreign languages from: https://lrc.cornell.edu/languages-cornell
+// codes are commented out if they cannot count for the A&S language requirement
 const FLcourses: readonly string[] = [
+  // 'AKKAD',
   'ARAB',
   'ASL',
   'BCS',
@@ -21,11 +23,12 @@ const FLcourses: readonly string[] = [
   'INDO',
   'ITAL',
   'JAPAN',
-  'KANAD',
+  // 'KANAD',
   'KHMER',
   'KOREA',
   'LATIN',
   'NEPAL',
+  // 'PALI',
   'PERSN',
   'POLSH',
   'PORT',
