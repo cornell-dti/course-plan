@@ -3,6 +3,7 @@
  */
 
 import {
+  onboardingDataCollection,
   semestersCollection,
   toggleableRequirementChoicesCollection,
   selectableRequirementChoicesCollection,
@@ -195,6 +196,55 @@ export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): 
         .filter(([k]) => parseInt(k, 10) !== courseUniqueID)
         .map(([k, v]) => ({ [k]: v }))
     )
+  );
+};
+
+const editAPIBExams = (
+  updater: (oldAPIBExams: readonly FirestoreAPIBExam[]) => readonly FirestoreAPIBExam[]
+): void => {
+  const newAPIBExams = updater(store.state.onboardingData.exam);
+  const newOnboardingData = {
+    ...store.state.onboardingData,
+    exam: newAPIBExams,
+  };
+  store.commit('setOnboardingData', newOnboardingData);
+  onboardingDataCollection
+    .doc(store.state.currentFirebaseUser.email)
+    .update({ exam: newAPIBExams });
+};
+
+export const addOverridenRequirementAPIB = (
+  examName: string,
+  optIn: boolean,
+  requirementName: string,
+  slotName: string,
+  courseUniqueId: string
+): void => {
+  editAPIBExams(oldAPIBExams =>
+    oldAPIBExams.map(exam => {
+      if (`${exam.type} ${exam.subject}` === examName) {
+        const overridenRequirements = optIn ? exam.optIn || {} : exam.optOut || {};
+        overridenRequirements[requirementName][slotName] = [
+          ...overridenRequirements[requirementName][slotName],
+          courseUniqueId,
+        ];
+        if (optIn) return { ...exam, optIn: overridenRequirements };
+        return { ...exam, optOut: overridenRequirements };
+      }
+      return exam;
+    })
+  );
+};
+
+export const clearOverridenRequirementsAPIB = (examName: string): void => {
+  editAPIBExams(oldAPIBExams =>
+    oldAPIBExams.map(exam => {
+      if (`${exam.type} ${exam.subject}` === examName) {
+        const { optIn, optOut, ...rest } = exam;
+        return { optIn: {}, optOut: {}, ...rest };
+      }
+      return exam;
+    })
   );
 };
 

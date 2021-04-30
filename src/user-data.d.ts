@@ -32,12 +32,14 @@ type FirestoreSemester = {
   readonly courses: readonly FirestoreSemesterCourse[];
 };
 
-type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
 type FirestoreAPIBExam = {
   readonly type: 'AP' | 'IB';
   readonly score: number;
   readonly subject: string;
+  readonly optIn?: Record<string, Record<string, string[]>>;
+  readonly optOut?: Record<string, Record<string, string[]>>;
 };
+type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
 type FirestoreTransferClass = {
   readonly class: string;
   readonly course: CornellCourseRosterCourse;

@@ -97,8 +97,8 @@ const store: TypedVuexStore = new TypedVuexStore({
     setUserName(state: VuexStoreState, userName: FirestoreUserName) {
       state.userName = userName;
     },
-    setOnboardingData(state: VuexStoreState, onboardingData: FirestoreOnboardingUserData) {
-      state.onboardingData = createAppOnboardingData(onboardingData);
+    setOnboardingData(state: VuexStoreState, onboardingData: AppOnboardingData) {
+      state.onboardingData = onboardingData;
     },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
       state.semesters = semesters;
@@ -268,7 +268,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     .onSnapshot(snapshot => {
       const data = snapshot.data();
       if (data != null) {
-        store.commit('setOnboardingData', data);
+        store.commit('setOnboardingData', createAppOnboardingData(data));
       }
       onboardingDataInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
