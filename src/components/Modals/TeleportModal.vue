@@ -8,7 +8,7 @@
   >
     <div
       class="teleport"
-      :class="{ 'teleport-simple': isSimpleModal }"
+      :class="{ 'teleport-simple': isSimpleModal, 'teleport-noBackground': hasNoBackground }"
       @click="closeOnClickOutside"
     >
       <div :class="['modal-content', contentClass, { 'modal-simple': isSimpleModal }]">
@@ -55,6 +55,7 @@ export default defineComponent({
     rightButtonAlt: { type: String, default: '' },
     rightButtonIsDisabled: { type: Boolean, default: false },
     isSimpleModal: { type: Boolean, default: false },
+    hasNoBackground: { type: Boolean, default: false },
   },
   emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed'],
   setup(props, { emit }) {
@@ -96,6 +97,13 @@ export default defineComponent({
 
   &-simple {
     padding: 0rem;
+  }
+
+  &-noBackground {
+    background-color: rgba(0, 0, 0, 0);
+    width: 100%;
+    min-height: 0;
+    pointer-events: none;
   }
 }
 
@@ -163,6 +171,18 @@ export default defineComponent({
       border: 1px solid $sangBlue;
       background-color: $disabledGray;
     }
+  }
+}
+
+// custom styling for different modals depending on contentClass
+.content {
+  &-confirmation {
+    align-items: center;
+    border: none;
+    margin-top: 1rem;
+    min-height: 0;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 </style>

@@ -16,8 +16,8 @@
     />
     <confirmation
       class="confirmation-modal"
-      :class="{ 'confirmation-modal--flex': isConfirmationOpen }"
       :text="confirmationText"
+      v-model="isConfirmationOpen"
     />
     <delete-semester
       class="semester-modal"
@@ -99,7 +99,7 @@ import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
-import Confirmation from '@/components/Confirmation.vue';
+import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
@@ -533,14 +533,6 @@ export default defineComponent({
 
     &--block {
       display: block;
-    }
-  }
-
-  .confirmation-modal {
-    display: none;
-
-    &--flex {
-      display: flex;
     }
   }
 
