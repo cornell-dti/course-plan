@@ -36,8 +36,8 @@ type FirestoreAPIBExam = {
   readonly type: 'AP' | 'IB';
   readonly score: number;
   readonly subject: string;
-  readonly optIn?: Record<string, Record<string, string[]>>;
-  readonly optOut?: Record<string, Record<string, string[]>>;
+  readonly optIn?: Record<string, string[]>;
+  readonly optOut?: Record<string, string[]>;
 };
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
 type FirestoreTransferClass = {

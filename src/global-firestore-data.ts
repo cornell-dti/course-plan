@@ -246,23 +246,19 @@ export const addOverridenRequirementAPIB = (
   examName: string,
   optIn: boolean,
   requirementName: string,
-  slotName: string,
-  courseUniqueId: string
+  slotName: string
 ): void => {
   editAPIBExams(oldAPIBExams =>
     oldAPIBExams.map(exam => {
       if (`${exam.type} ${exam.subject}` === examName) {
         const overridenRequirements = optIn ? exam.optIn || {} : exam.optOut || {};
-        if (!(requirementName in overridenRequirements)) {
-          overridenRequirements[requirementName] = {};
+        if (requirementName in overridenRequirements) {
+          if (overridenRequirements[requirementName].indexOf(slotName) === -1) {
+            overridenRequirements[requirementName].push(slotName);
+          }
+        } else {
+          overridenRequirements[requirementName] = [slotName];
         }
-        if (!(slotName in overridenRequirements[requirementName])) {
-          overridenRequirements[requirementName][slotName] = [];
-        }
-        overridenRequirements[requirementName][slotName] = [
-          ...overridenRequirements[requirementName][slotName],
-          courseUniqueId,
-        ];
         if (optIn) return { ...exam, optIn: overridenRequirements };
         return { ...exam, optOut: overridenRequirements };
       }
