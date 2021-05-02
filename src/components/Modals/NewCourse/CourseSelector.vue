@@ -44,7 +44,42 @@ const getMatchingCourses = (
     course.fullCourseString = `${course.subject} ${course.catalogNbr} ${course.titleLong}`;
     return course;
   });
+
+
+  // Assume first word is subject
+  const firstWord = searchText.includes(' ') ? searchText.split(' ')[0] : searchText;
+
+  // Performed under the assumption that the user will refer the to the subject as the first string.
+  // Step 1: Check for first string
+  const subjectOptions = {
+    includeScore: true,
+    keys: ['subject'],
+  };
+  const firstWordSearch = new Fuse(courses, subjectOptions);
+  const firstWordResult: Fuse.FuseResult<SearchableCourse>[] = firstWordSearch.search(firstWord, {
+    limit: 5,
+  });
+
+  let courseCodeResult: Fuse.FuseResult<SearchableCourse>[] = [];
+  const indexOfFirstSpace = searchText.indexOf(' ');
+  if (indexOfFirstSpace !== -1) {
+    const indexOfSecondSpace = searchText.indexOf(' ', indexOfFirstSpace + 1);
+    const firstTwoWords = searchText.substr(0, indexOfSecondSpace);
+    // Step 2: Check for courseCode
+    if (/^[A-Za-z]+ [0-9]+$/.test(firstTwoWords)) {
+      const courseCodeOptions = {
+        includeScore: true,
+        keys: ['courseCode'],
+      };
+      const courseCodeSearch = new Fuse(courses, courseCodeOptions);
+      courseCodeResult = courseCodeSearch.search(firstTwoWords, { limit: 5 });
+    }
+  }
+
+
+  // Step 3: General search
   const options = {
+    includeScore: true,
     keys: [
       { name: 'courseCode', weight: 2 },
       { name: 'subject', weight: 3 },
@@ -53,15 +88,20 @@ const getMatchingCourses = (
       { name: 'titleLong', weight: 1 },
     ],
   };
-
   const fuse = new Fuse(courses, options);
-  const result: readonly CornellCourseRosterCourse[] = fuse
-    .search(searchText, { limit: 10 })
-    .map(elem => {
-      delete elem.item.courseCode;
-      delete elem.item.fullCourseString;
-      return elem.item;
-    });
+  const generalResult = fuse.search(searchText, { limit: 10 });
+  // const result: readonly CornellCourseRosterCourse[] = fuse
+  //   .search(searchText, { limit: 10 })
+  //   .map(elem => {
+  //     delete elem.item.courseCode;
+  //     delete elem.item.fullCourseString;
+  //     return elem.item;
+  //   });
+
+  const allSearchResults = firstWordResult.concat(courseCodeResult).concat(generalResult);
+  arr.filter((v,i,a)=>a.findIndex(t=>(t.place === v.place && t.name===v.name))===i)
+  allSearchResults.filter((v,i,a)=>a.findIndex(t=>(t.item.)));
+  allSearchResults.sort((a,b) => a.score - b.score);
   return result;
 };
 
