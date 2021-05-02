@@ -57,6 +57,12 @@
         <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">
           Please fill out all required fields and try again.
         </div>
+        <div
+          class="onboarding-error"
+          :class="{ 'onboarding--hidden': !isInvalidMajorOrMinorError }"
+        >
+          Invalid major or minor. Delete the placeholder major or minor and try again.
+        </div>
       </div>
       <div class="onboarding-bottom">
         <div class="onboarding-bottom--section onboarding-bottom--section---center">
@@ -95,6 +101,7 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import { setOnboardingData } from '@/global-firestore-data';
+import { getMajorFullName, getMinorFullName } from '@/utilities';
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -113,26 +120,36 @@ export default defineComponent({
   data() {
     return {
       currentPage: 1,
-      isError: false,
       name: { ...this.userName },
       onboarding: { ...this.onboardingData },
     };
   },
-  methods: {
-    submitOnboarding() {
-      // Display error if a required field is empty, otherwise submit
-      if (
+  computed: {
+    // Display error if a required field is empty
+    isError(): boolean {
+      return (
         this.name.firstName === '' ||
         this.name.lastName === '' ||
         this.onboarding.college === '' ||
         this.onboarding.gradYear === '' ||
         this.onboarding.entranceYear === ''
-      ) {
-        this.isError = true;
-      } else {
-        setOnboardingData(this.name, this.onboarding);
-        this.$emit('onboard');
-      }
+      );
+    },
+    // Display error if onboarding data includes a major or minor that doesn't exist in requirementsJSON
+    isInvalidMajorOrMinorError(): boolean {
+      return (
+        this.onboarding.major
+          .map(getMajorFullName)
+          .some((majorFullName: string) => majorFullName === '') ||
+        this.onboarding.minor
+          .map(getMinorFullName)
+          .some((minorFullName: string) => minorFullName === '')
+      );
+    },
+  },
+  methods: {
+    submitOnboarding() {
+      setOnboardingData(this.name, this.onboarding);
     },
     goBack() {
       this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
@@ -141,7 +158,10 @@ export default defineComponent({
       this.currentPage = page;
     },
     goNext() {
-      this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+      // Only move onto next page if error message is not displayed
+      if (!(this.isError || this.isInvalidMajorOrMinorError)) {
+        this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+      }
     },
     updateBasic(
       gradYear: string,

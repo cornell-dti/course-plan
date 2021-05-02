@@ -142,6 +142,7 @@ export default defineComponent({
 
 .details {
   padding: 20px;
+  width: 100%;
 
   &-head {
     margin-top: 10px;
