@@ -8,17 +8,6 @@ import {
 } from '../checkers-common';
 
 const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
-  // {
-  //   name: 'Intermediate Spanish',
-  //   description: 'SPAN 2095',
-  //   source: 'https://romancestudies.cornell.edu/spanish-undergraduate#major-requirements',
-  //   // Allow double counting, because it overlaps with A&S language requirement.
-  //   allowCourseDoubleCounting: true,
-  //   checker: includesWithSingleRequirement('SPAN 2095'),
-  //   fulfilledBy: 'courses',
-  //   perSlotMinCount: [1],
-  //   slotNames: ['Course'],
-  // },
   {
     name: 'Requirement 1',
     description: 'SPAN 2140 or SPAN 2235',
@@ -69,6 +58,7 @@ const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'credits',
     perSlotMinCount: [15],
   },
+  // TODO: see if there is a way to identify senior seminar courses.
   {
     name: 'Senior Seminar',
     description: 'Must include a senior seminar in the 15 credits of electives.',
