@@ -50,6 +50,11 @@ export default defineComponent({
   padding-left: 8px;
   padding-right: 8px;
 
+  &:hover {
+    filter: brightness(95%);
+    transition: all 0.2s ease;
+  }
+
   &-wrapper {
     display: flex;
     flex-direction: row;
