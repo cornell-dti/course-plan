@@ -50,11 +50,6 @@
         :class="{ 'modal--flex': isSemesterConfirmationOpen }"
         :text="confirmationText"
       />
-      <semester-caution
-        class="semesterView-caution"
-        :class="{ 'modal--flex': isCautionModalOpen }"
-        :text="cautionText"
-      />
       <div class="semesterView-content">
         <div
           v-for="(sem, semesterIndex) in semesters"
@@ -74,7 +69,6 @@
             @course-onclick="courseOnClick"
             @new-semester="openSemesterModal"
             @delete-semester="deleteSemester"
-            @open-caution-modal="openCautionModal"
             @modal-open="modalToggle"
           />
         </div>
@@ -113,7 +107,6 @@
 import { defineComponent } from 'vue';
 import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Confirmation.vue';
-import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
@@ -122,7 +115,7 @@ import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 
 export default defineComponent({
-  components: { Confirmation, NewSemesterModal, Semester, SemesterCaution },
+  components: { Confirmation, NewSemesterModal, Semester },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
@@ -137,13 +130,11 @@ export default defineComponent({
   data() {
     return {
       confirmationText: '',
-      cautionText: '',
       key: 0,
       activatedCourse: {} as FirestoreSemesterCourse,
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
-      isCautionModalOpen: false,
     };
   },
   computed: {
@@ -181,16 +172,6 @@ export default defineComponent({
 
       setTimeout(() => {
         this.isSemesterConfirmationOpen = false;
-      }, 3000);
-    },
-    openCautionModal() {
-      this.cautionText = `Unable to add course. Already in plan.`;
-      this.isCautionModalOpen = true;
-      this.$emit('modal-open', true);
-
-      setTimeout(() => {
-        this.isCautionModalOpen = false;
-        this.$emit('modal-open', false);
       }, 3000);
     },
     openSemesterModal() {
