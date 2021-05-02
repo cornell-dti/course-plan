@@ -229,11 +229,11 @@ const editAPIBExams = (
 ): void => {
   console.log(store.state.onboardingData.exam);
   const newAPIBExams = updater(store.state.onboardingData.exam);
+  console.log(newAPIBExams);
   const newOnboardingData = {
     ...store.state.onboardingData,
     exam: newAPIBExams,
   };
-  console.log(newAPIBExams);
   store.commit('setOnboardingData', newOnboardingData);
   onboardingDataCollection
     .doc(store.state.currentFirebaseUser.email)
@@ -251,9 +251,14 @@ export const addOverridenRequirementAPIB = (
     oldAPIBExams.map(exam => {
       if (`${exam.type} ${exam.subject}` === examName) {
         const overridenRequirements = optIn ? exam.optIn || {} : exam.optOut || {};
+        if (!(requirementName in overridenRequirements)) {
+          overridenRequirements[requirementName] = {};
+        }
+        if (!(slotName in overridenRequirements[requirementName])) {
+          overridenRequirements[requirementName][slotName] = [];
+        }
         overridenRequirements[requirementName][slotName] = [
-          ...(overridenRequirements[requirementName] &&
-            overridenRequirements[requirementName][slotName]),
+          ...overridenRequirements[requirementName][slotName],
           courseUniqueId,
         ];
         if (optIn) return { ...exam, optIn: overridenRequirements };

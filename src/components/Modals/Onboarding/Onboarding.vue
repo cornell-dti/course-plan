@@ -94,12 +94,21 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { setOnboardingData } from '@/global-firestore-data';
+import { setOnboardingData, addOverridenRequirementAPIB } from '@/global-firestore-data';
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
 
 export default defineComponent({
+  mounted() {
+    addOverridenRequirementAPIB(
+      'AP Biology',
+      true,
+      'reqName',
+      'slotName',
+      'uniqueID'
+    );
+  },
   components: { OnboardingBasic, OnboardingReview, OnboardingTransfer },
   props: {
     isEditingProfile: { type: Boolean, required: true },
