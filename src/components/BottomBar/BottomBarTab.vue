@@ -1,5 +1,5 @@
 <template>
-  <div
+  <button
     class="bottombartab full-opacity-on-hover"
     :style="{ background: `#${color}` }"
     @click="$emit('on-change-focus')"
@@ -14,7 +14,7 @@
         alt="x to delete bottom bar tab"
       />
     </button>
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
