@@ -28,82 +28,10 @@ import { PropType, defineComponent } from 'vue';
 import Fuse from 'fuse.js';
 import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
-const getMatchingCourses = (
-  searchText: string,
-  filter?: (course: CornellCourseRosterCourse) => boolean
-): readonly CornellCourseRosterCourse[] => {
-  interface SearchableCourse extends CornellCourseRosterCourse {
-    courseCode?: string;
-    fullCourseString?: string;
-  }
-
-  const courses: readonly SearchableCourse[] =
-    filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
-  courses.map((course: SearchableCourse) => {
-    course.courseCode = `${course.subject} ${course.catalogNbr}`;
-    course.fullCourseString = `${course.subject} ${course.catalogNbr} ${course.titleLong}`;
-    return course;
-  });
-
-
-  // Assume first word is subject
-  const firstWord = searchText.includes(' ') ? searchText.split(' ')[0] : searchText;
-
-  // Performed under the assumption that the user will refer the to the subject as the first string.
-  // Step 1: Check for first string
-  const subjectOptions = {
-    includeScore: true,
-    keys: ['subject'],
-  };
-  const firstWordSearch = new Fuse(courses, subjectOptions);
-  const firstWordResult: Fuse.FuseResult<SearchableCourse>[] = firstWordSearch.search(firstWord, {
-    limit: 5,
-  });
-
-  let courseCodeResult: Fuse.FuseResult<SearchableCourse>[] = [];
-  const indexOfFirstSpace = searchText.indexOf(' ');
-  if (indexOfFirstSpace !== -1) {
-    const indexOfSecondSpace = searchText.indexOf(' ', indexOfFirstSpace + 1);
-    const firstTwoWords = searchText.substr(0, indexOfSecondSpace);
-    // Step 2: Check for courseCode
-    if (/^[A-Za-z]+ [0-9]+$/.test(firstTwoWords)) {
-      const courseCodeOptions = {
-        includeScore: true,
-        keys: ['courseCode'],
-      };
-      const courseCodeSearch = new Fuse(courses, courseCodeOptions);
-      courseCodeResult = courseCodeSearch.search(firstTwoWords, { limit: 5 });
-    }
-  }
-
-
-  // Step 3: General search
-  const options = {
-    includeScore: true,
-    keys: [
-      { name: 'courseCode', weight: 2 },
-      { name: 'subject', weight: 3 },
-      { name: 'fullCourseString', weight: 2.5 },
-      { name: 'catalogNbr', weight: 1.5 },
-      { name: 'titleLong', weight: 1 },
-    ],
-  };
-  const fuse = new Fuse(courses, options);
-  const generalResult = fuse.search(searchText, { limit: 10 });
-  // const result: readonly CornellCourseRosterCourse[] = fuse
-  //   .search(searchText, { limit: 10 })
-  //   .map(elem => {
-  //     delete elem.item.courseCode;
-  //     delete elem.item.fullCourseString;
-  //     return elem.item;
-  //   });
-
-  const allSearchResults = firstWordResult.concat(courseCodeResult).concat(generalResult);
-  arr.filter((v,i,a)=>a.findIndex(t=>(t.place === v.place && t.name===v.name))===i)
-  allSearchResults.filter((v,i,a)=>a.findIndex(t=>(t.item.)));
-  allSearchResults.sort((a,b) => a.score - b.score);
-  return result;
-};
+interface SearchableCourse extends CornellCourseRosterCourse {
+  courseCode?: string;
+  fullCourseString?: string;
+}
 
 export default defineComponent({
   props: {
@@ -129,7 +57,32 @@ export default defineComponent({
   },
   computed: {
     matches(): readonly CornellCourseRosterCourse[] {
-      return getMatchingCourses(this.searchText, this.courseFilter);
+      if (!this.searchText || this.searchText.length < 2) return [];
+      const options = {
+        keys: [
+          { name: 'courseCode', weight: 2 },
+          { name: 'subject', weight: 3 },
+          { name: 'fullCourseString', weight: 2.5 },
+          { name: 'catalogNbr', weight: 1.5 },
+          { name: 'titleLong', weight: 1 },
+        ],
+      };
+
+      const fuse = new Fuse(this.searchableCourses, options);
+      const result: readonly SearchableCourse[] = fuse
+        .search(this.searchText, { limit: 10 })
+        .map(elem => elem.item);
+      return result;
+    },
+    searchableCourses(): readonly SearchableCourse[] {
+      const courses: readonly SearchableCourse[] =
+        this.courseFilter != null ? fullCoursesArray.filter(this.courseFilter) : fullCoursesArray;
+      courses.map((course: SearchableCourse) => {
+        course.courseCode = `${course.subject} ${course.catalogNbr}`;
+        course.fullCourseString = `${course.subject} ${course.catalogNbr} ${course.titleLong}`;
+        return course;
+      });
+      return courses;
     },
   },
   mounted() {
