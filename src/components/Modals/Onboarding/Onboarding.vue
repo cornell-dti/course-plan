@@ -94,26 +94,20 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { setOnboardingData, addOverridenRequirementAPIB } from '@/global-firestore-data';
+import { setOnboardingData } from '@/global-firestore-data';
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
 
 export default defineComponent({
-  mounted() {
-    addOverridenRequirementAPIB(
-      'AP Biology',
-      true,
-      'reqName',
-      'slotName',
-      'uniqueID'
-    );
-  },
   components: { OnboardingBasic, OnboardingReview, OnboardingTransfer },
   props: {
     isEditingProfile: { type: Boolean, required: true },
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
   },
   emits: ['onboard', 'cancelOnboarding'],
   data() {
@@ -158,7 +152,14 @@ export default defineComponent({
       name: FirestoreUserName
     ) {
       this.name = name;
-      this.onboarding = { ...this.onboarding, gradYear, entranceYear, college, major, minor };
+      this.onboarding = {
+        ...this.onboarding,
+        gradYear,
+        entranceYear,
+        college,
+        major,
+        minor,
+      };
     },
     updateTransfer(
       exams: readonly FirestoreAPIBExam[],

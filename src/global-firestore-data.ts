@@ -42,8 +42,10 @@ const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
   const newSemesters = updater(store.state.semesters);
-  store.commit('setSemesters', newSemesters);
-  semestersCollection.doc(store.state.currentFirebaseUser.email).set({ semesters: newSemesters });
+  semestersCollection
+    .doc(store.state.currentFirebaseUser.email)
+    .set({ semesters: newSemesters })
+    .then(() => store.commit('setSemesters', newSemesters));
 };
 
 export const editSemester = (
@@ -227,17 +229,17 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
 const editAPIBExams = (
   updater: (oldAPIBExams: readonly FirestoreAPIBExam[]) => readonly FirestoreAPIBExam[]
 ): void => {
-  console.log(store.state.onboardingData.exam);
   const newAPIBExams = updater(store.state.onboardingData.exam);
-  console.log(newAPIBExams);
   const newOnboardingData = {
     ...store.state.onboardingData,
     exam: newAPIBExams,
   };
-  store.commit('setOnboardingData', newOnboardingData);
   onboardingDataCollection
     .doc(store.state.currentFirebaseUser.email)
-    .update({ exam: newAPIBExams });
+    .update({ exam: newAPIBExams })
+    .then(() => {
+      store.commit('setOnboardingData', newOnboardingData);
+    });
 };
 
 export const addOverridenRequirementAPIB = (
