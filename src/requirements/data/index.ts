@@ -39,6 +39,7 @@ import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
 import pamRequirements from './majors/pam';
 import physRequirements from './majors/phys';
+import spanishRequirements from './majors/spanish';
 import stsRequirements from './majors/sts';
 import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
@@ -54,6 +55,7 @@ import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
 import policyMinorRequirements from './minors/policy';
 import psychMinorRequirements from './minors/psych';
+import spanishMinorRequirements from './minors/spanish';
 
 const json: RequirementsJson = {
   university: {
@@ -247,6 +249,11 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: physRequirements,
     },
+    SPAN: {
+      name: 'Spanish',
+      schools: ['AS1', 'AS2'],
+      requirements: spanishRequirements,
+    },
     STS: {
       name: 'Science & Technology Studies',
       schools: ['AS1', 'AS2'],
@@ -323,6 +330,11 @@ const json: RequirementsJson = {
       name: 'Psychology',
       schools: ['AS1', 'AS2'],
       requirements: psychMinorRequirements,
+    },
+    SPANISH: {
+      name: 'Spanish',
+      schools: ['AS1', 'AS2'],
+      requirements: spanishMinorRequirements,
     },
   },
 };
