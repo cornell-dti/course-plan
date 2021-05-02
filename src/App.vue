@@ -7,5 +7,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-export default defineComponent({});
+import { addOverridenRequirementAPIB } from './global-firestore-data';
+
+export default defineComponent({
+  mounted() {
+    addOverridenRequirementAPIB(
+      'test',
+      true,
+      'reqName',
+      'slotName',
+      'uniqueID'
+    );
+  },
+});
 </script>

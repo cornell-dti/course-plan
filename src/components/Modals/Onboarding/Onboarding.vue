@@ -94,8 +94,7 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { db, onboardingDataCollection, usernameCollection } from '@/firebaseConfig';
-import store from '@/store';
+import { setOnboardingData } from '@/global-firestore-data';
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -128,23 +127,7 @@ export default defineComponent({
       ) {
         this.isError = true;
       } else {
-        db.batch()
-          .set(usernameCollection.doc(store.state.currentFirebaseUser.email), {
-            firstName: this.name.firstName,
-            middleName: this.name.middleName,
-            lastName: this.name.lastName,
-          })
-          .set(onboardingDataCollection.doc(store.state.currentFirebaseUser.email), {
-            gradYear: this.onboarding.gradYear,
-            entranceYear: this.onboarding.entranceYear,
-            colleges: [{ acronym: this.onboarding.college }],
-            majors: this.onboarding.major.map(acronym => ({ acronym })),
-            minors: this.onboarding.minor.map(acronym => ({ acronym })),
-            exam: this.onboarding.exam,
-            class: this.onboarding.transferCourse,
-            tookSwim: this.onboarding.tookSwim,
-          })
-          .commit();
+        setOnboardingData(this.name, this.onboarding);
         this.$emit('onboard');
       }
     },

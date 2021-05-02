@@ -3,6 +3,7 @@
  */
 
 import {
+  usernameCollection,
   onboardingDataCollection,
   semestersCollection,
   toggleableRequirementChoicesCollection,
@@ -199,14 +200,40 @@ export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): 
   );
 };
 
+export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboardingData): void => {
+  usernameCollection
+    .doc(store.state.currentFirebaseUser.email)
+    .set({
+      firstName: name.firstName,
+      middleName: name.middleName || '',
+      lastName: name.lastName,
+    })
+    .then(() => store.commit('setUserName', name));
+  onboardingDataCollection
+    .doc(store.state.currentFirebaseUser.email)
+    .set({
+      gradYear: onboarding.gradYear,
+      entranceYear: onboarding.entranceYear,
+      colleges: [{ acronym: onboarding.college }],
+      majors: onboarding.major.map(acronym => ({ acronym })),
+      minors: onboarding.minor.map(acronym => ({ acronym })),
+      exam: onboarding.exam,
+      class: onboarding.transferCourse,
+      tookSwim: onboarding.tookSwim,
+    })
+    .then(() => store.commit('setOnboardingData', onboarding));
+};
+
 const editAPIBExams = (
   updater: (oldAPIBExams: readonly FirestoreAPIBExam[]) => readonly FirestoreAPIBExam[]
 ): void => {
+  console.log(store.state.onboardingData.exam);
   const newAPIBExams = updater(store.state.onboardingData.exam);
   const newOnboardingData = {
     ...store.state.onboardingData,
     exam: newAPIBExams,
   };
+  console.log(newAPIBExams);
   store.commit('setOnboardingData', newOnboardingData);
   onboardingDataCollection
     .doc(store.state.currentFirebaseUser.email)
@@ -225,7 +252,8 @@ export const addOverridenRequirementAPIB = (
       if (`${exam.type} ${exam.subject}` === examName) {
         const overridenRequirements = optIn ? exam.optIn || {} : exam.optOut || {};
         overridenRequirements[requirementName][slotName] = [
-          ...overridenRequirements[requirementName][slotName],
+          ...(overridenRequirements[requirementName] &&
+            overridenRequirements[requirementName][slotName]),
           courseUniqueId,
         ];
         if (optIn) return { ...exam, optIn: overridenRequirements };
