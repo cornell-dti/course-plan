@@ -118,11 +118,32 @@ export default defineComponent({
   data() {
     return {
       currentPage: 1,
-      isError: false,
-      isInvalidMajorOrMinorError: false,
       name: { ...this.userName },
       onboarding: { ...this.onboardingData },
     };
+  },
+  computed: {
+    // Display error if a required field is empty
+    isError(): boolean {
+      return (
+        this.name.firstName === '' ||
+        this.name.lastName === '' ||
+        this.onboarding.college === '' ||
+        this.onboarding.gradYear === '' ||
+        this.onboarding.entranceYear === ''
+      );
+    },
+    // Display error if onboarding data includes a major or minor that doesn't exist in requirementsJSON
+    isInvalidMajorOrMinorError(): boolean {
+      return (
+        this.onboarding.major
+          .map(getMajorFullName)
+          .some((majorFullName: string) => majorFullName === '') ||
+        this.onboarding.minor
+          .map(getMinorFullName)
+          .some((minorFullName: string) => minorFullName === '')
+      );
+    },
   },
   methods: {
     submitOnboarding() {
@@ -152,25 +173,6 @@ export default defineComponent({
       this.currentPage = page;
     },
     goNext() {
-      // Onboarding Basic
-      if (this.currentPage === 1) {
-        // Display error if a required field is empty
-        // Display error if onboarding data includes a major or minor that doesn't exist in requirementsJSON
-        this.isError =
-          this.name.firstName === '' ||
-          this.name.lastName === '' ||
-          this.onboarding.college === '' ||
-          this.onboarding.gradYear === '' ||
-          this.onboarding.entranceYear === '';
-
-        this.isInvalidMajorOrMinorError =
-          this.onboarding.major
-            .map(getMajorFullName)
-            .some((majorFullName: string) => majorFullName === '') ||
-          this.onboarding.minor
-            .map(getMinorFullName)
-            .some((minorFullName: string) => minorFullName === '');
-      }
       // Only move onto next page if error message is not displayed
       if (!(this.isError || this.isInvalidMajorOrMinorError)) {
         this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
