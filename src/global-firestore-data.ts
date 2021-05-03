@@ -278,9 +278,9 @@ export const addOverridenRequirementAPIBUpdater = (
           delete otherOverridenRequirements[requirementName];
         }
       }
-      if (optIn)
-        return { ...exam, optIn: overridenRequirements, optOut: otherOverridenRequirements };
-      return { ...exam, optIn: otherOverridenRequirements, optOut: overridenRequirements };
+      return optIn
+        ? { ...exam, optIn: overridenRequirements, optOut: otherOverridenRequirements }
+        : { ...exam, optIn: otherOverridenRequirements, optOut: overridenRequirements };
     }
     return exam;
   });
