@@ -49,6 +49,7 @@ it('Override with missing data', () => {
       score: 5,
       subject: 'Biology',
       optIn: { reqName: ['slotName'] },
+      optOut: {},
     },
   ];
   let newAPIBExams = addOverridenRequirementAPIBUpdater(
@@ -65,6 +66,7 @@ it('Override with missing data', () => {
       type: 'AP',
       score: 5,
       subject: 'Biology',
+      optIn: {},
       optOut: { reqName: ['slotName'] },
     },
   ];
@@ -93,6 +95,7 @@ it('Override with no initial data', () => {
       score: 5,
       subject: 'Biology',
       optIn: { reqName: ['slotName'] },
+      optOut: {},
     },
   ];
   let newAPIBExams = addOverridenRequirementAPIBUpdater(
@@ -109,6 +112,7 @@ it('Override with no initial data', () => {
       type: 'AP',
       score: 5,
       subject: 'Biology',
+      optIn: {},
       optOut: { reqName: ['slotName'] },
     },
   ];
@@ -129,7 +133,7 @@ it('Override with duplicate data', () => {
       score: 5,
       subject: 'Biology',
       optIn: { reqName: ['slotName'] },
-      optOut: { reqName: ['slotName'] },
+      optOut: { reqName1: ['slotName1'] },
     },
   ];
 
@@ -145,9 +149,9 @@ it('Override with duplicate data', () => {
   newAPIBExams = addOverridenRequirementAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
-    true,
-    'reqName',
-    'slotName'
+    false,
+    'reqName1',
+    'slotName1'
   );
   expect(newAPIBExams).toEqual(oldAPIBExams);
 });
@@ -167,6 +171,7 @@ it('Opt in with new data', () => {
       score: 5,
       subject: 'Biology',
       optIn: { reqName: ['slotName1', 'slotName'] },
+      optOut: {},
     },
   ];
   const newAPIBExams = addOverridenRequirementAPIBUpdater(
@@ -193,6 +198,7 @@ it('Opt out with new data', () => {
       type: 'AP',
       score: 5,
       subject: 'Biology',
+      optIn: {},
       optOut: { reqName: ['slotName1', 'slotName'] },
     },
   ];
@@ -221,7 +227,7 @@ it('Opt in with opt out data', () => {
       score: 5,
       subject: 'Biology',
       optIn: { reqName: ['slotName'] },
-      optOut: { reqName: ['slotName'] },
+      optOut: {},
     },
   ];
   const newAPIBExams = addOverridenRequirementAPIBUpdater(
@@ -248,7 +254,7 @@ it('Opt out with opt in data', () => {
       type: 'AP',
       score: 5,
       subject: 'Biology',
-      optIn: { reqName: ['slotName'] },
+      optIn: {},
       optOut: { reqName: ['slotName'] },
     },
   ];
@@ -277,6 +283,7 @@ it('Opt in with opt in data', () => {
       score: 5,
       subject: 'Biology',
       optIn: { reqName: ['slotName1', 'slotName'] },
+      optOut: {},
     },
   ];
   const newAPIBExams = addOverridenRequirementAPIBUpdater(
@@ -303,6 +310,7 @@ it('Opt out with opt out data', () => {
       type: 'AP',
       score: 5,
       subject: 'Biology',
+      optIn: {},
       optOut: { reqName: ['slotName1', 'slotName'] },
     },
   ];
@@ -323,7 +331,7 @@ it('Override with different reqName', () => {
       score: 5,
       subject: 'Biology',
       optIn: { reqName1: ['slotName1'] },
-      optOut: { reqName1: ['slotName1'] },
+      optOut: { reqName2: ['slotName2'] },
     },
   ];
 
@@ -333,7 +341,7 @@ it('Override with different reqName', () => {
       score: 5,
       subject: 'Biology',
       optIn: { reqName1: ['slotName1'], reqName: ['slotName'] },
-      optOut: { reqName1: ['slotName1'] },
+      optOut: { reqName2: ['slotName2'] },
     },
   ];
   let newAPIBExams = addOverridenRequirementAPIBUpdater(
@@ -351,7 +359,7 @@ it('Override with different reqName', () => {
       score: 5,
       subject: 'Biology',
       optIn: { reqName1: ['slotName1'] },
-      optOut: { reqName1: ['slotName1'], reqName: ['slotName'] },
+      optOut: { reqName2: ['slotName2'], reqName: ['slotName'] },
     },
   ];
   newAPIBExams = addOverridenRequirementAPIBUpdater(

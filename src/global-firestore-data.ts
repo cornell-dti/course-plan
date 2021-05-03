@@ -268,8 +268,19 @@ export const addOverridenRequirementAPIBUpdater = (
       } else {
         overridenRequirements[requirementName] = [slotName];
       }
-      if (optIn) return { ...exam, optIn: overridenRequirements };
-      return { ...exam, optOut: overridenRequirements };
+      const otherOverridenRequirements = optIn ? { ...exam.optOut } : { ...exam.optIn };
+      if (requirementName in otherOverridenRequirements) {
+        const idx = otherOverridenRequirements[requirementName].indexOf(slotName);
+        if (idx !== -1) {
+          otherOverridenRequirements[requirementName].splice(idx, 1);
+        }
+        if (otherOverridenRequirements[requirementName].length === 0) {
+          delete otherOverridenRequirements[requirementName];
+        }
+      }
+      if (optIn)
+        return { ...exam, optIn: overridenRequirements, optOut: otherOverridenRequirements };
+      return { ...exam, optIn: otherOverridenRequirements, optOut: overridenRequirements };
     }
     return exam;
   });
