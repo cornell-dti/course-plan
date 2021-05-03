@@ -263,17 +263,19 @@ export const addOverridenRequirementAPIBUpdater = (
       const overridenRequirements = optIn ? { ...exam.optIn } : { ...exam.optOut };
       if (requirementName in overridenRequirements) {
         if (overridenRequirements[requirementName].indexOf(slotName) === -1) {
-          overridenRequirements[requirementName].push(slotName);
+          overridenRequirements[requirementName] = [
+            ...overridenRequirements[requirementName],
+            slotName,
+          ];
         }
       } else {
         overridenRequirements[requirementName] = [slotName];
       }
       const otherOverridenRequirements = optIn ? { ...exam.optOut } : { ...exam.optIn };
       if (requirementName in otherOverridenRequirements) {
-        const idx = otherOverridenRequirements[requirementName].indexOf(slotName);
-        if (idx !== -1) {
-          otherOverridenRequirements[requirementName].splice(idx, 1);
-        }
+        otherOverridenRequirements[requirementName] = otherOverridenRequirements[
+          requirementName
+        ].filter(slot => slot !== slotName);
         if (otherOverridenRequirements[requirementName].length === 0) {
           delete otherOverridenRequirements[requirementName];
         }
