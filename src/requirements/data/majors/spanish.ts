@@ -31,7 +31,8 @@ const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean => {
         return (
-          ((ifCodeMatch(course.subject, 'SPAN') || ifCodeMatch(course.subject, 'PORT')) && ifCodeMatch(course.catalogNbr, '4***'))
+          (ifCodeMatch(course.subject, 'SPAN') || ifCodeMatch(course.subject, 'PORT')) &&
+          ifCodeMatch(course.catalogNbr, '4***')
         );
       },
     ],
