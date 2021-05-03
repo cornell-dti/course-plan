@@ -229,7 +229,8 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
 const editAPIBExams = (
   updater: (oldAPIBExams: readonly FirestoreAPIBExam[]) => readonly FirestoreAPIBExam[]
 ): void => {
-  const newAPIBExams = updater(store.state.onboardingData.exam);
+  const oldAPIBExams = store.state.onboardingData.exam;
+  const newAPIBExams = updater(oldAPIBExams);
   const newOnboardingData = {
     ...store.state.onboardingData,
     exam: newAPIBExams,
@@ -242,42 +243,55 @@ const editAPIBExams = (
     });
 };
 
+// split and exposed for testing
+export const addOverridenRequirementAPIBUpdater = (
+  oldAPIBExams: readonly FirestoreAPIBExam[],
+  examName: string,
+  optIn: boolean,
+  requirementName: string,
+  slotName: string
+): readonly FirestoreAPIBExam[] =>
+  oldAPIBExams.map(exam => {
+    if (`${exam.type} ${exam.subject}` === examName) {
+      const overridenRequirements = optIn ? exam.optIn || {} : exam.optOut || {};
+      if (requirementName in overridenRequirements) {
+        if (overridenRequirements[requirementName].indexOf(slotName) === -1) {
+          overridenRequirements[requirementName].push(slotName);
+        }
+      } else {
+        overridenRequirements[requirementName] = [slotName];
+      }
+      if (optIn) return { ...exam, optIn: overridenRequirements };
+      return { ...exam, optOut: overridenRequirements };
+    }
+    return exam;
+  });
+
 export const addOverridenRequirementAPIB = (
   examName: string,
   optIn: boolean,
   requirementName: string,
   slotName: string
-): void => {
+): void =>
   editAPIBExams(oldAPIBExams =>
-    oldAPIBExams.map(exam => {
-      if (`${exam.type} ${exam.subject}` === examName) {
-        const overridenRequirements = optIn ? exam.optIn || {} : exam.optOut || {};
-        if (requirementName in overridenRequirements) {
-          if (overridenRequirements[requirementName].indexOf(slotName) === -1) {
-            overridenRequirements[requirementName].push(slotName);
-          }
-        } else {
-          overridenRequirements[requirementName] = [slotName];
-        }
-        if (optIn) return { ...exam, optIn: overridenRequirements };
-        return { ...exam, optOut: overridenRequirements };
-      }
-      return exam;
-    })
+    addOverridenRequirementAPIBUpdater(oldAPIBExams, examName, optIn, requirementName, slotName)
   );
-};
 
-export const clearOverridenRequirementsAPIB = (examName: string): void => {
-  editAPIBExams(oldAPIBExams =>
-    oldAPIBExams.map(exam => {
-      if (`${exam.type} ${exam.subject}` === examName) {
-        const { optIn, optOut, ...rest } = exam;
-        return { optIn: {}, optOut: {}, ...rest };
-      }
-      return exam;
-    })
-  );
-};
+// split and exposed for testing
+export const clearOverridenRequirementsAPIBUpdater = (
+  oldAPIBExams: readonly FirestoreAPIBExam[],
+  examName: string
+): readonly FirestoreAPIBExam[] =>
+  oldAPIBExams.map(exam => {
+    if (`${exam.type} ${exam.subject}` === examName) {
+      const { optIn, optOut, ...rest } = exam;
+      return { optIn: {}, optOut: {}, ...rest };
+    }
+    return exam;
+  });
+
+export const clearOverridenRequirementsAPIB = (examName: string): void =>
+  editAPIBExams(oldAPIBExams => clearOverridenRequirementsAPIBUpdater(oldAPIBExams, examName));
 
 export const incrementUniqueID = (amount = 1): number => {
   const updatedID = store.state.uniqueIncrementer + amount;
