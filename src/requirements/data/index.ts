@@ -25,6 +25,7 @@ import eceRequirements from './majors/ece';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
 import epRequirements from './majors/ep';
+import foodSciRequirements from './majors/foodsci';
 import governmentRequirements from './majors/govt';
 import hdRequirements from './majors/hd';
 import hotelAdminRequirements from './majors/hadm';
@@ -178,6 +179,11 @@ const json: RequirementsJson = {
       name: 'Engineering Physics',
       schools: ['EN'],
       requirements: epRequirements,
+    },
+    FDSC: {
+      name: 'Food Science',
+      schools: ['AG'],
+      requirements: foodSciRequirements,
     },
     GOVT: {
       name: 'Government',
