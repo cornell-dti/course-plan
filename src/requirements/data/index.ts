@@ -337,7 +337,7 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: psychMinorRequirements,
     },
-    SPANISH: {
+    SPAN: {
       name: 'Spanish',
       schools: ['AS1', 'AS2'],
       requirements: spanishMinorRequirements,
