@@ -142,9 +142,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Concentration',
     description:
-      'Students are required to complete one concentration from Science, Safety and Business.',
-    checkerWarning:
-      'For the optional electives in each concentration, we do not check whether the courses selected fulfil the minimum credits needed for that category.',
+      'Students are required to complete one concentration from Science, Safety and Business.\nWarning: For the optional electives in each concentration, we do not check whether the courses selected fulfil the minimum credits needed for that category.',
     source: 'https://cals.cornell.edu/education/degrees-programs/food-science-major-minor',
     fulfilledBy: 'toggleable',
     // TODO: Can change Science and Business options to be fulfilled by credits instead, however would lose slot names.
@@ -262,11 +260,11 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
         slotNames: [
           'FDSC 4230',
           'FDSC 5970',
-          'Economics: ECON 1110 or ECON 3030 or PAM 2000',
-          'Management: AEM 1200 or HADM 1810 or ILRID 1700 or AEM 2200 or ILROB 1220',
-          'Marketing: AEM 2400 or HADM 2410 or NCC 5530 or AEM 2420',
-          'Accounting: AEM 2210 or HADM 2230 or NCC 5500 or AEM 2225',
-          'Finance: AEM 2241 or NCC 5560 or HADM 2250 or AEM 2240',
+          'Economics Course',
+          'Management Course',
+          'Marketing Course',
+          'Accounting Course',
+          'Finance Course',
           '2 credits of >4000 FDSC electives',
           '6 credits of business electives',
         ],
