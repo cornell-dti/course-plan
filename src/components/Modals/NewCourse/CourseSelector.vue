@@ -25,36 +25,19 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import Fuse from 'fuse.js';
 import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
-const getMatchingCourses = (
-  searchText: string,
-  filter?: (course: CornellCourseRosterCourse) => boolean
-): readonly CornellCourseRosterCourse[] => {
-  // search after value length of 2 to reduce search times of courses
-  if (!searchText || searchText.length < 2) return [];
-  /* code array for results that contain course code and title array for results that contain title */
-  const code: CornellCourseRosterCourse[] = [];
-  const title: CornellCourseRosterCourse[] = [];
+interface SearchableCourse extends CornellCourseRosterCourse {
+  courseCode?: string;
+  fullCourseString?: string;
+}
 
-  const filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
-  for (const course of filteredCourses) {
-    const courseCode = `${course.subject} ${course.catalogNbr}`;
-    if (courseCode.toUpperCase().includes(searchText)) {
-      code.push(course);
-    } else if (course.titleLong.toUpperCase().includes(searchText)) {
-      title.push(course);
-    }
-  }
-
-  // Sort both results by title
-  code.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
-  title.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
-
-  /* prioritize code matches over title matches */
-  // limit the number of results to 10
-  return code.concat(title).slice(0, 10);
-};
+const fullSearchableCoursesArray = fullCoursesArray.map((course: SearchableCourse) => {
+  course.courseCode = `${course.subject} ${course.catalogNbr}`;
+  course.fullCourseString = `${course.subject} ${course.catalogNbr} ${course.titleLong}`;
+  return course;
+});
 
 export default defineComponent({
   props: {
@@ -80,7 +63,29 @@ export default defineComponent({
   },
   computed: {
     matches(): readonly CornellCourseRosterCourse[] {
-      return getMatchingCourses(this.searchText.toUpperCase(), this.courseFilter);
+      if (!this.searchText || this.searchText.length < 2) return [];
+      const options = {
+        keys: [
+          { name: 'courseCode', weight: 2 },
+          { name: 'subject', weight: 3 },
+          { name: 'fullCourseString', weight: 2.5 },
+          { name: 'catalogNbr', weight: 1.5 },
+          { name: 'titleLong', weight: 1 },
+        ],
+      };
+
+      const fuse = new Fuse(this.searchableCourses, options);
+      const result: readonly SearchableCourse[] = fuse
+        .search(this.searchText, { limit: 10 })
+        .map(elem => elem.item);
+      return result;
+    },
+    searchableCourses(): readonly SearchableCourse[] {
+      const courses: readonly SearchableCourse[] =
+        this.courseFilter != null
+          ? fullSearchableCoursesArray.filter(this.courseFilter)
+          : fullSearchableCoursesArray;
+      return courses;
     },
   },
   mounted() {
