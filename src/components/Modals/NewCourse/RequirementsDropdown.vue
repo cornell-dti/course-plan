@@ -87,6 +87,9 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: {
+    'on-selected-change': (id: string) => typeof id === 'string',
+  },
   data(): Data {
     return {
       showDropdown: false,

@@ -21,6 +21,7 @@ export default defineComponent({
     compact: { type: Boolean, required: true },
     shouldClearPadding: { type: Boolean, default: false },
   },
+  emits: ['click'],
   computed: {
     addCourseText() {
       return '+ Course';

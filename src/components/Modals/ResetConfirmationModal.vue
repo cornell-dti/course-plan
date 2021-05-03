@@ -37,6 +37,11 @@ export default defineComponent({
     isTestReq: { type: Boolean, required: true },
     modelValue: { type: Boolean, required: true },
   },
+  emits: {
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+    'modal-open': (value: boolean) => typeof value === 'boolean',
+    'close-reset-modal': (value: boolean) => typeof value === 'boolean',
+  },
   methods: {
     closeCurrentModal(): void {
       this.$emit('update:modelValue', false);

@@ -43,6 +43,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
+  emits: ['open-delete-semester-modal', 'open-edit-semester-modal'],
   data() {
     return {
       isOpenModal: false,

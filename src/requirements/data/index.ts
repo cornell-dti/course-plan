@@ -10,6 +10,7 @@ import humanEcologyRequirements from './colleges/he';
 import ilrRequirements from './colleges/il';
 
 import aemRequirements from './majors/aem';
+import astroRequrements from './majors/astro';
 import bioRequirements from './majors/bio';
 import bioEngineeringRequirements from './majors/be';
 import bsocRequirements from './majors/bsoc';
@@ -25,6 +26,7 @@ import eceRequirements from './majors/ece';
 import essRequirements from './majors/ess';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
+import epRequirements from './majors/ep';
 import governmentRequirements from './majors/govt';
 import hdRequirements from './majors/hd';
 import hotelAdminRequirements from './majors/hadm';
@@ -34,9 +36,13 @@ import isstRequirements from './majors/isst';
 import lingRequirements from './majors/ling';
 import mathRequirements from './majors/math';
 import mechnicalEngineeringRequirements from './majors/me';
+import mseRequirements from './majors/mse';
 import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
-
+import pamRequirements from './majors/pam';
+import physRequirements from './majors/phys';
+import stsRequirements from './majors/sts';
+import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
 import cogsciMinorRequirements from './minors/cogsci';
@@ -97,6 +103,11 @@ const json: RequirementsJson = {
       name: 'Applied Economics and Management',
       schools: ['AG', 'BU'],
       requirements: aemRequirements,
+    },
+    ASTRO: {
+      name: 'Astronomy',
+      schools: ['AS1', 'AS2'],
+      requirements: astroRequrements,
     },
     BIO: {
       name: 'Biological Sciences',
@@ -168,10 +179,17 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: envEngineeringRequirements,
     },
+<<<<<<< HEAD
     ESS: {
       name: 'Environment and Sustainability',
       schools: ['AG', 'AS1', 'AS2'],
       requirements: essRequirements,
+=======
+    EP: {
+      name: 'Engineering Physics',
+      schools: ['EN'],
+      requirements: epRequirements,
+>>>>>>> d76bfdab550c212088074c8b6c85d586c04a7e75
     },
     GOVT: {
       name: 'Government',
@@ -223,13 +241,38 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: mechnicalEngineeringRequirements,
     },
+    MSE: {
+      name: 'Materials Science & Engineering',
+      schools: ['EN'],
+      requirements: mseRequirements,
+    },
     ORIE: {
       name: 'Operations Research and Engineering',
       schools: ['EN'],
       requirements: orieRequirements,
     },
+    PAM: {
+      name: 'Policy Analysis and Management',
+      schools: ['HE'],
+      requirements: pamRequirements,
+    },
+    PHYS: {
+      name: 'Physics',
+      schools: ['AS1', 'AS2'],
+      requirements: physRequirements,
+    },
+    STS: {
+      name: 'Science & Technology Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: stsRequirements,
+    },
   },
   minor: {
+    AEROSPACE: {
+      name: 'Aerospace Engineering',
+      schools: ['EN'],
+      requirements: aerospaceMinorRequirements,
+    },
     APPLIEDMATH: {
       name: 'Applied Mathematics',
       schools: ['EN'],

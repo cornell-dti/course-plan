@@ -156,6 +156,11 @@ export default defineComponent({
       return numPerRow;
     },
   },
+  emits: {
+    'delete-course': () => true,
+    'color-course': (color: string) => typeof color === 'string',
+    'edit-course-credit': (credit: number) => typeof credit === 'number',
+  },
   methods: {
     deleteCourse() {
       this.$emit('delete-course');
