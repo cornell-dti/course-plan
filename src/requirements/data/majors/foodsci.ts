@@ -18,7 +18,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
-    slotNames: ['Courses'],
+    slotNames: ['Course'],
   },
   {
     name: 'General Chemistry',
@@ -106,7 +106,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Core Courses',
     description:
-      'These are the core courses required for every concentration.' +
+      'These are the core courses required for every concentration. ' +
       'FDSC 1101, FDSC 1102, NS 1150, FDSC 2000, FDSC 2100, FDSC 2110, ' +
       'FDSC 3940, FDSC 3960, FDSC 4000, FDSC 4170,FDSC 4210',
     source: 'https://cals.cornell.edu/education/degrees-programs/food-science-major-minor',
