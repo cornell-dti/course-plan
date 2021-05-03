@@ -211,6 +211,7 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
       lastName: name.lastName,
     })
     .then(() => store.commit('setUserName', name));
+  const oldCollege = store.state.onboardingData.college;
   onboardingDataCollection
     .doc(store.state.currentFirebaseUser.email)
     .set({
@@ -223,7 +224,13 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
       class: onboarding.transferCourse,
       tookSwim: onboarding.tookSwim,
     })
-    .then(() => store.commit('setOnboardingData', onboarding));
+    .then(() => {
+      store.commit('setOnboardingData', onboarding);
+      const newCollege = store.state.onboardingData.college;
+      if (oldCollege !== newCollege) {
+        clearOverridenRequirementsAPIB();
+      }
+    });
 };
 
 const editAPIBExams = (
@@ -286,7 +293,7 @@ export const clearOverridenRequirementsAPIBUpdater = (
     return { optIn: {}, optOut: {}, ...rest };
   });
 
-export const clearOverridenRequirementsAPIB = (): void =>
+const clearOverridenRequirementsAPIB = (): void =>
   editAPIBExams(oldAPIBExams => clearOverridenRequirementsAPIBUpdater(oldAPIBExams));
 
 export const incrementUniqueID = (amount = 1): number => {

@@ -150,6 +150,7 @@ export default defineComponent({
   methods: {
     submitOnboarding() {
       setOnboardingData(this.name, this.onboarding);
+      this.$emit('onboard');
     },
     goBack() {
       this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
