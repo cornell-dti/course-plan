@@ -33,6 +33,12 @@ interface SearchableCourse extends CornellCourseRosterCourse {
   fullCourseString?: string;
 }
 
+const fullSearchableCoursesArray = fullCoursesArray.map((course: SearchableCourse) => {
+  course.courseCode = `${course.subject} ${course.catalogNbr}`;
+  course.fullCourseString = `${course.subject} ${course.catalogNbr} ${course.titleLong}`;
+  return course;
+});
+
 export default defineComponent({
   props: {
     searchBoxClassName: { type: String, required: true },
@@ -76,12 +82,9 @@ export default defineComponent({
     },
     searchableCourses(): readonly SearchableCourse[] {
       const courses: readonly SearchableCourse[] =
-        this.courseFilter != null ? fullCoursesArray.filter(this.courseFilter) : fullCoursesArray;
-      courses.map((course: SearchableCourse) => {
-        course.courseCode = `${course.subject} ${course.catalogNbr}`;
-        course.fullCourseString = `${course.subject} ${course.catalogNbr} ${course.titleLong}`;
-        return course;
-      });
+        this.courseFilter != null
+          ? fullSearchableCoursesArray.filter(this.courseFilter)
+          : fullSearchableCoursesArray;
       return courses;
     },
   },
