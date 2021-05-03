@@ -36,7 +36,7 @@ const spanishMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     name: '3 Electives',
     description:
       '3 electives of at least 3 credits each focusing on the Hispanic world. SPAN 2090, SPAN 2070 and SPAN 2095 are excluded. Only courses beginning at SPAN 2130 count.',
-    source: 'https://www.cs.cornell.edu/undergrad/csminor',
+    source: 'https://romancestudies.cornell.edu/spanish-undergraduate#minor-requirements',
     checker: [
       (course: Course): boolean =>
         (ifCodeMatch(course.subject, 'SPAN') || ifCodeMatch(course.subject, 'PORT')) &&

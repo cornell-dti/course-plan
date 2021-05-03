@@ -1,5 +1,9 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { includesWithSubRequirements, ifCodeMatch } from '../checkers-common';
+import {
+  includesWithSubRequirements,
+  ifCodeMatch,
+  courseMeetsCreditMinimum,
+} from '../checkers-common';
 
 const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -15,6 +19,20 @@ const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
     slotNames: ['SPAN 2140 or SPAN 2235', 'SPAN 2150 or SPAN 2205', 'SPAN 2170', 'SPAN 2180'],
+  },
+  {
+    name: 'Electives',
+    description:
+      'Students are required to complete 15 credits of courses focusing on the Hispanic world. SPAN 2090, SPAN 2070 and SPAN 2095 are excluded. Only courses beginning at SPAN 2130 count.',
+    source: 'https://romancestudies.cornell.edu/spanish-undergraduate#major-requirements',
+    checker: [
+      (course: Course): boolean =>
+        (ifCodeMatch(course.subject, 'SPAN') || ifCodeMatch(course.subject, 'PORT')) &&
+        !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '20**')) &&
+        courseMeetsCreditMinimum(course, 3),
+    ],
+    fulfilledBy: 'credits',
+    perSlotMinCount: [15],
   },
   // TODO: see if there is a way to identify senior seminar courses.
   {
