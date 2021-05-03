@@ -32,7 +32,7 @@ type FirestoreSemester = {
   readonly courses: readonly FirestoreSemesterCourse[];
 };
 
-type FirestoreAPIBRequirementOverride = {
+type FirestoreAPIBOverridenRequirements = {
   // Values are slot names
   readonly [requirementName: string]: readonly string[];
 };
@@ -40,8 +40,8 @@ type FirestoreAPIBExam = {
   readonly type: 'AP' | 'IB';
   readonly score: number;
   readonly subject: string;
-  readonly optIn?: FirestoreAPIBRequirementOverride;
-  readonly optOut?: FirestoreAPIBRequirementOverride;
+  readonly optIn?: FirestoreAPIBOverridenRequirements;
+  readonly optOut?: FirestoreAPIBOverridenRequirements;
 };
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
 type FirestoreTransferClass = {
