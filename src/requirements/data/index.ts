@@ -179,17 +179,15 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: envEngineeringRequirements,
     },
-<<<<<<< HEAD
     ESS: {
       name: 'Environment and Sustainability',
       schools: ['AG', 'AS1', 'AS2'],
       requirements: essRequirements,
-=======
+    },
     EP: {
       name: 'Engineering Physics',
       schools: ['EN'],
       requirements: epRequirements,
->>>>>>> d76bfdab550c212088074c8b6c85d586c04a7e75
     },
     GOVT: {
       name: 'Government',
