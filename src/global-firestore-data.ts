@@ -211,7 +211,6 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
       lastName: name.lastName,
     })
     .then(() => store.commit('setUserName', name));
-  const oldCollege = store.state.onboardingData.college;
   onboardingDataCollection
     .doc(store.state.currentFirebaseUser.email)
     .set({
@@ -225,6 +224,7 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
       tookSwim: onboarding.tookSwim,
     })
     .then(() => {
+      const oldCollege = store.state.onboardingData.college;
       store.commit('setOnboardingData', onboarding);
       const newCollege = store.state.onboardingData.college;
       if (oldCollege !== newCollege) {
