@@ -38,13 +38,10 @@ const spanishMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       '3 electives of at least 3 credits each focusing on the Hispanic world. SPAN 2090, SPAN 2070 and SPAN 2095 are excluded. Only courses beginning at SPAN 2130 count.',
     source: 'https://www.cs.cornell.edu/undergrad/csminor',
     checker: [
-      (course: Course): boolean => {
-        return (
-          (ifCodeMatch(course.subject, 'SPAN') || ifCodeMatch(course.subject, 'PORT')) &&
-          !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '20**')) &&
-          courseMeetsCreditMinimum(course, 3)
-        );
-      },
+      (course: Course): boolean =>
+        (ifCodeMatch(course.subject, 'SPAN') || ifCodeMatch(course.subject, 'PORT')) &&
+        !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '20**')) &&
+        courseMeetsCreditMinimum(course, 3),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [3],

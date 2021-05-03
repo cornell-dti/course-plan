@@ -1,11 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import {
-  includesWithSingleRequirement,
-  includesWithSubRequirements,
-  courseMatchesCodeOptions,
-  ifCodeMatch,
-  courseIsSpecial,
-} from '../checkers-common';
+import { includesWithSubRequirements, ifCodeMatch } from '../checkers-common';
 
 const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -29,12 +23,9 @@ const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://romancestudies.cornell.edu/spanish-undergraduate#major-requirements',
     allowCourseDoubleCounting: true,
     checker: [
-      (course: Course): boolean => {
-        return (
-          (ifCodeMatch(course.subject, 'SPAN') || ifCodeMatch(course.subject, 'PORT')) &&
-          ifCodeMatch(course.catalogNbr, '4***')
-        );
-      },
+      (course: Course): boolean =>
+        (ifCodeMatch(course.subject, 'SPAN') || ifCodeMatch(course.subject, 'PORT')) &&
+        ifCodeMatch(course.catalogNbr, '4***'),
     ],
     checkerWarning: 'We do not check that the course is a senior seminar.',
     fulfilledBy: 'courses',

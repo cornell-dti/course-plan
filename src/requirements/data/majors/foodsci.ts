@@ -1,4 +1,4 @@
-import { Course, CollegeOrMajorRequirement } from '../../types';
+import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSubRequirements, includesWithSingleRequirement } from '../checkers-common';
 
 const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
