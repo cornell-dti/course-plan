@@ -253,7 +253,7 @@ export const addOverridenRequirementAPIBUpdater = (
 ): readonly FirestoreAPIBExam[] =>
   oldAPIBExams.map(exam => {
     if (`${exam.type} ${exam.subject}` === examName) {
-      const overridenRequirements = optIn ? exam.optIn || {} : exam.optOut || {};
+      const overridenRequirements = optIn ? { ...exam.optIn } : { ...exam.optOut };
       if (requirementName in overridenRequirements) {
         if (overridenRequirements[requirementName].indexOf(slotName) === -1) {
           overridenRequirements[requirementName].push(slotName);
