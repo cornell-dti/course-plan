@@ -279,19 +279,15 @@ export const addOverridenRequirementAPIB = (
 
 // split and exposed for testing
 export const clearOverridenRequirementsAPIBUpdater = (
-  oldAPIBExams: readonly FirestoreAPIBExam[],
-  examName: string
+  oldAPIBExams: readonly FirestoreAPIBExam[]
 ): readonly FirestoreAPIBExam[] =>
   oldAPIBExams.map(exam => {
-    if (`${exam.type} ${exam.subject}` === examName) {
-      const { optIn, optOut, ...rest } = exam;
-      return { optIn: {}, optOut: {}, ...rest };
-    }
-    return exam;
+    const { optIn, optOut, ...rest } = exam;
+    return { optIn: {}, optOut: {}, ...rest };
   });
 
-export const clearOverridenRequirementsAPIB = (examName: string): void =>
-  editAPIBExams(oldAPIBExams => clearOverridenRequirementsAPIBUpdater(oldAPIBExams, examName));
+export const clearOverridenRequirementsAPIB = (): void =>
+  editAPIBExams(oldAPIBExams => clearOverridenRequirementsAPIBUpdater(oldAPIBExams));
 
 export const incrementUniqueID = (amount = 1): number => {
   const updatedID = store.state.uniqueIncrementer + amount;

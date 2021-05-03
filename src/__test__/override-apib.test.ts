@@ -367,3 +367,89 @@ it('Override with different reqName', () => {
 /**
  * Tests for clearOverridenRequirementsAPIBUpdater
  */
+it('No exams to clear', () => {
+  const oldAPIBExams: FirestoreAPIBExam[] = [];
+  const newAPIBExams = clearOverridenRequirementsAPIBUpdater(oldAPIBExams);
+  expect(newAPIBExams).toEqual(oldAPIBExams);
+});
+
+it('Exams are already cleared', () => {
+  const oldAPIBExams: FirestoreAPIBExam[] = [
+    {
+      type: 'AP',
+      score: 5,
+      subject: 'Biology',
+    },
+  ];
+  const expectedAPIBExams: FirestoreAPIBExam[] = [
+    {
+      type: 'AP',
+      score: 5,
+      subject: 'Biology',
+      optIn: {},
+      optOut: {},
+    },
+  ];
+  const newAPIBExams = clearOverridenRequirementsAPIBUpdater(oldAPIBExams);
+  expect(newAPIBExams).toEqual(expectedAPIBExams);
+});
+
+it('Clear for one exam', () => {
+  const oldAPIBExams: FirestoreAPIBExam[] = [
+    {
+      type: 'AP',
+      score: 5,
+      subject: 'Biology',
+      optIn: { reqName: ['slotName'] },
+      optOut: { reqName: ['slotName'] },
+    },
+  ];
+  const expectedAPIBExams: FirestoreAPIBExam[] = [
+    {
+      type: 'AP',
+      score: 5,
+      subject: 'Biology',
+      optIn: {},
+      optOut: {},
+    },
+  ];
+  const newAPIBExams = clearOverridenRequirementsAPIBUpdater(oldAPIBExams);
+  expect(newAPIBExams).toEqual(expectedAPIBExams);
+});
+
+it('Clear for multiple exams', () => {
+  const oldAPIBExams: FirestoreAPIBExam[] = [
+    {
+      type: 'AP',
+      score: 5,
+      subject: 'Biology',
+      optIn: { reqName: ['slotName'] },
+      optOut: { reqName: ['slotName'] },
+    },
+    {
+      type: 'AP',
+      score: 5,
+      subject: 'Computer Science',
+      optIn: { reqName1: ['slotName1', 'slotName2'], reqName: ['slotName'] },
+      optOut: { reqName1: ['slotName1', 'slotName2'], reqName: ['slotName'] },
+    },
+  ];
+  const expectedAPIBExams: FirestoreAPIBExam[] = [
+    {
+      type: 'AP',
+      score: 5,
+      subject: 'Biology',
+      optIn: {},
+      optOut: {},
+    },
+    {
+      type: 'AP',
+      score: 5,
+      subject: 'Computer Science',
+      optIn: {},
+      optOut: {},
+    },
+  ];
+  const newAPIBExams = clearOverridenRequirementsAPIBUpdater(oldAPIBExams);
+  expect(newAPIBExams).toEqual(expectedAPIBExams);
+});
