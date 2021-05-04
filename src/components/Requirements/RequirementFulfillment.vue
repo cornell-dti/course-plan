@@ -32,7 +32,6 @@
           requirementFulfillment.requirement.fulfilledBy === 'self-check' ||
           requirementFulfillment.requirement.checkerWarning != null
         "
-
         :requirementFulfillment="requirementFulfillment"
         :isCompleted="isCompleted"
         :toggleableRequirementChoice="toggleableRequirementChoice"

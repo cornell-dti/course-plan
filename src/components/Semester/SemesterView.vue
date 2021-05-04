@@ -106,7 +106,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Semester from '@/components/Semester/Semester.vue';
-import Confirmation from '@/components/Confirmation.vue';
+import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
