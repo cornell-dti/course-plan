@@ -6,7 +6,7 @@
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="selectedCourse == null"
-    @modal-closed="$emit('update:modelValue', false)"
+    @modal-closed="escape"
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addItem"
   >
