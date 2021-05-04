@@ -19,7 +19,7 @@
       :key="courseSelectorKey"
       placeholder='"CS 1110", "Multivariable Calculus", etc'
       :autoFocus="true"
-      @on-escape="closeCurrentModal"
+      @on-escape="$emit('update:modelValue', false)"
       @on-select="selectCourse"
     />
     <div v-else class="selected-course">
