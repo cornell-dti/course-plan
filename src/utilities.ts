@@ -33,15 +33,21 @@ export function getCurrentYearSuffix(): string {
 }
 
 export function getCollegeFullName(acronym: string): string {
-  return requirementJSON.college[acronym].name;
+  // Return empty string if college is not in requirementJSON
+  const college = requirementJSON.college[acronym];
+  return college ? college.name : '';
 }
 
 export function getMajorFullName(acronym: string): string {
-  return requirementJSON.major[acronym].name;
+  // Return empty string if major is not in requirementJSON
+  const major = requirementJSON.major[acronym];
+  return major ? major.name : '';
 }
 
 export function getMinorFullName(acronym: string): string {
-  return requirementJSON.minor[acronym].name;
+  // Return empty string if minor is not in requirementJSON
+  const minor = requirementJSON.minor[acronym];
+  return minor ? minor.name : '';
 }
 
 function getAllSubjects(): ReadonlySet<string> {

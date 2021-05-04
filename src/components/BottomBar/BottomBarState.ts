@@ -54,7 +54,15 @@ const getReviews = (
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ subject: subject.toLowerCase(), number }),
-  }).then(res => res.json().then(reviews => reviews.result));
+  }).then(res =>
+    res
+      .json()
+      .then(reviews =>
+        reviews.result
+          ? reviews.result
+          : { classRating: null, classDifficulty: null, classWorkload: null }
+      )
+  );
 
 export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
   vueForBottomBar.isExpanded = true;
