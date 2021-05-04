@@ -1,15 +1,10 @@
 <template>
-  <Teleport
-    to="#modalTarget"
-    v-if="modelValue"
-    @click="checkClickOutside"
-    ref="modalBackground"
-    aria-modal="true"
-  >
+  <Teleport to="#modalTarget" v-if="modelValue" @click="checkClickOutside" aria-modal="true">
     <div
       class="teleport"
       :class="{ 'teleport-simple': isSimpleModal, 'teleport-noBackground': hasNoBackground }"
       @click="closeOnClickOutside"
+      ref="modalBackground"
     >
       <div :class="['modal-content', contentClass, { 'modal-simple': isSimpleModal }]">
         <div v-if="!isSimpleModal" class="modal-top">
@@ -57,12 +52,13 @@ export default defineComponent({
     isSimpleModal: { type: Boolean, default: false },
     hasNoBackground: { type: Boolean, default: false },
   },
-  emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed'],
+  emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed', 'update:modelValue'],
   setup(props, { emit }) {
     const modalBackground = ref((null as unknown) as HTMLDivElement);
 
     const close = () => {
       emit('modal-closed', true);
+      emit('update:modelValue', false);
     };
 
     const closeOnClickOutside = (e: MouseEvent) => {
@@ -177,7 +173,6 @@ export default defineComponent({
 // custom styling for different modals depending on contentClass
 .content {
   &-confirmation {
-    align-items: center;
     border: none;
     margin-top: 1rem;
     min-height: 0;

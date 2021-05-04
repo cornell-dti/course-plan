@@ -1,10 +1,11 @@
 <template>
-  <flexible-modal
+  <TeleportModal
     :title="modalTitle"
     content-class="content-course"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="!canAddCourse"
+    :modelValue="modelValue"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addCourse"
@@ -31,25 +32,27 @@
         />
       </div>
     </div>
-  </flexible-modal>
+  </TeleportModal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import SelectSemester from '@/components/Modals/SelectSemester.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 import store from '@/store';
 import { getFilter } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
-  components: { CourseSelector, FlexibleModal, SelectSemester },
+  components: { CourseSelector, TeleportModal, SelectSemester },
   props: {
     subReqName: { type: String, required: true },
     requirementId: { type: String, required: true },
+    modelValue: { required: true, type: Boolean },
   },
   emits: {
     'close-course-modal': () => true,
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
     'add-course': (
       selected: CornellCourseRosterCourse,
       season: FirestoreSemesterType,
@@ -62,6 +65,7 @@ export default defineComponent({
       courseSelectorKey: 0,
       season: '' as FirestoreSemesterType,
       year: 0,
+      isOpen: false,
     };
   },
   computed: {
@@ -88,7 +92,7 @@ export default defineComponent({
   methods: {
     closeCurrentModal() {
       this.reset();
-      this.$emit('close-course-modal');
+      this.$emit('update:modelValue', false);
       // @ts-expect-error: TS cannot understand $ref's component.
       this.$refs.modalBodyComponent.resetDropdowns();
     },

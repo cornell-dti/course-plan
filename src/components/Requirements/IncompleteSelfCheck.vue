@@ -2,7 +2,7 @@
   <div class="incompleteselfcheck">
     <new-self-check-course-modal
       class="incompleteselfcheck-modal"
-      :class="{ 'incompleteselfcheck-modal--block': isCourseModalOpen }"
+      v-model="isCourseModalOpen"
       :subReqName="subReqName"
       :requirementId="subReqId"
       @close-course-modal="closeCourseModal"

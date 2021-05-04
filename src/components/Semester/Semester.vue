@@ -8,12 +8,7 @@
     data-disable-interaction="1"
     data-tooltipClass="tooltipCenter"
   >
-    <new-course-modal
-      class="semester-modal"
-      :class="{ 'modal--block': isCourseModalOpen }"
-      @close-course-modal="closeCourseModal"
-      @add-course="addCourse"
-    />
+    <new-course-modal class="semester-modal" v-model="isCourseModalOpen" @add-course="addCourse" />
     <confirmation
       class="confirmation-modal"
       :text="confirmationText"
@@ -276,11 +271,7 @@ export default defineComponent({
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
-      this.isCourseModalOpen = true;
-    },
-    // TODO: delete this method when course modal is converted to use teleportModal
-    closeCourseModal() {
-      this.isCourseModalOpen = false;
+      this.isCourseModalOpen = !this.isCourseModalOpen;
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively

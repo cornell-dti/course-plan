@@ -1,7 +1,6 @@
 <template>
   <teleport-modal
     title="Reset Requirement"
-    :class="[{ 'modal--block': modelValue }, 'modal-width']"
     content-class="content-confirmation"
     left-button-text="No"
     right-button-text="Yes"
@@ -59,26 +58,10 @@ export default defineComponent({
 
 .content-confirmation {
   width: 30.5em;
+  align-items: initial;
   button {
     width: 48px;
   }
-}
-
-.reset-modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-.modal-width {
-  transform: translateX(calc(50vw - 50%));
 }
 
 .text-width {
