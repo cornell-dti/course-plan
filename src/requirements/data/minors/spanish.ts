@@ -8,7 +8,7 @@ import {
 const spanishMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Advanced Language Course',
-    description: 'SPAN 2130 or SPAN 2180',
+    description: 'SPAN 2130 or SPAN 2180.',
     source: 'https://romancestudies.cornell.edu/spanish-undergraduate#minor-requirements',
     checker: includesWithSingleRequirement('SPAN 2130', 'SPAN 2180'),
     fulfilledBy: 'courses',
@@ -17,7 +17,7 @@ const spanishMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Perspectives Course',
-    description: 'SPAN 2200 or SPAN 2205 or SPAN 2230 or SPAN 2235 or SPAN 2240 or PORT 2800',
+    description: 'SPAN 2200 or SPAN 2205 or SPAN 2230 or SPAN 2235 or SPAN 2240 or PORT 2800.',
     source: 'https://romancestudies.cornell.edu/spanish-undergraduate#minor-requirements',
     checker: includesWithSingleRequirement(
       'SPAN 2200',

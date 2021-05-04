@@ -5,7 +5,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Introductory Biology Courses',
     description:
-      'Two courses out of BIOG 1140, BIOG 1440, BIOG 1500, BIOEE 1610, BIOEE 1780, BIOAP 1100 and PLSCI 1115',
+      'Two courses out of BIOG 1140, BIOG 1440, BIOG 1500, BIOEE 1610, BIOEE 1780, BIOAP 1100 and PLSCI 1115.',
     source: 'https://cals.cornell.edu/education/degrees-programs/food-science-major-minor',
     checker: includesWithSingleRequirement(
       'BIOG 1140',
@@ -22,7 +22,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'General Chemistry',
-    description: 'Option 1: CHEM 2070 AND CHEM 2080, Option 2: CHEM 2150',
+    description: 'Option 1: CHEM 2070 AND CHEM 2080, Option 2: CHEM 2150.',
     source: 'https://cals.cornell.edu/education/degrees-programs/food-science-major-minor',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
@@ -44,7 +44,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Organic Chemistry',
-    description: 'CHEM 3570 and CHEM 3580',
+    description: 'CHEM 3570 and CHEM 3580.',
     source: 'https://cals.cornell.edu/education/degrees-programs/food-science-major-minor',
     checker: includesWithSubRequirements(['CHEM 3570'], ['CHEM 3580']),
     fulfilledBy: 'courses',
@@ -62,7 +62,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Statistics',
-    description: 'AEM 2100 or STSCI 2100 or STSCI 2150 or STSCI 2200 or MATH 1710 or PSYCH 3500',
+    description: 'AEM 2100 or STSCI 2100 or STSCI 2150 or STSCI 2200 or MATH 1710 or PSYCH 3500.',
     source: 'https://cals.cornell.edu/education/degrees-programs/food-science-major-minor',
     checker: includesWithSingleRequirement(
       'AEM 2100',
@@ -78,7 +78,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Microbiology (Lecture & Lab)',
-    description: 'BIOMI 2900 (lecture) and BIOMI 2911 (lab)',
+    description: 'BIOMI 2900 (lecture) and BIOMI 2911 (lab).',
     source: 'https://cals.cornell.edu/education/degrees-programs/food-science-major-minor',
     checker: includesWithSubRequirements(['BIOMI 2900'], ['BIOMI 2911']),
     fulfilledBy: 'courses',
@@ -87,7 +87,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Biochemistry',
-    description: 'BIOMG 3310 or BIOMG 3350 or NS 3200',
+    description: 'BIOMG 3310 or BIOMG 3350 or NS 3200.',
     source: 'https://cals.cornell.edu/education/degrees-programs/food-science-major-minor',
     checker: includesWithSingleRequirement('BIOMG 3310', 'BIOMG 3350', 'NS 3200'),
     fulfilledBy: 'courses',
@@ -96,7 +96,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Physics',
-    description: 'PHYS 1101 or PHYS 2207',
+    description: 'PHYS 1101 or PHYS 2207.',
     source: 'https://cals.cornell.edu/education/degrees-programs/food-science-major-minor',
     checker: includesWithSingleRequirement('PHYS 1101', 'PHYS 2207'),
     fulfilledBy: 'courses',
@@ -108,7 +108,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'These are the core courses required for every concentration. ' +
       'FDSC 1101, FDSC 1102, NS 1150, FDSC 2000, FDSC 2100, FDSC 2110, ' +
-      'FDSC 3940, FDSC 3960, FDSC 4000, FDSC 4170,FDSC 4210',
+      'FDSC 3940, FDSC 3960, FDSC 4000, FDSC 4170, and FDSC 4210.',
     source: 'https://cals.cornell.edu/education/degrees-programs/food-science-major-minor',
     checker: includesWithSubRequirements(
       ['FDSC 1101'],
@@ -149,7 +149,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfillmentOptions: {
       Science: {
         description:
-          'Required FDSC courses, and 3 >4000 FDSC electives, with at least 3 credits from group 1 and 2 credits from group 2.',
+          'Required FDSC courses, and 3 4000+ FDSC electives (with at least 3 credits from group 1 and 2 credits from group 2).',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['FDSC 3950'],
@@ -157,6 +157,15 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
           ['FDSC 4190'],
           ['FDSC 4230'],
           ['FDSC 4010', 'FDSC 4040', 'FDSC 4050', 'FDSC 4220', 'FDSC 4250', 'FDSC 4400'],
+          [
+            'FDSC 4020',
+            'FDSC 4110',
+            'FDSC 4500',
+            'FDSC 4510',
+            'FDSC 4880',
+            'FDSC 5970',
+            'FDSC 6950',
+          ],
           [
             'FDSC 4020',
             'FDSC 4110',
@@ -173,19 +182,20 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
             'FDSC 4400',
           ]
         ),
-        perSlotMinCount: [1, 1, 1, 1, 1, 1],
+        perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
         slotNames: [
           'FDSC 3950',
           'FDSC 4100',
           'FDSC 4190',
           'FDSC 4230',
-          'Group 1 >4000 electives',
-          'Group 2 >4000 electives',
+          'Group 1 4000+ elective',
+          'Group 2 4000+ elective',
+          'Group 1 or Group 2 4000+ elective',
         ],
       },
       Safety: {
         description:
-          'Required FDSC courses, epidemiology course, risk analysis and management course, microbial pathogenesis course, and 2 credits of >4000 FDSC electives',
+          'Required FDSC courses, epidemiology course, risk analysis and management course, microbial pathogenesis course, and 2 credits of 4000+ FDSC electives.',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['FDSC 3950'],
@@ -218,12 +228,12 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
           'NS 3600 or PAM 3280 or ENTOM 4250 (in preferred order)',
           'PAM 4240 or DSOC 4080 or ORIE 2380 (in preferred order)',
           'BIOMS 4040 or BIOMS 4090 or BIOMS 4150 or BIOMS 4340 or BIOMG 4390 (in preferred order)',
-          '2 credits of >4000 FDSC electives',
+          '2 credits of 4000+ FDSC electives',
         ],
       },
       Business: {
         description:
-          'Required FDSC courses, economics course, management course, marketing course, accounting course, finance course, 2 credits of >4000 FDSC electives, and 6 credits of business electives',
+          'Required FDSC courses, economics course, management course, marketing course, accounting course, finance course, 2 credits of 4000+ FDSC electives, and 6 credits of business electives.',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['FDSC 4230'],
@@ -265,7 +275,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
           'Marketing Course',
           'Accounting Course',
           'Finance Course',
-          '2 credits of >4000 FDSC electives',
+          '2 credits of 4000+ FDSC electives',
           '6 credits of business electives',
         ],
       },

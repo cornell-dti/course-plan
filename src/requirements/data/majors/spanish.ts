@@ -39,6 +39,8 @@ const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Senior Seminar',
     description: 'Must include a senior seminar in the 15 credits of electives.',
     source: 'https://romancestudies.cornell.edu/spanish-undergraduate#major-requirements',
+    // Allowing double counting, since this is a check to see if the 15 credits
+    // of electives include a senior seminar course.
     allowCourseDoubleCounting: true,
     checker: [
       (course: Course): boolean =>
