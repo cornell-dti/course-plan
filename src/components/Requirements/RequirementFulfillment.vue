@@ -24,7 +24,6 @@
         :isCompleted="isCompleted"
         :displayDescription="displayDescription"
         :toggleableRequirementChoice="toggleableRequirementChoice"
-        @modal-open="modalToggled"
         @onShowAllCourses="onShowAllCourses"
       />
       <requirement-self-check-slots
@@ -35,7 +34,6 @@
         :requirementFulfillment="requirementFulfillment"
         :isCompleted="isCompleted"
         :toggleableRequirementChoice="toggleableRequirementChoice"
-        @modal-open="modalToggled"
       />
     </div>
   </div>
@@ -81,7 +79,7 @@ export default defineComponent({
     },
   },
   data() {
-    return { showDescription: false, modalToggled: false };
+    return { showDescription: false };
   },
   computed: {
     displayDescription(): boolean {
