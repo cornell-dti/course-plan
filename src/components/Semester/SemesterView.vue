@@ -134,6 +134,7 @@ export default defineComponent({
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
+      modalToggle: false,
     };
   },
   computed: {

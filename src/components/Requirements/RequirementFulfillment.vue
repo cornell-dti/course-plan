@@ -81,7 +81,7 @@ export default defineComponent({
     },
   },
   data() {
-    return { showDescription: false };
+    return { showDescription: false, modalToggled: false };
   },
   computed: {
     displayDescription(): boolean {

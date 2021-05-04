@@ -19,7 +19,7 @@
       :key="courseSelectorKey"
       placeholder='"CS 1110", "Multivariable Calculus", etc'
       :autoFocus="true"
-      @on-escape="$emit('update:modelValue', false)"
+      @on-escape="escape"
       @on-select="selectCourse"
     />
     <div v-else class="selected-course">
@@ -89,6 +89,9 @@ export default defineComponent({
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.getReqsRelatedToCourse(result);
+    },
+    escape() {
+      this.$emit('update:modelValue', false);
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
