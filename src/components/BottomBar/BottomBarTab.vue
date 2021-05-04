@@ -1,5 +1,5 @@
 <template>
-  <div
+  <button
     class="bottombartab full-opacity-on-hover"
     :style="{ background: `#${color}` }"
     @click="$emit('on-change-focus')"
@@ -14,7 +14,7 @@
         alt="x to delete bottom bar tab"
       />
     </button>
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
@@ -49,6 +49,11 @@ export default defineComponent({
   justify-content: space-between;
   padding-left: 8px;
   padding-right: 8px;
+
+  &:hover {
+    filter: brightness(95%);
+    transition: all 0.2s ease;
+  }
 
   &-wrapper {
     display: flex;

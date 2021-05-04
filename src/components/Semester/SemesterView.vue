@@ -50,11 +50,6 @@
         :text="confirmationText"
         v-model="isSemesterConfirmationOpen"
       />
-      <semester-caution
-        class="semesterView-caution"
-        :class="{ 'modal--flex': isCautionModalOpen }"
-        :text="cautionText"
-      />
       <div class="semesterView-content">
         <div
           v-for="(sem, semesterIndex) in semesters"
@@ -121,7 +116,7 @@ import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 
 export default defineComponent({
-  components: { Confirmation, NewSemesterModal, Semester, SemesterCaution },
+  components: { Confirmation, NewSemesterModal, Semester },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
@@ -135,13 +130,11 @@ export default defineComponent({
   data() {
     return {
       confirmationText: '',
-      cautionText: '',
       key: 0,
       activatedCourse: {} as FirestoreSemesterCourse,
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
-      isCautionModalOpen: false,
     };
   },
   computed: {
