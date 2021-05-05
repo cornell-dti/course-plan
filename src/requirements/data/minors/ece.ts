@@ -1,0 +1,73 @@
+import { CollegeOrMajorRequirement, Course } from '../../types';
+import {
+  includesWithSingleRequirement,
+  courseMatchesCodeOptions,
+  ifCodeMatch,
+} from '../checkers-common';
+
+const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
+  {
+    name: 'Requirement 1',
+    description: 'Choose two courses. ',
+    source: 'https://www.human.cornell.edu/pam/studentlife/advising/minorhealthpolicy',
+    checker: includesWithSingleRequirement('ECE 2100', 'ECE 2200', 'ECE 2300'),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [2],
+    slotNames: ['Course'],
+  },
+  {
+    name: 'Requirement 2',
+    description: 'Choose two courses. ',
+    source: 'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/minor',
+    checker: includesWithSingleRequirement(
+      'ECE 3030',
+      'ECE 3140',
+      'ECE 3100',
+      'ECE 3150',
+      'ECE 3250'
+    ),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [2],
+    slotNames: ['Course'],
+  },
+  {
+    name: '3000+ Courses',
+    description:
+      'One other technical ECE lecture course at the 3000 level or above. ECE 3400 cannot be used.',
+    source: 'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/minor',
+    checker: [
+      (course: Course): boolean => {
+        if (courseMatchesCodeOptions(course, ['ECE 3400'])) {
+          return false;
+        }
+        return (
+          ifCodeMatch(course.subject, 'ECE') &&
+          !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***'))
+        );
+      },
+    ],
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1],
+    slotNames: ['Course'],
+  },
+  {
+    name: '4000+ Courses',
+    description:
+      'One other technical ECE lecture course at the 3000 level or above. ECE 3400 cannot be used.',
+    source: 'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/minor',
+    checker: [
+      (course: Course): boolean =>
+        ifCodeMatch(course.subject, 'ECE') &&
+        !(
+          ifCodeMatch(course.catalogNbr, '1***') ||
+          ifCodeMatch(course.catalogNbr, '2***') ||
+          ifCodeMatch(course.catalogNbr, '3***')
+        ),
+    ],
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1],
+    slotNames: ['Course'],
+  },
+];
+
+export default roboticsMinorRequirements;
