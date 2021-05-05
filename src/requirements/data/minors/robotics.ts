@@ -30,7 +30,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/majors-and-minors/robotics-minor',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
-      'Intelligence': {
+      Intelligence: {
         description: 'Choose three courses. ',
         counting: 'courses',
         checker: includesWithSingleRequirement(
@@ -61,7 +61,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
         perSlotMinCount: [3],
         slotNames: ['Courses'],
       },
-      'Perception': {
+      Perception: {
         description: 'Choose three courses. ',
         counting: 'courses',
         checker: includesWithSingleRequirement(

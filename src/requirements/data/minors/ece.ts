@@ -42,7 +42,8 @@ const eceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           return false;
         }
         return (
-          courseMeetsCreditMinimum(course, 3) && ifCodeMatch(course.subject, 'ECE') &&
+          courseMeetsCreditMinimum(course, 3) &&
+          ifCodeMatch(course.subject, 'ECE') &&
           !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***'))
         );
       },
@@ -53,12 +54,12 @@ const eceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: '4000+ Courses',
-    description:
-      'One other technical ECE lecture course at the 4000 level or above.',
+    description: 'One other technical ECE lecture course at the 4000 level or above.',
     source: 'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/minor',
     checker: [
       (course: Course): boolean =>
-      courseMeetsCreditMinimum(course, 3) && ifCodeMatch(course.subject, 'ECE') &&
+        courseMeetsCreditMinimum(course, 3) &&
+        ifCodeMatch(course.subject, 'ECE') &&
         !(
           ifCodeMatch(course.catalogNbr, '1***') ||
           ifCodeMatch(course.catalogNbr, '2***') ||
