@@ -4,7 +4,7 @@ import { includesWithSingleRequirement, includesWithSubRequirements } from '../c
 const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Foundation Course',
-    description: 'Choose one course',
+    description: 'Choose one course.',
     source: 'https://cals.cornell.edu/environment-sustainability/education/core-curriculum',
     checker: includesWithSingleRequirement('NTRES 1101', 'NTRES 1201'),
     fulfilledBy: 'courses',
@@ -146,7 +146,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
         description:
           'A. Required Courses, ' +
           'B. Resource/Environmental Economics (choose two), ' +
-          'C. Data Analysis/Econometrics (choose one)',
+          'C. Data Analysis/Econometrics (choose one).',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['AEM 2500'],
@@ -168,13 +168,13 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
         ),
         perSlotMinCount: [1, 1, 1, 1, 1, 2, 1],
         slotNames: [
-          'Course',
-          'Course',
-          'Course',
-          'Course',
-          'Course',
-          'Resource/Environmental Economics',
-          'Data Analysis/Econometrics',
+          'A. Course',
+          'A. Course',
+          'A. Course',
+          'A. Course',
+          'A. Course',
+          'B. Resource/Environmental Economics',
+          'C. Data Analysis/Econometrics',
         ],
       },
       // TODO: check 18/26 credits are 3000+ level higher
@@ -212,13 +212,13 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
         ),
         perSlotMinCount: [7],
         minNumberOfSlots: 1,
-        slotNames: ['Courses'],
+        slotNames: ['Course'],
       },
       'Environmental Policy & Governance': {
         description:
           'A. Foundation Courses, ' +
           'B. Methods/Tools Course (choose one), ' +
-          'C. Additional environmental courses (choose two)',
+          'C. Additional environmental courses (choose two).',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['CRP 4440'],
@@ -333,7 +333,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
         description:
           'A. Core curriculum (2 courses), ' +
           'B. Additional courses beyond the E&S core requirements (choose four) ' +
-          'C. LAWR electives (choose five)',
+          'C. LAWR electives (choose five).',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['BIOEE 1610'],

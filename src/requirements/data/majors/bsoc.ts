@@ -67,7 +67,7 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Social Sciences/Humanities Foundation',
-    description: 'Two courses; one from any two of the following subject areas',
+    description: 'Two courses; one from any two of the following subject areas. ',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19805',
     checker: includesWithSubRequirements(
       [
