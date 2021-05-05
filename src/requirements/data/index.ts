@@ -44,6 +44,7 @@ import pamRequirements from './majors/pam';
 import physRequirements from './majors/phys';
 import spanishRequirements from './majors/spanish';
 import stsRequirements from './majors/sts';
+
 import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
@@ -51,6 +52,8 @@ import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
+import eceMinorRequirements from './minors/ece';
+import hpMinorRequirements from './minors/hp';
 import hdMinorRequirements from './minors/hd';
 import infoENMinorRequirements from './minors/infoEN';
 import lingMinorRequirements from './minors/ling';
@@ -58,6 +61,7 @@ import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
 import policyMinorRequirements from './minors/policy';
 import psychMinorRequirements from './minors/psych';
+import roboticsMinorRequirements from './minors/robotics';
 import spanishMinorRequirements from './minors/spanish';
 
 const json: RequirementsJson = {
@@ -314,6 +318,16 @@ const json: RequirementsJson = {
       schools: ['HE'],
       requirements: deaMinorRequirements,
     },
+    ECE: {
+      name: 'Electrical and Computer Engineering',
+      schools: ['EN'],
+      requirements: eceMinorRequirements,
+    },
+    HP: {
+      name: 'Human Policy',
+      schools: ['HE'],
+      requirements: hpMinorRequirements,
+    },
     HD: {
       name: 'Human Development',
       schools: ['HE'],
@@ -348,6 +362,11 @@ const json: RequirementsJson = {
       name: 'Psychology',
       schools: ['AS1', 'AS2'],
       requirements: psychMinorRequirements,
+    },
+    ROBOTICS: {
+      name: 'Robotics',
+      schools: ['EN'],
+      requirements: roboticsMinorRequirements,
     },
     SPAN: {
       name: 'Spanish',
