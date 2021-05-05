@@ -195,7 +195,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
       },
       Safety: {
         description:
-          'Required FDSC courses, epidemiology course, risk analysis and management course, microbial pathogenesis course, and 2 credits of 4000+ FDSC electives.',
+          '1. Required FDSC courses 2. Epidemiology course 3. Risk analysis and management course 4. Microbial pathogenesis course 5. 2 credits of 4000+ FDSC electives.\nNote: The course options for requirements 2 - 4 are given in order of the preferred course for fulfillment.',
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['FDSC 3950'],
