@@ -13,6 +13,7 @@ import aemRequirements from './majors/aem';
 import astroRequrements from './majors/astro';
 import bioRequirements from './majors/bio';
 import bioEngineeringRequirements from './majors/be';
+import bsocRequirements from './majors/bsoc';
 import biomedicalEngineeringRequirements from './majors/bme';
 import chemERequirements from './majors/chemE';
 import civilRequirements from './majors/ce';
@@ -22,6 +23,7 @@ import csRequirements from './majors/cs';
 import deaRequirements from './majors/dea';
 import economicsRequirements from './majors/econ';
 import eceRequirements from './majors/ece';
+import essRequirements from './majors/ess';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
 import epRequirements from './majors/ep';
@@ -115,6 +117,11 @@ const json: RequirementsJson = {
       schools: ['AG', 'AS1', 'AS2'],
       requirements: bioRequirements,
     },
+    BSOC: {
+      name: 'Biology and Society',
+      schools: ['AG', 'AS1', 'AS2'],
+      requirements: bsocRequirements,
+    },
     BME: {
       name: 'Biomedical Engineering',
       schools: ['EN'],
@@ -174,6 +181,11 @@ const json: RequirementsJson = {
       name: 'Environmental Engineering',
       schools: ['EN'],
       requirements: envEngineeringRequirements,
+    },
+    ESS: {
+      name: 'Environment and Sustainability',
+      schools: ['AG', 'AS1', 'AS2'],
+      requirements: essRequirements,
     },
     EP: {
       name: 'Engineering Physics',
