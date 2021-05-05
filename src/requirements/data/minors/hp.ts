@@ -18,7 +18,7 @@ const hpMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: '3000/4000+ Level',
     description:
-      'Complete at least 9 credit at the 3000 or 4000 level in PAM from the following list',
+      'Complete at least 9 credit at the 3000 or 4000 level in PAM from the following list.',
     source: 'https://www.human.cornell.edu/pam/studentlife/advising/minorhealthpolicy',
     checker: includesWithSingleRequirement(
       'PAM 3110',

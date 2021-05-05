@@ -7,7 +7,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   // ECE majors may not count ECE 3400
   {
     name: 'Fundamentals Courses',
-    description: 'Choose three courses. ',
+    description: 'Choose three courses.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/majors-and-minors/robotics-minor',
     checker: includesWithSingleRequirement(
@@ -30,7 +30,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/majors-and-minors/robotics-minor',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
-      Intelligence: {
+      'Intelligence': {
         description: 'Choose three courses. ',
         counting: 'courses',
         checker: includesWithSingleRequirement(
@@ -61,7 +61,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
         perSlotMinCount: [3],
         slotNames: ['Courses'],
       },
-      Perception: {
+      'Perception': {
         description: 'Choose three courses. ',
         counting: 'courses',
         checker: includesWithSingleRequirement(
@@ -92,7 +92,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           'MAE 6710'
         ),
         perSlotMinCount: [3],
-        slotNames: ['Courses'],
+        slotNames: ['Course'],
       },
     },
   },

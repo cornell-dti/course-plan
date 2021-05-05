@@ -3,13 +3,14 @@ import {
   includesWithSingleRequirement,
   courseMatchesCodeOptions,
   ifCodeMatch,
+  courseMeetsCreditMinimum,
 } from '../checkers-common';
 
-const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
+const eceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Requirement 1',
     description: 'Choose two courses. ',
-    source: 'https://www.human.cornell.edu/pam/studentlife/advising/minorhealthpolicy',
+    source: 'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/minor',
     checker: includesWithSingleRequirement('ECE 2100', 'ECE 2200', 'ECE 2300'),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
@@ -41,7 +42,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           return false;
         }
         return (
-          ifCodeMatch(course.subject, 'ECE') &&
+          courseMeetsCreditMinimum(course, 3) && ifCodeMatch(course.subject, 'ECE') &&
           !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***'))
         );
       },
@@ -53,11 +54,11 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: '4000+ Courses',
     description:
-      'One other technical ECE lecture course at the 3000 level or above. ECE 3400 cannot be used.',
+      'One other technical ECE lecture course at the 4000 level or above.',
     source: 'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/minor',
     checker: [
       (course: Course): boolean =>
-        ifCodeMatch(course.subject, 'ECE') &&
+      courseMeetsCreditMinimum(course, 3) && ifCodeMatch(course.subject, 'ECE') &&
         !(
           ifCodeMatch(course.catalogNbr, '1***') ||
           ifCodeMatch(course.catalogNbr, '2***') ||
@@ -70,4 +71,4 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   },
 ];
 
-export default roboticsMinorRequirements;
+export default eceMinorRequirements;
