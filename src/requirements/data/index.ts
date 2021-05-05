@@ -25,6 +25,7 @@ import eceRequirements from './majors/ece';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
 import epRequirements from './majors/ep';
+import foodSciRequirements from './majors/foodsci';
 import governmentRequirements from './majors/govt';
 import hdRequirements from './majors/hd';
 import hotelAdminRequirements from './majors/hadm';
@@ -39,6 +40,7 @@ import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
 import pamRequirements from './majors/pam';
 import physRequirements from './majors/phys';
+import spanishRequirements from './majors/spanish';
 import stsRequirements from './majors/sts';
 import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
@@ -54,6 +56,7 @@ import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
 import policyMinorRequirements from './minors/policy';
 import psychMinorRequirements from './minors/psych';
+import spanishMinorRequirements from './minors/spanish';
 
 const json: RequirementsJson = {
   university: {
@@ -177,6 +180,11 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: epRequirements,
     },
+    FDSC: {
+      name: 'Food Science',
+      schools: ['AG'],
+      requirements: foodSciRequirements,
+    },
     GOVT: {
       name: 'Government',
       schools: ['AS1', 'AS2'],
@@ -246,6 +254,11 @@ const json: RequirementsJson = {
       name: 'Physics',
       schools: ['AS1', 'AS2'],
       requirements: physRequirements,
+    },
+    SPAN: {
+      name: 'Spanish',
+      schools: ['AS1', 'AS2'],
+      requirements: spanishRequirements,
     },
     STS: {
       name: 'Science & Technology Studies',
@@ -323,6 +336,11 @@ const json: RequirementsJson = {
       name: 'Psychology',
       schools: ['AS1', 'AS2'],
       requirements: psychMinorRequirements,
+    },
+    SPAN: {
+      name: 'Spanish',
+      schools: ['AS1', 'AS2'],
+      requirements: spanishMinorRequirements,
     },
   },
 };
