@@ -44,7 +44,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           'MAE 6710'
         ),
         perSlotMinCount: [3],
-        slotNames: ['Courses'],
+        slotNames: ['Course'],
       },
       'Modelling, Dynamics, and Control': {
         description: 'Choose three courses. ',
@@ -59,7 +59,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           'MAE 6780'
         ),
         perSlotMinCount: [3],
-        slotNames: ['Courses'],
+        slotNames: ['Course'],
       },
       Perception: {
         description: 'Choose three courses. ',
@@ -73,7 +73,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           'MAE 6760'
         ),
         perSlotMinCount: [3],
-        slotNames: ['Courses'],
+        slotNames: ['Course'],
       },
       'Systems and Design': {
         description: 'Choose three courses. ',
