@@ -14,13 +14,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     compact: { type: Boolean, required: true },
     shouldClearPadding: { type: Boolean, default: false },
   },
+  emits: ['click'],
   computed: {
     addCourseText() {
       return '+ Course';

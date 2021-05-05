@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
@@ -49,8 +49,13 @@ import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 import store from '@/store';
 import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
-export default Vue.extend({
+export default defineComponent({
   components: { CourseSelector, FlexibleModal, SelectedRequirementEditor },
+  emits: {
+    'close-course-modal': () => true,
+    'add-course': (course: CornellCourseRosterCourse, requirementID: string) =>
+      typeof course === 'object' && typeof requirementID === 'string',
+  },
   data() {
     return {
       selectedCourse: null as CornellCourseRosterCourse | null,

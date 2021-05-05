@@ -14,6 +14,7 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
+    slotNames: ['Linear Algebra', 'Multivariable Calculus'],
   },
   {
     name: 'Four 3000 or 4000 level MATH courses',
@@ -24,6 +25,7 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('MATH 3***', 'MATH 4***'),
     fulfilledBy: 'courses',
     perSlotMinCount: [4],
+    slotNames: ['Course'],
   },
   {
     name: 'At least one 4000 level course',
@@ -32,6 +34,7 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('MATH 4***'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'One algebra course',
@@ -51,6 +54,7 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'One analysis course',
@@ -72,6 +76,7 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
 ];
 

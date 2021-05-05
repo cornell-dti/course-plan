@@ -54,6 +54,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 3],
+        slotNames: ['AEM 3360', 'AEM 3370', '9 credits from the list below'],
       },
       'Agribusiness Management': {
         description: 'AEM 3020, HADM 2810 or ILRHR 2600 and 9 credits from the list.',
@@ -76,6 +77,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 3],
+        slotNames: ['AEM 3020', 'HADM 2810 or ILRHR 2600', 'Additional AEM courses'],
       },
       'Applied Economics and Management': {
         description:
@@ -133,6 +135,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 4, 1],
+        slotNames: ['ECON 3040', 'Applied Economics Requirement', 'Quantitative Methods'],
       },
       'Business Analytics': {
         description:
@@ -157,6 +160,12 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 2],
+        slotNames: [
+          'AEM 3100 or AEM 4110',
+          'AEM 2830 or AEM 2840 or CS 1112',
+          'AEM 2820 or CSS 4200',
+          '6 credits from the list',
+        ],
       },
       Entrepreneurship: {
         description: 'Complete 15 credits from the list with at least 6 credits from AEM.',
@@ -185,6 +194,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           'NBA 6230',
         ]),
         perSlotMinCount: [5],
+        slotNames: ['Course'],
       },
       'Environmental, Energy, and Resource Economics': {
         description:
@@ -208,6 +218,13 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 2, 1],
+        slotNames: [
+          'ECON 3030',
+          'ECON 3040',
+          'AEM 2500',
+          'AEM 4500 or AEM 4510 or AEM 4515',
+          '3 credits from the list below',
+        ],
       },
       Finance: {
         description: 'AEM 4570, AEM 4670, AEM 3520 or AEM 3360, 6 credits from the list below.',
@@ -231,6 +248,12 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 2],
+        slotNames: [
+          'AEM 4570',
+          'AEM 4670',
+          'AEM 3520 or AEM 3360',
+          '6 credits from the list below',
+        ],
       },
       'Food Industry Management': {
         description:
@@ -243,6 +266,12 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ['AEM 3270', 'AEM 4150', 'AEM 4460']
         ),
         perSlotMinCount: [1, 1, 1, 2],
+        slotNames: [
+          'AEM 2480',
+          'AEM 3340 or HADM 3470',
+          'AEM 4400',
+          'AEM 3270 or AEM 4150 or AEM 4460',
+        ],
       },
       'International Trade and Development': {
         description: 'AEM 2300 or AEM 2350 and 12 credits from the list below.',
@@ -263,6 +292,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 4],
+        slotNames: ['AEM 2300 or AEM 2350', '12 credits from the list below'],
       },
       Marketing: {
         description: 'AEM 3440 or HADM 3470, AEM 4410 and 9 credits from the list below.',
@@ -287,6 +317,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 3],
+        slotNames: ['AEM 3440 or HADM 3470', 'AEM 4410', '9 credits from the list below'],
       },
       Strategy: {
         description: '6 and 9 credits from the lists below.',
@@ -307,6 +338,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [2, 3],
+        slotNames: ['6 credits from the list below', '9 credits from the list below'],
       },
     },
   },
@@ -327,6 +359,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
+    slotNames: ['AEM 2200', 'AEM 2225', 'AEM 2240', 'AEM 2420', 'AEM 2601', 'AEM 3200', 'AEM 3230'],
   },
   {
     name: 'Economics Requirements',
@@ -336,6 +369,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['ECON 1110'], ['ECON 1120'], ['AEM 2600', 'ECON 3030']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
+    slotNames: ['ECON 1110', 'ECON 1120', 'AEM 2600 or ECON 3030'],
   },
   {
     name: 'Quantitative Methods Requirements',
@@ -344,6 +378,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['AEM 2100'], ['MATH 1110', 'MATH 1120'], ['AEM 2010']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
+    slotNames: ['AEM 2100', 'MATH 1110 OR MATH 1120', 'AEM 2010'],
   },
   {
     name: 'Quantitative Methods Elective Requirements',
@@ -396,6 +431,12 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
+    slotNames: [
+      'Environmental, Energy, and Resource Economics',
+      'Economic Analysis',
+      'International Trade and Development',
+      'Food and Agricultural Economics',
+    ],
     minNumberOfSlots: 2,
   },
   {
@@ -403,7 +444,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'Taken during Sophomore year. Focus: Critical thinking. ' +
       'These course options are centered around contemporary global issues and will help you learn communication, business analysis, and critical thinking skills as you develop cultural awareness. ' +
-      'Available courses may vary per semester. You’ll choose one of the following:',
+      "Available courses may vary per semester. You'll choose one of the following:",
     source: 'https://dyson.cornell.edu/programs/undergraduate/degree-requirements/core/',
     checker: includesWithSingleRequirement(
       'AEM 2000',
@@ -414,6 +455,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Grand Challenges Reqiurement Part 2: Pre-Project Weekend Immersion',
@@ -422,6 +464,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('AEM 3000'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Grand Challenges Reqiurement Part 3: Project Course',
@@ -430,6 +473,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('AEM 4000'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
 ];
 

@@ -7,7 +7,7 @@ import {
 } from './types';
 import sourceRequirements from './data';
 import { FWS_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
-import { coursesWithLastOfferingData } from './filtered-course-data';
+import { fullCoursesArray } from '../assets/courses/typed-full-courses';
 
 /**
  * Special (synthetic) courses, as used in AP/IB equivalent courses generation.
@@ -38,7 +38,7 @@ const getEligibleCoursesFromRequirementCheckers = (
 ): readonly (readonly number[])[] =>
   checkers.map(oneRequirementChecker => {
     const courseIdSet = new Set(
-      [...coursesWithLastOfferingData, ...specialCourses]
+      [...fullCoursesArray, ...specialCourses]
         .filter(course => oneRequirementChecker(course))
         .map(course => course.crseId)
     );
@@ -54,10 +54,23 @@ const decorateRequirementWithCourses = (
       return requirement;
     case 'courses':
     case 'credits': {
-      const { checker, ...rest } = requirement;
+      const { checker, additionalRequirements, ...rest } = requirement;
       return {
         ...rest,
         courses: getEligibleCoursesFromRequirementCheckers(checker),
+        additionalRequirements:
+          additionalRequirements &&
+          Object.fromEntries(
+            Object.entries(additionalRequirements).map(
+              ([name, { checker: additionalChecker, ...additionalRequirementRest }]) => [
+                name,
+                {
+                  ...additionalRequirementRest,
+                  courses: getEligibleCoursesFromRequirementCheckers(additionalChecker),
+                },
+              ]
+            )
+          ),
       };
     }
     case 'toggleable': {

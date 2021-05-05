@@ -19,17 +19,21 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import trashIcon from '@/assets/images/trash-white.svg';
 
-export default Vue.extend({
+export default defineComponent({
   components: { FlexibleModal },
   props: {
     deleteSemType: { type: String, required: true },
     deleteSemYear: { type: Number, required: true },
   },
-
+  emits: {
+    'close-delete-modal': () => true,
+    'delete-semester': (type: string, year: number) =>
+      typeof type === 'string' && typeof year === 'number',
+  },
   computed: {
     text() {
       return 'Are you sure you want to delete this semester?';

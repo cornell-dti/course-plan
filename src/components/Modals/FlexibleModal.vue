@@ -31,9 +31,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     title: { type: String, required: true },
     contentClass: { type: String, required: true },
@@ -43,6 +43,7 @@ export default Vue.extend({
     rightButtonAlt: { type: String, default: '' },
     rightButtonIsDisabled: { type: Boolean, required: true },
   },
+  emits: ['modal-closed', 'left-button-clicked', 'right-button-clicked'],
   methods: {
     closeCurrentModal(): void {
       this.$emit('modal-closed');

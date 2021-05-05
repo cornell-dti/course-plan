@@ -21,13 +21,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import BottomBarCourse from '@/components/BottomBar/BottomBarCourse.vue';
 import BottomBarTabView from '@/components/BottomBar/BottomBarTabView.vue';
 import BottomBarTitle from '@/components/BottomBar/BottomBarTitle.vue';
 import { immutableBottomBarState, toggleBottomBar } from '@/components/BottomBar/BottomBarState';
 
-export default Vue.extend({
+export default defineComponent({
   components: { BottomBarCourse, BottomBarTabView, BottomBarTitle },
   props: {
     maxBottomBarTabs: { type: Number, required: true },

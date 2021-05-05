@@ -66,11 +66,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
 import { GTagEvent } from '@/gtag';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     title: { type: String, required: true },
     text: { type: String, required: true },
@@ -78,6 +78,7 @@ export default Vue.extend({
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
   },
+  emits: ['hide', 'startTour', 'skip'],
   data() {
     return {
       hideOnClick: '',

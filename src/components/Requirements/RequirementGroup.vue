@@ -19,10 +19,15 @@
       <div v-if="displayDetails || tourStep === 1">
         <h2>Ongoing Requirements</h2>
         <div class="separator"></div>
-        <div v-for="(subReq, id) in partitionedRequirementsProgress.ongoing" :key="id">
-          <sub-requirement
-            :subReq="subReq"
-            :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
+        <div
+          v-for="(requirementFulfillment, id) in partitionedRequirementsProgress.ongoing"
+          :key="id"
+        >
+          <requirement-fulfillment
+            :requirementFulfillment="requirementFulfillment"
+            :toggleableRequirementChoice="
+              toggleableRequirementChoices[requirementFulfillment.requirement.id]
+            "
             :color="reqGroupColorMap[req.groupName][0]"
             :isCompleted="false"
             :tourStep="tourStep"
@@ -49,11 +54,16 @@
 
         <!-- Completed requirements -->
         <div v-if="displayCompleted">
-          <div v-for="(subReq, id) in partitionedRequirementsProgress.completed" :key="id">
+          <div
+            v-for="(requirementFulfillment, id) in partitionedRequirementsProgress.completed"
+            :key="id"
+          >
             <div class="separator" v-if="reqIndex < reqs.length - 1 || displayDetails"></div>
-            <sub-requirement
-              :subReq="subReq"
-              :toggleableRequirementChoice="toggleableRequirementChoices[subReq.requirement.id]"
+            <requirement-fulfillment
+              :requirementFulfillment="requirementFulfillment"
+              :toggleableRequirementChoice="
+                toggleableRequirementChoices[requirementFulfillment.requirement.id]
+              "
               :color="reqGroupColorMap[req.groupName][0]"
               :isCompleted="true"
               :tourStep="tourStep"
@@ -71,10 +81,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
-import SubRequirement from '@/components/Requirements/SubRequirement.vue';
+import RequirementFulfillment from '@/components/Requirements/RequirementFulfillment.vue';
 
 import store from '@/store';
 
@@ -90,8 +100,8 @@ type PartitionedRequirementsProgress = {
   readonly completed: readonly RequirementFulfillment[];
 };
 
-export default Vue.extend({
-  components: { RequirementHeader, SubRequirement },
+export default defineComponent({
+  components: { RequirementHeader, RequirementFulfillment },
   props: {
     req: { type: Object as PropType<GroupedRequirementFulfillmentReport>, required: true },
     reqIndex: { type: Number, required: true }, // Index of this req in reqs array
@@ -104,6 +114,17 @@ export default Vue.extend({
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
     tourStep: { type: Number, required: true },
+  },
+  emits: {
+    activateMajor: (id: number) => typeof id === 'number',
+    activateMinor: (id: number) => typeof id === 'number',
+    onShowAllCourses: (courses: {
+      requirementName: string;
+      subReqCoursesArray: readonly FirestoreSemesterCourse[];
+    }) => typeof courses === 'object',
+    changeToggleableRequirementChoice: (requirementID: string, option: string) =>
+      typeof requirementID === 'string' && typeof option === 'string',
+    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data() {
     return {
@@ -141,7 +162,10 @@ export default Vue.extend({
     activateMinor(id: number) {
       this.$emit('activateMinor', id);
     },
-    onShowAllCourses(courses: FirestoreSemesterCourse[]) {
+    onShowAllCourses(courses: {
+      requirementName: string;
+      subReqCoursesArray: readonly FirestoreSemesterCourse[];
+    }) {
       this.$emit('onShowAllCourses', courses);
     },
     changeToggleableRequirementChoice(requirementID: string, option: string) {

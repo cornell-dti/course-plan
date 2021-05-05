@@ -16,6 +16,7 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
   {
     name: 'Government Coursework',
@@ -47,6 +48,7 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19897',
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
     checkerWarning: 'We do not check the course is a seminar style.',
     allowCourseDoubleCounting: true,
     checker: [

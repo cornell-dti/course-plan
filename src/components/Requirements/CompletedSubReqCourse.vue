@@ -14,7 +14,7 @@
           <span class="completed-reqCourses-course-heading-check"
             ><img src="@/assets/images/checkmark-green.svg" alt="checkmark"
           /></span>
-          {{ courseLabel }}
+          {{ slotName }}
         </div>
         <button
           class="completed-reqCourses-course-heading-reset-button reqCourse-button"
@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import ResetConfirmationModal from '@/components/Modals/ResetConfirmationModal.vue';
 import store from '@/store';
@@ -48,11 +48,14 @@ import getCurrentSeason, { getCurrentYear } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
-export default Vue.extend({
+export default defineComponent({
   components: { ReqCourse, ResetConfirmationModal },
   props: {
-    subReqCourseId: { type: Number, required: true },
+    slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
+  },
+  emits: {
+    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data: () => ({
     resetConfirmVisible: false,
@@ -60,9 +63,6 @@ export default Vue.extend({
   computed: {
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
-    },
-    courseLabel(): string {
-      return `Course ${this.subReqCourseId + 1}`;
     },
     resetText(): string {
       return 'Reset';

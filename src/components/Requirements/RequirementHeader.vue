@@ -137,11 +137,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 
-export default Vue.extend({
+export default defineComponent({
   components: { DropDownArrow },
   props: {
     reqIndex: { type: Number, required: true },
@@ -156,6 +156,17 @@ export default Vue.extend({
     onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
+  },
+  emits: {
+    activateMajor(id: number) {
+      return typeof id === 'number';
+    },
+    activateMinor(id: number) {
+      return typeof id === 'number';
+    },
+    toggleDetails() {
+      return true;
+    },
   },
   computed: {
     // number of fully fulfilled requirements, note pure self-checks are never fulfilled

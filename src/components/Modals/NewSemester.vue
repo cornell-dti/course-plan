@@ -74,7 +74,7 @@
             <div
               v-for="yearChoice in years"
               :key="yearChoice"
-              ref="yearRef"
+              :ref="`year-ref-${yearChoice}`"
               class="newSemester-dropdown-content-item"
               @click="selectYear(yearChoice)"
             >
@@ -89,8 +89,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
+import store from '@/store';
 
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
@@ -117,10 +118,9 @@ type Data = {
   };
 };
 
-const yearScrollIndex = 4;
 const yearRange = 6;
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     currentSemesters: {
       type: Array as PropType<readonly FirestoreSemester[] | null>,
@@ -131,6 +131,11 @@ export default Vue.extend({
     year: { type: Number, default: 0 },
     type: { type: String as PropType<FirestoreSemesterType>, default: '' },
     isCourseModelSelectingSemester: { type: Boolean, default: false },
+  },
+  emits: {
+    updateSemProps: (season: string, year: number): boolean =>
+      typeof season === 'string' && typeof year === 'number',
+    duplicateSemester: (duplicate: boolean): boolean => typeof duplicate === 'boolean',
   },
   data(): Data {
     // years
@@ -189,6 +194,13 @@ export default Vue.extend({
       }
       return String(this.yearText || this.year || defaultYear);
     },
+    // scroll the bottom of the year dropdown to 4 years after the user's entrance year, or the current year if undefined
+    scrollTopToElement(): number {
+      const topYear = store.state.onboardingData.entranceYear
+        ? store.state.onboardingData.entranceYear
+        : '2017';
+      return Number(topYear);
+    },
   },
   directives: {
     'click-outside': clickOutside,
@@ -227,9 +239,11 @@ export default Vue.extend({
 
       // scroll to the middle of the year div after visible (on the next tick)
       if (!contentShown && type === 'year') {
+        // @ts-expect-error: weird complaints about emit string type not assignable
         this.$nextTick(() => {
-          const el = (this.$refs.yearRef as Element[])[yearScrollIndex];
-          el.scrollIntoView({ behavior: 'auto' });
+          (this.$refs[`year-ref-${this.scrollTopToElement}`] as Element).scrollIntoView({
+            behavior: 'auto',
+          });
         });
       }
     },
@@ -289,7 +303,7 @@ export default Vue.extend({
         this.yearText = 0;
       }
 
-      if (this.isSemesterAdd) {
+      if (this.isSemesterAdd || this.isEdit) {
         this.$emit('updateSemProps', this.seasonPlaceholder, Number(this.yearPlaceholder));
       }
     },

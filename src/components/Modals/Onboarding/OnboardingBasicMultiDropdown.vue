@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import OnboardingBasicSingleDropdown from '@/components/Modals/Onboarding/OnboardingBasicSingleDropdown.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: { OnboardingBasicSingleDropdown },
   props: {
     /** Mapping from acronym to full name */
@@ -32,6 +32,12 @@ export default Vue.extend({
     },
     dropdownChoices: { type: Array as PropType<readonly string[]>, required: true },
     addDropdownText: { type: String, required: true },
+  },
+  emits: {
+    'on-select': (key: string, index: number) =>
+      typeof key === 'string' && typeof index === 'number',
+    'on-remove': (index: number) => typeof index === 'number',
+    'on-add': () => true,
   },
   methods: {
     onSelect(key: string, index: number) {

@@ -21,6 +21,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
+    slotNames: ['INFO 1200 or INFO 1260', 'INFO 1300', 'INFO 2040', 'INFO 2450', 'INFO 2950'],
   },
   {
     name: 'Programming and Math Requirements',
@@ -54,6 +55,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
+    slotNames: ['Programming', 'Calculus', 'Statistics'],
   },
   {
     name: 'Concentration',
@@ -96,6 +98,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [2, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
       'Data Science': {
         description:
@@ -123,6 +126,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
           ['INFO 4310', 'COMM 3150', 'COMM 3189', 'COMM 4200', 'COMM 4860', 'GOVT 2169', 'SOC 3580']
         ),
         perSlotMinCount: [1, 1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],
       },
       'Digital Culture and Production': {
         description:
@@ -157,6 +161,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 2],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
       'Information Ethics, Law, and Policy': {
         description:
@@ -181,6 +186,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
           ['INFO 3300', 'INFO 3350', 'INFO 4120', 'INFO 4130', 'INFO 4300']
         ),
         perSlotMinCount: [1, 1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],
       },
       'Interactive Technologies': {
         description:
@@ -216,6 +222,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
       'Networks, Crowds, and Markets': {
         description: 'A. Models (choose two), B. Data (choose one), C. Policy/Values (choose one)',
@@ -237,6 +244,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
           ['INFO 3561', 'INFO 4200', 'INFO 4240', 'INFO 4250', 'INFO 4940', 'STS 3440']
         ),
         perSlotMinCount: [2, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C'],
       },
       'UX (User Experience)': {
         description:
@@ -262,6 +270,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 1],
+        slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],
       },
     },
   },
@@ -290,6 +299,7 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
 ];
 

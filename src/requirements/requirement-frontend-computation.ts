@@ -44,8 +44,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-AG-total-credits',
         description:
           '120 academic credits are required for graduation. ' +
-          'A minimum of 100 credits must be in courses for which a letter grade was recieved. ' +
-          'PE courses do not count.',
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11561',
       };
       break;
@@ -55,7 +55,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-AS1-total-credits',
         description:
           '120 academic credits are required. ' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11570#credit-req',
       };
       break;
@@ -75,7 +76,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-HE-total-credits',
         description:
           '120 academic credits are required. ' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source:
           'http://courses.cornell.edu/content.php?catoid=41&navoid=11600#Cornell_Credit_Requirements',
       };
@@ -86,7 +88,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-IL-total-credits',
         description:
           '120 academic credits are required. ' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11587',
       };
       break;
@@ -96,7 +99,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-BU-total-credits',
         description:
           '120 academic credits are required. ' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
+          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11715',
       };
       break;
@@ -105,20 +109,11 @@ const getTotalCreditsFulfillmentStatistics = (
   }
 
   let minCountFulfilled = 0;
-  let minCountRequired = 120;
-  const courseCodeSet = new Set<string>();
-  const eligibleCourses =
-    college === 'AG'
-      ? courses.filter(course => !course.code.startsWith('PE '))
-      : courses.filter(courseIsAllEligible);
+  const minCountRequired = 120;
+  const eligibleCourses = courses.filter(courseIsAllEligible);
 
   eligibleCourses.forEach(course => {
     minCountFulfilled += course.credits;
-    if (courseCodeSet.has(course.code)) {
-      minCountRequired += course.credits;
-    } else {
-      courseCodeSet.add(course.code);
-    }
   });
 
   return {
@@ -147,6 +142,7 @@ const getSwimTestFulfillmentStatistics = (
     courses: [[SWIM_TEST_COURSE_ID]],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   };
   const swimClasses = courses.filter(it => it.courseId === SWIM_TEST_COURSE_ID);
   if (tookSwimTest) {

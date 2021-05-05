@@ -22,16 +22,21 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import store from '@/store';
 
-export default Vue.extend({
+export default defineComponent({
   components: { FlexibleModal, NewSemester },
   props: {
     deleteSemType: { type: String as PropType<FirestoreSemesterType>, required: true },
     deleteSemYear: { type: Number, required: true },
+  },
+  emits: {
+    'close-edit-modal': () => true,
+    'edit-semester': (season: string, year: number) =>
+      typeof season === 'string' && typeof year === 'number',
   },
   data() {
     return {
@@ -53,16 +58,16 @@ export default Vue.extend({
     },
     editSemester() {
       if (!this.isDisabled) {
-        this.$emit('edit-semester', this.season, this.year);
+        this.$emit('edit-semester', this.season, Number(this.year));
         this.closeCurrentModal();
       }
     },
     disableButton(bool: boolean) {
       this.isDisabled = bool;
     },
-    updateSemProps(season: string, year: string) {
+    updateSemProps(season: string, year: number) {
       this.season = season;
-      this.year = year;
+      this.year = String(year);
     },
   },
 });

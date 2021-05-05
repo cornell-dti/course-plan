@@ -108,7 +108,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { examData as reqsData, ExamRequirements } from '@/requirements/data/exams/ExamCredit';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
@@ -166,7 +166,7 @@ export const getExamCredit = (exam: FirestoreAPIBExam): number => {
   return mostPossibleCredit;
 };
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     OnboardingTransferSwimming,
     OnboardingTransferExamPropertyDropdown,

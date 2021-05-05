@@ -70,13 +70,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
-export default Vue.extend({
+export default defineComponent({
   components: { RequirementsDropdown },
   props: {
     editMode: { type: Boolean, required: true },
@@ -90,11 +90,15 @@ export default Vue.extend({
       type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
       required: true,
     },
-    // all the other ones that don’t allow double counting
+    // all the other ones that don't allow double counting
     relatedRequirements: {
       type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
       required: true,
     },
+  },
+  emits: {
+    'on-selected-change': (id: string) => typeof id === 'string',
+    'edit-mode': () => true,
   },
   computed: {
     chosenRequirementText(): string {

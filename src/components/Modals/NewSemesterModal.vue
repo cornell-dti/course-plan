@@ -22,13 +22,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import store from '@/store';
 
-export default Vue.extend({
+export default defineComponent({
   components: { FlexibleModal, NewSemester },
+  emits: {
+    'close-semester-modal': () => true,
+    'add-semester': (season: string, year: number) =>
+      typeof season === 'string' && typeof year === 'number',
+  },
   data() {
     return { isDisabled: false, season: '', year: 0 };
   },

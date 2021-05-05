@@ -10,11 +10,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import info from '@/assets/images/info.svg';
 import caution from '@/assets/images/caution.svg';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     isInformation: { type: Boolean, required: true },
   },

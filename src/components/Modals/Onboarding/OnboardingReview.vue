@@ -36,19 +36,27 @@
               ><span> {{ userName.lastName }}</span></label
             >
           </div>
+          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <label class="onboarding-label"
+              ><span>Entrance Year<span class="onboarding-required-star">*</span></span></label
+            >
+            <label class="onboarding-label--review"
+              ><span> {{ entranceYearText }}</span></label
+            >
+          </div>
+          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <label class="onboarding-label"
+              ><span>Graduation Year<span class="onboarding-required-star">*</span></span></label
+            >
+            <label class="onboarding-label--review"
+              ><span> {{ gradYearText }}</span></label
+            >
+          </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
           <span class="onboarding-subHeader2-review"> Your Major</span>
         </div>
         <div class="onboarding-selectWrapper">
-          <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label"
-              >Graduation Year<span class="onboarding-required-star">*</span></label
-            >
-            <div>
-              <label class="onboarding-label--review">{{ gradYearText }}</label>
-            </div>
-          </div>
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label"
               >College<span class="onboarding-required-star">*</span></label
@@ -154,17 +162,22 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
 import { GTagEvent } from '@/gtag';
 
 const placeholderText = 'Select one';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+  },
+  emits: {
+    setPage(page: number) {
+      return typeof page === 'number';
+    },
   },
   computed: {
     collegeText(): string {
@@ -174,6 +187,11 @@ export default Vue.extend({
     },
     gradYearText(): string {
       return this.onboardingData.gradYear !== '' ? this.onboardingData.gradYear : placeholderText;
+    },
+    entranceYearText(): string {
+      return this.onboardingData.entranceYear !== ''
+        ? this.onboardingData.entranceYear
+        : placeholderText;
     },
     totalCredits(): number {
       let count = 0;

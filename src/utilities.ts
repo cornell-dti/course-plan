@@ -33,15 +33,21 @@ export function getCurrentYearSuffix(): string {
 }
 
 export function getCollegeFullName(acronym: string): string {
-  return requirementJSON.college[acronym].name;
+  // Return empty string if college is not in requirementJSON
+  const college = requirementJSON.college[acronym];
+  return college ? college.name : '';
 }
 
 export function getMajorFullName(acronym: string): string {
-  return requirementJSON.major[acronym].name;
+  // Return empty string if major is not in requirementJSON
+  const major = requirementJSON.major[acronym];
+  return major ? major.name : '';
 }
 
 export function getMinorFullName(acronym: string): string {
-  return requirementJSON.minor[acronym].name;
+  // Return empty string if minor is not in requirementJSON
+  const minor = requirementJSON.minor[acronym];
+  return minor ? minor.name : '';
 }
 
 function getAllSubjects(): ReadonlySet<string> {
@@ -91,16 +97,16 @@ export function allocateAllSubjectColor(
 
 export const clickOutside = {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  bind(el: any, binding: any, vnode: any): void {
-    el.event = (event: Event) => {
+  beforeMount(el: any, binding: any): void {
+    el.clickOutsideEvent = (event: Event) => {
       if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event, binding.arg);
+        binding.value(event, el);
       }
     };
-    document.body.addEventListener('click', el.event);
+    document.body.addEventListener('click', el.clickOutsideEvent);
   },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  unbind(el: any): void {
-    document.body.removeEventListener('click', el.event);
+  unmounted(el: any): void {
+    document.body.removeEventListener('click', el.clickOutsideEvent);
   },
 };

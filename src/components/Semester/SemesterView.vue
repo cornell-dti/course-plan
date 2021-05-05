@@ -50,11 +50,6 @@
         :class="{ 'modal--flex': isSemesterConfirmationOpen }"
         :text="confirmationText"
       />
-      <semester-caution
-        class="semesterView-caution"
-        :class="{ 'modal--flex': isCautionModalOpen }"
-        :text="cautionText"
-      />
       <div class="semesterView-content">
         <div
           v-for="(sem, semesterIndex) in semesters"
@@ -74,7 +69,6 @@
             @course-onclick="courseOnClick"
             @new-semester="openSemesterModal"
             @delete-semester="deleteSemester"
-            @open-caution-modal="openCautionModal"
             @modal-open="modalToggle"
           />
         </div>
@@ -110,10 +104,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Confirmation.vue';
-import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
@@ -121,8 +114,8 @@ import { GTagEvent } from '@/gtag';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 
-export default Vue.extend({
-  components: { Confirmation, NewSemesterModal, Semester, SemesterCaution },
+export default defineComponent({
+  components: { Confirmation, NewSemesterModal, Semester },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
@@ -130,16 +123,18 @@ export default Vue.extend({
     isMobile: { type: Boolean, required: true },
     startTour: { type: Boolean, required: true },
   },
+  emits: {
+    'compact-updated': (compact: boolean) => typeof compact === 'boolean',
+    'modal-open': (open: boolean) => typeof open === 'boolean',
+  },
   data() {
     return {
       confirmationText: '',
-      cautionText: '',
       key: 0,
       activatedCourse: {} as FirestoreSemesterCourse,
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
-      isCautionModalOpen: false,
     };
   },
   computed: {
@@ -179,16 +174,6 @@ export default Vue.extend({
         this.isSemesterConfirmationOpen = false;
       }, 3000);
     },
-    openCautionModal() {
-      this.cautionText = `Unable to add course. Already in plan.`;
-      this.isCautionModalOpen = true;
-      this.$emit('modal-open', true);
-
-      setTimeout(() => {
-        this.isCautionModalOpen = false;
-        this.$emit('modal-open', false);
-      }, 3000);
-    },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
       this.$emit('modal-open', true);
@@ -197,13 +182,13 @@ export default Vue.extend({
       this.isSemesterModalOpen = false;
       this.$emit('modal-open', false);
     },
-    addSemester(type: FirestoreSemesterType, year: number) {
-      addSemester(type, year, this.$gtag);
-      this.openSemesterConfirmationModal(type, year, true);
+    addSemester(type: string, year: number) {
+      addSemester(type as FirestoreSemesterType, year, this.$gtag);
+      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, true);
     },
-    deleteSemester(type: FirestoreSemesterType, year: number) {
-      deleteSemester(type, year, this.$gtag);
-      this.openSemesterConfirmationModal(type, year, false);
+    deleteSemester(type: string, year: number) {
+      deleteSemester(type as FirestoreSemesterType, year, this.$gtag);
+      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.activatedCourse = course;

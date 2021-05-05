@@ -1,8 +1,8 @@
 <template>
-  <div class="reset-modal" :class="{ 'modal--block': value }">
+  <div class="reset-modal" :class="{ 'modal--block': modelValue }">
     <flexible-modal
       title="Reset Requirement"
-      :class="[{ 'modal--block': value }, 'modal-width']"
+      :class="[{ 'modal--block': modelValue }, 'modal-width']"
       content-class="content-confirmation"
       left-button-text="No"
       right-button-text="Yes"
@@ -27,19 +27,24 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import FlexibleModal from './FlexibleModal.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: { FlexibleModal },
   props: {
     reqName: { type: String, required: true },
     isTestReq: { type: Boolean, required: true },
-    value: { type: Boolean, required: true },
+    modelValue: { type: Boolean, required: true },
+  },
+  emits: {
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+    'modal-open': (value: boolean) => typeof value === 'boolean',
+    'close-reset-modal': (value: boolean) => typeof value === 'boolean',
   },
   methods: {
     closeCurrentModal(): void {
-      this.$emit('input', false);
+      this.$emit('update:modelValue', false);
       this.$emit('modal-open', false);
     },
     resetClicked(): void {

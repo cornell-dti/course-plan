@@ -48,15 +48,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import firebase from 'firebase/app';
 import { GTagEvent } from '@/gtag';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     isOpeningRequirements: { type: Boolean, required: true },
     modalIsOpen: { type: Boolean, required: true },
   },
+  emits: ['editProfile', 'toggleRequirementsBar'],
   data() {
     return {
       menuOpen: false,

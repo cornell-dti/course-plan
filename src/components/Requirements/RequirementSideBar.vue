@@ -22,7 +22,7 @@
         data-tooltipClass="tooltipCenter"
       >
         <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
-          <requirement-view
+          <requirement-group
             :req="req"
             :reqIndex="index"
             :toggleableRequirementChoices="toggleableRequirementChoices"
@@ -71,21 +71,24 @@
           </div>
         </div>
         <draggable
-          :value="showAllCourses.shownCourses"
+          :modelValue="showAllCourses.shownCourses"
           :clone="cloneCourse"
+          item-key="code"
           :group="{ name: 'draggable-semester-courses', put: false }"
         >
-          <div v-for="(courseData, index) in showAllCourses.shownCourses" :key="index">
-            <div class="mt-3">
-              <course
-                :courseObj="courseData"
-                :compact="false"
-                :active="false"
-                :isReqCourse="true"
-                class="requirements-course"
-              />
+          <template #item="{ element }">
+            <div>
+              <div class="mt-3">
+                <course
+                  :courseObj="element"
+                  :compact="false"
+                  :active="false"
+                  :isReqCourse="true"
+                  class="requirements-course"
+                />
+              </div>
             </div>
-          </div>
+          </template>
         </draggable>
       </div>
     </div>
@@ -94,12 +97,11 @@
 
 <script lang="ts">
 import draggable from 'vuedraggable';
-import Vue from 'vue';
-import VueCollapse from 'vue2-collapse';
+import { defineComponent } from 'vue';
 import introJs from 'intro.js';
 
 import Course from '@/components/Course/Course.vue';
-import RequirementView from '@/components/Requirements/RequirementView.vue';
+import RequirementGroup from '@/components/Requirements/RequirementGroup.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
 import clipboard from '@/assets/images/clipboard.svg';
@@ -107,12 +109,10 @@ import warning from '@/assets/images/warning.svg';
 import store from '@/store';
 import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-firestore-data';
 
-Vue.use(VueCollapse);
-
 export type ShowAllCourses = {
   readonly name: string;
-  shownCourses: FirestoreSemesterCourse[];
-  readonly allCourses: FirestoreSemesterCourse[];
+  shownCourses: readonly FirestoreSemesterCourse[];
+  readonly allCourses: readonly FirestoreSemesterCourse[];
 };
 
 type Data = {
@@ -136,10 +136,14 @@ tour.setOption('exitOnOverlayClick', 'false');
 // show 24 courses per page of the see all menu
 const maxSeeAllCoursesPerPage = 24;
 
-export default Vue.extend({
-  components: { draggable, Course, DropDownArrow, RequirementView },
+export default defineComponent({
+  components: { draggable, Course, DropDownArrow, RequirementGroup },
   props: {
     startTour: { type: Boolean, required: true },
+  },
+  emits: {
+    showTourEndWindow: () => true,
+    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data(): Data {
     return {
@@ -206,9 +210,7 @@ export default Vue.extend({
       const typedWindow = initWindow as windowType;
       return (
         /constructor/i.test(htmlElement as string) ||
-        (function (p) {
-          return p.toString() === '[object SafariRemoteNotification]';
-        })(
+        (p => p.toString() === '[object SafariRemoteNotification]')(
           !typedWindow.safari ||
             (typeof typedWindow.safari !== 'undefined' && typedWindow.safari.pushNotification)
         )
@@ -250,7 +252,7 @@ export default Vue.extend({
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
-      subReqCoursesArray: FirestoreSemesterCourse[];
+      subReqCoursesArray: readonly FirestoreSemesterCourse[];
     }) {
       this.shouldShowAllCourses = true;
 
@@ -281,7 +283,9 @@ export default Vue.extend({
       );
     },
     // return an array consisting of the courses to display on the see all menu, depending on the showAllPage and maxSeeAllCoursesPerPage
-    findPotentialSeeAllCourses(courses: FirestoreSemesterCourse[]): FirestoreSemesterCourse[] {
+    findPotentialSeeAllCourses(
+      courses: readonly FirestoreSemesterCourse[]
+    ): FirestoreSemesterCourse[] {
       const allPotentialCourses = courses.slice(
         this.showAllPage * maxSeeAllCoursesPerPage,
         (this.showAllPage + 1) * maxSeeAllCoursesPerPage

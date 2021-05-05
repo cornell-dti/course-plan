@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
 const getMatchingCourses = (
@@ -36,7 +36,6 @@ const getMatchingCourses = (
   /* code array for results that contain course code and title array for results that contain title */
   const code: CornellCourseRosterCourse[] = [];
   const title: CornellCourseRosterCourse[] = [];
-
   const filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
   for (const course of filteredCourses) {
     const courseCode = `${course.subject} ${course.catalogNbr}`;
@@ -46,7 +45,6 @@ const getMatchingCourses = (
       title.push(course);
     }
   }
-
   // Sort both results by title
   code.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
   title.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
@@ -56,15 +54,21 @@ const getMatchingCourses = (
   return code.concat(title).slice(0, 10);
 };
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     searchBoxClassName: { type: String, required: true },
     placeholder: { type: String, required: true },
     courseFilter: {
-      type: Function as PropType<((course: CornellCourseRosterCourse) => boolean) | undefined>,
+      type: (Function as unknown) as PropType<
+        ((course: CornellCourseRosterCourse) => boolean) | undefined
+      >,
       default: undefined,
     },
     autoFocus: { type: Boolean, required: true },
+  },
+  emits: {
+    'on-escape': () => true,
+    'on-select': (result: CornellCourseRosterCourse) => typeof result === 'object',
   },
   data() {
     return {

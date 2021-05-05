@@ -40,18 +40,23 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
 const placeholderText = 'Select one';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     propertyName: { type: String, required: true },
     columnWide: { type: Boolean, required: true },
     availableOptions: { type: Array as PropType<readonly unknown[]>, required: true },
     choice: { type: [String, Number], required: true },
+  },
+  emits: {
+    // Need any to pass emit type checker
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    'on-select': (choice: any) => choice !== undefined,
   },
   data() {
     return {

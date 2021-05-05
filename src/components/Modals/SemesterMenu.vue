@@ -40,9 +40,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
+  emits: ['open-delete-semester-modal', 'open-edit-semester-modal'],
   data() {
     return {
       isOpenModal: false,

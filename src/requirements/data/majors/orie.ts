@@ -11,6 +11,7 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     allowCourseDoubleCounting: true,
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Major Required Classes',
@@ -28,6 +29,15 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
+    slotNames: [
+      'ORIE 3120',
+      'ORIE 3150 (or replacements)',
+      'ORIE 3300',
+      'ORIE 3310',
+      'ORIE 3500',
+      'ORIE 3510',
+      'ORIE 4580',
+    ],
   },
   {
     name: 'ORIE Electives',

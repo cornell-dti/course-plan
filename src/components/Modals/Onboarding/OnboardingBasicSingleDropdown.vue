@@ -25,7 +25,7 @@
           v-for="(fullName, key) in availableChoices"
           :key="key"
           class="onboarding-dropdown-content-item"
-          ref="scrollRef"
+          :ref="`scroll-ref-${key}`"
           @click="onSelect(key)"
         >
           {{ fullName }}
@@ -45,11 +45,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
 import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     /** Mapping from acronym to full name */
     availableChoices: {
@@ -58,7 +58,11 @@ export default Vue.extend({
     },
     choice: { type: String, required: true },
     cannotBeRemoved: { type: Boolean, required: true },
-    scrollBottomToIndex: { type: Number, default: 0 },
+    scrollBottomToElement: { type: Number, default: 0 },
+  },
+  emits: {
+    'on-select': (acronym: string) => typeof acronym === 'string',
+    'on-remove': () => true,
   },
   data() {
     return {
@@ -86,11 +90,14 @@ export default Vue.extend({
         this.arrowColor = yuxuanBlue;
       }
 
-      // scroll the bottom of the graduation year dropdown to scrollBottomToIndex
-      if (!contentShown && this.scrollBottomToIndex > 0) {
+      // scroll the bottom of the graduation year dropdown to scrollBottomToElement
+      if (!contentShown && this.scrollBottomToElement > 0) {
+        // @ts-expect-error: weird complaints about emit string type not assignable
         this.$nextTick(() => {
-          const el = (this.$refs.scrollRef as Element[])[this.scrollBottomToIndex];
-          el.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+          (this.$refs[`scroll-ref-${this.scrollBottomToElement}`] as Element).scrollIntoView({
+            behavior: 'auto',
+            block: 'nearest',
+          });
         });
       }
     },

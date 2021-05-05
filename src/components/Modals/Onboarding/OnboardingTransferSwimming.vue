@@ -38,12 +38,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import checkmarkSelected from '@/assets/images/checkmark-onboarding.svg';
 import checkmarkUnselected from '@/assets/images/checkmark-empty.svg';
 
-export default Vue.extend({
+export default defineComponent({
   props: { tookSwimTest: { type: Boolean, required: true } },
+  emits: {
+    'update-swim': (tookSwimTest: boolean) => typeof tookSwimTest === 'boolean',
+  },
   data() {
     return { radioValue: String(this.tookSwimTest) };
   },

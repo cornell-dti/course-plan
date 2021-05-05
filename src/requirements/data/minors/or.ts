@@ -20,6 +20,7 @@ const orMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   {
     name: 'OR/MS Minor Requirement 2',
@@ -46,6 +47,7 @@ const orMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
 ];
 

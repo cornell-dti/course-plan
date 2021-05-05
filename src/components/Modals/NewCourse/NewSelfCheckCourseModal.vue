@@ -35,18 +35,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
 import NewSemester from '@/components/Modals/NewSemester.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 import store from '@/store';
 import { getFilter } from '@/requirements/requirement-frontend-utils';
 
-export default Vue.extend({
+export default defineComponent({
   components: { CourseSelector, FlexibleModal, NewSemester },
   props: {
     subReqName: { type: String, required: true },
     requirementId: { type: String, required: true },
+  },
+  emits: {
+    'close-course-modal': () => true,
+    'add-course': (
+      selected: CornellCourseRosterCourse,
+      season: FirestoreSemesterType,
+      year: number
+    ) => typeof selected === 'object' && typeof season === 'string' && typeof year === 'number',
   },
   data() {
     return {
@@ -101,8 +109,8 @@ export default Vue.extend({
     backOrCancel() {
       this.closeCurrentModal();
     },
-    updateSemProps(season: FirestoreSemesterType, year: number) {
-      this.season = season;
+    updateSemProps(season: string, year: number) {
+      this.season = season as FirestoreSemesterType;
       this.year = year;
     },
   },

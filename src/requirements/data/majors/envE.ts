@@ -24,6 +24,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['CHEM 1570', 'CHEM 3530', 'CHEM 3570']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Biological Sciences',
@@ -40,6 +41,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Engineering Distribution',
@@ -50,6 +52,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['ENGRD 2510']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
     allowCourseDoubleCounting: true,
   },
   {
@@ -60,6 +63,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['BEE 2220', 'ENGRD 2210', 'ENGRD 3200']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Core Courses',
@@ -76,6 +80,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1],
+    slotNames: ['CEE 3040', 'CEE 3310', 'CEE 3510', 'CEE 4510', 'BEE 4750', 'CEE 3230'],
   },
   {
     name: 'Earth Science',
@@ -95,6 +100,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Laboratory Course',
@@ -104,6 +110,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSingleRequirement('BEE 4270', 'CEE 4370', 'CEE 4530 3010'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
+    slotNames: ['Course'],
   },
   {
     name: 'Design Electives',
@@ -126,6 +133,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
+    slotNames: ['Course'],
   },
   {
     // TODO: update this with official list
@@ -138,9 +146,10 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         majorApproved.some(subject => course.subject?.includes(subject) ?? false),
     ],
-    checkerWarning: 'We do not check that the courses are major approved electives',
+    checkerWarning: 'We do not check that the courses are major approved electives.',
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
+    slotNames: ['Course'],
   },
 ];
 

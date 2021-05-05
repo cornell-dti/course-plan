@@ -18,7 +18,7 @@
           @toggleRequirementsBar="toggleRequirementsBar"
           :modalIsOpen="modalIsOpen"
         />
-        <requirements
+        <requirement-side-bar
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :startTour="startTour"
@@ -34,7 +34,7 @@
         :isBottomBarExpanded="bottomBarIsExpanded"
         :isBottomBar="hasBottomCourses"
         :isMobile="isMobile"
-        @compact-updated="compactVal = $event"
+        @compact-updated="compactUpdated"
         @modal-open="modalToggle"
       />
     </div>
@@ -49,7 +49,7 @@
     />
     <tour-window
       title="Let's get CoursePlanning!"
-      text="There’s more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and
+      text="There's more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and
       also consult your advisors for more up to date information!"
       :isFinalStep="true"
       exit=""
@@ -66,11 +66,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
 import introJs from 'intro.js';
 import SemesterView from '@/components/Semester/SemesterView.vue';
-import Requirements from '@/components/Requirements/Requirements.vue';
+import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue';
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
@@ -113,12 +113,12 @@ tour.setOption('exitOnOverlayClick', 'false');
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 let listenerUnsubscriber = (): void => {};
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     BottomBar,
     NavBar,
     Onboarding,
-    Requirements,
+    RequirementSideBar,
     SemesterView,
     TourWindow,
   },
@@ -167,7 +167,7 @@ export default Vue.extend({
       }
     });
   },
-  destroyed() {
+  unmounted() {
     window.removeEventListener('resize', this.resizeEventHandler);
     listenerUnsubscriber();
   },
@@ -179,6 +179,9 @@ export default Vue.extend({
     },
     toggleRequirementsBar() {
       this.isOpeningRequirements = !this.isOpeningRequirements;
+    },
+    compactUpdated(compact: boolean) {
+      this.compactVal = compact;
     },
 
     showTourEnd() {

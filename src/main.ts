@@ -1,7 +1,6 @@
-import Vue from 'vue';
+import { createApp, App as VueApp } from 'vue';
 
-import BootstrapVue from 'bootstrap-vue';
-import VueGtag from 'vue-gtag';
+import VueGtag from 'vue-gtag-next';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -15,24 +14,17 @@ import store from './store';
 
 import * as fb from './firebaseConfig';
 
-Vue.config.productionTip = false;
-
-Vue.use(BootstrapVue);
-
-// Enable Google analytics with custom events
-Vue.use(VueGtag, {
-  config: { id: 'UA-124837875-2' },
-});
-
 // handle page reloads
-let app: Vue | undefined;
+let app: VueApp | undefined;
 fb.auth.onAuthStateChanged(() => {
   if (!app) {
-    app = new Vue({
-      el: '#app',
-      router,
-      store,
-      render: h => h(App),
+    app = createApp(App);
+    app.use(router);
+    // Enable Google analytics with custom events
+    app.use(VueGtag, {
+      property: { id: 'UA-124837875-2' },
     });
+    app.use(store);
+    app.mount('#app');
   }
 });

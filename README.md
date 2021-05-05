@@ -30,8 +30,11 @@ Then access http://localhost:8080/
 - **Nikita Kasumov** - Developer
 - **Sam Zhou** - Developer
 - **Ben Shen** - Developer
+- **Vaishnavi Gupta** - Developer
 - **Yuxuan Chen** - Designer
 - **Cristie Huang** - Designer
+- **Kehui Guo** - Designer
+- **Miranda Yu** - PMM
 - **Theresa Cho** - TPM
 - **Ein Chang** - PM
 

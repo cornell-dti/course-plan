@@ -1,38 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { courseIsFWS, ifCodeMatch } from '../checkers-common';
-
-const FLcourses: readonly string[] = [
-  'ARAB',
-  'BENGL',
-  'BURM',
-  'CHIN',
-  'FREN',
-  'GERST',
-  'GREEK',
-  'HEBRW',
-  'HINDI',
-  'INDO',
-  'ITAL',
-  'JAPAN',
-  'KHMER',
-  'KOREA',
-  'LATIN',
-  'NEPAL',
-  'PERSN',
-  'POLSH',
-  'PORT',
-  'RUSSA',
-  'SANSK',
-  'SINHA',
-  'SPAN',
-  'SWAHL',
-  'TAG',
-  'THAI',
-  'TURK',
-  'VIET',
-  'YORUB',
-  'ZULU',
-];
+import { courseIsFWS, ifCodeMatch, courseIsForeignLang } from '../checkers-common';
 
 const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -76,16 +43,16 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
           'Complete one intermediate course of 3 or more credits at Cornell at the 2000 level or above.',
         checker: [
           (course: Course): boolean =>
-            FLcourses.some(language => course.subject?.includes(language) ?? false) &&
-            !ifCodeMatch(course.catalogNbr, '1***'),
+            courseIsForeignLang(course) && !ifCodeMatch(course.catalogNbr, '1***'),
         ],
         counting: 'courses',
         perSlotMinCount: [1],
+        slotNames: ['Course'],
       },
       'Option 2': {
         description:
           'Complete at least 11 credits of study (2 or 3 semesters) in a single foreign language taken in the appropriate sequence at Cornell.',
-        checker: [(course: Course): boolean => FLcourses.includes(course.subject)],
+        checker: [(course: Course): boolean => courseIsForeignLang(course)],
         counting: 'credits',
         perSlotMinCount: [11],
       },
@@ -121,6 +88,7 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    slotNames: ['ALC', 'BIO', 'ETM', 'GLC', 'HST', 'PHS', 'SCD', 'SSC', 'SDS', 'SMR'],
     allowCourseDoubleCounting: true,
     minNumberOfSlots: 8,
     disallowTransferCredit: true,
