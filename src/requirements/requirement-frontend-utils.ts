@@ -153,6 +153,22 @@ export function getUserRequirements({
   }));
 }
 
+type MatchedRequirementFulfillmentSpecificationBase = {
+  readonly fulfilledBy: 'courses' | 'credits';
+  readonly eligibleCourses: readonly (readonly number[])[];
+  readonly perSlotMinCount: readonly number[];
+  readonly slotNames: readonly string[];
+  readonly minNumberOfSlots?: number;
+};
+
+type MatchedRequirementFulfillmentSpecification =
+  | (MatchedRequirementFulfillmentSpecificationBase & {
+      readonly additionalRequirements?: {
+        readonly [name: string]: MatchedRequirementFulfillmentSpecificationBase;
+      };
+    })
+  | null;
+
 /**
  * The function respects the user choice on toggleable requirement, and provides the already decided
  * fulfillment strategy to follow.
@@ -163,13 +179,31 @@ export function getUserRequirements({
 export function getMatchedRequirementFulfillmentSpecification(
   requirement: RequirementWithIDSourceType,
   toggleableRequirementChoices: AppToggleableRequirementChoices
-): {
-  readonly fulfilledBy: 'courses' | 'credits';
-  readonly eligibleCourses: readonly (readonly number[])[];
-  readonly perSlotMinCount: readonly number[];
-  readonly slotNames: readonly string[];
-  readonly minNumberOfSlots?: number;
-} | null {
+): MatchedRequirementFulfillmentSpecification {
+  const convertAdditionalRequirements = (additionalRequirements?: {
+    readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<{
+      readonly courses: readonly (readonly number[])[];
+    }>;
+  }): { readonly [name: string]: MatchedRequirementFulfillmentSpecificationBase } | undefined =>
+    additionalRequirements == null
+      ? undefined
+      : Object.fromEntries(
+          Object.entries(additionalRequirements).map(([name, subRequirement]) => {
+            const slotNames =
+              subRequirement.fulfilledBy === 'courses' ? subRequirement.slotNames : [];
+            return [
+              name,
+              {
+                fulfilledBy: subRequirement.fulfilledBy,
+                eligibleCourses: subRequirement.courses,
+                perSlotMinCount: subRequirement.perSlotMinCount,
+                slotNames,
+                minNumberOfSlots: subRequirement.minNumberOfSlots,
+              },
+            ];
+          })
+        );
+
   switch (requirement.fulfilledBy) {
     case 'self-check':
       return null;
@@ -177,6 +211,7 @@ export function getMatchedRequirementFulfillmentSpecification(
       return {
         fulfilledBy: requirement.fulfilledBy,
         eligibleCourses: requirement.courses,
+        additionalRequirements: convertAdditionalRequirements(requirement.additionalRequirements),
         perSlotMinCount: requirement.perSlotMinCount,
         slotNames: requirement.slotNames,
         minNumberOfSlots: requirement.minNumberOfSlots,
@@ -185,6 +220,7 @@ export function getMatchedRequirementFulfillmentSpecification(
       return {
         fulfilledBy: requirement.fulfilledBy,
         eligibleCourses: requirement.courses,
+        additionalRequirements: convertAdditionalRequirements(requirement.additionalRequirements),
         perSlotMinCount: requirement.perSlotMinCount,
         slotNames: [],
         minNumberOfSlots: requirement.minNumberOfSlots,
@@ -208,32 +244,25 @@ export function getMatchedRequirementFulfillmentSpecification(
   }
 }
 
-/**
- * @param requirement the requirement which we want sub-requirement progress report.
- * @param coursesTaken a list of courses that are associated with the requirement in the graph.
- * @param toggleableRequirementChoices user's choices on toggleable requirements.
- * @returns requirement fulfillment stat, and partitioned courses into sub-requirement slots.
- */
-export function computeFulfillmentCoursesAndStatistics(
-  requirement: RequirementWithIDSourceType,
-  coursesTaken: readonly CourseTaken[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices
-): RequirementFulfillmentStatistics & { readonly courses: readonly (readonly CourseTaken[])[] } {
-  const spec = getMatchedRequirementFulfillmentSpecification(
-    requirement,
-    toggleableRequirementChoices
-  );
-  if (spec == null) {
-    // Give self-check 1 required course and 0 fulfilled to prevent it from being fulfilled.
-    return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 1, courses: [] };
-  }
-  const { fulfilledBy, eligibleCourses, perSlotMinCount, minNumberOfSlots } = spec;
+export type RequirementFulfillmentStatisticsWithCourses = RequirementFulfillmentStatistics & {
+  readonly courses: readonly (readonly CourseTaken[])[];
+};
 
+const computeFilfillmentStatistics = (
+  coursesTaken: readonly CourseTaken[],
+  disallowTransferCredit: boolean,
+  {
+    fulfilledBy,
+    eligibleCourses,
+    perSlotMinCount,
+    minNumberOfSlots,
+  }: MatchedRequirementFulfillmentSpecificationBase
+): RequirementFulfillmentStatisticsWithCourses => {
   const coursesThatFulfilledSubRequirements: CourseTaken[][] = eligibleCourses.map(() => []);
   const subRequirementProgress: number[] = eligibleCourses.map(() => 0);
   coursesTaken.forEach(courseTaken => {
     const { courseId } = courseTaken;
-    if (!(requirement.disallowTransferCredit && courseIsAPIB(courseTaken))) {
+    if (!(disallowTransferCredit && courseIsAPIB(courseTaken))) {
       for (
         let subRequirementIndex = 0;
         subRequirementIndex < eligibleCourses.length;
@@ -273,6 +302,43 @@ export function computeFulfillmentCoursesAndStatistics(
     minCountFulfilled,
     minCountRequired,
     courses: coursesThatFulfilledSubRequirements,
+  };
+};
+
+/**
+ * @param requirement the requirement which we want sub-requirement progress report.
+ * @param coursesTaken a list of courses that are associated with the requirement in the graph.
+ * @param toggleableRequirementChoices user's choices on toggleable requirements.
+ * @returns requirement fulfillment stat, and partitioned courses into sub-requirement slots.
+ */
+export function computeFulfillmentCoursesAndStatistics(
+  requirement: RequirementWithIDSourceType,
+  coursesTaken: readonly CourseTaken[],
+  toggleableRequirementChoices: AppToggleableRequirementChoices
+): RequirementFulfillmentStatisticsWithCourses & {
+  readonly additionalRequirements?: {
+    readonly [name: string]: RequirementFulfillmentStatisticsWithCourses;
+  };
+} {
+  const spec = getMatchedRequirementFulfillmentSpecification(
+    requirement,
+    toggleableRequirementChoices
+  );
+  if (spec == null) {
+    // Give self-check 1 required course and 0 fulfilled to prevent it from being fulfilled.
+    return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 1, courses: [] };
+  }
+  const disallowTransferCredit = requirement.disallowTransferCredit || false;
+  const base = computeFilfillmentStatistics(coursesTaken, disallowTransferCredit, spec);
+  if (spec.additionalRequirements == null) return base;
+  return {
+    ...base,
+    additionalRequirements: Object.fromEntries(
+      Object.entries(spec.additionalRequirements).map(([name, subSpec]) => [
+        name,
+        computeFilfillmentStatistics(coursesTaken, disallowTransferCredit, subSpec),
+      ])
+    ),
   };
 }
 
