@@ -262,3 +262,9 @@ form {
     opacity: 0.8;
   }
 }
+
+.row > * {
+  flex-shrink: 0;
+  max-width: 100%;
+  width: auto;
+}
