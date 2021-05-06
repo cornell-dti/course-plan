@@ -94,7 +94,7 @@ $mobile-navbar-height: 4.5rem;
   height: 100vh;
   display: flex;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   flex-direction: column;
   justify-content: space-between;
   padding-top: 2.25rem;
