@@ -13,6 +13,7 @@ import aemRequirements from './majors/aem';
 import astroRequrements from './majors/astro';
 import bioRequirements from './majors/bio';
 import bioEngineeringRequirements from './majors/be';
+import bsocRequirements from './majors/bsoc';
 import biomedicalEngineeringRequirements from './majors/bme';
 import chemERequirements from './majors/chemE';
 import civilRequirements from './majors/ce';
@@ -22,9 +23,11 @@ import csRequirements from './majors/cs';
 import deaRequirements from './majors/dea';
 import economicsRequirements from './majors/econ';
 import eceRequirements from './majors/ece';
+import essRequirements from './majors/ess';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
 import epRequirements from './majors/ep';
+import foodSciRequirements from './majors/foodsci';
 import governmentRequirements from './majors/govt';
 import hdRequirements from './majors/hd';
 import hotelAdminRequirements from './majors/hadm';
@@ -39,7 +42,9 @@ import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements from './majors/orie';
 import pamRequirements from './majors/pam';
 import physRequirements from './majors/phys';
+import spanishRequirements from './majors/spanish';
 import stsRequirements from './majors/sts';
+
 import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
@@ -47,6 +52,8 @@ import cogsciMinorRequirements from './minors/cogsci';
 import csMinorRequirements from './minors/cs';
 import dbmeMinorRequirements from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
+import eceMinorRequirements from './minors/ece';
+import hpMinorRequirements from './minors/hp';
 import hdMinorRequirements from './minors/hd';
 import infoENMinorRequirements from './minors/infoEN';
 import lingMinorRequirements from './minors/ling';
@@ -54,6 +61,8 @@ import mathMinorRequirements from './minors/math';
 import ormsMinorRequirements from './minors/orms';
 import policyMinorRequirements from './minors/policy';
 import psychMinorRequirements from './minors/psych';
+import roboticsMinorRequirements from './minors/robotics';
+import spanishMinorRequirements from './minors/spanish';
 
 const json: RequirementsJson = {
   university: {
@@ -111,6 +120,11 @@ const json: RequirementsJson = {
       name: 'Biological Sciences',
       schools: ['AG', 'AS1', 'AS2'],
       requirements: bioRequirements,
+    },
+    BSOC: {
+      name: 'Biology and Society',
+      schools: ['AG', 'AS1', 'AS2'],
+      requirements: bsocRequirements,
     },
     BME: {
       name: 'Biomedical Engineering',
@@ -172,10 +186,20 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: envEngineeringRequirements,
     },
+    ESS: {
+      name: 'Environment and Sustainability',
+      schools: ['AG', 'AS1', 'AS2'],
+      requirements: essRequirements,
+    },
     EP: {
       name: 'Engineering Physics',
       schools: ['EN'],
       requirements: epRequirements,
+    },
+    FDSC: {
+      name: 'Food Science',
+      schools: ['AG'],
+      requirements: foodSciRequirements,
     },
     GOVT: {
       name: 'Government',
@@ -247,6 +271,11 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: physRequirements,
     },
+    SPAN: {
+      name: 'Spanish',
+      schools: ['AS1', 'AS2'],
+      requirements: spanishRequirements,
+    },
     STS: {
       name: 'Science & Technology Studies',
       schools: ['AS1', 'AS2'],
@@ -289,6 +318,16 @@ const json: RequirementsJson = {
       schools: ['HE'],
       requirements: deaMinorRequirements,
     },
+    ECE: {
+      name: 'Electrical and Computer Engineering',
+      schools: ['EN'],
+      requirements: eceMinorRequirements,
+    },
+    HP: {
+      name: 'Human Policy',
+      schools: ['HE'],
+      requirements: hpMinorRequirements,
+    },
     HD: {
       name: 'Human Development',
       schools: ['HE'],
@@ -323,6 +362,16 @@ const json: RequirementsJson = {
       name: 'Psychology',
       schools: ['AS1', 'AS2'],
       requirements: psychMinorRequirements,
+    },
+    ROBOTICS: {
+      name: 'Robotics',
+      schools: ['EN'],
+      requirements: roboticsMinorRequirements,
+    },
+    SPAN: {
+      name: 'Spanish',
+      schools: ['AS1', 'AS2'],
+      requirements: spanishMinorRequirements,
     },
   },
 };
