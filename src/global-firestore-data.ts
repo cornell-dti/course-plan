@@ -203,14 +203,12 @@ export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): 
 };
 
 export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboardingData): void => {
-  usernameCollection
-    .doc(store.state.currentFirebaseUser.email)
-    .set({
-      firstName: name.firstName,
-      middleName: name.middleName || '',
-      lastName: name.lastName,
-    })
-    .then(() => store.commit('setUserName', name));
+  usernameCollection.doc(store.state.currentFirebaseUser.email).set({
+    firstName: name.firstName,
+    middleName: name.middleName || '',
+    lastName: name.lastName,
+  });
+  const oldCollege = store.state.onboardingData.college;
   onboardingDataCollection
     .doc(store.state.currentFirebaseUser.email)
     .set({
@@ -224,8 +222,6 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
       tookSwim: onboarding.tookSwim,
     })
     .then(() => {
-      const oldCollege = store.state.onboardingData.college;
-      store.commit('setOnboardingData', onboarding);
       const newCollege = store.state.onboardingData.college;
       if (oldCollege !== newCollege) {
         clearOverridenRequirementsAPIB();
@@ -238,16 +234,9 @@ const editAPIBExams = (
 ): void => {
   const oldAPIBExams = store.state.onboardingData.exam;
   const newAPIBExams = updater(oldAPIBExams);
-  const newOnboardingData = {
-    ...store.state.onboardingData,
-    exam: newAPIBExams,
-  };
   onboardingDataCollection
     .doc(store.state.currentFirebaseUser.email)
-    .update({ exam: newAPIBExams })
-    .then(() => {
-      store.commit('setOnboardingData', newOnboardingData);
-    });
+    .update({ exam: newAPIBExams });
 };
 
 // split and exposed for testing
