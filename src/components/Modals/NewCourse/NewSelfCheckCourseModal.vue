@@ -91,10 +91,7 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal() {
-      this.reset();
       this.$emit('update:modelValue', false);
-      // @ts-expect-error: TS cannot understand $ref's component.
-      this.$refs.modalBodyComponent.resetDropdowns();
     },
     setCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
@@ -103,12 +100,6 @@ export default defineComponent({
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, this.season, this.year);
       this.closeCurrentModal();
-    },
-    reset() {
-      this.courseSelectorKey += 1;
-      this.selectedCourse = null;
-      this.year = 0;
-      this.season = '' as FirestoreSemesterType;
     },
     backOrCancel() {
       this.closeCurrentModal();

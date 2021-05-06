@@ -6,7 +6,7 @@
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="selectedCourse == null"
-    @modal-closed="escape"
+    @modal-closed="closeCurrentModal"
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addItem"
   >
@@ -19,7 +19,7 @@
       :key="courseSelectorKey"
       placeholder='"CS 1110", "Multivariable Calculus", etc'
       :autoFocus="true"
-      @on-escape="escape"
+      @on-escape="closeCurrentModal"
       @on-select="selectCourse"
     />
     <div v-else class="selected-course">
@@ -90,7 +90,7 @@ export default defineComponent({
       this.selectedCourse = result;
       this.getReqsRelatedToCourse(result);
     },
-    escape() {
+    closeCurrentModal() {
       this.$emit('update:modelValue', false);
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
@@ -140,18 +140,10 @@ export default defineComponent({
     addCourse() {
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, this.selectedRequirementID);
-      this.reset();
+      this.closeCurrentModal();
     },
     onSelectedChange(selected: string) {
       this.selectedRequirementID = selected;
-    },
-    reset() {
-      this.editMode = false;
-      this.courseSelectorKey += 1;
-      this.selectedCourse = null;
-      this.selectedRequirementID = '';
-      this.relatedRequirements = [];
-      this.selfCheckRequirements = [];
     },
     backOrCancel() {
       if (this.leftButtonText === 'Back') {
@@ -162,7 +154,7 @@ export default defineComponent({
           this.courseSelectorKey += 1;
         }
       } else {
-        this.$emit('update:modelValue', false);
+        this.closeCurrentModal();
       }
     },
     toggleEditMode() {

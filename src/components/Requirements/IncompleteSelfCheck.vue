@@ -3,6 +3,7 @@
     <new-self-check-course-modal
       class="incompleteselfcheck-modal"
       v-model="isCourseModalOpen"
+      v-if="isCourseModalOpen"
       :subReqName="subReqName"
       :requirementId="subReqId"
       @close-course-modal="closeCourseModal"

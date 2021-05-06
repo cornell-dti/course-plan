@@ -8,11 +8,17 @@
     data-disable-interaction="1"
     data-tooltipClass="tooltipCenter"
   >
-    <new-course-modal class="semester-modal" v-model="isCourseModalOpen" @add-course="addCourse" />
+    <new-course-modal
+      class="semester-modal"
+      v-model="isCourseModalOpen"
+      v-if="isCourseModalOpen"
+      @add-course="addCourse"
+    />
     <confirmation
       class="confirmation-modal"
       :text="confirmationText"
       v-model="isConfirmationOpen"
+      v-if="isConfirmationOpen"
     />
     <delete-semester
       class="semester-modal"
@@ -21,6 +27,7 @@
       :deleteSemYear="year"
       ref="deletesemester"
       v-model="isDeleteSemesterOpen"
+      v-if="isDeleteSemesterOpen"
     />
     <edit-semester
       class="semester-modal"
@@ -29,6 +36,7 @@
       :deleteSemYear="year"
       ref="modalBodyComponent"
       v-model="isEditSemesterOpen"
+      v-if="isEditSemesterOpen"
     />
     <button v-if="isFirstSem" class="semester-addSemesterButton" @click="openSemesterModal">
       + New Semester

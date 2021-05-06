@@ -42,6 +42,7 @@
       button-text="Start Tutorial"
       @startTour="startWelcomeTour()"
       v-model="welcomeHidden"
+      v-if="welcomeHidden"
     />
     <tour-window
       title="Let's get CoursePlanning!"
@@ -51,6 +52,7 @@
       exit=""
       button-text="Get Started"
       v-model="showTourEndWindow"
+      v-if="showTourEndWindow"
     />
     <bottom-bar
       v-if="(!isOpeningRequirements && isTablet) || !isTablet"
@@ -201,7 +203,10 @@ export default defineComponent({
     },
 
     startWelcomeTour() {
-      if (!this.startTour) this.startTour = true;
+      if (!this.startTour) {
+        this.startTour = true;
+        this.welcomeHidden = false;
+      }
     },
 
     editProfile() {

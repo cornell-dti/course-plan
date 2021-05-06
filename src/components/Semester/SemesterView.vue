@@ -15,6 +15,7 @@
         :class="{ 'modal--block': isSemesterModalOpen }"
         @add-semester="addSemester"
         v-model="isSemesterModalOpen"
+        v-if="isSemesterModalOpen"
       />
       <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
         <button
@@ -49,6 +50,7 @@
         class="semesterView-confirmation"
         :text="confirmationText"
         v-model="isSemesterConfirmationOpen"
+        v-if="isSemesterConfirmationOpen"
       />
       <div class="semesterView-content">
         <div

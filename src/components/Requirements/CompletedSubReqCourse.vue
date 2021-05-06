@@ -4,6 +4,7 @@
       :isTestReq="isTransferCredit"
       :reqName="courseTaken.code"
       v-model="resetConfirmVisible"
+      v-if="resetConfirmVisible"
       @close-reset-modal="onResetConfirmClosed"
     />
     <div class="completed-reqCourses-course-wrapper">

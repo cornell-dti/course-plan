@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="#modalTarget" v-if="modelValue" aria-modal="true">
+  <Teleport to="#modalTarget" aria-modal="true">
     <div
       class="teleport"
       :class="{ 'teleport-simple': isSimpleModal, 'teleport-noBackground': hasNoBackground }"
