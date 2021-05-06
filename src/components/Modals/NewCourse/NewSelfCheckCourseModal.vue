@@ -28,7 +28,6 @@
           :year="year"
           :isCourseModelSelectingSemester="true"
           @updateSemProps="updateSemProps"
-          ref="modalBodyComponent"
         />
       </div>
     </div>
@@ -51,7 +50,6 @@ export default defineComponent({
     modelValue: { required: true, type: Boolean },
   },
   emits: {
-    'close-course-modal': () => true,
     'update:modelValue': (value: boolean) => typeof value === 'boolean',
     'add-course': (
       selected: CornellCourseRosterCourse,
@@ -65,7 +63,6 @@ export default defineComponent({
       courseSelectorKey: 0,
       season: '' as FirestoreSemesterType,
       year: 0,
-      isOpen: false,
     };
   },
   computed: {

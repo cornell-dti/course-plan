@@ -17,7 +17,6 @@
       :type="deleteSemType"
       @duplicateSemester="disableButton"
       @updateSemProps="updateSemProps"
-      ref="modalBodyComponent"
     />
   </teleport-modal>
 </template>

@@ -6,7 +6,6 @@
       v-if="isCourseModalOpen"
       :subReqName="subReqName"
       :requirementId="subReqId"
-      @close-course-modal="closeCourseModal"
       @add-course="addNewCourse"
       ref="modal"
     />
@@ -159,9 +158,6 @@ export default defineComponent({
     },
     openCourseModal() {
       this.isCourseModalOpen = true;
-    },
-    closeCourseModal() {
-      this.isCourseModalOpen = false;
     },
   },
 });

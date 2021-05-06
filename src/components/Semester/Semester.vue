@@ -34,7 +34,6 @@
       @edit-semester="editSemester"
       :deleteSemType="type"
       :deleteSemYear="year"
-      ref="modalBodyComponent"
       v-model="isEditSemesterOpen"
       v-if="isEditSemesterOpen"
     />

@@ -16,7 +16,6 @@
       :isCourseModelSelectingSemester="false"
       @duplicateSemester="disableButton"
       @updateSemProps="updateSemProps"
-      ref="modalBodyComponent"
     />
   </teleport-modal>
 </template>
