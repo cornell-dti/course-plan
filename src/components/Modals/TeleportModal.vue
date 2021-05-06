@@ -41,7 +41,7 @@ import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   props: {
-    modelValue: { required: true, type: Boolean },
+    modelValue: { required: true, type: Boolean }, // true if the modal is visible, false otherwise
     title: { type: String, default: '' },
     contentClass: { type: String, required: true },
     leftButtonText: { type: String, default: '' },
@@ -49,8 +49,8 @@ export default defineComponent({
     rightButtonImage: { type: String, default: '' },
     rightButtonAlt: { type: String, default: '' },
     rightButtonIsDisabled: { type: Boolean, default: false },
-    isSimpleModal: { type: Boolean, default: false },
-    hasNoBackground: { type: Boolean, default: false },
+    isSimpleModal: { type: Boolean, default: false }, // true if the modal will set its own styling for its position
+    hasNoBackground: { type: Boolean, default: false }, // true for modals without the gray overlay behind them
   },
   emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed', 'update:modelValue'],
   setup(props, { emit }) {
