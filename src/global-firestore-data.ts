@@ -42,10 +42,8 @@ const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
   const newSemesters = updater(store.state.semesters);
-  semestersCollection
-    .doc(store.state.currentFirebaseUser.email)
-    .set({ semesters: newSemesters })
-    .then(() => store.commit('setSemesters', newSemesters));
+  store.commit('setSemesters', newSemesters);
+  semestersCollection.doc(store.state.currentFirebaseUser.email).set({ semesters: newSemesters });
 };
 
 export const editSemester = (
