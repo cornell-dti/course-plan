@@ -1,18 +1,28 @@
 <template>
-  <div class="confirmation">
-    <div class="confirmation-left">
-      <img class="confirmation-icon" src="@/assets/images/checkmark.svg" alt="checkmark" />
+  <teleport-modal
+    content-class="content-confirmation"
+    :isSimpleModal="true"
+    :modelValue="modelValue"
+    :hasNoBackground="true"
+  >
+    <div class="confirmation">
+      <div class="confirmation-left">
+        <img class="confirmation-icon" src="@/assets/images/checkmark.svg" alt="checkmark" />
+      </div>
+      <div class="confirmation-text">{{ text }}</div>
     </div>
-    <div class="confirmation-text">{{ text }}</div>
-  </div>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 export default defineComponent({
+  components: { TeleportModal },
   props: {
     text: { type: String, required: true },
+    modelValue: { type: Boolean, required: true },
   },
 });
 </script>
@@ -21,12 +31,6 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .confirmation {
-  position: fixed;
-  z-index: 10;
-  top: 16px;
-  left: 29.5rem;
-  right: 0;
-  margin: 0 auto;
   width: max-content;
   background: #ffffff;
   border-radius: 6px;

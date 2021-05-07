@@ -24,7 +24,6 @@
         :isCompleted="isCompleted"
         :displayDescription="displayDescription"
         :toggleableRequirementChoice="toggleableRequirementChoice"
-        @modal-open="modalToggled"
         @onShowAllCourses="onShowAllCourses"
       />
       <requirement-self-check-slots
@@ -35,7 +34,6 @@
         :requirementFulfillment="requirementFulfillment"
         :isCompleted="isCompleted"
         :toggleableRequirementChoice="toggleableRequirementChoice"
-        @modal-open="modalToggled"
       />
     </div>
   </div>
@@ -70,7 +68,6 @@ export default defineComponent({
     tourStep: { type: Number, required: true },
   },
   emits: {
-    'modal-open': (open: boolean) => typeof open === 'boolean',
     changeToggleableRequirementChoice(id: string, option: string) {
       return typeof id === 'string' && typeof option === 'string';
     },
@@ -111,9 +108,6 @@ export default defineComponent({
     },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);
-    },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });

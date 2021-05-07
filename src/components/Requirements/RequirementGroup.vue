@@ -33,7 +33,6 @@
             :tourStep="tourStep"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
-            @modal-open="modalToggled"
           />
           <div class="separator"></div>
         </div>
@@ -124,7 +123,6 @@ export default defineComponent({
     }) => typeof courses === 'object',
     changeToggleableRequirementChoice: (requirementID: string, option: string) =>
       typeof requirementID === 'string' && typeof option === 'string',
-    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data() {
     return {
@@ -177,9 +175,6 @@ export default defineComponent({
     turnCompleted(bool: boolean) {
       GTagEvent(this.$gtag, 'requirements-bar-filled-requirements-toggle');
       this.displayCompleted = bool;
-    },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });

@@ -1,7 +1,8 @@
 <template>
-  <flexible-modal
+  <TeleportModal
     title="Add Course"
     content-class="content-course"
+    :modelValue="modelValue"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="selectedCourse == null"
@@ -37,24 +38,27 @@
         @edit-mode="toggleEditMode"
       />
     </div>
-  </flexible-modal>
+  </TeleportModal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
-import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
 import store from '@/store';
 import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
-  components: { CourseSelector, FlexibleModal, SelectedRequirementEditor },
+  components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
+  props: {
+    modelValue: { type: Boolean, required: true },
+  },
   emits: {
-    'close-course-modal': () => true,
     'add-course': (course: CornellCourseRosterCourse, requirementID: string) =>
       typeof course === 'object' && typeof requirementID === 'string',
+    'update:modelValue': (val: boolean) => typeof val === 'boolean',
   },
   data() {
     return {
@@ -66,6 +70,7 @@ export default defineComponent({
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
       editMode: false,
       courseSelectorKey: 0,
+      isOpen: false,
     };
   },
   computed: {
@@ -84,6 +89,9 @@ export default defineComponent({
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.getReqsRelatedToCourse(result);
+    },
+    closeCurrentModal() {
+      this.$emit('update:modelValue', false);
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
@@ -122,10 +130,6 @@ export default defineComponent({
         this.selectedRequirementID = '';
       }
     },
-    closeCurrentModal() {
-      this.reset();
-      this.$emit('close-course-modal');
-    },
     addItem() {
       if (this.editMode) {
         this.editMode = false;
@@ -136,19 +140,10 @@ export default defineComponent({
     addCourse() {
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, this.selectedRequirementID);
-      this.reset();
       this.closeCurrentModal();
     },
     onSelectedChange(selected: string) {
       this.selectedRequirementID = selected;
-    },
-    reset() {
-      this.editMode = false;
-      this.courseSelectorKey += 1;
-      this.selectedCourse = null;
-      this.selectedRequirementID = '';
-      this.relatedRequirements = [];
-      this.selfCheckRequirements = [];
     },
     backOrCancel() {
       if (this.leftButtonText === 'Back') {

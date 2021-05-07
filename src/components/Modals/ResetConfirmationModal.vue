@@ -1,37 +1,34 @@
 <template>
-  <div class="reset-modal" :class="{ 'modal--block': modelValue }">
-    <flexible-modal
-      title="Reset Requirement"
-      :class="[{ 'modal--block': modelValue }, 'modal-width']"
-      content-class="content-confirmation"
-      left-button-text="No"
-      right-button-text="Yes"
-      @left-button-clicked="closeClicked"
-      @right-button-clicked="resetClicked"
-      @modal-closed="closeCurrentModal"
-      :rightButtonIsDisabled="false"
-    >
-      <div v-if="isTestReq" class="text-width">
-        Are you sure you want to reset "{{ reqName }}" for this requirement? This will delete the
-        selected transfer credit from your schedule, allowing you to add a different course to
-        satisfy this requirement.
-        <br />
-        Transfer credits can be re-added in your Profile.
-      </div>
-      <div v-else class="text-width">
-        Are you sure you want to reset the "{{ reqName }}" requirement? This will delete the
-        selected course from your schedule, allowing you to add a different course to satisfy this
-        requirement.
-      </div>
-    </flexible-modal>
-  </div>
+  <teleport-modal
+    title="Reset Requirement"
+    content-class="content-confirmation"
+    left-button-text="No"
+    right-button-text="Yes"
+    @left-button-clicked="closeClicked"
+    @right-button-clicked="resetClicked"
+    @modal-closed="closeCurrentModal"
+    :rightButtonIsDisabled="false"
+    :modelValue="modelValue"
+  >
+    <div v-if="isTestReq" class="text-width">
+      Are you sure you want to reset "{{ reqName }}" for this requirement? This will delete the
+      selected transfer credit from your schedule, allowing you to add a different course to satisfy
+      this requirement.
+      <br />
+      Transfer credits can be re-added in your Profile.
+    </div>
+    <div v-else class="text-width">
+      Are you sure you want to reset the "{{ reqName }}" requirement? This will delete the selected
+      course from your schedule, allowing you to add a different course to satisfy this requirement.
+    </div>
+  </teleport-modal>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FlexibleModal from './FlexibleModal.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 export default defineComponent({
-  components: { FlexibleModal },
+  components: { TeleportModal },
   props: {
     reqName: { type: String, required: true },
     isTestReq: { type: Boolean, required: true },
@@ -39,13 +36,11 @@ export default defineComponent({
   },
   emits: {
     'update:modelValue': (value: boolean) => typeof value === 'boolean',
-    'modal-open': (value: boolean) => typeof value === 'boolean',
     'close-reset-modal': (value: boolean) => typeof value === 'boolean',
   },
   methods: {
     closeCurrentModal(): void {
       this.$emit('update:modelValue', false);
-      this.$emit('modal-open', false);
     },
     resetClicked(): void {
       this.closeCurrentModal();
@@ -63,26 +58,10 @@ export default defineComponent({
 
 .content-confirmation {
   width: 30.5em;
+  align-items: initial;
   button {
     width: 48px;
   }
-}
-
-.reset-modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-.modal-width {
-  transform: translateX(calc(50vw - 50%));
 }
 
 .text-width {

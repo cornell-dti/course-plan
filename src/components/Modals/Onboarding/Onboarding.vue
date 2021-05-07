@@ -100,9 +100,8 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { db, onboardingDataCollection, usernameCollection } from '@/firebaseConfig';
+import { setOnboardingData } from '@/global-firestore-data';
 import { getMajorFullName, getMinorFullName } from '@/utilities';
-import store from '@/store';
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -112,7 +111,10 @@ export default defineComponent({
   props: {
     isEditingProfile: { type: Boolean, required: true },
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
   },
   emits: ['onboard', 'cancelOnboarding'],
   data() {
@@ -147,23 +149,7 @@ export default defineComponent({
   },
   methods: {
     submitOnboarding() {
-      db.batch()
-        .set(usernameCollection.doc(store.state.currentFirebaseUser.email), {
-          firstName: this.name.firstName,
-          middleName: this.name.middleName,
-          lastName: this.name.lastName,
-        })
-        .set(onboardingDataCollection.doc(store.state.currentFirebaseUser.email), {
-          gradYear: this.onboarding.gradYear,
-          entranceYear: this.onboarding.entranceYear,
-          colleges: [{ acronym: this.onboarding.college }],
-          majors: this.onboarding.major.map(acronym => ({ acronym })),
-          minors: this.onboarding.minor.map(acronym => ({ acronym })),
-          exam: this.onboarding.exam,
-          class: this.onboarding.transferCourse,
-          tookSwim: this.onboarding.tookSwim,
-        })
-        .commit();
+      setOnboardingData(this.name, this.onboarding);
       this.$emit('onboard');
     },
     goBack() {
@@ -187,7 +173,14 @@ export default defineComponent({
       name: FirestoreUserName
     ) {
       this.name = name;
-      this.onboarding = { ...this.onboarding, gradYear, entranceYear, college, major, minor };
+      this.onboarding = {
+        ...this.onboarding,
+        gradYear,
+        entranceYear,
+        college,
+        major,
+        minor,
+      };
     },
     updateTransfer(
       exams: readonly FirestoreAPIBExam[],

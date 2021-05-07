@@ -1,6 +1,6 @@
 <template>
-  <div class="tour">
-    <div class="blackout">
+  <teleport-modal content-class="content-tour" :isSimpleModal="true" :modelValue="modelValue">
+    <div class="tour">
       <div class="intropage">
         <div class="top">
           <div class="dtiLogoWrapper">
@@ -40,45 +40,38 @@
               <a href="mailto:courseplan@cornelldti.org">courseplan@cornelldti.org</a>.
             </div>
           </div>
-          <button
-            class="startButton"
-            @click="
-              $emit('hide');
-              $emit('startTour');
-              startTour();
-            "
-          >
+          <button class="startButton" @click="startTour()">
             {{ buttonText }}
           </button>
-          <button
-            class="skipButton"
-            @click="
-              $emit('skip');
-              skipTour();
-            "
-          >
+          <button class="skipButton" @click="skipTour()">
             {{ exit }}
           </button>
         </div>
       </div>
     </div>
-  </div>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
 import { GTagEvent } from '@/gtag';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 export default defineComponent({
+  components: { TeleportModal },
   props: {
     title: { type: String, required: true },
     text: { type: String, required: true },
     isFinalStep: { type: Boolean, required: false, default: false },
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
+    modelValue: { type: Boolean, required: true },
   },
-  emits: ['hide', 'startTour', 'skip'],
+  emits: {
+    startTour: () => true,
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+  },
   data() {
     return {
       hideOnClick: '',
@@ -89,9 +82,12 @@ export default defineComponent({
   },
   methods: {
     startTour(): void {
+      this.$emit('startTour');
+      this.$emit('update:modelValue', false);
       GTagEvent(this.$gtag, 'start-walkthrough');
     },
     skipTour(): void {
+      this.$emit('update:modelValue', false);
       GTagEvent(this.$gtag, 'skip-walkthrough');
     },
   },
@@ -101,20 +97,14 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
-.blackout {
-  z-index: 100;
-  background-color: rgba(0, 0, 0, 0.4);
-  position: fixed;
-  width: 100vw;
-  height: 100%;
-  left: 0px;
-  bottom: 0px;
+.tour {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
+
 .intropage {
-  z-index: 200;
   width: 40vw;
   background-color: $white;
   opacity: 1;
