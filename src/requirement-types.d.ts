@@ -35,7 +35,7 @@ type RequirementFulfillmentInformationCreditBase<T> = {
   readonly minNumberOfSlots?: number;
 } & T;
 
-type RequirementFulfillmentInformationCourseOrCreditBase<T = Record<string, unknown>> =
+type RequirementFulfillmentInformationCourseOrCreditBase<T> =
   | RequirementFulfillmentInformationCourseBase<T>
   | RequirementFulfillmentInformationCreditBase<T>;
 
