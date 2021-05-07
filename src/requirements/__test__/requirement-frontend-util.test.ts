@@ -16,8 +16,10 @@ const getMockCourseTaken = (courseId: number, credits = 0): CourseTaken => ({
   credits,
 });
 
-type StatisticsResultType = RequirementFulfillmentStatistics & {
-  readonly courses: readonly (readonly CourseTaken[])[];
+type StatisticsResultType = RequirementFulfillmentStatisticsWithCourses & {
+  readonly additionalRequirements?: {
+    readonly [name: string]: RequirementFulfillmentStatisticsWithCourses;
+  };
 };
 
 it('computeFulfillmentCoursesAndStatistics self-check test', () => {
@@ -124,6 +126,89 @@ it('computeFulfillmentCoursesAndStatistics course (without minNumberOfSlots) tes
     fulfilledBy: 'courses',
     minCountFulfilled: 4,
     minCountRequired: 4,
+  });
+});
+
+it('computeFulfillmentCoursesAndStatistics course (with additional requirements) test', () => {
+  const mockRequirement: RequirementWithIDSourceType = {
+    ...mockRequirementCommon,
+    fulfilledBy: 'courses',
+    perSlotMinCount: [2, 1, 1],
+    slotNames: ['', '', ''],
+    courses: [
+      [1, 2],
+      [3, 4],
+      [3, 4],
+    ],
+    additionalRequirements: {
+      R1: {
+        fulfilledBy: 'courses',
+        perSlotMinCount: [1, 1],
+        slotNames: ['', ''],
+        courses: [
+          [1, 3],
+          [2, 4],
+        ],
+      },
+      R2: {
+        fulfilledBy: 'courses',
+        perSlotMinCount: [1, 1],
+        slotNames: ['', ''],
+        courses: [
+          [1, 2],
+          [4, 3],
+        ],
+      },
+      R3: {
+        fulfilledBy: 'credits',
+        perSlotMinCount: [100],
+        courses: [[1, 2, 4]],
+      },
+    },
+  };
+
+  // Asserts that the progress computation goes deeper into additional requirements,
+  // when they are present.
+  expect(
+    computeFulfillmentCoursesAndStatistics(
+      mockRequirement,
+      [
+        getMockCourseTaken(1, 1),
+        getMockCourseTaken(2, 2),
+        getMockCourseTaken(3, 3),
+        getMockCourseTaken(4, 4),
+      ],
+      {}
+    )
+  ).toEqual<StatisticsResultType>({
+    courses: [
+      [getMockCourseTaken(1, 1), getMockCourseTaken(2, 2)],
+      [getMockCourseTaken(3, 3)],
+      [getMockCourseTaken(4, 4)],
+    ],
+    fulfilledBy: 'courses',
+    minCountFulfilled: 4,
+    minCountRequired: 4,
+    additionalRequirements: {
+      R1: {
+        courses: [[getMockCourseTaken(1, 1)], [getMockCourseTaken(2, 2)]],
+        fulfilledBy: 'courses',
+        minCountFulfilled: 2,
+        minCountRequired: 2,
+      },
+      R2: {
+        courses: [[getMockCourseTaken(1, 1)], [getMockCourseTaken(3, 3)]],
+        fulfilledBy: 'courses',
+        minCountFulfilled: 2,
+        minCountRequired: 2,
+      },
+      R3: {
+        courses: [[getMockCourseTaken(1, 1), getMockCourseTaken(2, 2), getMockCourseTaken(4, 4)]],
+        fulfilledBy: 'credits',
+        minCountFulfilled: 7,
+        minCountRequired: 100,
+      },
+    },
   });
 });
 
