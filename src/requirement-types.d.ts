@@ -115,6 +115,10 @@ type RequirementFulfillmentStatistics = {
   readonly minCountRequired: number;
 };
 
+type RequirementFulfillmentStatisticsWithCourses = RequirementFulfillmentStatistics & {
+  readonly courses: readonly (readonly CourseTaken[])[];
+};
+
 type RequirementFulfillment = {
   /** The original requirement object. */
   readonly requirement: RequirementWithIDSourceType;

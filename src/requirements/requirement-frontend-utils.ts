@@ -153,6 +153,13 @@ export function getUserRequirements({
   }));
 }
 
+/**
+ * The base type for requirement specification.
+ * A requirement specification is a condensed object tells you exactly
+ * how a requirement can be fulfilled on each slot.
+ * Specifically, the toggleable requirement choice has already been made,
+ * so only the one the user chosen is here.
+ */
 type MatchedRequirementFulfillmentSpecificationBase = {
   readonly fulfilledBy: 'courses' | 'credits';
   readonly eligibleCourses: readonly (readonly number[])[];
@@ -161,6 +168,10 @@ type MatchedRequirementFulfillmentSpecificationBase = {
   readonly minNumberOfSlots?: number;
 };
 
+/**
+ * Same as `MatchedRequirementFulfillmentSpecificationBase`,
+ * but also including additional requirements.
+ */
 type MatchedRequirementFulfillmentSpecification =
   | (MatchedRequirementFulfillmentSpecificationBase & {
       readonly additionalRequirements?: {
@@ -180,6 +191,11 @@ export function getMatchedRequirementFulfillmentSpecification(
   requirement: RequirementWithIDSourceType,
   toggleableRequirementChoices: AppToggleableRequirementChoices
 ): MatchedRequirementFulfillmentSpecification {
+  /**
+   * Given a map of additional requirements, keep the requirement name key, but extract out the
+   * requirement spec for each additional requirement.
+   * This enables us to run the name fulfillment computation algorithm on additional requirements.
+   */
   const convertAdditionalRequirements = (additionalRequirements?: {
     readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<{
       readonly courses: readonly (readonly number[])[];
@@ -244,11 +260,7 @@ export function getMatchedRequirementFulfillmentSpecification(
   }
 }
 
-export type RequirementFulfillmentStatisticsWithCourses = RequirementFulfillmentStatistics & {
-  readonly courses: readonly (readonly CourseTaken[])[];
-};
-
-const computeFilfillmentStatistics = (
+const computeFulfillmentStatistics = (
   coursesTaken: readonly CourseTaken[],
   disallowTransferCredit: boolean,
   {
@@ -329,14 +341,14 @@ export function computeFulfillmentCoursesAndStatistics(
     return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 1, courses: [] };
   }
   const disallowTransferCredit = requirement.disallowTransferCredit || false;
-  const base = computeFilfillmentStatistics(coursesTaken, disallowTransferCredit, spec);
+  const base = computeFulfillmentStatistics(coursesTaken, disallowTransferCredit, spec);
   if (spec.additionalRequirements == null) return base;
   return {
     ...base,
     additionalRequirements: Object.fromEntries(
       Object.entries(spec.additionalRequirements).map(([name, subSpec]) => [
         name,
-        computeFilfillmentStatistics(coursesTaken, disallowTransferCredit, subSpec),
+        computeFulfillmentStatistics(coursesTaken, disallowTransferCredit, subSpec),
       ])
     ),
   };

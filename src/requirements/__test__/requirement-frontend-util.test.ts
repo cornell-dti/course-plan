@@ -1,7 +1,4 @@
-import {
-  RequirementFulfillmentStatisticsWithCourses,
-  computeFulfillmentCoursesAndStatistics,
-} from '../requirement-frontend-utils';
+import { computeFulfillmentCoursesAndStatistics } from '../requirement-frontend-utils';
 
 const mockRequirementCommon = {
   name: '',
