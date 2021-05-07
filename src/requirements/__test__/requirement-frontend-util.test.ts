@@ -159,6 +159,11 @@ it('computeFulfillmentCoursesAndStatistics course (with additional requirements)
           [4, 3],
         ],
       },
+      R3: {
+        fulfilledBy: 'credits',
+        perSlotMinCount: [100],
+        courses: [[1, 2, 4]],
+      },
     },
   };
 
@@ -167,30 +172,41 @@ it('computeFulfillmentCoursesAndStatistics course (with additional requirements)
   expect(
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
-      [getMockCourseTaken(1), getMockCourseTaken(2), getMockCourseTaken(3), getMockCourseTaken(4)],
+      [
+        getMockCourseTaken(1, 1),
+        getMockCourseTaken(2, 2),
+        getMockCourseTaken(3, 3),
+        getMockCourseTaken(4, 4),
+      ],
       {}
     )
   ).toEqual<StatisticsResultType>({
     courses: [
-      [getMockCourseTaken(1), getMockCourseTaken(2)],
-      [getMockCourseTaken(3)],
-      [getMockCourseTaken(4)],
+      [getMockCourseTaken(1, 1), getMockCourseTaken(2, 2)],
+      [getMockCourseTaken(3, 3)],
+      [getMockCourseTaken(4, 4)],
     ],
     fulfilledBy: 'courses',
     minCountFulfilled: 4,
     minCountRequired: 4,
     additionalRequirements: {
       R1: {
-        courses: [[getMockCourseTaken(1)], [getMockCourseTaken(2)]],
+        courses: [[getMockCourseTaken(1, 1)], [getMockCourseTaken(2, 2)]],
         fulfilledBy: 'courses',
         minCountFulfilled: 2,
         minCountRequired: 2,
       },
       R2: {
-        courses: [[getMockCourseTaken(1)], [getMockCourseTaken(3)]],
+        courses: [[getMockCourseTaken(1, 1)], [getMockCourseTaken(3, 3)]],
         fulfilledBy: 'courses',
         minCountFulfilled: 2,
         minCountRequired: 2,
+      },
+      R3: {
+        courses: [[getMockCourseTaken(1, 1), getMockCourseTaken(2, 2), getMockCourseTaken(4, 4)]],
+        fulfilledBy: 'credits',
+        minCountFulfilled: 7,
+        minCountRequired: 100,
       },
     },
   });
