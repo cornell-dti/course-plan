@@ -16,14 +16,12 @@
           :isOpeningRequirements="isOpeningRequirements"
           @editProfile="editProfile"
           @toggleRequirementsBar="toggleRequirementsBar"
-          :modalIsOpen="modalIsOpen"
         />
         <requirement-side-bar
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
-          @modal-open="modalToggle"
         />
       </div>
       <semester-view
@@ -35,7 +33,6 @@
         :isBottomBar="hasBottomCourses"
         :isMobile="isMobile"
         @compact-updated="compactUpdated"
-        @modal-open="modalToggle"
       />
     </div>
     <tour-window
@@ -43,8 +40,8 @@
       text="View your college requirements, plan your semesters and courses, and more."
       exit="No, I want to skip this"
       button-text="Start Tutorial"
-      @hide="hideWelcomeTour()"
-      @skip="welcomeHidden = false"
+      @startTour="startWelcomeTour()"
+      v-model="welcomeHidden"
       v-if="welcomeHidden"
     />
     <tour-window
@@ -54,7 +51,7 @@
       :isFinalStep="true"
       exit=""
       button-text="Get Started"
-      @hide="showTourEndWindow = false"
+      v-model="showTourEndWindow"
       v-if="showTourEndWindow"
     />
     <bottom-bar
@@ -135,7 +132,6 @@ export default defineComponent({
       welcomeHidden: false,
       startTour: false,
       showTourEndWindow: false,
-      modalIsOpen: false,
     };
   },
   computed: {
@@ -206,18 +202,16 @@ export default defineComponent({
       this.isOnboarding = false;
     },
 
-    hideWelcomeTour() {
-      this.welcomeHidden = false;
-      if (!this.startTour) this.startTour = true;
+    startWelcomeTour() {
+      if (!this.startTour) {
+        this.startTour = true;
+        this.welcomeHidden = false;
+      }
     },
 
     editProfile() {
       this.isOnboarding = true;
       this.isEditingProfile = true;
-    },
-
-    modalToggle(isOpen: boolean) {
-      this.modalIsOpen = isOpen;
     },
   },
 });

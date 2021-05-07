@@ -82,6 +82,11 @@ a:not([href]) {
 }
 .introjs-emoji {
   margin-left: 0.25rem;
+
+  &-text {
+    height: 14px;
+    padding: 0px;
+  }
 }
 .introjs-customTitle {
   display: flex;

@@ -14,7 +14,8 @@
         class="semester-modal"
         :class="{ 'modal--block': isSemesterModalOpen }"
         @add-semester="addSemester"
-        @close-semester-modal="closeSemesterModal"
+        v-model="isSemesterModalOpen"
+        v-if="isSemesterModalOpen"
       />
       <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
         <button
@@ -47,8 +48,9 @@
       </div>
       <confirmation
         class="semesterView-confirmation"
-        :class="{ 'modal--flex': isSemesterConfirmationOpen }"
         :text="confirmationText"
+        v-model="isSemesterConfirmationOpen"
+        v-if="isSemesterConfirmationOpen"
       />
       <div class="semesterView-content">
         <div
@@ -106,7 +108,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Semester from '@/components/Semester/Semester.vue';
-import Confirmation from '@/components/Confirmation.vue';
+import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
@@ -125,7 +127,6 @@ export default defineComponent({
   },
   emits: {
     'compact-updated': (compact: boolean) => typeof compact === 'boolean',
-    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data() {
     return {
@@ -135,6 +136,7 @@ export default defineComponent({
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
+      modalToggle: false,
     };
   },
   computed: {
@@ -176,11 +178,6 @@ export default defineComponent({
     },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
-      this.$emit('modal-open', true);
-    },
-    closeSemesterModal() {
-      this.isSemesterModalOpen = false;
-      this.$emit('modal-open', false);
     },
     addSemester(type: string, year: number) {
       addSemester(type as FirestoreSemesterType, year, this.$gtag);
@@ -204,9 +201,6 @@ export default defineComponent({
     getToggleTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Toggle between Views</div><div class="introjs-customProgress">4/4</div>
       </div><div class = "introjs-bodytext">View semesters and courses in full or compact mode.</div>`;
-    },
-    modalToggle(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });
