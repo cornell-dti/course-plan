@@ -16,14 +16,12 @@
           :isOpeningRequirements="isOpeningRequirements"
           @editProfile="editProfile"
           @toggleRequirementsBar="toggleRequirementsBar"
-          :modalIsOpen="modalIsOpen"
         />
-        <requirements
+        <requirement-side-bar
           class="dashboard-reqs"
           v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
-          @modal-open="modalToggle"
         />
       </div>
       <semester-view
@@ -34,8 +32,7 @@
         :isBottomBarExpanded="bottomBarIsExpanded"
         :isBottomBar="hasBottomCourses"
         :isMobile="isMobile"
-        @compact-updated="compactVal = $event"
-        @modal-open="modalToggle"
+        @compact-updated="compactUpdated"
       />
     </div>
     <tour-window
@@ -43,18 +40,18 @@
       text="View your college requirements, plan your semesters and courses, and more."
       exit="No, I want to skip this"
       button-text="Start Tutorial"
-      @hide="hideWelcomeTour()"
-      @skip="welcomeHidden = false"
+      @startTour="startWelcomeTour()"
+      v-model="welcomeHidden"
       v-if="welcomeHidden"
     />
     <tour-window
       title="Let's get CoursePlanning!"
-      text="There’s more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and
+      text="There's more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and
       also consult your advisors for more up to date information!"
       :isFinalStep="true"
       exit=""
       button-text="Get Started"
-      @hide="showTourEndWindow = false"
+      v-model="showTourEndWindow"
       v-if="showTourEndWindow"
     />
     <bottom-bar
@@ -70,7 +67,7 @@ import { defineComponent } from 'vue';
 
 import introJs from 'intro.js';
 import SemesterView from '@/components/Semester/SemesterView.vue';
-import Requirements from '@/components/Requirements/Requirements.vue';
+import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue';
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
@@ -118,7 +115,7 @@ export default defineComponent({
     BottomBar,
     NavBar,
     Onboarding,
-    Requirements,
+    RequirementSideBar,
     SemesterView,
     TourWindow,
   },
@@ -135,7 +132,6 @@ export default defineComponent({
       welcomeHidden: false,
       startTour: false,
       showTourEndWindow: false,
-      modalIsOpen: false,
     };
   },
   computed: {
@@ -180,6 +176,9 @@ export default defineComponent({
     toggleRequirementsBar() {
       this.isOpeningRequirements = !this.isOpeningRequirements;
     },
+    compactUpdated(compact: boolean) {
+      this.compactVal = compact;
+    },
 
     showTourEnd() {
       if (!this.isMobile) {
@@ -203,18 +202,16 @@ export default defineComponent({
       this.isOnboarding = false;
     },
 
-    hideWelcomeTour() {
-      this.welcomeHidden = false;
-      if (!this.startTour) this.startTour = true;
+    startWelcomeTour() {
+      if (!this.startTour) {
+        this.startTour = true;
+        this.welcomeHidden = false;
+      }
     },
 
     editProfile() {
       this.isOnboarding = true;
       this.isEditingProfile = true;
-    },
-
-    modalToggle(isOpen: boolean) {
-      this.modalIsOpen = isOpen;
     },
   },
 });

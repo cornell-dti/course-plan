@@ -51,6 +51,15 @@ export default defineComponent({
     isReqCourse: { type: Boolean, required: true },
     semesterIndex: { type: Number, required: false, default: 0 },
   },
+  emits: {
+    'delete-course': (code: string, uniqueID: number) =>
+      typeof code === 'string' && typeof uniqueID === 'number',
+    'color-course': (color: string, uniqueID: number) =>
+      typeof color === 'string' && typeof uniqueID === 'number',
+    'course-on-click': (course: FirestoreSemesterCourse) => typeof course === 'object',
+    'edit-course-credit': (credit: number, uniqueID: number) =>
+      typeof credit === 'number' && typeof uniqueID === 'number',
+  },
   data() {
     return {
       menuOpen: false,

@@ -17,6 +17,43 @@ type RequirementCommon = {
   readonly checkerWarning?: string;
 };
 
+type RequirementFulfillmentInformationCourseBase<T> = {
+  readonly fulfilledBy: 'courses';
+  /** The minimum number of courses/credits required to fulfill each sub-requirement. */
+  readonly perSlotMinCount: readonly number[];
+  /** The name of each slot, used for display only. */
+  readonly slotNames: readonly string[];
+  /** When we care more about how many slots are filled with some courses */
+  readonly minNumberOfSlots?: number;
+} & T;
+
+type RequirementFulfillmentInformationCreditBase<T> = {
+  readonly fulfilledBy: 'credits';
+  /** The minimum number of courses/credits required to fulfill each sub-requirement. */
+  readonly perSlotMinCount: readonly number[];
+  /** When we care more about how many slots are filled with some courses */
+  readonly minNumberOfSlots?: number;
+} & T;
+
+type RequirementFulfillmentInformationCourseOrCreditBase<T> =
+  | RequirementFulfillmentInformationCourseBase<T>
+  | RequirementFulfillmentInformationCreditBase<T>;
+
+type ToggleableRequirementFulfillmentInformation<T = Record<string, unknown>> = {
+  readonly fulfilledBy: 'toggleable';
+  readonly fulfillmentOptions: {
+    readonly [optionName: string]: {
+      readonly perSlotMinCount: readonly number[];
+      readonly minNumberOfSlots?: number;
+      readonly description: string;
+    } & T &
+      (
+        | { readonly counting: 'courses'; readonly slotNames: readonly string[] }
+        | { readonly counting: 'credits' }
+      );
+  };
+};
+
 /**
  * @param T additional information only attached to credits and courses type.
  */
@@ -26,36 +63,21 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
       // Currently unused.
       readonly minCount?: number;
     }
-  | ({
-      readonly fulfilledBy: 'courses';
-      /** The minimum number of courses/credits required to fulfill each sub-requirement. */
-      readonly perSlotMinCount: readonly number[];
-      /** The name of each slot, used for display only. */
-      readonly slotNames: readonly string[];
-      /** When we care more about how many slots are filled with some courses */
-      readonly minNumberOfSlots?: number;
-    } & T)
-  | ({
-      readonly fulfilledBy: 'credits';
-      /** The minimum number of courses/credits required to fulfill each sub-requirement. */
-      readonly perSlotMinCount: readonly number[];
-      /** When we care more about how many slots are filled with some courses */
-      readonly minNumberOfSlots?: number;
-    } & T)
-  | {
-      readonly fulfilledBy: 'toggleable';
-      readonly fulfillmentOptions: {
-        readonly [optionName: string]: {
-          readonly perSlotMinCount: readonly number[];
-          readonly minNumberOfSlots?: number;
-          readonly description: string;
-        } & T &
-          (
-            | { readonly counting: 'courses'; readonly slotNames: readonly string[] }
-            | { readonly counting: 'credits' }
-          );
+  | (RequirementFulfillmentInformationCourseBase<T> & {
+      /**
+       * Compound requirements only.
+       * It is a map from additional requirement name and corresponding courses/checkers.
+       */
+      readonly additionalRequirements?: {
+        readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<T>;
       };
-    };
+    } & T)
+  | (RequirementFulfillmentInformationCreditBase<T> & {
+      readonly additionalRequirements?: {
+        readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<T>;
+      };
+    } & T)
+  | ToggleableRequirementFulfillmentInformation<T>;
 
 type DecoratedCollegeOrMajorRequirement = RequirementCommon &
   RequirementFulfillmentInformation<{ readonly courses: readonly (readonly number[])[] }>;
@@ -91,6 +113,10 @@ type RequirementFulfillmentStatistics = {
   readonly fulfilledBy: 'courses' | 'credits' | 'self-check';
   readonly minCountFulfilled: number;
   readonly minCountRequired: number;
+};
+
+type RequirementFulfillmentStatisticsWithCourses = RequirementFulfillmentStatistics & {
+  readonly courses: readonly (readonly CourseTaken[])[];
 };
 
 type RequirementFulfillment = {

@@ -1,5 +1,5 @@
 <template>
-  <flexible-modal
+  <teleport-modal
     title="Edit Semester"
     content-class="content-semester"
     left-button-text="Cancel"
@@ -8,30 +8,36 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="editSemester"
+    :modelValue="modelValue"
   >
-    <new-semester
+    <select-semester
       :currentSemesters="semesters"
       :isEdit="true"
       :year="deleteSemYear"
       :type="deleteSemType"
       @duplicateSemester="disableButton"
       @updateSemProps="updateSemProps"
-      ref="modalBodyComponent"
     />
-  </flexible-modal>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import NewSemester from '@/components/Modals/NewSemester.vue';
-import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
+import SelectSemester from '@/components/Modals/SelectSemester.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import store from '@/store';
 
 export default defineComponent({
-  components: { FlexibleModal, NewSemester },
+  components: { TeleportModal, SelectSemester },
   props: {
     deleteSemType: { type: String as PropType<FirestoreSemesterType>, required: true },
     deleteSemYear: { type: Number, required: true },
+    modelValue: { type: Boolean, required: true },
+  },
+  emits: {
+    'edit-semester': (season: string, year: number) =>
+      typeof season === 'string' && typeof year === 'number',
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
   },
   data() {
     return {
@@ -47,22 +53,20 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal() {
-      this.$emit('close-edit-modal');
-      // @ts-expect-error: TS cannot understand $ref's component.
-      this.$refs.modalBodyComponent.resetDropdowns();
+      this.$emit('update:modelValue', false);
     },
     editSemester() {
       if (!this.isDisabled) {
-        this.$emit('edit-semester', this.season, this.year);
+        this.$emit('edit-semester', this.season, Number(this.year));
         this.closeCurrentModal();
       }
     },
     disableButton(bool: boolean) {
       this.isDisabled = bool;
     },
-    updateSemProps(season: string, year: string) {
+    updateSemProps(season: string, year: number) {
       this.season = season;
-      this.year = year;
+      this.year = String(year);
     },
   },
 });

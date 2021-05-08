@@ -44,6 +44,9 @@ import checkmarkUnselected from '@/assets/images/checkmark-empty.svg';
 
 export default defineComponent({
   props: { tookSwimTest: { type: Boolean, required: true } },
+  emits: {
+    'update-swim': (tookSwimTest: boolean) => typeof tookSwimTest === 'boolean',
+  },
   data() {
     return { radioValue: String(this.tookSwimTest) };
   },

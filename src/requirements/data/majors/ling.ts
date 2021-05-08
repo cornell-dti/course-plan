@@ -28,6 +28,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
   // TODO - "language courses" cannot be used for this requirement, but some courses with language course codes can. Unless we have a way of checking
   // "FL" designations besides the broad subjects we do now, we can't restrict this.
   // TODO - The CU-UGR restriction should probably be part of this compounded requirement as well. Right now assumes a CU-UGR course in linguistics is 3000+ and the language is confusing.
+  // TODO - The CU-UGR restriction restricts to only allow courses that could possibly be 4 credits, but a user could edit it to 3 or fewer credits and it would still count when it shouldn't.
   {
     name: 'Additional Courses: 3000 or above, CU-UGR',
     description:

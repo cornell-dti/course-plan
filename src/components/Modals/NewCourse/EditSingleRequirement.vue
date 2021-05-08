@@ -25,6 +25,7 @@ export default defineComponent({
     selected: { type: Boolean, required: true },
     isClickable: { type: Boolean, required: true },
   },
+  emits: ['on-select'],
   data() {
     return {
       isSelected: false,

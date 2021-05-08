@@ -1,8 +1,8 @@
 <template>
   <div class="semesterMenu">
     <button
+      v-if="!isOpenModal"
       class="semesterMenu-section full-opacity-on-hover"
-      :class="{ 'd-none': isOpenModal }"
       @click="openEditSemesterModal"
       data-cyId="semesterMenu-edit"
     >
@@ -20,8 +20,8 @@
       </div>
     </button>
     <button
+      v-if="!isOpenModal"
       class="semesterMenu-section full-opacity-on-hover"
-      :class="{ 'd-none': isOpenModal }"
       @click="openDeleteSemesterModal"
       data-cyId="semesterMenu-delete"
     >
@@ -45,6 +45,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
+  emits: ['open-delete-semester-modal', 'open-edit-semester-modal'],
   data() {
     return {
       isOpenModal: false,

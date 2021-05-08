@@ -1,5 +1,5 @@
 <template>
-  <flexible-modal
+  <teleport-modal
     title="Delete Semester"
     class="deleteSemesterModal"
     content-class="content-delete"
@@ -11,25 +11,31 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="deleteSemester"
+    :modelValue="modelValue"
   >
     <div class="deleteSemesterModal-body">
       <div class="deleteSemesterModal-body-text">{{ text }}</div>
     </div>
-  </flexible-modal>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import trashIcon from '@/assets/images/trash-white.svg';
 
 export default defineComponent({
-  components: { FlexibleModal },
+  components: { TeleportModal },
   props: {
     deleteSemType: { type: String, required: true },
     deleteSemYear: { type: Number, required: true },
+    modelValue: { type: Boolean, required: true },
   },
-
+  emits: {
+    'delete-semester': (type: string, year: number) =>
+      typeof type === 'string' && typeof year === 'number',
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+  },
   computed: {
     text() {
       return 'Are you sure you want to delete this semester?';
@@ -40,7 +46,7 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal() {
-      this.$emit('close-delete-modal');
+      this.$emit('update:modelValue', false);
     },
     deleteSemester() {
       this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);

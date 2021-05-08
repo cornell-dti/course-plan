@@ -57,6 +57,12 @@
         <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">
           Please fill out all required fields and try again.
         </div>
+        <div
+          class="onboarding-error"
+          :class="{ 'onboarding--hidden': !isInvalidMajorOrMinorError }"
+        >
+          Invalid major or minor. Delete the placeholder major or minor and try again.
+        </div>
       </div>
       <div class="onboarding-bottom">
         <div class="onboarding-bottom--section onboarding-bottom--section---center">
@@ -102,8 +108,8 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { db, onboardingDataCollection, usernameCollection } from '@/firebaseConfig';
-import store from '@/store';
+import { setOnboardingData } from '@/global-firestore-data';
+import { getMajorFullName, getMinorFullName } from '@/utilities';
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -113,45 +119,46 @@ export default defineComponent({
   props: {
     isEditingProfile: { type: Boolean, required: true },
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
   },
+  emits: ['onboard', 'cancelOnboarding'],
   data() {
     return {
       currentPage: 1,
-      isError: false,
       name: { ...this.userName },
       onboarding: { ...this.onboardingData },
     };
   },
-  methods: {
-    submitOnboarding() {
-      // Display error if a required field is empty, otherwise submit
-      if (
+  computed: {
+    // Display error if a required field is empty
+    isError(): boolean {
+      return (
         this.name.firstName === '' ||
         this.name.lastName === '' ||
         this.onboarding.college === '' ||
-        this.onboarding.gradYear === ''
-      ) {
-        this.isError = true;
-      } else {
-        db.batch()
-          .set(usernameCollection.doc(store.state.currentFirebaseUser.email), {
-            firstName: this.name.firstName,
-            middleName: this.name.middleName,
-            lastName: this.name.lastName,
-          })
-          .set(onboardingDataCollection.doc(store.state.currentFirebaseUser.email), {
-            gradYear: this.onboarding.gradYear,
-            colleges: [{ acronym: this.onboarding.college }],
-            majors: this.onboarding.major.map(acronym => ({ acronym })),
-            minors: this.onboarding.minor.map(acronym => ({ acronym })),
-            exam: this.onboarding.exam,
-            class: this.onboarding.transferCourse,
-            tookSwim: this.onboarding.tookSwim,
-          })
-          .commit();
-        this.$emit('onboard');
-      }
+        this.onboarding.gradYear === '' ||
+        this.onboarding.entranceYear === ''
+      );
+    },
+    // Display error if onboarding data includes a major or minor that doesn't exist in requirementsJSON
+    isInvalidMajorOrMinorError(): boolean {
+      return (
+        this.onboarding.major
+          .map(getMajorFullName)
+          .some((majorFullName: string) => majorFullName === '') ||
+        this.onboarding.minor
+          .map(getMinorFullName)
+          .some((minorFullName: string) => minorFullName === '')
+      );
+    },
+  },
+  methods: {
+    submitOnboarding() {
+      setOnboardingData(this.name, this.onboarding);
+      this.$emit('onboard');
     },
     goBack() {
       this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
@@ -160,17 +167,28 @@ export default defineComponent({
       this.currentPage = page;
     },
     goNext() {
-      this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+      // Only move onto next page if error message is not displayed
+      if (!(this.isError || this.isInvalidMajorOrMinorError)) {
+        this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+      }
     },
     updateBasic(
       gradYear: string,
+      entranceYear: string,
       college: string,
       major: readonly string[],
       minor: readonly string[],
       name: FirestoreUserName
     ) {
       this.name = name;
-      this.onboarding = { ...this.onboarding, gradYear, college, major, minor };
+      this.onboarding = {
+        ...this.onboarding,
+        gradYear,
+        entranceYear,
+        college,
+        major,
+        minor,
+      };
     },
     updateTransfer(
       exams: readonly FirestoreAPIBExam[],

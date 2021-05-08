@@ -14,7 +14,8 @@
         class="semester-modal"
         :class="{ 'modal--block': isSemesterModalOpen }"
         @add-semester="addSemester"
-        @close-semester-modal="closeSemesterModal"
+        v-model="isSemesterModalOpen"
+        v-if="isSemesterModalOpen"
         data-cyId="addSemesterModal"
       />
       <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
@@ -49,13 +50,9 @@
       </div>
       <confirmation
         class="semesterView-confirmation"
-        :class="{ 'modal--flex': isSemesterConfirmationOpen }"
         :text="confirmationText"
-      />
-      <semester-caution
-        class="semesterView-caution"
-        :class="{ 'modal--flex': isCautionModalOpen }"
-        :text="cautionText"
+        v-model="isSemesterConfirmationOpen"
+        v-if="isSemesterConfirmationOpen"
       />
       <div class="semesterView-content">
         <div
@@ -76,7 +73,6 @@
             @course-onclick="courseOnClick"
             @new-semester="openSemesterModal"
             @delete-semester="deleteSemester"
-            @open-caution-modal="openCautionModal"
             @modal-open="modalToggle"
           />
         </div>
@@ -114,8 +110,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Semester from '@/components/Semester/Semester.vue';
-import Confirmation from '@/components/Confirmation.vue';
-import SemesterCaution from '@/components/Semester/SemesterCaution.vue';
+import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
@@ -124,7 +119,7 @@ import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 
 export default defineComponent({
-  components: { Confirmation, NewSemesterModal, Semester, SemesterCaution },
+  components: { Confirmation, NewSemesterModal, Semester },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
@@ -132,16 +127,18 @@ export default defineComponent({
     isMobile: { type: Boolean, required: true },
     startTour: { type: Boolean, required: true },
   },
+  emits: {
+    'compact-updated': (compact: boolean) => typeof compact === 'boolean',
+  },
   data() {
     return {
       confirmationText: '',
-      cautionText: '',
       key: 0,
       activatedCourse: {} as FirestoreSemesterCourse,
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
-      isCautionModalOpen: false,
+      modalToggle: false,
     };
   },
   computed: {
@@ -181,31 +178,16 @@ export default defineComponent({
         this.isSemesterConfirmationOpen = false;
       }, 3000);
     },
-    openCautionModal() {
-      this.cautionText = `Unable to add course. Already in plan.`;
-      this.isCautionModalOpen = true;
-      this.$emit('modal-open', true);
-
-      setTimeout(() => {
-        this.isCautionModalOpen = false;
-        this.$emit('modal-open', false);
-      }, 3000);
-    },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
-      this.$emit('modal-open', true);
     },
-    closeSemesterModal() {
-      this.isSemesterModalOpen = false;
-      this.$emit('modal-open', false);
+    addSemester(type: string, year: number) {
+      addSemester(type as FirestoreSemesterType, year, this.$gtag);
+      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, true);
     },
-    addSemester(type: FirestoreSemesterType, year: number) {
-      addSemester(type, year, this.$gtag);
-      this.openSemesterConfirmationModal(type, year, true);
-    },
-    deleteSemester(type: FirestoreSemesterType, year: number) {
-      deleteSemester(type, year, this.$gtag);
-      this.openSemesterConfirmationModal(type, year, false);
+    deleteSemester(type: string, year: number) {
+      deleteSemester(type as FirestoreSemesterType, year, this.$gtag);
+      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.activatedCourse = course;
@@ -221,9 +203,6 @@ export default defineComponent({
     getToggleTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Toggle between Views</div><div class="introjs-customProgress">4/4</div>
       </div><div class = "introjs-bodytext">View semesters and courses in full or compact mode.</div>`;
-    },
-    modalToggle(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });

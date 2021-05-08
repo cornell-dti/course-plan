@@ -62,6 +62,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     userName: { firstName: '', middleName: '', lastName: '' },
     onboardingData: {
       gradYear: '',
+      entranceYear: '',
       college: '',
       major: [],
       minor: [],
@@ -96,8 +97,8 @@ const store: TypedVuexStore = new TypedVuexStore({
     setUserName(state: VuexStoreState, userName: FirestoreUserName) {
       state.userName = userName;
     },
-    setOnboardingData(state: VuexStoreState, onboardingData: FirestoreOnboardingUserData) {
-      state.onboardingData = createAppOnboardingData(onboardingData);
+    setOnboardingData(state: VuexStoreState, onboardingData: AppOnboardingData) {
+      state.onboardingData = onboardingData;
     },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
       state.semesters = semesters;
@@ -211,6 +212,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
 const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardingData => ({
   // TODO: take into account multiple colleges
   gradYear: data.gradYear ? data.gradYear : '',
+  entranceYear: data.entranceYear ? data.entranceYear : '',
   college: data.colleges[0].acronym,
   major: data.majors.map(({ acronym }) => acronym),
   minor: data.minors.map(({ acronym }) => acronym),
@@ -266,7 +268,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     .onSnapshot(snapshot => {
       const data = snapshot.data();
       if (data != null) {
-        store.commit('setOnboardingData', data);
+        store.commit('setOnboardingData', createAppOnboardingData(data));
       }
       onboardingDataInitialLoadFinished = true;
       emitOnLoadWhenLoaded();

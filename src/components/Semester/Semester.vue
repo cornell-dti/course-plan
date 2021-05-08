@@ -10,32 +10,32 @@
   >
     <new-course-modal
       class="semester-modal"
-      :class="{ 'modal--block': isCourseModalOpen }"
-      @close-course-modal="closeCourseModal"
+      v-model="isCourseModalOpen"
+      v-if="isCourseModalOpen"
       @add-course="addCourse"
     />
     <confirmation
       class="confirmation-modal"
-      :class="{ 'confirmation-modal--flex': isConfirmationOpen }"
       :text="confirmationText"
+      v-model="isConfirmationOpen"
+      v-if="isConfirmationOpen"
     />
     <delete-semester
       class="semester-modal"
-      :class="{ 'modal--block': isDeleteSemesterOpen }"
       @delete-semester="deleteSemester"
-      @close-delete-modal="closeDeleteModal"
       :deleteSemType="type"
       :deleteSemYear="year"
       ref="deletesemester"
+      v-model="isDeleteSemesterOpen"
+      v-if="isDeleteSemesterOpen"
     />
     <edit-semester
       class="semester-modal"
-      :class="{ 'modal--block': isEditSemesterOpen }"
       @edit-semester="editSemester"
-      @close-edit-modal="closeEditModal"
       :deleteSemType="type"
       :deleteSemYear="year"
-      ref="modalBodyComponent"
+      v-model="isEditSemesterOpen"
+      v-if="isEditSemesterOpen"
     />
     <button
       v-if="isFirstSem"
@@ -110,7 +110,7 @@ import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
-import Confirmation from '@/components/Confirmation.vue';
+import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
@@ -184,6 +184,12 @@ export default defineComponent({
       required: true,
     },
     isFirstSem: { type: Boolean, required: true },
+  },
+  emits: {
+    'new-semester': () => true,
+    'course-onclick': (course: FirestoreSemesterCourse) => typeof course === 'object',
+    'delete-semester': (type: string, year: number) =>
+      typeof type === 'string' && typeof year === 'number',
   },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, {
@@ -281,20 +287,7 @@ export default defineComponent({
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
-      this.isCourseModalOpen = true;
-      this.$emit('modal-open', true);
-    },
-    closeCourseModal() {
-      this.isCourseModalOpen = false;
-      this.$emit('modal-open', false);
-    },
-    closeEditModal() {
-      this.isEditSemesterOpen = false;
-      this.$emit('modal-open', false);
-    },
-    closeDeleteModal() {
-      this.isDeleteSemesterOpen = false;
-      this.$emit('modal-open', false);
+      this.isCourseModalOpen = !this.isCourseModalOpen;
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
@@ -370,21 +363,20 @@ export default defineComponent({
     openDeleteSemesterModal() {
       this.isDeleteSemesterOpen = true;
     },
-    deleteSemester(type: string, year: string) {
+    deleteSemester(type: string, year: number) {
       this.$emit('delete-semester', type, year);
       this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
     },
     openEditSemesterModal() {
       this.isEditSemesterOpen = true;
-      this.$emit('modal-open', true);
     },
-    editSemester(seasonInput: FirestoreSemesterType, yearInput: number) {
+    editSemester(seasonInput: string, yearInput: number) {
       editSemester(
         this.year,
         this.type,
         (oldSemester: FirestoreSemester): FirestoreSemester => ({
           ...oldSemester,
-          type: seasonInput,
+          type: seasonInput as FirestoreSemesterType,
           year: yearInput,
         })
       );
@@ -548,14 +540,6 @@ export default defineComponent({
 
     &--block {
       display: block;
-    }
-  }
-
-  .confirmation-modal {
-    display: none;
-
-    &--flex {
-      display: flex;
     }
   }
 

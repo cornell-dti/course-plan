@@ -1,5 +1,5 @@
 <template>
-  <flexible-modal
+  <teleport-modal
     title="New Semester"
     content-class="content-semester"
     left-button-text="Cancel"
@@ -8,27 +8,34 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="addSemester"
+    :modelValue="modelValue"
   >
-    <new-semester
+    <select-semester
       :currentSemesters="semesters"
       :isEdit="false"
-      :isSemesterAdd="true"
       :isCourseModelSelectingSemester="false"
       @duplicateSemester="disableButton"
       @updateSemProps="updateSemProps"
-      ref="modalBodyComponent"
     />
-  </flexible-modal>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import NewSemester from '@/components/Modals/NewSemester.vue';
-import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
+import SelectSemester from '@/components/Modals/SelectSemester.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import store from '@/store';
 
 export default defineComponent({
-  components: { FlexibleModal, NewSemester },
+  components: { TeleportModal, SelectSemester },
+  props: {
+    modelValue: { type: Boolean, required: true },
+  },
+  emits: {
+    'add-semester': (season: string, year: number) =>
+      typeof season === 'string' && typeof year === 'number',
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+  },
   data() {
     return { isDisabled: false, season: '', year: 0 };
   },
@@ -42,9 +49,7 @@ export default defineComponent({
       this.isDisabled = disabled;
     },
     closeCurrentModal() {
-      this.$emit('close-semester-modal');
-      // @ts-expect-error: TS cannot understand $ref's component.
-      this.$refs.modalBodyComponent.resetDropdowns();
+      this.$emit('update:modelValue', false);
     },
     addSemester() {
       if (!this.isDisabled) {

@@ -37,7 +37,6 @@ const getMatchingCourses = (
   /* code array for results that contain course code and title array for results that contain title */
   const code: CornellCourseRosterCourse[] = [];
   const title: CornellCourseRosterCourse[] = [];
-
   const filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
   for (const course of filteredCourses) {
     const courseCode = `${course.subject} ${course.catalogNbr}`;
@@ -47,7 +46,6 @@ const getMatchingCourses = (
       title.push(course);
     }
   }
-
   // Sort both results by title
   code.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
   title.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
@@ -68,6 +66,10 @@ export default defineComponent({
       default: undefined,
     },
     autoFocus: { type: Boolean, required: true },
+  },
+  emits: {
+    'on-escape': () => true,
+    'on-select': (result: CornellCourseRosterCourse) => typeof result === 'object',
   },
   data() {
     return {

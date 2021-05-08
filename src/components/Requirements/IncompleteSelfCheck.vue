@@ -2,10 +2,10 @@
   <div class="incompleteselfcheck">
     <new-self-check-course-modal
       class="incompleteselfcheck-modal"
-      :class="{ 'incompleteselfcheck-modal--block': isCourseModalOpen }"
+      v-model="isCourseModalOpen"
+      v-if="isCourseModalOpen"
       :subReqName="subReqName"
       :requirementId="subReqId"
-      @close-course-modal="closeCourseModal"
       @add-course="addNewCourse"
       ref="modal"
     />
@@ -158,11 +158,6 @@ export default defineComponent({
     },
     openCourseModal() {
       this.isCourseModalOpen = true;
-      this.$emit('modal-open', true);
-    },
-    closeCourseModal() {
-      this.isCourseModalOpen = false;
-      this.$emit('modal-open', false);
     },
   },
 });

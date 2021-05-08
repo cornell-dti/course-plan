@@ -1,39 +1,37 @@
 <template>
-  <div class="caution">
-    <div class="caution-left">
-      <img class="caution-icon" src="@/assets/images/caution-white.svg" alt="caution icon" />
+  <teleport-modal
+    content-class="content-confirmation"
+    :isSimpleModal="true"
+    :modelValue="modelValue"
+    :hasNoBackground="true"
+  >
+    <div class="confirmation">
+      <div class="confirmation-left">
+        <img class="confirmation-icon" src="@/assets/images/checkmark.svg" alt="checkmark" />
+      </div>
+      <div class="confirmation-text">{{ text }}</div>
     </div>
-    <div class="caution-text">{{ text }}</div>
-    <div class="caution-right">
-      <!-- TODO: implement undo functionality -->
-      <!-- <span class="undo-buttonText">{{ undo }}</span> -->
-    </div>
-  </div>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 export default defineComponent({
+  components: { TeleportModal },
   props: {
     text: { type: String, required: true },
-  },
-
-  computed: {
-    // TODO: implement undo functionality
-    // undo() {
-    //   return 'UNDO';
-    // }
+    modelValue: { type: Boolean, required: true },
   },
 });
 </script>
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
-.caution {
-  position: fixed;
-  z-index: 10;
-  top: 16px;
+
+.confirmation {
+  width: max-content;
   background: #ffffff;
   border-radius: 6px;
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
@@ -44,7 +42,7 @@ export default defineComponent({
     min-width: 42px;
     min-height: 42px;
 
-    background: #eb6d6d;
+    background: #3eb53b;
     border-radius: 5px;
   }
 
@@ -74,10 +72,7 @@ export default defineComponent({
 
     color: #7b7d7e;
 
-    margin-left: 8px;
-    margin-right: 16px;
-    margin-top: 13px;
-    margin-bottom: 12px;
+    margin: 14px 16px 12px 16px;
   }
 
   &-right {
@@ -99,8 +94,20 @@ export default defineComponent({
   }
 }
 
+@media only screen and (max-width: $large-breakpoint) {
+  .confirmation {
+    left: 25.5rem;
+  }
+}
+
+@media only screen and (max-width: $medium-breakpoint) {
+  .confirmation {
+    left: 0;
+  }
+}
+
 @media only screen and (max-width: $small-breakpoint) {
-  .caution {
+  .confirmation {
     width: 75%;
     &-left {
       width: 15%;

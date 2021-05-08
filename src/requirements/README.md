@@ -47,6 +47,14 @@ requirements are linked to courses, but it knows nothing about the requirement f
 It is the list of requirement fulfillment progress report, grouped into colleges, majors and minors.
 It knows nothing about the requirement graph structure.
 
+### Requirement Fulfillment
+
+A single requirement with several subrequirements, including the current fulfillment progress.
+
+### Subrequirement
+
+Sub-requirement is nested inside a requirement. It corresponds to one slot in the requirement data.
+
 ### Double Counting
 
 Double counting happens when one course is used to help fulfill two requirements. Not all double

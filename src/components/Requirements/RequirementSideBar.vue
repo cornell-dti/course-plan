@@ -22,7 +22,7 @@
         data-tooltipClass="tooltipCenter"
       >
         <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
-          <requirement-view
+          <requirement-group
             :req="req"
             :reqIndex="index"
             :toggleableRequirementChoices="toggleableRequirementChoices"
@@ -35,7 +35,6 @@
             @activateMajor="activateMajor"
             @activateMinor="activateMinor"
             @onShowAllCourses="onShowAllCourses"
-            @modal-open="modalToggled"
           />
         </div>
       </div>
@@ -101,7 +100,7 @@ import { defineComponent } from 'vue';
 import introJs from 'intro.js';
 
 import Course from '@/components/Course/Course.vue';
-import RequirementView from '@/components/Requirements/RequirementView.vue';
+import RequirementGroup from '@/components/Requirements/RequirementGroup.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
 import clipboard from '@/assets/images/clipboard.svg';
@@ -111,8 +110,8 @@ import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-f
 
 export type ShowAllCourses = {
   readonly name: string;
-  shownCourses: FirestoreSemesterCourse[];
-  readonly allCourses: FirestoreSemesterCourse[];
+  shownCourses: readonly FirestoreSemesterCourse[];
+  readonly allCourses: readonly FirestoreSemesterCourse[];
 };
 
 type Data = {
@@ -137,9 +136,12 @@ tour.setOption('exitOnOverlayClick', 'false');
 const maxSeeAllCoursesPerPage = 24;
 
 export default defineComponent({
-  components: { draggable, Course, DropDownArrow, RequirementView },
+  components: { draggable, Course, DropDownArrow, RequirementGroup },
   props: {
     startTour: { type: Boolean, required: true },
+  },
+  emits: {
+    showTourEndWindow: () => true,
   },
   data(): Data {
     return {
@@ -237,9 +239,9 @@ export default defineComponent({
       this.displayedMinorIndex = id;
     },
     getRequirementsTooltipText() {
-      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Meet your Requirements Bar <img src="${clipboard}" class = "introjs-emoji newSemester-emoji-text" alt="clipboard icon"/>
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Meet your Requirements Bar <img src="${clipboard}" class = "introjs-emoji introjs-emoji-text" alt="clipboard icon"/>
           </div><div class="introjs-customProgress">1/4</div></div><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and
-          required courses.<br><img src="${warning}" class = "newSemester-emoji-text" alt="warning icon"/> Some requirements
+          required courses.<br><img src="${warning}" class = "introjs-emoji-text" alt="warning icon"/> Some requirements
           aren’t fully tracked by us yet, so pay attention to the warnings.</div>`;
     },
     getCoursesTooltipText() {
@@ -248,7 +250,7 @@ export default defineComponent({
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
-      subReqCoursesArray: FirestoreSemesterCourse[];
+      subReqCoursesArray: readonly FirestoreSemesterCourse[];
     }) {
       this.shouldShowAllCourses = true;
 
@@ -279,7 +281,9 @@ export default defineComponent({
       );
     },
     // return an array consisting of the courses to display on the see all menu, depending on the showAllPage and maxSeeAllCoursesPerPage
-    findPotentialSeeAllCourses(courses: FirestoreSemesterCourse[]): FirestoreSemesterCourse[] {
+    findPotentialSeeAllCourses(
+      courses: readonly FirestoreSemesterCourse[]
+    ): FirestoreSemesterCourse[] {
       const allPotentialCourses = courses.slice(
         this.showAllPage * maxSeeAllCoursesPerPage,
         (this.showAllPage + 1) * maxSeeAllCoursesPerPage
@@ -293,10 +297,6 @@ export default defineComponent({
     },
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
-    },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
-      this.modalIsOpen = isOpen;
     },
   },
 });

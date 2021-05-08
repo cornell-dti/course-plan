@@ -1,10 +1,11 @@
 <template>
-  <flexible-modal
+  <TeleportModal
     :title="modalTitle"
     content-class="content-course"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="!canAddCourse"
+    :modelValue="modelValue"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addCourse"
@@ -22,31 +23,39 @@
     <div>
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
-        <new-semester
+        <select-semester
           :type="season"
           :year="year"
           :isCourseModelSelectingSemester="true"
           @updateSemProps="updateSemProps"
-          ref="modalBodyComponent"
         />
       </div>
     </div>
-  </flexible-modal>
+  </TeleportModal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
-import NewSemester from '@/components/Modals/NewSemester.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
+import SelectSemester from '@/components/Modals/SelectSemester.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 import store from '@/store';
 import { getFilter } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
-  components: { CourseSelector, FlexibleModal, NewSemester },
+  components: { CourseSelector, TeleportModal, SelectSemester },
   props: {
     subReqName: { type: String, required: true },
     requirementId: { type: String, required: true },
+    modelValue: { required: true, type: Boolean },
+  },
+  emits: {
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+    'add-course': (
+      selected: CornellCourseRosterCourse,
+      season: FirestoreSemesterType,
+      year: number
+    ) => typeof selected === 'object' && typeof season === 'string' && typeof year === 'number',
   },
   data() {
     return {
@@ -79,10 +88,7 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal() {
-      this.reset();
-      this.$emit('close-course-modal');
-      // @ts-expect-error: TS cannot understand $ref's component.
-      this.$refs.modalBodyComponent.resetDropdowns();
+      this.$emit('update:modelValue', false);
     },
     setCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
@@ -92,17 +98,11 @@ export default defineComponent({
       this.$emit('add-course', this.selectedCourse, this.season, this.year);
       this.closeCurrentModal();
     },
-    reset() {
-      this.courseSelectorKey += 1;
-      this.selectedCourse = null;
-      this.year = 0;
-      this.season = '' as FirestoreSemesterType;
-    },
     backOrCancel() {
       this.closeCurrentModal();
     },
-    updateSemProps(season: FirestoreSemesterType, year: number) {
-      this.season = season;
+    updateSemProps(season: string, year: number) {
+      this.season = season as FirestoreSemesterType;
       this.year = year;
     },
   },

@@ -91,11 +91,15 @@ export default defineComponent({
       type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
       required: true,
     },
-    // all the other ones that don’t allow double counting
+    // all the other ones that don't allow double counting
     relatedRequirements: {
       type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
       required: true,
     },
+  },
+  emits: {
+    'on-selected-change': (id: string) => typeof id === 'string',
+    'edit-mode': () => true,
   },
   computed: {
     chosenRequirementText(): string {
