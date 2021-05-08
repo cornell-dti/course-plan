@@ -41,7 +41,7 @@
               ><span>Entrance Year<span class="onboarding-required-star">*</span></span></label
             >
             <label class="onboarding-label--review"
-              ><span> {{ entranceYearText }}</span></label
+              ><span data-cyId="onboarding-entranceYear">{{ entranceYearText }}</span></label
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
@@ -49,7 +49,7 @@
               ><span>Graduation Year<span class="onboarding-required-star">*</span></span></label
             >
             <label class="onboarding-label--review"
-              ><span> {{ gradYearText }}</span></label
+              ><span data-cyId="onboarding-gradYear">{{ gradYearText }}</span></label
             >
           </div>
         </div>

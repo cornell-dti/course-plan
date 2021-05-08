@@ -10,13 +10,15 @@ before('Visit site logged in', () => {
 });
 
 // Delete existing semesters to ensure existing data does not mess with tests
-// Note: will fail if the user testing has no semesters, but the other tests will continue as expected
-it('Delete all existing semesters', () => {
-  cy.get('[data-cyId=semesterMenu]').each($el => {
-    cy.wrap($el).click();
-    cy.get('[data-cyId=semesterMenu-delete]').click();
-    cy.get('[data-cyId=modal-button]').eq(2).click();
-  });
+it('Delete all existing semesters, if any exist', () => {
+  const semesterMenus = '[data-cyId=semesterMenu]';
+  if (Cypress.$(semesterMenus).length > 0) {
+    cy.get(semesterMenus).each($el => {
+      cy.wrap($el).click();
+      cy.get('[data-cyId=semesterMenu-delete]').click();
+      cy.get('[data-cyId=modal-button]').click();
+    });
+  }
 });
 
 // Confirm that a semester can be added to the plan
@@ -33,7 +35,7 @@ it('Add a semester (Fall 2015)', () => {
   cy.get('[data-cyId=newSemester-yearItem]').first().click();
 
   // add semester
-  cy.get('[data-cyId=modal-button]').first().click();
+  cy.get('[data-cyId=modal-button]').click();
 
   // confirm the oldest semester is the newly added one
   cy.get('[data-cyId=semesterName]').last().contains('Fall 2015');
@@ -56,7 +58,7 @@ it('Fail to add a duplicate semester (Fall 2015)', () => {
   cy.get('[data-cyId=modal-button]').should('be.disabled');
 
   // exit the modal
-  cy.get('[data-cyId=modal-exit]').first().click();
+  cy.get('[data-cyId=modal-exit]').click();
 });
 
 // Confirm that the newly added semester can be edited
@@ -74,16 +76,28 @@ it('Edit a semester (Fall 2015 -> Spring 2016)', () => {
   cy.get('[data-cyId=newSemester-yearItem]').eq(1).click();
 
   // finish editing and confirm it has been updated
-  cy.get('[data-cyId=modal-button]').eq(3).click();
+  cy.get('[data-cyId=modal-button]').click();
   cy.get('[data-cyId=semesterName]').last().contains('Spring 2016');
 });
 
-// Test that you can change grad year, colleges and majors. A later requirements test is dependent on these choices
+// Test that you can change entrance year, grad year, colleges and majors. A later requirements test is dependent on these choices
 it('Switch to engineering college and cs major in class of 2022', () => {
   cy.get('[data-cyId=editProfile]').click();
 
-  // set Graduation year to 2022
+  // set Graduation year to 2018
   cy.get('[data-cyId=onboarding-dropdown]').eq(0).click();
+  cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
+    cy.wrap($el)
+      .invoke('text')
+      .then(text => {
+        if (text.includes('2018')) {
+          cy.wrap($el).click();
+        }
+      });
+  });
+
+  // set Graduation year to 2022
+  cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
@@ -95,7 +109,7 @@ it('Switch to engineering college and cs major in class of 2022', () => {
   });
 
   // set to Engineering college
-  cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
+  cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
@@ -107,7 +121,7 @@ it('Switch to engineering college and cs major in class of 2022', () => {
   });
 
   // set to CS major
-  cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
+  cy.get('[data-cyId=onboarding-dropdown]').eq(3).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
@@ -122,7 +136,8 @@ it('Switch to engineering college and cs major in class of 2022', () => {
   cy.get('[data-cyId=onboarding-nextButton]').click();
   cy.get('[data-cyId=onboarding-nextButton]').click();
 
-  // confirm 2022, engineering and computer science are selected on the review screen
+  // confirm 2018, 2022, engineering, and computer science are selected on the review screen
+  cy.get('[data-cyId=onboarding-entranceYear]').contains('2018');
   cy.get('[data-cyId=onboarding-gradYear]').contains('2022');
   cy.get('[data-cyId=onboarding-college]').contains('Engineering');
   cy.get('[data-cyId=onboarding-major]').contains('Computer Science');
@@ -159,8 +174,8 @@ it('Add a course with the new add modal (CS 1110)', () => {
 
   // keep it assigned to the default introductory programming requirement
   cy.get('[data-cyId=newCourse-requirementsDropdown]').click();
-  cy.get('[data-cyId=modal-button]').eq(1).click();
-  cy.get('[data-cyId=modal-button]').eq(1).click();
+  cy.get('[data-cyId=modal-button]').click();
+  cy.get('[data-cyId=modal-button]').click();
 
   // confirm the only course in plan is CS 1110
   cy.get('[data-cyId=courseCode]').contains('CS 1110');
@@ -168,6 +183,6 @@ it('Add a course with the new add modal (CS 1110)', () => {
   // confirm that the only subreq completed has CS 1110 assigned to it (Computing)
   cy.get('[data-cyId=requirements-viewMore]').first().click();
   cy.get('[data-cyId=requirements-showCompleted]').click();
-  cy.get('[data-cyId=requirements-subreqButton]').last().click();
+  cy.get('[data-cyId=requirements-displayToggle]').last().click();
   cy.get('[data-cyId=reqcourse-code]').first().contains('CS 1110');
 });

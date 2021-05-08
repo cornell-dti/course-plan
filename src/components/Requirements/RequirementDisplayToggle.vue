@@ -4,6 +4,7 @@
     class="dropdown row slightly-lower-opacity-on-hover"
     aria-haspopup="true"
     data-toggle="dropdown"
+    data-cyId="requirements-displayToggle"
   >
     <div class="row depth-req">
       <div class="btn">
