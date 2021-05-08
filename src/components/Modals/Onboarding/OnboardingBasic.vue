@@ -1,7 +1,7 @@
 <template>
   <div class="onboarding">
     <div class="onboarding-section">
-      <div class="onboarding-subHeader">
+      <div class="onboarding-subHeader onboarding-subHeader--indent">
         <span class="onboarding-subHeader--font"> Your Name</span>
       </div>
       <div class="onboarding-inputs onboarding-inputs--name">
@@ -62,54 +62,75 @@
       </div>
     </div>
     <div class="onboarding-section">
-      <!-- TODO: Multiple colleges -->
-      <div class="onboarding-subHeader">
-        <span class="onboarding-subHeader--font">Your Major</span>
+      <div class="onboarding-subHeader onboarding-subHeader--indent">
+        <span class="onboarding-subHeader--font">Undergraduate Degree</span>
       </div>
-      <div class="onboarding-inputs">
-        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <label class="onboarding-label"
-            >College<span class="onboarding-required-star">*</span></label
-          >
-          <div class="onboarding-selectWrapper">
-            <onboarding-basic-single-dropdown
-              :availableChoices="colleges"
-              :choice="collegeAcronym"
-              :cannotBeRemoved="true"
-              @on-select="selectCollege"
-            />
+      <div class="onboarding-inputs onboarding-inputs--undergrad">
+        <div class="onboarding-section">
+          <!-- TODO: Multiple colleges -->
+          <div class="onboarding-subHeader">
+            <span class="onboarding-subHeader--font">Your Major</span>
+          </div>
+          <div class="onboarding-inputs onboarding-inputs--small">
+            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
+              <label class="onboarding-label">College</label>
+              <div class="onboarding-selectWrapper">
+                <onboarding-basic-single-dropdown
+                  :availableChoices="colleges"
+                  :choice="collegeAcronym"
+                  :cannotBeRemoved="true"
+                  @on-select="selectCollege"
+                />
+              </div>
+            </div>
+            <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
+              <label class="onboarding-label">Major</label>
+              <onboarding-basic-multi-dropdown
+                :availableChoices="majors"
+                :dropdownChoices="majorAcronyms"
+                add-dropdown-text="+ another major"
+                @on-select="selectMajor"
+                @on-remove="removeMajor"
+                @on-add="addMajor"
+              />
+              <div class="requestForm">
+                *Don't see your major/minor? We are working hard to add them soon! Get updated when
+                we add it by signing up
+                <a href="https://forms.gle/MDvVDoRapUp2VeBb9" target="_blank" class="link">here</a>
+              </div>
+            </div>
+          </div>
+          <div class="onboarding-subHeader">
+            <span class="onboarding-subHeader--font">Your Minor</span>
+          </div>
+          <div class="onboarding-inputs onboarding-inputs--small">
+            <div class="onboarding-inputWrapper">
+              <label class="onboarding-label">Minor</label>
+              <onboarding-basic-multi-dropdown
+                :availableChoices="minors"
+                :dropdownChoices="minorAcronyms"
+                add-dropdown-text="+ another minor"
+                @on-select="selectMinor"
+                @on-remove="removeMinor"
+                @on-add="addMinor"
+              />
+            </div>
           </div>
         </div>
-        <div class="onboarding-inputWrapper onboarding-inputWrapper--college">
-          <label class="onboarding-label">Major</label>
-          <onboarding-basic-multi-dropdown
-            :availableChoices="majors"
-            :dropdownChoices="majorAcronyms"
-            add-dropdown-text="+ another major"
-            @on-select="selectMajor"
-            @on-remove="removeMajor"
-            @on-add="addMajor"
-          />
-          <div class="requestForm">
-            *Don't see your major/minor? We are working hard to add them soon! Get updated when we
-            add it by signing up
-            <a href="https://forms.gle/MDvVDoRapUp2VeBb9" target="_blank" class="link">here</a>
-          </div>
-        </div>
       </div>
-      <div class="onboarding-subHeader">
-        <span class="onboarding-subHeader--font">Your Minor</span>
+    </div>
+    <div class="onboarding-section">
+      <div class="onboarding-subHeader onboarding-subHeader--indent">
+        <span class="onboarding-subHeader--font">Graduate Degree</span>
       </div>
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper">
-          <label class="onboarding-label">Minor</label>
+          <label class="onboarding-label">Program</label>
           <onboarding-basic-multi-dropdown
             :availableChoices="minors"
             :dropdownChoices="minorAcronyms"
-            add-dropdown-text="+ another minor"
             @on-select="selectMinor"
             @on-remove="removeMinor"
-            @on-add="addMinor"
           />
         </div>
       </div>

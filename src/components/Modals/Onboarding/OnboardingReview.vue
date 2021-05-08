@@ -54,13 +54,11 @@
           </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2-review"> Your Major</span>
+          <span class="onboarding-subHeader2-review"> Your Undergraduate Degree</span>
         </div>
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label"
-              >College<span class="onboarding-required-star">*</span></label
-            >
+            <label class="onboarding-label">College</label>
             <div>
               <label class="onboarding-label--review">{{ collegeText }}</label>
             </div>
@@ -71,14 +69,20 @@
               <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
             </div>
           </div>
+          <div class="onboarding-selectWrapper-review">
+            <label class="onboarding-label">Minors</label>
+            <div v-for="(minor, index) in onboardingData.minor" :key="index">
+              <label class="onboarding-label--review">{{ getMinorFullName(minor) }}</label>
+            </div>
+          </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2-review"> Your Minor</span>
+          <span class="onboarding-subHeader2-review"> Your Graduate Degree</span>
         </div>
-        <div class="onboarding-selectWrapper">
-          <label class="onboarding-label">Minors:</label>
-          <div v-for="(minor, index) in onboardingData.minor" :key="index">
-            <label class="onboarding-label--review">{{ getMinorFullName(minor) }}</label>
+        <div class="onboarding-selectWrapper-review">
+          <label class="onboarding-label">Program</label>
+          <div v-for="(major, index) in onboardingData.major" :key="index">
+            <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
           </div>
         </div>
       </div>
