@@ -126,11 +126,12 @@
       <div class="onboarding-inputs">
         <div class="onboarding-inputWrapper">
           <label class="onboarding-label">Program</label>
-          <onboarding-basic-multi-dropdown
-            :availableChoices="minors"
-            :dropdownChoices="minorAcronyms"
-            @on-select="selectMinor"
-            @on-remove="removeMinor"
+          <onboarding-basic-single-dropdown
+            :availableChoices="programs"
+            :choice="programAcronym"
+            :cannotBeRemoved="programAcronym.length <= 0"
+            @on-select="selectProgram"
+            @on-remove="removeProgram"
           />
         </div>
       </div>
@@ -160,6 +161,7 @@ export default defineComponent({
       collegeAcronym: string,
       majorAcronyms: readonly string[],
       minorAcronyms: readonly string[],
+      programAcronym: string,
       name: FirestoreUserName
     ) {
       return (
@@ -168,6 +170,7 @@ export default defineComponent({
         typeof collegeAcronym === 'string' &&
         Array.isArray(majorAcronyms) &&
         Array.isArray(minorAcronyms) &&
+        typeof programAcronym === 'string' &&
         typeof name === 'object'
       );
     },
@@ -175,8 +178,10 @@ export default defineComponent({
   data() {
     const majorAcronyms = [...this.onboardingData.major];
     const minorAcronyms = [...this.onboardingData.minor];
+    let programAcronym = '';
     if (majorAcronyms.length === 0) majorAcronyms.push('');
     if (minorAcronyms.length === 0) minorAcronyms.push('');
+    if (this.onboardingData.program) programAcronym = this.onboardingData.program;
     return {
       firstName: this.userName.firstName,
       middleName: this.userName.middleName,
@@ -187,6 +192,7 @@ export default defineComponent({
       collegeAcronym: this.onboardingData.college,
       majorAcronyms,
       minorAcronyms,
+      programAcronym,
     };
   },
   directives: {
@@ -218,6 +224,17 @@ export default defineComponent({
       });
       return minors;
     },
+    programs(): Readonly<Record<string, string>> {
+      const programs: Record<string, string> = {};
+
+      // TODO: connect requirements side here instead of using dummy data
+
+      programs.TEMP = 'TEMP PROGRAM';
+      programs.TEMP2 = 'TEMP PROGRAM 2';
+      programs.TEMP3 = 'TEMP PROGRAM 3';
+
+      return programs;
+    },
     semesters(): Readonly<Record<string, string>> {
       const semsDict: Record<string, string> = {};
       const yearRange = 6;
@@ -238,6 +255,7 @@ export default defineComponent({
         this.collegeAcronym,
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
+        this.programAcronym,
         { firstName: this.firstName, middleName: this.middleName, lastName: this.lastName }
       );
     },
@@ -283,6 +301,10 @@ export default defineComponent({
       );
       this.updateBasic();
     },
+    selectProgram(acronym: string) {
+      this.programAcronym = acronym;
+      this.updateBasic();
+    },
     removeMajor(index: number) {
       this.majorAcronyms.splice(index, 1);
       if (this.majorAcronyms.length === 0) {
@@ -295,6 +317,10 @@ export default defineComponent({
       if (this.minorAcronyms.length === 0) {
         this.addMinor();
       }
+      this.updateBasic();
+    },
+    removeProgram() {
+      this.programAcronym = '';
       this.updateBasic();
     },
     addMajor() {

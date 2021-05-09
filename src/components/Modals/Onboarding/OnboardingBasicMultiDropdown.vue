@@ -13,9 +13,7 @@
       class="onboarding-addRemoveWrapper"
       :class="{ 'onboarding--hidden': dropdownChoices.length <= 0 }"
     >
-      <button v-if="addDropdownText" class="onboarding-add" @click="addDropdown">
-        {{ addDropdownText }}
-      </button>
+      <button class="onboarding-add" @click="addDropdown">{{ addDropdownText }}</button>
     </div>
   </div>
 </template>
@@ -33,7 +31,7 @@ export default defineComponent({
       required: true,
     },
     dropdownChoices: { type: Array as PropType<readonly string[]>, required: true },
-    addDropdownText: { type: String, default: '' },
+    addDropdownText: { type: String, required: true },
   },
   emits: {
     'on-select': (key: string, index: number) =>

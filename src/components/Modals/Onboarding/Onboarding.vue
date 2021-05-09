@@ -170,6 +170,7 @@ export default defineComponent({
       college: string,
       major: readonly string[],
       minor: readonly string[],
+      program: string,
       name: FirestoreUserName
     ) {
       this.name = name;
@@ -180,6 +181,7 @@ export default defineComponent({
         college,
         major,
         minor,
+        program,
       };
     },
     updateTransfer(

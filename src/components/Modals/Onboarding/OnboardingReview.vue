@@ -81,8 +81,8 @@
         </div>
         <div class="onboarding-selectWrapper-review">
           <label class="onboarding-label">Program</label>
-          <div v-for="(major, index) in onboardingData.major" :key="index">
-            <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
+          <div>
+            <label class="onboarding-label--review">{{ programText }}</label>
           </div>
         </div>
       </div>
@@ -168,7 +168,12 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
-import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
+import {
+  getCollegeFullName,
+  getMajorFullName,
+  getMinorFullName,
+  getProgramFullName,
+} from '@/utilities';
 import { GTagEvent } from '@/gtag';
 
 const placeholderText = 'Select one';
@@ -187,6 +192,11 @@ export default defineComponent({
     collegeText(): string {
       return this.onboardingData.college !== ''
         ? getCollegeFullName(this.onboardingData.college)
+        : placeholderText;
+    },
+    programText(): string {
+      return this.onboardingData.program !== ''
+        ? getProgramFullName(this.onboardingData.program)
         : placeholderText;
     },
     gradYearText(): string {
