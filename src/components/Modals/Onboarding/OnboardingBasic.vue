@@ -179,10 +179,8 @@ export default defineComponent({
   data() {
     const majorAcronyms = [...this.onboardingData.major];
     const minorAcronyms = [...this.onboardingData.minor];
-    let programAcronym = '';
     if (majorAcronyms.length === 0) majorAcronyms.push('');
     if (minorAcronyms.length === 0) minorAcronyms.push('');
-    if (this.onboardingData.program) programAcronym = this.onboardingData.program;
     return {
       firstName: this.userName.firstName,
       middleName: this.userName.middleName,
@@ -193,7 +191,7 @@ export default defineComponent({
       collegeAcronym: this.onboardingData.college,
       majorAcronyms,
       minorAcronyms,
-      programAcronym,
+      programAcronym: this.onboardingData.program,
     };
   },
   directives: {
