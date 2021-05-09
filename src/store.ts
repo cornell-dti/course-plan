@@ -277,19 +277,26 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       if (data != null) {
         store.commit('setSemesters', data.semesters);
       } else {
-        const { entranceYear, gradYear } = store.state.onboardingData;
+        const entranceYear = Number.parseFloat(store.state.onboardingData.entranceYear);
+        const gradYear = Number.parseFloat(store.state.onboardingData.gradYear);
         const seasons: FirestoreSemesterType[] = ['Fall', 'Spring'];
         let startingSems: FirestoreSemester[] = [];
-        for (let yr = Number.parseFloat(entranceYear); yr < Number.parseFloat(gradYear); yr += 1) {
+        for (let yr = entranceYear; yr < gradYear; yr += 1) {
           for (const season of seasons) {
-            startingSems = [
-              ...startingSems,
-              {
-                type: season,
-                year: yr,
-                courses: [],
-              },
-            ];
+            if (
+              !(
+                (yr === entranceYear && season === 'Spring') ||
+                (yr === gradYear && season === 'Fall')
+              )
+            )
+              startingSems = [
+                ...startingSems,
+                {
+                  type: season,
+                  year: yr,
+                  courses: [],
+                },
+              ];
           }
         }
 
