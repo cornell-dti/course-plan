@@ -54,14 +54,12 @@
             @setPage="setPage"
           />
         </div>
-        <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">
-          Please fill out all required fields and try again.
+        <div class="onboarding-error" v-if="isError">
+          {{ errorText }}
         </div>
-        <div
-          class="onboarding-error"
-          :class="{ 'onboarding--hidden': !isInvalidMajorOrMinorError }"
-        >
-          Invalid major or minor. Delete the placeholder major or minor and try again.
+        <div class="onboarding-error" v-if="isInvalidMajorMinorProgramError">
+          Invalid major, minor, or graduate program. Delete the placeholder major, minor, or program
+          and try again.
         </div>
       </div>
       <div class="onboarding-bottom">
@@ -101,7 +99,7 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import { setOnboardingData } from '@/global-firestore-data';
-import { getMajorFullName, getMinorFullName } from '@/utilities';
+import { getMajorFullName, getMinorFullName, getProgramFullName } from '@/utilities';
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -130,21 +128,56 @@ export default defineComponent({
       return (
         this.name.firstName === '' ||
         this.name.lastName === '' ||
-        this.onboarding.college === '' ||
         this.onboarding.gradYear === '' ||
-        this.onboarding.entranceYear === ''
+        this.onboarding.entranceYear === '' ||
+        (this.onboarding.college === '' && this.onboarding.program === '')
       );
     },
-    // Display error if onboarding data includes a major or minor that doesn't exist in requirementsJSON
-    isInvalidMajorOrMinorError(): boolean {
+    // Display error if onboarding data includes a major, minor, or graduate program that doesn't exist in requirementsJSON
+    isInvalidMajorMinorProgramError(): boolean {
       return (
         this.onboarding.major
           .map(getMajorFullName)
           .some((majorFullName: string) => majorFullName === '') ||
         this.onboarding.minor
           .map(getMinorFullName)
-          .some((minorFullName: string) => minorFullName === '')
+          .some((minorFullName: string) => minorFullName === '') ||
+        (this.onboarding.program !== '' && getProgramFullName(this.onboarding.program) === '')
       );
+    },
+    // Set error text depending on which fields are missing
+    errorText(): string {
+      const messages = [];
+      if (this.onboarding.college === '' && this.onboarding.program === '') {
+        messages.push('at least one undergraduate or graduate degree');
+      }
+      if (this.name.firstName === '') {
+        messages.push('a first name');
+      }
+      if (this.name.lastName === '') {
+        messages.push('a last name');
+      }
+      if (this.onboarding.gradYear === '') {
+        messages.push('a graduation year');
+      }
+      if (this.onboarding.entranceYear === '') {
+        messages.push('an entrance year');
+      }
+
+      // generate the string depending on how many error messages are selected
+      let errorString = 'Please select ';
+      for (let i = 0; i < messages.length; i += 1) {
+        errorString += messages[i];
+        if (i < messages.length - 2) {
+          errorString += ', ';
+        } else if (i === messages.length - 2 && messages.length === 2) {
+          errorString += ' and ';
+        } else if (i === messages.length - 2) {
+          errorString += ', and ';
+        }
+      }
+
+      return `${errorString}.`;
     },
   },
   methods: {
@@ -160,7 +193,7 @@ export default defineComponent({
     },
     goNext() {
       // Only move onto next page if error message is not displayed
-      if (!(this.isError || this.isInvalidMajorOrMinorError)) {
+      if (!(this.isError || this.isInvalidMajorMinorProgramError)) {
         this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
       }
     },
