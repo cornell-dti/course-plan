@@ -1,7 +1,6 @@
 <template>
   <teleport-modal
     title="Delete Semester"
-    class="deleteSemesterModal"
     content-class="content-delete"
     left-button-text="Cancel"
     right-button-text="Delete"

@@ -5,7 +5,6 @@
         <completed-sub-req-course
           :slotName="requirementFulfillmentCourseSlot.name"
           :courseTaken="requirementFulfillmentCourseSlot.courses[0]"
-          @modal-open="modalToggled"
         />
       </div>
       <div v-if="!requirementFulfillmentCourseSlot.isCompleted">
@@ -79,7 +78,6 @@ export default defineComponent({
     toggleableRequirementChoice: { type: String, default: null },
   },
   emits: {
-    'modal-open': (open: boolean) => typeof open === 'boolean',
     onShowAllCourses(courses: {
       requirementName: string;
       subReqCoursesArray: readonly FirestoreSemesterCourse[];
@@ -166,9 +164,6 @@ export default defineComponent({
         subReqCoursesArray: this.requirementCoursesSlots[subReqIndex]
           .courses as readonly FirestoreSemesterCourse[],
       });
-    },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });

@@ -9,28 +9,19 @@
     data-tooltipClass="tooltipCenter"
   >
     <new-course-modal
-      class="semester-modal"
       v-model="isCourseModalOpen"
       v-if="isCourseModalOpen"
       @add-course="addCourse"
     />
-    <confirmation
-      class="confirmation-modal"
-      :text="confirmationText"
-      v-model="isConfirmationOpen"
-      v-if="isConfirmationOpen"
-    />
+    <confirmation :text="confirmationText" v-model="isConfirmationOpen" v-if="isConfirmationOpen" />
     <delete-semester
-      class="semester-modal"
       @delete-semester="deleteSemester"
       :deleteSemType="type"
       :deleteSemYear="year"
-      ref="deletesemester"
       v-model="isDeleteSemesterOpen"
       v-if="isDeleteSemesterOpen"
     />
     <edit-semester
-      class="semester-modal"
       @edit-semester="editSemester"
       :deleteSemType="type"
       :deleteSemYear="year"
@@ -497,47 +488,10 @@ export default defineComponent({
     margin-top: -4px;
   }
 
-  /* The Modal (background) */
-  .semester-modal {
-    display: none;
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  }
-
   .draggable-semester-courses {
     padding-top: 5px;
     padding-left: 1.125rem;
     padding-right: 1.125rem;
-  }
-
-  .semester-modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 2; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-
-    &--block {
-      display: block;
-    }
-  }
-
-  .modal {
-    &--block {
-      display: block;
-    }
   }
 }
 

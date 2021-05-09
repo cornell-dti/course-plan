@@ -1,13 +1,11 @@
 <template>
   <div class="incompleteselfcheck">
     <new-self-check-course-modal
-      class="incompleteselfcheck-modal"
       v-model="isCourseModalOpen"
       v-if="isCourseModalOpen"
       :subReqName="subReqName"
       :requirementId="subReqId"
       @add-course="addNewCourse"
-      ref="modal"
     />
     <div class="separator"></div>
     <div class="top">{{ addCourseLabel }}</div>
@@ -264,24 +262,6 @@ export default defineComponent({
   &-content div:hover {
     background: rgba(50, 160, 242, 0.15);
     width: 100%;
-  }
-}
-
-/* The Modal (background) */
-.incompleteselfcheck-modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-
-  &--block {
-    display: block;
   }
 }
 </style>
