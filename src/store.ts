@@ -3,11 +3,7 @@ import { Store } from 'vuex';
 import * as fb from './firebaseConfig';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
-import getCurrentSeason, {
-  checkNotNull,
-  getCurrentYear,
-  allocateAllSubjectColor,
-} from './utilities';
+import { checkNotNull, allocateAllSubjectColor } from './utilities';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
@@ -281,13 +277,24 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       if (data != null) {
         store.commit('setSemesters', data.semesters);
       } else {
-        const newSemeter: FirestoreSemester = {
-          type: getCurrentSeason(),
-          year: getCurrentYear(),
-          courses: [],
-        };
-        store.commit('setSemesters', [newSemeter]);
-        fb.semestersCollection.doc(simplifiedUser.email).set({ semesters: [newSemeter] });
+        const { entranceYear, gradYear } = store.state.onboardingData;
+        const seasons: FirestoreSemesterType[] = ['Fall', 'Spring'];
+        let startingSems: FirestoreSemester[] = [];
+        for (let yr = Number.parseFloat(entranceYear); yr < Number.parseFloat(gradYear); yr += 1) {
+          for (const season of seasons) {
+            startingSems = [
+              ...startingSems,
+              {
+                type: season,
+                year: yr,
+                courses: [],
+              },
+            ];
+          }
+        }
+
+        store.commit('setSemesters', startingSems);
+        fb.semestersCollection.doc(simplifiedUser.email).set({ semesters: startingSems });
       }
       semestersInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
