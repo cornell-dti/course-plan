@@ -78,8 +78,9 @@
                 <onboarding-basic-single-dropdown
                   :availableChoices="colleges"
                   :choice="collegeAcronym"
-                  :cannotBeRemoved="true"
+                  :cannotBeRemoved="collegeAcronym.length <= 0"
                   @on-select="selectCollege"
+                  @on-remove="removeCollege"
                 />
               </div>
             </div>
@@ -303,6 +304,10 @@ export default defineComponent({
     },
     selectProgram(acronym: string) {
       this.programAcronym = acronym;
+      this.updateBasic();
+    },
+    removeCollege() {
+      this.collegeAcronym = '';
       this.updateBasic();
     },
     removeMajor(index: number) {

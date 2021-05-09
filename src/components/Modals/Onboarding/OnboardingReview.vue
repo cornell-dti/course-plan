@@ -87,7 +87,7 @@
         </div>
       </div>
     </div>
-    <div class="onboarding-section">
+    <div class="onboarding-section" v-if="!isGraduateOnly">
       <!-- TODO: Multiple colleges -->
       <div class="onboarding-subHeader">
         <span class="onboarding-subHeader--font"> Transfer Credits</span>
@@ -216,6 +216,9 @@ export default defineComponent({
         count += clas.credits;
       });
       return count;
+    },
+    isGraduateOnly(): boolean {
+      return this.onboardingData.program !== '' && this.onboardingData.college === '';
     },
   },
   methods: {

@@ -182,11 +182,21 @@ export default defineComponent({
   },
   methods: {
     submitOnboarding() {
+      this.clearTransferCreditIfGraduate();
       setOnboardingData(this.name, this.onboarding);
       this.$emit('onboard');
     },
     goBack() {
-      this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
+      // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
+      if (
+        this.onboarding.program !== '' &&
+        this.onboarding.college === '' &&
+        this.currentPage > 1
+      ) {
+        this.currentPage = 1;
+      } else {
+        this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
+      }
     },
     setPage(page: number) {
       this.currentPage = page;
@@ -194,7 +204,16 @@ export default defineComponent({
     goNext() {
       // Only move onto next page if error message is not displayed
       if (!(this.isError || this.isInvalidMajorMinorProgramError)) {
-        this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+        // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
+        if (
+          this.onboarding.program !== '' &&
+          this.onboarding.college === '' &&
+          this.currentPage === 1
+        ) {
+          this.currentPage += 2;
+        } else {
+          this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+        }
       }
     },
     updateBasic(
@@ -217,6 +236,12 @@ export default defineComponent({
         program,
       };
     },
+    // clear transfer credits if the student is only in a graduate program, but previously set transfer credits
+    clearTransferCreditIfGraduate() {
+      if (this.onboarding.program !== '' && this.onboarding.college === '') {
+        this.updateTransfer([], [], 'no');
+      }
+    },
     updateTransfer(
       exams: readonly FirestoreAPIBExam[],
       classes: readonly FirestoreTransferClass[],
@@ -234,12 +259,15 @@ export default defineComponent({
       };
     },
     cancel() {
-      if (this.onboardingData.college !== '') {
+      if (this.onboardingData.college !== '' || this.onboardingData.program !== '') {
         this.$emit('cancelOnboarding');
       }
     },
     checkClickOutside(e: MouseEvent) {
-      if (e.target === this.$refs.modalBackground && this.onboardingData.college !== '') {
+      if (
+        e.target === this.$refs.modalBackground &&
+        (this.onboardingData.college !== '' || this.onboardingData.program !== '')
+      ) {
         this.cancel();
       }
     },
