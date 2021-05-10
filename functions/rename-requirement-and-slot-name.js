@@ -17,43 +17,77 @@ const userOnboardingData = db.collection('user-onboarding-data');
 const oldName;
 /** The name that we want to change the requirement or slot name to. */
 const newName;
-/** True if the name we are changing is the name of a slot.
- * False if the name we are changing is the name of a requirement. */
-const isChangingSlotName;
-
-/** updates the old name of the requirement or slot name with the new name in
- * userOverriddenReqsCollection
+/** True if the name we are changing is the name of a requirement.
+ * False if the name we are changing is the name of a slot. */
+const isChangingReqName;
+/**
+ * Goes through object and updates key.
  */
-const updateNames = doc => {
+const updateObjectProperty = doc => {
   const newDoc = {};
-  for (const [key, value] of Object.entries(doc)) {
-    const nameInDB = isChangingSlotName ? key[1] : key[0];
-    if (nameInDB === oldName) {
-      const newKey = isChangingSlotName ? [key[0], newName] : [newName, key[1]];
-      newDoc[newKey] = value;
+  for (const [reqName, value] of Object.entries(doc)) {
+    if (reqName === oldName) {
+      newDoc[newName] = value;
     } else {
-      newDoc[key] = value;
+      newDoc[reqName] = value;
+    }
+  }
+  return newDoc;
+};
+/**
+ *
+ * Goes through each property and checks if its value (an object) has the
+ * name and updates it.
+ * (Used for slot name updates in user-overridden-requirements)
+ */
+const updateObjectValue = doc => {
+  const newDoc = {};
+  for (const [reqName, value] of Object.entries(doc)) {
+    if (value[oldName] !== undefined) {
+      // check for slot name
+      newDoc[reqName] = updateObjectProperty(value);
+    } else {
+      newDoc[reqName] = value;
     }
   }
   return newDoc;
 };
 
-const updateNamesInArray = arr => {
-  return arr.map(([reqName, slotName]) => {
-    const nameInDB = isChangingSlotName ? slotName : reqName;
-    if (nameInDB === oldName) {
-      return isChangingSlotName ? [reqName, newName] : [newName, slotName];
-    }
-    return [reqName, slotName];
+/**
+ * Updates the exam property in the user-onboarding-data collection.
+ */
+const updateExamProperty = doc => {
+  return doc.map(exam => {
+    return {
+      ...exam,
+      optIn: isChangingReqName
+        ? updateObjectProperty(exam.optIn)
+        : updateOnboardingSlotName(exam.optIn),
+      optOut: isChangingReqName
+        ? updateObjectProperty(exam.optOut)
+        : updateOnboardingSlotName(exam.optOut),
+    };
   });
 };
 
-const transformOverriddenReqsCollection = doc => updateNames(doc);
+const updateOnboardingSlotName = doc => {
+  const newDoc = {};
+  for (const [reqName, value] of Object.entries(doc)) {
+    if (value.includes(oldName)) {
+      value.map(slot => (slot !== oldName ? slot : newName));
+      newDoc[reqName] = value;
+    } else {
+      newDoc[reqName] = value;
+    }
+  }
+};
+
+const transformOverriddenReqsCollection = doc =>
+  isChangingReqName ? updateObjectProperty(doc) : updateObjectValue(doc);
 
 const transformOnboardingData = doc => ({
   ...doc,
-  optIn: updateNamesInArray(doc.optIn),
-  optOut: updateNamesInArray(doc.optOut),
+  exam: updateExamProperty(doc.exam),
 });
 
 if (process.argv[2] === '--dry-run') {
