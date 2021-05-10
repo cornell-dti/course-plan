@@ -1,7 +1,9 @@
 import { CREDITS_COURSE_ID } from './data/constants';
-import { getUserRequirements } from './requirement-frontend-utils';
+import { courseIsAPIB, getUserRequirements } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
-import buildRequirementFulfillmentGraph from './requirement-graph-builder';
+import buildRequirementFulfillmentGraph, {
+  OverridenRequirements,
+} from './requirement-graph-builder';
 
 /**
  * Removes all AP/IB equivalent course credit if it's a duplicate crseId.
@@ -38,6 +40,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
+  const userExamsTaken = new Set(onboardingData.exam.map(exam => `${exam.type} ${exam.subject}`));
 
   const requirementFulfillmentGraph = buildRequirementFulfillmentGraph<string, CourseTaken>({
     requirements: userRequirements.map(it => it.id),
@@ -60,7 +63,44 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         return [uniqueId, requirementID] as const;
       })
     ),
-    userChoiceOnRequirementOverrides: {},
+    userChoiceOnRequirementOverrides: Object.fromEntries(
+      coursesTaken
+        .filter(course => {
+          if (!courseIsAPIB(course) || !userExamsTaken.has(course.code)) return false;
+          const userExam = onboardingData.exam.find(
+            ({ type, subject }) => `${type} ${subject}` === course.code
+          );
+          if (!userExam) return false;
+          return (
+            (userExam.optIn && Object.keys(userExam.optIn).length !== 0) ||
+            (userExam.optOut && Object.keys(userExam.optOut).length !== 0)
+          );
+        })
+        .map(course => {
+          const userExam = onboardingData.exam.find(
+            ({ type, subject }) => `${type} ${subject}` === course.code
+          );
+          if (!userExam) return null;
+          const overridenRequirements: OverridenRequirements<string> = {
+            optIn: new Set(),
+            optOut: new Set(),
+          };
+          if (userExam.optIn)
+            Object.entries(userExam.optIn).forEach(([requirementName, slotNames]) => {
+              slotNames.forEach(slotName => {
+                overridenRequirements.optIn.add(`${requirementName} ${slotName}`);
+              });
+            });
+          if (userExam.optOut)
+            Object.entries(userExam.optOut).forEach(([requirementName, slotNames]) => {
+              slotNames.forEach(slotName => {
+                overridenRequirements.optIn.add(`${requirementName} ${slotName}`);
+              });
+            });
+          return [course.uniqueId, overridenRequirements];
+        })
+        .filter((it): it is [number, OverridenRequirements<string>] => it != null)
+    ),
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirementID => {
       const requirement = userRequirementsMap[requirementID];
       let eligibleCoursesList: readonly (readonly number[])[];

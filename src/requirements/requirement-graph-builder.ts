@@ -4,6 +4,11 @@ interface CourseForRequirementGraph extends CourseWithUniqueId {
   readonly courseId: number;
 }
 
+export type OverridenRequirements<Requirement extends string> = {
+  readonly optIn: Set<Requirement>;
+  readonly optOut: Set<Requirement>;
+};
+
 type BuildRequirementFulfillmentGraphParameters<
   Requirement extends string,
   Course extends CourseForRequirementGraph
@@ -38,13 +43,7 @@ type BuildRequirementFulfillmentGraphParameters<
    * This handles AP/IB overrides, as well as general overrides.
    */
   readonly userChoiceOnRequirementOverrides: Readonly<
-    Record<
-      number,
-      {
-        readonly optIn: Set<Requirement>;
-        readonly optOut: Set<Requirement>;
-      }
-    >
+    Record<number, OverridenRequirements<Requirement>>
   >;
   /**
    * Naively give a list of courses ID that can satisfy a requirement. Most of the time this function
@@ -145,13 +144,13 @@ const buildRequirementFulfillmentGraph = <
         // Otherwise, the edge will be removed.
         if (userChoiceOnRequirementOverrides[uniqueId].optOut.has(connectedRequirement)) {
           graph.removeEdge(connectedRequirement, { uniqueId });
-        }
-        else if (userChoiceOnRequirementOverrides[uniqueId].optIn.has(connectedRequirement)) {
+        } else if (userChoiceOnRequirementOverrides[uniqueId].optIn.has(connectedRequirement)) {
           graph.addEdge(connectedRequirement, course);
         }
       }
     });
   });
+  console.log(userChoiceOnRequirementOverrides);
 
   // Phase MAX_INT: PROFIT!
   return graph;
