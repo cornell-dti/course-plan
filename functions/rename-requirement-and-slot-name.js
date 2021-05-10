@@ -10,7 +10,7 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
-const userOverriddenReqsCollection = db.collection('user-overridden-reqs');
+const userOverriddenReqsCollection = db.collection('user-overridden-requirements');
 const userOnboardingData = db.collection('user-onboarding-data');
 
 /** The current name of the requirement or slot name that we want to change. */
