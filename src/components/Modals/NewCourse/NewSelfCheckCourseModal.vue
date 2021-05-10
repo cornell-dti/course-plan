@@ -82,6 +82,7 @@ export default defineComponent({
       return getFilter(
         store.state.userRequirementsMap,
         store.state.toggleableRequirementChoices,
+        store.state.overridenRequirementChoices,
         this.requirementId
       );
     },

@@ -42,6 +42,7 @@ export type VuexStoreState = {
   derivedSelectableRequirementData: DerivedSelectableRequirementData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   selectableRequirementChoices: AppSelectableRequirementChoices;
+  overridenRequirementChoices: AppOverridenRequirementChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
@@ -81,6 +82,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     toggleableRequirementChoices: {},
     selectableRequirementChoices: {},
+    overridenRequirementChoices: {},
     userRequirementsMap: {},
     // It won't be null once the app loads.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -123,6 +125,16 @@ const store: TypedVuexStore = new TypedVuexStore({
       selectableRequirementChoices: AppSelectableRequirementChoices
     ) {
       state.selectableRequirementChoices = selectableRequirementChoices;
+    },
+    setOverridenRequirementChoices(
+      state: VuexStoreState,
+      overridenRequirementChoices: AppOverridenRequirementChoices
+    ) {
+      const APIBOverridenRequirements = { "Major-CS-Technical Electives": { optIn: new Set([-2]), optOut: new Set([0]) } };
+      state.overridenRequirementChoices = {
+        ...overridenRequirementChoices,
+        ...APIBOverridenRequirements,
+      };
     },
     setRequirementData(
       state: VuexStoreState,
@@ -193,7 +205,8 @@ const autoRecomputeDerivedData = (): (() => void) =>
       payload.type === 'setOnboardingData' ||
       payload.type === 'setSemesters' ||
       payload.type === 'setToggleableRequirementChoices' ||
-      payload.type === 'setSelectableRequirementChoices'
+      payload.type === 'setSelectableRequirementChoices' ||
+      payload.type === 'setOverridenRequirementChoices'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -202,7 +215,8 @@ const autoRecomputeDerivedData = (): (() => void) =>
             state.semesters,
             state.onboardingData,
             state.toggleableRequirementChoices,
-            state.selectableRequirementChoices
+            state.selectableRequirementChoices,
+            state.overridenRequirementChoices
           )
         );
       }
@@ -269,6 +283,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const data = snapshot.data();
       if (data != null) {
         store.commit('setOnboardingData', createAppOnboardingData(data));
+        store.commit('setOverridenRequirementChoices', store.state.overridenRequirementChoices);
       }
       onboardingDataInitialLoadFinished = true;
       emitOnLoadWhenLoaded();

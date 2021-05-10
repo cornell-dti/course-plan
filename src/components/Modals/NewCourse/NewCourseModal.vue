@@ -100,7 +100,8 @@ export default defineComponent({
       } = getRelatedUnfulfilledRequirements(
         selectedCourse,
         store.state.groupedRequirementFulfillmentReport,
-        store.state.toggleableRequirementChoices
+        store.state.toggleableRequirementChoices,
+        store.state.overridenRequirementChoices
       );
 
       const requirementsThatAllowDoubleCounting: string[] = [];

@@ -4,11 +4,6 @@ interface CourseForRequirementGraph extends CourseWithUniqueId {
   readonly courseId: number;
 }
 
-export type OverridenRequirements<Requirement extends string> = {
-  readonly optIn: Set<Requirement>;
-  readonly optOut: Set<Requirement>;
-};
-
 type BuildRequirementFulfillmentGraphParameters<
   Requirement extends string,
   Course extends CourseForRequirementGraph
@@ -37,13 +32,15 @@ type BuildRequirementFulfillmentGraphParameters<
    */
   readonly userChoiceOnDoubleCountingElimination: Readonly<Record<number, Requirement>>;
   /**
-   * The mapping from course's unique ID to requirement override options.
-   * Requirement override options a mapping from optIn/optOut to a set of requirements.
+   * The mapping from course's unique ID to requirement override (opt-in) options.
    * It describes how the user wants to use a course to override requirements.
    * This handles AP/IB overrides, as well as general overrides.
    */
   readonly userChoiceOnRequirementOverrides: Readonly<
-    Record<number, OverridenRequirements<Requirement>>
+    Record<
+      number,
+      Set<Requirement>
+    >
   >;
   /**
    * Naively give a list of courses ID that can satisfy a requirement. Most of the time this function
@@ -140,12 +137,8 @@ const buildRequirementFulfillmentGraph = <
     const { uniqueId } = course;
     if (uniqueId in userChoiceOnRequirementOverrides) {
       // This assumes the invariant that no requirement is in both optIn and optOut.
-      // Otherwise, the edge will be removed.
-      userChoiceOnRequirementOverrides[uniqueId].optIn.forEach(requirement => {
+      userChoiceOnRequirementOverrides[uniqueId].forEach(requirement => {
         graph.addEdge(requirement, course);
-      });
-      userChoiceOnRequirementOverrides[uniqueId].optOut.forEach(requirement => {
-        graph.removeEdge(requirement, { uniqueId });
       });
     }
   });

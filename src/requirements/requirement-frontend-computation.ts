@@ -181,7 +181,8 @@ export default function computeGroupedRequirementFulfillmentReports(
   semesters: readonly FirestoreSemester[],
   onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  selectableRequirementChoices: AppSelectableRequirementChoices
+  selectableRequirementChoices: AppSelectableRequirementChoices,
+  overridenRequirementChoices: AppOverridenRequirementChoices
 ): {
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
@@ -197,7 +198,8 @@ export default function computeGroupedRequirementFulfillmentReports(
     coursesTaken,
     onboardingData,
     toggleableRequirementChoices,
-    selectableRequirementChoices
+    selectableRequirementChoices,
+    overridenRequirementChoices
   );
 
   const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];
@@ -218,7 +220,7 @@ export default function computeGroupedRequirementFulfillmentReports(
     const fulfillmentStatistics = {
       id: requirement.id,
       requirement,
-      ...computeFulfillmentCoursesAndStatistics(requirement, courses, toggleableRequirementChoices),
+      ...computeFulfillmentCoursesAndStatistics(requirement, courses, toggleableRequirementChoices, overridenRequirementChoices),
     };
 
     switch (requirement.sourceType) {

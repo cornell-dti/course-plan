@@ -148,3 +148,14 @@ type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 
 /** Map from course's unique ID to requirement ID */
 type AppSelectableRequirementChoices = Readonly<Record<string, string>>;
+
+/** Map from requirement ID to overriding options, which stores a set of unique IDs */
+type AppOverridenRequirementChoices = Readonly<
+  Record<
+    readonly [requirementName: string],
+    {
+      readonly optIn: Set<number>;
+      readonly optOut: Set<number>;
+    }
+  >
+>;

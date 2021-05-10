@@ -63,7 +63,8 @@ export default defineComponent({
         this.requirementFulfillment.requirement,
         {
           [this.requirementFulfillment.requirement.id]: this.toggleableRequirementChoice,
-        }
+        },
+        store.state.overridenRequirementChoices
       );
       if (requirementFulfillmentSpec !== null) {
         if (requirementFulfillmentSpec.fulfilledBy === 'credits') {
