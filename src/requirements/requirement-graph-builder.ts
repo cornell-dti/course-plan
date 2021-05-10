@@ -138,19 +138,17 @@ const buildRequirementFulfillmentGraph = <
   // Phase 4: Respect user's choices on overrides.
   userCourses.forEach(course => {
     const { uniqueId } = course;
-    graph.getConnectedRequirementsFromCourse({ uniqueId }).forEach(connectedRequirement => {
-      if (uniqueId in userChoiceOnRequirementOverrides) {
-        // This assumes the invariant that no requirement is in both optIn and optOut.
-        // Otherwise, the edge will be removed.
-        if (userChoiceOnRequirementOverrides[uniqueId].optOut.has(connectedRequirement)) {
-          graph.removeEdge(connectedRequirement, { uniqueId });
-        } else if (userChoiceOnRequirementOverrides[uniqueId].optIn.has(connectedRequirement)) {
-          graph.addEdge(connectedRequirement, course);
-        }
-      }
-    });
+    if (uniqueId in userChoiceOnRequirementOverrides) {
+      // This assumes the invariant that no requirement is in both optIn and optOut.
+      // Otherwise, the edge will be removed.
+      userChoiceOnRequirementOverrides[uniqueId].optIn.forEach(requirement => {
+        graph.addEdge(requirement, course);
+      });
+      userChoiceOnRequirementOverrides[uniqueId].optOut.forEach(requirement => {
+        graph.removeEdge(requirement, { uniqueId });
+      });
+    }
   });
-  console.log(userChoiceOnRequirementOverrides);
 
   // Phase MAX_INT: PROFIT!
   return graph;

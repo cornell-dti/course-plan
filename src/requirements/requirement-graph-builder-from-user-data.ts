@@ -86,16 +86,12 @@ export default function buildRequirementFulfillmentGraphFromUserData(
             optOut: new Set(),
           };
           if (userExam.optIn)
-            Object.entries(userExam.optIn).forEach(([requirementName, slotNames]) => {
-              slotNames.forEach(slotName => {
-                overridenRequirements.optIn.add(`${requirementName} ${slotName}`);
-              });
+            Object.keys(userExam.optIn).forEach(requirementName => {
+              overridenRequirements.optIn.add(requirementName);
             });
           if (userExam.optOut)
-            Object.entries(userExam.optOut).forEach(([requirementName, slotNames]) => {
-              slotNames.forEach(slotName => {
-                overridenRequirements.optIn.add(`${requirementName} ${slotName}`);
-              });
+            Object.keys(userExam.optOut).forEach(requirementName => {
+              overridenRequirements.optOut.add(requirementName);
             });
           return [course.uniqueId, overridenRequirements];
         })
