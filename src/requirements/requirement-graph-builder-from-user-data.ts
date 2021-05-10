@@ -12,12 +12,17 @@ import buildRequirementFulfillmentGraph from './requirement-graph-builder';
  * helping to compute requirement progress.
  */
 function forfeitTransferCredit(coursesTaken: readonly CourseTaken[]): readonly CourseTaken[] {
+  // filter out AP/IB equivalent courses with legitimate course ids
   const equivalentCourses = coursesTaken.filter(course => course.courseId !== CREDITS_COURSE_ID);
+
+  // generate set for all forfeited equivalent course ids
   const equivalentCourseIds = new Set(equivalentCourses.map(({ courseId }) => courseId));
-  let transferCreditCourses = coursesTaken.filter(course => course.courseId === CREDITS_COURSE_ID);
-  transferCreditCourses = transferCreditCourses.filter(
-    ({ courseId }) => !equivalentCourseIds.has(courseId)
+  // filter out any credits-only courses generated from AP/IB exams
+  const transferCreditCourses = coursesTaken.filter(
+    course => course.courseId === CREDITS_COURSE_ID && !equivalentCourseIds.has(course.courseId)
   );
+
+  // return the filtered array of courses taken
   return equivalentCourses.concat(transferCreditCourses);
 }
 
@@ -55,6 +60,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         return [uniqueId, requirementID] as const;
       })
     ),
+    userChoiceOnRequirementOverrides: {},
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirementID => {
       const requirement = userRequirementsMap[requirementID];
       let eligibleCoursesList: readonly (readonly number[])[];

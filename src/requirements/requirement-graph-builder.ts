@@ -32,6 +32,21 @@ type BuildRequirementFulfillmentGraphParameters<
    */
   readonly userChoiceOnDoubleCountingElimination: Readonly<Record<number, Requirement>>;
   /**
+   * The mapping from course's unique ID to requirement override options.
+   * Requirement override options a mapping from optIn/optOut to a set of requirements.
+   * It describes how the user wants to use a course to override requirements.
+   * This handles AP/IB overrides, as well as general overrides.
+   */
+  readonly userChoiceOnRequirementOverrides: Readonly<
+    Record<
+      number,
+      {
+        readonly optIn: Set<Requirement>;
+        readonly optOut: Set<Requirement>;
+      }
+    >
+  >;
+  /**
    * Naively give a list of courses ID that can satisfy a requirement. Most of the time this function
    * should just return the pre-computed eligible course id list. For requirements have multiple
    * fulfillment strategies, it will return the union of all pre-computed course list.
@@ -55,6 +70,7 @@ const buildRequirementFulfillmentGraph = <
     userCourses,
     userChoiceOnFulfillmentStrategy,
     userChoiceOnDoubleCountingElimination,
+    userChoiceOnRequirementOverrides,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
     allowDoubleCounting,
   }: BuildRequirementFulfillmentGraphParameters<Requirement, Course>,
@@ -116,6 +132,23 @@ const buildRequirementFulfillmentGraph = <
       if (keepCoursesWithoutDoubleCountingEliminationChoice && chosenRequirement == null) return;
       if (connectedRequirement !== chosenRequirement) {
         graph.removeEdge(connectedRequirement, { uniqueId });
+      }
+    });
+  });
+
+  // Phase 4: Respect user's choices on overrides.
+  userCourses.forEach(course => {
+    const { uniqueId } = course;
+    graph.getConnectedRequirementsFromCourse({ uniqueId }).forEach(connectedRequirement => {
+      if (uniqueId in userChoiceOnRequirementOverrides) {
+        // This assumes the invariant that no requirement is in both optIn and optOut.
+        // Otherwise, the edge will be removed.
+        if (userChoiceOnRequirementOverrides[uniqueId].optOut.has(connectedRequirement)) {
+          graph.removeEdge(connectedRequirement, { uniqueId });
+        }
+        else if (userChoiceOnRequirementOverrides[uniqueId].optIn.has(connectedRequirement)) {
+          graph.addEdge(connectedRequirement, course);
+        }
       }
     });
   });
