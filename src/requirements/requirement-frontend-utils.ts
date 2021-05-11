@@ -282,7 +282,6 @@ const computeFulfillmentStatistics = (
   coursesTaken.forEach(courseTaken => {
     const overrideOptions = overridenRequirementChoices[courseTaken.uniqueId];
     const optInSlotNames = (overrideOptions && overrideOptions.optIn[requirementName]) || null;
-    console.log(optInSlotNames);
     const optOutSlotNames = (overrideOptions && overrideOptions.optOut[requirementName]) || null;
     if (!(disallowTransferCredit && courseIsAPIB(courseTaken)) || optInSlotNames) {
       for (
