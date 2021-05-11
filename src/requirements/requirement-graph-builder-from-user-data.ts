@@ -39,7 +39,8 @@ export default function buildRequirementFulfillmentGraphFromUserData(
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
-  console.log(overridenRequirementChoices);
+
+  if (false) console.log(overridenRequirementChoices);
 
   const requirementFulfillmentGraph = buildRequirementFulfillmentGraph<string, CourseTaken>({
     requirements: userRequirements.map(it => it.id),
@@ -63,32 +64,15 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       })
     ),
     userChoiceOnRequirementOverrides: {
-      // ...Object.fromEntries(
-      //   Object.entries(overridenRequirementChoices).map(([requirement, { optIn }]) => [
-      //     requirement,
-      //     optIn,
-      //   ])
-      // ),
       ...Object.fromEntries(
         coursesTaken
-          .filter(course => {
-            if (!courseIsAPIB(course)) return false;
-            const userExam = onboardingData.exam.find(
-              ({ type, subject }) => `${type} ${subject}` === course.code
-            );
-            if (!userExam) return false;
-            return !!userExam.optIn;
-          })
           .map(course => {
+            if (!courseIsAPIB(course)) return null;
             const userExam = onboardingData.exam.find(
               ({ type, subject }) => `${type} ${subject}` === course.code
             );
-            if (!userExam) return null;
-            const overridenRequirements: Set<string> = new Set();
-            if (userExam.optIn)
-              Object.keys(userExam.optIn).forEach(requirementName => {
-                overridenRequirements.add(requirementName);
-              });
+            if (!(userExam && userExam.optIn)) return null;
+            const overridenRequirements = new Set(Object.keys(userExam.optIn));
             return [course.uniqueId, overridenRequirements];
           })
           .filter((it): it is [number, Set<string>] => it != null)

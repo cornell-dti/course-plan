@@ -130,7 +130,10 @@ const store: TypedVuexStore = new TypedVuexStore({
       state: VuexStoreState,
       overridenRequirementChoices: AppOverridenRequirementChoices
     ) {
-      const APIBOverridenRequirements = { "Major-CS-Technical Electives": { optIn: new Set([-2]), optOut: new Set([0]) } };
+      // TEMP, TODO: get from state.onboardingData
+      const APIBOverridenRequirements: AppOverridenRequirementChoices = {
+        [-3]: { optOut: { 'Major-CS-Introductory Programming': new Set(['CS 111x']) }, optIn: { '': new Set() } },
+      };
       state.overridenRequirementChoices = {
         ...overridenRequirementChoices,
         ...APIBOverridenRequirements,

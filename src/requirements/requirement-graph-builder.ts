@@ -36,12 +36,7 @@ type BuildRequirementFulfillmentGraphParameters<
    * It describes how the user wants to use a course to override requirements.
    * This handles AP/IB overrides, as well as general overrides.
    */
-  readonly userChoiceOnRequirementOverrides: Readonly<
-    Record<
-      number,
-      Set<Requirement>
-    >
-  >;
+  readonly userChoiceOnRequirementOverrides: Readonly<Record<number, Set<Requirement>>>;
   /**
    * Naively give a list of courses ID that can satisfy a requirement. Most of the time this function
    * should just return the pre-computed eligible course id list. For requirements have multiple

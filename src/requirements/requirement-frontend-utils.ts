@@ -43,8 +43,7 @@ export const getFilter = (
   if (requirement == null) return () => true;
   const requirementSpec = getMatchedRequirementFulfillmentSpecification(
     requirement,
-    toggleableRequirementChoices,
-    overridenRequirementChoices
+    toggleableRequirementChoices
   );
   // If a requirement is truly self-check, then all courses can be used.
   if (requirementSpec == null) return () => true;
@@ -68,8 +67,7 @@ export function canFulfillChecker(
   if (requirement == null) return true;
   const requirementSpec = getMatchedRequirementFulfillmentSpecification(
     requirement,
-    toggleableRequirementChoices,
-    overridenRequirementChoices
+    toggleableRequirementChoices
   );
   // If a requirement is truly self-check, then all courses can be used.
   if (requirementSpec == null) return true;
@@ -193,8 +191,7 @@ type MatchedRequirementFulfillmentSpecification =
  */
 export function getMatchedRequirementFulfillmentSpecification(
   requirement: RequirementWithIDSourceType,
-  toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overridenRequirementChoices: AppOverridenRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices
 ): MatchedRequirementFulfillmentSpecification {
   /**
    * Given a map of additional requirements, keep the requirement name key, but extract out the
@@ -229,7 +226,6 @@ export function getMatchedRequirementFulfillmentSpecification(
     case 'self-check':
       return null;
     case 'courses':
-      console.log(overridenRequirementChoices);
       return {
         fulfilledBy: requirement.fulfilledBy,
         eligibleCourses: requirement.courses,
@@ -267,28 +263,36 @@ export function getMatchedRequirementFulfillmentSpecification(
 }
 
 const computeFulfillmentStatistics = (
+  requirementName: string,
   coursesTaken: readonly CourseTaken[],
+  overridenRequirementChoices: AppOverridenRequirementChoices,
   disallowTransferCredit: boolean,
   {
     fulfilledBy,
     eligibleCourses,
     perSlotMinCount,
+    slotNames,
     minNumberOfSlots,
   }: MatchedRequirementFulfillmentSpecificationBase
 ): RequirementFulfillmentStatisticsWithCourses => {
   const coursesThatFulfilledSubRequirements: CourseTaken[][] = eligibleCourses.map(() => []);
   const subRequirementProgress: number[] = eligibleCourses.map(() => 0);
   coursesTaken.forEach(courseTaken => {
-    const { courseId } = courseTaken;
+    const overrideOptions = overridenRequirementChoices[courseTaken.uniqueId];
+    const optInSlotNames = (overrideOptions && overrideOptions.optIn[requirementName]) || null;
+    const optOutSlotNames = (overrideOptions && overrideOptions.optOut[requirementName]) || null;
     if (!(disallowTransferCredit && courseIsAPIB(courseTaken))) {
       for (
         let subRequirementIndex = 0;
         subRequirementIndex < eligibleCourses.length;
         subRequirementIndex += 1
       ) {
+        const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
         if (
-          eligibleCourses[subRequirementIndex].includes(courseId) &&
-          subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
+          (optInSlotNames && optInSlotNames.has(slotName)) ||
+          (eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
+            subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex] &&
+            !(optOutSlotNames && optOutSlotNames.has(slotName)))
         ) {
           // add the course to the list of courses used to fulfill that one sub-requirement
           coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
@@ -341,22 +345,33 @@ export function computeFulfillmentCoursesAndStatistics(
 } {
   const spec = getMatchedRequirementFulfillmentSpecification(
     requirement,
-    toggleableRequirementChoices,
-    overridenRequirementChoices
+    toggleableRequirementChoices
   );
   if (spec == null) {
     // Give self-check 1 required course and 0 fulfilled to prevent it from being fulfilled.
     return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 1, courses: [] };
   }
   const disallowTransferCredit = requirement.disallowTransferCredit || false;
-  const base = computeFulfillmentStatistics(coursesTaken, disallowTransferCredit, spec);
+  const base = computeFulfillmentStatistics(
+    requirement.id,
+    coursesTaken,
+    overridenRequirementChoices,
+    disallowTransferCredit,
+    spec
+  );
   if (spec.additionalRequirements == null) return base;
   return {
     ...base,
     additionalRequirements: Object.fromEntries(
       Object.entries(spec.additionalRequirements).map(([name, subSpec]) => [
         name,
-        computeFulfillmentStatistics(coursesTaken, disallowTransferCredit, subSpec),
+        computeFulfillmentStatistics(
+          name,
+          coursesTaken,
+          overridenRequirementChoices,
+          disallowTransferCredit,
+          subSpec
+        ),
       ])
     ),
   };
@@ -392,8 +407,7 @@ export function getRelatedUnfulfilledRequirements(
       const existingCourses = existingCoursesInSlots.flat();
       const requirementSpec = getMatchedRequirementFulfillmentSpecification(
         subRequirement,
-        toggleableRequirementChoices,
-        overridenRequirementChoices
+        toggleableRequirementChoices
       );
       // potential self-check requirements
       if (requirementSpec == null && !subRequirement.allowCourseDoubleCounting) {
