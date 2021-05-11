@@ -104,11 +104,21 @@ export default defineComponent({
         }
       );
       if (requirementFulfillmentSpec === null) return [];
+      /**
+       * `appliedRequirementFulfillmentSpec` means the requirement we actually consider.
+       * Since this component supports compound requirement, `appliedRequirementFulfillmentSpec`
+       * corresponds to the nested requirement inside component requirement the user chooses
+       * to display.
+       */
       const appliedRequirementFulfillmentSpec =
         (requirementFulfillmentSpec.additionalRequirements || {})[this.compoundRequirementChoice] ||
         requirementFulfillmentSpec;
       const requirementFulfillmentEligibleCourses =
         appliedRequirementFulfillmentSpec.eligibleCourses;
+      /**
+       * Similar to `appliedRequirementFulfillmentSpec`, this is the courses that are matched to
+       * the nested requirement inside compound requirement the user chooses to display.
+       */
       const matchedCourses = (
         (this.requirementFulfillment.additionalRequirements || {})[
           this.compoundRequirementChoice
