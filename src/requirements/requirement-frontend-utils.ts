@@ -35,7 +35,6 @@ export function convertFirestoreSemesterCourseToCourseTaken({
 export const getFilter = (
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overridenRequirementChoices: AppOverridenRequirementChoices,
   requirementId: string
 ): ((course: CornellCourseRosterCourse) => boolean) => {
   const requirement = userRequirementsMap[requirementId];
@@ -58,7 +57,6 @@ export const getFilter = (
 export function canFulfillChecker(
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overridenRequirementChoices: AppOverridenRequirementChoices,
   requirementId: string,
   crseId: number
 ): boolean {

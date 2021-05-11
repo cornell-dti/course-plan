@@ -121,7 +121,6 @@ export default defineComponent({
           const canFulfillReq = canFulfillChecker(
             store.state.userRequirementsMap,
             store.state.toggleableRequirementChoices,
-            store.state.overridenRequirementChoices,
             this.subReqId,
             course.crseId
           );

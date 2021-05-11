@@ -220,7 +220,12 @@ export default function computeGroupedRequirementFulfillmentReports(
     const fulfillmentStatistics = {
       id: requirement.id,
       requirement,
-      ...computeFulfillmentCoursesAndStatistics(requirement, courses, toggleableRequirementChoices, overridenRequirementChoices),
+      ...computeFulfillmentCoursesAndStatistics(
+        requirement,
+        courses,
+        toggleableRequirementChoices,
+        overridenRequirementChoices
+      ),
     };
 
     switch (requirement.sourceType) {
