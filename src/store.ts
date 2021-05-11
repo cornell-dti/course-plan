@@ -226,21 +226,22 @@ const autoRecomputeDerivedData = (): (() => void) =>
       const examToUniqueIdsMap: Record<string, Set<number>> = {};
       const uniqueIdToExamMap: Record<number, string> = {};
       const equivalentCourses = getCourseEquivalentsFromUserExams(state.onboardingData);
+      state.onboardingData.exam.forEach(({ type, subject }) => {
+        const examName = `${type} ${subject}`;
+        examToUniqueIdsMap[examName] = new Set();
+      });
       equivalentCourses.forEach(({ uniqueId, code }) => {
         uniqueIdToExamMap[uniqueId] = code;
-        if (!(code in examToUniqueIdsMap)) {
-          examToUniqueIdsMap[code] = new Set([uniqueId]);
-        } else {
-          examToUniqueIdsMap[code].add(uniqueId);
-        }
+        examToUniqueIdsMap[code].add(uniqueId);
       });
       const derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData = {
         examToUniqueIdsMap,
         uniqueIdToExamMap,
       };
+      console.log(examToUniqueIdsMap);
       store.commit('setDerivedAPIBEquivalentCourseData', derivedAPIBEquivalentCourseData);
-      // Recompute overriden requirements with new AP/IB data, because
-      // overridenRequirementChoices also includes user choice from onboardingData
+      // Recompute overridenRequirementChoices, which is dependent
+      // on onboardingData and derivedAPIBEquivalentCourseData
       store.commit('setOverridenRequirementChoices', state.overridenRequirementChoices);
     }
     // Recompute requirements

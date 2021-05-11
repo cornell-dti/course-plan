@@ -1,4 +1,8 @@
-import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './data/constants';
+import {
+  NO_EQUIVALENT_COURSES_COURSE_ID,
+  CREDITS_COURSE_ID,
+  FWS_COURSE_ID,
+} from './data/constants';
 import requirementJson from './typed-requirement-json';
 
 /**
@@ -11,7 +15,7 @@ import requirementJson from './typed-requirement-json';
  * @returns true if the course is AP/IB equivalent course or credit
  */
 export const courseIsAPIB = (course: CourseTaken): boolean =>
-  [CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
+  [NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
   ['AP', 'IB'].includes(course.code.split(' ')[0]) ||
   course.uniqueId < -1;
 

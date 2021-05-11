@@ -1,4 +1,4 @@
-import { CREDITS_COURSE_ID, FWS_COURSE_ID } from '../constants';
+import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID, FWS_COURSE_ID } from '../constants';
 
 export type ExamRequirements = {
   readonly name: string;
@@ -409,6 +409,7 @@ function userDataToCourses(
       return prev;
     }, undefined);
     // generate the equivalent course
+    let courseEquivalentsExist = false;
     if (exam) {
       const courseEquivalents =
         (exam.fulfillment.courseEquivalents &&
@@ -418,6 +419,7 @@ function userDataToCourses(
       const excludedMajor =
         exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
       if (!excludedMajor) {
+        courseEquivalentsExist = true;
         if (courseEquivalents.length === 1) {
           const courseId = courseEquivalents[0];
           courses.push({
@@ -447,6 +449,15 @@ function userDataToCourses(
           });
         }
       }
+    }
+    if (!courseEquivalentsExist) {
+      courses.push({
+        courseId: NO_EQUIVALENT_COURSES_COURSE_ID,
+        uniqueId,
+        code: `${examType} ${userExam.subject}`,
+        credits: 0,
+      });
+      uniqueId -= 1;
     }
   });
   return courses;
