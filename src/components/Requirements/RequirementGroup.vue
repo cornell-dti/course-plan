@@ -137,7 +137,7 @@ export default defineComponent({
     reqs(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
-    reqGroupColorMap() {
+    reqGroupColorMap(): typeof reqGroupColorMap {
       return reqGroupColorMap;
     },
     partitionedRequirementsProgress(): PartitionedRequirementsProgress {
@@ -145,6 +145,13 @@ export default defineComponent({
       const completed: RequirementFulfillment[] = [];
       this.req.reqs.forEach(req => {
         if (req.minCountFulfilled < req.minCountRequired) {
+          ongoing.push(req);
+        } else if (
+          req.additionalRequirements == null ||
+          Object.values(req.additionalRequirements).every(
+            it => it.minCountFulfilled >= req.minCountRequired
+          )
+        ) {
           ongoing.push(req);
         } else {
           completed.push(req);
