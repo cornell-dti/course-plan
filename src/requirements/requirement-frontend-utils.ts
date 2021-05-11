@@ -282,19 +282,25 @@ const computeFulfillmentStatistics = (
   coursesTaken.forEach(courseTaken => {
     const overrideOptions = overridenRequirementChoices[courseTaken.uniqueId];
     const optInSlotNames = (overrideOptions && overrideOptions.optIn[requirementName]) || null;
+    console.log(optInSlotNames);
     const optOutSlotNames = (overrideOptions && overrideOptions.optOut[requirementName]) || null;
-    if (!(disallowTransferCredit && courseIsAPIB(courseTaken))) {
+    if (!(disallowTransferCredit && courseIsAPIB(courseTaken)) || optInSlotNames) {
       for (
         let subRequirementIndex = 0;
         subRequirementIndex < eligibleCourses.length;
         subRequirementIndex += 1
       ) {
         const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
-        if (
-          (optInSlotNames && optInSlotNames.has(slotName)) ||
-          (eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
-            subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex] &&
-            !(optOutSlotNames && optOutSlotNames.has(slotName)))
+        if (optInSlotNames && optInSlotNames.has(slotName)) {
+          // add the course to the list of courses used to fulfill that one sub-requirement
+          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+          subRequirementProgress[subRequirementIndex] +=
+            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+          // don't break
+        } else if (
+          eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
+          subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex] &&
+          !(optOutSlotNames && optOutSlotNames.has(slotName))
         ) {
           // add the course to the list of courses used to fulfill that one sub-requirement
           coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
