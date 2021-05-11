@@ -239,7 +239,8 @@ const autoRecomputeDerivedData = (): (() => void) =>
         uniqueIdToExamMap,
       };
       store.commit('setDerivedAPIBEquivalentCourseData', derivedAPIBEquivalentCourseData);
-      // Recompute overriden requirements with new AP/IB data
+      // Recompute overriden requirements with new AP/IB data, because
+      // overridenRequirementChoices also includes user choice from onboardingData
       store.commit('setOverridenRequirementChoices', state.overridenRequirementChoices);
     }
     // Recompute requirements
@@ -367,7 +368,6 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const data = snapshot.data();
       if (data != null) {
         store.commit('setOnboardingData', createAppOnboardingData(data));
-        store.commit('setOverridenRequirementChoices', store.state.overridenRequirementChoices);
       }
       onboardingDataInitialLoadFinished = true;
       emitOnLoadWhenLoaded();

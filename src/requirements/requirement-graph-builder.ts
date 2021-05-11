@@ -35,6 +35,9 @@ type BuildRequirementFulfillmentGraphParameters<
    * The mapping from course's unique ID to requirement override (opt-in) options.
    * It describes how the user wants to use a course to override requirements.
    * This handles AP/IB overrides, as well as general overrides.
+   * The granularity of optIn/optOut being slot-specific requires the actual
+   * slot computation to be handled in the frontend computation. When building the
+   * graph, only optIn choices are relevant (to add the extra edges).
    */
   readonly userChoiceOnRequirementOverrides: Readonly<Record<number, Set<Requirement>>>;
   /**
@@ -127,11 +130,10 @@ const buildRequirementFulfillmentGraph = <
     });
   });
 
-  // Phase 4: Respect user's choices on overrides.
+  // Phase 4: Respect user's choices on overrides (optIn only).
   userCourses.forEach(course => {
     const { uniqueId } = course;
     if (uniqueId in userChoiceOnRequirementOverrides) {
-      // This assumes the invariant that no requirement is in both optIn and optOut.
       userChoiceOnRequirementOverrides[uniqueId].forEach(requirement => {
         graph.addEdge(requirement, course);
       });
