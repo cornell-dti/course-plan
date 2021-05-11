@@ -132,8 +132,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     ) {
       // TEMP, TODO: get from state.onboardingData
       const APIBOverridenRequirements: AppOverridenRequirementChoices = {
-        [-3]: { optOut: { 'Major-CS-Introductory Programming': new Set(['CS 111x']) }, optIn: { '': new Set() } },
+        [-3]: { optOut: { }, optIn: { 'Major-CS-Technical Electives': new Set(['Course'])  } },
       };
+      // Object.fromEntries(state.onboardingData.exam.map((exam, ) => ));
       state.overridenRequirementChoices = {
         ...overridenRequirementChoices,
         ...APIBOverridenRequirements,
@@ -202,6 +203,10 @@ const autoRecomputeDerivedData = (): (() => void) =>
         requirementToCoursesMap,
       };
       store.commit('setDerivedSelectableRequirementData', derivedSelectableRequirementData);
+    }
+    // Recompute overriden requirements with AP/IB data
+    if (payload.type === 'setOnboardingData') {
+      store.commit('setOverridenRequirementChoices', state.overridenRequirementChoices);
     }
     // Recompute requirements
     if (

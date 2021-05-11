@@ -1,5 +1,5 @@
 import { CREDITS_COURSE_ID } from './data/constants';
-import { courseIsAPIB, getUserRequirements } from './requirement-frontend-utils';
+import { getUserRequirements } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraph from './requirement-graph-builder';
 
@@ -40,8 +40,6 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
 
-  if (false) console.log(overridenRequirementChoices);
-
   const requirementFulfillmentGraph = buildRequirementFulfillmentGraph<string, CourseTaken>({
     requirements: userRequirements.map(it => it.id),
     userCourses: forfeitTransferCredit(coursesTaken),
@@ -67,12 +65,10 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       ...Object.fromEntries(
         coursesTaken
           .map(course => {
-            if (!courseIsAPIB(course)) return null;
-            const userExam = onboardingData.exam.find(
-              ({ type, subject }) => `${type} ${subject}` === course.code
+            if (!(course.uniqueId in overridenRequirementChoices)) return null;
+            const overridenRequirements = new Set(
+              Object.keys(overridenRequirementChoices[course.uniqueId].optIn)
             );
-            if (!(userExam && userExam.optIn)) return null;
-            const overridenRequirements = new Set(Object.keys(userExam.optIn));
             return [course.uniqueId, overridenRequirements];
           })
           .filter((it): it is [number, Set<string>] => it != null)
