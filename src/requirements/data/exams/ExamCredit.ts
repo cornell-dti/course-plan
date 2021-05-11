@@ -389,12 +389,14 @@ function userDataToCourses(
   college: string,
   major: string,
   userData: ExamsTaken,
-  examType: 'AP' | 'IB'
+  examType: 'AP' | 'IB',
+  uniqueIdDecrementer: number
 ): CourseTaken[] {
   const userExams = userData[examType];
   const exams = examData[examType];
   const courses: CourseTaken[] = [];
-  userExams.forEach((userExam, examIndex) => {
+  let uniqueId = -2 - uniqueIdDecrementer;
+  userExams.forEach(userExam => {
     // match exam to user-taken exam
     const exam = exams.reduce((prev: ExamRequirements | undefined, curr: ExamRequirements) => {
       // check if exam name matches and score is high enough
@@ -420,25 +422,28 @@ function userDataToCourses(
           const courseId = courseEquivalents[0];
           courses.push({
             courseId,
-            uniqueId: -examIndex - 2,
+            uniqueId,
             code: `${examType} ${exam.name}`,
             credits: exam.fulfillment.credits,
           });
+          uniqueId -= 1;
         } else {
           // separate credits from equivalent course
+          courses.push({
+            courseId: CREDITS_COURSE_ID,
+            uniqueId,
+            code: `${examType} ${exam.name}`,
+            credits: exam.fulfillment.credits,
+          });
+          uniqueId -= 1;
           courseEquivalents.forEach(courseId => {
             courses.push({
               courseId,
-              uniqueId: -examIndex - 2,
+              uniqueId,
               code: `${examType} ${exam.name}`,
               credits: 0,
             });
-          });
-          courses.push({
-            courseId: CREDITS_COURSE_ID,
-            uniqueId: -examIndex - 2,
-            code: `${examType} ${exam.name}`,
-            credits: exam.fulfillment.credits,
+            uniqueId -= 1;
           });
         }
       }
@@ -452,8 +457,14 @@ export function getCourseEquivalentsFromOneMajor(
   major: string,
   userData: ExamsTaken
 ): readonly CourseTaken[] {
-  const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
-  const IBCourseEquivalents = userDataToCourses(college, major, userData, 'IB');
+  const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP', 0);
+  const IBCourseEquivalents = userDataToCourses(
+    college,
+    major,
+    userData,
+    'IB',
+    APCourseEquivalents.length
+  );
   return APCourseEquivalents.concat(IBCourseEquivalents);
 }
 
