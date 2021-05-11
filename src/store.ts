@@ -238,7 +238,6 @@ const autoRecomputeDerivedData = (): (() => void) =>
         examToUniqueIdsMap,
         uniqueIdToExamMap,
       };
-      console.log(examToUniqueIdsMap);
       store.commit('setDerivedAPIBEquivalentCourseData', derivedAPIBEquivalentCourseData);
       // Recompute overridenRequirementChoices, which is dependent
       // on onboardingData and derivedAPIBEquivalentCourseData
