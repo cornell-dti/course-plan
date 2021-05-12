@@ -147,9 +147,9 @@ export default defineComponent({
         if (req.minCountFulfilled < req.minCountRequired) {
           ongoing.push(req);
         } else if (
-          req.additionalRequirements == null ||
-          Object.values(req.additionalRequirements).every(
-            it => it.minCountFulfilled >= req.minCountRequired
+          req.additionalRequirements != null &&
+          Object.values(req.additionalRequirements).some(
+            it => it.minCountFulfilled < it.minCountRequired
           )
         ) {
           ongoing.push(req);
