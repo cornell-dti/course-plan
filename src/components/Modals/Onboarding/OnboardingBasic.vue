@@ -304,8 +304,10 @@ export default defineComponent({
       this.programAcronym = acronym;
       this.updateBasic();
     },
+    // remove college and all current majors
     removeCollege() {
       this.collegeAcronym = '';
+      this.clearMajorIfNotInCollege();
       this.updateBasic();
     },
     removeMajor(index: number) {

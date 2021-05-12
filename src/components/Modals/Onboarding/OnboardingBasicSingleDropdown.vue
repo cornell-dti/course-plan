@@ -118,6 +118,7 @@ export default defineComponent({
       this.$emit('on-select', acronym);
     },
     onRemove() {
+      this.placeholderColor = '';
       this.$emit('on-remove');
     },
   },
