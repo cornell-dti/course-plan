@@ -16,11 +16,8 @@
           /></span>
           {{ slotName }}
         </div>
-        <button
-          class="completed-reqCourses-course-heading-reset-button reqCourse-button"
-          @click="onReset"
-        >
-          {{ resetText }}
+        <button class="reqCourse-button" @click="openSlotMenu">
+          <img src="@/assets/images/settingsBlue.svg" alt="Requirement slot settings" />
         </button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
@@ -34,6 +31,12 @@
         <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
       </div>
     </div>
+    <slot-menu
+      v-if="slotMenuOpen"
+      @open-delete-slot-modal="openDeleteSlotModal"
+      @open-edit-slot-modal="openEditSlotModal"
+      v-click-outside="closeSlotMenuIfOpen"
+    />
   </div>
 </template>
 
@@ -41,28 +44,28 @@
 import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import ResetConfirmationModal from '@/components/Modals/ResetConfirmationModal.vue';
+import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebaseConfig';
-import getCurrentSeason, { getCurrentYear } from '@/utilities';
+import getCurrentSeason, { getCurrentYear, clickOutside } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, ResetConfirmationModal },
+  components: { ReqCourse, ResetConfirmationModal, SlotMenu },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
   data: () => ({
     resetConfirmVisible: false,
+    stopCloseFlag: false,
+    slotMenuOpen: false,
   }),
   computed: {
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
-    },
-    resetText(): string {
-      return 'Reset';
     },
     isTransferCredit(): boolean {
       return this.courseTaken.uniqueId < 0;
@@ -99,6 +102,26 @@ export default defineComponent({
         } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
       }
     },
+    openSlotMenu() {
+      this.stopCloseFlag = true;
+      this.slotMenuOpen = true;
+    },
+    closeSlotMenuIfOpen() {
+      if (this.stopCloseFlag) {
+        this.stopCloseFlag = false;
+      } else if (this.slotMenuOpen) {
+        this.slotMenuOpen = false;
+      }
+    },
+    openDeleteSlotModal() {
+      // TODO
+    },
+    openEditSlotModal() {
+      // TODO
+    },
+  },
+  directives: {
+    'click-outside': clickOutside,
   },
 });
 </script>
@@ -155,7 +178,7 @@ export default defineComponent({
     font-size: 14px;
     line-height: 15px;
     color: $yuxuanBlue;
-    padding: 0.2rem;
+    padding: 0 0.2rem 0.4rem;
     cursor: pointer;
   }
 }
