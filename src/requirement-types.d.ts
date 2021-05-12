@@ -119,12 +119,16 @@ type RequirementFulfillmentStatisticsWithCourses = RequirementFulfillmentStatist
   readonly courses: readonly (readonly CourseTaken[])[];
 };
 
+type RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements = RequirementFulfillmentStatisticsWithCourses & {
+  readonly additionalRequirements?: {
+    readonly [name: string]: RequirementFulfillmentStatisticsWithCourses;
+  };
+};
+
 type RequirementFulfillment = {
   /** The original requirement object. */
   readonly requirement: RequirementWithIDSourceType;
-  /** A list of courses that satisfy this requirement. */
-  readonly courses: readonly (readonly CourseTaken[])[];
-} & RequirementFulfillmentStatistics;
+} & RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements;
 
 type GroupedRequirementFulfillmentReport = {
   readonly groupName: 'College' | 'Major' | 'Minor';
