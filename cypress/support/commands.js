@@ -43,4 +43,5 @@ const fbConfig = {
 
 firebase.initializeApp(fbConfig);
 
+// attach custom firebase commands to cypress from the cypress-firebase package
 attachCustomCommands({ Cypress, cy, firebase });

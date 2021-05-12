@@ -62,23 +62,17 @@
               >College<span class="onboarding-required-star">*</span></label
             >
             <div>
-              <label
-                id="onboarding-college"
-                class="onboarding-label--review"
-                data-cyId="onboarding-college"
-                >{{ collegeText }}</label
-              >
+              <label class="onboarding-label--review" data-cyId="onboarding-college">{{
+                collegeText
+              }}</label>
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">Major</label>
             <div v-for="(major, index) in onboardingData.major" :key="index">
-              <label
-                id="onboarding-major"
-                class="onboarding-label--review"
-                data-cyId="onboarding-major"
-                >{{ getMajorFullName(major) }}</label
-              >
+              <label class="onboarding-label--review" data-cyId="onboarding-major">{{
+                getMajorFullName(major)
+              }}</label>
             </div>
           </div>
         </div>
@@ -88,9 +82,7 @@
         <div class="onboarding-selectWrapper">
           <label class="onboarding-label">Minors:</label>
           <div v-for="(minor, index) in onboardingData.minor" :key="index">
-            <label id="onboarding-minor" class="onboarding-label--review">{{
-              getMinorFullName(minor)
-            }}</label>
+            <label class="onboarding-label--review">{{ getMinorFullName(minor) }}</label>
           </div>
         </div>
       </div>
