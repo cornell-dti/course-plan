@@ -21,6 +21,11 @@ const newName;
  * False if the name we are changing is the name of a slot. */
 const isChangingReqName;
 /**
+ * Requirement name of the slot name you want to update.
+ * Only define if you are changing the slot name.
+ */
+const reqNameOfSlot;
+/**
  * Goes through object and updates key.
  */
 const updateObjectProperty = doc => {
@@ -43,7 +48,7 @@ const updateObjectProperty = doc => {
 const updateObjectValue = doc => {
   const newDoc = {};
   for (const [reqName, value] of Object.entries(doc)) {
-    if (value[oldName] !== undefined) {
+    if (reqNameOfSlot === reqName && value[oldName] !== undefined) {
       // check for slot name
       newDoc[reqName] = updateObjectProperty(value);
     } else {
@@ -73,7 +78,7 @@ const updateExamProperty = doc => {
 const updateOnboardingSlotName = doc => {
   const newDoc = {};
   for (const [reqName, value] of Object.entries(doc)) {
-    if (value.includes(oldName)) {
+    if (reqName === reqNameOfSlot && value.includes(oldName)) {
       value.map(slot => (slot !== oldName ? slot : newName));
       newDoc[reqName] = value;
     } else {
