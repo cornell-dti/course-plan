@@ -1,7 +1,4 @@
-/**
- * Course ID for no AP/IB equivalent courses.
- * This shouldn't satisfy any requirements unless the user opted in.
- */
+/** Course ID for special course that satisfies no requirements. */
 export const NO_EQUIVALENT_COURSES_COURSE_ID = 10;
 
 /** Course ID for special course that satisfies total academic credits requirement. */

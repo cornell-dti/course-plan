@@ -279,6 +279,8 @@ const computeFulfillmentStatistics = (
     const overrideOptions = overridenRequirementChoices[courseTaken.uniqueId];
     const optInSlotNames = (overrideOptions && overrideOptions.optIn[requirementName]) || null;
     const optOutSlotNames = (overrideOptions && overrideOptions.optOut[requirementName]) || null;
+    
+    // block AP/IB equivalent courses if disallowTransferCredit
     if (!(disallowTransferCredit && courseIsAPIB(courseTaken)) || optInSlotNames) {
       for (
         let subRequirementIndex = 0;
@@ -287,17 +289,17 @@ const computeFulfillmentStatistics = (
       ) {
         const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
         if (optInSlotNames && (fulfilledBy === 'credits' || optInSlotNames.has(slotName))) {
-          // add the course to the list of courses used to fulfill that one sub-requirement
+          // the user wants to use this course to override this sub-requirement
           coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
           subRequirementProgress[subRequirementIndex] +=
             fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-          // don't break
+          // don't break, in case the user wants to override more sub-requirements with the same course
         } else if (
           eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
           subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex] &&
           !(optOutSlotNames && (fulfilledBy === 'credits' || optOutSlotNames.has(slotName)))
         ) {
-          // add the course to the list of courses used to fulfill that one sub-requirement
+          // this course is eligible to fulfill this sub-requirement, and the user did not opt out
           coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
           subRequirementProgress[subRequirementIndex] +=
             fulfilledBy === 'courses' ? 1 : courseTaken.credits;
