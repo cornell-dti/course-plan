@@ -16,7 +16,7 @@
           /></span>
           {{ slotName }}
         </div>
-        <button class="reqCourse-button" @click="openSlotMenu">
+        <button class="reqCourse-button" @click="openEditSlotModal">
           <img src="@/assets/images/settingsBlue.svg" alt="Requirement slot settings" />
         </button>
       </div>
@@ -31,14 +31,6 @@
         <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
       </div>
     </div>
-    <slot-menu
-      v-if="slotMenuOpen"
-      @open-delete-slot-modal="openDeleteSlotModal"
-      @open-edit-slot-modal="openEditSlotModal"
-      v-click-outside="closeSlotMenuIfOpen"
-      v-model="slotMenuOpen"
-      ref="slotmenu"
-    />
   </div>
 </template>
 
@@ -46,7 +38,6 @@
 import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import ResetConfirmationModal from '@/components/Modals/ResetConfirmationModal.vue';
-import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebaseConfig';
@@ -55,7 +46,7 @@ import getCurrentSeason, { getCurrentYear, clickOutside } from '@/utilities';
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, ResetConfirmationModal, SlotMenu },
+  components: { ReqCourse, ResetConfirmationModal },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
@@ -102,18 +93,6 @@ export default defineComponent({
             exam: onBoardingData.exam.filter(e => !(e.type === type && e.subject === name)),
           });
         } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
-      }
-    },
-    openSlotMenu() {
-      this.stopCloseFlag = true;
-      this.slotMenuOpen = true;
-    },
-    closeSlotMenuIfOpen() {
-      if (this.stopCloseFlag) {
-        this.stopCloseFlag = false;
-      } else if (this.slotMenuOpen) {
-        this.$emit('update:modelValue', false);
-        this.slotMenuOpen = false;
       }
     },
     openDeleteSlotModal() {
