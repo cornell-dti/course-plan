@@ -279,7 +279,7 @@ const computeFulfillmentStatistics = (
     const overrideOptions = overridenRequirementChoices[courseTaken.uniqueId];
     const optInSlotNames = (overrideOptions && overrideOptions.optIn[requirementName]) || null;
     const optOutSlotNames = (overrideOptions && overrideOptions.optOut[requirementName]) || null;
-    
+
     // block AP/IB equivalent courses if disallowTransferCredit
     if (!(disallowTransferCredit && courseIsAPIB(courseTaken)) || optInSlotNames) {
       for (
