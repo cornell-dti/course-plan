@@ -9,10 +9,7 @@
       @on-select="choice => onSelect(choice, index)"
       @on-remove="() => onRemove(index)"
     />
-    <div
-      class="onboarding-addRemoveWrapper"
-      :class="{ 'onboarding--hidden': dropdownChoices.length <= 0 }"
-    >
+    <div class="onboarding-addRemoveWrapper" v-if="showAddDropdown">
       <button class="onboarding-add" @click="addDropdown">{{ addDropdownText }}</button>
     </div>
   </div>
@@ -38,6 +35,12 @@ export default defineComponent({
       typeof key === 'string' && typeof index === 'number',
     'on-remove': (index: number) => typeof index === 'number',
     'on-add': () => true,
+  },
+  computed: {
+    // show add dropdown only if a dropdown choice has been selected (so an element exists at index 0 besides the empty string)
+    showAddDropdown(): boolean {
+      return this.dropdownChoices.length > 0 && this.dropdownChoices[0].length > 0;
+    },
   },
   methods: {
     onSelect(key: string, index: number) {
