@@ -49,6 +49,7 @@
             color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
           }"
           class="major-title-top"
+          data-cyId="majorTitle"
         >
           {{ getMajorFullName(major) }}
         </p>
@@ -57,6 +58,7 @@
             color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
           }"
           class="major-title-bottom"
+          data-cyId="collegeTitle"
         >
           ({{ getCollegeFullName(onboardingData.college) }})
         </p>
@@ -120,6 +122,7 @@
         @click="toggleDetails()"
         aria-haspopup="true"
         data-toggle="dropdown"
+        data-cyId="requirements-viewMore"
       >
         <div class="col-1 p-0 btn" :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }">
           <drop-down-arrow
@@ -179,14 +182,21 @@ export default defineComponent({
     },
     // number of requirements that can be fulfilled (so no pure self-checks)
     requirementTotalRequired(): number {
-      return this.req.reqs.filter(req => req.fulfilledBy !== 'self-check').length;
+      let totalRequired = 0;
+      this.req.reqs.forEach(req => {
+        if (req.fulfilledBy === 'self-check') return;
+        totalRequired += 1 + Object.values(req.additionalRequirements || {}).length;
+      });
+      return totalRequired;
     },
     // the sum of the progress of each requirement (outside of pure self-check), maxed out at 1
     totalRequirementProgress(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
-        if (req.minCountFulfilled >= req.minCountRequired) fulfilled += 1;
-        else fulfilled += req.minCountFulfilled / req.minCountRequired;
+        [req, ...Object.values(req.additionalRequirements || {})].forEach(reqOrNestedReq => {
+          if (reqOrNestedReq.minCountFulfilled >= reqOrNestedReq.minCountRequired) fulfilled += 1;
+          else fulfilled += reqOrNestedReq.minCountFulfilled / reqOrNestedReq.minCountRequired;
+        });
       });
       return fulfilled;
     },

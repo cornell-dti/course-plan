@@ -74,6 +74,7 @@ export default defineComponent({
       type: Object as PropType<RequirementFulfillment>,
       required: true,
     },
+    compoundRequirementChoice: { type: String, required: true },
     isCompleted: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
@@ -103,16 +104,35 @@ export default defineComponent({
         }
       );
       if (requirementFulfillmentSpec === null) return [];
-      const requirementFulfillmentEligibleCourses = requirementFulfillmentSpec.eligibleCourses;
+      /**
+       * `appliedRequirementFulfillmentSpec` means the requirement we actually consider.
+       * Since this component supports compound requirement, `appliedRequirementFulfillmentSpec`
+       * corresponds to the nested requirement inside component requirement the user chooses
+       * to display.
+       */
+      const appliedRequirementFulfillmentSpec =
+        (requirementFulfillmentSpec.additionalRequirements || {})[this.compoundRequirementChoice] ||
+        requirementFulfillmentSpec;
+      const requirementFulfillmentEligibleCourses =
+        appliedRequirementFulfillmentSpec.eligibleCourses;
+      /**
+       * Similar to `appliedRequirementFulfillmentSpec`, this is the courses that are matched to
+       * the nested requirement inside compound requirement the user chooses to display.
+       */
+      const matchedCourses = (
+        (this.requirementFulfillment.additionalRequirements || {})[
+          this.compoundRequirementChoice
+        ] || this.requirementFulfillment
+      ).courses;
 
       const allTakenCourseIds: ReadonlySet<number> = new Set(
-        this.requirementFulfillment.courses.flat().map(course => course.courseId)
+        matchedCourses.flat().map(course => course.courseId)
       );
       const slots: SubReqCourseSlot[] = [];
 
-      if (requirementFulfillmentSpec.fulfilledBy === 'credits') {
+      if (appliedRequirementFulfillmentSpec.fulfilledBy === 'credits') {
         let slotID = 1;
-        this.requirementFulfillment.courses[0].forEach(completedCourse => {
+        matchedCourses[0].forEach(completedCourse => {
           slots.push({ name: `Course ${slotID}`, isCompleted: true, courses: [completedCourse] });
           slotID += 1;
         });
@@ -128,9 +148,9 @@ export default defineComponent({
           });
         }
       } else {
-        this.requirementFulfillment.courses.forEach((requirementFulfillmentCourseSlot, i) => {
-          const slotMinCount = requirementFulfillmentSpec.perSlotMinCount[i];
-          const slotName = requirementFulfillmentSpec.slotNames[i];
+        matchedCourses.forEach((requirementFulfillmentCourseSlot, i) => {
+          const slotMinCount = appliedRequirementFulfillmentSpec.perSlotMinCount[i];
+          const slotName = appliedRequirementFulfillmentSpec.slotNames[i];
           let slotID = 1;
           for (let j = 0; j < slotMinCount; j += 1) {
             const name = slotMinCount === 1 ? slotName : `${slotName} ${slotID}`;

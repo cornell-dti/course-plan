@@ -341,11 +341,7 @@ export function computeFulfillmentCoursesAndStatistics(
   coursesTaken: readonly CourseTaken[],
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   overridenRequirementChoices: AppOverridenRequirementChoices
-): RequirementFulfillmentStatisticsWithCourses & {
-  readonly additionalRequirements?: {
-    readonly [name: string]: RequirementFulfillmentStatisticsWithCourses;
-  };
-} {
+): RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements {
   const spec = getMatchedRequirementFulfillmentSpecification(
     requirement,
     toggleableRequirementChoices
