@@ -1,6 +1,6 @@
 <template>
   <teleport-modal
-    title="Reset Requirement"
+    title="Delete Course"
     content-class="content-confirmation"
     left-button-text="No"
     right-button-text="Yes"
@@ -11,15 +11,14 @@
     :modelValue="modelValue"
   >
     <div v-if="isTestReq" class="text-width">
-      Are you sure you want to reset "{{ reqName }}" for this requirement? This will delete the
-      selected transfer credit from your schedule, allowing you to add a different course to satisfy
-      this requirement.
+      Are you sure you want to remove "{{ reqName }}" for this requirement? This will delete the
+      selected transfer credit from your schedule.
       <br />
       Transfer credits can be re-added in your Profile.
     </div>
     <div v-else class="text-width">
-      Are you sure you want to reset the "{{ reqName }}" requirement? This will delete the selected
-      course from your schedule, allowing you to add a different course to satisfy this requirement.
+      Are you sure you want to remove "{{ reqName }}" for this requirement? This will delete the
+      selected course from your schedule.
     </div>
   </teleport-modal>
 </template>
