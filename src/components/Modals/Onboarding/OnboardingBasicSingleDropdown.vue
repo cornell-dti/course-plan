@@ -4,7 +4,7 @@
     :style="{ borderColor: boxBorder }"
     v-click-outside="closeDropdownIfOpen"
   >
-    <div class="onboarding-select onboarding-input">
+    <div class="onboarding-select onboarding-input" data-cyId="onboarding-dropdown">
       <div
         class="onboarding-dropdown-placeholder college-major-minor-wrapper"
         @click="showHideDropdown()"
@@ -27,6 +27,7 @@
           class="onboarding-dropdown-content-item"
           :ref="`scroll-ref-${key}`"
           @click="onSelect(key)"
+          data-cyId="onboarding-dropdownItem"
         >
           {{ fullName }}
         </div>
