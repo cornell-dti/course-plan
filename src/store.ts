@@ -3,7 +3,7 @@ import { Store } from 'vuex';
 import * as fb from './firebaseConfig';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
-import { checkNotNull, allocateAllSubjectColor } from './utilities';
+import getCurrentSeason, { checkNotNull, allocateAllSubjectColor, getCurrentYear } from './utilities';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
@@ -65,6 +65,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       exam: [],
       transferCourse: [],
       tookSwim: 'no',
+      hasPrepopulated: false,
     },
     semesters: [],
     derivedCoursesData: {
@@ -215,6 +216,7 @@ const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardi
   exam: 'exam' in data ? [...data.exam] : [],
   transferCourse: 'class' in data ? [...data.class] : [],
   tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',
+  hasPrepopulated: 'hasPrepopulated' in data ? data : true
 });
 
 export const initializeFirestoreListeners = (onLoad: () => void): (() => void) => {
@@ -277,31 +279,13 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       if (data != null) {
         store.commit('setSemesters', data.semesters);
       } else {
-        const entranceYear = Number.parseFloat(store.state.onboardingData.entranceYear);
-        const gradYear = Number.parseFloat(store.state.onboardingData.gradYear);
-        const seasons: FirestoreSemesterType[] = ['Fall', 'Spring'];
-        let startingSems: FirestoreSemester[] = [];
-        for (let yr = entranceYear; yr < gradYear; yr += 1) {
-          for (const season of seasons) {
-            if (
-              !(
-                (yr === entranceYear && season === 'Spring') ||
-                (yr === gradYear && season === 'Fall')
-              )
-            )
-              startingSems = [
-                ...startingSems,
-                {
-                  type: season,
-                  year: yr,
-                  courses: [],
-                },
-              ];
-          }
-        }
-
-        store.commit('setSemesters', startingSems);
-        fb.semestersCollection.doc(simplifiedUser.email).set({ semesters: startingSems });
+        const newSemeter: FirestoreSemester = {
+          type: getCurrentSeason(),
+          year: getCurrentYear(),
+          courses: [],
+        };
+        store.commit('setSemesters', [newSemeter]);
+        fb.semestersCollection.doc(simplifiedUser.email).set({ semesters: [newSemeter] });
       }
       semestersInitialLoadFinished = true;
       emitOnLoadWhenLoaded();

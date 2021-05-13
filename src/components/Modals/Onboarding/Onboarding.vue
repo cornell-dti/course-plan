@@ -100,7 +100,7 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { setOnboardingData } from '@/global-firestore-data';
+import { addStarterSemesters, setOnboardingData } from '@/global-firestore-data';
 import { getMajorFullName, getMinorFullName } from '@/utilities';
 
 const placeholderText = 'Select one';
@@ -150,6 +150,7 @@ export default defineComponent({
   methods: {
     submitOnboarding() {
       setOnboardingData(this.name, this.onboarding);
+      addStarterSemesters();
       this.$emit('onboard');
     },
     goBack() {

@@ -80,6 +80,40 @@ export const addSemester = (
   );
 };
 
+export const addStarterSemesters = () : void => {
+  if (!store.state.onboardingData.hasPrepopulated){
+    const entranceYear = Number.parseFloat(store.state.onboardingData.entranceYear);
+    const gradYear = Number.parseFloat(store.state.onboardingData.gradYear);
+    const seasons: FirestoreSemesterType[] = ['Fall', 'Spring'];
+    let startingSems: FirestoreSemester[] = [];
+    for (let yr = entranceYear; yr <= gradYear; yr += 1) {
+      for (const season of seasons) {
+        if (
+          !(
+            (yr === entranceYear && season === 'Spring') ||
+            (yr === gradYear && season === 'Fall')
+          )
+        )
+          startingSems = [
+            ...startingSems,
+            {
+              type: season,
+              year: yr,
+              courses: [],
+            },
+          ];
+      }
+    }
+
+    store.commit('setSemesters', startingSems);
+    semestersCollection.doc(store.state.currentFirebaseUser.email).set({ semesters: startingSems });
+    // make sure it only happens once
+    const onboardingDataWithPrepop = {...store.state.onboardingData, hasPrepopulated: true};
+    store.commit('setOnboardingData', onboardingDataWithPrepop);
+    onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({hasPrepopulated: true});
+  }
+}
+
 export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
   GTagEvent(gtag, 'delete-semester');
   const semester = store.state.semesters.find(sem => sem.type === type && sem.year === year);
@@ -205,6 +239,15 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
     firstName: name.firstName,
     middleName: name.middleName || '',
     lastName: name.lastName,
+  });
+  // If we already have an onboarding doc then this user is not new
+  onboardingDataCollection.doc(store.state.currentFirebaseUser.email).onSnapshot(snapshot => {
+    const data = snapshot.data();
+    onboardingDataCollection
+      .doc(store.state.currentFirebaseUser.email)
+      .update({
+        hasPrepopulated: data != null,
+      })
   });
   const oldCollege = store.state.onboardingData.college;
   onboardingDataCollection
