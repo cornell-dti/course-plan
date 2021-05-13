@@ -1,8 +1,4 @@
-import {
-  NO_EQUIVALENT_COURSES_COURSE_ID,
-  CREDITS_COURSE_ID,
-  FWS_COURSE_ID,
-} from './data/constants';
+import { SPECIAL_COURSES } from './data/constants';
 import requirementJson from './typed-requirement-json';
 
 /**
@@ -15,7 +11,7 @@ import requirementJson from './typed-requirement-json';
  * @returns true if the course is AP/IB equivalent course or credit
  */
 export const courseIsAPIB = (course: CourseTaken): boolean =>
-  [NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID, FWS_COURSE_ID].includes(course.courseId) ||
+  Object.values(SPECIAL_COURSES).includes(course.courseId) ||
   ['AP', 'IB'].includes(course.code.split(' ')[0]) ||
   course.uniqueId < -1;
 
@@ -290,7 +286,7 @@ const computeFulfillmentStatistics = (
         subRequirementIndex += 1
       ) {
         const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
-        if (optInSlotNames && optInSlotNames.has(slotName)) {
+        if (optInSlotNames && (fulfilledBy === 'credits' || optInSlotNames.has(slotName))) {
           // add the course to the list of courses used to fulfill that one sub-requirement
           coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
           subRequirementProgress[subRequirementIndex] +=
@@ -299,7 +295,7 @@ const computeFulfillmentStatistics = (
         } else if (
           eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
           subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex] &&
-          !(optOutSlotNames && optOutSlotNames.has(slotName))
+          !(optOutSlotNames && (fulfilledBy === 'credits' || optOutSlotNames.has(slotName)))
         ) {
           // add the course to the list of courses used to fulfill that one sub-requirement
           coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
