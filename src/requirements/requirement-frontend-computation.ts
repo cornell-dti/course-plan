@@ -253,9 +253,7 @@ export default function computeGroupedRequirementFulfillmentReports(
         if (existingArray != null) {
           existingArray.push(fulfillmentStatistics);
         } else {
-          gradFulfillmentStatisticsMap.set(requirement.sourceSpecificName, [
-            fulfillmentStatistics,
-          ]);
+          gradFulfillmentStatisticsMap.set(requirement.sourceSpecificName, [fulfillmentStatistics]);
         }
         break;
       }

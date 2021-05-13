@@ -374,7 +374,7 @@ const json: RequirementsJson = {
       requirements: spanishMinorRequirements,
     },
   },
-  grad: {}
+  grad: {},
 };
 
 export default json;

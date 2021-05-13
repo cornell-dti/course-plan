@@ -134,7 +134,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     college: {},
     major: {},
     minor: {},
-    grad: {}
+    grad: {},
   };
   const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) =>
     requirements.map(decorateRequirementWithCourses);

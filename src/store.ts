@@ -49,7 +49,7 @@ export type VuexStoreState = {
   uniqueIncrementer: number;
 };
 
-export class TypedVuexStore extends Store<VuexStoreState> { }
+export class TypedVuexStore extends Store<VuexStoreState> {}
 
 const store: TypedVuexStore = new TypedVuexStore({
   strict: process.env.NODE_ENV !== 'production',
