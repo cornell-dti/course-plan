@@ -45,8 +45,22 @@
               :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
             >
               <!-- Toggle to display completed reqs -->
-              <p class="toggle" v-if="displayCompleted" @click="turnCompleted(false)">HIDE</p>
-              <p class="toggle" v-else @click="turnCompleted(true)">SHOW</p>
+              <p
+                class="toggle"
+                v-if="displayCompleted"
+                @click="turnCompleted(false)"
+                data-cyId="requirements-showCompleted"
+              >
+                HIDE
+              </p>
+              <p
+                class="toggle"
+                v-else
+                @click="turnCompleted(true)"
+                data-cyId="requirements-showCompleted"
+              >
+                SHOW
+              </p>
             </button>
           </div>
         </div>
@@ -137,7 +151,7 @@ export default defineComponent({
     reqs(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
-    reqGroupColorMap() {
+    reqGroupColorMap(): typeof reqGroupColorMap {
       return reqGroupColorMap;
     },
     partitionedRequirementsProgress(): PartitionedRequirementsProgress {
@@ -145,6 +159,13 @@ export default defineComponent({
       const completed: RequirementFulfillment[] = [];
       this.req.reqs.forEach(req => {
         if (req.minCountFulfilled < req.minCountRequired) {
+          ongoing.push(req);
+        } else if (
+          req.additionalRequirements != null &&
+          Object.values(req.additionalRequirements).some(
+            it => it.minCountFulfilled < it.minCountRequired
+          )
+        ) {
           ongoing.push(req);
         } else {
           completed.push(req);

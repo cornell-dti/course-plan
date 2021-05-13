@@ -22,3 +22,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Firebase service account, used for things like logging in for Cypress tests
+serviceAccount.json

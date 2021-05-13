@@ -11,6 +11,7 @@
       <button
         class="navbar-iconWrapper desktop profile-icon full-opacity-on-hover"
         @click="editProfile"
+        data-cyId="editProfile"
       ></button>
     </div>
     <div class="navbar-bottom">
