@@ -151,16 +151,16 @@ export function getUserRequirements({
       })
       .flat(),
     ...grad
-      .map(grad => {
-        const gradRequirement = requirementJson.grad[grad];
+      .map(gradProg => {
+        const gradRequirement = requirementJson.grad[gradProg];
         if (gradRequirement == null) return [];
         return gradRequirement.requirements.map(
           it =>
           ({
             ...it,
-            id: `Grad-${grad}-${it.name}`,
+            id: `Grad-${gradProg}-${it.name}`,
             sourceType: 'Grad',
-            sourceSpecificName: grad,
+            sourceSpecificName: gradProg,
           } as const)
         );
       })
