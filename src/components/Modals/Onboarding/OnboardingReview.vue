@@ -60,7 +60,9 @@
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">College</label>
             <div>
-              <label class="onboarding-label--review">{{ collegeText }}</label>
+              <label class="onboarding-label--review" v-if="onboardingData.college">
+                {{ collegeText }}
+              </label>
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
@@ -82,7 +84,9 @@
         <div class="onboarding-selectWrapper-review">
           <label class="onboarding-label">Program</label>
           <div>
-            <label class="onboarding-label--review">{{ programText }}</label>
+            <label class="onboarding-label--review" v-if="onboardingData.program">
+              {{ programText }}
+            </label>
           </div>
         </div>
       </div>
@@ -190,14 +194,10 @@ export default defineComponent({
   },
   computed: {
     collegeText(): string {
-      return this.onboardingData.college !== ''
-        ? getCollegeFullName(this.onboardingData.college)
-        : placeholderText;
+      return getCollegeFullName(this.onboardingData.college);
     },
     programText(): string {
-      return this.onboardingData.program !== ''
-        ? getProgramFullName(this.onboardingData.program)
-        : placeholderText;
+      return getProgramFullName(this.onboardingData.program);
     },
     gradYearText(): string {
       return this.onboardingData.gradYear !== '' ? this.onboardingData.gradYear : placeholderText;

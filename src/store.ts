@@ -217,7 +217,7 @@ const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardi
   college: data.colleges[0].acronym,
   major: data.majors.map(({ acronym }) => acronym),
   minor: data.minors.map(({ acronym }) => acronym),
-  program: data.programs[0].acronym,
+  program: data.programs ? data.programs[0].acronym : '',
   exam: 'exam' in data ? [...data.exam] : [],
   transferCourse: 'class' in data ? [...data.class] : [],
   tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',

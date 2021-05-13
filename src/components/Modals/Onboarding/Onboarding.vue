@@ -140,7 +140,13 @@ export default defineComponent({
         (this.onboarding.college === '' && this.onboarding.program === '')
       );
     },
-    // Display error if onboarding data includes a major, minor, or graduate program that doesn't exist in requirementsJSON
+    /**
+     * Display error if onboarding data includes a major, minor, or graduate program
+     * that doesn't exist in requirementsJSON.
+     *
+     * @returns true if onboarding contains a major, minor, or program that is not in
+     * requirementsJSON on this branch, false otherwise.
+     */
     isInvalidMajorMinorProgramError(): boolean {
       return (
         this.onboarding.major
@@ -152,7 +158,11 @@ export default defineComponent({
         (this.onboarding.program !== '' && getProgramFullName(this.onboarding.program) === '')
       );
     },
-    // Set error text depending on which fields are missing
+    /**
+     * Set error text depending on which fields are missing
+     *
+     * @returns a string containing the names of all types of required data missing from onboarding.
+     */
     errorText(): string {
       const messages = [];
       if (this.onboarding.college === '' && this.onboarding.program === '') {
