@@ -107,6 +107,7 @@ export default defineComponent({
         // clicked box when content shown. So then hide content
         this.boxBorder = inactiveGray;
         this.arrowColor = inactiveGray;
+        this.curQuery = this.prevQuery;
       } else {
         box.focus();
         this.prevQuery = this.curQuery;
