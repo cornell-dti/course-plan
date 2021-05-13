@@ -497,7 +497,6 @@ export default function getCourseEquivalentsFromUserExams(
       }
     })
   );
-  console.log(courses);
   return courses;
 }
 
