@@ -85,7 +85,14 @@
             <button v-if="currentPage != 1" class="onboarding-button-previous" @click="goBack">
               &lt; Previous
             </button>
-            <button class="onboarding-button" @click="goNext">Next &gt;</button>
+            <button
+              class="onboarding-button"
+              @click="goNext"
+              :disabled="!canProgress()"
+              :class="{ 'onboarding-button--disabled': !canProgress() }"
+            >
+              Next &gt;
+            </button>
           </div>
         </div>
       </div>
@@ -200,6 +207,9 @@ export default defineComponent({
     },
     setPage(page: number) {
       this.currentPage = page;
+    },
+    canProgress() {
+      return !(this.isError || this.isInvalidMajorMinorProgramError);
     },
     goNext() {
       // Only move onto next page if error message is not displayed

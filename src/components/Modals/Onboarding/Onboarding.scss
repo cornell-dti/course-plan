@@ -368,6 +368,16 @@ input {
       border-radius: 0px;
       border-width: 0px;
     }
+
+    &--disabled {
+      opacity: 0.3;
+      border: 1px solid $sangBlue;
+      background-color: $disabledGray;
+
+      &:hover {
+        opacity: 0.3;
+      }
+    }
   }
 
   &-error {
