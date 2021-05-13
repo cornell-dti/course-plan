@@ -1,5 +1,5 @@
 <template>
-  <Teleport class="slotMenu" to="modalTarget" aria-model="true">
+  <Teleport class="slotMenu" to="#modalTarget" aria-model="true">
     <button class="slotMenu-section" @click="openEditSlotModal">
       <div class="slotMenu-row">
         <div class="slotMenu-left">
@@ -28,11 +28,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-  emits: ['open-delete-slot-modal', 'open-edit-slot-modal'],
+  props: {
+    modelValue: { required: true, type: Boolean },
+  },
+  emits: ['open-delete-slot-modal', 'open-edit-slot-modal', 'update:modelValue', 'modal-closed'],
   setup(props, { emit }) {
+    const modalBackground = ref((null as unknown) as HTMLDivElement);
+
+    const close = () => {
+      emit('modal-closed', true);
+      emit('update:modelValue', false);
+    };
+
     const openDeleteSlotModal = () => {
       emit('open-delete-slot-modal');
     };
@@ -41,7 +51,11 @@ export default defineComponent({
       emit('open-edit-slot-modal');
     };
 
-    return { openDeleteSlotModal, openEditSlotModal };
+    const closeOnClickOutside = (e: MouseEvent) => {
+      if (e.target === modalBackground.value) close();
+    };
+
+    return { close, openDeleteSlotModal, openEditSlotModal, closeOnClickOutside };
   },
 });
 </script>

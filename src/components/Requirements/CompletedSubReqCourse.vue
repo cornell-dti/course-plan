@@ -36,6 +36,8 @@
       @open-delete-slot-modal="openDeleteSlotModal"
       @open-edit-slot-modal="openEditSlotModal"
       v-click-outside="closeSlotMenuIfOpen"
+      v-model="slotMenuOpen"
+      ref="slotmenu"
     />
   </div>
 </template>
@@ -110,6 +112,7 @@ export default defineComponent({
       if (this.stopCloseFlag) {
         this.stopCloseFlag = false;
       } else if (this.slotMenuOpen) {
+        this.$emit('update:modelValue', false);
         this.slotMenuOpen = false;
       }
     },
@@ -122,6 +125,9 @@ export default defineComponent({
   },
   directives: {
     'click-outside': clickOutside,
+  },
+  emits: {
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
   },
 });
 </script>
