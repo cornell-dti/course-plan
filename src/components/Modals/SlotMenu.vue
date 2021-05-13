@@ -1,5 +1,10 @@
 <template>
-  <Teleport class="slotMenu" to="#modalTarget" aria-model="true">
+  <teleport-modal
+    content-class="content-slotmenu"
+    :isSimpleModal="true"
+    :modelValue="modelValue"
+    :hasNoBackground="true"
+  >
     <button class="slotMenu-section" @click="openEditSlotModal">
       <div class="slotMenu-row">
         <div class="slotMenu-left">
@@ -24,38 +29,26 @@
         </div>
       </div>
     </button>
-  </Teleport>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 export default defineComponent({
+  components: { TeleportModal },
   props: {
     modelValue: { required: true, type: Boolean },
   },
-  emits: ['open-delete-slot-modal', 'open-edit-slot-modal', 'update:modelValue', 'modal-closed'],
-  setup(props, { emit }) {
-    const modalBackground = ref((null as unknown) as HTMLDivElement);
-
-    const close = () => {
-      emit('modal-closed', true);
-      emit('update:modelValue', false);
-    };
-
-    const openDeleteSlotModal = () => {
-      emit('open-delete-slot-modal');
-    };
-
-    const openEditSlotModal = () => {
-      emit('open-edit-slot-modal');
-    };
-
-    const closeOnClickOutside = (e: MouseEvent) => {
-      if (e.target === modalBackground.value) close();
-    };
-
-    return { close, openDeleteSlotModal, openEditSlotModal, closeOnClickOutside };
+  emits: ['open-delete-slot-modal', 'open-edit-slot-modal'],
+  methods: {
+    openDeleteSlotModal() {
+      this.$emit('open-delete-slot-modal');
+    },
+    openEditSlotModal() {
+      this.$emit('open-edit-slot-modal');
+    },
   },
 });
 </script>

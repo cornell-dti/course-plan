@@ -179,5 +179,13 @@ export default defineComponent({
     margin-left: auto;
     margin-right: auto;
   }
+
+  &-slotmenu {
+    border: 1px solid black;
+    background-color: white;
+    margin-top: 1rem;
+    min-height: 0;
+    width: 9rem;
+  }
 }
 </style>
