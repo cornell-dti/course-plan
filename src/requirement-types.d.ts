@@ -47,10 +47,10 @@ type ToggleableRequirementFulfillmentInformation<T = Record<string, unknown>> = 
       readonly minNumberOfSlots?: number;
       readonly description: string;
     } & T &
-      (
-        | { readonly counting: 'courses'; readonly slotNames: readonly string[] }
-        | { readonly counting: 'credits' }
-      );
+    (
+      | { readonly counting: 'courses'; readonly slotNames: readonly string[] }
+      | { readonly counting: 'credits' }
+    );
   };
 };
 
@@ -59,24 +59,24 @@ type ToggleableRequirementFulfillmentInformation<T = Record<string, unknown>> = 
  */
 type RequirementFulfillmentInformation<T = Record<string, unknown>> =
   | {
-      readonly fulfilledBy: 'self-check';
-      // Currently unused.
-      readonly minCount?: number;
-    }
+    readonly fulfilledBy: 'self-check';
+    // Currently unused.
+    readonly minCount?: number;
+  }
   | (RequirementFulfillmentInformationCourseBase<T> & {
-      /**
-       * Compound requirements only.
-       * It is a map from additional requirement name and corresponding courses/checkers.
-       */
-      readonly additionalRequirements?: {
-        readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<T>;
-      };
-    } & T)
+    /**
+     * Compound requirements only.
+     * It is a map from additional requirement name and corresponding courses/checkers.
+     */
+    readonly additionalRequirements?: {
+      readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<T>;
+    };
+  } & T)
   | (RequirementFulfillmentInformationCreditBase<T> & {
-      readonly additionalRequirements?: {
-        readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<T>;
-      };
-    } & T)
+    readonly additionalRequirements?: {
+      readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<T>;
+    };
+  } & T)
   | ToggleableRequirementFulfillmentInformation<T>;
 
 type DecoratedCollegeOrMajorRequirement = RequirementCommon &
@@ -101,7 +101,7 @@ type CourseTaken = {
   readonly credits: number;
 };
 
-type RequirementGroupType = 'College' | 'Major' | 'Minor';
+type RequirementGroupType = 'College' | 'Major' | 'Minor' | 'Grad';
 
 type RequirementWithIDSourceType = DecoratedCollegeOrMajorRequirement & {
   readonly id: string;
@@ -127,7 +127,7 @@ type RequirementFulfillment = {
 } & RequirementFulfillmentStatistics;
 
 type GroupedRequirementFulfillmentReport = {
-  readonly groupName: 'College' | 'Major' | 'Minor';
+  readonly groupName: 'College' | 'Major' | 'Minor' | 'Grad';
   readonly specific: string;
   readonly reqs: readonly RequirementFulfillment[];
 };

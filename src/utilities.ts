@@ -50,6 +50,12 @@ export function getMinorFullName(acronym: string): string {
   return minor ? minor.name : '';
 }
 
+export function getGradFullName(acronym: string): string {
+  // Return empty string if minor is not in requirementJSON
+  const grad = requirementJSON.grad[acronym];
+  return grad ? grad.name : '';
+}
+
 function getAllSubjects(): ReadonlySet<string> {
   const set = new Set<string>();
   fullCoursesArray.forEach(it => set.add(it.subject));

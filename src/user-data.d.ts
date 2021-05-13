@@ -56,6 +56,7 @@ type FirestoreOnboardingUserData = {
   readonly colleges: readonly FirestoreCollegeOrMajorOrMinor[];
   readonly majors: readonly FirestoreCollegeOrMajorOrMinor[];
   readonly minors: readonly FirestoreCollegeOrMajorOrMinor[];
+  readonly grad: readonly FirestoreCollegeOrMajorOrMinor[];
   readonly exam: readonly FirestoreAPIBExam[];
   readonly tookSwim: 'yes' | 'no';
 };
@@ -119,6 +120,7 @@ type AppOnboardingData = {
   readonly college: string;
   readonly major: readonly string[];
   readonly minor: readonly string[];
+  readonly grad: readonly string[];
   readonly exam: readonly FirestoreAPIBExam[];
   readonly transferCourse: readonly FirestoreTransferClass[];
   readonly tookSwim: 'yes' | 'no';

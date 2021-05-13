@@ -28,6 +28,7 @@ type GenericRequirementsJson<R> = {
   readonly college: CollegeRequirements<R>;
   readonly major: MajorRequirements<R>;
   readonly minor: MajorRequirements<R>;
+  readonly grad: MajorRequirements<R>;
 };
 
 export type RequirementsJson = GenericRequirementsJson<CollegeOrMajorRequirement>;
@@ -37,4 +38,5 @@ export type DecoratedRequirementsJson = {
   readonly college: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
+  readonly grad: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };

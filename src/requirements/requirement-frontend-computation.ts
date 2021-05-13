@@ -213,6 +213,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   );
   const majorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
   const minorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
+  const gradFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
   userRequirements.forEach(requirement => {
     const courses = requirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement.id);
     const fulfillmentStatistics = {
@@ -247,6 +248,17 @@ export default function computeGroupedRequirementFulfillmentReports(
         }
         break;
       }
+      case 'Grad': {
+        const existingArray = gradFulfillmentStatisticsMap.get(requirement.sourceSpecificName);
+        if (existingArray != null) {
+          existingArray.push(fulfillmentStatistics);
+        } else {
+          gradFulfillmentStatisticsMap.set(requirement.sourceSpecificName, [
+            fulfillmentStatistics,
+          ]);
+        }
+        break;
+      }
       default:
         throw new Error();
     }
@@ -261,6 +273,10 @@ export default function computeGroupedRequirementFulfillmentReports(
     ...Array.from(minorFulfillmentStatisticsMap.entries()).map(
       ([minorName, fulfillmentStatistics]) =>
         ({ groupName: 'Minor', specific: minorName, reqs: fulfillmentStatistics } as const)
+    ),
+    ...Array.from(gradFulfillmentStatisticsMap.entries()).map(
+      ([gradName, fulfillmentStatistics]) =>
+        ({ groupName: 'Grad', specific: gradName, reqs: fulfillmentStatistics } as const)
     ),
   ];
 

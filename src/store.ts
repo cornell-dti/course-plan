@@ -49,7 +49,7 @@ export type VuexStoreState = {
   uniqueIncrementer: number;
 };
 
-export class TypedVuexStore extends Store<VuexStoreState> {}
+export class TypedVuexStore extends Store<VuexStoreState> { }
 
 const store: TypedVuexStore = new TypedVuexStore({
   strict: process.env.NODE_ENV !== 'production',
@@ -66,6 +66,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       college: '',
       major: [],
       minor: [],
+      grad: [],
       exam: [],
       transferCourse: [],
       tookSwim: 'no',
@@ -216,6 +217,7 @@ const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardi
   college: data.colleges[0].acronym,
   major: data.majors.map(({ acronym }) => acronym),
   minor: data.minors.map(({ acronym }) => acronym),
+  grad: data.grad.map(({ acronym }) => acronym),
   exam: 'exam' in data ? [...data.exam] : [],
   transferCourse: 'class' in data ? [...data.class] : [],
   tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',

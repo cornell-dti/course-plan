@@ -215,6 +215,7 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
       colleges: [{ acronym: onboarding.college }],
       majors: onboarding.major.map(acronym => ({ acronym })),
       minors: onboarding.minor.map(acronym => ({ acronym })),
+      grad: onboarding.grad.map(acronym => ({ acronym })),
       exam: onboarding.exam,
       class: onboarding.transferCourse,
       tookSwim: onboarding.tookSwim,
