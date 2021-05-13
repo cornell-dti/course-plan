@@ -7,7 +7,11 @@
       @on-toggle="toggleDescription()"
     />
     <div v-if="displayDescription" class="description">
-      <requirement-information :requirement="requirementFulfillment.requirement" :color="color" />
+      <requirement-information
+        :requirementFulfillment="requirementFulfillment"
+        v-model="compoundRequirementChoice"
+        :color="color"
+      />
       <div v-if="requirementFulfillment.requirement.fulfilledBy === 'toggleable'">
         <toggleable-requirement-choice-dropdown
           :toggleableRequirement="requirementFulfillment.requirement"
@@ -21,6 +25,7 @@
           requirementFulfillment.requirement.checkerWarning == null
         "
         :requirementFulfillment="requirementFulfillment"
+        :compoundRequirementChoice="compoundRequirementChoice"
         :isCompleted="isCompleted"
         :displayDescription="displayDescription"
         :toggleableRequirementChoice="toggleableRequirementChoice"
@@ -79,7 +84,7 @@ export default defineComponent({
     },
   },
   data() {
-    return { showDescription: false };
+    return { showDescription: false, compoundRequirementChoice: '' };
   },
   computed: {
     displayDescription(): boolean {

@@ -79,7 +79,13 @@
           </div> -->
           <div class="onboarding-bottom--contents">
             <button class="onboarding-button-previous" @click="goBack">&lt; Previous</button>
-            <button class="onboarding-button" @click="submitOnboarding">Finish</button>
+            <button
+              class="onboarding-button"
+              @click="submitOnboarding"
+              data-cyId="onboarding-finishButton"
+            >
+              Finish
+            </button>
           </div>
         </div>
         <div v-else class="onboarding-bottom--section">
@@ -87,7 +93,9 @@
             <button v-if="currentPage != 1" class="onboarding-button-previous" @click="goBack">
               &lt; Previous
             </button>
-            <button class="onboarding-button" @click="goNext">Next &gt;</button>
+            <button class="onboarding-button" @click="goNext" data-cyId="onboarding-nextButton">
+              Next &gt;
+            </button>
           </div>
         </div>
       </div>

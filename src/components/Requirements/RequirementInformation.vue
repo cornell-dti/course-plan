@@ -1,20 +1,26 @@
 <template>
   <div>
-    <div>
-      {{ requirement.description }}
-      <a :style="{ color: `#${color}` }" :href="requirement.source" target="_blank">
-        <strong>Learn More</strong></a
-      >
-    </div>
-    <div v-if="requirement.checkerWarning" class="requirement-checker-warning">
+    <requirement-description
+      :requirementFulfillment="requirementFulfillment"
+      :choice="modelValue"
+      :color="color"
+      @update-choice="choice => $emit('update:modelValue', choice)"
+    />
+    <div
+      v-if="requirementFulfillment.requirement.checkerWarning"
+      class="requirement-checker-warning"
+    >
       <img
         class="requirement-checker-warning-icon"
         src="@/assets/images/warning.svg"
         alt="warning icon"
       />
-      {{ requirement.checkerWarning }}
+      {{ requirementFulfillment.requirement.checkerWarning }}
     </div>
-    <div v-if="requirement.fulfilledBy === 'self-check'" class="requirement-checker-warning">
+    <div
+      v-if="requirementFulfillment.requirement.fulfilledBy === 'self-check'"
+      class="requirement-checker-warning"
+    >
       <img
         class="requirement-checker-warning-icon"
         src="@/assets/images/warning.svg"
@@ -28,11 +34,19 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import RequirementDescription from '@/components/Requirements/RequirementDescription.vue';
 
 export default defineComponent({
+  components: { RequirementDescription },
   props: {
-    requirement: { type: Object as PropType<RequirementWithIDSourceType>, required: true },
+    requirementFulfillment: { type: Object as PropType<RequirementFulfillment>, required: true },
+    /** User choice of the nested requirement to display. */
+    modelValue: { type: String, required: true },
+    /** Color of the link. */
     color: { type: String, required: true },
+  },
+  emits: {
+    'update:modelValue': (value: string) => typeof value === 'string',
   },
 });
 </script>

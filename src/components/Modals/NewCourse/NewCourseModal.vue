@@ -21,8 +21,9 @@
       :autoFocus="true"
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
+      data-cyId="newCourse-dropdown"
     />
-    <div v-else class="selected-course">
+    <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}: {{ selectedCourse.titleLong }}
     </div>
     <div v-if="selectedCourse != null">
