@@ -37,6 +37,7 @@ export default defineComponent({
   box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
   display: flex;
   flex-direction: row;
+  pointer-events: auto;
 
   &-left {
     min-width: 42px;
