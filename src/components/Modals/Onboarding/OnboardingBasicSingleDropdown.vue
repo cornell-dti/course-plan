@@ -108,7 +108,7 @@ export default defineComponent({
         // clicked box when content shown. So then hide content
         this.boxBorder = inactiveGray;
         this.arrowColor = inactiveGray;
-        this.matchSelected();
+        this.curQuery = this.prevQuery;
       } else {
         box.focus();
         this.prevQuery = this.curQuery;
@@ -133,7 +133,7 @@ export default defineComponent({
         this.stopClose = false;
       } else if (this.shown) {
         this.shown = false;
-        this.matchSelected();
+        this.curQuery = this.prevQuery;
         this.boxBorder = inactiveGray;
         this.arrowColor = inactiveGray;
       }
