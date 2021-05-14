@@ -92,6 +92,8 @@ const reqGroupColorMap = {
   College: ['4D7D92', 'sangBlue'],
   Major: ['148481', 'emGreen'],
   Minor: ['105351', 'chrisGreen'],
+  // TODO: make colors wrap around if less than 4 elements, else new colour
+  Grad: ['105351', 'sangBlue'],
 };
 
 type PartitionedRequirementsProgress = {
