@@ -13,6 +13,7 @@
           <div
             class="selectSemester-dropdown-placeholder season-wrapper"
             @click="showHideSeasonContent"
+            data-cyId="newSemester-seasonWrapper"
           >
             <div
               class="selectSemester-dropdown-placeholder season-placeholder"
@@ -35,6 +36,7 @@
               :key="season[1]"
               class="selectSemester-dropdown-content-item"
               @click="selectSeason(season[1])"
+              data-cyId="newSemester-seasonItem"
             >
               <img
                 :src="season[0]"
@@ -58,6 +60,7 @@
           <div
             class="selectSemester-dropdown-placeholder year-wrapper"
             @click="showHideYearContent"
+            data-cyId="newSemester-yearWrapper"
           >
             <div
               class="selectSemester-dropdown-placeholder year-placeholder"
@@ -80,6 +83,7 @@
               :ref="`year-ref-${yearChoice}`"
               class="selectSemester-dropdown-content-item"
               @click="selectYear(yearChoice)"
+              data-cyId="newSemester-yearItem"
             >
               {{ yearChoice }}
             </div>
