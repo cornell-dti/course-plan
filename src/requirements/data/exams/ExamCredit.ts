@@ -395,6 +395,9 @@ function userDataToCourses(
   const userExams = userData[examType];
   const exams = examData[examType];
   const courses: CourseTaken[] = [];
+  // uniqueId starts at -2 and is decremented for each course added (-1 is reserved for swim test).
+  // uniqueIdDecrementer needs to be passed as an accumulator because the function is called multiple times,
+  // once for each examType. this assigned uniqueId is not stable and should not be stored in firestore.
   let uniqueId = -2 - uniqueIdDecrementer;
   userExams.forEach(userExam => {
     // match exam to user-taken exam
@@ -419,6 +422,7 @@ function userDataToCourses(
       const excludedMajor =
         exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
       if (!excludedMajor) {
+        // AP/IB credit can be potentially applied towards the user's requirements
         courseEquivalentsExist = true;
         if (courseEquivalents.length === 1) {
           const courseId = courseEquivalents[0];

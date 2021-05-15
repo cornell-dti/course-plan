@@ -155,7 +155,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     ) {
       state.overridenRequirementChoices = {
         ...overridenRequirementChoices,
-        ...computeAPIBOverridenRequirements(state),
+        ...computeAPIBOverridenRequirements(state), // adds AP/IB data from onboarding collection
       };
     },
     setRequirementData(
@@ -278,6 +278,10 @@ const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardi
   tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',
 });
 
+/**
+ * Computes AP/IB Overriden Requirement Choices from
+ * onboarding data and derived AP/IB equivalent course data.
+ */
 const computeAPIBOverridenRequirements = (
   state: VuexStoreState
 ): AppOverridenRequirementChoices => {
