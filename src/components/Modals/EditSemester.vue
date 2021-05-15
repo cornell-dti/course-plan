@@ -8,7 +8,6 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="editSemester"
-    :modelValue="modelValue"
   >
     <select-semester
       :currentSemesters="semesters"
@@ -32,12 +31,11 @@ export default defineComponent({
   props: {
     deleteSemType: { type: String as PropType<FirestoreSemesterType>, required: true },
     deleteSemYear: { type: Number, required: true },
-    modelValue: { type: Boolean, required: true },
   },
   emits: {
+    'close-edit-sem': () => true,
     'edit-semester': (season: string, year: number) =>
       typeof season === 'string' && typeof year === 'number',
-    'update:modelValue': (value: boolean) => typeof value === 'boolean',
   },
   data() {
     return {
@@ -53,7 +51,7 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal() {
-      this.$emit('update:modelValue', false);
+      this.$emit('close-edit-sem');
     },
     editSemester() {
       if (!this.isDisabled) {

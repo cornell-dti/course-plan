@@ -2,7 +2,6 @@
   <teleport-modal
     content-class="content-confirmation"
     :isSimpleModal="true"
-    :modelValue="modelValue"
     :hasNoBackground="true"
   >
     <div class="confirmation">
@@ -22,7 +21,6 @@ export default defineComponent({
   components: { TeleportModal },
   props: {
     text: { type: String, required: true },
-    modelValue: { type: Boolean, required: true },
   },
 });
 </script>

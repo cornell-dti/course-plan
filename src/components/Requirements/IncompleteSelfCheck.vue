@@ -1,11 +1,11 @@
 <template>
   <div class="incompleteselfcheck">
     <new-self-check-course-modal
-      v-model="isCourseModalOpen"
       v-if="isCourseModalOpen"
       :subReqName="subReqName"
       :requirementId="subReqId"
       @add-course="addNewCourse"
+      @close-course-modal="closeCourseModal"
     />
     <div class="separator"></div>
     <div class="top">{{ addCourseLabel }}</div>
@@ -156,6 +156,9 @@ export default defineComponent({
     },
     openCourseModal() {
       this.isCourseModalOpen = true;
+    },
+    closeCourseModal() {
+      this.isCourseModalOpen = false;
     },
   },
 });

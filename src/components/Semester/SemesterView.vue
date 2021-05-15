@@ -12,9 +12,8 @@
     <div class="semesterView-top">
       <new-semester-modal
         @add-semester="addSemester"
-        v-model="isSemesterModalOpen"
+        @close-sem-modal="closeSemesterModal"
         v-if="isSemesterModalOpen"
-        data-cyId="addSemesterModal"
       />
       <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
         <button
@@ -46,11 +45,7 @@
           />
         </div>
       </div>
-      <confirmation
-        :text="confirmationText"
-        v-model="isSemesterConfirmationOpen"
-        v-if="isSemesterConfirmationOpen"
-      />
+      <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
       <div class="semesterView-content">
         <div
           v-for="(sem, semesterIndex) in semesters"
@@ -175,6 +170,9 @@ export default defineComponent({
     },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
+    },
+    closeSemesterModal() {
+      this.isSemesterModalOpen = false;
     },
     addSemester(type: string, year: number) {
       addSemester(type as FirestoreSemesterType, year, this.$gtag);

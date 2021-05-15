@@ -8,7 +8,6 @@
     @right-button-clicked="resetClicked"
     @modal-closed="closeCurrentModal"
     :rightButtonIsDisabled="false"
-    :modelValue="modelValue"
   >
     <div v-if="isTestReq" class="text-width">
       Are you sure you want to remove "{{ reqName }}" for this requirement? This will delete the
@@ -31,15 +30,13 @@ export default defineComponent({
   props: {
     reqName: { type: String, required: true },
     isTestReq: { type: Boolean, required: true },
-    modelValue: { type: Boolean, required: true },
   },
   emits: {
-    'update:modelValue': (value: boolean) => typeof value === 'boolean',
     'close-reset-modal': (value: boolean) => typeof value === 'boolean',
   },
   methods: {
     closeCurrentModal(): void {
-      this.$emit('update:modelValue', false);
+      this.$emit('close-reset-modal', false);
     },
     resetClicked(): void {
       this.closeCurrentModal();

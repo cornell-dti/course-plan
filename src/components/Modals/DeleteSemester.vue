@@ -10,7 +10,6 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="deleteSemester"
-    :modelValue="modelValue"
   >
     <div class="deleteSemesterModal-body">
       <div class="deleteSemesterModal-body-text">{{ text }}</div>
@@ -28,12 +27,11 @@ export default defineComponent({
   props: {
     deleteSemType: { type: String, required: true },
     deleteSemYear: { type: Number, required: true },
-    modelValue: { type: Boolean, required: true },
   },
   emits: {
+    'close-delete-sem': () => true,
     'delete-semester': (type: string, year: number) =>
       typeof type === 'string' && typeof year === 'number',
-    'update:modelValue': (value: boolean) => typeof value === 'boolean',
   },
   computed: {
     text() {
@@ -45,7 +43,7 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal() {
-      this.$emit('update:modelValue', false);
+      this.$emit('close-delete-sem');
     },
     deleteSemester() {
       this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);

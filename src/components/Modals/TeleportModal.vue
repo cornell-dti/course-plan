@@ -43,7 +43,6 @@ import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   props: {
-    modelValue: { required: true, type: Boolean }, // true if the modal is visible, false otherwise
     title: { type: String, default: '' },
     contentClass: { type: String, required: true },
     leftButtonText: { type: String, default: '' },
@@ -54,13 +53,12 @@ export default defineComponent({
     isSimpleModal: { type: Boolean, default: false }, // true if the modal will set its own styling for its position
     hasNoBackground: { type: Boolean, default: false }, // true for modals without the gray overlay behind them
   },
-  emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed', 'update:modelValue'],
+  emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed'],
   setup(props, { emit }) {
     const modalBackground = ref((null as unknown) as HTMLDivElement);
 
     const close = () => {
       emit('modal-closed', true);
-      emit('update:modelValue', false);
     };
 
     const closeOnClickOutside = (e: MouseEvent) => {

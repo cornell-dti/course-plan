@@ -9,23 +9,23 @@
     data-tooltipClass="tooltipCenter"
   >
     <new-course-modal
-      v-model="isCourseModalOpen"
+      @close-course-modal="closeCourseModal"
       v-if="isCourseModalOpen"
       @add-course="addCourse"
     />
-    <confirmation :text="confirmationText" v-model="isConfirmationOpen" v-if="isConfirmationOpen" />
+    <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
       @delete-semester="deleteSemester"
+      @close-delete-sem="closeDeleteSemesterModal"
       :deleteSemType="type"
       :deleteSemYear="year"
-      v-model="isDeleteSemesterOpen"
       v-if="isDeleteSemesterOpen"
     />
     <edit-semester
       @edit-semester="editSemester"
+      @close-edit-sem="closeEditSemesterModal"
       :deleteSemType="type"
       :deleteSemYear="year"
-      v-model="isEditSemesterOpen"
       v-if="isEditSemesterOpen"
     />
     <button
@@ -280,6 +280,9 @@ export default defineComponent({
       this.closeConfirmationModal();
       this.isCourseModalOpen = !this.isCourseModalOpen;
     },
+    closeCourseModal() {
+      this.isCourseModalOpen = false;
+    },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
       this.closeConfirmationModal();
@@ -354,12 +357,18 @@ export default defineComponent({
     openDeleteSemesterModal() {
       this.isDeleteSemesterOpen = true;
     },
+    closeDeleteSemesterModal() {
+      this.isDeleteSemesterOpen = false;
+    },
     deleteSemester(type: string, year: number) {
       this.$emit('delete-semester', type, year);
       this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
     },
     openEditSemesterModal() {
       this.isEditSemesterOpen = true;
+    },
+    closeEditSemesterModal() {
+      this.isEditSemesterOpen = false;
     },
     editSemester(seasonInput: string, yearInput: number) {
       editSemester(
