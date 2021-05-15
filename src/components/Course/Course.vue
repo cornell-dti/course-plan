@@ -6,7 +6,7 @@
     <div class="course-content" @click="courseOnClick()">
       <div class="course-main">
         <div class="course-top">
-          <div class="course-code">{{ courseObj.code }}</div>
+          <div class="course-code" data-cyId="courseCode">{{ courseObj.code }}</div>
           <button v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
           </button>

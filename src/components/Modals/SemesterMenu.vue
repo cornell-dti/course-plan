@@ -4,6 +4,7 @@
       v-if="!isOpenModal"
       class="semesterMenu-section full-opacity-on-hover"
       @click="openEditSemesterModal"
+      data-cyId="semesterMenu-edit"
     >
       <div class="semesterMenu-content">
         <div class="semesterMenu-content">
@@ -22,6 +23,7 @@
       v-if="!isOpenModal"
       class="semesterMenu-section full-opacity-on-hover"
       @click="openDeleteSemesterModal"
+      data-cyId="semesterMenu-delete"
     >
       <div class="semesterMenu-content">
         <div class="semesterMenu-content">

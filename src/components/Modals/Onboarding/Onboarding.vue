@@ -77,7 +77,13 @@
           </div> -->
           <div class="onboarding-bottom--contents">
             <button class="onboarding-button-previous" @click="goBack">&lt; Previous</button>
-            <button class="onboarding-button" @click="submitOnboarding">Finish</button>
+            <button
+              class="onboarding-button"
+              @click="submitOnboarding"
+              data-cyId="onboarding-finishButton"
+            >
+              Finish
+            </button>
           </div>
         </div>
         <div v-else class="onboarding-bottom--section">
@@ -90,6 +96,7 @@
               @click="goNext"
               :disabled="!canProgress()"
               :class="{ 'onboarding-button--disabled': !canProgress() }"
+              data-cyId="onboarding-nextButton"
             >
               Next &gt;
             </button>
