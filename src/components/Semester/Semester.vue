@@ -284,7 +284,7 @@ export default defineComponent({
 
       setTimeout(() => {
         this.closeConfirmationModal();
-      }, 3000);
+      }, 2000);
     },
     closeConfirmationModal() {
       this.isConfirmationOpen = false;

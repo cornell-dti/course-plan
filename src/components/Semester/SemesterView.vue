@@ -169,7 +169,7 @@ export default defineComponent({
 
       setTimeout(() => {
         this.isSemesterConfirmationOpen = false;
-      }, 3000);
+      }, 2000);
     },
     openSemesterModal() {
       this.isSemesterModalOpen = true;

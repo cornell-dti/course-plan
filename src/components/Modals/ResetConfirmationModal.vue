@@ -1,7 +1,7 @@
 <template>
   <teleport-modal
     title="Reset Requirement"
-    content-class="content-confirmation"
+    content-class="content-reset"
     left-button-text="No"
     right-button-text="Yes"
     @left-button-clicked="closeClicked"
@@ -56,7 +56,7 @@ export default defineComponent({
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 
-.content-confirmation {
+.content-reset {
   width: 30.5em;
   align-items: initial;
   button {
@@ -80,7 +80,7 @@ export default defineComponent({
 }
 
 @media only screen and (max-width: $small-medium-breakpoint) {
-  .content-confirmation {
+  .content-reset {
     width: 100%;
   }
   .text-width {
