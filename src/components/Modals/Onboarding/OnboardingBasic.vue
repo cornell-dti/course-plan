@@ -218,8 +218,10 @@ export default defineComponent({
       const minors: Record<string, string> = {};
       const minorJSON = reqsData.minor;
       Object.keys(minorJSON).forEach(key => {
-        // only show majors for schools the user is in
-        minors[key] = minorJSON[key].name;
+        // show no minors if the user is not in a college
+        if (this.collegeAcronym) {
+          minors[key] = minorJSON[key].name;
+        }
       });
       return minors;
     },
@@ -308,6 +310,7 @@ export default defineComponent({
     removeCollege() {
       this.collegeAcronym = '';
       this.majorAcronyms = [''];
+      this.minorAcronyms = [''];
       this.updateBasic();
     },
     removeMajor(index: number) {

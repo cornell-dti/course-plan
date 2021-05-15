@@ -303,9 +303,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/components/Modals/Onboarding/Onboarding.scss';
-</style>
-<style lang="scss">
-@import '@/components/Modals/Onboarding/Onboarding.scss';
+
 .new-course {
   &-onboarding {
     font-size: 14px;
