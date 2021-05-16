@@ -41,7 +41,6 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 export default defineComponent({
   components: { TeleportModal },
   props: {
-    modelValue: { required: true, type: Boolean },
     position: { type: Object as PropType<{ x: number; y: number }>, required: true },
   },
   emits: {
