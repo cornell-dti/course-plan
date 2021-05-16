@@ -210,7 +210,6 @@ export default defineComponent({
   }
 
   &-slotmenu {
-    border: 1px solid black;
     background-color: white;
     min-height: 0;
     width: 7rem;

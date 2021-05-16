@@ -8,7 +8,7 @@
     :hasCustomPosition="true"
     :position="position"
   >
-    <button class="slotMenu-section" @click="openEditSlotModal">
+    <button class="slotMenu-section full-opacity-on-hover" @click="openEditSlotModal">
       <div class="slotMenu-row">
         <div class="slotMenu-left">
           <img
@@ -20,7 +20,7 @@
         </div>
       </div>
     </button>
-    <button class="slotMenu-section" @click="openDeleteSlotModal">
+    <button class="slotMenu-section full-opacity-on-hover" @click="openDeleteSlotModal">
       <div class="slotMenu-row">
         <div class="slotMenu-left">
           <img

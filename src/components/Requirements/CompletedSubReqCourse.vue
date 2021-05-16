@@ -34,8 +34,8 @@
     <slot-menu
       v-model="slotMenuOpen"
       v-if="slotMenuOpen"
-      :position="position"
-      @open-delete-slot-modal="onReset"
+      :position="slotMenuPosition"
+      @open-delete-slot-modal="onDeleteModalOpen"
     />
   </div>
 </template>
@@ -61,7 +61,7 @@ export default defineComponent({
   data: () => ({
     deleteModalVisible: false,
     slotMenuOpen: false,
-    position: { x: 0, y: 0 },
+    mousePosition: { x: 0, y: 0 },
   }),
   computed: {
     semesters(): readonly FirestoreSemester[] {
@@ -83,9 +83,14 @@ export default defineComponent({
       const course = store.state.derivedCoursesData.courseMap[this.courseTaken.uniqueId];
       return course != null ? course.color : '';
     },
+    slotMenuPosition(): { x: number; y: number } {
+      return window.innerWidth > 863
+        ? { x: this.mousePosition.x + 10, y: this.mousePosition.y - 14 }
+        : { x: this.mousePosition.x - 120, y: this.mousePosition.y - 7 };
+    },
   },
   methods: {
-    onReset(): void {
+    onDeleteModalOpen(): void {
       this.deleteModalVisible = true;
     },
     onDeleteCourseModalClosed(isDelete: boolean): void {
@@ -103,11 +108,11 @@ export default defineComponent({
       }
     },
     openSlotMenu(e: MouseEvent) {
-      console.log('window', window);
-      this.position =
-        window.innerWidth > 863
-          ? { x: e.clientX + 10, y: e.clientY - 14 }
-          : { x: e.clientX - 120, y: e.clientY - 7 };
+      this.mousePosition = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+      console.log(this.mousePosition);
       this.slotMenuOpen = true;
     },
   },
