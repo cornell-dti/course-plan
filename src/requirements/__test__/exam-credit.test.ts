@@ -167,7 +167,6 @@ it('Exam is counted correctly for one major', () => {
     major: ['CS'],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
     minor: [],
-    grad: [],
     transferCourse: [],
     tookSwim: 'no',
   };
@@ -188,7 +187,6 @@ it('Two exams are counted correctly for one major', () => {
       { type: 'AP', score: 5, subject: 'Chemistry' },
     ],
     minor: [],
-    grad: [],
     transferCourse: [],
     tookSwim: 'no',
   };
@@ -206,7 +204,6 @@ it('One exam is only counted once for multiple majors', () => {
     major: ['CS', 'Biological Sciences'],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
     minor: [],
-    grad: [],
     transferCourse: [],
     tookSwim: 'no',
   };
@@ -225,7 +222,6 @@ it('Equivalent course appears if it matches one major but not the other', () => 
     major: ['Biological Sciences'],
     exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],
     minor: [],
-    grad: [],
     transferCourse: [],
     tookSwim: 'no',
   };
@@ -240,7 +236,6 @@ it('Equivalent course appears if it matches one major but not the other', () => 
     major: ['CS', 'Biological Sciences'],
     exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],
     minor: [],
-    grad: [],
     transferCourse: [],
     tookSwim: 'no',
   };

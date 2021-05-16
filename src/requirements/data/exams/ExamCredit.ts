@@ -467,13 +467,16 @@ export default function getCourseEquivalentsFromUserExams(
     const examTaken: ExamTaken = { subject: exam.subject, score: exam.score };
     userExamData[exam.type].push(examTaken);
   });
+  // If there is no college, that means that the user only has a grad program, so they cannot get any course credit.
   user.major.forEach((major: string) =>
-    getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
-      if (!examCourseCodeSet.has(course.code)) {
-        examCourseCodeSet.add(course.code);
-        courses.push(course);
-      }
-    })
+    user.college
+      ? getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
+          if (!examCourseCodeSet.has(course.code)) {
+            examCourseCodeSet.add(course.code);
+            courses.push(course);
+          }
+        })
+      : []
   );
   return courses;
 }

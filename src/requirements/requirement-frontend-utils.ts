@@ -96,30 +96,34 @@ export function getUserRequirements({
   grad,
 }: AppOnboardingData): readonly RequirementWithIDSourceType[] {
   // check university & college & major & minor requirements
-  if (!(college in requirementJson.college)) throw new Error(`College ${college} not found.`);
+  if (college && !(college in requirementJson.college))
+    throw new Error(`College ${college} not found.`);
 
   const universityReqs = requirementJson.university.UNI;
-  const collegeReqs = requirementJson.college[college];
-
   return [
-    ...universityReqs.requirements.map(
-      it =>
-        ({
-          ...it,
-          id: `College-UNI-${it.name}`,
-          sourceType: 'College',
-          sourceSpecificName: college,
-        } as const)
-    ),
-    ...collegeReqs.requirements.map(
-      it =>
-        ({
-          ...it,
-          id: `College-${college}-${it.name}`,
-          sourceType: 'College',
-          sourceSpecificName: college,
-        } as const)
-    ),
+    // University requirements only added if college is defined, i.e. if the user has selected an undergraduate program.
+    ...(college
+      ? universityReqs.requirements.map(
+          it =>
+            ({
+              ...it,
+              id: `College-UNI-${it.name}`,
+              sourceType: 'College',
+              sourceSpecificName: college,
+            } as const)
+        )
+      : []),
+    ...(college
+      ? requirementJson.college[college].requirements.map(
+          it =>
+            ({
+              ...it,
+              id: `College-${college}-${it.name}`,
+              sourceType: 'College',
+              sourceSpecificName: college,
+            } as const)
+        )
+      : []),
     ...majors
       .map(major => {
         const majorRequirement = requirementJson.major[major];
@@ -150,21 +154,17 @@ export function getUserRequirements({
         );
       })
       .flat(),
-    ...grad
-      .map(gradProg => {
-        const gradRequirement = requirementJson.grad[gradProg];
-        if (gradRequirement == null) return [];
-        return gradRequirement.requirements.map(
+    ...(grad
+      ? requirementJson.grad[grad].requirements.map(
           it =>
             ({
               ...it,
-              id: `Grad-${gradProg}-${it.name}`,
+              id: `Grad-${grad}-${it.name}`,
               sourceType: 'Grad',
-              sourceSpecificName: gradProg,
+              sourceSpecificName: grad,
             } as const)
-        );
-      })
-      .flat(),
+        )
+      : []),
   ].map(requirement => ({
     ...requirement,
     allowCourseDoubleCounting: requirementAllowDoubleCounting(requirement, majors) || undefined,

@@ -201,16 +201,16 @@ export default function computeGroupedRequirementFulfillmentReports(
   );
 
   const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];
-  const totalCreditsFulfillmentStatistics = getTotalCreditsFulfillmentStatistics(
-    college,
-    coursesTaken
-  );
+  const totalCreditsFulfillmentStatistics = college
+    ? getTotalCreditsFulfillmentStatistics(college, coursesTaken)
+    : null;
   if (totalCreditsFulfillmentStatistics != null) {
     collegeFulfillmentStatistics.push(totalCreditsFulfillmentStatistics);
   }
-  collegeFulfillmentStatistics.push(
-    getSwimTestFulfillmentStatistics(college, coursesTaken, onboardingData.tookSwim === 'yes')
-  );
+  if (college)
+    collegeFulfillmentStatistics.push(
+      getSwimTestFulfillmentStatistics(college, coursesTaken, onboardingData.tookSwim === 'yes')
+    );
   const majorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
   const minorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
   const gradFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
@@ -262,8 +262,7 @@ export default function computeGroupedRequirementFulfillmentReports(
     }
   });
 
-  const groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[] = [
-    { groupName: 'College', specific: college, reqs: collegeFulfillmentStatistics },
+  const groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport[] = [
     ...Array.from(majorFulfillmentStatisticsMap.entries()).map(
       ([majorName, fulfillmentStatistics]) =>
         ({ groupName: 'Major', specific: majorName, reqs: fulfillmentStatistics } as const)
@@ -277,6 +276,15 @@ export default function computeGroupedRequirementFulfillmentReports(
         ({ groupName: 'Grad', specific: gradName, reqs: fulfillmentStatistics } as const)
     ),
   ];
+
+  // college may be undefined if the user has only selected a grad program
+  if (college) {
+    groupedRequirementFulfillmentReport.push({
+      groupName: 'College',
+      specific: college,
+      reqs: collegeFulfillmentStatistics,
+    });
+  }
 
   return {
     userRequirementsMap: Object.fromEntries(userRequirements.map(it => [it.id, it])),
