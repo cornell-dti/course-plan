@@ -56,9 +56,11 @@ export default defineComponent({
     },
     openDeleteSlotModal() {
       this.$emit('open-delete-slot-modal');
+      this.$emit('update:modelValue', false);
     },
     openEditSlotModal() {
       this.$emit('open-edit-slot-modal');
+      this.$emit('update:modelValue', false);
     },
   },
 });

@@ -5,7 +5,7 @@
     left-button-text="No"
     right-button-text="Yes"
     @left-button-clicked="closeClicked"
-    @right-button-clicked="resetClicked"
+    @right-button-clicked="deleteClicked"
     @modal-closed="closeCurrentModal"
     :rightButtonIsDisabled="false"
     :modelValue="modelValue"
@@ -35,19 +35,19 @@ export default defineComponent({
   },
   emits: {
     'update:modelValue': (value: boolean) => typeof value === 'boolean',
-    'close-reset-modal': (value: boolean) => typeof value === 'boolean',
+    'close-delete-course-modal': (value: boolean) => typeof value === 'boolean',
   },
   methods: {
     closeCurrentModal(): void {
       this.$emit('update:modelValue', false);
     },
-    resetClicked(): void {
+    deleteClicked(): void {
       this.closeCurrentModal();
-      this.$emit('close-reset-modal', true);
+      this.$emit('close-delete-course-modal', true);
     },
     closeClicked(): void {
       this.closeCurrentModal();
-      this.$emit('close-reset-modal', false);
+      this.$emit('close-delete-course-modal', false);
     },
   },
 });

@@ -3,9 +3,9 @@
     <delete-course-modal
       :isTestReq="isTransferCredit"
       :reqName="courseTaken.code"
-      v-model="resetConfirmVisible"
-      v-if="resetConfirmVisible"
-      @close-reset-modal="onResetConfirmClosed"
+      v-model="deleteModalVisible"
+      v-if="deleteModalVisible"
+      @close-delete-course-modal="onDeleteCourseModalClosed"
     />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
@@ -31,7 +31,12 @@
         <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
       </div>
     </div>
-    <slot-menu v-model="slotMenuOpen" v-if="slotMenuOpen" :position="position" />
+    <slot-menu
+      v-model="slotMenuOpen"
+      v-if="slotMenuOpen"
+      :position="position"
+      @open-delete-slot-modal="onReset"
+    />
   </div>
 </template>
 
@@ -54,7 +59,7 @@ export default defineComponent({
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
   data: () => ({
-    resetConfirmVisible: false,
+    deleteModalVisible: false,
     slotMenuOpen: false,
     position: { x: 0, y: 0 },
   }),
@@ -81,10 +86,10 @@ export default defineComponent({
   },
   methods: {
     onReset(): void {
-      this.resetConfirmVisible = true;
+      this.deleteModalVisible = true;
     },
-    onResetConfirmClosed(isReset: boolean): void {
-      if (isReset) {
+    onDeleteCourseModalClosed(isDelete: boolean): void {
+      if (isDelete) {
         if (this.isTransferCredit) {
           const type = this.courseTaken.code.substr(0, 2);
           const name = this.courseTaken.code.substr(3);
