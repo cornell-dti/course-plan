@@ -71,7 +71,7 @@ export default defineComponent({
 
 .slotMenu {
   background: $white;
-  border: 1px solid #acacac;
+  border: 1px solid $lightGray;
   box-sizing: border-box;
   border-radius: 9px;
   position: absolute;
