@@ -86,7 +86,9 @@ export default defineComponent({
   },
   computed: {
     foundChoices(): [string, string][] {
-      return Object.entries(this.availableChoices).filter(v => v[1].startsWith(this.curQuery));
+      return Object.entries(this.availableChoices).filter(v =>
+        v[1].toLowerCase().startsWith(this.curQuery.toLowerCase())
+      );
     },
   },
   directives: {
@@ -94,7 +96,7 @@ export default defineComponent({
   },
   watch: {
     choice(newVal) {
-      this.curQuery = this.availableChoices[newVal];
+      this.curQuery = this.availableChoices[newVal] || '';
       this.prevQuery = this.curQuery;
     },
   },
