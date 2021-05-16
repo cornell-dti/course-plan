@@ -213,7 +213,7 @@ export default defineComponent({
     border: 1px solid black;
     background-color: white;
     min-height: 0;
-    width: 9rem;
+    width: 7rem;
     position: fixed;
   }
 }

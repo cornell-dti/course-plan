@@ -103,7 +103,11 @@ export default defineComponent({
       }
     },
     openSlotMenu(e: MouseEvent) {
-      this.position = { x: e.clientX + 10, y: e.clientY - 14 };
+      console.log('window', window);
+      this.position =
+        window.innerWidth > 863
+          ? { x: e.clientX + 10, y: e.clientY - 14 }
+          : { x: e.clientX - 120, y: e.clientY - 7 };
       this.slotMenuOpen = true;
     },
   },
