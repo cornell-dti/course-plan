@@ -40,8 +40,8 @@
       text="View your college requirements, plan your semesters and courses, and more."
       exit="No, I want to skip this"
       button-text="Start Tutorial"
-      @startTour="startWelcomeTour()"
-      v-model="welcomeHidden"
+      @startTour="startWelcomeTour"
+      @closeTourWindow="closeWelcome"
       v-if="welcomeHidden"
     />
     <tour-window
@@ -51,7 +51,7 @@
       :isFinalStep="true"
       exit=""
       button-text="Get Started"
-      v-model="showTourEndWindow"
+      @closeTourWindow="closeTour"
       v-if="showTourEndWindow"
     />
     <bottom-bar
@@ -212,6 +212,14 @@ export default defineComponent({
     editProfile() {
       this.isOnboarding = true;
       this.isEditingProfile = true;
+    },
+
+    closeWelcome() {
+      this.welcomeHidden = false;
+    },
+
+    closeTour() {
+      this.showTourEndWindow = false;
     },
   },
 });

@@ -3,7 +3,6 @@
     <delete-course-modal
       :isTestReq="isTransferCredit"
       :reqName="courseTaken.code"
-      v-model="resetConfirmVisible"
       v-if="resetConfirmVisible"
       @close-reset-modal="onResetConfirmClosed"
     />
@@ -86,6 +85,8 @@ export default defineComponent({
       this.resetConfirmVisible = true;
     },
     onResetConfirmClosed(isReset: boolean): void {
+      this.resetConfirmVisible = false;
+
       if (isReset) {
         if (this.isTransferCredit) {
           const type = this.courseTaken.code.substr(0, 2);

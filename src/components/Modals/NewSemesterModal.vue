@@ -8,7 +8,6 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="addSemester"
-    :modelValue="modelValue"
   >
     <select-semester
       :currentSemesters="semesters"
@@ -28,13 +27,10 @@ import store from '@/store';
 
 export default defineComponent({
   components: { TeleportModal, SelectSemester },
-  props: {
-    modelValue: { type: Boolean, required: true },
-  },
   emits: {
+    'close-sem-modal': () => true,
     'add-semester': (season: string, year: number) =>
       typeof season === 'string' && typeof year === 'number',
-    'update:modelValue': (value: boolean) => typeof value === 'boolean',
   },
   data() {
     return { isDisabled: false, season: '', year: 0 };
@@ -49,7 +45,7 @@ export default defineComponent({
       this.isDisabled = disabled;
     },
     closeCurrentModal() {
-      this.$emit('update:modelValue', false);
+      this.$emit('close-sem-modal');
     },
     addSemester() {
       if (!this.isDisabled) {

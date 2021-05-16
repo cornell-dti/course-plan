@@ -1,11 +1,7 @@
 <template>
   <div>
     <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
-      <completed-sub-req-course
-        :slotName="`Course ${id + 1}`"
-        :courseTaken="selfCheckCourse"
-        @modal-open="modalToggled"
-      />
+      <completed-sub-req-course :slotName="`Course ${id + 1}`" :courseTaken="selfCheckCourse" />
     </div>
     <div v-if="!isCompleted">
       <incomplete-self-check
@@ -13,7 +9,6 @@
         :subReqName="requirementFulfillment.requirement.name"
         :subReqFulfillment="requirementFulfillment.fulfilledBy"
         :subReqCourseId="requirementFulfillment.minCountFulfilled"
-        @modal-open="modalToggled"
       />
     </div>
   </div>
@@ -40,9 +35,6 @@ export default defineComponent({
     },
     isCompleted: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
-  },
-  emits: {
-    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   computed: {
     fulfilledSelfCheckCourses(): readonly CourseTaken[] {
@@ -89,11 +81,6 @@ export default defineComponent({
       fulfillableCourses = fulfillableCourses.filter(courseIsAPIB);
 
       return [...selectedCourses, ...fulfillableCourses];
-    },
-  },
-  methods: {
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });
