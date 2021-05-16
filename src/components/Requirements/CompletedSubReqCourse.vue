@@ -1,6 +1,6 @@
 <template>
   <div class="completedsubreqcourse">
-    <reset-confirmation-modal
+    <delete-course-modal
       :isTestReq="isTransferCredit"
       :reqName="courseTaken.code"
       v-model="resetConfirmVisible"
@@ -38,8 +38,8 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
-import ResetConfirmationModal from '@/components/Modals/ResetConfirmationModal.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
+import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebaseConfig';
@@ -48,7 +48,7 @@ import getCurrentSeason, { getCurrentYear, clickOutside } from '@/utilities';
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, ResetConfirmationModal, SlotMenu },
+  components: { ReqCourse, DeleteCourseModal, SlotMenu },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },

@@ -103,9 +103,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Liberal Studies: 6 courses',
-    description:
-      'Liberal arts commonly include courses in the humanities. A minimum of six courses must be taken. ' +
-      'At least two courses must be at the 2000 level or higher.',
+    description: 'A minimum of six courses must be taken.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
     checker: [
@@ -118,68 +116,53 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     allowCourseDoubleCounting: true,
     perSlotMinCount: [6],
     slotNames: ['Course'],
-  },
-  {
-    name: 'Liberal Studies Distribution: 3 categories',
-    description:
-      'In addition to six courses, the liberal studies courses must be from 3 categories.',
-    source:
-      'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
-    checker: [
-      (course: Course): boolean =>
-        (course.catalogDistr?.includes('LA') || course.catalogDistr?.includes('LAD')) ?? false,
-      ...engineeringLiberalArtsDistributions
-        .filter(it => it !== 'LA' && it !== 'LAD')
-        .map(distribution => (course: Course): boolean =>
-          course.catalogDistr?.includes(distribution) ?? false
-        ),
-    ],
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    slotNames: [
-      'LA',
-      ...engineeringLiberalArtsDistributions.filter(it => it !== 'LA' && it !== 'LAD'),
-    ],
-    minNumberOfSlots: 3,
-    allowCourseDoubleCounting: true,
-  },
-  {
-    name: 'Liberal Studies Distribution: 18 credits',
-    description:
-      'In addition to six courses, the liberal studies distribution must total a minimum of 18 credits.',
-    source:
-      'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
-    checker: [
-      (course: Course): boolean =>
-        engineeringLiberalArtsDistributions.some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
-        ) || courseIsForeignLang(course),
-    ],
-    fulfilledBy: 'credits',
-    perSlotMinCount: [18],
-    allowCourseDoubleCounting: true,
-  },
-  {
-    name: 'Liberal Studies: 2000+ level',
-    description: 'At least two liberal arts courses must be at the 2000 level or higher.',
-    source:
-      'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
-    checker: [
-      (course: Course): boolean => {
-        const { catalogNbr } = course;
-        return (
-          !ifCodeMatch(catalogNbr, '1***') &&
-          (engineeringLiberalArtsDistributions.some(
-            category => course.catalogDistr?.includes(category) ?? false
-          ) ||
-            courseIsForeignLang(course))
-        );
+    additionalRequirements: {
+      'Courses must be from 3 categories.': {
+        checker: [
+          (course: Course): boolean =>
+            (course.catalogDistr?.includes('LA') || course.catalogDistr?.includes('LAD')) ?? false,
+          ...engineeringLiberalArtsDistributions
+            .filter(it => it !== 'LA' && it !== 'LAD')
+            .map(distribution => (course: Course): boolean =>
+              course.catalogDistr?.includes(distribution) ?? false
+            ),
+        ],
+        fulfilledBy: 'courses',
+        perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        slotNames: [
+          'LA',
+          ...engineeringLiberalArtsDistributions.filter(it => it !== 'LA' && it !== 'LAD'),
+        ],
+        minNumberOfSlots: 3,
       },
-    ],
-    fulfilledBy: 'courses',
-    perSlotMinCount: [2],
-    slotNames: ['Course'],
-    allowCourseDoubleCounting: true,
+      'Courses must have at least 18 credits.': {
+        checker: [
+          (course: Course): boolean =>
+            engineeringLiberalArtsDistributions.some(
+              distribution => course.catalogDistr?.includes(distribution) ?? false
+            ) || courseIsForeignLang(course),
+        ],
+        fulfilledBy: 'credits',
+        perSlotMinCount: [18],
+      },
+      'Two courses must be at the 2000 level or higher.': {
+        checker: [
+          (course: Course): boolean => {
+            const { catalogNbr } = course;
+            return (
+              !ifCodeMatch(catalogNbr, '1***') &&
+              (engineeringLiberalArtsDistributions.some(
+                category => course.catalogDistr?.includes(category) ?? false
+              ) ||
+                courseIsForeignLang(course))
+            );
+          },
+        ],
+        fulfilledBy: 'courses',
+        perSlotMinCount: [2],
+        slotNames: ['Course'],
+      },
+    },
   },
 
   // TODO: Create special function for this as it is the same as Advisor-Approved Electives for CS checker

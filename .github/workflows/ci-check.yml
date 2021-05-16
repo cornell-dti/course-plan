@@ -16,5 +16,18 @@ jobs:
         run: npm run lint
       - name: Type Check
         run: npm run type-check
-      - name: Test
+      - name: Jest Test
         run: npm run test
+  frontend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Node
+        uses: actions/setup-node@v2-beta
+      - name: NPM Clean Install
+        run: npm ci
+      - name: Cypress Test
+        run: npm run cypress:e2e
+        env:
+          CYPRESS_TEST_UID: ${{ secrets.CYPRESS_TEST_UID }}
+          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CORNELLDTI_COURSEPLAN_DEV }}

@@ -1,0 +1,89 @@
+<template>
+  <teleport-modal
+    title="Delete Course"
+    content-class="content-confirmation"
+    left-button-text="No"
+    right-button-text="Yes"
+    @left-button-clicked="closeClicked"
+    @right-button-clicked="resetClicked"
+    @modal-closed="closeCurrentModal"
+    :rightButtonIsDisabled="false"
+    :modelValue="modelValue"
+  >
+    <div v-if="isTestReq" class="text-width">
+      Are you sure you want to remove "{{ reqName }}" for this requirement? This will delete the
+      selected transfer credit from your schedule.
+      <br />
+      Transfer credits can be re-added in your Profile.
+    </div>
+    <div v-else class="text-width">
+      Are you sure you want to remove "{{ reqName }}" for this requirement? This will delete the
+      selected course from your schedule.
+    </div>
+  </teleport-modal>
+</template>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
+
+export default defineComponent({
+  components: { TeleportModal },
+  props: {
+    reqName: { type: String, required: true },
+    isTestReq: { type: Boolean, required: true },
+    modelValue: { type: Boolean, required: true },
+  },
+  emits: {
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+    'close-reset-modal': (value: boolean) => typeof value === 'boolean',
+  },
+  methods: {
+    closeCurrentModal(): void {
+      this.$emit('update:modelValue', false);
+    },
+    resetClicked(): void {
+      this.closeCurrentModal();
+      this.$emit('close-reset-modal', true);
+    },
+    closeClicked(): void {
+      this.closeCurrentModal();
+      this.$emit('close-reset-modal', false);
+    },
+  },
+});
+</script>
+<style lang="scss">
+@import '@/assets/scss/_variables.scss';
+
+.content-confirmation {
+  width: 30.5em;
+  align-items: initial;
+  button {
+    width: 48px;
+  }
+}
+
+.text-width {
+  width: 28em;
+  line-height: 17px;
+  color: $lightPlaceholderGray;
+}
+
+.modal {
+  &--block {
+    display: block;
+  }
+  &--flex {
+    display: flex;
+  }
+}
+
+@media only screen and (max-width: $small-medium-breakpoint) {
+  .content-confirmation {
+    width: 100%;
+  }
+  .text-width {
+    width: 100%;
+  }
+}
+</style>

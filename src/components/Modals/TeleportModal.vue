@@ -16,7 +16,7 @@
       >
         <div v-if="!isSimpleModal" class="modal-top">
           <h1>{{ title }}</h1>
-          <button @click="close">
+          <button @click="close" data-cyId="modal-exit">
             <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
           </button>
         </div>
@@ -29,6 +29,8 @@
             class="modal-button modal-button--add"
             :class="{ 'modal-button--disabled': rightButtonIsDisabled }"
             @click="rightButtonClicked"
+            data-cyId="modal-button"
+            :disabled="rightButtonIsDisabled"
           >
             <img
               v-if="rightButtonImage"
