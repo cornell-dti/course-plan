@@ -1,5 +1,5 @@
 <template>
-  <teleport-modal content-class="content-tour" :isSimpleModal="true" :modelValue="modelValue">
+  <teleport-modal content-class="content-tour" :isSimpleModal="true">
     <div class="tour">
       <div class="intropage">
         <div class="top">
@@ -66,11 +66,10 @@ export default defineComponent({
     isFinalStep: { type: Boolean, required: false, default: false },
     exit: { type: String, required: true },
     buttonText: { type: String, required: true },
-    modelValue: { type: Boolean, required: true },
   },
   emits: {
     startTour: () => true,
-    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+    closeTourWindow: () => true,
   },
   data() {
     return {
@@ -83,11 +82,11 @@ export default defineComponent({
   methods: {
     startTour(): void {
       this.$emit('startTour');
-      this.$emit('update:modelValue', false);
+      this.$emit('closeTourWindow');
       GTagEvent(this.$gtag, 'start-walkthrough');
     },
     skipTour(): void {
-      this.$emit('update:modelValue', false);
+      this.$emit('closeTourWindow');
       GTagEvent(this.$gtag, 'skip-walkthrough');
     },
   },

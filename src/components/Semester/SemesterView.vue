@@ -11,12 +11,9 @@
   >
     <div class="semesterView-top">
       <new-semester-modal
-        class="semester-modal"
-        :class="{ 'modal--block': isSemesterModalOpen }"
         @add-semester="addSemester"
-        v-model="isSemesterModalOpen"
+        @close-sem-modal="closeSemesterModal"
         v-if="isSemesterModalOpen"
-        data-cyId="addSemesterModal"
       />
       <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
         <button
@@ -48,12 +45,7 @@
           />
         </div>
       </div>
-      <confirmation
-        class="semesterView-confirmation"
-        :text="confirmationText"
-        v-model="isSemesterConfirmationOpen"
-        v-if="isSemesterConfirmationOpen"
-      />
+      <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
       <div class="semesterView-content">
         <div
           v-for="(sem, semesterIndex) in semesters"
@@ -73,7 +65,6 @@
             @course-onclick="courseOnClick"
             @new-semester="openSemesterModal"
             @delete-semester="deleteSemester"
-            @modal-open="modalToggle"
           />
         </div>
         <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
@@ -138,7 +129,6 @@ export default defineComponent({
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
-      modalToggle: false,
     };
   },
   computed: {
@@ -176,10 +166,13 @@ export default defineComponent({
 
       setTimeout(() => {
         this.isSemesterConfirmationOpen = false;
-      }, 3000);
+      }, 2000);
     },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
+    },
+    closeSemesterModal() {
+      this.isSemesterModalOpen = false;
     },
     addSemester(type: string, year: number) {
       addSemester(type as FirestoreSemesterType, year, this.$gtag);
@@ -307,12 +300,6 @@ export default defineComponent({
     }
   }
 
-  &-confirmation,
-  &-caution {
-    display: none;
-    margin: auto;
-  }
-
   &-empty {
     flex: 1 1 50%;
     padding: 0 0.75rem;
@@ -346,31 +333,8 @@ export default defineComponent({
   }
 }
 
-/* The Modal (background) */
-.semester-modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
 .bottomBar {
   margin-bottom: 350px;
-}
-
-.modal {
-  &--block {
-    display: block;
-  }
-  &--flex {
-    display: flex;
-  }
 }
 
 @media only screen and (max-width: $medium-breakpoint) {

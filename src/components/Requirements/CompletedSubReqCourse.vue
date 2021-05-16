@@ -3,9 +3,8 @@
     <delete-course-modal
       :isTestReq="isTransferCredit"
       :reqName="courseTaken.code"
-      v-model="deleteModalVisible"
-      v-if="deleteModalVisible"
-      @close-delete-course-modal="onDeleteCourseModalClosed"
+      v-if="resetConfirmVisible"
+      @close-delete-course-modal="onResetConfirmClosed"
     />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
@@ -93,7 +92,9 @@ export default defineComponent({
     onDeleteModalOpen(): void {
       this.deleteModalVisible = true;
     },
-    onDeleteCourseModalClosed(isDelete: boolean): void {
+    onResetConfirmClosed(isDelete: boolean): void {
+      this.deleteModalVisible = false;
+
       if (isDelete) {
         if (this.isTransferCredit) {
           const type = this.courseTaken.code.substr(0, 2);

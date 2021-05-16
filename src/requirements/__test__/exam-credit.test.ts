@@ -2,7 +2,7 @@ import getCourseEquivalentsFromUserExams, {
   ExamsTaken,
   getCourseEquivalentsFromOneMajor,
 } from '../data/exams/ExamCredit';
-import { CREDITS_COURSE_ID } from '../data/constants';
+import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID } from '../data/constants';
 
 /**
  * Tests for getCourseEquivalentsFromOneMajor
@@ -34,9 +34,9 @@ it('Exam score is too low', () => {
     IB: [],
   };
   const courseEquivalents = getCourseEquivalentsFromOneMajor('EN', 'CS', exams);
-  const courseCodes = new Set(courseEquivalents.map(c => c.code));
-  const expected = new Set();
-  expect(courseCodes).toEqual(expected);
+  const courseIds = new Set(courseEquivalents.map(c => c.courseId));
+  const expected = new Set([NO_EQUIVALENT_COURSES_COURSE_ID]);
+  expect(courseIds).toEqual(expected);
 });
 
 it('Two exams are converted to the correct courses', () => {
@@ -72,7 +72,7 @@ it('Exam is correctly converted to two courses', () => {
   const courseEquivalents = getCourseEquivalentsFromOneMajor('EN', 'CS', exams);
   expect(courseEquivalents.length >= 2).toBeTruthy();
   const courseIds = new Set(courseEquivalents.map(c => c.courseId));
-  const expected = new Set([10, 355142, 355143]);
+  const expected = new Set([CREDITS_COURSE_ID, 355142, 355143]);
   // If this fails, first check if the AP/IB equivalent course logic has changed.
   expect(courseIds).toEqual(expected);
 });
@@ -226,8 +226,10 @@ it('Equivalent course appears if it matches one major but not the other', () => 
     tookSwim: 'no',
   };
   let courseEquivalents = getCourseEquivalentsFromUserExams(userData);
+  let courseIds = new Set(courseEquivalents.map(c => c.courseId));
+  let expected = new Set([NO_EQUIVALENT_COURSES_COURSE_ID]);
   // If this fails, first check if the AP/IB equivalent course logic has changed.
-  expect(courseEquivalents.length).toBe(0);
+  expect(courseIds).toEqual(expected);
 
   userData = {
     gradYear: '2020',
@@ -240,8 +242,7 @@ it('Equivalent course appears if it matches one major but not the other', () => 
     tookSwim: 'no',
   };
   courseEquivalents = getCourseEquivalentsFromUserExams(userData);
-  const courseCodes = new Set(courseEquivalents.map(c => c.code));
-  const expected = new Set(['AP Statistics']);
+  courseIds = new Set(courseEquivalents.map(c => c.courseId));
   // If this fails, first check if the AP/IB equivalent course logic has changed.
-  expect(courseCodes).toEqual(expected);
+  expect(courseIds).not.toEqual(expected);
 });

@@ -50,7 +50,6 @@ import { defineComponent, ref, PropType } from 'vue';
 
 export default defineComponent({
   props: {
-    modelValue: { required: true, type: Boolean }, // true if the modal is visible, false otherwise
     title: { type: String, default: '' },
     contentClass: { type: String, required: true },
     leftButtonText: { type: String, default: '' },
@@ -75,13 +74,12 @@ export default defineComponent({
       customPosition,
     };
   },
-  emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed', 'update:modelValue'],
+  emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed'],
   setup(props, { emit }) {
     const modalBackground = ref((null as unknown) as HTMLDivElement);
 
     const close = () => {
       emit('modal-closed', true);
-      emit('update:modelValue', false);
     };
 
     const closeOnClickOutside = (e: MouseEvent) => {
@@ -207,6 +205,9 @@ export default defineComponent({
     min-height: 0;
     margin-left: auto;
     margin-right: auto;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
   }
 
   &-slotmenu {
