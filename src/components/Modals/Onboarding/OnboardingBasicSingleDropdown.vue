@@ -13,7 +13,7 @@
           type="text"
           class="onboarding-dropdown-placeholder college-major-minor-placeholder"
           :style="{ color: placeholderColor, border: 'none', outline: 'none' }"
-          :placeholder="prevQuery === '' ? 'Select one' : prevQuery"
+          :placeholder="prevQuery || 'Select one'"
           v-model="curQuery"
           tabindex="-1"
           ref="selectbox"
