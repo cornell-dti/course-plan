@@ -2,11 +2,18 @@
   <Teleport to="#modalTarget" aria-modal="true">
     <div
       class="teleport"
-      :class="{ 'teleport-simple': isSimpleModal, 'teleport-noBackground': hasNoBackground }"
+      :class="{
+        'teleport-simple': isSimpleModal,
+        'teleport-noBackground': hasNoBackground,
+        'teleport-transparentBackground': hasClickableTransparentBackground,
+      }"
       @click="closeOnClickOutside"
       ref="modalBackground"
     >
-      <div :class="['modal-content', contentClass, { 'modal-simple': isSimpleModal }]">
+      <div
+        :class="['modal-content', contentClass, { 'modal-simple': isSimpleModal }]"
+        :style="customPosition"
+      >
         <div v-if="!isSimpleModal" class="modal-top">
           <h1>{{ title }}</h1>
           <button @click="close">
@@ -37,7 +44,7 @@
   </Teleport>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, PropType } from 'vue';
 
 export default defineComponent({
   props: {
@@ -51,6 +58,20 @@ export default defineComponent({
     rightButtonIsDisabled: { type: Boolean, default: false },
     isSimpleModal: { type: Boolean, default: false }, // true if the modal will set its own styling for its position
     hasNoBackground: { type: Boolean, default: false }, // true for modals without the gray overlay behind them
+    hasClickableTransparentBackground: { type: Boolean, default: false },
+    hasCustomPosition: { type: Boolean, default: false },
+    position: { type: Object as PropType<{ x: number; y: number }>, default: { x: 0, y: 0 } },
+  },
+  data() {
+    const customPosition = this.hasCustomPosition
+      ? {
+          left: `${this.position.x}px`,
+          top: `${this.position.y}px`,
+        }
+      : {};
+    return {
+      customPosition,
+    };
   },
   emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed', 'update:modelValue'],
   setup(props, { emit }) {
@@ -100,6 +121,12 @@ export default defineComponent({
     width: 100%;
     min-height: 0;
     pointer-events: none;
+  }
+
+  &-transparentBackground {
+    background-color: rgba(0, 0, 0, 0);
+    width: 100%;
+    min-height: 100vh;
   }
 }
 
@@ -183,9 +210,9 @@ export default defineComponent({
   &-slotmenu {
     border: 1px solid black;
     background-color: white;
-    margin-top: 1rem;
     min-height: 0;
     width: 9rem;
+    position: fixed;
   }
 }
 </style>

@@ -31,14 +31,7 @@
         <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
       </div>
     </div>
-    <slot-menu
-      v-if="slotMenuOpen"
-      @open-delete-slot-modal="openDeleteSlotModal"
-      @open-edit-slot-modal="openEditSlotModal"
-      v-click-outside="closeSlotMenuIfOpen"
-      v-model="slotMenuOpen"
-      ref="slotmenu"
-    />
+    <slot-menu v-model="slotMenuOpen" v-if="slotMenuOpen" :position="position" />
   </div>
 </template>
 
@@ -62,8 +55,8 @@ export default defineComponent({
   },
   data: () => ({
     resetConfirmVisible: false,
-    stopCloseFlag: false,
     slotMenuOpen: false,
+    position: { x: 0, y: 0 },
   }),
   computed: {
     semesters(): readonly FirestoreSemester[] {
@@ -104,23 +97,9 @@ export default defineComponent({
         } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
       }
     },
-    openSlotMenu() {
-      this.stopCloseFlag = true;
+    openSlotMenu(e: MouseEvent) {
+      this.position = { x: e.clientX + 10, y: e.clientY - 14 };
       this.slotMenuOpen = true;
-    },
-    closeSlotMenuIfOpen() {
-      if (this.stopCloseFlag) {
-        this.stopCloseFlag = false;
-      } else if (this.slotMenuOpen) {
-        this.$emit('update:modelValue', false);
-        this.slotMenuOpen = false;
-      }
-    },
-    openDeleteSlotModal() {
-      // TODO
-    },
-    openEditSlotModal() {
-      // TODO
     },
   },
   directives: {

@@ -3,7 +3,10 @@
     content-class="content-slotmenu"
     :isSimpleModal="true"
     :modelValue="modelValue"
-    :hasNoBackground="true"
+    @modal-closed="closeCurrentModal"
+    :hasClickableTransparentBackground="true"
+    :hasCustomPosition="true"
+    :position="position"
   >
     <button class="slotMenu-section" @click="openEditSlotModal">
       <div class="slotMenu-row">
@@ -33,16 +36,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 export default defineComponent({
   components: { TeleportModal },
   props: {
     modelValue: { required: true, type: Boolean },
+    position: { type: Object as PropType<{ x: number; y: number }>, required: true },
   },
-  emits: ['open-delete-slot-modal', 'open-edit-slot-modal'],
+  emits: {
+    'open-delete-slot-modal': () => true,
+    'open-edit-slot-modal': () => true,
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+  },
   methods: {
+    closeCurrentModal() {
+      this.$emit('update:modelValue', false);
+    },
     openDeleteSlotModal() {
       this.$emit('open-delete-slot-modal');
     },
