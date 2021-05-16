@@ -3,8 +3,8 @@
     <delete-course-modal
       :isTestReq="isTransferCredit"
       :reqName="courseTaken.code"
-      v-if="resetConfirmVisible"
-      @close-reset-modal="onResetConfirmClosed"
+      v-if="deleteModalVisible"
+      @close-delete-course-modal="onDeleteCourseModalClose"
     />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
@@ -15,11 +15,8 @@
           /></span>
           {{ slotName }}
         </div>
-        <button
-          class="completed-reqCourses-course-heading-reset-button reqCourse-button"
-          @click="onReset"
-        >
-          {{ resetText }}
+        <button class="reqCourse-button" @click="openSlotMenu">
+          <img src="@/assets/images/settingsBlue.svg" alt="Requirement slot settings" />
         </button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
@@ -33,35 +30,41 @@
         <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
       </div>
     </div>
+    <slot-menu
+      v-if="slotMenuOpen"
+      :position="slotMenuPosition"
+      @open-delete-slot-modal="onDeleteModalOpen"
+      @close-slot-menu="closeSlotMenu"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
+import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebaseConfig';
-import getCurrentSeason, { getCurrentYear } from '@/utilities';
+import getCurrentSeason, { getCurrentYear, clickOutside } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, DeleteCourseModal },
+  components: { ReqCourse, DeleteCourseModal, SlotMenu },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
   data: () => ({
-    resetConfirmVisible: false,
+    deleteModalVisible: false,
+    slotMenuOpen: false,
+    mousePosition: { x: 0, y: 0 },
   }),
   computed: {
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
-    },
-    resetText(): string {
-      return 'Reset';
     },
     isTransferCredit(): boolean {
       return this.courseTaken.uniqueId < 0;
@@ -79,15 +82,20 @@ export default defineComponent({
       const course = store.state.derivedCoursesData.courseMap[this.courseTaken.uniqueId];
       return course != null ? course.color : '';
     },
+    slotMenuPosition(): { x: number; y: number } {
+      return window.innerWidth > 863
+        ? { x: this.mousePosition.x + 10, y: this.mousePosition.y - 14 }
+        : { x: this.mousePosition.x - 120, y: this.mousePosition.y - 7 };
+    },
   },
   methods: {
-    onReset(): void {
-      this.resetConfirmVisible = true;
+    onDeleteModalOpen(): void {
+      this.deleteModalVisible = true;
     },
-    onResetConfirmClosed(isReset: boolean): void {
-      this.resetConfirmVisible = false;
+    onDeleteCourseModalClose(isDelete: boolean): void {
+      this.deleteModalVisible = false;
 
-      if (isReset) {
+      if (isDelete) {
         if (this.isTransferCredit) {
           const type = this.courseTaken.code.substr(0, 2);
           const name = this.courseTaken.code.substr(3);
@@ -100,6 +108,22 @@ export default defineComponent({
         } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
       }
     },
+    openSlotMenu(e: MouseEvent) {
+      this.mousePosition = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+      this.slotMenuOpen = true;
+    },
+    closeSlotMenu() {
+      this.slotMenuOpen = false;
+    },
+  },
+  directives: {
+    'click-outside': clickOutside,
+  },
+  emits: {
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
   },
 });
 </script>
@@ -156,7 +180,7 @@ export default defineComponent({
     font-size: 14px;
     line-height: 15px;
     color: $yuxuanBlue;
-    padding: 0.2rem;
+    padding: 0 0.2rem 0.4rem;
     cursor: pointer;
   }
 }

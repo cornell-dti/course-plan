@@ -65,9 +65,11 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .semesterMenu {
-  background: #ffffff;
-  border: 1px solid #acacac;
+  background: $white;
+  border: 1px solid $lightGray;
   box-sizing: border-box;
   border-radius: 9px;
 
