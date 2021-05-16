@@ -2,7 +2,6 @@
   <teleport-modal
     content-class="content-slotmenu"
     :isSimpleModal="true"
-    :modelValue="modelValue"
     @modal-closed="closeCurrentModal"
     :hasClickableTransparentBackground="true"
     :hasCustomPosition="true"
@@ -48,19 +47,19 @@ export default defineComponent({
   emits: {
     'open-delete-slot-modal': () => true,
     'open-edit-slot-modal': () => true,
-    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+    'close-slot-menu': (value: boolean) => typeof value === 'boolean',
   },
   methods: {
     closeCurrentModal() {
-      this.$emit('update:modelValue', false);
+      this.$emit('close-slot-menu', false);
     },
     openDeleteSlotModal() {
       this.$emit('open-delete-slot-modal');
-      this.$emit('update:modelValue', false);
+      this.$emit('close-slot-menu', false);
     },
     openEditSlotModal() {
       this.$emit('open-edit-slot-modal');
-      this.$emit('update:modelValue', false);
+      this.$emit('close-slot-menu', false);
     },
   },
 });

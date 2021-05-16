@@ -31,10 +31,10 @@
       </div>
     </div>
     <slot-menu
-      v-model="slotMenuOpen"
       v-if="slotMenuOpen"
       :position="slotMenuPosition"
       @open-delete-slot-modal="onDeleteModalOpen"
+      @close-slot-menu="closeSlotMenu"
     />
   </div>
 </template>
@@ -115,6 +115,9 @@ export default defineComponent({
       };
       console.log(this.mousePosition);
       this.slotMenuOpen = true;
+    },
+    closeSlotMenu() {
+      this.slotMenuOpen = false;
     },
   },
   directives: {
