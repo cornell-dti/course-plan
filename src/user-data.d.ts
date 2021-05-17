@@ -159,3 +159,10 @@ type AppOverridenRequirementChoices = Readonly<
     }
   >
 >;
+
+type DerivedAPIBEquivalentCourseData = {
+  // Mapping from exam name to unique ids (there can be multiple)
+  readonly examToUniqueIdsMap: Readonly<Record<string, Set<number>>>;
+  // Mapping from unique id to exam name
+  readonly uniqueIdToExamMap: Readonly<Record<number, string>>;
+};

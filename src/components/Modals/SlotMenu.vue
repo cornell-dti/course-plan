@@ -43,14 +43,10 @@ export default defineComponent({
   props: {
     position: { type: Object as PropType<{ x: number; y: number }>, required: true },
   },
-  emits: {
-    'open-delete-slot-modal': () => true,
-    'open-edit-slot-modal': () => true,
-    'close-slot-menu': (value: boolean) => typeof value === 'boolean',
-  },
+  emits: ['open-delete-slot-modal', 'open-edit-slot-modal', 'close-slot-menu'],
   methods: {
     closeCurrentModal() {
-      this.$emit('close-slot-menu', false);
+      this.$emit('close-slot-menu');
     },
     openDeleteSlotModal() {
       this.$emit('open-delete-slot-modal');

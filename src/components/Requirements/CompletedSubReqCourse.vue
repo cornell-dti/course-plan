@@ -6,6 +6,10 @@
       v-if="deleteModalVisible"
       @close-delete-course-modal="onDeleteCourseModalClose"
     />
+    <override-AP-IB-modal
+      @close-override-apib-modal="onOverrideModalClose"
+      v-if="overrideModalVisible"
+    />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
@@ -34,6 +38,7 @@
       v-if="slotMenuOpen"
       :position="slotMenuPosition"
       @open-delete-slot-modal="onDeleteModalOpen"
+      @open-edit-slot-modal="onOverrideModalOpen"
       @close-slot-menu="closeSlotMenu"
     />
   </div>
@@ -44,6 +49,7 @@ import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
+import OverrideAPIBModal from '@/components/Modals/OverrideAPIBModal.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebaseConfig';
@@ -52,13 +58,14 @@ import getCurrentSeason, { getCurrentYear, clickOutside } from '@/utilities';
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, DeleteCourseModal, SlotMenu },
+  components: { ReqCourse, DeleteCourseModal, SlotMenu, OverrideAPIBModal },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
   data: () => ({
     deleteModalVisible: false,
+    overrideModalVisible: false,
     slotMenuOpen: false,
     mousePosition: { x: 0, y: 0 },
   }),
@@ -107,6 +114,12 @@ export default defineComponent({
           });
         } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
       }
+    },
+    onOverrideModalOpen(): void {
+      this.overrideModalVisible = true;
+    },
+    onOverrideModalClose(): void {
+      this.overrideModalVisible = false;
     },
     openSlotMenu(e: MouseEvent) {
       this.mousePosition = {

@@ -1,21 +1,20 @@
 <template>
   <TeleportModal
-    title="Edit Requirement"
+    title="Override Requirement with Transfer Credit"
     content-class="content-course"
-    :modelValue="modelValue"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
-    @right-button-clicked="addItem"
+    @right-button-clicked="closeCurrentModal"
   >
-    <div class="newCourse-text">{{ courseName }} is being fulfilled by:</div>
-    <requirements-dropdown
+    <div class="newCourse-text">Select AP/IB credit to override this requirement:</div>
+    <!-- <requirements-dropdown
       :relatedRequirements="relatedRequirements"
       :potentialRequirements="potentialRequirements"
       :selectedID="selectedRequirementID"
       @on-selected-change="toggleSelectRequirement"
-    />
+    /> -->
     <div class="warning">
       <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
       We cannot accurately check the requirements marked with the warning icon, so double check
@@ -27,19 +26,19 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
-import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
+// import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
 
 import store from '@/store';
 
 export default defineComponent({
-  components: { TeleportModal, RequirementsDropdown },
+  // components: { TeleportModal, RequirementsDropdown },
+  components: { TeleportModal },
   props: {
-    modelValue: { type: Boolean, required: true },
     courseName: { type: String, required: true },
     selectedReq: { type: String, required: true },
   },
   emits: {
-    'update:modelValue': (val: boolean) => typeof val === 'boolean',
+    'close-override-apib-modal': (val: boolean) => typeof val === 'boolean',
   },
   data() {
     return {};
@@ -49,15 +48,19 @@ export default defineComponent({
       return 'Cancel';
     },
     rightButtonText(): string {
-      return 'Done';
+      return 'Override';
     },
     selectableRequirementChoices(): AppSelectableRequirementChoices {
       return store.state.selectableRequirementChoices;
     },
+    derivedAPIBEquivalentCourseData(): DerivedAPIBEquivalentCourseData {
+      // use in the dropdown to not include any exams with 0 course equivalents if the req is fulfilled by credits
+      return store.state.derivedAPIBEquivalentCourseData;
+    },
   },
   methods: {
     closeCurrentModal() {
-      this.$emit('update:modelValue', false);
+      this.$emit('close-override-apib-modal', false);
     },
   },
 });
