@@ -32,9 +32,9 @@ export function getCurrentYearSuffix(): string {
   return currentYear.toString().substring(2);
 }
 
-export function getCollegeFullName(acronym: string): string {
+export function getCollegeFullName(acronym: string | undefined): string {
   // Return empty string if college is not in requirementJSON
-  const college = requirementJSON.college[acronym];
+  const college = acronym ? requirementJSON.college[acronym] : null;
   return college ? college.name : '';
 }
 
