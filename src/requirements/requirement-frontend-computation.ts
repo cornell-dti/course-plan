@@ -286,7 +286,7 @@ export default function computeGroupedRequirementFulfillmentReports(
 
   // college may be undefined if the user has only selected a grad program
   if (college) {
-    groupedRequirementFulfillmentReport.push({
+    groupedRequirementFulfillmentReport.unshift({
       groupName: 'College',
       specific: college,
       reqs: collegeFulfillmentStatistics,
