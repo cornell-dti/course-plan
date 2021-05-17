@@ -193,6 +193,8 @@ const mpaRequirements: readonly CollegeOrMajorRequirement[] = [
   //   perSlotMinCount: [1, 1],
   //   slotNames: ['CS 111x', 'CS 2110 or CS 2112'],
   // },
+
+  // TODO: PADM 5012 needs to be taken twice
   {
     name: 'Colloquium Coursework',
     description: 'PADM 5009, PADM 5011, and PADM 5012 (must be taken twice)',
