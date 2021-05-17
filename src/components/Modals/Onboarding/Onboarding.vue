@@ -212,7 +212,7 @@ export default defineComponent({
     },
     goBack() {
       // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
-      if (this.onboarding.grad !== '' && this.onboarding.college === '' && this.currentPage > 1) {
+      if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage > 1) {
         this.currentPage = 1;
       } else {
         this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
@@ -228,11 +228,7 @@ export default defineComponent({
       // Only move onto next page if error message is not displayed
       if (!(this.isError || this.isInvalidMajorMinorGradError)) {
         // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
-        if (
-          this.onboarding.grad !== '' &&
-          this.onboarding.college === '' &&
-          this.currentPage === 1
-        ) {
+        if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage === 1) {
           this.currentPage += 2;
         } else {
           this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
