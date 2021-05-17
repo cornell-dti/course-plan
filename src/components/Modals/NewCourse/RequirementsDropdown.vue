@@ -89,7 +89,7 @@ export default defineComponent({
     },
     potentialRequirements: {
       type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
-      required: true,
+      default: [],
     },
   },
   emits: {

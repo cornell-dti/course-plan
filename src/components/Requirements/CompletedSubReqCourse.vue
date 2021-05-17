@@ -9,6 +9,8 @@
     <override-AP-IB-modal
       @close-override-apib-modal="onOverrideModalClose"
       v-if="overrideModalVisible"
+      :slotName="slotName"
+      :requirementFulfillment="requirementFulfillment"
     />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
@@ -62,6 +64,10 @@ export default defineComponent({
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
+    requirementFulfillment: {
+      type: Object as PropType<RequirementFulfillment>,
+      required: true,
+    },
   },
   data: () => ({
     deleteModalVisible: false,

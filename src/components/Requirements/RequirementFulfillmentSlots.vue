@@ -5,6 +5,7 @@
         <completed-sub-req-course
           :slotName="requirementFulfillmentCourseSlot.name"
           :courseTaken="requirementFulfillmentCourseSlot.courses[0]"
+          :requirementFulfillment="requirementFulfillment"
         />
       </div>
       <div v-if="!requirementFulfillmentCourseSlot.isCompleted">

@@ -2,46 +2,45 @@
   <TeleportModal
     title="Override Requirement with Transfer Credit"
     content-class="content-course"
-    :leftButtonText="leftButtonText"
-    :rightButtonText="rightButtonText"
+    leftButtonText="Cancel"
+    rightButtonText="Override"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
-    @right-button-clicked="closeCurrentModal"
+    @right-button-clicked="overrideClicked"
   >
-    <div class="newCourse-text">Select AP/IB credit to override this requirement:</div>
-    <!-- <requirements-dropdown
-      :relatedRequirements="relatedRequirements"
-      :potentialRequirements="potentialRequirements"
-      :selectedID="selectedRequirementID"
-      @on-selected-change="toggleSelectRequirement"
-    /> -->
-    <div class="warning">
-      <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
-      We cannot accurately check the requirements marked with the warning icon, so double check
-      before selecting.
-    </div>
+    <div class="overrideModal-text">Select AP/IB credit to override this requirement:</div>
+    <requirements-dropdown
+      :relatedRequirements="relatedExams"
+      :selectedID="selectedExamID"
+      @on-selected-change="onSelectedExamChange"
+    />
   </TeleportModal>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
+import { addOverridenRequirementAPIB } from '@/global-firestore-data';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
-// import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
+import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
 
 import store from '@/store';
 
 export default defineComponent({
-  // components: { TeleportModal, RequirementsDropdown },
-  components: { TeleportModal },
+  components: { TeleportModal, RequirementsDropdown },
   props: {
-    courseName: { type: String, required: true },
-    selectedReq: { type: String, required: true },
+    requirementFulfillment: {
+      type: Object as PropType<RequirementFulfillment>,
+      required: true,
+    },
+    slotName: { type: String, required: true },
   },
   emits: {
     'close-override-apib-modal': (val: boolean) => typeof val === 'boolean',
   },
   data() {
-    return {};
+    return {
+      selectedExamID: '',
+    };
   },
   computed: {
     leftButtonText(): string {
@@ -54,13 +53,43 @@ export default defineComponent({
       return store.state.selectableRequirementChoices;
     },
     derivedAPIBEquivalentCourseData(): DerivedAPIBEquivalentCourseData {
-      // use in the dropdown to not include any exams with 0 course equivalents if the req is fulfilled by credits
       return store.state.derivedAPIBEquivalentCourseData;
+    },
+    relatedExams(): { id: string; name: string }[] {
+      if (this.requirementFulfillment.fulfilledBy !== 'credits') {
+        return Object.entries(this.derivedAPIBEquivalentCourseData.examToUniqueIdsMap).map(
+          (entry, index) => ({
+            id: index.toString(),
+            name: entry[0],
+          })
+        );
+      }
+      // if fulfilledBy === credits then only add exam with course equivalents
+      return Object.entries(this.derivedAPIBEquivalentCourseData.examToUniqueIdsMap)
+        .filter(exams => exams[1].size > 0)
+        .map((entry, index) => ({
+          id: index.toString(),
+          name: entry[0],
+        }));
     },
   },
   methods: {
     closeCurrentModal() {
       this.$emit('close-override-apib-modal', false);
+    },
+    overrideClicked() {
+      if (this.selectedExamID !== '') {
+        addOverridenRequirementAPIB(
+          this.relatedExams[parseInt(this.selectedExamID, 10)].name,
+          true,
+          this.requirementFulfillment.requirement.id,
+          this.slotName
+        );
+      }
+      this.closeCurrentModal();
+    },
+    onSelectedExamChange(id: string) {
+      this.selectedExamID = id;
     },
   },
 });
@@ -68,55 +97,17 @@ export default defineComponent({
 
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
-.newCourse {
+.overrideModal {
   &-text {
     font-size: 14px;
     line-height: 17px;
     color: $lightPlaceholderGray;
-  }
-  &-dropdown {
-    font-size: 14px;
-    line-height: 17px;
-    color: $lightPlaceholderGray;
-    width: 100%;
-    border-radius: 3px;
-    padding: 0.5rem;
-    border: 0.5px solid $inactiveGray;
-    &::placeholder {
-      color: $darkPlaceholderGray;
-    }
-  }
-  &-name {
-    position: relative;
-    border-radius: 11px;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    color: $darkGray;
-  }
-  &-title {
-    font-size: 14px;
-    line-height: 17px;
-    color: $lightPlaceholderGray;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
   }
 }
 
 .content-course {
   width: 27.75rem;
-}
-
-.warning {
-  color: $warning;
-  font-size: 14px;
-  line-height: 17px;
-  margin-bottom: 8px;
-  &-icon {
-    float: left;
-    margin: 0.125rem 0.25rem 0 0;
-    width: 14px;
-    height: 14px;
-  }
 }
 
 @media only screen and (max-width: $small-medium-breakpoint) {
