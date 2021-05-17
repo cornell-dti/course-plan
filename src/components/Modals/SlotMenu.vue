@@ -54,11 +54,11 @@ export default defineComponent({
     },
     openDeleteSlotModal() {
       this.$emit('open-delete-slot-modal');
-      this.$emit('close-slot-menu', false);
+      this.closeCurrentModal();
     },
     openEditSlotModal() {
       this.$emit('open-edit-slot-modal');
-      this.$emit('close-slot-menu', false);
+      this.closeCurrentModal();
     },
   },
 });
