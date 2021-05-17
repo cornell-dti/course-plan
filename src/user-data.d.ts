@@ -57,7 +57,7 @@ type FirestoreOnboardingUserData = {
   readonly colleges: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly majors: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly minors: readonly FirestoreCollegeMajorMinorOrGrad[];
-  readonly grads: readonly FirestoreCollegeMajorMinorOrGrad[];
+  readonly gradPrograms: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly exam: readonly FirestoreAPIBExam[];
   readonly tookSwim: 'yes' | 'no';
 };

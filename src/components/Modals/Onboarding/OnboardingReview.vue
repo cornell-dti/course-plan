@@ -90,8 +90,8 @@
         <div class="onboarding-selectWrapper-review">
           <label class="onboarding-label">Program</label>
           <div>
-            <label class="onboarding-label--review" v-if="onboardingData.program">
-              {{ programText }}
+            <label class="onboarding-label--review" v-if="onboardingData.grad">
+              {{ gradText }}
             </label>
           </div>
         </div>
@@ -182,7 +182,7 @@ import {
   getCollegeFullName,
   getMajorFullName,
   getMinorFullName,
-  getProgramFullName,
+  getGradFullName,
 } from '@/utilities';
 import { GTagEvent } from '@/gtag';
 
@@ -202,8 +202,8 @@ export default defineComponent({
     collegeText(): string {
       return getCollegeFullName(this.onboardingData.college);
     },
-    programText(): string {
-      return getProgramFullName(this.onboardingData.program);
+    gradText(): string {
+      return getGradFullName(this.onboardingData.grad);
     },
     gradYearText(): string {
       return this.onboardingData.gradYear !== '' ? this.onboardingData.gradYear : placeholderText;
@@ -224,7 +224,7 @@ export default defineComponent({
       return count;
     },
     isGraduateOnly(): boolean {
-      return this.onboardingData.program !== '' && this.onboardingData.college === '';
+      return this.onboardingData.grad !== '' && this.onboardingData.college === '';
     },
   },
   methods: {

@@ -128,11 +128,11 @@
         <div class="onboarding-inputWrapper">
           <label class="onboarding-label">Program</label>
           <onboarding-basic-single-dropdown
-            :availableChoices="programs"
-            :choice="programAcronym"
-            :cannotBeRemoved="programAcronym.length <= 0"
-            @on-select="selectProgram"
-            @on-remove="removeProgram"
+            :availableChoices="gradPrograms"
+            :choice="gradAcronym ? gradAcronym : ''"
+            :cannotBeRemoved="gradAcronym ? gradAcronym.length <= 0 : true"
+            @on-select="selectGrad"
+            @on-remove="removeGrad"
           />
         </div>
       </div>
@@ -162,7 +162,7 @@ export default defineComponent({
       collegeAcronym: string,
       majorAcronyms: readonly string[],
       minorAcronyms: readonly string[],
-      programAcronym: string,
+      gradAcronym: string,
       name: FirestoreUserName
     ) {
       return (
@@ -171,7 +171,7 @@ export default defineComponent({
         typeof collegeAcronym === 'string' &&
         Array.isArray(majorAcronyms) &&
         Array.isArray(minorAcronyms) &&
-        typeof programAcronym === 'string' &&
+        typeof gradAcronym === 'string' &&
         typeof name === 'object'
       );
     },
@@ -191,7 +191,7 @@ export default defineComponent({
       collegeAcronym: this.onboardingData.college ? this.onboardingData.college : '',
       majorAcronyms,
       minorAcronyms,
-      programAcronym: this.onboardingData.program,
+      gradAcronym: this.onboardingData.grad,
     };
   },
   directives: {
@@ -225,16 +225,19 @@ export default defineComponent({
       });
       return minors;
     },
-    programs(): Readonly<Record<string, string>> {
-      const programs: Record<string, string> = {};
-
+    gradPrograms(): Readonly<Record<string, string>> {
       // TODO: connect requirements side here instead of using dummy data
 
-      programs.TEMP = 'TEMP PROGRAM';
-      programs.TEMP2 = 'TEMP PROGRAM 2';
-      programs.TEMP3 = 'TEMP PROGRAM 3';
+      // return Object.fromEntries(
+      //   Object.entries(reqsData.grad).map(([key, { name }]) => [key, name])
+      // );
 
-      return programs;
+      const gradPrograms: Record<string, string> = {};
+      gradPrograms.TEMP = 'TEMP PROGRAM';
+      gradPrograms.TEMP2 = 'TEMP PROGRAM 2';
+      gradPrograms.TEMP3 = 'TEMP PROGRAM 3';
+
+      return gradPrograms;
     },
     semesters(): Readonly<Record<string, string>> {
       const semsDict: Record<string, string> = {};
@@ -256,7 +259,7 @@ export default defineComponent({
         this.collegeAcronym,
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
-        this.programAcronym,
+        this.gradAcronym ? this.gradAcronym : '',
         { firstName: this.firstName, middleName: this.middleName, lastName: this.lastName }
       );
     },
@@ -302,8 +305,8 @@ export default defineComponent({
       );
       this.updateBasic();
     },
-    selectProgram(acronym: string) {
-      this.programAcronym = acronym;
+    selectGrad(acronym: string) {
+      this.gradAcronym = acronym;
       this.updateBasic();
     },
     // remove college and all current majors
@@ -327,8 +330,8 @@ export default defineComponent({
       }
       this.updateBasic();
     },
-    removeProgram() {
-      this.programAcronym = '';
+    removeGrad() {
+      this.gradAcronym = '';
       this.updateBasic();
     },
     addMajor() {

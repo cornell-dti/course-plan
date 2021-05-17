@@ -57,7 +57,7 @@
         <div class="onboarding-error" v-if="isError">
           {{ errorText }}
         </div>
-        <div class="onboarding-error" v-if="isInvalidMajorMinorProgramError">
+        <div class="onboarding-error" v-if="isInvalidMajorMinorGradError">
           Invalid major, minor, or graduate program. Delete the placeholder major, minor, or program
           and try again.
         </div>
@@ -113,7 +113,7 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import { setOnboardingData } from '@/global-firestore-data';
-import { getMajorFullName, getMinorFullName, getProgramFullName } from '@/utilities';
+import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -144,7 +144,7 @@ export default defineComponent({
         this.name.lastName === '' ||
         this.onboarding.gradYear === '' ||
         this.onboarding.entranceYear === '' ||
-        (this.onboarding.college === '' && this.onboarding.program === '')
+        (this.onboarding.college === '' && this.onboarding.grad === '')
       );
     },
     /**
@@ -154,7 +154,7 @@ export default defineComponent({
      * @returns true if onboarding contains a major, minor, or program that is not in
      * requirementsJSON on this branch, false otherwise.
      */
-    isInvalidMajorMinorProgramError(): boolean {
+    isInvalidMajorMinorGradError(): boolean {
       return (
         this.onboarding.major
           .map(getMajorFullName)
@@ -162,7 +162,7 @@ export default defineComponent({
         this.onboarding.minor
           .map(getMinorFullName)
           .some((minorFullName: string) => minorFullName === '') ||
-        (this.onboarding.program !== '' && getProgramFullName(this.onboarding.program) === '')
+        (this.onboarding.grad ? getGradFullName(this.onboarding.grad) === '' : false)
       );
     },
     /**
@@ -172,7 +172,7 @@ export default defineComponent({
      */
     errorText(): string {
       const messages = [];
-      if (this.onboarding.college === '' && this.onboarding.program === '') {
+      if (this.onboarding.college === '' && this.onboarding.grad === '') {
         messages.push('at least one undergraduate or graduate degree');
       }
       if (this.name.firstName === '') {
@@ -212,11 +212,7 @@ export default defineComponent({
     },
     goBack() {
       // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
-      if (
-        this.onboarding.program !== '' &&
-        this.onboarding.college === '' &&
-        this.currentPage > 1
-      ) {
+      if (this.onboarding.grad !== '' && this.onboarding.college === '' && this.currentPage > 1) {
         this.currentPage = 1;
       } else {
         this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
@@ -226,14 +222,14 @@ export default defineComponent({
       this.currentPage = page;
     },
     canProgress() {
-      return !(this.isError || this.isInvalidMajorMinorProgramError);
+      return !(this.isError || this.isInvalidMajorMinorGradError);
     },
     goNext() {
       // Only move onto next page if error message is not displayed
-      if (!(this.isError || this.isInvalidMajorMinorProgramError)) {
+      if (!(this.isError || this.isInvalidMajorMinorGradError)) {
         // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
         if (
-          this.onboarding.program !== '' &&
+          this.onboarding.grad !== '' &&
           this.onboarding.college === '' &&
           this.currentPage === 1
         ) {
@@ -249,7 +245,7 @@ export default defineComponent({
       college: string,
       major: readonly string[],
       minor: readonly string[],
-      program: string,
+      grad: string,
       name: FirestoreUserName
     ) {
       this.name = name;
@@ -260,12 +256,12 @@ export default defineComponent({
         college,
         major,
         minor,
-        program,
+        grad,
       };
     },
     // clear transfer credits if the student is only in a graduate program, but previously set transfer credits
     clearTransferCreditIfGraduate() {
-      if (this.onboarding.program !== '' && this.onboarding.college === '') {
+      if (this.onboarding.grad !== '' && this.onboarding.college === '') {
         this.updateTransfer([], [], 'no');
       }
     },
@@ -286,14 +282,14 @@ export default defineComponent({
       };
     },
     cancel() {
-      if (this.onboardingData.college !== '' || this.onboardingData.program !== '') {
+      if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
         this.$emit('cancelOnboarding');
       }
     },
     checkClickOutside(e: MouseEvent) {
       if (
         e.target === this.$refs.modalBackground &&
-        (this.onboardingData.college !== '' || this.onboardingData.program !== '')
+        (this.onboardingData.college !== '' || this.onboardingData.grad !== '')
       ) {
         this.cancel();
       }
