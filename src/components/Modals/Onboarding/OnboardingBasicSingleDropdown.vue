@@ -37,13 +37,7 @@
         </div>
       </div>
     </div>
-    <button
-      class="onboarding-remove"
-      @click="onRemove()"
-      :class="{
-        'onboarding--hidden': cannotBeRemoved,
-      }"
-    >
+    <button class="onboarding-remove" @click="onRemove()" v-if="!cannotBeRemoved">
       <img src="@/assets/images/x-green.svg" alt="x to delete dropdown" />
     </button>
   </div>
@@ -164,6 +158,7 @@ export default defineComponent({
       }
     },
     onRemove() {
+      this.placeholderColor = '';
       this.$emit('on-remove');
     },
   },

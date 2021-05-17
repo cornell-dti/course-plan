@@ -285,8 +285,9 @@ export default function computeGroupedRequirementFulfillmentReports(
   ];
 
   // college may be undefined if the user has only selected a grad program
+  // note that order matters, so unshift is used to ensure the college group is put at the front of the fulfillment report
   if (college) {
-    groupedRequirementFulfillmentReport.push({
+    groupedRequirementFulfillmentReport.unshift({
       groupName: 'College',
       specific: college,
       reqs: collegeFulfillmentStatistics,
