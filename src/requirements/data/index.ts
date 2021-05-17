@@ -64,6 +64,8 @@ import psychMinorRequirements from './minors/psych';
 import roboticsMinorRequirements from './minors/robotics';
 import spanishMinorRequirements from './minors/spanish';
 
+import mpaRequirements from './grad/mpa';
+
 const json: RequirementsJson = {
   university: {
     UNI: {
@@ -374,7 +376,13 @@ const json: RequirementsJson = {
       requirements: spanishMinorRequirements,
     },
   },
-  grad: {},
+  grad: {
+    MPA: {
+      name: 'Master of Public Administration (MPA) Program',
+      schools: ['HE'],
+      requirements: mpaRequirements,
+    },
+  },
 };
 
 export default json;
