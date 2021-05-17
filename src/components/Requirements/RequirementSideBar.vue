@@ -13,7 +13,6 @@
         class="fixed"
         :class="{
           'd-none': shouldShowAllCourses,
-          'position-static': isSafari && modalIsOpen,
         }"
         data-intro-group="req-tooltip"
         :data-intro="getCoursesTooltipText()"
@@ -122,7 +121,6 @@ type Data = {
   shouldShowAllCourses: boolean;
   showAllPage: number;
   tourStep: number;
-  modalIsOpen: boolean;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -152,7 +150,6 @@ export default defineComponent({
       shouldShowAllCourses: false,
       showAllPage: 0,
       tourStep: 0,
-      modalIsOpen: false,
     };
   },
   watch: {
@@ -196,23 +193,6 @@ export default defineComponent({
     },
     pageText(): string {
       return `Page ${this.showAllPage + 1}/${this.numPages}`;
-    },
-    isSafari(): boolean {
-      const htmlElement = window.HTMLElement as unknown;
-      type windowType = {
-        safari: {
-          pushNotification: boolean;
-        };
-      };
-      const initWindow = window as unknown;
-      const typedWindow = initWindow as windowType;
-      return (
-        /constructor/i.test(htmlElement as string) ||
-        (p => p.toString() === '[object SafariRemoteNotification]')(
-          !typedWindow.safari ||
-            (typeof typedWindow.safari !== 'undefined' && typedWindow.safari.pushNotification)
-        )
-      );
     },
   },
   methods: {
@@ -319,9 +299,6 @@ export default defineComponent({
   height: 100%;
   width: 25rem;
   background-color: $white;
-}
-.position-static {
-  position: static;
 }
 .fixed {
   position: fixed;

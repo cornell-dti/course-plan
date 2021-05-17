@@ -50,10 +50,19 @@ export function getMinorFullName(acronym: string): string {
   return minor ? minor.name : '';
 }
 
-export function getGradFullName(acronym: string): string {
-  // Return empty string if minor is not in requirementJSON
-  const grad = requirementJSON.grad[acronym];
-  return grad ? grad.name : '';
+export function getGradFullName(acronym: string | undefined): string {
+  // TODO: connect requirements side here instead of using dummy data
+  const acronymDict: Record<string, string> = {
+    TEMP: 'TEMP PROGRAM',
+    TEMP2: 'TEMP PROGRAM 2',
+    TEMP3: 'TEMP PROGRAM 3',
+  };
+
+  return acronym ? acronymDict[acronym] : '';
+
+  // Return empty string if grad is not in requirementJSON
+  // const grad = acronym ? requirementJSON.grad[acronym] : null;
+  // return grad ? grad.name : '';
 }
 
 function getAllSubjects(): ReadonlySet<string> {

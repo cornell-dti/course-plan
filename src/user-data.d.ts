@@ -44,6 +44,7 @@ type FirestoreAPIBExam = {
   readonly optIn?: FirestoreAPIBOverridenRequirements;
   readonly optOut?: FirestoreAPIBOverridenRequirements;
 };
+type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
 type FirestoreTransferClass = {
   readonly class: string;
   readonly course: CornellCourseRosterCourse;
@@ -53,10 +54,10 @@ type FirestoreOnboardingUserData = {
   readonly class: readonly FirestoreTransferClass[];
   readonly gradYear: string;
   readonly entranceYear: string;
-  readonly colleges: readonly FirestoreCollegeOrMajorOrMinor[];
-  readonly majors: readonly FirestoreCollegeOrMajorOrMinor[];
-  readonly minors: readonly FirestoreCollegeOrMajorOrMinor[];
-  readonly grad: readonly FirestoreCollegeOrMajorOrMinor[];
+  readonly colleges: readonly FirestoreCollegeMajorMinorOrGrad[];
+  readonly majors: readonly FirestoreCollegeMajorMinorOrGrad[];
+  readonly minors: readonly FirestoreCollegeMajorMinorOrGrad[];
+  readonly gradPrograms: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly exam: readonly FirestoreAPIBExam[];
   readonly tookSwim: 'yes' | 'no';
 };
