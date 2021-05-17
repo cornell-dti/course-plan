@@ -79,6 +79,8 @@ export function requirementAllowDoubleCounting(
 ): boolean {
   // All minor requirements are automatically double-countable.
   if (requirement.sourceType === 'Minor') return true;
+  // All grad program requirements are automatically not double-countable.
+  if (requirement.sourceType === 'Grad') return false;
   if (requirement.sourceType === 'Major') {
     if (majors == null) throw new Error("shouldn't get here since we have major requirements!");
     // If it's not the first major, then it's double countable.
@@ -91,32 +93,37 @@ export function getUserRequirements({
   college,
   major: majors,
   minor: minors,
+  grad,
 }: AppOnboardingData): readonly RequirementWithIDSourceType[] {
   // check university & college & major & minor requirements
-  if (!(college in requirementJson.college)) throw new Error(`College ${college} not found.`);
+  if (college && !(college in requirementJson.college))
+    throw new Error(`College ${college} not found.`);
 
   const universityReqs = requirementJson.university.UNI;
-  const collegeReqs = requirementJson.college[college];
-
   return [
-    ...universityReqs.requirements.map(
-      it =>
-        ({
-          ...it,
-          id: `College-UNI-${it.name}`,
-          sourceType: 'College',
-          sourceSpecificName: college,
-        } as const)
-    ),
-    ...collegeReqs.requirements.map(
-      it =>
-        ({
-          ...it,
-          id: `College-${college}-${it.name}`,
-          sourceType: 'College',
-          sourceSpecificName: college,
-        } as const)
-    ),
+    // University requirements only added if college is defined, i.e. if the user has selected an undergraduate program.
+    ...(college
+      ? universityReqs.requirements.map(
+          it =>
+            ({
+              ...it,
+              id: `College-UNI-${it.name}`,
+              sourceType: 'College',
+              sourceSpecificName: college,
+            } as const)
+        )
+      : []),
+    ...(college
+      ? requirementJson.college[college].requirements.map(
+          it =>
+            ({
+              ...it,
+              id: `College-${college}-${it.name}`,
+              sourceType: 'College',
+              sourceSpecificName: college,
+            } as const)
+        )
+      : []),
     ...majors
       .map(major => {
         const majorRequirement = requirementJson.major[major];
@@ -147,6 +154,17 @@ export function getUserRequirements({
         );
       })
       .flat(),
+    ...(grad
+      ? requirementJson.grad[grad].requirements.map(
+          it =>
+            ({
+              ...it,
+              id: `Grad-${grad}-${it.name}`,
+              sourceType: 'Grad',
+              sourceSpecificName: grad,
+            } as const)
+        )
+      : []),
   ].map(requirement => ({
     ...requirement,
     allowCourseDoubleCounting: requirementAllowDoubleCounting(requirement, majors) || undefined,
