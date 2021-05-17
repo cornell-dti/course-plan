@@ -136,7 +136,6 @@ export default defineComponent({
     },
     toggleEditMode() {
       GTagEvent(this.$gtag, 'add-modal-edit-requirements');
-      console.log('this.relatedRequirements', this.relatedRequirements);
       this.$emit('edit-mode');
     },
   },
