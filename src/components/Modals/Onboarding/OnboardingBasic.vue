@@ -129,8 +129,8 @@
           <label class="onboarding-label">Program</label>
           <onboarding-basic-single-dropdown
             :availableChoices="gradPrograms"
-            :choice="gradAcronym ? gradAcronym : ''"
-            :cannotBeRemoved="gradAcronym ? gradAcronym.length <= 0 : true"
+            :choice="gradAcronym"
+            :cannotBeRemoved="gradAcronym.length <= 0"
             @on-select="selectGrad"
             @on-remove="removeGrad"
           />
@@ -191,7 +191,7 @@ export default defineComponent({
       collegeAcronym: this.onboardingData.college ? this.onboardingData.college : '',
       majorAcronyms,
       minorAcronyms,
-      gradAcronym: this.onboardingData.grad,
+      gradAcronym: this.onboardingData.grad ? this.onboardingData.grad : '',
     };
   },
   directives: {
@@ -259,7 +259,7 @@ export default defineComponent({
         this.collegeAcronym,
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
-        this.gradAcronym ? this.gradAcronym : '',
+        this.gradAcronym,
         { firstName: this.firstName, middleName: this.middleName, lastName: this.lastName }
       );
     },
