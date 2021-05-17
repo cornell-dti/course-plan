@@ -93,7 +93,8 @@ export function getUserRequirements({
   college,
   major: majors,
   minor: minors,
-}: // grad, TODO: uncomment when grad data exists
+  grad,
+}:
 AppOnboardingData): readonly RequirementWithIDSourceType[] {
   // check university & college & major & minor requirements
   if (college && !(college in requirementJson.college))
@@ -154,18 +155,17 @@ AppOnboardingData): readonly RequirementWithIDSourceType[] {
         );
       })
       .flat(),
-    // TODO: uncomment when grad data exists
-    // ...(grad
-    //   ? requirementJson.grad[grad].requirements.map(
-    //       it =>
-    //         ({
-    //           ...it,
-    //           id: `Grad-${grad}-${it.name}`,
-    //           sourceType: 'Grad',
-    //           sourceSpecificName: grad,
-    //         } as const)
-    //     )
-    //   : []),
+    ...(grad
+      ? requirementJson.grad[grad].requirements.map(
+          it =>
+            ({
+              ...it,
+              id: `Grad-${grad}-${it.name}`,
+              sourceType: 'Grad',
+              sourceSpecificName: grad,
+            } as const)
+        )
+      : []),
   ].map(requirement => ({
     ...requirement,
     allowCourseDoubleCounting: requirementAllowDoubleCounting(requirement, majors) || undefined,

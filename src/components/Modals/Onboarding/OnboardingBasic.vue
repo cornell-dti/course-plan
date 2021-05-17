@@ -226,18 +226,9 @@ export default defineComponent({
       return minors;
     },
     gradPrograms(): Readonly<Record<string, string>> {
-      // TODO: connect requirements side here instead of using dummy data
-
-      // return Object.fromEntries(
-      //   Object.entries(reqsData.grad).map(([key, { name }]) => [key, name])
-      // );
-
-      const gradPrograms: Record<string, string> = {};
-      gradPrograms.TEMP = 'TEMP PROGRAM';
-      gradPrograms.TEMP2 = 'TEMP PROGRAM 2';
-      gradPrograms.TEMP3 = 'TEMP PROGRAM 3';
-
-      return gradPrograms;
+      return Object.fromEntries(
+        Object.entries(reqsData.grad).map(([key, { name }]) => [key, name])
+      );      
     },
     semesters(): Readonly<Record<string, string>> {
       const semsDict: Record<string, string> = {};
