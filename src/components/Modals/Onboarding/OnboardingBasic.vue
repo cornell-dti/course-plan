@@ -188,7 +188,7 @@ export default defineComponent({
       placeholderText,
       gradYear: this.onboardingData.gradYear,
       entranceYear: this.onboardingData.entranceYear,
-      collegeAcronym: this.onboardingData.college,
+      collegeAcronym: this.onboardingData.college ? this.onboardingData.college : '',
       majorAcronyms,
       minorAcronyms,
       programAcronym: this.onboardingData.program,

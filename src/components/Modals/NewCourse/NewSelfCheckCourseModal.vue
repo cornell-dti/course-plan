@@ -5,7 +5,6 @@
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="!canAddCourse"
-    :modelValue="modelValue"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addCourse"
@@ -47,10 +46,9 @@ export default defineComponent({
   props: {
     subReqName: { type: String, required: true },
     requirementId: { type: String, required: true },
-    modelValue: { required: true, type: Boolean },
   },
   emits: {
-    'update:modelValue': (value: boolean) => typeof value === 'boolean',
+    'close-course-modal': () => true,
     'add-course': (
       selected: CornellCourseRosterCourse,
       season: FirestoreSemesterType,
@@ -88,7 +86,7 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal() {
-      this.$emit('update:modelValue', false);
+      this.$emit('close-course-modal');
     },
     setCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;

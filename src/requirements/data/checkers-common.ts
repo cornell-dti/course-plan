@@ -1,5 +1,5 @@
 import { Course, RequirementChecker } from '../types';
-import { CREDITS_COURSE_ID, FWS_COURSE_ID } from './constants';
+import { SPECIAL_COURSES, FWS_COURSE_ID } from './constants';
 
 // course codes representing foreign languages from: https://lrc.cornell.edu/languages-cornell
 // codes are commented out if they cannot count for the A&S language requirement
@@ -111,7 +111,7 @@ export const courseIsForeignLang = (course: Course): boolean =>
  * @returns if the course is a special course
  */
 export const courseIsSpecial = (course: Course): boolean =>
-  course.crseId === CREDITS_COURSE_ID || course.crseId === FWS_COURSE_ID;
+  Object.values(SPECIAL_COURSES).includes(course.crseId);
 
 /**
  * This function checks whether a course's maximum number of credits reaches a specified minimum

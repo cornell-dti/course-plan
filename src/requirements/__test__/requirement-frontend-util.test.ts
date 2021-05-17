@@ -30,7 +30,7 @@ it('computeFulfillmentCoursesAndStatistics self-check test', () => {
 
   // A simple test on self-check.
   expect(
-    computeFulfillmentCoursesAndStatistics(mockRequirement, [], {})
+    computeFulfillmentCoursesAndStatistics(mockRequirement, [], {}, {})
   ).toEqual<StatisticsResultType>({
     courses: [],
     fulfilledBy: 'self-check',
@@ -52,6 +52,7 @@ it('computeFulfillmentCoursesAndStatistics credit test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1234, 4), getMockCourseTaken(5678, 4)],
+      {},
       {}
     )
   ).toEqual<StatisticsResultType>({
@@ -66,6 +67,7 @@ it('computeFulfillmentCoursesAndStatistics credit test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1234, 4), getMockCourseTaken(5678, 4), getMockCourseTaken(9101112, 4)],
+      {},
       {}
     )
   ).toEqual<StatisticsResultType>({
@@ -97,6 +99,7 @@ it('computeFulfillmentCoursesAndStatistics course (without minNumberOfSlots) tes
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1), getMockCourseTaken(2), getMockCourseTaken(3), getMockCourseTaken(4)],
+      {},
       {}
     )
   ).toEqual<StatisticsResultType>({
@@ -115,6 +118,7 @@ it('computeFulfillmentCoursesAndStatistics course (without minNumberOfSlots) tes
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1), getMockCourseTaken(2), getMockCourseTaken(4), getMockCourseTaken(3)],
+      {},
       {}
     )
   ).toEqual<StatisticsResultType>({
@@ -178,6 +182,7 @@ it('computeFulfillmentCoursesAndStatistics course (with additional requirements)
         getMockCourseTaken(3, 3),
         getMockCourseTaken(4, 4),
       ],
+      {},
       {}
     )
   ).toEqual<StatisticsResultType>({
@@ -233,6 +238,7 @@ it('computeFulfillmentCoursesAndStatistics course (with minNumberOfSlots) test',
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1), getMockCourseTaken(2), getMockCourseTaken(3)],
+      {},
       {}
     )
   ).toEqual<StatisticsResultType>({
@@ -269,7 +275,7 @@ it('computeFulfillmentCoursesAndStatistics toggleable requirement test', () => {
   // The first one has no choice so it defaults to the first option.
   // The second one chooses option A, and the third one chooses option B.
   expect(
-    computeFulfillmentCoursesAndStatistics(mockRequirement, [getMockCourseTaken(1)], {})
+    computeFulfillmentCoursesAndStatistics(mockRequirement, [getMockCourseTaken(1)], {}, {})
   ).toEqual<StatisticsResultType>({
     courses: [[getMockCourseTaken(1)]],
     fulfilledBy: 'courses',
@@ -277,9 +283,14 @@ it('computeFulfillmentCoursesAndStatistics toggleable requirement test', () => {
     minCountRequired: 1,
   });
   expect(
-    computeFulfillmentCoursesAndStatistics(mockRequirement, [getMockCourseTaken(1)], {
-      MOCK_ID: 'A',
-    })
+    computeFulfillmentCoursesAndStatistics(
+      mockRequirement,
+      [getMockCourseTaken(1)],
+      {
+        MOCK_ID: 'A',
+      },
+      {}
+    )
   ).toEqual<StatisticsResultType>({
     courses: [[getMockCourseTaken(1)]],
     fulfilledBy: 'courses',
@@ -287,9 +298,14 @@ it('computeFulfillmentCoursesAndStatistics toggleable requirement test', () => {
     minCountRequired: 1,
   });
   expect(
-    computeFulfillmentCoursesAndStatistics(mockRequirement, [getMockCourseTaken(1)], {
-      MOCK_ID: 'B',
-    })
+    computeFulfillmentCoursesAndStatistics(
+      mockRequirement,
+      [getMockCourseTaken(1)],
+      {
+        MOCK_ID: 'B',
+      },
+      {}
+    )
   ).toEqual<StatisticsResultType>({
     courses: [[]],
     fulfilledBy: 'courses',

@@ -210,7 +210,7 @@ export default defineComponent({
 
   &-content {
     background: $white;
-    border: 1px solid #acacac;
+    border: 1px solid $lightGray;
     box-sizing: border-box;
     border-radius: 9px;
     font-size: 14px;

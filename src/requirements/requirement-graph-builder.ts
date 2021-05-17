@@ -32,6 +32,15 @@ type BuildRequirementFulfillmentGraphParameters<
    */
   readonly userChoiceOnDoubleCountingElimination: Readonly<Record<number, Requirement>>;
   /**
+   * The mapping from course's unique ID to requirement override (opt-in) options.
+   * It describes how the user wants to use a course to override requirements.
+   * This handles AP/IB overrides, as well as general overrides.
+   * The granularity of optIn/optOut being slot-specific requires the actual
+   * slot computation to be handled in the frontend computation. When building the
+   * graph, only optIn choices are relevant (to add the extra edges).
+   */
+  readonly userChoiceOnRequirementOverrides: Readonly<Record<number, Set<Requirement>>>;
+  /**
    * Naively give a list of courses ID that can satisfy a requirement. Most of the time this function
    * should just return the pre-computed eligible course id list. For requirements have multiple
    * fulfillment strategies, it will return the union of all pre-computed course list.
@@ -55,6 +64,7 @@ const buildRequirementFulfillmentGraph = <
     userCourses,
     userChoiceOnFulfillmentStrategy,
     userChoiceOnDoubleCountingElimination,
+    userChoiceOnRequirementOverrides,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
     allowDoubleCounting,
   }: BuildRequirementFulfillmentGraphParameters<Requirement, Course>,
@@ -118,6 +128,16 @@ const buildRequirementFulfillmentGraph = <
         graph.removeEdge(connectedRequirement, { uniqueId });
       }
     });
+  });
+
+  // Phase 4: Respect user's choices on overrides (optIn only).
+  userCourses.forEach(course => {
+    const { uniqueId } = course;
+    if (uniqueId in userChoiceOnRequirementOverrides) {
+      userChoiceOnRequirementOverrides[uniqueId].forEach(requirement => {
+        graph.addEdge(requirement, course);
+      });
+    }
   });
 
   // Phase MAX_INT: PROFIT!

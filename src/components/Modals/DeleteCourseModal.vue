@@ -1,14 +1,13 @@
 <template>
   <teleport-modal
     title="Delete Course"
-    content-class="content-confirmation"
+    content-class="content-reset"
     left-button-text="No"
     right-button-text="Yes"
     @left-button-clicked="closeClicked"
-    @right-button-clicked="resetClicked"
+    @right-button-clicked="deleteClicked"
     @modal-closed="closeCurrentModal"
     :rightButtonIsDisabled="false"
-    :modelValue="modelValue"
   >
     <div v-if="isTestReq" class="text-width">
       Are you sure you want to remove "{{ reqName }}" for this requirement? This will delete the
@@ -31,23 +30,21 @@ export default defineComponent({
   props: {
     reqName: { type: String, required: true },
     isTestReq: { type: Boolean, required: true },
-    modelValue: { type: Boolean, required: true },
   },
   emits: {
-    'update:modelValue': (value: boolean) => typeof value === 'boolean',
-    'close-reset-modal': (value: boolean) => typeof value === 'boolean',
+    'close-delete-course-modal': (value: boolean) => typeof value === 'boolean',
   },
   methods: {
     closeCurrentModal(): void {
-      this.$emit('update:modelValue', false);
+      this.$emit('close-delete-course-modal', false);
     },
-    resetClicked(): void {
+    deleteClicked(): void {
       this.closeCurrentModal();
-      this.$emit('close-reset-modal', true);
+      this.$emit('close-delete-course-modal', true);
     },
     closeClicked(): void {
       this.closeCurrentModal();
-      this.$emit('close-reset-modal', false);
+      this.$emit('close-delete-course-modal', false);
     },
   },
 });
@@ -55,7 +52,7 @@ export default defineComponent({
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 
-.content-confirmation {
+.content-reset {
   width: 30.5em;
   align-items: initial;
   button {
@@ -79,7 +76,7 @@ export default defineComponent({
 }
 
 @media only screen and (max-width: $small-medium-breakpoint) {
-  .content-confirmation {
+  .content-reset {
     width: 100%;
   }
   .text-width {

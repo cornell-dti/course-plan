@@ -2,11 +2,18 @@
   <Teleport to="#modalTarget" aria-modal="true">
     <div
       class="teleport"
-      :class="{ 'teleport-simple': isSimpleModal, 'teleport-noBackground': hasNoBackground }"
+      :class="{
+        'teleport-simple': isSimpleModal,
+        'teleport-noBackground': hasNoBackground,
+        'teleport-transparentBackground': hasClickableTransparentBackground,
+      }"
       @click="closeOnClickOutside"
       ref="modalBackground"
     >
-      <div :class="['modal-content', contentClass, { 'modal-simple': isSimpleModal }]">
+      <div
+        :class="['modal-content', contentClass, { 'modal-simple': isSimpleModal }]"
+        :style="customPosition"
+      >
         <div v-if="!isSimpleModal" class="modal-top">
           <h1>{{ title }}</h1>
           <button @click="close" data-cyId="modal-exit">
@@ -39,11 +46,10 @@
   </Teleport>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, PropType } from 'vue';
 
 export default defineComponent({
   props: {
-    modelValue: { required: true, type: Boolean }, // true if the modal is visible, false otherwise
     title: { type: String, default: '' },
     contentClass: { type: String, required: true },
     leftButtonText: { type: String, default: '' },
@@ -53,14 +59,27 @@ export default defineComponent({
     rightButtonIsDisabled: { type: Boolean, default: false },
     isSimpleModal: { type: Boolean, default: false }, // true if the modal will set its own styling for its position
     hasNoBackground: { type: Boolean, default: false }, // true for modals without the gray overlay behind them
+    hasClickableTransparentBackground: { type: Boolean, default: false }, // modals without a gray overlay behind them AND clicking on the background closes the modal
+    hasCustomPosition: { type: Boolean, default: false }, // true if you want to set custom position for modal
+    position: { type: Object as PropType<{ x: number; y: number }>, default: { x: 0, y: 0 } }, // custom position (hasCustomPosition must be true)
   },
-  emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed', 'update:modelValue'],
+  data() {
+    const customPosition = this.hasCustomPosition
+      ? {
+          left: `${this.position.x}px`,
+          top: `${this.position.y}px`,
+        }
+      : {};
+    return {
+      customPosition,
+    };
+  },
+  emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed'],
   setup(props, { emit }) {
     const modalBackground = ref((null as unknown) as HTMLDivElement);
 
     const close = () => {
       emit('modal-closed', true);
-      emit('update:modelValue', false);
     };
 
     const closeOnClickOutside = (e: MouseEvent) => {
@@ -102,6 +121,12 @@ export default defineComponent({
     width: 100%;
     min-height: 0;
     pointer-events: none;
+  }
+
+  &-transparentBackground {
+    background-color: rgba(0, 0, 0, 0);
+    width: 100%;
+    min-height: 100vh;
   }
 }
 
@@ -180,6 +205,16 @@ export default defineComponent({
     min-height: 0;
     margin-left: auto;
     margin-right: auto;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  &-slotmenu {
+    background-color: $white;
+    min-height: 0;
+    width: 7rem;
+    position: fixed;
   }
 }
 </style>

@@ -1,6 +1,7 @@
 import { Store } from 'vuex';
 
 import * as fb from './firebaseConfig';
+import getCourseEquivalentsFromUserExams from './requirements/data/exams/ExamCredit';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import getCurrentSeason, {
@@ -33,6 +34,17 @@ type DerivedSelectableRequirementData = {
   readonly requirementToCoursesMap: Readonly<Record<string, readonly FirestoreSemesterCourse[]>>;
 };
 
+/**
+ * Some AP/IB equivalent course data that can be derived from onboarding data, but added to the global store
+ * for efficiency and ease of access.
+ */
+type DerivedAPIBEquivalentCourseData = {
+  // Mapping from exam name to unique ids (there can be multiple)
+  readonly examToUniqueIdsMap: Readonly<Record<string, Set<number>>>;
+  // Mapping from unique id to exam name
+  readonly uniqueIdToExamMap: Readonly<Record<number, string>>;
+};
+
 export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
   userName: FirestoreUserName;
@@ -40,8 +52,10 @@ export type VuexStoreState = {
   semesters: readonly FirestoreSemester[];
   derivedCoursesData: DerivedCoursesData;
   derivedSelectableRequirementData: DerivedSelectableRequirementData;
+  derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   selectableRequirementChoices: AppSelectableRequirementChoices;
+  overridenRequirementChoices: AppOverridenRequirementChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
@@ -66,7 +80,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       college: '',
       major: [],
       minor: [],
-      program: '',
+      grad: '',
       exam: [],
       transferCourse: [],
       tookSwim: 'no',
@@ -80,8 +94,13 @@ const store: TypedVuexStore = new TypedVuexStore({
     derivedSelectableRequirementData: {
       requirementToCoursesMap: {},
     },
+    derivedAPIBEquivalentCourseData: {
+      examToUniqueIdsMap: {},
+      uniqueIdToExamMap: {},
+    },
     toggleableRequirementChoices: {},
     selectableRequirementChoices: {},
+    overridenRequirementChoices: {},
     userRequirementsMap: {},
     // It won't be null once the app loads.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -113,6 +132,12 @@ const store: TypedVuexStore = new TypedVuexStore({
     ) {
       state.derivedSelectableRequirementData = data;
     },
+    setDerivedAPIBEquivalentCourseData(
+      state: VuexStoreState,
+      data: DerivedAPIBEquivalentCourseData
+    ) {
+      state.derivedAPIBEquivalentCourseData = data;
+    },
     setToggleableRequirementChoices(
       state: VuexStoreState,
       toggleableRequirementChoices: AppToggleableRequirementChoices
@@ -124,6 +149,15 @@ const store: TypedVuexStore = new TypedVuexStore({
       selectableRequirementChoices: AppSelectableRequirementChoices
     ) {
       state.selectableRequirementChoices = selectableRequirementChoices;
+    },
+    setOverridenRequirementChoices(
+      state: VuexStoreState,
+      overridenRequirementChoices: AppOverridenRequirementChoices
+    ) {
+      state.overridenRequirementChoices = {
+        ...overridenRequirementChoices,
+        ...computeAPIBOverridenRequirements(state), // adds AP/IB data from onboarding collection
+      };
     },
     setRequirementData(
       state: VuexStoreState,
@@ -189,12 +223,34 @@ const autoRecomputeDerivedData = (): (() => void) =>
       };
       store.commit('setDerivedSelectableRequirementData', derivedSelectableRequirementData);
     }
+    if (payload.type === 'setOnboardingData') {
+      const examToUniqueIdsMap: Record<string, Set<number>> = {};
+      const uniqueIdToExamMap: Record<number, string> = {};
+      const equivalentCourses = getCourseEquivalentsFromUserExams(state.onboardingData);
+      state.onboardingData.exam.forEach(({ type, subject }) => {
+        const examName = `${type} ${subject}`;
+        examToUniqueIdsMap[examName] = new Set();
+      });
+      equivalentCourses.forEach(({ uniqueId, code }) => {
+        uniqueIdToExamMap[uniqueId] = code;
+        examToUniqueIdsMap[code].add(uniqueId);
+      });
+      const derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData = {
+        examToUniqueIdsMap,
+        uniqueIdToExamMap,
+      };
+      store.commit('setDerivedAPIBEquivalentCourseData', derivedAPIBEquivalentCourseData);
+      // Recompute overridenRequirementChoices, which is dependent
+      // on onboardingData and derivedAPIBEquivalentCourseData
+      store.commit('setOverridenRequirementChoices', state.overridenRequirementChoices);
+    }
     // Recompute requirements
     if (
       payload.type === 'setOnboardingData' ||
       payload.type === 'setSemesters' ||
       payload.type === 'setToggleableRequirementChoices' ||
-      payload.type === 'setSelectableRequirementChoices'
+      payload.type === 'setSelectableRequirementChoices' ||
+      payload.type === 'setOverridenRequirementChoices'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -203,7 +259,8 @@ const autoRecomputeDerivedData = (): (() => void) =>
             state.semesters,
             state.onboardingData,
             state.toggleableRequirementChoices,
-            state.selectableRequirementChoices
+            state.selectableRequirementChoices,
+            state.overridenRequirementChoices
           )
         );
       }
@@ -214,14 +271,60 @@ const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardi
   // TODO: take into account multiple colleges
   gradYear: data.gradYear ? data.gradYear : '',
   entranceYear: data.entranceYear ? data.entranceYear : '',
-  college: data.colleges[0].acronym,
+  college: data.colleges.length !== 0 ? data.colleges[0].acronym : undefined,
   major: data.majors.map(({ acronym }) => acronym),
   minor: data.minors.map(({ acronym }) => acronym),
-  program: data.programs ? data.programs[0].acronym : '',
+  grad: 'grad' in data && data.grad.length !== 0 ? data.grad[0].acronym : undefined,
   exam: 'exam' in data ? [...data.exam] : [],
   transferCourse: 'class' in data ? [...data.class] : [],
   tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',
 });
+
+/**
+ * Computes AP/IB Overriden Requirement Choices from
+ * onboarding data and derived AP/IB equivalent course data.
+ */
+const computeAPIBOverridenRequirements = (
+  state: VuexStoreState
+): AppOverridenRequirementChoices => {
+  const APIBOverridenRequirements: Record<
+    number,
+    {
+      readonly optIn: Record<string, Set<string>>;
+      readonly optOut: Record<string, Set<string>>;
+    }
+  > = {};
+  state.onboardingData.exam.forEach(exam => {
+    const { type, subject } = exam;
+    const examName = `${type} ${subject}`;
+    const uniqueIds = state.derivedAPIBEquivalentCourseData.examToUniqueIdsMap[examName];
+    if (!(uniqueIds && uniqueIds.size)) return;
+    const { optIn, optOut } = exam;
+    const optInChoices: Record<string, Set<string>> = optIn
+      ? Object.fromEntries(
+          Object.entries(optIn).map(([requirementName, slotNames]) => [
+            requirementName,
+            new Set(slotNames),
+          ])
+        )
+      : {};
+    const optOutChoices: Record<string, Set<string>> = optOut
+      ? Object.fromEntries(
+          Object.entries(optOut).map(([requirementName, slotNames]) => [
+            requirementName,
+            new Set(slotNames),
+          ])
+        )
+      : {};
+    uniqueIds.forEach(uniqueId => {
+      APIBOverridenRequirements[uniqueId] = {
+        optIn: optInChoices,
+        optOut: optOutChoices,
+      };
+    });
+  });
+  return APIBOverridenRequirements;
+};
 
 export const initializeFirestoreListeners = (onLoad: () => void): (() => void) => {
   const simplifiedUser = store.state.currentFirebaseUser;

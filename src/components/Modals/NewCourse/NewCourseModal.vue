@@ -2,7 +2,6 @@
   <TeleportModal
     title="Add Course"
     content-class="content-course"
-    :modelValue="modelValue"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="selectedCourse == null"
@@ -53,13 +52,10 @@ import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-fr
 
 export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
-  props: {
-    modelValue: { type: Boolean, required: true },
-  },
   emits: {
+    'close-course-modal': () => true,
     'add-course': (course: CornellCourseRosterCourse, requirementID: string) =>
       typeof course === 'object' && typeof requirementID === 'string',
-    'update:modelValue': (val: boolean) => typeof val === 'boolean',
   },
   data() {
     return {
@@ -92,7 +88,7 @@ export default defineComponent({
       this.getReqsRelatedToCourse(result);
     },
     closeCurrentModal() {
-      this.$emit('update:modelValue', false);
+      this.$emit('close-course-modal');
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
@@ -101,7 +97,8 @@ export default defineComponent({
       } = getRelatedUnfulfilledRequirements(
         selectedCourse,
         store.state.groupedRequirementFulfillmentReport,
-        store.state.toggleableRequirementChoices
+        store.state.toggleableRequirementChoices,
+        store.state.overridenRequirementChoices
       );
 
       const requirementsThatAllowDoubleCounting: string[] = [];
