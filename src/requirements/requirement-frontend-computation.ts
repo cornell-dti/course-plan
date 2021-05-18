@@ -203,18 +203,19 @@ export default function computeGroupedRequirementFulfillmentReports(
   );
 
   const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];
-  const totalCreditsFulfillmentStatistics = getTotalCreditsFulfillmentStatistics(
-    college,
-    coursesTaken
-  );
+  const totalCreditsFulfillmentStatistics = college
+    ? getTotalCreditsFulfillmentStatistics(college, coursesTaken)
+    : null;
   if (totalCreditsFulfillmentStatistics != null) {
     collegeFulfillmentStatistics.push(totalCreditsFulfillmentStatistics);
   }
-  collegeFulfillmentStatistics.push(
-    getSwimTestFulfillmentStatistics(college, coursesTaken, onboardingData.tookSwim === 'yes')
-  );
+  if (college)
+    collegeFulfillmentStatistics.push(
+      getSwimTestFulfillmentStatistics(college, coursesTaken, onboardingData.tookSwim === 'yes')
+    );
   const majorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
   const minorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
+  const gradFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
   userRequirements.forEach(requirement => {
     const courses = requirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement.id);
     const fulfillmentStatistics = {
@@ -254,13 +255,21 @@ export default function computeGroupedRequirementFulfillmentReports(
         }
         break;
       }
+      case 'Grad': {
+        const existingArray = gradFulfillmentStatisticsMap.get(requirement.sourceSpecificName);
+        if (existingArray != null) {
+          existingArray.push(fulfillmentStatistics);
+        } else {
+          gradFulfillmentStatisticsMap.set(requirement.sourceSpecificName, [fulfillmentStatistics]);
+        }
+        break;
+      }
       default:
         throw new Error();
     }
   });
 
-  const groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[] = [
-    { groupName: 'College', specific: college, reqs: collegeFulfillmentStatistics },
+  const groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport[] = [
     ...Array.from(majorFulfillmentStatisticsMap.entries()).map(
       ([majorName, fulfillmentStatistics]) =>
         ({ groupName: 'Major', specific: majorName, reqs: fulfillmentStatistics } as const)
@@ -269,7 +278,21 @@ export default function computeGroupedRequirementFulfillmentReports(
       ([minorName, fulfillmentStatistics]) =>
         ({ groupName: 'Minor', specific: minorName, reqs: fulfillmentStatistics } as const)
     ),
+    ...Array.from(gradFulfillmentStatisticsMap.entries()).map(
+      ([gradName, fulfillmentStatistics]) =>
+        ({ groupName: 'Grad', specific: gradName, reqs: fulfillmentStatistics } as const)
+    ),
   ];
+
+  // college may be undefined if the user has only selected a grad program
+  // note that order matters, so unshift is used to ensure the college group is put at the front of the fulfillment report
+  if (college) {
+    groupedRequirementFulfillmentReport.unshift({
+      groupName: 'College',
+      specific: college,
+      reqs: collegeFulfillmentStatistics,
+    });
+  }
 
   return {
     userRequirementsMap: Object.fromEntries(userRequirements.map(it => [it.id, it])),

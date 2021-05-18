@@ -80,6 +80,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       college: '',
       major: [],
       minor: [],
+      grad: '',
       exam: [],
       transferCourse: [],
       tookSwim: 'no',
@@ -270,9 +271,13 @@ const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardi
   // TODO: take into account multiple colleges
   gradYear: data.gradYear ? data.gradYear : '',
   entranceYear: data.entranceYear ? data.entranceYear : '',
-  college: data.colleges[0].acronym,
+  college: data.colleges.length !== 0 ? data.colleges[0].acronym : undefined,
   major: data.majors.map(({ acronym }) => acronym),
   minor: data.minors.map(({ acronym }) => acronym),
+  grad:
+    'gradPrograms' in data && data.gradPrograms.length !== 0
+      ? data.gradPrograms[0].acronym
+      : undefined,
   exam: 'exam' in data ? [...data.exam] : [],
   transferCourse: 'class' in data ? [...data.class] : [],
   tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',

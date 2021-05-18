@@ -36,10 +36,7 @@
                   <button
                     class="onboarding-remove"
                     @click="removeExam('AP', index)"
-                    :class="{
-                      'onboarding--hidden':
-                        examsAP.length === 1 && exam.subject === placeholderText,
-                    }"
+                    v-if="hasExams(examsAP, exam)"
                   >
                     <img
                       src="@/assets/images/x-green.svg"
@@ -77,10 +74,7 @@
                   <button
                     class="onboarding-remove"
                     @click="removeExam('IB', index)"
-                    :class="{
-                      'onboarding--hidden':
-                        examsIB.length === 1 && exam.subject === placeholderText,
-                    }"
+                    v-if="hasExams(examsIB, exam)"
                   >
                     <img
                       src="@/assets/images/x-green.svg"
@@ -300,15 +294,16 @@ export default defineComponent({
       }
       return selectableOptions;
     },
+    hasExams(exams: FirestoreAPIBExam[], exam: FirestoreAPIBExam): boolean {
+      return !(exams.length === 1 && exam.subject === placeholderText);
+    },
   },
 });
 </script>
 
 <style scoped lang="scss">
 @import '@/components/Modals/Onboarding/Onboarding.scss';
-</style>
-<style lang="scss">
-@import '@/components/Modals/Onboarding/Onboarding.scss';
+
 .new-course {
   &-onboarding {
     font-size: 14px;

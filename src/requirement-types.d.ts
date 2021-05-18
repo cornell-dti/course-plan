@@ -101,7 +101,7 @@ type CourseTaken = {
   readonly credits: number;
 };
 
-type RequirementGroupType = 'College' | 'Major' | 'Minor';
+type RequirementGroupType = 'College' | 'Major' | 'Minor' | 'Grad';
 
 type RequirementWithIDSourceType = DecoratedCollegeOrMajorRequirement & {
   readonly id: string;
@@ -131,7 +131,7 @@ type RequirementFulfillment = {
 } & RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements;
 
 type GroupedRequirementFulfillmentReport = {
-  readonly groupName: 'College' | 'Major' | 'Minor';
+  readonly groupName: 'College' | 'Major' | 'Minor' | 'Grad';
   readonly specific: string;
   readonly reqs: readonly RequirementFulfillment[];
 };

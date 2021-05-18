@@ -81,7 +81,7 @@ const decorateRequirementWithCourses = (
 };
 
 const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequirementsJson => {
-  const { university, college, major, minor } = sourceRequirements;
+  const { university, college, major, minor, grad } = sourceRequirements;
   type MutableDecoratedJson = {
     university: {
       [key: string]: {
@@ -109,12 +109,21 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
         readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
       };
     };
+    grad: {
+      [key: string]: {
+        readonly name: string;
+        // Unsure if grad programs can be offered by multiple schools, but allows flexibility.
+        readonly schools: readonly string[];
+        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+      };
+    };
   };
   const decoratedJson: MutableDecoratedJson = {
     university: {},
     college: {},
     major: {},
     minor: {},
+    grad: {},
   };
   const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) =>
     requirements.map(decorateRequirementWithCourses);
@@ -140,6 +149,10 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     const { requirements, ...rest } = minorRequirement;
     decoratedJson.minor[minorName] = { ...rest, requirements: decorateRequirements(requirements) };
   });
+  Object.entries(grad).forEach(([gradName, gradRequirement]) => {
+    const { requirements, ...rest } = gradRequirement;
+    decoratedJson.grad[gradName] = { ...rest, requirements: decorateRequirements(requirements) };
+  });
 
   // Check no duplicate requirement identifier
   const allRequirementIDs = [
@@ -151,6 +164,9 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     ),
     ...Object.entries(decoratedJson.minor).map(
       ([code, requirements]) => ['MINOR', code, requirements] as const
+    ),
+    ...Object.entries(decoratedJson.grad).map(
+      ([code, requirements]) => ['GRAD', code, requirements] as const
     ),
   ].flatMap(([category, code, { requirements }]) =>
     requirements.map(it => `${category}-${code}-${it.name}`)
