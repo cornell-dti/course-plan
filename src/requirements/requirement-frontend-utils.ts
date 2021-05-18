@@ -94,8 +94,7 @@ export function getUserRequirements({
   major: majors,
   minor: minors,
   grad,
-}:
-AppOnboardingData): readonly RequirementWithIDSourceType[] {
+}: AppOnboardingData): readonly RequirementWithIDSourceType[] {
   // check university & college & major & minor requirements
   if (college && !(college in requirementJson.college))
     throw new Error(`College ${college} not found.`);

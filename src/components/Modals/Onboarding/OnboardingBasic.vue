@@ -228,7 +228,7 @@ export default defineComponent({
     gradPrograms(): Readonly<Record<string, string>> {
       return Object.fromEntries(
         Object.entries(reqsData.grad).map(([key, { name }]) => [key, name])
-      );      
+      );
     },
     semesters(): Readonly<Record<string, string>> {
       const semsDict: Record<string, string> = {};
