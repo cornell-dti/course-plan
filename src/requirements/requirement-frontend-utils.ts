@@ -306,23 +306,24 @@ const computeFulfillmentStatistics = (
         subRequirementIndex < eligibleCourses.length;
         subRequirementIndex += 1
       ) {
-        const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
-        if (optInSlotNames && (fulfilledBy === 'credits' || optInSlotNames.has(slotName))) {
-          // the user wants to use this course to override this sub-requirement
-          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
-          subRequirementProgress[subRequirementIndex] +=
-            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-          // don't break, in case the user wants to override more sub-requirements with the same course
-        } else if (
-          eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
-          subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex] &&
-          !(optOutSlotNames && (fulfilledBy === 'credits' || optOutSlotNames.has(slotName)))
-        ) {
-          // this course is eligible to fulfill this sub-requirement, and the user did not opt out
-          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
-          subRequirementProgress[subRequirementIndex] +=
-            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-          break;
+        if (subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]) {
+          const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
+          if (optInSlotNames && (fulfilledBy === 'credits' || optInSlotNames.has(slotName))) {
+            // the user wants to use this course to override this sub-requirement
+            coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+            subRequirementProgress[subRequirementIndex] +=
+              fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+            // don't break, in case the user wants to override more sub-requirements with the same course
+          } else if (
+            eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
+            !(optOutSlotNames && (fulfilledBy === 'credits' || optOutSlotNames.has(slotName)))
+          ) {
+            // this course is eligible to fulfill this sub-requirement, and the user did not opt out
+            coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+            subRequirementProgress[subRequirementIndex] +=
+              fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+            break;
+          }
         }
       }
     }
