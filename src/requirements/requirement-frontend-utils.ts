@@ -294,13 +294,13 @@ const computeFulfillmentStatistics = (
 ): RequirementFulfillmentStatisticsWithCourses => {
   const coursesThatFulfilledSubRequirements: CourseTaken[][] = eligibleCourses.map(() => []);
   const subRequirementProgress: number[] = eligibleCourses.map(() => 0);
+
+  // handle slot fulfillment opt-in overrides (this loop should run first to prioritize opt-in user choice)
+  // respect the opt-in user choice by being as generous as possible.
   coursesTaken.forEach(courseTaken => {
     const overrideOptions = overridenRequirementChoices[courseTaken.uniqueId];
     const optInSlotNames = (overrideOptions && overrideOptions.optIn[requirementName]) || null;
-    const optOutSlotNames = (overrideOptions && overrideOptions.optOut[requirementName]) || null;
-
-    // block AP/IB equivalent courses if disallowTransferCredit
-    if (!(disallowTransferCredit && courseIsAPIB(courseTaken)) || optInSlotNames) {
+    if (optInSlotNames) {
       for (
         let subRequirementIndex = 0;
         subRequirementIndex < eligibleCourses.length;
@@ -314,7 +314,27 @@ const computeFulfillmentStatistics = (
             subRequirementProgress[subRequirementIndex] +=
               fulfilledBy === 'courses' ? 1 : courseTaken.credits;
             // don't break, in case the user wants to override more sub-requirements with the same course
-          } else if (
+          }
+        }
+      }
+    }
+  });
+
+  // handle slot fulfillment, excluding opt-in overrides
+  // in this loop, consider opt-out user choice and be as strict as possible.
+  coursesTaken.forEach(courseTaken => {
+    const overrideOptions = overridenRequirementChoices[courseTaken.uniqueId];
+    const optOutSlotNames = (overrideOptions && overrideOptions.optOut[requirementName]) || null;
+    // block AP/IB equivalent courses if disallowTransferCredit
+    if (!(disallowTransferCredit && courseIsAPIB(courseTaken))) {
+      for (
+        let subRequirementIndex = 0;
+        subRequirementIndex < eligibleCourses.length;
+        subRequirementIndex += 1
+      ) {
+        if (subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]) {
+          const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
+          if (
             eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
             !(optOutSlotNames && (fulfilledBy === 'credits' || optOutSlotNames.has(slotName)))
           ) {
