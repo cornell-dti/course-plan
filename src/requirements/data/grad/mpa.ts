@@ -30,7 +30,7 @@ const mpaRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Additional Foundation Coursework',
     description:
-      'Three additional semester-length courses (or equivalent) in any of the three Foundation Areas',
+      'Three additional semester-length courses (or equivalent) in any of the three Foundation Areas.',
     source: 'https://www.human.cornell.edu/cipa/academics/curriculum/guide',
     checker: includesWithSubRequirements([
       'ANTH 4462',
@@ -155,7 +155,7 @@ const mpaRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Professional Development Coursework',
     description:
-      "Two courses to strengthen professional preparation, which may include statistical, analytical or mathematical skills, professional writing or speaking, leadership or management, or additional skills or knowledge needed for a fellow's selected concentration. CIPA Fellows may also want to consider including a course from the list of General Concentration courses, or from the list of Public and Nonprofit Management courses as one of their two specialized/professional development courses",
+      "Two courses to strengthen professional preparation, which may include statistical, analytical or mathematical skills, professional writing or speaking, leadership or management, or additional skills or knowledge needed for a fellow's selected concentration. CIPA Fellows may also want to consider including a course from the list of General Concentration courses, or from the list of Public and Nonprofit Management courses as one of their two specialized/professional development courses.",
     source: 'https://www.human.cornell.edu/cipa/academics/curriculum/guide',
     checker: includesWithSubRequirements([
       'PADM 5910',
@@ -550,7 +550,7 @@ const mpaRequirements: readonly CollegeOrMajorRequirement[] = [
   // TODO: PADM 5012 needs to be taken twice
   {
     name: 'Colloquium Coursework',
-    description: 'PADM 5009, PADM 5011, and PADM 5012 (must be taken twice)',
+    description: 'PADM 5009, PADM 5011, and PADM 5012 (must be taken twice).',
     source: 'https://www.human.cornell.edu/cipa/academics/curriculum/guide',
     checker: includesWithSubRequirements(['PADM 5009'], ['PADM 5011'], ['PADM 5012']),
     fulfilledBy: 'courses',
