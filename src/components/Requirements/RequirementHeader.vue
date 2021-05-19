@@ -15,7 +15,7 @@
     <div v-if="req.groupName === 'College'" class="college">
       <button
         :style="{
-          'border-bottom': `2px solid #${reqGroupColorMap[req.groupName][0]}`,
+          'border-bottom': `2px solid #${getReqColor(req.groupName, onboardingData)}`,
         }"
         class="college-title-button college-title full-opacity-on-hover"
         :disabled="true"
@@ -23,7 +23,7 @@
         <p
           :style="{
             'font-weight': '500',
-            color: `#${reqGroupColorMap[req.groupName][0]}`,
+            color: `#${getReqColor(req.groupName, onboardingData)}`,
           }"
           class="college-title-top"
         >
@@ -36,7 +36,9 @@
       <button
         :style="{
           'border-bottom':
-            id === displayedMajorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
+            id === displayedMajorIndex
+              ? `2px solid #${getReqColor(req.groupName, onboardingData)}`
+              : '',
         }"
         @click="activateMajor(id)"
         :class="[
@@ -50,7 +52,8 @@
         <p
           :style="{
             'font-weight': id === displayedMajorIndex ? '500' : '',
-            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
+            color:
+              id === displayedMajorIndex ? `#${getReqColor(req.groupName, onboardingData)}` : '',
           }"
           class="major-title-top"
           data-cyId="majorTitle"
@@ -59,7 +62,8 @@
         </p>
         <p
           :style="{
-            color: id === displayedMajorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
+            color:
+              id === displayedMajorIndex ? `#${getReqColor(req.groupName, onboardingData)}` : '',
           }"
           class="major-title-bottom"
           data-cyId="collegeTitle"
@@ -75,7 +79,9 @@
       <button
         :style="{
           'border-bottom':
-            id === displayedMinorIndex ? `2px solid #${reqGroupColorMap[req.groupName][0]}` : '',
+            id === displayedMinorIndex
+              ? `2px solid #${getReqColor(req.groupName, onboardingData)}`
+              : '',
         }"
         @click="activateMinor(id)"
         :class="[
@@ -89,7 +95,8 @@
         <p
           :style="{
             'font-weight': id === displayedMinorIndex ? '500' : '',
-            color: id === displayedMinorIndex ? `#${reqGroupColorMap[req.groupName][0]}` : '',
+            color:
+              id === displayedMinorIndex ? `#${getReqColor(req.groupName, onboardingData)}` : '',
           }"
           class="minor-title-top"
         >
@@ -101,7 +108,7 @@
     <div v-if="req.groupName === 'Grad'" class="grad">
       <button
         :style="{
-          'border-bottom': `2px solid #${reqGroupColorMap[req.groupName][0]}`,
+          'border-bottom': `2px solid #${getReqColor(req.groupName, onboardingData)}`,
         }"
         class="grad-title-button grad-title full-opacity-on-hover"
         :disabled="true"
@@ -109,7 +116,7 @@
         <p
           :style="{
             'font-weight': '500',
-            color: `#${reqGroupColorMap[req.groupName][0]}`,
+            color: `#${getReqColor(req.groupName, onboardingData)}`,
           }"
           class="grad-title-top"
         >
@@ -124,7 +131,7 @@
         <div
           class="progress-bar"
           :style="{
-            'background-color': `#${reqGroupColorMap[req.groupName][0]}`,
+            'background-color': `#${getReqColor(req.groupName, onboardingData)}`,
             width: progressWidth,
           }"
           role="progressbar"
@@ -150,14 +157,20 @@
         data-toggle="dropdown"
         data-cyId="requirements-viewMore"
       >
-        <div class="col-1 p-0 btn" :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }">
+        <div
+          class="col-1 p-0 btn"
+          :style="{ color: `#${getReqColor(req.groupName, onboardingData)}` }"
+        >
           <drop-down-arrow
             :isFlipped="displayDetails"
-            :fillColor="`#${reqGroupColorMap[req.groupName][0]}`"
+            :fillColor="`#${getReqColor(req.groupName, onboardingData)}`"
             :isHeader="true"
           />
         </div>
-        <div class="req-name col p-0" :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }">
+        <div
+          class="req-name col p-0"
+          :style="{ color: `#${getReqColor(req.groupName, onboardingData)}` }"
+        >
           {{ displayDetails ? 'Hide' : 'View' }} All {{ req.groupName }} Requirements
         </div>
       </button>
@@ -173,6 +186,7 @@ import {
   getMajorFullName,
   getMinorFullName,
   getGradFullName,
+  getReqColor,
 } from '@/utilities';
 
 export default defineComponent({
@@ -183,10 +197,6 @@ export default defineComponent({
     displayedMajorIndex: { type: Number, required: true },
     displayedMinorIndex: { type: Number, required: true },
     req: { type: Object as PropType<GroupedRequirementFulfillmentReport>, required: true },
-    reqGroupColorMap: {
-      type: Object as PropType<Readonly<Record<string, string[]>>>,
-      required: true,
-    },
     onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
@@ -244,6 +254,7 @@ export default defineComponent({
     getMajorFullName,
     getMinorFullName,
     getGradFullName,
+    getReqColor,
     toggleDetails() {
       this.$emit('toggleDetails');
     },
