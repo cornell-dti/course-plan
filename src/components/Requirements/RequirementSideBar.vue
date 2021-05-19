@@ -196,13 +196,18 @@ export default defineComponent({
     },
   },
   methods: {
+    // TODO CHANGE FOR MULTIPLE COLLEGES & GRAD PROGRAMS
     showMajorOrMinorRequirements(id: number, group: string): boolean {
+      // colleges and programs should always be shown as there can only be 1
+      if (group === 'College' || group === 'Grad') {
+        return true;
+      }
+      // majors should be shown only if the id matches the index of the displayed major
       if (group === 'Major') {
         return id === this.displayedMajorIndex + this.numOfColleges;
       }
-      // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+      // minors should be shown depending on index and number of college and majors selected
       return (
-        id < this.numOfColleges ||
         id === this.displayedMinorIndex + this.numOfColleges + this.onboardingData.major.length
       );
     },

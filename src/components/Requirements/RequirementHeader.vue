@@ -2,13 +2,17 @@
   <div class="requirementheader">
     <!-- TODO change for multiple colleges -->
     <h1
-      v-if="reqIndex <= numOfColleges || reqIndex == numOfColleges + onboardingData.major.length"
+      v-if="
+        reqIndex <= numOfColleges ||
+        reqIndex == numOfColleges + onboardingData.major.length ||
+        req.groupName === 'Grad'
+      "
       class="col top p-0"
     >
       {{ req.groupName }} Requirements
     </h1>
     <!-- TODO change for multiple colleges -->
-    <div v-if="reqIndex === 0" class="college">
+    <div v-if="req.groupName === 'College'" class="college">
       <button
         :style="{
           'border-bottom': `2px solid #${reqGroupColorMap[req.groupName][0]}`,
@@ -28,7 +32,7 @@
       </button>
     </div>
     <!-- TODO change for multiple colleges -->
-    <div v-if="reqIndex === numOfColleges" class="major">
+    <div v-if="reqIndex === numOfColleges && req.groupName === 'Major'" class="major">
       <button
         :style="{
           'border-bottom':
@@ -64,7 +68,10 @@
         </p>
       </button>
     </div>
-    <div v-if="reqIndex == numOfColleges + onboardingData.major.length" class="minor">
+    <div
+      v-if="reqIndex == numOfColleges + onboardingData.major.length && req.groupName === 'Minor'"
+      class="minor"
+    >
       <button
         :style="{
           'border-bottom':
@@ -89,6 +96,25 @@
           {{ getMinorFullName(minor) }}
         </p>
         <!-- <p :style="{'color': minor.display ? `#${reqGroupColorMap[req.group][0]}` : ''}" class="minor-title-bottom">({{user.collegeFN}})</p> Change for multiple colleges -->
+      </button>
+    </div>
+    <div v-if="req.groupName === 'Grad'" class="grad">
+      <button
+        :style="{
+          'border-bottom': `2px solid #${reqGroupColorMap[req.groupName][0]}`,
+        }"
+        class="grad-title-button grad-title full-opacity-on-hover"
+        :disabled="true"
+      >
+        <p
+          :style="{
+            'font-weight': '500',
+            color: `#${reqGroupColorMap[req.groupName][0]}`,
+          }"
+          class="grad-title-top"
+        >
+          {{ getGradFullName(onboardingData.grad) }}
+        </p>
       </button>
     </div>
 
@@ -142,7 +168,12 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
+import {
+  getCollegeFullName,
+  getMajorFullName,
+  getMinorFullName,
+  getGradFullName,
+} from '@/utilities';
 
 export default defineComponent({
   components: { DropDownArrow },
@@ -212,6 +243,7 @@ export default defineComponent({
     getCollegeFullName,
     getMajorFullName,
     getMinorFullName,
+    getGradFullName,
     toggleDetails() {
       this.$emit('toggleDetails');
     },
@@ -230,7 +262,8 @@ export default defineComponent({
 
 .college,
 .major,
-.minor {
+.minor,
+.grad {
   display: flex;
   padding-bottom: 25px;
   &-title {
