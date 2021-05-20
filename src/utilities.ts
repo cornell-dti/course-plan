@@ -51,18 +51,9 @@ export function getMinorFullName(acronym: string): string {
 }
 
 export function getGradFullName(acronym: string | undefined): string {
-  // TODO: connect requirements side here instead of using dummy data
-  const acronymDict: Record<string, string> = {
-    TEMP: 'TEMP PROGRAM',
-    TEMP2: 'TEMP PROGRAM 2',
-    TEMP3: 'TEMP PROGRAM 3',
-  };
-
-  return acronym ? acronymDict[acronym] : '';
-
   // Return empty string if grad is not in requirementJSON
-  // const grad = acronym ? requirementJSON.grad[acronym] : null;
-  // return grad ? grad.name : '';
+  const grad = acronym ? requirementJSON.grad[acronym] : null;
+  return grad ? grad.name : '';
 }
 
 function getAllSubjects(): ReadonlySet<string> {
@@ -125,3 +116,38 @@ export const clickOutside = {
     document.body.removeEventListener('click', el.clickOutsideEvent);
   },
 };
+
+// reqGroupColorList determines the colors of the first 3 types of requirements the user has in their plan
+// if they have 4 - wraps around
+const reqGroupColorList = ['4D7D92', '148481', '105351'];
+
+// get the color for a given requirement type in the requirements sidebar
+export function getReqColor(groupName: string, onboardingData: AppOnboardingData): string {
+  // college will always be the first color
+  if (groupName === 'College') {
+    return reqGroupColorList[0];
+  }
+  // if the user has major(s), it must be the second group in the requirements bar
+  if (groupName === 'Major') {
+    return reqGroupColorList[1];
+  }
+  // if the user has minors, use the second color if the majors section does not display, otherwise use the third color
+  if (groupName === 'Minor') {
+    if (onboardingData.major.length === 0) {
+      return reqGroupColorList[1];
+    }
+    return reqGroupColorList[2];
+  }
+  // if the user has a grad program, display the first color if no college present, second color if no majors and minors,
+  // the third color if one of them, or wrap around if all are present
+  if (!onboardingData.college) {
+    return reqGroupColorList[0];
+  }
+  if (onboardingData.major.length === 0 && onboardingData.minor.length === 0) {
+    return reqGroupColorList[1];
+  }
+  if (onboardingData.minor.length === 0 || onboardingData.major.length === 0) {
+    return reqGroupColorList[2];
+  }
+  return reqGroupColorList[0];
+}

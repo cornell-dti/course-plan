@@ -145,6 +145,7 @@ export default defineComponent({
       line-height: 15px;
       color: $yuxuanBlue;
       cursor: pointer;
+      white-space: nowrap;
     }
   }
 

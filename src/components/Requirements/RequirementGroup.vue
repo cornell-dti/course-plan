@@ -6,7 +6,6 @@
       :displayedMajorIndex="displayedMajorIndex"
       :displayedMinorIndex="displayedMinorIndex"
       :req="req"
-      :reqGroupColorMap="reqGroupColorMap"
       :onboardingData="onboardingData"
       :showMajorOrMinorRequirements="showMajorOrMinorRequirements"
       :numOfColleges="numOfColleges"
@@ -28,7 +27,7 @@
             :toggleableRequirementChoice="
               toggleableRequirementChoices[requirementFulfillment.requirement.id]
             "
-            :color="reqGroupColorMap[req.groupName][0]"
+            :color="getReqColor(req.groupName, onboardingData)"
             :isCompleted="false"
             :tourStep="tourStep"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
@@ -42,7 +41,7 @@
           <div class="col-1 text-right">
             <button
               class="btn float-right"
-              :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
+              :style="{ color: `#${getReqColor(req.groupName, onboardingData)}` }"
             >
               <!-- Toggle to display completed reqs -->
               <p
@@ -77,7 +76,7 @@
               :toggleableRequirementChoice="
                 toggleableRequirementChoices[requirementFulfillment.requirement.id]
               "
-              :color="reqGroupColorMap[req.groupName][0]"
+              :color="getReqColor(req.groupName, onboardingData)"
               :isCompleted="true"
               :tourStep="tourStep"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
@@ -98,17 +97,9 @@ import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import RequirementFulfillment from '@/components/Requirements/RequirementFulfillment.vue';
+import { getReqColor } from '@/utilities';
 
 import store from '@/store';
-
-// reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
-const reqGroupColorMap = {
-  College: ['4D7D92', 'sangBlue'],
-  Major: ['148481', 'emGreen'],
-  Minor: ['105351', 'chrisGreen'],
-  // TODO: make colors wrap around if less than 4 elements, else new colour
-  Grad: ['105351', 'sangBlue'],
-};
 
 type PartitionedRequirementsProgress = {
   readonly ongoing: readonly RequirementFulfillment[];
@@ -153,9 +144,6 @@ export default defineComponent({
     reqs(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
-    reqGroupColorMap(): typeof reqGroupColorMap {
-      return reqGroupColorMap;
-    },
     partitionedRequirementsProgress(): PartitionedRequirementsProgress {
       const ongoing: RequirementFulfillment[] = [];
       const completed: RequirementFulfillment[] = [];
@@ -177,6 +165,7 @@ export default defineComponent({
     },
   },
   methods: {
+    getReqColor,
     activateMajor(id: number) {
       this.$emit('activateMajor', id);
     },
