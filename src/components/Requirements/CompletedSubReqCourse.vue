@@ -1,11 +1,10 @@
 <template>
   <div class="completedsubreqcourse">
-    <reset-confirmation-modal
+    <delete-course-modal
       :isTestReq="isTransferCredit"
       :reqName="courseTaken.code"
-      v-model="resetConfirmVisible"
-      @close-reset-modal="onResetConfirmClosed"
-      @modal-open="modalToggled"
+      v-if="deleteModalVisible"
+      @close-delete-course-modal="onDeleteCourseModalClose"
     />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
@@ -16,12 +15,7 @@
           /></span>
           {{ slotName }}
         </div>
-        <button
-          class="completed-reqCourses-course-heading-reset-button reqCourse-button"
-          @click="onReset"
-        >
-          {{ resetText }}
-        </button>
+        <button class="reqCourse-button" @click="onDeleteModalOpen">Delete ></button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
@@ -34,38 +28,41 @@
         <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
       </div>
     </div>
+    <slot-menu
+      v-if="slotMenuOpen"
+      :position="slotMenuPosition"
+      @open-delete-slot-modal="onDeleteModalOpen"
+      @close-slot-menu="closeSlotMenu"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
-import ResetConfirmationModal from '@/components/Modals/ResetConfirmationModal.vue';
+import SlotMenu from '@/components/Modals/SlotMenu.vue';
+import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebaseConfig';
-import getCurrentSeason, { getCurrentYear } from '@/utilities';
+import getCurrentSeason, { getCurrentYear, clickOutside } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, ResetConfirmationModal },
+  components: { ReqCourse, DeleteCourseModal, SlotMenu },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
-  emits: {
-    'modal-open': (open: boolean) => typeof open === 'boolean',
-  },
   data: () => ({
-    resetConfirmVisible: false,
+    deleteModalVisible: false,
+    slotMenuOpen: false,
+    mousePosition: { x: 0, y: 0 },
   }),
   computed: {
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
-    },
-    resetText(): string {
-      return 'Reset';
     },
     isTransferCredit(): boolean {
       return this.courseTaken.uniqueId < 0;
@@ -83,15 +80,20 @@ export default defineComponent({
       const course = store.state.derivedCoursesData.courseMap[this.courseTaken.uniqueId];
       return course != null ? course.color : '';
     },
+    slotMenuPosition(): { x: number; y: number } {
+      return window.innerWidth > 863
+        ? { x: this.mousePosition.x + 10, y: this.mousePosition.y - 14 }
+        : { x: this.mousePosition.x - 120, y: this.mousePosition.y - 7 };
+    },
   },
   methods: {
-    onReset(): void {
-      this.resetConfirmVisible = true;
-      this.$emit('modal-open', true);
+    onDeleteModalOpen(): void {
+      this.deleteModalVisible = true;
     },
-    onResetConfirmClosed(isReset: boolean): void {
-      this.$emit('modal-open', false);
-      if (isReset) {
+    onDeleteCourseModalClose(isDelete: boolean): void {
+      this.deleteModalVisible = false;
+
+      if (isDelete) {
         if (this.isTransferCredit) {
           const type = this.courseTaken.code.substr(0, 2);
           const name = this.courseTaken.code.substr(3);
@@ -104,9 +106,22 @@ export default defineComponent({
         } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
       }
     },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
+    openSlotMenu(e: MouseEvent) {
+      this.mousePosition = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+      this.slotMenuOpen = true;
     },
+    closeSlotMenu() {
+      this.slotMenuOpen = false;
+    },
+  },
+  directives: {
+    'click-outside': clickOutside,
+  },
+  emits: {
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
   },
 });
 </script>
@@ -163,7 +178,7 @@ export default defineComponent({
     font-size: 14px;
     line-height: 15px;
     color: $yuxuanBlue;
-    padding: 0.2rem;
+    padding: 0 0.2rem 0.4rem;
     cursor: pointer;
   }
 }

@@ -1,4 +1,4 @@
-import { CREDITS_COURSE_ID, FWS_COURSE_ID } from '../constants';
+import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID, FWS_COURSE_ID } from '../constants';
 
 export type ExamRequirements = {
   readonly name: string;
@@ -389,12 +389,17 @@ function userDataToCourses(
   college: string,
   major: string,
   userData: ExamsTaken,
-  examType: 'AP' | 'IB'
+  examType: 'AP' | 'IB',
+  uniqueIdDecrementer: number
 ): CourseTaken[] {
   const userExams = userData[examType];
   const exams = examData[examType];
   const courses: CourseTaken[] = [];
-  userExams.forEach((userExam, examIndex) => {
+  // uniqueId starts at -2 and is decremented for each course added (-1 is reserved for swim test).
+  // uniqueIdDecrementer needs to be passed as an accumulator because the function is called multiple times,
+  // once for each examType. this assigned uniqueId is not stable and should not be stored in firestore.
+  let uniqueId = -2 - uniqueIdDecrementer;
+  userExams.forEach(userExam => {
     // match exam to user-taken exam
     const exam = exams.reduce((prev: ExamRequirements | undefined, curr: ExamRequirements) => {
       // check if exam name matches and score is high enough
@@ -407,6 +412,7 @@ function userDataToCourses(
       return prev;
     }, undefined);
     // generate the equivalent course
+    let courseEquivalentsExist = false;
     if (exam) {
       const courseEquivalents =
         (exam.fulfillment.courseEquivalents &&
@@ -416,32 +422,46 @@ function userDataToCourses(
       const excludedMajor =
         exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
       if (!excludedMajor) {
+        // AP/IB credit can be potentially applied towards the user's requirements
+        courseEquivalentsExist = true;
         if (courseEquivalents.length === 1) {
           const courseId = courseEquivalents[0];
           courses.push({
             courseId,
-            uniqueId: -examIndex - 2,
+            uniqueId,
             code: `${examType} ${exam.name}`,
             credits: exam.fulfillment.credits,
           });
+          uniqueId -= 1;
         } else {
           // separate credits from equivalent course
+          courses.push({
+            courseId: CREDITS_COURSE_ID,
+            uniqueId,
+            code: `${examType} ${exam.name}`,
+            credits: exam.fulfillment.credits,
+          });
+          uniqueId -= 1;
           courseEquivalents.forEach(courseId => {
             courses.push({
               courseId,
-              uniqueId: -examIndex - 2,
+              uniqueId,
               code: `${examType} ${exam.name}`,
               credits: 0,
             });
-          });
-          courses.push({
-            courseId: CREDITS_COURSE_ID,
-            uniqueId: -examIndex - 2,
-            code: `${examType} ${exam.name}`,
-            credits: exam.fulfillment.credits,
+            uniqueId -= 1;
           });
         }
       }
+    }
+    if (!courseEquivalentsExist) {
+      courses.push({
+        courseId: NO_EQUIVALENT_COURSES_COURSE_ID,
+        uniqueId,
+        code: `${examType} ${userExam.subject}`,
+        credits: 0,
+      });
+      uniqueId -= 1;
     }
   });
   return courses;
@@ -452,8 +472,14 @@ export function getCourseEquivalentsFromOneMajor(
   major: string,
   userData: ExamsTaken
 ): readonly CourseTaken[] {
-  const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
-  const IBCourseEquivalents = userDataToCourses(college, major, userData, 'IB');
+  const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP', 0);
+  const IBCourseEquivalents = userDataToCourses(
+    college,
+    major,
+    userData,
+    'IB',
+    APCourseEquivalents.length
+  );
   return APCourseEquivalents.concat(IBCourseEquivalents);
 }
 
@@ -467,13 +493,16 @@ export default function getCourseEquivalentsFromUserExams(
     const examTaken: ExamTaken = { subject: exam.subject, score: exam.score };
     userExamData[exam.type].push(examTaken);
   });
+  // If there is no college, that means that the user only has a grad program, so they cannot get any course credit.
   user.major.forEach((major: string) =>
-    getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
-      if (!examCourseCodeSet.has(course.code)) {
-        examCourseCodeSet.add(course.code);
-        courses.push(course);
-      }
-    })
+    user.college
+      ? getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
+          if (!examCourseCodeSet.has(course.code)) {
+            examCourseCodeSet.add(course.code);
+            courses.push(course);
+          }
+        })
+      : []
   );
   return courses;
 }

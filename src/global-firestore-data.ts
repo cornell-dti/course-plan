@@ -3,6 +3,8 @@
  */
 
 import {
+  usernameCollection,
+  onboardingDataCollection,
   semestersCollection,
   toggleableRequirementChoicesCollection,
   selectableRequirementChoicesCollection,
@@ -197,6 +199,103 @@ export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): 
     )
   );
 };
+
+export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboardingData): void => {
+  usernameCollection.doc(store.state.currentFirebaseUser.email).set({
+    firstName: name.firstName,
+    middleName: name.middleName || '',
+    lastName: name.lastName,
+  });
+  const oldCollege = store.state.onboardingData.college;
+  onboardingDataCollection
+    .doc(store.state.currentFirebaseUser.email)
+    .set({
+      gradYear: onboarding.gradYear,
+      entranceYear: onboarding.entranceYear,
+      colleges: onboarding.college ? [{ acronym: onboarding.college }] : [],
+      majors: onboarding.major.map(acronym => ({ acronym })),
+      minors: onboarding.minor.map(acronym => ({ acronym })),
+      gradPrograms: onboarding.grad ? [{ acronym: onboarding.grad }] : [],
+      exam: onboarding.exam,
+      class: onboarding.transferCourse,
+      tookSwim: onboarding.tookSwim,
+    })
+    .then(() => {
+      const newCollege = store.state.onboardingData.college;
+      if (oldCollege !== newCollege) {
+        clearOverridenRequirementsAPIB();
+      }
+    });
+};
+
+const editAPIBExams = (
+  updater: (oldAPIBExams: readonly FirestoreAPIBExam[]) => readonly FirestoreAPIBExam[]
+): void => {
+  const oldAPIBExams = store.state.onboardingData.exam;
+  const newAPIBExams = updater(oldAPIBExams);
+  onboardingDataCollection
+    .doc(store.state.currentFirebaseUser.email)
+    .update({ exam: newAPIBExams });
+};
+
+// split and exposed for testing
+export const addOverridenRequirementAPIBUpdater = (
+  oldAPIBExams: readonly FirestoreAPIBExam[],
+  examName: string,
+  optIn: boolean,
+  requirementName: string,
+  slotName: string
+): readonly FirestoreAPIBExam[] =>
+  oldAPIBExams.map(exam => {
+    if (`${exam.type} ${exam.subject}` === examName) {
+      const overridenRequirements = optIn ? { ...exam.optIn } : { ...exam.optOut };
+      if (requirementName in overridenRequirements) {
+        if (overridenRequirements[requirementName].indexOf(slotName) === -1) {
+          overridenRequirements[requirementName] = [
+            ...overridenRequirements[requirementName],
+            slotName,
+          ];
+        }
+      } else {
+        overridenRequirements[requirementName] = [slotName];
+      }
+      const otherOverridenRequirements = optIn ? { ...exam.optOut } : { ...exam.optIn };
+      if (requirementName in otherOverridenRequirements) {
+        otherOverridenRequirements[requirementName] = otherOverridenRequirements[
+          requirementName
+        ].filter(slot => slot !== slotName);
+        if (otherOverridenRequirements[requirementName].length === 0) {
+          delete otherOverridenRequirements[requirementName];
+        }
+      }
+      return optIn
+        ? { ...exam, optIn: overridenRequirements, optOut: otherOverridenRequirements }
+        : { ...exam, optIn: otherOverridenRequirements, optOut: overridenRequirements };
+    }
+    return exam;
+  });
+
+export const addOverridenRequirementAPIB = (
+  examName: string,
+  optIn: boolean,
+  requirementName: string,
+  slotName: string
+): void =>
+  editAPIBExams(oldAPIBExams =>
+    addOverridenRequirementAPIBUpdater(oldAPIBExams, examName, optIn, requirementName, slotName)
+  );
+
+// split and exposed for testing
+export const clearOverridenRequirementsAPIBUpdater = (
+  oldAPIBExams: readonly FirestoreAPIBExam[]
+): readonly FirestoreAPIBExam[] =>
+  oldAPIBExams.map(exam => {
+    const { optIn, optOut, ...rest } = exam;
+    return { optIn: {}, optOut: {}, ...rest };
+  });
+
+const clearOverridenRequirementsAPIB = (): void =>
+  editAPIBExams(oldAPIBExams => clearOverridenRequirementsAPIBUpdater(oldAPIBExams));
 
 export const incrementUniqueID = (amount = 1): number => {
   const updatedID = store.state.uniqueIncrementer + amount;

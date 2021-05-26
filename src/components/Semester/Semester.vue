@@ -9,47 +9,43 @@
     data-tooltipClass="tooltipCenter"
   >
     <new-course-modal
-      class="semester-modal"
-      :class="{ 'modal--block': isCourseModalOpen }"
       @close-course-modal="closeCourseModal"
+      v-if="isCourseModalOpen"
       @add-course="addCourse"
     />
-    <confirmation
-      class="confirmation-modal"
-      :class="{ 'confirmation-modal--flex': isConfirmationOpen }"
-      :text="confirmationText"
-    />
+    <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
-      class="semester-modal"
-      :class="{ 'modal--block': isDeleteSemesterOpen }"
       @delete-semester="deleteSemester"
-      @close-delete-modal="closeDeleteModal"
+      @close-delete-sem="closeDeleteSemesterModal"
       :deleteSemType="type"
       :deleteSemYear="year"
-      ref="deletesemester"
+      v-if="isDeleteSemesterOpen"
     />
     <edit-semester
-      class="semester-modal"
-      :class="{ 'modal--block': isEditSemesterOpen }"
       @edit-semester="editSemester"
-      @close-edit-modal="closeEditModal"
+      @close-edit-sem="closeEditSemesterModal"
       :deleteSemType="type"
       :deleteSemYear="year"
-      ref="modalBodyComponent"
+      v-if="isEditSemesterOpen"
     />
-    <button v-if="isFirstSem" class="semester-addSemesterButton" @click="openSemesterModal">
+    <button
+      v-if="isFirstSem"
+      class="semester-addSemesterButton"
+      @click="openSemesterModal"
+      data-cyId="semester-addSemesterButton"
+    >
       + New Semester
     </button>
     <div class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
-          <span class="semester-name"
+          <span class="semester-name" data-cyId="semesterName"
             ><img class="season-emoji" :src="seasonImg[type]" alt="" /> {{ type }} {{ year }}</span
           >
           <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
-          <button class="semester-dotRow" @click="openSemesterMenu">
+          <button class="semester-dotRow" @click="openSemesterMenu" data-cyId="semesterMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="open menu for semester" />
           </button>
         </div>
@@ -83,7 +79,11 @@
             </div>
           </template>
         </draggable>
-        <add-course-button :compact="compact" @click="openCourseModal" />
+        <add-course-button
+          :compact="compact"
+          @click="openCourseModal"
+          data-cyId="semester-addCourse"
+        />
       </div>
     </div>
     <semester-menu
@@ -101,7 +101,7 @@ import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
-import Confirmation from '@/components/Confirmation.vue';
+import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
@@ -177,7 +177,6 @@ export default defineComponent({
     isFirstSem: { type: Boolean, required: true },
   },
   emits: {
-    'modal-open': (open: boolean) => typeof open === 'boolean',
     'new-semester': () => true,
     'course-onclick': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'delete-semester': (type: string, year: number) =>
@@ -279,20 +278,10 @@ export default defineComponent({
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
-      this.isCourseModalOpen = true;
-      this.$emit('modal-open', true);
+      this.isCourseModalOpen = !this.isCourseModalOpen;
     },
     closeCourseModal() {
       this.isCourseModalOpen = false;
-      this.$emit('modal-open', false);
-    },
-    closeEditModal() {
-      this.isEditSemesterOpen = false;
-      this.$emit('modal-open', false);
-    },
-    closeDeleteModal() {
-      this.isDeleteSemesterOpen = false;
-      this.$emit('modal-open', false);
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
@@ -307,7 +296,7 @@ export default defineComponent({
 
       setTimeout(() => {
         this.closeConfirmationModal();
-      }, 3000);
+      }, 2000);
     },
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
@@ -368,13 +357,18 @@ export default defineComponent({
     openDeleteSemesterModal() {
       this.isDeleteSemesterOpen = true;
     },
+    closeDeleteSemesterModal() {
+      this.isDeleteSemesterOpen = false;
+    },
     deleteSemester(type: string, year: number) {
       this.$emit('delete-semester', type, year);
       this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
     },
     openEditSemesterModal() {
       this.isEditSemesterOpen = true;
-      this.$emit('modal-open', true);
+    },
+    closeEditSemesterModal() {
+      this.isEditSemesterOpen = false;
     },
     editSemester(seasonInput: string, yearInput: number) {
       editSemester(
@@ -512,55 +506,10 @@ export default defineComponent({
     margin-top: -4px;
   }
 
-  /* The Modal (background) */
-  .semester-modal {
-    display: none;
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  }
-
   .draggable-semester-courses {
     padding-top: 5px;
     padding-left: 1.125rem;
     padding-right: 1.125rem;
-  }
-
-  .semester-modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 2; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-
-    &--block {
-      display: block;
-    }
-  }
-
-  .confirmation-modal {
-    display: none;
-
-    &--flex {
-      display: flex;
-    }
-  }
-
-  .modal {
-    &--block {
-      display: block;
-    }
   }
 }
 

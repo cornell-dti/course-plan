@@ -1,9 +1,10 @@
 <template>
   <div class="semesterMenu">
     <button
+      v-if="!isOpenModal"
       class="semesterMenu-section full-opacity-on-hover"
-      :class="{ 'd-none': isOpenModal }"
       @click="openEditSemesterModal"
+      data-cyId="semesterMenu-edit"
     >
       <div class="semesterMenu-content">
         <div class="semesterMenu-content">
@@ -19,9 +20,10 @@
       </div>
     </button>
     <button
+      v-if="!isOpenModal"
       class="semesterMenu-section full-opacity-on-hover"
-      :class="{ 'd-none': isOpenModal }"
       @click="openDeleteSemesterModal"
+      data-cyId="semesterMenu-delete"
     >
       <div class="semesterMenu-content">
         <div class="semesterMenu-content">
@@ -63,9 +65,11 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .semesterMenu {
-  background: #ffffff;
-  border: 1px solid #acacac;
+  background: $white;
+  border: 1px solid $lightGray;
   box-sizing: border-box;
   border-radius: 9px;
 

@@ -41,7 +41,7 @@
               ><span>Entrance Year<span class="onboarding-required-star">*</span></span></label
             >
             <label class="onboarding-label--review"
-              ><span> {{ entranceYearText }}</span></label
+              ><span data-cyId="onboarding-entranceYear">{{ entranceYearText }}</span></label
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
@@ -49,41 +49,55 @@
               ><span>Graduation Year<span class="onboarding-required-star">*</span></span></label
             >
             <label class="onboarding-label--review"
-              ><span> {{ gradYearText }}</span></label
+              ><span data-cyId="onboarding-gradYear">{{ gradYearText }}</span></label
             >
           </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2-review"> Your Major</span>
+          <span class="onboarding-subHeader2-review"> Your Undergraduate Degree</span>
         </div>
         <div class="onboarding-selectWrapper">
           <div class="onboarding-selectWrapper-review">
-            <label class="onboarding-label"
-              >College<span class="onboarding-required-star">*</span></label
-            >
+            <label class="onboarding-label">College</label>
             <div>
-              <label class="onboarding-label--review">{{ collegeText }}</label>
+              <label
+                class="onboarding-label--review"
+                v-if="onboardingData.college"
+                data-cyId="onboarding-college"
+              >
+                {{ collegeText }}
+              </label>
             </div>
           </div>
           <div class="onboarding-selectWrapper-review">
             <label class="onboarding-label">Major</label>
             <div v-for="(major, index) in onboardingData.major" :key="index">
-              <label class="onboarding-label--review">{{ getMajorFullName(major) }}</label>
+              <label class="onboarding-label--review" data-cyId="onboarding-major">{{
+                getMajorFullName(major)
+              }}</label>
+            </div>
+          </div>
+          <div class="onboarding-selectWrapper-review">
+            <label class="onboarding-label">Minors</label>
+            <div v-for="(minor, index) in onboardingData.minor" :key="index">
+              <label class="onboarding-label--review">{{ getMinorFullName(minor) }}</label>
             </div>
           </div>
         </div>
         <div class="onboarding-subHeader2-fillRow">
-          <span class="onboarding-subHeader2-review"> Your Minor</span>
+          <span class="onboarding-subHeader2-review"> Your Graduate Degree</span>
         </div>
-        <div class="onboarding-selectWrapper">
-          <label class="onboarding-label">Minors:</label>
-          <div v-for="(minor, index) in onboardingData.minor" :key="index">
-            <label class="onboarding-label--review">{{ getMinorFullName(minor) }}</label>
+        <div class="onboarding-selectWrapper-review">
+          <label class="onboarding-label">Program</label>
+          <div>
+            <label class="onboarding-label--review" v-if="onboardingData.grad">
+              {{ gradText }}
+            </label>
           </div>
         </div>
       </div>
     </div>
-    <div class="onboarding-section">
+    <div class="onboarding-section" v-if="!isGraduateOnly">
       <!-- TODO: Multiple colleges -->
       <div class="onboarding-subHeader">
         <span class="onboarding-subHeader--font"> Transfer Credits</span>
@@ -164,7 +178,12 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
-import { getCollegeFullName, getMajorFullName, getMinorFullName } from '@/utilities';
+import {
+  getCollegeFullName,
+  getMajorFullName,
+  getMinorFullName,
+  getGradFullName,
+} from '@/utilities';
 import { GTagEvent } from '@/gtag';
 
 const placeholderText = 'Select one';
@@ -181,9 +200,10 @@ export default defineComponent({
   },
   computed: {
     collegeText(): string {
-      return this.onboardingData.college !== ''
-        ? getCollegeFullName(this.onboardingData.college)
-        : placeholderText;
+      return getCollegeFullName(this.onboardingData.college);
+    },
+    gradText(): string {
+      return getGradFullName(this.onboardingData.grad);
     },
     gradYearText(): string {
       return this.onboardingData.gradYear !== '' ? this.onboardingData.gradYear : placeholderText;
@@ -202,6 +222,9 @@ export default defineComponent({
         count += clas.credits;
       });
       return count;
+    },
+    isGraduateOnly(): boolean {
+      return this.onboardingData.grad !== '' && this.onboardingData.college === '';
     },
   },
   methods: {

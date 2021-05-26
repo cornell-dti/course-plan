@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar" :style="{ zIndex: modalIsOpen ? 1 : 2 }">
+  <nav class="navbar">
     <div
       class="navbar-iconWrapper hamburger full-opacity-on-hover"
       @click="menuOpen = !menuOpen"
@@ -11,6 +11,7 @@
       <button
         class="navbar-iconWrapper desktop profile-icon full-opacity-on-hover"
         @click="editProfile"
+        data-cyId="editProfile"
       ></button>
     </div>
     <div class="navbar-bottom">
@@ -55,7 +56,6 @@ import { GTagEvent } from '@/gtag';
 export default defineComponent({
   props: {
     isOpeningRequirements: { type: Boolean, required: true },
-    modalIsOpen: { type: Boolean, required: true },
   },
   emits: ['editProfile', 'toggleRequirementsBar'],
   data() {
@@ -95,7 +95,7 @@ $mobile-navbar-height: 4.5rem;
   height: 100vh;
   display: flex;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   flex-direction: column;
   justify-content: space-between;
   padding-top: 2.25rem;

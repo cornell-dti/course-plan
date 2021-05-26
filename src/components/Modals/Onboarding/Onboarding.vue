@@ -54,14 +54,12 @@
             @setPage="setPage"
           />
         </div>
-        <div class="onboarding-error" :class="{ 'onboarding--hidden': !isError }">
-          Please fill out all required fields and try again.
+        <div class="onboarding-error" v-if="isError">
+          {{ errorText }}
         </div>
-        <div
-          class="onboarding-error"
-          :class="{ 'onboarding--hidden': !isInvalidMajorOrMinorError }"
-        >
-          Invalid major or minor. Delete the placeholder major or minor and try again.
+        <div class="onboarding-error" v-if="isInvalidMajorMinorGradError">
+          Invalid major, minor, or graduate program. Delete the placeholder major, minor, or program
+          and try again.
         </div>
       </div>
       <div class="onboarding-bottom">
@@ -79,7 +77,13 @@
           </div> -->
           <div class="onboarding-bottom--contents">
             <button class="onboarding-button-previous" @click="goBack">&lt; Previous</button>
-            <button class="onboarding-button" @click="submitOnboarding">Finish</button>
+            <button
+              class="onboarding-button"
+              @click="submitOnboarding"
+              data-cyId="onboarding-finishButton"
+            >
+              Finish
+            </button>
           </div>
         </div>
         <div v-else class="onboarding-bottom--section">
@@ -87,7 +91,15 @@
             <button v-if="currentPage != 1" class="onboarding-button-previous" @click="goBack">
               &lt; Previous
             </button>
-            <button class="onboarding-button" @click="goNext">Next &gt;</button>
+            <button
+              class="onboarding-button"
+              @click="goNext"
+              :disabled="!canProgress()"
+              :class="{ 'onboarding-button--disabled': !canProgress() }"
+              data-cyId="onboarding-nextButton"
+            >
+              Next &gt;
+            </button>
           </div>
         </div>
       </div>
@@ -100,9 +112,8 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { db, onboardingDataCollection, usernameCollection } from '@/firebaseConfig';
-import { getMajorFullName, getMinorFullName } from '@/utilities';
-import store from '@/store';
+import { setOnboardingData } from '@/global-firestore-data';
+import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -112,7 +123,10 @@ export default defineComponent({
   props: {
     isEditingProfile: { type: Boolean, required: true },
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
   },
   emits: ['onboard', 'cancelOnboarding'],
   data() {
@@ -128,54 +142,97 @@ export default defineComponent({
       return (
         this.name.firstName === '' ||
         this.name.lastName === '' ||
-        this.onboarding.college === '' ||
         this.onboarding.gradYear === '' ||
-        this.onboarding.entranceYear === ''
+        this.onboarding.entranceYear === '' ||
+        (this.onboarding.college === '' && this.onboarding.grad === '')
       );
     },
-    // Display error if onboarding data includes a major or minor that doesn't exist in requirementsJSON
-    isInvalidMajorOrMinorError(): boolean {
+    /**
+     * Display error if onboarding data includes a major, minor, or graduate program
+     * that doesn't exist in requirementsJSON.
+     *
+     * @returns true if onboarding contains a major, minor, or program that is not in
+     * requirementsJSON on this branch, false otherwise.
+     */
+    isInvalidMajorMinorGradError(): boolean {
       return (
         this.onboarding.major
           .map(getMajorFullName)
           .some((majorFullName: string) => majorFullName === '') ||
         this.onboarding.minor
           .map(getMinorFullName)
-          .some((minorFullName: string) => minorFullName === '')
+          .some((minorFullName: string) => minorFullName === '') ||
+        (this.onboarding.grad ? getGradFullName(this.onboarding.grad) === '' : false)
       );
+    },
+    /**
+     * Set error text depending on which fields are missing
+     *
+     * @returns a string containing the names of all types of required data missing from onboarding.
+     */
+    errorText(): string {
+      const messages = [];
+      if (this.onboarding.college === '' && this.onboarding.grad === '') {
+        messages.push('at least one undergraduate or graduate degree');
+      }
+      if (this.name.firstName === '') {
+        messages.push('a first name');
+      }
+      if (this.name.lastName === '') {
+        messages.push('a last name');
+      }
+      if (this.onboarding.gradYear === '') {
+        messages.push('a graduation year');
+      }
+      if (this.onboarding.entranceYear === '') {
+        messages.push('an entrance year');
+      }
+
+      // generate the string depending on how many error messages are selected
+      let errorString = 'Please select ';
+      for (let i = 0; i < messages.length; i += 1) {
+        errorString += messages[i];
+        if (i < messages.length - 2) {
+          errorString += ', ';
+        } else if (i === messages.length - 2 && messages.length === 2) {
+          errorString += ' and ';
+        } else if (i === messages.length - 2) {
+          errorString += ', and ';
+        }
+      }
+
+      return `${errorString}.`;
     },
   },
   methods: {
     submitOnboarding() {
-      db.batch()
-        .set(usernameCollection.doc(store.state.currentFirebaseUser.email), {
-          firstName: this.name.firstName,
-          middleName: this.name.middleName,
-          lastName: this.name.lastName,
-        })
-        .set(onboardingDataCollection.doc(store.state.currentFirebaseUser.email), {
-          gradYear: this.onboarding.gradYear,
-          entranceYear: this.onboarding.entranceYear,
-          colleges: [{ acronym: this.onboarding.college }],
-          majors: this.onboarding.major.map(acronym => ({ acronym })),
-          minors: this.onboarding.minor.map(acronym => ({ acronym })),
-          exam: this.onboarding.exam,
-          class: this.onboarding.transferCourse,
-          tookSwim: this.onboarding.tookSwim,
-        })
-        .commit();
+      this.clearTransferCreditIfGraduate();
+      setOnboardingData(this.name, this.onboarding);
       this.$emit('onboard');
     },
     goBack() {
-      this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
+      // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
+      if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage > 1) {
+        this.currentPage = 1;
+      } else {
+        this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
+      }
     },
     setPage(page: number) {
       this.currentPage = page;
     },
+    canProgress() {
+      return !(this.isError || this.isInvalidMajorMinorGradError);
+    },
     goNext() {
       // Only move onto next page if error message is not displayed
-      if (!(this.isError || this.isInvalidMajorOrMinorError)) {
-        this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+      if (!(this.isError || this.isInvalidMajorMinorGradError)) {
+        // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
+        if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage === 1) {
+          this.currentPage += 2;
+        } else {
+          this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+        }
       }
     },
     updateBasic(
@@ -184,10 +241,25 @@ export default defineComponent({
       college: string,
       major: readonly string[],
       minor: readonly string[],
+      grad: string,
       name: FirestoreUserName
     ) {
       this.name = name;
-      this.onboarding = { ...this.onboarding, gradYear, entranceYear, college, major, minor };
+      this.onboarding = {
+        ...this.onboarding,
+        gradYear,
+        entranceYear,
+        college,
+        major,
+        minor,
+        grad,
+      };
+    },
+    // clear transfer credits if the student is only in a graduate program, but previously set transfer credits
+    clearTransferCreditIfGraduate() {
+      if (this.onboarding.grad !== '' && this.onboarding.college === '') {
+        this.updateTransfer([], [], 'no');
+      }
     },
     updateTransfer(
       exams: readonly FirestoreAPIBExam[],
@@ -206,12 +278,15 @@ export default defineComponent({
       };
     },
     cancel() {
-      if (this.onboardingData.college !== '') {
+      if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
         this.$emit('cancelOnboarding');
       }
     },
     checkClickOutside(e: MouseEvent) {
-      if (e.target === this.$refs.modalBackground && this.onboardingData.college !== '') {
+      if (
+        e.target === this.$refs.modalBackground &&
+        (this.onboardingData.college !== '' || this.onboardingData.grad !== '')
+      ) {
         this.cancel();
       }
     },

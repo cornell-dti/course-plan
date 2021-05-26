@@ -6,7 +6,6 @@
       :displayedMajorIndex="displayedMajorIndex"
       :displayedMinorIndex="displayedMinorIndex"
       :req="req"
-      :reqGroupColorMap="reqGroupColorMap"
       :onboardingData="onboardingData"
       :showMajorOrMinorRequirements="showMajorOrMinorRequirements"
       :numOfColleges="numOfColleges"
@@ -28,12 +27,11 @@
             :toggleableRequirementChoice="
               toggleableRequirementChoices[requirementFulfillment.requirement.id]
             "
-            :color="reqGroupColorMap[req.groupName][0]"
+            :color="getReqColor(req.groupName, onboardingData)"
             :isCompleted="false"
             :tourStep="tourStep"
             @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
             @onShowAllCourses="onShowAllCourses"
-            @modal-open="modalToggled"
           />
           <div class="separator"></div>
         </div>
@@ -43,11 +41,25 @@
           <div class="col-1 text-right">
             <button
               class="btn float-right"
-              :style="{ color: `#${reqGroupColorMap[req.groupName][0]}` }"
+              :style="{ color: `#${getReqColor(req.groupName, onboardingData)}` }"
             >
               <!-- Toggle to display completed reqs -->
-              <p class="toggle" v-if="displayCompleted" @click="turnCompleted(false)">HIDE</p>
-              <p class="toggle" v-else @click="turnCompleted(true)">SHOW</p>
+              <p
+                class="toggle"
+                v-if="displayCompleted"
+                @click="turnCompleted(false)"
+                data-cyId="requirements-showCompleted"
+              >
+                HIDE
+              </p>
+              <p
+                class="toggle"
+                v-else
+                @click="turnCompleted(true)"
+                data-cyId="requirements-showCompleted"
+              >
+                SHOW
+              </p>
             </button>
           </div>
         </div>
@@ -64,7 +76,7 @@
               :toggleableRequirementChoice="
                 toggleableRequirementChoices[requirementFulfillment.requirement.id]
               "
-              :color="reqGroupColorMap[req.groupName][0]"
+              :color="getReqColor(req.groupName, onboardingData)"
               :isCompleted="true"
               :tourStep="tourStep"
               @changeToggleableRequirementChoice="changeToggleableRequirementChoice"
@@ -85,15 +97,9 @@ import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import RequirementFulfillment from '@/components/Requirements/RequirementFulfillment.vue';
+import { getReqColor } from '@/utilities';
 
 import store from '@/store';
-
-// reqGroupColorMap maps reqGroup to an array [<hex color for progress bar>, <color for arrow image>]
-const reqGroupColorMap = {
-  College: ['4D7D92', 'sangBlue'],
-  Major: ['148481', 'emGreen'],
-  Minor: ['105351', 'chrisGreen'],
-};
 
 type PartitionedRequirementsProgress = {
   readonly ongoing: readonly RequirementFulfillment[];
@@ -124,7 +130,6 @@ export default defineComponent({
     }) => typeof courses === 'object',
     changeToggleableRequirementChoice: (requirementID: string, option: string) =>
       typeof requirementID === 'string' && typeof option === 'string',
-    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data() {
     return {
@@ -139,14 +144,18 @@ export default defineComponent({
     reqs(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
-    reqGroupColorMap() {
-      return reqGroupColorMap;
-    },
     partitionedRequirementsProgress(): PartitionedRequirementsProgress {
       const ongoing: RequirementFulfillment[] = [];
       const completed: RequirementFulfillment[] = [];
       this.req.reqs.forEach(req => {
         if (req.minCountFulfilled < req.minCountRequired) {
+          ongoing.push(req);
+        } else if (
+          req.additionalRequirements != null &&
+          Object.values(req.additionalRequirements).some(
+            it => it.minCountFulfilled < it.minCountRequired
+          )
+        ) {
           ongoing.push(req);
         } else {
           completed.push(req);
@@ -156,6 +165,7 @@ export default defineComponent({
     },
   },
   methods: {
+    getReqColor,
     activateMajor(id: number) {
       this.$emit('activateMajor', id);
     },
@@ -177,9 +187,6 @@ export default defineComponent({
     turnCompleted(bool: boolean) {
       GTagEvent(this.$gtag, 'requirements-bar-filled-requirements-toggle');
       this.displayCompleted = bool;
-    },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });

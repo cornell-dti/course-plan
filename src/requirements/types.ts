@@ -28,6 +28,8 @@ type GenericRequirementsJson<R> = {
   readonly college: CollegeRequirements<R>;
   readonly major: MajorRequirements<R>;
   readonly minor: MajorRequirements<R>;
+  // We are treating grad programs at the same level as a major/minor.
+  readonly grad: MajorRequirements<R>;
 };
 
 export type RequirementsJson = GenericRequirementsJson<CollegeOrMajorRequirement>;
@@ -37,4 +39,6 @@ export type DecoratedRequirementsJson = {
   readonly college: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
+  // We are treating grad programs at the same level as a major/minor.
+  readonly grad: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };

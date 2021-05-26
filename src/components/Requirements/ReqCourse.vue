@@ -19,6 +19,7 @@
             :class="{ 'reqcourse-code--min': compact }"
             :title="courseCode"
             class="reqcourse-code"
+            data-cyId="reqcourse-code"
           >
             {{ courseCode }}
           </div>

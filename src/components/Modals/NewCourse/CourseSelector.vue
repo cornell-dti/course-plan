@@ -16,6 +16,7 @@
         :key="index"
         :class="['search-result', currentFocus === index ? 'autocomplete-active' : '']"
         @click="selectCourse(matchingCourse)"
+        data-cyId="newCourse-searchResult"
       >
         {{ matchingCourse.subject }} {{ matchingCourse.catalogNbr }}: {{ matchingCourse.titleLong }}
       </div>

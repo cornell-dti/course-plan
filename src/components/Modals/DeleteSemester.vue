@@ -1,7 +1,6 @@
 <template>
-  <flexible-modal
+  <teleport-modal
     title="Delete Semester"
-    class="deleteSemesterModal"
     content-class="content-delete"
     left-button-text="Cancel"
     right-button-text="Delete"
@@ -15,22 +14,22 @@
     <div class="deleteSemesterModal-body">
       <div class="deleteSemesterModal-body-text">{{ text }}</div>
     </div>
-  </flexible-modal>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FlexibleModal from '@/components/Modals/FlexibleModal.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import trashIcon from '@/assets/images/trash-white.svg';
 
 export default defineComponent({
-  components: { FlexibleModal },
+  components: { TeleportModal },
   props: {
     deleteSemType: { type: String, required: true },
     deleteSemYear: { type: Number, required: true },
   },
   emits: {
-    'close-delete-modal': () => true,
+    'close-delete-sem': () => true,
     'delete-semester': (type: string, year: number) =>
       typeof type === 'string' && typeof year === 'number',
   },
@@ -44,7 +43,7 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal() {
-      this.$emit('close-delete-modal');
+      this.$emit('close-delete-sem');
     },
     deleteSemester() {
       this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);

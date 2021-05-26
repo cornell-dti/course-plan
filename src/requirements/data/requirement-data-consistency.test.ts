@@ -26,6 +26,14 @@ const allRequirementsWithIDs = [
       }))
     )
     .flat(),
+  ...Object.entries(requirementJson.grad)
+    .map(([grad, gradRequirement]) =>
+      gradRequirement.requirements.map(it => ({
+        id: `Grad-${grad}-${it.name}`,
+        requirement: it,
+      }))
+    )
+    .flat(),
 ].sort((a, b) => a.id.localeCompare(b.id));
 
 allRequirementsWithIDs.forEach(({ id, requirement }) => {

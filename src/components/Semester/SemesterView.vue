@@ -11,16 +11,16 @@
   >
     <div class="semesterView-top">
       <new-semester-modal
-        class="semester-modal"
-        :class="{ 'modal--block': isSemesterModalOpen }"
         @add-semester="addSemester"
-        @close-semester-modal="closeSemesterModal"
+        @close-sem-modal="closeSemesterModal"
+        v-if="isSemesterModalOpen"
       />
       <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
         <button
           v-if="noSemesters"
           class="semesterView-addSemesterButton"
           @click="openSemesterModal"
+          data-cyId="semesterView-addSemesterButton"
         >
           + New Semester
         </button>
@@ -45,11 +45,7 @@
           />
         </div>
       </div>
-      <confirmation
-        class="semesterView-confirmation"
-        :class="{ 'modal--flex': isSemesterConfirmationOpen }"
-        :text="confirmationText"
-      />
+      <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
       <div class="semesterView-content">
         <div
           v-for="(sem, semesterIndex) in semesters"
@@ -69,7 +65,6 @@
             @course-onclick="courseOnClick"
             @new-semester="openSemesterModal"
             @delete-semester="deleteSemester"
-            @modal-open="modalToggle"
           />
         </div>
         <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
@@ -106,7 +101,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Semester from '@/components/Semester/Semester.vue';
-import Confirmation from '@/components/Confirmation.vue';
+import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
@@ -125,7 +120,6 @@ export default defineComponent({
   },
   emits: {
     'compact-updated': (compact: boolean) => typeof compact === 'boolean',
-    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data() {
     return {
@@ -172,15 +166,13 @@ export default defineComponent({
 
       setTimeout(() => {
         this.isSemesterConfirmationOpen = false;
-      }, 3000);
+      }, 2000);
     },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
-      this.$emit('modal-open', true);
     },
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
-      this.$emit('modal-open', false);
     },
     addSemester(type: string, year: number) {
       addSemester(type as FirestoreSemesterType, year, this.$gtag);
@@ -204,9 +196,6 @@ export default defineComponent({
     getToggleTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Toggle between Views</div><div class="introjs-customProgress">4/4</div>
       </div><div class = "introjs-bodytext">View semesters and courses in full or compact mode.</div>`;
-    },
-    modalToggle(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });
@@ -311,12 +300,6 @@ export default defineComponent({
     }
   }
 
-  &-confirmation,
-  &-caution {
-    display: none;
-    margin: auto;
-  }
-
   &-empty {
     flex: 1 1 50%;
     padding: 0 0.75rem;
@@ -350,31 +333,8 @@ export default defineComponent({
   }
 }
 
-/* The Modal (background) */
-.semester-modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
 .bottomBar {
   margin-bottom: 350px;
-}
-
-.modal {
-  &--block {
-    display: block;
-  }
-  &--flex {
-    display: flex;
-  }
 }
 
 @media only screen and (max-width: $medium-breakpoint) {

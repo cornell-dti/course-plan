@@ -32,11 +32,11 @@ input {
     flex-direction: column;
     justify-content: space-between;
 
-    &--review {
+    &-review {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     &-reviewExam {
       display: flex;
@@ -134,6 +134,12 @@ input {
         margin-right: 65px;
       }
     }
+    &--small {
+      padding: 1.5rem 1.5rem;
+    }
+    &--undergrad {
+      padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+    }
   }
   &-subsection {
     width: 100%;
@@ -145,12 +151,12 @@ input {
   }
   &-subHeader {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 22px;
     position: relative;
     top: 23px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     /* identical to box height */
     display: flex;
     align-items: center;
@@ -171,6 +177,10 @@ input {
       background-color: $white;
       color: $lightPlaceholderGray;
       font-size: 16px;
+    }
+    &--indent {
+      padding-left: 3rem;
+      font-size: 18px;
     }
   }
   &-subHeader2 {
@@ -222,6 +232,7 @@ input {
       background-color: $white;
       color: $lightPlaceholderGray;
       font-size: 16px;
+      margin-bottom: 0;
     }
 
     &--subject {
@@ -356,6 +367,16 @@ input {
       color: $emGreen;
       border-radius: 0px;
       border-width: 0px;
+    }
+
+    &--disabled {
+      opacity: 0.3;
+      border: 1px solid $sangBlue;
+      background-color: $disabledGray;
+
+      &:hover {
+        opacity: 0.3;
+      }
     }
   }
 
@@ -496,10 +517,6 @@ input {
   &-dropdown-content div:hover {
     background: rgba(50, 160, 242, 0.15);
     width: 100%;
-  }
-
-  &--hidden {
-    display: none;
   }
 
   &-required-star {

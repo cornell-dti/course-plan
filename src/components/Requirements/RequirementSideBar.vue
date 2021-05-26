@@ -13,7 +13,6 @@
         class="fixed"
         :class="{
           'd-none': shouldShowAllCourses,
-          'position-static': isSafari && modalIsOpen,
         }"
         data-intro-group="req-tooltip"
         :data-intro="getCoursesTooltipText()"
@@ -35,7 +34,6 @@
             @activateMajor="activateMajor"
             @activateMinor="activateMinor"
             @onShowAllCourses="onShowAllCourses"
-            @modal-open="modalToggled"
           />
         </div>
       </div>
@@ -123,7 +121,6 @@ type Data = {
   shouldShowAllCourses: boolean;
   showAllPage: number;
   tourStep: number;
-  modalIsOpen: boolean;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -143,7 +140,6 @@ export default defineComponent({
   },
   emits: {
     showTourEndWindow: () => true,
-    'modal-open': (open: boolean) => typeof open === 'boolean',
   },
   data(): Data {
     return {
@@ -154,7 +150,6 @@ export default defineComponent({
       shouldShowAllCourses: false,
       showAllPage: 0,
       tourStep: 0,
-      modalIsOpen: false,
     };
   },
   watch: {
@@ -199,32 +194,20 @@ export default defineComponent({
     pageText(): string {
       return `Page ${this.showAllPage + 1}/${this.numPages}`;
     },
-    isSafari(): boolean {
-      const htmlElement = window.HTMLElement as unknown;
-      type windowType = {
-        safari: {
-          pushNotification: boolean;
-        };
-      };
-      const initWindow = window as unknown;
-      const typedWindow = initWindow as windowType;
-      return (
-        /constructor/i.test(htmlElement as string) ||
-        (p => p.toString() === '[object SafariRemoteNotification]')(
-          !typedWindow.safari ||
-            (typeof typedWindow.safari !== 'undefined' && typedWindow.safari.pushNotification)
-        )
-      );
-    },
   },
   methods: {
+    // TODO CHANGE FOR MULTIPLE COLLEGES & GRAD PROGRAMS
     showMajorOrMinorRequirements(id: number, group: string): boolean {
+      // colleges and programs should always be shown as there can only be 1
+      if (group === 'College' || group === 'Grad') {
+        return true;
+      }
+      // majors should be shown only if the id matches the index of the displayed major
       if (group === 'Major') {
         return id === this.displayedMajorIndex + this.numOfColleges;
       }
-      // TODO CHANGE FOR MULTIPLE COLLEGES & UNIVERISTIES
+      // minors should be shown depending on index and number of college and majors selected
       return (
-        id < this.numOfColleges ||
         id === this.displayedMinorIndex + this.numOfColleges + this.onboardingData.major.length
       );
     },
@@ -241,9 +224,9 @@ export default defineComponent({
       this.displayedMinorIndex = id;
     },
     getRequirementsTooltipText() {
-      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Meet your Requirements Bar <img src="${clipboard}" class = "introjs-emoji newSemester-emoji-text" alt="clipboard icon"/>
+      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Meet your Requirements Bar <img src="${clipboard}" class = "introjs-emoji introjs-emoji-text" alt="clipboard icon"/>
           </div><div class="introjs-customProgress">1/4</div></div><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and
-          required courses.<br><img src="${warning}" class = "newSemester-emoji-text" alt="warning icon"/> Some requirements
+          required courses.<br><img src="${warning}" class = "introjs-emoji-text" alt="warning icon"/> Some requirements
           aren’t fully tracked by us yet, so pay attention to the warnings.</div>`;
     },
     getCoursesTooltipText() {
@@ -300,10 +283,6 @@ export default defineComponent({
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
-      this.modalIsOpen = isOpen;
-    },
   },
 });
 </script>
@@ -325,9 +304,6 @@ export default defineComponent({
   height: 100%;
   width: 25rem;
   background-color: $white;
-}
-.position-static {
-  position: static;
 }
 .fixed {
   position: fixed;

@@ -33,11 +33,18 @@ type FirestoreSemester = {
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
+type FirestoreAPIBOverridenRequirements = {
+  // Values are slot names
+  readonly [requirementName: string]: readonly string[];
+};
 type FirestoreAPIBExam = {
   readonly type: 'AP' | 'IB';
   readonly score: number;
   readonly subject: string;
+  readonly optIn?: FirestoreAPIBOverridenRequirements;
+  readonly optOut?: FirestoreAPIBOverridenRequirements;
 };
+type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
 type FirestoreTransferClass = {
   readonly class: string;
   readonly course: CornellCourseRosterCourse;
@@ -47,9 +54,10 @@ type FirestoreOnboardingUserData = {
   readonly class: readonly FirestoreTransferClass[];
   readonly gradYear: string;
   readonly entranceYear: string;
-  readonly colleges: readonly FirestoreCollegeOrMajorOrMinor[];
-  readonly majors: readonly FirestoreCollegeOrMajorOrMinor[];
-  readonly minors: readonly FirestoreCollegeOrMajorOrMinor[];
+  readonly colleges: readonly FirestoreCollegeMajorMinorOrGrad[];
+  readonly majors: readonly FirestoreCollegeMajorMinorOrGrad[];
+  readonly minors: readonly FirestoreCollegeMajorMinorOrGrad[];
+  readonly gradPrograms: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly exam: readonly FirestoreAPIBExam[];
   readonly tookSwim: 'yes' | 'no';
 };
@@ -107,12 +115,14 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
   readonly catalogDistr?: string;
 }
 
+// college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
   readonly gradYear: string;
   readonly entranceYear: string;
-  readonly college: string;
+  readonly college?: string;
   readonly major: readonly string[];
   readonly minor: readonly string[];
+  readonly grad?: string;
   readonly exam: readonly FirestoreAPIBExam[];
   readonly transferCourse: readonly FirestoreTransferClass[];
   readonly tookSwim: 'yes' | 'no';
@@ -142,3 +152,14 @@ type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 
 /** Map from course's unique ID to requirement ID */
 type AppSelectableRequirementChoices = Readonly<Record<string, string>>;
+
+/** Map from course's unique ID to override options */
+type AppOverridenRequirementChoices = Readonly<
+  Record<
+    number,
+    {
+      readonly optIn: Record<string, Set<string>>;
+      readonly optOut: Record<string, Set<string>>;
+    }
+  >
+>;

@@ -7,7 +7,11 @@
       @on-toggle="toggleDescription()"
     />
     <div v-if="displayDescription" class="description">
-      <requirement-information :requirement="requirementFulfillment.requirement" :color="color" />
+      <requirement-information
+        :requirementFulfillment="requirementFulfillment"
+        v-model="compoundRequirementChoice"
+        :color="color"
+      />
       <div v-if="requirementFulfillment.requirement.fulfilledBy === 'toggleable'">
         <toggleable-requirement-choice-dropdown
           :toggleableRequirement="requirementFulfillment.requirement"
@@ -21,10 +25,10 @@
           requirementFulfillment.requirement.checkerWarning == null
         "
         :requirementFulfillment="requirementFulfillment"
+        :compoundRequirementChoice="compoundRequirementChoice"
         :isCompleted="isCompleted"
         :displayDescription="displayDescription"
         :toggleableRequirementChoice="toggleableRequirementChoice"
-        @modal-open="modalToggled"
         @onShowAllCourses="onShowAllCourses"
       />
       <requirement-self-check-slots
@@ -35,7 +39,6 @@
         :requirementFulfillment="requirementFulfillment"
         :isCompleted="isCompleted"
         :toggleableRequirementChoice="toggleableRequirementChoice"
-        @modal-open="modalToggled"
       />
     </div>
   </div>
@@ -70,7 +73,6 @@ export default defineComponent({
     tourStep: { type: Number, required: true },
   },
   emits: {
-    'modal-open': (open: boolean) => typeof open === 'boolean',
     changeToggleableRequirementChoice(id: string, option: string) {
       return typeof id === 'string' && typeof option === 'string';
     },
@@ -82,7 +84,7 @@ export default defineComponent({
     },
   },
   data() {
-    return { showDescription: false };
+    return { showDescription: false, compoundRequirementChoice: '' };
   },
   computed: {
     displayDescription(): boolean {
@@ -111,9 +113,6 @@ export default defineComponent({
     },
     convertCourse(course: FirestoreSemesterCourse): CourseTaken {
       return convertFirestoreSemesterCourseToCourseTaken(course);
-    },
-    modalToggled(isOpen: boolean) {
-      this.$emit('modal-open', isOpen);
     },
   },
 });
