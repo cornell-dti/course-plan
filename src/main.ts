@@ -13,6 +13,7 @@ import router from './router/index';
 import store from './store';
 
 import * as fb from './firebaseConfig';
+import { registerGateKeeper } from './debug-flags';
 
 // handle page reloads
 let app: VueApp | undefined;
@@ -28,3 +29,5 @@ fb.auth.onAuthStateChanged(() => {
     app.mount('#app');
   }
 });
+
+registerGateKeeper();
