@@ -23,6 +23,20 @@ export default class RequirementFulfillmentGraph<
 
   private readonly courseToRequirementsMap: Map<number, Set<Requirement>> = new Map();
 
+  public getAllRequirements(): readonly Requirement[] {
+    return Array.from(this.requirementToCoursesMap.keys());
+  }
+
+  public getAllCourses(): readonly Course[] {
+    const coursesMap = new Map<number, Course>();
+    Array.from(this.requirementToCoursesMap.values()).forEach(map => {
+      map.forEach((course, id) => {
+        coursesMap.set(id, course);
+      });
+    });
+    return Array.from(coursesMap.values());
+  }
+
   public getAllEdges(): readonly (readonly [Requirement, Course])[] {
     const edges: (readonly [Requirement, Course])[] = [];
     this.requirementToCoursesMap.forEach((courses, requirement) => {

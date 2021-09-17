@@ -20,6 +20,23 @@
         data-step="2"
         data-tooltipClass="tooltipCenter"
       >
+        <button
+          class="requirement-debugger-toggler"
+          v-if="debuggerAllowed"
+          @click="toggleDebugger()"
+        >
+          Open Requirement Debugger
+        </button>
+        <teleport-modal
+          content-class="requirement-debugger-modal-content"
+          :isSimpleModal="true"
+          v-if="displayDebugger"
+        >
+          <button class="requirement-debugger-toggler" @click="toggleDebugger()">
+            Close Requirement Debugger
+          </button>
+          <requirement-debugger />
+        </teleport-modal>
         <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
           <requirement-group
             :req="req"
@@ -97,8 +114,11 @@
 import draggable from 'vuedraggable';
 import { defineComponent } from 'vue';
 import introJs from 'intro.js';
+import { isRequirementDebuggerEnabled } from '@/debug-flags';
 
 import Course from '@/components/Course/Course.vue';
+import TeleportModal from '@/components/Modals/TeleportModal.vue';
+import RequirementDebugger from '@/components/Requirements/RequirementDebugger.vue';
 import RequirementGroup from '@/components/Requirements/RequirementGroup.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 
@@ -114,6 +134,7 @@ export type ShowAllCourses = {
 };
 
 type Data = {
+  displayDebugger: boolean;
   displayedMajorIndex: number;
   displayedMinorIndex: number;
   numOfColleges: number;
@@ -134,7 +155,14 @@ tour.setOption('exitOnOverlayClick', 'false');
 const maxSeeAllCoursesPerPage = 24;
 
 export default defineComponent({
-  components: { draggable, Course, DropDownArrow, RequirementGroup },
+  components: {
+    draggable,
+    Course,
+    DropDownArrow,
+    RequirementDebugger,
+    RequirementGroup,
+    TeleportModal,
+  },
   props: {
     startTour: { type: Boolean, required: true },
   },
@@ -143,6 +171,7 @@ export default defineComponent({
   },
   data(): Data {
     return {
+      displayDebugger: false,
       displayedMajorIndex: 0,
       displayedMinorIndex: 0,
       numOfColleges: 1,
@@ -170,6 +199,9 @@ export default defineComponent({
     },
   },
   computed: {
+    debuggerAllowed(): boolean {
+      return isRequirementDebuggerEnabled();
+    },
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
     },
@@ -196,6 +228,9 @@ export default defineComponent({
     },
   },
   methods: {
+    toggleDebugger(): void {
+      this.displayDebugger = !this.displayDebugger;
+    },
     // TODO CHANGE FOR MULTIPLE COLLEGES & GRAD PROGRAMS
     showMajorOrMinorRequirements(id: number, group: string): boolean {
       // colleges and programs should always be shown as there can only be 1
@@ -289,6 +324,10 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+.requirement-debugger-toggler {
+  background: $medGray;
+  color: white;
+}
 .separator {
   height: 1px;
   width: 100%;
@@ -440,5 +479,16 @@ h1.title {
     width: 100%;
     height: calc(100vh - 4.5rem);
   }
+}
+</style>
+<style lang="scss">
+.modal-content.requirement-debugger-modal-content {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 2em;
+  width: calc(100% - 10em);
+  height: 100vh;
+  overflow: scroll;
 }
 </style>
