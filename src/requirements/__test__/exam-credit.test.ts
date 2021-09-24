@@ -227,7 +227,7 @@ it('Equivalent course appears if it matches one major but not the other', () => 
   };
   let courseEquivalents = getCourseEquivalentsFromUserExams(userData);
   let courseIds = new Set(courseEquivalents.map(c => c.courseId));
-  let expected = new Set([NO_EQUIVALENT_COURSES_COURSE_ID]);
+  const expected = new Set([NO_EQUIVALENT_COURSES_COURSE_ID]);
   // If this fails, first check if the AP/IB equivalent course logic has changed.
   expect(courseIds).toEqual(expected);
 
