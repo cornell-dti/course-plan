@@ -7,7 +7,9 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Set up Node
-        uses: actions/setup-node@v2-beta
+        uses: actions/setup-node@v2
+        with:
+          cache: 'npm'
       - name: NPM Clean Install
         run: npm ci
       - name: Run Prettier Check
@@ -23,7 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Set up Node
-        uses: actions/setup-node@v2-beta
+        uses: actions/setup-node@v2
+        with:
+          cache: 'npm'
       - name: NPM Clean Install
         run: npm ci
       - name: Cypress Test
