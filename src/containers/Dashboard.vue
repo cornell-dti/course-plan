@@ -79,7 +79,7 @@ import {
   smallBreakpoint,
   mediumBreakpoint,
   veryLargeBreakpoint,
-} from '@/assets/scss/_variables.scss';
+} from '@/assets/constants/scss-variables';
 
 const smallBreakpointPixels = parseInt(
   smallBreakpoint.substring(0, smallBreakpoint.length - 2),

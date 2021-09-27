@@ -104,7 +104,7 @@ import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
-import { inactiveGray, yuxuanBlue, darkPlaceholderGray } from '@/assets/scss/_variables.scss';
+import { inactiveGray, yuxuanBlue, darkPlaceholderGray } from '@/assets/constants/scss-variables';
 
 type DisplayOption = {
   shown: boolean;
@@ -245,7 +245,6 @@ export default defineComponent({
 
       // scroll to the middle of the year div after visible (on the next tick)
       if (!contentShown && type === 'year') {
-        // @ts-expect-error: weird complaints about emit string type not assignable
         this.$nextTick(() => {
           (this.$refs[`year-ref-${this.scrollTopToElement}`] as Element).scrollIntoView({
             behavior: 'auto',
