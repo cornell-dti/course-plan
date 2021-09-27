@@ -61,19 +61,16 @@ const updateObjectValue = doc => {
 /**
  * Updates the exam property in the user-onboarding-data collection.
  */
-const updateExamProperty = doc => {
-  return doc.map(exam => {
-    return {
-      ...exam,
-      optIn: isChangingReqName
-        ? updateObjectProperty(exam.optIn)
-        : updateOnboardingSlotName(exam.optIn),
-      optOut: isChangingReqName
-        ? updateObjectProperty(exam.optOut)
-        : updateOnboardingSlotName(exam.optOut),
-    };
-  });
-};
+const updateExamProperty = doc =>
+  doc.map(exam => ({
+    ...exam,
+    optIn: isChangingReqName
+      ? updateObjectProperty(exam.optIn)
+      : updateOnboardingSlotName(exam.optIn),
+    optOut: isChangingReqName
+      ? updateObjectProperty(exam.optOut)
+      : updateOnboardingSlotName(exam.optOut),
+  }));
 
 const updateOnboardingSlotName = doc => {
   const newDoc = {};
@@ -129,7 +126,6 @@ if (process.argv[2] === '--dry-run') {
       JSON.stringify(newUserOnboardingData, undefined, 2)
     );
   });
-  return;
 } else {
   userOverriddenReqsCollection.get().then(userData => {
     Promise.all(

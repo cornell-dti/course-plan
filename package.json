@@ -7,7 +7,7 @@
     "build": "vue-cli-service build --mode production",
     "courses-gen": "ts-node -T -P tsconfig.node.json src/requirements/courses-json-generator.ts",
     "req-gen": "ts-node -T -P tsconfig.node.json src/requirements/requirement-json-generator.ts",
-    "lint": "vue-cli-service lint",
+    "lint": "eslint . --cache",
     "tsc": "tsc",
     "type-check": "tsc && vti diagnostics",
     "build:staging": "vue-cli-service build --mode staging",
