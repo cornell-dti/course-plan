@@ -157,13 +157,19 @@ export default defineComponent({
   mounted() {
     listenerUnsubscriber = initializeFirestoreListeners(() => {
       if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
+        console.log('loaded');
         this.loaded = true;
       } else {
+        console.log('new user');
+        console.log(this.onboardingData);
         this.onboardingData = {
           ...this.onboardingData,
           isFirst: true,
         };
-        console.log('new user');
+        console.log({
+          ...this.onboardingData,
+          isFirst: true,
+        });
         console.log(this.onboardingData);
         this.startOnboarding();
       }
