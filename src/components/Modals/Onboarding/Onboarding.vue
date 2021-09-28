@@ -208,6 +208,10 @@ export default defineComponent({
     submitOnboarding() {
       this.clearTransferCreditIfGraduate();
       setOnboardingData(this.name, this.onboarding);
+      this.onboarding = {
+        ...this.onboarding,
+        isFirst: false,
+      };
       this.$emit('onboard');
     },
     goBack() {

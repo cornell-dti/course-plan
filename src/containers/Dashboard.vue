@@ -159,6 +159,10 @@ export default defineComponent({
       if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
         this.loaded = true;
       } else {
+        this.onboardingData = {
+          ...this.onboardingData,
+          isFirst: true,
+        };
         this.startOnboarding();
       }
     });
