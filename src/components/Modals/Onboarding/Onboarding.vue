@@ -209,7 +209,7 @@ export default defineComponent({
       this.clearTransferCreditIfGraduate();
       setOnboardingData(this.name, this.onboarding);
       // indicates first time user onboarding
-      if (!isEditingProfile) populateSemesters(this.onboarding);
+      if (!this.isEditingProfile) populateSemesters(this.onboarding);
       this.$emit('onboard');
     },
     goBack() {
