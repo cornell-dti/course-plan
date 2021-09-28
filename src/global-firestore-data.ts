@@ -12,7 +12,6 @@ import {
 } from './firebaseConfig';
 import store from './store';
 import { GTag, GTagEvent } from './gtag';
-import { cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation } from './user-data-converter';
 
 // enum to define seasons as integers in season order
 export const SeasonsEnum = Object.freeze({
@@ -250,7 +249,7 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
     });
 
   console.log(onboarding);
-  if (onboarding.isFirst == true) {
+  if (onboarding.isFirst === true) {
     populateSemesters(parseInt(onboarding.entranceYear, 10), parseInt(onboarding.gradYear, 10));
   }
 };
