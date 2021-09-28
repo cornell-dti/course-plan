@@ -208,6 +208,7 @@ export default defineComponent({
     submitOnboarding() {
       this.clearTransferCreditIfGraduate();
       setOnboardingData(this.name, this.onboarding);
+      if (!isEditingProfile) populateSemesters(this.onboarding);
       this.$emit('onboard');
     },
     goBack() {

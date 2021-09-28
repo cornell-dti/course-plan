@@ -65,7 +65,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { populateSemesters } from '@/global-firestore-data';
 import introJs from 'intro.js';
 import SemesterView from '@/components/Semester/SemesterView.vue';
 import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue';
@@ -192,10 +191,6 @@ export default defineComponent({
     },
 
     endOnboarding() {
-      if (!this.isEditingProfile) {
-        console.log('new user !');
-        populateSemesters();
-      }
       if (!this.isMobile && !this.isEditingProfile) {
         this.welcomeHidden = true;
       }
