@@ -4,6 +4,7 @@ dist
 .vscode
 .firebase
 requirement-generator-dist/
+.eslintcache
 
 # local env files
 .env.local

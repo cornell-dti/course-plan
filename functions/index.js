@@ -2,12 +2,13 @@ const functions = require('firebase-functions');
 
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 const admin = require('firebase-admin');
+
 admin.initializeApp();
 const db = admin.firestore();
 const usernameCollection = db.collection('user-name');
 const semestersCollection = db.collection('user-semesters');
 
-let average = array => array.reduce((a, b) => a + b) / array.length;
+const average = array => array.reduce((a, b) => a + b) / array.length;
 function typeToMonth(type) {
   switch (type) {
     case 'Spring':
@@ -19,23 +20,23 @@ function typeToMonth(type) {
     case 'Winter':
       return 12;
     default:
+      throw new Error();
   }
 }
 function isOld(semester) {
-  var currentTime = new Date();
-  var month = currentTime.getMonth() + 1;
-  var year = currentTime.getFullYear();
+  const currentTime = new Date();
+  const month = currentTime.getMonth() + 1;
+  const year = currentTime.getFullYear();
   if (semester.year > year) {
     return false;
-  } else if (semester.year < year) {
-    return true;
-  } else {
-    if (typeToMonth(semester.type) <= month) {
-      return true;
-    } else {
-      return false;
-    }
   }
+  if (semester.year < year) {
+    return true;
+  }
+  if (typeToMonth(semester.type) <= month) {
+    return true;
+  }
+  return false;
 }
 /**
  * TrackUsers returns user metrics based on
@@ -98,6 +99,7 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
 
   Promise.all([usernamePromise, semesterPromise]).then(promiseResponses => {
     const response = Object.assign({}, ...promiseResponses);
+    // eslint-disable-next-line no-console
     console.log(response);
     res.send(response);
     return response;
