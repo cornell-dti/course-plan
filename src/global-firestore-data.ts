@@ -90,7 +90,7 @@ export const populateSemesters = (
   gradSem: FirestoreSemesterType = 'Spring'
 ): void => {
   // GTagEvent(gtag, 'populate-semester');
-  console.log(entranceYear)
+  console.log(entranceYear);
   const sems = [createSemester('Fall', entranceYear, []), createSemester('Spring', gradYear, [])];
   if (entranceSem === 'Spring') sems.push(createSemester('Spring', entranceYear, []));
   if (gradSem === 'Fall') sems.push(createSemester('Fall', gradYear, []));
@@ -243,15 +243,16 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
       tookSwim: onboarding.tookSwim,
     })
     .then(() => {
-      console.log(onboarding)
-      if (onboarding.isFirst == true) {
-        populateSemesters(parseInt(onboarding.entranceYear, 10), parseInt(onboarding.gradYear, 10));
-      }
       const newCollege = store.state.onboardingData.college;
       if (oldCollege !== newCollege) {
         clearOverridenRequirementsAPIB();
       }
     });
+
+  console.log(onboarding);
+  if (onboarding.isFirst == true) {
+    populateSemesters(parseInt(onboarding.entranceYear, 10), parseInt(onboarding.gradYear, 10));
+  }
 };
 
 const editAPIBExams = (
