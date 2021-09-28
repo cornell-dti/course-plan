@@ -42,8 +42,7 @@ function isOld(semester) {
  * TrackUsers returns user metrics based on
  * data from the user-name and user-semesters Firestore collections.
  *
- * It returns the first names of every user (people),
- * the total number of users (total-users),
+ * It returns the total number of users (total-users),
  * the total number of semesters across all users (total-semesters),
  * the average number of semesters per user (avg-semester),
  * the average number of older semesters that are/before the current semester
@@ -53,7 +52,6 @@ function isOld(semester) {
  */
 
 exports.TrackUsers = functions.https.onRequest(async (req, res) => {
-  const firstNames = [];
   let totalUsersCount = 0;
   const semesters = [];
   const oldSemesters = [];
@@ -62,11 +60,9 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
 
   const usernamePromise = usernameCollection.get().then(usernameQuerySnapshot => {
     usernameQuerySnapshot.forEach(doc => {
-      firstNames.push(doc.data().firstName);
       totalUsersCount += 1;
     });
     const usernameResponse = {
-      people: firstNames,
       'total-users': totalUsersCount,
     };
     return usernameResponse;
