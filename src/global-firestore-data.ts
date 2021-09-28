@@ -86,7 +86,6 @@ export const populateSemesters = (): void => {
   const entranceYear = parseInt(store.state.onboardingData.entranceYear, 10);
   const gradYear = parseInt(store.state.onboardingData.gradYear, 10);
 
-  // will obtain entrance and grad semesters from onboarding data once those fields are added to onboarding data type
   const entranceSem: FirestoreSemesterType = store.state.onboardingData.entranceSem
     ? store.state.onboardingData.entranceSem
     : 'Fall';
@@ -96,6 +95,7 @@ export const populateSemesters = (): void => {
 
   console.log(entranceYear);
   console.log(gradYear);
+  console.log(store.state.onboardingData.entranceYear);
   const sems = [createSemester('Fall', entranceYear, []), createSemester('Spring', gradYear, [])];
   if (entranceSem === 'Spring') sems.push(createSemester('Spring', entranceYear, []));
   if (gradSem === 'Fall') sems.push(createSemester('Fall', gradYear, []));
@@ -228,6 +228,13 @@ export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): 
 };
 
 export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboardingData): void => {
+  store.commit('setOnboardingData', {
+    ...store.state.onboardingData,
+    gradYear: onboarding.gradYear,
+    entranceYear: onboarding.entranceYear,
+    gradSem: onboarding.gradSem,
+    entranceSem: onboarding.entranceSem,
+  });
   usernameCollection.doc(store.state.currentFirebaseUser.email).set({
     firstName: name.firstName,
     middleName: name.middleName || '',
