@@ -126,7 +126,7 @@ type AppOnboardingData = {
   readonly exam: readonly FirestoreAPIBExam[];
   readonly transferCourse: readonly FirestoreTransferClass[];
   readonly tookSwim: 'yes' | 'no';
-  readonly isFirst: boolean;
+  readonly isFirst?: boolean;
 };
 
 type AppBottomBarCourse = {
