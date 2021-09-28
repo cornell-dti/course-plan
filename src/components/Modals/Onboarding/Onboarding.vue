@@ -207,12 +207,7 @@ export default defineComponent({
   methods: {
     submitOnboarding() {
       this.clearTransferCreditIfGraduate();
-      console.log(this.onboarding);
       setOnboardingData(this.name, this.onboarding);
-      this.onboarding = {
-        ...this.onboarding,
-        isFirst: false,
-      };
       this.$emit('onboard');
     },
     goBack() {

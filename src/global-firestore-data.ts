@@ -82,14 +82,20 @@ export const addSemester = (
 };
 
 // function to add all the semesters a user will be enrolled in based on entrance and graduation time
-export const populateSemesters = (
-  entranceYear: number,
-  gradYear: number,
-  entranceSem: FirestoreSemesterType = 'Fall',
-  gradSem: FirestoreSemesterType = 'Spring'
-): void => {
-  // GTagEvent(gtag, 'populate-semester');
+export const populateSemesters = (): void => {
+  const entranceYear = parseInt(store.state.onboardingData.entranceYear, 10);
+  const gradYear = parseInt(store.state.onboardingData.gradYear, 10);
+
+  // will obtain entrance and grad semesters from onboarding data once those fields are added to onboarding data type
+  const entranceSem: FirestoreSemesterType = store.state.onboardingData.entranceSem
+    ? store.state.onboardingData.entranceSem
+    : 'Fall';
+  const gradSem: FirestoreSemesterType = store.state.onboardingData.gradSem
+    ? store.state.onboardingData.gradSem
+    : 'Spring';
+
   console.log(entranceYear);
+  console.log(gradYear);
   const sems = [createSemester('Fall', entranceYear, []), createSemester('Spring', gradYear, [])];
   if (entranceSem === 'Spring') sems.push(createSemester('Spring', entranceYear, []));
   if (gradSem === 'Fall') sems.push(createSemester('Fall', gradYear, []));
@@ -222,7 +228,6 @@ export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): 
 };
 
 export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboardingData): void => {
-  console.log('setonboardingdata called');
   usernameCollection.doc(store.state.currentFirebaseUser.email).set({
     firstName: name.firstName,
     middleName: name.middleName || '',
@@ -248,11 +253,6 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
         clearOverridenRequirementsAPIB();
       }
     });
-
-  console.log(onboarding);
-  if (onboarding.isFirst === true) {
-    populateSemesters(parseInt(onboarding.entranceYear, 10), parseInt(onboarding.gradYear, 10));
-  }
 };
 
 const editAPIBExams = (
