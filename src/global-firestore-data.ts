@@ -12,6 +12,7 @@ import {
 } from './firebaseConfig';
 import store from './store';
 import { GTag, GTagEvent } from './gtag';
+import { cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation } from './user-data-converter';
 
 // enum to define seasons as integers in season order
 export const SeasonsEnum = Object.freeze({
@@ -42,6 +43,7 @@ const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
   const newSemesters = updater(store.state.semesters);
+  console.log(newSemesters);
   store.commit('setSemesters', newSemesters);
   semestersCollection.doc(store.state.currentFirebaseUser.email).set({ semesters: newSemesters });
 };
@@ -88,6 +90,7 @@ export const populateSemesters = (
   gradSem: FirestoreSemesterType = 'Spring'
 ): void => {
   // GTagEvent(gtag, 'populate-semester');
+  console.log(entranceYear)
   const sems = [createSemester('Fall', entranceYear, []), createSemester('Spring', gradYear, [])];
   if (entranceSem === 'Spring') sems.push(createSemester('Spring', entranceYear, []));
   if (gradSem === 'Fall') sems.push(createSemester('Fall', gradYear, []));
@@ -240,8 +243,10 @@ export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboar
       tookSwim: onboarding.tookSwim,
     })
     .then(() => {
-      if (onboarding.isFirst)
+      console.log(onboarding)
+      if (onboarding.isFirst == true) {
         populateSemesters(parseInt(onboarding.entranceYear, 10), parseInt(onboarding.gradYear, 10));
+      }
       const newCollege = store.state.onboardingData.college;
       if (oldCollege !== newCollege) {
         clearOverridenRequirementsAPIB();
