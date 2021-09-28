@@ -112,7 +112,7 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { setOnboardingData } from '@/global-firestore-data';
+import { setOnboardingData, populateSemesters } from '@/global-firestore-data';
 import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
 
 const placeholderText = 'Select one';
@@ -208,6 +208,8 @@ export default defineComponent({
     submitOnboarding() {
       this.clearTransferCreditIfGraduate();
       setOnboardingData(this.name, this.onboarding);
+      // indicates first time user onboarding
+      if (!isEditingProfile) populateSemesters(this.onboarding);
       this.$emit('onboard');
     },
     goBack() {
