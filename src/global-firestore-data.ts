@@ -222,6 +222,7 @@ export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): 
 };
 
 export const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboardingData): void => {
+  console.log('setonboardingdata called');
   usernameCollection.doc(store.state.currentFirebaseUser.email).set({
     firstName: name.firstName,
     middleName: name.middleName || '',

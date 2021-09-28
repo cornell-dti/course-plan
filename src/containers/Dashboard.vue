@@ -163,6 +163,7 @@ export default defineComponent({
           ...this.onboardingData,
           isFirst: true,
         };
+        console.log(this.onboardingData);
         this.startOnboarding();
       }
     });
