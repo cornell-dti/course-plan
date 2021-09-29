@@ -44,7 +44,7 @@ import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
-import { onboardingDataCollection } from '@/firebaseConfig';
+import { onboardingDataCollection } from '@/firebase-frontend-config';
 import getCurrentSeason, { getCurrentYear, clickOutside } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit

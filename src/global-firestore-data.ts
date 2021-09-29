@@ -9,7 +9,7 @@ import {
   toggleableRequirementChoicesCollection,
   selectableRequirementChoicesCollection,
   uniqueIncrementerCollection,
-} from './firebaseConfig';
+} from './firebase-frontend-config';
 import store from './store';
 import { GTag, GTagEvent } from './gtag';
 
