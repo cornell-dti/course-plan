@@ -150,7 +150,7 @@ import firebase from 'firebase/app';
 import CustomFooter from '@/components/Footer.vue';
 
 import { GTagLoginEvent } from '@/gtag';
-import * as fb from '@/firebaseConfig';
+import * as fb from '@/firebase-frontend-config';
 import store from '@/store';
 import { checkNotNull } from '@/utilities';
 
