@@ -20,6 +20,14 @@ type FirestoreSemesterCourse = {
   readonly color: string;
 };
 
+type FirestoreSpecialCourse = {
+  readonly uniqueID: string;
+  readonly code: string;
+  readonly name: string;
+  readonly credits: number;
+  readonly category: string;
+};
+
 // This is used for drag&drop between SubRequirement and Semester
 type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
   readonly requirementID?: string;
@@ -156,7 +164,7 @@ type AppSelectableRequirementChoices = Readonly<Record<string, string>>;
 /** Map from course's unique ID to override options */
 type AppOverridenRequirementChoices = Readonly<
   Record<
-    number,
+    string,
     {
       readonly optIn: Record<string, Set<string>>;
       readonly optOut: Record<string, Set<string>>;

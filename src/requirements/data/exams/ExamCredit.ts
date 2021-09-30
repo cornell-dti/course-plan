@@ -390,15 +390,10 @@ function userDataToCourses(
   major: string,
   userData: ExamsTaken,
   examType: 'AP' | 'IB',
-  uniqueIdDecrementer: number
 ): CourseTaken[] {
   const userExams = userData[examType];
   const exams = examData[examType];
   const courses: CourseTaken[] = [];
-  // uniqueId starts at -2 and is decremented for each course added (-1 is reserved for swim test).
-  // uniqueIdDecrementer needs to be passed as an accumulator because the function is called multiple times,
-  // once for each examType. this assigned uniqueId is not stable and should not be stored in firestore.
-  let uniqueId = -2 - uniqueIdDecrementer;
   userExams.forEach(userExam => {
     // match exam to user-taken exam
     const exam = exams.reduce((prev: ExamRequirements | undefined, curr: ExamRequirements) => {
@@ -411,8 +406,10 @@ function userDataToCourses(
       }
       return prev;
     }, undefined);
-    // generate the equivalent course
+    // generate the equivalent course(s)
+    // multiple equivalent courses for the same exam can share a unique id, i.e., the unique id represents the exam id
     let courseEquivalentsExist = false;
+    const uniqueId = userExam.subject;
     if (exam) {
       const courseEquivalents =
         (exam.fulfillment.courseEquivalents &&
@@ -432,7 +429,6 @@ function userDataToCourses(
             code: `${examType} ${exam.name}`,
             credits: exam.fulfillment.credits,
           });
-          uniqueId -= 1;
         } else {
           // separate credits from equivalent course
           courses.push({
@@ -441,7 +437,6 @@ function userDataToCourses(
             code: `${examType} ${exam.name}`,
             credits: exam.fulfillment.credits,
           });
-          uniqueId -= 1;
           courseEquivalents.forEach(courseId => {
             courses.push({
               courseId,
@@ -449,7 +444,6 @@ function userDataToCourses(
               code: `${examType} ${exam.name}`,
               credits: 0,
             });
-            uniqueId -= 1;
           });
         }
       }
@@ -461,7 +455,6 @@ function userDataToCourses(
         code: `${examType} ${userExam.subject}`,
         credits: 0,
       });
-      uniqueId -= 1;
     }
   });
   return courses;
@@ -472,13 +465,12 @@ export function getCourseEquivalentsFromOneMajor(
   major: string,
   userData: ExamsTaken
 ): readonly CourseTaken[] {
-  const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP', 0);
+  const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
   const IBCourseEquivalents = userDataToCourses(
     college,
     major,
     userData,
     'IB',
-    APCourseEquivalents.length
   );
   return APCourseEquivalents.concat(IBCourseEquivalents);
 }
@@ -497,11 +489,11 @@ export default function getCourseEquivalentsFromUserExams(
   user.major.forEach((major: string) =>
     user.college
       ? getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
-          if (!examCourseCodeSet.has(course.code)) {
-            examCourseCodeSet.add(course.code);
-            courses.push(course);
-          }
-        })
+        if (!examCourseCodeSet.has(course.code)) {
+          examCourseCodeSet.add(course.code);
+          courses.push(course);
+        }
+      })
       : []
   );
   return courses;
