@@ -38,8 +38,11 @@ import { defineComponent } from 'vue';
 
 import { clickOutside } from '@/utilities';
 import store from '@/store';
-import { addCourseToSemester, addCourseToSelectableRequirements } from '@/global-firestore-data';
-import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
+import {
+  cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
+  addCourseToSemester,
+  addCourseToSelectableRequirements,
+} from '@/global-firestore-data';
 import { canFulfillChecker } from '@/requirements/requirement-frontend-utils';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
@@ -151,7 +154,7 @@ export default defineComponent({
     },
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterType, year: number) {
       this.showDropdown = false;
-      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(course);
+      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(course);
       addCourseToSemester(season, year, newCourse, this.subReqId, this.$gtag);
     },
     openCourseModal() {

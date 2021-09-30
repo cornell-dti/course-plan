@@ -9,6 +9,7 @@
     "serve:build": "serve --listen 8080 --single dist",
     "courses-gen": "ts-node -T -P tsconfig.node.json src/requirements/courses-json-generator.ts",
     "req-gen": "ts-node -T -P tsconfig.node.json src/requirements/requirement-json-generator.ts",
+    "req-graph-dump": "ts-node -T -P tsconfig.node.json src/requirements/requirement-graph-dumper.ts",
     "lint": "eslint . --cache",
     "tsc": "tsc",
     "type-check": "tsc && vti diagnostics",
