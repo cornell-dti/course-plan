@@ -58,6 +58,21 @@ function addToFrequencyDictionary(categories, freqDict) {
   });
 }
 
+// adds year to freqDict if not set, otherwise increments frequency by 1
+// simplified version of addToFrequencyDictionary for entrance/grad year, as they
+// are single elements, not lists, and do not have an acronym prop
+function addYearToFrequencyDictionary(year, freqDict) {
+  if (!year) {
+    return;
+  }
+
+  if (year in freqDict) {
+    freqDict[year] += 1;
+  } else {
+    freqDict[year] = 1;
+  }
+}
+
 /**
  * TrackUsers returns user metrics based on
  * data from the user-name and user-semesters Firestore collections.
@@ -120,35 +135,43 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
 
     let totalNumMajors = 0;
     let totalNumMinors = 0;
+    let totalNumExams = 0;
 
     let collegeFreq = {};
     let programFreq = {};
     let majorFreq = {};
     let minorFreq = {};
 
+    let entranceYearFreq = {};
+    let gradYearFreq = {};
+
     for (let i in onboardingQuerySnapshot.docs) {
       const doc = onboardingQuerySnapshot.docs[i];
-      const majors = doc.data().majors,
-      const minors = doc.data().minors,
+      const majors = doc.data().majors;
+      const minors = doc.data().minors;
+      const exams = doc.data().exam;
 
       addToFrequencyDictionary(doc.data().colleges, collegeFreq);
       addToFrequencyDictionary(doc.data().gradPrograms, programFreq);
       addToFrequencyDictionary(majors, majorFreq);
       addToFrequencyDictionary(minors, minorFreq);
 
+      addYearToFrequencyDictionary(doc.data().entranceYear, entranceYearFreq);
+      addYearToFrequencyDictionary(doc.data().gradYear, gradYearFreq);
+
       let isUndergrad = false;
       let isGrad = false;
 
-      if (isUndergrad && isGrad) {
-        undergradAndGradCount += 1;
+      if (isUndergrad) {
+        if (isGrad) {
+          undergradAndGradCount += 1;
+        } else {
+          undergradCount += 1;
+        }
 
-        totalNumMajors += majors.length;
-        totalNumMinors += minors.length;
-      } else if (isUndergrad) {
-        undergradCount += 1;
-
-        totalNumMajors += majors.length;
-        totalNumMinors += minors.length;
+        totalNumMajors += majors ? majors.length : 0;
+        totalNumMinors += minors ? minors.length : 0;
+        totalNumExams += exams ? exams.length : 0;
       } else if (isGrad) {
         gradCount += 1;
       }
@@ -162,8 +185,14 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
       'major-frequencies': majorFreq,
       'minor-frequencies': minorFreq,
       'graduate-program-frequencies': programFreq,
-      'average-number-majors-for-undergrads': totalNumMajors / (undergradAndGradCount + undergradCount),
-      'average-number-minors-for-undergrads': totalNumMinors / (undergradAndGradCount + undergradCount),
+      'average-number-majors-for-undergrads':
+        totalNumMajors / (undergradAndGradCount + undergradCount),
+      'average-number-minors-for-undergrads':
+        totalNumMinors / (undergradAndGradCount + undergradCount),
+      'average-number-ap/ib-exams-for-undergrads':
+        totalNumExams / (undergradAndGradCount + undergradCount),
+      'entrance-year-frequencies': entranceYearFreq,
+      'grad-year-frequencies': gradYearFreq,
     };
 
     return onboardingResponse;
