@@ -20,14 +20,6 @@ type FirestoreSemesterCourse = {
   readonly color: string;
 };
 
-type FirestoreSpecialCourse = {
-  readonly uniqueID: string;
-  readonly code: string;
-  readonly name: string;
-  readonly credits: number;
-  readonly category: string;
-};
-
 // This is used for drag&drop between SubRequirement and Semester
 type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
   readonly requirementID?: string;
