@@ -409,7 +409,7 @@ function userDataToCourses(
     // generate the equivalent course(s)
     // multiple equivalent courses for the same exam can share a unique id, i.e., the unique id represents the exam id
     let courseEquivalentsExist = false;
-    const uniqueId = userExam.subject;
+    const name = `${examType} ${userExam.subject}`;
     if (exam) {
       const courseEquivalents =
         (exam.fulfillment.courseEquivalents &&
@@ -425,23 +425,23 @@ function userDataToCourses(
           const courseId = courseEquivalents[0];
           courses.push({
             courseId,
-            uniqueId,
-            code: `${examType} ${exam.name}`,
+            uniqueId: name,
+            code: name,
             credits: exam.fulfillment.credits,
           });
         } else {
           // separate credits from equivalent course
           courses.push({
             courseId: CREDITS_COURSE_ID,
-            uniqueId,
-            code: `${examType} ${exam.name}`,
+            uniqueId: name,
+            code: name,
             credits: exam.fulfillment.credits,
           });
           courseEquivalents.forEach(courseId => {
             courses.push({
               courseId,
-              uniqueId,
-              code: `${examType} ${exam.name}`,
+              uniqueId: name,
+              code: name,
               credits: 0,
             });
           });
@@ -451,8 +451,8 @@ function userDataToCourses(
     if (!courseEquivalentsExist) {
       courses.push({
         courseId: NO_EQUIVALENT_COURSES_COURSE_ID,
-        uniqueId,
-        code: `${examType} ${userExam.subject}`,
+        uniqueId: name,
+        code: name,
         credits: 0,
       });
     }

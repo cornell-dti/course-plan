@@ -105,7 +105,7 @@ export const courseIsForeignLang = (course: Course): boolean =>
   FLcourses.some(language => course.subject?.includes(language) ?? false);
 
 /**
- * Detects special (synthetic) courses, as defined in requirement-json-generator.ts
+ * Detects special courses, as defined in constants.ts
  *
  * @param course course object with useful information retrived from Cornell courses API.
  * @returns if the course is a special course
