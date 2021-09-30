@@ -214,7 +214,7 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .top-sec {
-  background-image: url('~@/assets/images/landing_new/top_rect.svg');
+  background-image: url('@/assets/images/landing_new/top_rect.svg');
   background-repeat: no-repeat;
   background-size: 100vw 900px;
   overflow: hidden;

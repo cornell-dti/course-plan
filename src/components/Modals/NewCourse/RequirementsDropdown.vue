@@ -72,7 +72,7 @@ import { PropType, defineComponent } from 'vue';
 
 import { clickOutside } from '@/utilities';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import { emGreen } from '@/assets/scss/_variables.scss';
+import { emGreen } from '@/assets/constants/scss-variables';
 
 type Data = {
   showDropdown: boolean;

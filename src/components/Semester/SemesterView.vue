@@ -264,26 +264,26 @@ export default defineComponent({
   }
 
   &-twoColumn {
-    background-image: url('~@/assets/images/views/twoColumn.svg');
+    background-image: url('@/assets/images/views/twoColumn.svg');
 
     &:hover,
     &:focus,
     &:active,
     &--active {
       cursor: pointer;
-      background-image: url('~@/assets/images/views/twoColumnSelected.svg');
+      background-image: url('@/assets/images/views/twoColumnSelected.svg');
     }
   }
 
   &-fourColumn {
-    background-image: url('~@/assets/images/views/fourColumn.svg');
+    background-image: url('@/assets/images/views/fourColumn.svg');
 
     &:hover,
     &:focus,
     &:active,
     &--active {
       cursor: pointer;
-      background-image: url('~@/assets/images/views/fourColumnSelected.svg');
+      background-image: url('@/assets/images/views/fourColumnSelected.svg');
     }
   }
 

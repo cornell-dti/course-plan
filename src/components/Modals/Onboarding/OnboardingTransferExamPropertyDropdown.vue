@@ -42,7 +42,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
-import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
+import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/constants/scss-variables';
 
 const placeholderText = 'Select one';
 
