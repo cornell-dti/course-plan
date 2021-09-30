@@ -115,38 +115,38 @@ $mobile-navbar-height: 4.5rem;
   }
 
   .profile-icon {
-    background-image: url('~@/assets/images/navbar/profileIcon.svg');
+    background-image: url('@/assets/images/navbar/profileIcon.svg');
 
     &:hover,
     &:focus,
     &:active {
-      background-image: url('~@/assets/images/navbar/profileIconBlue.svg');
+      background-image: url('@/assets/images/navbar/profileIconBlue.svg');
     }
   }
 
   .requirements-bar {
     display: none;
-    background-image: url('~@/assets/images/navbar/requirement-toggle.svg');
+    background-image: url('@/assets/images/navbar/requirement-toggle.svg');
   }
 
   .hamburger {
     display: none;
-    background-image: url('~@/assets/images/navbar/hamburger-gray.svg');
+    background-image: url('@/assets/images/navbar/hamburger-gray.svg');
 
     &:hover,
     &:focus,
     &:active {
-      background-image: url('~@/assets/images/navbar/hamburger-blue.svg');
+      background-image: url('@/assets/images/navbar/hamburger-blue.svg');
     }
   }
 
   .logout-icon {
-    background-image: url('~@/assets/images/navbar/logout.svg');
+    background-image: url('@/assets/images/navbar/logout.svg');
 
     &:hover,
     &:focus,
     &:active {
-      background-image: url('~@/assets/images/navbar/logoutBlue.svg');
+      background-image: url('@/assets/images/navbar/logoutBlue.svg');
     }
   }
 
@@ -184,11 +184,11 @@ $mobile-navbar-height: 4.5rem;
   }
 
   .profile-mobile-icon {
-    background-image: url('~@/assets/images/navbar/profile-mobile-icon.svg');
+    background-image: url('@/assets/images/navbar/profile-mobile-icon.svg');
   }
 
   .logout-mobile-icon {
-    background-image: url('~@/assets/images/navbar/logout-mobile-icon.svg');
+    background-image: url('@/assets/images/navbar/logout-mobile-icon.svg');
   }
 }
 
