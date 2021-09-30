@@ -46,7 +46,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
-import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/scss/_variables.scss';
+import { inactiveGray, yuxuanBlue, lightPlaceholderGray } from '@/assets/constants/scss-variables';
 
 export default defineComponent({
   props: {
@@ -115,7 +115,6 @@ export default defineComponent({
 
       // scroll the bottom of the graduation year dropdown to scrollBottomToElement
       if (!contentShown && this.scrollBottomToElement > 0) {
-        // @ts-expect-error: weird complaints about emit string type not assignable
         this.$nextTick(() => {
           (this.$refs[`scroll-ref-${this.scrollBottomToElement}`] as Element).scrollIntoView({
             behavior: 'auto',

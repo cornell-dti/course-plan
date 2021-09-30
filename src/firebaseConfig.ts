@@ -5,7 +5,7 @@ import 'firebase/firestore';
 import 'firebase/functions';
 
 let config;
-if (process.env.VUE_APP_FIREBASE_MODE === 'prod') {
+if (import.meta.env.VITE_FIREBASE_MODE === 'prod') {
   // Production config
   config = {
     apiKey: 'AIzaSyDkKOpImjbjS2O0RhIQNJLQXx2SuYbxsfU',
