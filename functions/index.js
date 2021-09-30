@@ -7,6 +7,7 @@ admin.initializeApp();
 const db = admin.firestore();
 const usernameCollection = db.collection('user-name');
 const semestersCollection = db.collection('user-semesters');
+const onboardingCollection = db.collection('user-onboarding-data');
 
 const average = array => array.reduce((a, b) => a + b) / array.length;
 function typeToMonth(type) {
@@ -38,6 +39,25 @@ function isOld(semester) {
   }
   return false;
 }
+
+// add all colleges/programs/majors etc. in arr to frequency dict
+// TODO this will not show any colleges/grad programs with 0 people.
+// Need to look at requirements data and add each to the map with 0 frequency to do so.
+function addToFrequencyDictionary(categories, freqDict) {
+  // if no colleges/programs/majors/minors for this doc, skip
+  if (!categories) {
+    return;
+  }
+
+  categories.forEach(category => {
+    if (category.acronym in freqDict) {
+      freqDict[category.acronym] += 1;
+    } else {
+      freqDict[category.acronym] = 1;
+    }
+  });
+}
+
 /**
  * TrackUsers returns user metrics based on
  * data from the user-name and user-semesters Firestore collections.
@@ -93,7 +113,50 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
     return semesterResponse;
   });
 
-  Promise.all([usernamePromise, semesterPromise]).then(promiseResponses => {
+  const onboardingPromise = onboardingCollection.get().then(onboardingQuerySnapshot => {
+    let undergradCount = 0;
+    let gradCount = 0;
+    let undergradAndGradCount = 0;
+
+    let collegeFreq = {};
+    let programFreq = {};
+    let majorFreq = {};
+    let minorFreq = {};
+
+    for (let i in onboardingQuerySnapshot.docs) {
+      const doc = onboardingQuerySnapshot.docs[i];
+
+      addToFrequencyDictionary(doc.data().colleges, collegeFreq);
+      addToFrequencyDictionary(doc.data().gradPrograms, programFreq);
+      addToFrequencyDictionary(doc.data().majors, majorFreq);
+      addToFrequencyDictionary(doc.data().minors, minorFreq);
+
+      let isUndergrad = false;
+      let isGrad = false;
+
+      if (isUndergrad && isGrad) {
+        undergradAndGradCount += 1;
+      } else if (isUndergrad) {
+        undergradCount += 1;
+      } else if (isGrad) {
+        gradCount += 1;
+      }
+    }
+
+    const onboardingResponse = {
+      'undergrad-students': undergradCount,
+      'grad-students': gradCount,
+      'both-undergrad-and-grad-students': undergradAndGradCount,
+      'undergrad-college-frequencies': collegeFreq,
+      'major-frequencies': majorFreq,
+      'minor-frequencies': minorFreq,
+      'graduate-program-frequencies': programFreq,
+    };
+
+    return onboardingResponse;
+  });
+
+  Promise.all([usernamePromise, semesterPromise, onboardingPromise]).then(promiseResponses => {
     const response = Object.assign({}, ...promiseResponses);
     // eslint-disable-next-line no-console
     console.log(response);
