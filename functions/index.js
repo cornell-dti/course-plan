@@ -79,7 +79,7 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
   let semesterCount = 0;
 
   const usernamePromise = usernameCollection.get().then(usernameQuerySnapshot => {
-    usernameQuerySnapshot.forEach(doc => {
+    usernameQuerySnapshot.forEach(() => {
       totalUsersCount += 1;
     });
     const usernameResponse = {
@@ -118,6 +118,9 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
     let gradCount = 0;
     let undergradAndGradCount = 0;
 
+    let totalNumMajors = 0;
+    let totalNumMinors = 0;
+
     let collegeFreq = {};
     let programFreq = {};
     let majorFreq = {};
@@ -125,19 +128,27 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
 
     for (let i in onboardingQuerySnapshot.docs) {
       const doc = onboardingQuerySnapshot.docs[i];
+      const majors = doc.data().majors,
+      const minors = doc.data().minors,
 
       addToFrequencyDictionary(doc.data().colleges, collegeFreq);
       addToFrequencyDictionary(doc.data().gradPrograms, programFreq);
-      addToFrequencyDictionary(doc.data().majors, majorFreq);
-      addToFrequencyDictionary(doc.data().minors, minorFreq);
+      addToFrequencyDictionary(majors, majorFreq);
+      addToFrequencyDictionary(minors, minorFreq);
 
       let isUndergrad = false;
       let isGrad = false;
 
       if (isUndergrad && isGrad) {
         undergradAndGradCount += 1;
+
+        totalNumMajors += majors.length;
+        totalNumMinors += minors.length;
       } else if (isUndergrad) {
         undergradCount += 1;
+
+        totalNumMajors += majors.length;
+        totalNumMinors += minors.length;
       } else if (isGrad) {
         gradCount += 1;
       }
@@ -151,6 +162,8 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
       'major-frequencies': majorFreq,
       'minor-frequencies': minorFreq,
       'graduate-program-frequencies': programFreq,
+      'average-number-majors-for-undergrads': totalNumMajors / (undergradAndGradCount + undergradCount),
+      'average-number-minors-for-undergrads': totalNumMinors / (undergradAndGradCount + undergradCount),
     };
 
     return onboardingResponse;
