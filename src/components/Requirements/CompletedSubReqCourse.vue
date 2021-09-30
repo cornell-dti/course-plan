@@ -15,9 +15,7 @@
           /></span>
           {{ slotName }}
         </div>
-        <button class="reqCourse-button" @click="onDeleteModalOpen">
-          Delete >
-        </button>
+        <button class="reqCourse-button" @click="onDeleteModalOpen">Delete ></button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
@@ -27,9 +25,7 @@
           :isCompletedReqCourse="true"
           class="completed-reqCourses-course-object"
         />
-        <div class="completed-reqCourses-course-object-semester">
-          in {{ semesterLabel }}
-        </div>
+        <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
       </div>
     </div>
     <slot-menu
@@ -87,8 +83,7 @@ export default defineComponent({
       if (this.isTransferCredit) return transferCreditColor;
       const { uniqueId } = this.courseTaken;
       const course =
-        (typeof uniqueId === 'number' &&
-          store.state.derivedCoursesData.courseMap[uniqueId]) ||
+        (typeof uniqueId === 'number' && store.state.derivedCoursesData.courseMap[uniqueId]) ||
         null;
       return course !== null ? course.color : '';
     },
@@ -112,17 +107,12 @@ export default defineComponent({
 
           const onBoardingData = store.state.onboardingData;
 
-          onboardingDataCollection
-            .doc(store.state.currentFirebaseUser.email)
-            .update({
-              exam: onBoardingData.exam.filter(
-                e => !(e.type === type && e.subject === name)
-              ),
-            });
+          onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
+            exam: onBoardingData.exam.filter(e => !(e.type === type && e.subject === name)),
+          });
         } else {
           const { uniqueId } = this.courseTaken;
-          if (typeof uniqueId === 'number')
-            deleteCourseFromSemesters(uniqueId, this.$gtag);
+          if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);
         }
       }
     },

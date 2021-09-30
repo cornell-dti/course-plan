@@ -389,7 +389,7 @@ function userDataToCourses(
   college: string,
   major: string,
   userData: ExamsTaken,
-  examType: 'AP' | 'IB',
+  examType: 'AP' | 'IB'
 ): CourseTaken[] {
   const userExams = userData[examType];
   const exams = examData[examType];
@@ -466,12 +466,7 @@ export function getCourseEquivalentsFromOneMajor(
   userData: ExamsTaken
 ): readonly CourseTaken[] {
   const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
-  const IBCourseEquivalents = userDataToCourses(
-    college,
-    major,
-    userData,
-    'IB',
-  );
+  const IBCourseEquivalents = userDataToCourses(college, major, userData, 'IB');
   return APCourseEquivalents.concat(IBCourseEquivalents);
 }
 
@@ -489,11 +484,11 @@ export default function getCourseEquivalentsFromUserExams(
   user.major.forEach((major: string) =>
     user.college
       ? getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
-        if (!examCourseCodeSet.has(course.code)) {
-          examCourseCodeSet.add(course.code);
-          courses.push(course);
-        }
-      })
+          if (!examCourseCodeSet.has(course.code)) {
+            examCourseCodeSet.add(course.code);
+            courses.push(course);
+          }
+        })
       : []
   );
   return courses;

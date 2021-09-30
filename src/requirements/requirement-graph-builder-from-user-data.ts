@@ -57,7 +57,9 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     ),
     userChoiceOnDoubleCountingElimination: Object.fromEntries(
       Object.entries(selectableRequirementChoices).map(([uniqueIDString, requirementID]) => {
-        const uniqueId = Number.isNaN(uniqueIDString) ? uniqueIDString : parseInt(uniqueIDString, 10);
+        const uniqueId = Number.isNaN(uniqueIDString)
+          ? uniqueIDString
+          : parseInt(uniqueIDString, 10);
         return [uniqueId, requirementID] as const;
       })
     ),
