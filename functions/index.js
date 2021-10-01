@@ -137,30 +137,27 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
     let totalNumMinors = 0;
     let totalNumExams = 0;
 
-    let collegeFreq = {};
-    let programFreq = {};
-    let majorFreq = {};
-    let minorFreq = {};
+    const collegeFreq = {};
+    const programFreq = {};
+    const majorFreq = {};
+    const minorFreq = {};
 
-    let entranceYearFreq = {};
-    let gradYearFreq = {};
+    const entranceYearFreq = {};
+    const gradYearFreq = {};
 
-    for (let i in onboardingQuerySnapshot.docs) {
-      const doc = onboardingQuerySnapshot.docs[i];
-      const majors = doc.data().majors;
-      const minors = doc.data().minors;
-      const exams = doc.data().exam;
+    onboardingQuerySnapshot.forEach(doc => {
+      const { majors, minors, exams, colleges, gradPrograms } = doc.data();
 
-      addToFrequencyDictionary(doc.data().colleges, collegeFreq);
-      addToFrequencyDictionary(doc.data().gradPrograms, programFreq);
+      addToFrequencyDictionary(colleges, collegeFreq);
+      addToFrequencyDictionary(gradPrograms, programFreq);
       addToFrequencyDictionary(majors, majorFreq);
       addToFrequencyDictionary(minors, minorFreq);
 
       addYearToFrequencyDictionary(doc.data().entranceYear, entranceYearFreq);
       addYearToFrequencyDictionary(doc.data().gradYear, gradYearFreq);
 
-      let isUndergrad = false;
-      let isGrad = false;
+      const isUndergrad = colleges && colleges.length > 0;
+      const isGrad = gradPrograms && gradPrograms.length > 0;
 
       if (isUndergrad) {
         if (isGrad) {
@@ -175,7 +172,7 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
       } else if (isGrad) {
         gradCount += 1;
       }
-    }
+    });
 
     const onboardingResponse = {
       'undergrad-students': undergradCount,
