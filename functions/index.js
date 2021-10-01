@@ -146,7 +146,7 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
     const gradYearFreq = {};
 
     onboardingQuerySnapshot.forEach(doc => {
-      const { majors, minors, exams, colleges, gradPrograms } = doc.data();
+      const { majors, minors, exam, colleges, gradPrograms } = doc.data();
 
       addToFrequencyDictionary(colleges, collegeFreq);
       addToFrequencyDictionary(gradPrograms, programFreq);
@@ -168,7 +168,7 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
 
         totalNumMajors += majors ? majors.length : 0;
         totalNumMinors += minors ? minors.length : 0;
-        totalNumExams += exams ? exams.length : 0;
+        totalNumExams += exam ? exam.length : 0;
       } else if (isGrad) {
         gradCount += 1;
       }
