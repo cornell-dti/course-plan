@@ -112,11 +112,11 @@ const buildRequirementFulfillmentGraph = <
 
   // Phase 3: Respect user's choices on double-counted courses.
   userCourses.forEach(({ uniqueId }) => {
-    // uniqueId < 0 means it's AP/IB course or swim test.
-    // (-1 == swim test, < -1 == AP/IB)
+    // typeof uniqueId === 'string' means it's AP/IB equivalent course.
+    // uniqueId < 0 means it's swim test.
     // User never gets to make a choice about these courses, so it will never appear in the choices.
     // Therefore, removing those edges will nullify all these credits.
-    if (uniqueId < 0) return;
+    if (typeof uniqueId === 'string' || uniqueId < 0) return;
     const chosenRequirement = userChoiceOnDoubleCountingElimination[uniqueId];
     graph.getConnectedRequirementsFromCourse({ uniqueId }).forEach(connectedRequirement => {
       if (allowDoubleCounting(connectedRequirement)) return;
