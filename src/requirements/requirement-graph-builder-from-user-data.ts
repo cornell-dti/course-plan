@@ -57,7 +57,9 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     ),
     userChoiceOnDoubleCountingElimination: Object.fromEntries(
       Object.entries(selectableRequirementChoices).map(([uniqueIDString, requirementID]) => {
-        const uniqueId = parseInt(uniqueIDString, 10);
+        const uniqueId = Number.isNaN(uniqueIDString)
+          ? uniqueIDString
+          : parseInt(uniqueIDString, 10);
         return [uniqueId, requirementID] as const;
       })
     ),
@@ -65,13 +67,14 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       ...Object.fromEntries(
         coursesTaken
           .map(course => {
-            if (!(course.uniqueId in overridenRequirementChoices)) return null;
+            const uniqueId = course.uniqueId.toString();
+            if (!(uniqueId in overridenRequirementChoices)) return null;
             const overridenRequirements = new Set(
-              Object.keys(overridenRequirementChoices[course.uniqueId].optIn)
+              Object.keys(overridenRequirementChoices[uniqueId].optIn)
             );
-            return [course.uniqueId, overridenRequirements];
+            return [uniqueId, overridenRequirements];
           })
-          .filter((it): it is [number, Set<string>] => it != null)
+          .filter((it): it is [string, Set<string>] => it != null)
       ),
     },
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirementID => {

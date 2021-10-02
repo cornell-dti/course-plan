@@ -30,7 +30,7 @@ type BuildRequirementFulfillmentGraphParameters<
    * requirements do not allow double counting, then a mapping `c => r1` means that we should keep the
    * (r1, c) edge in the graph and drop the (r2, c) edge.
    */
-  readonly userChoiceOnDoubleCountingElimination: Readonly<Record<number, Requirement>>;
+  readonly userChoiceOnDoubleCountingElimination: Readonly<Record<string | number, Requirement>>;
   /**
    * The mapping from course's unique ID to requirement override (opt-in) options.
    * It describes how the user wants to use a course to override requirements.
@@ -39,7 +39,7 @@ type BuildRequirementFulfillmentGraphParameters<
    * slot computation to be handled in the frontend computation. When building the
    * graph, only optIn choices are relevant (to add the extra edges).
    */
-  readonly userChoiceOnRequirementOverrides: Readonly<Record<number, Set<Requirement>>>;
+  readonly userChoiceOnRequirementOverrides: Readonly<Record<string, Set<Requirement>>>;
   /**
    * Naively give a list of courses ID that can satisfy a requirement. Most of the time this function
    * should just return the pre-computed eligible course id list. For requirements have multiple
@@ -112,11 +112,11 @@ const buildRequirementFulfillmentGraph = <
 
   // Phase 3: Respect user's choices on double-counted courses.
   userCourses.forEach(({ uniqueId }) => {
-    // uniqueId < 0 means it's AP/IB course or swim test.
-    // (-1 == swim test, < -1 == AP/IB)
+    // typeof uniqueId === 'string' means it's AP/IB equivalent course.
+    // uniqueId < 0 means it's swim test.
     // User never gets to make a choice about these courses, so it will never appear in the choices.
     // Therefore, removing those edges will nullify all these credits.
-    if (uniqueId < 0) return;
+    if (typeof uniqueId === 'string' || uniqueId < 0) return;
     const chosenRequirement = userChoiceOnDoubleCountingElimination[uniqueId];
     graph.getConnectedRequirementsFromCourse({ uniqueId }).forEach(connectedRequirement => {
       if (allowDoubleCounting(connectedRequirement)) return;

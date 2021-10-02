@@ -65,20 +65,27 @@ export default defineComponent({
       return store.state.semesters;
     },
     isTransferCredit(): boolean {
-      return this.courseTaken.uniqueId < 0;
+      const { uniqueId } = this.courseTaken;
+      return typeof uniqueId === 'string' || uniqueId < 0;
     },
     semesterLabel(): string {
       if (this.isTransferCredit) return 'Transfer Credits';
+      const { uniqueId } = this.courseTaken;
       const courseSemester =
-        store.state.derivedCoursesData.courseToSemesterMap[this.courseTaken.uniqueId];
-      return courseSemester != null
+        (typeof uniqueId === 'number' &&
+          store.state.derivedCoursesData.courseToSemesterMap[uniqueId]) ||
+        null;
+      return courseSemester !== null
         ? `${courseSemester.type} ${courseSemester.year}`
         : `${getCurrentSeason()} ${getCurrentYear()}`;
     },
     courseColor(): string {
       if (this.isTransferCredit) return transferCreditColor;
-      const course = store.state.derivedCoursesData.courseMap[this.courseTaken.uniqueId];
-      return course != null ? course.color : '';
+      const { uniqueId } = this.courseTaken;
+      const course =
+        (typeof uniqueId === 'number' && store.state.derivedCoursesData.courseMap[uniqueId]) ||
+        null;
+      return course !== null ? course.color : '';
     },
     slotMenuPosition(): { x: number; y: number } {
       return window.innerWidth > 863
@@ -103,7 +110,10 @@ export default defineComponent({
           onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
             exam: onBoardingData.exam.filter(e => !(e.type === type && e.subject === name)),
           });
-        } else deleteCourseFromSemesters(this.courseTaken.uniqueId, this.$gtag);
+        } else {
+          const { uniqueId } = this.courseTaken;
+          if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);
+        }
       }
     },
     openSlotMenu(e: MouseEvent) {

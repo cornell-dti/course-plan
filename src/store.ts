@@ -40,9 +40,9 @@ type DerivedSelectableRequirementData = {
  */
 type DerivedAPIBEquivalentCourseData = {
   // Mapping from exam name to unique ids (there can be multiple)
-  readonly examToUniqueIdsMap: Readonly<Record<string, Set<number>>>;
+  readonly examToUniqueIdsMap: Readonly<Record<string, Set<string | number>>>;
   // Mapping from unique id to exam name
-  readonly uniqueIdToExamMap: Readonly<Record<number, string>>;
+  readonly uniqueIdToExamMap: Readonly<Record<string | number, string>>;
 };
 
 export type VuexStoreState = {
@@ -224,8 +224,8 @@ const autoRecomputeDerivedData = (): (() => void) =>
       store.commit('setDerivedSelectableRequirementData', derivedSelectableRequirementData);
     }
     if (payload.type === 'setOnboardingData') {
-      const examToUniqueIdsMap: Record<string, Set<number>> = {};
-      const uniqueIdToExamMap: Record<number, string> = {};
+      const examToUniqueIdsMap: Record<string, Set<string | number>> = {};
+      const uniqueIdToExamMap: Record<string | number, string> = {};
       const equivalentCourses = getCourseEquivalentsFromUserExams(state.onboardingData);
       state.onboardingData.exam.forEach(({ type, subject }) => {
         const examName = `${type} ${subject}`;
@@ -291,7 +291,7 @@ const computeAPIBOverridenRequirements = (
   state: VuexStoreState
 ): AppOverridenRequirementChoices => {
   const APIBOverridenRequirements: Record<
-    number,
+    string,
     {
       readonly optIn: Record<string, Set<string>>;
       readonly optOut: Record<string, Set<string>>;

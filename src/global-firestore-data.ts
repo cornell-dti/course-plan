@@ -179,7 +179,7 @@ const chooseSelectableRequirementOption = (
 };
 
 export const addCourseToSelectableRequirements = (
-  courseUniqueID: number,
+  courseUniqueID: string | number,
   requirementID: string | undefined
 ): void => {
   if (!requirementID) return;
@@ -189,12 +189,16 @@ export const addCourseToSelectableRequirements = (
   });
 };
 
-export const deleteCourseFromSelectableRequirements = (courseUniqueID: number): void => {
+export const deleteCourseFromSelectableRequirements = (courseUniqueID: string | number): void => {
   chooseSelectableRequirementOption(
     Object.assign(
       {},
       ...Object.entries(store.state.selectableRequirementChoices)
-        .filter(([k]) => parseInt(k, 10) !== courseUniqueID)
+        .filter(([k]) =>
+          typeof courseUniqueID === 'number'
+            ? parseInt(k, 10) !== courseUniqueID
+            : k !== courseUniqueID
+        )
         .map(([k, v]) => ({ [k]: v }))
     )
   );
