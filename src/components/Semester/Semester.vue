@@ -46,7 +46,11 @@
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
           <button class="semester-minimize" @click="minimizeSemester" data-cyId="minimizeSemester">
-            <img v-if="!isSemesterMinimized" src="@/assets/images/minimize.svg" alt="minimze semester" />
+            <img
+              v-if="!isSemesterMinimized"
+              src="@/assets/images/minimize.svg"
+              alt="minimze semester"
+            />
             <img v-else src="@/assets/images/expand.svg" alt="expand semester" />
           </button>
           <button class="semester-dotRow" @click="openSemesterMenu" data-cyId="semesterMenu">
@@ -54,10 +58,7 @@
           </button>
         </div>
       </div>
-      <div
-        v-if="!isSemesterMinimized"
-        class="semester-courses"
-      >
+      <div v-if="!isSemesterMinimized" class="semester-courses">
         <draggable
           ref="droppable"
           class="draggable-semester-courses"
