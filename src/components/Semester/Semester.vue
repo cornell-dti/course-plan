@@ -45,12 +45,19 @@
           <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
+          <button class="semester-minimize" @click="minimizeSemester" data-cyId="minimizeSemester">
+            <img v-if="!isSemesterMinimized" src="@/assets/images/minimize.svg" alt="minimze semester" />
+            <img v-else src="@/assets/images/expand.svg" alt="expand semester" />
+          </button>
           <button class="semester-dotRow" @click="openSemesterMenu" data-cyId="semesterMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="open menu for semester" />
           </button>
         </div>
       </div>
-      <div class="semester-courses">
+      <div
+        v-if="!isSemesterMinimized"
+        class="semester-courses"
+      >
         <draggable
           ref="droppable"
           class="draggable-semester-courses"
@@ -149,6 +156,7 @@ export default defineComponent({
       isShadowCounter: 0,
       isDraggedFrom: false,
       isCourseModalOpen: false,
+      isSemesterMinimized: false,
 
       seasonImg: {
         Fall: fall,
@@ -343,6 +351,9 @@ export default defineComponent({
     dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
     },
+    minimizeSemester() {
+      this.isSemesterMinimized = !this.isSemesterMinimized;
+    },
     openSemesterMenu() {
       this.stopCloseFlag = true;
       this.semesterMenuOpen = true;
@@ -447,13 +458,19 @@ export default defineComponent({
   }
 
   &-right {
+    display: flex;
+
     &--compact {
       margin-top: 0.25rem;
     }
   }
 
+  &-minimize {
+    margin-right: 8px;
+  }
+
   &-dotRow {
-    padding: 8px 0;
+    padding: 15px 0;
     display: flex;
     position: relative;
     &:hover,
