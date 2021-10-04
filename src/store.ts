@@ -4,6 +4,7 @@ import * as fb from './firebase-frontend-config';
 import getCourseEquivalentsFromUserExams from './requirements/data/exams/ExamCredit';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
+import { createAppOnboardingData } from './user-data-converter';
 import getCurrentSeason, {
   checkNotNull,
   getCurrentYear,
@@ -266,22 +267,6 @@ const autoRecomputeDerivedData = (): (() => void) =>
       }
     }
   });
-
-const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardingData => ({
-  // TODO: take into account multiple colleges
-  gradYear: data.gradYear ? data.gradYear : '',
-  entranceYear: data.entranceYear ? data.entranceYear : '',
-  college: data.colleges.length !== 0 ? data.colleges[0].acronym : undefined,
-  major: data.majors.map(({ acronym }) => acronym),
-  minor: data.minors.map(({ acronym }) => acronym),
-  grad:
-    'gradPrograms' in data && data.gradPrograms.length !== 0
-      ? data.gradPrograms[0].acronym
-      : undefined,
-  exam: 'exam' in data ? [...data.exam] : [],
-  transferCourse: 'class' in data ? [...data.class] : [],
-  tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',
-});
 
 /**
  * Computes AP/IB Overriden Requirement Choices from

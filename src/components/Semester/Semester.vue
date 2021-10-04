@@ -114,12 +114,12 @@ import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import {
+  cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   editSemester,
   addCourseToSemester,
   deleteCourseFromSemester,
   addCourseToSelectableRequirements,
 } from '@/global-firestore-data';
-import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -302,7 +302,7 @@ export default defineComponent({
       this.isConfirmationOpen = false;
     },
     addCourse(data: CornellCourseRosterCourse, requirementID: string) {
-      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(data);
+      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       addCourseToSemester(this.type, this.year, newCourse, requirementID, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;

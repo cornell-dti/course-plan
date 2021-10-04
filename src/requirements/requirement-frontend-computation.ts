@@ -162,7 +162,7 @@ const getSwimTestFulfillmentStatistics = (
   };
 };
 
-function getCourseCodesArray(
+export function getCourseCodesArray(
   semesters: readonly FirestoreSemester[],
   onboardingData: AppOnboardingData
 ): readonly CourseTaken[] {

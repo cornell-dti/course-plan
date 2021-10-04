@@ -12,6 +12,7 @@ import {
 } from './firebase-frontend-config';
 import store from './store';
 import { GTag, GTagEvent } from './gtag';
+import { cornellCourseRosterCourseToFirebaseSemesterCourse } from './user-data-converter';
 
 // enum to define seasons as integers in season order
 export const SeasonsEnum = Object.freeze({
@@ -20,6 +21,11 @@ export const SeasonsEnum = Object.freeze({
   Summer: 2,
   Fall: 3,
 });
+
+export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
+  course: CornellCourseRosterCourse
+): FirestoreSemesterCourse =>
+  cornellCourseRosterCourseToFirebaseSemesterCourse(course, store, incrementUniqueID);
 
 // compare function for FirestoreSemester to determine which comes first by year and type/season
 export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSemester): number => {
