@@ -17,7 +17,7 @@ export const usernameCollection = db
   .collection('user-name')
   .withConverter(getTypedFirestoreDataConverter<FirestoreUserName>());
 
-export type SemesterDocumentData = { readonly semesters: readonly FirestoreSemester[] };
+export type SemesterDocumentData = { readonly semesters: FirestoreSemesters };
 export const semestersCollection = db
   .collection('user-semesters')
   .withConverter(getTypedFirestoreDataConverter<SemesterDocumentData>());
