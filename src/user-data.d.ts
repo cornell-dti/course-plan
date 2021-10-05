@@ -66,7 +66,7 @@ type FirestoreSemesters = {
   /** true iff the user orders the semesters by newest first */
   readonly orderByNewest: boolean;
   /** The semesters the user has created */
-  readonly semesters: FirestoreSemester[];
+  readonly semesters: readonly FirestoreSemester[];
 };
 
 type FirestoreUserData = {

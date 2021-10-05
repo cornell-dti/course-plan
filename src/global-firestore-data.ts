@@ -41,9 +41,31 @@ export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSeme
 const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
-  const newSemesters = updater(store.state.semesters);
-  store.commit('setSemesters', newSemesters);
-  semestersCollection.doc(store.state.currentFirebaseUser.email).set({ semesters: newSemesters });
+  const { orderByNewest, semesters } = store.state;
+  const newSemesters = updater(semesters)
+    .slice()
+    .sort((a, b) => {
+      // sort in increasing order iff orderByNewest is false, increasing otherwise
+      const order = orderByNewest ? -1 : 1;
+      if (a.year < b.year) {
+        return -order;
+      }
+      if (a.year > b.year) {
+        return order;
+      }
+      const seasonA = SeasonsEnum[a.type];
+      const seasonB = SeasonsEnum[b.type];
+      if (seasonA < seasonB) {
+        return -order;
+      }
+      if (seasonA > seasonB) {
+        return order;
+      }
+      return 0;
+    });
+  const updated = { orderByNewest, semesters: newSemesters };
+  store.commit('setSemesters', updated);
+  semestersCollection.doc(store.state.currentFirebaseUser.email).set(updated);
 };
 
 export const editSemester = (
