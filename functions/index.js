@@ -7,6 +7,7 @@ admin.initializeApp();
 const db = admin.firestore();
 const usernameCollection = db.collection('user-name');
 const semestersCollection = db.collection('user-semesters');
+const onboardingCollection = db.collection('user-onboarding-data');
 
 const average = array => array.reduce((a, b) => a + b) / array.length;
 function typeToMonth(type) {
@@ -38,12 +39,45 @@ function isOld(semester) {
   }
   return false;
 }
+
+// add all colleges/programs/majors etc. in arr to frequency dict
+// TODO this will not show any colleges/grad programs with 0 people.
+// Need to look at requirements data and add each to the map with 0 frequency to do so.
+function addToFrequencyDictionary(categories, freqDict) {
+  // if no colleges/programs/majors/minors for this doc, skip
+  if (!categories) {
+    return;
+  }
+
+  categories.forEach(category => {
+    if (category.acronym in freqDict) {
+      freqDict[category.acronym] += 1;
+    } else {
+      freqDict[category.acronym] = 1;
+    }
+  });
+}
+
+// adds year to freqDict if not set, otherwise increments frequency by 1
+// simplified version of addToFrequencyDictionary for entrance/grad year, as they
+// are single elements, not lists, and do not have an acronym prop
+function addYearToFrequencyDictionary(year, freqDict) {
+  if (!year) {
+    return;
+  }
+
+  if (year in freqDict) {
+    freqDict[year] += 1;
+  } else {
+    freqDict[year] = 1;
+  }
+}
+
 /**
  * TrackUsers returns user metrics based on
  * data from the user-name and user-semesters Firestore collections.
  *
- * It returns the first names of every user (people),
- * the total number of users (total-users),
+ * It returns the total number of users (total-users),
  * the total number of semesters across all users (total-semesters),
  * the average number of semesters per user (avg-semester),
  * the average number of older semesters that are/before the current semester
@@ -53,7 +87,6 @@ function isOld(semester) {
  */
 
 exports.TrackUsers = functions.https.onRequest(async (req, res) => {
-  const firstNames = [];
   let totalUsersCount = 0;
   const semesters = [];
   const oldSemesters = [];
@@ -61,12 +94,10 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
   let semesterCount = 0;
 
   const usernamePromise = usernameCollection.get().then(usernameQuerySnapshot => {
-    usernameQuerySnapshot.forEach(doc => {
-      firstNames.push(doc.data().firstName);
+    usernameQuerySnapshot.forEach(() => {
       totalUsersCount += 1;
     });
     const usernameResponse = {
-      people: firstNames,
       'total-users': totalUsersCount,
     };
     return usernameResponse;
@@ -97,7 +128,74 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
     return semesterResponse;
   });
 
-  Promise.all([usernamePromise, semesterPromise]).then(promiseResponses => {
+  const onboardingPromise = onboardingCollection.get().then(onboardingQuerySnapshot => {
+    let undergradCount = 0;
+    let gradCount = 0;
+    let undergradAndGradCount = 0;
+
+    let totalNumMajors = 0;
+    let totalNumMinors = 0;
+    let totalNumExams = 0;
+
+    const collegeFreq = {};
+    const programFreq = {};
+    const majorFreq = {};
+    const minorFreq = {};
+
+    const entranceYearFreq = {};
+    const gradYearFreq = {};
+
+    onboardingQuerySnapshot.forEach(doc => {
+      const { majors, minors, exam, colleges, gradPrograms } = doc.data();
+
+      addToFrequencyDictionary(colleges, collegeFreq);
+      addToFrequencyDictionary(gradPrograms, programFreq);
+      addToFrequencyDictionary(majors, majorFreq);
+      addToFrequencyDictionary(minors, minorFreq);
+
+      addYearToFrequencyDictionary(doc.data().entranceYear, entranceYearFreq);
+      addYearToFrequencyDictionary(doc.data().gradYear, gradYearFreq);
+
+      const isUndergrad = colleges && colleges.length > 0;
+      const isGrad = gradPrograms && gradPrograms.length > 0;
+
+      if (isUndergrad) {
+        if (isGrad) {
+          undergradAndGradCount += 1;
+        } else {
+          undergradCount += 1;
+        }
+
+        totalNumMajors += majors ? majors.length : 0;
+        totalNumMinors += minors ? minors.length : 0;
+        totalNumExams += exam ? exam.length : 0;
+      } else if (isGrad) {
+        gradCount += 1;
+      }
+    });
+
+    const onboardingResponse = {
+      'undergrad-students': undergradCount,
+      'grad-students': gradCount,
+      'both-undergrad-and-grad-students': undergradAndGradCount,
+      'undergrad-college-frequencies': collegeFreq,
+      'major-frequencies': majorFreq,
+      'minor-frequencies': minorFreq,
+      'graduate-program-frequencies': programFreq,
+      'average-number-majors-for-undergrads':
+        totalNumMajors / (undergradAndGradCount + undergradCount),
+      'average-number-minors-for-undergrads':
+        totalNumMinors / (undergradAndGradCount + undergradCount),
+      'average-number-ap/ib-exams-for-undergrads':
+        totalNumExams / (undergradAndGradCount + undergradCount),
+      'entrance-year-frequencies': entranceYearFreq,
+      'grad-year-frequencies': gradYearFreq,
+    };
+
+    return onboardingResponse;
+  });
+
+  Promise.all([usernamePromise, semesterPromise, onboardingPromise]).then(promiseResponses => {
     const response = Object.assign({}, ...promiseResponses);
     // eslint-disable-next-line no-console
     console.log(response);
