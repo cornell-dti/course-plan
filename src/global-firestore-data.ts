@@ -21,11 +21,14 @@ export const SeasonsEnum = Object.freeze({
   Fall: 3,
 });
 
-const editSemesters = (
-  updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
-): void => {
-  const { orderByNewest, semesters } = store.state;
-  const newSemesters = updater(semesters)
+/**
+ * Returns given semesters sorted in either increasing or decreasing order of date
+ * @param semesters the semesters to return sorted
+ * @param orderByNewest whether to sort the semesters in decreasing order
+ * @returns semesters sorted according to orderByNewest
+ */
+const sorted = (semesters: readonly FirestoreSemester[], orderByNewest: boolean) => (
+  semesters
     .slice()
     .sort((a, b) => {
       // sort in increasing order iff orderByNewest is false, increasing otherwise
@@ -45,11 +48,29 @@ const editSemesters = (
         return order;
       }
       return 0;
-    });
+    })
+);
+
+const editSemesters = (
+  updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
+): void => {
+  const { orderByNewest, semesters } = store.state;
+  const newSemesters = sorted(updater(semesters), orderByNewest);
   store.commit('setSemesters', newSemesters);
-  store.commit('setOrderByNewest', orderByNewest);
   const updated = { orderByNewest, semesters: newSemesters };
   semestersCollection.doc(store.state.currentFirebaseUser.email).set(updated);
+};
+
+/**
+ * Toggles whether semesters are ordered by newest/oldest
+ * @returns true iff semesters were previously ordered oldest -> newest, 
+ *          false otherwise
+ */
+export const toggleOrderByNewest = (): boolean => {
+  const toggled = !store.state.orderByNewest;
+  store.commit('setOrderByNewest', toggled);
+  editSemesters(lst => lst);
+  return toggled;
 };
 
 export const editSemester = (

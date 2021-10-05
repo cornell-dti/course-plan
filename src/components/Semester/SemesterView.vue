@@ -15,7 +15,10 @@
         @close-sem-modal="closeSemesterModal"
         v-if="isSemesterModalOpen"
       />
-      <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
+      <div
+        class="semesterView-settings"
+        :class="{ 'semesterView-settings--two': noSemesters }"
+      >
         <button
           v-if="noSemesters"
           class="semesterView-addSemesterButton"
@@ -24,6 +27,7 @@
         >
           + New Semester
         </button>
+        <!--
         <div
           class="semesterView-switch"
           data-intro-group="req-tooltip"
@@ -34,18 +38,29 @@
         >
           <span class="semesterView-switchText">View:</span>
           <button
-            class="semesterView-switchImage semesterView-twoColumn full-opacity-on-hover"
+            class="
+              semesterView-switchImage semesterView-twoColumn
+              full-opacity-on-hover
+            "
             @click="setNotCompact"
             :class="{ 'semesterView-twoColumn--active': !compact }"
           />
           <button
-            class="semesterView-switchImage semesterView-fourColumn full-opacity-on-hover"
+            class="
+              semesterView-switchImage semesterView-fourColumn
+              full-opacity-on-hover
+            "
             @click="setCompact"
             :class="{ 'semesterView-fourColumn--active': compact }"
           />
         </div>
+        -->
+        <order-dropdown />
       </div>
-      <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
+      <confirmation
+        :text="confirmationText"
+        v-if="isSemesterConfirmationOpen"
+      />
       <div class="semesterView-content">
         <div
           v-for="(sem, semesterIndex) in semesters"
@@ -67,7 +82,11 @@
             @delete-semester="deleteSemester"
           />
         </div>
-        <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
+        <div
+          v-if="!compact"
+          class="semesterView-empty"
+          aria-hidden="true"
+        ></div>
         <div
           v-if="compact"
           class="semesterView-empty semesterView-empty--compact"
@@ -89,8 +108,16 @@
     <div class="semesterView-bot">
       <div class="semesterView-builtBy">
         Built with
-        <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" /> by
-        <a target="_blank" href="https://www.cornelldti.org/projects/courseplan/">
+        <img
+          class="semesterView-heart"
+          src="@/assets/images/redHeart.svg"
+          alt="heart"
+        />
+        by
+        <a
+          target="_blank"
+          href="https://www.cornelldti.org/projects/courseplan/"
+        >
           Cornell Design &amp; Tech Initiative
         </a>
       </div>
@@ -108,9 +135,10 @@ import store from '@/store';
 import { GTagEvent } from '@/gtag';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
+import OrderDropdown from './OrderDropdown.vue';
 
 export default defineComponent({
-  components: { Confirmation, NewSemesterModal, Semester },
+  components: { Confirmation, NewSemesterModal, Semester, OrderDropdown },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
@@ -141,7 +169,10 @@ export default defineComponent({
   },
   methods: {
     checkIfFirstSem(semester: FirestoreSemester) {
-      return this.semesters[0].year === semester.year && this.semesters[0].type === semester.type;
+      return (
+        this.semesters[0].year === semester.year &&
+        this.semesters[0].type === semester.type
+      );
     },
     setCompact() {
       if (!this.compact) {
@@ -155,7 +186,11 @@ export default defineComponent({
         GTagEvent(this.$gtag, 'to-not-compact');
       }
     },
-    openSemesterConfirmationModal(type: FirestoreSemesterType, year: number, isAdd: boolean) {
+    openSemesterConfirmationModal(
+      type: FirestoreSemesterType,
+      year: number,
+      isAdd: boolean
+    ) {
       if (isAdd) {
         this.confirmationText = `Added ${type} ${year} to plan`;
       } else {
@@ -176,11 +211,19 @@ export default defineComponent({
     },
     addSemester(type: string, year: number) {
       addSemester(type as FirestoreSemesterType, year, this.$gtag);
-      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, true);
+      this.openSemesterConfirmationModal(
+        type as FirestoreSemesterType,
+        year,
+        true
+      );
     },
     deleteSemester(type: string, year: number) {
       deleteSemester(type as FirestoreSemesterType, year, this.$gtag);
-      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, false);
+      this.openSemesterConfirmationModal(
+        type as FirestoreSemesterType,
+        year,
+        false
+      );
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.activatedCourse = course;
@@ -233,7 +276,7 @@ export default defineComponent({
     justify-content: flex-end;
     margin-bottom: 1rem;
     min-height: 2.25rem;
-
+    align-items: center;
     &--two {
       justify-content: space-between;
     }

@@ -1,0 +1,66 @@
+<template>
+  <button class="dropdown-button full-opacity-on-hover" @click="onClick">
+    <div class="dropdown-button-option">
+      <img
+        :src="image"
+        class="dropdown-button-image"
+        alt="dropdown button image"
+      />
+      {{ label }}
+    </div>
+    <img
+      v-if="selected"
+      src="../../assets/images/schedule-view/view-settings/checkmark.svg"
+      class="dropdown-button-image"
+      alt="checkmark"
+    />
+  </button>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  props: {
+    selected: { type: Boolean, required: true },
+    image: { type: String, required: true },
+    label: { type: String, required: true },
+  },
+  emits: {
+    click: (label: string) => typeof label === 'string',
+  },
+  methods: {
+    onClick() {
+      this.$emit('click', this.$props.label);
+    },
+  },
+});
+</script>
+
+<style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+.dropdown-button {
+  &:hover {
+    background: $dropdownBlue;
+  }
+  &-option {
+    color: $dropdownGray;
+    font-size: 1rem;
+    line-height: 1rem;
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+  }
+  &-image {
+    pointer-events: none;
+    min-width: 1rem;
+    max-width: 1rem;
+  }
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  align-items: center;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+</style>
