@@ -58,7 +58,7 @@
           </button>
         </div>
       </div>
-      <div v-if="!isSemesterMinimized" class="semester-courses">
+      <div class="semester-courses" :class="{ 'semester-hidden': isSemesterMinimized }">
         <draggable
           ref="droppable"
           class="draggable-semester-courses"
@@ -517,6 +517,10 @@ export default defineComponent({
   &-course:active:hover {
     touch-action: none;
     cursor: grabbing;
+  }
+
+  &-hidden {
+    display: none;
   }
 
   .season-emoji {
