@@ -46,8 +46,9 @@ const editSemesters = (
       }
       return 0;
     });
+  store.commit('setSemesters', newSemesters);
+  store.commit('setOrderByNewest', orderByNewest);
   const updated = { orderByNewest, semesters: newSemesters };
-  store.commit('setSemesters', updated);
   semestersCollection.doc(store.state.currentFirebaseUser.email).set(updated);
 };
 

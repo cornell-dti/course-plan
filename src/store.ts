@@ -49,8 +49,8 @@ export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
   userName: FirestoreUserName;
   onboardingData: AppOnboardingData;
-  orderByNewest: boolean;
   semesters: readonly FirestoreSemester[];
+  orderByNewest: boolean;
   derivedCoursesData: DerivedCoursesData;
   derivedSelectableRequirementData: DerivedSelectableRequirementData;
   derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData;
@@ -121,6 +121,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setOnboardingData(state: VuexStoreState, onboardingData: AppOnboardingData) {
       state.onboardingData = onboardingData;
+    },
+    setOrderByNewest(state: VuexStoreState, orderByNewest: boolean) {
+      state.orderByNewest = orderByNewest;
     },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
       state.semesters = semesters;
@@ -337,6 +340,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   let userNameInitialLoadFinished = false;
   let onboardingDataInitialLoadFinished = false;
   let semestersInitialLoadFinished = false;
+  let orderByNewestInitialLoadFinished = false;
   let toggleableRequirementChoiceInitialLoadFinished = false;
   let selectableRequirementChoiceInitialLoadFinished = false;
   let subjectColorInitialLoadFinished = false;
@@ -349,6 +353,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       userNameInitialLoadFinished &&
       onboardingDataInitialLoadFinished &&
       semestersInitialLoadFinished &&
+      orderByNewestInitialLoadFinished &&
       toggleableRequirementChoiceInitialLoadFinished &&
       selectableRequirementChoiceInitialLoadFinished &&
       subjectColorInitialLoadFinished &&
@@ -390,6 +395,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const data = snapshot.data();
       if (data != null) {
         store.commit('setSemesters', data.semesters);
+        store.commit('setOrderByNewest', data.orderByNewest);
       } else {
         const newSemeter: FirestoreSemester = {
           type: getCurrentSeason(),
@@ -397,9 +403,12 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
           courses: [],
         };
         store.commit('setSemesters', [newSemeter]);
-        fb.semestersCollection.doc(simplifiedUser.email).set({ semesters: [newSemeter] });
+        fb.semestersCollection.doc(simplifiedUser.email).set({
+          orderByNewest: true, semesters: [newSemeter]
+        });
       }
       semestersInitialLoadFinished = true;
+      orderByNewestInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
   const toggleableRequirementChoiceUnsubscriber = fb.toggleableRequirementChoicesCollection
