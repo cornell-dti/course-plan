@@ -62,16 +62,10 @@ type FirestoreOnboardingUserData = {
   readonly tookSwim: 'yes' | 'no';
 };
 
-type FirestoreSemesters = {
-  /** true iff the user orders the semesters by newest first */
-  readonly orderByNewest: boolean;
-  /** The semesters the user has created */
-  readonly semesters: readonly FirestoreSemester[];
-};
-
 type FirestoreUserData = {
   readonly name: FirestoreUserName;
-  readonly semesters: FirestoreSemesters;
+  readonly semesters: readonlyFirestoreSemester[];
+  readonly orderByNewest: boolean;
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };
   readonly uniqueIncrementer: number;

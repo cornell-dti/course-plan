@@ -21,23 +21,6 @@ export const SeasonsEnum = Object.freeze({
   Fall: 3,
 });
 
-// compare function for FirestoreSemester to determine which comes first by year and type/season
-export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSemester): number => {
-  if (a.type === b.type && a.year === b.year) {
-    return 0;
-  }
-  if (a.year > b.year) {
-    return -1;
-  }
-  if (a.year < b.year) {
-    return 1;
-  }
-  if (SeasonsEnum[a.type] < SeasonsEnum[b.type]) {
-    return 1;
-  }
-  return -1;
-};
-
 const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
@@ -73,10 +56,8 @@ export const editSemester = (
   type: FirestoreSemesterType,
   updater: (oldSemester: FirestoreSemester) => FirestoreSemester
 ): void => {
-  editSemesters(oldSemesters =>
-    oldSemesters
-      .map(sem => (sem.year === year && sem.type === type ? updater(sem) : sem))
-      .sort(compareFirestoreSemesters)
+  editSemesters(oldSemesters => oldSemesters
+    .map(sem => (sem.year === year && sem.type === type ? updater(sem) : sem))
   );
 };
 
@@ -98,7 +79,7 @@ export const addSemester = (
 ): void => {
   GTagEvent(gtag, 'add-semester');
   editSemesters(oldSemesters =>
-    [...oldSemesters, createSemester(type, year, courses)].sort(compareFirestoreSemesters)
+    [...oldSemesters, createSemester(type, year, courses)]
   );
 };
 
@@ -137,9 +118,7 @@ export const addCourseToSemester = (
       return sem;
     });
     if (semesterFound) return newSemestersWithCourse;
-    return [...oldSemesters, createSemester(season, year, [newCourse])].sort(
-      compareFirestoreSemesters
-    );
+    return [...oldSemesters, createSemester(season, year, [newCourse])];
   });
   if (requirementID) {
     addCourseToSelectableRequirements(newCourse.uniqueID, requirementID);
