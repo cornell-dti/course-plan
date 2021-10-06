@@ -22,13 +22,13 @@
         :selected="orderByNewest"
         image="/src/assets/images/schedule-view/view-settings/newest-arrow.svg"
         label="Newest"
-        @click.stop="!orderByNewest && onOrderClick()"
+        @click.stop="onOrderClick(true)"
       />
       <order-dropdown-option
         :selected="!orderByNewest"
         image="/src/assets/images/schedule-view/view-settings/oldest-arrow.svg"
         label="Oldest"
-        @click.stop="orderByNewest && onOrderClick()"
+        @click.stop="onOrderClick(false)"
       />
     </div>
   </div>
@@ -57,7 +57,11 @@ export default defineComponent({
   },
 
   methods: {
-    onOrderClick: toggleOrderByNewest,
+    onOrderClick(orderByNewest: boolean) {
+      if (orderByNewest !== this.orderByNewest) {
+        toggleOrderByNewest();
+      }
+    },
   },
 });
 </script>

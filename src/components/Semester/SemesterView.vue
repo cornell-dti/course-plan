@@ -15,7 +15,10 @@
         @close-sem-modal="closeSemesterModal"
         v-if="isSemesterModalOpen"
       />
-      <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
+      <div
+        class="semesterView-settings"
+        :class="{ 'semesterView-settings--two': noSemesters }"
+      >
         <button
           v-if="noSemesters"
           class="semesterView-addSemesterButton"
@@ -24,9 +27,12 @@
         >
           + New Semester
         </button>
-        <order-dropdown :compact="compact" @click-compact="$event !== compact && toggleCompact()" />
+        <order-dropdown :compact="compact" @click-compact="toggleCompact" />
       </div>
-      <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
+      <confirmation
+        :text="confirmationText"
+        v-if="isSemesterConfirmationOpen"
+      />
       <div class="semesterView-content">
         <div
           v-for="(sem, semesterIndex) in semesters"
@@ -48,7 +54,11 @@
             @delete-semester="deleteSemester"
           />
         </div>
-        <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
+        <div
+          v-if="!compact"
+          class="semesterView-empty"
+          aria-hidden="true"
+        ></div>
         <div
           v-if="compact"
           class="semesterView-empty semesterView-empty--compact"
@@ -70,9 +80,16 @@
     <div class="semesterView-bot">
       <div class="semesterView-builtBy">
         Built with
-        <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" />
+        <img
+          class="semesterView-heart"
+          src="@/assets/images/redHeart.svg"
+          alt="heart"
+        />
         by
-        <a target="_blank" href="https://www.cornelldti.org/projects/courseplan/">
+        <a
+          target="_blank"
+          href="https://www.cornelldti.org/projects/courseplan/"
+        >
           Cornell Design &amp; Tech Initiative
         </a>
       </div>
@@ -124,14 +141,22 @@ export default defineComponent({
   },
   methods: {
     checkIfFirstSem(semester: FirestoreSemester) {
-      return this.semesters[0].year === semester.year && this.semesters[0].type === semester.type;
+      return (
+        this.semesters[0].year === semester.year &&
+        this.semesters[0].type === semester.type
+      );
     },
-    toggleCompact() {
-      const toggled = !this.compact;
-      this.$emit('compact-updated', toggled);
-      GTagEvent(this.$gtag, toggled ? 'to-compact' : 'to-not-compact');
+    toggleCompact(toggled: boolean) {
+      if (toggled !== this.compact) {
+        this.$emit('compact-updated', toggled);
+        GTagEvent(this.$gtag, toggled ? 'to-compact' : 'to-not-compact');
+      }
     },
-    openSemesterConfirmationModal(type: FirestoreSemesterType, year: number, isAdd: boolean) {
+    openSemesterConfirmationModal(
+      type: FirestoreSemesterType,
+      year: number,
+      isAdd: boolean
+    ) {
       if (isAdd) {
         this.confirmationText = `Added ${type} ${year} to plan`;
       } else {
@@ -152,11 +177,19 @@ export default defineComponent({
     },
     addSemester(type: string, year: number) {
       addSemester(type as FirestoreSemesterType, year, this.$gtag);
-      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, true);
+      this.openSemesterConfirmationModal(
+        type as FirestoreSemesterType,
+        year,
+        true
+      );
     },
     deleteSemester(type: string, year: number) {
       deleteSemester(type as FirestoreSemesterType, year, this.$gtag);
-      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, false);
+      this.openSemesterConfirmationModal(
+        type as FirestoreSemesterType,
+        year,
+        false
+      );
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.activatedCourse = course;
