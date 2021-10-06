@@ -107,9 +107,10 @@ export default defineComponent({
       flex-direction: column;
     }
     &--hline {
-      width: calc(100% - 1rem);
+      width: calc(100% - 2rem);
       height: 0;
       border: 0.5px solid $hlineGray;
+      margin: 0.5rem 0rem 0.5rem 0rem;
     }
   }
 }
