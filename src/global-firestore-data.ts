@@ -27,29 +27,26 @@ export const SeasonsEnum = Object.freeze({
  * @param orderByNewest whether to sort the semesters in decreasing order
  * @returns semesters sorted according to orderByNewest
  */
-const sorted = (semesters: readonly FirestoreSemester[], orderByNewest: boolean) => (
-  semesters
-    .slice()
-    .sort((a, b) => {
-      // sort in increasing order iff orderByNewest is false, increasing otherwise
-      const order = orderByNewest ? -1 : 1;
-      if (a.year < b.year) {
-        return -order;
-      }
-      if (a.year > b.year) {
-        return order;
-      }
-      const seasonA = SeasonsEnum[a.type];
-      const seasonB = SeasonsEnum[b.type];
-      if (seasonA < seasonB) {
-        return -order;
-      }
-      if (seasonA > seasonB) {
-        return order;
-      }
-      return 0;
-    })
-);
+const sorted = (semesters: readonly FirestoreSemester[], orderByNewest: boolean) =>
+  semesters.slice().sort((a, b) => {
+    // sort in increasing order iff orderByNewest is false, increasing otherwise
+    const order = orderByNewest ? -1 : 1;
+    if (a.year < b.year) {
+      return -order;
+    }
+    if (a.year > b.year) {
+      return order;
+    }
+    const seasonA = SeasonsEnum[a.type];
+    const seasonB = SeasonsEnum[b.type];
+    if (seasonA < seasonB) {
+      return -order;
+    }
+    if (seasonA > seasonB) {
+      return order;
+    }
+    return 0;
+  });
 
 const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
@@ -58,20 +55,20 @@ const editSemesters = (
   const newSemesters = sorted(updater(semesters), orderByNewest);
   store.commit('setSemesters', newSemesters);
   semestersCollection.doc(store.state.currentFirebaseUser.email).update({
-    semesters: newSemesters
+    semesters: newSemesters,
   });
 };
 
 /**
  * Toggles whether semesters are ordered by newest/oldest
- * @returns true iff semesters were previously ordered oldest -> newest, 
+ * @returns true iff semesters were previously ordered oldest -> newest,
  *          false otherwise
  */
 export const toggleOrderByNewest = (): boolean => {
   const toggled = !store.state.orderByNewest;
   store.commit('setOrderByNewest', toggled);
   semestersCollection.doc(store.state.currentFirebaseUser.email).update({
-    orderByNewest: toggled
+    orderByNewest: toggled,
   });
   store.commit('setSemesters', sorted(store.state.semesters, toggled));
   return toggled;
@@ -82,8 +79,8 @@ export const editSemester = (
   type: FirestoreSemesterType,
   updater: (oldSemester: FirestoreSemester) => FirestoreSemester
 ): void => {
-  editSemesters(oldSemesters => oldSemesters
-    .map(sem => (sem.year === year && sem.type === type ? updater(sem) : sem))
+  editSemesters(oldSemesters =>
+    oldSemesters.map(sem => (sem.year === year && sem.type === type ? updater(sem) : sem))
   );
 };
 
@@ -104,9 +101,7 @@ export const addSemester = (
   courses: readonly FirestoreSemesterCourse[] = []
 ): void => {
   GTagEvent(gtag, 'add-semester');
-  editSemesters(oldSemesters =>
-    [...oldSemesters, createSemester(type, year, courses)]
-  );
+  editSemesters(oldSemesters => [...oldSemesters, createSemester(type, year, courses)]);
 };
 
 export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
