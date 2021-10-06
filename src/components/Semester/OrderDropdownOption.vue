@@ -1,5 +1,5 @@
 <template>
-  <button class="dropdown-button full-opacity-on-hover" @click="onClick">
+  <button class="dropdown-button full-opacity-on-hover">
     <div class="dropdown-button-option">
       <img
         :src="image"
@@ -25,14 +25,6 @@ export default defineComponent({
     selected: { type: Boolean, required: true },
     image: { type: String, required: true },
     label: { type: String, required: true },
-  },
-  emits: {
-    click: (label: string) => typeof label === 'string',
-  },
-  methods: {
-    onClick() {
-      this.$emit('click', this.$props.label);
-    },
   },
 });
 </script>

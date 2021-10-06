@@ -27,35 +27,10 @@
         >
           + New Semester
         </button>
-        <!--
-        <div
-          class="semesterView-switch"
-          data-intro-group="req-tooltip"
-          :data-intro="getToggleTooltipText()"
-          data-disable-interaction="1"
-          data-step="4"
-          data-tooltipClass="tooltipCenter"
-        >
-          <span class="semesterView-switchText">View:</span>
-          <button
-            class="
-              semesterView-switchImage semesterView-twoColumn
-              full-opacity-on-hover
-            "
-            @click="setNotCompact"
-            :class="{ 'semesterView-twoColumn--active': !compact }"
-          />
-          <button
-            class="
-              semesterView-switchImage semesterView-fourColumn
-              full-opacity-on-hover
-            "
-            @click="setCompact"
-            :class="{ 'semesterView-fourColumn--active': compact }"
-          />
-        </div>
-        -->
-        <order-dropdown />
+        <order-dropdown
+          :compact="compact"
+          @click-compact="$event !== compact && toggleCompact()"
+        />
       </div>
       <confirmation
         :text="confirmationText"
@@ -174,17 +149,10 @@ export default defineComponent({
         this.semesters[0].type === semester.type
       );
     },
-    setCompact() {
-      if (!this.compact) {
-        this.$emit('compact-updated', !this.compact);
-        GTagEvent(this.$gtag, 'to-compact');
-      }
-    },
-    setNotCompact() {
-      if (this.compact) {
-        this.$emit('compact-updated', !this.compact);
-        GTagEvent(this.$gtag, 'to-not-compact');
-      }
+    toggleCompact() {
+      const toggled = !this.compact;
+      this.$emit('compact-updated', toggled);
+      GTagEvent(this.$gtag, toggled ? 'to-compact' : 'to-not-compact');
     },
     openSemesterConfirmationModal(
       type: FirestoreSemesterType,
