@@ -17,6 +17,7 @@
         label="Compact"
         @click.stop="$emit('click-compact', true)"
       />
+      <div class="dropdown-content--hline" />
       <order-dropdown-option
         :selected="orderByNewest"
         image="/src/assets/images/schedule-view/view-settings/newest-arrow.svg"
@@ -94,6 +95,7 @@ export default defineComponent({
     border-radius: 8px;
     min-height: 2.5rem;
     min-width: 12rem;
+    align-items: center;
     padding: 0.5rem 0rem 0.5rem 0rem;
     background-color: $white;
     border: 1px solid $borderGray;
@@ -103,6 +105,11 @@ export default defineComponent({
     :hover > & {
       display: flex;
       flex-direction: column;
+    }
+    &--hline {
+      width: calc(100% - 1rem);
+      height: 0;
+      border: 0.5px solid $hlineGray;
     }
   }
 }
