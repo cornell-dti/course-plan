@@ -57,8 +57,9 @@ const editSemesters = (
   const { orderByNewest, semesters } = store.state;
   const newSemesters = sorted(updater(semesters), orderByNewest);
   store.commit('setSemesters', newSemesters);
-  const updated = { orderByNewest, semesters: newSemesters };
-  semestersCollection.doc(store.state.currentFirebaseUser.email).set(updated);
+  semestersCollection.doc(store.state.currentFirebaseUser.email).update({
+    semesters: newSemesters
+  });
 };
 
 /**
@@ -69,7 +70,10 @@ const editSemesters = (
 export const toggleOrderByNewest = (): boolean => {
   const toggled = !store.state.orderByNewest;
   store.commit('setOrderByNewest', toggled);
-  editSemesters(lst => lst);
+  semestersCollection.doc(store.state.currentFirebaseUser.email).update({
+    orderByNewest: toggled
+  });
+  store.commit('setSemesters', sorted(store.state.semesters, toggled));
   return toggled;
 };
 
