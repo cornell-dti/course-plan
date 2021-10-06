@@ -13,46 +13,10 @@ import {
 import store from './store';
 import { GTag, GTagEvent } from './gtag';
 
-// enum to define seasons as integers in season order
-export const SeasonsEnum = Object.freeze({
-  Winter: 0,
-  Spring: 1,
-  Summer: 2,
-  Fall: 3,
-});
-
-/**
- * Returns given semesters sorted in either increasing or decreasing order of date
- * @param semesters the semesters to return sorted
- * @param orderByNewest whether to sort the semesters in decreasing order
- * @returns semesters sorted according to orderByNewest
- */
-const sorted = (semesters: readonly FirestoreSemester[], orderByNewest: boolean) =>
-  semesters.slice().sort((a, b) => {
-    // sort in increasing order iff orderByNewest is false, increasing otherwise
-    const order = orderByNewest ? -1 : 1;
-    if (a.year < b.year) {
-      return -order;
-    }
-    if (a.year > b.year) {
-      return order;
-    }
-    const seasonA = SeasonsEnum[a.type];
-    const seasonB = SeasonsEnum[b.type];
-    if (seasonA < seasonB) {
-      return -order;
-    }
-    if (seasonA > seasonB) {
-      return order;
-    }
-    return 0;
-  });
-
 const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
-  const { orderByNewest, semesters } = store.state;
-  const newSemesters = sorted(updater(semesters), orderByNewest);
+  const newSemesters = updater(store.state.semesters);
   store.commit('setSemesters', newSemesters);
   semestersCollection.doc(store.state.currentFirebaseUser.email).update({
     semesters: newSemesters,
@@ -70,7 +34,6 @@ export const toggleOrderByNewest = (): boolean => {
   semestersCollection.doc(store.state.currentFirebaseUser.email).update({
     orderByNewest: toggled,
   });
-  store.commit('setSemesters', sorted(store.state.semesters, toggled));
   return toggled;
 };
 
