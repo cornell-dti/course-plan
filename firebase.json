@@ -12,5 +12,9 @@
         "destination": "/index.html"
       }
     ]
+  },
+  "functions": {
+    "source": "functions/deployment-template",
+    "runtime": "nodejs14"
   }
 }

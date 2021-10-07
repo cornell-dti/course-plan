@@ -1,7 +1,5 @@
-const functions = require('firebase-functions');
-
-// The Firebase Admin SDK to access the Firebase Realtime Database.
-const admin = require('firebase-admin');
+import functions from 'firebase-functions';
+import admin from 'firebase-admin';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -9,8 +7,8 @@ const usernameCollection = db.collection('user-name');
 const semestersCollection = db.collection('user-semesters');
 const onboardingCollection = db.collection('user-onboarding-data');
 
-const average = array => array.reduce((a, b) => a + b) / array.length;
-function typeToMonth(type) {
+const average = (array: readonly number[]) => array.reduce((a, b) => a + b) / array.length;
+function typeToMonth(type: string) {
   switch (type) {
     case 'Spring':
       return 1;
@@ -24,7 +22,8 @@ function typeToMonth(type) {
       throw new Error();
   }
 }
-function isOld(semester) {
+
+function isOld(semester: { year: number; type: string }) {
   const currentTime = new Date();
   const month = currentTime.getMonth() + 1;
   const year = currentTime.getFullYear();
@@ -43,7 +42,10 @@ function isOld(semester) {
 // add all colleges/programs/majors etc. in arr to frequency dict
 // TODO this will not show any colleges/grad programs with 0 people.
 // Need to look at requirements data and add each to the map with 0 frequency to do so.
-function addToFrequencyDictionary(categories, freqDict) {
+function addToFrequencyDictionary(
+  categories: readonly { readonly acronym: string }[],
+  freqDict: Record<string, number>
+) {
   // if no colleges/programs/majors/minors for this doc, skip
   if (!categories) {
     return;
@@ -61,7 +63,7 @@ function addToFrequencyDictionary(categories, freqDict) {
 // adds year to freqDict if not set, otherwise increments frequency by 1
 // simplified version of addToFrequencyDictionary for entrance/grad year, as they
 // are single elements, not lists, and do not have an acronym prop
-function addYearToFrequencyDictionary(year, freqDict) {
+function addYearToFrequencyDictionary(year: string, freqDict: Record<string, number>) {
   if (!year) {
     return;
   }
@@ -137,13 +139,13 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
     let totalNumMinors = 0;
     let totalNumExams = 0;
 
-    const collegeFreq = {};
-    const programFreq = {};
-    const majorFreq = {};
-    const minorFreq = {};
+    const collegeFreq: Record<string, number> = {};
+    const programFreq: Record<string, number> = {};
+    const majorFreq: Record<string, number> = {};
+    const minorFreq: Record<string, number> = {};
 
-    const entranceYearFreq = {};
-    const gradYearFreq = {};
+    const entranceYearFreq: Record<string, number> = {};
+    const gradYearFreq: Record<string, number> = {};
 
     onboardingQuerySnapshot.forEach(doc => {
       const { majors, minors, exam, colleges, gradPrograms } = doc.data();
