@@ -198,7 +198,7 @@ export default defineComponent({
     const droppable = (this.$refs.droppable as ComponentRef).$el;
     droppable.addEventListener('dragenter', this.onDragEnter);
     droppable.addEventListener('dragleave', this.onDragExit);
-    let savedSemesterMinimize = localStorage.getItem(JSON.stringify(this.semesterIndex));
+    const savedSemesterMinimize = localStorage.getItem(JSON.stringify(this.semesterIndex));
     this.isSemesterMinimized = savedSemesterMinimize ? JSON.parse(savedSemesterMinimize) : false;
   },
   beforeUnmount() {
