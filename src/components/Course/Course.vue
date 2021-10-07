@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue';
+import { CSSProperties, PropType, defineComponent } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import {
@@ -87,10 +87,10 @@ export default defineComponent({
       return `${this.courseObj.credits} credits`;
     },
 
-    cssVars(): { '--bg-color': string } {
+    cssVars(): CSSProperties {
       return {
         '--bg-color': `#${this.courseObj.color}`,
-      };
+      } as CSSProperties;
     },
   },
   methods: {

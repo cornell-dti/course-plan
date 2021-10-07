@@ -12,7 +12,6 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "resolveJsonModule": true,
     "baseUrl": ".",
     "types": [
       "webpack-env",
