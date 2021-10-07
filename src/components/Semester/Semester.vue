@@ -198,6 +198,8 @@ export default defineComponent({
     const droppable = (this.$refs.droppable as ComponentRef).$el;
     droppable.addEventListener('dragenter', this.onDragEnter);
     droppable.addEventListener('dragleave', this.onDragExit);
+    let savedSemesterMinimize = localStorage.getItem(JSON.stringify(this.semesterIndex));
+    this.isSemesterMinimized = savedSemesterMinimize ? JSON.parse(savedSemesterMinimize) : false;
   },
   beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);
@@ -354,6 +356,10 @@ export default defineComponent({
     },
     minimizeSemester() {
       this.isSemesterMinimized = !this.isSemesterMinimized;
+      localStorage.setItem(
+        JSON.stringify(this.semesterIndex),
+        JSON.stringify(this.isSemesterMinimized)
+      );
     },
     openSemesterMenu() {
       this.stopCloseFlag = true;
