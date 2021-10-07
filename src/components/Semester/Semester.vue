@@ -399,7 +399,10 @@ export default defineComponent({
       this.isClearSemesterOpen = false;
     },
     clearSemester(type: string, year: number) {
-      // implement
+      this.courses.forEach(({ uniqueID }) => {
+        deleteCourseFromSemester(this.type, this.year, uniqueID, this.$gtag);
+      });
+      this.openConfirmationModal(`Cleared ${type} ${year} in plan`);
     },
     walkthroughText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Add Classes to your Schedule</div><div class="introjs-customProgress">3/4</div>
