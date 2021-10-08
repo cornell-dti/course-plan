@@ -12,7 +12,7 @@
     "req-graph-dump": "ts-node -T -P tsconfig.node.json src/requirements/requirement-graph-dumper.ts",
     "lint": "eslint . --cache",
     "tsc": "tsc",
-    "type-check": "tsc && vti diagnostics",
+    "type-check": "vue-tsc --noEmit",
     "build:staging": "vite build --mode staging",
     "format": "prettier --write \"**/*.{js,ts,css,scss,html,vue}\"",
     "format:check": "prettier --check \"**/*.{js,ts,css,scss,html,vue}\"",

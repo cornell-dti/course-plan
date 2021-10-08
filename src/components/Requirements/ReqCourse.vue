@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { CSSProperties, defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
@@ -40,11 +40,11 @@ export default defineComponent({
     compact: { type: Boolean, required: true },
   },
   computed: {
-    borderColorCSSvar(): { '--border-color': string } {
-      return { '--border-color': `#${this.color}` };
+    borderColorCSSvar(): CSSProperties {
+      return { '--border-color': `#${this.color}` } as CSSProperties;
     },
-    courseColorCSSvar(): { '--bg-color': string } {
-      return { '--bg-color': `#${this.color}` };
+    courseColorCSSvar(): CSSProperties {
+      return { '--bg-color': `#${this.color}` } as CSSProperties;
     },
   },
 });

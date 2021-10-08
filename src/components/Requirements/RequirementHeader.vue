@@ -22,7 +22,7 @@
       >
         <p
           :style="{
-            'font-weight': '500',
+            'font-weight': 500,
             color: `#${getReqColor(req.groupName, onboardingData)}`,
           }"
           class="college-title-top"
@@ -51,7 +51,7 @@
       >
         <p
           :style="{
-            'font-weight': id === displayedMajorIndex ? '500' : '',
+            'font-weight': id === displayedMajorIndex ? 500 : undefined,
             color:
               id === displayedMajorIndex ? `#${getReqColor(req.groupName, onboardingData)}` : '',
           }"
@@ -94,7 +94,7 @@
       >
         <p
           :style="{
-            'font-weight': id === displayedMinorIndex ? '500' : '',
+            'font-weight': id === displayedMinorIndex ? 500 : undefined,
             color:
               id === displayedMinorIndex ? `#${getReqColor(req.groupName, onboardingData)}` : '',
           }"
@@ -115,7 +115,7 @@
       >
         <p
           :style="{
-            'font-weight': '500',
+            'font-weight': 500,
             color: `#${getReqColor(req.groupName, onboardingData)}`,
           }"
           class="grad-title-top"
