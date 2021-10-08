@@ -9,26 +9,26 @@
         :selected="!compact"
         image="/src/assets/images/schedule-view/view-settings/default-sem.svg"
         label="Default"
-        @click.stop="$emit('click-compact', false)"
+        @click="$emit('click-compact', false)"
       />
       <order-dropdown-option
         :selected="compact"
         image="/src/assets/images/schedule-view/view-settings/four-column.svg"
         label="Compact"
-        @click.stop="$emit('click-compact', true)"
+        @click="$emit('click-compact', true)"
       />
       <div class="dropdown-content--hline" />
       <order-dropdown-option
         :selected="orderByNewest"
         image="/src/assets/images/schedule-view/view-settings/newest-arrow.svg"
         label="Newest"
-        @click.stop="onOrderClick(true)"
+        @click="onOrderClick(true)"
       />
       <order-dropdown-option
         :selected="!orderByNewest"
         image="/src/assets/images/schedule-view/view-settings/oldest-arrow.svg"
         label="Oldest"
-        @click.stop="onOrderClick(false)"
+        @click="onOrderClick(false)"
       />
     </div>
   </div>
