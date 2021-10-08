@@ -138,7 +138,8 @@ const store: TypedVuexStore = new TypedVuexStore({
       state.onboardingData = onboardingData;
     },
     setOrderByNewest(state: VuexStoreState, orderByNewest: boolean) {
-      state.semesters = sorted(state.semesters, (state.orderByNewest = orderByNewest));
+      state.orderByNewest = orderByNewest;
+      state.semesters = sorted(state.semesters, orderByNewest);
     },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
       state.semesters = sorted(semesters, state.orderByNewest);
