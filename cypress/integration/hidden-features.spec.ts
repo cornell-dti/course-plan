@@ -11,6 +11,7 @@ before('Delete test user data, then visit site and log in', () => {
   // note that this delete will break if the collection is ever renamed
   const TEST_EMAIL = 'courseplan.cornelldti.test@gmail.com';
   cy.callFirestore('delete', `user-onboarding-data/${TEST_EMAIL}`);
+  cy.callFirestore('delete', `user-semesters/${TEST_EMAIL}`);
 
   cy.visit('localhost:8080/login');
   cy.login(Cypress.env('TEST_UID'));
@@ -76,4 +77,29 @@ it('Onboard a new user with all required fields', () => {
   cy.get('[data-cyId=onboarding-gradYear]').contains('2022');
   cy.get('[data-cyId=onboarding-college]').contains('Engineering');
   cy.get('[data-cyId=onboarding-finishButton]').click();
+});
+
+// Test to confirm that the new user walkthrough works as expected
+// Click through the initial explanation, then the 4 following steps, and finally the finishing page
+it('Click through the walkthrough tour', () => {
+  cy.get('[data-cyId=tour]').should('be.visible');
+  cy.get('[data-cyId=tour-startButton]').click();
+
+  // click through each step of the walkthrough, and confirm the tooltips are visible
+  // note that the introjs DOM elements come from the package, so cyID attributes cannot be used
+  cy.get('.tourStep1').should('be.visible');
+  cy.get('.introjs-nextbutton').click();
+
+  cy.get('.tourStep2').should('be.visible');
+  cy.get('.introjs-nextbutton').click();
+
+  cy.get('.tourStep3').should('be.visible');
+  cy.get('.introjs-nextbutton').click();
+
+  cy.get('.tourStep4').should('be.visible');
+  cy.get('.introjs-nextbutton').click();
+
+  // confirm the final page is visible and the tour can be finished
+  cy.get('[data-cyId=tour]').should('be.visible');
+  cy.get('[data-cyId=tour-startButton]').click();
 });

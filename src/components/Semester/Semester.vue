@@ -6,7 +6,7 @@
     data-step="3"
     :data-intro="walkthroughText()"
     data-disable-interaction="1"
-    data-tooltipClass="tooltipCenter"
+    data-tooltipClass="tooltipCenter tourStep3"
   >
     <new-course-modal
       @close-course-modal="closeCourseModal"

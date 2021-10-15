@@ -30,7 +30,7 @@
           :data-intro="getToggleTooltipText()"
           data-disable-interaction="1"
           data-step="4"
-          data-tooltipClass="tooltipCenter"
+          data-tooltipClass="tooltipCenter tourStep4"
         >
           <span class="semesterView-switchText">View:</span>
           <button

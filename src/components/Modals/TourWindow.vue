@@ -1,6 +1,6 @@
 <template>
   <teleport-modal content-class="content-tour" :isSimpleModal="true">
-    <div class="tour">
+    <div class="tour" data-cyId="tour">
       <div class="intropage">
         <div class="top">
           <div class="dtiLogoWrapper">
@@ -40,7 +40,7 @@
               <a href="mailto:courseplan@cornelldti.org">courseplan@cornelldti.org</a>.
             </div>
           </div>
-          <button class="startButton" @click="startTour()">
+          <button class="startButton" data-cyId="tour-startButton" @click="startTour()">
             {{ buttonText }}
           </button>
           <button class="skipButton" @click="skipTour()">
