@@ -78,6 +78,7 @@
                 :compact="compact"
                 :active="activatedCourse.uniqueID === element.uniqueID"
                 class="semester-course"
+                data-cyId="semester-course"
                 :semesterIndex="semesterIndex + 1"
                 @delete-course="deleteCourse"
                 @color-course="colorCourse"
