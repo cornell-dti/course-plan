@@ -103,3 +103,44 @@ it('Click through the walkthrough tour', () => {
   cy.get('[data-cyId=tour]').should('be.visible');
   cy.get('[data-cyId=tour-startButton]').click();
 });
+
+// Test to confirm that only one "+New Semester" button shows up at once
+// Due to front-end styling issues, there are two different buttons in different components
+// Only one should be visible at a time (from semesterView if there are 0 semesters, from semester otherwise)
+it('Test that only one semester button shows', () => {
+  // Delete each existing semester
+  const semesterMenus = '[data-cyId=semesterMenu]';
+  if (Cypress.$(semesterMenus).length > 0) {
+    // before deleting, confirm the semester button is the only version to exist
+    cy.get('[data-cyId=semester-addSemesterButton]').should('be.visible');
+    cy.get('[data-cyId=semesterView-addSemesterButton]').should('not.exist');
+
+    cy.get(semesterMenus).each($el => {
+      cy.wrap($el).click();
+      cy.get('[data-cyId=semesterMenu-delete]').click();
+      cy.get('[data-cyId=modal-button]').click();
+    });
+  }
+
+  // After all semesters deleted, confirm only the semesterView version is visible
+  cy.get('[data-cyId=semester-addSemesterButton]').should('not.exist');
+  cy.get('[data-cyId=semesterView-addSemesterButton]').should('be.visible');
+
+  // Add a semester back
+  cy.get('[data-cyId=semesterView-addSemesterButton]').click();
+
+  // click Fall
+  cy.get('[data-cyId=newSemester-seasonWrapper]').click();
+  cy.get('[data-cyId=newSemester-seasonItem]').first().click();
+
+  // click 2015
+  cy.get('[data-cyId=newSemester-yearWrapper]').click();
+  cy.get('[data-cyId=newSemester-yearItem]').first().click();
+
+  // add semester
+  cy.get('[data-cyId=modal-button]').click();
+
+  // Confirm only the semester version exists
+  cy.get('[data-cyId=semester-addSemesterButton]').should('be.visible');
+  cy.get('[data-cyId=semesterView-addSemesterButton]').should('not.exist');
+});
