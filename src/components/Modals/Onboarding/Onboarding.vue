@@ -54,7 +54,7 @@
             @setPage="setPage"
           />
         </div>
-        <div class="onboarding-error" v-if="isError">
+        <div class="onboarding-error" data-cyId="onboarding-error" v-if="isError">
           {{ errorText }}
         </div>
         <div class="onboarding-error" v-if="isInvalidMajorMinorGradError">
