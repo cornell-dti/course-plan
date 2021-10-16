@@ -4,41 +4,30 @@
 import store from '@/store';
 
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
-import { SeasonsEnum, incrementUniqueID } from './utils';
-import setOnboardingData from './onboarding-data';
-import {
-  editSemester,
-  addSemester,
-  deleteSemester,
-  addCourseToSemester,
-  deleteCourseFromSemester,
-  deleteCourseFromSemesters,
-} from './semesters';
-import chooseToggleableRequirementOption from './toggleable-requirement-choices';
-import {
-  addCourseToSelectableRequirements,
-  deleteCourseFromSelectableRequirements,
-} from './selectable-requirement-choices';
-import {
-  addOverridenRequirementAPIB,
-  clearOverridenRequirementsAPIB,
-} from './overridden-fulfillment-choices';
+import { incrementUniqueID } from './utils';
 
 export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
   course: CornellCourseRosterCourse
 ): FirestoreSemesterCourse =>
   cornellCourseRosterCourseToFirebaseSemesterCourse(course, store, incrementUniqueID);
 
-export { SeasonsEnum, incrementUniqueID };
-export { setOnboardingData };
+export { incrementUniqueID };
+export { default as setOnboardingData } from './onboarding-data';
 export {
   editSemester,
   addSemester,
   deleteSemester,
   addCourseToSemester,
   deleteCourseFromSemester,
+  deleteAllCoursesFromSemester,
   deleteCourseFromSemesters,
-};
-export { chooseToggleableRequirementOption };
-export { addCourseToSelectableRequirements, deleteCourseFromSelectableRequirements };
-export { addOverridenRequirementAPIB, clearOverridenRequirementsAPIB };
+} from './semesters';
+export { default as chooseToggleableRequirementOption } from './toggleable-requirement-choices';
+export {
+  addCourseToSelectableRequirements,
+  deleteCourseFromSelectableRequirements,
+} from './selectable-requirement-choices';
+export {
+  addOverridenRequirementAPIB,
+  clearOverridenRequirementsAPIB,
+} from './overridden-fulfillment-choices';

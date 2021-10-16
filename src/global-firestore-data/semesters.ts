@@ -130,9 +130,13 @@ export const deleteCourseFromSemester = (
 
 export const deleteAllCoursesFromSemester = (season: FirestoreSemesterType, year: number): void => {
   // TODO add gtag event
+  const semester = store.state.semesters.find(sem => sem.type === season && sem.year === year);
+  if (semester) {
+    deleteCoursesFromSelectableRequirements(semester.courses.map(course => course.uniqueID));
+  }
   editSemesters(oldSemesters => {
     let semesterFound = false;
-    const newSemestersWithoutCourse = oldSemesters.map(sem => {
+    const newSemestersWithEmptiedSemester = oldSemesters.map(sem => {
       if (sem.type === season && sem.year === year) {
         semesterFound = true;
         return {
@@ -142,7 +146,7 @@ export const deleteAllCoursesFromSemester = (season: FirestoreSemesterType, year
       }
       return sem;
     });
-    if (semesterFound) return newSemestersWithoutCourse;
+    if (semesterFound) return newSemestersWithEmptiedSemester;
     return oldSemesters;
   });
 };

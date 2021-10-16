@@ -247,10 +247,7 @@ export default defineComponent({
       );
     },
     chooseToggleableRequirementOption(requirementID: string, option: string): void {
-      chooseToggleableRequirementOption({
-        ...this.toggleableRequirementChoices,
-        [requirementID]: option,
-      });
+      chooseToggleableRequirementOption(requirementID, option);
     },
     activateMajor(id: number) {
       this.displayedMajorIndex = id;
