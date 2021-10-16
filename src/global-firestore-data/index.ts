@@ -1,9 +1,9 @@
 /**
  * Put all functions that can use and change the firestore data here.
  */
-import store from '@/store';
+import store from '../store';
 
-import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
+import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '../user-data-converter';
 import { incrementUniqueID } from './utils';
 
 export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (

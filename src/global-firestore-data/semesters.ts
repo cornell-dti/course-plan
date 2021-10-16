@@ -1,6 +1,6 @@
-import { semestersCollection } from '@/firebase-frontend-config';
-import store from '@/store';
-import { GTag, GTagEvent } from '@/gtag';
+import { semestersCollection } from '../firebase-frontend-config';
+import store from '../store';
+import { GTag, GTagEvent } from '../gtag';
 import { SeasonsEnum } from './utils';
 import {
   addCourseToSelectableRequirements,

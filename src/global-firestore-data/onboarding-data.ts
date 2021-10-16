@@ -1,5 +1,5 @@
-import { onboardingDataCollection } from '@/firebase-frontend-config';
-import store from '@/store';
+import { onboardingDataCollection } from '../firebase-frontend-config';
+import store from '../store';
 import setUsernameData from './username-data';
 import { clearOverridenRequirementsAPIB } from './overridden-fulfillment-choices';
 

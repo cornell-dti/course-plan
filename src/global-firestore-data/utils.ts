@@ -1,5 +1,5 @@
-import { uniqueIncrementerCollection } from '@/firebase-frontend-config';
-import store from '@/store';
+import { uniqueIncrementerCollection } from '../firebase-frontend-config';
+import store from '../store';
 
 // enum to define seasons as integers in season order
 export const SeasonsEnum = Object.freeze({

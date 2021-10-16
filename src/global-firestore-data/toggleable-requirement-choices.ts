@@ -1,5 +1,5 @@
-import { toggleableRequirementChoicesCollection } from '@/firebase-frontend-config';
-import store from '@/store';
+import { toggleableRequirementChoicesCollection } from '../firebase-frontend-config';
+import store from '../store';
 
 const editToggleableRequirementChoices = (
   toggleableRequirementChoices: AppToggleableRequirementChoices

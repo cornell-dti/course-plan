@@ -1,5 +1,5 @@
-import { selectableRequirementChoicesCollection } from '@/firebase-frontend-config';
-import store from '@/store';
+import { selectableRequirementChoicesCollection } from '../firebase-frontend-config';
+import store from '../store';
 
 const chooseSelectableRequirementOption = (
   selectableRequirementChoices: AppSelectableRequirementChoices

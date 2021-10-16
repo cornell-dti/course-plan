@@ -1,8 +1,8 @@
 /**
  * AP/IB override code temporarily uses the onboarding data collection
  */
-import { onboardingDataCollection } from '@/firebase-frontend-config';
-import store from '@/store';
+import { onboardingDataCollection } from '../firebase-frontend-config';
+import store from '../store';
 
 const editAPIBExams = (
   updater: (oldAPIBExams: readonly FirestoreAPIBExam[]) => readonly FirestoreAPIBExam[]
