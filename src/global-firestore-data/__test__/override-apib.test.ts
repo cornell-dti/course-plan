@@ -1,7 +1,7 @@
 import {
   addOverridenRequirementAPIBUpdater,
   clearOverridenRequirementsAPIBUpdater,
-} from '../global-firestore-data';
+} from '../overridden-fulfillment-choices';
 
 /**
  * Tests for addOverridenRequirementAPIBUpdater
