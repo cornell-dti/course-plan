@@ -11,6 +11,8 @@ before('Delete test user data, then visit site and log in', () => {
   cy.visit('localhost:8080/login');
   cy.login(Cypress.env('TEST_UID'));
 
+  cy.wait(5000); // ensure there is time to log in
+
   // delete user-onboarding-data for TEST_EMAIL
   // note that this delete will break if the collection is ever renamed
   const TEST_EMAIL = 'courseplan.cornelldti.test@gmail.com';
