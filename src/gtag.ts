@@ -20,6 +20,7 @@ type EventType =
   | 'delete-semester' // User deletes a semester
   | 'add-course' // User adds a course
   | 'delete-course' // User deletes a course
+  | 'delete-semester-courses' // User deletes all courses in a semester
   | 'course-edit-color' // User edits the course color
   | 'start-walkthrough' // User clicks to start the walkthrough
   | 'skip-walkthrough' // User clicks to skip the walkthrough
@@ -89,6 +90,13 @@ export const GTagEvent = (gtag: GTag | undefined, eventType: EventType): void =>
     case 'delete-course':
       eventPayload = {
         event_category: 'course',
+        event_label: 'delete',
+        value: 1,
+      };
+      break;
+    case 'delete-semester-courses':
+      eventPayload = {
+        event_category: 'semester-courses',
         event_label: 'delete',
         value: 1,
       };

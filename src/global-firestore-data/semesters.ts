@@ -128,8 +128,12 @@ export const deleteCourseFromSemester = (
   deleteCourseFromSelectableRequirements(courseUniqueID);
 };
 
-export const deleteAllCoursesFromSemester = (season: FirestoreSemesterType, year: number): void => {
-  // TODO add gtag event
+export const deleteAllCoursesFromSemester = (
+  season: FirestoreSemesterType,
+  year: number,
+  gtag?: GTag
+): void => {
+  GTagEvent(gtag, 'delete-semester-courses');
   const semester = store.state.semesters.find(sem => sem.type === season && sem.year === year);
   if (semester) {
     deleteCoursesFromSelectableRequirements(semester.courses.map(course => course.uniqueID));
