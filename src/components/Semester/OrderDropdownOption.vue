@@ -4,7 +4,12 @@
       <img :src="image" class="dropdown-button-image" :alt="alt" />
       {{ label }}
     </div>
-    <img v-if="selected" :src="checkmark" class="dropdown-button-image" alt="checkmark" />
+    <img
+      v-if="selected"
+      :src="checkmark"
+      class="dropdown-button-image"
+      alt="checkmark"
+    />
   </button>
 </template>
 

@@ -1,36 +1,35 @@
 import { semestersCollection } from '../firebase-frontend-config';
 import store from '../store';
 import { GTag, GTagEvent } from '../gtag';
-import { SeasonsEnum } from './utils';
+
 import {
   addCourseToSelectableRequirements,
   deleteCourseFromSelectableRequirements,
   deleteCoursesFromSelectableRequirements,
 } from './selectable-requirement-choices';
 
-// compare function for FirestoreSemester to determine which comes first by year and type/season
-export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSemester): number => {
-  if (a.type === b.type && a.year === b.year) {
-    return 0;
-  }
-  if (a.year > b.year) {
-    return -1;
-  }
-  if (a.year < b.year) {
-    return 1;
-  }
-  if (SeasonsEnum[a.type] < SeasonsEnum[b.type]) {
-    return 1;
-  }
-  return -1;
-};
-
 const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
   const newSemesters = updater(store.state.semesters);
   store.commit('setSemesters', newSemesters);
-  semestersCollection.doc(store.state.currentFirebaseUser.email).set({ semesters: newSemesters });
+  semestersCollection.doc(store.state.currentFirebaseUser.email).update({
+    semesters: newSemesters,
+  });
+};
+
+/**
+ * Toggles whether semesters are ordered by newest/oldest
+ * @returns true iff semesters were previously ordered oldest -> newest,
+ *          false otherwise
+ */
+export const toggleOrderByNewest = (): boolean => {
+  const toggled = !store.state.orderByNewest;
+  store.commit('setOrderByNewest', toggled);
+  semestersCollection.doc(store.state.currentFirebaseUser.email).update({
+    orderByNewest: toggled,
+  });
+  return toggled;
 };
 
 export const editSemester = (
@@ -39,9 +38,7 @@ export const editSemester = (
   updater: (oldSemester: FirestoreSemester) => FirestoreSemester
 ): void => {
   editSemesters(oldSemesters =>
-    oldSemesters
-      .map(sem => (sem.year === year && sem.type === type ? updater(sem) : sem))
-      .sort(compareFirestoreSemesters)
+    oldSemesters.map(sem => (sem.year === year && sem.type === type ? updater(sem) : sem))
   );
 };
 
@@ -63,7 +60,7 @@ export const addSemester = (
 ): void => {
   GTagEvent(gtag, 'add-semester');
   editSemesters(oldSemesters =>
-    [...oldSemesters, createSemester(type, year, courses)].sort(compareFirestoreSemesters)
+    [...oldSemesters, createSemester(type, year, courses)]
   );
 };
 
@@ -94,9 +91,7 @@ export const addCourseToSemester = (
       return sem;
     });
     if (semesterFound) return newSemestersWithCourse;
-    return [...oldSemesters, createSemester(season, year, [newCourse])].sort(
-      compareFirestoreSemesters
-    );
+    return [...oldSemesters, createSemester(season, year, [newCourse])];
   });
   if (requirementID) {
     addCourseToSelectableRequirements(newCourse.uniqueID, requirementID);
