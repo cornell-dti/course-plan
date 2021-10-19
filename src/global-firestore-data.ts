@@ -80,6 +80,25 @@ export const addSemester = (
   );
 };
 
+export const getActiveSemesters = (
+  entranceSem: FirestoreSemesterType,
+  entranceYear: number,
+  gradSem: FirestoreSemesterType,
+  gradYear: number
+): FirestoreSemester[] => {
+  const sems = [createSemester('Fall', entranceYear, []), createSemester('Spring', gradYear, [])];
+  if (entranceSem === 'Spring' && entranceYear !== gradYear)
+    sems.push(createSemester('Spring', entranceYear, []));
+  if (gradSem === 'Fall' && entranceYear !== gradYear)
+    sems.push(createSemester('Fall', gradYear, []));
+
+  for (let yr = entranceYear + 1; yr < gradYear; yr += 1) {
+    sems.push(createSemester('Spring', yr, []));
+    sems.push(createSemester('Fall', yr, []));
+  }
+  return sems.sort(compareFirestoreSemesters);
+};
+
 // function to add all the semesters a user will be enrolled in based on entrance and graduation time
 export const populateSemesters = (onboarding: AppOnboardingData): void => {
   const entranceYear = parseInt(onboarding.entranceYear, 10);
@@ -90,15 +109,7 @@ export const populateSemesters = (onboarding: AppOnboardingData): void => {
     : 'Fall';
   const gradSem: FirestoreSemesterType = onboarding.gradSem ? onboarding.gradSem : 'Spring';
 
-  const sems = [createSemester('Fall', entranceYear, []), createSemester('Spring', gradYear, [])];
-  if (entranceSem === 'Spring') sems.push(createSemester('Spring', entranceYear, []));
-  if (gradSem === 'Fall') sems.push(createSemester('Fall', gradYear, []));
-
-  for (let yr = entranceYear + 1; yr < gradYear; yr += 1) {
-    sems.push(createSemester('Spring', yr, []));
-    sems.push(createSemester('Fall', yr, []));
-  }
-  editSemesters(() => sems.sort(compareFirestoreSemesters));
+  editSemesters(() => getActiveSemesters(entranceSem, entranceYear, gradSem, gradYear));
 };
 
 export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
