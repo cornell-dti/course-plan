@@ -2,7 +2,7 @@
   <div
     class="edit-requirement"
     :class="{ 'edit-requirement-selected': selected, 'edit-requirement-pointer': isClickable }"
-    v-on="isClickable ? { click: () => onClick() } : { click: $event => $event.preventDefault() }"
+    @click="onClick"
   >
     <img
       v-if="selected"
@@ -37,8 +37,12 @@ export default defineComponent({
     },
   },
   methods: {
-    onClick() {
-      this.$emit('on-select');
+    onClick(event: Event) {
+      if (this.isClickable) {
+        this.$emit('on-select');
+      } else {
+        event.preventDefault();
+      }
     },
   },
 });

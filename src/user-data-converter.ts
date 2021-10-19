@@ -1,5 +1,13 @@
-import { incrementUniqueID } from './global-firestore-data';
-import store from './store';
+/**
+ * A set of pure functions to convert between Firestore data and app data.
+ * ===================================================================================================
+ * Note:
+ * Do not directly or indrectly import and use the global VueX `store`.
+ * Instead, pass it as an parameter.
+ * It's important to keep these functions pure and avoid cyclic dependencies between modules.
+ */
+
+import type { TypedVuexStore } from './store';
 
 /**
  * Creates credit range based on course
@@ -46,7 +54,9 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndCol
 };
 
 export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
-  course: CornellCourseRosterCourse
+  course: CornellCourseRosterCourse,
+  store: TypedVuexStore,
+  incrementUniqueID: () => number
 ): FirestoreSemesterCourse =>
   cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
     course,
@@ -128,4 +138,20 @@ export const firestoreSemesterCourseToBottomBarCourse = ({
   overallRating: 0,
   difficulty: 0,
   workload: 0,
+});
+
+export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardingData => ({
+  // TODO: take into account multiple colleges
+  gradYear: data.gradYear ? data.gradYear : '',
+  entranceYear: data.entranceYear ? data.entranceYear : '',
+  college: data.colleges.length !== 0 ? data.colleges[0].acronym : undefined,
+  major: data.majors.map(({ acronym }) => acronym),
+  minor: data.minors.map(({ acronym }) => acronym),
+  grad:
+    'gradPrograms' in data && data.gradPrograms.length !== 0
+      ? data.gradPrograms[0].acronym
+      : undefined,
+  exam: 'exam' in data ? [...data.exam] : [],
+  transferCourse: 'class' in data ? [...data.class] : [],
+  tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',
 });

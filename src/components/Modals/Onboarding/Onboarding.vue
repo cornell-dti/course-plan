@@ -64,11 +64,7 @@
       </div>
       <div class="onboarding-bottom">
         <div class="onboarding-bottom--section onboarding-bottom--section---center">
-          <img
-            class="timeline"
-            :src="require(`@/assets/images/timeline${currentPage}text.svg`)"
-            alt="onboarding progress timeline"
-          />
+          <img class="timeline" :src="timelineTextImage" alt="onboarding progress timeline" />
         </div>
         <div v-if="currentPage === 3" class="onboarding-bottom--section">
           <!-- keeping skip button code in case we want to add back -->
@@ -114,6 +110,11 @@ import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfe
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import { setOnboardingData, populateSemesters } from '@/global-firestore-data';
 import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
+import timeline1Text from '@/assets/images/timeline1text.svg';
+import timeline2Text from '@/assets/images/timeline2text.svg';
+import timeline3Text from '@/assets/images/timeline3text.svg';
+
+const timelineTexts = [timeline1Text, timeline2Text, timeline3Text];
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -146,6 +147,9 @@ export default defineComponent({
         this.onboarding.entranceYear === '' ||
         (this.onboarding.college === '' && this.onboarding.grad === '')
       );
+    },
+    timelineTextImage(): string {
+      return timelineTexts[this.currentPage - 1];
     },
     /**
      * Display error if onboarding data includes a major, minor, or graduate program

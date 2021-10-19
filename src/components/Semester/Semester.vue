@@ -45,12 +45,20 @@
           <span class="semester-credits">{{ creditString }}</span>
         </div>
         <div class="semester-right" :class="{ 'semester-right--compact': compact }">
+          <button class="semester-minimize" @click="minimizeSemester" data-cyId="minimizeSemester">
+            <img
+              v-if="!isSemesterMinimized"
+              src="@/assets/images/minimize.svg"
+              alt="minimze semester"
+            />
+            <img v-else src="@/assets/images/expand.svg" alt="expand semester" />
+          </button>
           <button class="semester-dotRow" @click="openSemesterMenu" data-cyId="semesterMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="open menu for semester" />
           </button>
         </div>
       </div>
-      <div class="semester-courses">
+      <div class="semester-courses" :class="{ 'semester-hidden': isSemesterMinimized }">
         <draggable
           ref="droppable"
           class="draggable-semester-courses"
@@ -114,12 +122,12 @@ import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import {
+  cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   editSemester,
   addCourseToSemester,
   deleteCourseFromSemester,
   addCourseToSelectableRequirements,
 } from '@/global-firestore-data';
-import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '@/user-data-converter';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -149,6 +157,7 @@ export default defineComponent({
       isShadowCounter: 0,
       isDraggedFrom: false,
       isCourseModalOpen: false,
+      isSemesterMinimized: false,
 
       seasonImg: {
         Fall: fall,
@@ -189,6 +198,8 @@ export default defineComponent({
     const droppable = (this.$refs.droppable as ComponentRef).$el;
     droppable.addEventListener('dragenter', this.onDragEnter);
     droppable.addEventListener('dragleave', this.onDragExit);
+    const savedSemesterMinimize = localStorage.getItem(JSON.stringify(this.semesterIndex));
+    this.isSemesterMinimized = savedSemesterMinimize ? JSON.parse(savedSemesterMinimize) : false;
   },
   beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);
@@ -302,7 +313,7 @@ export default defineComponent({
       this.isConfirmationOpen = false;
     },
     addCourse(data: CornellCourseRosterCourse, requirementID: string) {
-      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourse(data);
+      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       addCourseToSemester(this.type, this.year, newCourse, requirementID, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
@@ -342,6 +353,13 @@ export default defineComponent({
     },
     dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
+    },
+    minimizeSemester() {
+      this.isSemesterMinimized = !this.isSemesterMinimized;
+      localStorage.setItem(
+        JSON.stringify(this.semesterIndex),
+        JSON.stringify(this.isSemesterMinimized)
+      );
     },
     openSemesterMenu() {
       this.stopCloseFlag = true;
@@ -447,13 +465,19 @@ export default defineComponent({
   }
 
   &-right {
+    display: flex;
+
     &--compact {
       margin-top: 0.25rem;
     }
   }
 
+  &-minimize {
+    margin-right: 8px;
+  }
+
   &-dotRow {
-    padding: 8px 0;
+    padding: 15px 0;
     display: flex;
     position: relative;
     &:hover,
@@ -499,6 +523,10 @@ export default defineComponent({
   &-course:active:hover {
     touch-action: none;
     cursor: grabbing;
+  }
+
+  &-hidden {
+    display: none;
   }
 
   .season-emoji {
