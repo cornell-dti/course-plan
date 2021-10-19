@@ -182,7 +182,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   selectableRequirementChoices: AppSelectableRequirementChoices,
-  overridenRequirementChoices: AppOverridenRequirementChoices
+  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
 ): {
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
@@ -199,7 +199,7 @@ export default function computeGroupedRequirementFulfillmentReports(
     onboardingData,
     toggleableRequirementChoices,
     selectableRequirementChoices,
-    overridenRequirementChoices
+    overriddenFulfillmentChoices
   );
 
   const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];
@@ -225,7 +225,7 @@ export default function computeGroupedRequirementFulfillmentReports(
         requirement,
         courses,
         toggleableRequirementChoices,
-        overridenRequirementChoices
+        overriddenFulfillmentChoices
       ),
     };
 

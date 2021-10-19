@@ -56,7 +56,7 @@ export type VuexStoreState = {
   derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   selectableRequirementChoices: AppSelectableRequirementChoices;
-  overridenRequirementChoices: AppOverridenRequirementChoices;
+  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
@@ -101,7 +101,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     toggleableRequirementChoices: {},
     selectableRequirementChoices: {},
-    overridenRequirementChoices: {},
+    overriddenFulfillmentChoices: {},
     userRequirementsMap: {},
     // It won't be null once the app loads.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -151,13 +151,13 @@ const store: TypedVuexStore = new TypedVuexStore({
     ) {
       state.selectableRequirementChoices = selectableRequirementChoices;
     },
-    setOverridenRequirementChoices(
+    setOverriddenFulfillmentChoices(
       state: VuexStoreState,
-      overridenRequirementChoices: AppOverridenRequirementChoices
+      overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
     ) {
-      state.overridenRequirementChoices = {
-        ...overridenRequirementChoices,
-        ...computeAPIBOverridenRequirements(state), // adds AP/IB data from onboarding collection
+      state.overriddenFulfillmentChoices = {
+        ...overriddenFulfillmentChoices,
+        ...computeAPIBOverriddenFulfillments(state), // adds AP/IB data from onboarding collection
       };
     },
     setRequirementData(
@@ -241,9 +241,9 @@ const autoRecomputeDerivedData = (): (() => void) =>
         uniqueIdToExamMap,
       };
       store.commit('setDerivedAPIBEquivalentCourseData', derivedAPIBEquivalentCourseData);
-      // Recompute overridenRequirementChoices, which is dependent
+      // Recompute overriddenFulfillmentChoices, which is dependent
       // on onboardingData and derivedAPIBEquivalentCourseData
-      store.commit('setOverridenRequirementChoices', state.overridenRequirementChoices);
+      store.commit('setOverriddenFulfillmentChoices', state.overriddenFulfillmentChoices);
     }
     // Recompute requirements
     if (
@@ -251,7 +251,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
       payload.type === 'setSemesters' ||
       payload.type === 'setToggleableRequirementChoices' ||
       payload.type === 'setSelectableRequirementChoices' ||
-      payload.type === 'setOverridenRequirementChoices'
+      payload.type === 'setOverriddenFulfillmentChoices'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -261,7 +261,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
             state.onboardingData,
             state.toggleableRequirementChoices,
             state.selectableRequirementChoices,
-            state.overridenRequirementChoices
+            state.overriddenFulfillmentChoices
           )
         );
       }
@@ -269,13 +269,13 @@ const autoRecomputeDerivedData = (): (() => void) =>
   });
 
 /**
- * Computes AP/IB Overriden Requirement Choices from
+ * Computes AP/IB Overridden Fulfillment Choices from
  * onboarding data and derived AP/IB equivalent course data.
  */
-const computeAPIBOverridenRequirements = (
+const computeAPIBOverriddenFulfillments = (
   state: VuexStoreState
-): AppOverridenRequirementChoices => {
-  const APIBOverridenRequirements: Record<
+): AppOverriddenFulfillmentChoices => {
+  const APIBOverriddenFulfillments: Record<
     string,
     {
       readonly optIn: Record<string, Set<string>>;
@@ -305,13 +305,13 @@ const computeAPIBOverridenRequirements = (
         )
       : {};
     uniqueIds.forEach(uniqueId => {
-      APIBOverridenRequirements[uniqueId] = {
+      APIBOverriddenFulfillments[uniqueId] = {
         optIn: optInChoices,
         optOut: optOutChoices,
       };
     });
   });
-  return APIBOverridenRequirements;
+  return APIBOverriddenFulfillments;
 };
 
 export const initializeFirestoreListeners = (onLoad: () => void): (() => void) => {

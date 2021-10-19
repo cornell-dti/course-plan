@@ -15,7 +15,7 @@ const editAPIBExams = (
 };
 
 // split and exposed for testing
-export const addOverridenRequirementAPIBUpdater = (
+export const addOverriddenFulfillmentAPIBUpdater = (
   oldAPIBExams: readonly FirestoreAPIBExam[],
   examName: string,
   optIn: boolean,
@@ -24,45 +24,45 @@ export const addOverridenRequirementAPIBUpdater = (
 ): readonly FirestoreAPIBExam[] =>
   oldAPIBExams.map(exam => {
     if (`${exam.type} ${exam.subject}` === examName) {
-      const overridenRequirements = optIn ? { ...exam.optIn } : { ...exam.optOut };
-      if (requirementName in overridenRequirements) {
-        if (overridenRequirements[requirementName].indexOf(slotName) === -1) {
-          overridenRequirements[requirementName] = [
-            ...overridenRequirements[requirementName],
+      const overriddenFulfillments = optIn ? { ...exam.optIn } : { ...exam.optOut };
+      if (requirementName in overriddenFulfillments) {
+        if (overriddenFulfillments[requirementName].indexOf(slotName) === -1) {
+          overriddenFulfillments[requirementName] = [
+            ...overriddenFulfillments[requirementName],
             slotName,
           ];
         }
       } else {
-        overridenRequirements[requirementName] = [slotName];
+        overriddenFulfillments[requirementName] = [slotName];
       }
-      const otherOverridenRequirements = optIn ? { ...exam.optOut } : { ...exam.optIn };
-      if (requirementName in otherOverridenRequirements) {
-        otherOverridenRequirements[requirementName] = otherOverridenRequirements[
+      const otherOverriddenFulfillments = optIn ? { ...exam.optOut } : { ...exam.optIn };
+      if (requirementName in otherOverriddenFulfillments) {
+        otherOverriddenFulfillments[requirementName] = otherOverriddenFulfillments[
           requirementName
         ].filter(slot => slot !== slotName);
-        if (otherOverridenRequirements[requirementName].length === 0) {
-          delete otherOverridenRequirements[requirementName];
+        if (otherOverriddenFulfillments[requirementName].length === 0) {
+          delete otherOverriddenFulfillments[requirementName];
         }
       }
       return optIn
-        ? { ...exam, optIn: overridenRequirements, optOut: otherOverridenRequirements }
-        : { ...exam, optIn: otherOverridenRequirements, optOut: overridenRequirements };
+        ? { ...exam, optIn: overriddenFulfillments, optOut: otherOverriddenFulfillments }
+        : { ...exam, optIn: otherOverriddenFulfillments, optOut: overriddenFulfillments };
     }
     return exam;
   });
 
-export const addOverridenRequirementAPIB = (
+export const addOverriddenFulfillmentAPIB = (
   examName: string,
   optIn: boolean,
   requirementName: string,
   slotName: string
 ): void =>
   editAPIBExams(oldAPIBExams =>
-    addOverridenRequirementAPIBUpdater(oldAPIBExams, examName, optIn, requirementName, slotName)
+    addOverriddenFulfillmentAPIBUpdater(oldAPIBExams, examName, optIn, requirementName, slotName)
   );
 
 // split and exposed for testing
-export const clearOverridenRequirementsAPIBUpdater = (
+export const clearOverriddenFulfillmentsAPIBUpdater = (
   oldAPIBExams: readonly FirestoreAPIBExam[]
 ): readonly FirestoreAPIBExam[] =>
   oldAPIBExams.map(exam => {
@@ -70,5 +70,5 @@ export const clearOverridenRequirementsAPIBUpdater = (
     return { optIn: {}, optOut: {}, ...rest };
   });
 
-export const clearOverridenRequirementsAPIB = (): void =>
-  editAPIBExams(oldAPIBExams => clearOverridenRequirementsAPIBUpdater(oldAPIBExams));
+export const clearOverriddenFulfillmentsAPIB = (): void =>
+  editAPIBExams(oldAPIBExams => clearOverriddenFulfillmentsAPIBUpdater(oldAPIBExams));

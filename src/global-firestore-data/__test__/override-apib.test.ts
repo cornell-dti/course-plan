@@ -1,14 +1,14 @@
 import {
-  addOverridenRequirementAPIBUpdater,
-  clearOverridenRequirementsAPIBUpdater,
+  addOverriddenFulfillmentAPIBUpdater,
+  clearOverriddenFulfillmentsAPIBUpdater,
 } from '../overridden-fulfillment-choices';
 
 /**
- * Tests for addOverridenRequirementAPIBUpdater
+ * Tests for addOverriddenFulfillmentAPIBUpdater
  */
 it('Exam name not found', () => {
   let oldAPIBExams: FirestoreAPIBExam[] = [];
-  let newAPIBExams = addOverridenRequirementAPIBUpdater(
+  let newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'examName',
     true,
@@ -24,7 +24,7 @@ it('Exam name not found', () => {
       subject: 'Biology',
     },
   ];
-  newAPIBExams = addOverridenRequirementAPIBUpdater(
+  newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'examName',
     true,
@@ -52,7 +52,7 @@ it('Override with missing data', () => {
       optOut: {},
     },
   ];
-  let newAPIBExams = addOverridenRequirementAPIBUpdater(
+  let newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     true,
@@ -70,7 +70,7 @@ it('Override with missing data', () => {
       optOut: { reqName: ['slotName'] },
     },
   ];
-  newAPIBExams = addOverridenRequirementAPIBUpdater(
+  newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     false,
@@ -98,7 +98,7 @@ it('Override with no initial data', () => {
       optOut: {},
     },
   ];
-  let newAPIBExams = addOverridenRequirementAPIBUpdater(
+  let newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     true,
@@ -116,7 +116,7 @@ it('Override with no initial data', () => {
       optOut: { reqName: ['slotName'] },
     },
   ];
-  newAPIBExams = addOverridenRequirementAPIBUpdater(
+  newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     false,
@@ -137,7 +137,7 @@ it('Override with duplicate data', () => {
     },
   ];
 
-  let newAPIBExams = addOverridenRequirementAPIBUpdater(
+  let newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     true,
@@ -146,7 +146,7 @@ it('Override with duplicate data', () => {
   );
   expect(newAPIBExams).toEqual(oldAPIBExams);
 
-  newAPIBExams = addOverridenRequirementAPIBUpdater(
+  newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     false,
@@ -174,7 +174,7 @@ it('Opt in with new data', () => {
       optOut: {},
     },
   ];
-  const newAPIBExams = addOverridenRequirementAPIBUpdater(
+  const newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     true,
@@ -202,7 +202,7 @@ it('Opt out with new data', () => {
       optOut: { reqName: ['slotName1', 'slotName'] },
     },
   ];
-  const newAPIBExams = addOverridenRequirementAPIBUpdater(
+  const newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     false,
@@ -230,7 +230,7 @@ it('Opt in with opt out data', () => {
       optOut: {},
     },
   ];
-  const newAPIBExams = addOverridenRequirementAPIBUpdater(
+  const newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     true,
@@ -258,7 +258,7 @@ it('Opt out with opt in data', () => {
       optOut: { reqName: ['slotName'] },
     },
   ];
-  const newAPIBExams = addOverridenRequirementAPIBUpdater(
+  const newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     false,
@@ -286,7 +286,7 @@ it('Opt in with opt in data', () => {
       optOut: {},
     },
   ];
-  const newAPIBExams = addOverridenRequirementAPIBUpdater(
+  const newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     true,
@@ -314,7 +314,7 @@ it('Opt out with opt out data', () => {
       optOut: { reqName: ['slotName1', 'slotName'] },
     },
   ];
-  const newAPIBExams = addOverridenRequirementAPIBUpdater(
+  const newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     false,
@@ -344,7 +344,7 @@ it('Override with different reqName', () => {
       optOut: { reqName2: ['slotName2'] },
     },
   ];
-  let newAPIBExams = addOverridenRequirementAPIBUpdater(
+  let newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     true,
@@ -362,7 +362,7 @@ it('Override with different reqName', () => {
       optOut: { reqName2: ['slotName2'], reqName: ['slotName'] },
     },
   ];
-  newAPIBExams = addOverridenRequirementAPIBUpdater(
+  newAPIBExams = addOverriddenFulfillmentAPIBUpdater(
     oldAPIBExams,
     'AP Biology',
     false,
@@ -373,11 +373,11 @@ it('Override with different reqName', () => {
 });
 
 /**
- * Tests for clearOverridenRequirementsAPIBUpdater
+ * Tests for clearOverriddenFulfillmentsAPIBUpdater
  */
 it('No exams to clear', () => {
   const oldAPIBExams: FirestoreAPIBExam[] = [];
-  const newAPIBExams = clearOverridenRequirementsAPIBUpdater(oldAPIBExams);
+  const newAPIBExams = clearOverriddenFulfillmentsAPIBUpdater(oldAPIBExams);
   expect(newAPIBExams).toEqual(oldAPIBExams);
 });
 
@@ -398,7 +398,7 @@ it('Exams are already cleared', () => {
       optOut: {},
     },
   ];
-  const newAPIBExams = clearOverridenRequirementsAPIBUpdater(oldAPIBExams);
+  const newAPIBExams = clearOverriddenFulfillmentsAPIBUpdater(oldAPIBExams);
   expect(newAPIBExams).toEqual(expectedAPIBExams);
 });
 
@@ -421,7 +421,7 @@ it('Clear for one exam', () => {
       optOut: {},
     },
   ];
-  const newAPIBExams = clearOverridenRequirementsAPIBUpdater(oldAPIBExams);
+  const newAPIBExams = clearOverriddenFulfillmentsAPIBUpdater(oldAPIBExams);
   expect(newAPIBExams).toEqual(expectedAPIBExams);
 });
 
@@ -458,6 +458,6 @@ it('Clear for multiple exams', () => {
       optOut: {},
     },
   ];
-  const newAPIBExams = clearOverridenRequirementsAPIBUpdater(oldAPIBExams);
+  const newAPIBExams = clearOverriddenFulfillmentsAPIBUpdater(oldAPIBExams);
   expect(newAPIBExams).toEqual(expectedAPIBExams);
 });
