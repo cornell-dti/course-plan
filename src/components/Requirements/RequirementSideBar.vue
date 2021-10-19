@@ -114,7 +114,7 @@
 import draggable from 'vuedraggable';
 import { defineComponent } from 'vue';
 import introJs from 'intro.js';
-import { isRequirementDebuggerEnabled } from '@/feature-flags';
+import featureFlagCheckers from '@/feature-flags';
 
 import Course from '@/components/Course/Course.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
@@ -200,7 +200,7 @@ export default defineComponent({
   },
   computed: {
     debuggerAllowed(): boolean {
-      return isRequirementDebuggerEnabled();
+      return featureFlagCheckers.isRequirementDebuggerEnabled();
     },
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;

@@ -22,15 +22,25 @@ inline comments in that file to see how to add and use the feature flags.
 
 ## Usage
 
-To add a feature flag, add the following line below and keep it alphabetically sorted.
+To add a feature flag, add the feature flag name to both the type and in `registerFeatureFlagChecker`.
 
 ```ts
-export const isXyzEnabled = registerFeatureFlagChecker('Xyz');
+type FeatureFlagName =
+  | 'Example'
+  | 'RequirementDebugger'
+  | ...
+  | 'YourFeatureFlagName';
+const featureFlagCheckers = registerFeatureFlagChecker(
+  'Example',
+  'RequirementDebugger',
+  ...,
+  'YourFeatureFlagName'
+);
 ```
 
-For consistency, the name should be in `PascalCase`.
+For consistency, the name should be in `PascalCase` and kept alphabetically sorted.
 
-To check the feature flag in your code, import `isXyzEnabled` from `feature-flags.ts`.
+To check the feature flag in your code, import `featureFlagCheckers` from `feature-flags.ts` and call `featureFlagCheckers.isXyzEnabled()`.
 
 To toggle the feature flag in the app, open developer console and type `GK.enableXyz()` or
 `GK.disableXyz()`. You can press tab for autocompletion.
