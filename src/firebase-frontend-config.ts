@@ -40,8 +40,6 @@ firebase.initializeApp(config);
 export const db = firebase.firestore();
 export const auth = firebase.auth();
 
-db.settings({ experimentalForceLongPolling: true });
-
 export const usernameCollection = db
   .collection('user-name')
   .withConverter(getTypedFirestoreDataConverter<FirestoreUserName>());

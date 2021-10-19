@@ -31,6 +31,10 @@ it('Onboard a new user with all required fields', () => {
   cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
 
+  // confirm that onboarding cannot be clicked outsideto close when creating a new user
+  cy.get('[data-cyId=onboarding]').clickOutside();
+  cy.get('[data-cyId=onboarding]').should('be.visible');
+
   // set Graduation year to 2018
   cy.get('[data-cyId=onboarding-dropdown]').eq(0).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
@@ -179,4 +183,20 @@ it('Confirm CUReviews data exists', () => {
     .should(text => {
       expect(text).not.to.eq('N/A');
     });
+});
+
+// Test to confirm that teleport modals can be clicked outside of to close them
+it('Click outside teleport modals', () => {
+  cy.get('[data-cyId=semester-addCourse]').click();
+  cy.get('[data-cyId=teleportModal]').should('be.visible');
+  cy.get('[data-cyId=teleportModal]').clickOutside();
+  cy.get('[data-cyId=teleportModal]').should('not.exist');
+});
+
+// Test to confirm that onboarding can be clicked outside (when editing)
+it('Click outside onboarding modal', () => {
+  cy.get('[data-cyId=editProfile]').click();
+  cy.get('[data-cyId=onboarding]').should('be.visible');
+  cy.get('[data-cyId=onboarding]').clickOutside();
+  cy.get('[data-cyId=onboarding]').should('not.exist');
 });

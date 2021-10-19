@@ -9,6 +9,7 @@
       }"
       @click="closeOnClickOutside"
       ref="modalBackground"
+      data-cyId="teleportModal"
     >
       <div
         :class="['modal-content', contentClass, { 'modal-simple': isSimpleModal }]"

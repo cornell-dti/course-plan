@@ -1,5 +1,5 @@
 <template>
-  <div class="onboarding" @click="checkClickOutside" ref="modalBackground">
+  <div class="onboarding" @click="checkClickOutside" ref="modalBackground" data-cyId="onboarding">
     <div class="onboarding-main">
       <div v-if="isEditingProfile" class="onboarding-cancel">
         <button @click="cancel">

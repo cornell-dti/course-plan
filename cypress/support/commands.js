@@ -42,6 +42,12 @@ const fbConfig = {
 };
 
 firebase.initializeApp(fbConfig);
+firebase.firestore().settings({ experimentalForceLongPolling: true });
+
+Cypress.Commands.add(
+  'clickOutside',
+  () => cy.get('body').click(0, 0) // clicks at (0, 0)
+);
 
 // attach custom firebase commands to cypress from the cypress-firebase package
 attachCustomCommands({ Cypress, cy, firebase });
