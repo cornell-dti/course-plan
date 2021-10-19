@@ -48,7 +48,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import store from '@/store';
-import { toggleOrderByNewest } from '@/global-firestore-data';
+import { toggleOrderByNewest } from '@/global-firestore-data/semesters';
 import defaultSem from '@/assets/images/schedule-view/view-settings/default-sem.svg';
 import compactSem from '@/assets/images/schedule-view/view-settings/four-column.svg';
 import newestArrow from '@/assets/images/schedule-view/view-settings/newest-arrow.svg';

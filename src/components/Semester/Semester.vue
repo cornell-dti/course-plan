@@ -146,13 +146,16 @@ import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
+
+import { cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData } from '@/global-firestore-data/index';
+
 import {
-  cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   editSemester,
   addCourseToSemester,
   deleteCourseFromSemester,
-  addCourseToSelectableRequirements,
-} from '@/global-firestore-data';
+} from '@/global-firestore-data/semesters';
+
+import { addCourseToSelectableRequirements } from '@/global-firestore-data/selectable-requirement-choices';
 
 type ComponentRef = { $el: HTMLDivElement };
 
