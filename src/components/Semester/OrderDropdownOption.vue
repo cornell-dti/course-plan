@@ -1,11 +1,7 @@
 <template>
   <button class="dropdown-button full-opacity-on-hover">
     <div class="dropdown-button-option">
-      <img
-        :src="image"
-        class="dropdown-button-image"
-        alt="dropdown button image"
-      />
+      <img :src="image" class="dropdown-button-image" alt="dropdown button image" />
       {{ label }}
     </div>
     <img
