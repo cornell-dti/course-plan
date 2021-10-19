@@ -1,32 +1,32 @@
 <template>
   <div class="dropdown">
-    <button class="dropdown-button" data-cyId="dropdown-button">
+    <button class="dropdown-button" data-cyId="dropdown-button" @click="toggle">
       <img class="dropdown-button--image" />
       View
     </button>
-    <div class="dropdown-content">
+    <div v-if="open" class="dropdown-content">
       <order-dropdown-option
         :selected="!compact"
-        image="/src/assets/images/schedule-view/view-settings/default-sem.svg"
+        :image="defaultSem"
         label="Default"
         @click="$emit('click-compact', false)"
       />
       <order-dropdown-option
         :selected="compact"
-        image="/src/assets/images/schedule-view/view-settings/four-column.svg"
+        :image="compactSem"
         label="Compact"
         @click="$emit('click-compact', true)"
       />
       <div class="dropdown-content--hline" />
       <order-dropdown-option
         :selected="orderByNewest"
-        image="/src/assets/images/schedule-view/view-settings/newest-arrow.svg"
+        :image="newestArrow"
         label="Newest"
         @click="onOrderClick(true)"
       />
       <order-dropdown-option
         :selected="!orderByNewest"
-        image="/src/assets/images/schedule-view/view-settings/oldest-arrow.svg"
+        :image="oldestArrow"
         label="Oldest"
         @click="onOrderClick(false)"
       />
@@ -38,6 +38,10 @@
 import { defineComponent } from 'vue';
 import store from '@/store';
 import { toggleOrderByNewest } from '@/global-firestore-data';
+import defaultSem from '@/assets/images/schedule-view/view-settings/default-sem.svg';
+import compactSem from '@/assets/images/schedule-view/view-settings/four-column.svg';
+import newestArrow from '@/assets/images/schedule-view/view-settings/newest-arrow.svg';
+import oldestArrow from '@/assets/images/schedule-view/view-settings/oldest-arrow.svg';
 import OrderDropdownOption from './OrderDropdownOption.vue';
 
 export default defineComponent({
@@ -45,10 +49,26 @@ export default defineComponent({
   props: {
     compact: { type: Boolean, required: true },
   },
-
+  data() {
+    return {
+      open: false,
+    };
+  },
   computed: {
     orderByNewest() {
       return store.state.orderByNewest;
+    },
+    defaultSem() {
+      return defaultSem;
+    },
+    compactSem() {
+      return compactSem;
+    },
+    newestArrow() {
+      return newestArrow;
+    },
+    oldestArrow() {
+      return oldestArrow;
     },
   },
 
@@ -61,6 +81,9 @@ export default defineComponent({
       if (orderByNewest !== this.orderByNewest) {
         toggleOrderByNewest();
       }
+    },
+    toggle() {
+      this.open = !this.open;
     },
   },
 });
@@ -93,7 +116,8 @@ export default defineComponent({
     }
   }
   &-content {
-    display: none;
+    display: flex;
+    flex-direction: column;
     position: absolute;
     right: 0;
     border-radius: 8px;
@@ -106,10 +130,6 @@ export default defineComponent({
     box-sizing: border-box;
     box-shadow: 0px 5px 8px 2px $boxShadowGray;
     border-radius: 4px;
-    :hover > & {
-      display: flex;
-      flex-direction: column;
-    }
     &--hline {
       width: calc(100% - 2rem);
       height: 0;
