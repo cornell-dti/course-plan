@@ -8,6 +8,9 @@
         'teleport-transparentBackground': hasClickableTransparentBackground,
       }"
       @click="closeOnClickOutside"
+      @wheel.prevent
+      @touchmove.prevent
+      @scroll.prevent
       ref="modalBackground"
     >
       <div
