@@ -49,10 +49,10 @@
 import { defineComponent } from 'vue';
 import store from '@/store';
 import { toggleOrderByNewest } from '@/global-firestore-data/semesters';
-import defaultSem from '@/assets/images/schedule-view/view-settings/default-sem.svg';
-import compactSem from '@/assets/images/schedule-view/view-settings/four-column.svg';
-import newestArrow from '@/assets/images/schedule-view/view-settings/newest-arrow.svg';
-import oldestArrow from '@/assets/images/schedule-view/view-settings/oldest-arrow.svg';
+import defaultSem from '@/assets/images/views/twoColumnSelected.svg';
+import compactSem from '@/assets/images/views/fourColumnSelected.svg';
+import newestArrow from '@/assets/images/views/newestArrow.svg';
+import oldestArrow from '@/assets/images/views/oldestArrow.svg';
 import OrderDropdownOption from './OrderDropdownOption.vue';
 
 export default defineComponent({
@@ -120,9 +120,9 @@ export default defineComponent({
     &--image {
       margin-right: 0.3rem;
       width: 1rem;
-      content: url('@/assets/images/schedule-view/view-settings/settings.svg');
+      content: url('@/assets/images/views/settings.svg');
       :hover > & {
-        content: url('@/assets/images/schedule-view/view-settings/settings-on-hover.svg');
+        content: url('@/assets/images/views/settingsOnHover.svg');
       }
     }
   }

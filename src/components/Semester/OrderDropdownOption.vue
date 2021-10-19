@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import checkmark from '@/assets/images/schedule-view/view-settings/checkmark.svg';
+import checkmark from '@/assets/images/views/checkmark.svg';
 
 export default defineComponent({
   props: {
@@ -50,9 +50,6 @@ export default defineComponent({
   &-image {
     min-width: 1rem;
     max-width: 1rem;
-    &--checkmark {
-      content: url('@/assets/images/schedule-view/view-settings/checkmark.svg');
-    }
   }
 }
 </style>
