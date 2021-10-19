@@ -25,10 +25,10 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
   readonly requirementID?: string;
 };
 
-type FirestoreSemesterType = 'Fall' | 'Spring' | 'Summer' | 'Winter';
+type FirestoreSemesterSeason = 'Fall' | 'Spring' | 'Summer' | 'Winter';
 type FirestoreSemester = {
   readonly year: number;
-  readonly type: FirestoreSemesterType;
+  readonly season: FirestoreSemesterSeason;
   readonly courses: readonly FirestoreSemesterCourse[];
 };
 

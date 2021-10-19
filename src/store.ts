@@ -5,7 +5,8 @@ import getCourseEquivalentsFromUserExams from './requirements/data/exams/ExamCre
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
-import getCurrentSeason, {
+import {
+  getCurrentSeason,
   checkNotNull,
   getCurrentYear,
   allocateAllSubjectColor,
@@ -375,7 +376,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         store.commit('setSemesters', data.semesters);
       } else {
         const newSemeter: FirestoreSemester = {
-          type: getCurrentSeason(),
+          season: getCurrentSeason(),
           year: getCurrentYear(),
           courses: [],
         };

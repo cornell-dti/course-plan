@@ -6,20 +6,12 @@ export function checkNotNull<T>(value: T | null | undefined): T {
   return value;
 }
 
-export default function getCurrentSeason(): FirestoreSemesterType {
+export function getCurrentSeason(): FirestoreSemesterSeason {
   const currentMonth = new Date().getMonth();
   if (currentMonth === 0) return 'Winter';
   if (currentMonth <= 4) return 'Spring';
   if (currentMonth <= 7) return 'Summer';
   return 'Fall';
-}
-
-export function getCurrentType(): 'WI' | 'SP' | 'SU' | 'FA' {
-  const currentMonth = new Date().getMonth();
-  if (currentMonth === 0) return 'WI';
-  if (currentMonth <= 4) return 'SP';
-  if (currentMonth <= 7) return 'SU';
-  return 'FA';
 }
 
 export function getCurrentYear(): number {

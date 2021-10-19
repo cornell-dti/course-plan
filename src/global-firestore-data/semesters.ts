@@ -8,9 +8,9 @@ import {
   deleteCoursesFromSelectableRequirements,
 } from './selectable-requirement-choices';
 
-// compare function for FirestoreSemester to determine which comes first by year and type/season
+// compare function for FirestoreSemester to determine which comes first by year and season
 export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSemester): number => {
-  if (a.type === b.type && a.year === b.year) {
+  if (a.season === b.season && a.year === b.year) {
     return 0;
   }
   if (a.year > b.year) {
@@ -19,7 +19,7 @@ export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSeme
   if (a.year < b.year) {
     return 1;
   }
-  if (SeasonsEnum[a.type] < SeasonsEnum[b.type]) {
+  if (SeasonsEnum[a.season] < SeasonsEnum[b.season]) {
     return 1;
   }
   return -1;
@@ -35,49 +35,59 @@ const editSemesters = (
 
 export const editSemester = (
   year: number,
-  type: FirestoreSemesterType,
+  season: FirestoreSemesterSeason,
   updater: (oldSemester: FirestoreSemester) => FirestoreSemester
 ): void => {
   editSemesters(oldSemesters =>
     oldSemesters
-      .map(sem => (sem.year === year && sem.type === type ? updater(sem) : sem))
+      .map(sem => (sem.year === year && sem.season === season ? updater(sem) : sem))
       .sort(compareFirestoreSemesters)
   );
 };
 
 const createSemester = (
-  type: FirestoreSemesterType,
+  season: FirestoreSemesterSeason,
   year: number,
   courses: readonly FirestoreSemesterCourse[]
-): { type: FirestoreSemesterType; year: number; courses: readonly FirestoreSemesterCourse[] } => ({
+): {
+  season: FirestoreSemesterSeason;
+  year: number;
+  courses: readonly FirestoreSemesterCourse[];
+} => ({
   courses,
-  type,
+  season,
   year,
 });
 
 export const addSemester = (
-  type: FirestoreSemesterType,
+  season: FirestoreSemesterSeason,
   year: number,
   gtag?: GTag,
   courses: readonly FirestoreSemesterCourse[] = []
 ): void => {
   GTagEvent(gtag, 'add-semester');
   editSemesters(oldSemesters =>
-    [...oldSemesters, createSemester(type, year, courses)].sort(compareFirestoreSemesters)
+    [...oldSemesters, createSemester(season, year, courses)].sort(compareFirestoreSemesters)
   );
 };
 
-export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
+export const deleteSemester = (
+  season: FirestoreSemesterSeason,
+  year: number,
+  gtag?: GTag
+): void => {
   GTagEvent(gtag, 'delete-semester');
-  const semester = store.state.semesters.find(sem => sem.type === type && sem.year === year);
+  const semester = store.state.semesters.find(sem => sem.season === season && sem.year === year);
   if (semester) {
     deleteCoursesFromSelectableRequirements(semester.courses.map(course => course.uniqueID));
   }
-  editSemesters(oldSemesters => oldSemesters.filter(sem => sem.type !== type || sem.year !== year));
+  editSemesters(oldSemesters =>
+    oldSemesters.filter(sem => sem.season !== season || sem.year !== year)
+  );
 };
 
 export const addCourseToSemester = (
-  season: FirestoreSemesterType,
+  season: FirestoreSemesterSeason,
   year: number,
   newCourse: FirestoreSemesterCourse,
   requirementID?: string,
@@ -87,7 +97,7 @@ export const addCourseToSemester = (
   editSemesters(oldSemesters => {
     let semesterFound = false;
     const newSemestersWithCourse = oldSemesters.map(sem => {
-      if (sem.type === season && sem.year === year) {
+      if (sem.season === season && sem.year === year) {
         semesterFound = true;
         return { ...sem, courses: [...sem.courses, newCourse] };
       }
@@ -104,7 +114,7 @@ export const addCourseToSemester = (
 };
 
 export const deleteCourseFromSemester = (
-  season: FirestoreSemesterType,
+  season: FirestoreSemesterSeason,
   year: number,
   courseUniqueID: number,
   gtag?: GTag
@@ -113,7 +123,7 @@ export const deleteCourseFromSemester = (
   editSemesters(oldSemesters => {
     let semesterFound = false;
     const newSemestersWithoutCourse = oldSemesters.map(sem => {
-      if (sem.type === season && sem.year === year) {
+      if (sem.season === season && sem.year === year) {
         semesterFound = true;
         return {
           ...sem,
@@ -128,16 +138,19 @@ export const deleteCourseFromSemester = (
   deleteCourseFromSelectableRequirements(courseUniqueID);
 };
 
-export const deleteAllCoursesFromSemester = (season: FirestoreSemesterType, year: number): void => {
+export const deleteAllCoursesFromSemester = (
+  season: FirestoreSemesterSeason,
+  year: number
+): void => {
   // TODO add gtag event
-  const semester = store.state.semesters.find(sem => sem.type === season && sem.year === year);
+  const semester = store.state.semesters.find(sem => sem.season === season && sem.year === year);
   if (semester) {
     deleteCoursesFromSelectableRequirements(semester.courses.map(course => course.uniqueID));
   }
   editSemesters(oldSemesters => {
     let semesterFound = false;
     const newSemestersWithEmptiedSemester = oldSemesters.map(sem => {
-      if (sem.type === season && sem.year === year) {
+      if (sem.season === season && sem.year === year) {
         semesterFound = true;
         return {
           ...sem,

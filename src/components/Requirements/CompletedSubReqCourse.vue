@@ -45,7 +45,7 @@ import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebase-frontend-config';
-import getCurrentSeason, { getCurrentYear, clickOutside } from '@/utilities';
+import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
@@ -76,7 +76,7 @@ export default defineComponent({
           store.state.derivedCoursesData.courseToSemesterMap[uniqueId]) ||
         null;
       return courseSemester !== null
-        ? `${courseSemester.type} ${courseSemester.year}`
+        ? `${courseSemester.season} ${courseSemester.year}`
         : `${getCurrentSeason()} ${getCurrentYear()}`;
     },
     courseColor(): string {
