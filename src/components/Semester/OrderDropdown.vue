@@ -52,23 +52,15 @@ export default defineComponent({
   data() {
     return {
       open: false,
+      defaultSem,
+      compactSem,
+      newestArrow,
+      oldestArrow,
     };
   },
   computed: {
     orderByNewest() {
       return store.state.orderByNewest;
-    },
-    defaultSem() {
-      return defaultSem;
-    },
-    compactSem() {
-      return compactSem;
-    },
-    newestArrow() {
-      return newestArrow;
-    },
-    oldestArrow() {
-      return oldestArrow;
     },
   },
 
@@ -92,7 +84,7 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 .dropdown {
-  z-index: 999;
+  z-index: 1;
   position: relative;
   float: right;
   &-button {

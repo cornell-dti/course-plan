@@ -1,12 +1,16 @@
 <template>
   <button class="dropdown-button full-opacity-on-hover">
     <div class="dropdown-button-option">
-      <img :src="image" class="dropdown-button-image" alt="dropdown button image" />
+      <img
+        :src="image"
+        class="dropdown-button-image"
+        alt="dropdown button image"
+      />
       {{ label }}
     </div>
     <img
       v-if="selected"
-      src="../../assets/images/schedule-view/view-settings/checkmark.svg"
+      :src="checkmark"
       class="dropdown-button-image"
       alt="checkmark"
     />
@@ -15,12 +19,18 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import checkmark from '@/assets/images/schedule-view/view-settings/checkmark.svg';
 
 export default defineComponent({
   props: {
     selected: { type: Boolean, required: true },
     image: { type: String, required: true },
     label: { type: String, required: true },
+  },
+  data() {
+    return {
+      checkmark,
+    };
   },
 });
 </script>
@@ -40,6 +50,9 @@ export default defineComponent({
     gap: 1rem;
   }
   &-image {
+    &--checkmark {
+      content: url('@/assets/images/schedule-view/view-settings/checkmark.svg');
+    }
     pointer-events: none;
     min-width: 1rem;
     max-width: 1rem;
