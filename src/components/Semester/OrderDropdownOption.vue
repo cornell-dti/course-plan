@@ -1,19 +1,10 @@
 <template>
   <button class="dropdown-button full-opacity-on-hover">
     <div class="dropdown-button-option">
-      <img
-        :src="image"
-        class="dropdown-button-image"
-        alt="dropdown button image"
-      />
+      <img :src="image" class="dropdown-button-image" alt="dropdown button image" />
       {{ label }}
     </div>
-    <img
-      v-if="selected"
-      :src="checkmark"
-      class="dropdown-button-image"
-      alt="checkmark"
-    />
+    <img v-if="selected" :src="checkmark" class="dropdown-button-image" alt="checkmark" />
   </button>
 </template>
 
@@ -56,11 +47,11 @@ export default defineComponent({
     gap: 1rem;
   }
   &-image {
+    min-width: 1rem;
+    max-width: 1rem;
     &--checkmark {
       content: url('@/assets/images/schedule-view/view-settings/checkmark.svg');
     }
-    min-width: 1rem;
-    max-width: 1rem;
   }
 }
 </style>
