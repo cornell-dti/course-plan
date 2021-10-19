@@ -17,7 +17,7 @@
     <delete-semester
       @delete-semester="deleteSemester"
       @close-delete-sem="closeDeleteSemesterModal"
-      :deleteSemType="season"
+      :deleteSemSeason="season"
       :deleteSemYear="year"
       v-if="isDeleteSemesterOpen"
     />
@@ -315,13 +315,13 @@ export default defineComponent({
     },
     addCourse(data: CornellCourseRosterCourse, requirementID: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      addCourseToSemester(this.season, this.year, newCourse, requirementID, this.$gtag);
+      addCourseToSemester(this.year, this.season, newCourse, requirementID, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
-      deleteCourseFromSemester(this.season, this.year, uniqueID, this.$gtag);
+      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
     },

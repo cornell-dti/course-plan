@@ -46,12 +46,12 @@ export const editSemester = (
 };
 
 const createSemester = (
-  season: FirestoreSemesterSeason,
   year: number,
+  season: FirestoreSemesterSeason,
   courses: readonly FirestoreSemesterCourse[]
 ): {
-  season: FirestoreSemesterSeason;
   year: number;
+  season: FirestoreSemesterSeason;
   courses: readonly FirestoreSemesterCourse[];
 } => ({
   courses,
@@ -60,20 +60,20 @@ const createSemester = (
 });
 
 export const addSemester = (
-  season: FirestoreSemesterSeason,
   year: number,
+  season: FirestoreSemesterSeason,
   gtag?: GTag,
   courses: readonly FirestoreSemesterCourse[] = []
 ): void => {
   GTagEvent(gtag, 'add-semester');
   editSemesters(oldSemesters =>
-    [...oldSemesters, createSemester(season, year, courses)].sort(compareFirestoreSemesters)
+    [...oldSemesters, createSemester(year, season, courses)].sort(compareFirestoreSemesters)
   );
 };
 
 export const deleteSemester = (
-  season: FirestoreSemesterSeason,
   year: number,
+  season: FirestoreSemesterSeason,
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'delete-semester');
@@ -87,8 +87,8 @@ export const deleteSemester = (
 };
 
 export const addCourseToSemester = (
-  season: FirestoreSemesterSeason,
   year: number,
+  season: FirestoreSemesterSeason,
   newCourse: FirestoreSemesterCourse,
   requirementID?: string,
   gtag?: GTag
@@ -104,7 +104,7 @@ export const addCourseToSemester = (
       return sem;
     });
     if (semesterFound) return newSemestersWithCourse;
-    return [...oldSemesters, createSemester(season, year, [newCourse])].sort(
+    return [...oldSemesters, createSemester(year, season, [newCourse])].sort(
       compareFirestoreSemesters
     );
   });
@@ -114,8 +114,8 @@ export const addCourseToSemester = (
 };
 
 export const deleteCourseFromSemester = (
-  season: FirestoreSemesterSeason,
   year: number,
+  season: FirestoreSemesterSeason,
   courseUniqueID: number,
   gtag?: GTag
 ): void => {
@@ -139,8 +139,8 @@ export const deleteCourseFromSemester = (
 };
 
 export const deleteAllCoursesFromSemester = (
-  season: FirestoreSemesterSeason,
   year: number,
+  season: FirestoreSemesterSeason,
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'delete-semester-courses');

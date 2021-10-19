@@ -177,11 +177,11 @@ export default defineComponent({
       this.isSemesterModalOpen = false;
     },
     addSemester(season: string, year: number) {
-      addSemester(season as FirestoreSemesterSeason, year, this.$gtag);
+      addSemester(year, season as FirestoreSemesterSeason, this.$gtag);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, true);
     },
     deleteSemester(season: string, year: number) {
-      deleteSemester(season as FirestoreSemesterSeason, year, this.$gtag);
+      deleteSemester(year, season as FirestoreSemesterSeason, this.$gtag);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
