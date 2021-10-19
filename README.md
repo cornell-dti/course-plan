@@ -20,6 +20,11 @@ npm run serve
 
 Then access http://localhost:8080/
 
+## Docs
+
+- [Requirements](./src/requirements/README.md)
+- [Feature Flags](./src/feature-flags.md)
+
 ## Contributors
 
 ### SP21
