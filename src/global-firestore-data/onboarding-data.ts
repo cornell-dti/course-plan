@@ -1,7 +1,7 @@
 import { onboardingDataCollection } from '../firebase-frontend-config';
 import store from '../store';
 import setUsernameData from './username-data';
-import { clearOverridenRequirementsAPIB } from './overridden-fulfillment-choices';
+import { clearOverriddenFulfillmentsAPIB } from './overridden-fulfillment-choices';
 
 const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboardingData): void => {
   setUsernameData(name);
@@ -22,7 +22,7 @@ const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboardingDat
     .then(() => {
       const newCollege = store.state.onboardingData.college;
       if (oldCollege !== newCollege) {
-        clearOverridenRequirementsAPIB();
+        clearOverriddenFulfillmentsAPIB();
       }
     });
 };

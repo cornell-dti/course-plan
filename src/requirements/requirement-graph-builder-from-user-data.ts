@@ -31,7 +31,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   selectableRequirementChoices: AppSelectableRequirementChoices,
-  overridenRequirementChoices: AppOverridenRequirementChoices
+  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
 ): {
   readonly userRequirements: readonly RequirementWithIDSourceType[];
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
@@ -68,11 +68,11 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         coursesTaken
           .map(course => {
             const uniqueId = course.uniqueId.toString();
-            if (!(uniqueId in overridenRequirementChoices)) return null;
-            const overridenRequirements = new Set(
-              Object.keys(overridenRequirementChoices[uniqueId].optIn)
+            if (!(uniqueId in overriddenFulfillmentChoices)) return null;
+            const overriddenFulfillments = new Set(
+              Object.keys(overriddenFulfillmentChoices[uniqueId].optIn)
             );
-            return [uniqueId, overridenRequirements];
+            return [uniqueId, overriddenFulfillments];
           })
           .filter((it): it is [string, Set<string>] => it != null)
       ),

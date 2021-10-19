@@ -28,6 +28,6 @@ export {
   deleteCourseFromSelectableRequirements,
 } from './selectable-requirement-choices';
 export {
-  addOverridenRequirementAPIB,
-  clearOverridenRequirementsAPIB,
+  addOverriddenFulfillmentAPIB,
+  clearOverriddenFulfillmentsAPIB,
 } from './overridden-fulfillment-choices';
