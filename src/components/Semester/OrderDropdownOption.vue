@@ -1,7 +1,11 @@
 <template>
   <button class="dropdown-button full-opacity-on-hover">
     <div class="dropdown-button-option">
-      <img :src="image" class="dropdown-button-image" alt="dropdown button image" />
+      <img
+        :src="image"
+        class="dropdown-button-image"
+        alt="dropdown button image"
+      />
       {{ label }}
     </div>
     <img
@@ -29,7 +33,7 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 .dropdown-button {
   &:hover {
-    background: $dropdownBlue;
+    background: $einBlueTransparent;
   }
   &-option {
     color: $dropdownGray;

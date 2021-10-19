@@ -97,6 +97,9 @@ export default defineComponent({
   float: right;
   &-button {
     &--label {
+      :hover > & {
+        color: $einBlue;
+      }
       font-weight: 500;
       font-size: 19px;
       line-height: 19px;
@@ -114,9 +117,6 @@ export default defineComponent({
     display: flex;
     align-items: center;
     padding-bottom: 0.5rem;
-    &:hover {
-      color: $viewButtonBlue;
-    }
   }
   &-content {
     display: flex;
