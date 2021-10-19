@@ -13,7 +13,7 @@ import router from './router/index';
 import store from './store';
 
 import * as fb from './firebase-frontend-config';
-import { registerGateKeeper } from './debug-flags';
+import { registerGateKeeper } from './feature-flags';
 
 // handle page reloads
 let app: VueApp | undefined;
