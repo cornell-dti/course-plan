@@ -1,4 +1,4 @@
-import { getActiveSemesters } from '../global-firestore-data';
+import { getActiveSemesters } from '../semesters';
 
 it('normal 4 yr plan', () => {
   const expectedSems: FirestoreSemester[] = [

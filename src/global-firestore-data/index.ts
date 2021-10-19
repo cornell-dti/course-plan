@@ -21,6 +21,7 @@ export {
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
   deleteCourseFromSemesters,
+  populateSemesters,
 } from './semesters';
 export { default as chooseToggleableRequirementOption } from './toggleable-requirement-choices';
 export {
