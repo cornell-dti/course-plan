@@ -33,7 +33,7 @@ type FirestoreSemester = {
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
-type FirestoreAPIBOverridenRequirements = {
+type FirestoreAPIBOverriddenFulfillments = {
   // Values are slot names
   readonly [requirementName: string]: readonly string[];
 };
@@ -41,8 +41,8 @@ type FirestoreAPIBExam = {
   readonly type: 'AP' | 'IB';
   readonly score: number;
   readonly subject: string;
-  readonly optIn?: FirestoreAPIBOverridenRequirements;
-  readonly optOut?: FirestoreAPIBOverridenRequirements;
+  readonly optIn?: FirestoreAPIBOverriddenFulfillments;
+  readonly optOut?: FirestoreAPIBOverriddenFulfillments;
 };
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
 type FirestoreTransferClass = {
@@ -155,7 +155,7 @@ type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 type AppSelectableRequirementChoices = Readonly<Record<string, string>>;
 
 /** Map from course's unique ID to override options */
-type AppOverridenRequirementChoices = Readonly<
+type AppOverriddenFulfillmentChoices = Readonly<
   Record<
     string,
     {

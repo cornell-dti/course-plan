@@ -11,7 +11,7 @@ jobs:
         with:
           cache: 'npm'
       - name: NPM Clean Install
-        run: npm ci
+        run: npm ci && cd functions && npm ci
       - name: Run Prettier Check
         run: npm run format:check
       - name: Run Linter
