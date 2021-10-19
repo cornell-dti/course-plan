@@ -99,9 +99,9 @@ if (process.argv[2] === '--dry-run') {
       ...doc.data(),
     }));
     // Using JSON parse and stringify trick so we get a deep copy of the nested oldUserOverriddenFulfillmentsData
-    const newUserOverriddenFulfillments = JSON.parse(JSON.stringify(oldUserOverriddenFulfillmentsData)).map(
-      transformOverriddenFulfillmentsCollection
-    );
+    const newUserOverriddenFulfillments = JSON.parse(
+      JSON.stringify(oldUserOverriddenFulfillmentsData)
+    ).map(transformOverriddenFulfillmentsCollection);
     fs.writeFileSync(
       'old-userOverriddenFulfillmentsData.json',
       JSON.stringify(oldUserOverriddenFulfillmentsData, undefined, 2)
