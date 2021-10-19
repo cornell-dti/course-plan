@@ -88,6 +88,10 @@ export default defineComponent({
   position: relative;
   float: right;
   &-button {
+    border: none;
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.5rem;
     &--label {
       :hover > & {
         color: $einBlue;
@@ -105,10 +109,6 @@ export default defineComponent({
         content: url('@/assets/images/schedule-view/view-settings/settings-on-hover.svg');
       }
     }
-    border: none;
-    display: flex;
-    align-items: center;
-    padding-bottom: 0.5rem;
   }
   &-content {
     display: flex;

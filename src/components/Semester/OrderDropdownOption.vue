@@ -1,10 +1,19 @@
 <template>
   <button class="dropdown-button full-opacity-on-hover">
     <div class="dropdown-button-option">
-      <img :src="image" class="dropdown-button-image" alt="dropdown button image" />
+      <img
+        :src="image"
+        class="dropdown-button-image"
+        alt="dropdown button image"
+      />
       {{ label }}
     </div>
-    <img v-if="selected" :src="checkmark" class="dropdown-button-image" alt="checkmark" />
+    <img
+      v-if="selected"
+      :src="checkmark"
+      class="dropdown-button-image"
+      alt="checkmark"
+    />
   </button>
 </template>
 
@@ -29,6 +38,12 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 .dropdown-button {
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  align-items: center;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
   &:hover {
     background: $einBlueTransparent;
   }
@@ -47,11 +62,5 @@ export default defineComponent({
     min-width: 1rem;
     max-width: 1rem;
   }
-  padding: 0.5rem 1rem 0.5rem 1rem;
-  align-items: center;
-  display: flex;
-  width: 100%;
-  flex-wrap: wrap;
-  justify-content: space-between;
 }
 </style>
