@@ -55,15 +55,17 @@ import newestArrow from '@/assets/images/views/newestArrow.svg';
 import oldestArrow from '@/assets/images/views/oldestArrow.svg';
 import OrderDropdownOption from './OrderDropdownOption.vue';
 
+const requiredStringProp = { type: String, reqiured: true, default: '' };
+
 export default defineComponent({
   components: { OrderDropdownOption },
   props: {
     compact: { type: Boolean, required: true },
-    dataIntroGroup: { type: String, reqiured: true, default: '' },
-    dataIntro: { type: String, reqiured: true, default: '' },
-    dataDisableInteraction: { type: String, reqiured: true, default: '' },
-    dataStep: { type: String, reqiured: true, default: '' },
-    dataTooltipClass: { type: String, reqiured: true, default: '' },
+    dataIntroGroup: requiredStringProp,
+    dataIntro: requiredStringProp,
+    dataDisableInteraction: requiredStringProp,
+    dataStep: requiredStringProp,
+    dataTooltipClass: requiredStringProp,
   },
   data() {
     return {
