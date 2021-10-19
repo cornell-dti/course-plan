@@ -80,7 +80,7 @@ export type VuexStoreState = {
   uniqueIncrementer: number;
 };
 
-export class TypedVuexStore extends Store<VuexStoreState> { }
+export class TypedVuexStore extends Store<VuexStoreState> {}
 
 const store: TypedVuexStore = new TypedVuexStore({
   strict: process.env.NODE_ENV !== 'production',
@@ -311,19 +311,19 @@ const computeAPIBOverriddenFulfillments = (
     const { optIn, optOut } = exam;
     const optInChoices: Record<string, Set<string>> = optIn
       ? Object.fromEntries(
-        Object.entries(optIn).map(([requirementName, slotNames]) => [
-          requirementName,
-          new Set(slotNames),
-        ])
-      )
+          Object.entries(optIn).map(([requirementName, slotNames]) => [
+            requirementName,
+            new Set(slotNames),
+          ])
+        )
       : {};
     const optOutChoices: Record<string, Set<string>> = optOut
       ? Object.fromEntries(
-        Object.entries(optOut).map(([requirementName, slotNames]) => [
-          requirementName,
-          new Set(slotNames),
-        ])
-      )
+          Object.entries(optOut).map(([requirementName, slotNames]) => [
+            requirementName,
+            new Set(slotNames),
+          ])
+        )
       : {};
     uniqueIds.forEach(uniqueId => {
       APIBOverriddenFulfillments[uniqueId] = {

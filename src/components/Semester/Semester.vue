@@ -38,52 +38,27 @@
     </button>
     <div class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
-        <div
-          class="semester-left"
-          :class="{ 'semester-left--compact': compact }"
-        >
+        <div class="semester-left" :class="{ 'semester-left--compact': compact }">
           <span class="semester-name" data-cyId="semesterName"
-            ><img class="season-emoji" :src="seasonImg[type]" alt="" />
-            {{ type }} {{ year }}</span
+            ><img class="season-emoji" :src="seasonImg[type]" alt="" /> {{ type }} {{ year }}</span
           >
           <span class="semester-credits">{{ creditString }}</span>
         </div>
-        <div
-          class="semester-right"
-          :class="{ 'semester-right--compact': compact }"
-        >
-          <button
-            class="semester-minimize"
-            @click="minimizeSemester"
-            data-cyId="minimizeSemester"
-          >
+        <div class="semester-right" :class="{ 'semester-right--compact': compact }">
+          <button class="semester-minimize" @click="minimizeSemester" data-cyId="minimizeSemester">
             <img
               v-if="!isSemesterMinimized"
               src="@/assets/images/minimize.svg"
               alt="minimze semester"
             />
-            <img
-              v-else
-              src="@/assets/images/expand.svg"
-              alt="expand semester"
-            />
+            <img v-else src="@/assets/images/expand.svg" alt="expand semester" />
           </button>
-          <button
-            class="semester-dotRow"
-            @click="openSemesterMenu"
-            data-cyId="semesterMenu"
-          >
-            <img
-              src="@/assets/images/dots/threeDots.svg"
-              alt="open menu for semester"
-            />
+          <button class="semester-dotRow" @click="openSemesterMenu" data-cyId="semesterMenu">
+            <img src="@/assets/images/dots/threeDots.svg" alt="open menu for semester" />
           </button>
         </div>
       </div>
-      <div
-        class="semester-courses"
-        :class="{ 'semester-hidden': isSemesterMinimized }"
-      >
+      <div class="semester-courses" :class="{ 'semester-hidden': isSemesterMinimized }">
         <draggable
           ref="droppable"
           class="draggable-semester-courses"
@@ -215,8 +190,7 @@ export default defineComponent({
   },
   emits: {
     'new-semester': () => true,
-    'course-onclick': (course: FirestoreSemesterCourse) =>
-      typeof course === 'object',
+    'course-onclick': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'delete-semester': (type: string, year: number) =>
       typeof type === 'string' && typeof year === 'number',
   },
@@ -227,12 +201,8 @@ export default defineComponent({
     const droppable = (this.$refs.droppable as ComponentRef).$el;
     droppable.addEventListener('dragenter', this.onDragEnter);
     droppable.addEventListener('dragleave', this.onDragExit);
-    const savedSemesterMinimize = localStorage.getItem(
-      JSON.stringify(this.semesterIndex)
-    );
-    this.isSemesterMinimized = savedSemesterMinimize
-      ? JSON.parse(savedSemesterMinimize)
-      : false;
+    const savedSemesterMinimize = localStorage.getItem(JSON.stringify(this.semesterIndex));
+    this.isSemesterMinimized = savedSemesterMinimize ? JSON.parse(savedSemesterMinimize) : false;
   },
   beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);
@@ -346,27 +316,16 @@ export default defineComponent({
       this.isConfirmationOpen = false;
     },
     addCourse(data: CornellCourseRosterCourse, requirementID: string) {
-      const newCourse =
-        cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      addCourseToSemester(
-        this.type,
-        this.year,
-        newCourse,
-        requirementID,
-        this.$gtag
-      );
+      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
+      addCourseToSemester(this.type, this.year, newCourse, requirementID, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
-      this.openConfirmationModal(
-        `Added ${courseCode} to ${this.type} ${this.year}`
-      );
+      this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
       deleteCourseFromSemester(this.type, this.year, uniqueID, this.$gtag);
       // Update requirements menu
-      this.openConfirmationModal(
-        `Removed ${courseCode} from ${this.type} ${this.year}`
-      );
+      this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
     },
     colorCourse(color: string, uniqueID: number) {
       editSemester(
@@ -390,9 +349,7 @@ export default defineComponent({
         (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
-            course.uniqueID === uniqueID
-              ? { ...course, credits: credit }
-              : course
+            course.uniqueID === uniqueID ? { ...course, credits: credit } : course
           ),
         })
       );

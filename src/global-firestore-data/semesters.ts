@@ -59,9 +59,7 @@ export const addSemester = (
   courses: readonly FirestoreSemesterCourse[] = []
 ): void => {
   GTagEvent(gtag, 'add-semester');
-  editSemesters(oldSemesters =>
-    [...oldSemesters, createSemester(type, year, courses)]
-  );
+  editSemesters(oldSemesters => [...oldSemesters, createSemester(type, year, courses)]);
 };
 
 export const deleteSemester = (type: FirestoreSemesterType, year: number, gtag?: GTag): void => {
