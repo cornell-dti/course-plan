@@ -40,7 +40,7 @@ export const editSemester = (
 ): void => {
   editSemesters(oldSemesters =>
     oldSemesters
-      .map(sem => (sem.year === year && sem.season === season ? updater(sem) : sem))
+      .map(sem => (semesterEquals(sem, year, season) ? updater(sem) : sem))
       .sort(compareFirestoreSemesters)
   );
 };
@@ -51,13 +51,23 @@ const createSemester = (
   courses: readonly FirestoreSemesterCourse[]
 ): {
   year: number;
+  type: FirestoreSemesterSeason;
   season: FirestoreSemesterSeason;
   courses: readonly FirestoreSemesterCourse[];
 } => ({
   courses,
+  type: season, // TODO @bshen remove & write migration script when every dev pulls from master
   season,
   year,
 });
+
+const semesterEquals = (
+  semester: FirestoreSemester,
+  year: number,
+  season: FirestoreSemesterSeason
+): boolean =>
+  // TODO @bshen remove semester.type & write migration script when every dev pulls from master
+  semester.year === year && (semester.season === season || semester.type === season);
 
 export const addSemester = (
   year: number,
@@ -77,13 +87,11 @@ export const deleteSemester = (
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'delete-semester');
-  const semester = store.state.semesters.find(sem => sem.season === season && sem.year === year);
+  const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
   if (semester) {
     deleteCoursesFromSelectableRequirements(semester.courses.map(course => course.uniqueID));
+    editSemesters(oldSemesters => oldSemesters.filter(sem => !semesterEquals(sem, year, season)));
   }
-  editSemesters(oldSemesters =>
-    oldSemesters.filter(sem => sem.season !== season || sem.year !== year)
-  );
 };
 
 export const addCourseToSemester = (
@@ -97,7 +105,7 @@ export const addCourseToSemester = (
   editSemesters(oldSemesters => {
     let semesterFound = false;
     const newSemestersWithCourse = oldSemesters.map(sem => {
-      if (sem.season === season && sem.year === year) {
+      if (semesterEquals(sem, year, season)) {
         semesterFound = true;
         return { ...sem, courses: [...sem.courses, newCourse] };
       }
@@ -120,22 +128,18 @@ export const deleteCourseFromSemester = (
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'delete-course');
-  editSemesters(oldSemesters => {
-    let semesterFound = false;
-    const newSemestersWithoutCourse = oldSemesters.map(sem => {
-      if (sem.season === season && sem.year === year) {
-        semesterFound = true;
-        return {
-          ...sem,
-          courses: sem.courses.filter(course => course.uniqueID !== courseUniqueID),
-        };
-      }
-      return sem;
-    });
-    if (semesterFound) return newSemestersWithoutCourse;
-    return oldSemesters;
-  });
-  deleteCourseFromSelectableRequirements(courseUniqueID);
+  const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
+  if (semester) {
+    deleteCourseFromSelectableRequirements(courseUniqueID);
+    editSemesters(oldSemesters =>
+      oldSemesters.map(sem => ({
+        ...sem,
+        courses: semesterEquals(sem, year, season)
+          ? sem.courses.filter(course => course.uniqueID !== courseUniqueID)
+          : sem.courses,
+      }))
+    );
+  }
 };
 
 export const deleteAllCoursesFromSemester = (
@@ -144,25 +148,16 @@ export const deleteAllCoursesFromSemester = (
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'delete-semester-courses');
-  const semester = store.state.semesters.find(sem => sem.season === season && sem.year === year);
+  const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
   if (semester) {
     deleteCoursesFromSelectableRequirements(semester.courses.map(course => course.uniqueID));
+    editSemesters(oldSemesters =>
+      oldSemesters.map(sem => ({
+        ...sem,
+        courses: semesterEquals(sem, year, season) ? [] : sem.courses,
+      }))
+    );
   }
-  editSemesters(oldSemesters => {
-    let semesterFound = false;
-    const newSemestersWithEmptiedSemester = oldSemesters.map(sem => {
-      if (sem.season === season && sem.year === year) {
-        semesterFound = true;
-        return {
-          ...sem,
-          courses: [],
-        };
-      }
-      return sem;
-    });
-    if (semesterFound) return newSemestersWithEmptiedSemester;
-    return oldSemesters;
-  });
 };
 
 export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: GTag): void => {

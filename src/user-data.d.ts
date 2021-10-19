@@ -28,6 +28,7 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
 type FirestoreSemesterSeason = 'Fall' | 'Spring' | 'Summer' | 'Winter';
 type FirestoreSemester = {
   readonly year: number;
+  readonly type?: FirestoreSemesterSeason; // TODO @bshen remove & write migration script when every dev pulls from master
   readonly season: FirestoreSemesterSeason;
   readonly courses: readonly FirestoreSemesterCourse[];
 };
