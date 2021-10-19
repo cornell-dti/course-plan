@@ -98,8 +98,8 @@ export default defineComponent({
       color: $medGray;
     }
     &--image {
-      margin-right: 0.3em;
-      width: 1em;
+      margin-right: 0.3rem;
+      width: 1rem;
       content: url('@/assets/images/schedule-view/view-settings/settings.svg');
       :hover > & {
         content: url('@/assets/images/schedule-view/view-settings/settings-on-hover.svg');
