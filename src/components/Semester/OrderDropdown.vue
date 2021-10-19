@@ -2,7 +2,7 @@
   <div class="dropdown">
     <button class="dropdown-button" data-cyId="dropdown-button" @click="toggle">
       <img class="dropdown-button--image" />
-      View
+      <span class="dropdown-button--label">View</span>
     </button>
     <div v-if="open" class="dropdown-content">
       <order-dropdown-option
@@ -96,6 +96,12 @@ export default defineComponent({
   position: relative;
   float: right;
   &-button {
+    &--label {
+      font-weight: 500;
+      font-size: 19px;
+      line-height: 19px;
+      color: $medGray;
+    }
     &--image {
       margin-right: 0.3em;
       width: 1em;
@@ -107,9 +113,6 @@ export default defineComponent({
     border: none;
     display: flex;
     align-items: center;
-    line-height: 19px;
-    font-size: 19px;
-    color: $inactiveGray;
     padding-bottom: 0.5rem;
     &:hover {
       color: $viewButtonBlue;
