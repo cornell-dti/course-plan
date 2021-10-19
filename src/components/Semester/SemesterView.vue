@@ -24,7 +24,15 @@
         >
           + New Semester
         </button>
-        <order-dropdown :compact="compact" @click-compact="toggleCompact" />
+        <order-dropdown
+          data-intro-group="req-tooltip"
+          :data-intro="getToggleTooltipText()"
+          data-disable-interaction="1"
+          data-step="4"
+          data-tooltipClass="tooltipCenter"
+          :compact="compact"
+          @click-compact="toggleCompact"
+        />
       </div>
       <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
       <div class="semesterView-content">

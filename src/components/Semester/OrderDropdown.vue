@@ -1,5 +1,12 @@
 <template>
-  <div class="dropdown">
+  <div
+    class="dropdown"
+    :data-intro-group="dataIntroGroup"
+    :data-intro="dataIntro"
+    :data-disable-interaction="dataDisableInteraction"
+    :data-step="dataStep"
+    :data-tooltipClass="dataTooltipClass"
+  >
     <button class="dropdown-button" data-cyId="dropdown-button" @click="toggle">
       <img class="dropdown-button--image" />
       <span class="dropdown-button--label">View</span>
@@ -52,6 +59,11 @@ export default defineComponent({
   components: { OrderDropdownOption },
   props: {
     compact: { type: Boolean, required: true },
+    dataIntroGroup: { type: String, reqiured: true, default: '' },
+    dataIntro: { type: String, reqiured: true, default: '' },
+    dataDisableInteraction: { type: String, reqiured: true, default: '' },
+    dataStep: { type: String, reqiured: true, default: '' },
+    dataTooltipClass: { type: String, reqiured: true, default: '' },
   },
   data() {
     return {
@@ -123,7 +135,7 @@ export default defineComponent({
     min-height: 2.5rem;
     min-width: 12rem;
     align-items: center;
-    padding: 0.5rem 0rem 0.5rem 0rem;
+    padding: 0.5rem 0rem;
     background-color: $white;
     border: 1px solid $borderGray;
     box-sizing: border-box;
@@ -133,7 +145,7 @@ export default defineComponent({
       width: calc(100% - 2rem);
       height: 0;
       border: 0.5px solid $hlineGray;
-      margin: 0.5rem 0rem 0.5rem 0rem;
+      margin: 0.5rem 0rem;
     }
   }
 }

@@ -30,7 +30,7 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 .dropdown-button {
-  padding: 0.5rem 1rem 0.5rem 1rem;
+  padding: 0.5rem 1rem;
   align-items: center;
   display: flex;
   width: 100%;
