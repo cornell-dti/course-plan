@@ -200,3 +200,22 @@ it('Click outside onboarding modal', () => {
   cy.get('[data-cyId=onboarding]').clickOutside();
   cy.get('[data-cyId=onboarding]').should('not.exist');
 });
+
+// Test to confirm the mobile menu shows up in front of the dashboard
+// Also confirm onboarding and requirements can still be interacted with on mobile
+it('Use mobile navbar', () => {
+  cy.viewport('samsung-s10'); // Set viewport to the dimensions of a Samsung S10
+
+  // confirm menu works
+  cy.get('[data-cyId=navbar-menuButton]').click();
+  cy.get('[data-cyId=navbar-menu]').should('be.visible');
+
+  // confirm onboarding works
+  cy.get('[data-cyId=navbar-editProfile]').click();
+  cy.get('[data-cyId=onboarding-cancel]').click();
+
+  // confirm requirements works
+  cy.get('[data-cyId=navbar-menuButton]').click();
+  cy.get('[data-cyId=navbar-viewRequirements]').click();
+  cy.get('[data-cyId=requirements-viewMore]').click();
+});

@@ -2,6 +2,7 @@
   <nav class="navbar">
     <div
       class="navbar-iconWrapper hamburger full-opacity-on-hover"
+      data-cyId="navbar-menuButton"
       @click="menuOpen = !menuOpen"
     ></div>
     <div class="navbar-top">
@@ -21,14 +22,18 @@
       />
     </div>
     <div v-if="menuOpen" class="navbar-menu-background-shadow" @click="editProfile" />
-    <div v-if="menuOpen" class="navbar-menu">
-      <button class="nav-mobile-button" @click="toggleRequirementsBar">
+    <div v-if="menuOpen" class="navbar-menu" data-cyId="navbar-menu">
+      <button
+        class="nav-mobile-button"
+        data-cyId="navbar-viewRequirements"
+        @click="toggleRequirementsBar"
+      >
         <div class="navbar-iconWrapper requirements-bar" />
         <span class="nav-mobile-button-text">
           {{ isOpeningRequirements ? 'View Schedule' : 'View Requirements' }}
         </span>
       </button>
-      <button class="nav-mobile-button" @click="editProfile">
+      <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="editProfile">
         <div class="navbar-iconWrapper profile-mobile-icon" />
         <span class="nav-mobile-button-text">Edit Profile</span>
       </button>
