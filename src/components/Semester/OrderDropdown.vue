@@ -6,12 +6,14 @@
     </button>
     <div v-if="open" class="dropdown-content">
       <order-dropdown-option
+        alt="not compact"
         :selected="!compact"
         :image="defaultSem"
         label="Default"
         @click="$emit('click-compact', false)"
       />
       <order-dropdown-option
+        alt="compact"
         :selected="compact"
         :image="compactSem"
         label="Compact"
@@ -19,12 +21,14 @@
       />
       <div class="dropdown-content--hline" />
       <order-dropdown-option
+        alt="order by newest"
         :selected="orderByNewest"
         :image="newestArrow"
         label="Newest"
         @click="onOrderClick(true)"
       />
       <order-dropdown-option
+        alt="order by oldest"
         :selected="!orderByNewest"
         :image="oldestArrow"
         label="Oldest"
