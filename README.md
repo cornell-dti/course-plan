@@ -8,13 +8,13 @@ View documentation on updating requirements data.
 
 ## Project installation
 
-```
+```shell
 npm install
 ```
 
 ## Run locally
 
-```
+```shell
 npm run serve
 ```
 
@@ -78,7 +78,3 @@ Then access http://localhost:8080/
 - **Brandon Hong** - PMM
 - **Boon Palipatana** - TPM
 - **Han Wang** - PM
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
