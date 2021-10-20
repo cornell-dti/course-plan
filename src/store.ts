@@ -398,7 +398,9 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         const { orderByNewest, semesters } = data;
         store.commit('setSemesters', semesters);
         // if user hasn't yet chosen an ordering, choose true by default
-        store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
+        if (orderByNewest === undefined) {
+            store.commit('setOrderByNewest', true);
+        }
       } else {
         const newSemeter: FirestoreSemester = {
           type: getCurrentSeason(),
