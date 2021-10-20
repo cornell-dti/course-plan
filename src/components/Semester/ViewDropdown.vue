@@ -12,14 +12,14 @@
       <span class="dropdown-button--label">View</span>
     </button>
     <div v-if="open" class="dropdown-content">
-      <order-dropdown-option
+      <view-dropdown-option
         alt="not compact"
         :selected="!compact"
         :image="defaultSem"
         label="Default"
         @click="$emit('click-compact', false)"
       />
-      <order-dropdown-option
+      <view-dropdown-option
         alt="compact"
         :selected="compact"
         :image="compactSem"
@@ -27,14 +27,14 @@
         @click="$emit('click-compact', true)"
       />
       <div class="dropdown-content--hline" />
-      <order-dropdown-option
+      <view-dropdown-option
         alt="order by newest"
         :selected="orderByNewest"
         :image="newestArrow"
         label="Newest"
         @click="onOrderClick(true)"
       />
-      <order-dropdown-option
+      <view-dropdown-option
         alt="order by oldest"
         :selected="!orderByNewest"
         :image="oldestArrow"
@@ -53,12 +53,12 @@ import defaultSem from '@/assets/images/views/twoColumnSelected.svg';
 import compactSem from '@/assets/images/views/fourColumnSelected.svg';
 import newestArrow from '@/assets/images/views/newestArrow.svg';
 import oldestArrow from '@/assets/images/views/oldestArrow.svg';
-import OrderDropdownOption from './OrderDropdownOption.vue';
+import ViewDropdownOption from './ViewDropdownOption.vue';
 
 const requiredStringProp = { type: String, reqiured: true, default: '' };
 
 export default defineComponent({
-  components: { OrderDropdownOption },
+  components: { ViewDropdownOption },
   props: {
     compact: { type: Boolean, required: true },
     dataIntroGroup: requiredStringProp,

@@ -24,7 +24,7 @@
         >
           + New Semester
         </button>
-        <order-dropdown
+        <view-dropdown
           data-intro-group="req-tooltip"
           :data-intro="getToggleTooltipText()"
           data-disable-interaction="1"
@@ -98,10 +98,10 @@ import store from '@/store';
 import { GTagEvent } from '@/gtag';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
-import OrderDropdown from './OrderDropdown.vue';
+import ViewDropdown from './ViewDropdown.vue';
 
 export default defineComponent({
-  components: { Confirmation, NewSemesterModal, Semester, OrderDropdown },
+  components: { Confirmation, NewSemesterModal, Semester, ViewDropdown },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
