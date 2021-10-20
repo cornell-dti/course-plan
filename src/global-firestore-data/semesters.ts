@@ -1,3 +1,4 @@
+import { SeasonOrdinal } from '@/utilities';
 import { semestersCollection } from '../firebase-frontend-config';
 import store from '../store';
 import { GTag, GTagEvent } from '../gtag';
@@ -7,6 +8,23 @@ import {
   deleteCourseFromSelectableRequirements,
   deleteCoursesFromSelectableRequirements,
 } from './selectable-requirement-choices';
+
+// compare function for FirestoreSemester to determine which comes first by year and type/season
+export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSemester): number => {
+  if (a.type === b.type && a.year === b.year) {
+    return 0;
+  }
+  if (a.year > b.year) {
+    return -1;
+  }
+  if (a.year < b.year) {
+    return 1;
+  }
+  if (SeasonOrdinal[a.type] < SeasonOrdinal[b.type]) {
+    return 1;
+  }
+  return -1;
+};
 
 const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
