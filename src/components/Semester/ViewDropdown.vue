@@ -1,5 +1,6 @@
 <template>
   <div
+    v-click-outside="close"
     class="dropdown"
     :data-intro-group="dataIntroGroup"
     :data-intro="dataIntro"
@@ -53,6 +54,7 @@ import defaultSem from '@/assets/images/views/twoColumnSelected.svg';
 import compactSem from '@/assets/images/views/fourColumnSelected.svg';
 import newestArrow from '@/assets/images/views/newestArrow.svg';
 import oldestArrow from '@/assets/images/views/oldestArrow.svg';
+import { clickOutside } from '@/utilities';
 import ViewDropdownOption from './ViewDropdownOption.vue';
 
 const requiredStringProp = { type: String, reqiured: true, default: '' };
@@ -95,6 +97,12 @@ export default defineComponent({
     toggle() {
       this.open = !this.open;
     },
+    close() {
+      this.open = false;
+    },
+  },
+  directives: {
+    'click-outside': clickOutside,
   },
 });
 </script>
