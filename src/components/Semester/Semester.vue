@@ -501,6 +501,7 @@ export default defineComponent({
     font-size: 18px;
     line-height: 18px;
     margin-right: 0.5rem;
+    white-space: nowrap;
     font-weight: bold;
   }
 
