@@ -121,16 +121,13 @@ import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
-
-import { cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData } from '@/global-firestore-data/index';
-
 import {
+  cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   editSemester,
   addCourseToSemester,
   deleteCourseFromSemester,
-} from '@/global-firestore-data/semesters';
-
-import { addCourseToSelectableRequirements } from '@/global-firestore-data/selectable-requirement-choices';
+  addCourseToSelectableRequirements,
+} from '@/global-firestore-data';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -501,7 +498,6 @@ export default defineComponent({
     font-size: 18px;
     line-height: 18px;
     margin-right: 0.5rem;
-    white-space: nowrap;
     font-weight: bold;
   }
 
