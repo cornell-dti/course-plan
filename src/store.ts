@@ -4,9 +4,9 @@ import * as fb from './firebase-frontend-config';
 import getCourseEquivalentsFromUserExams from './requirements/data/exams/ExamCredit';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
-import SeasonOrdinal from './SeasonOrdinal';
 import { createAppOnboardingData } from './user-data-converter';
 import getCurrentSeason, {
+  sorted,
   checkNotNull,
   getCurrentYear,
   allocateAllSubjectColor,
@@ -46,20 +46,6 @@ type DerivedAPIBEquivalentCourseData = {
   // Mapping from unique id to exam name
   readonly uniqueIdToExamMap: Readonly<Record<string | number, string>>;
 };
-
-/**
- * Returns given semesters sorted in either increasing or decreasing order of date
- * @param semesters the semesters to return sorted
- * @param orderByNewest whether to sort the semesters in decreasing order
- * @returns semesters sorted according to orderByNewest
- */
-const sorted = (semesters: readonly FirestoreSemester[], orderByNewest: boolean) =>
-  semesters.slice().sort((a, b) => {
-    // sort in increasing order iff orderByNewest is false, increasing otherwise
-    const order = orderByNewest ? -1 : 1;
-    const byYear = a.year - b.year;
-    return order * (byYear === 0 ? SeasonOrdinal[a.type] - SeasonOrdinal[b.type] : byYear);
-  });
 
 export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
@@ -399,7 +385,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         store.commit('setSemesters', semesters);
         // if user hasn't yet chosen an ordering, choose true by default
         if (orderByNewest === undefined) {
-            store.commit('setOrderByNewest', true);
+          store.commit('setOrderByNewest', true);
         }
       } else {
         const newSemeter: FirestoreSemester = {

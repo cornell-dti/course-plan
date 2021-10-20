@@ -1,6 +1,31 @@
 import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 
+/** Enumerated type to define seasons as integers in season order */
+export const SeasonOrdinal = {
+  Winter: 0,
+  Spring: 1,
+  Summer: 2,
+  Fall: 3,
+} as const;
+
+/**
+ * Returns given semesters sorted in either increasing or decreasing order of date
+ * @param semesters the semesters to return sorted
+ * @param orderByNewest whether to sort the semesters in decreasing order
+ * @returns semesters sorted according to orderByNewest
+ */
+export const sorted = (
+  semesters: readonly FirestoreSemester[],
+  orderByNewest: boolean
+): readonly FirestoreSemester[] =>
+  semesters.slice().sort((a, b) => {
+    // sort in increasing order iff orderByNewest is false, increasing otherwise
+    const order = orderByNewest ? -1 : 1;
+    const byYear = a.year - b.year;
+    return order * (byYear === 0 ? SeasonOrdinal[a.type] - SeasonOrdinal[b.type] : byYear);
+  });
+
 export function checkNotNull<T>(value: T | null | undefined): T {
   if (value == null) throw new Error();
   return value;
