@@ -218,9 +218,6 @@ export default defineComponent({
       this.onboardingData.exam.forEach(exam => {
         count += getExamCredit(exam);
       });
-      this.onboardingData.transferCourse.forEach(clas => {
-        count += clas.credits;
-      });
       return count;
     },
     isGraduateOnly(): boolean {

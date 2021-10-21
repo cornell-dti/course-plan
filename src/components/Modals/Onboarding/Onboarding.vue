@@ -264,22 +264,16 @@ export default defineComponent({
     // clear transfer credits if the student is only in a graduate program, but previously set transfer credits
     clearTransferCreditIfGraduate() {
       if (this.onboarding.grad !== '' && this.onboarding.college === '') {
-        this.updateTransfer([], [], 'no');
+        this.updateTransfer([], 'no');
       }
     },
-    updateTransfer(
-      exams: readonly FirestoreAPIBExam[],
-      classes: readonly FirestoreTransferClass[],
-      tookSwim: 'yes' | 'no'
-    ) {
+    updateTransfer(exams: readonly FirestoreAPIBExam[], tookSwim: 'yes' | 'no') {
       const userExams = exams.filter(
         ({ subject, score }) => score !== 0 && subject !== placeholderText
       );
-      const userClasses = classes.filter(it => it.class !== placeholderText);
       this.onboarding = {
         ...this.onboarding,
         exam: userExams,
-        transferCourse: userClasses,
         tookSwim,
       };
     },
