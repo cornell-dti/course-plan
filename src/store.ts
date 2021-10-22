@@ -125,7 +125,6 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setOrderByNewest(state: VuexStoreState, orderByNewest: boolean) {
       state.orderByNewest = orderByNewest;
-      state.semesters = sorted(state.semesters, orderByNewest);
     },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
       state.semesters = sorted(semesters, state.orderByNewest);
@@ -190,6 +189,9 @@ const store: TypedVuexStore = new TypedVuexStore({
 
 const autoRecomputeDerivedData = (): (() => void) =>
   store.subscribe((payload, state) => {
+    if (payload.type === 'setOrderByNewest') {
+      store.commit('setSemesters', sorted(state.semesters, state.orderByNewest));
+    }
     // Recompute courses
     if (payload.type === 'setSemesters') {
       const allCourseSet = new Set<string>();
