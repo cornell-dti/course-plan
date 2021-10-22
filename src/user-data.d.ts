@@ -34,7 +34,7 @@ type FirestoreSemester = {
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
-type FirestoreAPIBOverridenRequirements = {
+type FirestoreAPIBOverriddenFulfillments = {
   // Values are slot names
   readonly [requirementName: string]: readonly string[];
 };
@@ -42,8 +42,8 @@ type FirestoreAPIBExam = {
   readonly type: 'AP' | 'IB';
   readonly score: number;
   readonly subject: string;
-  readonly optIn?: FirestoreAPIBOverridenRequirements;
-  readonly optOut?: FirestoreAPIBOverridenRequirements;
+  readonly optIn?: FirestoreAPIBOverriddenFulfillments;
+  readonly optOut?: FirestoreAPIBOverriddenFulfillments;
 };
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
 type FirestoreTransferClass = {
@@ -119,7 +119,9 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
   readonly gradYear: string;
+  readonly gradSem?: FirestoreSemesterType;
   readonly entranceYear: string;
+  readonly entranceSem?: FirestoreSemesterType;
   readonly college?: string;
   readonly major: readonly string[];
   readonly minor: readonly string[];
@@ -155,7 +157,7 @@ type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 type AppSelectableRequirementChoices = Readonly<Record<string, string>>;
 
 /** Map from course's unique ID to override options */
-type AppOverridenRequirementChoices = Readonly<
+type AppOverriddenFulfillmentChoices = Readonly<
   Record<
     string,
     {

@@ -21,6 +21,7 @@ export {
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
   deleteCourseFromSemesters,
+  populateSemesters,
 } from './semesters';
 export { default as chooseToggleableRequirementOption } from './toggleable-requirement-choices';
 export {
@@ -28,6 +29,6 @@ export {
   deleteCourseFromSelectableRequirements,
 } from './selectable-requirement-choices';
 export {
-  addOverridenRequirementAPIB,
-  clearOverridenRequirementsAPIB,
+  addOverriddenFulfillmentAPIB,
+  clearOverriddenFulfillmentsAPIB,
 } from './overridden-fulfillment-choices';
