@@ -28,6 +28,13 @@
       :deleteSemYear="year"
       v-if="isEditSemesterOpen"
     />
+    <clear-semester
+      @clear-semester="clearSemester"
+      @close-clear-sem="closeClearSemesterModal"
+      :clearSemType="type"
+      :clearSemYear="year"
+      v-if="isClearSemesterOpen"
+    />
     <button
       v-if="isFirstSem"
       class="semester-addSemesterButton"
@@ -97,8 +104,10 @@
     <semester-menu
       v-if="semesterMenuOpen"
       class="semester-menu"
+      :isOpenModal="isDeleteSemesterOpen || isEditSemesterOpen || isClearSemesterOpen"
       @open-delete-semester-modal="openDeleteSemesterModal"
       @open-edit-semester-modal="openEditSemesterModal"
+      @open-clear-semester-modal="openClearSemesterModal"
       v-click-outside="closeSemesterMenuIfOpen"
     />
   </div>
@@ -113,6 +122,7 @@ import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
+import ClearSemester from '@/components/Modals/ClearSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
 import { clickOutside } from '@/utilities';
@@ -126,6 +136,7 @@ import {
   editSemester,
   addCourseToSemester,
   deleteCourseFromSemester,
+  deleteAllCoursesFromSemester,
   addCourseToSelectableRequirements,
 } from '@/global-firestore-data';
 
@@ -139,6 +150,7 @@ export default defineComponent({
     Course,
     DeleteSemester,
     EditSemester,
+    ClearSemester,
     NewCourseModal,
     SemesterMenu,
   },
@@ -152,6 +164,7 @@ export default defineComponent({
 
       isDeleteSemesterOpen: false,
       isEditSemesterOpen: false,
+      isClearSemesterOpen: false,
       // Keep track of how many levels has a card enters in the droppable zone.
       // Inspired by https://stackoverflow.com/a/21002544
       isShadowCounter: 0,
@@ -398,6 +411,16 @@ export default defineComponent({
           year: yearInput,
         })
       );
+    },
+    openClearSemesterModal() {
+      this.isClearSemesterOpen = true;
+    },
+    closeClearSemesterModal() {
+      this.isClearSemesterOpen = false;
+    },
+    clearSemester(type: string, year: number) {
+      deleteAllCoursesFromSemester(this.type, this.year, this.$gtag);
+      this.openConfirmationModal(`Cleared ${type} ${year} in plan`);
     },
     walkthroughText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Add Classes to your Schedule</div><div class="introjs-customProgress">3/4</div>
