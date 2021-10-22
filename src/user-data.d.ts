@@ -57,6 +57,22 @@ type FirestoreOnboardingUserData = {
   readonly tookSwim: 'yes' | 'no';
 };
 
+type FirestoreCourseOptInOptOutChoices = {
+  /** A list of requirements to opt-out */
+  readonly optOut: readonly string[];
+  /** It is for opting-in requirements that has a checker warning. */
+  readonly acknowledgedCheckerWarningOptIn: readonly string[];
+  /**
+   * A list of requirement and their slots to opt-in arbitrarily.
+   * It's for attaching completely unknown courses to a requirement
+   * (e.g. opt-in CS 2112 for history requirement).
+   */
+  readonly arbitraryOptIn: readonly { readonly [requirement: string]: readonly string[] };
+};
+type FirestoreOverriddenFulfillmentChoices = {
+  readonly [courseUniqueId: string]: FirestoreCourseOptInOptOutChoices;
+};
+
 type FirestoreUserData = {
   readonly name: FirestoreUserName;
   readonly semesters: readonlyFirestoreSemester[];
@@ -65,6 +81,7 @@ type FirestoreUserData = {
   readonly subjectColors: { readonly [subject: string]: string };
   readonly uniqueIncrementer: number;
   readonly userData: FirestoreOnboardingUserData;
+  // TODO: add overriddenFulfillmentChoices once we connect new requirement flow to prod.
 };
 
 interface CornellCourseRosterCourse {
@@ -150,7 +167,11 @@ type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 /** Map from course's unique ID to requirement ID */
 type AppSelectableRequirementChoices = Readonly<Record<string, string>>;
 
-/** Map from course's unique ID to override options */
+/**
+ * @deprecated replaced by `FirestoreOverriddenFulfillmentChoices`
+ *
+ * Map from course's unique ID to override options.
+ */
 type AppOverriddenFulfillmentChoices = Readonly<
   Record<
     string,
