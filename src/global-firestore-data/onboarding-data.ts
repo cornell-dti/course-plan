@@ -16,7 +16,6 @@ const setOnboardingData = (name: FirestoreUserName, onboarding: AppOnboardingDat
       minors: onboarding.minor.map(acronym => ({ acronym })),
       gradPrograms: onboarding.grad ? [{ acronym: onboarding.grad }] : [],
       exam: onboarding.exam,
-      class: onboarding.transferCourse,
       tookSwim: onboarding.tookSwim,
     })
     .then(() => {
