@@ -177,9 +177,6 @@ export default defineComponent({
     examsAP.push({ type: 'AP', subject: placeholderText, score: 0 });
     examsIB.push({ type: 'IB', subject: placeholderText, score: 0 });
     const transferClasses: TransferClassWithOptionalCourse[] = [];
-    this.onboardingData.transferCourse.forEach(course => {
-      transferClasses.push(course);
-    });
     transferClasses.push({ class: placeholderText, credits: 0 });
     return {
       tookSwimTest:
@@ -257,12 +254,7 @@ export default defineComponent({
       this.classes.push({ class: placeholderText, credits: 0 });
     },
     updateTransfer() {
-      this.$emit(
-        'updateTransfer',
-        [...this.examsAP, ...this.examsIB],
-        this.classes,
-        this.tookSwimTest
-      );
+      this.$emit('updateTransfer', [...this.examsAP, ...this.examsIB], this.tookSwimTest);
     },
     onCourseSelection(id: number, course: CornellCourseRosterCourse) {
       const courseCode = `${course.subject} ${course.catalogNbr}`;

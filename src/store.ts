@@ -85,7 +85,6 @@ const store: TypedVuexStore = new TypedVuexStore({
       minor: [],
       grad: '',
       exam: [],
-      transferCourse: [],
       tookSwim: 'no',
     },
     orderByNewest: true,

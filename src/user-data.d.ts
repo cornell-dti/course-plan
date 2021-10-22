@@ -45,13 +45,7 @@ type FirestoreAPIBExam = {
   readonly optOut?: FirestoreAPIBOverriddenFulfillments;
 };
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
-type FirestoreTransferClass = {
-  readonly class: string;
-  readonly course: CornellCourseRosterCourse;
-  readonly credits: number;
-};
 type FirestoreOnboardingUserData = {
-  readonly class: readonly FirestoreTransferClass[];
   readonly gradYear: string;
   readonly entranceYear: string;
   readonly colleges: readonly FirestoreCollegeMajorMinorOrGrad[];
@@ -119,13 +113,14 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
   readonly gradYear: string;
+  readonly gradSem?: FirestoreSemesterType;
   readonly entranceYear: string;
+  readonly entranceSem?: FirestoreSemesterType;
   readonly college?: string;
   readonly major: readonly string[];
   readonly minor: readonly string[];
   readonly grad?: string;
   readonly exam: readonly FirestoreAPIBExam[];
-  readonly transferCourse: readonly FirestoreTransferClass[];
   readonly tookSwim: 'yes' | 'no';
 };
 
