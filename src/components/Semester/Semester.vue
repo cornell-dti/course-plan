@@ -104,6 +104,7 @@
     <semester-menu
       v-if="semesterMenuOpen"
       class="semester-menu"
+      :isOpenModal="isDeleteSemesterOpen || isEditSemesterOpen || isClearSemesterOpen"
       @open-delete-semester-modal="openDeleteSemesterModal"
       @open-edit-semester-modal="openEditSemesterModal"
       @open-clear-semester-modal="openClearSemesterModal"
