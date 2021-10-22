@@ -113,7 +113,6 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
         ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'courses',
-    allowCourseDoubleCounting: true,
     perSlotMinCount: [6],
     slotNames: ['Course'],
     additionalRequirements: {
