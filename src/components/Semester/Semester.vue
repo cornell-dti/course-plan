@@ -135,6 +135,7 @@ import {
   editSemester,
   addCourseToSemester,
   deleteCourseFromSemester,
+  deleteAllCoursesFromSemester,
   addCourseToSelectableRequirements,
 } from '@/global-firestore-data';
 
@@ -417,9 +418,7 @@ export default defineComponent({
       this.isClearSemesterOpen = false;
     },
     clearSemester(type: string, year: number) {
-      this.courses.forEach(({ uniqueID }) => {
-        deleteCourseFromSemester(this.type, this.year, uniqueID, this.$gtag);
-      });
+      deleteAllCoursesFromSemester(this.type, this.year, this.$gtag);
       this.openConfirmationModal(`Cleared ${type} ${year} in plan`);
     },
     walkthroughText() {
