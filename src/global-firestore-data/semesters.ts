@@ -174,20 +174,20 @@ export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: GTag): 
 };
 
 export const getActiveSemesters = (
-  entranceSem: FirestoreSemesterType,
   entranceYear: number,
-  gradSem: FirestoreSemesterType,
-  gradYear: number
+  entranceSem: FirestoreSemesterSeason,
+  gradYear: number,
+  gradSem: FirestoreSemesterSeason
 ): FirestoreSemester[] => {
-  const sems = [createSemester('Fall', entranceYear, []), createSemester('Spring', gradYear, [])];
-  if (entranceSem === 'Spring' && entranceYear !== gradYear)
-    sems.push(createSemester('Spring', entranceYear, []));
-  if (gradSem === 'Fall' && entranceYear !== gradYear)
-    sems.push(createSemester('Fall', gradYear, []));
+  const sems = [createSemester(entranceYear, 'Fall', []), createSemester(gradYear, 'Spring', [])];
+  if (entranceYear !== gradYear && entranceSem === 'Spring')
+    sems.push(createSemester(entranceYear, 'Spring', []));
+  if (entranceYear !== gradYear && gradSem === 'Fall')
+    sems.push(createSemester(gradYear, 'Fall', []));
 
   for (let yr = entranceYear + 1; yr < gradYear; yr += 1) {
-    sems.push(createSemester('Spring', yr, []));
-    sems.push(createSemester('Fall', yr, []));
+    sems.push(createSemester(yr, 'Spring', []));
+    sems.push(createSemester(yr, 'Fall', []));
   }
   return sems.sort(compareFirestoreSemesters);
 };
@@ -197,10 +197,10 @@ export const populateSemesters = (onboarding: AppOnboardingData): void => {
   const entranceYear = parseInt(onboarding.entranceYear, 10);
   const gradYear = parseInt(onboarding.gradYear, 10);
 
-  const entranceSem: FirestoreSemesterType = onboarding.entranceSem
+  const entranceSem: FirestoreSemesterSeason = onboarding.entranceSem
     ? onboarding.entranceSem
     : 'Fall';
-  const gradSem: FirestoreSemesterType = onboarding.gradSem ? onboarding.gradSem : 'Spring';
+  const gradSem: FirestoreSemesterSeason = onboarding.gradSem ? onboarding.gradSem : 'Spring';
 
-  editSemesters(() => getActiveSemesters(entranceSem, entranceYear, gradSem, gradYear));
+  editSemesters(() => getActiveSemesters(entranceYear, entranceSem, gradYear, gradSem));
 };
