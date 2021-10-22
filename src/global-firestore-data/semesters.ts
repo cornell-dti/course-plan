@@ -1,6 +1,6 @@
-import { SeasonOrdinal } from '@/utilities';
-import { semestersCollection } from '../firebase-frontend-config';
+import { SeasonOrdinal } from '../utilities';
 import store from '../store';
+import { semestersCollection } from '../firebase-frontend-config';
 import { GTag, GTagEvent } from '../gtag';
 
 import {
