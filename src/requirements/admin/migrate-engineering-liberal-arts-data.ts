@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
 
-import { usernameCollection } from '../../firebase-admin-config';
+import {
+  usernameCollection,
+  selectableRequirementChoicesCollection,
+} from '../../firebase-admin-config';
 import { requirementAllowDoubleCounting } from '../requirement-frontend-utils';
 import getUserRequirementDataOnAdmin from './requirement-graph-admin-utils';
 
@@ -21,7 +24,7 @@ const REQUIREMENT_ID = 'College-EN-Liberal Studies: 6 courses';
  *      not the same as the new one, or maybe due to override.
  *    - In those cases, we skip and print a warning.
  */
-async function runOnUser(userEmail: string) {
+async function runOnUser(userEmail: string, runOnDB: boolean) {
   const {
     selectableRequirementChoices,
     onboardingData,
@@ -54,19 +57,29 @@ async function runOnUser(userEmail: string) {
     const choice = selectableRequirementChoices[stringId];
     if (choice === REQUIREMENT_ID) {
       console.log(
-        `Course with unique ID ${course.uniqueId} (${course.code}) is already bind to ${REQUIREMENT_ID}. Skip.`
+        `[INFO] Course with unique ID ${course.uniqueId} (${course.code}) is already bind to ${REQUIREMENT_ID}. Skip.`
       );
       return;
     }
     if (choice) {
-      console.group(
-        `[ALERT] Potentially bad invariant violation for course with uniqueID=${course.uniqueId}:`
-      );
-      console.log(`Courses connected to other requirement that does not allow double-counting
-should not have choices other than '${REQUIREMENT_ID}' recorded!
-Recorded choice: ${choice}`);
-      console.groupEnd();
-      return;
+      const requirementOfChoice = userRequirementMap[choice];
+      if (requirementOfChoice == null) {
+        // Happens when
+        // - user switch college/major
+        // - leftover like other old liberal studies requirement (18 credits, 3 category stuff)
+        console.log(`[INFO] Non-existing requirement: ${choice}.`);
+      } else if (requirementAllowDoubleCounting(requirementOfChoice, onboardingData.major)) {
+        // Not sure how it happens, but it's mostly harmless.
+        // We can still make the requirement choose the liberal studies one.
+        console.log(
+          `[INFO] Somehow a requirement allow double counting is recorded as choice: ${choice}`
+        );
+      } else {
+        // Seen in staging but not in prod: probably some corrupted data during dev.
+        console.log(
+          `[INFO] Connected to ${choice} that can no longer be satisfied by course: ${course.uniqueId}.`
+        );
+      }
     }
     console.log(
       `Now binding course with unique ID ${course.uniqueId} (${course.code}) to ${REQUIREMENT_ID}.`
@@ -80,25 +93,26 @@ Recorded choice: ${choice}`);
 
   console.log('Choices Updates:');
   console.log(choicesUpdates);
+
+  if (runOnDB && Object.keys(choicesUpdates).length > 0) {
+    await selectableRequirementChoicesCollection.doc(userEmail).update(choicesUpdates);
+  }
 }
 
 async function main() {
   let userEmail = process.argv[2];
-  if (userEmail != null) {
-    await runOnUser(userEmail);
+  const runOnDB = process.argv.includes('--run-on-db');
+  if (userEmail != null && userEmail !== '--run-on-db') {
+    await runOnUser(userEmail, runOnDB);
     return;
   }
   const collection = await usernameCollection.get();
   const userEmails = collection.docs.map(it => it.id);
   for (userEmail of userEmails) {
     console.group(`Running on ${userEmail}...`);
-    try {
-      // Intentionally await in a loop to have no interleaved console logs.
-      // eslint-disable-next-line no-await-in-loop
-      await runOnUser(userEmail);
-    } catch (e) {
-      console.log(e);
-    }
+    // Intentionally await in a loop to have no interleaved console logs.
+    // eslint-disable-next-line no-await-in-loop
+    await runOnUser(userEmail, runOnDB);
     console.groupEnd();
   }
 }
