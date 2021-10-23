@@ -188,6 +188,7 @@ export default defineComponent({
 
     startOnboarding() {
       this.isOnboarding = true;
+      store.commit('setIsTeleportModalOpen', true);
     },
 
     endOnboarding() {
@@ -200,6 +201,7 @@ export default defineComponent({
 
     cancelOnboarding() {
       this.isOnboarding = false;
+      store.commit('setIsTeleportModalOpen', false);
     },
 
     startWelcomeTour() {
@@ -210,8 +212,8 @@ export default defineComponent({
     },
 
     editProfile() {
-      this.isOnboarding = true;
       this.isEditingProfile = true;
+      this.startOnboarding();
     },
 
     closeWelcome() {
