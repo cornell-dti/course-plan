@@ -31,8 +31,6 @@
     <clear-semester
       @clear-semester="clearSemester"
       @close-clear-sem="closeClearSemesterModal"
-      :clearSemType="type"
-      :clearSemYear="year"
       v-if="isClearSemesterOpen"
     />
     <button
@@ -419,9 +417,9 @@ export default defineComponent({
     closeClearSemesterModal() {
       this.isClearSemesterOpen = false;
     },
-    clearSemester(type: string, year: number) {
-      deleteAllCoursesFromSemester(this.type, this.year, this.$gtag);
-      this.openConfirmationModal(`Cleared ${type} ${year} in plan`);
+    clearSemester() {
+      deleteAllCoursesFromSemester(this.year, this.season, this.$gtag);
+      this.openConfirmationModal(`Cleared ${this.season} ${this.year} in plan`);
     },
     walkthroughText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Add Classes to your Schedule</div><div class="introjs-customProgress">3/4</div>
