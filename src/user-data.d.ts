@@ -46,13 +46,7 @@ type FirestoreAPIBExam = {
   readonly optOut?: FirestoreAPIBOverriddenFulfillments;
 };
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
-type FirestoreTransferClass = {
-  readonly class: string;
-  readonly course: CornellCourseRosterCourse;
-  readonly credits: number;
-};
 type FirestoreOnboardingUserData = {
-  readonly class: readonly FirestoreTransferClass[];
   readonly gradYear: string;
   readonly entranceYear: string;
   readonly colleges: readonly FirestoreCollegeMajorMinorOrGrad[];
@@ -127,7 +121,6 @@ type AppOnboardingData = {
   readonly minor: readonly string[];
   readonly grad?: string;
   readonly exam: readonly FirestoreAPIBExam[];
-  readonly transferCourse: readonly FirestoreTransferClass[];
   readonly tookSwim: 'yes' | 'no';
 };
 
