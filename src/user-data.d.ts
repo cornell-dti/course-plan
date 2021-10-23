@@ -58,7 +58,8 @@ type FirestoreOnboardingUserData = {
 
 type FirestoreUserData = {
   readonly name: FirestoreUserName;
-  readonly semesters: readonly FirestoreSemester[];
+  readonly semesters: readonlyFirestoreSemester[];
+  readonly orderByNewest: boolean;
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };
   readonly uniqueIncrementer: number;
