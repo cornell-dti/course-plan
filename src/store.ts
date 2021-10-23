@@ -7,6 +7,7 @@ import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
 import {
   getCurrentSeason,
+  sorted,
   checkNotNull,
   getCurrentYear,
   allocateAllSubjectColor,
@@ -52,6 +53,7 @@ export type VuexStoreState = {
   userName: FirestoreUserName;
   onboardingData: AppOnboardingData;
   semesters: readonly FirestoreSemester[];
+  orderByNewest: boolean;
   derivedCoursesData: DerivedCoursesData;
   derivedSelectableRequirementData: DerivedSelectableRequirementData;
   derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData;
@@ -63,6 +65,7 @@ export type VuexStoreState = {
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
+  isTeleportModalOpen: boolean;
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -86,6 +89,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       exam: [],
       tookSwim: 'no',
     },
+    orderByNewest: true,
     semesters: [],
     derivedCoursesData: {
       duplicatedCourseCodeSet: new Set(),
@@ -109,6 +113,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     groupedRequirementFulfillmentReport: [],
     subjectColors: {},
     uniqueIncrementer: 0,
+    isTeleportModalOpen: false,
   },
   actions: {},
   mutations: {
@@ -121,12 +126,18 @@ const store: TypedVuexStore = new TypedVuexStore({
     setOnboardingData(state: VuexStoreState, onboardingData: AppOnboardingData) {
       state.onboardingData = onboardingData;
     },
+    setOrderByNewest(state: VuexStoreState, orderByNewest: boolean) {
+      state.orderByNewest = orderByNewest;
+    },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
       // TODO @bshen remove .map & write migration script when every dev pulls from master
-      state.semesters = semesters.map(sem => {
-        if (sem.season) return sem;
-        return { ...sem, season: sem.season || sem.type }; // sem.season is necessary for type check
-      });
+      state.semesters = sorted(
+        semesters.map(sem => {
+          if (sem.season) return sem;
+          return { ...sem, season: sem.season || sem.type }; // sem.season is necessary for type check
+        }),
+        state.orderByNewest
+      );
     },
     setDerivedCourseData(state: VuexStoreState, data: DerivedCoursesData) {
       state.derivedCoursesData = data;
@@ -183,11 +194,17 @@ const store: TypedVuexStore = new TypedVuexStore({
     setUniqueIncrementer(state: VuexStoreState, newIncrementerValue: number) {
       state.uniqueIncrementer = newIncrementerValue;
     },
+    setIsTeleportModalOpen(state: VuexStoreState, newTeleportModalValue: boolean) {
+      state.isTeleportModalOpen = newTeleportModalValue;
+    },
   },
 });
 
 const autoRecomputeDerivedData = (): (() => void) =>
   store.subscribe((payload, state) => {
+    if (payload.type === 'setOrderByNewest') {
+      store.commit('setSemesters', sorted(state.semesters, state.orderByNewest));
+    }
     // Recompute courses
     if (payload.type === 'setSemesters') {
       const allCourseSet = new Set<string>();
@@ -324,6 +341,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   let userNameInitialLoadFinished = false;
   let onboardingDataInitialLoadFinished = false;
   let semestersInitialLoadFinished = false;
+  let orderByNewestInitialLoadFinished = false;
   let toggleableRequirementChoiceInitialLoadFinished = false;
   let selectableRequirementChoiceInitialLoadFinished = false;
   let subjectColorInitialLoadFinished = false;
@@ -336,6 +354,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       userNameInitialLoadFinished &&
       onboardingDataInitialLoadFinished &&
       semestersInitialLoadFinished &&
+      orderByNewestInitialLoadFinished &&
       toggleableRequirementChoiceInitialLoadFinished &&
       selectableRequirementChoiceInitialLoadFinished &&
       subjectColorInitialLoadFinished &&
@@ -351,7 +370,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     .doc(simplifiedUser.email)
     .onSnapshot(snapshot => {
       const data = snapshot.data();
-      if (data != null) {
+      if (data) {
         store.commit('setUserName', data);
       } else {
         const [firstName, lastName] = simplifiedUser.displayName.split(' ');
@@ -364,7 +383,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     .doc(simplifiedUser.email)
     .onSnapshot(snapshot => {
       const data = snapshot.data();
-      if (data != null) {
+      if (data) {
         store.commit('setOnboardingData', createAppOnboardingData(data));
       }
       onboardingDataInitialLoadFinished = true;
@@ -375,8 +394,11 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     .get()
     .then(snapshot => {
       const data = snapshot.data();
-      if (data != null) {
-        store.commit('setSemesters', data.semesters);
+      if (data) {
+        const { orderByNewest, semesters } = data;
+        store.commit('setSemesters', semesters);
+        // if user hasn't yet chosen an ordering, choose true by default
+        store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
       } else {
         const newSemester: FirestoreSemester = {
           year: getCurrentYear(),
@@ -385,9 +407,13 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
           courses: [],
         };
         store.commit('setSemesters', [newSemester]);
-        fb.semestersCollection.doc(simplifiedUser.email).set({ semesters: [newSemester] });
+        fb.semestersCollection.doc(simplifiedUser.email).set({
+          orderByNewest: true,
+          semesters: [newSemester],
+        });
       }
       semestersInitialLoadFinished = true;
+      orderByNewestInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
   const toggleableRequirementChoiceUnsubscriber = fb.toggleableRequirementChoicesCollection

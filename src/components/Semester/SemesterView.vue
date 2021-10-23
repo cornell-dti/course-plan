@@ -24,26 +24,15 @@
         >
           + New Semester
         </button>
-        <div
-          class="semesterView-switch"
+        <view-dropdown
           data-intro-group="req-tooltip"
           :data-intro="getToggleTooltipText()"
           data-disable-interaction="1"
           data-step="4"
           data-tooltipClass="tooltipCenter"
-        >
-          <span class="semesterView-switchText">View:</span>
-          <button
-            class="semesterView-switchImage semesterView-twoColumn full-opacity-on-hover"
-            @click="setNotCompact"
-            :class="{ 'semesterView-twoColumn--active': !compact }"
-          />
-          <button
-            class="semesterView-switchImage semesterView-fourColumn full-opacity-on-hover"
-            @click="setCompact"
-            :class="{ 'semesterView-fourColumn--active': compact }"
-          />
-        </div>
+          :compact="compact"
+          @click-compact="toggleCompact"
+        />
       </div>
       <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
       <div class="semesterView-content">
@@ -89,7 +78,8 @@
     <div class="semesterView-bot">
       <div class="semesterView-builtBy">
         Built with
-        <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" /> by
+        <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" />
+        by
         <a target="_blank" href="https://www.cornelldti.org/projects/courseplan/">
           Cornell Design &amp; Tech Initiative
         </a>
@@ -108,9 +98,10 @@ import store from '@/store';
 import { GTagEvent } from '@/gtag';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
+import ViewDropdown from './ViewDropdown.vue';
 
 export default defineComponent({
-  components: { Confirmation, NewSemesterModal, Semester },
+  components: { Confirmation, NewSemesterModal, Semester, ViewDropdown },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
@@ -145,16 +136,10 @@ export default defineComponent({
         this.semesters[0].year === semester.year && this.semesters[0].season === semester.season
       );
     },
-    setCompact() {
-      if (!this.compact) {
-        this.$emit('compact-updated', !this.compact);
-        GTagEvent(this.$gtag, 'to-compact');
-      }
-    },
-    setNotCompact() {
-      if (this.compact) {
-        this.$emit('compact-updated', !this.compact);
-        GTagEvent(this.$gtag, 'to-not-compact');
+    toggleCompact(toggled: boolean) {
+      if (toggled !== this.compact) {
+        this.$emit('compact-updated', toggled);
+        GTagEvent(this.$gtag, toggled ? 'to-compact' : 'to-not-compact');
       }
     },
     openSemesterConfirmationModal(season: FirestoreSemesterSeason, year: number, isAdd: boolean) {
@@ -235,7 +220,7 @@ export default defineComponent({
     justify-content: flex-end;
     margin-bottom: 1rem;
     min-height: 2.25rem;
-
+    align-items: center;
     &--two {
       justify-content: space-between;
     }
