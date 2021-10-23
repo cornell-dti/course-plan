@@ -62,6 +62,7 @@ export type VuexStoreState = {
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
+  isTeleportModalOpen: boolean;
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -108,6 +109,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     groupedRequirementFulfillmentReport: [],
     subjectColors: {},
     uniqueIncrementer: 0,
+    isTeleportModalOpen: false,
   },
   actions: {},
   mutations: {
@@ -177,6 +179,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setUniqueIncrementer(state: VuexStoreState, newIncrementerValue: number) {
       state.uniqueIncrementer = newIncrementerValue;
+    },
+    setIsTeleportModalOpen(state: VuexStoreState, newTeleportModalValue: boolean) {
+      state.isTeleportModalOpen = newTeleportModalValue;
     },
   },
 });
