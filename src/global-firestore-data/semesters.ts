@@ -1,30 +1,13 @@
-import { SeasonOrdinal } from '../utilities';
-import store from '../store';
 import { semestersCollection } from '../firebase-frontend-config';
+import store from '../store';
 import { GTag, GTagEvent } from '../gtag';
+import { sortedSemesters } from '../utilities';
 
 import {
   addCourseToSelectableRequirements,
   deleteCourseFromSelectableRequirements,
   deleteCoursesFromSelectableRequirements,
 } from './selectable-requirement-choices';
-
-// compare function for FirestoreSemester to determine which comes first by year and season
-export const compareFirestoreSemesters = (a: FirestoreSemester, b: FirestoreSemester): number => {
-  if (a.season === b.season && a.year === b.year) {
-    return 0;
-  }
-  if (a.year > b.year) {
-    return -1;
-  }
-  if (a.year < b.year) {
-    return 1;
-  }
-  if (SeasonOrdinal[a.season] < SeasonOrdinal[b.season]) {
-    return 1;
-  }
-  return -1;
-};
 
 const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
@@ -37,17 +20,14 @@ const editSemesters = (
 };
 
 /**
- * Toggles whether semesters are ordered by newest/oldest
- * @returns true iff semesters were previously ordered oldest -> newest,
- *          false otherwise
+ * Sets whether semesters are ordered by newest/oldest
  */
-export const toggleOrderByNewest = (): boolean => {
-  const toggled = !store.state.orderByNewest;
-  store.commit('setOrderByNewest', toggled);
+export const setOrderByNewest = (orderByNewest: boolean): void => {
+  if (orderByNewest === store.state.orderByNewest) return;
+  store.commit('setOrderByNewest', orderByNewest);
   semestersCollection.doc(store.state.currentFirebaseUser.email).update({
-    orderByNewest: toggled,
+    orderByNewest,
   });
-  return toggled;
 };
 
 export const editSemester = (
@@ -189,7 +169,7 @@ export const getActiveSemesters = (
   entranceSem: FirestoreSemesterSeason,
   gradYear: number,
   gradSem: FirestoreSemesterSeason
-): FirestoreSemester[] => {
+): readonly FirestoreSemester[] => {
   const sems = [createSemester(entranceYear, 'Fall', []), createSemester(gradYear, 'Spring', [])];
   if (entranceYear !== gradYear && entranceSem === 'Spring')
     sems.push(createSemester(entranceYear, 'Spring', []));
@@ -200,7 +180,7 @@ export const getActiveSemesters = (
     sems.push(createSemester(yr, 'Spring', []));
     sems.push(createSemester(yr, 'Fall', []));
   }
-  return sems.sort(compareFirestoreSemesters);
+  return sortedSemesters(sems);
 };
 
 // add empty semesters based on entrance and graduation time

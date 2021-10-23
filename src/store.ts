@@ -7,7 +7,7 @@ import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
 import {
   getCurrentSeason,
-  sorted,
+  sortedSemesters,
   checkNotNull,
   getCurrentYear,
   allocateAllSubjectColor,
@@ -131,7 +131,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
       // TODO @bshen remove .map & write migration script when every dev pulls from master
-      state.semesters = sorted(
+      state.semesters = sortedSemesters(
         semesters.map(sem => {
           if (sem.season) return sem;
           return { ...sem, season: sem.season || sem.type }; // sem.season is necessary for type check
@@ -203,7 +203,7 @@ const store: TypedVuexStore = new TypedVuexStore({
 const autoRecomputeDerivedData = (): (() => void) =>
   store.subscribe((payload, state) => {
     if (payload.type === 'setOrderByNewest') {
-      store.commit('setSemesters', sorted(state.semesters, state.orderByNewest));
+      store.commit('setSemesters', sortedSemesters(state.semesters, state.orderByNewest));
     }
     // Recompute courses
     if (payload.type === 'setSemesters') {

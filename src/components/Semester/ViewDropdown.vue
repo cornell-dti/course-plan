@@ -49,7 +49,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import store from '@/store';
-import { toggleOrderByNewest } from '@/global-firestore-data/semesters';
+import { setOrderByNewest } from '@/global-firestore-data/semesters';
 import defaultSem from '@/assets/images/views/twoColumnSelected.svg';
 import compactSem from '@/assets/images/views/fourColumnSelected.svg';
 import newestArrow from '@/assets/images/views/newestArrow.svg';
@@ -90,9 +90,7 @@ export default defineComponent({
 
   methods: {
     onOrderClick(orderByNewest: boolean) {
-      if (orderByNewest !== this.orderByNewest) {
-        toggleOrderByNewest();
-      }
+      setOrderByNewest(orderByNewest);
     },
     toggle() {
       this.open = !this.open;
