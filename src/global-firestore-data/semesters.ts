@@ -61,13 +61,12 @@ const createSemester = (
   year,
 });
 
-const semesterEquals = (
+// exposed for testing
+export const semesterEquals = (
   semester: FirestoreSemester,
   year: number,
   season: FirestoreSemesterSeason
-): boolean =>
-  // TODO @bshen remove semester.type & write migration script when every dev pulls from master
-  semester.year === year && (semester.season === season || semester.type === season);
+): boolean => semester.year === year && semester.season === season;
 
 export const addSemester = (
   year: number,
@@ -173,6 +172,7 @@ export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: GTag): 
   deleteCourseFromSelectableRequirements(courseUniqueID);
 };
 
+// exposed for testing
 export const getActiveSemesters = (
   entranceYear: number,
   entranceSem: FirestoreSemesterSeason,
@@ -192,7 +192,7 @@ export const getActiveSemesters = (
   return sems.sort(compareFirestoreSemesters);
 };
 
-// function to add all the semesters a user will be enrolled in based on entrance and graduation time
+// add empty semesters based on entrance and graduation time
 export const populateSemesters = (onboarding: AppOnboardingData): void => {
   const entranceYear = parseInt(onboarding.entranceYear, 10);
   const gradYear = parseInt(onboarding.gradYear, 10);
