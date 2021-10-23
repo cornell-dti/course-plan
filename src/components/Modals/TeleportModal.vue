@@ -73,7 +73,6 @@ export default defineComponent({
       : {};
     return {
       customPosition,
-      isTeleportClosed: false,
     };
   },
   emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed'],
