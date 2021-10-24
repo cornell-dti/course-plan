@@ -4,13 +4,12 @@ import { includesWithSubRequirements } from '../checkers-common';
 const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'General Chemistry',
-    description:
-      'Choose one of the following - Option 1: CHEM 2070 AND CHEM 2080, Option 2: CHEM 2150',
+    description: 'CHEM 2070 - CHEM 2080 or CHEM 2150',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Option 1': {
-        description: 'CHEM 2070 AND CHEM 2080',
+        description: 'CHEM 2070 and CHEM 2080',
         checker: includesWithSubRequirements(['CHEM 2070'], ['CHEM 2080']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
@@ -27,20 +26,19 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Organic Chemistry',
-    description:
-      'Choose one of the following - Option 1: CHEM 3570 AND 3580, Option 2: CHEM 3590 AND 3600, Option 3: CHEM 3530',
+    description: 'CHEM 3570 - 3580 or CHEM 3590 - CHEM 3600 or CHEM 3530',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Option 1': {
-        description: 'CHEM 3570 AND CHEM 3580',
+        description: 'CHEM 3570 and CHEM 3580',
         checker: includesWithSubRequirements(['CHEM 3570'], ['CHEM 3580']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
         slotNames: ['CHEM 3570', 'CHEM 3580'],
       },
       'Option 2': {
-        description: 'CHEM 3590 AND CHEM 3600',
+        description: 'CHEM 3590 and CHEM 3600',
         checker: includesWithSubRequirements(['CHEM 3590'], ['CHEM 3600']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
@@ -57,13 +55,12 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Physical Chemistry',
-    description:
-      'Choose one of the following - Option 1: CHEM 3890 AND CHEM 3900, Option 2: CHEM 2870',
+    description: 'CHEM 3890 - CHEM 3900 or CHEM 2870',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Option 1': {
-        description: 'CHEM 3890 AND CHEM 3900',
+        description: 'CHEM 3890 and CHEM 3900',
         checker: includesWithSubRequirements(['CHEM 3890'], ['CHEM 3900']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
@@ -80,7 +77,7 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Inorganic Laboratory',
-    description: 'Only CHEM 4100 fulfills this requirement',
+    description: 'Only CHEM 4100',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     checker: includesWithSubRequirements(['CHEM 4100']),
     fulfilledBy: 'courses',
@@ -89,7 +86,7 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Laboratory Core',
-    description: 'Need to take CHEM 2510 and either CHEM 2900 or CHEM 3030',
+    description: 'CHEM 2510 and either CHEM 2900 or CHEM 3030',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     checker: includesWithSubRequirements(['CHEM 2510'], ['CHEM 2900', 'CHEM 3030']),
     fulfilledBy: 'courses',
@@ -111,13 +108,12 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Mathematics',
-    description:
-      'Choose one of the following - Option 1: MATH 1110 and MATH 1120, Option 2: 4 AP credits + MATH 1910',
+    description: 'MATH 1110 - MATH 1120 or MATH 1910 (with AP credits)',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Option 1': {
-        description: 'MATH 1110 AND MATH 1120',
+        description: 'MATH 1110 and MATH 1120',
         checker: includesWithSubRequirements(['MATH 1110'], ['MATH 1120']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
@@ -134,8 +130,7 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Physics',
-    description:
-      'Choose one of the following - Option 1: PHYS 2207 and PHYS 2208, Option 2: PHYS 1112 and PHYS 2213, Option 3: PHYS 1116 and PHYS 2217',
+    description: 'PHYS 2207 - PHYS 2208 or PHYS 1112 - PHYS 2213 or PHYS 1116 - PHYS 2217',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
