@@ -4,7 +4,8 @@ import { includesWithSubRequirements } from '../checkers-common';
 const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'General Chemistry',
-    description: 'Choose one of the following - Option 1: CHEM 2070 AND CHEM 2080, Option 2: CHEM 2150',
+    description:
+      'Choose one of the following - Option 1: CHEM 2070 AND CHEM 2080, Option 2: CHEM 2150',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
@@ -26,7 +27,8 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Organic Chemistry',
-    description: 'Choose one of the following - Option 1: CHEM 3570 AND 3580, Option 2: CHEM 3590 AND 3600, Option 3: CHEM 3530',
+    description:
+      'Choose one of the following - Option 1: CHEM 3570 AND 3580, Option 2: CHEM 3590 AND 3600, Option 3: CHEM 3530',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
@@ -55,7 +57,8 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Physical Chemistry',
-    description: 'Choose one of the following - Option 1: CHEM 3890 AND CHEM 3900, Option 2: CHEM 2870',
+    description:
+      'Choose one of the following - Option 1: CHEM 3890 AND CHEM 3900, Option 2: CHEM 2870',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
@@ -87,8 +90,7 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Laboratory Core',
     description: 'Need to take CHEM 2510 and either CHEM 2900 or CHEM 3030',
-    source:
-      'https://chemistry.cornell.edu/required-core-courses',
+    source: 'https://chemistry.cornell.edu/required-core-courses',
     checker: includesWithSubRequirements(['CHEM 2510'], ['CHEM 2900', 'CHEM 3030']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
@@ -98,7 +100,8 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     // TODO: fulfill by credits eventually, currently only provides other 4 credit options
     name: 'Laboratory Requirement',
-    description: 'A total of 8 credits of laboratory, including core laboratories, is required. This requirement may be met by taking CHEM 3010 and/or CHEM 3020 or by taking laboratory courses outside of chemistry that are listed under electives.',
+    description:
+      'A total of 8 credits of laboratory, including core laboratories, is required. This requirement may be met by taking CHEM 3010 and/or CHEM 3020 or by taking laboratory courses outside of chemistry that are listed under electives.',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     checker: includesWithSubRequirements(['CHEM 3010', 'CHEM 3020', 'BIOMG 4400', 'CHEM 4010']),
     fulfilledBy: 'courses',
@@ -108,7 +111,8 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Mathematics',
-    description: 'Choose one of the following - Option 1: MATH 1110 and MATH 1120, Option 2: 4 AP credits + MATH 1910',
+    description:
+      'Choose one of the following - Option 1: MATH 1110 and MATH 1120, Option 2: 4 AP credits + MATH 1910',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
@@ -130,7 +134,8 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Physics',
-    description: 'Choose one of the following - Option 1: PHYS 2207 and PHYS 2208, Option 2: PHYS 1112 and PHYS 2213, Option 3: PHYS 1116 and PHYS 2217',
+    description:
+      'Choose one of the following - Option 1: PHYS 2207 and PHYS 2208, Option 2: PHYS 1112 and PHYS 2213, Option 3: PHYS 1116 and PHYS 2217',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
