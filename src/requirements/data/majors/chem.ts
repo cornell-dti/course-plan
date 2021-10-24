@@ -26,7 +26,7 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Organic Chemistry',
-    description: 'CHEM 3570 - 3580 or CHEM 3590 - CHEM 3600 or CHEM 3530',
+    description: 'CHEM 3570 - CHEM 3580 or CHEM 3590 - CHEM 3600 or CHEM 3530',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
