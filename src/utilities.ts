@@ -19,7 +19,7 @@ export const sortedSemesters = (
   semesters: readonly FirestoreSemester[],
   orderByNewest = true
 ): readonly FirestoreSemester[] =>
-  [...semesters].sort((a, b) => {
+  semesters.slice().sort((a, b) => {
     // sort in increasing order iff orderByNewest is false, increasing otherwise
     const order = orderByNewest ? -1 : 1;
     const byYear = a.year - b.year;

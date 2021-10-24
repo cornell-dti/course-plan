@@ -6,8 +6,8 @@ import computeGroupedRequirementFulfillmentReports from './requirements/requirem
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
 import {
-  getCurrentSeason,
   sortedSemesters,
+  getCurrentSeason,
   checkNotNull,
   getCurrentYear,
   allocateAllSubjectColor,
