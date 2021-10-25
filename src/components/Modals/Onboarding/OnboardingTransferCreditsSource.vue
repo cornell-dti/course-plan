@@ -14,7 +14,7 @@
             @on-select="subject => selectSubject(subject, index)"
           />
           <onboarding-transfer-exam-property-dropdown
-            v-if="scoresDropdown"
+            v-if="scoresDropdown !== undefined"
             property-name="Score"
             :columnWide="false"
             :availableOptions="scoresDropdown.scores"
@@ -50,7 +50,7 @@ import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamProp
 type Exam = 'AP' | 'IB';
 
 type GetSelectableOptions = (
-  selectedExams: FirestoreAPIBExam[],
+  selectedExams: readonly FirestoreAPIBExam[],
   allSubjects: readonly string[],
   choice: string
 ) => readonly string[];
@@ -67,7 +67,7 @@ type ScoreDropdown = {
 
 type RemoveExam = (name: Exam, index: number) => void;
 
-type HasExams = (exams: FirestoreAPIBExam[], exam: FirestoreAPIBExam) => boolean;
+type HasExams = (exams: readonly FirestoreAPIBExam[], exam: FirestoreAPIBExam) => boolean;
 
 type AddExam = (name: Exam) => void;
 
