@@ -215,7 +215,7 @@ export default defineComponent({
     },
     getSelectableOptions(
       // exams already picked
-      selectedExams: FirestoreAPIBExam[],
+      selectedExams: readonly FirestoreAPIBExam[],
       // array of ap/ib exams
       allSubjects: readonly string[],
       choice: string
@@ -235,7 +235,7 @@ export default defineComponent({
       }
       return selectableOptions;
     },
-    hasExams(exams: FirestoreAPIBExam[], exam: FirestoreAPIBExam): boolean {
+    hasExams(exams: readonly FirestoreAPIBExam[], exam: FirestoreAPIBExam): boolean {
       return !(exams.length === 1 && exam.subject === placeholderText);
     },
   },

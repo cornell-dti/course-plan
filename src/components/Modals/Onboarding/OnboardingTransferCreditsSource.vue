@@ -14,12 +14,12 @@
             @on-select="subject => selectSubject(subject, index)"
           />
           <onboarding-transfer-exam-property-dropdown
-            v-if="scoresDropdown !== undefined"
+            v-if="scoresDropdown"
             property-name="Score"
             :columnWide="false"
             :availableOptions="scoresDropdown.scores"
             :choice="exam.score"
-            @on-select="score => scoresDropdown.selectScore(score, index)"
+            @on-select="score => onSelect(score, index)"
           />
           <div class="onboarding-select--column-removeExam">
             <button
@@ -53,7 +53,7 @@ type GetSelectableOptions = (
   selectedExams: readonly FirestoreAPIBExam[],
   allSubjects: readonly string[],
   choice: string
-) => readonly string[];
+) => string[];
 
 type SelectSubject = (subject: string, i: number) => void;
 
@@ -109,6 +109,11 @@ export default defineComponent({
     addExam: {
       type: Function as PropType<AddExam>,
       required: true,
+    },
+  },
+  methods: {
+    onSelect(score: number, index: number) {
+      if (this.scoresDropdown) this.scoresDropdown.selectScore(score, index);
     },
   },
 });
