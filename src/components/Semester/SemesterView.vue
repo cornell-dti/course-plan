@@ -322,6 +322,14 @@ export default defineComponent({
   margin-bottom: 350px;
 }
 
+@media only screen and (max-width: $largest-breakpoint) {
+  .semesterView {
+    &-empty--compact {
+      min-width: 50%;
+    }
+  }
+}
+
 @media only screen and (max-width: $medium-breakpoint) {
   .semesterView {
     margin-top: 5.5rem;
