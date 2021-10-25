@@ -4,7 +4,7 @@ import { includesWithSubRequirements } from '../checkers-common';
 const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'General Chemistry',
-    description: 'CHEM 2070 - CHEM 2080 or CHEM 2150',
+    description: 'Option 1: CHEM 2070 and CHEM 2080, Option 2: CHEM 2150',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
@@ -26,7 +26,8 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Organic Chemistry',
-    description: 'CHEM 3570 - CHEM 3580 or CHEM 3590 - CHEM 3600 or CHEM 3530',
+    description:
+      'Option 1: CHEM 3570 and CHEM 3580, Option 2: CHEM 3590 and CHEM 3600, Option 3: CHEM 3530. One of the two-semester sequences is required for the Honors Curriculum and strongly encouraged for students who are planning for graduate study in Chemistry or a career as a Chemist or Healthcare Professional.',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
@@ -55,7 +56,8 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Physical Chemistry',
-    description: 'CHEM 3890 - CHEM 3900 or CHEM 2870',
+    description:
+      'Option 1: CHEM 3890 and CHEM 3900, Option 2: CHEM 2870. The two-semester sequences is required for the Honors Curriculum and strongly encouraged for students who are planning for graduate study in Chemistry or a career as a Chemist. Students taking CHEM 3890 and 3900 are also required to take a semester of Multivariable Calculus or Linear Algebra from the electives below.',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
@@ -77,7 +79,7 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Inorganic Laboratory',
-    description: 'Only CHEM 4100',
+    description: 'CHEM 4100',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     checker: includesWithSubRequirements(['CHEM 4100']),
     fulfilledBy: 'courses',
@@ -108,7 +110,7 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Mathematics',
-    description: 'MATH 1110 - MATH 1120 or MATH 1910 (with AP credits)',
+    description: 'Option 1: MATH 1110 and MATH 1120, Option 2: MATH 1910 (with 4 AP credits)',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
@@ -130,7 +132,8 @@ const chemRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Physics',
-    description: 'PHYS 2207 - PHYS 2208 or PHYS 1112 - PHYS 2213 or PHYS 1116 - PHYS 2217',
+    description:
+      'Option 1: PHYS 2207 and PHYS 2208, Option 2: PHYS 1112 and PHYS 2213, Option 3: PHYS 1116 and PHYS 2217',
     source: 'https://chemistry.cornell.edu/required-core-courses',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
