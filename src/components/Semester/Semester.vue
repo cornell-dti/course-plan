@@ -461,7 +461,7 @@ export default defineComponent({
   }
 
   &--compact {
-    width: 16rem;
+    width: 17.5rem;
     padding: 0.875rem 1.125rem;
   }
 
@@ -566,7 +566,7 @@ export default defineComponent({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .semester {
-    width: 16rem;
+    width: 17.5rem;
 
     &-menu {
       right: 0rem;
