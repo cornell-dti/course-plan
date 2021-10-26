@@ -11,8 +11,6 @@
       <div class="onboarding-transferCredits onboarding-inputs">
         <div
           class="onboarding-inputWrapper onboarding-inputWrapper--college onboarding-inputWrapper--description"
-          @on-remove="removeExam"
-          @on-add="addExam"
         >
           <onboarding-transfer-credits-source
             examName="AP"
@@ -22,6 +20,8 @@
             :placeholderText="placeholderText"
             @on-subject-select="selectAPSubject"
             @on-score-select="selectAPScore"
+            @on-remove="removeExam"
+            @on-add="addExam"
           />
           <onboarding-transfer-credits-source
             examName="IB"
@@ -31,6 +31,8 @@
             :placeholderText="placeholderText"
             @on-subject-select="selectIBSubject"
             @on-score-select="selectIBScore"
+            @on-remove="removeExam"
+            @on-add="addExam"
           />
         </div>
         <div class="onboarding-transferCreditDescription">
