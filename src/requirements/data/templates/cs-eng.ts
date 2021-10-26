@@ -14,6 +14,19 @@ const csEngTemplate: readonly MajorTemplate[] = [
     name: 'Computer Science Core',
     templateSemesters: [3, 5, 4, 6, 7],
   },
+  // more complex version of above to handle edge cases if desired 
+  // (incomplete templates, different checkers)
+  {
+    reqGroup: 'CS',
+    name: 'Computer Science Core',
+    templateSemesters: {
+      "3": { 
+        slotName: "CS 2800 or CS 2802", 
+        checker?: newCheckerForSlot, 
+        placeholderName?: "CS 280X" }
+      ...
+    },
+  },
   {
     reqGroup: 'CS',
     name: 'CS Electives',
