@@ -25,10 +25,11 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
   readonly requirementID?: string;
 };
 
-type FirestoreSemesterType = 'Fall' | 'Spring' | 'Summer' | 'Winter';
+type FirestoreSemesterSeason = 'Fall' | 'Spring' | 'Summer' | 'Winter';
 type FirestoreSemester = {
   readonly year: number;
-  readonly type: FirestoreSemesterType;
+  readonly type?: FirestoreSemesterSeason; // TODO @bshen remove & write migration script when every dev pulls from master
+  readonly season: FirestoreSemesterSeason;
   readonly courses: readonly FirestoreSemesterCourse[];
 };
 
@@ -113,9 +114,9 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
   readonly gradYear: string;
-  readonly gradSem?: FirestoreSemesterType;
+  readonly gradSem?: FirestoreSemesterSeason;
   readonly entranceYear: string;
-  readonly entranceSem?: FirestoreSemesterType;
+  readonly entranceSem?: FirestoreSemesterSeason;
   readonly college?: string;
   readonly major: readonly string[];
   readonly minor: readonly string[];

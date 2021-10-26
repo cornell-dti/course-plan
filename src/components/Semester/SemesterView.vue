@@ -38,13 +38,13 @@
       <div class="semesterView-content">
         <div
           v-for="(sem, semesterIndex) in semesters"
-          :key="`${sem.year}-${sem.type}`"
+          :key="`${sem.year}-${sem.season}`"
           class="semesterView-wrapper"
           :class="{ 'semesterView-wrapper--compact': compact }"
         >
           <semester
             ref="semester"
-            :type="sem.type"
+            :season="sem.season"
             :year="sem.year"
             :courses="sem.courses"
             :semesterIndex="semesterIndex"
@@ -132,7 +132,9 @@ export default defineComponent({
   },
   methods: {
     checkIfFirstSem(semester: FirestoreSemester) {
-      return this.semesters[0].year === semester.year && this.semesters[0].type === semester.type;
+      return (
+        this.semesters[0].year === semester.year && this.semesters[0].season === semester.season
+      );
     },
     toggleCompact(toggled: boolean) {
       if (toggled !== this.compact) {
@@ -140,11 +142,11 @@ export default defineComponent({
         GTagEvent(this.$gtag, toggled ? 'to-compact' : 'to-not-compact');
       }
     },
-    openSemesterConfirmationModal(type: FirestoreSemesterType, year: number, isAdd: boolean) {
+    openSemesterConfirmationModal(season: FirestoreSemesterSeason, year: number, isAdd: boolean) {
       if (isAdd) {
-        this.confirmationText = `Added ${type} ${year} to plan`;
+        this.confirmationText = `Added ${season} ${year} to plan`;
       } else {
-        this.confirmationText = `Deleted ${type} ${year} from plan`;
+        this.confirmationText = `Deleted ${season} ${year} from plan`;
       }
 
       this.isSemesterConfirmationOpen = true;
@@ -159,13 +161,13 @@ export default defineComponent({
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
     },
-    addSemester(type: string, year: number) {
-      addSemester(type as FirestoreSemesterType, year, this.$gtag);
-      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, true);
+    addSemester(season: string, year: number) {
+      addSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, true);
     },
-    deleteSemester(type: string, year: number) {
-      deleteSemester(type as FirestoreSemesterType, year, this.$gtag);
-      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, false);
+    deleteSemester(season: string, year: number) {
+      deleteSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.activatedCourse = course;

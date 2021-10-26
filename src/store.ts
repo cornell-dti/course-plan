@@ -5,8 +5,9 @@ import getCourseEquivalentsFromUserExams from './requirements/data/exams/ExamCre
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
-import getCurrentSeason, {
-  sorted,
+import {
+  sortedSemesters,
+  getCurrentSeason,
   checkNotNull,
   getCurrentYear,
   allocateAllSubjectColor,
@@ -129,7 +130,14 @@ const store: TypedVuexStore = new TypedVuexStore({
       state.orderByNewest = orderByNewest;
     },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
-      state.semesters = sorted(semesters, state.orderByNewest);
+      // TODO @bshen remove .map & write migration script when every dev pulls from master
+      state.semesters = sortedSemesters(
+        semesters.map(sem => {
+          if (sem.season) return sem;
+          return { ...sem, season: sem.season || sem.type }; // sem.season is necessary for type check
+        }),
+        state.orderByNewest
+      );
     },
     setDerivedCourseData(state: VuexStoreState, data: DerivedCoursesData) {
       state.derivedCoursesData = data;
@@ -195,7 +203,7 @@ const store: TypedVuexStore = new TypedVuexStore({
 const autoRecomputeDerivedData = (): (() => void) =>
   store.subscribe((payload, state) => {
     if (payload.type === 'setOrderByNewest') {
-      store.commit('setSemesters', sorted(state.semesters, state.orderByNewest));
+      store.commit('setSemesters', sortedSemesters(state.semesters, state.orderByNewest));
     }
     // Recompute courses
     if (payload.type === 'setSemesters') {
@@ -392,15 +400,16 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         // if user hasn't yet chosen an ordering, choose true by default
         store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
       } else {
-        const newSemeter: FirestoreSemester = {
-          type: getCurrentSeason(),
+        const newSemester: FirestoreSemester = {
           year: getCurrentYear(),
+          type: getCurrentSeason(), // TODO @bshen remove & write migration script when every dev pulls from master
+          season: getCurrentSeason(),
           courses: [],
         };
-        store.commit('setSemesters', [newSemeter]);
+        store.commit('setSemesters', [newSemester]);
         fb.semestersCollection.doc(simplifiedUser.email).set({
           orderByNewest: true,
-          semesters: [newSemeter],
+          semesters: [newSemester],
         });
       }
       semestersInitialLoadFinished = true;

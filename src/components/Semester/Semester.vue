@@ -17,22 +17,20 @@
     <delete-semester
       @delete-semester="deleteSemester"
       @close-delete-sem="closeDeleteSemesterModal"
-      :deleteSemType="type"
+      :deleteSemSeason="season"
       :deleteSemYear="year"
       v-if="isDeleteSemesterOpen"
     />
     <edit-semester
       @edit-semester="editSemester"
       @close-edit-sem="closeEditSemesterModal"
-      :deleteSemType="type"
+      :deleteSemSeason="season"
       :deleteSemYear="year"
       v-if="isEditSemesterOpen"
     />
     <clear-semester
       @clear-semester="clearSemester"
       @close-clear-sem="closeClearSemesterModal"
-      :clearSemType="type"
-      :clearSemYear="year"
       v-if="isClearSemesterOpen"
     />
     <button
@@ -47,7 +45,8 @@
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
           <span class="semester-name" data-cyId="semesterName"
-            ><img class="season-emoji" :src="seasonImg[type]" alt="" /> {{ type }} {{ year }}</span
+            ><img class="season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
+            {{ year }}</span
           >
           <span class="semester-credits">{{ creditString }}</span>
         </div>
@@ -182,8 +181,8 @@ export default defineComponent({
   },
   props: {
     semesterIndex: { type: Number, required: true },
-    type: {
-      type: String as PropType<FirestoreSemesterType>,
+    season: {
+      type: String as PropType<FirestoreSemesterSeason>,
       required: true,
     },
     year: { type: Number, required: true },
@@ -201,8 +200,8 @@ export default defineComponent({
   emits: {
     'new-semester': () => true,
     'course-onclick': (course: FirestoreSemesterCourse) => typeof course === 'object',
-    'delete-semester': (type: string, year: number) =>
-      typeof type === 'string' && typeof year === 'number',
+    'delete-semester': (season: string, year: number) =>
+      typeof season === 'string' && typeof year === 'number',
   },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, {
@@ -230,7 +229,7 @@ export default defineComponent({
         const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
         editSemester(
           this.year,
-          this.type,
+          this.season,
           (semester: FirestoreSemester): FirestoreSemester => ({
             ...semester,
             courses,
@@ -327,20 +326,20 @@ export default defineComponent({
     },
     addCourse(data: CornellCourseRosterCourse, requirementID: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      addCourseToSemester(this.type, this.year, newCourse, requirementID, this.$gtag);
+      addCourseToSemester(this.year, this.season, newCourse, requirementID, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
-      this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
+      this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
-      deleteCourseFromSemester(this.type, this.year, uniqueID, this.$gtag);
+      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
       // Update requirements menu
-      this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
+      this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
     },
     colorCourse(color: string, uniqueID: number) {
       editSemester(
         this.year,
-        this.type,
+        this.season,
         (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
@@ -355,7 +354,7 @@ export default defineComponent({
     editCourseCredit(credit: number, uniqueID: number) {
       editSemester(
         this.year,
-        this.type,
+        this.season,
         (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
@@ -391,9 +390,9 @@ export default defineComponent({
     closeDeleteSemesterModal() {
       this.isDeleteSemesterOpen = false;
     },
-    deleteSemester(type: string, year: number) {
-      this.$emit('delete-semester', type, year);
-      this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
+    deleteSemester(season: string, year: number) {
+      this.$emit('delete-semester', season, year);
+      this.openConfirmationModal(`Deleted ${season} ${year} from plan`);
     },
     openEditSemesterModal() {
       this.isEditSemesterOpen = true;
@@ -404,10 +403,10 @@ export default defineComponent({
     editSemester(seasonInput: string, yearInput: number) {
       editSemester(
         this.year,
-        this.type,
+        this.season,
         (oldSemester: FirestoreSemester): FirestoreSemester => ({
           ...oldSemester,
-          type: seasonInput as FirestoreSemesterType,
+          season: seasonInput as FirestoreSemesterSeason,
           year: yearInput,
         })
       );
@@ -418,9 +417,9 @@ export default defineComponent({
     closeClearSemesterModal() {
       this.isClearSemesterOpen = false;
     },
-    clearSemester(type: string, year: number) {
-      deleteAllCoursesFromSemester(this.type, this.year, this.$gtag);
-      this.openConfirmationModal(`Cleared ${type} ${year} in plan`);
+    clearSemester() {
+      deleteAllCoursesFromSemester(this.year, this.season, this.$gtag);
+      this.openConfirmationModal(`Cleared ${this.season} ${this.year} in plan`);
     },
     walkthroughText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Add Classes to your Schedule</div><div class="introjs-customProgress">3/4</div>

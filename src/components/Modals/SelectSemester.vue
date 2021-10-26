@@ -32,18 +32,18 @@
           >
             <div
               :class="{ warning: isDuplicate }"
-              v-for="season in seasons"
-              :key="season[1]"
+              v-for="s in seasons"
+              :key="s[1]"
               class="selectSemester-dropdown-content-item"
-              @click="selectSeason(season[1])"
+              @click="selectSeason(s[1])"
               data-cyId="newSemester-seasonItem"
             >
               <img
-                :src="season[0]"
+                :src="s[0]"
                 class="selectSemester-dropdown-content-season"
-                :alt="`${season[1]} icon`"
+                :alt="`${s[1]} icon`"
               />
-              {{ season[1] }}
+              {{ s[1] }}
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { clickOutside } from '@/utilities';
+import { getCurrentSeason, clickOutside } from '@/utilities';
 import store from '@/store';
 
 import fall from '@/assets/images/fallEmoji.svg';
@@ -115,7 +115,7 @@ type DisplayOption = {
 };
 
 type Data = {
-  readonly seasons: readonly (readonly [string, FirestoreSemesterType])[];
+  readonly seasons: readonly (readonly [string, FirestoreSemesterSeason])[];
   readonly years: readonly number[];
   seasonText: string;
   yearText: number;
@@ -135,7 +135,7 @@ export default defineComponent({
     },
     isEdit: { type: Boolean, default: false },
     year: { type: Number, default: 0 },
-    type: { type: String as PropType<FirestoreSemesterType>, default: '' },
+    season: { type: String as PropType<FirestoreSemesterSeason>, default: '' },
     isCourseModelSelectingSemester: { type: Boolean, default: false },
   },
   emits: {
@@ -146,7 +146,7 @@ export default defineComponent({
   data(): Data {
     // years
     const currentYear = new Date().getFullYear();
-    const seasons: readonly (readonly [string, FirestoreSemesterType])[] = [
+    const seasons: readonly (readonly [string, FirestoreSemesterSeason])[] = [
       [fall, 'Fall'],
       [spring, 'Spring'],
       [summer, 'Summer'],
@@ -187,11 +187,11 @@ export default defineComponent({
   computed: {
     seasonPlaceholder(): string {
       // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
-      let defaultSeason: string = this.getCurrentSeason();
+      let defaultSeason: string = getCurrentSeason();
       if (this.isCourseModelSelectingSemester) {
         defaultSeason = 'Select';
       }
-      return this.seasonText || this.type || defaultSeason;
+      return this.seasonText || this.season || defaultSeason;
     },
     yearPlaceholder(): string {
       let defaultYear = String(new Date().getFullYear());
@@ -215,20 +215,6 @@ export default defineComponent({
     this.$emit('updateSemProps', this.seasonPlaceholder, Number(this.yearPlaceholder));
   },
   methods: {
-    getCurrentSeason(): FirestoreSemesterType {
-      let currentSeason: FirestoreSemesterType;
-      const currentMonth = new Date().getMonth();
-      if (currentMonth === 0) {
-        currentSeason = 'Winter';
-      } else if (currentMonth <= 4) {
-        currentSeason = 'Spring';
-      } else if (currentMonth <= 7) {
-        currentSeason = 'Summer';
-      } else {
-        currentSeason = 'Fall';
-      }
-      return currentSeason;
-    },
     showHideContent(type: 'season' | 'year') {
       const displayOptions = this.displayOptions[type];
       const contentShown = displayOptions.shown;
@@ -301,13 +287,13 @@ export default defineComponent({
         semesters.forEach(semester => {
           if (
             semester.year === Number(this.yearPlaceholder) &&
-            semester.type === this.seasonPlaceholder
+            semester.season === this.seasonPlaceholder
           ) {
             if (
               !this.isEdit ||
               (this.isEdit &&
                 (Number(this.yearPlaceholder) !== this.year ||
-                  this.seasonPlaceholder !== this.type))
+                  this.seasonPlaceholder !== this.season))
             ) {
               isDup = true;
             }

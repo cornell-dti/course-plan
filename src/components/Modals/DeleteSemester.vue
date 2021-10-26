@@ -25,13 +25,13 @@ import trashIcon from '@/assets/images/trash-white.svg';
 export default defineComponent({
   components: { TeleportModal },
   props: {
-    deleteSemType: { type: String, required: true },
+    deleteSemSeason: { type: String, required: true },
     deleteSemYear: { type: Number, required: true },
   },
   emits: {
     'close-delete-sem': () => true,
-    'delete-semester': (type: string, year: number) =>
-      typeof type === 'string' && typeof year === 'number',
+    'delete-semester': (season: string, year: number) =>
+      typeof season === 'string' && typeof year === 'number',
   },
   computed: {
     text() {
@@ -46,7 +46,7 @@ export default defineComponent({
       this.$emit('close-delete-sem');
     },
     deleteSemester() {
-      this.$emit('delete-semester', this.deleteSemType, this.deleteSemYear);
+      this.$emit('delete-semester', this.deleteSemSeason, this.deleteSemYear);
       this.closeCurrentModal();
     },
   },

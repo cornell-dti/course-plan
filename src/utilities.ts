@@ -15,15 +15,15 @@ export const SeasonOrdinal = {
  * @param orderByNewest whether to sort the semesters in decreasing order
  * @returns semesters sorted according to orderByNewest
  */
-export const sorted = (
+export const sortedSemesters = (
   semesters: readonly FirestoreSemester[],
-  orderByNewest: boolean
+  orderByNewest = true
 ): readonly FirestoreSemester[] =>
   semesters.slice().sort((a, b) => {
     // sort in increasing order iff orderByNewest is false, increasing otherwise
     const order = orderByNewest ? -1 : 1;
     const byYear = a.year - b.year;
-    return order * (byYear === 0 ? SeasonOrdinal[a.type] - SeasonOrdinal[b.type] : byYear);
+    return order * (byYear === 0 ? SeasonOrdinal[a.season] - SeasonOrdinal[b.season] : byYear);
   });
 
 export function checkNotNull<T>(value: T | null | undefined): T {
@@ -31,20 +31,12 @@ export function checkNotNull<T>(value: T | null | undefined): T {
   return value;
 }
 
-export default function getCurrentSeason(): FirestoreSemesterType {
+export function getCurrentSeason(): FirestoreSemesterSeason {
   const currentMonth = new Date().getMonth();
   if (currentMonth === 0) return 'Winter';
   if (currentMonth <= 4) return 'Spring';
   if (currentMonth <= 7) return 'Summer';
   return 'Fall';
-}
-
-export function getCurrentType(): 'WI' | 'SP' | 'SU' | 'FA' {
-  const currentMonth = new Date().getMonth();
-  if (currentMonth === 0) return 'WI';
-  if (currentMonth <= 4) return 'SP';
-  if (currentMonth <= 7) return 'SU';
-  return 'FA';
 }
 
 export function getCurrentYear(): number {
