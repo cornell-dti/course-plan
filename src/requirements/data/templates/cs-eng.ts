@@ -1,19 +1,21 @@
 const csEngTemplate: readonly MajorTemplate[] = [
   {
-    source: 'EN',
+    reqGroup: 'EN',
     name: 'Mathematics',
     templateSemesters: [1, 2, 3],
   },
   {
-    source: 'CS',
+    reqGroup: 'CS',
     name: 'Introductory Programming',
     templateSemesters: [1, 3],
   },
   {
+    reqGroup: 'CS',
     name: 'Computer Science Core',
     templateSemesters: [3, 5, 4, 6, 7],
   },
   {
+    reqGroup: 'CS',
     name: 'CS Electives',
     templateSemesters: [6, 7, 8],
   },
