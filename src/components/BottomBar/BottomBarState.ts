@@ -6,7 +6,6 @@ import {
   cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
   firestoreSemesterCourseToBottomBarCourse,
 } from '../../user-data-converter';
-import { reviewColors } from '@/assets/constants/colors';
 
 export type BottomBarState = {
   bottomCourses: readonly AppBottomBarCourse[];
