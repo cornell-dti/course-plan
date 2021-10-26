@@ -11,20 +11,20 @@
             :columnWide="true"
             :availableOptions="getSelectableOptions(exams, subjects, exam.subject)"
             :choice="exam.subject"
-            @on-select="subject => selectSubject(subject, index)"
+            @on-select="subject => $emit('on-subject-select', subject, index)"
           />
           <onboarding-transfer-exam-property-dropdown
-            v-if="scoresDropdown"
+            v-if="scores"
             property-name="Score"
             :columnWide="false"
-            :availableOptions="scoresDropdown.scores"
+            :availableOptions="scores"
             :choice="exam.score"
-            @on-select="score => onSelect(score, index)"
+            @on-select="score => $emit('on-score-select', score, index)"
           />
           <div class="onboarding-select--column-removeExam">
             <button
               class="onboarding-remove"
-              @click="removeExam(examName, index)"
+              @click="$emit('on-remove', examName, index)"
               v-if="hasExams(exams, exam)"
             >
               <img
@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="onboarding-addRemoveWrapper">
-        <button class="onboarding-add" @click="addExam(examName)">+ another subject</button>
+        <button class="onboarding-add" @click="$emit('on-add', examName)">+ another subject</button>
       </div>
     </div>
   </div>
@@ -49,31 +49,18 @@ import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamProp
 /** Represents an exam one can take for transfer credit */
 type Exam = 'AP' | 'IB';
 
-type GetSelectableOptions = (
-  selectedExams: readonly FirestoreAPIBExam[],
-  allSubjects: readonly string[],
-  choice: string
-) => string[];
-
-type SelectSubject = (subject: string, i: number) => void;
-
-/** Represents the information needed to represent a score dropdown menu */
-type ScoreDropdown = {
-  /** The scores achievable on the test */
-  readonly scores: readonly number[];
-  /** A callback to execute upon selection of a score */
-  readonly selectScore: (score: number, index: number) => void;
-};
-
-type RemoveExam = (name: Exam, index: number) => void;
-
-type HasExams = (exams: readonly FirestoreAPIBExam[], exam: FirestoreAPIBExam) => boolean;
-
-type AddExam = (name: Exam) => void;
-
 export default defineComponent({
   components: {
     OnboardingTransferExamPropertyDropdown,
+  },
+  emits: {
+    'on-subject-select': (subject: string, index: number) =>
+      typeof subject === 'string' && typeof index === 'number',
+    'on-score-select': (score: number, index: number) =>
+      typeof score === 'number' && typeof index === 'number',
+    'on-remove': (name: Exam, index: number) =>
+      typeof name === 'string' && typeof index === 'number',
+    'on-add': (name: Exam) => typeof name === 'string',
   },
   props: {
     examName: { type: String as PropType<Exam>, required: true },
@@ -85,35 +72,41 @@ export default defineComponent({
       type: Array as PropType<readonly string[]>,
       required: true,
     },
-    getSelectableOptions: {
-      type: Function as PropType<GetSelectableOptions>,
-      required: true,
-    },
-    selectSubject: {
-      type: Function as PropType<SelectSubject>,
-      required: true,
-    },
-    scoresDropdown: {
-      type: Object as PropType<ScoreDropdown>,
+    scores: {
+      type: Array as PropType<readonly number[]>,
       required: false,
       default: undefined,
     },
-    removeExam: {
-      type: Function as PropType<RemoveExam>,
-      required: true,
-    },
-    hasExams: {
-      type: Function as PropType<HasExams>,
-      required: true,
-    },
-    addExam: {
-      type: Function as PropType<AddExam>,
+    placeholderText: {
+      type: String,
       required: true,
     },
   },
   methods: {
-    onSelect(score: number, index: number) {
-      if (this.scoresDropdown) this.scoresDropdown.selectScore(score, index);
+    getSelectableOptions(
+      // exams already picked
+      selectedExams: readonly FirestoreAPIBExam[],
+      // array of ap/ib exams
+      allSubjects: readonly string[],
+      choice: string
+    ) {
+      const selectedExamsNames = selectedExams.map(exam => exam.subject);
+      const selectableOptions: string[] = [];
+      // copy all of the possible options over but exclude already selected ones
+      for (const subject of allSubjects) {
+        // don't include selected ones
+        if (!selectedExamsNames.includes(subject)) {
+          selectableOptions.push(subject);
+        }
+      }
+      // add the current selection associated with this input into the availableChoices
+      if (choice !== this.placeholderText) {
+        selectableOptions.push(choice);
+      }
+      return selectableOptions;
+    },
+    hasExams(exams: readonly FirestoreAPIBExam[], exam: FirestoreAPIBExam): boolean {
+      return !(exams.length === 1 && exam.subject === this.placeholderText);
     },
   },
 });
