@@ -9,13 +9,26 @@
 before('Delete test user data, then visit site and log in', () => {
   // log the user in
   cy.visit('localhost:8080/login');
-  cy.login(Cypress.env('TEST_UID'));
+
+  cy.login(Cypress.env('TEST_UID'))
+    // eslint-disable-next-line no-console
+    .then(result => console.log('1', result))
+    // eslint-disable-next-line no-console
+    .catch(error => console.log('1', error));
 
   // delete user-onboarding-data for TEST_EMAIL
   // note that this delete will break if the collection is ever renamed
   const TEST_EMAIL = 'courseplan.cornelldti.test@gmail.com';
-  cy.callFirestore('delete', `user-onboarding-data/${TEST_EMAIL}`);
-  cy.callFirestore('delete', `user-semesters/${TEST_EMAIL}`);
+  cy.callFirestore('delete', `user-onboarding-data/${TEST_EMAIL}`)
+    // eslint-disable-next-line no-console
+    .then(result => console.log('2', result))
+    // eslint-disable-next-line no-console
+    .catch(error => console.log('2', error));
+  cy.callFirestore('delete', `user-semesters/${TEST_EMAIL}`)
+    // eslint-disable-next-line no-console
+    .then(result => console.log('3', result))
+    // eslint-disable-next-line no-console
+    .catch(error => console.log('3', error));
 
   // visit the site
   cy.visit('localhost:8080');
