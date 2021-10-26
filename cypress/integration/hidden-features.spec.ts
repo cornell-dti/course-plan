@@ -14,6 +14,13 @@ before('Delete test user data, then visit site and log in', () => {
     // eslint-disable-next-line no-console
     .then(result => cy.log('1', result));
 
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(10000); // ensure the page has time to load
+});
+
+// Test to go through the onboarding flow
+// Confirm that the next button cannot be clicked until all required fields have been filled out (as the user has no previous data)
+it('Onboard a new user with all required fields', () => {
   // delete user-onboarding-data for TEST_EMAIL
   // note that this delete will break if the collection is ever renamed
   const TEST_EMAIL = 'courseplan.cornelldti.test@gmail.com';
@@ -32,13 +39,6 @@ before('Delete test user data, then visit site and log in', () => {
   // visit the site
   cy.visit('localhost:8080');
 
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(5000); // ensure the page has time to load
-});
-
-// Test to go through the onboarding flow
-// Confirm that the next button cannot be clicked until all required fields have been filled out (as the user has no previous data)
-it('Onboard a new user with all required fields', () => {
   // confirm the next button is disabled and the error text is visible until all required fields filled out
   cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
