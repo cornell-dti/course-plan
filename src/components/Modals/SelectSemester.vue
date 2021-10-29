@@ -97,7 +97,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { getCurrentSeason, clickOutside } from '@/utilities';
+import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 import store from '@/store';
 
 import fall from '@/assets/images/fallEmoji.svg';
@@ -145,7 +145,7 @@ export default defineComponent({
   },
   data(): Data {
     // years
-    const currentYear = new Date().getFullYear();
+    const currentYear = getCurrentYear();
     const seasons: readonly (readonly [string, FirestoreSemesterSeason])[] = [
       [fall, 'Fall'],
       [spring, 'Spring'],
@@ -194,7 +194,7 @@ export default defineComponent({
       return this.seasonText || this.season || defaultSeason;
     },
     yearPlaceholder(): string {
-      let defaultYear = String(new Date().getFullYear());
+      let defaultYear = String(getCurrentYear());
       if (this.isCourseModelSelectingSemester) {
         defaultYear = 'Select';
       }

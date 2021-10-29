@@ -6,11 +6,11 @@ import computeGroupedRequirementFulfillmentReports from './requirements/requirem
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
 import {
-  sortedSemesters,
-  getCurrentSeason,
-  checkNotNull,
-  getCurrentYear,
   allocateAllSubjectColor,
+  checkNotNull,
+  getCurrentSeason,
+  getCurrentYear,
+  sortedSemesters,
 } from './utilities';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
