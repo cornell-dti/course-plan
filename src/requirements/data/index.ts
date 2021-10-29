@@ -64,6 +64,7 @@ import psychMinorRequirements from './minors/psych';
 import roboticsMinorRequirements from './minors/robotics';
 import spanishMinorRequirements from './minors/spanish';
 
+import mengCSRequirements from './grad/meng-cs';
 import mpaRequirements from './grad/mpa';
 
 const json: RequirementsJson = {
@@ -377,8 +378,13 @@ const json: RequirementsJson = {
     },
   },
   grad: {
+    MENGCS: {
+      name: 'Master of Engineering (MEng) in Computer Science',
+      schools: ['EN'],
+      requirements: mengCSRequirements,
+    },
     MPA: {
-      name: 'Master of Public Administration (MPA) Program',
+      name: 'Master of Public Administration (MPA)',
       schools: ['HE'],
       requirements: mpaRequirements,
     },
