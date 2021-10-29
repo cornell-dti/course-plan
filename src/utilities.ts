@@ -43,12 +43,6 @@ export function getCurrentYear(): number {
   return new Date().getFullYear();
 }
 
-export function getCurrentYearSuffix(): string {
-  // If current year is 2020, get string '20'
-  const currentYear = new Date().getFullYear();
-  return currentYear.toString().substring(2);
-}
-
 export function getCollegeFullName(acronym: string | undefined): string {
   // Return empty string if college is not in requirementJSON
   const college = acronym ? requirementJSON.college[acronym] : null;
