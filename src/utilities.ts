@@ -44,9 +44,8 @@ export function getCurrentYear(): number {
 }
 
 export function getCurrentYearSuffix(): string {
-  // If current year is 2020, get string '20'
-  const currentYear = new Date().getFullYear();
-  return currentYear.toString().substring(2);
+  // If current year is 2021, get string '21'
+  return String(getCurrentYear()).substring(2);
 }
 
 export function getCollegeFullName(acronym: string | undefined): string {
