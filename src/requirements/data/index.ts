@@ -64,7 +64,7 @@ import psychMinorRequirements from './minors/psych';
 import roboticsMinorRequirements from './minors/robotics';
 import spanishMinorRequirements from './minors/spanish';
 
-import mengCSRequirements from './grad/meng-cs';
+// import mengCSRequirements from './grad/meng-cs';
 import mpaRequirements from './grad/mpa';
 
 const json: RequirementsJson = {
