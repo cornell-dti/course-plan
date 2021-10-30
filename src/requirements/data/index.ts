@@ -384,7 +384,7 @@ const json: RequirementsJson = {
       requirements: mengCSRequirements,
     },
     MPA: {
-      name: 'Master of Public Administration (MPA)',
+      name: 'Master of Public Administration (MPA) Program',
       schools: ['HE'],
       requirements: mpaRequirements,
     },
