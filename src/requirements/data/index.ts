@@ -378,11 +378,13 @@ const json: RequirementsJson = {
     },
   },
   grad: {
+    /* TODO add back after undergrad-grad constraints are implemented
     MENGCS: {
-      name: 'Master of Engineering (MEng) in Computer Science',
+      name: 'MEng in Computer Science',
       schools: ['EN'],
       requirements: mengCSRequirements,
     },
+    */
     MPA: {
       name: 'Master of Public Administration (MPA) Program',
       schools: ['HE'],
