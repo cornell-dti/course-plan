@@ -100,8 +100,9 @@ const mengCSRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Total Credits',
     description:
       'Any work that contributes to these 30 credits must begin after entering the M.Eng program. ' +
-      'At least 28 credits must be taken for a letter grade. ' +
-      'For courses co-listed at the 4000 and 5000 levels, M.Eng students must enroll in the 5000 level version.',
+      'None of the 30 credits may be counted toward any other degree program. ' +
+      'No more than 21 credits can be taken in one semester. ' +
+      'At least 28 credits must be taken for a letter grade. ',
     source: 'https://www.cs.cornell.edu/masters/academics/preapprovedcourses',
     checker: [
       (course: Course): boolean =>
@@ -110,7 +111,6 @@ const mengCSRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'credits',
     perSlotMinCount: [30],
     allowCourseDoubleCounting: true,
-    disallowTransferCredit: true,
   },
   {
     name: 'Project',

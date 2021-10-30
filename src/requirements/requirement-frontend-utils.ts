@@ -78,8 +78,6 @@ export function requirementAllowDoubleCounting(
 ): boolean {
   // All minor requirements are automatically double-countable.
   if (requirement.sourceType === 'Minor') return true;
-  // All grad program requirements are automatically not double-countable.
-  if (requirement.sourceType === 'Grad') return false;
   if (requirement.sourceType === 'Major') {
     if (majors == null) throw new Error("shouldn't get here since we have major requirements!");
     // If it's not the first major, then it's double countable.
