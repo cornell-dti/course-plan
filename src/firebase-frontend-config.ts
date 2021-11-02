@@ -39,6 +39,7 @@ firebase.initializeApp(config);
 // firebase utils
 export const db = firebase.firestore();
 export const auth = firebase.auth();
+export const functions = firebase.functions();
 
 export const usernameCollection = db
   .collection('user-name')
