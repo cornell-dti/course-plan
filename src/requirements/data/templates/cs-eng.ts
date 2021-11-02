@@ -1,56 +1,86 @@
-const csEngTemplate: readonly MajorTemplate[] = [
+import { PlaceholdersForRequirement } from '@/requirements/types';
+
+const csEngTemplate: readonly PlaceholdersForRequirement[] = [
+  {
+    reqGroup: 'UNI',
+    name: 'Physical Education',
+    placeholderSemesters: [1, 2],
+  },
   {
     reqGroup: 'EN',
     name: 'Mathematics',
-    templateSemesters: [1, 2, 3],
+    placeholderSemesters: [1, 2, 3],
+  },
+  {
+    reqGroup: 'EN',
+    name: 'Physics',
+    placeholderSemesters: [2, 3],
+  },
+  {
+    reqGroup: 'EN',
+    name: 'Chemistry',
+    placeholderSemesters: [1],
+  },
+  {
+    reqGroup: 'EN',
+    name: 'First-Year Writing Seminars',
+    placeholderSemesters: [1, 2],
+  },
+  // TODO: can probably remove the computing requirement from the template as Introductory Programming will cover it.
+  {
+    reqGroup: 'EN',
+    name: 'Computing',
+    placeholderSemesters: [1],
+  },
+  {
+    reqGroup: 'EN',
+    name: 'Introduction to Engineering',
+    placeholderSemesters: [2],
+  },
+  {
+    reqGroup: 'EN',
+    name: 'Liberal Studies: 6 courses',
+    placeholderSemesters: [3, 4, 5, 6, 7, 8],
+  },
+  {
+    reqGroup: 'EN',
+    name: 'Advisor-Approved Electives',
+    placeholderSemesters: [5, 6],
   },
   {
     reqGroup: 'CS',
     name: 'Introductory Programming',
-    templateSemesters: [1, 3],
+    placeholderSemesters: [1, 3],
   },
   {
     reqGroup: 'CS',
     name: 'Computer Science Core',
-    templateSemesters: [3, 5, 4, 6, 7],
-  },
-  // more complex version of above to handle edge cases if desired 
-  // (incomplete templates, different checkers)
-  {
-    reqGroup: 'CS',
-    name: 'Computer Science Core',
-    templateSemesters: {
-      "3": { 
-        slotName: "CS 2800 or CS 2802", 
-        checker?: newCheckerForSlot, 
-        placeholderName?: "CS 280X" }
-      ...
-    },
+    placeholderSemesters: [3, 5, 4, 6, 7],
   },
   {
     reqGroup: 'CS',
     name: 'CS Electives',
-    templateSemesters: [6, 7, 8],
+    placeholderSemesters: [6, 7, 8],
   },
   {
+    reqGroup: 'CS',
     name: 'CS Practicum or Project',
-    templateSemesters: [8],
+    placeholderSemesters: [8],
   },
   {
+    reqGroup: 'CS',
     name: 'Technical Electives',
-    templateSemesters: [5, 6, 7],
+    placeholderSemesters: [5, 6, 7],
   },
   {
+    reqGroup: 'CS',
     name: 'External Specialization',
-    templateSemesters: [5, 7, 8],
+    placeholderSemesters: [5, 7, 8],
   },
   {
+    reqGroup: 'CS',
     name: 'Major-approved Elective(s)',
-    templateSemesters: [4],
-  },
-  {
-    name: 'Probability',
-    templateSemesters: [],
+    placeholderSemesters: [4],
   },
 ];
 

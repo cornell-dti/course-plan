@@ -43,6 +43,7 @@ export type DecoratedRequirementsJson = {
   readonly grad: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
 };
 
+/* Type that represents a set of placeholders for a given requirement */
 export type PlaceholdersForRequirement = {
   /**
    * Acronym representing the unviersity/college/major the requirement is located in.
@@ -53,7 +54,7 @@ export type PlaceholdersForRequirement = {
   readonly name: string;
   /**
    * Semesters for which placeholders representing req name should be placed in, indexed starting at 1.
-   * Each element in semestersWithPlaceholders corresponds to the element with the same index in perSlotMinCount.
+   * Each element in placeholderSemesters corresponds to the element with the same index in perSlotMinCount.
    */
-  readonly semestersWithPlaceholders: number[];
+  readonly placeholderSemesters: number[];
 };
