@@ -35,15 +35,11 @@
           <button
             v-for="(color, index) in colors"
             :key="index"
-            class="courseMenu-section full-opacity-on-hover"
+            class="courseMenu-color full-opacity-on-hover"
             @click="colorCourse(color)"
           >
             <div class="courseMenu-left">
-              <div
-                class="courseMenu-icon courseMenu-icon--color"
-                :style="{ backgroundColor: color.hex }"
-              ></div>
-              <span class="courseMenu-text">{{ color.text }}</span>
+              <div class="courseMenu-color--icon" :style="{ backgroundColor: color.hex }"></div>
             </div>
           </button>
         </div>
@@ -262,23 +258,34 @@ export default defineComponent({
   &-icon {
     margin-right: 1rem;
 
-    &--color {
-      width: 16px;
-      height: 16px;
-    }
-
     &--left {
       margin-right: 0.25rem;
     }
   }
+
+  &-color {
+    padding: 0px 3px 10px 3px;
+
+    &--icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+      &:hover {
+        box-shadow: 0px 0px 2px black;
+      }
+    }
+  }
+
   &-colors {
     position: absolute;
+    padding: 10px 5px 0px 5px;
     right: -9rem;
 
     &--left {
       right: 8.87rem;
     }
   }
+
   &-editCredits {
     position: absolute;
     width: 2.75rem;
