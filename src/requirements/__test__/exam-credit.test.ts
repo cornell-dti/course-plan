@@ -1,7 +1,7 @@
 import getCourseEquivalentsFromUserExams, {
   ExamsTaken,
   getCourseEquivalentsFromOneMajor,
-} from '../data/exams/ExamCredit';
+} from '../requirement-exam-utils';
 import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID } from '../data/constants';
 
 /**
