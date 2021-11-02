@@ -123,7 +123,7 @@ export default defineComponent({
     subjectsIB(): string[] {
       const currentSubjects = new Set(this.examsIB.map(exam => exam.subject));
       return examSubjects.IB.filter(subject => !currentSubjects.has(subject));
-    }
+    },
   },
   methods: {
     getTransferClassSearchboxPlaceholder(text: string): string {
