@@ -180,10 +180,10 @@ export function getFirestoreCourseOptInOptOutChoicesBuilder(
    * | (has warning)    |                                        |                                   |
    */
   return function builder(course) {
-    const connectedRequirementsWithDoubleCountingAccounted = graphWithDoubleCountingAccounted.getConnectedRequirementsFromCourse(
+    const requirementsWithDoubleCountingRemoved = graphWithDoubleCountingAccounted.getConnectedRequirementsFromCourse(
       course
     );
-    const connectedRequirementsWithoutDoubleCountingAccounted = graphWithoutDoubleCountingAccounted.getConnectedRequirementsFromCourse(
+    const allRelevantRequirements = graphWithoutDoubleCountingAccounted.getConnectedRequirementsFromCourse(
       course
     );
     /**
@@ -198,8 +198,8 @@ export function getFirestoreCourseOptInOptOutChoicesBuilder(
      * ) == all requirements that course can be used to satisfy
      * ```
      */
-    const complementary = new Set(connectedRequirementsWithoutDoubleCountingAccounted);
-    connectedRequirementsWithDoubleCountingAccounted.forEach(r => complementary.delete(r));
+    const complementary = new Set(allRelevantRequirements);
+    requirementsWithDoubleCountingRemoved.forEach(r => complementary.delete(r));
 
     // We only need to explicitly opt-out of requirements without checker warnings, since requirement
     // with checker warnings need to be explicitly opt-in.
@@ -209,7 +209,7 @@ export function getFirestoreCourseOptInOptOutChoicesBuilder(
     // Find requirements with checker warnings that needs to be explictly opt-in.
     const acknowledgedCheckerWarningOptIn = courseIsAPIB(course)
       ? []
-      : connectedRequirementsWithDoubleCountingAccounted.filter(
+      : requirementsWithDoubleCountingRemoved.filter(
           it => userRequirementsMap[it].checkerWarning != null
         );
 
