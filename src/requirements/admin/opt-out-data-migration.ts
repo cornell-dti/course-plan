@@ -39,14 +39,14 @@ async function runOnUser(userEmail: string) {
 }
 
 async function main() {
-  let userEmail = process.argv[2];
-  if (userEmail != null) {
-    await runOnUser(userEmail);
+  const userEmailFromArgument = process.argv[2];
+  if (userEmailFromArgument != null) {
+    await runOnUser(userEmailFromArgument);
     return;
   }
   const collection = await usernameCollection.get();
   const userEmails = collection.docs.map(it => it.id);
-  for (userEmail of userEmails) {
+  for (const userEmail of userEmails) {
     console.group(`Running on ${userEmail}...`);
     try {
       // Intentionally await in a loop to have no interleaved console logs.
