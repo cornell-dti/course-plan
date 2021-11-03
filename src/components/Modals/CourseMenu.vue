@@ -6,12 +6,6 @@
         @mouseover="setDisplayColors(true)"
         @mouseleave="setDisplayColors(false)"
       >
-        <img
-          v-if="isLeft"
-          class="courseMenu-arrow"
-          src="@/assets/images/sidearrowleft.svg"
-          alt="arrow to expand edit course color"
-        />
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -21,7 +15,6 @@
           <span class="courseMenu-text">Edit Color</span>
         </div>
         <img
-          v-if="!isLeft"
           class="courseMenu-arrow"
           src="@/assets/images/sidearrow.svg"
           alt="arrow to expand edit course color"
@@ -62,12 +55,6 @@
         @mouseleave="setDisplayEditCourseCredits(false)"
         v-if="getCreditRange && getCreditRange[0] != getCreditRange[1]"
       >
-        <img
-          v-if="isLeft"
-          class="courseMenu-arrow"
-          src="@/assets/images/sidearrowleft.svg"
-          alt="arrow to expand edit course credits"
-        />
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -78,7 +65,6 @@
           <span class="courseMenu-text">Edit Credits</span>
         </div>
         <img
-          v-if="!isLeft"
           class="courseMenu-arrow"
           src="@/assets/images/sidearrow.svg"
           alt="arrow to expand edit course credits"
@@ -100,11 +86,7 @@
           </div>
         </div>
       </div>
-      <button
-        class="courseMenu-section full-opacity-on-hover"
-        :class="{ 'courseMenu-section--left': isLeft }"
-        @click="deleteCourse"
-      >
+      <button class="courseMenu-section full-opacity-on-hover" @click="deleteCourse">
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -277,10 +259,10 @@ export default defineComponent({
   }
 
   &-icon {
-    margin-right: 1rem;
+    margin-right: 0.75rem;
 
     &--left {
-      margin-right: 0.25rem;
+      margin-right: 0.75rem;
     }
   }
 
