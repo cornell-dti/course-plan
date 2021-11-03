@@ -37,9 +37,14 @@
             :key="index"
             class="courseMenu-color full-opacity-on-hover"
             @click="colorCourse(color)"
+            @mouseover="setDisplayColorTooltip(true, color.text)"
+            @mouseleave="setDisplayColorTooltip(false, color.text)"
           >
             <div class="courseMenu-left">
               <div class="courseMenu-color--icon" :style="{ backgroundColor: color.hex }"></div>
+            </div>
+            <div v-if="tooltipColor === color.text" class="courseMenu-color--tooltip">
+              {{ color.text }}
             </div>
           </button>
         </div>
@@ -130,6 +135,7 @@ export default defineComponent({
       colors: coursesColorSet,
       displayColors: false,
       displayEditCourseCredits: false,
+      tooltipColor: '',
     };
   },
   computed: {
@@ -167,6 +173,13 @@ export default defineComponent({
     },
     setDisplayColors(bool: boolean) {
       this.displayColors = bool;
+    },
+    setDisplayColorTooltip(bool: boolean, color: string) {
+      if (bool) {
+        this.tooltipColor = color;
+      } else {
+        this.tooltipColor = '';
+      }
     },
     setDisplayEditCourseCredits(bool: boolean) {
       this.displayEditCourseCredits = bool;
@@ -273,6 +286,13 @@ export default defineComponent({
       &:hover {
         box-shadow: 0px 0px 2px black;
       }
+    }
+
+    &--tooltip {
+      position: absolute;
+      background-color: white;
+      box-shadow: 0px 0px 2px black;
+      padding: 0px 8px 0px 8px;
     }
   }
 
