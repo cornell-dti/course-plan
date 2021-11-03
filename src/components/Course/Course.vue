@@ -23,6 +23,7 @@
       v-if="menuOpen"
       :semesterIndex="semesterIndex"
       :isCompact="compact"
+      :courseColor="courseObj.color"
       @delete-course="deleteCourse"
       @color-course="colorCourse"
       @edit-course-credit="editCourseCredit"

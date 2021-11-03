@@ -41,7 +41,14 @@
             @mouseleave="setDisplayColorTooltip(false, color.text)"
           >
             <div class="courseMenu-left">
-              <div class="courseMenu-color--icon" :style="{ backgroundColor: color.hex }"></div>
+              <div class="courseMenu-color--icon" :style="{ backgroundColor: color.hex }">
+                <img
+                  v-if="`#${courseColor}` === color.hex"
+                  class="courseMenu-color--checkmark"
+                  src="@/assets/images/checkmark-color.svg"
+                  alt="color checkmark"
+                />
+              </div>
             </div>
             <div v-if="tooltipColor === color.text" class="courseMenu-color--tooltip">
               {{ color.text }}
@@ -124,6 +131,7 @@ export default defineComponent({
     },
     semesterIndex: { type: Number, required: true },
     isCompact: { type: Boolean, required: true },
+    courseColor: { type: String, required: true },
   },
   data() {
     return {
@@ -286,6 +294,10 @@ export default defineComponent({
       &:hover {
         box-shadow: 0px 0px 2px black;
       }
+    }
+
+    &--checkmark {
+      padding-bottom: 7px;
     }
 
     &--tooltip {
