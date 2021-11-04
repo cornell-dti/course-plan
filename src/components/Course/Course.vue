@@ -1,5 +1,11 @@
 <template>
   <div :class="{ 'course--min': compact, active: active }" class="course">
+    <edit-color
+      :editedColor="editedColor"
+      @color-course="colorCourse"
+      @close-edit-color="closeEditColorModal"
+      v-if="isEditColorOpen"
+    />
     <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
       <img src="@/assets/images/dots/sixDots.svg" alt="" />
     </div>
@@ -24,8 +30,8 @@
       :semesterIndex="semesterIndex"
       :isCompact="compact"
       :courseColor="courseObj.color"
+      @open-edit-color-modal="openEditColorModal"
       @delete-course="deleteCourse"
-      @color-course="colorCourse"
       @edit-course-credit="editCourseCredit"
       :getCreditRange="getCreditRange || []"
       v-click-outside="closeMenuIfOpen"
@@ -42,9 +48,10 @@ import {
   reportCourseColorChange,
 } from '@/components/BottomBar/BottomBarState';
 import { clickOutside } from '@/utilities';
+import EditColor from '../Modals/EditColor.vue';
 
 export default defineComponent({
-  components: { CourseCaution, CourseMenu },
+  components: { CourseCaution, CourseMenu, EditColor },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     compact: { type: Boolean, required: true },
@@ -66,6 +73,8 @@ export default defineComponent({
       menuOpen: false,
       stopCloseFlag: false,
       getCreditRange: this.courseObj.creditRange,
+      isEditColorOpen: false,
+      editedColor: '',
     };
   },
   computed: {
@@ -109,6 +118,13 @@ export default defineComponent({
     deleteCourse() {
       this.$emit('delete-course', this.courseObj.code, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
+    },
+    openEditColorModal(color: string) {
+      this.editedColor = color;
+      this.isEditColorOpen = true;
+    },
+    closeEditColorModal() {
+      this.isEditColorOpen = false;
     },
     colorCourse(color: string) {
       this.$emit('color-course', color, this.courseObj.uniqueID);

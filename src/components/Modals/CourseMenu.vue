@@ -29,7 +29,7 @@
             v-for="(color, index) in colors"
             :key="index"
             class="courseMenu-color full-opacity-on-hover"
-            @click="colorCourse(color)"
+            @click="openEditColorModal(color.hex)"
             @mouseover="setDisplayColorTooltip(true, color.text)"
             @mouseleave="setDisplayColorTooltip(false, color.text)"
           >
@@ -103,7 +103,6 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
-import { GTagEvent } from '@/gtag';
 
 export default defineComponent({
   props: {
@@ -151,15 +150,15 @@ export default defineComponent({
   emits: {
     'delete-course': () => true,
     'color-course': (color: string) => typeof color === 'string',
+    'open-edit-color-modal': (color: string) => typeof color === 'string',
     'edit-course-credit': (credit: number) => typeof credit === 'number',
   },
   methods: {
     deleteCourse() {
       this.$emit('delete-course');
     },
-    colorCourse(color: { hex: string }) {
-      this.$emit('color-course', color.hex.substring(1));
-      GTagEvent(this.$gtag, 'course-edit-color');
+    openEditColorModal(color: string) {
+      this.$emit('open-edit-color-modal', color);
     },
     setDisplayColors(bool: boolean) {
       this.displayColors = bool;
