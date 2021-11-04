@@ -4,7 +4,7 @@ interface CourseForRequirementGraph extends CourseWithUniqueId {
   readonly courseId: number;
 }
 
-type BuildRequirementFulfillmentGraphParameters<
+export type BuildRequirementFulfillmentGraphParameters<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 > = {
