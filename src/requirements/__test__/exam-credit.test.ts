@@ -241,3 +241,34 @@ it('Equivalent course appears if it matches one major but not the other', () => 
   // If this fails, first check if the AP/IB equivalent course logic has changed.
   expect(courseIds).not.toEqual(expected);
 });
+
+it('Exam is counted even if major is not defined', () => {
+  const userData: AppOnboardingData = {
+    gradYear: '2020',
+    entranceYear: '2016',
+    college: 'EN',
+    major: [],
+    exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
+    minor: [],
+    tookSwim: 'no',
+  };
+  const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
+  expect(courseEquivalents.length).toBe(1);
+  const courseCodes = new Set(courseEquivalents.map(c => c.code));
+  const expected = new Set(['AP Computer Science A']);
+  expect(courseCodes).toEqual(expected);
+});
+
+it('Exam is not counted if college is not defined', () => {
+  const userData: AppOnboardingData = {
+    gradYear: '2020',
+    entranceYear: '2016',
+    college: undefined,
+    major: [],
+    exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
+    minor: [],
+    tookSwim: 'no',
+  };
+  const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
+  expect(courseEquivalents.length).toBe(0);
+});

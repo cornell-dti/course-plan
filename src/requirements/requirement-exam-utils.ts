@@ -10,11 +10,14 @@ export type ExamsTaken = Record<'AP' | 'IB', ExamTaken[]>;
 type ExamSubjects = Record<'AP' | 'IB', string[]>;
 
 function userDataToCourses(
-  college: string,
-  major: string,
+  college: string | undefined,
+  major: string | undefined,
   userData: ExamsTaken,
   examType: 'AP' | 'IB'
 ): CourseTaken[] {
+  // If there is no college, that means that the user only has a grad program, so they cannot get any course credit.
+  if (!college) return [];
+
   const userExams = userData[examType];
   const exams = examData[examType];
   const courses: CourseTaken[] = [];
@@ -41,7 +44,7 @@ function userDataToCourses(
             exam.fulfillment.courseEquivalents.DEFAULT)) ||
         [];
       const excludedMajor =
-        exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
+        major && exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
       if (!excludedMajor) {
         // AP/IB credit can be potentially applied towards the user's requirements
         courseEquivalentsExist = true;
@@ -85,8 +88,8 @@ function userDataToCourses(
 }
 
 export function getCourseEquivalentsFromOneMajor(
-  college: string,
-  major: string,
+  college: string | undefined,
+  major: string | undefined,
   userData: ExamsTaken
 ): readonly CourseTaken[] {
   const APCourseEquivalents = userDataToCourses(college, major, userData, 'AP');
@@ -97,25 +100,27 @@ export function getCourseEquivalentsFromOneMajor(
 export default function getCourseEquivalentsFromUserExams(
   user: AppOnboardingData
 ): readonly CourseTaken[] {
-  const courses: CourseTaken[] = [];
   const examCourseCodeSet = new Set<string>();
+  const { college, major: majors } = user;
   const userExamData: ExamsTaken = { AP: [], IB: [] };
   user.exam.forEach((exam: FirestoreAPIBExam) => {
     const examTaken: ExamTaken = { subject: exam.subject, score: exam.score };
     userExamData[exam.type].push(examTaken);
   });
-  // If there is no college, that means that the user only has a grad program, so they cannot get any course credit.
-  user.major.forEach((major: string) =>
-    user.college
-      ? getCourseEquivalentsFromOneMajor(user.college, major, userExamData).forEach(course => {
-          if (!examCourseCodeSet.has(course.code)) {
-            examCourseCodeSet.add(course.code);
-            courses.push(course);
-          }
-        })
-      : []
-  );
-  return courses;
+  if (majors.length === 0) {
+    return getCourseEquivalentsFromOneMajor(college, undefined, userExamData);
+  }
+  return [
+    ...majors.map((major: string) =>
+      getCourseEquivalentsFromOneMajor(college, major, userExamData).filter(({ code }) => {
+        if (!examCourseCodeSet.has(code)) {
+          examCourseCodeSet.add(code);
+          return true;
+        }
+        return false;
+      })
+    ),
+  ].flat();
 }
 
 function toSubjects(data: ExamRequirements[]) {
