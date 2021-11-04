@@ -22,7 +22,7 @@
       >
         <p
           :style="{
-            'font-weight': '500',
+            'font-weight': 500,
             color: `#${getReqColor(req.groupName, onboardingData)}`,
           }"
           class="college-title-top"
@@ -51,7 +51,7 @@
       >
         <p
           :style="{
-            'font-weight': id === displayedMajorIndex ? '500' : '',
+            'font-weight': id === displayedMajorIndex ? 500 : undefined,
             color:
               id === displayedMajorIndex ? `#${getReqColor(req.groupName, onboardingData)}` : '',
           }"
@@ -94,7 +94,7 @@
       >
         <p
           :style="{
-            'font-weight': id === displayedMinorIndex ? '500' : '',
+            'font-weight': id === displayedMinorIndex ? 500 : undefined,
             color:
               id === displayedMinorIndex ? `#${getReqColor(req.groupName, onboardingData)}` : '',
           }"
@@ -115,7 +115,7 @@
       >
         <p
           :style="{
-            'font-weight': '500',
+            'font-weight': 500,
             color: `#${getReqColor(req.groupName, onboardingData)}`,
           }"
           class="grad-title-top"
@@ -217,7 +217,9 @@ export default defineComponent({
     requirementFulfilled(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
-        if (req.minCountFulfilled >= req.minCountRequired) fulfilled += 1;
+        [req, ...Object.values(req.additionalRequirements || {})].forEach(reqOrNestedReq => {
+          if (reqOrNestedReq.minCountFulfilled >= reqOrNestedReq.minCountRequired) fulfilled += 1;
+        });
       });
       return fulfilled;
     },

@@ -1,12 +1,37 @@
 import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 
+/** Enumerated type to define seasons as integers in season order */
+export const SeasonOrdinal = {
+  Winter: 0,
+  Spring: 1,
+  Summer: 2,
+  Fall: 3,
+} as const;
+
+/**
+ * Returns given semesters sorted in either increasing or decreasing order of date
+ * @param semesters the semesters to return sorted
+ * @param orderByNewest whether to sort the semesters in decreasing order
+ * @returns semesters sorted according to orderByNewest
+ */
+export const sortedSemesters = (
+  semesters: readonly FirestoreSemester[],
+  orderByNewest = true
+): readonly FirestoreSemester[] =>
+  semesters.slice().sort((a, b) => {
+    // sort in increasing order iff orderByNewest is false, increasing otherwise
+    const order = orderByNewest ? -1 : 1;
+    const byYear = a.year - b.year;
+    return order * (byYear === 0 ? SeasonOrdinal[a.season] - SeasonOrdinal[b.season] : byYear);
+  });
+
 export function checkNotNull<T>(value: T | null | undefined): T {
   if (value == null) throw new Error();
   return value;
 }
 
-export default function getCurrentSeason(): FirestoreSemesterType {
+export function getCurrentSeason(): FirestoreSemesterSeason {
   const currentMonth = new Date().getMonth();
   if (currentMonth === 0) return 'Winter';
   if (currentMonth <= 4) return 'Spring';
@@ -14,22 +39,8 @@ export default function getCurrentSeason(): FirestoreSemesterType {
   return 'Fall';
 }
 
-export function getCurrentType(): 'WI' | 'SP' | 'SU' | 'FA' {
-  const currentMonth = new Date().getMonth();
-  if (currentMonth === 0) return 'WI';
-  if (currentMonth <= 4) return 'SP';
-  if (currentMonth <= 7) return 'SU';
-  return 'FA';
-}
-
 export function getCurrentYear(): number {
   return new Date().getFullYear();
-}
-
-export function getCurrentYearSuffix(): string {
-  // If current year is 2020, get string '20'
-  const currentYear = new Date().getFullYear();
-  return currentYear.toString().substring(2);
 }
 
 export function getCollegeFullName(acronym: string | undefined): string {

@@ -13,7 +13,7 @@
       :currentSemesters="semesters"
       :isEdit="true"
       :year="deleteSemYear"
-      :type="deleteSemType"
+      :season="deleteSemSeason"
       @duplicateSemester="disableButton"
       @updateSemProps="updateSemProps"
     />
@@ -29,7 +29,7 @@ import store from '@/store';
 export default defineComponent({
   components: { TeleportModal, SelectSemester },
   props: {
-    deleteSemType: { type: String as PropType<FirestoreSemesterType>, required: true },
+    deleteSemSeason: { type: String as PropType<FirestoreSemesterSeason>, required: true },
     deleteSemYear: { type: Number, required: true },
   },
   emits: {

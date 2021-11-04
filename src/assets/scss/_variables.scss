@@ -1,3 +1,5 @@
+// Please remember to update src/assets/constants/scss-variables.ts when you changed values!
+
 $primary: #f15151;
 $error: #ef5777;
 $warning: #ad6500;
@@ -17,11 +19,14 @@ $medGray: #737373;
 $darkGray: #3c3c3c;
 $darkGray2: #404040;
 $onboardingGray: #4f4f4f;
+$dropdownGray: #7b7d7e;
+$hlineGray: #dddddd;
 
 $emGreen: #148481;
 $chrisGreen: #105351;
 $sangBlue: #4d7d92;
 $einBlue: #92c3e6;
+$einBlueTransparent: #92c3e61a;
 
 $yuxuanBlue: #0d7acb;
 $yuxuanBlueTransparent: #0d7acb1a;
@@ -44,26 +49,5 @@ $small-medium-breakpoint: 600px;
 $medium-breakpoint: 878px;
 $large-breakpoint: 976px;
 $very-large-breakpoint: 1347px;
-
-// Export for javascript
-:export {
-  yuxuanBlue: $yuxuanBlue;
-  inactiveGray: $inactiveGray;
-  backgroundBlue: $backgroundBlue;
-  primaryGray: $primaryGray;
-  secondaryGray: $secondaryGray;
-  lightPlaceholderGray: $lightPlaceholderGray;
-  darkPlaceholderGray: $darkPlaceholderGray;
-  emGreen: $emGreen;
-  smallBreakpoint: $small-breakpoint;
-  smallMediumBreakpoint: $small-medium-breakpoint;
-  mediumBreakpoint: $medium-breakpoint;
-  largeBreakpoint: $large-breakpoint;
-  veryLargeBreakpoint: $very-large-breakpoint;
-}
-
-// To import into <script>
-// import { yuxuanBlue, ... } from '@/assets/scss/_variables.scss';
-
-// To import into <style>
-// @import "@/assets/scss/_variables.scss";
+$larger-breakpoint: 1407px;
+$largest-breakpoint: 1455px;

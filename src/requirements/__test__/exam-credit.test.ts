@@ -167,7 +167,6 @@ it('Exam is counted correctly for one major', () => {
     major: ['CS'],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
     minor: [],
-    transferCourse: [],
     tookSwim: 'no',
   };
   const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
@@ -187,7 +186,6 @@ it('Two exams are counted correctly for one major', () => {
       { type: 'AP', score: 5, subject: 'Chemistry' },
     ],
     minor: [],
-    transferCourse: [],
     tookSwim: 'no',
   };
   const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
@@ -204,7 +202,6 @@ it('One exam is only counted once for multiple majors', () => {
     major: ['CS', 'Biological Sciences'],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
     minor: [],
-    transferCourse: [],
     tookSwim: 'no',
   };
   const courseEquivalents = getCourseEquivalentsFromUserExams(userData);
@@ -222,12 +219,11 @@ it('Equivalent course appears if it matches one major but not the other', () => 
     major: ['Biological Sciences'],
     exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],
     minor: [],
-    transferCourse: [],
     tookSwim: 'no',
   };
   let courseEquivalents = getCourseEquivalentsFromUserExams(userData);
   let courseIds = new Set(courseEquivalents.map(c => c.courseId));
-  let expected = new Set([NO_EQUIVALENT_COURSES_COURSE_ID]);
+  const expected = new Set([NO_EQUIVALENT_COURSES_COURSE_ID]);
   // If this fails, first check if the AP/IB equivalent course logic has changed.
   expect(courseIds).toEqual(expected);
 
@@ -238,7 +234,6 @@ it('Equivalent course appears if it matches one major but not the other', () => 
     major: ['CS', 'Biological Sciences'],
     exam: [{ type: 'AP', score: 4, subject: 'Statistics' }],
     minor: [],
-    transferCourse: [],
     tookSwim: 'no',
   };
   courseEquivalents = getCourseEquivalentsFromUserExams(userData);

@@ -47,6 +47,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue';
+import store from '@/store';
 
 export default defineComponent({
   props: {
@@ -79,6 +80,7 @@ export default defineComponent({
     const modalBackground = ref((null as unknown) as HTMLDivElement);
 
     const close = () => {
+      store.commit('setIsTeleportModalOpen', false);
       emit('modal-closed', true);
     };
 
@@ -93,6 +95,8 @@ export default defineComponent({
     const rightButtonClicked = () => {
       emit('right-button-clicked');
     };
+
+    store.commit('setIsTeleportModalOpen', true);
 
     return { close, closeOnClickOutside, leftButtonClicked, rightButtonClicked, modalBackground };
   },

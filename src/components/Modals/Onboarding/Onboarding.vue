@@ -64,11 +64,7 @@
       </div>
       <div class="onboarding-bottom">
         <div class="onboarding-bottom--section onboarding-bottom--section---center">
-          <img
-            class="timeline"
-            :src="require(`@/assets/images/timeline${currentPage}text.svg`)"
-            alt="onboarding progress timeline"
-          />
+          <img class="timeline" :src="timelineTextImage" alt="onboarding progress timeline" />
         </div>
         <div v-if="currentPage === 3" class="onboarding-bottom--section">
           <!-- keeping skip button code in case we want to add back -->
@@ -112,8 +108,13 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { setOnboardingData } from '@/global-firestore-data';
+import { setOnboardingData, populateSemesters } from '@/global-firestore-data';
 import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
+import timeline1Text from '@/assets/images/timeline1text.svg';
+import timeline2Text from '@/assets/images/timeline2text.svg';
+import timeline3Text from '@/assets/images/timeline3text.svg';
+
+const timelineTexts = [timeline1Text, timeline2Text, timeline3Text];
 
 const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
@@ -146,6 +147,9 @@ export default defineComponent({
         this.onboarding.entranceYear === '' ||
         (this.onboarding.college === '' && this.onboarding.grad === '')
       );
+    },
+    timelineTextImage(): string {
+      return timelineTexts[this.currentPage - 1];
     },
     /**
      * Display error if onboarding data includes a major, minor, or graduate program
@@ -208,6 +212,8 @@ export default defineComponent({
     submitOnboarding() {
       this.clearTransferCreditIfGraduate();
       setOnboardingData(this.name, this.onboarding);
+      // indicates first time user onboarding
+      if (!this.isEditingProfile) populateSemesters(this.onboarding);
       this.$emit('onboard');
     },
     goBack() {
@@ -258,22 +264,16 @@ export default defineComponent({
     // clear transfer credits if the student is only in a graduate program, but previously set transfer credits
     clearTransferCreditIfGraduate() {
       if (this.onboarding.grad !== '' && this.onboarding.college === '') {
-        this.updateTransfer([], [], 'no');
+        this.updateTransfer([], 'no');
       }
     },
-    updateTransfer(
-      exams: readonly FirestoreAPIBExam[],
-      classes: readonly FirestoreTransferClass[],
-      tookSwim: 'yes' | 'no'
-    ) {
+    updateTransfer(exams: readonly FirestoreAPIBExam[], tookSwim: 'yes' | 'no') {
       const userExams = exams.filter(
         ({ subject, score }) => score !== 0 && subject !== placeholderText
       );
-      const userClasses = classes.filter(it => it.class !== placeholderText);
       this.onboarding = {
         ...this.onboarding,
         exam: userExams,
-        transferCourse: userClasses,
         tookSwim,
       };
     },

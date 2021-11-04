@@ -9,6 +9,7 @@ before('Visit site logged in', () => {
   cy.visit('localhost:8080/login');
   cy.login(Cypress.env('TEST_UID'));
   cy.visit('localhost:8080');
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(5000); // ensure the page has time to load
 });
 

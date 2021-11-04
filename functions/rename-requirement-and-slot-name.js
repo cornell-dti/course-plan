@@ -10,7 +10,7 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
-const userOverriddenReqsCollection = db.collection('user-overridden-requirements');
+const userOverriddenFulfillmentsCollection = db.collection('user-overridden-fulfillments');
 const userOnboardingData = db.collection('user-onboarding-data');
 
 /** The current name of the requirement or slot name that we want to change. */
@@ -43,7 +43,7 @@ const updateObjectProperty = doc => {
  *
  * Goes through each property and checks if its value (an object) has the
  * name and updates it.
- * (Used for slot name updates in user-overridden-requirements)
+ * (Used for slot name updates in user-overridden-fulfillments)
  */
 const updateObjectValue = doc => {
   const newDoc = {};
@@ -61,19 +61,16 @@ const updateObjectValue = doc => {
 /**
  * Updates the exam property in the user-onboarding-data collection.
  */
-const updateExamProperty = doc => {
-  return doc.map(exam => {
-    return {
-      ...exam,
-      optIn: isChangingReqName
-        ? updateObjectProperty(exam.optIn)
-        : updateOnboardingSlotName(exam.optIn),
-      optOut: isChangingReqName
-        ? updateObjectProperty(exam.optOut)
-        : updateOnboardingSlotName(exam.optOut),
-    };
-  });
-};
+const updateExamProperty = doc =>
+  doc.map(exam => ({
+    ...exam,
+    optIn: isChangingReqName
+      ? updateObjectProperty(exam.optIn)
+      : updateOnboardingSlotName(exam.optIn),
+    optOut: isChangingReqName
+      ? updateObjectProperty(exam.optOut)
+      : updateOnboardingSlotName(exam.optOut),
+  }));
 
 const updateOnboardingSlotName = doc => {
   const newDoc = {};
@@ -87,7 +84,7 @@ const updateOnboardingSlotName = doc => {
   }
 };
 
-const transformOverriddenReqsCollection = doc =>
+const transformOverriddenFulfillmentsCollection = doc =>
   isChangingReqName ? updateObjectProperty(doc) : updateObjectValue(doc);
 
 const transformOnboardingData = doc => ({
@@ -96,22 +93,22 @@ const transformOnboardingData = doc => ({
 });
 
 if (process.argv[2] === '--dry-run') {
-  userOverriddenReqsCollection.get().then(userOverriddenReqsData => {
-    const oldUserOverriddenReqsData = userOverriddenReqsData.docs.map(doc => ({
+  userOverriddenFulfillmentsCollection.get().then(userOverriddenFulfillmentsData => {
+    const oldUserOverriddenFulfillmentsData = userOverriddenFulfillmentsData.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
-    // Using JSON parse and stringify trick so we get a deep copy of the nested oldUserOverriddenReqsData
-    const newUserOverriddenReqs = JSON.parse(JSON.stringify(oldUserOverriddenReqsData)).map(
-      transformOverriddenReqsCollection
+    // Using JSON parse and stringify trick so we get a deep copy of the nested oldUserOverriddenFulfillmentsData
+    const newUserOverriddenFulfillments = JSON.parse(
+      JSON.stringify(oldUserOverriddenFulfillmentsData)
+    ).map(transformOverriddenFulfillmentsCollection);
+    fs.writeFileSync(
+      'old-userOverriddenFulfillmentsData.json',
+      JSON.stringify(oldUserOverriddenFulfillmentsData, undefined, 2)
     );
     fs.writeFileSync(
-      'old-userOverriddenReqsData.json',
-      JSON.stringify(oldUserOverriddenReqsData, undefined, 2)
-    );
-    fs.writeFileSync(
-      'new-userOverriddenReqs.json',
-      JSON.stringify(newUserOverriddenReqs, undefined, 2)
+      'new-userOverriddenFulfillments.json',
+      JSON.stringify(newUserOverriddenFulfillments, undefined, 2)
     );
   });
   userOnboardingData.get().then(userOnboarding => {
@@ -129,12 +126,11 @@ if (process.argv[2] === '--dry-run') {
       JSON.stringify(newUserOnboardingData, undefined, 2)
     );
   });
-  return;
 } else {
-  userOverriddenReqsCollection.get().then(userData => {
+  userOverriddenFulfillmentsCollection.get().then(userData => {
     Promise.all(
       userData.docs.map(userDataDocument =>
-        userDataDocument.ref.set(transformOverriddenReqsCollection(userDataDocument.data()))
+        userDataDocument.ref.set(transformOverriddenFulfillmentsCollection(userDataDocument.data()))
       )
     );
   });

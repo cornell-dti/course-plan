@@ -90,8 +90,8 @@ type DecoratedCollegeOrMajorRequirement = RequirementCommon &
 type CourseTaken = {
   /** The course ID from course roster, or our dummy id to denote special courses like FWS equiv. */
   readonly courseId: number;
-  /** Using the unique ID of firestore course for real course, -1 for swim test and < -1 for AP/IB. */
-  readonly uniqueId: number;
+  /** Using the unique ID of firestore course for real course, -1 for swim test, and string for AP/IB. */
+  readonly uniqueId: string | number;
   /**
    * Course code like 'CS 2112', 'AP CS'.
    * It's mostly unused except for displaying completed courses, or calculating total credits.

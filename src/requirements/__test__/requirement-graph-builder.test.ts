@@ -27,7 +27,7 @@ it('buildRequirementFulfillmentGraph phase 1 test 1', () => {
       requirements,
       userCourses: [CS3410, CS3420, MATH4710],
       userChoiceOnFulfillmentStrategy: {},
-      userChoiceOnDoubleCountingElimination: [],
+      userChoiceOnDoubleCountingElimination: {},
       userChoiceOnRequirementOverrides: {},
       getAllCoursesThatCanPotentiallySatisfyRequirement,
       allowDoubleCounting: () => false,

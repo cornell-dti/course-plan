@@ -19,7 +19,6 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
     extraFileExtensions: ['.vue'],
-    project: ['./tsconfig.json', './tsconfig.node.json'],
   },
   env: {
     browser: true,
@@ -76,29 +75,15 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx', '*.vue'],
       rules: {
-        'import/extensions': [
-          'error',
-          'always',
-          {
-            js: 'never',
-            ts: 'never',
-            vue: 'always',
-          },
-        ],
+        'import/extensions': ['error', 'always', { js: 'never', ts: 'never', vue: 'always' }],
       },
     },
     {
       files: ['*.js'],
       rules: {
-        'import/extensions': [
-          'error',
-          'always',
-          {
-            js: 'never',
-            ts: 'never',
-            vue: 'never',
-          },
-        ],
+        '@typescript-eslint/no-var-requires': 'off',
+        'import/extensions': ['error', 'always', { js: 'never', ts: 'never', vue: 'never' }],
+        'import/no-unresolved': 'off',
       },
     },
   ],

@@ -23,7 +23,7 @@
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
         <select-semester
-          :type="season"
+          :season="season"
           :year="year"
           :isCourseModelSelectingSemester="true"
           @updateSemProps="updateSemProps"
@@ -51,7 +51,7 @@ export default defineComponent({
     'close-course-modal': () => true,
     'add-course': (
       selected: CornellCourseRosterCourse,
-      season: FirestoreSemesterType,
+      season: FirestoreSemesterSeason,
       year: number
     ) => typeof selected === 'object' && typeof season === 'string' && typeof year === 'number',
   },
@@ -59,7 +59,7 @@ export default defineComponent({
     return {
       selectedCourse: null as CornellCourseRosterCourse | null,
       courseSelectorKey: 0,
-      season: '' as FirestoreSemesterType,
+      season: '' as FirestoreSemesterSeason,
       year: 0,
     };
   },
@@ -100,7 +100,7 @@ export default defineComponent({
       this.closeCurrentModal();
     },
     updateSemProps(season: string, year: number) {
-      this.season = season as FirestoreSemesterType;
+      this.season = season as FirestoreSemesterSeason;
       this.year = year;
     },
   },

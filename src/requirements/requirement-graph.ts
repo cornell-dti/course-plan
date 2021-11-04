@@ -1,5 +1,5 @@
 export interface CourseWithUniqueId {
-  readonly uniqueId: number;
+  readonly uniqueId: string | number;
 }
 
 /**
@@ -19,9 +19,26 @@ export default class RequirementFulfillmentGraph<
   // Internally, we use a two hash map to represent the bidirection relation
   // between requirement and courses.
 
-  private readonly requirementToCoursesMap: Map<Requirement, Map<number, Course>> = new Map();
+  private readonly requirementToCoursesMap: Map<
+    Requirement,
+    Map<string | number, Course>
+  > = new Map();
 
-  private readonly courseToRequirementsMap: Map<number, Set<Requirement>> = new Map();
+  private readonly courseToRequirementsMap: Map<string | number, Set<Requirement>> = new Map();
+
+  public getAllRequirements(): readonly Requirement[] {
+    return Array.from(this.requirementToCoursesMap.keys());
+  }
+
+  public getAllCourses(): readonly Course[] {
+    const coursesMap = new Map<string | number, Course>();
+    Array.from(this.requirementToCoursesMap.values()).forEach(map => {
+      map.forEach((course, id) => {
+        coursesMap.set(id, course);
+      });
+    });
+    return Array.from(coursesMap.values());
+  }
 
   public getAllEdges(): readonly (readonly [Requirement, Course])[] {
     const edges: (readonly [Requirement, Course])[] = [];
