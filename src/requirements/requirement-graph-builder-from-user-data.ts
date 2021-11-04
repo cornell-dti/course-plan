@@ -1,7 +1,9 @@
 import { CREDITS_COURSE_ID } from './data/constants';
-import { getUserRequirements } from './requirement-frontend-utils';
+import { courseIsAPIB, getUserRequirements } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
-import buildRequirementFulfillmentGraph from './requirement-graph-builder';
+import buildRequirementFulfillmentGraph, {
+  BuildRequirementFulfillmentGraphParameters,
+} from './requirement-graph-builder';
 
 /**
  * Removes all AP/IB equivalent course credit if it's a duplicate crseId.
@@ -31,7 +33,9 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   selectableRequirementChoices: AppSelectableRequirementChoices,
-  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices,
+  /** A flag for data migration. Prod code should never use this */
+  keepCoursesWithoutDoubleCountingEliminationChoice = false
 ): {
   readonly userRequirements: readonly RequirementWithIDSourceType[];
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
@@ -40,7 +44,10 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
 
-  const requirementFulfillmentGraph = buildRequirementFulfillmentGraph<string, CourseTaken>({
+  const requirementGraphBuilderParameters: BuildRequirementFulfillmentGraphParameters<
+    string,
+    CourseTaken
+  > = {
     requirements: userRequirements.map(it => it.id),
     userCourses: forfeitTransferCredit(coursesTaken),
     userChoiceOnFulfillmentStrategy: Object.fromEntries(
@@ -99,7 +106,113 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     },
     allowDoubleCounting: requirementID =>
       userRequirementsMap[requirementID].allowCourseDoubleCounting || false,
-  });
+  };
+  const requirementFulfillmentGraph = buildRequirementFulfillmentGraph(
+    requirementGraphBuilderParameters,
+    keepCoursesWithoutDoubleCountingEliminationChoice
+  );
 
   return { userRequirements, userRequirementsMap, requirementFulfillmentGraph };
+}
+
+export type FirestoreCourseOptInOptOutChoicesBuilder = (
+  c: CourseTaken
+) => FirestoreCourseOptInOptOutChoices;
+
+/**
+ * @returns a function that given a course, return a `FirestoreCourseOptInOptOutChoices`.
+ *
+ * Frontend code can use the returned function to compute the equivalent opt-out data,
+ * and the data migration code can use the returned function to compute opt-out choice for all courses.
+ * This function should be deleted once we fully finish the migration.
+ */
+export function getFirestoreCourseOptInOptOutChoicesBuilder(
+  coursesTaken: readonly CourseTaken[],
+  onboardingData: AppOnboardingData,
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  selectableRequirementChoices: AppSelectableRequirementChoices,
+  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
+): FirestoreCourseOptInOptOutChoicesBuilder {
+  // In this graph, each course is connected to all requirements that course can be used to satisfy.
+  const {
+    requirementFulfillmentGraph: graphWithoutDoubleCountingAccounted,
+    userRequirementsMap,
+  } = buildRequirementFulfillmentGraphFromUserData(
+    coursesTaken,
+    onboardingData,
+    toggleableRequirementChoices,
+    {}, // Provide no double counting choices, so all the edges will be kept
+    overriddenFulfillmentChoices,
+    /* keepCoursesWithoutDoubleCountingEliminationChoice */ true
+  );
+
+  // In this graph, each course is only connected to the selected requirement and the requirements
+  // that allow double counting.
+  const graphWithDoubleCountingAccounted = buildRequirementFulfillmentGraphFromUserData(
+    coursesTaken,
+    onboardingData,
+    toggleableRequirementChoices,
+    selectableRequirementChoices,
+    overriddenFulfillmentChoices,
+    /* keepCoursesWithoutDoubleCountingEliminationChoice */ false
+  ).requirementFulfillmentGraph;
+
+  /**
+   * The table below summerizes the type of all possible requirement-course edges before
+   * double-counting elimination, and where they will go in the new format.
+   *
+   * -------------------------------------------------------------------------------------------------
+   * | Requirement Type | edge exists after double-counting elim | where is it in the new format     |
+   * | ---------------- | -------------------------------------- | --------------------------------- |
+   * | selected         | True                                   | implicit (connected by default)   |
+   * | (no warning)     |                                        |                                   |
+   * |                  |                                        |                                   |
+   * | selected         | True                                   | `acknowledgedCheckerWarningOptIn` |
+   * | (has warning)    |                                        |                                   |
+   * |                  |                                        |                                   |
+   * | allow double     | True                                   | implicit (connected by default)   |
+   * | counting         |                                        |                                   |
+   * |                  |                                        |                                   |
+   * | not connected    | False                                  | `optOut`                          |
+   * | (no warning)     |                                        |                                   |
+   * |                  |                                        |                                   |
+   * | not connected    | False                                  | implicit (unconnected by default) |
+   * | (has warning)    |                                        |                                   |
+   */
+  return function builder(course) {
+    const requirementsWithDoubleCountingRemoved = graphWithDoubleCountingAccounted.getConnectedRequirementsFromCourse(
+      course
+    );
+    const allRelevantRequirements = graphWithoutDoubleCountingAccounted.getConnectedRequirementsFromCourse(
+      course
+    );
+    /**
+     * complementary == All unconnected requirement after double counting elimination
+     *
+     * It's true that
+     * ```
+     * union(
+     *  selectableRequirementChoices[course],
+     *  requirements that allow double counting and the given course can be used to satisfy,
+     *  complementary,
+     * ) == all requirements that course can be used to satisfy
+     * ```
+     */
+    const complementary = new Set(allRelevantRequirements);
+    requirementsWithDoubleCountingRemoved.forEach(r => complementary.delete(r));
+
+    // We only need to explicitly opt-out of requirements without checker warnings, since requirement
+    // with checker warnings need to be explicitly opt-in.
+    const optOut = Array.from(complementary).filter(
+      it => userRequirementsMap[it].checkerWarning == null
+    );
+    // Find requirements with checker warnings that needs to be explictly opt-in.
+    const acknowledgedCheckerWarningOptIn = courseIsAPIB(course)
+      ? []
+      : requirementsWithDoubleCountingRemoved.filter(
+          it => userRequirementsMap[it].checkerWarning != null
+        );
+
+    return { optOut, arbitraryOptIn: {}, acknowledgedCheckerWarningOptIn };
+  };
 }

@@ -15,6 +15,7 @@ import bioRequirements from './majors/bio';
 import bioEngineeringRequirements from './majors/be';
 import bsocRequirements from './majors/bsoc';
 import biomedicalEngineeringRequirements from './majors/bme';
+import chemRequirements from './majors/chem';
 import chemERequirements from './majors/chemE';
 import civilRequirements from './majors/ce';
 import commRequirements from './majors/comm';
@@ -143,6 +144,11 @@ const json: RequirementsJson = {
       name: 'Civil Engineering',
       schools: ['EN'],
       requirements: civilRequirements,
+    },
+    CHEM: {
+      name: 'Chemistry',
+      schools: ['AS1', 'AS2'],
+      requirements: chemRequirements,
     },
     CHEME: {
       name: 'Chemical and Biomolecular Engineering',

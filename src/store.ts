@@ -1,7 +1,7 @@
 import { Store } from 'vuex';
 
 import * as fb from './firebase-frontend-config';
-import getCourseEquivalentsFromUserExams from './requirements/data/exams/ExamCredit';
+import getCourseEquivalentsFromUserExams from './requirements/requirement-exam-utils';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';

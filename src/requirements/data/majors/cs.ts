@@ -35,7 +35,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
-    slotNames: ['CS 2800 or CS 2802', 'CS 3110', 'CS 3410 or CS 3410', 'CS 4820', 'CS 4410'],
+    slotNames: ['CS 2800 or CS 2802', 'CS 3110', 'CS 3410 or CS 3420', 'CS 4820', 'CS 4410'],
   },
   {
     name: 'CS Electives',
