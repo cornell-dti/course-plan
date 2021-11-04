@@ -152,6 +152,5 @@ export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppO
       ? data.gradPrograms[0].acronym
       : undefined,
   exam: 'exam' in data ? [...data.exam] : [],
-  transferCourse: 'class' in data ? [...data.class] : [],
   tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',
 });

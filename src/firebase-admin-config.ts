@@ -17,7 +17,10 @@ export const usernameCollection = db
   .collection('user-name')
   .withConverter(getTypedFirestoreDataConverter<FirestoreUserName>());
 
-export type SemesterDocumentData = { readonly semesters: readonly FirestoreSemester[] };
+export type SemesterDocumentData = {
+  semesters: readonly FirestoreSemester[];
+  orderByNewest: boolean;
+};
 export const semestersCollection = db
   .collection('user-semesters')
   .withConverter(getTypedFirestoreDataConverter<SemesterDocumentData>());
@@ -29,6 +32,10 @@ export const toggleableRequirementChoicesCollection = db
 export const selectableRequirementChoicesCollection = db
   .collection('user-selectable-requirement-choices')
   .withConverter(getTypedFirestoreDataConverter<AppSelectableRequirementChoices>());
+
+export const overriddenFulfillmentChoicesCollection = db
+  .collection('user-overridden-fulfillment-choices')
+  .withConverter(getTypedFirestoreDataConverter<FirestoreOverriddenFulfillmentChoices>());
 
 export const subjectColorsCollection = db
   .collection('user-subject-colors')

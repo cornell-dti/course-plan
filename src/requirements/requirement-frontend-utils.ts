@@ -78,8 +78,6 @@ export function requirementAllowDoubleCounting(
 ): boolean {
   // All minor requirements are automatically double-countable.
   if (requirement.sourceType === 'Minor') return true;
-  // All grad program requirements are automatically not double-countable.
-  if (requirement.sourceType === 'Grad') return false;
   if (requirement.sourceType === 'Major') {
     if (majors == null) throw new Error("shouldn't get here since we have major requirements!");
     // If it's not the first major, then it's double countable.
@@ -280,7 +278,7 @@ export function getMatchedRequirementFulfillmentSpecification(
 const computeFulfillmentStatistics = (
   requirementName: string,
   coursesTaken: readonly CourseTaken[],
-  overridenRequirementChoices: AppOverridenRequirementChoices,
+  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices,
   disallowTransferCredit: boolean,
   {
     fulfilledBy,
@@ -293,7 +291,7 @@ const computeFulfillmentStatistics = (
   const coursesThatFulfilledSubRequirements: CourseTaken[][] = eligibleCourses.map(() => []);
   const subRequirementProgress: number[] = eligibleCourses.map(() => 0);
   coursesTaken.forEach(courseTaken => {
-    const overrideOptions = overridenRequirementChoices[courseTaken.uniqueId];
+    const overrideOptions = overriddenFulfillmentChoices[courseTaken.uniqueId];
     const optInSlotNames = (overrideOptions && overrideOptions.optIn[requirementName]) || null;
     const optOutSlotNames = (overrideOptions && overrideOptions.optOut[requirementName]) || null;
 
@@ -359,7 +357,7 @@ export function computeFulfillmentCoursesAndStatistics(
   requirement: RequirementWithIDSourceType,
   coursesTaken: readonly CourseTaken[],
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overridenRequirementChoices: AppOverridenRequirementChoices
+  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
 ): RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements {
   const spec = getMatchedRequirementFulfillmentSpecification(
     requirement,
@@ -373,7 +371,7 @@ export function computeFulfillmentCoursesAndStatistics(
   const base = computeFulfillmentStatistics(
     requirement.id,
     coursesTaken,
-    overridenRequirementChoices,
+    overriddenFulfillmentChoices,
     disallowTransferCredit,
     spec
   );
@@ -386,7 +384,7 @@ export function computeFulfillmentCoursesAndStatistics(
         computeFulfillmentStatistics(
           name,
           coursesTaken,
-          overridenRequirementChoices,
+          overriddenFulfillmentChoices,
           disallowTransferCredit,
           subSpec
         ),
@@ -404,7 +402,7 @@ export function getRelatedUnfulfilledRequirements(
   }: CornellCourseRosterCourse,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overridenRequirementChoices: AppOverridenRequirementChoices
+  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
 ): {
   readonly directlyRelatedRequirements: readonly RequirementWithIDSourceType[];
   readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
@@ -438,7 +436,7 @@ export function getRelatedUnfulfilledRequirements(
             subRequirement,
             [...existingCourses, { uniqueId: -1, courseId, code, credits }],
             toggleableRequirementChoices,
-            overridenRequirementChoices
+            overriddenFulfillmentChoices
           );
           if (fulfillmentStatisticsWithNewCourse.minCountFulfilled > existingMinCountFulfilled) {
             if (subRequirement.checkerWarning == null) {

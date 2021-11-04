@@ -125,17 +125,14 @@ export default defineComponent({
       return `https://www.cureviews.org/course/${subject}/${number}`;
     },
     CUROverallRating(): string | number {
-      if (this.courseObj.overallRating === 0) return '';
       if (!this.courseObj.overallRating) return 'N/A';
       return Math.round(this.courseObj.overallRating * 10) / 10;
     },
     CURDifficulty(): string | number {
-      if (this.courseObj.difficulty === 0) return '';
       if (!this.courseObj.difficulty) return 'N/A';
       return Math.round(this.courseObj.difficulty * 10) / 10;
     },
     CURWorkload(): string | number {
-      if (this.courseObj.workload === 0) return '';
       if (!this.courseObj.workload) return 'N/A';
       return Math.round(this.courseObj.workload * 10) / 10;
     },

@@ -177,7 +177,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { getExamCredit } from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
+import { getExamCredit } from '@/requirements/requirement-exam-utils';
 import {
   getCollegeFullName,
   getMajorFullName,
@@ -218,9 +218,6 @@ export default defineComponent({
       this.onboardingData.exam.forEach(exam => {
         count += getExamCredit(exam);
       });
-      this.onboardingData.transferCourse.forEach(clas => {
-        count += clas.credits;
-      });
       return count;
     },
     isGraduateOnly(): boolean {
@@ -236,7 +233,6 @@ export default defineComponent({
       this.setPage(2);
       GTagEvent(this.$gtag, 'onboarding-edit-transfer-credits');
     },
-    getExamCredit,
     getMajorFullName,
     getMinorFullName,
     setPage(page: number): void {

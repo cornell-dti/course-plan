@@ -8,8 +8,8 @@ const semestersCollection = db.collection('user-semesters');
 const onboardingCollection = db.collection('user-onboarding-data');
 
 const average = (array: readonly number[]) => array.reduce((a, b) => a + b) / array.length;
-function typeToMonth(type: string) {
-  switch (type) {
+function seasonToMonth(season: string) {
+  switch (season) {
     case 'Spring':
       return 1;
     case 'Summer':
@@ -23,7 +23,7 @@ function typeToMonth(type: string) {
   }
 }
 
-function isOld(semester: { year: number; type: string }) {
+function isOld(semester: { year: number; season: string }) {
   const currentTime = new Date();
   const month = currentTime.getMonth() + 1;
   const year = currentTime.getFullYear();
@@ -33,7 +33,7 @@ function isOld(semester: { year: number; type: string }) {
   if (semester.year < year) {
     return true;
   }
-  if (typeToMonth(semester.type) <= month) {
+  if (seasonToMonth(semester.season) <= month) {
     return true;
   }
   return false;
