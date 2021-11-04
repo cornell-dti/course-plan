@@ -24,10 +24,10 @@ before('Delete test user data, then visit site and log in', () => {
 
       cy.callFirestore('delete', `user-onboarding-data/${TEST_EMAIL}`)
         // eslint-disable-next-line no-console
-        .then(result => cy.log('2', result));
+        .then(result2 => cy.log('2', result2));
       cy.callFirestore('delete', `user-semesters/${TEST_EMAIL}`)
         // eslint-disable-next-line no-console
-        .then(result => cy.log('3', result));
+        .then(result2 => cy.log('3', result2));
     });
 
   // visit the site
