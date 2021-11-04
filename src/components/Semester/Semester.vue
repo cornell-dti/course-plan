@@ -87,6 +87,7 @@
                 :semesterIndex="semesterIndex + 1"
                 @delete-course="deleteCourse"
                 @color-course="colorCourse"
+                @color-subject="colorSubject"
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
               />
@@ -133,11 +134,13 @@ import summer from '@/assets/images/summerEmoji.svg';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   editSemester,
+  editSemesters,
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
   addCourseToSelectableRequirements,
 } from '@/global-firestore-data';
+import { updateSubjectColorData } from '@/store';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -336,7 +339,7 @@ export default defineComponent({
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
     },
-    colorCourse(color: string, uniqueID: number) {
+    colorCourse(color: string, uniqueID: number, code: string) {
       editSemester(
         this.year,
         this.season,
@@ -347,6 +350,19 @@ export default defineComponent({
           ),
         })
       );
+      this.openConfirmationModal(`Changed color for ${code}`);
+    },
+    colorSubject(color: string, targetCourse: string) {
+      const code = targetCourse.split(' ')[0];
+      const updater = (semester: FirestoreSemester): FirestoreSemester => ({
+        ...semester,
+        courses: semester.courses.map(course =>
+          course.code.split(' ')[0] === code ? { ...course, color } : course
+        ),
+      });
+      editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));
+      updateSubjectColorData(color, code);
+      this.openConfirmationModal(`Changed color for ${code}`);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.$emit('course-onclick', course);

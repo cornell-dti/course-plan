@@ -9,7 +9,7 @@ import {
   deleteCoursesFromSelectableRequirements,
 } from './selectable-requirement-choices';
 
-const editSemesters = (
+export const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
   const newSemesters = updater(store.state.semesters);

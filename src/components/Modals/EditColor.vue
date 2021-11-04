@@ -28,7 +28,6 @@
         </div>
       </div>
     </div>
-    <!-- @click="colorCourse(color)" -->
   </teleport-modal>
 </template>
 
@@ -49,7 +48,8 @@ export default defineComponent({
   },
   emits: {
     'close-edit-color': () => true,
-    'edit-color': () => true,
+    'color-course': (color: string) => typeof color === 'string',
+    'color-subject': (color: string) => typeof color === 'string',
   },
   computed: {
     courseText() {
@@ -64,15 +64,15 @@ export default defineComponent({
       this.$emit('close-edit-color');
     },
     editColor(scope: string) {
-      console.log(scope);
-      console.log(this.editedColor);
-      // this.$emit('edit-color');
+      if (scope === 'course') {
+        this.$emit('color-course', this.editedColor.substring(1));
+        GTagEvent(this.$gtag, 'course-edit-color');
+      } else {
+        this.$emit('color-subject', this.editedColor.substring(1));
+        GTagEvent(this.$gtag, 'subject-edit-color');
+      }
       this.closeCurrentModal();
     },
-    // colorCourse(color: { hex: string }) {
-    //   this.$emit('color-course', color.hex.substring(1));
-    //   GTagEvent(this.$gtag, 'course-edit-color');
-    // },
   },
 });
 </script>

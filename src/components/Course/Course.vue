@@ -3,6 +3,7 @@
     <edit-color
       :editedColor="editedColor"
       @color-course="colorCourse"
+      @color-subject="colorSubject"
       @close-edit-color="closeEditColorModal"
       v-if="isEditColorOpen"
     />
@@ -46,6 +47,7 @@ import CourseCaution from '@/components/Course/CourseCaution.vue';
 import {
   addCourseToBottomBar,
   reportCourseColorChange,
+  reportSubjectColorChange,
 } from '@/components/BottomBar/BottomBarState';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
@@ -62,8 +64,10 @@ export default defineComponent({
   emits: {
     'delete-course': (code: string, uniqueID: number) =>
       typeof code === 'string' && typeof uniqueID === 'number',
-    'color-course': (color: string, uniqueID: number) =>
-      typeof color === 'string' && typeof uniqueID === 'number',
+    'color-course': (color: string, uniqueID: number, code: string) =>
+      typeof color === 'string' && typeof uniqueID === 'number' && typeof code === 'string',
+    'color-subject': (color: string, code: string) =>
+      typeof color === 'string' && typeof code === 'string',
     'course-on-click': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'edit-course-credit': (credit: number, uniqueID: number) =>
       typeof credit === 'number' && typeof uniqueID === 'number',
@@ -127,8 +131,13 @@ export default defineComponent({
       this.isEditColorOpen = false;
     },
     colorCourse(color: string) {
-      this.$emit('color-course', color, this.courseObj.uniqueID);
+      this.$emit('color-course', color, this.courseObj.uniqueID, this.courseObj.code);
       reportCourseColorChange(this.courseObj.uniqueID, color);
+      this.closeMenuIfOpen();
+    },
+    colorSubject(color: string) {
+      this.$emit('color-subject', color, this.courseObj.code);
+      reportSubjectColorChange(this.courseObj.code, color);
       this.closeMenuIfOpen();
     },
     courseOnClick() {

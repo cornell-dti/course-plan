@@ -23,6 +23,7 @@ type EventType =
   | 'bottom-bar-see-more' // User clicks on the See More tab of the Bottom Bar
   | 'bottom-bar-view-course-information-on-roster' // User clicks View Course Information on Roster link on Bottom Bar
   | 'course-edit-color' // User edits the course color
+  | 'subject-edit-color' // User edits the subject color
   | 'delete-course' // User deletes a course
   | 'delete-semester' // User deletes a semester
   | 'delete-semester-courses' // User deletes all courses in a semester
@@ -111,6 +112,13 @@ export const GTagEvent = (gtag: GTag | undefined, eventType: EventType): void =>
     case 'course-edit-color':
       eventPayload = {
         event_category: 'course',
+        event_label: 'edit-color',
+        value: 1,
+      };
+      break;
+    case 'subject-edit-color':
+      eventPayload = {
+        event_category: 'subject',
         event_label: 'edit-color',
         value: 1,
       };

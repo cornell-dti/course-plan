@@ -149,7 +149,6 @@ export default defineComponent({
   },
   emits: {
     'delete-course': () => true,
-    'color-course': (color: string) => typeof color === 'string',
     'open-edit-color-modal': (color: string) => typeof color === 'string',
     'edit-course-credit': (credit: number) => typeof credit === 'number',
   },

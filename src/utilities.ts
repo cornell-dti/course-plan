@@ -136,6 +136,20 @@ export function allocateAllSubjectColor(
   return subjectsColorsCopy;
 }
 
+export function udpateSubjectColor(
+  subjectColors: Record<string, string>,
+  color: string,
+  code: string
+): Record<string, string> {
+  const subjectsColorsCopy = { ...subjectColors };
+  getAllSubjects().forEach(subject => {
+    if (subject === code) {
+      subjectsColorsCopy[subject] = color;
+    }
+  });
+  return subjectsColorsCopy;
+}
+
 export const clickOutside = {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
   beforeMount(el: any, binding: any): void {
