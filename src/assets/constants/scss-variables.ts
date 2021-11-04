@@ -11,4 +11,5 @@ export const smallMediumBreakpoint = '600px';
 export const mediumBreakpoint = '878px';
 export const largeBreakpoint = '976px';
 export const veryLargeBreakpoint = '1347px';
+export const largerBreakpoint = '1407px';
 export const largestBreakpoint = '1455px';

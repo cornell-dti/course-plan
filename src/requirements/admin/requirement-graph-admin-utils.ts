@@ -10,18 +10,19 @@ import { getCourseCodesArray } from '../requirement-frontend-computation';
 import buildRequirementFulfillmentGraphFromUserData from '../requirement-graph-builder-from-user-data';
 import RequirementFulfillmentGraph from '../requirement-graph';
 
-interface UserRequirementDataOnAdmin {
+interface UserDataOnAdmin {
   readonly courses: readonly CourseTaken[];
   readonly onboardingData: AppOnboardingData;
   readonly toggleableRequirementChoices: Readonly<Record<string, string>>;
   readonly selectableRequirementChoices: Readonly<Record<string, string>>;
+}
+
+interface UserRequirementDataOnAdmin extends UserDataOnAdmin {
   readonly userRequirements: readonly RequirementWithIDSourceType[];
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
 }
 
-export default async function getUserRequirementDataOnAdmin(
-  userEmail: string
-): Promise<UserRequirementDataOnAdmin> {
+export async function getUserDataOnAdmin(userEmail: string): Promise<UserDataOnAdmin> {
   const [
     semesters,
     toggleableRequirementChoices,
@@ -47,6 +48,20 @@ export default async function getUserRequirementDataOnAdmin(
   ]);
 
   const courses = getCourseCodesArray(semesters, onboardingData);
+
+  return { courses, onboardingData, toggleableRequirementChoices, selectableRequirementChoices };
+}
+
+export default async function getUserRequirementDataOnAdmin(
+  userEmail: string
+): Promise<UserRequirementDataOnAdmin> {
+  const {
+    courses,
+    onboardingData,
+    toggleableRequirementChoices,
+    selectableRequirementChoices,
+  } = await getUserDataOnAdmin(userEmail);
+
   const {
     userRequirements,
     requirementFulfillmentGraph,
