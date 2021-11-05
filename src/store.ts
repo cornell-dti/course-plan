@@ -7,7 +7,7 @@ import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
 import {
   allocateAllSubjectColor,
-  udpateSubjectColor,
+  updateSubjectColor,
   checkNotNull,
   getCurrentSeason,
   getCurrentYear,
@@ -473,7 +473,7 @@ export const updateSubjectColorData = (color: string, code: string): void => {
     .get()
     .then(snapshot => {
       const subjectColors = snapshot.data() || {};
-      const newSubjectColors = udpateSubjectColor(subjectColors, color, code);
+      const newSubjectColors = updateSubjectColor(subjectColors, color, code);
       store.commit('setSubjectColors', newSubjectColors);
       fb.subjectColorsCollection.doc(simplifiedUser.email).set(newSubjectColors);
     });

@@ -136,7 +136,7 @@ export function allocateAllSubjectColor(
   return subjectsColorsCopy;
 }
 
-export function udpateSubjectColor(
+export function updateSubjectColor(
   subjectColors: Record<string, string>,
   color: string,
   code: string
