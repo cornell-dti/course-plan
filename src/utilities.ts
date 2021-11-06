@@ -1,5 +1,6 @@
 import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
+import { coursesColorSet } from './assets/constants/colors';
 
 /** Enumerated type to define seasons as integers in season order */
 export const SeasonOrdinal = {
@@ -73,65 +74,15 @@ function getAllSubjects(): ReadonlySet<string> {
   return set;
 }
 
-const SUBJECT_COLORS = [
-  {
-    text: 'Red',
-    hex: 'FF3B30',
-  },
-  {
-    text: 'Orange',
-    hex: 'FF9500',
-  },
-  {
-    text: 'Green',
-    hex: '34C759',
-  },
-  {
-    text: 'Blue',
-    hex: '007AFF',
-  },
-  {
-    text: 'Purple',
-    hex: 'AF52DE',
-  },
-  {
-    text: 'Pink',
-    hex: 'F296D3',
-  },
-  {
-    text: 'Big Red',
-    hex: 'AB1D1A',
-  },
-  {
-    text: 'Chimes',
-    hex: 'EAB168',
-  },
-  {
-    text: 'Gorges',
-    hex: '318663',
-  },
-  {
-    text: 'Cayuga',
-    hex: '0D49A9',
-  },
-  {
-    text: 'Ithaca Winter',
-    hex: '88B9F2',
-  },
-  {
-    text: 'Blossom',
-    hex: 'D67B9B',
-  },
-];
-
 export function allocateAllSubjectColor(
   subjectColors: Record<string, string>
 ): Record<string, string> {
   const subjectsColorsCopy = { ...subjectColors };
   getAllSubjects().forEach(subject => {
     if (subjectsColorsCopy[subject]) return;
-    subjectsColorsCopy[subject] =
-      SUBJECT_COLORS[Math.floor(Math.random() * SUBJECT_COLORS.length)].hex;
+    subjectsColorsCopy[subject] = coursesColorSet[
+      Math.floor(Math.random() * coursesColorSet.length)
+    ].hex.substring(1);
   });
   return subjectsColorsCopy;
 }
