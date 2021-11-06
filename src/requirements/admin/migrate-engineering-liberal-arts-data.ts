@@ -95,7 +95,9 @@ async function runOnUser(userEmail: string, runOnDB: boolean) {
   console.log(choicesUpdates);
 
   if (runOnDB && Object.keys(choicesUpdates).length > 0) {
-    await selectableRequirementChoicesCollection.doc(userEmail).update(choicesUpdates);
+    await selectableRequirementChoicesCollection
+      .doc(userEmail)
+      .set({ ...selectableRequirementChoices, ...choicesUpdates });
   }
 }
 
