@@ -43,7 +43,7 @@ export default defineComponent({
   },
   data() {
     return {
-      picked: '',
+      picked: 'course',
     };
   },
   emits: {

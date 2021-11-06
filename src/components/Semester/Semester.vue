@@ -339,7 +339,7 @@ export default defineComponent({
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
     },
-    colorCourse(color: string, uniqueID: number, course: string) {
+    colorCourse(color: string, uniqueID: number, courseCode: string) {
       editSemester(
         this.year,
         this.season,
@@ -350,10 +350,10 @@ export default defineComponent({
           ),
         })
       );
-      this.openConfirmationModal(`Changed color for ${course}`);
+      this.openConfirmationModal(`Changed color for ${courseCode}`);
     },
-    colorSubject(color: string, course: string) {
-      const subject = course.split(' ')[0];
+    colorSubject(color: string, courseCode: string) {
+      const subject = courseCode.split(' ')[0];
       const updater = (semester: FirestoreSemester): FirestoreSemester => ({
         ...semester,
         courses: semester.courses.map(course =>
