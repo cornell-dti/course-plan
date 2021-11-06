@@ -183,12 +183,12 @@ export default defineComponent({
 
   &-content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(25rem, 100%), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min($regular-semester-width * 1.05, 100%), 1fr));
     grid-auto-flow: dense;
     margin: 0 -0.75rem;
 
     &--compact {
-      grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min($compact-semester-width * 1.05, 100%), 1fr));
     }
   }
 
@@ -307,6 +307,7 @@ export default defineComponent({
     &-content {
       width: 100%;
       justify-content: center;
+      grid-template-columns: repeat(auto-fill, minmax(min($compact-semester-width * 1.05, 100%), 1fr));
     }
   }
 }
