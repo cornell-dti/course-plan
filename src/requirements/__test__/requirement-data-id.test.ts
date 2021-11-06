@@ -13,8 +13,13 @@ const allRequirementsIDs = [
     )
     .flat(),
   ...Object.entries(requirementJson.minor)
-    .map(([major, minorRequirement]) =>
-      minorRequirement.requirements.map(it => `Minor-${major}-${it.name}`)
+    .map(([minor, minorRequirement]) =>
+      minorRequirement.requirements.map(it => `Minor-${minor}-${it.name}`)
+    )
+    .flat(),
+  ...Object.entries(requirementJson.grad)
+    .map(([grad, gradRequirement]) =>
+      gradRequirement.requirements.map(it => `Grad-${grad}-${it.name}`)
     )
     .flat(),
 ].sort((a, b) => a.localeCompare(b));

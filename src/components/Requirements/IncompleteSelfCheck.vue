@@ -152,10 +152,10 @@ export default defineComponent({
       this.showDropdown = false;
       addCourseToSelectableRequirements(this.selfCheckCourses[option].uniqueID, this.subReqId);
     },
-    addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterType, year: number) {
+    addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterSeason, year: number) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(course);
-      addCourseToSemester(season, year, newCourse, this.subReqId, this.$gtag);
+      addCourseToSemester(year, season, newCourse, this.subReqId, this.$gtag);
     },
     openCourseModal() {
       this.isCourseModalOpen = true;

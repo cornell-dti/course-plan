@@ -24,14 +24,9 @@ import eraseIcon from '@/assets/images/erase-white.svg';
 
 export default defineComponent({
   components: { TeleportModal },
-  props: {
-    clearSemType: { type: String, required: true },
-    clearSemYear: { type: Number, required: true },
-  },
   emits: {
     'close-clear-sem': () => true,
-    'clear-semester': (type: string, year: number) =>
-      typeof type === 'string' && typeof year === 'number',
+    'clear-semester': () => true,
   },
   computed: {
     text() {
@@ -46,7 +41,7 @@ export default defineComponent({
       this.$emit('close-clear-sem');
     },
     clearSemester() {
-      this.$emit('clear-semester', this.clearSemType, this.clearSemYear);
+      this.$emit('clear-semester');
       this.closeCurrentModal();
     },
   },

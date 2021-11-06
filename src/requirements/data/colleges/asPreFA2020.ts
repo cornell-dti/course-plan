@@ -53,7 +53,7 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
       'Option 2': {
         description:
           'Complete at least 11 credits of study (2 or 3 semesters) in a single foreign language taken in the appropriate sequence at Cornell.',
-        checker: [(course: Course): boolean => courseIsForeignLang(course)],
+        checker: [courseIsForeignLang],
         counting: 'credits',
         perSlotMinCount: [11],
       },
