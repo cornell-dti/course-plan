@@ -19,7 +19,7 @@
         />
         <requirement-side-bar
           class="dashboard-reqs"
-          v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
+          v-if="loaded && isOpeningRequirements"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
         />
@@ -120,14 +120,17 @@ export default defineComponent({
     TourWindow,
   },
   data() {
+    const isTablet = window.innerWidth <= mediumBreakpointPixels;
+    const isMobile = window.innerWidth <= mediumBreakpointPixels;
     return {
       loaded: true,
       compactVal: false,
+      showSideBar: true,
       isOnboarding: false,
       isEditingProfile: false,
-      isOpeningRequirements: false,
-      isTablet: window.innerWidth <= mediumBreakpointPixels,
-      isMobile: window.innerWidth <= smallBreakpointPixels,
+      isTablet,
+      isMobile,
+      isOpeningRequirements: !isTablet,
       maxBottomBarTabs: getMaxButtonBarTabs(),
       welcomeHidden: false,
       startTour: false,

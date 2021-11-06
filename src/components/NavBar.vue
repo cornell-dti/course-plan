@@ -16,6 +16,10 @@
     </div>
     <div class="navbar-bottom">
       <button
+        class="navbar-iconWrapper desktop toggle-requirements-icon full-opacity-on-hover"
+        @click="toggleRequirementsBar"
+      />
+      <button
         class="navbar-iconWrapper desktop logout-icon full-opacity-on-hover"
         @click="logout"
       />
@@ -147,6 +151,16 @@ $mobile-navbar-height: 4.5rem;
     &:focus,
     &:active {
       background-image: url('@/assets/images/navbar/logoutBlue.svg');
+    }
+  }
+
+  .toggle-requirements-icon {
+    background-image: url('@/assets/images/navbar/hamburger-gray.svg');
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-image: url('@/assets/images/navbar/hamburger-blue.svg');
     }
   }
 
