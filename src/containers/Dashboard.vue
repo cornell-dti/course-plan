@@ -240,16 +240,11 @@ export default defineComponent({
   &-mainView {
     display: flex;
     background-color: $backgroundBlue;
-    overflow-x: hidden;
     min-height: 100vh;
   }
 
   &-menus {
     display: flex;
-  }
-
-  &-reqs {
-    margin-left: 4.5rem;
   }
 
   /* The Modal (background) */

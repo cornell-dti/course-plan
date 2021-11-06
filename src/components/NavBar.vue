@@ -98,7 +98,8 @@ $mobile-navbar-height: 4.5rem;
   width: 4.5rem;
   height: 100vh;
   display: flex;
-  position: fixed;
+  position: sticky;
+  top: 0;
   z-index: 2;
   flex-direction: column;
   justify-content: space-between;
@@ -222,6 +223,7 @@ $mobile-navbar-height: 4.5rem;
     padding-top: 0rem;
     padding-bottom: 0rem;
     display: flex;
+    position: fixed;
     flex-direction: row;
 
     .nav-mobile-button {

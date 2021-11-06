@@ -343,7 +343,6 @@ export default defineComponent({
 }
 .fixed {
   position: fixed;
-  left: 4.5rem;
   top: 0;
   overflow-y: scroll;
   overflow-x: hidden;
