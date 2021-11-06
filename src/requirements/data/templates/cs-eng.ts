@@ -1,6 +1,6 @@
-import { PlaceholdersForRequirement } from '@/requirements/types';
+import { Template } from '@/requirements/types';
 
-const csEngTemplate: readonly PlaceholdersForRequirement[] = [
+const csEngTemplate: Template = [
   {
     reqGroup: 'UNI',
     name: 'Physical Education',

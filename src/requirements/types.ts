@@ -44,7 +44,7 @@ export type DecoratedRequirementsJson = {
 };
 
 /* Type that represents a set of placeholders for a given requirement */
-export type PlaceholdersForRequirement = {
+type PlaceholdersForRequirement = {
   /**
    * Acronym representing the university/college/major the requirement is located in.
    * Should be the same acronym used in RequirementsJson.
@@ -58,3 +58,5 @@ export type PlaceholdersForRequirement = {
    */
   readonly placeholderSemesters: number[];
 };
+
+export type Template = readonly PlaceholdersForRequirement[];
