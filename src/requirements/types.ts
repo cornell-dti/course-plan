@@ -46,7 +46,7 @@ export type DecoratedRequirementsJson = {
 /* Type that represents a set of placeholders for a given requirement */
 export type PlaceholdersForRequirement = {
   /**
-   * Acronym representing the unviersity/college/major the requirement is located in.
+   * Acronym representing the university/college/major the requirement is located in.
    * Should be the same acronym used in RequirementsJson.
    */
   readonly reqGroup: string;
