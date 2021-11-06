@@ -26,12 +26,6 @@ const csEngTemplate: Template = [
     name: 'First-Year Writing Seminars',
     placeholderSemesters: [1, 2],
   },
-  // TODO: can probably remove the computing requirement from the template as Introductory Programming will cover it.
-  {
-    reqGroup: 'EN',
-    name: 'Computing',
-    placeholderSemesters: [1],
-  },
   {
     reqGroup: 'EN',
     name: 'Introduction to Engineering',
@@ -47,6 +41,7 @@ const csEngTemplate: Template = [
     name: 'Advisor-Approved Electives',
     placeholderSemesters: [5, 6],
   },
+  // TODO: add back Computing req if a programatic way of finding duplicate placeholders (such as between Computing and Introductory Programming) is implemented
   {
     reqGroup: 'CS',
     name: 'Introductory Programming',
