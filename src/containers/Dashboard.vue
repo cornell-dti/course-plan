@@ -121,7 +121,7 @@ export default defineComponent({
   },
   data() {
     const isTablet = window.innerWidth <= mediumBreakpointPixels;
-    const isMobile = window.innerWidth <= mediumBreakpointPixels;
+    const isMobile = window.innerWidth <= smallBreakpointPixels;
     return {
       loaded: true,
       compactVal: false,
