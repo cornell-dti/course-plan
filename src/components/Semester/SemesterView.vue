@@ -35,12 +35,11 @@
         />
       </div>
       <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
-      <div class="semesterView-content">
+      <div class="semesterView-content" :class="{ 'semesterView-content--compact': compact }">
         <div
           v-for="(sem, semesterIndex) in semesters"
           :key="`${sem.year}-${sem.season}`"
           class="semesterView-wrapper"
-          :class="{ 'semesterView-wrapper--compact': compact }"
         >
           <semester
             ref="semester"
@@ -56,23 +55,6 @@
             @delete-semester="deleteSemester"
           />
         </div>
-        <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
-        <div
-          v-if="compact"
-          class="semesterView-empty semesterView-empty--compact"
-          aria-hidden="true"
-        ></div>
-        <div
-          v-if="compact"
-          class="semesterView-empty semesterView-empty--compact"
-          aria-hidden="true"
-        ></div>
-        <div
-          v-if="compact"
-          class="semesterView-empty semesterView-empty--compact"
-          aria-hidden="true"
-        ></div>
-        <div v-if="compact"><div v-if="compact"></div></div>
       </div>
     </div>
     <div class="semesterView-bot">
@@ -200,9 +182,14 @@ export default defineComponent({
   position: relative;
 
   &-content {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(25rem, 100%), 1fr));
+    grid-auto-flow: dense;
     margin: 0 -0.75rem;
+
+    &--compact {
+      grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+    }
   }
 
   &-addSemesterButton {
@@ -277,24 +264,9 @@ export default defineComponent({
   &-wrapper {
     display: flex;
     justify-content: center;
-    flex: 1 1 50%;
 
     margin-bottom: 1.5rem;
     padding: 0 0.25rem;
-
-    &--compact {
-      flex: 1 1 25%;
-    }
-  }
-
-  &-empty {
-    flex: 1 1 50%;
-    padding: 0 0.75rem;
-
-    &--compact {
-      flex: 1 1 25%;
-      min-width: 14.5rem;
-    }
   }
 
   &-builtBy {
@@ -322,22 +294,6 @@ export default defineComponent({
 
 .bottomBar {
   margin-bottom: 350px;
-}
-
-@media only screen and (max-width: $largest-breakpoint) {
-  .semesterView {
-    &-empty--compact {
-      min-width: 33%;
-    }
-  }
-}
-
-@media only screen and (max-width: $larger-breakpoint) {
-  .semesterView {
-    &-empty--compact {
-      min-width: 50%;
-    }
-  }
 }
 
 @media only screen and (max-width: $medium-breakpoint) {

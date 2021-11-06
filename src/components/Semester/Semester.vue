@@ -461,7 +461,6 @@ export default defineComponent({
 
   &--compact {
     width: 17.5rem;
-    padding: 0.875rem 1.125rem;
   }
 
   &-confirmation {
