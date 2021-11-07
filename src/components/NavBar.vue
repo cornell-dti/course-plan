@@ -16,6 +16,7 @@
     </div>
     <div class="navbar-bottom">
       <button
+        v-if="showToggleRequirementsBtn"
         class="navbar-iconWrapper desktop toggle-requirements-icon full-opacity-on-hover"
         @click="toggleRequirementsBar"
       />
@@ -56,6 +57,7 @@
 import { defineComponent } from 'vue';
 import firebase from 'firebase/app';
 import { GTagEvent } from '@/gtag';
+import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   props: {
@@ -66,6 +68,11 @@ export default defineComponent({
     return {
       menuOpen: false,
     };
+  },
+  computed: {
+    showToggleRequirementsBtn(): boolean {
+      return featureFlagCheckers.isToggleRequirementsBarBtnEnabled();
+    },
   },
   methods: {
     logout() {
