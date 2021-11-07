@@ -183,8 +183,9 @@ export default defineComponent({
 
   &-content {
     display: grid;
+    justify-items: center;
     grid-template-columns: repeat(auto-fill, minmax(min($regular-semester-width, 100%), 1fr));
-    grid-auto-flow: dense;
+    column-gap: 0.5rem;
     margin: 0 -0.75rem;
 
     &--compact {
