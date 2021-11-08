@@ -29,7 +29,7 @@
             >
               <img
                 src="@/assets/images/x-green.svg"
-                :alt="`x to remove ${examName} exam ${exam.type} ${exam.subject}`"
+                :alt="`x to remove ${examName} exam ${exam.name} ${exam.subject}`"
               />
             </button>
           </div>
@@ -46,9 +46,6 @@
 import { defineComponent, PropType } from 'vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
 
-/** Represents an exam one can take for transfer credit */
-type Exam = 'AP' | 'IB';
-
 export default defineComponent({
   components: {
     OnboardingTransferExamPropertyDropdown,
@@ -58,14 +55,14 @@ export default defineComponent({
       typeof subject === 'string' && typeof index === 'number',
     'on-score-select': (score: number, index: number) =>
       typeof score === 'number' && typeof index === 'number',
-    'on-remove': (name: Exam, index: number) =>
+    'on-remove': (name: TransferExam, index: number) =>
       typeof name === 'string' && typeof index === 'number',
-    'on-add': (name: Exam) => typeof name === 'string',
+    'on-add': (name: TransferExam) => typeof name === 'string',
   },
   props: {
-    examName: { type: String as PropType<Exam>, required: true },
+    examName: { type: String as PropType<TransferExam>, required: true },
     exams: {
-      type: Array as PropType<readonly FirestoreAPIBExam[]>,
+      type: Array as PropType<readonly FirestoreTransferExam[]>,
       required: true,
     },
     subjects: {
@@ -85,7 +82,7 @@ export default defineComponent({
   methods: {
     getSelectableOptions(
       // exams already picked
-      selectedExams: readonly FirestoreAPIBExam[],
+      selectedExams: readonly FirestoreTransferExam[],
       // array of ap/ib exams
       allSubjects: readonly string[],
       choice: string
@@ -105,7 +102,7 @@ export default defineComponent({
       }
       return selectableOptions;
     },
-    hasExams(exams: readonly FirestoreAPIBExam[], exam: FirestoreAPIBExam): boolean {
+    hasExams(exams: readonly FirestoreTransferExam[], exam: FirestoreTransferExam): boolean {
       return !(exams.length === 1 && exam.subject === this.placeholderText);
     },
   },
