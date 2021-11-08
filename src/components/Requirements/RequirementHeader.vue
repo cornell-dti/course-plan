@@ -217,7 +217,9 @@ export default defineComponent({
     requirementFulfilled(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
-        if (req.minCountFulfilled >= req.minCountRequired) fulfilled += 1;
+        [req, ...Object.values(req.additionalRequirements || {})].forEach(reqOrNestedReq => {
+          if (reqOrNestedReq.minCountFulfilled >= reqOrNestedReq.minCountRequired) fulfilled += 1;
+        });
       });
       return fulfilled;
     },

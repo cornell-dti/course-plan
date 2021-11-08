@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { examData as reqsData, ExamRequirements } from '@/requirements/data/exams/ExamCredit';
+import { examSubjects, getExamCredit } from '@/requirements/requirement-exam-utils';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferCreditsSource from './OnboardingTransferCreditsSource.vue';
 
@@ -70,15 +70,8 @@ type TransferClassWithOptionalCourse = {
 
 type Data = {
   tookSwimTest: 'yes' | 'no';
-  scores: {
-    AP: readonly number[];
-    IB: readonly number[];
-  };
-  subjects: {
-    AP: readonly string[];
-    IB: readonly string[];
-    CASE: readonly string[];
-  };
+  scoresAP: readonly number[];
+  scoresIB: readonly number[];
   placeholderText: string;
   exams: {
     AP: FirestoreTransferExam[];
@@ -90,24 +83,6 @@ type Data = {
 
 const scoresAP = [5, 4, 3, 2, 1];
 const scoresIB = [7, 6, 5, 4, 3, 2, 1];
-const existingAP: Record<string, boolean> = {};
-const unmodifiedReqsData = { ...reqsData };
-// filter duplicate exam names and ones already selected
-reqsData.AP = reqsData.AP.filter(ap => {
-  const inExisting = ap.name in existingAP;
-  existingAP[ap.name] = true;
-  return !inExisting;
-});
-const existingIB: Record<string, boolean> = {};
-// filter duplicate exam names and ones already selected
-reqsData.IB = reqsData.IB.filter(ib => {
-  const inExisting = ib.name in existingIB;
-  existingIB[ib.name] = true;
-  return !inExisting;
-});
-const subjectsAP = reqsData.AP.map(({ name }) => name);
-const subjectsIB = reqsData.IB.map(({ name }) => name);
-const subjectsCASE = ['Computer Science', 'Chemistry', 'Physics', 'Foreign Language'];
 
 const asAPIB = (exam: FirestoreTransferExam) => {
   const { name } = exam;
@@ -119,18 +94,6 @@ const asAPIB = (exam: FirestoreTransferExam) => {
 
 const asAPIBArray = (exams: FirestoreTransferExam[]) => exams.map(asAPIB);
 
-export const getExamCredit = (exam: FirestoreAPIBExam): number => {
-  const allExamsWithSameName: ExamRequirements[] = unmodifiedReqsData[exam.type].filter(
-    ({ name }) => name === exam.subject
-  );
-  let mostPossibleCredit = 0;
-  for (const examWithSameName of allExamsWithSameName) {
-    if (exam.score >= examWithSameName.fulfillment.minimumScore) {
-      mostPossibleCredit = Math.max(mostPossibleCredit, examWithSameName.fulfillment.credits);
-    }
-  }
-  return mostPossibleCredit;
-};
 
 export default defineComponent({
   components: {
@@ -161,9 +124,10 @@ export default defineComponent({
     return {
       tookSwimTest:
         typeof this.onboardingData.tookSwim !== 'undefined' ? this.onboardingData.tookSwim : 'no',
-      scores: { AP: scoresAP, IB: scoresIB },
-      subjects: { AP: subjectsAP, IB: subjectsIB, CASE: subjectsCASE },
-      exams,
+      scoresAP,
+      scoresIB,
+      examsAP,
+      examsIB,
       classes: transferClasses,
       placeholderText,
     };
@@ -173,16 +137,23 @@ export default defineComponent({
       let count = 0;
       const aggregated = [...asAPIBArray(this.exams.AP), ...asAPIBArray(this.exams.IB)];
       aggregated.forEach(exam => {
-        count += this.getExamCredit(exam);
+        count += getExamCredit(exam);
       });
       this.classes.forEach(clas => {
         count += clas.credits;
       });
       return count;
     },
+    subjectsAP(): string[] {
+      const currentSubjects = new Set(this.examsAP.map(exam => exam.subject));
+      return examSubjects.AP.filter(subject => !currentSubjects.has(subject));
+    },
+    subjectsIB(): string[] {
+      const currentSubjects = new Set(this.examsIB.map(exam => exam.subject));
+      return examSubjects.IB.filter(subject => !currentSubjects.has(subject));
+    },
   },
   methods: {
-    getExamCredit,
     getTransferClassSearchboxPlaceholder(text: string): string {
       return text !== this.placeholderText ? text : '"CS1110", "Multivariable Calculus", etc';
     },

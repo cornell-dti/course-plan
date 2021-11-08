@@ -280,7 +280,7 @@ export default defineComponent({
     flex: 1 1 50%;
 
     margin-bottom: 1.5rem;
-    padding: 0 0.75rem;
+    padding: 0 0.25rem;
 
     &--compact {
       flex: 1 1 25%;
@@ -325,6 +325,14 @@ export default defineComponent({
 }
 
 @media only screen and (max-width: $largest-breakpoint) {
+  .semesterView {
+    &-empty--compact {
+      min-width: 33%;
+    }
+  }
+}
+
+@media only screen and (max-width: $larger-breakpoint) {
   .semesterView {
     &-empty--compact {
       min-width: 50%;
