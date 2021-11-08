@@ -7,7 +7,7 @@ type ExamTaken = {
 };
 export type ExamsTaken = Record<'AP' | 'IB', ExamTaken[]>;
 
-type ExamSubjects = Record<'AP' | 'IB', string[]>;
+type ExamSubjects = Record<TransferExam, readonly string[]>;
 
 function userDataToCourses(
   college: string | undefined,
@@ -133,6 +133,7 @@ function toSubjects(data: ExamRequirements[]) {
 export const examSubjects: ExamSubjects = {
   AP: toSubjects(examData.AP),
   IB: toSubjects(examData.IB),
+  CASE: ['Computer Science', 'Chemistry', 'Physics', 'Foreign Language'], // stub in for now
 };
 
 export const getExamCredit = (examTaken: FirestoreAPIBExam): number => {
