@@ -35,6 +35,7 @@
             @on-add="addExam"
           />
           <onboarding-transfer-credits-source
+            v-if="caseEnabled"
             examName="CASE"
             :exams="CASE.exams"
             :subjects="subjectsCASE"
@@ -59,6 +60,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { examSubjects, getExamCredit } from '@/requirements/requirement-exam-utils';
+import featureFlagCheckers from '@/feature-flags';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferCreditsSource from './OnboardingTransferCreditsSource.vue';
 
@@ -242,6 +244,9 @@ export default defineComponent({
     },
     subjectsCASE(): string[] {
       return this.subjects('CASE');
+    },
+    caseEnabled(): boolean {
+      return featureFlagCheckers.isCaseEnabled();
     },
   },
 });

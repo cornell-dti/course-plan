@@ -2,10 +2,10 @@
 const GateKeeperTogglers: Record<string, () => void> = {};
 
 // Register your new feature flags below, both in type and in `registerFeatureFlagChecker`.
-type FeatureFlagName = 'RequirementDebugger' | 'CASE' /* | 'AddYourFeatureFlagNameHere' */;
+type FeatureFlagName = 'RequirementDebugger' | 'Case' /* | 'AddYourFeatureFlagNameHere' */;
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'RequirementDebugger',
-  'CASE'
+  'Case'
   /* 'AddYourFeatureFlagNameHere' */
 );
 export default featureFlagCheckers;
