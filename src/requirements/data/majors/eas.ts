@@ -28,7 +28,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Chemistry',
     description:
-      'At least two courses in chemistry: CHEM 2070 or CHEM 2090 + CHEM 2080 or CHEM 1570. Students who take PHYS 1112 + PHYS 2213 may substitute PHYS 2214 for their second course in chemistry',
+      'Option 1: CHEM 2070 or CHEM 2090 + CHEM 2080. Option 2: CHEM 1570. Option 3: PHYS 2214',
     source:
       'https://www.eas.cornell.edu/eas/programs/undergraduate-programs/abbs-earth-and-atmospheric-sciences/eas-major-requirements',
     fulfilledBy: 'toggleable',
@@ -41,8 +41,15 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
         slotNames: ['CHEM 2070 or CHEM 2090', 'CHEM 2080'],
       },
       'Option 2': {
+        description: 'CHEM 1570',
+        checker: includesWithSingleRequirement('CHEM 1570'),
+        counting: 'courses',
+        perSlotMinCount: [1],
+        slotNames: ['Course'],
+      },
+      'Option 3': {
         description: 'PHYS 2214',
-        checker: includesWithSubRequirements(['PHYS 2214']),
+        checker: includesWithSingleRequirement('PHYS 2214'),
         counting: 'courses',
         perSlotMinCount: [1],
         slotNames: ['Course'],
