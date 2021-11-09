@@ -5,7 +5,7 @@ import { serviceAccount, SemesterDocumentData } from '../../firebase-admin-confi
 import { getTypedFirestoreDataConverter } from '../../firebase-config-common';
 
 const TEST_EMAIL = 'courseplan.cornelldti.test@gmail.com';
-admin.credential.cert = process.env.SERVICE_ACCOUNT ?? serviceAccount;
+admin.credential.cert = serviceAccount;
 const db = admin.firestore();
 
 const semestersCollection = db
