@@ -19,13 +19,23 @@ async function deleteOnboardingAndSemesterDocument() {
       console.log(doc.data());
     });
   } else {
-    onboardingDoc.delete().then(() => {
-      console.log("Test user's onboarding data deleted");
-    });
+    onboardingDoc
+      .delete()
+      .then(() => {
+        console.log("Test user's onboarding data deleted");
+      })
+      .catch(error => {
+        console.log('Onboarding error:', error);
+      });
 
-    semesterDoc.delete().then(() => {
-      console.log("Test user's semester data deleted");
-    });
+    semesterDoc
+      .delete()
+      .then(() => {
+        console.log("Test user's semester data deleted");
+      })
+      .catch(error => {
+        console.log('Semester error:', error);
+      });
   }
 }
 
