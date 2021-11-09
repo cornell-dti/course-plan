@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 type EventPayload = { event_category: string; event_label: string; value: number };
 type LoginEventPayload = { method: string };
 

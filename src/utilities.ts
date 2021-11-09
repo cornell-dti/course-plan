@@ -113,7 +113,7 @@ export function allocateAllSubjectColor(
 }
 
 export const clickOutside = {
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   beforeMount(el: any, binding: any): void {
     el.clickOutsideEvent = (event: Event) => {
       if (!(el === event.target || el.contains(event.target))) {
@@ -122,7 +122,7 @@ export const clickOutside = {
     };
     document.body.addEventListener('click', el.clickOutsideEvent);
   },
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   unmounted(el: any): void {
     document.body.removeEventListener('click', el.clickOutsideEvent);
   },

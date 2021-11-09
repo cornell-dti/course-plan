@@ -62,7 +62,10 @@ export default defineComponent({
     hasNoBackground: { type: Boolean, default: false }, // true for modals without the gray overlay behind them
     hasClickableTransparentBackground: { type: Boolean, default: false }, // modals without a gray overlay behind them AND clicking on the background closes the modal
     hasCustomPosition: { type: Boolean, default: false }, // true if you want to set custom position for modal
-    position: { type: Object as PropType<{ x: number; y: number }>, default: { x: 0, y: 0 } }, // custom position (hasCustomPosition must be true)
+    position: {
+      type: Object as PropType<{ x: number; y: number }>,
+      default: () => ({ x: 0, y: 0 }),
+    }, // custom position (hasCustomPosition must be true)
   },
   data() {
     const customPosition = this.hasCustomPosition
