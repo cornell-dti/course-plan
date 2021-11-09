@@ -32,6 +32,8 @@ jobs:
           cache: 'npm'
       - name: NPM Clean Install
         run: npm ci
+      - name: Set Test Account Firestore Data
+        run: npm run ts-node -- src/requirements/admin/set-testing-account-data.ts
       - name: Cypress Test
         run: npm run cypress:e2e
         env:
