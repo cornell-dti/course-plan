@@ -21,7 +21,6 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first",
-    "cypress:set-data": "npm run ts-node -- src/requirements/admin/set-testing-account-data.ts"
   },
   "dependencies": {
     "@cypress/vue": "^2.0.2",

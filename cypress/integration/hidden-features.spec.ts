@@ -1,7 +1,6 @@
 /**
  * A test file containing a number of tests on features and bugs that are often forgotten about when testing PRs.
  * Can and should be expanded in the future.
- * Note: This spec file must run on the CI before the others, as it will set the user's initial data after it is deleted by a script
  */
 
 // Before running tests, delete Firestore data for the testing email (so the initial onboarding and walkthrough trigger)
