@@ -11,7 +11,7 @@ before('Delete test user data, then visit site and log in', () => {
   cy.visit('localhost:8080/login');
   cy.login(Cypress.env('TEST_UID'));
 
-  const TEST_EMAIL = 'courseplan.cornelldti.test@gmail.com';
+  const TEST_EMAIL = Cypress.env('TEST_EMAIL');
 
   // delete test user's necessary collections to treat them as a new user
   cy.callFirestore('delete', `user-onboarding-data/${TEST_EMAIL}`);
