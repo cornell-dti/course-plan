@@ -324,9 +324,20 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    addCourse(data: CornellCourseRosterCourse, requirementID: string) {
+    addCourse(
+      data: CornellCourseRosterCourse,
+      requirementID: string,
+      selectableDoubleCountableIDs
+    ) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      addCourseToSemester(this.year, this.season, newCourse, requirementID, this.$gtag);
+      addCourseToSemester(
+        this.year,
+        this.season,
+        newCourse,
+        requirementID,
+        selectableDoubleCountableIDs,
+        this.$gtag
+      );
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);

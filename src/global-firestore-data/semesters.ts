@@ -91,6 +91,7 @@ export const addCourseToSemester = (
   season: FirestoreSemesterSeason,
   newCourse: FirestoreSemesterCourse,
   requirementID?: string,
+  selectableDoubleCountableIDs?: string[],
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'add-course');
@@ -108,6 +109,11 @@ export const addCourseToSemester = (
   });
   if (requirementID) {
     addCourseToSelectableRequirements(newCourse.uniqueID, requirementID);
+  }
+  if (selectableDoubleCountableIDs) {
+    selectableDoubleCountableIDs.forEach(reqID => {
+      addCourseToSelectableRequirements(newCourse.uniqueID, reqID);
+    });
   }
 };
 

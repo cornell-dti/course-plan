@@ -13,7 +13,9 @@ export const addCourseToSelectableRequirements = (
   courseUniqueID: string | number,
   requirementID: string | undefined
 ): void => {
+  console.log('ADD');
   if (!requirementID) return;
+  console.log('RETURN');
   chooseSelectableRequirementOption({
     ...store.state.selectableRequirementChoices,
     [courseUniqueID]: requirementID,

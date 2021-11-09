@@ -54,8 +54,14 @@ export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
     'close-course-modal': () => true,
-    'add-course': (course: CornellCourseRosterCourse, requirementID: string) =>
-      typeof course === 'object' && typeof requirementID === 'string',
+    'add-course': (
+      course: CornellCourseRosterCourse,
+      requirementID: string,
+      selectableDoubleCountableIDs: readonly string[]
+    ) =>
+      typeof course === 'object' &&
+      typeof requirementID === 'string' &&
+      typeof selectableDoubleCountableIDs === 'object',
   },
   data() {
     return {
@@ -65,6 +71,7 @@ export default defineComponent({
       // relatedRequirements : the requirements that don't allow double counting
       relatedRequirements: [] as readonly RequirementWithIDSourceType[],
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
+      selfCheckDoubleCountableIDs: [] as readonly string[],
       editMode: false,
       courseSelectorKey: 0,
       isOpen: false,
@@ -100,7 +107,7 @@ export default defineComponent({
 
       const requirementsThatAllowDoubleCounting: string[] = [];
       const relatedRequirements: RequirementWithIDSourceType[] = [];
-      const selfCheckDoubleCountableRequirements: RequirementWithIDSourceType[] = [];
+      const selfCheckDoubleCountableIDs: string[] = [];
       directlyRelatedRequirements.forEach(it => {
         if (it.allowCourseDoubleCounting) {
           requirementsThatAllowDoubleCounting.push(it.name);
@@ -112,7 +119,7 @@ export default defineComponent({
       selfCheckRequirements.forEach(it => {
         if (it.allowCourseDoubleCounting) {
           requirementsThatAllowDoubleCounting.push(it.name);
-          selfCheckDoubleCountableRequirements.push(it);
+          selfCheckDoubleCountableIDs.push(it.id);
         } else {
           selfCheckRequirementsThatDoesNotAllowDoubleCounting.push(it);
         }
@@ -121,10 +128,9 @@ export default defineComponent({
       this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;
       this.relatedRequirements = relatedRequirements;
       this.selfCheckRequirements = selfCheckRequirementsThatDoesNotAllowDoubleCounting;
+      this.selfCheckDoubleCountableIDs = selfCheckDoubleCountableIDs;
       if (relatedRequirements.length > 0) {
         this.selectedRequirementID = relatedRequirements[0].id;
-      } else if (selfCheckDoubleCountableRequirements.length > 0) {
-        this.selectedRequirementID = selfCheckDoubleCountableRequirements[0].id;
       } else {
         this.selectedRequirementID = '';
       }
@@ -138,10 +144,16 @@ export default defineComponent({
     },
     addCourse() {
       if (this.selectedCourse == null) return;
-      this.$emit('add-course', this.selectedCourse, this.selectedRequirementID);
+      this.$emit(
+        'add-course',
+        this.selectedCourse,
+        this.selectedRequirementID,
+        this.selfCheckDoubleCountableIDs
+      );
       this.closeCurrentModal();
     },
     onSelectedChange(selected: string) {
+      console.log('CHANGE');
       this.selectedRequirementID = selected;
     },
     backOrCancel() {
