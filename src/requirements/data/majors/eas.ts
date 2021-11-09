@@ -5,8 +5,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Mathematics',
     description: 'At least two courses in calculus: MATH 1110 + MATH 1120 or MATH 1910 + MATH 1920',
-    source:
-      'https://www.eas.cornell.edu/eas/programs/undergraduate-programs/abbs-earth-and-atmospheric-sciences/eas-major-requirements',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
     checker: includesWithSubRequirements(['MATH 1110', 'MATH 1120'], ['MATH 1910', 'MATH 1920']),
     fulfilledBy: 'courses',
     perSlotMinCount: [2, 2],
@@ -17,8 +16,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Physics',
     description:
       'At least two courses in calculus-based physics: PHYS 2207 + PHYS 2208 or PHYS 1112 + PHYS 2213',
-    source:
-      'https://www.eas.cornell.edu/eas/programs/undergraduate-programs/abbs-earth-and-atmospheric-sciences/eas-major-requirements',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
     checker: includesWithSubRequirements(['PHYS 2207', 'PHYS 2208'], ['PHYS 1112', 'PHYS 2213']),
     fulfilledBy: 'courses',
     perSlotMinCount: [2, 2],
@@ -29,8 +27,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Chemistry',
     description:
       'Option 1: CHEM 2070 or CHEM 2090 + CHEM 2080. Option 2: CHEM 1570. Option 3: PHYS 2214',
-    source:
-      'https://www.eas.cornell.edu/eas/programs/undergraduate-programs/abbs-earth-and-atmospheric-sciences/eas-major-requirements',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Option 1': {
@@ -60,8 +57,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Biology',
     description:
       'At least one course in biology, chosen from the following: BIOG 1140, BIOG 1440, BIOEE 1610, BIOEE 1780, BIOMG 1350, BIOSM 1610, or BIOSM 1780',
-    source:
-      'https://www.eas.cornell.edu/eas/programs/undergraduate-programs/abbs-earth-and-atmospheric-sciences/eas-major-requirements',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
     fulfilledBy: 'courses',
     checker: includesWithSingleRequirement(
       'BIOG 1140',
@@ -74,6 +70,131 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
     ),
     perSlotMinCount: [1],
     slotNames: ['Course'],
+  },
+  {
+    name: 'Advisor-Approved Course in Math, Statistics, Computer Science, or Natural Science',
+    description:
+      'In addition to the math, physics, chemistry, and biology requirements listed above, students are required to take an advisor-approved course in statistics, computer science, mathematics, or natural science (including, but not limited to, a course in astronomy, a second course in biology, or an additional course in physics or chemistry). Students in the College of Agriculture and Life Sciences must select a second course in biology.',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
+    fulfilledBy: 'self-check',
+  },
+  {
+    name: 'Introductory Course',
+    description:
+      'Students in the College of Engineering may count EAS 2250 The Earth System as an ENGRD course in fulfilling their college core curriculum requirements. Students who choose to do so must take an additional major-approved elective (see "Additional Required Courses" section below).',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
+    fulfilledBy: 'courses',
+    checker: includesWithSingleRequirement('EAS 2250'),
+    perSlotMinCount: [1],
+    slotNames: ['Course'],
+  },
+  {
+    name: 'Concentration',
+    description: 'Choose one concentration from the four available',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
+    fulfilledBy: 'toggleable',
+    fulfillmentOptions: {
+      'Climate Science': {
+        description:
+          'Students must complete 3 core courses and 5 concentration courses at the 3000-level or above.',
+        counting: 'courses',
+        checker: includesWithSubRequirements(
+          ['EAS 3050', 'EAS 3410', 'EAS 3420'],
+          [
+            'EAS 3340',
+            'EAS 3530',
+            'EAS 4350',
+            'EAS 4470',
+            'EAS 4800',
+            'EAS 3010',
+            'EAS 3030',
+            'EAS 3421',
+            'EAS 4443',
+            'EAS 4444',
+            'EAS 5555',
+            'BEE 2000',
+            'BEE 4110',
+          ]
+        ),
+        perSlotMinCount: [3, 5],
+        slotNames: ['EAS 3050 & EAS 3410 & EAS 3420', '5 Concentration Courses'],
+      },
+      'Environmental Science': {
+        description:
+          'Students must complete 3 core courses and 5 concentration courses at the 3000-level or above.',
+        counting: 'courses',
+        checker: includesWithSubRequirements(
+          ['EAS 3090', 'EAS 3030', 'EAS 3450'],
+          [
+            'EAS 3010',
+            'EAS 3530',
+            'EAS 3540',
+            'EAS 4710',
+            'EAS 4740',
+            'EAS 4870',
+            'PLSCS 4110',
+            'PLSCS 3650',
+            'BEE 4270',
+            'BEE 4730',
+            'BEE 4750',
+          ]
+        ),
+        perSlotMinCount: [3, 5],
+        slotNames: ['EAS 3090 & EAS 3030 & EAS 3450', '5 Concentration Courses'],
+      },
+      'Geological Sciences': {
+        description:
+          'Students must complete 3 core courses and 5 concentration courses at the 3000-level or above.',
+        counting: 'courses',
+        checker: includesWithSubRequirements(
+          ['EAS 3090', 'EAS 3880', 'EAS 3010'],
+          [
+            'EAS 4010',
+            'EAS 4040',
+            'EAS 4050',
+            'EAS 4540',
+            'EAS 4550',
+            'EAS 4561',
+            'EAS 4760',
+            'EAS 4780',
+            'EAS 4790',
+            'EAS 4820',
+            'BEE 4840',
+            'EAS 4580',
+            'EAS 4740',
+            'EAS 5770',
+            'EAS 5780',
+          ]
+        ),
+        perSlotMinCount: [3, 5],
+        slotNames: ['EAS 3090 & EAS 3880 & EAS 3010', '5 Concentration Courses'],
+      },
+      'Ocean Sciences': {
+        description:
+          'Students must complete 3 core courses and 5 concentration courses at the 3000-level or above.',
+        counting: 'courses',
+        checker: includesWithSubRequirements(
+          ['EAS 3050', 'EAS 3530', 'EAS 3010'],
+          [
+            'BIOEE 4570',
+            'BIOEE 4780',
+            'BIOEE 4920',
+            'BIOEE 4930',
+            'BIOEE 6680',
+            'BIOSM 3650',
+            'EAS 3420',
+            'EAS 3530',
+            'EAS 3540',
+            'EAS 3555',
+            'EAS 4620',
+            'BIOSM 3210',
+            'BIOSM 3830',
+          ]
+        ),
+        perSlotMinCount: [3, 5],
+        slotNames: ['EAS 3050 & EAS 3530 & EAS 3010', '5 Concentration Courses'],
+      },
+    },
   },
 ];
 
