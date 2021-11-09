@@ -189,9 +189,9 @@ export default defineComponent({
       this[name].exams.push(exam);
     },
     removeExam(name: TransferExam, index: number) {
-      const transerExams = this[name].exams;
-      transerExams.splice(index, 1);
-      if (transerExams.length === 0) this.addExam(name);
+      const transferExams = this[name].exams;
+      transferExams.splice(index, 1);
+      if (transferExams.length === 0) this.addExam(name);
       this.updateTransfer();
     },
     removeTransfer(index: number) {
