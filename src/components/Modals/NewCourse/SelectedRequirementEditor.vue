@@ -127,6 +127,7 @@ export default defineComponent({
       const requirements = [...this.relatedRequirements, ...this.potentialRequirements].filter(
         it => it.id === this.selectedRequirementID
       );
+      if (requirements.length <= 0) return '';
       return requirements[0].name;
     },
   },

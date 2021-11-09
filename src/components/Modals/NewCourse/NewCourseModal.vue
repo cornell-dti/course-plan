@@ -78,9 +78,6 @@ export default defineComponent({
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
     },
-    selectableRequirementChoices(): AppSelectableRequirementChoices {
-      return store.state.selectableRequirementChoices;
-    },
   },
   methods: {
     selectCourse(result: CornellCourseRosterCourse) {
@@ -103,6 +100,7 @@ export default defineComponent({
 
       const requirementsThatAllowDoubleCounting: string[] = [];
       const relatedRequirements: RequirementWithIDSourceType[] = [];
+      const selfCheckDoubleCountableRequirements: RequirementWithIDSourceType[] = [];
       directlyRelatedRequirements.forEach(it => {
         if (it.allowCourseDoubleCounting) {
           requirementsThatAllowDoubleCounting.push(it.name);
@@ -114,6 +112,7 @@ export default defineComponent({
       selfCheckRequirements.forEach(it => {
         if (it.allowCourseDoubleCounting) {
           requirementsThatAllowDoubleCounting.push(it.name);
+          selfCheckDoubleCountableRequirements.push(it);
         } else {
           selfCheckRequirementsThatDoesNotAllowDoubleCounting.push(it);
         }
@@ -124,6 +123,8 @@ export default defineComponent({
       this.selfCheckRequirements = selfCheckRequirementsThatDoesNotAllowDoubleCounting;
       if (relatedRequirements.length > 0) {
         this.selectedRequirementID = relatedRequirements[0].id;
+      } else if (selfCheckDoubleCountableRequirements.length > 0) {
+        this.selectedRequirementID = selfCheckDoubleCountableRequirements[0].id;
       } else {
         this.selectedRequirementID = '';
       }
