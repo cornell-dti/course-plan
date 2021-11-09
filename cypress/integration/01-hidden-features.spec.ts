@@ -3,32 +3,13 @@
  * Can and should be expanded in the future.
  */
 
-// Before running tests, delete Firestore data for the testing email (so the initial onboarding and walkthrough trigger)
-// Then start on landing page, log in to firebase, and visits the dashboard
-// Delete and log in occurs with TEST_UID and test email of the courseplan testing account using functions from the cypress-firebase package
+// Before running tests, Firestore data for the testing email will be deleted (so the initial onboarding and walkthrough trigger)
+// This is completed through the "npm run cypress:set-data" command
+// Then starts on landing page, logs in to firebase, and visits the dashboard
 before('Delete test user data, then visit site and log in', () => {
   // log the user in
   cy.visit('localhost:8080/login');
-
-  // delete user-onboarding-data for TEST_EMAIL
-  // note that this delete will break if the collection is ever renamed
-  // const TEST_EMAIL = 'courseplan.cornelldti.test@gmail.com';
-
   cy.login(Cypress.env('TEST_UID'));
-  // // eslint-disable-next-line no-console
-  // .then(result => {
-  //   cy.log('1', result);
-  //   cy.callFirestore('get', `user-onboarding-data/${TEST_EMAIL}`).then(r => {
-  //     cy.log('get returned: ', r);
-  //   });
-
-  //   cy.callFirestore('delete', `user-onboarding-data/${TEST_EMAIL}`)
-  //     // eslint-disable-next-line no-console
-  //     .then(result2 => cy.log('2', result2));
-  //   cy.callFirestore('delete', `user-semesters/${TEST_EMAIL}`)
-  //     // eslint-disable-next-line no-console
-  //     .then(result2 => cy.log('3', result2));
-  // });
 
   // visit the site
   cy.visit('localhost:8080');
