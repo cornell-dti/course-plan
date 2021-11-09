@@ -4,13 +4,19 @@
  * Note: This spec file must run on the CI before the others, as it will set the user's initial data after it is deleted by a script
  */
 
-// Before running tests, Firestore data for the testing email will be deleted (so the initial onboarding and walkthrough trigger)
-// This is completed through the "npm run cypress:set-data" command
-// Then starts on landing page, logs in to firebase, and visits the dashboard
+// Before running tests, delete Firestore data for the testing email (so the initial onboarding and walkthrough trigger)
+// Then start on landing page, log in to firebase, and visits the dashboard
+// Delete and log in occurs with TEST_UID and test email of the courseplan testing account using functions from the cypress-firebase package
 before('Delete test user data, then visit site and log in', () => {
   // log the user in
   cy.visit('localhost:8080/login');
   cy.login(Cypress.env('TEST_UID'));
+
+  const TEST_EMAIL = 'courseplan.cornelldti.test@gmail.com';
+
+  // delete test user's necessary collections to treat them as a new user
+  cy.callFirestore('delete', `user-onboarding-data/${TEST_EMAIL}`);
+  cy.callFirestore('delete', `user-semesters/${TEST_EMAIL}`);
 
   // visit the site
   cy.visit('localhost:8080');

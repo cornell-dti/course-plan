@@ -32,10 +32,6 @@ jobs:
           cache: 'npm'
       - name: NPM Clean Install
         run: npm ci
-      - name: Set Test Account Firestore Data
-        run: npm run cypress:set-data
-        env:
-          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CORNELLDTI_COURSEPLAN_DEV }}
       - name: Cypress Test
         run: npm run cypress:e2e
         env:
