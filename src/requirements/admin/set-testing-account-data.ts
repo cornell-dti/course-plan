@@ -1,20 +1,8 @@
 /* eslint-disable no-console */
 
-import * as admin from 'firebase-admin';
-import { serviceAccount, SemesterDocumentData } from '../../firebase-admin-config';
-import { getTypedFirestoreDataConverter } from '../../firebase-config-common';
+import { onboardingDataCollection, semestersCollection } from '../../firebase-admin-config';
 
 const TEST_EMAIL = 'courseplan.cornelldti.test@gmail.com';
-admin.credential.cert = serviceAccount;
-const db = admin.firestore();
-
-const semestersCollection = db
-  .collection('user-semesters')
-  .withConverter(getTypedFirestoreDataConverter<SemesterDocumentData>());
-
-const onboardingDataCollection = db
-  .collection('user-onboarding-data')
-  .withConverter(getTypedFirestoreDataConverter<FirestoreOnboardingUserData>());
 
 async function deleteOnboardingAndSemesterDocument() {
   const onboardingDoc = onboardingDataCollection.doc(TEST_EMAIL);
