@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import { getTypedFirestoreDataConverter } from './firebase-config-common';
 
 const serviceAccountFilename = process.env.PROD ? 'serviceAccountProd.json' : 'serviceAccount.json';
-const serviceAccount = JSON.parse(
+export const serviceAccount = JSON.parse(
   fs.readFileSync(path.join(__dirname, '..', serviceAccountFilename)).toString()
 );
 admin.initializeApp({
