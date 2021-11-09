@@ -42,7 +42,6 @@ const fbConfig = {
 };
 
 firebase.initializeApp(fbConfig);
-firebase.firestore().settings({ experimentalForceLongPolling: true });
 
 Cypress.Commands.add(
   'clickOutside',
