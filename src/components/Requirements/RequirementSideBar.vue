@@ -350,31 +350,34 @@ export default defineComponent({
   justify-content: flex-end;
 }
 
-.requirement-sidebar-btn {
+@mixin requirement-sidebar-btn {
   color: #7b7d7e;
   background: white;
   font-size: 2rem;
   font-family: monospace;
-  top: 2rem;
   z-index: 1;
 
   &:hover {
     color: $yuxuanBlue;
     opacity: 1;
   }
+}
 
-  &-open {
-    @extend .requirement-sidebar-btn;
-    position: fixed;
-    box-shadow: 2px 0px 10px 0px #dddddd;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
+.requirement-sidebar-btn-open {
+  @include requirement-sidebar-btn;
+  position: fixed;
+  top: 2rem;
+  box-shadow: 2px 0px 10px 0px #dddddd;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
 
-  &-close {
-    @extend .requirement-sidebar-btn;
-    position: absolute;
-  }
+.requirement-sidebar-btn-close {
+  @include requirement-sidebar-btn;
+  position: absolute;
+  line-height: 2rem;
+  top: auto;
+  margin-top: 1rem;
 }
 
 .requirement-debugger-toggler {
