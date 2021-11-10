@@ -20,9 +20,8 @@
         <requirement-side-bar
           class="dashboard-reqs"
           v-if="loaded"
-          :isShowingToggle="!isTablet"
+          :isDesktop="!isTablet"
           :isOpeningRequirements="isOpeningRequirements"
-          @toggleRequirementsBar="toggleRequirementsBar"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
         />
@@ -133,7 +132,7 @@ export default defineComponent({
       isEditingProfile: false,
       isTablet,
       isMobile,
-      isOpeningRequirements: !isTablet,
+      isOpeningRequirements: false,
       maxBottomBarTabs: getMaxButtonBarTabs(),
       welcomeHidden: false,
       startTour: false,

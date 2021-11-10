@@ -1,13 +1,13 @@
 <template v-if="semesters">
   <div>
     <button
-      v-if="!isOpeningRequirements && showToggleRequirementsBtn"
+      v-if="!isExpanded && showToggleRequirementsBtn"
       class="requirement-sidebar-btn-open"
-      @click="toggleRequirementsBar"
+      @click="setExpanded(true)"
     >
       →
     </button>
-    <aside v-if="isOpeningRequirements" class="requirements">
+    <aside v-if="isDesktop ? isExpanded : isOpeningRequirements" class="requirements">
       <div
         class="requirements-wrapper"
         data-intro-group="req-tooltip"
@@ -46,7 +46,7 @@
             <requirement-debugger />
           </teleport-modal>
           <div v-if="showToggleRequirementsBtn" class="requirement-sidebar-header">
-            <button class="requirement-sidebar-btn-close" @click="toggleRequirementsBar">←</button>
+            <button class="requirement-sidebar-btn-close" @click="setExpanded(false)">←</button>
           </div>
           <div
             class="req"
@@ -160,6 +160,7 @@ type Data = {
   shouldShowAllCourses: boolean;
   showAllPage: number;
   tourStep: number;
+  isExpanded: boolean;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -184,9 +185,9 @@ export default defineComponent({
   props: {
     startTour: { type: Boolean, required: true },
     isOpeningRequirements: { type: Boolean, required: true },
-    isShowingToggle: { type: Boolean, required: true },
+    isDesktop: { type: Boolean, required: true },
   },
-  emits: ['showTourEndWindow', 'toggleRequirementsBar'],
+  emits: ['showTourEndWindow'],
   data(): Data {
     return {
       displayDebugger: false,
@@ -197,6 +198,7 @@ export default defineComponent({
       shouldShowAllCourses: false,
       showAllPage: 0,
       tourStep: 0,
+      isExpanded: true,
     };
   },
   watch: {
@@ -245,7 +247,7 @@ export default defineComponent({
       return `Page ${this.showAllPage + 1}/${this.numPages}`;
     },
     showToggleRequirementsBtn(): boolean {
-      return this.isShowingToggle && featureFlagCheckers.isToggleRequirementsBarBtnEnabled();
+      return this.isDesktop && featureFlagCheckers.isToggleRequirementsBarBtnEnabled();
     },
   },
   methods: {
@@ -336,8 +338,8 @@ export default defineComponent({
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
-    toggleRequirementsBar() {
-      this.$emit('toggleRequirementsBar');
+    setExpanded(status: boolean) {
+      this.isExpanded = status;
     },
   },
 });

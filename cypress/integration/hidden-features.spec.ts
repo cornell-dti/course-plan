@@ -205,7 +205,6 @@ it('Click outside onboarding modal', () => {
 // Also confirm onboarding and requirements can still be interacted with on mobile
 it('Use mobile navbar', () => {
   cy.viewport('samsung-s10'); // Set viewport to the dimensions of a Samsung S10
-  cy.reload(true); // load page with inital mobile viewport (else requirements bar will be open)
 
   // confirm menu works
   cy.get('[data-cyId=navbar-menuButton]').click();
