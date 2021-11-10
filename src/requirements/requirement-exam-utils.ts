@@ -1,4 +1,4 @@
-import examData, { ExamRequirements, ExamRequirementsMapping } from './data/exams/ExamCredit';
+import examData, { ExamFulfillment, ExamRequirementsMapping } from './data/exams/ExamCredit';
 import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
 
 type ExamTaken = {
@@ -24,16 +24,24 @@ function userDataToCourses(
   userExams.forEach(userExam => {
     // match exam to user-taken exam
     const exam = exams[userExam.subject];
-    const fulfillment = exam.fulfillment.reduce((prev, curr) => {
-      if (!prev) return curr;
-      if (curr.minimumScore <= userExam.score && prev.minimumScore < curr.minimumScore) return curr;
-      return prev;
-    });
+    const fulfillment = exam.fulfillmentOptions.reduce(
+      (prev: ExamFulfillment | undefined, curr: ExamFulfillment) => {
+        // check if exam name matches and score is high enough
+        if (userExam.score >= curr.minimumScore) {
+          // update exam variable if this exam has a higher minimum score
+          if (!prev || prev.minimumScore < curr.minimumScore) {
+            return curr;
+          }
+        }
+        return prev;
+      },
+      undefined
+    );
     // generate the equivalent course(s)
     // multiple equivalent courses for the same exam can share a unique id, i.e., the unique id represents the exam id
     let courseEquivalentsExist = false;
     const name = `${examType} ${userExam.subject}`;
-    if (exam) {
+    if (fulfillment) {
       const courseEquivalents =
         (fulfillment.courseEquivalents &&
           (fulfillment.courseEquivalents[college] || fulfillment.courseEquivalents.DEFAULT)) ||
@@ -118,7 +126,7 @@ export default function getCourseEquivalentsFromUserExams(
   ].flat();
 }
 
-export const getExamCoursesFromOneMajor = () => true;
+export const getExamCoursesFromOneMajor = () => {};
 
 function toSubjects(data: ExamRequirementsMapping) {
   const subjects = [...new Set(Object.keys(data))];
@@ -132,8 +140,8 @@ export const examSubjects: ExamSubjects = {
 };
 
 export const getExamCredit = (examTaken: FirestoreAPIBExam): number => {
-  const exam: ExamRequirements = examData[examTaken.type][examTaken.subject];
-  const mostPossibleCredit = exam.fulfillment.reduce((credit, fulfillment) => {
+  const exam = examData[examTaken.type][examTaken.subject];
+  const mostPossibleCredit = exam.fulfillmentOptions.reduce((credit, fulfillment) => {
     if (examTaken.score >= fulfillment.minimumScore) {
       return Math.max(credit, fulfillment.credits);
     }

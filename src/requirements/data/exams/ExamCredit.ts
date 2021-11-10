@@ -1,13 +1,14 @@
 import { FWS_COURSE_ID } from '../constants';
 
-export type ExamRequirements = {
+export type ExamFulfillment = {
+  readonly courseEquivalents?: Record<string, number[]>;
+  readonly minimumScore: number;
+  readonly credits: number;
+  readonly majorsExcluded?: string[];
+};
+type ExamRequirements = {
   readonly courseId: number;
-  readonly fulfillment: {
-    readonly courseEquivalents?: Record<string, number[]>;
-    readonly minimumScore: number;
-    readonly credits: number;
-    readonly majorsExcluded?: string[];
-  }[];
+  readonly fulfillmentOptions: ExamFulfillment[];
 };
 export type ExamRequirementsMapping = Record<string, ExamRequirements>;
 export type ExamData = Record<'AP' | 'IB', ExamRequirementsMapping>;
@@ -16,7 +17,7 @@ const examData: ExamData = {
   AP: {
     Biology: {
       courseId: 100,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           minimumScore: 4,
           credits: 4,
@@ -26,7 +27,7 @@ const examData: ExamData = {
     },
     Chemistry: {
       courseId: 101,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [351265], // CHEM 2070
@@ -39,7 +40,7 @@ const examData: ExamData = {
     },
     'Computer Science A': {
       courseId: 102,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [358526], // CS 1110
@@ -51,7 +52,7 @@ const examData: ExamData = {
     },
     Microeconomics: {
       courseId: 103,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [350025], // ECON 1110
@@ -71,7 +72,7 @@ const examData: ExamData = {
     },
     Macroeconomics: {
       courseId: 104,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [350038], // ECON 1120
@@ -83,7 +84,7 @@ const examData: ExamData = {
     },
     'English Literature and Composition': {
       courseId: 105,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [FWS_COURSE_ID], // FWS
@@ -95,7 +96,7 @@ const examData: ExamData = {
     },
     'English Language and Composition': {
       courseId: 106,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [FWS_COURSE_ID], // FWS
@@ -107,7 +108,7 @@ const examData: ExamData = {
     },
     'French Language': {
       courseId: 107,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [353172], // FREN 2090
@@ -119,7 +120,7 @@ const examData: ExamData = {
     },
     'French Literature': {
       courseId: 108,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           minimumScore: 4,
           credits: 3,
@@ -128,7 +129,7 @@ const examData: ExamData = {
     },
     'Italian Language': {
       courseId: 109,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           minimumScore: 4,
           credits: 3,
@@ -137,7 +138,7 @@ const examData: ExamData = {
     },
     'Italian Literature': {
       courseId: 110,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           minimumScore: 4,
           credits: 3,
@@ -146,7 +147,7 @@ const examData: ExamData = {
     },
     'Mathematics BC (Non-Engineering)': {
       courseId: 111,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [352116, 352120], // MATH 1110, MATH 1120
@@ -159,7 +160,7 @@ const examData: ExamData = {
     },
     'Mathematics BC (Engineering)': {
       courseId: 112,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [],
@@ -172,7 +173,7 @@ const examData: ExamData = {
     },
     'Mathematics AB': {
       courseId: 113,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [352116], // MATH 1110
@@ -184,7 +185,7 @@ const examData: ExamData = {
     },
     'Physics I': {
       courseId: 114,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [355142], // PHYS 1101
@@ -196,7 +197,7 @@ const examData: ExamData = {
     },
     'Physics II': {
       courseId: 115,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [355143], // PHYS 1102
@@ -208,7 +209,7 @@ const examData: ExamData = {
     },
     'Physics C-Mechanics': {
       courseId: 116,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [355197], // PHYS 2207
@@ -221,7 +222,7 @@ const examData: ExamData = {
     },
     'Physics C-Electricity & Magnetism': {
       courseId: 117,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [355207], // PHYS 2213
@@ -233,7 +234,7 @@ const examData: ExamData = {
     },
     Psychology: {
       courseId: 118,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [351438], // PSYCH 1101
@@ -245,7 +246,7 @@ const examData: ExamData = {
     },
     'Spanish Language': {
       courseId: 119,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           minimumScore: 4,
           credits: 3,
@@ -254,7 +255,7 @@ const examData: ExamData = {
     },
     'Spanish Literature': {
       courseId: 120,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           minimumScore: 4,
           credits: 3,
@@ -263,7 +264,7 @@ const examData: ExamData = {
     },
     Statistics: {
       courseId: 121,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [
@@ -318,7 +319,7 @@ const examData: ExamData = {
   IB: {
     'Chemical and Physical Systems': {
       courseId: 201,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [355142, 355143], // PHYS 1101, PHYS 1102
@@ -330,7 +331,7 @@ const examData: ExamData = {
     },
     Chemistry: {
       courseId: 202,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [351265], // CHEM 2070
@@ -343,7 +344,7 @@ const examData: ExamData = {
     },
     'Computer Science': {
       courseId: 203,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [358526], // CS 1110
@@ -355,7 +356,7 @@ const examData: ExamData = {
     },
     Economics: {
       courseId: 204,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [350025, 350038], // ECON 1110, ECON 1120
@@ -367,7 +368,7 @@ const examData: ExamData = {
     },
     'English Literature A': {
       courseId: 205,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [FWS_COURSE_ID], // FWS
@@ -379,7 +380,7 @@ const examData: ExamData = {
     },
     'English Language and Literature': {
       courseId: 206,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [FWS_COURSE_ID], // FWS
@@ -391,7 +392,7 @@ const examData: ExamData = {
     },
     Mathematics: {
       courseId: 207,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [352111, 352116], // MATH 1106, MATH 1110
@@ -403,7 +404,7 @@ const examData: ExamData = {
     },
     'Physical Science': {
       courseId: 208,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [351265, 355142], // CHEM 2070, PHYS 1101
@@ -415,7 +416,7 @@ const examData: ExamData = {
     },
     Physics: {
       courseId: 209,
-      fulfillment: [
+      fulfillmentOptions: [
         {
           courseEquivalents: {
             DEFAULT: [355142, 355197], // PHYS 1101, PHYS 2207
