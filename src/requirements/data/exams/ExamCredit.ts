@@ -1,416 +1,432 @@
 import { FWS_COURSE_ID } from '../constants';
 
 export type ExamRequirements = {
-  readonly name: string;
   readonly courseId: number;
   readonly fulfillment: {
     readonly courseEquivalents?: Record<string, number[]>;
     readonly minimumScore: number;
     readonly credits: number;
     readonly majorsExcluded?: string[];
-  };
+  }[];
 };
-export type ExamData = Record<'AP' | 'IB', ExamRequirements[]>;
+export type ExamRequirementsMapping = Record<string, ExamRequirements>;
+export type ExamData = Record<'AP' | 'IB', ExamRequirementsMapping>;
 
 const examData: ExamData = {
-  AP: [
-    {
-      name: 'Biology',
+  AP: {
+    Biology: {
       courseId: 100,
-      fulfillment: {
-        minimumScore: 4,
-        credits: 4,
-      },
+      fulfillment: [
+        {
+          minimumScore: 4,
+          credits: 4,
+        },
+        { minimumScore: 5, credits: 8 },
+      ],
     },
-    {
-      name: 'Biology',
-      courseId: 100,
-      fulfillment: {
-        minimumScore: 5,
-        credits: 8,
-      },
-    },
-    {
-      name: 'Chemistry',
+    Chemistry: {
       courseId: 101,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [351265], // CHEM 2070
-          EN: [359187], // CHEM 2090
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [351265], // CHEM 2070
+            EN: [359187], // CHEM 2090
+          },
+          minimumScore: 5,
+          credits: 4,
         },
-        minimumScore: 5,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Computer Science A',
+    'Computer Science A': {
       courseId: 102,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [358526], // CS 1110
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [358526], // CS 1110
+          },
+          minimumScore: 5,
+          credits: 4,
         },
-        minimumScore: 5,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Microeconomics',
+    Microeconomics: {
       courseId: 103,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [350025], // ECON 1110
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [350025], // ECON 1110
+          },
+          minimumScore: 4,
+          credits: 3,
         },
-        minimumScore: 4,
-        credits: 3,
-      },
-    },
-    {
-      name: 'Microeconomics',
-      courseId: 103,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [350025], // ECON 1110
-          BU: [350025, 351468], // ECON 1110, HADM 1410
+        {
+          courseEquivalents: {
+            DEFAULT: [350025], // ECON 1110
+            BU: [350025, 351468], // ECON 1110, HADM 1410
+          },
+          minimumScore: 5,
+          credits: 3,
         },
-        minimumScore: 5,
-        credits: 3,
-      },
+      ],
     },
-    {
-      name: 'Macroeconomics',
+    Macroeconomics: {
       courseId: 104,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [350038], // ECON 1120
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [350038], // ECON 1120
+          },
+          minimumScore: 4,
+          credits: 3,
         },
-        minimumScore: 4,
-        credits: 3,
-      },
+      ],
     },
-    {
-      name: 'English Literature and Composition',
+    'English Literature and Composition': {
       courseId: 105,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [FWS_COURSE_ID], // FWS
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [FWS_COURSE_ID], // FWS
+          },
+          minimumScore: 4,
+          credits: 3,
         },
-        minimumScore: 4,
-        credits: 3,
-      },
+      ],
     },
-    {
-      name: 'English Language and Composition',
+    'English Language and Composition': {
       courseId: 106,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [FWS_COURSE_ID], // FWS
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [FWS_COURSE_ID], // FWS
+          },
+          minimumScore: 4,
+          credits: 3,
         },
-        minimumScore: 4,
-        credits: 3,
-      },
+      ],
     },
-    {
-      name: 'French Language',
+    'French Language': {
       courseId: 107,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [353172], // FREN 2090
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [353172], // FREN 2090
+          },
+          minimumScore: 4,
+          credits: 3,
         },
-        minimumScore: 4,
-        credits: 3,
-      },
+      ],
     },
-    {
-      name: 'French Literature',
+    'French Literature': {
       courseId: 108,
-      fulfillment: {
-        minimumScore: 4,
-        credits: 3,
-      },
+      fulfillment: [
+        {
+          minimumScore: 4,
+          credits: 3,
+        },
+      ],
     },
-    {
-      name: 'Italian Language',
+    'Italian Language': {
       courseId: 109,
-      fulfillment: {
-        minimumScore: 4,
-        credits: 3,
-      },
+      fulfillment: [
+        {
+          minimumScore: 4,
+          credits: 3,
+        },
+      ],
     },
-    {
-      name: 'Italian Literature',
+    'Italian Literature': {
       courseId: 110,
-      fulfillment: {
-        minimumScore: 4,
-        credits: 3,
-      },
+      fulfillment: [
+        {
+          minimumScore: 4,
+          credits: 3,
+        },
+      ],
     },
-    {
-      name: 'Mathematics BC (Non-Engineering)',
+    'Mathematics BC (Non-Engineering)': {
       courseId: 111,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [352116, 352120], // MATH 1110, MATH 1120
-          EN: [],
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [352116, 352120], // MATH 1110, MATH 1120
+            EN: [],
+          },
+          minimumScore: 4,
+          credits: 8,
         },
-        minimumScore: 4,
-        credits: 8,
-      },
+      ],
     },
-    {
-      name: 'Mathematics BC (Engineering)',
+    'Mathematics BC (Engineering)': {
       courseId: 112,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [],
-          EN: [352255], // MATH 1910
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [],
+            EN: [352255], // MATH 1910
+          },
+          minimumScore: 5,
+          credits: 4,
         },
-        minimumScore: 5,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Mathematics AB',
+    'Mathematics AB': {
       courseId: 113,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [352116], // MATH 1110
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [352116], // MATH 1110
+          },
+          minimumScore: 4,
+          credits: 4,
         },
-        minimumScore: 4,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Physics I',
+    'Physics I': {
       courseId: 114,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [355142], // PHYS 1101
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [355142], // PHYS 1101
+          },
+          minimumScore: 5,
+          credits: 4,
         },
-        minimumScore: 5,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Physics II',
+    'Physics II': {
       courseId: 115,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [355143], // PHYS 1102
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [355143], // PHYS 1102
+          },
+          minimumScore: 5,
+          credits: 4,
         },
-        minimumScore: 5,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Physics C-Mechanics',
+    'Physics C-Mechanics': {
       courseId: 116,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [355197], // PHYS 2207
-          EN: [355146], // PHYS 1112
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [355197], // PHYS 2207
+            EN: [355146], // PHYS 1112
+          },
+          minimumScore: 5,
+          credits: 4,
         },
-        minimumScore: 5,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Physics C-Electricity & Magnetism',
+    'Physics C-Electricity & Magnetism': {
       courseId: 117,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [355207], // PHYS 2213
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [355207], // PHYS 2213
+          },
+          minimumScore: 5,
+          credits: 4,
         },
-        minimumScore: 5,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Psychology',
+    Psychology: {
       courseId: 118,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [351438], // PSYCH 1101
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [351438], // PSYCH 1101
+          },
+          minimumScore: 4,
+          credits: 3,
         },
-        minimumScore: 4,
-        credits: 3,
-      },
+      ],
     },
-    {
-      name: 'Spanish Language',
+    'Spanish Language': {
       courseId: 119,
-      fulfillment: {
-        minimumScore: 4,
-        credits: 3,
-      },
+      fulfillment: [
+        {
+          minimumScore: 4,
+          credits: 3,
+        },
+      ],
     },
-    {
-      name: 'Spanish Literature',
+    'Spanish Literature': {
       courseId: 120,
-      fulfillment: {
-        minimumScore: 4,
-        credits: 3,
-      },
-    },
-    {
-      name: 'Statistics',
-      courseId: 121,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [
-            350500, // AEM 2100
-            360952, // BTRY 3010
-            352353, // BTRY 6010
-            350154, // ILRST 2100
-            352353, // ILRST 6100
-            352245, // MATH 1710
-            351485, // PAM 2100
-            363824, // PAM 2101
-            351674, // PSYCH 2500
-            354665, // SOC 3010
-            350154, // STSCI 2100
-            365785, // STSCI 2150
-            360952, // STSCI 2200
-          ],
-          AG: [],
-          BU: [],
-          EN: [],
+      fulfillment: [
+        {
+          minimumScore: 4,
+          credits: 3,
         },
-        minimumScore: 4,
-        credits: 4,
-        majorsExcluded: ['Biological Sciences'],
-      },
+      ],
     },
-    {
-      name: 'Statistics',
+    Statistics: {
       courseId: 121,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [
-            350500, // AEM 2100
-            360952, // BTRY 3010
-            352353, // BTRY 6010
-            350154, // ILRST 2100
-            352353, // ILRST 6100
-            352245, // MATH 1710
-            351485, // PAM 2100
-            363824, // PAM 2101
-            351674, // PSYCH 2500
-            354665, // SOC 3010
-            350154, // STSCI 2100
-            365785, // STSCI 2150
-            360952, // STSCI 2200
-          ],
-          BU: [],
-          EN: [],
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [
+              350500, // AEM 2100
+              360952, // BTRY 3010
+              352353, // BTRY 6010
+              350154, // ILRST 2100
+              352353, // ILRST 6100
+              352245, // MATH 1710
+              351485, // PAM 2100
+              363824, // PAM 2101
+              351674, // PSYCH 2500
+              354665, // SOC 3010
+              350154, // STSCI 2100
+              365785, // STSCI 2150
+              360952, // STSCI 2200
+            ],
+            AG: [],
+            BU: [],
+            EN: [],
+          },
+          minimumScore: 4,
+          credits: 4,
+          majorsExcluded: ['Biological Sciences'],
         },
-        minimumScore: 5,
-        credits: 4,
-      },
+        {
+          courseEquivalents: {
+            DEFAULT: [
+              350500, // AEM 2100
+              360952, // BTRY 3010
+              352353, // BTRY 6010
+              350154, // ILRST 2100
+              352353, // ILRST 6100
+              352245, // MATH 1710
+              351485, // PAM 2100
+              363824, // PAM 2101
+              351674, // PSYCH 2500
+              354665, // SOC 3010
+              350154, // STSCI 2100
+              365785, // STSCI 2150
+              360952, // STSCI 2200
+            ],
+            BU: [],
+            EN: [],
+          },
+          minimumScore: 5,
+          credits: 4,
+        },
+      ],
     },
-  ],
-  IB: [
-    {
-      name: 'Chemical and Physical Systems',
+  },
+  IB: {
+    'Chemical and Physical Systems': {
       courseId: 201,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [355142, 355143], // PHYS 1101, PHYS 1102
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [355142, 355143], // PHYS 1101, PHYS 1102
+          },
+          minimumScore: 6,
+          credits: 8,
         },
-        minimumScore: 6,
-        credits: 8,
-      },
+      ],
     },
-    {
-      name: 'Chemistry',
+    Chemistry: {
       courseId: 202,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [351265], // CHEM 2070
-          EN: [359187], // CHEM 2090
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [351265], // CHEM 2070
+            EN: [359187], // CHEM 2090
+          },
+          minimumScore: 6,
+          credits: 4,
         },
-        minimumScore: 6,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Computer Science',
+    'Computer Science': {
       courseId: 203,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [358526], // CS 1110
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [358526], // CS 1110
+          },
+          minimumScore: 6,
+          credits: 4,
         },
-        minimumScore: 6,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Economics',
+    Economics: {
       courseId: 204,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [350025, 350038], // ECON 1110, ECON 1120
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [350025, 350038], // ECON 1110, ECON 1120
+          },
+          minimumScore: 6,
+          credits: 6,
         },
-        minimumScore: 6,
-        credits: 6,
-      },
+      ],
     },
-    {
-      name: 'English Literature A',
+    'English Literature A': {
       courseId: 205,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [FWS_COURSE_ID], // FWS
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [FWS_COURSE_ID], // FWS
+          },
+          minimumScore: 7,
+          credits: 3,
         },
-        minimumScore: 7,
-        credits: 3,
-      },
+      ],
     },
-    {
-      name: 'English Language and Literature',
+    'English Language and Literature': {
       courseId: 206,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [FWS_COURSE_ID], // FWS
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [FWS_COURSE_ID], // FWS
+          },
+          minimumScore: 7,
+          credits: 3,
         },
-        minimumScore: 7,
-        credits: 3,
-      },
+      ],
     },
-    {
-      name: 'Mathematics',
+    Mathematics: {
       courseId: 207,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [352111, 352116], // MATH 1106, MATH 1110
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [352111, 352116], // MATH 1106, MATH 1110
+          },
+          minimumScore: 6,
+          credits: 4,
         },
-        minimumScore: 6,
-        credits: 4,
-      },
+      ],
     },
-    {
-      name: 'Physical Science',
+    'Physical Science': {
       courseId: 208,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [351265, 355142], // CHEM 2070, PHYS 1101
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [351265, 355142], // CHEM 2070, PHYS 1101
+          },
+          minimumScore: 6,
+          credits: 8,
         },
-        minimumScore: 6,
-        credits: 8,
-      },
+      ],
     },
-    {
-      name: 'Physics',
+    Physics: {
       courseId: 209,
-      fulfillment: {
-        courseEquivalents: {
-          DEFAULT: [355142, 355197], // PHYS 1101, PHYS 2207
-          EN: [355146], // PHYS 1112
+      fulfillment: [
+        {
+          courseEquivalents: {
+            DEFAULT: [355142, 355197], // PHYS 1101, PHYS 2207
+            EN: [355146], // PHYS 1112
+          },
+          minimumScore: 6,
+          credits: 4,
         },
-        minimumScore: 6,
-        credits: 4,
-      },
+      ],
     },
-  ],
+  },
 };
 
 export default examData;

@@ -1,4 +1,4 @@
-import examData, { ExamRequirements } from './data/exams/ExamCredit';
+import examData, { ExamRequirements, ExamRequirementsMapping } from './data/exams/ExamCredit';
 import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
 
 type ExamTaken = {
@@ -23,28 +23,23 @@ function userDataToCourses(
   const courses: CourseTaken[] = [];
   userExams.forEach(userExam => {
     // match exam to user-taken exam
-    const exam = exams.reduce((prev: ExamRequirements | undefined, curr: ExamRequirements) => {
-      // check if exam name matches and score is high enough
-      if (curr.name.includes(userExam.subject) && userExam.score >= curr.fulfillment.minimumScore) {
-        // update exam variable if this exam has a higher minimum score
-        if (!prev || prev.fulfillment.minimumScore < curr.fulfillment.minimumScore) {
-          return curr;
-        }
-      }
+    const exam = exams[userExam.subject];
+    const fulfillment = exam.fulfillment.reduce((prev, curr) => {
+      if (!prev) return curr;
+      if (curr.minimumScore <= userExam.score && prev.minimumScore < curr.minimumScore) return curr;
       return prev;
-    }, undefined);
+    });
     // generate the equivalent course(s)
     // multiple equivalent courses for the same exam can share a unique id, i.e., the unique id represents the exam id
     let courseEquivalentsExist = false;
     const name = `${examType} ${userExam.subject}`;
     if (exam) {
       const courseEquivalents =
-        (exam.fulfillment.courseEquivalents &&
-          (exam.fulfillment.courseEquivalents[college] ||
-            exam.fulfillment.courseEquivalents.DEFAULT)) ||
+        (fulfillment.courseEquivalents &&
+          (fulfillment.courseEquivalents[college] || fulfillment.courseEquivalents.DEFAULT)) ||
         [];
       const excludedMajor =
-        major && exam.fulfillment.majorsExcluded && exam.fulfillment.majorsExcluded.includes(major);
+        major && fulfillment.majorsExcluded && fulfillment.majorsExcluded.includes(major);
       if (!excludedMajor) {
         // AP/IB credit can be potentially applied towards the user's requirements
         courseEquivalentsExist = true;
@@ -54,7 +49,7 @@ function userDataToCourses(
             courseId,
             uniqueId: name,
             code: name,
-            credits: exam.fulfillment.credits,
+            credits: fulfillment.credits,
           });
         } else {
           // separate credits from equivalent course
@@ -62,7 +57,7 @@ function userDataToCourses(
             courseId: CREDITS_COURSE_ID,
             uniqueId: name,
             code: name,
-            credits: exam.fulfillment.credits,
+            credits: fulfillment.credits,
           });
           courseEquivalents.forEach(courseId => {
             courses.push({
@@ -123,9 +118,10 @@ export default function getCourseEquivalentsFromUserExams(
   ].flat();
 }
 
-function toSubjects(data: ExamRequirements[]) {
-  const exams = data.map(({ name }) => name);
-  const subjects = [...new Set(exams)];
+export const getExamCoursesFromOneMajor = () => true;
+
+function toSubjects(data: ExamRequirementsMapping) {
+  const subjects = [...new Set(Object.keys(data))];
   subjects.sort();
   return subjects;
 }
@@ -136,12 +132,10 @@ export const examSubjects: ExamSubjects = {
 };
 
 export const getExamCredit = (examTaken: FirestoreAPIBExam): number => {
-  const examsWithSameName: ExamRequirements[] = examData[examTaken.type].filter(
-    it => it.name === examTaken.subject
-  );
-  const mostPossibleCredit = examsWithSameName.reduce((credit, exam) => {
-    if (examTaken.score >= exam.fulfillment.minimumScore) {
-      return Math.max(credit, exam.fulfillment.credits);
+  const exam: ExamRequirements = examData[examTaken.type][examTaken.subject];
+  const mostPossibleCredit = exam.fulfillment.reduce((credit, fulfillment) => {
+    if (examTaken.score >= fulfillment.minimumScore) {
+      return Math.max(credit, fulfillment.credits);
     }
     return credit;
   }, 0);
