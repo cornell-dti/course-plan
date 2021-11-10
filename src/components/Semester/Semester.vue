@@ -6,7 +6,7 @@
     data-step="3"
     :data-intro="walkthroughText()"
     data-disable-interaction="1"
-    data-tooltipClass="tooltipCenter"
+    data-tooltipClass="tooltipCenter tourStep3"
   >
     <new-course-modal
       @close-course-modal="closeCourseModal"
@@ -84,6 +84,7 @@
                 :compact="compact"
                 :active="activatedCourse.uniqueID === element.uniqueID"
                 class="semester-course"
+                data-cyId="semester-course"
                 :semesterIndex="semesterIndex + 1"
                 @delete-course="deleteCourse"
                 @color-course="colorCourse"

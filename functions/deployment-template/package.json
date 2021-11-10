@@ -5,5 +5,8 @@
   "main": "index.js",
   "scripts": {
     "deploy": "firebase deploy --only functions"
+  },
+  "engines": {
+    "node": "10"
   }
 }

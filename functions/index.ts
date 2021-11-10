@@ -1,3 +1,5 @@
+/* eslint-disable import/no-import-module-exports */
+
 import functions from 'firebase-functions';
 import admin from 'firebase-admin';
 

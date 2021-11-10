@@ -14,7 +14,7 @@
         :data-intro="getRequirementsTooltipText()"
         data-disable-interaction="1"
         data-step="1"
-        data-tooltipClass="tooltipCenter"
+        data-tooltipClass="tooltipCenter tourStep1"
       >
         <!-- loop through reqs array of req objects -->
         <div
@@ -26,7 +26,7 @@
           :data-intro="getCoursesTooltipText()"
           data-disable-interaction="1"
           data-step="2"
-          data-tooltipClass="tooltipCenter"
+          data-tooltipClass="tooltipCenter tourStep2"
         >
           <button
             class="requirement-debugger-toggler"

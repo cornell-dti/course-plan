@@ -12,8 +12,8 @@
   </svg>
 </template>
 <script lang="ts">
-import store from '@/store';
 import { defineComponent } from 'vue';
+import store from '@/store';
 
 type RequirementGraphForDisplay = {
   requirements: readonly string[];

@@ -9,7 +9,10 @@ import { Course } from './types';
 const PREFIX = 'https://classes.cornell.edu/api/2.0';
 
 /** A helper function to generate a wait promise. Used for cooldown to limit API usage. */
-const wait = (time: number) => new Promise<void>(resolve => setTimeout(() => resolve(), time));
+const wait = (time: number) =>
+  new Promise<void>(resolve => {
+    setTimeout(() => resolve(), time);
+  });
 
 /** @returns a list of available semesters from roster. */
 const getSemesters = async (): Promise<readonly string[]> => {
