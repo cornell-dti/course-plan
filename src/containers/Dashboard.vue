@@ -19,7 +19,10 @@
         />
         <requirement-side-bar
           class="dashboard-reqs"
-          v-if="loaded && isOpeningRequirements"
+          v-if="loaded"
+          :isShowingToggle="!isTablet"
+          :isOpeningRequirements="isOpeningRequirements"
+          @toggleRequirementsBar="toggleRequirementsBar"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
         />

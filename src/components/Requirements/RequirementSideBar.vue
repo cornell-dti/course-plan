@@ -1,113 +1,131 @@
 <template v-if="semesters">
-  <aside class="requirements">
-    <div
-      class="requirements-wrapper"
-      data-intro-group="req-tooltip"
-      :data-intro="getRequirementsTooltipText()"
-      data-disable-interaction="1"
-      data-step="1"
-      data-tooltipClass="tooltipCenter"
+  <div>
+    <button
+      v-if="!isOpeningRequirements && showToggleRequirementsBtn"
+      class="requirement-sidebar-btn-open"
+      @click="toggleRequirementsBar"
     >
-      <!-- loop through reqs array of req objects -->
+      →
+    </button>
+    <aside v-if="isOpeningRequirements" class="requirements">
       <div
-        class="fixed"
-        :class="{
-          'd-none': shouldShowAllCourses,
-        }"
+        class="requirements-wrapper"
         data-intro-group="req-tooltip"
-        :data-intro="getCoursesTooltipText()"
+        :data-intro="getRequirementsTooltipText()"
         data-disable-interaction="1"
-        data-step="2"
+        data-step="1"
         data-tooltipClass="tooltipCenter"
       >
-        <button
-          class="requirement-debugger-toggler"
-          v-if="debuggerAllowed"
-          @click="toggleDebugger()"
+        <!-- loop through reqs array of req objects -->
+        <div
+          class="fixed"
+          :class="{
+            'd-none': shouldShowAllCourses,
+          }"
+          data-intro-group="req-tooltip"
+          :data-intro="getCoursesTooltipText()"
+          data-disable-interaction="1"
+          data-step="2"
+          data-tooltipClass="tooltipCenter"
         >
-          Open Requirement Debugger
-        </button>
-        <teleport-modal
-          content-class="requirement-debugger-modal-content"
-          :isSimpleModal="true"
-          v-if="displayDebugger"
-        >
-          <button class="requirement-debugger-toggler" @click="toggleDebugger()">
-            Close Requirement Debugger
+          <button
+            class="requirement-debugger-toggler"
+            v-if="debuggerAllowed"
+            @click="toggleDebugger()"
+          >
+            Open Requirement Debugger
           </button>
-          <requirement-debugger />
-        </teleport-modal>
-        <div class="req" v-for="(req, index) in groupedRequirementFulfillmentReports" :key="index">
-          <requirement-group
-            :req="req"
-            :reqIndex="index"
-            :toggleableRequirementChoices="toggleableRequirementChoices"
-            :displayedMajorIndex="displayedMajorIndex"
-            :displayedMinorIndex="displayedMinorIndex"
-            :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
-            :numOfColleges="numOfColleges"
-            :tourStep="tourStep"
-            @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
-            @activateMajor="activateMajor"
-            @activateMinor="activateMinor"
-            @onShowAllCourses="onShowAllCourses"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses">
-      <div class="see-all-padding-x see-all-header pb-3">
-        <span class="arrow-left">
-          <drop-down-arrow :isPointingLeft="true" :fillColor="'#32A0F2'" />
-        </span>
-        <button class="btn back-button p-0" @click="backFromSeeAll">GO BACK TO REQUIREMENTS</button>
-      </div>
-      <div class="see-all-padding-x py-3">
-        <h1 class="title">{{ showAllCourses.name }}</h1>
-        <div class="see-all-pages" v-if="numPages > 1">
-          <span class="see-all-pageCount">{{ pageText }}</span>
-          <div class="see-all-buttonWrapper">
-            <button
-              class="see-all-button"
-              :class="{ 'see-all-button--disabled': !hasPrevPage }"
-              :disabled="!hasPrevPage"
-              @click="prevPage()"
-            >
-              <span class="see-all-button-text">Prev</span>
+          <teleport-modal
+            content-class="requirement-debugger-modal-content"
+            :isSimpleModal="true"
+            v-if="displayDebugger"
+          >
+            <button class="requirement-debugger-toggler" @click="toggleDebugger()">
+              Close Requirement Debugger
             </button>
-            <button
-              class="see-all-button"
-              :class="{ 'see-all-button--disabled': !hasNextPage }"
-              :disabled="!hasNextPage"
-              @click="nextPage()"
-            >
-              <span class="see-all-button-text">Next</span>
-            </button>
+            <requirement-debugger />
+          </teleport-modal>
+          <div v-if="showToggleRequirementsBtn" class="requirement-sidebar-header">
+            <button class="requirement-sidebar-btn-close" @click="toggleRequirementsBar">←</button>
+          </div>
+          <div
+            class="req"
+            v-for="(req, index) in groupedRequirementFulfillmentReports"
+            :key="index"
+          >
+            <requirement-group
+              :req="req"
+              :reqIndex="index"
+              :toggleableRequirementChoices="toggleableRequirementChoices"
+              :displayedMajorIndex="displayedMajorIndex"
+              :displayedMinorIndex="displayedMinorIndex"
+              :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
+              :numOfColleges="numOfColleges"
+              :tourStep="tourStep"
+              @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
+              @activateMajor="activateMajor"
+              @activateMinor="activateMinor"
+              @onShowAllCourses="onShowAllCourses"
+            />
           </div>
         </div>
-        <draggable
-          :modelValue="showAllCourses.shownCourses"
-          :clone="cloneCourse"
-          item-key="code"
-          :group="{ name: 'draggable-semester-courses', put: false }"
-        >
-          <template #item="{ element }">
-            <div>
-              <div class="mt-3">
-                <course
-                  :courseObj="element"
-                  :compact="false"
-                  :active="false"
-                  :isReqCourse="true"
-                  class="requirements-course"
-                />
-              </div>
-            </div>
-          </template>
-        </draggable>
       </div>
-    </div>
-  </aside>
+      <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses">
+        <div class="see-all-padding-x see-all-header pb-3">
+          <span class="arrow-left">
+            <drop-down-arrow :isPointingLeft="true" :fillColor="'#32A0F2'" />
+          </span>
+          <button class="btn back-button p-0" @click="backFromSeeAll">
+            GO BACK TO REQUIREMENTS
+          </button>
+        </div>
+        <div class="see-all-padding-x py-3">
+          <h1 class="title">{{ showAllCourses.name }}</h1>
+          <div class="see-all-pages" v-if="numPages > 1">
+            <span class="see-all-pageCount">{{ pageText }}</span>
+            <div class="see-all-buttonWrapper">
+              <button
+                class="see-all-button"
+                :class="{ 'see-all-button--disabled': !hasPrevPage }"
+                :disabled="!hasPrevPage"
+                @click="prevPage()"
+              >
+                <span class="see-all-button-text">Prev</span>
+              </button>
+              <button
+                class="see-all-button"
+                :class="{ 'see-all-button--disabled': !hasNextPage }"
+                :disabled="!hasNextPage"
+                @click="nextPage()"
+              >
+                <span class="see-all-button-text">Next</span>
+              </button>
+            </div>
+          </div>
+          <draggable
+            :modelValue="showAllCourses.shownCourses"
+            :clone="cloneCourse"
+            item-key="code"
+            :group="{ name: 'draggable-semester-courses', put: false }"
+          >
+            <template #item="{ element }">
+              <div>
+                <div class="mt-3">
+                  <course
+                    :courseObj="element"
+                    :compact="false"
+                    :active="false"
+                    :isReqCourse="true"
+                    class="requirements-course"
+                  />
+                </div>
+              </div>
+            </template>
+          </draggable>
+        </div>
+      </div>
+    </aside>
+  </div>
 </template>
 
 <script lang="ts">
@@ -165,10 +183,10 @@ export default defineComponent({
   },
   props: {
     startTour: { type: Boolean, required: true },
+    isOpeningRequirements: { type: Boolean, required: true },
+    isShowingToggle: { type: Boolean, required: true },
   },
-  emits: {
-    showTourEndWindow: () => true,
-  },
+  emits: ['showTourEndWindow', 'toggleRequirementsBar'],
   data(): Data {
     return {
       displayDebugger: false,
@@ -225,6 +243,9 @@ export default defineComponent({
     },
     pageText(): string {
       return `Page ${this.showAllPage + 1}/${this.numPages}`;
+    },
+    showToggleRequirementsBtn(): boolean {
+      return this.isShowingToggle && featureFlagCheckers.isToggleRequirementsBarBtnEnabled();
     },
   },
   methods: {
@@ -315,12 +336,47 @@ export default defineComponent({
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
+    toggleRequirementsBar() {
+      this.$emit('toggleRequirementsBar');
+    },
   },
 });
 </script>
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+.requirement-sidebar-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.requirement-sidebar-btn {
+  color: #7b7d7e;
+  background: white;
+  font-size: 2rem;
+  font-family: monospace;
+  top: 2rem;
+  z-index: 1;
+
+  &:hover {
+    color: $yuxuanBlue;
+    opacity: 1;
+  }
+
+  &-open {
+    @extend .requirement-sidebar-btn;
+    position: fixed;
+    box-shadow: 2px 0px 10px 0px #dddddd;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  &-close {
+    @extend .requirement-sidebar-btn;
+    position: absolute;
+  }
+}
+
 .requirement-debugger-toggler {
   background: $medGray;
   color: white;
