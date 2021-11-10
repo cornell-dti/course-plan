@@ -9,7 +9,9 @@
       <div class="details-ratings">
         <p class="details-ratings-title">
           <span class="details-ratings-title-strong">Overall: </span>
-          <span class="details-ratings-strong">{{ CUROverallRating }}</span>
+          <span class="details-ratings-strong" data-cyId="CUReviews-overall">{{
+            CUROverallRating
+          }}</span>
         </p>
         <div class="progress rating">
           <div
@@ -29,7 +31,9 @@
       <div class="details-ratings">
         <p class="details-ratings-title">
           <span class="details-ratings-title-strong">Difficulty: </span>
-          <span class="details-ratings-strong"> {{ CURDifficulty }}</span>
+          <span class="details-ratings-strong" data-cyId="CUReviews-difficulty">
+            {{ CURDifficulty }}</span
+          >
         </p>
         <div class="progress rating">
           <div
@@ -49,7 +53,9 @@
       <div class="details-ratings">
         <p class="details-ratings-title">
           <span class="details-ratings-title-strong">Workload: </span>
-          <span class="details-ratings-strong">{{ CURWorkload }}</span>
+          <span class="details-ratings-strong" data-cyId="CUReviews-workload">{{
+            CURWorkload
+          }}</span>
         </p>
         <div class="progress rating">
           <div

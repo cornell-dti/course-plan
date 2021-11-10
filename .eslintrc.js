@@ -6,13 +6,13 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:vue/recommended',
-    '@vue/airbnb',
+    'airbnb-base',
     '@vue/typescript',
     'plugin:import/typescript',
     'prettier',
-    'prettier/vue',
     'plugin:cypress/recommended',
   ],
+  reportUnusedDisableDirectives: true,
   plugins: ['@typescript-eslint'],
   parserOptions: {
     parser: '@typescript-eslint/parser',
@@ -31,12 +31,18 @@ module.exports = {
     // TODO: auto-fix of this and the next rule introduces too many code changes that might cause merge conflict.
     'vue/attributes-order': ['off'],
     'vue/order-in-components': ['off'],
+    'vue/multi-word-component-names': ['off'],
     'vue/no-v-html': ['error'],
     'no-console': ['warn'],
     'no-await-in-loop': ['error'],
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
     'no-param-reassign': ['error', { props: false }],
+    'import/extensions': [
+      'error',
+      'always',
+      { js: 'never', mjs: 'never', jsx: 'never', ts: 'never', tsx: 'never' },
+    ],
     // allow optionalDependencies
     'import/no-extraneous-dependencies': [
       'error',
@@ -67,9 +73,18 @@ module.exports = {
       { vars: 'all', args: 'after-used', ignoreRestSiblings: true },
     ],
     'no-use-before-define': ['off'],
-    'vue/no-mutating-props': ['warn'],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+  },
+  settings: {
+    'import/resolver': {
+      [require.resolve('eslint-import-resolver-node')]: {},
+      [require.resolve('eslint-import-resolver-alias')]: {
+        map: [['@', './src']],
+        extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx'],
+      },
+    },
+    'import/extensions': ['.js', '.jsx', '.mjs', '.ts', '.tsx'],
   },
   overrides: [
     {
