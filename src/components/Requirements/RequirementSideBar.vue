@@ -1,13 +1,13 @@
 <template v-if="semesters">
   <div>
     <button
-      v-if="!isExpanded && showToggleRequirementsBtn"
+      v-if="isMinimized && showToggleRequirementsBtn"
       class="requirement-sidebar-btn-open"
-      @click="setExpanded(true)"
+      @click="toggleMinimized"
     >
       →
     </button>
-    <aside v-if="isDesktop ? isExpanded : isOpeningRequirements" class="requirements">
+    <aside v-if="isMobile ? isDisplayingMobile : !isMinimized" class="requirements">
       <div
         class="requirements-wrapper"
         data-intro-group="req-tooltip"
@@ -46,7 +46,7 @@
             <requirement-debugger />
           </teleport-modal>
           <div v-if="showToggleRequirementsBtn" class="requirement-sidebar-header">
-            <button class="requirement-sidebar-btn-close" @click="setExpanded(false)">←</button>
+            <button class="requirement-sidebar-btn-close" @click="toggleMinimized">←</button>
           </div>
           <div
             class="req"
@@ -160,7 +160,6 @@ type Data = {
   shouldShowAllCourses: boolean;
   showAllPage: number;
   tourStep: number;
-  isExpanded: boolean;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -184,10 +183,11 @@ export default defineComponent({
   },
   props: {
     startTour: { type: Boolean, required: true },
-    isOpeningRequirements: { type: Boolean, required: true },
-    isDesktop: { type: Boolean, required: true },
+    isDisplayingMobile: { type: Boolean, required: true },
+    isMobile: { type: Boolean, required: true },
+    isMinimized: { type: Boolean, required: true },
   },
-  emits: ['showTourEndWindow'],
+  emits: ['showTourEndWindow', 'toggleMinimized'],
   data(): Data {
     return {
       displayDebugger: false,
@@ -198,7 +198,6 @@ export default defineComponent({
       shouldShowAllCourses: false,
       showAllPage: 0,
       tourStep: 0,
-      isExpanded: true,
     };
   },
   watch: {
@@ -247,7 +246,7 @@ export default defineComponent({
       return `Page ${this.showAllPage + 1}/${this.numPages}`;
     },
     showToggleRequirementsBtn(): boolean {
-      return this.isDesktop && featureFlagCheckers.isToggleRequirementsBarBtnEnabled();
+      return !this.isMobile && featureFlagCheckers.isToggleRequirementsBarBtnEnabled();
     },
   },
   methods: {
@@ -338,8 +337,8 @@ export default defineComponent({
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
-    setExpanded(status: boolean) {
-      this.isExpanded = status;
+    toggleMinimized() {
+      this.$emit('toggleMinimized');
     },
   },
 });

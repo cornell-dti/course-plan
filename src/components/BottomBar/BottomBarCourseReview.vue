@@ -186,6 +186,8 @@ export default defineComponent({
         margin-top: -1rem;
         margin-bottom: 1rem;
         margin-left: 1rem;
+        padding-top: 0.5rem;
+        padding-right: 0.5rem;
       }
     }
   }

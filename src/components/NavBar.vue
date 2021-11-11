@@ -30,7 +30,7 @@
       >
         <div class="navbar-iconWrapper requirements-bar" />
         <span class="nav-mobile-button-text">
-          {{ isOpeningRequirements ? 'View Schedule' : 'View Requirements' }}
+          {{ isDisplayingRequirementsMobile ? 'View Schedule' : 'View Requirements' }}
         </span>
       </button>
       <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="editProfile">
@@ -60,9 +60,9 @@ import { GTagEvent } from '@/gtag';
 
 export default defineComponent({
   props: {
-    isOpeningRequirements: { type: Boolean, required: true },
+    isDisplayingRequirementsMobile: { type: Boolean, required: true },
   },
-  emits: ['editProfile', 'toggleRequirementsBar'],
+  emits: ['editProfile', 'toggleDisplayingRequirementsMobile'],
   data() {
     return {
       menuOpen: false,
@@ -80,9 +80,9 @@ export default defineComponent({
       this.menuOpen = false;
       this.$emit('editProfile');
     },
-    toggleRequirementsBar() {
+    toggleDisplayingRequirementsMobile() {
       this.menuOpen = false;
-      this.$emit('toggleRequirementsBar');
+      this.$emit('toggleDisplayingRequirementsMobile');
     },
   },
 });
