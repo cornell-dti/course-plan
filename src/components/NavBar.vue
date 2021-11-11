@@ -26,7 +26,7 @@
       <button
         class="nav-mobile-button"
         data-cyId="navbar-viewRequirements"
-        @click="toggleRequirementsBar"
+        @click="toggleDisplayingRequirementsMobile"
       >
         <div class="navbar-iconWrapper requirements-bar" />
         <span class="nav-mobile-button-text">
