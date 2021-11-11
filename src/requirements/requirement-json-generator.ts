@@ -6,21 +6,23 @@ import {
   Course,
 } from './types';
 import sourceRequirements from './data';
-import { SPECIAL_COURSES } from './data/constants';
+import { NO_EQUIVALENT_COURSES_COURSE_ID, SPECIAL_COURSES } from './data/constants';
 import { fullCoursesArray } from '../assets/courses/typed-full-courses';
 
 /**
  * Special (synthetic) courses, as used in AP/IB equivalent courses generation.
  */
-const specialCourses: Course[] = Object.entries(SPECIAL_COURSES).map(([name, crseId]) => ({
-  subject: name,
-  crseId,
-  catalogNbr: '',
-  titleLong: '',
-  enrollGroups: [],
-  acadCareer: '',
-  acadGroup: '',
-}));
+const specialCourses: Course[] = Object.entries(SPECIAL_COURSES)
+  .filter(([_, crseId]) => crseId !== NO_EQUIVALENT_COURSES_COURSE_ID)
+  .map(([name, crseId]) => ({
+    subject: name,
+    crseId,
+    catalogNbr: '',
+    titleLong: '',
+    enrollGroups: [],
+    acadCareer: '',
+    acadGroup: '',
+  }));
 
 const getEligibleCoursesFromRequirementCheckers = (
   checkers: readonly RequirementChecker[]
