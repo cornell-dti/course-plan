@@ -1,5 +1,5 @@
 import { ExamsTaken, userExamsToExamCourses } from '../requirement-exam-utils';
-import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID } from '../data/constants';
+import { NO_EQUIVALENT_COURSES_COURSE_ID } from '../data/constants';
 
 /**
  * Tests for userExamsToExamCourses

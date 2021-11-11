@@ -1,10 +1,10 @@
 /** Course ID for special course that satisfies no requirements. */
-export const NO_EQUIVALENT_COURSES_COURSE_ID = 10; // TODO @bshen rename to NO_FULFILLMENT_COURSE_ID
+export const NO_EQUIVALENT_COURSES_COURSE_ID = 10; // TODO @bshen rename to NO_FULFILLMENTS_COURSE_ID
 
-/** Course ID for special course that satisfies total academic credits requirement. */
+/** @deprecated Course ID for special course that satisfies total academic credits requirement. */
 export const CREDITS_COURSE_ID = 11;
 
-/** Course ID for special course that satisfies FWS requirement. */
+/** @deprecated Course ID for special course that satisfies FWS requirement. */
 export const FWS_COURSE_ID = 12;
 
 /** List of special course IDs */

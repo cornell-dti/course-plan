@@ -10,10 +10,9 @@ import { NO_EQUIVALENT_COURSES_COURSE_ID, SPECIAL_COURSES } from './data/constan
 import { fullCoursesArray } from '../assets/courses/typed-full-courses';
 
 /**
- * Special (synthetic) courses, as used in AP/IB equivalent courses generation.
+ * Special (synthetic) courses used for AP/IB fulfillment.
  */
 const specialCourses: Course[] = Object.entries(SPECIAL_COURSES)
-  .filter(([_, crseId]) => crseId !== NO_EQUIVALENT_COURSES_COURSE_ID)
   .map(([name, crseId]) => ({
     subject: name,
     crseId,
@@ -22,7 +21,8 @@ const specialCourses: Course[] = Object.entries(SPECIAL_COURSES)
     enrollGroups: [],
     acadCareer: '',
     acadGroup: '',
-  }));
+  }))
+  .filter(({ crseId }) => crseId !== NO_EQUIVALENT_COURSES_COURSE_ID);
 
 const getEligibleCoursesFromRequirementCheckers = (
   checkers: readonly RequirementChecker[]
