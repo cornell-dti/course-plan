@@ -156,16 +156,6 @@ $mobile-navbar-height: 4.5rem;
     }
   }
 
-  .toggle-requirements-icon {
-    background-image: url('@/assets/images/navbar/hamburger-gray.svg');
-
-    &:hover,
-    &:focus,
-    &:active {
-      background-image: url('@/assets/images/navbar/hamburger-blue.svg');
-    }
-  }
-
   .navbar-menu-background-shadow {
     display: none;
     position: fixed;
