@@ -26,7 +26,7 @@
       <button
         class="nav-mobile-button"
         data-cyId="navbar-viewRequirements"
-        @click="toggleDisplayingRequirementsMobile"
+        @click="toggleRequirementsMobile"
       >
         <div class="navbar-iconWrapper requirements-bar" />
         <span class="nav-mobile-button-text">
@@ -62,7 +62,7 @@ export default defineComponent({
   props: {
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
   },
-  emits: ['editProfile', 'toggleDisplayingRequirementsMobile'],
+  emits: ['editProfile', 'toggleRequirementsMobile'],
   data() {
     return {
       menuOpen: false,
@@ -80,9 +80,9 @@ export default defineComponent({
       this.menuOpen = false;
       this.$emit('editProfile');
     },
-    toggleDisplayingRequirementsMobile() {
+    toggleRequirementsMobile() {
       this.menuOpen = false;
-      this.$emit('toggleDisplayingRequirementsMobile');
+      this.$emit('toggleRequirementsMobile');
     },
   },
 });
