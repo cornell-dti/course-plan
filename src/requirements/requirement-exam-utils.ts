@@ -9,13 +9,14 @@ type ExamTakenOld = {
 /** @deprecated old infra */
 export type ExamsTakenOld = Record<'AP' | 'IB', ExamTakenOld[]>;
 
+type ExamType = keyof typeof examData;
 type ExamTaken = {
-  readonly examType: 'AP' | 'IB';
+  readonly examType: ExamType;
   readonly subject: string;
   readonly score: number;
 };
-
-type ExamSubjects = Record<'AP' | 'IB', string[]>;
+export type ExamsTaken = ExamTaken[];
+type ExamSubjects = Record<ExamType, string[]>;
 
 /** @deprecated old infra */
 function userDataToCourses(
@@ -149,7 +150,7 @@ const getExamFulfillment = (userExam: ExamTaken): ExamFulfillment | undefined =>
   return fulfillment;
 };
 
-function userExamsToExamCourses(userExams: ExamTaken[]): CourseTaken[] {
+export function userExamsToExamCourses(userExams: ExamsTaken): CourseTaken[] {
   const examCourses: CourseTaken[] = [];
   userExams.forEach(userExam => {
     // match exam to fulfillment
