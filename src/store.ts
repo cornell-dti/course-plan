@@ -7,6 +7,7 @@ import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
 import {
   allocateAllSubjectColor,
+  updateSubjectColor,
   checkNotNull,
   getCurrentSeason,
   getCurrentYear,
@@ -425,6 +426,19 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     derivedDataComputationUnsubscriber();
   };
   return unsubscriber;
+};
+
+export const updateSubjectColorData = (color: string, code: string): void => {
+  const simplifiedUser = store.state.currentFirebaseUser;
+  fb.subjectColorsCollection
+    .doc(simplifiedUser.email)
+    .get()
+    .then(snapshot => {
+      const subjectColors = snapshot.data() || {};
+      const newSubjectColors = updateSubjectColor(subjectColors, color, code);
+      store.commit('setSubjectColors', newSubjectColors);
+      fb.subjectColorsCollection.doc(simplifiedUser.email).set(newSubjectColors);
+    });
 };
 
 fb.auth.onAuthStateChanged(user => {

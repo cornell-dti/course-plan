@@ -6,12 +6,6 @@
         @mouseover="setDisplayColors(true)"
         @mouseleave="setDisplayColors(false)"
       >
-        <img
-          v-if="isLeft"
-          class="courseMenu-arrow"
-          src="@/assets/images/sidearrowleft.svg"
-          alt="arrow to expand edit course color"
-        />
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -21,7 +15,6 @@
           <span class="courseMenu-text">Edit Color</span>
         </div>
         <img
-          v-if="!isLeft"
           class="courseMenu-arrow"
           src="@/assets/images/sidearrow.svg"
           alt="arrow to expand edit course color"
@@ -35,15 +28,26 @@
           <button
             v-for="(color, index) in colors"
             :key="index"
-            class="courseMenu-section full-opacity-on-hover"
-            @click="colorCourse(color)"
+            class="courseMenu-color full-opacity-on-hover"
+            @click="openEditColorModal(color.hex)"
           >
             <div class="courseMenu-left">
               <div
-                class="courseMenu-icon courseMenu-icon--color"
+                class="courseMenu-color--icon"
                 :style="{ backgroundColor: color.hex }"
-              ></div>
-              <span class="courseMenu-text">{{ color.text }}</span>
+                @mouseover="setDisplayColorTooltip(true, color.text)"
+                @mouseleave="setDisplayColorTooltip(false, color.text)"
+              >
+                <img
+                  v-if="`#${courseColor}` === color.hex"
+                  class="courseMenu-color--checkmark"
+                  src="@/assets/images/checkmark-color.svg"
+                  alt="color checkmark"
+                />
+              </div>
+            </div>
+            <div v-if="tooltipColor === color.text" class="courseMenu-color--tooltip">
+              {{ color.text }}
             </div>
           </button>
         </div>
@@ -54,12 +58,6 @@
         @mouseleave="setDisplayEditCourseCredits(false)"
         v-if="getCreditRange && getCreditRange[0] != getCreditRange[1]"
       >
-        <img
-          v-if="isLeft"
-          class="courseMenu-arrow"
-          src="@/assets/images/sidearrowleft.svg"
-          alt="arrow to expand edit course credits"
-        />
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -70,7 +68,6 @@
           <span class="courseMenu-text">Edit Credits</span>
         </div>
         <img
-          v-if="!isLeft"
           class="courseMenu-arrow"
           src="@/assets/images/sidearrow.svg"
           alt="arrow to expand edit course credits"
@@ -92,11 +89,7 @@
           </div>
         </div>
       </div>
-      <button
-        class="courseMenu-section full-opacity-on-hover"
-        :class="{ 'courseMenu-section--left': isLeft }"
-        @click="deleteCourse"
-      >
+      <button class="courseMenu-section full-opacity-on-hover" @click="deleteCourse">
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -113,7 +106,6 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
-import { GTagEvent } from '@/gtag';
 
 export default defineComponent({
   props: {
@@ -123,17 +115,20 @@ export default defineComponent({
     },
     semesterIndex: { type: Number, required: true },
     isCompact: { type: Boolean, required: true },
+    courseColor: { type: String, required: true },
   },
   data() {
     return {
       isLeft:
         (this.semesterIndex % 2 === 0 && !this.isCompact) ||
-        (this.semesterIndex % 4 === 0 && this.isCompact),
+        (this.semesterIndex % 4 === 0 && this.isCompact) ||
+        window.innerWidth < 1200,
       // TODO: better version for all breakpoints
       // isLeft: this.semId % numPerRow() === 0,
       colors: coursesColorSet,
       displayColors: false,
       displayEditCourseCredits: false,
+      tooltipColor: '',
     };
   },
   computed: {
@@ -158,19 +153,25 @@ export default defineComponent({
   },
   emits: {
     'delete-course': () => true,
-    'color-course': (color: string) => typeof color === 'string',
+    'open-edit-color-modal': (color: string) => typeof color === 'string',
     'edit-course-credit': (credit: number) => typeof credit === 'number',
   },
   methods: {
     deleteCourse() {
       this.$emit('delete-course');
     },
-    colorCourse(color: { hex: string }) {
-      this.$emit('color-course', color.hex.substring(1));
-      GTagEvent(this.$gtag, 'course-edit-color');
+    openEditColorModal(color: string) {
+      this.$emit('open-edit-color-modal', color);
     },
     setDisplayColors(bool: boolean) {
       this.displayColors = bool;
+    },
+    setDisplayColorTooltip(bool: boolean, color: string) {
+      if (bool) {
+        this.tooltipColor = color;
+      } else {
+        this.tooltipColor = '';
+      }
     },
     setDisplayEditCourseCredits(bool: boolean) {
       this.displayEditCourseCredits = bool;
@@ -260,25 +261,48 @@ export default defineComponent({
   }
 
   &-icon {
-    margin-right: 1rem;
-
-    &--color {
-      width: 16px;
-      height: 16px;
-    }
+    margin-right: 0.75rem;
 
     &--left {
-      margin-right: 0.25rem;
+      margin-right: 0.75rem;
     }
   }
+
+  &-color {
+    padding: 0px 3px 10px 3px;
+
+    &--icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+      &:hover {
+        box-shadow: 0px 0px 2px black;
+      }
+    }
+
+    &--checkmark {
+      padding-top: 4px;
+      padding-bottom: 13px;
+    }
+
+    &--tooltip {
+      position: absolute;
+      background-color: white;
+      box-shadow: 0px 0px 2px black;
+      padding: 0px 8px 0px 8px;
+    }
+  }
+
   &-colors {
     position: absolute;
+    padding: 10px 5px 0px 5px;
     right: -9rem;
 
     &--left {
       right: 8.87rem;
     }
   }
+
   &-editCredits {
     position: absolute;
     width: 2.75rem;

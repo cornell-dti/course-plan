@@ -14,6 +14,7 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
 export { incrementUniqueID };
 export { default as setOnboardingData } from './onboarding-data';
 export {
+  editSemesters,
   editSemester,
   addSemester,
   deleteSemester,
