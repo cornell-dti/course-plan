@@ -1,8 +1,12 @@
-import { ExamsTaken, userExamsToExamCourses } from '../requirement-exam-utils';
+import {
+  ExamsTaken,
+  examsTakenToExamCourses,
+  userDataToExamCourses,
+} from '../requirement-exam-utils';
 import { NO_EQUIVALENT_COURSES_COURSE_ID } from '../data/constants';
 
 /**
- * Tests for userExamsToExamCourses
+ * Tests for examsTakenToExamCourses
  */
 it('Exam is converted to correct course', () => {
   const exams: ExamsTaken = [
@@ -12,7 +16,7 @@ it('Exam is converted to correct course', () => {
       score: 5,
     },
   ];
-  const examCourses = userExamsToExamCourses(exams);
+  const examCourses = examsTakenToExamCourses(exams);
   const expected = {
     code: 'AP Computer Science A',
     uniqueId: 'AP Computer Science A',
@@ -30,7 +34,7 @@ it('Exam score is too low', () => {
       score: 0,
     },
   ];
-  const examCourses = userExamsToExamCourses(exams);
+  const examCourses = examsTakenToExamCourses(exams);
   const expected = {
     code: 'AP Computer Science A',
     uniqueId: 'AP Computer Science A',
@@ -53,8 +57,31 @@ it('Two exams are converted to the correct courses', () => {
       score: 5,
     },
   ];
-  const examCourses = userExamsToExamCourses(exams);
+  const examCourses = examsTakenToExamCourses(exams);
   const codes = new Set(examCourses.map(({ code }) => code));
   const expectedCodes = new Set(['AP Computer Science A', 'AP Chemistry']);
   expect(codes).toEqual(expectedCodes);
+});
+
+/**
+ * Tests for userDataToExamCourses
+ */
+it('Exam is converted to correct course', () => {
+  const userData: AppOnboardingData = {
+    gradYear: '2020',
+    entranceYear: '2016',
+    college: 'EN',
+    major: [],
+    exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
+    minor: [],
+    tookSwim: 'no',
+  };
+  const examCourses = userDataToExamCourses(userData);
+  const expected = {
+    code: 'AP Computer Science A',
+    uniqueId: 'AP Computer Science A',
+    credits: 4,
+    courseId: 103, // dependent on data/ExamCredit.ts
+  };
+  expect(examCourses[0]).toEqual(expected);
 });

@@ -109,9 +109,7 @@ export function getCourseEquivalentsFromOneMajor(
 }
 
 /** @deprecated old infra */
-export default function getCourseEquivalentsFromUserExams(
-  user: AppOnboardingData
-): readonly CourseTaken[] {
+export default function (user: AppOnboardingData): readonly CourseTaken[] {
   const examCourseCodeSet = new Set<string>();
   const { college, major: majors } = user;
   const userExamData: ExamsTakenOld = { AP: [], IB: [] };
@@ -150,14 +148,14 @@ const getExamFulfillment = (userExam: ExamTaken): ExamFulfillment | undefined =>
   return fulfillment;
 };
 
-export function userExamsToExamCourses(userExams: ExamsTaken): CourseTaken[] {
+export const examsTakenToExamCourses = (exams: ExamsTaken): CourseTaken[] => {
   const examCourses: CourseTaken[] = [];
-  userExams.forEach(userExam => {
+  exams.forEach(exam => {
     // match exam to fulfillment
-    const fulfillment = getExamFulfillment(userExam);
+    const fulfillment = getExamFulfillment(exam);
 
     // generate exam course
-    const examName = `${userExam.examType} ${userExam.subject}`;
+    const examName = `${exam.examType} ${exam.subject}`;
     if (fulfillment) {
       const { courseId, credits } = fulfillment;
       examCourses.push({
@@ -176,7 +174,15 @@ export function userExamsToExamCourses(userExams: ExamsTaken): CourseTaken[] {
     }
   });
   return examCourses;
-}
+};
+
+// TODO @bshen make this default export
+export const userDataToExamCourses = (user: AppOnboardingData): CourseTaken[] => {
+  const examsTaken = user.exam.map(({ type: examType, subject, score }) => {
+    return { examType, subject, score };
+  });
+  return examsTakenToExamCourses(examsTaken);
+};
 
 const toSubjects = (data: ExamFulfillments) => {
   const subjects = [...new Set(Object.keys(data))];
