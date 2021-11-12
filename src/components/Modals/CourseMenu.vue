@@ -30,11 +30,14 @@
             :key="index"
             class="courseMenu-color full-opacity-on-hover"
             @click="openEditColorModal(color.hex)"
-            @mouseover="setDisplayColorTooltip(true, color.text)"
-            @mouseleave="setDisplayColorTooltip(false, color.text)"
           >
             <div class="courseMenu-left">
-              <div class="courseMenu-color--icon" :style="{ backgroundColor: color.hex }">
+              <div
+                class="courseMenu-color--icon"
+                :style="{ backgroundColor: color.hex }"
+                @mouseover="setDisplayColorTooltip(true, color.text)"
+                @mouseleave="setDisplayColorTooltip(false, color.text)"
+              >
                 <img
                   v-if="`#${courseColor}` === color.hex"
                   class="courseMenu-color--checkmark"
