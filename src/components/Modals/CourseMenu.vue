@@ -21,7 +21,6 @@
         />
 
         <div
-          v-if="displayColors"
           class="courseMenu-content courseMenu-colors"
           :class="{ 'courseMenu-colors--left': isLeft }"
         >
@@ -280,7 +279,8 @@ export default defineComponent({
     }
 
     &--checkmark {
-      padding-bottom: 7px;
+      padding-top: 4px;
+      padding-bottom: 13px;
     }
 
     &--tooltip {
