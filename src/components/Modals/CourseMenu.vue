@@ -21,6 +21,7 @@
         />
 
         <div
+          v-if="displayColors"
           class="courseMenu-content courseMenu-colors"
           :class="{ 'courseMenu-colors--left': isLeft }"
         >
