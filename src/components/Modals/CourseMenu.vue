@@ -121,7 +121,8 @@ export default defineComponent({
     return {
       isLeft:
         (this.semesterIndex % 2 === 0 && !this.isCompact) ||
-        (this.semesterIndex % 4 === 0 && this.isCompact),
+        (this.semesterIndex % 4 === 0 && this.isCompact) ||
+        window.innerWidth < 1200,
       // TODO: better version for all breakpoints
       // isLeft: this.semId % numPerRow() === 0,
       colors: coursesColorSet,
