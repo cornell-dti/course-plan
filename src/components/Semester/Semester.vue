@@ -456,7 +456,7 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .semester {
-  width: 24rem;
+  width: $regular-semester-width;
   box-sizing: border-box;
   position: relative;
   border-radius: 11px;
@@ -480,8 +480,7 @@ export default defineComponent({
   }
 
   &--compact {
-    width: 17.5rem;
-    padding: 0.875rem 1.125rem;
+    width: $compact-semester-width;
   }
 
   &-confirmation {
@@ -585,7 +584,7 @@ export default defineComponent({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .semester {
-    width: 17.5rem;
+    width: $compact-semester-width;
 
     &-menu {
       right: 0rem;

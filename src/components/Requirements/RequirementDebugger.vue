@@ -1,12 +1,20 @@
 <template>
   <svg class="debugger-svg" :width="900" :height="itemSize * 48 + 36">
-    <g v-for="(requirement, index) in requirementGraphForDisplay.requirements" :key="index">
+    <g
+      v-for="(requirement, index) in requirementGraphForDisplay.requirements"
+      :key="index"
+      @click="setOnlyNodeToKeepEdge(requirement)"
+    >
       <rect :x="0" :y="index * 48 + 16" :width="300" :height="32" class="requirement-box"></rect>
       <text :x="8" :y="index * 48 + 36" :font-size="16">{{ requirement }}</text>
     </g>
-    <g v-for="(course, index) in requirementGraphForDisplay.courses" :key="index">
+    <g
+      v-for="(course, index) in requirementGraphForDisplay.courses"
+      :key="index"
+      @click="setOnlyNodeToKeepEdge(course.uniqueId)"
+    >
       <rect :x="600" :y="index * 48 + 16" :width="300" :height="32" class="course-box"></rect>
-      <text :x="608" :y="index * 48 + 36" :font-size="16" fill="white">{{ course }}</text>
+      <text :x="608" :y="index * 48 + 36" :font-size="16" fill="white">{{ course.code }}</text>
     </g>
     <path v-for="(line, index) in lines" :key="index" :d="line" stroke="black" />
   </svg>
@@ -17,30 +25,53 @@ import store from '@/store';
 
 type RequirementGraphForDisplay = {
   requirements: readonly string[];
-  courses: readonly string[];
+  courses: readonly CourseTaken[];
   edges: readonly { readonly requirementIndex: number; readonly courseIndex: number }[];
 };
 
-function computeRequirementGraphForDisplay(): RequirementGraphForDisplay {
+function computeRequirementGraphForDisplay(
+  onlyNodeToKeepEdge: string | number | null
+): RequirementGraphForDisplay {
   const graph = store.state.requirementFulfillmentGraph;
   const requirements = graph.getAllRequirements();
   const courses = graph.getAllCourses();
   const requirementToIndexMap = new Map(requirements.map((it, index) => [it, index]));
   const courseToIndexMap = new Map(courses.map((it, index) => [it.uniqueId, index]));
-  const edges = graph.getAllEdges().map(([requirement, course]) => {
+  const edges = graph.getAllEdges().flatMap(([requirement, course]) => {
+    if (
+      onlyNodeToKeepEdge != null &&
+      onlyNodeToKeepEdge !== requirement &&
+      onlyNodeToKeepEdge !== course.uniqueId
+    ) {
+      return [];
+    }
     const requirementIndex = requirementToIndexMap.get(requirement);
     const courseIndex = courseToIndexMap.get(course.uniqueId);
     if (requirementIndex == null || courseIndex == null) throw new Error();
-    return { requirementIndex, courseIndex };
+    return [{ requirementIndex, courseIndex }];
   });
 
-  return { requirements, courses: courses.map(it => it.code), edges };
+  return { requirements, courses, edges };
 }
 
+type Data = { onlyNodeToKeepEdge: string | number | null };
+
 export default defineComponent({
+  data(): Data {
+    return { onlyNodeToKeepEdge: null };
+  },
+  methods: {
+    setOnlyNodeToKeepEdge(clickedNode: string | number) {
+      if (clickedNode === this.onlyNodeToKeepEdge) {
+        this.onlyNodeToKeepEdge = null;
+      } else {
+        this.onlyNodeToKeepEdge = clickedNode;
+      }
+    },
+  },
   computed: {
     requirementGraphForDisplay(): RequirementGraphForDisplay {
-      return computeRequirementGraphForDisplay();
+      return computeRequirementGraphForDisplay(this.onlyNodeToKeepEdge);
     },
     itemSize(): number {
       return Math.max(
