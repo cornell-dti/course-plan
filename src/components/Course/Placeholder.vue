@@ -4,7 +4,9 @@
       <img src="@/assets/images/dots/sixDots.svg" alt="" />
     </div>
     <div class="placeholder-content" @click="openModal()">
-      <div class="placeholder-name">Placeholder Name</div>
+      <div class="placeholder-name" :class="{ 'placeholder-name--min': compact }">
+        Placeholder Name
+      </div>
       <!-- TODO make sure caution works -->
       <!-- <course-caution :course="courseObj" /> -->
     </div>
@@ -42,16 +44,6 @@ export default defineComponent({
   flex-direction: row;
   position: relative;
   height: 5.625rem;
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.15);
-  }
-
-  &:active:hover {
-    touch-action: none;
-    cursor: grabbing;
-  }
 
   &--min {
     height: 2.125rem;
@@ -70,7 +62,30 @@ export default defineComponent({
     border-style: dashed;
     border-color: $borderGray;
     border-width: 2px 2px 2px 0;
+    border-radius: 0 0.5rem 0.5rem 0;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover,
+    &:active,
+    &.focus {
+      border-color: $yuxuanBlue;
+      background: rgba(0, 0, 0, 0.03);
+      color: $yuxuanBlue;
+      cursor: pointer;
+    }
+  }
+
+  &-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: $lightPlaceholderGray;
+
+    &--min {
+      font-size: 14px;
+    }
   }
 }
 </style>
