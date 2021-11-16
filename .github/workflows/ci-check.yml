@@ -36,6 +36,7 @@ jobs:
         run: exit $(git status --porcelain | wc -l)
   frontend-tests:
     runs-on: ubuntu-latest
+    concurrency: cypress-tests
     steps:
       - uses: actions/checkout@master
       - name: Set up Node
