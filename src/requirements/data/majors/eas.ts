@@ -144,7 +144,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 5],
-        slotNames: ['EAS 3050', 'EAS 3410', 'EAS 3420', 'Concentration Courses'],
+        slotNames: ['EAS 3050', 'EAS 3410', 'EAS 3420', 'Concentration Course'],
       },
       'Environmental Science': {
         description:
@@ -169,7 +169,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 5],
-        slotNames: ['EAS 3090', 'EAS 3030', 'EAS 3450', 'Concentration Courses'],
+        slotNames: ['EAS 3090', 'EAS 3030', 'EAS 3450', 'Concentration Course'],
       },
       'Geological Sciences': {
         description:
@@ -198,7 +198,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 5],
-        slotNames: ['EAS 3090', 'EAS 3880', 'EAS 3010', 'Concentration Courses'],
+        slotNames: ['EAS 3090', 'EAS 3880', 'EAS 3010', 'Concentration Course'],
       },
       'Ocean Sciences': {
         description:
@@ -225,7 +225,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
           ]
         ),
         perSlotMinCount: [1, 1, 1, 5],
-        slotNames: ['EAS 3050', 'EAS 3530', 'EAS 3010', 'Concentration Courses'],
+        slotNames: ['EAS 3050', 'EAS 3530', 'EAS 3010', 'Concentration Course'],
       },
     },
   },
