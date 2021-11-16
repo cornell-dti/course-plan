@@ -1,5 +1,10 @@
 import { FWS_COURSE_ID } from '../constants';
 
+/**
+ * Describes how exams can be converted to a representation understood by CoursePlan.
+ * If the user takes an exam, our algorithm determines the best fulfillment option for the user's score.
+ * There can be multiple exam fulfillments (for different minimum scores) associated with a single exam.
+ */
 export type ExamFulfillment = {
   readonly courseId: number;
   readonly courseEquivalents?: Record<string, number[]>;
