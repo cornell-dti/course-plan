@@ -157,7 +157,7 @@ export default defineComponent({
       this.tookSwimTest = tookSwimTest ? 'yes' : 'no';
       this.updateTransfer();
     },
-    selectSubject(subject: string, i: number, name: TransferExam) {
+    selectSubject(subject: string, i: number, name: TransferExamType) {
       this[name].exams = this[name].exams.map((exam, index) =>
         index === i ? { ...exam, subject } : exam
       );
@@ -172,7 +172,7 @@ export default defineComponent({
     selectCASESubject(subject: string, i: number) {
       this.selectSubject(subject, i, 'CASE');
     },
-    selectScore(score: number, i: number, name: TransferExam) {
+    selectScore(score: number, i: number, name: TransferExamType) {
       this[name].exams = this[name].exams.map((exam, index) =>
         index === i ? { ...exam, score } : exam
       );
@@ -184,11 +184,11 @@ export default defineComponent({
     selectIBScore(score: number, i: number) {
       this.selectScore(score, i, 'IB');
     },
-    addExam(name: TransferExam) {
+    addExam(name: TransferExamType) {
       const exam = { name, subject: this.placeholderText, score: 0 };
       this[name].exams.push(exam);
     },
-    removeExam(name: TransferExam, index: number) {
+    removeExam(name: TransferExamType, index: number) {
       const transferExams = this[name].exams;
       transferExams.splice(index, 1);
       if (transferExams.length === 0) this.addExam(name);
@@ -219,7 +219,7 @@ export default defineComponent({
       this.classes = classes;
       this.updateTransfer();
     },
-    subjects(name: TransferExam) {
+    subjects(name: TransferExamType) {
       const currentSubjects = new Set(this[name].exams.map(({ subject }) => subject));
       return examSubjects[name].filter(subject => !currentSubjects.has(subject));
     },

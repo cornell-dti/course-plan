@@ -55,12 +55,12 @@ export default defineComponent({
       typeof subject === 'string' && typeof index === 'number',
     'on-score-select': (score: number, index: number) =>
       typeof score === 'number' && typeof index === 'number',
-    'on-remove': (name: TransferExam, index: number) =>
+    'on-remove': (name: TransferExamType, index: number) =>
       typeof name === 'string' && typeof index === 'number',
-    'on-add': (name: TransferExam) => typeof name === 'string',
+    'on-add': (name: TransferExamType) => typeof name === 'string',
   },
   props: {
-    examName: { type: String as PropType<TransferExam>, required: true },
+    examName: { type: String as PropType<TransferExamType>, required: true },
     exams: {
       type: Array as PropType<readonly FirestoreTransferExam[]>,
       required: true,

@@ -47,10 +47,10 @@ type FirestoreAPIBExam = {
 };
 
 /** Represents the name of an exam a student can take for transfer credit */
-type TransferExam = 'AP' | 'IB' | 'CASE';
+type TransferExamType = 'AP' | 'IB' | 'CASE';
 
 type FirestoreTransferExam = {
-  readonly name: TransferExam;
+  readonly name: TransferExamType;
   readonly score: number;
   readonly subject: string;
   readonly optIn?: FirestoreAPIBOverriddenFulfillments;

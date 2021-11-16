@@ -7,7 +7,7 @@ type ExamTaken = {
 };
 export type ExamsTaken = Record<'AP' | 'IB', ExamTaken[]>;
 
-type ExamSubjects = Record<TransferExam, readonly string[]>;
+type ExamSubjects = Record<TransferExamType, readonly string[]>;
 
 function userDataToCourses(
   college: string | undefined,
