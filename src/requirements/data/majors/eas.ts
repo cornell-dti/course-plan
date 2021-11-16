@@ -5,7 +5,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Mathematics',
     description:
-      'At least two courses in calculus: MATH 1110 and MATH 1120 or MATH 1910 and MATH 1920',
+      'At least two courses in calculus. Option 1: MATH 1110 and MATH 1120. Option 2: MATH 1910 and MATH 1920',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
@@ -28,7 +28,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Physics',
     description:
-      'At least two courses in calculus-based physics: PHYS 2207 and PHYS 2208 or PHYS 1112 and PHYS 2213',
+      'At least two courses in calculus-based physics. Option 1: PHYS 2207 and PHYS 2208. Option 2: PHYS 1112 and PHYS 2213',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
