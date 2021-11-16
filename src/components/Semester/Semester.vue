@@ -139,7 +139,7 @@ import {
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
-  addCourseToSelectableRequirements,
+  addCoursesToSelectableRequirements,
 } from '@/global-firestore-data';
 import { updateSubjectColorData } from '@/store';
 
@@ -239,9 +239,11 @@ export default defineComponent({
             courses,
           })
         );
-        newCourses.forEach(({ uniqueID, requirementID }) =>
-          addCourseToSelectableRequirements(uniqueID, requirementID)
-        );
+        const newChoices: Record<string, string> = {};
+        newCourses.forEach(({ uniqueID, requirementID }) => {
+          if (requirementID) newChoices[uniqueID] = requirementID;
+        });
+        addCoursesToSelectableRequirements(newChoices);
       },
     },
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
