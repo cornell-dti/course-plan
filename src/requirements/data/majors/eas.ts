@@ -4,34 +4,59 @@ import { includesWithSingleRequirement, includesWithSubRequirements } from '../c
 const easRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Mathematics',
-    description: 'At least two courses in calculus: MATH 1110 + MATH 1120 or MATH 1910 + MATH 1920',
-    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
-    checker: includesWithSubRequirements(['MATH 1110', 'MATH 1120'], ['MATH 1910', 'MATH 1920']),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [2, 2],
-    slotNames: ['MATH 1110 & MATH 1120', 'MATH 1910 & MATH 1920'],
-    minNumberOfSlots: 1,
-  },
-  {
-    name: 'Physics',
     description:
-      'At least two courses in calculus-based physics: PHYS 2207 + PHYS 2208 or PHYS 1112 + PHYS 2213',
-    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
-    checker: includesWithSubRequirements(['PHYS 2207', 'PHYS 2208'], ['PHYS 1112', 'PHYS 2213']),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [2, 2],
-    slotNames: ['PHYS 2207 & PHYS 2208', 'PHYS 1112 & PHYS 2213'],
-    minNumberOfSlots: 1,
-  },
-  {
-    name: 'Chemistry',
-    description:
-      'Option 1: CHEM 2070 or CHEM 2090 + CHEM 2080. Option 2: CHEM 1570. Option 3: PHYS 2214',
+      'At least two courses in calculus: MATH 1110 and MATH 1120 or MATH 1910 and MATH 1920',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Option 1': {
-        description: 'CHEM 2070 or CHEM 2090 AND CHEM 2080',
+        description: 'MATH 1110 and MATH 1120',
+        checker: includesWithSubRequirements(['MATH 1110'], ['MATH 1120']),
+        counting: 'courses',
+        perSlotMinCount: [1, 1],
+        slotNames: ['MATH 1110', 'MATH 1120'],
+      },
+      'Option 2': {
+        description: 'MATH 1910 and MATH 1920',
+        checker: includesWithSubRequirements(['MATH 1910'], ['MATH 1920']),
+        counting: 'courses',
+        perSlotMinCount: [1, 1],
+        slotNames: ['MATH 1910', 'MATH 1920'],
+      },
+    },
+  },
+  {
+    name: 'Physics',
+    description:
+      'At least two courses in calculus-based physics: PHYS 2207 and PHYS 2208 or PHYS 1112 and PHYS 2213',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
+    fulfilledBy: 'toggleable',
+    fulfillmentOptions: {
+      'Option 1': {
+        description: 'PHYS 2207 and PHYS 2208',
+        checker: includesWithSubRequirements(['PHYS 2207'], ['PHYS 2208']),
+        counting: 'courses',
+        perSlotMinCount: [1, 1],
+        slotNames: ['PHYS 2207', 'PHYS 2208'],
+      },
+      'Option 2': {
+        description: 'PHYS 1112 and PHYS 2213',
+        checker: includesWithSubRequirements(['PHYS 1112'], ['PHYS 2213']),
+        counting: 'courses',
+        perSlotMinCount: [1, 1],
+        slotNames: ['PHYS 1112', 'PHYS 2213'],
+      },
+    },
+  },
+  {
+    name: 'Chemistry',
+    description:
+      'Option 1: CHEM 2070 or CHEM 2090 and CHEM 2080. Option 2: CHEM 1570. Option 3: PHYS 2214',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
+    fulfilledBy: 'toggleable',
+    fulfillmentOptions: {
+      'Option 1': {
+        description: 'CHEM 2070 or CHEM 2090 and CHEM 2080',
         checker: includesWithSubRequirements(['CHEM 2070', 'CHEM 2090'], ['CHEM 2080']),
         counting: 'courses',
         perSlotMinCount: [1, 1],
@@ -99,7 +124,9 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
           'Students must complete 3 core courses and 5 concentration courses at the 3000-level or above.',
         counting: 'courses',
         checker: includesWithSubRequirements(
-          ['EAS 3050', 'EAS 3410', 'EAS 3420'],
+          ['EAS 3050'],
+          ['EAS 3410'],
+          ['EAS 3420'],
           [
             'EAS 3340',
             'EAS 3530',
@@ -116,15 +143,17 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
             'BEE 4110',
           ]
         ),
-        perSlotMinCount: [3, 5],
-        slotNames: ['EAS 3050 & EAS 3410 & EAS 3420', '5 Concentration Courses'],
+        perSlotMinCount: [1, 1, 1, 5],
+        slotNames: ['EAS 3050', 'EAS 3410', 'EAS 3420', '5 Concentration Courses'],
       },
       'Environmental Science': {
         description:
           'Students must complete 3 core courses and 5 concentration courses at the 3000-level or above.',
         counting: 'courses',
         checker: includesWithSubRequirements(
-          ['EAS 3090', 'EAS 3030', 'EAS 3450'],
+          ['EAS 3090'],
+          ['EAS 3030'],
+          ['EAS 3450'],
           [
             'EAS 3010',
             'EAS 3530',
@@ -139,15 +168,17 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
             'BEE 4750',
           ]
         ),
-        perSlotMinCount: [3, 5],
-        slotNames: ['EAS 3090 & EAS 3030 & EAS 3450', '5 Concentration Courses'],
+        perSlotMinCount: [1, 1, 1, 5],
+        slotNames: ['EAS 3090', 'EAS 3030', 'EAS 3450', '5 Concentration Courses'],
       },
       'Geological Sciences': {
         description:
           'Students must complete 3 core courses and 5 concentration courses at the 3000-level or above.',
         counting: 'courses',
         checker: includesWithSubRequirements(
-          ['EAS 3090', 'EAS 3880', 'EAS 3010'],
+          ['EAS 3090'],
+          ['EAS 3880'],
+          ['EAS 3010'],
           [
             'EAS 4010',
             'EAS 4040',
@@ -166,15 +197,17 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
             'EAS 5780',
           ]
         ),
-        perSlotMinCount: [3, 5],
-        slotNames: ['EAS 3090 & EAS 3880 & EAS 3010', '5 Concentration Courses'],
+        perSlotMinCount: [1, 1, 1, 5],
+        slotNames: ['EAS 3090', 'EAS 3880', 'EAS 3010', '5 Concentration Courses'],
       },
       'Ocean Sciences': {
         description:
           'Students must complete 3 core courses and 5 concentration courses at the 3000-level or above.',
         counting: 'courses',
         checker: includesWithSubRequirements(
-          ['EAS 3050', 'EAS 3530', 'EAS 3010'],
+          ['EAS 3050'],
+          ['EAS 3530'],
+          ['EAS 3010'],
           [
             'BIOEE 4570',
             'BIOEE 4780',
@@ -191,8 +224,8 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
             'BIOSM 3830',
           ]
         ),
-        perSlotMinCount: [3, 5],
-        slotNames: ['EAS 3050 & EAS 3530 & EAS 3010', '5 Concentration Courses'],
+        perSlotMinCount: [1, 1, 1, 5],
+        slotNames: ['EAS 3050', 'EAS 3530', 'EAS 3010', '5 Concentration Courses'],
       },
     },
   },
