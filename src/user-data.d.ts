@@ -50,7 +50,7 @@ type FirestoreAPIBExam = {
 type TransferExamType = 'AP' | 'IB' | 'CASE';
 
 type FirestoreTransferExam = {
-  readonly name: TransferExamType;
+  readonly examType: TransferExamType;
   readonly score: number;
   readonly subject: string;
   readonly optIn?: FirestoreAPIBOverriddenFulfillments;

@@ -13,7 +13,7 @@
           class="onboarding-inputWrapper onboarding-inputWrapper--college onboarding-inputWrapper--description"
         >
           <onboarding-transfer-credits-source
-            examName="AP"
+            examType="AP"
             :exams="AP.exams"
             :subjects="subjectsAP"
             :scores="AP.scores"
@@ -24,7 +24,7 @@
             @on-add="addExam"
           />
           <onboarding-transfer-credits-source
-            examName="IB"
+            examType="IB"
             :exams="IB.exams"
             :subjects="subjectsIB"
             :scores="IB.scores"
@@ -36,7 +36,7 @@
           />
           <onboarding-transfer-credits-source
             v-if="caseEnabled"
-            examName="CASE"
+            examType="CASE"
             :exams="CASE.exams"
             :subjects="subjectsCASE"
             :placeholderText="placeholderText"
@@ -85,11 +85,11 @@ type Data = {
 };
 
 const asAPIB = (exam: FirestoreTransferExam) => {
-  const { name } = exam;
-  if (name === 'CASE') {
+  const { examType } = exam;
+  if (examType === 'CASE') {
     throw new TypeError('Cannot fetch credit from CASE exam');
   }
-  return { ...exam, type: name };
+  return { ...exam, type: examType };
 };
 
 const asAPIBArray = (exams: readonly FirestoreTransferExam[]) => exams.map(asAPIB);
@@ -116,11 +116,11 @@ export default defineComponent({
       CASE: [] as FirestoreTransferExam[],
     } as const;
     this.onboardingData.exam.forEach(exam => {
-      exams[exam.type].push({ ...exam, name: exam.type });
+      exams[exam.type].push({ ...exam, examType: exam.type });
     });
-    exams.AP.push({ name: 'AP', subject: placeholderText, score: 0 });
-    exams.IB.push({ name: 'IB', subject: placeholderText, score: 0 });
-    exams.CASE.push({ name: 'CASE', subject: placeholderText, score: 0 });
+    exams.AP.push({ examType: 'AP', subject: placeholderText, score: 0 });
+    exams.IB.push({ examType: 'IB', subject: placeholderText, score: 0 });
+    exams.CASE.push({ examType: 'CASE', subject: placeholderText, score: 0 });
     const transferClasses: TransferClassWithOptionalCourse[] = [];
     transferClasses.push({ class: placeholderText, credits: 0 });
     const AP = {
@@ -157,8 +157,8 @@ export default defineComponent({
       this.tookSwimTest = tookSwimTest ? 'yes' : 'no';
       this.updateTransfer();
     },
-    selectSubject(subject: string, i: number, name: TransferExamType) {
-      this[name].exams = this[name].exams.map((exam, index) =>
+    selectSubject(subject: string, i: number, examType: TransferExamType) {
+      this[examType].exams = this[examType].exams.map((exam, index) =>
         index === i ? { ...exam, subject } : exam
       );
       this.updateTransfer();
@@ -172,8 +172,8 @@ export default defineComponent({
     selectCASESubject(subject: string, i: number) {
       this.selectSubject(subject, i, 'CASE');
     },
-    selectScore(score: number, i: number, name: TransferExamType) {
-      this[name].exams = this[name].exams.map((exam, index) =>
+    selectScore(score: number, i: number, examType: TransferExamType) {
+      this[examType].exams = this[examType].exams.map((exam, index) =>
         index === i ? { ...exam, score } : exam
       );
       this.updateTransfer();
@@ -184,14 +184,14 @@ export default defineComponent({
     selectIBScore(score: number, i: number) {
       this.selectScore(score, i, 'IB');
     },
-    addExam(name: TransferExamType) {
-      const exam = { name, subject: this.placeholderText, score: 0 };
-      this[name].exams.push(exam);
+    addExam(examType: TransferExamType) {
+      const exam = { examType, subject: this.placeholderText, score: 0 };
+      this[examType].exams.push(exam);
     },
-    removeExam(name: TransferExamType, index: number) {
-      const transferExams = this[name].exams;
+    removeExam(examType: TransferExamType, index: number) {
+      const transferExams = this[examType].exams;
       transferExams.splice(index, 1);
-      if (transferExams.length === 0) this.addExam(name);
+      if (transferExams.length === 0) this.addExam(examType);
       this.updateTransfer();
     },
     removeTransfer(index: number) {
@@ -219,9 +219,9 @@ export default defineComponent({
       this.classes = classes;
       this.updateTransfer();
     },
-    subjects(name: TransferExamType) {
-      const currentSubjects = new Set(this[name].exams.map(({ subject }) => subject));
-      return examSubjects[name].filter(subject => !currentSubjects.has(subject));
+    subjects(examType: TransferExamType) {
+      const currentSubjects = new Set(this[examType].exams.map(({ subject }) => subject));
+      return examSubjects[examType].filter(subject => !currentSubjects.has(subject));
     },
   },
   computed: {
