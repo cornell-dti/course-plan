@@ -7,24 +7,22 @@
       <div class="placeholder-name" :class="{ 'placeholder-name--min': compact }">
         {{ placeholderObj.name }}
       </div>
-      <!-- TODO make sure caution works -->
-      <!-- <course-caution :course="courseObj" /> -->
+      <course-caution :course="placeholderObj" :semesterIndex="semesterIndex" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-// import CourseCaution from '@/components/Course/CourseCaution.vue';
+import CourseCaution from '@/components/Course/CourseCaution.vue';
 
 export default defineComponent({
-  // components: { CourseCaution },
+  components: { CourseCaution },
   props: {
     placeholderObj: { type: Object as PropType<FirestoreSemesterPlaceholder>, required: true },
     compact: { type: Boolean, required: true },
     semesterIndex: { type: Number, required: false, default: 0 },
   },
-  // data() {},
   methods: {
     openModal() {
       // TODO: open modal to assign course to placeholder
