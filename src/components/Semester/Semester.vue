@@ -92,6 +92,7 @@
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
               />
+              <placeholder :compact="compact" :semesterIndex="semesterIndex + 1" />
             </div>
           </template>
         </draggable>
@@ -118,6 +119,7 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
+import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
@@ -156,6 +158,7 @@ export default defineComponent({
     ClearSemester,
     NewCourseModal,
     SemesterMenu,
+    Placeholder,
   },
   data() {
     return {
@@ -257,7 +260,8 @@ export default defineComponent({
       if (this.compact) {
         factor = 2.6;
       }
-      return (this.courses.length + 1 + extraIncrementer) * factor;
+      // TODO multiplying by 2 for placeholders temporarily
+      return (this.courses.length * 2 + 1 + extraIncrementer) * factor;
     },
     creditString() {
       let credits = 0;
