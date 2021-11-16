@@ -27,6 +27,12 @@ export const reportCourseColorChange = (courseUniqueID: number, color: string): 
   );
 };
 
+export const reportSubjectColorChange = (code: string, color: string): void => {
+  vueForBottomBar.bottomCourses = vueForBottomBar.bottomCourses.map(course =>
+    course.code.split(' ')[0] === code.split(' ')[0] ? { ...course, color } : course
+  );
+};
+
 const getDetailedInformationForBottomBar = async (
   roster: string,
   subject: string,

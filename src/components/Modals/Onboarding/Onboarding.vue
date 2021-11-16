@@ -1,8 +1,8 @@
 <template>
-  <div class="onboarding" @click="checkClickOutside" ref="modalBackground">
+  <div class="onboarding" @click="checkClickOutside" ref="modalBackground" data-cyId="onboarding">
     <div class="onboarding-main">
       <div v-if="isEditingProfile" class="onboarding-cancel">
-        <button @click="cancel">
+        <button data-cyId="onboarding-cancel" @click="cancel">
           <img
             class="onboarding-cancel-icon"
             src="@/assets/images/x.svg"
@@ -54,7 +54,7 @@
             @setPage="setPage"
           />
         </div>
-        <div class="onboarding-error" v-if="isError">
+        <div class="onboarding-error" data-cyId="onboarding-error" v-if="isError">
           {{ errorText }}
         </div>
         <div class="onboarding-error" v-if="isInvalidMajorMinorGradError">
