@@ -1,3 +1,4 @@
+import { isPlaceholderCourse } from '@/utilities';
 import { SWIM_TEST_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './requirement-exam-utils';
 import {
@@ -169,7 +170,9 @@ export function getCourseCodesArray(
   const courses: CourseTaken[] = [];
   semesters.forEach(semester => {
     semester.courses.forEach(course => {
-      courses.push(convertFirestoreSemesterCourseToCourseTaken(course));
+      if (!isPlaceholderCourse(course)) {
+        courses.push(convertFirestoreSemesterCourseToCourseTaken(course));
+      }
     });
   });
   courses.push(...getCourseEquivalentsFromUserExams(onboardingData));

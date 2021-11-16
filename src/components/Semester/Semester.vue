@@ -79,7 +79,7 @@
           <template #item="{ element }">
             <div class="semester-courseWrapper">
               <course
-                v-if="!isPlaceholder(element)"
+                v-if="!isPlaceholderCourse(element)"
                 :courseObj="element"
                 :isReqCourse="false"
                 :compact="compact"
@@ -134,7 +134,7 @@ import EditSemester from '@/components/Modals/EditSemester.vue';
 import ClearSemester from '@/components/Modals/ClearSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
-import { clickOutside } from '@/utilities';
+import { clickOutside, isPlaceholderCourse } from '@/utilities';
 
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
@@ -272,7 +272,9 @@ export default defineComponent({
     creditString() {
       let credits = 0;
       this.courses.forEach(course => {
-        credits += course.credits;
+        if (!isPlaceholderCourse(course)) {
+          credits += course.credits;
+        }
       });
       if (credits === 1) {
         return `${credits.toString()} credit`;
@@ -281,6 +283,7 @@ export default defineComponent({
     },
   },
   methods: {
+    isPlaceholderCourse,
     onDragStart() {
       this.isDraggedFrom = true;
       this.scrollable = true;
@@ -356,7 +359,9 @@ export default defineComponent({
       const updater = (semester: FirestoreSemester): FirestoreSemester => ({
         ...semester,
         courses: semester.courses.map(course =>
-          course.code.split(' ')[0] === subject ? { ...course, color } : course
+          !isPlaceholderCourse(course) && course.code.split(' ')[0] === subject
+            ? { ...course, color }
+            : course
         ),
       });
       editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));
@@ -439,14 +444,6 @@ export default defineComponent({
     walkthroughText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Add Classes to your Schedule</div><div class="introjs-customProgress">3/4</div>
       </div><div class = "introjs-bodytext">Press "+ Course" to add classes! Edit semesters using the ellipses on the top right and drag courses between semesters.</div>`;
-    },
-    isPlaceholder(
-      element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse
-    ): element is FirestoreSemesterPlaceholder {
-      if ((element as FirestoreSemesterPlaceholder).startingSemester) {
-        return true;
-      }
-      return false;
     },
   },
   directives: {

@@ -22,6 +22,7 @@ type FirestoreSemesterCourse = {
 
 type FirestoreSemesterPlaceholder = {
   readonly name: string;
+  readonly uniqueID: number;
   readonly reqGroup: string;
   readonly slot: number;
   readonly startingSemester: number;

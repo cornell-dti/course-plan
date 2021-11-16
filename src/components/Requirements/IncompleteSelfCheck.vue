@@ -36,7 +36,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { clickOutside } from '@/utilities';
+import { clickOutside, isPlaceholderCourse } from '@/utilities';
 import store from '@/store';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
@@ -76,6 +76,10 @@ export default defineComponent({
       const courses: Record<string, FirestoreSemesterCourse> = {};
       store.state.semesters.forEach(semester => {
         semester.courses.forEach(course => {
+          if (isPlaceholderCourse(course)) {
+            return;
+          }
+
           const selectableRequirementCourses =
             store.state.derivedSelectableRequirementData.requirementToCoursesMap[this.subReqId];
 

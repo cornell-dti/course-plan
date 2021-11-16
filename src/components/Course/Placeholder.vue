@@ -15,10 +15,10 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import CourseCaution from '@/components/Course/CourseCaution.vue';
+// import CourseCaution from '@/components/Course/CourseCaution.vue';
 
 export default defineComponent({
-  components: { CourseCaution },
+  // components: { CourseCaution },
   props: {
     placeholderObj: { type: Object as PropType<FirestoreSemesterPlaceholder>, required: true },
     compact: { type: Boolean, required: true },
