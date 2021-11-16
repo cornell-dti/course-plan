@@ -155,9 +155,5 @@ export function getReqColor(groupName: string, onboardingData: AppOnboardingData
 // Determines whether the given element in a FireStoreSemester list is a Placeholder or not
 export const isPlaceholderCourse = (
   element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse
-): element is FirestoreSemesterPlaceholder => {
-  if ((element as FirestoreSemesterPlaceholder).startingSemester) {
-    return true;
-  }
-  return false;
-};
+): element is FirestoreSemesterPlaceholder =>
+  !!(element as FirestoreSemesterPlaceholder).startingSemester;
