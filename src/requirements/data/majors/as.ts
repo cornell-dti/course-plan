@@ -7,37 +7,37 @@ const asRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'EAS 3050, EAS 3410, EAS 3420, EAS 3520, EAS 4470, and EAS 4510',
     source:
       'https://www.eas.cornell.edu/eas/programs/undergraduate-programs/bs-atmospheric-sciences/major-requirements',
-    checker: includesWithSingleRequirement(
-      'EAS 3050',
-      'EAS 3410',
-      'EAS 3420',
-      'EAS 3520',
-      'EAS 4470',
-      'EAS 4510'
+    checker: includesWithSubRequirements(
+      ['EAS 3050'],
+      ['EAS 3410'],
+      ['EAS 3420'],
+      ['EAS 3520'],
+      ['EAS 4470'],
+      ['EAS 4510']
     ),
     fulfilledBy: 'courses',
-    perSlotMinCount: [6],
-    slotNames: ['Course'],
+    perSlotMinCount: [1, 1, 1, 1, 1, 1],
+    slotNames: ['EAS 3050', 'EAS 3410', 'EAS 3420', 'EAS 3520', 'EAS 4470', 'EAS 4510'],
   },
   {
     name: 'Electives',
     description: 'Choose at least 2 other atmospheric courses',
     source:
       'https://www.eas.cornell.edu/eas/programs/undergraduate-programs/bs-atmospheric-sciences/major-requirements',
-    checker: includesWithSingleRequirement(
-      'EAS 1310',
-      'EAS 1330',
-      'EAS 1340',
-      'EAS 2500',
-      'EAS 2680',
-      'EAS 3340',
-      'EAS 4350',
-      'EAS 4570',
-      'EAS 4700',
-      'EAS 4800',
-      'EAS 4860',
-      'EAS 4960',
-      'EAS 4980'
+    checker: includesWithSubRequirements(
+      ['EAS 1310'],
+      ['EAS 1330'],
+      ['EAS 1340'],
+      ['EAS 2500'],
+      ['EAS 2680'],
+      ['EAS 3340'],
+      ['EAS 4350'],
+      ['EAS 4570'],
+      ['EAS 4700'],
+      ['EAS 4800'],
+      ['EAS 4860'],
+      ['EAS 4960'],
+      ['EAS 4980']
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
@@ -83,10 +83,10 @@ const asRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'PHYS 2207, PHYS 2208, and CHEM 1560',
     source:
       'https://www.eas.cornell.edu/eas/programs/undergraduate-programs/bs-atmospheric-sciences/major-requirements',
-    checker: includesWithSubRequirements(['PHYS 2207', 'PHYS 2208'], ['CHEM 1560']),
+    checker: includesWithSubRequirements(['PHYS 2207'], ['PHYS 2208'], ['CHEM 1560']),
     fulfilledBy: 'courses',
-    perSlotMinCount: [2, 1],
-    slotNames: ['PHYS 2207 & PHYS 2208', 'CHEM 1560'],
+    perSlotMinCount: [1, 1, 1],
+    slotNames: ['PHYS 2207', 'PHYS 2208', 'CHEM 1560'],
   },
 ];
 
