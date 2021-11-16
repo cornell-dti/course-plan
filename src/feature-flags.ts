@@ -7,7 +7,7 @@ type FeatureFlagName = 'Case' | 'RequirementDebugger' | 'ToggleRequirementsBarBt
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'Case',
   'RequirementDebugger',
-  'ToggleRequirementsBarBtn',
+  'ToggleRequirementsBarBtn'
   /* 'AddYourFeatureFlagNameHere' */
 );
 export default featureFlagCheckers;
