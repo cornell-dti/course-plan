@@ -1,4 +1,4 @@
-import { isPlaceholderCourse } from './../utilities';
+import { isPlaceholderCourse } from '../utilities';
 import { SWIM_TEST_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './requirement-exam-utils';
 import {
