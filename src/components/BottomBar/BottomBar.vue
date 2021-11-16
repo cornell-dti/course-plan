@@ -105,12 +105,12 @@ export default defineComponent({
 
 @media only screen and (max-width: $large-breakpoint) {
   .bottombar {
-    &-tabview,
-    &-title,
-    &-course {
-      left: 25.5rem;
-      width: calc(100vw - 25.5rem);
-    }
+    width: calc(100vw - 25.5rem);
+    margin-left: 25.5rem;
+  }
+  .wideBar {
+    width: calc(100vw - 4.5rem);
+    margin-left: 4.5rem;
   }
 }
 

@@ -178,8 +178,9 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 1.5rem 3rem 0;
+  padding: 1.5rem 3rem 0;
   position: relative;
+  overflow-y: auto;
 
   &-content {
     display: grid;
@@ -293,8 +294,12 @@ export default defineComponent({
   }
 }
 
+.collapsedBottomBarSemesterView {
+  padding-bottom: 70px;
+}
+
 .bottomBar {
-  margin-bottom: 350px;
+  padding-bottom: 350px;
 }
 
 @media only screen and (max-width: $medium-breakpoint) {

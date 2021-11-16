@@ -248,7 +248,6 @@ export default defineComponent({
     display: flex;
     background-color: $backgroundBlue;
     min-height: 100vh;
-    overflow-y: scroll;
   }
 
   &-menus {
