@@ -197,8 +197,6 @@ const toSubjects = (data: ExamFulfillments) => {
 export const examSubjects: ExamSubjects = {
   AP: toSubjects(examData.AP),
   IB: toSubjects(examData.IB),
-  // TODO: replace stubbed in exam names
-  CASE: ['Computer Science', 'Chemistry', 'Physics', 'Foreign Language'],
 };
 
 export const getExamCredit = (examTaken: FirestoreAPIBExam): number => {
