@@ -1,5 +1,6 @@
 import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
+import { coursesColorSet } from './assets/constants/colors';
 
 /** Enumerated type to define seasons as integers in season order */
 export const SeasonOrdinal = {
@@ -73,47 +74,35 @@ function getAllSubjects(): ReadonlySet<string> {
   return set;
 }
 
-const SUBJECT_COLORS = [
-  {
-    text: 'Red',
-    hex: 'DA4A4A',
-  },
-  {
-    text: 'Orange',
-    hex: 'FFA53C',
-  },
-  {
-    text: 'Green',
-    hex: '58C913',
-  },
-  {
-    text: 'Blue',
-    hex: '139DC9',
-  },
-  {
-    text: 'Purple',
-    hex: 'C478FF',
-  },
-  {
-    text: 'Pink',
-    hex: 'F296D3',
-  },
-];
-
 export function allocateAllSubjectColor(
   subjectColors: Record<string, string>
 ): Record<string, string> {
   const subjectsColorsCopy = { ...subjectColors };
   getAllSubjects().forEach(subject => {
     if (subjectsColorsCopy[subject]) return;
-    subjectsColorsCopy[subject] =
-      SUBJECT_COLORS[Math.floor(Math.random() * SUBJECT_COLORS.length)].hex;
+    subjectsColorsCopy[subject] = coursesColorSet[
+      Math.floor(Math.random() * coursesColorSet.length)
+    ].hex.substring(1);
+  });
+  return subjectsColorsCopy;
+}
+
+export function updateSubjectColor(
+  subjectColors: Record<string, string>,
+  color: string,
+  code: string
+): Record<string, string> {
+  const subjectsColorsCopy = { ...subjectColors };
+  getAllSubjects().forEach(subject => {
+    if (subject === code) {
+      subjectsColorsCopy[subject] = color;
+    }
   });
   return subjectsColorsCopy;
 }
 
 export const clickOutside = {
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   beforeMount(el: any, binding: any): void {
     el.clickOutsideEvent = (event: Event) => {
       if (!(el === event.target || el.contains(event.target))) {
@@ -122,7 +111,7 @@ export const clickOutside = {
     };
     document.body.addEventListener('click', el.clickOutsideEvent);
   },
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   unmounted(el: any): void {
     document.body.removeEventListener('click', el.clickOutsideEvent);
   },

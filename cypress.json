@@ -1,5 +1,6 @@
 {
   "env": {
-    "TEST_UID": "puJfpGX3sWakJvzxq4NIsOoZsmw1"
+    "TEST_UID": "puJfpGX3sWakJvzxq4NIsOoZsmw1",
+    "TEST_EMAIL": "courseplan.cornelldti.test@gmail.com"
   }
 }

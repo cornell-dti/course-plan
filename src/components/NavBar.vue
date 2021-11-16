@@ -2,6 +2,7 @@
   <nav class="navbar">
     <div
       class="navbar-iconWrapper hamburger full-opacity-on-hover"
+      data-cyId="navbar-menuButton"
       @click="menuOpen = !menuOpen"
     ></div>
     <div class="navbar-top">
@@ -21,14 +22,18 @@
       />
     </div>
     <div v-if="menuOpen" class="navbar-menu-background-shadow" @click="editProfile" />
-    <div v-if="menuOpen" class="navbar-menu">
-      <button class="nav-mobile-button" @click="toggleRequirementsBar">
+    <div v-if="menuOpen" class="navbar-menu" data-cyId="navbar-menu">
+      <button
+        class="nav-mobile-button"
+        data-cyId="navbar-viewRequirements"
+        @click="toggleRequirementsMobile"
+      >
         <div class="navbar-iconWrapper requirements-bar" />
         <span class="nav-mobile-button-text">
-          {{ isOpeningRequirements ? 'View Schedule' : 'View Requirements' }}
+          {{ isDisplayingRequirementsMobile ? 'View Schedule' : 'View Requirements' }}
         </span>
       </button>
-      <button class="nav-mobile-button" @click="editProfile">
+      <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="editProfile">
         <div class="navbar-iconWrapper profile-mobile-icon" />
         <span class="nav-mobile-button-text">Edit Profile</span>
       </button>
@@ -55,9 +60,9 @@ import { GTagEvent } from '@/gtag';
 
 export default defineComponent({
   props: {
-    isOpeningRequirements: { type: Boolean, required: true },
+    isDisplayingRequirementsMobile: { type: Boolean, required: true },
   },
-  emits: ['editProfile', 'toggleRequirementsBar'],
+  emits: ['editProfile', 'toggleRequirementsMobile'],
   data() {
     return {
       menuOpen: false,
@@ -75,9 +80,9 @@ export default defineComponent({
       this.menuOpen = false;
       this.$emit('editProfile');
     },
-    toggleRequirementsBar() {
+    toggleRequirementsMobile() {
       this.menuOpen = false;
-      this.$emit('toggleRequirementsBar');
+      this.$emit('toggleRequirementsMobile');
     },
   },
 });
@@ -94,7 +99,8 @@ $mobile-navbar-height: 4.5rem;
   width: 4.5rem;
   height: 100vh;
   display: flex;
-  position: fixed;
+  position: sticky;
+  top: 0;
   z-index: 2;
   flex-direction: column;
   justify-content: space-between;
@@ -208,6 +214,7 @@ $mobile-navbar-height: 4.5rem;
     padding-top: 0rem;
     padding-bottom: 0rem;
     display: flex;
+    position: fixed;
     flex-direction: row;
 
     .nav-mobile-button {
