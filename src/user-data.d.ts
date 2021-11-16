@@ -20,6 +20,13 @@ type FirestoreSemesterCourse = {
   readonly color: string;
 };
 
+type FirestoreSemesterPlaceholder = {
+  readonly name: string;
+  readonly reqGroup: string;
+  readonly slot: number;
+  readonly startingSemester: number;
+};
+
 // This is used for drag&drop between SubRequirement and Semester
 type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
   readonly requirementID?: string;
@@ -30,7 +37,7 @@ type FirestoreSemester = {
   readonly year: number;
   readonly type?: FirestoreSemesterSeason; // TODO @bshen remove & write migration script when every dev pulls from master
   readonly season: FirestoreSemesterSeason;
-  readonly courses: readonly FirestoreSemesterCourse[];
+  readonly courses: readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[];
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };

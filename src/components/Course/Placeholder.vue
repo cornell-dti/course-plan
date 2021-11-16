@@ -5,7 +5,7 @@
     </div>
     <div class="placeholder-content" @click="openModal()">
       <div class="placeholder-name" :class="{ 'placeholder-name--min': compact }">
-        Placeholder Name
+        {{ placeholderObj.name }}
       </div>
       <!-- TODO make sure caution works -->
       <!-- <course-caution :course="courseObj" /> -->
@@ -14,21 +14,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
-import { clickOutside } from '@/utilities';
 
 export default defineComponent({
   components: { CourseCaution },
   props: {
-    // courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    placeholderObj: { type: Object as PropType<FirestoreSemesterPlaceholder>, required: true },
     compact: { type: Boolean, required: true },
     semesterIndex: { type: Number, required: false, default: 0 },
   },
   // data() {},
   methods: {
     openModal() {
-      // TODO: in follow-up PR, open modal to assign course to placeholder
+      // TODO: open modal to assign course to placeholder
     },
   },
 });

@@ -79,6 +79,7 @@
           <template #item="{ element }">
             <div class="semester-courseWrapper">
               <course
+                v-if="!isPlaceholder(element)"
                 :courseObj="element"
                 :isReqCourse="false"
                 :compact="compact"
@@ -92,7 +93,12 @@
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
               />
-              <placeholder :compact="compact" :semesterIndex="semesterIndex + 1" />
+              <placeholder
+                v-else
+                :compact="compact"
+                :semesterIndex="semesterIndex + 1"
+                :placeholderObj="element"
+              />
             </div>
           </template>
         </draggable>
@@ -194,7 +200,7 @@ export default defineComponent({
     },
     year: { type: Number, required: true },
     courses: {
-      type: Array as PropType<readonly FirestoreSemesterCourse[]>,
+      type: Array as PropType<readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[]>,
       required: true,
     },
     compact: { type: Boolean, required: true },
@@ -229,10 +235,11 @@ export default defineComponent({
 
   computed: {
     coursesForDraggable: {
-      get(): readonly FirestoreSemesterCourse[] {
+      get(): readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[] {
         return this.courses;
       },
       set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
+        // TODO: does this need to be updated? probably
         const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
         editSemester(
           this.year,
@@ -260,8 +267,7 @@ export default defineComponent({
       if (this.compact) {
         factor = 2.6;
       }
-      // TODO multiplying by 2 for placeholders temporarily
-      return (this.courses.length * 2 + 1 + extraIncrementer) * factor;
+      return (this.courses.length + 1 + extraIncrementer) * factor;
     },
     creditString() {
       let credits = 0;
@@ -272,18 +278,6 @@ export default defineComponent({
         return `${credits.toString()} credit`;
       }
       return `${credits.toString()} credits`;
-    },
-    // Note: Currently not used
-    deleteDuplicateCourses(): readonly FirestoreSemesterCourse[] {
-      const uniqueCoursesNames: string[] = [];
-      const uniqueCourses: FirestoreSemesterCourse[] = [];
-      this.courses.forEach(course => {
-        if (uniqueCoursesNames.indexOf(course.name) === -1) {
-          uniqueCourses.push(course);
-          uniqueCoursesNames.push(course.name);
-        }
-      });
-      return uniqueCourses;
     },
   },
   methods: {
@@ -445,6 +439,14 @@ export default defineComponent({
     walkthroughText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Add Classes to your Schedule</div><div class="introjs-customProgress">3/4</div>
       </div><div class = "introjs-bodytext">Press "+ Course" to add classes! Edit semesters using the ellipses on the top right and drag courses between semesters.</div>`;
+    },
+    isPlaceholder(
+      element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse
+    ): element is FirestoreSemesterPlaceholder {
+      if ((element as FirestoreSemesterPlaceholder).startingSemester) {
+        return true;
+      }
+      return false;
     },
   },
   directives: {
