@@ -54,8 +54,8 @@ export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
     'close-course-modal': () => true,
-    'add-course': (course: CornellCourseRosterCourse, requirementID: string) =>
-      typeof course === 'object' && typeof requirementID === 'string',
+    'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
+      typeof course === 'object' && typeof choice === 'object',
   },
   data() {
     return {
@@ -98,7 +98,7 @@ export default defineComponent({
         selectedCourse,
         store.state.groupedRequirementFulfillmentReport,
         store.state.toggleableRequirementChoices,
-        /* deprecated AppOverriddenFulfillmentChoices */ {}
+        store.state.overriddenFulfillmentChoices
       );
 
       const requirementsThatAllowDoubleCounting: string[] = [];
@@ -137,7 +137,15 @@ export default defineComponent({
     },
     addCourse() {
       if (this.selectedCourse == null) return;
-      this.$emit('add-course', this.selectedCourse, this.selectedRequirementID);
+      this.$emit('add-course', this.selectedCourse, {
+        optOut: this.relatedRequirements
+          .filter(it => it.id !== this.selectedRequirementID)
+          .map(it => it.id),
+        acknowledgedCheckerWarningOptIn: this.selfCheckRequirements
+          .filter(it => it.id !== this.selectedRequirementID)
+          .map(it => it.id),
+        arbitraryOptIn: {},
+      });
       this.closeCurrentModal();
     },
     onSelectedChange(selected: string) {

@@ -177,6 +177,7 @@ export function getUserRequirements({
  */
 type MatchedRequirementFulfillmentSpecificationBase = {
   readonly fulfilledBy: 'courses' | 'credits';
+  readonly hasRequirementCheckerWarning: boolean;
   readonly eligibleCourses: readonly (readonly number[])[];
   readonly perSlotMinCount: readonly number[];
   readonly slotNames: readonly string[];
@@ -226,6 +227,7 @@ export function getMatchedRequirementFulfillmentSpecification(
               name,
               {
                 fulfilledBy: subRequirement.fulfilledBy,
+                hasRequirementCheckerWarning: false,
                 eligibleCourses: subRequirement.courses,
                 perSlotMinCount: subRequirement.perSlotMinCount,
                 slotNames,
@@ -235,12 +237,14 @@ export function getMatchedRequirementFulfillmentSpecification(
           })
         );
 
+  const hasRequirementCheckerWarning = requirement.checkerWarning != null;
   switch (requirement.fulfilledBy) {
     case 'self-check':
       return null;
     case 'courses':
       return {
         fulfilledBy: requirement.fulfilledBy,
+        hasRequirementCheckerWarning,
         eligibleCourses: requirement.courses,
         additionalRequirements: convertAdditionalRequirements(requirement.additionalRequirements),
         perSlotMinCount: requirement.perSlotMinCount,
@@ -250,6 +254,7 @@ export function getMatchedRequirementFulfillmentSpecification(
     case 'credits':
       return {
         fulfilledBy: requirement.fulfilledBy,
+        hasRequirementCheckerWarning,
         eligibleCourses: requirement.courses,
         additionalRequirements: convertAdditionalRequirements(requirement.additionalRequirements),
         perSlotMinCount: requirement.perSlotMinCount,
@@ -264,6 +269,7 @@ export function getMatchedRequirementFulfillmentSpecification(
         ];
       return {
         fulfilledBy: option.counting,
+        hasRequirementCheckerWarning,
         eligibleCourses: option.courses,
         perSlotMinCount: option.perSlotMinCount,
         slotNames: option.counting === 'courses' ? option.slotNames : [],
@@ -278,10 +284,11 @@ export function getMatchedRequirementFulfillmentSpecification(
 const computeFulfillmentStatistics = (
   requirementName: string,
   coursesTaken: readonly CourseTaken[],
-  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices,
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
   disallowTransferCredit: boolean,
   {
     fulfilledBy,
+    hasRequirementCheckerWarning,
     eligibleCourses,
     perSlotMinCount,
     slotNames,
@@ -291,19 +298,33 @@ const computeFulfillmentStatistics = (
   const coursesThatFulfilledSubRequirements: CourseTaken[][] = eligibleCourses.map(() => []);
   const subRequirementProgress: number[] = eligibleCourses.map(() => 0);
   coursesTaken.forEach(courseTaken => {
-    const overrideOptions = overriddenFulfillmentChoices[courseTaken.uniqueId];
-    const optInSlotNames = (overrideOptions && overrideOptions.optIn[requirementName]) || null;
-    const optOutSlotNames = (overrideOptions && overrideOptions.optOut[requirementName]) || null;
+    const overrideOptions = overriddenFulfillmentChoices[courseTaken.uniqueId] || {
+      arbitraryOptIn: [],
+      acknowledgedCheckerWarningOptIn: [],
+      optOut: [],
+    };
+    // If a requirement has checker warning, do not match it the course unless it's acknoledged.
+    if (
+      overrideOptions.optOut.includes(requirementName) ||
+      (hasRequirementCheckerWarning &&
+        !overrideOptions.acknowledgedCheckerWarningOptIn.includes(requirementName))
+    ) {
+      return;
+    }
+    const arbitraryOptInSlotNames = new Set(overrideOptions.arbitraryOptIn[requirementName] || []);
 
     // block AP/IB equivalent courses if disallowTransferCredit
-    if (!(disallowTransferCredit && courseIsAPIB(courseTaken)) || optInSlotNames) {
+    if (
+      !(disallowTransferCredit && courseIsAPIB(courseTaken)) ||
+      arbitraryOptInSlotNames.size > 0
+    ) {
       for (
         let subRequirementIndex = 0;
         subRequirementIndex < eligibleCourses.length;
         subRequirementIndex += 1
       ) {
         const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
-        if (optInSlotNames && (fulfilledBy === 'credits' || optInSlotNames.has(slotName))) {
+        if (arbitraryOptInSlotNames.has(slotName)) {
           // the user wants to use this course to override this sub-requirement
           coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
           subRequirementProgress[subRequirementIndex] +=
@@ -311,8 +332,7 @@ const computeFulfillmentStatistics = (
           // don't break, in case the user wants to override more sub-requirements with the same course
         } else if (
           eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
-          subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex] &&
-          !(optOutSlotNames && (fulfilledBy === 'credits' || optOutSlotNames.has(slotName)))
+          subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
         ) {
           // this course is eligible to fulfill this sub-requirement, and the user did not opt out
           coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
@@ -357,7 +377,7 @@ export function computeFulfillmentCoursesAndStatistics(
   requirement: RequirementWithIDSourceType,
   coursesTaken: readonly CourseTaken[],
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
 ): RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements {
   const spec = getMatchedRequirementFulfillmentSpecification(
     requirement,
@@ -402,7 +422,7 @@ export function getRelatedUnfulfilledRequirements(
   }: CornellCourseRosterCourse,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
 ): {
   readonly directlyRelatedRequirements: readonly RequirementWithIDSourceType[];
   readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];

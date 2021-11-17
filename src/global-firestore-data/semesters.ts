@@ -4,10 +4,10 @@ import { GTag, GTagEvent } from '../gtag';
 import { sortedSemesters } from '../utilities';
 
 import {
-  addCourseToSelectableRequirements,
-  deleteCourseFromSelectableRequirements,
-  deleteCoursesFromSelectableRequirements,
-} from './selectable-requirement-choices';
+  updateRequirementChoice,
+  deleteCourseFromRequirementChoices,
+  deleteCoursesFromRequirementChoices,
+} from './override-fulfillment-choices';
 
 export const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
@@ -81,7 +81,7 @@ export const deleteSemester = (
   GTagEvent(gtag, 'delete-semester');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
   if (semester) {
-    deleteCoursesFromSelectableRequirements(semester.courses.map(course => course.uniqueID));
+    deleteCoursesFromRequirementChoices(semester.courses.map(course => course.uniqueID));
     editSemesters(oldSemesters => oldSemesters.filter(sem => !semesterEquals(sem, year, season)));
   }
 };
@@ -90,7 +90,7 @@ export const addCourseToSemester = (
   year: number,
   season: FirestoreSemesterSeason,
   newCourse: FirestoreSemesterCourse,
-  requirementID?: string,
+  choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices,
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'add-course');
@@ -106,9 +106,7 @@ export const addCourseToSemester = (
     if (semesterFound) return newSemestersWithCourse;
     return [...oldSemesters, createSemester(year, season, [newCourse])];
   });
-  if (requirementID) {
-    addCourseToSelectableRequirements(newCourse.uniqueID, requirementID);
-  }
+  updateRequirementChoice(newCourse.uniqueID, choiceUpdater);
 };
 
 export const deleteCourseFromSemester = (
@@ -120,7 +118,7 @@ export const deleteCourseFromSemester = (
   GTagEvent(gtag, 'delete-course');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
   if (semester) {
-    deleteCourseFromSelectableRequirements(courseUniqueID);
+    deleteCourseFromRequirementChoices(courseUniqueID);
     editSemesters(oldSemesters =>
       oldSemesters.map(sem => ({
         ...sem,
@@ -140,7 +138,7 @@ export const deleteAllCoursesFromSemester = (
   GTagEvent(gtag, 'delete-semester-courses');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
   if (semester) {
-    deleteCoursesFromSelectableRequirements(semester.courses.map(course => course.uniqueID));
+    deleteCoursesFromRequirementChoices(semester.courses.map(course => course.uniqueID));
     editSemesters(oldSemesters =>
       oldSemesters.map(sem => ({
         ...sem,
@@ -160,7 +158,7 @@ export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: GTag): 
       return { ...semester, courses: coursesWithoutDeleted };
     })
   );
-  deleteCourseFromSelectableRequirements(courseUniqueID);
+  deleteCourseFromRequirementChoices(courseUniqueID);
 };
 
 // exposed for testing

@@ -41,7 +41,7 @@ import store from '@/store';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   addCourseToSemester,
-  addCourseToSelectableRequirements,
+  updateRequirementChoice,
 } from '@/global-firestore-data';
 import { canFulfillChecker } from '@/requirements/requirement-frontend-utils';
 
@@ -150,12 +150,32 @@ export default defineComponent({
     },
     addExistingCourse(option: string) {
       this.showDropdown = false;
-      addCourseToSelectableRequirements(this.selfCheckCourses[option].uniqueID, this.subReqId);
+      updateRequirementChoice(this.selfCheckCourses[option].uniqueID, choice => ({
+        ...choice,
+        // Since we edit from a self-check requirement,
+        // we know it must be `acknowledgedCheckerWarningOptIn`.
+        acknowledgedCheckerWarningOptIn: Array.from(
+          new Set([...choice.acknowledgedCheckerWarningOptIn, this.subReqId])
+        ),
+      }));
     },
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterSeason, year: number) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(course);
-      addCourseToSemester(year, season, newCourse, this.subReqId, this.$gtag);
+      addCourseToSemester(
+        year,
+        season,
+        newCourse,
+        // Since the course is new, we know the old choice does not exist.
+        () => ({
+          arbitraryOptIn: {},
+          // Since we edit from a self-check requirement,
+          // we know it must be `acknowledgedCheckerWarningOptIn`.
+          acknowledgedCheckerWarningOptIn: [this.subReqId],
+          optOut: [],
+        }),
+        this.$gtag
+      );
     },
     openCourseModal() {
       this.isCourseModalOpen = true;

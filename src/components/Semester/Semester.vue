@@ -139,7 +139,7 @@ import {
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
-  addCoursesToSelectableRequirements,
+  updateRequirementChoices,
 } from '@/global-firestore-data';
 import { updateSubjectColorData } from '@/store';
 
@@ -239,11 +239,18 @@ export default defineComponent({
             courses,
           })
         );
-        const newChoices: Record<string, string> = {};
-        newCourses.forEach(({ uniqueID, requirementID }) => {
-          if (requirementID) newChoices[uniqueID] = requirementID;
+        updateRequirementChoices(oldChoices => {
+          const choices = { ...oldChoices };
+          newCourses.forEach(({ uniqueID, requirementID }) => {
+            const choice = choices[uniqueID] || {
+              arbitraryOptIn: {},
+              acknowledgedCheckerWarningOptIn: [],
+              optOut: [],
+            };
+            return { ...choice, optOut: choice.optOut.filter(it => it !== requirementID) };
+          });
+          return choices;
         });
-        addCoursesToSelectableRequirements(newChoices);
       },
     },
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
@@ -330,9 +337,10 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    addCourse(data: CornellCourseRosterCourse, requirementID: string) {
+    addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      addCourseToSemester(this.year, this.season, newCourse, requirementID, this.$gtag);
+      // Since the course is new, we know the old choice does not exist.
+      addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);

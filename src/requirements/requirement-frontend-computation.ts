@@ -181,8 +181,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   semesters: readonly FirestoreSemester[],
   onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  selectableRequirementChoices: AppSelectableRequirementChoices,
-  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
 ): {
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
@@ -198,7 +197,6 @@ export default function computeGroupedRequirementFulfillmentReports(
     coursesTaken,
     onboardingData,
     toggleableRequirementChoices,
-    selectableRequirementChoices,
     overriddenFulfillmentChoices
   );
 

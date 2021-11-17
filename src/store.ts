@@ -279,8 +279,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
             state.semesters,
             state.onboardingData,
             state.toggleableRequirementChoices,
-            state.selectableRequirementChoices,
-            /* deprecated AppOverriddenFulfillmentChoices */ {}
+            state.overriddenFulfillmentChoices
           )
         );
       }
