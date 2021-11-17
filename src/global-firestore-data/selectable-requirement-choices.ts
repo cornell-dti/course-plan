@@ -50,6 +50,17 @@ export const addCourseToSelectableRequirements = (
   );
 };
 
+export const addCoursesToSelectableRequirements = (
+  newChoices: Readonly<Record<string, string>>
+): void => {
+  // Even when there is no change, we set the old data anyways,
+  // so it can trigger a save of user choice in new format.
+  chooseSelectableRequirementOption({
+    ...store.state.selectableRequirementChoices,
+    ...newChoices,
+  });
+};
+
 export const deleteCourseFromSelectableRequirements = (courseUniqueID: string | number): void => {
   deleteCoursesFromSelectableRequirements([courseUniqueID]);
 };
