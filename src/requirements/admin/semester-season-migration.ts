@@ -14,13 +14,9 @@ async function runOnUser(userEmail: string, runOnDB: boolean) {
       return (data && data.semesters) || [];
     });
 
-  console.group(`Running on ${userEmail}...`);
-  const newSemesters = semesters.map(semester =>
-    // each semester should have type but not necessarily season
-    ({ ...semester, season: semester.season || semester.type })
-  );
+  // remove semester type from semesters
+  const newSemesters = semesters.map(({ type, ...semester }) => semester);
   console.log(semesters, '=>', newSemesters);
-  console.groupEnd();
 
   if (runOnDB) {
     await semestersCollection.doc(userEmail).update({ semesters: newSemesters });
