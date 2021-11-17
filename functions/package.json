@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint .",
-    "predeploy": "../node_modules/.bin/esbuild --bundle --platform=node --outdir=deployment-template index.ts",
+    "predeploy": "esbuild --bundle --platform=node --outdir=deployment-template index.ts",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
@@ -12,6 +12,8 @@
     "logs": "firebase functions:log"
   },
   "dependencies": {
+    "cypress-firebase": "^2.0.0",
+    "esbuild": "^0.13.12",
     "firebase-admin": "^9.12.0",
     "firebase-functions": "^3.15.7"
   }

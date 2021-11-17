@@ -6,7 +6,7 @@
     data-step="3"
     :data-intro="walkthroughText()"
     data-disable-interaction="1"
-    data-tooltipClass="tooltipCenter"
+    data-tooltipClass="tooltipCenter tourStep3"
   >
     <new-course-modal
       @close-course-modal="closeCourseModal"
@@ -84,9 +84,11 @@
                 :compact="compact"
                 :active="activatedCourse.uniqueID === element.uniqueID"
                 class="semester-course"
+                data-cyId="semester-course"
                 :semesterIndex="semesterIndex + 1"
                 @delete-course="deleteCourse"
                 @color-course="colorCourse"
+                @color-subject="colorSubject"
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
               />
@@ -133,11 +135,13 @@ import summer from '@/assets/images/summerEmoji.svg';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   editSemester,
+  editSemesters,
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
-  addCourseToSelectableRequirements,
+  addCoursesToSelectableRequirements,
 } from '@/global-firestore-data';
+import { updateSubjectColorData } from '@/store';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -235,9 +239,11 @@ export default defineComponent({
             courses,
           })
         );
-        newCourses.forEach(({ uniqueID, requirementID }) =>
-          addCourseToSelectableRequirements(uniqueID, requirementID)
-        );
+        const newChoices: Record<string, string> = {};
+        newCourses.forEach(({ uniqueID, requirementID }) => {
+          if (requirementID) newChoices[uniqueID] = requirementID;
+        });
+        addCoursesToSelectableRequirements(newChoices);
       },
     },
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
@@ -336,7 +342,7 @@ export default defineComponent({
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
     },
-    colorCourse(color: string, uniqueID: number) {
+    colorCourse(color: string, uniqueID: number, courseCode: string) {
       editSemester(
         this.year,
         this.season,
@@ -347,6 +353,19 @@ export default defineComponent({
           ),
         })
       );
+      this.openConfirmationModal(`Changed color for ${courseCode}`);
+    },
+    colorSubject(color: string, courseCode: string) {
+      const subject = courseCode.split(' ')[0];
+      const updater = (semester: FirestoreSemester): FirestoreSemester => ({
+        ...semester,
+        courses: semester.courses.map(course =>
+          course.code.split(' ')[0] === subject ? { ...course, color } : course
+        ),
+      });
+      editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));
+      updateSubjectColorData(color, subject);
+      this.openConfirmationModal(`Changed color for ${subject}`);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.$emit('course-onclick', course);
@@ -436,7 +455,7 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .semester {
-  width: 24rem;
+  width: $regular-semester-width;
   box-sizing: border-box;
   position: relative;
   border-radius: 11px;
@@ -460,8 +479,7 @@ export default defineComponent({
   }
 
   &--compact {
-    width: 17.5rem;
-    padding: 0.875rem 1.125rem;
+    width: $compact-semester-width;
   }
 
   &-confirmation {
@@ -565,7 +583,7 @@ export default defineComponent({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .semester {
-    width: 17.5rem;
+    width: $compact-semester-width;
 
     &-menu {
       right: 0rem;

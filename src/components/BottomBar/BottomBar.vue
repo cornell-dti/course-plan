@@ -1,5 +1,5 @@
 <template>
-  <div class="bottombar" v-if="hasBottomBarCourses">
+  <div class="bottombar" :class="{ wideBar: isNavbarWide }" v-if="hasBottomBarCourses">
     <div class="bottombar-tabview" :class="{ expandedTabView: isExpanded }">
       <bottom-bar-tab-view :maxBottomBarTabs="maxBottomBarTabs" />
     </div>
@@ -31,6 +31,7 @@ export default defineComponent({
   components: { BottomBarCourse, BottomBarTabView, BottomBarTitle },
   props: {
     maxBottomBarTabs: { type: Number, required: true },
+    isNavbarWide: { type: Boolean, required: true },
   },
 
   computed: {
@@ -59,21 +60,22 @@ export default defineComponent({
 .bottombar {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  z-index: 1;
+  position: fixed;
+  width: calc(100vw - 29.5rem);
+  margin-left: 29.5rem;
 
   &-tabview {
     position: fixed;
     bottom: 2.5rem;
-    left: 29.5rem;
-    width: calc(100vw - 29.5rem);
+    width: inherit;
   }
 
   &-title {
     position: fixed;
     bottom: 0;
-    left: 29.5rem;
     height: 2.5rem;
-    width: calc(100vw - 29.5rem);
+    width: inherit;
     text-align: left;
     padding-left: 0;
   }
@@ -81,12 +83,15 @@ export default defineComponent({
   &-course {
     position: fixed;
     bottom: 0;
-    left: 29.5rem;
-    width: 100%;
+    width: inherit;
     background-color: $white;
-    width: calc(100vw - 29.5rem);
     height: 16.5rem;
   }
+}
+
+.wideBar {
+  width: calc(100vw - 4.5rem);
+  margin-left: 4.5rem;
 }
 
 .expandedTabView {
@@ -100,12 +105,12 @@ export default defineComponent({
 
 @media only screen and (max-width: $large-breakpoint) {
   .bottombar {
-    &-tabview,
-    &-title,
-    &-course {
-      left: 25.5rem;
-      width: calc(100vw - 25.5rem);
-    }
+    width: calc(100vw - 25.5rem);
+    margin-left: 25.5rem;
+  }
+  .wideBar {
+    width: calc(100vw - 4.5rem);
+    margin-left: 4.5rem;
   }
 }
 

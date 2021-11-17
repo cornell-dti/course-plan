@@ -3,8 +3,9 @@ import * as path from 'path';
 import * as admin from 'firebase-admin';
 import { getTypedFirestoreDataConverter } from './firebase-config-common';
 
+const serviceAccountFilename = process.env.PROD ? 'serviceAccountProd.json' : 'serviceAccount.json';
 const serviceAccount = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '..', 'serviceAccount.json')).toString()
+  fs.readFileSync(path.join(__dirname, '..', serviceAccountFilename)).toString()
 );
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -32,6 +33,10 @@ export const toggleableRequirementChoicesCollection = db
 export const selectableRequirementChoicesCollection = db
   .collection('user-selectable-requirement-choices')
   .withConverter(getTypedFirestoreDataConverter<AppSelectableRequirementChoices>());
+
+export const overriddenFulfillmentChoicesCollection = db
+  .collection('user-overridden-fulfillment-choices')
+  .withConverter(getTypedFirestoreDataConverter<FirestoreOverriddenFulfillmentChoices>());
 
 export const subjectColorsCollection = db
   .collection('user-subject-colors')

@@ -98,7 +98,7 @@ export default defineComponent({
         selectedCourse,
         store.state.groupedRequirementFulfillmentReport,
         store.state.toggleableRequirementChoices,
-        store.state.overriddenFulfillmentChoices
+        /* deprecated AppOverriddenFulfillmentChoices */ {}
       );
 
       const requirementsThatAllowDoubleCounting: string[] = [];

@@ -1,12 +1,13 @@
 import { Store } from 'vuex';
 
 import * as fb from './firebase-frontend-config';
-import getCourseEquivalentsFromUserExams from './requirements/data/exams/ExamCredit';
+import getCourseEquivalentsFromUserExams from './requirements/requirement-exam-utils';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
 import {
   allocateAllSubjectColor,
+  updateSubjectColor,
   checkNotNull,
   getCurrentSeason,
   getCurrentYear,
@@ -59,7 +60,7 @@ export type VuexStoreState = {
   derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   selectableRequirementChoices: AppSelectableRequirementChoices;
-  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices;
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
@@ -168,12 +169,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setOverriddenFulfillmentChoices(
       state: VuexStoreState,
-      overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
+      overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
     ) {
-      state.overriddenFulfillmentChoices = {
-        ...overriddenFulfillmentChoices,
-        ...computeAPIBOverriddenFulfillments(state), // adds AP/IB data from onboarding collection
-      };
+      state.overriddenFulfillmentChoices = overriddenFulfillmentChoices;
     },
     setRequirementData(
       state: VuexStoreState,
@@ -282,58 +280,12 @@ const autoRecomputeDerivedData = (): (() => void) =>
             state.onboardingData,
             state.toggleableRequirementChoices,
             state.selectableRequirementChoices,
-            state.overriddenFulfillmentChoices
+            /* deprecated AppOverriddenFulfillmentChoices */ {}
           )
         );
       }
     }
   });
-
-/**
- * Computes AP/IB Overridden Fulfillment Choices from
- * onboarding data and derived AP/IB equivalent course data.
- */
-const computeAPIBOverriddenFulfillments = (
-  state: VuexStoreState
-): AppOverriddenFulfillmentChoices => {
-  const APIBOverriddenFulfillments: Record<
-    string,
-    {
-      readonly optIn: Record<string, Set<string>>;
-      readonly optOut: Record<string, Set<string>>;
-    }
-  > = {};
-  state.onboardingData.exam.forEach(exam => {
-    const { type, subject } = exam;
-    const examName = `${type} ${subject}`;
-    const uniqueIds = state.derivedAPIBEquivalentCourseData.examToUniqueIdsMap[examName];
-    if (!(uniqueIds && uniqueIds.size)) return;
-    const { optIn, optOut } = exam;
-    const optInChoices: Record<string, Set<string>> = optIn
-      ? Object.fromEntries(
-          Object.entries(optIn).map(([requirementName, slotNames]) => [
-            requirementName,
-            new Set(slotNames),
-          ])
-        )
-      : {};
-    const optOutChoices: Record<string, Set<string>> = optOut
-      ? Object.fromEntries(
-          Object.entries(optOut).map(([requirementName, slotNames]) => [
-            requirementName,
-            new Set(slotNames),
-          ])
-        )
-      : {};
-    uniqueIds.forEach(uniqueId => {
-      APIBOverriddenFulfillments[uniqueId] = {
-        optIn: optInChoices,
-        optOut: optOutChoices,
-      };
-    });
-  });
-  return APIBOverriddenFulfillments;
-};
 
 export const initializeFirestoreListeners = (onLoad: () => void): (() => void) => {
   const simplifiedUser = store.state.currentFirebaseUser;
@@ -344,6 +296,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   let orderByNewestInitialLoadFinished = false;
   let toggleableRequirementChoiceInitialLoadFinished = false;
   let selectableRequirementChoiceInitialLoadFinished = false;
+  let overriddenFulfillmentChoiceInitialLoadFinished = false;
   let subjectColorInitialLoadFinished = false;
   let uniqueIncrementerInitialLoadFinished = false;
 
@@ -357,6 +310,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       orderByNewestInitialLoadFinished &&
       toggleableRequirementChoiceInitialLoadFinished &&
       selectableRequirementChoiceInitialLoadFinished &&
+      overriddenFulfillmentChoiceInitialLoadFinished &&
       subjectColorInitialLoadFinished &&
       uniqueIncrementerInitialLoadFinished &&
       !emitted
@@ -432,6 +386,14 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       selectableRequirementChoiceInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
+  const overriddenFulfillmentChoiceUnsubscriber = fb.overriddenFulfillmentChoicesCollection
+    .doc(simplifiedUser.email)
+    .onSnapshot(snapshot => {
+      const overriddenFulfillmentChoices = snapshot.data() || {};
+      store.commit('setOverriddenFulfillmentChoices', overriddenFulfillmentChoices);
+      overriddenFulfillmentChoiceInitialLoadFinished = true;
+      emitOnLoadWhenLoaded();
+    });
   fb.subjectColorsCollection
     .doc(simplifiedUser.email)
     .get()
@@ -459,10 +421,24 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     onboardingDataUnsubscriber();
     toggleableRequirementChoiceUnsubscriber();
     selectableRequirementChoiceUnsubscriber();
+    overriddenFulfillmentChoiceUnsubscriber();
     uniqueIncrementerUnsubscriber();
     derivedDataComputationUnsubscriber();
   };
   return unsubscriber;
+};
+
+export const updateSubjectColorData = (color: string, code: string): void => {
+  const simplifiedUser = store.state.currentFirebaseUser;
+  fb.subjectColorsCollection
+    .doc(simplifiedUser.email)
+    .get()
+    .then(snapshot => {
+      const subjectColors = snapshot.data() || {};
+      const newSubjectColors = updateSubjectColor(subjectColors, color, code);
+      store.commit('setSubjectColors', newSubjectColors);
+      fb.subjectColorsCollection.doc(simplifiedUser.email).set(newSubjectColors);
+    });
 };
 
 fb.auth.onAuthStateChanged(user => {
