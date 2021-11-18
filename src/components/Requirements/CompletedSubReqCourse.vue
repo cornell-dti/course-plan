@@ -19,6 +19,7 @@
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
+          :uniqueID="courseTaken.uniqueId"
           :color="courseColor"
           :courseCode="courseTaken.code"
           :compact="true"

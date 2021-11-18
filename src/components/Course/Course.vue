@@ -1,5 +1,8 @@
 <template>
-  <div :class="{ 'course--min': compact, active: active }" class="course">
+  <div
+    :class="{ 'course--min': compact, active: active, 'double-counted': isDoubleCounted }"
+    class="course"
+  >
     <edit-color
       :editedColor="editedColor"
       @color-course="colorCourse"
@@ -45,12 +48,13 @@ import { CSSProperties, PropType, defineComponent } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import {
-  addCourseToBottomBar,
   reportCourseColorChange,
   reportSubjectColorChange,
 } from '@/components/BottomBar/BottomBarState';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
+import { openRequirementChoiceEditor } from '../Modals/RequirementChoiceEditor/RequirementChoiceEditorState';
+import store from '@/store';
 
 export default defineComponent({
   components: { CourseCaution, CourseMenu, EditColor },
@@ -92,6 +96,10 @@ export default defineComponent({
       }
 
       return semesterString;
+    },
+
+    isDoubleCounted(): boolean {
+      return store.state.doubleCountedCourseUniqueIDSet.has(this.courseObj.uniqueID);
     },
 
     creditString(): string {
@@ -143,7 +151,7 @@ export default defineComponent({
     courseOnClick() {
       if (!this.menuOpen) {
         this.$emit('course-on-click', this.courseObj);
-        addCourseToBottomBar(this.courseObj);
+        openRequirementChoiceEditor(this.courseObj);
       }
     },
     editCourseCredit(credit: number) {
@@ -284,5 +292,8 @@ $colored-grabber-width: 1.25rem;
 
 .active {
   border: 1px solid $yuxuanBlue;
+}
+.double-counted {
+  border: 1px solid $warning;
 }
 </style>

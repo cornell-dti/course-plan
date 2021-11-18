@@ -8,6 +8,7 @@ import {
   deleteCourseFromRequirementChoices,
   deleteCoursesFromRequirementChoices,
 } from './override-fulfillment-choices';
+import { openRequirementChoiceEditor } from '../components/Modals/RequirementChoiceEditor/RequirementChoiceEditorState';
 
 export const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
@@ -105,6 +106,7 @@ export const addCourseToSemester = (
     return [...oldSemesters, createSemester(year, season, [newCourse])];
   });
   updateRequirementChoice(newCourse.uniqueID, choiceUpdater);
+  openRequirementChoiceEditor(newCourse);
 };
 
 export const deleteCourseFromSemester = (

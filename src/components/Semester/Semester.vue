@@ -8,10 +8,10 @@
     data-disable-interaction="1"
     data-tooltipClass="tooltipCenter tourStep3"
   >
-    <new-course-modal
-      @close-course-modal="closeCourseModal"
+    <add-course-from-semester-modal-new-flow
       v-if="isCourseModalOpen"
       @add-course="addCourse"
+      @close-course-modal="closeCourseModal"
     />
     <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
@@ -122,7 +122,7 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
-import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
+import AddCourseFromSemesterModalNewFlow from '@/components/Modals/NewCourse/AddCourseFromSemesterModalNewFlow.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
@@ -159,7 +159,7 @@ export default defineComponent({
     DeleteSemester,
     EditSemester,
     ClearSemester,
-    NewCourseModal,
+    AddCourseFromSemesterModalNewFlow,
     SemesterMenu,
   },
   data() {

@@ -12,7 +12,7 @@
     <div class="dropdown-select-wrapper">
       <div class="dropdown-select dropdown-input" v-click-outside="closeMenuIfOpen">
         <div class="dropdown-placeholder dropdown-wrapper" @click="showDropdown = !showDropdown">
-          <span>Select Course</span>
+          <span>Match Course</span>
         </div>
         <div class="dropdown-placeholder dropdown-arrow"></div>
       </div>
@@ -21,7 +21,7 @@
           v-for="optionName in Object.keys(selfCheckCourses)"
           :key="optionName"
           class="dropdown-content-item"
-          @click="addExistingCourse(optionName)"
+          @click="editExistingCourse(optionName)"
         >
           <span>{{ optionName }}</span>
         </div>
@@ -136,7 +136,7 @@ export default defineComponent({
     closeMenuIfOpen() {
       this.showDropdown = false;
     },
-    addExistingCourse(option: string) {
+    editExistingCourse(option: string) {
       this.showDropdown = false;
       updateRequirementChoice(this.selfCheckCourses[option].uniqueID, choice => ({
         ...choice,

@@ -17,6 +17,28 @@ export const updateRequirementChoice = (
   });
 };
 
+export const toggleRequirementChoice = (
+  courseUniqueID: string | number,
+  requirementID: string,
+  relevantRequirementChoiceType: keyof FirestoreCourseOptInOptOutChoices
+): void =>
+  updateRequirementChoice(courseUniqueID, choice => {
+    switch (relevantRequirementChoiceType) {
+      case 'optOut':
+      case 'acknowledgedCheckerWarningOptIn': {
+        const oldList = choice[relevantRequirementChoiceType];
+        return {
+          ...choice,
+          [relevantRequirementChoiceType]: oldList.includes(requirementID)
+            ? oldList.filter(it => it !== requirementID)
+            : [...oldList, requirementID],
+        };
+      }
+      default:
+        return choice;
+    }
+  });
+
 export const updateRequirementChoices = (
   updater: (
     oldChoices: FirestoreOverriddenFulfillmentChoices

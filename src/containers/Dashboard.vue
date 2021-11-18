@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard">
+    <requirement-choice-editor-modal />
     <onboarding
       class="dashboard-onboarding"
       v-if="isOnboarding"
@@ -77,6 +78,7 @@ import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
+import RequirementChoiceEditorModal from '@/components/Modals/RequirementChoiceEditor/RequirementChoiceEditorModal.vue';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
@@ -121,6 +123,7 @@ export default defineComponent({
     NavBar,
     Onboarding,
     RequirementSideBar,
+    RequirementChoiceEditorModal,
     SemesterView,
     TourWindow,
   },

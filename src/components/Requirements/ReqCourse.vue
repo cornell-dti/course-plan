@@ -1,6 +1,10 @@
 <template>
   <div
-    :class="{ 'reqcourse--min': compact, completedReqCourse: isCompletedReqCourse }"
+    :class="{
+      'reqcourse--min': compact,
+      completedReqCourse: isCompletedReqCourse,
+      doubleCountedReqCourse: isDoubleCounted,
+    }"
     class="reqcourse"
     :style="borderColorCSSvar"
   >
@@ -31,15 +35,20 @@
 
 <script lang="ts">
 import { CSSProperties, defineComponent } from 'vue';
+import store from '@/store';
 
 export default defineComponent({
   props: {
+    uniqueID: { type: [String, Number], required: true },
     color: { type: String, required: true },
     courseCode: { type: String, required: true },
     isCompletedReqCourse: { type: Boolean, required: true },
     compact: { type: Boolean, required: true },
   },
   computed: {
+    isDoubleCounted(): boolean {
+      return store.state.doubleCountedCourseUniqueIDSet.has(this.uniqueID);
+    },
     borderColorCSSvar(): CSSProperties {
       return { '--border-color': `#${this.color}` } as CSSProperties;
     },
@@ -141,5 +150,9 @@ export default defineComponent({
 .completedReqCourse {
   border: 1px solid;
   border-color: var(--border-color);
+}
+.doubleCountedReqCourse {
+  border: 1px solid;
+  border-color: $warning;
 }
 </style>

@@ -23,7 +23,7 @@
         </div>
         <slot class="modal-body"></slot>
         <div v-if="!isSimpleModal" class="modal-buttonWrapper">
-          <button class="modal-button" @click="leftButtonClicked">
+          <button v-if="leftButtonText" class="modal-button" @click="leftButtonClicked">
             {{ leftButtonText }}
           </button>
           <button

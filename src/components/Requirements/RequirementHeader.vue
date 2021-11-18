@@ -132,21 +132,31 @@
           class="progress-bar"
           :style="{
             'background-color': `#${getReqColor(req.groupName, onboardingData)}`,
-            width: progressWidth,
+            width: safeProgressWidth,
           }"
           role="progressbar"
-          aria-label="Requirements Progress"
-          :aria-valuenow="progressWidthValue"
+          aria-label="Requirements Safe Progress"
+          :aria-valuenow="safeProgressWidthValue"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+        <div
+          class="progress-bar warning"
+          :style="{ width: dangerousProgressWidth }"
+          role="progressbar"
+          aria-label="Requirements Dangerous Progress"
+          :aria-valuenow="dangerousProgressWidthValue"
           aria-valuemin="0"
           aria-valuemax="100"
         ></div>
       </div>
 
       <p class="progress-text">
-        <span class="progress-text-credits"
-          >{{ requirementFulfilled }}/{{ requirementTotalRequired }}</span
-        >
-        <span class="progress-text-text"> Total Requirements Inputted on Schedule</span>
+        <span class="progress-text-text">
+          Total {{ requirementTotalRequired }} Requirements.
+          {{ requirementSafelyFulfilled }} Fulfilled,
+          {{ requirementDangerouslyFulfilled - requirementSafelyFulfilled }} Uncertain.
+        </span>
       </p>
 
       <!--View more college requirements -->
@@ -214,12 +224,24 @@ export default defineComponent({
   },
   computed: {
     // number of fully fulfilled requirements, note pure self-checks are never fulfilled
-    requirementFulfilled(): number {
+    requirementSafelyFulfilled(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
         [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
           reqOrNestedReq => {
             if (reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired)
+              fulfilled += 1;
+          }
+        );
+      });
+      return fulfilled;
+    },
+    requirementDangerouslyFulfilled(): number {
+      let fulfilled = 0;
+      this.req.reqs.forEach(req => {
+        [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
+          reqOrNestedReq => {
+            if (reqOrNestedReq.dangerousMinCountFulfilled >= reqOrNestedReq.minCountRequired)
               fulfilled += 1;
           }
         );
@@ -236,7 +258,7 @@ export default defineComponent({
       return totalRequired;
     },
     // the sum of the progress of each requirement (outside of pure self-check), maxed out at 1
-    totalRequirementProgress(): number {
+    totalSafeRequirementProgress(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
         [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
@@ -251,12 +273,36 @@ export default defineComponent({
       });
       return fulfilled;
     },
-    // the sum of the progress of each requirement, divided by number of requirements
-    progressWidth(): string {
-      return `${(this.totalRequirementProgress / this.requirementTotalRequired) * 100}%`;
+    totalDangerousRequirementProgress(): number {
+      let fulfilled = 0;
+      this.req.reqs.forEach(req => {
+        [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
+          reqOrNestedReq => {
+            if (reqOrNestedReq.dangerousMinCountFulfilled >= reqOrNestedReq.minCountRequired) {
+              fulfilled += 1;
+            } else {
+              fulfilled +=
+                reqOrNestedReq.dangerousMinCountFulfilled / reqOrNestedReq.minCountRequired;
+            }
+          }
+        );
+      });
+      return fulfilled;
     },
-    progressWidthValue(): string {
-      return ((this.totalRequirementProgress / this.requirementTotalRequired) * 100).toFixed(1);
+    // the sum of the progress of each requirement, divided by number of requirements
+    safeProgressWidth(): string {
+      return `${(this.totalSafeRequirementProgress / this.requirementTotalRequired) * 100}%`;
+    },
+    dangerousProgressWidth(): string {
+      const diff = this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress;
+      return `${(diff / this.requirementTotalRequired) * 100}%`;
+    },
+    safeProgressWidthValue(): string {
+      return ((this.totalSafeRequirementProgress / this.requirementTotalRequired) * 100).toFixed(1);
+    },
+    dangerousProgressWidthValue(): string {
+      const diff = this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress;
+      return ((diff / this.requirementTotalRequired) * 100).toFixed(1);
     },
   },
   methods: {
@@ -280,6 +326,10 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
+.progress-bar.warning {
+  background-color: $warning;
+}
 
 .college,
 .major,

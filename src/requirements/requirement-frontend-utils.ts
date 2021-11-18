@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { SPECIAL_COURSES } from './data/constants';
 import requirementJson from './typed-requirement-json';
 
@@ -434,6 +436,16 @@ export function getAllEligibleRelatedRequirementIds(
     });
 }
 
+export function fulfillmentProgressString({
+  fulfilledBy,
+  safeMinCountFulfilled,
+  dangerousMinCountFulfilled,
+  minCountRequired,
+}: MixedRequirementFulfillmentStatistics) {
+  const uncertainString = safeMinCountFulfilled === dangerousMinCountFulfilled ? '' : '?';
+  return `${dangerousMinCountFulfilled}${uncertainString}/${minCountRequired} ${fulfilledBy}`;
+}
+
 export function getRelatedUnfulfilledRequirements(
   {
     crseId: courseId,
@@ -448,6 +460,7 @@ export function getRelatedUnfulfilledRequirements(
   readonly directlyRelatedRequirements: readonly RequirementWithIDSourceType[];
   readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
 } {
+  /*
   const code = `${subject} ${catalogNbr}`;
   const directlyRelatedRequirements: RequirementWithIDSourceType[] = [];
   const selfCheckRequirements: RequirementWithIDSourceType[] = [];
@@ -502,6 +515,9 @@ export function getRelatedUnfulfilledRequirements(
     }
   }
   return { directlyRelatedRequirements, selfCheckRequirements };
+  */
+  // TODO: unused, should be deleted once the overall approach of the PR is approved.
+  return { directlyRelatedRequirements: [], selfCheckRequirements: [] };
 }
 
 export function getAllEligibleRequirements(

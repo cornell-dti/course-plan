@@ -27,6 +27,7 @@ export {
 export { default as chooseToggleableRequirementOption } from './toggleable-requirement-choices';
 export {
   updateRequirementChoice,
+  toggleRequirementChoice,
   updateRequirementChoices,
   deleteCourseFromRequirementChoices,
 } from './override-fulfillment-choices';
