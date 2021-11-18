@@ -93,7 +93,7 @@ function addYearToFrequencyDictionary(year: string, freqDict: Record<string, num
 
 async function trackUsers() {
   let nameData = {} as FirestoreTrackUsersNameData;
-  let semestersData = {} as FirestoreTrackUsersSemesterData;
+  let semesterData = {} as FirestoreTrackUsersSemesterData;
   let onboardingData = {} as FirestoreTrackUsersOnboardingData;
 
   await usernameCollection.get().then(usernameQuerySnapshot => {
@@ -143,7 +143,7 @@ async function trackUsers() {
 
     console.log(semesterResponse);
 
-    semestersData = {
+    semesterData = {
       totalSemesters: semesterResponse['total-semesters'],
       averageNumberSemesters: semesterResponse['avg-semester'],
       averageNumberNewSemesters: semesterResponse['avg-new-semster'],
@@ -234,15 +234,15 @@ async function trackUsers() {
     };
   });
 
-  let outputData: FirestoreTrackUsersData = {
-    nameData: nameData,
-    semesterData: semestersData,
-    onboardingData: onboardingData,
+  const outputData: FirestoreTrackUsersData = {
+    nameData,
+    semesterData,
+    onboardingData,
   };
 
   // Create a document in collection with current timestamp
-  let date = new Date(Date.now());
-  let docId = date.toISOString();
+  const date = new Date(Date.now());
+  const docId = date.toISOString();
   trackUsersCollection.doc(docId).set(outputData);
 }
 
