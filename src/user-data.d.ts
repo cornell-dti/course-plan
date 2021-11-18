@@ -90,6 +90,38 @@ type FirestoreUserData = {
   // TODO: add overriddenFulfillmentChoices once we connect new requirement flow to prod.
 };
 
+type FirestoreTrackUsersData = {
+  nameData: FirestoreTrackUsersNameData;
+  semesterData: FirestoreTrackUsersSemesterData;
+  onboardingData: FirestoreTrackUsersOnboardingData;
+};
+
+type FirestoreTrackUsersNameData = {
+  totalUsers: number;
+};
+
+type FirestoreTrackUsersSemesterData = {
+  totalSemesters: number;
+  averageNumberSemesters: number;
+  averageNumberOldSemesters: number;
+  averageNumberNewSemesters: number;
+};
+
+type FirestoreTrackUsersOnboardingData = {
+  undergradUsers: number;
+  gradUsers: number;
+  undergradAndGradUsers: number;
+  majorFrequences: { readonly [group: string]: number };
+  minorFrequencies: { readonly [group: string]: number };
+  collegeFrequencies: { readonly [group: string]: number };
+  graduateProgramFrequencies: { readonly [group: string]: number };
+  averageNumberUndergradMajors: number;
+  averageNumberUndergradMinors: number;
+  averageNumberUndergradAPIBExams: number;
+  entranceYearFrequencies: { readonly [group: string]: number };
+  gradYearFrequencies: { readonly [group: string]: number };
+};
+
 interface CornellCourseRosterCourse {
   readonly crseId: number;
   readonly subject: string;
