@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" v-click-outside="closeMenuIfOpen">
     <div
       class="navbar-iconWrapper hamburger full-opacity-on-hover"
       data-cyId="navbar-menuButton"
@@ -21,7 +21,6 @@
         @click="logout"
       />
     </div>
-    <div v-if="menuOpen" class="navbar-menu-background-shadow" @click="editProfile" />
     <div v-if="menuOpen" class="navbar-menu" data-cyId="navbar-menu">
       <button
         class="nav-mobile-button"
@@ -51,12 +50,14 @@
       >
     </div>
   </nav>
+  <div v-if="menuOpen" class="navbar-menu-background-shadow" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import firebase from 'firebase/app';
 import { GTagEvent } from '@/gtag';
+import { clickOutside } from '@/utilities';
 
 export default defineComponent({
   props: {
@@ -84,6 +85,12 @@ export default defineComponent({
       this.menuOpen = false;
       this.$emit('toggleRequirementsMobile');
     },
+    closeMenuIfOpen() {
+      this.menuOpen = false;
+    },
+  },
+  directives: {
+    'click-outside': clickOutside,
   },
 });
 </script>
@@ -156,17 +163,6 @@ $mobile-navbar-height: 4.5rem;
     }
   }
 
-  .navbar-menu-background-shadow {
-    display: none;
-    position: fixed;
-    z-index: 2;
-    left: 0;
-    right: 0;
-    top: $mobile-navbar-height;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-  }
-
   .navbar-menu {
     position: fixed;
     z-index: 3;
@@ -206,6 +202,17 @@ $mobile-navbar-height: 4.5rem;
   cursor: default;
 }
 
+.navbar-menu-background-shadow {
+  display: none;
+  position: fixed;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: $mobile-navbar-height;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
 @media only screen and (max-width: $medium-breakpoint) {
   .navbar {
     width: 100%;
@@ -216,6 +223,7 @@ $mobile-navbar-height: 4.5rem;
     display: flex;
     position: fixed;
     flex-direction: row;
+    z-index: 3;
 
     .nav-mobile-button {
       border: 0;
@@ -256,8 +264,7 @@ $mobile-navbar-height: 4.5rem;
     }
 
     .hamburger,
-    .requirements-bar,
-    .navbar-menu-background-shadow {
+    .requirements-bar {
       display: block;
     }
 
@@ -265,6 +272,10 @@ $mobile-navbar-height: 4.5rem;
       display: flex;
       flex-direction: column;
     }
+  }
+
+  .navbar-menu-background-shadow {
+    display: block;
   }
 
   .desktop {
