@@ -28,16 +28,28 @@ const eceTemplate: Template = [
   },
   {
     reqGroup: 'EN',
-    name: 'Advanced Programming/Computer Engineering',
-    placeholderSemesters: [3],
+    name: 'Intro to Engineering',
+    placeholderSemesters: [1],
   },
   {
     reqGroup: 'EN',
+    name: 'Computing from engineering',
+    placeholderSemesters: [2],
+  },
+  /*
+  {
+    reqGroup: 'ECE',
+    name: 'Advanced Programming/Computer Engineering',
+    placeholderSemesters: [3],
+  },
+  */
+  {
+    reqGroup: 'ECE',
     name: 'ENGRD 2300',
     placeholderSemesters: [3],
   },
   {
-    reqGroup: 'EN',
+    reqGroup: 'ECE',
     name: 'Core Courses',
     placeholderSemesters: [3, 4],
   },
@@ -52,34 +64,34 @@ const eceTemplate: Template = [
     placeholderSemesters: [3, 4, 5, 6, 7, 8],
   },
   {
-    reqGroup: 'EN',
+    reqGroup: 'ECE',
     name: 'Outside ECE Technical Electives',
     placeholderSemesters: [5, 6, 7],
   },
   {
-    reqGroup: 'EN',
+    reqGroup: 'ECE',
     name: 'Culminating Design Experience (CDE)',
     placeholderSemesters: [7],
   },
   {
     reqGroup: 'EN',
     name: 'Advisor Approved Electives',
-    placeholderSemesters: [3, 4],
+    placeholderSemesters: [5, 6],
   },
   {
-    reqGroup: 'EN',
+    reqGroup: 'ECE',
     name: 'Foundation Courses',
     placeholderSemesters: [5, 6],
   },
   {
-    reqGroup: 'EN',
+    reqGroup: 'ECE',
     name: 'Upper-Level ECE Electives',
-    placeholderSemesters: [6],
+    placeholderSemesters: [6, 7, 8],
   },
   {
-    reqGroup: 'EN',
+    reqGroup: 'ECE',
     name: 'Upper-Level ECE Electives: 4000 level',
-    placeholderSemesters: [7, 8],
+    placeholderSemesters: [8],
   },
 ];
 
