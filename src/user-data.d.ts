@@ -34,16 +34,10 @@ type FirestoreSemester = {
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
-type FirestoreAPIBOverriddenFulfillments = {
-  // Values are slot names
-  readonly [requirementName: string]: readonly string[];
-};
 type FirestoreAPIBExam = {
   readonly type: 'AP' | 'IB';
   readonly score: number;
   readonly subject: string;
-  readonly optIn?: FirestoreAPIBOverriddenFulfillments;
-  readonly optOut?: FirestoreAPIBOverriddenFulfillments;
 };
 
 /** Represents the name of an exam a student can take for transfer credit */

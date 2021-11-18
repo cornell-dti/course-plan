@@ -30,7 +30,3 @@ export {
   addCoursesToSelectableRequirements,
   deleteCourseFromSelectableRequirements,
 } from './selectable-requirement-choices';
-export {
-  addOverriddenFulfillmentAPIB,
-  clearOverriddenFulfillmentsAPIB,
-} from './overridden-fulfillment-choices';
