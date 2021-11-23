@@ -1,0 +1,17 @@
+name: TrackUsers
+on:
+  schedule:
+    - cron:  '0 4 * * *'
+
+jobs:
+  track-users:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - name: Run TrackUsers
+        run: npm run track-users
