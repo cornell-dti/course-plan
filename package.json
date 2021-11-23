@@ -11,6 +11,7 @@
     "courses-gen": "npm run ts-node -- src/requirements/courses-json-generator.ts",
     "req-gen": "npm run ts-node -- src/requirements/requirement-json-generator.ts",
     "req-graph-dump": "npm run ts-node -- src/requirements/admin/requirement-graph-dumper.ts",
+    "track-users": "npm run ts-node -- src/requirements/admin/track-users.ts",
     "lint": "eslint . --cache",
     "tsc": "tsc",
     "type-check": "vue-tsc --noEmit",
@@ -20,8 +21,7 @@
     "test": "jest",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first",
-    "track-users": "npm run ts-node -- src/requirements/admin/track-users.ts"
+    "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first"
   },
   "dependencies": {
     "@cypress/vue": "^2.0.2",
