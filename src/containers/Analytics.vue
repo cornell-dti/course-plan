@@ -2,7 +2,7 @@
   <div>
     <div class="body-container">
       <top-bar />
-      <div class="message-container">Hi</div>
+      <div class="message-container">{{ analyticsData }}</div>
       <div class="back_to_home">
         <a class="back_to_home_link" href="/login">Back to home</a>
       </div>
@@ -15,9 +15,38 @@
 import { defineComponent } from 'vue';
 import CustomFooter from '@/components/Footer.vue';
 import TopBar from '@/components/TopBar.vue';
+import { trackUsersCollection } from '@/firebase-frontend-config';
 
 export default defineComponent({
   components: { CustomFooter, TopBar },
+  mounted() {
+    this.displayData();
+  },
+  data() {
+    return {
+      analyticsData: {},
+    };
+  },
+  methods: {
+    displayData() {
+      trackUsersCollection.get().then(querySnapshot => {
+        let newestDoc = null;
+        let newestDate = new Date(0);
+
+        querySnapshot.forEach(doc => {
+          let isoTimestamp = doc.id;
+          let date = new Date(isoTimestamp);
+          if (date.getTime() > newestDate.getTime()) {
+            newestDate = date;
+            newestDoc = doc;
+          }
+        });
+
+        let output = newestDoc.data();
+        this.analyticsData = output;
+      });
+    },
+  },
 });
 </script>
 
