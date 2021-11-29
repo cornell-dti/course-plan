@@ -1,22 +1,63 @@
-import { selectableRequirementChoicesCollection } from '../firebase-frontend-config';
+import { getCourseCodesArray } from '../requirements/requirement-frontend-computation';
+import { getFirestoreCourseOptInOptOutChoicesBuilder } from '../requirements/requirement-graph-builder-from-user-data';
+import {
+  db,
+  selectableRequirementChoicesCollection,
+  overriddenFulfillmentChoicesCollection,
+} from '../firebase-frontend-config';
 import store from '../store';
 
 const chooseSelectableRequirementOption = (
   selectableRequirementChoices: AppSelectableRequirementChoices
 ): void => {
-  selectableRequirementChoicesCollection
-    .doc(store.state.currentFirebaseUser.email)
-    .set(selectableRequirementChoices);
+  const courses = getCourseCodesArray(store.state.semesters, store.state.onboardingData);
+  const newFormatChoicesBuilder = getFirestoreCourseOptInOptOutChoicesBuilder(
+    courses,
+    store.state.onboardingData,
+    store.state.toggleableRequirementChoices,
+    selectableRequirementChoices,
+    /* deprecated AppOverriddenFulfillmentChoices */ {}
+  );
+  const overriddenFulfillmentChoices = Object.fromEntries(
+    courses.map(course => [course.uniqueId, newFormatChoicesBuilder(course)])
+  );
+
+  const batch = db.batch();
+  batch.set(
+    selectableRequirementChoicesCollection.doc(store.state.currentFirebaseUser.email),
+    selectableRequirementChoices
+  );
+  batch.set(
+    overriddenFulfillmentChoicesCollection.doc(store.state.currentFirebaseUser.email),
+    overriddenFulfillmentChoices
+  );
+  batch.commit();
 };
 
 export const addCourseToSelectableRequirements = (
   courseUniqueID: string | number,
   requirementID: string | undefined
 ): void => {
-  if (!requirementID) return;
+  // Even when there is no change, we set the old data anyways,
+  // so it can trigger a save of user choice in new format.
+  chooseSelectableRequirementOption(
+    requirementID
+      ? {
+          ...store.state.selectableRequirementChoices,
+          [courseUniqueID]: requirementID,
+        }
+      : store.state.selectableRequirementChoices
+  );
+};
+
+export const addCoursesToSelectableRequirements = (
+  newChoices: Readonly<Record<string, string>>
+): void => {
+  // Even when there is no change, we set the old data anyways,
+  // so it can trigger a save of user choice in new format.
   chooseSelectableRequirementOption({
     ...store.state.selectableRequirementChoices,
-    [courseUniqueID]: requirementID,
+    ...newChoices,
   });
 };
 

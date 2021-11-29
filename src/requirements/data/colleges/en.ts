@@ -113,7 +113,6 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
         ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'courses',
-    allowCourseDoubleCounting: true,
     perSlotMinCount: [6],
     slotNames: ['Course'],
     additionalRequirements: {
@@ -225,7 +224,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [1],
     slotNames: ['Course'],
     checkerWarning:
-      'We do check that your selected course fulfills the guidelines of this requirement.',
+      'We do not check that your selected course fulfills the guidelines of this requirement.',
     allowCourseDoubleCounting: true,
   },
 ];

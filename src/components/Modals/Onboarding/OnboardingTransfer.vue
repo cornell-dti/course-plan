@@ -12,82 +12,38 @@
         <div
           class="onboarding-inputWrapper onboarding-inputWrapper--college onboarding-inputWrapper--description"
         >
-          <div class="onboarding-subHeader">
-            <span class="onboarding-subHeader--font">AP Credits</span>
-          </div>
-          <div class="onboarding-subsection onboarding-transferCreditsSection">
-            <div class="onboarding-section" v-for="(exam, index) in examsAP" :key="index">
-              <div class="onboarding-selectWrapperRow">
-                <onboarding-transfer-exam-property-dropdown
-                  property-name="Subject"
-                  :columnWide="true"
-                  :availableOptions="getSelectableOptions(examsAP, subjectsAP, exam.subject)"
-                  :choice="exam.subject"
-                  @on-select="subject => selectAPSubject(subject, index)"
-                />
-                <onboarding-transfer-exam-property-dropdown
-                  property-name="Score"
-                  :columnWide="false"
-                  :availableOptions="scoresAP"
-                  :choice="exam.score"
-                  @on-select="score => selectAPScore(score, index)"
-                />
-                <div class="onboarding-select--column-removeExam">
-                  <button
-                    class="onboarding-remove"
-                    @click="removeExam('AP', index)"
-                    v-if="hasExams(examsAP, exam)"
-                  >
-                    <img
-                      src="@/assets/images/x-green.svg"
-                      :alt="`x to remove AP exam ${exam.type} ${exam.subject}`"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="onboarding-addRemoveWrapper">
-              <button class="onboarding-add" @click="addExam('AP')">+ another subject</button>
-            </div>
-          </div>
-          <div class="onboarding-subHeader">
-            <span class="onboarding-subHeader--font">IB Credits</span>
-          </div>
-          <div class="onboarding-inputs onboarding-transferCreditsSection">
-            <div class="onboarding-section" v-for="(exam, index) in examsIB" :key="index">
-              <div class="onboarding-selectWrapperRow">
-                <onboarding-transfer-exam-property-dropdown
-                  property-name="Subject"
-                  :columnWide="true"
-                  :availableOptions="getSelectableOptions(examsIB, subjectsIB, exam.subject)"
-                  :choice="exam.subject"
-                  @on-select="subject => selectIBSubject(subject, index)"
-                />
-                <onboarding-transfer-exam-property-dropdown
-                  property-name="Score"
-                  :columnWide="false"
-                  :availableOptions="scoresIB"
-                  :choice="exam.score"
-                  @on-select="score => selectIBScore(score, index)"
-                />
-                <div class="onboarding-select--column-removeExam">
-                  <button
-                    class="onboarding-remove"
-                    @click="removeExam('IB', index)"
-                    v-if="hasExams(examsIB, exam)"
-                  >
-                    <img
-                      src="@/assets/images/x-green.svg"
-                      :alt="`x to remove IB exam ${exam.type} ${exam.subject}`"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="onboarding-addRemoveWrapper">
-              <button class="onboarding-add" @click="addExam('IB')">+ another subject</button>
-            </div>
-          </div>
+          <onboarding-transfer-credits-source
+            examType="AP"
+            :exams="exams.AP"
+            :subjects="subjectsAP"
+            :scores="scores.AP"
+            :placeholderText="placeholderText"
+            @on-subject-select="selectAPSubject"
+            @on-score-select="selectAPScore"
+            @on-remove="removeExam"
+            @on-add="addExam"
+          />
+          <onboarding-transfer-credits-source
+            examType="IB"
+            :exams="exams.IB"
+            :subjects="subjectsIB"
+            :scores="scores.IB"
+            :placeholderText="placeholderText"
+            @on-subject-select="selectIBSubject"
+            @on-score-select="selectIBScore"
+            @on-remove="removeExam"
+            @on-add="addExam"
+          />
+          <onboarding-transfer-credits-source
+            v-if="caseEnabled"
+            examType="CASE"
+            :exams="exams.CASE"
+            :subjects="subjectsCASE"
+            :placeholderText="placeholderText"
+            @on-subject-select="selectCASESubject"
+            @on-remove="removeExam"
+            @on-add="addExam"
+          />
         </div>
         <div class="onboarding-transferCreditDescription">
           *To add credit from external institutions, please add the equivalent Cornell course to
@@ -103,11 +59,10 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { examData as reqsData, ExamRequirements } from '@/requirements/data/exams/ExamCredit';
+import { examSubjects, getExamCredit } from '@/requirements/requirement-exam-utils';
+import featureFlagCheckers from '@/feature-flags';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
-import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
-
-const placeholderText = 'Select one';
+import OnboardingTransferCreditsSource from './OnboardingTransferCreditsSource.vue';
 
 type TransferClassWithOptionalCourse = {
   class: string;
@@ -117,102 +72,78 @@ type TransferClassWithOptionalCourse = {
 
 type Data = {
   tookSwimTest: 'yes' | 'no';
-  scoresAP: readonly number[];
-  scoresIB: readonly number[];
-  subjectsAP: readonly string[];
-  subjectsIB: readonly string[];
   placeholderText: string;
-  examsAP: FirestoreAPIBExam[];
-  examsIB: FirestoreAPIBExam[];
+  exams: {
+    AP: FirestoreTransferExam[];
+    IB: FirestoreTransferExam[];
+    CASE: FirestoreTransferExam[];
+  };
+  scores: {
+    AP: readonly number[];
+    IB: readonly number[];
+  };
   classes: TransferClassWithOptionalCourse[];
 };
 
-const scoresAP = [5, 4, 3, 2, 1];
-const scoresIB = [7, 6, 5, 4, 3, 2, 1];
-const existingAP: Record<string, boolean> = {};
-const unmodifiedReqsData = { ...reqsData };
-// filter duplicate exam names and ones already selected
-reqsData.AP = reqsData.AP.filter(ap => {
-  const inExisting = ap.name in existingAP;
-  existingAP[ap.name] = true;
-  return !inExisting;
-});
-const existingIB: Record<string, boolean> = {};
-// filter duplicate exam names and ones already selected
-reqsData.IB = reqsData.IB.filter(ib => {
-  const inExisting = ib.name in existingIB;
-  existingIB[ib.name] = true;
-  return !inExisting;
-});
-const subjectsAP = reqsData.AP.map(it => it.name);
-const subjectsIB = reqsData.IB.map(it => it.name);
-
-export const getExamCredit = (exam: FirestoreAPIBExam): number => {
-  const allExamsWithSameName: ExamRequirements[] = unmodifiedReqsData[exam.type].filter(
-    it => it.name === exam.subject
-  );
-  let mostPossibleCredit = 0;
-  for (const examWithSameName of allExamsWithSameName) {
-    if (exam.score >= examWithSameName.fulfillment.minimumScore) {
-      mostPossibleCredit = Math.max(mostPossibleCredit, examWithSameName.fulfillment.credits);
-    }
+const asAPIB = (exam: FirestoreTransferExam) => {
+  const { examType } = exam;
+  if (examType === 'CASE') {
+    throw new TypeError('Cannot fetch credit from CASE exam');
   }
-  return mostPossibleCredit;
+  return { ...exam, type: examType };
 };
+
+const asAPIBArray = (exams: readonly FirestoreTransferExam[]) => exams.map(asAPIB);
+
+const scores = {
+  AP: [5, 4, 3, 2, 1],
+  IB: [7, 6, 5, 4, 3, 2, 1],
+} as const;
+
+// TODO: replace stubbed in values
+const subjectsCASE = ['Computer Science', 'Chemistry', 'Physics', 'Foreign Language'];
 
 export default defineComponent({
   components: {
     OnboardingTransferSwimming,
-    OnboardingTransferExamPropertyDropdown,
+    OnboardingTransferCreditsSource,
   },
   props: {
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
   },
   data(): Data {
-    const examsAP: FirestoreAPIBExam[] = [];
-    const examsIB: FirestoreAPIBExam[] = [];
+    const placeholderText = 'Select one';
+    const exams = {
+      AP: [] as FirestoreTransferExam[],
+      IB: [] as FirestoreTransferExam[],
+      CASE: [] as FirestoreTransferExam[],
+    };
     this.onboardingData.exam.forEach(exam => {
-      (exam.type === 'AP' ? examsAP : examsIB).push(exam);
+      exams[exam.type].push({ ...exam, examType: exam.type });
     });
-    examsAP.push({ type: 'AP', subject: placeholderText, score: 0 });
-    examsIB.push({ type: 'IB', subject: placeholderText, score: 0 });
+    exams.AP.push({ examType: 'AP', subject: placeholderText, score: 0 });
+    exams.IB.push({ examType: 'IB', subject: placeholderText, score: 0 });
+    exams.CASE.push({ examType: 'CASE', subject: placeholderText, score: 0 });
     const transferClasses: TransferClassWithOptionalCourse[] = [];
-    this.onboardingData.transferCourse.forEach(course => {
-      transferClasses.push(course);
-    });
     transferClasses.push({ class: placeholderText, credits: 0 });
     return {
       tookSwimTest:
         typeof this.onboardingData.tookSwim !== 'undefined' ? this.onboardingData.tookSwim : 'no',
-      scoresAP,
-      scoresIB,
-      subjectsAP,
-      subjectsIB,
-      examsAP,
-      examsIB,
+      exams,
+      scores,
       classes: transferClasses,
       placeholderText,
     };
   },
-  computed: {
-    totalCredits(): number {
-      let count = 0;
-      [...this.examsAP, ...this.examsIB].forEach(exam => {
-        count += this.getExamCredit(exam);
-      });
-      this.classes.forEach(clas => {
-        count += clas.credits;
-      });
-      return count;
-    },
-  },
   methods: {
-    getExamCredit,
     getTransferClassSearchboxPlaceholder(text: string): string {
-      return text !== placeholderText ? text : '"CS1110", "Multivariable Calculus", etc';
+      return text !== this.placeholderText ? text : '"CS1110", "Multivariable Calculus", etc';
     },
     transferClassSearchboxClassname(text: string): string {
-      return text !== placeholderText
+      return text !== this.placeholderText
         ? 'new-course-onboarding'
         : 'new-course-onboarding new-course-onboarding-empty';
     },
@@ -220,30 +151,41 @@ export default defineComponent({
       this.tookSwimTest = tookSwimTest ? 'yes' : 'no';
       this.updateTransfer();
     },
-    selectAPSubject(subject: string, i: number) {
-      this.examsAP = this.examsAP.map((exam, index) => (index === i ? { ...exam, subject } : exam));
+    selectSubject(subject: string, i: number, examType: TransferExamType) {
+      this.exams[examType] = this.exams[examType].map((exam, index) =>
+        index === i ? { ...exam, subject } : exam
+      );
       this.updateTransfer();
     },
+    selectAPSubject(subject: string, i: number) {
+      this.selectSubject(subject, i, 'AP');
+    },
     selectIBSubject(subject: string, i: number) {
-      this.examsIB = this.examsIB.map((exam, index) => (index === i ? { ...exam, subject } : exam));
+      this.selectSubject(subject, i, 'IB');
+    },
+    selectCASESubject(subject: string, i: number) {
+      this.selectSubject(subject, i, 'CASE');
+    },
+    selectScore(score: number, i: number, examType: TransferExamType) {
+      this.exams[examType] = this.exams[examType].map((exam, index) =>
+        index === i ? { ...exam, score } : exam
+      );
       this.updateTransfer();
     },
     selectAPScore(score: number, i: number) {
-      this.examsAP = this.examsAP.map((exam, index) => (index === i ? { ...exam, score } : exam));
-      this.updateTransfer();
+      this.selectScore(score, i, 'AP');
     },
     selectIBScore(score: number, i: number) {
-      this.examsIB = this.examsIB.map((exam, index) => (index === i ? { ...exam, score } : exam));
-      this.updateTransfer();
+      this.selectScore(score, i, 'IB');
     },
-    addExam(type: 'AP' | 'IB') {
-      const exam = { type, subject: placeholderText, score: 0 };
-      (type === 'AP' ? this.examsAP : this.examsIB).push(exam);
+    addExam(examType: TransferExamType) {
+      const exam = { examType, subject: this.placeholderText, score: 0 };
+      this.exams[examType].push(exam);
     },
-    removeExam(type: 'AP' | 'IB', index: number) {
-      const exams = type === 'AP' ? this.examsAP : this.examsIB;
-      exams.splice(index, 1);
-      if (exams.length === 0) this.addExam(type);
+    removeExam(examType: TransferExamType, index: number) {
+      const transferExams = this.exams[examType];
+      transferExams.splice(index, 1);
+      if (transferExams.length === 0) this.addExam(examType);
       this.updateTransfer();
     },
     removeTransfer(index: number) {
@@ -254,13 +196,12 @@ export default defineComponent({
       this.updateTransfer();
     },
     addTransfer() {
-      this.classes.push({ class: placeholderText, credits: 0 });
+      this.classes.push({ class: this.placeholderText, credits: 0 });
     },
     updateTransfer() {
       this.$emit(
         'updateTransfer',
-        [...this.examsAP, ...this.examsIB],
-        this.classes,
+        [...asAPIBArray(this.exams.AP), ...asAPIBArray(this.exams.IB)],
         this.tookSwimTest
       );
     },
@@ -272,30 +213,36 @@ export default defineComponent({
       this.classes = classes;
       this.updateTransfer();
     },
-    getSelectableOptions(
-      // exams already picked
-      selectedExams: FirestoreAPIBExam[],
-      // array of ap/ib exams
-      allSubjects: readonly string[],
-      choice: string
-    ) {
-      const selectedExamsNames = selectedExams.map(exam => exam.subject);
-      const selectableOptions: string[] = [];
-      // copy all of the possible options over but exclude already selected ones
-      for (const subject of allSubjects) {
-        // don't include selected ones
-        if (!selectedExamsNames.includes(subject)) {
-          selectableOptions.push(subject);
-        }
-      }
-      // add the current selection associated with this input into the availableChoices
-      if (choice !== placeholderText) {
-        selectableOptions.push(choice);
-      }
-      return selectableOptions;
+    subjects(examType: TransferExamType) {
+      const currentSubjects = new Set(this.exams[examType].map(({ subject }) => subject));
+      // stub in CASE exams here for now
+      const subjects = { ...examSubjects, CASE: subjectsCASE };
+      return subjects[examType].filter(subject => !currentSubjects.has(subject));
     },
-    hasExams(exams: FirestoreAPIBExam[], exam: FirestoreAPIBExam): boolean {
-      return !(exams.length === 1 && exam.subject === placeholderText);
+  },
+  computed: {
+    totalCredits(): number {
+      let count = 0;
+      const aggregated = [...asAPIBArray(this.exams.AP), ...asAPIBArray(this.exams.IB)];
+      aggregated.forEach(exam => {
+        count += getExamCredit(exam);
+      });
+      this.classes.forEach(clas => {
+        count += clas.credits;
+      });
+      return count;
+    },
+    subjectsAP(): string[] {
+      return this.subjects('AP');
+    },
+    subjectsIB(): string[] {
+      return this.subjects('IB');
+    },
+    subjectsCASE(): string[] {
+      return this.subjects('CASE');
+    },
+    caseEnabled(): boolean {
+      return featureFlagCheckers.isCaseEnabled();
     },
   },
 });

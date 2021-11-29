@@ -1,8 +1,8 @@
 <template>
-  <div class="onboarding" @click="checkClickOutside" ref="modalBackground">
+  <div class="onboarding" @click="checkClickOutside" ref="modalBackground" data-cyId="onboarding">
     <div class="onboarding-main">
       <div v-if="isEditingProfile" class="onboarding-cancel">
-        <button @click="cancel">
+        <button data-cyId="onboarding-cancel" @click="cancel">
           <img
             class="onboarding-cancel-icon"
             src="@/assets/images/x.svg"
@@ -54,7 +54,7 @@
             @setPage="setPage"
           />
         </div>
-        <div class="onboarding-error" v-if="isError">
+        <div class="onboarding-error" data-cyId="onboarding-error" v-if="isError">
           {{ errorText }}
         </div>
         <div class="onboarding-error" v-if="isInvalidMajorMinorGradError">
@@ -108,7 +108,7 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { setOnboardingData } from '@/global-firestore-data';
+import { setOnboardingData, populateSemesters } from '@/global-firestore-data';
 import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
 import timeline1Text from '@/assets/images/timeline1text.svg';
 import timeline2Text from '@/assets/images/timeline2text.svg';
@@ -212,6 +212,8 @@ export default defineComponent({
     submitOnboarding() {
       this.clearTransferCreditIfGraduate();
       setOnboardingData(this.name, this.onboarding);
+      // indicates first time user onboarding
+      if (!this.isEditingProfile) populateSemesters(this.onboarding);
       this.$emit('onboard');
     },
     goBack() {
@@ -262,22 +264,16 @@ export default defineComponent({
     // clear transfer credits if the student is only in a graduate program, but previously set transfer credits
     clearTransferCreditIfGraduate() {
       if (this.onboarding.grad !== '' && this.onboarding.college === '') {
-        this.updateTransfer([], [], 'no');
+        this.updateTransfer([], 'no');
       }
     },
-    updateTransfer(
-      exams: readonly FirestoreAPIBExam[],
-      classes: readonly FirestoreTransferClass[],
-      tookSwim: 'yes' | 'no'
-    ) {
+    updateTransfer(exams: readonly FirestoreAPIBExam[], tookSwim: 'yes' | 'no') {
       const userExams = exams.filter(
         ({ subject, score }) => score !== 0 && subject !== placeholderText
       );
-      const userClasses = classes.filter(it => it.class !== placeholderText);
       this.onboarding = {
         ...this.onboarding,
         exam: userExams,
-        transferCourse: userClasses,
         tookSwim,
       };
     },

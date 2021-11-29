@@ -1,63 +1,71 @@
 <template>
-  <nav class="navbar">
-    <div
-      class="navbar-iconWrapper hamburger full-opacity-on-hover"
-      @click="menuOpen = !menuOpen"
-    ></div>
-    <div class="navbar-top">
-      <div class="navbar-iconWrapper course-plan-logo no-hover">
-        <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
+  <div>
+    <nav class="navbar" v-click-outside="closeMenuIfOpen">
+      <div
+        class="navbar-iconWrapper hamburger full-opacity-on-hover"
+        data-cyId="navbar-menuButton"
+        @click="menuOpen = !menuOpen"
+      ></div>
+      <div class="navbar-top">
+        <div class="navbar-iconWrapper course-plan-logo no-hover">
+          <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
+        </div>
+        <button
+          class="navbar-iconWrapper desktop profile-icon full-opacity-on-hover"
+          @click="editProfile"
+          data-cyId="editProfile"
+        ></button>
       </div>
-      <button
-        class="navbar-iconWrapper desktop profile-icon full-opacity-on-hover"
-        @click="editProfile"
-        data-cyId="editProfile"
-      ></button>
-    </div>
-    <div class="navbar-bottom">
-      <button
-        class="navbar-iconWrapper desktop logout-icon full-opacity-on-hover"
-        @click="logout"
-      />
-    </div>
-    <div v-if="menuOpen" class="navbar-menu-background-shadow" @click="editProfile" />
-    <div v-if="menuOpen" class="navbar-menu">
-      <button class="nav-mobile-button" @click="toggleRequirementsBar">
-        <div class="navbar-iconWrapper requirements-bar" />
-        <span class="nav-mobile-button-text">
-          {{ isOpeningRequirements ? 'View Schedule' : 'View Requirements' }}
-        </span>
-      </button>
-      <button class="nav-mobile-button" @click="editProfile">
-        <div class="navbar-iconWrapper profile-mobile-icon" />
-        <span class="nav-mobile-button-text">Edit Profile</span>
-      </button>
-      <button class="nav-mobile-button" @click="logout">
-        <div class="navbar-iconWrapper logout-mobile-icon" />
-        <span class="nav-mobile-button-text">Log Out</span>
-      </button>
-      <div class="nav-menu-spacing" />
-      <a
-        class="nav-menu-dti-link"
-        href="https://www.cornelldti.org/projects/courseplan/"
-        target="_black"
-        rel="noopener noreferrer"
-        >Cornell DTI @ 2021</a
-      >
-    </div>
-  </nav>
+      <div class="navbar-bottom">
+        <button
+          class="navbar-iconWrapper desktop logout-icon full-opacity-on-hover"
+          @click="logout"
+        />
+      </div>
+      <div v-if="menuOpen" class="navbar-menu" data-cyId="navbar-menu">
+        <button
+          class="nav-mobile-button"
+          data-cyId="navbar-viewRequirements"
+          @click="toggleRequirementsMobile"
+        >
+          <div class="navbar-iconWrapper requirements-bar" />
+          <span class="nav-mobile-button-text">
+            {{ isDisplayingRequirementsMobile ? 'View Schedule' : 'View Requirements' }}
+          </span>
+        </button>
+        <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="editProfile">
+          <div class="navbar-iconWrapper profile-mobile-icon" />
+          <span class="nav-mobile-button-text">Edit Profile</span>
+        </button>
+        <button class="nav-mobile-button" @click="logout">
+          <div class="navbar-iconWrapper logout-mobile-icon" />
+          <span class="nav-mobile-button-text">Log Out</span>
+        </button>
+        <div class="nav-menu-spacing" />
+        <a
+          class="nav-menu-dti-link"
+          href="https://www.cornelldti.org/projects/courseplan/"
+          target="_black"
+          rel="noopener noreferrer"
+          >Cornell DTI @ 2021</a
+        >
+      </div>
+    </nav>
+    <div v-if="menuOpen" class="navbar-menu-background-shadow" />
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import firebase from 'firebase/app';
 import { GTagEvent } from '@/gtag';
+import { clickOutside } from '@/utilities';
 
 export default defineComponent({
   props: {
-    isOpeningRequirements: { type: Boolean, required: true },
+    isDisplayingRequirementsMobile: { type: Boolean, required: true },
   },
-  emits: ['editProfile', 'toggleRequirementsBar'],
+  emits: ['editProfile', 'toggleRequirementsMobile'],
   data() {
     return {
       menuOpen: false,
@@ -75,10 +83,16 @@ export default defineComponent({
       this.menuOpen = false;
       this.$emit('editProfile');
     },
-    toggleRequirementsBar() {
+    toggleRequirementsMobile() {
       this.menuOpen = false;
-      this.$emit('toggleRequirementsBar');
+      this.$emit('toggleRequirementsMobile');
     },
+    closeMenuIfOpen() {
+      this.menuOpen = false;
+    },
+  },
+  directives: {
+    'click-outside': clickOutside,
   },
 });
 </script>
@@ -94,7 +108,8 @@ $mobile-navbar-height: 4.5rem;
   width: 4.5rem;
   height: 100vh;
   display: flex;
-  position: fixed;
+  position: sticky;
+  top: 0;
   z-index: 2;
   flex-direction: column;
   justify-content: space-between;
@@ -150,17 +165,6 @@ $mobile-navbar-height: 4.5rem;
     }
   }
 
-  .navbar-menu-background-shadow {
-    display: none;
-    position: fixed;
-    z-index: 2;
-    left: 0;
-    right: 0;
-    top: $mobile-navbar-height;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-  }
-
   .navbar-menu {
     position: fixed;
     z-index: 3;
@@ -200,6 +204,17 @@ $mobile-navbar-height: 4.5rem;
   cursor: default;
 }
 
+.navbar-menu-background-shadow {
+  display: none;
+  position: fixed;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: $mobile-navbar-height;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
 @media only screen and (max-width: $medium-breakpoint) {
   .navbar {
     width: 100%;
@@ -208,7 +223,9 @@ $mobile-navbar-height: 4.5rem;
     padding-top: 0rem;
     padding-bottom: 0rem;
     display: flex;
+    position: fixed;
     flex-direction: row;
+    z-index: 3;
 
     .nav-mobile-button {
       border: 0;
@@ -249,8 +266,7 @@ $mobile-navbar-height: 4.5rem;
     }
 
     .hamburger,
-    .requirements-bar,
-    .navbar-menu-background-shadow {
+    .requirements-bar {
       display: block;
     }
 
@@ -258,6 +274,10 @@ $mobile-navbar-height: 4.5rem;
       display: flex;
       flex-direction: column;
     }
+  }
+
+  .navbar-menu-background-shadow {
+    display: block;
   }
 
   .desktop {

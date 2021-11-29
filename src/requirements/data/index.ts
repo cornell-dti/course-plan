@@ -10,11 +10,13 @@ import humanEcologyRequirements from './colleges/he';
 import ilrRequirements from './colleges/il';
 
 import aemRequirements from './majors/aem';
+import asRequirements from './majors/as';
 import astroRequrements from './majors/astro';
 import bioRequirements from './majors/bio';
 import bioEngineeringRequirements from './majors/be';
 import bsocRequirements from './majors/bsoc';
 import biomedicalEngineeringRequirements from './majors/bme';
+import chemRequirements from './majors/chem';
 import chemERequirements from './majors/chemE';
 import civilRequirements from './majors/ce';
 import commRequirements from './majors/comm';
@@ -64,6 +66,7 @@ import psychMinorRequirements from './minors/psych';
 import roboticsMinorRequirements from './minors/robotics';
 import spanishMinorRequirements from './minors/spanish';
 
+// import mengCSRequirements from './grad/meng-cs';
 import mpaRequirements from './grad/mpa';
 
 const json: RequirementsJson = {
@@ -113,6 +116,11 @@ const json: RequirementsJson = {
       schools: ['AG', 'BU'],
       requirements: aemRequirements,
     },
+    AS: {
+      name: 'Atmospheric Science',
+      schools: ['AG'],
+      requirements: asRequirements,
+    },
     ASTRO: {
       name: 'Astronomy',
       schools: ['AS1', 'AS2'],
@@ -142,6 +150,11 @@ const json: RequirementsJson = {
       name: 'Civil Engineering',
       schools: ['EN'],
       requirements: civilRequirements,
+    },
+    CHEM: {
+      name: 'Chemistry',
+      schools: ['AS1', 'AS2'],
+      requirements: chemRequirements,
     },
     CHEME: {
       name: 'Chemical and Biomolecular Engineering',
@@ -377,6 +390,13 @@ const json: RequirementsJson = {
     },
   },
   grad: {
+    /* TODO add back after undergrad-grad constraints are implemented
+    MENGCS: {
+      name: 'MEng in Computer Science',
+      schools: ['EN'],
+      requirements: mengCSRequirements,
+    },
+    */
     MPA: {
       name: 'Master of Public Administration (MPA) Program',
       schools: ['HE'],

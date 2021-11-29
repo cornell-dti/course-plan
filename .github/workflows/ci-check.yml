@@ -9,6 +9,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
+          node-version: '16'
           cache: 'npm'
       - name: NPM Clean Install
         run: npm ci && cd functions && npm ci
@@ -20,18 +21,38 @@ jobs:
         run: npm run type-check
       - name: Jest Test
         run: npm run test
-  frontend-tests:
+  check-lockfile:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
+          node-version: '16'
+          cache: 'npm'
+      - name: NPM Install
+        run: npm install && cd functions && npm install
+      - name: Check that package-lock.json has no changes
+        run: exit $(git status --porcelain | wc -l)
+  frontend-tests:
+    runs-on: ubuntu-latest
+    concurrency: cypress-tests
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
           cache: 'npm'
       - name: NPM Clean Install
         run: npm ci
       - name: Cypress Test
         run: npm run cypress:e2e
         env:
-          CYPRESS_TEST_UID: ${{ secrets.CYPRESS_TEST_UID }}
           SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CORNELLDTI_COURSEPLAN_DEV }}
+      - name: Upload recordings if tests fail
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: recorded-videos
+          path: cypress/videos/

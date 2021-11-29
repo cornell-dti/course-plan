@@ -22,6 +22,25 @@
     <button
       v-if="!isOpenModal"
       class="semesterMenu-section full-opacity-on-hover"
+      @click="openClearSemesterModal"
+      data-cyId="semesterMenu-clear"
+    >
+      <div class="semesterMenu-content">
+        <div class="semesterMenu-content">
+          <div class="semesterMenu-left">
+            <img
+              class="semesterMenu-icon"
+              src="@/assets/images/erase.svg"
+              alt="clear semester erase icon"
+            />
+            <span class="semesterMenu-edit">Clear Semester</span>
+          </div>
+        </div>
+      </div>
+    </button>
+    <button
+      v-if="!isOpenModal"
+      class="semesterMenu-section full-opacity-on-hover"
       @click="openDeleteSemesterModal"
       data-cyId="semesterMenu-delete"
     >
@@ -45,20 +64,23 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  emits: ['open-delete-semester-modal', 'open-edit-semester-modal'],
-  data() {
-    return {
-      isOpenModal: false,
-    };
+  emits: {
+    'open-delete-semester-modal': () => true,
+    'open-edit-semester-modal': () => true,
+    'open-clear-semester-modal': () => true,
+  },
+  props: {
+    isOpenModal: { type: Boolean, required: true },
   },
   methods: {
     openDeleteSemesterModal() {
       this.$emit('open-delete-semester-modal');
-      this.isOpenModal = true;
     },
     openEditSemesterModal() {
       this.$emit('open-edit-semester-modal');
-      this.isOpenModal = true;
+    },
+    openClearSemesterModal() {
+      this.$emit('open-clear-semester-modal');
     },
   },
 });
@@ -115,7 +137,8 @@ export default defineComponent({
   &-delete {
     color: #eb6d6d;
   }
-  &-edit {
+  &-edit,
+  &-clear {
     color: black;
   }
 }

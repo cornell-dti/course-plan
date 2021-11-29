@@ -6,7 +6,7 @@
     data-step="3"
     :data-intro="walkthroughText()"
     data-disable-interaction="1"
-    data-tooltipClass="tooltipCenter"
+    data-tooltipClass="tooltipCenter tourStep3"
   >
     <new-course-modal
       @close-course-modal="closeCourseModal"
@@ -17,16 +17,21 @@
     <delete-semester
       @delete-semester="deleteSemester"
       @close-delete-sem="closeDeleteSemesterModal"
-      :deleteSemType="type"
+      :deleteSemSeason="season"
       :deleteSemYear="year"
       v-if="isDeleteSemesterOpen"
     />
     <edit-semester
       @edit-semester="editSemester"
       @close-edit-sem="closeEditSemesterModal"
-      :deleteSemType="type"
+      :deleteSemSeason="season"
       :deleteSemYear="year"
       v-if="isEditSemesterOpen"
+    />
+    <clear-semester
+      @clear-semester="clearSemester"
+      @close-clear-sem="closeClearSemesterModal"
+      v-if="isClearSemesterOpen"
     />
     <button
       v-if="isFirstSem"
@@ -40,7 +45,8 @@
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
         <div class="semester-left" :class="{ 'semester-left--compact': compact }">
           <span class="semester-name" data-cyId="semesterName"
-            ><img class="season-emoji" :src="seasonImg[type]" alt="" /> {{ type }} {{ year }}</span
+            ><img class="season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
+            {{ year }}</span
           >
           <span class="semester-credits">{{ creditString }}</span>
         </div>
@@ -78,9 +84,11 @@
                 :compact="compact"
                 :active="activatedCourse.uniqueID === element.uniqueID"
                 class="semester-course"
+                data-cyId="semester-course"
                 :semesterIndex="semesterIndex + 1"
                 @delete-course="deleteCourse"
                 @color-course="colorCourse"
+                @color-subject="colorSubject"
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
               />
@@ -97,8 +105,10 @@
     <semester-menu
       v-if="semesterMenuOpen"
       class="semester-menu"
+      :isOpenModal="isDeleteSemesterOpen || isEditSemesterOpen || isClearSemesterOpen"
       @open-delete-semester-modal="openDeleteSemesterModal"
       @open-edit-semester-modal="openEditSemesterModal"
+      @open-clear-semester-modal="openClearSemesterModal"
       v-click-outside="closeSemesterMenuIfOpen"
     />
   </div>
@@ -113,6 +123,7 @@ import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
+import ClearSemester from '@/components/Modals/ClearSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
 import { clickOutside } from '@/utilities';
@@ -124,10 +135,13 @@ import summer from '@/assets/images/summerEmoji.svg';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   editSemester,
+  editSemesters,
   addCourseToSemester,
   deleteCourseFromSemester,
-  addCourseToSelectableRequirements,
+  deleteAllCoursesFromSemester,
+  addCoursesToSelectableRequirements,
 } from '@/global-firestore-data';
+import { updateSubjectColorData } from '@/store';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -139,6 +153,7 @@ export default defineComponent({
     Course,
     DeleteSemester,
     EditSemester,
+    ClearSemester,
     NewCourseModal,
     SemesterMenu,
   },
@@ -152,6 +167,7 @@ export default defineComponent({
 
       isDeleteSemesterOpen: false,
       isEditSemesterOpen: false,
+      isClearSemesterOpen: false,
       // Keep track of how many levels has a card enters in the droppable zone.
       // Inspired by https://stackoverflow.com/a/21002544
       isShadowCounter: 0,
@@ -169,8 +185,8 @@ export default defineComponent({
   },
   props: {
     semesterIndex: { type: Number, required: true },
-    type: {
-      type: String as PropType<FirestoreSemesterType>,
+    season: {
+      type: String as PropType<FirestoreSemesterSeason>,
       required: true,
     },
     year: { type: Number, required: true },
@@ -188,8 +204,8 @@ export default defineComponent({
   emits: {
     'new-semester': () => true,
     'course-onclick': (course: FirestoreSemesterCourse) => typeof course === 'object',
-    'delete-semester': (type: string, year: number) =>
-      typeof type === 'string' && typeof year === 'number',
+    'delete-semester': (season: string, year: number) =>
+      typeof season === 'string' && typeof year === 'number',
   },
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, {
@@ -217,15 +233,17 @@ export default defineComponent({
         const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
         editSemester(
           this.year,
-          this.type,
+          this.season,
           (semester: FirestoreSemester): FirestoreSemester => ({
             ...semester,
             courses,
           })
         );
-        newCourses.forEach(({ uniqueID, requirementID }) =>
-          addCourseToSelectableRequirements(uniqueID, requirementID)
-        );
+        const newChoices: Record<string, string> = {};
+        newCourses.forEach(({ uniqueID, requirementID }) => {
+          if (requirementID) newChoices[uniqueID] = requirementID;
+        });
+        addCoursesToSelectableRequirements(newChoices);
       },
     },
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
@@ -314,20 +332,20 @@ export default defineComponent({
     },
     addCourse(data: CornellCourseRosterCourse, requirementID: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      addCourseToSemester(this.type, this.year, newCourse, requirementID, this.$gtag);
+      addCourseToSemester(this.year, this.season, newCourse, requirementID, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
-      this.openConfirmationModal(`Added ${courseCode} to ${this.type} ${this.year}`);
+      this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
-      deleteCourseFromSemester(this.type, this.year, uniqueID, this.$gtag);
+      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
       // Update requirements menu
-      this.openConfirmationModal(`Removed ${courseCode} from ${this.type} ${this.year}`);
+      this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
     },
-    colorCourse(color: string, uniqueID: number) {
+    colorCourse(color: string, uniqueID: number, courseCode: string) {
       editSemester(
         this.year,
-        this.type,
+        this.season,
         (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
@@ -335,6 +353,19 @@ export default defineComponent({
           ),
         })
       );
+      this.openConfirmationModal(`Changed color for ${courseCode}`);
+    },
+    colorSubject(color: string, courseCode: string) {
+      const subject = courseCode.split(' ')[0];
+      const updater = (semester: FirestoreSemester): FirestoreSemester => ({
+        ...semester,
+        courses: semester.courses.map(course =>
+          course.code.split(' ')[0] === subject ? { ...course, color } : course
+        ),
+      });
+      editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));
+      updateSubjectColorData(color, subject);
+      this.openConfirmationModal(`Changed color for ${subject}`);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.$emit('course-onclick', course);
@@ -342,7 +373,7 @@ export default defineComponent({
     editCourseCredit(credit: number, uniqueID: number) {
       editSemester(
         this.year,
-        this.type,
+        this.season,
         (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
@@ -378,9 +409,9 @@ export default defineComponent({
     closeDeleteSemesterModal() {
       this.isDeleteSemesterOpen = false;
     },
-    deleteSemester(type: string, year: number) {
-      this.$emit('delete-semester', type, year);
-      this.openConfirmationModal(`Deleted ${type} ${year} from plan`);
+    deleteSemester(season: string, year: number) {
+      this.$emit('delete-semester', season, year);
+      this.openConfirmationModal(`Deleted ${season} ${year} from plan`);
     },
     openEditSemesterModal() {
       this.isEditSemesterOpen = true;
@@ -391,13 +422,23 @@ export default defineComponent({
     editSemester(seasonInput: string, yearInput: number) {
       editSemester(
         this.year,
-        this.type,
+        this.season,
         (oldSemester: FirestoreSemester): FirestoreSemester => ({
           ...oldSemester,
-          type: seasonInput as FirestoreSemesterType,
+          season: seasonInput as FirestoreSemesterSeason,
           year: yearInput,
         })
       );
+    },
+    openClearSemesterModal() {
+      this.isClearSemesterOpen = true;
+    },
+    closeClearSemesterModal() {
+      this.isClearSemesterOpen = false;
+    },
+    clearSemester() {
+      deleteAllCoursesFromSemester(this.year, this.season, this.$gtag);
+      this.openConfirmationModal(`Cleared ${this.season} ${this.year} in plan`);
     },
     walkthroughText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Add Classes to your Schedule</div><div class="introjs-customProgress">3/4</div>
@@ -414,7 +455,7 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .semester {
-  width: 24rem;
+  width: $regular-semester-width;
   box-sizing: border-box;
   position: relative;
   border-radius: 11px;
@@ -438,8 +479,7 @@ export default defineComponent({
   }
 
   &--compact {
-    width: 16rem;
-    padding: 0.875rem 1.125rem;
+    width: $compact-semester-width;
   }
 
   &-confirmation {
@@ -543,7 +583,7 @@ export default defineComponent({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .semester {
-    width: 16rem;
+    width: $compact-semester-width;
 
     &-menu {
       right: 0rem;

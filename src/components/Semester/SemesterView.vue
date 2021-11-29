@@ -24,38 +24,26 @@
         >
           + New Semester
         </button>
-        <div
-          class="semesterView-switch"
+        <view-dropdown
           data-intro-group="req-tooltip"
           :data-intro="getToggleTooltipText()"
           data-disable-interaction="1"
           data-step="4"
-          data-tooltipClass="tooltipCenter"
-        >
-          <span class="semesterView-switchText">View:</span>
-          <button
-            class="semesterView-switchImage semesterView-twoColumn full-opacity-on-hover"
-            @click="setNotCompact"
-            :class="{ 'semesterView-twoColumn--active': !compact }"
-          />
-          <button
-            class="semesterView-switchImage semesterView-fourColumn full-opacity-on-hover"
-            @click="setCompact"
-            :class="{ 'semesterView-fourColumn--active': compact }"
-          />
-        </div>
+          data-tooltipClass="tooltipCenter tourStep4"
+          :compact="compact"
+          @click-compact="toggleCompact"
+        />
       </div>
       <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
-      <div class="semesterView-content">
+      <div class="semesterView-content" :class="{ 'semesterView-content--compact': compact }">
         <div
           v-for="(sem, semesterIndex) in semesters"
-          :key="`${sem.year}-${sem.type}`"
+          :key="`${sem.year}-${sem.season}`"
           class="semesterView-wrapper"
-          :class="{ 'semesterView-wrapper--compact': compact }"
         >
           <semester
             ref="semester"
-            :type="sem.type"
+            :season="sem.season"
             :year="sem.year"
             :courses="sem.courses"
             :semesterIndex="semesterIndex"
@@ -67,29 +55,13 @@
             @delete-semester="deleteSemester"
           />
         </div>
-        <div v-if="!compact" class="semesterView-empty" aria-hidden="true"></div>
-        <div
-          v-if="compact"
-          class="semesterView-empty semesterView-empty--compact"
-          aria-hidden="true"
-        ></div>
-        <div
-          v-if="compact"
-          class="semesterView-empty semesterView-empty--compact"
-          aria-hidden="true"
-        ></div>
-        <div
-          v-if="compact"
-          class="semesterView-empty semesterView-empty--compact"
-          aria-hidden="true"
-        ></div>
-        <div v-if="compact"><div v-if="compact"></div></div>
       </div>
     </div>
     <div class="semesterView-bot">
       <div class="semesterView-builtBy">
         Built with
-        <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" /> by
+        <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" />
+        by
         <a target="_blank" href="https://www.cornelldti.org/projects/courseplan/">
           Cornell Design &amp; Tech Initiative
         </a>
@@ -108,9 +80,10 @@ import store from '@/store';
 import { GTagEvent } from '@/gtag';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
+import ViewDropdown from './ViewDropdown.vue';
 
 export default defineComponent({
-  components: { Confirmation, NewSemesterModal, Semester },
+  components: { Confirmation, NewSemesterModal, Semester, ViewDropdown },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
@@ -141,25 +114,21 @@ export default defineComponent({
   },
   methods: {
     checkIfFirstSem(semester: FirestoreSemester) {
-      return this.semesters[0].year === semester.year && this.semesters[0].type === semester.type;
+      return (
+        this.semesters[0].year === semester.year && this.semesters[0].season === semester.season
+      );
     },
-    setCompact() {
-      if (!this.compact) {
-        this.$emit('compact-updated', !this.compact);
-        GTagEvent(this.$gtag, 'to-compact');
+    toggleCompact(toggled: boolean) {
+      if (toggled !== this.compact) {
+        this.$emit('compact-updated', toggled);
+        GTagEvent(this.$gtag, toggled ? 'to-compact' : 'to-not-compact');
       }
     },
-    setNotCompact() {
-      if (this.compact) {
-        this.$emit('compact-updated', !this.compact);
-        GTagEvent(this.$gtag, 'to-not-compact');
-      }
-    },
-    openSemesterConfirmationModal(type: FirestoreSemesterType, year: number, isAdd: boolean) {
+    openSemesterConfirmationModal(season: FirestoreSemesterSeason, year: number, isAdd: boolean) {
       if (isAdd) {
-        this.confirmationText = `Added ${type} ${year} to plan`;
+        this.confirmationText = `Added ${season} ${year} to plan`;
       } else {
-        this.confirmationText = `Deleted ${type} ${year} from plan`;
+        this.confirmationText = `Deleted ${season} ${year} from plan`;
       }
 
       this.isSemesterConfirmationOpen = true;
@@ -174,13 +143,13 @@ export default defineComponent({
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
     },
-    addSemester(type: string, year: number) {
-      addSemester(type as FirestoreSemesterType, year, this.$gtag);
-      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, true);
+    addSemester(season: string, year: number) {
+      addSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, true);
     },
-    deleteSemester(type: string, year: number) {
-      deleteSemester(type as FirestoreSemesterType, year, this.$gtag);
-      this.openSemesterConfirmationModal(type as FirestoreSemesterType, year, false);
+    deleteSemester(season: string, year: number) {
+      deleteSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.activatedCourse = course;
@@ -209,13 +178,20 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 1.5rem 3rem 0;
+  padding: 1.5rem 3rem 0;
   position: relative;
+  overflow-y: auto;
 
   &-content {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(min($regular-semester-width, 100%), 1fr));
+    column-gap: 0.5rem;
     margin: 0 -0.75rem;
+
+    &--compact {
+      grid-template-columns: repeat(auto-fill, minmax(min($compact-semester-width, 100%), 1fr));
+    }
   }
 
   &-addSemesterButton {
@@ -233,7 +209,7 @@ export default defineComponent({
     justify-content: flex-end;
     margin-bottom: 1rem;
     min-height: 2.25rem;
-
+    align-items: center;
     &--two {
       justify-content: space-between;
     }
@@ -290,24 +266,9 @@ export default defineComponent({
   &-wrapper {
     display: flex;
     justify-content: center;
-    flex: 1 1 50%;
 
     margin-bottom: 1.5rem;
-    padding: 0 0.75rem;
-
-    &--compact {
-      flex: 1 1 25%;
-    }
-  }
-
-  &-empty {
-    flex: 1 1 50%;
-    padding: 0 0.75rem;
-
-    &--compact {
-      flex: 1 1 25%;
-      min-width: 14.5rem;
-    }
+    padding: 0 0.25rem;
   }
 
   &-builtBy {
@@ -333,8 +294,12 @@ export default defineComponent({
   }
 }
 
+.collapsedBottomBarSemesterView {
+  padding-bottom: 70px;
+}
+
 .bottomBar {
-  margin-bottom: 350px;
+  padding-bottom: 350px;
 }
 
 @media only screen and (max-width: $medium-breakpoint) {
@@ -348,6 +313,7 @@ export default defineComponent({
     &-content {
       width: 100%;
       justify-content: center;
+      grid-template-columns: repeat(auto-fill, minmax(min($compact-semester-width, 100%), 1fr));
     }
   }
 }

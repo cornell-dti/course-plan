@@ -9,7 +9,9 @@
       <div class="details-ratings">
         <p class="details-ratings-title">
           <span class="details-ratings-title-strong">Overall: </span>
-          <span class="details-ratings-strong">{{ CUROverallRating }}</span>
+          <span class="details-ratings-strong" data-cyId="CUReviews-overall">{{
+            CUROverallRating
+          }}</span>
         </p>
         <div class="progress rating">
           <div
@@ -29,7 +31,9 @@
       <div class="details-ratings">
         <p class="details-ratings-title">
           <span class="details-ratings-title-strong">Difficulty: </span>
-          <span class="details-ratings-strong"> {{ CURDifficulty }}</span>
+          <span class="details-ratings-strong" data-cyId="CUReviews-difficulty">
+            {{ CURDifficulty }}</span
+          >
         </p>
         <div class="progress rating">
           <div
@@ -49,7 +53,9 @@
       <div class="details-ratings">
         <p class="details-ratings-title">
           <span class="details-ratings-title-strong">Workload: </span>
-          <span class="details-ratings-strong">{{ CURWorkload }}</span>
+          <span class="details-ratings-strong" data-cyId="CUReviews-workload">{{
+            CURWorkload
+          }}</span>
         </p>
         <div class="progress rating">
           <div
@@ -119,17 +125,14 @@ export default defineComponent({
       return `https://www.cureviews.org/course/${subject}/${number}`;
     },
     CUROverallRating(): string | number {
-      if (this.courseObj.overallRating === 0) return '';
       if (!this.courseObj.overallRating) return 'N/A';
       return Math.round(this.courseObj.overallRating * 10) / 10;
     },
     CURDifficulty(): string | number {
-      if (this.courseObj.difficulty === 0) return '';
       if (!this.courseObj.difficulty) return 'N/A';
       return Math.round(this.courseObj.difficulty * 10) / 10;
     },
     CURWorkload(): string | number {
-      if (this.courseObj.workload === 0) return '';
       if (!this.courseObj.workload) return 'N/A';
       return Math.round(this.courseObj.workload * 10) / 10;
     },
@@ -183,6 +186,8 @@ export default defineComponent({
         margin-top: -1rem;
         margin-bottom: 1rem;
         margin-left: 1rem;
+        padding-top: 0.5rem;
+        padding-right: 0.5rem;
       }
     }
   }

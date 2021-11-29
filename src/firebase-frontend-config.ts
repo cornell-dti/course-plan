@@ -57,6 +57,10 @@ export const selectableRequirementChoicesCollection = db
   .collection('user-selectable-requirement-choices')
   .withConverter(getTypedFirestoreDataConverter<AppSelectableRequirementChoices>());
 
+export const overriddenFulfillmentChoicesCollection = db
+  .collection('user-overridden-fulfillment-choices')
+  .withConverter(getTypedFirestoreDataConverter<FirestoreOverriddenFulfillmentChoices>());
+
 export const subjectColorsCollection = db
   .collection('user-subject-colors')
   .withConverter(getTypedFirestoreDataConverter<Readonly<Record<string, string>>>());

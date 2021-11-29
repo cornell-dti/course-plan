@@ -9,6 +9,7 @@
       }"
       @click="closeOnClickOutside"
       ref="modalBackground"
+      data-cyId="teleportModal"
     >
       <div
         :class="['modal-content', contentClass, { 'modal-simple': isSimpleModal }]"
@@ -47,6 +48,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue';
+import store from '@/store';
 
 export default defineComponent({
   props: {
@@ -61,7 +63,10 @@ export default defineComponent({
     hasNoBackground: { type: Boolean, default: false }, // true for modals without the gray overlay behind them
     hasClickableTransparentBackground: { type: Boolean, default: false }, // modals without a gray overlay behind them AND clicking on the background closes the modal
     hasCustomPosition: { type: Boolean, default: false }, // true if you want to set custom position for modal
-    position: { type: Object as PropType<{ x: number; y: number }>, default: { x: 0, y: 0 } }, // custom position (hasCustomPosition must be true)
+    position: {
+      type: Object as PropType<{ x: number; y: number }>,
+      default: () => ({ x: 0, y: 0 }),
+    }, // custom position (hasCustomPosition must be true)
   },
   data() {
     const customPosition = this.hasCustomPosition
@@ -79,6 +84,7 @@ export default defineComponent({
     const modalBackground = ref((null as unknown) as HTMLDivElement);
 
     const close = () => {
+      store.commit('setIsTeleportModalOpen', false);
       emit('modal-closed', true);
     };
 
@@ -93,6 +99,8 @@ export default defineComponent({
     const rightButtonClicked = () => {
       emit('right-button-clicked');
     };
+
+    store.commit('setIsTeleportModalOpen', true);
 
     return { close, closeOnClickOutside, leftButtonClicked, rightButtonClicked, modalBackground };
   },
@@ -109,7 +117,7 @@ export default defineComponent({
   width: 100vw;
   min-height: 100vh;
   background-color: rgba(0, 0, 0, 0.7);
-  z-index: 3;
+  z-index: 4;
   padding: 1rem;
 
   &-simple {

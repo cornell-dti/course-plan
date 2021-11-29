@@ -1,14 +1,17 @@
 import { Store } from 'vuex';
 
 import * as fb from './firebase-frontend-config';
-import getCourseEquivalentsFromUserExams from './requirements/data/exams/ExamCredit';
+import getCourseEquivalentsFromUserExams from './requirements/requirement-exam-utils';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
-import getCurrentSeason, {
-  checkNotNull,
-  getCurrentYear,
+import {
   allocateAllSubjectColor,
+  updateSubjectColor,
+  checkNotNull,
+  getCurrentSeason,
+  getCurrentYear,
+  sortedSemesters,
 } from './utilities';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
@@ -51,17 +54,19 @@ export type VuexStoreState = {
   userName: FirestoreUserName;
   onboardingData: AppOnboardingData;
   semesters: readonly FirestoreSemester[];
+  orderByNewest: boolean;
   derivedCoursesData: DerivedCoursesData;
   derivedSelectableRequirementData: DerivedSelectableRequirementData;
   derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   selectableRequirementChoices: AppSelectableRequirementChoices;
-  overridenRequirementChoices: AppOverridenRequirementChoices;
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
+  isTeleportModalOpen: boolean;
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -83,9 +88,9 @@ const store: TypedVuexStore = new TypedVuexStore({
       minor: [],
       grad: '',
       exam: [],
-      transferCourse: [],
       tookSwim: 'no',
     },
+    orderByNewest: true,
     semesters: [],
     derivedCoursesData: {
       duplicatedCourseCodeSet: new Set(),
@@ -101,7 +106,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     toggleableRequirementChoices: {},
     selectableRequirementChoices: {},
-    overridenRequirementChoices: {},
+    overriddenFulfillmentChoices: {},
     userRequirementsMap: {},
     // It won't be null once the app loads.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -109,6 +114,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     groupedRequirementFulfillmentReport: [],
     subjectColors: {},
     uniqueIncrementer: 0,
+    isTeleportModalOpen: false,
   },
   actions: {},
   mutations: {
@@ -121,8 +127,18 @@ const store: TypedVuexStore = new TypedVuexStore({
     setOnboardingData(state: VuexStoreState, onboardingData: AppOnboardingData) {
       state.onboardingData = onboardingData;
     },
+    setOrderByNewest(state: VuexStoreState, orderByNewest: boolean) {
+      state.orderByNewest = orderByNewest;
+    },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
-      state.semesters = semesters;
+      // TODO @bshen remove .map & write migration script when every dev pulls from master
+      state.semesters = sortedSemesters(
+        semesters.map(sem => {
+          if (sem.season) return sem;
+          return { ...sem, season: sem.season || sem.type }; // sem.season is necessary for type check
+        }),
+        state.orderByNewest
+      );
     },
     setDerivedCourseData(state: VuexStoreState, data: DerivedCoursesData) {
       state.derivedCoursesData = data;
@@ -151,14 +167,11 @@ const store: TypedVuexStore = new TypedVuexStore({
     ) {
       state.selectableRequirementChoices = selectableRequirementChoices;
     },
-    setOverridenRequirementChoices(
+    setOverriddenFulfillmentChoices(
       state: VuexStoreState,
-      overridenRequirementChoices: AppOverridenRequirementChoices
+      overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
     ) {
-      state.overridenRequirementChoices = {
-        ...overridenRequirementChoices,
-        ...computeAPIBOverridenRequirements(state), // adds AP/IB data from onboarding collection
-      };
+      state.overriddenFulfillmentChoices = overriddenFulfillmentChoices;
     },
     setRequirementData(
       state: VuexStoreState,
@@ -179,11 +192,17 @@ const store: TypedVuexStore = new TypedVuexStore({
     setUniqueIncrementer(state: VuexStoreState, newIncrementerValue: number) {
       state.uniqueIncrementer = newIncrementerValue;
     },
+    setIsTeleportModalOpen(state: VuexStoreState, newTeleportModalValue: boolean) {
+      state.isTeleportModalOpen = newTeleportModalValue;
+    },
   },
 });
 
 const autoRecomputeDerivedData = (): (() => void) =>
   store.subscribe((payload, state) => {
+    if (payload.type === 'setOrderByNewest') {
+      store.commit('setSemesters', sortedSemesters(state.semesters, state.orderByNewest));
+    }
     // Recompute courses
     if (payload.type === 'setSemesters') {
       const allCourseSet = new Set<string>();
@@ -241,9 +260,9 @@ const autoRecomputeDerivedData = (): (() => void) =>
         uniqueIdToExamMap,
       };
       store.commit('setDerivedAPIBEquivalentCourseData', derivedAPIBEquivalentCourseData);
-      // Recompute overridenRequirementChoices, which is dependent
+      // Recompute overriddenFulfillmentChoices, which is dependent
       // on onboardingData and derivedAPIBEquivalentCourseData
-      store.commit('setOverridenRequirementChoices', state.overridenRequirementChoices);
+      store.commit('setOverriddenFulfillmentChoices', state.overriddenFulfillmentChoices);
     }
     // Recompute requirements
     if (
@@ -251,7 +270,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
       payload.type === 'setSemesters' ||
       payload.type === 'setToggleableRequirementChoices' ||
       payload.type === 'setSelectableRequirementChoices' ||
-      payload.type === 'setOverridenRequirementChoices'
+      payload.type === 'setOverriddenFulfillmentChoices'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -261,58 +280,12 @@ const autoRecomputeDerivedData = (): (() => void) =>
             state.onboardingData,
             state.toggleableRequirementChoices,
             state.selectableRequirementChoices,
-            state.overridenRequirementChoices
+            /* deprecated AppOverriddenFulfillmentChoices */ {}
           )
         );
       }
     }
   });
-
-/**
- * Computes AP/IB Overriden Requirement Choices from
- * onboarding data and derived AP/IB equivalent course data.
- */
-const computeAPIBOverridenRequirements = (
-  state: VuexStoreState
-): AppOverridenRequirementChoices => {
-  const APIBOverridenRequirements: Record<
-    string,
-    {
-      readonly optIn: Record<string, Set<string>>;
-      readonly optOut: Record<string, Set<string>>;
-    }
-  > = {};
-  state.onboardingData.exam.forEach(exam => {
-    const { type, subject } = exam;
-    const examName = `${type} ${subject}`;
-    const uniqueIds = state.derivedAPIBEquivalentCourseData.examToUniqueIdsMap[examName];
-    if (!(uniqueIds && uniqueIds.size)) return;
-    const { optIn, optOut } = exam;
-    const optInChoices: Record<string, Set<string>> = optIn
-      ? Object.fromEntries(
-          Object.entries(optIn).map(([requirementName, slotNames]) => [
-            requirementName,
-            new Set(slotNames),
-          ])
-        )
-      : {};
-    const optOutChoices: Record<string, Set<string>> = optOut
-      ? Object.fromEntries(
-          Object.entries(optOut).map(([requirementName, slotNames]) => [
-            requirementName,
-            new Set(slotNames),
-          ])
-        )
-      : {};
-    uniqueIds.forEach(uniqueId => {
-      APIBOverridenRequirements[uniqueId] = {
-        optIn: optInChoices,
-        optOut: optOutChoices,
-      };
-    });
-  });
-  return APIBOverridenRequirements;
-};
 
 export const initializeFirestoreListeners = (onLoad: () => void): (() => void) => {
   const simplifiedUser = store.state.currentFirebaseUser;
@@ -320,8 +293,10 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   let userNameInitialLoadFinished = false;
   let onboardingDataInitialLoadFinished = false;
   let semestersInitialLoadFinished = false;
+  let orderByNewestInitialLoadFinished = false;
   let toggleableRequirementChoiceInitialLoadFinished = false;
   let selectableRequirementChoiceInitialLoadFinished = false;
+  let overriddenFulfillmentChoiceInitialLoadFinished = false;
   let subjectColorInitialLoadFinished = false;
   let uniqueIncrementerInitialLoadFinished = false;
 
@@ -332,8 +307,10 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       userNameInitialLoadFinished &&
       onboardingDataInitialLoadFinished &&
       semestersInitialLoadFinished &&
+      orderByNewestInitialLoadFinished &&
       toggleableRequirementChoiceInitialLoadFinished &&
       selectableRequirementChoiceInitialLoadFinished &&
+      overriddenFulfillmentChoiceInitialLoadFinished &&
       subjectColorInitialLoadFinished &&
       uniqueIncrementerInitialLoadFinished &&
       !emitted
@@ -347,7 +324,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     .doc(simplifiedUser.email)
     .onSnapshot(snapshot => {
       const data = snapshot.data();
-      if (data != null) {
+      if (data) {
         store.commit('setUserName', data);
       } else {
         const [firstName, lastName] = simplifiedUser.displayName.split(' ');
@@ -360,7 +337,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     .doc(simplifiedUser.email)
     .onSnapshot(snapshot => {
       const data = snapshot.data();
-      if (data != null) {
+      if (data) {
         store.commit('setOnboardingData', createAppOnboardingData(data));
       }
       onboardingDataInitialLoadFinished = true;
@@ -371,18 +348,26 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     .get()
     .then(snapshot => {
       const data = snapshot.data();
-      if (data != null) {
-        store.commit('setSemesters', data.semesters);
+      if (data) {
+        const { orderByNewest, semesters } = data;
+        store.commit('setSemesters', semesters);
+        // if user hasn't yet chosen an ordering, choose true by default
+        store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
       } else {
-        const newSemeter: FirestoreSemester = {
-          type: getCurrentSeason(),
+        const newSemester: FirestoreSemester = {
           year: getCurrentYear(),
+          type: getCurrentSeason(), // TODO @bshen remove & write migration script when every dev pulls from master
+          season: getCurrentSeason(),
           courses: [],
         };
-        store.commit('setSemesters', [newSemeter]);
-        fb.semestersCollection.doc(simplifiedUser.email).set({ semesters: [newSemeter] });
+        store.commit('setSemesters', [newSemester]);
+        fb.semestersCollection.doc(simplifiedUser.email).set({
+          orderByNewest: true,
+          semesters: [newSemester],
+        });
       }
       semestersInitialLoadFinished = true;
+      orderByNewestInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
   const toggleableRequirementChoiceUnsubscriber = fb.toggleableRequirementChoicesCollection
@@ -399,6 +384,14 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const selectableRequirementChoices = snapshot.data() || {};
       store.commit('setSelectableRequirementChoices', selectableRequirementChoices);
       selectableRequirementChoiceInitialLoadFinished = true;
+      emitOnLoadWhenLoaded();
+    });
+  const overriddenFulfillmentChoiceUnsubscriber = fb.overriddenFulfillmentChoicesCollection
+    .doc(simplifiedUser.email)
+    .onSnapshot(snapshot => {
+      const overriddenFulfillmentChoices = snapshot.data() || {};
+      store.commit('setOverriddenFulfillmentChoices', overriddenFulfillmentChoices);
+      overriddenFulfillmentChoiceInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
   fb.subjectColorsCollection
@@ -428,10 +421,24 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     onboardingDataUnsubscriber();
     toggleableRequirementChoiceUnsubscriber();
     selectableRequirementChoiceUnsubscriber();
+    overriddenFulfillmentChoiceUnsubscriber();
     uniqueIncrementerUnsubscriber();
     derivedDataComputationUnsubscriber();
   };
   return unsubscriber;
+};
+
+export const updateSubjectColorData = (color: string, code: string): void => {
+  const simplifiedUser = store.state.currentFirebaseUser;
+  fb.subjectColorsCollection
+    .doc(simplifiedUser.email)
+    .get()
+    .then(snapshot => {
+      const subjectColors = snapshot.data() || {};
+      const newSubjectColors = updateSubjectColor(subjectColors, color, code);
+      store.commit('setSubjectColors', newSubjectColors);
+      fb.subjectColorsCollection.doc(simplifiedUser.email).set(newSubjectColors);
+    });
 };
 
 fb.auth.onAuthStateChanged(user => {
