@@ -46,12 +46,10 @@ const createSemester = (
   courses: readonly FirestoreSemesterCourse[]
 ): {
   year: number;
-  type: FirestoreSemesterSeason;
   season: FirestoreSemesterSeason;
   courses: readonly FirestoreSemesterCourse[];
 } => ({
   courses,
-  type: season, // TODO @bshen remove & write migration script when every dev pulls from master
   season,
   year,
 });
