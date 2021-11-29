@@ -399,4 +399,13 @@ const json: RequirementsJson = {
   },
 };
 
+export const colleges = [...Object.keys(json.college)] as const;
+export type College = typeof colleges;
+
+export const majors = [...Object.keys(json.major)] as const;
+export type Major = typeof majors;
+
+export const minors = [...Object.keys(json.minor)] as const;
+export type Minor = typeof minors;
+
 export default json;
