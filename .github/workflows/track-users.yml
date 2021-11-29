@@ -13,5 +13,7 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
+      - name: NPM Clean Install
+        run: npm ci
       - name: Run TrackUsers
         run: npm run track-users
