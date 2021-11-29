@@ -30,20 +30,20 @@ export default defineComponent({
   methods: {
     displayData() {
       trackUsersCollection.get().then(querySnapshot => {
-        let newestDoc = null;
-        let newestDate = new Date(0);
+        let newestDocData = {};
+        let newestDocDate = new Date(0);
 
         querySnapshot.forEach(doc => {
-          let isoTimestamp = doc.id;
-          let date = new Date(isoTimestamp);
-          if (date.getTime() > newestDate.getTime()) {
-            newestDate = date;
-            newestDoc = doc;
+          const isoTimestamp = doc.id;
+          const date = new Date(isoTimestamp);
+          if (date.getTime() > newestDocDate.getTime()) {
+            newestDocDate = date;
+            newestDocData = doc.data();
           }
         });
 
-        let output = newestDoc.data();
-        return JSON.stringify(output, null, 2);
+        const output = JSON.stringify(newestDocData, null, 2);
+        return output;
       });
     },
   },
