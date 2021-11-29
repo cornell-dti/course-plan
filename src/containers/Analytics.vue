@@ -2,7 +2,7 @@
   <div>
     <div class="body-container">
       <top-bar />
-      <div class="message-container">{{ analyticsData }}</div>
+      <pre class="analytics">{{ analyticsData }}</pre>
       <div class="back_to_home">
         <a class="back_to_home_link" href="/login">Back to home</a>
       </div>
@@ -43,7 +43,7 @@ export default defineComponent({
         });
 
         let output = newestDoc.data();
-        this.analyticsData = output;
+        return JSON.stringify(output, null, 2);
       });
     },
   },
@@ -71,18 +71,16 @@ export default defineComponent({
 a.back_to_home_link {
   color: #7b7d7e;
 }
-.message-container {
-  display: flex;
-  margin-bottom: 3%;
-  margin-top: 10%;
-  justify-content: center;
-  @media (max-width: 1154px) {
-    margin-top: 8vh;
-    flex-direction: column;
-    align-items: center;
-  }
-}
 .body-container {
   min-height: 100vh;
+}
+
+.analytics {
+  font-size: 14px;
+  padding: 3.75rem 0 0 6.5rem;
+
+  @media (max-width: 1154px) {
+    padding: 0 0 0 3.125rem;
+  }
 }
 </style>
