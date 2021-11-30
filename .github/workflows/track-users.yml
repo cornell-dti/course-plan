@@ -18,4 +18,5 @@ jobs:
       - name: Run TrackUsers
         run: npm run track-users
         env:
+          PROD: true
           SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CORNELLDTI_COURSEPLAN_PROD }}

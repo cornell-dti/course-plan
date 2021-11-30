@@ -4,12 +4,18 @@ import * as admin from 'firebase-admin';
 import { getTypedFirestoreDataConverter } from './firebase-config-common';
 
 const serviceAccountFilename = process.env.PROD ? 'serviceAccountProd.json' : 'serviceAccount.json';
-const serviceAccount = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '..', serviceAccountFilename)).toString()
-);
+const serviceAccountUnparsed =
+  process.env.SERVICE_ACCOUNT ??
+  fs.readFileSync(path.join(__dirname, '..', serviceAccountFilename)).toString();
+const serviceAccount = JSON.parse(serviceAccountUnparsed);
+
+const databaseURL = process.env.PROD
+  ? 'https://cornell-courseplan.firebaseio.com'
+  : 'https://cornelldti-courseplan-dev.firebaseio.com';
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
+  databaseURL,
 });
 
 const db = admin.firestore();
