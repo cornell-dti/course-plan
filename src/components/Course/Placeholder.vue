@@ -25,7 +25,7 @@ export default defineComponent({
   },
   methods: {
     openModal() {
-      // TODO: open modal to assign course to placeholder
+      // TODO: open modal to assign a course to a placeholder
     },
   },
 });
