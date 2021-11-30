@@ -7,24 +7,14 @@ import {
 
 const eceRequirements: readonly CollegeOrMajorRequirement[] = [
   {
-    name: 'ENGRD 2300',
-    description: 'ENGRD 2300',
-    source:
-      'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
-    checker: includesWithSubRequirements(['ENGRD 2300']),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1],
-    slotNames: ['Course'],
-  },
-  {
     name: 'Engineering Distribution',
-    description: 'Any ENGRD course excluding ENGRD/ECE 2100, ENGRD/ECE 2200, and ENGRD/ECE 2300.',
+    description: 'ECE majors must complete ECE/ENGRD 2300. ECE majors interested in computer engineering are strongly encouraged to take ECE/ENGRD 2400 as their second engineering distribution class.',
     source:
       'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
     checker: [
       (course: Course): boolean =>
         course.subject === 'ENGRD' &&
-        !courseMatchesCodeOptions(course, ['ENGRD 2300', 'ENGRD 2100', 'ENGRD 2200']),
+        !courseMatchesCodeOptions(course, ['ENGRD 2300', 'ENGRD 2100']),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -32,13 +22,13 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Core Courses',
-    description: 'ECE 2100, ECE 2200 ECE 3400',
+    description: 'ECE 2100, ECE 2300, ECE 2720',
     source:
       'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
-    checker: includesWithSubRequirements(['ECE 2100'], ['ECE 2200'], ['ECE 3400']),
+    checker: includesWithSubRequirements(['ECE 2100'], ['ECE 2300'], ['ECE 2720']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
-    slotNames: ['ECE 2100', 'ECE 2200', 'ECE 3400'],
+    slotNames: ['ECE 2100', 'ECE 2320', 'ECE 2720'],
   },
   {
     name: 'Foundation Courses',
@@ -74,27 +64,8 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [3],
   },
   {
-    name: 'Probability and Statistics',
-    description:
-      'One course with significant probability content. ECE 2720, ECE 3100, ENGRD/ORIE 2700, CEE 3040, and MSE 5730 are appropriate such courses' +
-      ' Other courses satisfying the probability and statistics requirement may be allowed by an ECE petition.',
-    source:
-      'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
-    allowCourseDoubleCounting: true,
-    checker: includesWithSubRequirements([
-      'ECE 2720',
-      'ECE 3100',
-      'ENGRD 2700',
-      'CEE 3040',
-      'MSE 5730',
-    ]),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1],
-    slotNames: ['Course'],
-  },
-  {
-    name: 'Upper-Level ECE Electives',
-    description: 'These courses must be technical ECE courses ',
+    name: 'Upper-Level ECE Electives: 3000 level',
+    description: 'At least 3 technical ECE courses at the 3000 level.',
     source:
       'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
     checker: [
@@ -103,14 +74,14 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
         !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***')),
     ],
     fulfilledBy: 'courses',
-    perSlotMinCount: [1],
+    perSlotMinCount: [3],
     slotNames: ['Course'],
   },
   {
-    name: 'Upper-Level ECE Electives: 4000 level',
+    name: 'Upper-Level ECE Electives: 4000+ level',
     description:
       'These courses must be technical ECE courses ' +
-      'Three (3) courses at the 4000-level or above. ',
+      '2 courses at the 4000-level or above. ',
     source:
       'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
     checker: [
@@ -129,7 +100,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
       },
     ],
     fulfilledBy: 'courses',
-    perSlotMinCount: [3],
+    perSlotMinCount: [2],
     slotNames: ['Course'],
   },
   {
