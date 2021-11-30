@@ -8,7 +8,8 @@ import {
 const eceRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Engineering Distribution',
-    description: 'ECE majors must complete ECE/ENGRD 2300. ECE majors interested in computer engineering are strongly encouraged to take ECE/ENGRD 2400 as their second engineering distribution class.',
+    description:
+      'ECE majors must complete ECE/ENGRD 2300. ECE majors interested in computer engineering are strongly encouraged to take ECE/ENGRD 2400 as their second engineering distribution class.',
     source:
       'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
     checker: [
@@ -80,8 +81,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Upper-Level ECE Electives: 4000+ level',
     description:
-      'These courses must be technical ECE courses ' +
-      '2 courses at the 4000-level or above. ',
+      'These courses must be technical ECE courses ' + '2 courses at the 4000-level or above. ',
     source:
       'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
     checker: [
