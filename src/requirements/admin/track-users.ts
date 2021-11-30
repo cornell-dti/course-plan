@@ -32,7 +32,7 @@ function isOld(semester: FirestoreSemester) {
   if (semester.year < year) {
     return true;
   }
-  if (seasonToMonth(semester.season ?? semester.type) <= month) {
+  if (seasonToMonth(semester.season) <= month) {
     return true;
   }
   return false;
