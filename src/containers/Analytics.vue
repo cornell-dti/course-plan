@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="body-container" :class="{ 'no-data': !hasData }">
+    <div class="body-container" :class="{ 'no-data': !hasData() }">
       <top-bar />
       <div class="timestamp" v-if="hasData()">Data last retrieved at: {{ analyticsTimestamp }}</div>
       <pre class="analytics" v-if="hasData()">{{ analyticsData }}</pre>
