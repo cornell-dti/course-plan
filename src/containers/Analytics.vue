@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="body-container">
+    <div class="body-container" :class="{ 'no-data': !hasData }">
       <top-bar />
-      <pre class="analytics">{{ analyticsData }}</pre>
+      <pre class="analytics" v-if="hasData">{{ analyticsData }}</pre>
       <div class="back_to_home">
         <a class="back_to_home_link" href="/login">Back to home</a>
       </div>
@@ -20,15 +20,20 @@ import { trackUsersCollection } from '@/firebase-frontend-config';
 export default defineComponent({
   components: { CustomFooter, TopBar },
   mounted() {
-    this.displayData();
+    this.retrieveData();
   },
   data() {
     return {
-      analyticsData: {},
+      analyticsData: '',
     };
   },
+  computed: {
+    hasData() {
+      return this.analyticsData.length > 2;
+    },
+  },
   methods: {
-    displayData() {
+    retrieveData() {
       trackUsersCollection.get().then(querySnapshot => {
         let newestDocData = {};
         let newestDocDate = new Date(0);
@@ -43,7 +48,7 @@ export default defineComponent({
         });
 
         const output = JSON.stringify(newestDocData, null, 2);
-        return output;
+        this.analyticsData = output;
       });
     },
   },
@@ -51,6 +56,12 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.no-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .back_to_home {
   font-size: 32px;
   vertical-align: middle;
