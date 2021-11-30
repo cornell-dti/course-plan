@@ -4,7 +4,6 @@ import {
   DecoratedRequirementsJson,
   RequirementChecker,
   Course,
-  MajorRequirements,
   MutableMajorRequirements,
 } from './types';
 import sourceRequirements from './data';

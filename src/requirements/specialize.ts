@@ -14,10 +14,10 @@ export function specialized<R extends RequirementCommon>(
   collegeReqs: readonly R[],
   majors: readonly Major<R>[]
 ) {
-  const specializations = majors.flatMap(({ specializations }) => specializations ?? []);
-  const excluded = new Set(specializations.map(({ name }) => name));
+  const allSpecializations = majors.flatMap(({ specializations }) => specializations ?? []);
+  const excluded = new Set(allSpecializations.map(({ name }) => name));
   const filteredReqs = collegeReqs.filter(({ name }) => !excluded.has(name));
-  return [...filteredReqs, ...specializations];
+  return [...filteredReqs, ...allSpecializations];
 }
 
 /**
