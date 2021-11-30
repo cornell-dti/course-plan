@@ -400,6 +400,6 @@ const json: RequirementsJson = {
 };
 
 export const colleges = [...Object.keys(json.college)] as const;
-export type College = typeof colleges;
+export type College = typeof colleges[number];
 
 export default json;

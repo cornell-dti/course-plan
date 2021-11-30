@@ -3,9 +3,9 @@ import examData, {
   ExamFulfillment,
   ExamFulfillments,
 } from './data/exams/ExamCredit';
-import { colleges } from './data';
+import { colleges, College } from './data';
 
-type ExamRequirementsColleges = Record<number, string[]>;
+type ExamRequirementsColleges = Record<number, College[]>;
 type ExamRequirements = {
   colleges?: ExamRequirementsColleges; // if the user IS NOT in one of these colleges, the course id cannot fulfill the requirement
   majorsExcluded?: string[]; // if the user IS in one of these majors, the course id cannot fulfill the requirement
