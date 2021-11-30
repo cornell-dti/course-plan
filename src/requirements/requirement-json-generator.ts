@@ -4,6 +4,8 @@ import {
   DecoratedRequirementsJson,
   RequirementChecker,
   Course,
+  MajorRequirements,
+  MutableMajorRequirements,
 } from './types';
 import sourceRequirements from './data';
 import { NO_EQUIVALENT_COURSES_COURSE_ID, SPECIAL_COURSES } from './data/constants';
@@ -97,13 +99,7 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
         readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
       };
     };
-    major: {
-      [key: string]: {
-        readonly name: string;
-        readonly schools: readonly string[];
-        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
-      };
-    };
+    major: MutableMajorRequirements<DecoratedCollegeOrMajorRequirement>;
     minor: {
       [key: string]: {
         readonly name: string;
@@ -144,12 +140,19 @@ const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequiremen
     };
   });
   Object.entries(major).forEach(([majorName, majorRequirement]) => {
-    const { requirements, ...rest } = majorRequirement;
-    decoratedJson.major[majorName] = { ...rest, requirements: decorateRequirements(requirements) };
+    const { requirements, specializations, ...rest } = majorRequirement;
+    decoratedJson.major[majorName] = {
+      ...rest,
+      requirements: decorateRequirements(requirements),
+      specializations: decorateRequirements(specializations ?? []),
+    };
   });
   Object.entries(minor).forEach(([minorName, minorRequirement]) => {
     const { requirements, ...rest } = minorRequirement;
-    decoratedJson.minor[minorName] = { ...rest, requirements: decorateRequirements(requirements) };
+    decoratedJson.minor[minorName] = {
+      ...rest,
+      requirements: decorateRequirements(requirements),
+    };
   });
   Object.entries(grad).forEach(([gradName, gradRequirement]) => {
     const { requirements, ...rest } = gradRequirement;
