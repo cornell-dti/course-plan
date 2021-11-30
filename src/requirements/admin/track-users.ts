@@ -77,6 +77,7 @@ function addYearToFrequencyDictionary(year: string, freqDict: Record<string, num
 /**
  * TrackUsers outputs user metrics to a Firestore document with timestap based on
  * data from the user-name and user-semesters Firestore collections.
+ * Users are only included if they have finished onboarding (and have a document in the username collection)
  *
  * It returns the total number of users (total-users),
  * the total number of semesters across all users (total-semesters),
@@ -96,10 +97,14 @@ async function trackUsers() {
   let semesterData = {} as FirestoreTrackUsersSemesterData;
   let onboardingData = {} as FirestoreTrackUsersOnboardingData;
 
+  // set of all user emails that are in the usernameCollection (and thus finished onboarding)
+  let userEmails = new Set();
+
   await usernameCollection.get().then(usernameQuerySnapshot => {
     let totalUsersCount = 0;
 
-    usernameQuerySnapshot.forEach(() => {
+    usernameQuerySnapshot.forEach(doc => {
+      userEmails.add(doc.id);
       totalUsersCount += 1;
     });
     const usernameResponse = {
@@ -120,6 +125,10 @@ async function trackUsers() {
     let semesterCount = 0;
 
     semesterQuerySnapshot.forEach(doc => {
+      if (!userEmails.has(doc.id)) {
+        return;
+      }
+
       let oldSemesterCount = 0;
       let newSemesterCount = 0;
       doc.data().semesters.forEach(semester => {
@@ -169,6 +178,10 @@ async function trackUsers() {
     const gradYearFreq: Record<string, number> = {};
 
     onboardingQuerySnapshot.forEach(doc => {
+      if (!userEmails.has(doc.id)) {
+        return;
+      }
+
       const { majors, minors, exam, colleges, gradPrograms } = doc.data();
 
       addToFrequencyDictionary(colleges, collegeFreq);
