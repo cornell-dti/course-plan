@@ -413,6 +413,27 @@ export function computeFulfillmentCoursesAndStatistics(
   };
 }
 
+export function getAllEligibleRelatedRequirementIds(
+  courseId: number,
+  groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
+  toggleableRequirementChoices: AppToggleableRequirementChoices
+): readonly string[] {
+  return groupedRequirements
+    .flatMap(it => it.reqs)
+    .flatMap(({ requirement }) => {
+      const spec = getMatchedRequirementFulfillmentSpecification(
+        requirement,
+        toggleableRequirementChoices
+      );
+      if (spec == null) return [];
+      const allEligibleCourses = spec.eligibleCourses.flat();
+      if (allEligibleCourses.includes(courseId) && requirement.checkerWarning == null) {
+        return [requirement.id];
+      }
+      return [];
+    });
+}
+
 export function getRelatedUnfulfilledRequirements(
   {
     crseId: courseId,
@@ -456,7 +477,16 @@ export function getRelatedUnfulfilledRequirements(
             subRequirement,
             [...existingCourses, { uniqueId: -1, courseId, code, credits }],
             toggleableRequirementChoices,
-            overriddenFulfillmentChoices
+            {
+              ...overriddenFulfillmentChoices,
+              // Very loose choice to make the course count towards fulfillment
+              // Careful computation of choice is done during actual adding time.
+              [-1]: {
+                acknowledgedCheckerWarningOptIn: [subRequirement.id],
+                optOut: [],
+                arbitraryOptIn: {},
+              },
+            }
           );
           if (fulfillmentStatisticsWithNewCourse.minCountFulfilled > existingMinCountFulfilled) {
             if (subRequirement.checkerWarning == null) {

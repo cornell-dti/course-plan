@@ -141,7 +141,8 @@ import {
   deleteAllCoursesFromSemester,
   updateRequirementChoices,
 } from '@/global-firestore-data';
-import { updateSubjectColorData } from '@/store';
+import store, { updateSubjectColorData } from '@/store';
+import { getAllEligibleRelatedRequirementIds } from '@/requirements/requirement-frontend-utils';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -241,13 +242,19 @@ export default defineComponent({
         );
         updateRequirementChoices(oldChoices => {
           const choices = { ...oldChoices };
-          newCourses.forEach(({ uniqueID, requirementID }) => {
+          newCourses.forEach(({ uniqueID, requirementID, crseId }) => {
+            if (requirementID == null) return;
             const choice = choices[uniqueID] || {
               arbitraryOptIn: {},
               acknowledgedCheckerWarningOptIn: [],
               optOut: [],
             };
-            return { ...choice, optOut: choice.optOut.filter(it => it !== requirementID) };
+            const optOut = getAllEligibleRelatedRequirementIds(
+              crseId,
+              store.state.groupedRequirementFulfillmentReport,
+              store.state.toggleableRequirementChoices
+            ).filter(it => it !== requirementID);
+            choices[uniqueID] = { ...choice, optOut };
           });
           return choices;
         });

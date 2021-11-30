@@ -43,7 +43,10 @@ import {
   addCourseToSemester,
   updateRequirementChoice,
 } from '@/global-firestore-data';
-import { canFulfillChecker } from '@/requirements/requirement-frontend-utils';
+import {
+  canFulfillChecker,
+  getAllEligibleRelatedRequirementIds,
+} from '@/requirements/requirement-frontend-utils';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
 
@@ -157,6 +160,12 @@ export default defineComponent({
         acknowledgedCheckerWarningOptIn: Array.from(
           new Set([...choice.acknowledgedCheckerWarningOptIn, this.subReqId])
         ),
+        // Keep existing behavior of keeping it connected to at most one requirement.
+        optOut: getAllEligibleRelatedRequirementIds(
+          this.selfCheckCourses[option].crseId,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.toggleableRequirementChoices
+        ),
       }));
     },
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterSeason, year: number) {
@@ -172,7 +181,11 @@ export default defineComponent({
           // Since we edit from a self-check requirement,
           // we know it must be `acknowledgedCheckerWarningOptIn`.
           acknowledgedCheckerWarningOptIn: [this.subReqId],
-          optOut: [],
+          optOut: getAllEligibleRelatedRequirementIds(
+            newCourse.crseId,
+            store.state.groupedRequirementFulfillmentReport,
+            store.state.toggleableRequirementChoices
+          ),
         }),
         this.$gtag
       );

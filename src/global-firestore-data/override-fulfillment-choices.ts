@@ -39,7 +39,7 @@ export const deleteCoursesFromRequirementChoices = (
     .set(
       Object.fromEntries(
         Object.entries(store.state.overriddenFulfillmentChoices).filter(
-          ([k]) => !courseUniqueIdStrings.has(k)
+          ([uniqueId]) => !courseUniqueIdStrings.has(uniqueId)
         )
       )
     );
