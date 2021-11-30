@@ -98,7 +98,7 @@ async function trackUsers() {
   let onboardingData = {} as FirestoreTrackUsersOnboardingData;
 
   // set of all user emails that are in the usernameCollection (and thus finished onboarding)
-  let userEmails = new Set();
+  const userEmails = new Set();
 
   await usernameCollection.get().then(usernameQuerySnapshot => {
     let totalUsersCount = 0;
