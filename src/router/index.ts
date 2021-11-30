@@ -32,6 +32,9 @@ const router: Router = createRouter({
       path: '/analytics',
       name: 'Analytics',
       component: Analytics,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/:pathMatch(.*)*',
