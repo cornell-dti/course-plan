@@ -35,6 +35,6 @@ export default {
       fulfilledBy: 'courses',
       perSlotMinCount: [1, 1, 1],
       slotNames: ['MATH 1910', 'MATH 1920', 'MATH 2940'],
-    } as CollegeOrMajorRequirement
-  }
+    } as CollegeOrMajorRequirement,
+  },
 };
