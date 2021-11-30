@@ -14,7 +14,7 @@ const databaseURL = process.env.PROD
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: databaseURL,
+  databaseURL,
 });
 
 const db = admin.firestore();
