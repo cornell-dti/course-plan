@@ -14,7 +14,12 @@ const eceTemplate: Template = [
   {
     reqGroup: 'EN',
     name: 'Physics',
-    placeholderSemesters: [2, 3, 4],
+    placeholderSemesters: [2, 3],
+  },
+  {
+    reqGroup: 'ECE',
+    name: 'Physics 2214/2218',
+    placeholderSemesters: [4],
   },
   {
     reqGroup: 'EN',
@@ -33,7 +38,7 @@ const eceTemplate: Template = [
   },
   {
     reqGroup: 'EN',
-    name: 'Computing from engineering',
+    name: 'Computing',
     placeholderSemesters: [2],
   },
   /*
