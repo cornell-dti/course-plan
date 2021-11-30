@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { usernameCollection, semestersCollection } from '../../firebase-admin-config';
+import { semestersCollection } from '../../firebase-admin-config';
 
 /**
  * Perform migration of semester type to semester season
@@ -30,7 +30,7 @@ async function main() {
     await runOnUser(userEmail, runOnDB);
     return;
   }
-  const collection = await usernameCollection.get();
+  const collection = await semestersCollection.get();
   const userEmails = collection.docs.map(it => it.id);
   for (userEmail of userEmails) {
     console.group(`Running on ${userEmail}...`);
