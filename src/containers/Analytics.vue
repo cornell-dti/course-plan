@@ -2,7 +2,8 @@
   <div>
     <div class="body-container" :class="{ 'no-data': !hasData }">
       <top-bar />
-      <pre class="analytics" v-if="hasData">{{ analyticsData }}</pre>
+      <div class="timestamp" v-if="hasData()">Data last retrieved at: {{ analyticsTimestamp }}</div>
+      <pre class="analytics" v-if="hasData()">{{ analyticsData }}</pre>
       <div class="back_to_home">
         <a class="back_to_home_link" href="/login">Back to home</a>
       </div>
@@ -25,12 +26,8 @@ export default defineComponent({
   data() {
     return {
       analyticsData: '',
+      analyticsTimestamp: '',
     };
-  },
-  computed: {
-    hasData() {
-      return this.analyticsData.length > 2;
-    },
   },
   methods: {
     retrieveData() {
@@ -49,7 +46,11 @@ export default defineComponent({
 
         const output = JSON.stringify(newestDocData, null, 2);
         this.analyticsData = output;
+        this.analyticsTimestamp = newestDocDate.toLocaleString();
       });
+    },
+    hasData() {
+      return this.analyticsData.length > 2;
     },
   },
 });
@@ -86,9 +87,19 @@ a.back_to_home_link {
   min-height: 100vh;
 }
 
+.timestamp {
+  font-size: 16px;
+  padding: 3.75rem 0 0 6.5rem;
+  margin-bottom: 1rem;
+
+  @media (max-width: 1154px) {
+    padding: 0 0 0 3.125rem;
+  }
+}
+
 .analytics {
   font-size: 14px;
-  padding: 3.75rem 0 0 6.5rem;
+  padding: 0 0 0 6.5rem;
 
   @media (max-width: 1154px) {
     padding: 0 0 0 3.125rem;

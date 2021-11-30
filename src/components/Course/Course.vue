@@ -84,6 +84,7 @@ export default defineComponent({
   computed: {
     semesterString(): string {
       let semesterString = '';
+      this.menuOpen;
       this.courseObj.semesters.forEach(semester => {
         semesterString += `${semester}, `;
       });
