@@ -50,3 +50,7 @@ export const uniqueIncrementerCollection = db
 export const onboardingDataCollection = db
   .collection('user-onboarding-data')
   .withConverter(getTypedFirestoreDataConverter<FirestoreOnboardingUserData>());
+
+export const trackUsersCollection = db
+  .collection('track-users')
+  .withConverter(getTypedFirestoreDataConverter<FirestoreTrackUsersData>());

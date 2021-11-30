@@ -27,9 +27,6 @@ export {
 export { default as chooseToggleableRequirementOption } from './toggleable-requirement-choices';
 export {
   addCourseToSelectableRequirements,
+  addCoursesToSelectableRequirements,
   deleteCourseFromSelectableRequirements,
 } from './selectable-requirement-choices';
-export {
-  addOverriddenFulfillmentAPIB,
-  clearOverriddenFulfillmentsAPIB,
-} from './overridden-fulfillment-choices';

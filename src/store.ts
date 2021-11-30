@@ -132,14 +132,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       state.orderByNewest = orderByNewest;
     },
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
-      // TODO @bshen remove .map & write migration script when every dev pulls from master
-      state.semesters = sortedSemesters(
-        semesters.map(sem => {
-          if (sem.season) return sem;
-          return { ...sem, season: sem.season || sem.type }; // sem.season is necessary for type check
-        }),
-        state.orderByNewest
-      );
+      state.semesters = sortedSemesters(semesters, state.orderByNewest);
     },
     setDerivedCourseData(state: VuexStoreState, data: DerivedCoursesData) {
       state.derivedCoursesData = data;
@@ -361,7 +354,6 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       } else {
         const newSemester: FirestoreSemester = {
           year: getCurrentYear(),
-          type: getCurrentSeason(), // TODO @bshen remove & write migration script when every dev pulls from master
           season: getCurrentSeason(),
           courses: [],
         };
