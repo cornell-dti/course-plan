@@ -30,3 +30,5 @@ export {
   addCoursesToSelectableRequirements,
   deleteCourseFromSelectableRequirements,
 } from './selectable-requirement-choices';
+
+export { default as retrieveAnalytics } from './analytics';

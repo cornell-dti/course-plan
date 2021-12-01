@@ -16,7 +16,7 @@
 import { defineComponent } from 'vue';
 import CustomFooter from '@/components/Footer.vue';
 import TopBar from '@/components/TopBar.vue';
-import { trackUsersCollection } from '@/firebase-frontend-config';
+import { retrieveAnalytics } from '@/global-firestore-data';
 
 export default defineComponent({
   components: { CustomFooter, TopBar },
@@ -30,24 +30,10 @@ export default defineComponent({
     };
   },
   methods: {
-    retrieveData() {
-      trackUsersCollection.get().then(querySnapshot => {
-        let newestDocData = {};
-        let newestDocDate = new Date(0);
-
-        querySnapshot.forEach(doc => {
-          const isoTimestamp = doc.id;
-          const date = new Date(isoTimestamp);
-          if (date.getTime() > newestDocDate.getTime()) {
-            newestDocDate = date;
-            newestDocData = doc.data();
-          }
-        });
-
-        const output = JSON.stringify(newestDocData, null, 2);
-        this.analyticsData = output;
-        this.analyticsTimestamp = newestDocDate.toLocaleString();
-      });
+    async retrieveData() {
+      const analyticsObject = await retrieveAnalytics();
+      this.analyticsData = analyticsObject.data;
+      this.analyticsTimestamp = analyticsObject.timestamp;
     },
     hasData() {
       return this.analyticsData.length > 2;
