@@ -142,7 +142,7 @@ export default defineComponent({
           .filter(it => it.id !== this.selectedRequirementID)
           .map(it => it.id),
         acknowledgedCheckerWarningOptIn: this.selfCheckRequirements
-          .filter(it => it.id !== this.selectedRequirementID)
+          .filter(it => it.id === this.selectedRequirementID)
           .map(it => it.id),
         arbitraryOptIn: {},
       });
