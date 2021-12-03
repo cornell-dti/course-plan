@@ -78,9 +78,6 @@ export default defineComponent({
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
     },
-    selectableRequirementChoices(): AppSelectableRequirementChoices {
-      return store.state.selectableRequirementChoices;
-    },
   },
   methods: {
     selectCourse(result: CornellCourseRosterCourse) {

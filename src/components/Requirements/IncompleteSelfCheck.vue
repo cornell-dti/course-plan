@@ -77,61 +77,46 @@ export default defineComponent({
     // and courses that do not fulfill the requirement checker
     selfCheckCourses(): Record<string, FirestoreSemesterCourse> {
       const courses: Record<string, FirestoreSemesterCourse> = {};
-      store.state.semesters.forEach(semester => {
-        semester.courses.forEach(course => {
-          const selectableRequirementCourses =
-            store.state.derivedSelectableRequirementData.requirementToCoursesMap[this.subReqId];
-
-          // if course is mapped to another req(s), only allow it if all other reqs are double countable
-          let isAddable = true;
-          const otherReqsMappedTo = store.state.requirementFulfillmentGraph.getConnectedRequirementsFromCourse(
-            { uniqueId: course.uniqueID }
-          );
-
-          // true if all other requirements (if any) the course is assigned to are double countable, false otherwise
-          let allOtherReqsDoubleCountableIfAny = true;
-
-          // true if this requirement is double countable, false otherwise.
-          let thisReqDoubleCountable = false;
-
-          // loop through all reqs and determine if all other reqs this course is assigned to are
-          // double countable (if any exist) and whether or not this req itself is double countable
-          const collegesMajorsMinors = store.state.groupedRequirementFulfillmentReport;
-          collegesMajorsMinors.forEach(reqGroup => {
-            reqGroup.reqs.forEach(req => {
-              if (
-                otherReqsMappedTo.includes(req.requirement.id) &&
-                !req.requirement.allowCourseDoubleCounting
-              ) {
-                allOtherReqsDoubleCountableIfAny = false;
-              } else if (
-                req.requirement.id === this.subReqId &&
-                req.requirement.allowCourseDoubleCounting
-              ) {
-                thisReqDoubleCountable = true;
-              }
-            });
-          });
-
-          // if neither the current req or all other assigned reqs are not double countable, restrict from adding
-          if (!(allOtherReqsDoubleCountableIfAny || thisReqDoubleCountable)) {
-            isAddable = false;
+      store.state.semesters
+        .flatMap(it => it.courses)
+        .forEach(course => {
+          if (
+            !canFulfillChecker(
+              store.state.userRequirementsMap,
+              store.state.toggleableRequirementChoices,
+              this.subReqId,
+              course.crseId
+            )
+          ) {
+            // If the course can't help fulfill the checker, do not add to choices.
+            return;
           }
 
-          const isAlreadyAddedToReq =
-            selectableRequirementCourses && selectableRequirementCourses.includes(course);
-
-          // filter out courses that cannot fulfill the self-check, for self-checks with warnings
-          const canFulfillReq = canFulfillChecker(
-            store.state.userRequirementsMap,
-            store.state.toggleableRequirementChoices,
-            this.subReqId,
-            course.crseId
+          const currentlyMatchedRequirements = store.state.requirementFulfillmentGraph.getConnectedRequirementsFromCourse(
+            { uniqueId: course.uniqueID }
           );
+          if (currentlyMatchedRequirements.includes(this.subReqId)) {
+            // If the course is already matched to the current requirement, do not add to choices.
+            return;
+          }
 
-          if (!isAlreadyAddedToReq && isAddable && canFulfillReq) courses[course.code] = course;
+          const currentRequirementAllowDoubleCounting =
+            store.state.userRequirementsMap[this.subReqCourseId]?.allowCourseDoubleCounting;
+          const allOtherRequirementsAllowDoubleCounting = store.state.requirementFulfillmentGraph
+            .getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
+            .every(reqID => store.state.userRequirementsMap[reqID]?.allowCourseDoubleCounting);
+          if (!currentRequirementAllowDoubleCounting && !allOtherRequirementsAllowDoubleCounting) {
+            // At this point, we need to consider double counting issues.
+            // There are 2 ways we can add the course to the requirement without double counting violations:
+            // 1. This requirement allows double counting.
+            // 2. All the already matched requirements allow double counting.
+            // If both don't hold, we cannot add.
+            return;
+          }
+
+          // All pre-conditions have been checked, we can add it as choice!
+          courses[course.code] = course;
         });
-      });
 
       return courses;
     },

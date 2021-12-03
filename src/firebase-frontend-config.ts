@@ -52,10 +52,6 @@ export const toggleableRequirementChoicesCollection = db
   .collection('user-toggleable-requirement-choices')
   .withConverter(getTypedFirestoreDataConverter<AppToggleableRequirementChoices>());
 
-export const selectableRequirementChoicesCollection = db
-  .collection('user-selectable-requirement-choices')
-  .withConverter(getTypedFirestoreDataConverter<AppSelectableRequirementChoices>());
-
 export const overriddenFulfillmentChoicesCollection = db
   .collection('user-overridden-fulfillment-choices')
   .withConverter(getTypedFirestoreDataConverter<FirestoreOverriddenFulfillmentChoices>());

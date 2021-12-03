@@ -29,16 +29,6 @@ type DerivedCoursesData = {
 };
 
 /**
- * Some course data that can be derived from selectable requirement choices, but added to the global store
- * for efficiency and ease of access.
- * This should be used for self-check requirements and are not used in the requirement graph.
- */
-type DerivedSelectableRequirementData = {
-  // Mapping from requirement ID to the user-selected courses that fulfill the requirement.
-  readonly requirementToCoursesMap: Readonly<Record<string, readonly FirestoreSemesterCourse[]>>;
-};
-
-/**
  * Some AP/IB equivalent course data that can be derived from onboarding data, but added to the global store
  * for efficiency and ease of access.
  */
@@ -56,10 +46,8 @@ export type VuexStoreState = {
   semesters: readonly FirestoreSemester[];
   orderByNewest: boolean;
   derivedCoursesData: DerivedCoursesData;
-  derivedSelectableRequirementData: DerivedSelectableRequirementData;
   derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
-  selectableRequirementChoices: AppSelectableRequirementChoices;
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
@@ -97,15 +85,11 @@ const store: TypedVuexStore = new TypedVuexStore({
       courseMap: {},
       courseToSemesterMap: {},
     },
-    derivedSelectableRequirementData: {
-      requirementToCoursesMap: {},
-    },
     derivedAPIBEquivalentCourseData: {
       examToUniqueIdsMap: {},
       uniqueIdToExamMap: {},
     },
     toggleableRequirementChoices: {},
-    selectableRequirementChoices: {},
     overriddenFulfillmentChoices: {},
     userRequirementsMap: {},
     // It won't be null once the app loads.
@@ -136,12 +120,6 @@ const store: TypedVuexStore = new TypedVuexStore({
     setDerivedCourseData(state: VuexStoreState, data: DerivedCoursesData) {
       state.derivedCoursesData = data;
     },
-    setDerivedSelectableRequirementData(
-      state: VuexStoreState,
-      data: DerivedSelectableRequirementData
-    ) {
-      state.derivedSelectableRequirementData = data;
-    },
     setDerivedAPIBEquivalentCourseData(
       state: VuexStoreState,
       data: DerivedAPIBEquivalentCourseData
@@ -153,12 +131,6 @@ const store: TypedVuexStore = new TypedVuexStore({
       toggleableRequirementChoices: AppToggleableRequirementChoices
     ) {
       state.toggleableRequirementChoices = toggleableRequirementChoices;
-    },
-    setSelectableRequirementChoices(
-      state: VuexStoreState,
-      selectableRequirementChoices: AppSelectableRequirementChoices
-    ) {
-      state.selectableRequirementChoices = selectableRequirementChoices;
     },
     setOverriddenFulfillmentChoices(
       state: VuexStoreState,
@@ -221,21 +193,6 @@ const autoRecomputeDerivedData = (): (() => void) =>
       };
       store.commit('setDerivedCourseData', derivedCourseData);
     }
-    if (payload.type === 'setSelectableRequirementChoices') {
-      const requirementToCoursesMap: Record<string, FirestoreSemesterCourse[]> = {};
-      Object.entries(state.selectableRequirementChoices)
-        .sort((a, b) => parseInt(a[1], 10) - parseInt(b[1], 10))
-        .forEach(([courseUniqueId, reqId]) => {
-          const course: FirestoreSemesterCourse =
-            state.derivedCoursesData.courseMap[parseInt(courseUniqueId, 10)];
-          if (course)
-            requirementToCoursesMap[reqId] = [...(requirementToCoursesMap[reqId] || []), course];
-        });
-      const derivedSelectableRequirementData: DerivedSelectableRequirementData = {
-        requirementToCoursesMap,
-      };
-      store.commit('setDerivedSelectableRequirementData', derivedSelectableRequirementData);
-    }
     if (payload.type === 'setOnboardingData') {
       const examToUniqueIdsMap: Record<string, Set<string | number>> = {};
       const uniqueIdToExamMap: Record<string | number, string> = {};
@@ -262,7 +219,6 @@ const autoRecomputeDerivedData = (): (() => void) =>
       payload.type === 'setOnboardingData' ||
       payload.type === 'setSemesters' ||
       payload.type === 'setToggleableRequirementChoices' ||
-      payload.type === 'setSelectableRequirementChoices' ||
       payload.type === 'setOverriddenFulfillmentChoices'
     ) {
       if (state.onboardingData.college !== '') {
@@ -287,7 +243,6 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   let semestersInitialLoadFinished = false;
   let orderByNewestInitialLoadFinished = false;
   let toggleableRequirementChoiceInitialLoadFinished = false;
-  let selectableRequirementChoiceInitialLoadFinished = false;
   let overriddenFulfillmentChoiceInitialLoadFinished = false;
   let subjectColorInitialLoadFinished = false;
   let uniqueIncrementerInitialLoadFinished = false;
@@ -301,7 +256,6 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       semestersInitialLoadFinished &&
       orderByNewestInitialLoadFinished &&
       toggleableRequirementChoiceInitialLoadFinished &&
-      selectableRequirementChoiceInitialLoadFinished &&
       overriddenFulfillmentChoiceInitialLoadFinished &&
       subjectColorInitialLoadFinished &&
       uniqueIncrementerInitialLoadFinished &&
@@ -369,14 +323,6 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       toggleableRequirementChoiceInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
     });
-  const selectableRequirementChoiceUnsubscriber = fb.selectableRequirementChoicesCollection
-    .doc(simplifiedUser.email)
-    .onSnapshot(snapshot => {
-      const selectableRequirementChoices = snapshot.data() || {};
-      store.commit('setSelectableRequirementChoices', selectableRequirementChoices);
-      selectableRequirementChoiceInitialLoadFinished = true;
-      emitOnLoadWhenLoaded();
-    });
   const overriddenFulfillmentChoiceUnsubscriber = fb.overriddenFulfillmentChoicesCollection
     .doc(simplifiedUser.email)
     .onSnapshot(snapshot => {
@@ -411,7 +357,6 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     userNameUnsubscriber();
     onboardingDataUnsubscriber();
     toggleableRequirementChoiceUnsubscriber();
-    selectableRequirementChoiceUnsubscriber();
     overriddenFulfillmentChoiceUnsubscriber();
     uniqueIncrementerUnsubscriber();
     derivedDataComputationUnsubscriber();
