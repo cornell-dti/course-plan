@@ -138,9 +138,11 @@ export default defineComponent({
     addCourse() {
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, {
+        // Only exclude the selected requirement from opt-out.
         optOut: this.relatedRequirements
           .filter(it => it.id !== this.selectedRequirementID)
           .map(it => it.id),
+        // Only include the selected requirement from opt-in.
         acknowledgedCheckerWarningOptIn: this.selfCheckRequirements
           .filter(it => it.id === this.selectedRequirementID)
           .map(it => it.id),

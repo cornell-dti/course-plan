@@ -181,6 +181,9 @@ export default defineComponent({
           // Since we edit from a self-check requirement,
           // we know it must be `acknowledgedCheckerWarningOptIn`.
           acknowledgedCheckerWarningOptIn: [this.subReqId],
+          // We also need to opt-out of all requirements without warnings,
+          // because the user intention is clear that we only want to bind
+          // the course to this specific requirement.
           optOut: getAllEligibleRelatedRequirementIds(
             newCourse.crseId,
             store.state.groupedRequirementFulfillmentReport,

@@ -230,6 +230,15 @@ export default defineComponent({
       get(): readonly FirestoreSemesterCourse[] {
         return this.courses;
       },
+      /**
+       * This function is called when a course is dragged into the semester.
+       *
+       * It can be a semester-to-semester drag-n-drop, which does not have `requirementID`
+       * and does not require update the requirement.
+       * It can also be a requirement-bar-to-semester drag-n-drop, which has a `requirementID`
+       * attached to the course. We need to check the presence of this field and update requirement
+       * choice accordingly.
+       */
       set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
         const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
         editSemester(
@@ -243,12 +252,21 @@ export default defineComponent({
         updateRequirementChoices(oldChoices => {
           const choices = { ...oldChoices };
           newCourses.forEach(({ uniqueID, requirementID, crseId }) => {
-            if (requirementID == null) return;
+            if (requirementID == null) {
+              // In this case, it's not a course from requirement bar
+              return;
+            }
             const choice = choices[uniqueID] || {
               arbitraryOptIn: {},
               acknowledgedCheckerWarningOptIn: [],
               optOut: [],
             };
+            // We know the requirement must be dragged from requirements without warnings,
+            // because only those courses provide suggested courses.
+            // As a result, `acknowledgedCheckerWarningOptIn` is irrelevant and we only need to update
+            // the `optOut` field.
+            // Below, we find all the requirements it can possibly match,
+            // and only remove the requirementID since that's the one we should keep.
             const optOut = getAllEligibleRelatedRequirementIds(
               crseId,
               store.state.groupedRequirementFulfillmentReport,
