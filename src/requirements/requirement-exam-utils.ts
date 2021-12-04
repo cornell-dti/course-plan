@@ -1,8 +1,4 @@
-import examData, {
-  ExamFulfillment,
-  ExamFulfillments,
-  OTHER_COLLEGES,
-} from './data/exams/ExamCredit';
+import examData, { ExamFulfillment, ExamFulfillments } from './data/exams/ExamCredit';
 import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
 
 /** @deprecated old infra */
