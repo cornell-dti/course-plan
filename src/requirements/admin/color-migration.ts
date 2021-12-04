@@ -4,25 +4,35 @@ import { usernameCollection, subjectColorsCollection } from '../../firebase-admi
 function migrateSubjectColor(subjectColors: Record<string, string>): Record<string, string> {
   const subjectsColorsCopy = { ...subjectColors };
   for (const subject in subjectsColorsCopy) {
-    const color = subjectsColorsCopy[subject];
-    if (color === 'C4C4C4') {
-      // Gray -> Ithaca Winter
-      subjectsColorsCopy[subject] = '88B9F2';
-    } else if (color === 'DA4A4A') {
-      // Red
-      subjectsColorsCopy[subject] = 'FF3B30';
-    } else if (color === 'FFA53C') {
-      // Orange
-      subjectsColorsCopy[subject] = 'FF9500';
-    } else if (color === '58C913') {
-      // Green
-      subjectsColorsCopy[subject] = '34C759';
-    } else if (color === '139DC9') {
-      // Blue
-      subjectsColorsCopy[subject] = '007AFF';
-    } else if (color === 'C478FF') {
-      // Purple
-      subjectsColorsCopy[subject] = 'AF52DE';
+    if (subjectsColorsCopy.hasOwnProperty(subject)) {
+      switch (subjectsColorsCopy[subject]) {
+        // Gray -> Ithaca Winter
+        case 'C4C4C4':
+          subjectsColorsCopy[subject] = '88B9F2';
+          break;
+        // Red
+        case 'DA4A4A':
+          subjectsColorsCopy[subject] = 'FF3B30';
+          break;
+        // Orange
+        case 'FFA53C':
+          subjectsColorsCopy[subject] = 'FF9500';
+          break;
+        // Green
+        case '58C913':
+          subjectsColorsCopy[subject] = '34C759';
+          break;
+        // Blue
+        case '139DC9':
+          subjectsColorsCopy[subject] = '007AFF';
+          break;
+        // Purple
+        case 'C478FF':
+          subjectsColorsCopy[subject] = 'AF52DE';
+          break;
+        default:
+          break;
+      }
     }
   }
   return subjectsColorsCopy;
