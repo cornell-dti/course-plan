@@ -234,15 +234,17 @@ async function trackUsers() {
     };
   });
 
+  // Create a document in collection with current timestamp
+  const date = new Date(Date.now());
+  const docId = date.toISOString();
+
   const outputData: FirestoreTrackUsersData = {
     nameData,
     semesterData,
     onboardingData,
+    timestamp: docId,
   };
 
-  // Create a document in collection with current timestamp
-  const date = new Date(Date.now());
-  const docId = date.toISOString();
   trackUsersCollection.doc(docId).set(outputData);
 }
 
