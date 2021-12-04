@@ -1,4 +1,8 @@
-import examData, { ExamFulfillment, ExamFulfillments } from './data/exams/ExamCredit';
+import examData, {
+  ExamFulfillment,
+  ExamFulfillments,
+  OTHER_COLLEGES,
+} from './data/exams/ExamCredit';
 import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
 
 /** @deprecated old infra */
@@ -51,7 +55,8 @@ function userDataToCourses(
     if (fulfillment) {
       const courseEquivalents =
         (fulfillment.courseEquivalents &&
-          (fulfillment.courseEquivalents[college] || fulfillment.courseEquivalents.DEFAULT)) ||
+          (fulfillment.courseEquivalents[college] ||
+            fulfillment.courseEquivalents.OTHER_COLLEGES)) ||
         [];
       const excludedMajor =
         major && fulfillment.majorsExcluded && fulfillment.majorsExcluded.includes(major);
