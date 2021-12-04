@@ -4,7 +4,7 @@ import { usernameCollection, subjectColorsCollection } from '../../firebase-admi
 function migrateSubjectColor(subjectColors: Record<string, string>): Record<string, string> {
   const subjectsColorsCopy = { ...subjectColors };
   for (const subject in subjectsColorsCopy) {
-    if (subjectsColorsCopy.hasOwnProperty(subject)) {
+    if (Object.prototype.hasOwnProperty.call(subjectsColorsCopy, subject)) {
       switch (subjectsColorsCopy[subject]) {
         // Gray -> Ithaca Winter
         case 'C4C4C4':
