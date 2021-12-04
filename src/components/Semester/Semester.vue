@@ -64,7 +64,11 @@
           </button>
         </div>
       </div>
-      <div class="semester-courses" :class="{ 'semester-hidden': isSemesterMinimized }">
+      <div
+        class="semester-courses"
+        :class="{ 'semester-hidden': isSemesterMinimized }"
+        data-cyId="semester-courses"
+      >
         <draggable
           ref="droppable"
           class="draggable-semester-courses"
