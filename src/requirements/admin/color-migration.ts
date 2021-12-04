@@ -47,9 +47,7 @@ async function runOnUser(userEmail: string, runOnDB: boolean) {
     .get()
     .then(it => {
       const subjectColors = it.data() || {};
-      console.log(subjectColors);
       const newSubjectColors = migrateSubjectColor(subjectColors);
-      console.log(newSubjectColors);
       if (runOnDB) {
         subjectColorsCollection.doc(userEmail).set(newSubjectColors);
       }
