@@ -28,7 +28,6 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
 type FirestoreSemesterSeason = 'Fall' | 'Spring' | 'Summer' | 'Winter';
 type FirestoreSemester = {
   readonly year: number;
-  readonly type?: FirestoreSemesterSeason; // TODO @bshen remove & write migration script when every dev pulls from master
   readonly season: FirestoreSemesterSeason;
   readonly courses: readonly FirestoreSemesterCourse[];
 };
@@ -47,8 +46,6 @@ type FirestoreTransferExam = {
   readonly examType: TransferExamType;
   readonly score: number;
   readonly subject: string;
-  readonly optIn?: FirestoreAPIBOverriddenFulfillments;
-  readonly optOut?: FirestoreAPIBOverriddenFulfillments;
 };
 
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
@@ -202,21 +199,3 @@ type AppBottomBarCourse = {
 
 /** Map from requirement ID to option chosen */
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
-
-/** Map from course's unique ID to requirement ID */
-type AppSelectableRequirementChoices = Readonly<Record<string, string>>;
-
-/**
- * @deprecated replaced by `FirestoreOverriddenFulfillmentChoices`
- *
- * Map from course's unique ID to override options.
- */
-type AppOverriddenFulfillmentChoices = Readonly<
-  Record<
-    string,
-    {
-      readonly optIn: Record<string, Set<string>>;
-      readonly optOut: Record<string, Set<string>>;
-    }
-  >
->;
