@@ -32,7 +32,7 @@ function isOld(semester: FirestoreSemester) {
   if (semester.year < year) {
     return true;
   }
-  if (seasonToMonth(semester.season) <= month) {
+  if (semester.season && seasonToMonth(semester.season) <= month) {
     return true;
   }
   return false;
@@ -242,7 +242,7 @@ async function trackUsers() {
     nameData,
     semesterData,
     onboardingData,
-    timestamp: docId,
+    timestamp: date,
   };
 
   trackUsersCollection.doc(docId).set(outputData);
