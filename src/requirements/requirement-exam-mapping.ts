@@ -1,26 +1,41 @@
 import examData, {
-  DEFAULT_COLLEGES,
+  OTHER_COLLEGES,
   ExamFulfillment,
   ExamFulfillments,
 } from './data/exams/ExamCredit';
 import { colleges, College } from './data';
 
-type ExamRequirementsColleges = Record<number, College[]>;
-type ExamRequirements = {
-  colleges?: ExamRequirementsColleges; // if the user IS NOT in one of these colleges, the course id cannot fulfill the requirement
+type ExamRequirementsCollegeConditions = Record<number, College[]>;
+type ExamRequirementsConditions = {
+  collegeConditions?: ExamRequirementsCollegeConditions; // if the user IS NOT in one of these colleges, the course id cannot fulfill the requirement
   majorsExcluded?: string[]; // if the user IS in one of these majors, the course id cannot fulfill the requirement
 };
 
 /**
  * Flat list of exam fulfillments, i.e.
  * [
- *   { courseId: 100, minimumScore: 4, credits: 4 },
- *   { courseId: 101, minimumScore: 5, credits: 8 },
  *   {
- *     courseId: 102,
- *     courseEquivalents: { DEFAULT: [Array], EN: [Array] },
- *     minimumScore: 5,
- *     credits: 4
+ *     "courseId": 100,
+ *     "minimumScore": 4,
+ *     "credits": 4
+ *   },
+ *   {
+ *     "courseId": 101,
+ *     "minimumScore": 5,
+ *     "credits": 8
+ *   },
+ *   {
+ *     "courseId": 102,
+ *     "courseEquivalents": {
+ *       "OTHER_COLLEGES": [
+ *         351265
+ *       ],
+ *       "EN": [
+ *         359187
+ *       ]
+ *     },
+ *     "minimumScore": 5,
+ *     "credits": 4
  *   },
  *   ...
  * ]
@@ -30,12 +45,14 @@ const examFulfillmentList: ExamFulfillment[] = Object.values(examData)
   .flat(2);
 
 /**
- * Mapping from exam id to requirements info (course equivalents and exam conditions), i.e.
+ * Mapping for exams from course id to requirements info.
+ * The requirements info includes:
+ *   - for each equivalent course, the colleges for which the exam considers it a valid equivalent course
+ *   - the excluded majors
+ * i.e.
  * {
- *   "100": {},
- *   "101": {},
  *   "102": {
- *     "colleges": {
+ *     "collegeConditions": {
  *       "351265": [
  *         "AG",
  *         "AR",
@@ -53,59 +70,62 @@ const examFulfillmentList: ExamFulfillment[] = Object.values(examData)
  *   ...
  * }
  */
-export const examRequirementsMapping: Record<number, ExamRequirements> = examFulfillmentList.reduce(
-  (mapping, fulfillment) => {
-    const { courseId, courseEquivalents, majorsExcluded } = fulfillment;
+export const examRequirementsMapping: Record<
+  number,
+  ExamRequirementsConditions
+> = examFulfillmentList.reduce((mapping, fulfillment) => {
+  const { courseId, courseEquivalents, majorsExcluded } = fulfillment;
 
-    if (!courseEquivalents) {
-      // if no course equivalents, return empty mapping for exam
-      return { ...mapping, [courseId]: {} };
-    }
+  if (!courseEquivalents) {
+    // if no course equivalents, exam will never be looked up
+    return mapping;
+  }
 
-    // for each id, assign a list of colleges for which the exam can fulfill requirements
-    const nonDefaultColleges = Object.keys(courseEquivalents);
-    const collegeConditions = Object.entries(courseEquivalents).reduce(
-      (conditions: ExamRequirementsColleges, [college, courses]) => {
-        const defaultColleges = colleges.filter(c => !nonDefaultColleges.includes(c));
-        courses.forEach(course => {
-          if (college === DEFAULT_COLLEGES) {
-            conditions[course] = defaultColleges;
-            return;
-          }
-          if (!conditions[course]) conditions[course] = [];
-          if (conditions[course].includes(college)) return;
-          conditions[course] = [...conditions[course], college];
-        });
-        return conditions;
-      },
-      {}
-    );
-    if (majorsExcluded) {
-      return {
-        ...mapping,
-        [courseId]: {
-          colleges: collegeConditions,
-          majorsExcluded,
-        },
-      };
-    }
+  // for each id, assign a list of colleges for which the exam can fulfill requirements
+  const definedColleges = new Set(Object.keys(courseEquivalents));
+  const otherColleges = colleges.filter(c => !definedColleges.has(c)); // explicit expansion of OTHER_COLLEGES
+  const collegeConditions = Object.entries(courseEquivalents).reduce(
+    (conditions: ExamRequirementsCollegeConditions, [college, courses]) => {
+      courses.forEach(course => {
+        if (college === OTHER_COLLEGES) {
+          conditions[course] = otherColleges;
+          return;
+        }
+        if (!conditions[course]) conditions[course] = [];
+        if (conditions[course].includes(college)) return;
+        conditions[course] = [...conditions[course], college];
+      });
+      return conditions;
+    },
+    {}
+  );
+
+  if (!majorsExcluded) {
+    // if no majors excluded, just add the college conditions
     return {
       ...mapping,
       [courseId]: {
-        colleges: collegeConditions,
+        collegeConditions,
       },
     };
-  },
-  {}
-);
+  }
+
+  return {
+    ...mapping,
+    [courseId]: {
+      collegeConditions,
+      majorsExcluded,
+    },
+  };
+}, {});
 
 export const examToCourseMapping: Record<number, string[]> = Object.entries(
   examRequirementsMapping
 ).reduce((mapping: Record<number, string[]>, [id, conditions]) => {
-  if (!conditions.colleges) return { ...mapping, [id]: [] };
+  if (!conditions.collegeConditions) return { ...mapping, [id]: [] };
   return {
     ...mapping,
-    [id]: Object.keys(conditions.colleges),
+    [id]: Object.keys(conditions.collegeConditions),
   };
 }, {});
 
