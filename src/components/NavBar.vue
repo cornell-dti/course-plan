@@ -10,23 +10,23 @@
         <div class="navbar-iconWrapper course-plan-logo no-hover">
           <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
         </div>
-        <div class="navbar-iconWrapper hairline no-hover">
-          <img class="navbar-icon" src="@/assets/images/navbar/hairline.svg" />
+        <div class="navbar-iconWrapper hairlineWrapper no-hover">
+          <img class="navbar-icon hairline" src="@/assets/images/navbar/hairline.svg" />
         </div>
-        <div class="navbar-buttonWrapper" @click="openPlan" data-cyId="openPlan">
-          <button class="navbar-iconWrapper desktop plan-icon full-opacity-on-hover" />
+        <div class="navbar-buttonWrapper desktop" @click="openPlan" data-cyId="openPlan">
+          <button class="navbar-iconWrapper plan-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Plan</span>
           </div>
         </div>
-        <div class="navbar-buttonWrapper" @click="openTools" data-cyId="openTools">
-          <button class="navbar-iconWrapper desktop tools-icon full-opacity-on-hover" />
+        <div class="navbar-buttonWrapper desktop" @click="openTools" data-cyId="openTools">
+          <button class="navbar-iconWrapper tools-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Tools</span>
           </div>
         </div>
-        <div class="navbar-buttonWrapper" @click="editProfile" data-cyId="editProfile">
-          <button class="navbar-iconWrapper desktop profile-icon full-opacity-on-hover" />
+        <div class="navbar-buttonWrapper desktop" @click="editProfile" data-cyId="editProfile">
+          <button class="navbar-iconWrapper profile-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Profile</span>
           </div>
@@ -48,6 +48,14 @@
           <span class="nav-mobile-button-text">
             {{ isDisplayingRequirementsMobile ? 'View Schedule' : 'View Requirements' }}
           </span>
+        </button>
+        <button class="nav-mobile-button" data-cyId="navbar-openPlan" @click="openPlan">
+          <div class="navbar-iconWrapper plan-mobile-icon" />
+          <span class="nav-mobile-button-text">Plan</span>
+        </button>
+        <button class="nav-mobile-button" data-cyId="navbar-openTools" @click="openTools">
+          <div class="navbar-iconWrapper tools-mobile-icon" />
+          <span class="nav-mobile-button-text">Tools</span>
         </button>
         <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="editProfile">
           <div class="navbar-iconWrapper profile-mobile-icon" />
@@ -175,10 +183,13 @@ $mobile-navbar-height: 4.5rem;
     color: #808080;
   }
 
+  .hairlineWrapper {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
   .hairline {
-    display: flex;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    width: 100%;
   }
 
   .plan-icon {
@@ -239,6 +250,15 @@ $mobile-navbar-height: 4.5rem;
       padding: 1rem;
       text-align: center;
     }
+  }
+
+  // Need to add plan-mobile-icon
+  .plan-mobile-icon {
+    background-image: url('@/assets/images/navbar/toolbox-mobile-icon.svg');
+  }
+
+  .tools-mobile-icon {
+    background-image: url('@/assets/images/navbar/toolbox-mobile-icon.svg');
   }
 
   .profile-mobile-icon {
@@ -335,6 +355,11 @@ $mobile-navbar-height: 4.5rem;
   }
 
   .desktop {
+    display: none;
+  }
+
+  .hairline,
+  .hairlineWrapper {
     display: none;
   }
 

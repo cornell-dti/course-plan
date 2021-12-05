@@ -12,6 +12,8 @@
 </template>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .toolsContainer {
   background-color: #f6fafc;
   padding: 3rem 7rem;
@@ -24,6 +26,20 @@
   &-subtitle {
     font-size: 24px;
     color: #757575;
+  }
+}
+
+@media only screen and (max-width: $medium-breakpoint) {
+  .toolsContainer {
+    padding: 5rem 4rem;
+
+    &-title {
+      font-size: 30px;
+    }
+
+    &-subtitle {
+      font-size: 12px;
+    }
   }
 }
 </style>
