@@ -92,7 +92,7 @@ export default defineComponent({
             return;
           }
 
-          const currentlyMatchedRequirements = store.state.requirementFulfillmentGraph.getConnectedRequirementsFromCourse(
+          const currentlyMatchedRequirements = store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse(
             { uniqueId: course.uniqueID }
           );
           if (currentlyMatchedRequirements.includes(this.subReqId)) {
@@ -102,7 +102,7 @@ export default defineComponent({
 
           const currentRequirementAllowDoubleCounting =
             store.state.userRequirementsMap[this.subReqCourseId]?.allowCourseDoubleCounting;
-          const allOtherRequirementsAllowDoubleCounting = store.state.requirementFulfillmentGraph
+          const allOtherRequirementsAllowDoubleCounting = store.state.safeRequirementFulfillmentGraph
             .getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
             .every(reqID => store.state.userRequirementsMap[reqID]?.allowCourseDoubleCounting);
           if (!currentRequirementAllowDoubleCounting && !allOtherRequirementsAllowDoubleCounting) {

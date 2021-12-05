@@ -124,11 +124,27 @@ type RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements = Req
     readonly [name: string]: RequirementFulfillmentStatisticsWithCourses;
   };
 };
+type MixedRequirementFulfillmentStatistics = {
+  readonly fulfilledBy: 'courses' | 'credits' | 'self-check';
+  readonly safeCourses: readonly (readonly CourseTaken[])[];
+  readonly dangerousCourses: readonly (readonly CourseTaken[])[];
+  readonly safeMinCountFulfilled: number;
+  readonly dangerousMinCountFulfilled: number;
+  readonly safeMinCountFulfilled: number;
+  readonly dangerousMinCountFulfilled: number;
+  readonly minCountRequired: number;
+};
+type MixedRequirementFulfillmentStatisticsWithAdditionalRequirements = MixedRequirementFulfillmentStatistics & {
+  readonly additionalRequirements?: {
+    readonly [name: string]: MixedRequirementFulfillmentStatistics;
+  };
+};
 
 type RequirementFulfillment = {
   /** The original requirement object. */
   readonly requirement: RequirementWithIDSourceType;
-} & RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements;
+  readonly fulfillment: MixedRequirementFulfillmentStatisticsWithAdditionalRequirements;
+};
 
 type GroupedRequirementFulfillmentReport = {
   readonly groupName: 'College' | 'Major' | 'Minor' | 'Grad';
