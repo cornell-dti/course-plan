@@ -81,7 +81,7 @@ export default defineComponent({
   props: {
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
   },
-  emits: ['editProfile', 'toggleRequirementsMobile'],
+  emits: ['openPlan', 'openTools', 'editProfile', 'toggleRequirementsMobile'],
   data() {
     return {
       menuOpen: false,
@@ -94,6 +94,14 @@ export default defineComponent({
         .auth()
         .signOut()
         .then(() => window.location.reload());
+    },
+    openPlan() {
+      this.menuOpen = false;
+      this.$emit('openPlan');
+    },
+    openTools() {
+      this.menuOpen = false;
+      this.$emit('openTools');
     },
     editProfile() {
       this.menuOpen = false;
