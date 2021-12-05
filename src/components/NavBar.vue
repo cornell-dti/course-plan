@@ -11,6 +11,16 @@
           <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
         </div>
         <button
+          class="navbar-iconWrapper desktop plan-icon full-opacity-on-hover"
+          @click="openPlan"
+          data-cyId="openPlan"
+        ></button>
+        <button
+          class="navbar-iconWrapper desktop tools-icon full-opacity-on-hover"
+          @click="openTools"
+          data-cyId="openTools"
+        ></button>
+        <button
           class="navbar-iconWrapper desktop profile-icon full-opacity-on-hover"
           @click="editProfile"
           data-cyId="editProfile"
@@ -126,6 +136,26 @@ $mobile-navbar-height: 4.5rem;
 
     &:not(:first-child) {
       margin-top: 2.25rem;
+    }
+  }
+
+  .plan-icon {
+    background-image: url('@/assets/images/navbar/planIcon.svg');
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-image: url('@/assets/images/navbar/planIconBlue.svg');
+    }
+  }
+
+  .tools-icon {
+    background-image: url('@/assets/images/navbar/toolboxIcon.svg');
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-image: url('@/assets/images/navbar/toolboxIconBlue.svg');
     }
   }
 
