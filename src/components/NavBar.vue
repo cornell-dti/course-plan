@@ -10,21 +10,27 @@
         <div class="navbar-iconWrapper course-plan-logo no-hover">
           <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
         </div>
-        <button
-          class="navbar-iconWrapper desktop plan-icon full-opacity-on-hover"
-          @click="openPlan"
-          data-cyId="openPlan"
-        ></button>
-        <button
-          class="navbar-iconWrapper desktop tools-icon full-opacity-on-hover"
-          @click="openTools"
-          data-cyId="openTools"
-        ></button>
-        <button
-          class="navbar-iconWrapper desktop profile-icon full-opacity-on-hover"
-          @click="editProfile"
-          data-cyId="editProfile"
-        ></button>
+        <div class="navbar-iconWrapper hairline no-hover">
+          <img class="navbar-icon" src="@/assets/images/navbar/hairline.svg" />
+        </div>
+        <div class="navbar-buttonWrapper" @click="openPlan" data-cyId="openPlan">
+          <button class="navbar-iconWrapper desktop plan-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Plan</span>
+          </div>
+        </div>
+        <div class="navbar-buttonWrapper" @click="openTools" data-cyId="openTools">
+          <button class="navbar-iconWrapper desktop tools-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Tools</span>
+          </div>
+        </div>
+        <div class="navbar-buttonWrapper" @click="editProfile" data-cyId="editProfile">
+          <button class="navbar-iconWrapper desktop profile-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Profile</span>
+          </div>
+        </div>
       </div>
       <div class="navbar-bottom">
         <button
@@ -129,44 +135,54 @@ $mobile-navbar-height: 4.5rem;
   &-iconWrapper {
     width: $icon-size;
     height: $icon-size;
-    cursor: pointer;
     background-repeat: no-repeat;
     background-size: auto;
     background-position: center;
+  }
 
-    &:not(:first-child) {
-      margin-top: 2.25rem;
+  &-buttonWrapper {
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    &:hover,
+    &:focus,
+    &:active {
+      .navbar-iconText {
+        color: #0d7acb;
+      }
+      .plan-icon {
+        background-image: url('@/assets/images/navbar/planIconBlue.svg');
+      }
+      .tools-icon {
+        background-image: url('@/assets/images/navbar/toolboxIconBlue.svg');
+      }
+      .profile-icon {
+        background-image: url('@/assets/images/navbar/profileIconBlue.svg');
+      }
     }
+  }
+
+  &-iconText {
+    display: flex;
+    justify-content: center;
+    color: #808080;
+  }
+
+  .hairline {
+    display: flex;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 
   .plan-icon {
     background-image: url('@/assets/images/navbar/planIcon.svg');
-
-    &:hover,
-    &:focus,
-    &:active {
-      background-image: url('@/assets/images/navbar/planIconBlue.svg');
-    }
   }
 
   .tools-icon {
     background-image: url('@/assets/images/navbar/toolboxIcon.svg');
-
-    &:hover,
-    &:focus,
-    &:active {
-      background-image: url('@/assets/images/navbar/toolboxIconBlue.svg');
-    }
   }
 
   .profile-icon {
     background-image: url('@/assets/images/navbar/profileIcon.svg');
-
-    &:hover,
-    &:focus,
-    &:active {
-      background-image: url('@/assets/images/navbar/profileIconBlue.svg');
-    }
   }
 
   .requirements-bar {
