@@ -30,3 +30,5 @@ export {
   updateRequirementChoices,
   deleteCourseFromRequirementChoices,
 } from './override-fulfillment-choices';
+
+export { default as retrieveAnalytics } from './analytics';

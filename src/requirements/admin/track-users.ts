@@ -22,6 +22,8 @@ function seasonToMonth(season: string) {
   }
 }
 
+// true if a semester is an "old semester," i.e. if a semester on CoursePlan has already passed in real life
+// the idea is that old semesters and new semesters represent whether users are planning in the future or just uploading courses
 function isOld(semester: FirestoreSemester) {
   const currentTime = new Date();
   const month = currentTime.getMonth() + 1;
@@ -247,15 +249,17 @@ async function trackUsers() {
     };
   });
 
+  // Create a document in collection with current timestamp
+  const date = new Date(Date.now());
+  const docId = date.toISOString();
+
   const outputData: FirestoreTrackUsersData = {
     nameData,
     semesterData,
     onboardingData,
+    timestamp: date,
   };
 
-  // Create a document in collection with current timestamp
-  const date = new Date(Date.now());
-  const docId = date.toISOString();
   trackUsersCollection.doc(docId).set(outputData);
 }
 

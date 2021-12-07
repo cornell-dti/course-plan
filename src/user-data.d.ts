@@ -91,6 +91,7 @@ type FirestoreTrackUsersData = {
   nameData: FirestoreTrackUsersNameData;
   semesterData: FirestoreTrackUsersSemesterData;
   onboardingData: FirestoreTrackUsersOnboardingData;
+  timestamp: Date;
 };
 
 type FirestoreTrackUsersNameData = {
