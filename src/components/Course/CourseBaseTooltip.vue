@@ -96,7 +96,7 @@ export default defineComponent({
   border-width: 0.313rem;
   border-style: solid;
   border-color: transparent transparent white transparent;
-  z-index: 3;
+  z-index: 4;
 }
 
 /** The element that produces a gray triangle */

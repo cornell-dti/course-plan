@@ -10,6 +10,7 @@ import humanEcologyRequirements from './colleges/he';
 import ilrRequirements from './colleges/il';
 
 import aemRequirements from './majors/aem';
+import asRequirements from './majors/as';
 import astroRequrements from './majors/astro';
 import bioRequirements from './majors/bio';
 import bioEngineeringRequirements from './majors/be';
@@ -114,6 +115,11 @@ const json: RequirementsJson = {
       name: 'Applied Economics and Management',
       schools: ['AG', 'BU'],
       requirements: aemRequirements,
+    },
+    AS: {
+      name: 'Atmospheric Science',
+      schools: ['AG'],
+      requirements: asRequirements,
     },
     ASTRO: {
       name: 'Astronomy',
