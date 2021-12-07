@@ -3,7 +3,7 @@ import { checkNotNull } from '../../utilities';
 import {
   semestersCollection,
   toggleableRequirementChoicesCollection,
-  selectableRequirementChoicesCollection,
+  overriddenFulfillmentChoicesCollection,
   onboardingDataCollection,
 } from '../../firebase-admin-config';
 import { getCourseCodesArray } from '../requirement-frontend-computation';
@@ -14,7 +14,7 @@ interface UserDataOnAdmin {
   readonly courses: readonly CourseTaken[];
   readonly onboardingData: AppOnboardingData;
   readonly toggleableRequirementChoices: Readonly<Record<string, string>>;
-  readonly selectableRequirementChoices: Readonly<Record<string, string>>;
+  readonly overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices;
 }
 
 interface UserRequirementDataOnAdmin extends UserDataOnAdmin {
@@ -26,7 +26,7 @@ export async function getUserDataOnAdmin(userEmail: string): Promise<UserDataOnA
   const [
     semesters,
     toggleableRequirementChoices,
-    selectableRequirementChoices,
+    overriddenFulfillmentChoices,
     onboardingData,
   ] = await Promise.all([
     semestersCollection
@@ -37,7 +37,7 @@ export async function getUserDataOnAdmin(userEmail: string): Promise<UserDataOnA
       .doc(userEmail)
       .get()
       .then(it => it.data() || {}),
-    selectableRequirementChoicesCollection
+    overriddenFulfillmentChoicesCollection
       .doc(userEmail)
       .get()
       .then(it => it.data() || {}),
@@ -49,7 +49,7 @@ export async function getUserDataOnAdmin(userEmail: string): Promise<UserDataOnA
 
   const courses = getCourseCodesArray(semesters, onboardingData);
 
-  return { courses, onboardingData, toggleableRequirementChoices, selectableRequirementChoices };
+  return { courses, onboardingData, toggleableRequirementChoices, overriddenFulfillmentChoices };
 }
 
 export default async function getUserRequirementDataOnAdmin(
@@ -59,7 +59,7 @@ export default async function getUserRequirementDataOnAdmin(
     courses,
     onboardingData,
     toggleableRequirementChoices,
-    selectableRequirementChoices,
+    overriddenFulfillmentChoices,
   } = await getUserDataOnAdmin(userEmail);
 
   const {
@@ -69,15 +69,14 @@ export default async function getUserRequirementDataOnAdmin(
     courses,
     onboardingData,
     toggleableRequirementChoices,
-    selectableRequirementChoices,
-    {}
+    overriddenFulfillmentChoices
   );
 
   return {
     courses,
     onboardingData,
     toggleableRequirementChoices,
-    selectableRequirementChoices,
+    overriddenFulfillmentChoices,
     userRequirements,
     requirementFulfillmentGraph,
   };

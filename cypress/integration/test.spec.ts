@@ -193,3 +193,28 @@ it('Add a course with the new add modal (CS 1110)', () => {
   cy.get('[data-cyId=requirements-displayToggle]').last().click();
   cy.get('[data-cyId=reqcourse-code]').first().contains('CS 1110');
 });
+
+// Confirm that the minimize semester button can hide/show semester
+it('Minimize a semester', () => {
+  // open add modal and try to add CS 3110
+  cy.get('[data-cyId=semester-addCourse]').click();
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 3110');
+  cy.get('[data-cyId=newCourse-searchResult]').first().click();
+  cy.get('[data-cyId=modal-button]').click();
+
+  // click minimize semester button
+  cy.get('[data-cyId=minimizeSemester]').click();
+
+  // confirm semester is hidden, course is invisible, add course modal is invisible
+  cy.get('[data-cyId=semester-courses]').should('have.class', 'semester-hidden');
+  cy.get('[data-cyId=semester-course]').should('not.be.visible');
+  cy.get('[data-cyId=semester-addCourse]').should('not.be.visible');
+
+  // click minimize semester button (expand)
+  cy.get('[data-cyId=minimizeSemester]').click();
+
+  // confirm semester is shown, course is visible, add course modal is visible
+  cy.get('[data-cyId=semester-courses]').should('not.have.class', 'semester-hidden');
+  cy.get('[data-cyId=semester-course]').should('be.visible');
+  cy.get('[data-cyId=semester-addCourse]').should('be.visible');
+});

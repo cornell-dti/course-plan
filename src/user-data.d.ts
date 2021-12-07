@@ -28,22 +28,15 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
 type FirestoreSemesterSeason = 'Fall' | 'Spring' | 'Summer' | 'Winter';
 type FirestoreSemester = {
   readonly year: number;
-  readonly type?: FirestoreSemesterSeason; // TODO @bshen remove & write migration script when every dev pulls from master
   readonly season: FirestoreSemesterSeason;
   readonly courses: readonly FirestoreSemesterCourse[];
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
-type FirestoreAPIBOverriddenFulfillments = {
-  // Values are slot names
-  readonly [requirementName: string]: readonly string[];
-};
 type FirestoreAPIBExam = {
   readonly type: 'AP' | 'IB';
   readonly score: number;
   readonly subject: string;
-  readonly optIn?: FirestoreAPIBOverriddenFulfillments;
-  readonly optOut?: FirestoreAPIBOverriddenFulfillments;
 };
 
 /** Represents the name of an exam a student can take for transfer credit */
@@ -53,8 +46,6 @@ type FirestoreTransferExam = {
   readonly examType: TransferExamType;
   readonly score: number;
   readonly subject: string;
-  readonly optIn?: FirestoreAPIBOverriddenFulfillments;
-  readonly optOut?: FirestoreAPIBOverriddenFulfillments;
 };
 
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
@@ -94,6 +85,38 @@ type FirestoreUserData = {
   readonly uniqueIncrementer: number;
   readonly userData: FirestoreOnboardingUserData;
   // TODO: add overriddenFulfillmentChoices once we connect new requirement flow to prod.
+};
+
+type FirestoreTrackUsersData = {
+  nameData: FirestoreTrackUsersNameData;
+  semesterData: FirestoreTrackUsersSemesterData;
+  onboardingData: FirestoreTrackUsersOnboardingData;
+};
+
+type FirestoreTrackUsersNameData = {
+  totalUsers: number;
+};
+
+type FirestoreTrackUsersSemesterData = {
+  totalSemesters: number;
+  averageNumberSemesters: number;
+  averageNumberOldSemesters: number;
+  averageNumberNewSemesters: number;
+};
+
+type FirestoreTrackUsersOnboardingData = {
+  undergradUsers: number;
+  gradUsers: number;
+  undergradAndGradUsers: number;
+  majorFrequences: { readonly [group: string]: number };
+  minorFrequencies: { readonly [group: string]: number };
+  collegeFrequencies: { readonly [group: string]: number };
+  graduateProgramFrequencies: { readonly [group: string]: number };
+  averageNumberUndergradMajors: number;
+  averageNumberUndergradMinors: number;
+  averageNumberUndergradAPIBExams: number;
+  entranceYearFrequencies: { readonly [group: string]: number };
+  gradYearFrequencies: { readonly [group: string]: number };
 };
 
 interface CornellCourseRosterCourse {
@@ -175,21 +198,3 @@ type AppBottomBarCourse = {
 
 /** Map from requirement ID to option chosen */
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
-
-/** Map from course's unique ID to requirement ID */
-type AppSelectableRequirementChoices = Readonly<Record<string, string>>;
-
-/**
- * @deprecated replaced by `FirestoreOverriddenFulfillmentChoices`
- *
- * Map from course's unique ID to override options.
- */
-type AppOverriddenFulfillmentChoices = Readonly<
-  Record<
-    string,
-    {
-      readonly optIn: Record<string, Set<string>>;
-      readonly optOut: Record<string, Set<string>>;
-    }
-  >
->;
