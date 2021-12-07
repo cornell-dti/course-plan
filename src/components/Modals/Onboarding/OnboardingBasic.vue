@@ -153,7 +153,10 @@ export default defineComponent({
   components: { OnboardingBasicMultiDropdown, OnboardingBasicSingleDropdown },
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
   },
   emits: {
     updateBasic(
@@ -188,7 +191,7 @@ export default defineComponent({
       placeholderText,
       gradYear: this.onboardingData.gradYear,
       entranceYear: this.onboardingData.entranceYear,
-      collegeAcronym: this.onboardingData.college ? this.onboardingData.college : '',
+      collegeAcronym: this.onboardingData.college ?? '',
       majorAcronyms,
       minorAcronyms,
       gradAcronym: this.onboardingData.grad ? this.onboardingData.grad : '',
@@ -199,9 +202,11 @@ export default defineComponent({
   },
   computed: {
     colleges(): Readonly<Record<string, string>> {
-      return Object.fromEntries(
-        Object.entries(reqsData.college).map(([key, { name }]) => [key, name])
-      );
+      const base = Object.entries(reqsData.college)
+        .filter(([abr, _]) => !abr.startsWith('AS'))
+        .map(([key, { name }]) => [key, name]);
+      base.push(['AS', 'Arts and Sciences']);
+      return Object.fromEntries(base);
     },
     majors(): Readonly<Record<string, string>> {
       const majors: Record<string, string> = {};
@@ -243,6 +248,10 @@ export default defineComponent({
   },
   methods: {
     updateBasic() {
+      if (this.collegeAcronym === 'AS') {
+        const year = parseInt(this.entranceYear);
+        this.collegeAcronym = year < 2020 ? 'AS1' : 'AS2';
+      }
       this.$emit(
         'updateBasic',
         this.gradYear,
@@ -251,7 +260,11 @@ export default defineComponent({
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
         this.gradAcronym,
-        { firstName: this.firstName, middleName: this.middleName, lastName: this.lastName }
+        {
+          firstName: this.firstName,
+          middleName: this.middleName,
+          lastName: this.lastName,
+        }
       );
     },
     // Clear a major if a new college is selected and the major is not in it
