@@ -143,7 +143,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import { clickOutside, getCurrentYear } from '@/utilities';
+import { clickOutside, getCollegeFullName, getCurrentYear } from '@/utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -203,17 +203,20 @@ export default defineComponent({
   computed: {
     colleges(): Readonly<Record<string, string>> {
       const base = Object.entries(reqsData.college)
-        .filter(([abr, _]) => !abr.startsWith('AS'))
+        .filter(college => !college[0].startsWith('AS'))
         .map(([key, { name }]) => [key, name]);
-      base.push(['AS', 'Arts and Sciences']);
+      base.push(['AS', getCollegeFullName('AS')]);
+      base.sort((c1, c2) => c1[1].localeCompare(c2[1]));
+      console.log(base);
       return Object.fromEntries(base);
     },
     majors(): Readonly<Record<string, string>> {
       const majors: Record<string, string> = {};
       const majorJSON = reqsData.major;
+      const acr = this.collegeAcronym.replace('AS', 'AS2');
       Object.keys(majorJSON).forEach(key => {
         // only show majors for schools the user is in
-        if (majorJSON[key].schools.includes(this.collegeAcronym)) {
+        if (majorJSON[key].schools.includes(acr)) {
           majors[key] = majorJSON[key].name;
         }
       });
@@ -248,10 +251,6 @@ export default defineComponent({
   },
   methods: {
     updateBasic() {
-      if (this.collegeAcronym === 'AS') {
-        const year = parseInt(this.entranceYear);
-        this.collegeAcronym = year < 2020 ? 'AS1' : 'AS2';
-      }
       this.$emit(
         'updateBasic',
         this.gradYear,

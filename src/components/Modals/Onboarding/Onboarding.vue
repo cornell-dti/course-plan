@@ -210,10 +210,15 @@ export default defineComponent({
   },
   methods: {
     submitOnboarding() {
+      let revised = { ...this.onboarding };
+      if (revised.college === 'AS') {
+        const year = Number.parseInt(revised.entranceYear, 10);
+        revised.college = year < 2020 ? 'AS1' : 'AS2';
+      }
       this.clearTransferCreditIfGraduate();
-      setOnboardingData(this.name, this.onboarding);
+      setOnboardingData(this.name, revised);
       // indicates first time user onboarding
-      if (!this.isEditingProfile) populateSemesters(this.onboarding);
+      if (!this.isEditingProfile) populateSemesters(revised);
       this.$emit('onboard');
     },
     goBack() {

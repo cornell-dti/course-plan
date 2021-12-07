@@ -46,6 +46,9 @@ export function getCurrentYear(): number {
 
 export function getCollegeFullName(acronym: string | undefined): string {
   // Return empty string if college is not in requirementJSON
+  if (acronym === 'AS') {
+    return 'Arts and Sciences';
+  }
   const college = acronym ? requirementJSON.college[acronym] : null;
   return college ? college.name : '';
 }
