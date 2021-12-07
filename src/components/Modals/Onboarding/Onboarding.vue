@@ -210,7 +210,7 @@ export default defineComponent({
   },
   methods: {
     submitOnboarding() {
-      let revised = { ...this.onboarding };
+      const revised = { ...this.onboarding };
       if (revised.college === 'AS') {
         const year = Number.parseInt(revised.entranceYear, 10);
         revised.college = year < 2020 ? 'AS1' : 'AS2';

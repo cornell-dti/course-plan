@@ -207,7 +207,6 @@ export default defineComponent({
         .map(([key, { name }]) => [key, name]);
       base.push(['AS', getCollegeFullName('AS')]);
       base.sort((c1, c2) => c1[1].localeCompare(c2[1]));
-      console.log(base);
       return Object.fromEntries(base);
     },
     majors(): Readonly<Record<string, string>> {
