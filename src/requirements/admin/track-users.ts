@@ -22,6 +22,8 @@ function seasonToMonth(season: string) {
   }
 }
 
+// true if a semester is an "old semester," i.e. if a semester on CoursePlan has already passed in real life
+// the idea is that old semesters and new semesters represent whether users are planning in the future or just uploading courses
 function isOld(semester: FirestoreSemester) {
   const currentTime = new Date();
   const month = currentTime.getMonth() + 1;
@@ -32,7 +34,7 @@ function isOld(semester: FirestoreSemester) {
   if (semester.year < year) {
     return true;
   }
-  if (semester.season && seasonToMonth(semester.season) <= month) {
+  if (seasonToMonth(semester.season) <= month) {
     return true;
   }
   return false;
