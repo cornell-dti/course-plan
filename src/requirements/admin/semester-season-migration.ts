@@ -15,7 +15,7 @@ async function runOnUser(userEmail: string, runOnDB: boolean) {
     });
 
   // remove semester type from semesters
-  const newSemesters = semesters.map(({ type, ...semester }) => semester);
+  const newSemesters = semesters.map(({ type: _, ...semester }) => semester);
   console.log(semesters, '=>', newSemesters);
 
   if (runOnDB) {

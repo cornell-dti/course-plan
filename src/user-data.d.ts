@@ -28,6 +28,7 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
 type FirestoreSemesterSeason = 'Fall' | 'Spring' | 'Summer' | 'Winter';
 type FirestoreSemester = {
   readonly year: number;
+  readonly type?: FirestoreSemesterSeason; // TODO @bshen remove after script is run
   readonly season: FirestoreSemesterSeason;
   readonly courses: readonly FirestoreSemesterCourse[];
 };
