@@ -42,6 +42,20 @@ export default defineComponent({
   position: relative;
   height: 5.625rem;
 
+  border-style: dashed;
+  border-color: $borderGray;
+  border-width: 2px 2px 2px 0;
+  border-radius: 0.5rem;
+
+  &:hover,
+  &:active,
+  &.focus {
+    border-color: $yuxuanBlue;
+    background: rgba(0, 0, 0, 0.03);
+    color: $yuxuanBlue;
+    cursor: grab;
+  }
+
   &--min {
     height: 2.125rem;
   }
@@ -53,26 +67,14 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: -2px 0;
   }
 
   &-content {
-    border-style: dashed;
-    border-color: $borderGray;
-    border-width: 2px 2px 2px 0;
-    border-radius: 0 0.5rem 0.5rem 0;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    &:hover,
-    &:active,
-    &.focus {
-      border-color: $yuxuanBlue;
-      background: rgba(0, 0, 0, 0.03);
-      color: $yuxuanBlue;
-      cursor: pointer;
-    }
   }
 
   &-name {
