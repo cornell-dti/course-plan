@@ -239,7 +239,6 @@ export default defineComponent({
         return this.courses;
       },
       set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
-        // TODO: does this need to be updated? probably
         const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
         editSemester(
           this.year,
