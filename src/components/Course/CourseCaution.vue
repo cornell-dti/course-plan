@@ -120,19 +120,26 @@ export default defineComponent({
     },
     placeholderWarningSemesterText(): string {
       if (isPlaceholderCourse(this.course)) {
-        switch (this.course.startingSemester) {
-          case 1:
-            return '1st';
-          case 2:
-            return '2nd';
-          case 3:
-            return '3rd';
-          default:
-            return `${this.course.startingSemester}th`;
-        }
+        return this.formatOrdinals(this.course.startingSemester);
       }
 
       return '';
+    },
+  },
+  methods: {
+    formatOrdinals(n: number): string {
+      const rules = new Intl.PluralRules('en-US', { type: 'ordinal' });
+
+      const suffixes = new Map([
+        ['one', 'st'],
+        ['two', 'nd'],
+        ['few', 'rd'],
+        ['other', 'th'],
+      ]);
+
+      const rule = rules.select(n);
+      const suffix = suffixes.get(rule);
+      return `${n}${suffix}`;
     },
   },
 });
