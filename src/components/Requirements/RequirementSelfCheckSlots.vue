@@ -21,7 +21,6 @@ import IncompleteSelfCheck from '@/components/Requirements/IncompleteSelfCheck.v
 
 import store from '@/store';
 import {
-  convertFirestoreSemesterCourseToCourseTaken,
   getMatchedRequirementFulfillmentSpecification,
   courseIsAPIB,
 } from '@/requirements/requirement-frontend-utils';
@@ -39,13 +38,9 @@ export default defineComponent({
   computed: {
     fulfilledSelfCheckCourses(): readonly CourseTaken[] {
       // selectedCourses are courses that fulfill the requirement based on user-choice
-      // they are taken from derivedSelectableRequirementData
-      const selectedFirestoreCourses =
-        store.state.derivedSelectableRequirementData.requirementToCoursesMap[
-          this.requirementFulfillment.requirement.id
-        ] || [];
-      const selectedCourses = selectedFirestoreCourses.map(
-        convertFirestoreSemesterCourseToCourseTaken
+      // they are taken from requirement graph
+      const selectedCourses = store.state.requirementFulfillmentGraph.getConnectedCoursesFromRequirement(
+        this.requirementFulfillment.requirement.id
       );
 
       // fulfillableCourses are the courses that can fulfill this requirement
