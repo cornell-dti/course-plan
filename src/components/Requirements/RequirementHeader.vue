@@ -217,7 +217,7 @@ export default defineComponent({
     requirementFulfilled(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
-        [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements || {})].forEach(
+        [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
           reqOrNestedReq => {
             if (reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired)
               fulfilled += 1;
@@ -231,7 +231,7 @@ export default defineComponent({
       let totalRequired = 0;
       this.req.reqs.forEach(req => {
         if (req.fulfillment.fulfilledBy === 'self-check') return;
-        totalRequired += 1 + Object.values(req.fulfillment.additionalRequirements || {}).length;
+        totalRequired += 1 + Object.values(req.fulfillment.additionalRequirements ?? {}).length;
       });
       return totalRequired;
     },
@@ -239,7 +239,7 @@ export default defineComponent({
     totalRequirementProgress(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
-        [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements || {})].forEach(
+        [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
           reqOrNestedReq => {
             if (reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired) {
               fulfilled += 1;
