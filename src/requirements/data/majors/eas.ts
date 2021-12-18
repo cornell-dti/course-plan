@@ -1,5 +1,9 @@
 import { CollegeOrMajorRequirement } from '../../types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import {
+  courseMatchesCode,
+  includesWithSingleRequirement,
+  includesWithSubRequirements,
+} from '../checkers-common';
 
 const easRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -120,7 +124,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
     fulfilledBy: 'credits',
     perSlotMinCount: [3],
-    checker: [_ => true],
+    checker: [course => courseMatchesCode(course, 'EAS ****')],
     checkerWarning: 'We do not check that provided courses fulfill the Field Work requirement',
   },
   {
