@@ -64,7 +64,7 @@ export default async function getUserRequirementDataOnAdmin(
 
   const {
     userRequirements,
-    requirementFulfillmentGraph,
+    dangerousRequirementFulfillmentGraph: requirementFulfillmentGraph,
   } = buildRequirementFulfillmentGraphFromUserData(
     courses,
     onboardingData,

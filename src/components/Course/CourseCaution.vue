@@ -53,13 +53,14 @@ const getCourseCautions = (
   semesterIndex: number
 ): CourseCautions => {
   const {
-    requirementFulfillmentGraph,
+    safeRequirementFulfillmentGraph,
     derivedCoursesData: { duplicatedCourseCodeSet, courseToSemesterMap },
   } = store.state;
   const noMatchedRequirement =
     !isPlaceholderCourse(course) &&
-    requirementFulfillmentGraph.getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
-      .length === 0;
+    safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse({
+      uniqueId: course.uniqueID,
+    }).length === 0;
   const semesterOfUserCourse = courseToSemesterMap[course.uniqueID];
   const typicallyOfferedWarning =
     !isPlaceholderCourse(course) &&

@@ -118,10 +118,10 @@ export default defineComponent({
        * the nested requirement inside compound requirement the user chooses to display.
        */
       const matchedCourses = (
-        (this.requirementFulfillment.additionalRequirements || {})[
+        (this.requirementFulfillment.fulfillment.additionalRequirements || {})[
           this.compoundRequirementChoice
-        ] || this.requirementFulfillment
-      ).courses;
+        ] || this.requirementFulfillment.fulfillment
+      ).dangerousCourses;
 
       const allTakenCourseIds: ReadonlySet<number> = new Set(
         matchedCourses.flat().map(course => course.courseId)

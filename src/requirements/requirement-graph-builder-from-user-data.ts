@@ -1,8 +1,10 @@
 import { CREDITS_COURSE_ID } from './data/constants';
 import { getUserRequirements } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
-import buildRequirementFulfillmentGraph, {
+import {
   BuildRequirementFulfillmentGraphParameters,
+  buildRequirementFulfillmentGraph,
+  removeIllegalEdgesFromRequirementFulfillmentGraph,
 } from './requirement-graph-builder';
 
 /**
@@ -36,7 +38,9 @@ export default function buildRequirementFulfillmentGraphFromUserData(
 ): {
   readonly userRequirements: readonly RequirementWithIDSourceType[];
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
-  readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
@@ -104,9 +108,20 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       return eligibleCoursesList.flat();
     },
   };
-  const requirementFulfillmentGraph = buildRequirementFulfillmentGraph(
+  const dangerousRequirementFulfillmentGraph = buildRequirementFulfillmentGraph(
     requirementGraphBuilderParameters
   );
+  const safeRequirementFulfillmentGraph = dangerousRequirementFulfillmentGraph.copy();
+  const doubleCountedCourseUniqueIDSet = removeIllegalEdgesFromRequirementFulfillmentGraph(
+    safeRequirementFulfillmentGraph,
+    requirementID => userRequirementsMap[requirementID].allowCourseDoubleCounting || false
+  );
 
-  return { userRequirements, userRequirementsMap, requirementFulfillmentGraph };
+  return {
+    userRequirements,
+    userRequirementsMap,
+    dangerousRequirementFulfillmentGraph,
+    safeRequirementFulfillmentGraph,
+    doubleCountedCourseUniqueIDSet,
+  };
 }
