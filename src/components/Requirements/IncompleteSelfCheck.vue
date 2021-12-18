@@ -36,7 +36,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { clickOutside } from '@/utilities';
+import { clickOutside, isPlaceholderCourse } from '@/utilities';
 import store from '@/store';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
@@ -81,6 +81,7 @@ export default defineComponent({
         .flatMap(it => it.courses)
         .forEach(course => {
           if (
+            isPlaceholderCourse(course) ||
             !canFulfillChecker(
               store.state.userRequirementsMap,
               store.state.toggleableRequirementChoices,
@@ -88,7 +89,7 @@ export default defineComponent({
               course.crseId
             )
           ) {
-            // If the course can't help fulfill the checker, do not add to choices.
+            // If the course can't help fulfill the checker (or is a placeholder), do not add to choices.
             return;
           }
 

@@ -12,6 +12,7 @@ import {
   getCurrentSeason,
   getCurrentYear,
   sortedSemesters,
+  isPlaceholderCourse,
 } from './utilities';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
@@ -185,6 +186,10 @@ const autoRecomputeDerivedData = (): (() => void) =>
       const courseToSemesterMap: Record<number, FirestoreSemester> = {};
       state.semesters.forEach(semester => {
         semester.courses.forEach(course => {
+          if (isPlaceholderCourse(course)) {
+            return;
+          }
+
           const { code } = course;
           if (allCourseSet.has(code)) {
             duplicatedCourseCodeSet.add(code);
