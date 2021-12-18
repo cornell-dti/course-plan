@@ -1,6 +1,6 @@
 import { SPECIAL_COURSES } from './data/constants';
 import requirementJson from './typed-requirement-json';
-import * as Specialize from './specialize';
+import specialized from './specialize';
 
 /**
  * A collection of helper functions
@@ -131,10 +131,10 @@ const getMajors = (majorNames: readonly string[]) =>
  * @returns An array of college requirements specialized for the user based on
  * their majors
  */
-const specialized = (collegeName: string, majorNames: readonly string[]) => {
+const specializedForCollege = (collegeName: string, majorNames: readonly string[]) => {
   const majors = getMajors(majorNames);
-  const majorReqs = requirementJson.college[collegeName].requirements;
-  const spec = Specialize.specialized(majorReqs, majors);
+  const collegeReqs = requirementJson.college[collegeName].requirements;
+  const spec = specialized(collegeReqs, majors);
   return spec.map(
     req =>
       ({
@@ -169,7 +169,7 @@ export function getUserRequirements({
           } as const)
       )
     : [];
-  const collegeReqs = college ? specialized(college, majors) : [];
+  const collegeReqs = college ? specializedForCollege(college, majors) : [];
   const majorReqs = fieldOfStudyReqs('Major', majors);
   const minorReqs = fieldOfStudyReqs('Minor', minors);
   const gradReqs = grad

@@ -69,7 +69,7 @@ import spanishMinorRequirements from './minors/spanish';
 // import mengCSRequirements from './grad/meng-cs';
 import mpaRequirements from './grad/mpa';
 
-import { MATH2940 } from './specializations/en';
+import MATH2940 from './specializations/en';
 
 const json: RequirementsJson = {
   university: {

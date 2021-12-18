@@ -9,7 +9,7 @@ import { Major } from './types';
  * @param majors the set of majors to specialize `collegeReqs` for
  * @returns An array of `collegeReqs` having been specialized for `majors`
  */
-export function specialized<R extends RequirementCommon>(
+export default function specialized<R extends RequirementCommon>(
   collegeReqs: readonly R[],
   majors: readonly Major<R>[]
 ) {
