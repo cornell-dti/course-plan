@@ -36,12 +36,13 @@ type CourseCautions = {
 
 const getCourseCautions = (course: FirestoreSemesterCourse): CourseCautions => {
   const {
-    requirementFulfillmentGraph,
+    safeRequirementFulfillmentGraph,
     derivedCoursesData: { duplicatedCourseCodeSet, courseToSemesterMap },
   } = store.state;
   const noMatchedRequirement =
-    requirementFulfillmentGraph.getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
-      .length === 0;
+    safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse({
+      uniqueId: course.uniqueID,
+    }).length === 0;
   const semesterOfUserCourse = courseToSemesterMap[course.uniqueID];
   const typicallyOfferedWarning =
     semesterOfUserCourse != null &&

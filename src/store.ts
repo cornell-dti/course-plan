@@ -50,7 +50,9 @@ export type VuexStoreState = {
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
-  requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
@@ -94,7 +96,10 @@ const store: TypedVuexStore = new TypedVuexStore({
     userRequirementsMap: {},
     // It won't be null once the app loads.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    requirementFulfillmentGraph: null!,
+    dangerousRequirementFulfillmentGraph: null!,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    safeRequirementFulfillmentGraph: null!,
+    doubleCountedCourseUniqueIDSet: new Set(),
     groupedRequirementFulfillmentReport: [],
     subjectColors: {},
     uniqueIncrementer: 0,
@@ -143,12 +148,16 @@ const store: TypedVuexStore = new TypedVuexStore({
       data: Pick<
         VuexStoreState,
         | 'userRequirementsMap'
-        | 'requirementFulfillmentGraph'
+        | 'dangerousRequirementFulfillmentGraph'
+        | 'safeRequirementFulfillmentGraph'
+        | 'doubleCountedCourseUniqueIDSet'
         | 'groupedRequirementFulfillmentReport'
       >
     ) {
       state.userRequirementsMap = data.userRequirementsMap;
-      state.requirementFulfillmentGraph = data.requirementFulfillmentGraph;
+      state.dangerousRequirementFulfillmentGraph = data.dangerousRequirementFulfillmentGraph;
+      state.safeRequirementFulfillmentGraph = data.safeRequirementFulfillmentGraph;
+      state.doubleCountedCourseUniqueIDSet = data.doubleCountedCourseUniqueIDSet;
       state.groupedRequirementFulfillmentReport = data.groupedRequirementFulfillmentReport;
     },
     setSubjectColors(state: VuexStoreState, colors: Readonly<Record<string, string>>) {

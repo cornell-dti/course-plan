@@ -71,7 +71,7 @@ export default defineComponent({
   computed: {
     addCourseLabel(): string {
       let label = 'Add Course';
-      if (this.subReq.fulfilledBy === 'courses') {
+      if (this.subReq.fulfillment.fulfilledBy === 'courses') {
         label = `Add ${this.slotName}`;
       }
       return label;
