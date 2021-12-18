@@ -114,6 +114,16 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
     slotNames: ['Course'],
   },
   {
+    name: 'Field Work',
+    description:
+      'A minimum of 3 credits of appropriate coursework is required, although more experience with fieldwork is encouraged.',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3],
+    checker: [_ => true],
+    checkerWarning: 'We do not check that provided courses fulfill the Field Work requirement',
+  },
+  {
     name: 'Concentration',
     description: 'Choose one concentration from the four available',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23753',
