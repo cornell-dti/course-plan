@@ -434,6 +434,16 @@ export function getAllEligibleRelatedRequirementIds(
     });
 }
 
+export function fulfillmentProgressString({
+  fulfilledBy,
+  safeMinCountFulfilled,
+  dangerousMinCountFulfilled,
+  minCountRequired,
+}: MixedRequirementFulfillmentStatistics) {
+  const uncertainString = safeMinCountFulfilled === dangerousMinCountFulfilled ? '' : '?';
+  return `${dangerousMinCountFulfilled}${uncertainString}/${minCountRequired} ${fulfilledBy}`;
+}
+
 export function getRelatedUnfulfilledRequirements(
   {
     crseId: courseId,
