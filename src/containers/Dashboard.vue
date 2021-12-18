@@ -13,19 +13,29 @@
       <div class="dashboard-menus">
         <nav-bar
           class="dashboard-nav"
-          :isOpeningRequirements="isOpeningRequirements"
+          :isDisplayingRequirementsMobile="requirementsIsDisplayedMobile"
           @editProfile="editProfile"
-          @toggleRequirementsBar="toggleRequirementsBar"
+          @toggleRequirementsMobile="toggleRequirementsMobile"
         />
         <requirement-side-bar
           class="dashboard-reqs"
-          v-if="loaded && (!isTablet || (isOpeningRequirements && isTablet))"
+          v-if="loaded"
+          :isMobile="isTablet"
+          :isDisplayingMobile="requirementsIsDisplayedMobile"
+          :isMinimized="requirementsIsMinimized"
+          @toggleMinimized="toggleMinimizeRequirements"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
         />
+        <bottom-bar
+          v-if="!(isTablet && requirementsIsDisplayedMobile)"
+          :isNavbarWide="requirementsIsMinimized"
+          :isExpanded="bottomBarIsExpanded"
+          :maxBottomBarTabs="maxBottomBarTabs"
+        />
       </div>
       <semester-view
-        v-if="loaded && ((!isOpeningRequirements && isTablet) || !isTablet)"
+        v-if="loaded && !(isTablet && requirementsIsDisplayedMobile)"
         ref="semesterview"
         :compact="compactVal"
         :startTour="startTour"
@@ -53,11 +63,6 @@
       button-text="Get Started"
       @closeTourWindow="closeTour"
       v-if="showTourEndWindow"
-    />
-    <bottom-bar
-      v-if="(!isOpeningRequirements && isTablet) || !isTablet"
-      :isExpanded="bottomBarIsExpanded"
-      :maxBottomBarTabs="maxBottomBarTabs"
     />
   </div>
 </template>
@@ -123,11 +128,13 @@ export default defineComponent({
     return {
       loaded: true,
       compactVal: false,
+      showSideBar: true,
       isOnboarding: false,
       isEditingProfile: false,
-      isOpeningRequirements: false,
       isTablet: window.innerWidth <= mediumBreakpointPixels,
       isMobile: window.innerWidth <= smallBreakpointPixels,
+      requirementsIsDisplayedMobile: false,
+      requirementsIsMinimized: false,
       maxBottomBarTabs: getMaxButtonBarTabs(),
       welcomeHidden: false,
       startTour: false,
@@ -173,8 +180,11 @@ export default defineComponent({
       this.isTablet = window.innerWidth <= mediumBreakpointPixels;
       this.maxBottomBarTabs = getMaxButtonBarTabs();
     },
-    toggleRequirementsBar() {
-      this.isOpeningRequirements = !this.isOpeningRequirements;
+    toggleRequirementsMobile() {
+      this.requirementsIsDisplayedMobile = !this.requirementsIsDisplayedMobile;
+    },
+    toggleMinimizeRequirements() {
+      this.requirementsIsMinimized = !this.requirementsIsMinimized;
     },
     compactUpdated(compact: boolean) {
       this.compactVal = compact;
@@ -237,7 +247,6 @@ export default defineComponent({
   &-mainView {
     display: flex;
     background-color: $backgroundBlue;
-    overflow-x: hidden;
     min-height: 100vh;
   }
 
@@ -245,14 +254,10 @@ export default defineComponent({
     display: flex;
   }
 
-  &-reqs {
-    margin-left: 4.5rem;
-  }
-
   /* The Modal (background) */
   &-onboarding {
     position: fixed; /* Stay in place */
-    z-index: 3; /* Sit on top */
+    z-index: 4; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */

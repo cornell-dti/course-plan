@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="onboarding-subHeader">
-      <span class="onboarding-subHeader--font">{{ examName }} Credits</span>
+      <span class="onboarding-subHeader--font">{{ examType }} Credits</span>
     </div>
     <div class="onboarding-subsection onboarding-transferCreditsSection">
       <div class="onboarding-section" v-for="(exam, index) in exams" :key="index">
@@ -24,19 +24,19 @@
           <div class="onboarding-select--column-removeExam">
             <button
               class="onboarding-remove"
-              @click="$emit('on-remove', examName, index)"
+              @click="$emit('on-remove', examType, index)"
               v-if="hasExams(exams, exam)"
             >
               <img
                 src="@/assets/images/x-green.svg"
-                :alt="`x to remove ${examName} exam ${exam.type} ${exam.subject}`"
+                :alt="`x to remove ${examType} exam ${exam.examType} ${exam.subject}`"
               />
             </button>
           </div>
         </div>
       </div>
       <div class="onboarding-addRemoveWrapper">
-        <button class="onboarding-add" @click="$emit('on-add', examName)">+ another subject</button>
+        <button class="onboarding-add" @click="$emit('on-add', examType)">+ another subject</button>
       </div>
     </div>
   </div>
@@ -45,9 +45,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
-
-/** Represents an exam one can take for transfer credit */
-type Exam = 'AP' | 'IB';
 
 export default defineComponent({
   components: {
@@ -58,14 +55,14 @@ export default defineComponent({
       typeof subject === 'string' && typeof index === 'number',
     'on-score-select': (score: number, index: number) =>
       typeof score === 'number' && typeof index === 'number',
-    'on-remove': (name: Exam, index: number) =>
-      typeof name === 'string' && typeof index === 'number',
-    'on-add': (name: Exam) => typeof name === 'string',
+    'on-remove': (examType: TransferExamType, index: number) =>
+      typeof examType === 'string' && typeof index === 'number',
+    'on-add': (examType: TransferExamType) => typeof examType === 'string',
   },
   props: {
-    examName: { type: String as PropType<Exam>, required: true },
+    examType: { type: String as PropType<TransferExamType>, required: true },
     exams: {
-      type: Array as PropType<readonly FirestoreAPIBExam[]>,
+      type: Array as PropType<readonly FirestoreTransferExam[]>,
       required: true,
     },
     subjects: {
@@ -85,7 +82,7 @@ export default defineComponent({
   methods: {
     getSelectableOptions(
       // exams already picked
-      selectedExams: readonly FirestoreAPIBExam[],
+      selectedExams: readonly FirestoreTransferExam[],
       // array of ap/ib exams
       allSubjects: readonly string[],
       choice: string
@@ -105,7 +102,7 @@ export default defineComponent({
       }
       return selectableOptions;
     },
-    hasExams(exams: readonly FirestoreAPIBExam[], exam: FirestoreAPIBExam): boolean {
+    hasExams(exams: readonly FirestoreTransferExam[], exam: FirestoreTransferExam): boolean {
       return !(exams.length === 1 && exam.subject === this.placeholderText);
     },
   },

@@ -26,10 +26,9 @@ export {
 } from './semesters';
 export { default as chooseToggleableRequirementOption } from './toggleable-requirement-choices';
 export {
-  addCourseToSelectableRequirements,
-  deleteCourseFromSelectableRequirements,
-} from './selectable-requirement-choices';
-export {
-  addOverriddenFulfillmentAPIB,
-  clearOverriddenFulfillmentsAPIB,
-} from './overridden-fulfillment-choices';
+  updateRequirementChoice,
+  updateRequirementChoices,
+  deleteCourseFromRequirementChoices,
+} from './override-fulfillment-choices';
+
+export { default as retrieveAnalytics } from './analytics';

@@ -64,7 +64,11 @@
           </button>
         </div>
       </div>
-      <div class="semester-courses" :class="{ 'semester-hidden': isSemesterMinimized }">
+      <div
+        class="semester-courses"
+        :class="{ 'semester-hidden': isSemesterMinimized }"
+        data-cyId="semester-courses"
+      >
         <draggable
           ref="droppable"
           class="draggable-semester-courses"
@@ -139,9 +143,10 @@ import {
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
-  addCourseToSelectableRequirements,
+  updateRequirementChoices,
 } from '@/global-firestore-data';
-import { updateSubjectColorData } from '@/store';
+import store, { updateSubjectColorData } from '@/store';
+import { getAllEligibleRelatedRequirementIds } from '@/requirements/requirement-frontend-utils';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -229,6 +234,15 @@ export default defineComponent({
       get(): readonly FirestoreSemesterCourse[] {
         return this.courses;
       },
+      /**
+       * This function is called when a course is dragged into the semester.
+       *
+       * It can be a semester-to-semester drag-n-drop, which does not have `requirementID`
+       * and does not require update the requirement.
+       * It can also be a requirement-bar-to-semester drag-n-drop, which has a `requirementID`
+       * attached to the course. We need to check the presence of this field and update requirement
+       * choice accordingly.
+       */
       set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
         const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
         editSemester(
@@ -239,9 +253,33 @@ export default defineComponent({
             courses,
           })
         );
-        newCourses.forEach(({ uniqueID, requirementID }) =>
-          addCourseToSelectableRequirements(uniqueID, requirementID)
-        );
+        updateRequirementChoices(oldChoices => {
+          const choices = { ...oldChoices };
+          newCourses.forEach(({ uniqueID, requirementID, crseId }) => {
+            if (requirementID == null) {
+              // In this case, it's not a course from requirement bar
+              return;
+            }
+            const choice = choices[uniqueID] || {
+              arbitraryOptIn: {},
+              acknowledgedCheckerWarningOptIn: [],
+              optOut: [],
+            };
+            // We know the requirement must be dragged from requirements without warnings,
+            // because only those courses provide suggested courses.
+            // As a result, `acknowledgedCheckerWarningOptIn` is irrelevant and we only need to update
+            // the `optOut` field.
+            // Below, we find all the requirements it can possibly match,
+            // and only remove the requirementID since that's the one we should keep.
+            const optOut = getAllEligibleRelatedRequirementIds(
+              crseId,
+              store.state.groupedRequirementFulfillmentReport,
+              store.state.toggleableRequirementChoices
+            ).filter(it => it !== requirementID);
+            choices[uniqueID] = { ...choice, optOut };
+          });
+          return choices;
+        });
       },
     },
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
@@ -328,9 +366,10 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    addCourse(data: CornellCourseRosterCourse, requirementID: string) {
+    addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      addCourseToSemester(this.year, this.season, newCourse, requirementID, this.$gtag);
+      // Since the course is new, we know the old choice does not exist.
+      addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
@@ -453,7 +492,7 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .semester {
-  width: 24rem;
+  width: $regular-semester-width;
   box-sizing: border-box;
   position: relative;
   border-radius: 11px;
@@ -477,8 +516,7 @@ export default defineComponent({
   }
 
   &--compact {
-    width: 17.5rem;
-    padding: 0.875rem 1.125rem;
+    width: $compact-semester-width;
   }
 
   &-confirmation {
@@ -582,7 +620,7 @@ export default defineComponent({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .semester {
-    width: 17.5rem;
+    width: $compact-semester-width;
 
     &-menu {
       right: 0rem;
