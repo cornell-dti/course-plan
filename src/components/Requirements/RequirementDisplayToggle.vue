@@ -22,10 +22,6 @@
     </div>
     <div class="col requirement-progress text-right">
       {{ requirementFulfillmentProgress }}
-      <requirement-caution
-        :numSafelyFulfilled="safelyFulfilled"
-        :numDangerouslyFulfilled="dangerouslyFulfilled"
-      />
     </div>
   </button>
 </template>
@@ -33,11 +29,10 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import RequirementCaution from '@/components/Requirements/RequirementCaution.vue';
 import { fulfillmentProgressString } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
-  components: { DropDownArrow, RequirementCaution },
+  components: { DropDownArrow },
   props: {
     requirementFulfillment: { type: Object as PropType<RequirementFulfillment>, required: true },
     isCompleted: { type: Boolean, required: true },
@@ -82,15 +77,6 @@ export default defineComponent({
         return `${dangerouslyFulfilledCount}/${totalRequirementsCount} requirements`;
       }
       return `${dangerouslyFulfilledCount}?/${totalRequirementsCount} requirements`;
-    },
-    safelyFulfilled(): number {
-      // TODO this and dangerously fulfilled does not handle coumpound requirements or self-check cases
-      const { fulfillment } = this.requirementFulfillment;
-      return fulfillment.safeMinCountFulfilled;
-    },
-    dangerouslyFulfilled(): number {
-      const { fulfillment } = this.requirementFulfillment;
-      return fulfillment.dangerousMinCountFulfilled;
     },
   },
 });

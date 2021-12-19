@@ -10,7 +10,8 @@
       <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
-          <span class="completed-reqCourses-course-heading-check"
+          <requirement-caution v-if="isDoubleCounted" :course="courseTaken" />
+          <span v-else class="completed-reqCourses-course-heading-check"
             ><img src="@/assets/images/checkmark-green.svg" alt="checkmark"
           /></span>
           {{ slotName }}
@@ -42,6 +43,7 @@ import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
+import RequirementCaution from '@/components/Requirements/RequirementCaution.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebase-frontend-config';
@@ -50,7 +52,7 @@ import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, DeleteCourseModal, SlotMenu },
+  components: { ReqCourse, DeleteCourseModal, SlotMenu, RequirementCaution },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
@@ -91,6 +93,10 @@ export default defineComponent({
       return window.innerWidth > 863
         ? { x: this.mousePosition.x + 10, y: this.mousePosition.y - 14 }
         : { x: this.mousePosition.x - 120, y: this.mousePosition.y - 7 };
+    },
+    isDoubleCounted(): boolean {
+      const { uniqueId } = this.courseTaken;
+      return store.state.doubleCountedCourseUniqueIDSet.has(uniqueId);
     },
   },
   methods: {
