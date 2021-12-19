@@ -308,6 +308,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .duplicate-p {
   color: red;
 }
@@ -358,7 +360,7 @@ export default defineComponent({
     font-size: 14px;
     line-height: 14px;
 
-    color: #b6b6b6;
+    color: $darkPlaceholderGray;
   }
 
   &-icon {

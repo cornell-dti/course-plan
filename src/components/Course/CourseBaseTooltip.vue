@@ -20,7 +20,7 @@ import caution from '@/assets/images/caution.svg';
 export default defineComponent({
   props: {
     isInformation: { type: Boolean, required: true },
-    hideVerticalBar: { type: Boolean, default: false },
+    hideVerticalBar: { type: Boolean, required: false, default: false },
   },
   computed: {
     icon(): string {
@@ -43,9 +43,12 @@ export default defineComponent({
     margin-left: 0.2rem;
     align-items: center;
 
+    &:before {
+      margin-right: 0.2rem;
+    }
+
     &--verticalBar {
       &:before {
-        margin-right: 0.2rem;
         font-style: normal;
         content: '|';
       }
