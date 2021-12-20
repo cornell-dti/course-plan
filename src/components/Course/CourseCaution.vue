@@ -23,8 +23,7 @@
     </div>
     <ul v-if="!singleWarning" class="warning-list">
       <li class="warning-item" v-if="courseCautions.hasConflictRequirement">
-        This course has a conflict.
-        <button class="warning-button">Fix now</button>
+        This course has a conflict.<button class="warning-button">Fix now</button>
       </li>
       <li class="warning-item" v-if="courseCautions.noMatchedRequirement">
         This class is not matched to any requirement. Re-add this course to choose a requirement to
@@ -46,6 +45,7 @@
 import { PropType, defineComponent } from 'vue';
 import CourseBaseTooltip from '@/components/Course/CourseBaseTooltip.vue';
 import store from '@/store';
+import { isCourseConflict } from '@/global-firestore-data';
 import { isPlaceholderCourse, isCourseTaken } from '@/utilities';
 
 type CourseCautions = {
@@ -67,8 +67,7 @@ const getCourseCautions = (
 
   const uniqueID = isCourseTaken(course) ? course.uniqueId : course.uniqueID;
 
-  const hasConflictRequirement =
-    !isPlaceholderCourse(course) && store.state.doubleCountedCourseUniqueIDSet.has(uniqueID);
+  const hasConflictRequirement = !isPlaceholderCourse(course) && isCourseConflict(uniqueID);
 
   // if a CourseTaken is inputted (thus from the requirements bar), only check for the hasConflictWarning
   if (isCourseTaken(course)) {

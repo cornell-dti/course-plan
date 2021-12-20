@@ -10,7 +10,7 @@
       <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
-          <course-caution v-if="isDoubleCounted" :course="courseTaken" />
+          <course-caution v-if="isCourseConflict(courseTaken.uniqueId)" :course="courseTaken" />
           <span v-else class="completed-reqCourses-course-heading-check"
             ><img src="@/assets/images/checkmark-green.svg" alt="checkmark"
           /></span>
@@ -45,7 +45,7 @@ import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import store from '@/store';
-import { deleteCourseFromSemesters } from '@/global-firestore-data';
+import { deleteCourseFromSemesters, isCourseConflict } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebase-frontend-config';
 import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 
@@ -94,10 +94,6 @@ export default defineComponent({
         ? { x: this.mousePosition.x + 10, y: this.mousePosition.y - 14 }
         : { x: this.mousePosition.x - 120, y: this.mousePosition.y - 7 };
     },
-    isDoubleCounted(): boolean {
-      const { uniqueId } = this.courseTaken;
-      return store.state.doubleCountedCourseUniqueIDSet.has(uniqueId);
-    },
   },
   methods: {
     onDeleteModalOpen(): void {
@@ -132,6 +128,7 @@ export default defineComponent({
     closeSlotMenu() {
       this.slotMenuOpen = false;
     },
+    isCourseConflict,
   },
   directives: {
     'click-outside': clickOutside,

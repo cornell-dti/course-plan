@@ -16,3 +16,6 @@ export const incrementUniqueID = (amount = 1): number => {
     .set({ uniqueIncrementer: updatedID });
   return updatedID;
 };
+
+export const isCourseConflict = (uniqueId: string | number): boolean =>
+  store.state.doubleCountedCourseUniqueIDSet.has(uniqueId);
