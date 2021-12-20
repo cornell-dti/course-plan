@@ -434,14 +434,13 @@ export function getAllEligibleRelatedRequirementIds(
     });
 }
 
+// display the entire number of fulfillents, including those that are dangerous
 export function fulfillmentProgressString({
   fulfilledBy,
-  safeMinCountFulfilled,
   dangerousMinCountFulfilled,
   minCountRequired,
 }: MixedRequirementFulfillmentStatistics) {
-  const uncertainString = safeMinCountFulfilled === dangerousMinCountFulfilled ? '' : '?';
-  return `${dangerousMinCountFulfilled}${uncertainString}/${minCountRequired} ${fulfilledBy}`;
+  return `${dangerousMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
 }
 
 export function getRelatedUnfulfilledRequirements(

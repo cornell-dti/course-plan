@@ -51,20 +51,12 @@ export default defineComponent({
       // Compute progress string x/y requirements fulfilled.
       // We also need to include the main requirement into consideration.
 
-      let safelyFulfilledCount =
-        fulfillment.safeMinCountFulfilled >= fulfillment.minCountRequired ? 1 : 0;
       let dangerouslyFulfilledCount =
         fulfillment.dangerousMinCountFulfilled >= fulfillment.minCountRequired ? 1 : 0;
 
       const totalRequirementsCount = 1 + additionalRequirementsList.length;
       for (let i = 0; i < additionalRequirementsList.length; i += 1) {
         const additionalRequirementProgress = additionalRequirementsList[i];
-        if (
-          additionalRequirementProgress.safeMinCountFulfilled >=
-          additionalRequirementProgress.minCountRequired
-        ) {
-          safelyFulfilledCount += 1;
-        }
         if (
           additionalRequirementProgress.dangerousMinCountFulfilled >=
           additionalRequirementProgress.minCountRequired
@@ -73,10 +65,8 @@ export default defineComponent({
         }
       }
 
-      if (safelyFulfilledCount === dangerouslyFulfilledCount) {
-        return `${dangerouslyFulfilledCount}/${totalRequirementsCount} requirements`;
-      }
-      return `${dangerouslyFulfilledCount}?/${totalRequirementsCount} requirements`;
+      // count anything that fulfills requirement, including dangerous fulfillments
+      return `${dangerouslyFulfilledCount}/${totalRequirementsCount} requirements`;
     },
   },
 });
