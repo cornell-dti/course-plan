@@ -24,6 +24,7 @@
           :courseCode="courseTaken.code"
           :compact="true"
           :isCompletedReqCourse="true"
+          :isConflict="isCourseConflict(courseTaken.uniqueId)"
           class="completed-reqCourses-course-object"
         />
         <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>

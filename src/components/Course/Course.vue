@@ -295,7 +295,7 @@ export default defineComponent({
 }
 
 .conflict {
-  border: 1px solid rgba(255, 153, 0, 0.5);
+  border: 1px solid rgba($conflictWarning, 0.5);
   border-radius: 8px;
 }
 
