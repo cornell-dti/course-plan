@@ -17,11 +17,14 @@
         This requirement is suggested to be fulfilled in your
         {{ placeholderWarningSemesterText }} semester.
       </div>
-      <div v-if="courseCautions.hasConflictRequirement">This course has a conflict. FIX NOW</div>
+      <div v-if="courseCautions.hasConflictRequirement">
+        This course has a conflict.<button class="warning-button">Fix now</button>
+      </div>
     </div>
     <ul v-if="!singleWarning" class="warning-list">
       <li class="warning-item" v-if="courseCautions.hasConflictRequirement">
-        This course has a conflict. FIX NOW
+        This course has a conflict.
+        <button class="warning-button">Fix now</button>
       </li>
       <li class="warning-item" v-if="courseCautions.noMatchedRequirement">
         This class is not matched to any requirement. Re-add this course to choose a requirement to
@@ -190,5 +193,12 @@ ul.warning-list {
 li.warning-item {
   margin-left: 0;
   padding-left: -0.25rem;
+}
+
+.warning-button {
+  color: $emGreen;
+  text-transform: uppercase;
+  font-weight: normal;
+  text-decoration-line: underline;
 }
 </style>
