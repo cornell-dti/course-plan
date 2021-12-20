@@ -158,7 +158,7 @@ export const isPlaceholderCourse = (
 ): element is FirestoreSemesterPlaceholder =>
   !!(element as FirestoreSemesterPlaceholder).startingSemester;
 
-// Determines whether the given element used in CourseCaution is a FirestoreSemesterCourse
-export const isSemesterCourse = (
+// Determines whether the given element used in CourseCaution is CourseTaken
+export const isCourseTaken = (
   element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse | CourseTaken
-): element is FirestoreSemesterCourse => !!(element as FirestoreSemesterCourse).crseId;
+): element is CourseTaken => !!(element as CourseTaken).uniqueId;

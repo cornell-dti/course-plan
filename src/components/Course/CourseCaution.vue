@@ -2,9 +2,7 @@
   <course-base-tooltip
     v-if="hasCourseCautions"
     :isInformation="false"
-    :hideVerticalBar="
-      courseCautions.isPlaceholderWrongSemester || courseCautions.hasConflictRequirement
-    "
+    :hideVerticalBar="shouldHideVerticalBar"
   >
     <div v-if="singleWarning">
       <div v-if="courseCautions.noMatchedRequirement">
@@ -45,7 +43,7 @@
 import { PropType, defineComponent } from 'vue';
 import CourseBaseTooltip from '@/components/Course/CourseBaseTooltip.vue';
 import store from '@/store';
-import { isPlaceholderCourse, isSemesterCourse } from '@/utilities';
+import { isPlaceholderCourse, isCourseTaken } from '@/utilities';
 
 type CourseCautions = {
   readonly noMatchedRequirement: boolean;
@@ -64,14 +62,13 @@ const getCourseCautions = (
     derivedCoursesData: { duplicatedCourseCodeSet, courseToSemesterMap },
   } = store.state;
 
-  const uniqueID =
-    isPlaceholderCourse(course) || isSemesterCourse(course) ? course.uniqueID : course.uniqueId;
+  const uniqueID = isCourseTaken(course) ? course.uniqueId : course.uniqueID;
 
   const hasConflictRequirement =
     !isPlaceholderCourse(course) && store.state.doubleCountedCourseUniqueIDSet.has(uniqueID);
 
   // if a CourseTaken is inputted (thus from the requirements bar), only check for the hasConflictWarning
-  if (!isPlaceholderCourse(course) && !isSemesterCourse(course)) {
+  if (isCourseTaken(course)) {
     return {
       noMatchedRequirement: false,
       typicallyOfferedWarning: undefined,
@@ -156,6 +153,10 @@ export default defineComponent({
       }
 
       return '';
+    },
+    // hide vertical bar next to warning if icon is in a placeholder or requirements bar
+    shouldHideVerticalBar(): boolean {
+      return isPlaceholderCourse(this.course) || isCourseTaken(this.course);
     },
   },
   methods: {
