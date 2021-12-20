@@ -10,7 +10,7 @@
       <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
-          <requirement-caution v-if="isDoubleCounted" :course="courseTaken" />
+          <course-caution v-if="isDoubleCounted" :course="courseTaken" />
           <span v-else class="completed-reqCourses-course-heading-check"
             ><img src="@/assets/images/checkmark-green.svg" alt="checkmark"
           /></span>
@@ -43,7 +43,7 @@ import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
-import RequirementCaution from '@/components/Requirements/RequirementCaution.vue';
+import CourseCaution from '@/components/Course/CourseCaution.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebase-frontend-config';
@@ -52,7 +52,7 @@ import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, DeleteCourseModal, SlotMenu, RequirementCaution },
+  components: { ReqCourse, DeleteCourseModal, SlotMenu, CourseCaution },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
