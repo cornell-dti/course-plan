@@ -156,7 +156,7 @@
           >{{ requirementDangerouslyFulfilled }}/{{ requirementTotalRequired }}</span
         >
         <span class="progress-text-text"> Total Requirements Inputted on Schedule</span>
-        <progress-bar-caution :numConflicts="numberConflicts"></progress-bar-caution>
+        <progress-bar-caution :numConflicts="numberConflictsRounded"></progress-bar-caution>
       </p>
 
       <!--View more college requirements -->
@@ -297,6 +297,9 @@ export default defineComponent({
     },
     numberConflicts(): number {
       return this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress;
+    },
+    numberConflictsRounded(): number {
+      return Math.ceil(this.numberConflicts);
     },
   },
   methods: {
