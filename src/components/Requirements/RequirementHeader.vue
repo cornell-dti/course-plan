@@ -156,6 +156,7 @@
           >{{ requirementDangerouslyFulfilled }}/{{ requirementTotalRequired }}</span
         >
         <span class="progress-text-text"> Total Requirements Inputted on Schedule</span>
+        <progress-bar-caution :numConflicts="numberConflicts"></progress-bar-caution>
       </p>
 
       <!--View more college requirements -->
@@ -190,6 +191,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
+import ProgressBarCaution from '@/components/Requirements/ProgressBarCaution.vue';
 import {
   getCollegeFullName,
   getMajorFullName,
@@ -199,7 +201,7 @@ import {
 } from '@/utilities';
 
 export default defineComponent({
-  components: { DropDownArrow },
+  components: { DropDownArrow, ProgressBarCaution },
   props: {
     reqIndex: { type: Number, required: true },
     displayDetails: { type: Boolean, required: true },
@@ -283,15 +285,18 @@ export default defineComponent({
       return `${(this.totalSafeRequirementProgress / this.requirementTotalRequired) * 100}%`;
     },
     dangerousProgressWidth(): string {
-      const diff = this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress;
+      const diff = this.numberConflicts;
       return `${(diff / this.requirementTotalRequired) * 100}%`;
     },
     safeProgressWidthValue(): string {
       return ((this.totalSafeRequirementProgress / this.requirementTotalRequired) * 100).toFixed(1);
     },
     dangerousProgressWidthValue(): string {
-      const diff = this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress;
+      const diff = this.numberConflicts;
       return ((diff / this.requirementTotalRequired) * 100).toFixed(1);
+    },
+    numberConflicts(): number {
+      return this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress;
     },
   },
   methods: {

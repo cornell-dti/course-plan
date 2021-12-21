@@ -16,15 +16,21 @@
 import { defineComponent } from 'vue';
 import info from '@/assets/images/info.svg';
 import caution from '@/assets/images/caution.svg';
+import reqCaution from '@/assets/images/requirementsCaution.svg';
 
 export default defineComponent({
   props: {
     isInformation: { type: Boolean, required: true },
     hideVerticalBar: { type: Boolean, required: false, default: false },
+    showReqCaution: { type: Boolean, default: false },
   },
   computed: {
     icon(): string {
-      return this.isInformation ? info : caution;
+      if (this.isInformation) {
+        return info;
+      }
+
+      return this.showReqCaution ? reqCaution : caution;
     },
     alt(): string {
       return this.isInformation ? 'information sign' : 'caution sign';
