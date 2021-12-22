@@ -16,7 +16,7 @@ export type CollegeRequirements<R> = {
 };
 
 export type MajorRequirements<R> = {
-  readonly [collegeCode: string]: {
+  readonly [majorCode: string]: {
     readonly name: string;
     readonly schools: readonly string[];
     readonly requirements: readonly R[];

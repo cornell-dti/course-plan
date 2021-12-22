@@ -83,7 +83,7 @@ export const examRequirementsMapping: Record<
 
   // for each id, assign a list of colleges for which the exam can fulfill requirements
   const definedColleges = new Set(Object.keys(courseEquivalents));
-  const otherColleges = colleges.filter(c => !definedColleges.has(c)); // explicit expansion of OTHER_COLLEGES
+  const otherColleges = colleges.filter((c: College) => !definedColleges.has(c)); // explicit expansion of OTHER_COLLEGES
   const collegeConditions = Object.entries(courseEquivalents).reduce(
     (conditions: ExamRequirementsCollegeConditions, [college, courses]) => {
       courses.forEach(course => {
@@ -92,8 +92,8 @@ export const examRequirementsMapping: Record<
           return;
         }
         if (!conditions[course]) conditions[course] = [];
-        if (conditions[course].includes(college)) return;
-        conditions[course] = [...conditions[course], college];
+        if (conditions[course].includes(college as College)) return;
+        conditions[course] = [...conditions[course], college as College];
       });
       return conditions;
     },

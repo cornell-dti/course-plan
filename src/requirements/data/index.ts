@@ -399,7 +399,7 @@ const json: RequirementsJson = {
   },
 };
 
-export const colleges = [...Object.keys(json.college)] as const;
+export const colleges = ['AG', 'AR', 'AS1', 'AS2', 'EN', 'HE', 'IL', 'BU'] as const;
 export type College = typeof colleges[number];
 
 export default json;
