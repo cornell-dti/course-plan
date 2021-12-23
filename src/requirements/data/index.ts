@@ -23,6 +23,7 @@ import commRequirements from './majors/comm';
 import crpRequirements from './majors/crp';
 import csRequirements from './majors/cs';
 import deaRequirements from './majors/dea';
+import easRequirements from './majors/eas';
 import economicsRequirements from './majors/econ';
 import eceRequirements from './majors/ece';
 import essRequirements from './majors/ess';
@@ -180,6 +181,11 @@ const json: RequirementsJson = {
       name: 'Design and Environmental Analysis',
       schools: ['HE'],
       requirements: deaRequirements,
+    },
+    EAS: {
+      name: 'Earth and Atmospheric Sciences',
+      schools: ['AG', 'AS1', 'AS2', 'EN'],
+      requirements: easRequirements,
     },
     ECON: {
       name: 'Economics',
