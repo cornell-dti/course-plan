@@ -120,10 +120,10 @@ export const examRequirementsMapping: Record<
 }, {});
 
 export const examToCourseMapping: Record<number, string[]> = Object.fromEntries(
-  Object.entries(examRequirementsMapping).map(([id, conditions]) => {
-    const { collegeConditions } = conditions;
-    return [id, Object.keys(collegeConditions)];
-  })
+  Object.entries(examRequirementsMapping).map(([id, conditions]) => [
+    id,
+    Object.keys(conditions.collegeConditions),
+  ])
 );
 
 export const courseToExamMapping: Record<number, string[]> = Object.entries(
