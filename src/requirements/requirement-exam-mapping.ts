@@ -7,7 +7,7 @@ import { colleges, College } from './data';
 
 type ExamRequirementsCollegeConditions = Record<number, College[]>;
 type ExamRequirementsConditions = {
-  collegeConditions?: ExamRequirementsCollegeConditions; // if the user IS NOT in one of these colleges, the course id cannot fulfill the requirement
+  collegeConditions: ExamRequirementsCollegeConditions; // if the user IS NOT in one of these colleges, the course id cannot fulfill the requirement
   majorsExcluded?: string[]; // if the user IS in one of these majors, the course id cannot fulfill the requirement
 };
 
@@ -119,15 +119,12 @@ export const examRequirementsMapping: Record<
   };
 }, {});
 
-export const examToCourseMapping: Record<number, string[]> = Object.entries(
-  examRequirementsMapping
-).reduce((mapping: Record<number, string[]>, [id, conditions]) => {
-  if (!conditions.collegeConditions) return { ...mapping, [id]: [] };
-  return {
-    ...mapping,
-    [id]: Object.keys(conditions.collegeConditions),
-  };
-}, {});
+export const examToCourseMapping: Record<number, string[]> = Object.fromEntries(
+  Object.entries(examRequirementsMapping).map(([id, conditions]) => {
+    const { collegeConditions } = conditions;
+    return [id, Object.keys(collegeConditions)];
+  })
+);
 
 export const courseToExamMapping: Record<number, string[]> = Object.entries(
   examToCourseMapping
