@@ -217,9 +217,12 @@ export default defineComponent({
     requirementFulfilled(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
-        [req, ...Object.values(req.additionalRequirements || {})].forEach(reqOrNestedReq => {
-          if (reqOrNestedReq.minCountFulfilled >= reqOrNestedReq.minCountRequired) fulfilled += 1;
-        });
+        [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
+          reqOrNestedReq => {
+            if (reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired)
+              fulfilled += 1;
+          }
+        );
       });
       return fulfilled;
     },
@@ -227,8 +230,8 @@ export default defineComponent({
     requirementTotalRequired(): number {
       let totalRequired = 0;
       this.req.reqs.forEach(req => {
-        if (req.fulfilledBy === 'self-check') return;
-        totalRequired += 1 + Object.values(req.additionalRequirements || {}).length;
+        if (req.fulfillment.fulfilledBy === 'self-check') return;
+        totalRequired += 1 + Object.values(req.fulfillment.additionalRequirements ?? {}).length;
       });
       return totalRequired;
     },
@@ -236,10 +239,15 @@ export default defineComponent({
     totalRequirementProgress(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
-        [req, ...Object.values(req.additionalRequirements || {})].forEach(reqOrNestedReq => {
-          if (reqOrNestedReq.minCountFulfilled >= reqOrNestedReq.minCountRequired) fulfilled += 1;
-          else fulfilled += reqOrNestedReq.minCountFulfilled / reqOrNestedReq.minCountRequired;
-        });
+        [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
+          reqOrNestedReq => {
+            if (reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired) {
+              fulfilled += 1;
+            } else {
+              fulfilled += reqOrNestedReq.safeMinCountFulfilled / reqOrNestedReq.minCountRequired;
+            }
+          }
+        );
       });
       return fulfilled;
     },

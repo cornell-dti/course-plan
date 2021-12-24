@@ -64,7 +64,11 @@
           </button>
         </div>
       </div>
-      <div class="semester-courses" :class="{ 'semester-hidden': isSemesterMinimized }">
+      <div
+        class="semester-courses"
+        :class="{ 'semester-hidden': isSemesterMinimized }"
+        data-cyId="semester-courses"
+      >
         <draggable
           ref="droppable"
           class="draggable-semester-courses"
@@ -79,6 +83,7 @@
           <template #item="{ element }">
             <div class="semester-courseWrapper">
               <course
+                v-if="!isPlaceholderCourse(element)"
                 :courseObj="element"
                 :isReqCourse="false"
                 :compact="compact"
@@ -91,6 +96,12 @@
                 @color-subject="colorSubject"
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
+              />
+              <placeholder
+                v-else
+                :compact="compact"
+                :semesterIndex="semesterIndex + 1"
+                :placeholderObj="element"
               />
             </div>
           </template>
@@ -118,6 +129,7 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
+import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
@@ -126,7 +138,7 @@ import EditSemester from '@/components/Modals/EditSemester.vue';
 import ClearSemester from '@/components/Modals/ClearSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
-import { clickOutside } from '@/utilities';
+import { clickOutside, isPlaceholderCourse } from '@/utilities';
 
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
@@ -139,9 +151,10 @@ import {
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
-  addCoursesToSelectableRequirements,
+  updateRequirementChoices,
 } from '@/global-firestore-data';
-import { updateSubjectColorData } from '@/store';
+import store, { updateSubjectColorData } from '@/store';
+import { getAllEligibleRelatedRequirementIds } from '@/requirements/requirement-frontend-utils';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -156,6 +169,7 @@ export default defineComponent({
     ClearSemester,
     NewCourseModal,
     SemesterMenu,
+    Placeholder,
   },
   data() {
     return {
@@ -191,7 +205,7 @@ export default defineComponent({
     },
     year: { type: Number, required: true },
     courses: {
-      type: Array as PropType<readonly FirestoreSemesterCourse[]>,
+      type: Array as PropType<readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[]>,
       required: true,
     },
     compact: { type: Boolean, required: true },
@@ -226,9 +240,18 @@ export default defineComponent({
 
   computed: {
     coursesForDraggable: {
-      get(): readonly FirestoreSemesterCourse[] {
+      get(): readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[] {
         return this.courses;
       },
+      /**
+       * This function is called when a course is dragged into the semester.
+       *
+       * It can be a semester-to-semester drag-n-drop, which does not have `requirementID`
+       * and does not require update the requirement.
+       * It can also be a requirement-bar-to-semester drag-n-drop, which has a `requirementID`
+       * attached to the course. We need to check the presence of this field and update requirement
+       * choice accordingly.
+       */
       set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
         const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
         editSemester(
@@ -239,11 +262,33 @@ export default defineComponent({
             courses,
           })
         );
-        const newChoices: Record<string, string> = {};
-        newCourses.forEach(({ uniqueID, requirementID }) => {
-          if (requirementID) newChoices[uniqueID] = requirementID;
+        updateRequirementChoices(oldChoices => {
+          const choices = { ...oldChoices };
+          newCourses.forEach(({ uniqueID, requirementID, crseId }) => {
+            if (requirementID == null) {
+              // In this case, it's not a course from requirement bar
+              return;
+            }
+            const choice = choices[uniqueID] || {
+              arbitraryOptIn: {},
+              acknowledgedCheckerWarningOptIn: [],
+              optOut: [],
+            };
+            // We know the requirement must be dragged from requirements without warnings,
+            // because only those courses provide suggested courses.
+            // As a result, `acknowledgedCheckerWarningOptIn` is irrelevant and we only need to update
+            // the `optOut` field.
+            // Below, we find all the requirements it can possibly match,
+            // and only remove the requirementID since that's the one we should keep.
+            const optOut = getAllEligibleRelatedRequirementIds(
+              crseId,
+              store.state.groupedRequirementFulfillmentReport,
+              store.state.toggleableRequirementChoices
+            ).filter(it => it !== requirementID);
+            choices[uniqueID] = { ...choice, optOut };
+          });
+          return choices;
         });
-        addCoursesToSelectableRequirements(newChoices);
       },
     },
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
@@ -264,27 +309,18 @@ export default defineComponent({
     creditString() {
       let credits = 0;
       this.courses.forEach(course => {
-        credits += course.credits;
+        if (!isPlaceholderCourse(course)) {
+          credits += course.credits;
+        }
       });
       if (credits === 1) {
         return `${credits.toString()} credit`;
       }
       return `${credits.toString()} credits`;
     },
-    // Note: Currently not used
-    deleteDuplicateCourses(): readonly FirestoreSemesterCourse[] {
-      const uniqueCoursesNames: string[] = [];
-      const uniqueCourses: FirestoreSemesterCourse[] = [];
-      this.courses.forEach(course => {
-        if (uniqueCoursesNames.indexOf(course.name) === -1) {
-          uniqueCourses.push(course);
-          uniqueCoursesNames.push(course.name);
-        }
-      });
-      return uniqueCourses;
-    },
   },
   methods: {
+    isPlaceholderCourse,
     onDragStart() {
       this.isDraggedFrom = true;
       this.scrollable = true;
@@ -330,9 +366,10 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    addCourse(data: CornellCourseRosterCourse, requirementID: string) {
+    addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      addCourseToSemester(this.year, this.season, newCourse, requirementID, this.$gtag);
+      // Since the course is new, we know the old choice does not exist.
+      addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
@@ -360,7 +397,9 @@ export default defineComponent({
       const updater = (semester: FirestoreSemester): FirestoreSemester => ({
         ...semester,
         courses: semester.courses.map(course =>
-          course.code.split(' ')[0] === subject ? { ...course, color } : course
+          !isPlaceholderCourse(course) && course.code.split(' ')[0] === subject
+            ? { ...course, color }
+            : course
         ),
       });
       editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));

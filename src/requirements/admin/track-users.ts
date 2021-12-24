@@ -22,6 +22,8 @@ function seasonToMonth(season: string) {
   }
 }
 
+// true if a semester is an "old semester," i.e. if a semester on CoursePlan has already passed in real life
+// the idea is that old semesters and new semesters represent whether users are planning in the future or just uploading courses
 function isOld(semester: FirestoreSemester) {
   const currentTime = new Date();
   const month = currentTime.getMonth() + 1;
@@ -32,7 +34,7 @@ function isOld(semester: FirestoreSemester) {
   if (semester.year < year) {
     return true;
   }
-  if (seasonToMonth(semester.season ?? semester.type) <= month) {
+  if (seasonToMonth(semester.season) <= month) {
     return true;
   }
   return false;
@@ -77,6 +79,7 @@ function addYearToFrequencyDictionary(year: string, freqDict: Record<string, num
 /**
  * TrackUsers outputs user metrics to a Firestore document with timestap based on
  * data from the user-name and user-semesters Firestore collections.
+ * Users are only included if they have finished onboarding (and have a document in the username collection)
  *
  * It returns the total number of users (total-users),
  * the total number of semesters across all users (total-semesters),
@@ -96,10 +99,14 @@ async function trackUsers() {
   let semesterData = {} as FirestoreTrackUsersSemesterData;
   let onboardingData = {} as FirestoreTrackUsersOnboardingData;
 
+  // set of all user emails that are in the usernameCollection (and thus finished onboarding)
+  const userEmails = new Set();
+
   await usernameCollection.get().then(usernameQuerySnapshot => {
     let totalUsersCount = 0;
 
-    usernameQuerySnapshot.forEach(() => {
+    usernameQuerySnapshot.forEach(doc => {
+      userEmails.add(doc.id);
       totalUsersCount += 1;
     });
     const usernameResponse = {
@@ -120,6 +127,10 @@ async function trackUsers() {
     let semesterCount = 0;
 
     semesterQuerySnapshot.forEach(doc => {
+      if (!userEmails.has(doc.id)) {
+        return;
+      }
+
       let oldSemesterCount = 0;
       let newSemesterCount = 0;
       doc.data().semesters.forEach(semester => {
@@ -169,6 +180,10 @@ async function trackUsers() {
     const gradYearFreq: Record<string, number> = {};
 
     onboardingQuerySnapshot.forEach(doc => {
+      if (!userEmails.has(doc.id)) {
+        return;
+      }
+
       const { majors, minors, exam, colleges, gradPrograms } = doc.data();
 
       addToFrequencyDictionary(colleges, collegeFreq);
@@ -234,15 +249,17 @@ async function trackUsers() {
     };
   });
 
+  // Create a document in collection with current timestamp
+  const date = new Date(Date.now());
+  const docId = date.toISOString();
+
   const outputData: FirestoreTrackUsersData = {
     nameData,
     semesterData,
     onboardingData,
+    timestamp: date,
   };
 
-  // Create a document in collection with current timestamp
-  const date = new Date(Date.now());
-  const docId = date.toISOString();
   trackUsersCollection.doc(docId).set(outputData);
 }
 

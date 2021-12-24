@@ -1,3 +1,4 @@
+import { isPlaceholderCourse } from '../utilities';
 import { SWIM_TEST_COURSE_ID } from './data/constants';
 import getCourseEquivalentsFromUserExams from './requirement-exam-utils';
 import {
@@ -7,11 +8,6 @@ import {
 } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
-
-type FulfillmentStatistics = {
-  readonly requirement: RequirementWithIDSourceType;
-  readonly courses: readonly (readonly CourseTaken[])[];
-} & RequirementFulfillmentStatistics;
 
 /**
  * Used for total academic credit requirements for all colleges except EN and AR
@@ -27,7 +23,7 @@ const courseIsAllEligible = (course: CourseTaken): boolean => {
 const getTotalCreditsFulfillmentStatistics = (
   college: string,
   courses: readonly CourseTaken[]
-): FulfillmentStatistics | null => {
+): RequirementFulfillment | null => {
   const requirementCommon = {
     sourceType: 'College',
     sourceSpecificName: college,
@@ -118,10 +114,14 @@ const getTotalCreditsFulfillmentStatistics = (
 
   return {
     requirement,
-    courses: [[]],
-    fulfilledBy: 'credits',
-    minCountFulfilled,
-    minCountRequired,
+    fulfillment: {
+      fulfilledBy: 'credits',
+      safeCourses: [[]],
+      dangerousCourses: [[]],
+      safeMinCountFulfilled: minCountFulfilled,
+      dangerousMinCountFulfilled: minCountFulfilled,
+      minCountRequired,
+    },
   };
 };
 
@@ -129,7 +129,7 @@ const getSwimTestFulfillmentStatistics = (
   college: string,
   courses: readonly CourseTaken[],
   tookSwimTest: boolean
-): FulfillmentStatistics => {
+): RequirementFulfillment => {
   const requirement: RequirementWithIDSourceType = {
     id: 'College-UNI-SwimTest',
     sourceType: 'College',
@@ -153,12 +153,17 @@ const getSwimTestFulfillmentStatistics = (
       credits: 0,
     });
   }
+  const minCountFulfilled = swimClasses.length > 0 ? 1 : 0;
   return {
     requirement,
-    courses: [swimClasses],
-    fulfilledBy: 'courses',
-    minCountFulfilled: swimClasses.length > 0 ? 1 : 0,
-    minCountRequired: 1,
+    fulfillment: {
+      fulfilledBy: 'courses',
+      safeCourses: [swimClasses],
+      dangerousCourses: [swimClasses],
+      safeMinCountFulfilled: minCountFulfilled,
+      dangerousMinCountFulfilled: minCountFulfilled,
+      minCountRequired: 1,
+    },
   };
 };
 
@@ -169,11 +174,58 @@ export function getCourseCodesArray(
   const courses: CourseTaken[] = [];
   semesters.forEach(semester => {
     semester.courses.forEach(course => {
-      courses.push(convertFirestoreSemesterCourseToCourseTaken(course));
+      if (!isPlaceholderCourse(course)) {
+        courses.push(convertFirestoreSemesterCourseToCourseTaken(course));
+      }
     });
   });
   courses.push(...getCourseEquivalentsFromUserExams(onboardingData));
   return courses;
+}
+
+function mergeRequirementFulfillmentStatisticsWithAdditionalRequirements(
+  dangerous: RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements,
+  safe: RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements
+): MixedRequirementFulfillmentStatisticsWithAdditionalRequirements {
+  function mergeRequirementFulfillmentStatistics(
+    {
+      fulfilledBy,
+      minCountFulfilled: dangerousMinCountFulfilled,
+      minCountRequired,
+      courses: dangerousCourses,
+    }: RequirementFulfillmentStatisticsWithCourses,
+    {
+      minCountFulfilled: safeMinCountFulfilled,
+      courses: safeCourses,
+    }: RequirementFulfillmentStatisticsWithCourses
+  ): MixedRequirementFulfillmentStatistics {
+    return {
+      fulfilledBy,
+      safeCourses,
+      dangerousCourses,
+      safeMinCountFulfilled,
+      dangerousMinCountFulfilled,
+      minCountRequired,
+    };
+  }
+
+  const base = mergeRequirementFulfillmentStatistics(dangerous, safe);
+  if (dangerous.additionalRequirements == null) return base;
+  const safeAdditionalRequirements = safe.additionalRequirements || {};
+  return {
+    ...base,
+    additionalRequirements: Object.fromEntries(
+      Object.entries(
+        dangerous.additionalRequirements
+      ).map(([key, dangerousAdditionalRequirement]) => [
+        key,
+        mergeRequirementFulfillmentStatistics(
+          dangerousAdditionalRequirement,
+          safeAdditionalRequirements[key]
+        ),
+      ])
+    ),
+  };
 }
 
 /** Compute everything needed for displaying requirement on the frontend. */
@@ -181,11 +233,12 @@ export default function computeGroupedRequirementFulfillmentReports(
   semesters: readonly FirestoreSemester[],
   onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  selectableRequirementChoices: AppSelectableRequirementChoices,
-  overriddenFulfillmentChoices: AppOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
 ): {
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
-  readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   readonly groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
 } {
   const coursesTaken = getCourseCodesArray(semesters, onboardingData);
@@ -193,16 +246,17 @@ export default function computeGroupedRequirementFulfillmentReports(
 
   const {
     userRequirements,
-    requirementFulfillmentGraph,
+    dangerousRequirementFulfillmentGraph,
+    safeRequirementFulfillmentGraph,
+    doubleCountedCourseUniqueIDSet,
   } = buildRequirementFulfillmentGraphFromUserData(
     coursesTaken,
     onboardingData,
     toggleableRequirementChoices,
-    selectableRequirementChoices,
     overriddenFulfillmentChoices
   );
 
-  const collegeFulfillmentStatistics: FulfillmentStatistics[] = [];
+  const collegeFulfillmentStatistics: RequirementFulfillment[] = [];
   const totalCreditsFulfillmentStatistics = college
     ? getTotalCreditsFulfillmentStatistics(college, coursesTaken)
     : null;
@@ -213,19 +267,27 @@ export default function computeGroupedRequirementFulfillmentReports(
     collegeFulfillmentStatistics.push(
       getSwimTestFulfillmentStatistics(college, coursesTaken, onboardingData.tookSwim === 'yes')
     );
-  const majorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
-  const minorFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
-  const gradFulfillmentStatisticsMap = new Map<string, FulfillmentStatistics[]>();
+  const majorFulfillmentStatisticsMap = new Map<string, RequirementFulfillment[]>();
+  const minorFulfillmentStatisticsMap = new Map<string, RequirementFulfillment[]>();
+  const gradFulfillmentStatisticsMap = new Map<string, RequirementFulfillment[]>();
   userRequirements.forEach(requirement => {
-    const courses = requirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement.id);
-    const fulfillmentStatistics = {
-      id: requirement.id,
+    const dangerousRequirementFulfillmentStatistics = computeFulfillmentCoursesAndStatistics(
       requirement,
-      ...computeFulfillmentCoursesAndStatistics(
-        requirement,
-        courses,
-        toggleableRequirementChoices,
-        overriddenFulfillmentChoices
+      dangerousRequirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement.id),
+      toggleableRequirementChoices,
+      overriddenFulfillmentChoices
+    );
+    const safeRequirementFulfillmentStatistics = computeFulfillmentCoursesAndStatistics(
+      requirement,
+      safeRequirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement.id),
+      toggleableRequirementChoices,
+      overriddenFulfillmentChoices
+    );
+    const fulfillmentStatistics: RequirementFulfillment = {
+      requirement,
+      fulfillment: mergeRequirementFulfillmentStatisticsWithAdditionalRequirements(
+        dangerousRequirementFulfillmentStatistics,
+        safeRequirementFulfillmentStatistics
       ),
     };
 
@@ -296,7 +358,9 @@ export default function computeGroupedRequirementFulfillmentReports(
 
   return {
     userRequirementsMap: Object.fromEntries(userRequirements.map(it => [it.id, it])),
-    requirementFulfillmentGraph,
+    dangerousRequirementFulfillmentGraph,
+    safeRequirementFulfillmentGraph,
+    doubleCountedCourseUniqueIDSet,
     groupedRequirementFulfillmentReport,
   };
 }
