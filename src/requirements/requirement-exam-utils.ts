@@ -51,7 +51,8 @@ function userDataToCourses(
     if (fulfillment) {
       const courseEquivalents =
         (fulfillment.courseEquivalents &&
-          (fulfillment.courseEquivalents[college] || fulfillment.courseEquivalents.DEFAULT)) ||
+          (fulfillment.courseEquivalents[college] ||
+            fulfillment.courseEquivalents.OTHER_COLLEGES)) ||
         [];
       const excludedMajor =
         major && fulfillment.majorsExcluded && fulfillment.majorsExcluded.includes(major);

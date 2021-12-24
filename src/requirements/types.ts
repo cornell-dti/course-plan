@@ -24,7 +24,7 @@ export type Major<R> = Readonly<{
 }>;
 
 export type MutableMajorRequirements<R> = {
-  [collegeCode: string]: Major<R>;
+  [majorCode: string]: Major<R>;
 };
 
 export type MajorRequirements<R> = Readonly<MutableMajorRequirements<R>>;
