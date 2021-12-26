@@ -151,13 +151,16 @@
         ></div>
       </div>
 
-      <p class="progress-text">
+      <div class="progress-text">
+        <progress-bar-caution
+          class="caution"
+          :numConflicts="numberConflictsRounded"
+        ></progress-bar-caution>
         <span class="progress-text-credits"
           >{{ requirementDangerouslyFulfilled }}/{{ requirementTotalRequired }}</span
         >
         <span class="progress-text-text"> Total Requirements Inputted on Schedule</span>
-        <progress-bar-caution :numConflicts="numberConflictsRounded"></progress-bar-caution>
-      </p>
+      </div>
 
       <!--View more college requirements -->
       <button
@@ -422,11 +425,12 @@ button.active {
 .progress-text {
   margin: 0.3125rem 0 0 0;
   font-size: 12px;
-  line-height: 12px;
   color: $darkGray;
+  display: flex;
 
   &-credits {
     font-weight: bold;
+    margin-right: 0.2rem;
   }
   &-text {
     font-weight: normal;
@@ -466,5 +470,10 @@ button.view {
   div:first-child {
     justify-content: flex-start;
   }
+}
+
+.caution {
+  padding-top: 1px;
+  margin-right: 0.2rem;
 }
 </style>

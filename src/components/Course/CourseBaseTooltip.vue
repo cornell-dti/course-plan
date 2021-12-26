@@ -6,7 +6,10 @@
     >
       <img class="course-icon course-icon--caution" :src="icon" :alt="alt" />
     </div>
-    <div class="course-tooltiptext">
+    <div
+      class="course-tooltiptext"
+      :class="{ 'course-tooltiptext--verticalBar': !hideVerticalBar }"
+    >
       <slot />
     </div>
   </div>
@@ -16,13 +19,13 @@
 import { defineComponent } from 'vue';
 import info from '@/assets/images/info.svg';
 import caution from '@/assets/images/caution.svg';
-import reqCaution from '@/assets/images/requirementsCaution.svg';
+import conflictCaution from '@/assets/images/conflictCaution.svg';
 
 export default defineComponent({
   props: {
     isInformation: { type: Boolean, required: true },
     hideVerticalBar: { type: Boolean, required: false, default: false },
-    showReqCaution: { type: Boolean, default: false },
+    showConflictCaution: { type: Boolean, default: false },
   },
   computed: {
     icon(): string {
@@ -30,7 +33,7 @@ export default defineComponent({
         return info;
       }
 
-      return this.showReqCaution ? reqCaution : caution;
+      return this.showConflictCaution ? conflictCaution : caution;
     },
     alt(): string {
       return this.isInformation ? 'information sign' : 'caution sign';
@@ -46,7 +49,6 @@ export default defineComponent({
   &-iconWrapper {
     font-style: normal;
     display: flex;
-    margin-left: 0.2rem;
     align-items: center;
 
     &:before {
@@ -55,6 +57,7 @@ export default defineComponent({
 
     &--verticalBar {
       &:before {
+        margin-left: 0.2rem;
         font-style: normal;
         content: '|';
       }
@@ -74,7 +77,7 @@ export default defineComponent({
 }
 
 /* Tooltip text */
-.course-tooltip .course-tooltiptext {
+.course-tooltiptext {
   visibility: hidden;
   width: 10rem;
   color: $medGray;
@@ -82,13 +85,17 @@ export default defineComponent({
   text-align: left;
   padding: 0.5rem;
   border-radius: 6px;
-  left: -0.25rem;
+  left: -0.8rem;
   border: 0.75px solid #a7a7a7;
   top: 1.25rem;
 
   /* Position the tooltip text */
   position: absolute;
   z-index: 1;
+
+  &--verticalBar {
+    left: -0.25rem;
+  }
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */

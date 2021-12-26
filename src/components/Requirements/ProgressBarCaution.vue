@@ -4,7 +4,7 @@
     v-if="hasConflicts"
     :isInformation="false"
     :hideVerticalBar="true"
-    :showReqCaution="true"
+    :showConflictCaution="true"
   >
     {{ cautionString }}
   </course-base-tooltip>
@@ -39,6 +39,5 @@ export default defineComponent({
 
 .progress-bar-caution {
   font-size: 14px;
-  line-height: 17px;
 }
 </style>
