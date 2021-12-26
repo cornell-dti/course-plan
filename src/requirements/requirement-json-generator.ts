@@ -6,10 +6,14 @@ import {
   Course,
   MutableMajorRequirements,
 } from './types';
-import sourceRequirements from './data';
+import sourceRequirements, { colleges } from './data';
 import { NO_EQUIVALENT_COURSES_COURSE_ID, SPECIAL_COURSES } from './data/constants';
+import {
+  examRequirementsMapping,
+  examToCourseMapping,
+  courseToExamMapping,
+} from './requirement-exam-mapping';
 import { fullCoursesArray } from '../assets/courses/typed-full-courses';
-import universityRequirements from './data/university';
 
 /**
  * Special (synthetic) courses used for AP/IB fulfillment.
@@ -188,31 +192,120 @@ const requirementsJsonWithSatisfiableCourses = (): MutableDecoratedJson => {
   return decoratedJson;
 };
 
+const equivalentCourseIds = new Set(Object.keys(courseToExamMapping));
+const generateExamCourseIdsFromEquivalentCourses = (
+  courses: readonly number[]
+): { examCourseIds: Set<number>; examEquivalentCourses: Set<string> } => {
+  const examCourseIds = new Set<number>();
+  const examEquivalentCourses = new Set<string>();
+  courses
+    .map(course => course.toString())
+    .filter(course => equivalentCourseIds.has(course))
+    .forEach(course => {
+      courseToExamMapping[course].forEach(exam => examCourseIds.add(exam));
+      examEquivalentCourses.add(course);
+    });
+  return {
+    examCourseIds,
+    examEquivalentCourses,
+  };
+};
+
+/**
+ * Map this function across every list of course ids and figure out which
+ * exams' course ids should be added (if any).
+ */
+const addCourseIdsForAssociatedExams = (courses: readonly number[]): number[] => {
+  const { examCourseIds } = generateExamCourseIdsFromEquivalentCourses(courses);
+  return [...[...examCourseIds].sort(), ...courses];
+};
+
+/**
+ * Compute requirements conditions for AP/IB exams
+ */
+const computeConditionsForExams = (courses: readonly (readonly number[])[]) => {
+  const conditions: Record<
+    number,
+    {
+      colleges: string[];
+      majorsExcluded?: string[];
+    }
+  > = {};
+  const { examCourseIds, examEquivalentCourses } = generateExamCourseIdsFromEquivalentCourses(
+    courses.flat()
+  );
+  examCourseIds.forEach(exam => {
+    const { collegeConditions, majorsExcluded } = examRequirementsMapping[exam];
+    const validColleges = new Set<string>();
+    examToCourseMapping[exam].forEach(course => {
+      if (examEquivalentCourses.has(course.toString()))
+        collegeConditions[course].forEach(college => validColleges.add(college));
+    });
+    if (validColleges.size === colleges.length) return;
+    conditions[exam] = majorsExcluded
+      ? {
+          colleges: [...validColleges].sort(),
+          majorsExcluded,
+        }
+      : {
+          colleges: [...validColleges].sort(),
+        };
+  });
+  return conditions;
+};
+
 const decorateRequirementWithExams = (
   requirement: DecoratedCollegeOrMajorRequirement
 ): DecoratedCollegeOrMajorRequirement => {
+  if (requirement.disallowTransferCredit) {
+    return requirement;
+  }
   switch (requirement.fulfilledBy) {
     case 'self-check':
       return requirement;
     case 'courses':
     case 'credits': {
-      const { courses, ...rest } = requirement;
-      return {
-        ...rest,
-        courses: courses.concat([[10000000]]),
+      const { courses, conditions, ...rest } = requirement;
+      const examConditions = computeConditionsForExams(courses);
+      const newConditions = {
+        ...conditions,
+        ...examConditions,
       };
+      return Object.keys(newConditions).length !== 0
+        ? {
+            ...rest,
+            courses: courses.map(addCourseIdsForAssociatedExams),
+            conditions: newConditions,
+          }
+        : {
+            ...rest,
+            courses: courses.map(addCourseIdsForAssociatedExams),
+          };
     }
     case 'toggleable': {
-      const { fulfillmentOptions } = requirement;
-      return {
-        ...requirement,
-        fulfillmentOptions: Object.fromEntries(
-          Object.entries(fulfillmentOptions).map(([optionName, option]) => {
-            const { courses, ...rest } = option;
-            return [optionName, { ...rest, courses: courses.concat([[20000000]]) }];
-          })
-        ),
-      };
+      const { fulfillmentOptions, conditions, description } = requirement;
+      const newConditions = { ...conditions };
+      const newFulfillmentOptions = Object.fromEntries(
+        Object.entries(fulfillmentOptions).map(([optionName, option]) => {
+          const { courses, ...rest } = option;
+          const examConditions = computeConditionsForExams(courses);
+          Object.keys(examConditions).forEach(e => {
+            if (e in newConditions) console.log(description);
+          });
+          Object.assign(newConditions, examConditions);
+          return [optionName, { ...rest, courses: courses.map(addCourseIdsForAssociatedExams) }];
+        })
+      );
+      return Object.keys(newConditions).length !== 0
+        ? {
+            ...requirement,
+            fulfillmentOptions: newFulfillmentOptions,
+            conditions: newConditions,
+          }
+        : {
+            ...requirement,
+            fulfillmentOptions: newFulfillmentOptions,
+          };
     }
     default:
       throw new Error();

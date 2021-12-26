@@ -9,6 +9,16 @@ type RequirementCommon = {
   readonly allowCourseDoubleCounting?: true;
   /** If this is set to true, then AP/IB credits cannot be applied towards this requirement. */
   readonly disallowTransferCredit?: true;
+  /** Requirements may have conditions associated with certain course ids, eg. for AP/IB exams. */
+  readonly conditions?: Record<
+    [courseId: number],
+    {
+      /** If the user IS NOT in one of these colleges, the course id cannot fulfill the requirement. */
+      colleges: string[];
+      /** If the user IS in one of these majors, the course id cannot fulfill the requirement. */
+      majorsExcluded?: string[];
+    }
+  >;
 
   /**
    * If this field exists with string,
