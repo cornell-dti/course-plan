@@ -9,16 +9,6 @@ type RequirementCommon = {
   readonly allowCourseDoubleCounting?: true;
   /** If this is set to true, then AP/IB credits cannot be applied towards this requirement. */
   readonly disallowTransferCredit?: true;
-  /** Requirements may have conditions associated with certain course ids, eg. for AP/IB exams. */
-  readonly conditions?: Record<
-    [courseId: number],
-    {
-      /** If the user IS NOT in one of these colleges, the course id cannot fulfill the requirement. */
-      colleges: string[];
-      /** If the user IS in one of these majors, the course id cannot fulfill the requirement. */
-      majorsExcluded?: string[];
-    }
-  >;
 
   /**
    * If this field exists with string,
@@ -89,8 +79,22 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
     } & T)
   | ToggleableRequirementFulfillmentInformation<T>;
 
+/** Requirements may have conditions associated with certain course ids, eg. for AP/IB exams. */
+type RequirementCourseConditions = Record<
+  [courseId: number],
+  {
+    /** If the user IS NOT in one of these colleges, the course id cannot fulfill the requirement. */
+    readonly colleges: string[];
+    /** If the user IS in one of these majors, the course id cannot fulfill the requirement. */
+    readonly majorsExcluded?: string[];
+  }
+>;
+
 type DecoratedCollegeOrMajorRequirement = RequirementCommon &
-  RequirementFulfillmentInformation<{ readonly courses: readonly (readonly number[])[] }>;
+  RequirementFulfillmentInformation<{
+    readonly courses: readonly (readonly number[])[];
+    readonly conditions?: readonly RequirementCourseConditions;
+  }>;
 
 /**
  * CourseTaken is the data type used in requirement computation.

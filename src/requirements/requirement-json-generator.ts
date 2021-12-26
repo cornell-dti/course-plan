@@ -283,29 +283,30 @@ const decorateRequirementWithExams = (
           };
     }
     case 'toggleable': {
-      const { fulfillmentOptions, conditions, description } = requirement;
-      const newConditions = { ...conditions };
-      const newFulfillmentOptions = Object.fromEntries(
-        Object.entries(fulfillmentOptions).map(([optionName, option]) => {
-          const { courses, ...rest } = option;
-          const examConditions = computeConditionsForExams(courses);
-          Object.keys(examConditions).forEach(e => {
-            if (e in newConditions) console.log(description);
-          });
-          Object.assign(newConditions, examConditions);
-          return [optionName, { ...rest, courses: courses.map(addCourseIdsForAssociatedExams) }];
-        })
-      );
-      return Object.keys(newConditions).length !== 0
-        ? {
-            ...requirement,
-            fulfillmentOptions: newFulfillmentOptions,
-            conditions: newConditions,
-          }
-        : {
-            ...requirement,
-            fulfillmentOptions: newFulfillmentOptions,
-          };
+      const { fulfillmentOptions } = requirement;
+      return {
+        ...requirement,
+        fulfillmentOptions: Object.fromEntries(
+          Object.entries(fulfillmentOptions).map(([optionName, option]) => {
+            const { courses, conditions, ...rest } = option;
+            const examConditions = computeConditionsForExams(courses);
+            const newConditions = {
+              ...conditions,
+              ...examConditions,
+            };
+            return [
+              optionName,
+              Object.keys(newConditions).length !== 0
+                ? {
+                    ...rest,
+                    courses: courses.map(addCourseIdsForAssociatedExams),
+                    conditions: newConditions,
+                  }
+                : { ...rest, courses: courses.map(addCourseIdsForAssociatedExams) },
+            ];
+          })
+        ),
+      };
     }
     default:
       throw new Error();
