@@ -6,7 +6,7 @@ import {
   Course,
   MutableMajorRequirements,
 } from './types';
-import sourceRequirements, { College, colleges } from './data';
+import sourceRequirements, { colleges } from './data';
 import { NO_EQUIVALENT_COURSES_COURSE_ID, SPECIAL_COURSES } from './data/constants';
 import {
   examRequirementsMapping,
@@ -260,15 +260,13 @@ const sortRequirementCourses: RequirementDecorator = requirement => {
               ([
                 name,
                 { courses: additionalRequirementsCourses, ...additionalRequirementRest },
-              ]) => {
-                return [
-                  name,
-                  {
-                    ...additionalRequirementRest,
-                    courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
-                  },
-                ];
-              }
+              ]) => [
+                name,
+                {
+                  ...additionalRequirementRest,
+                  courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
+                },
+              ]
             )
           ),
       };
@@ -405,7 +403,6 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
 };
 
 const decoratedRequirements = generateDecoratedRequirementsJson();
-
 const decoratedRequirementsString = JSON.stringify(decoratedRequirements, undefined, 2);
 
 writeFileSync('src/requirements/decorated-requirements.json', decoratedRequirementsString);
