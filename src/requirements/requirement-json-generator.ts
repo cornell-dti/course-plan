@@ -153,7 +153,7 @@ const computeConditionsForExams = (courses: readonly (readonly number[])[]) => {
     });
     if (validColleges.size === colleges.length) return;
     conditions[exam] = {
-      colleges: [...validColleges],
+      colleges: [...validColleges].sort(),
       ...(majorsExcluded && { majorsExcluded }),
     };
   });
