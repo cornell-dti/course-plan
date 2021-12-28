@@ -6,7 +6,7 @@ import {
   Course,
   MutableMajorRequirements,
 } from './types';
-import sourceRequirements, { colleges } from './data';
+import sourceRequirements, { College, colleges } from './data';
 import { NO_EQUIVALENT_COURSES_COURSE_ID, SPECIAL_COURSES } from './data/constants';
 import {
   examRequirementsMapping,
@@ -30,36 +30,12 @@ const specialCourses: Course[] = Object.entries(SPECIAL_COURSES)
   }))
   .filter(({ crseId }) => crseId !== NO_EQUIVALENT_COURSES_COURSE_ID);
 
-type MutableDecoratedJson = {
-  university: {
-    [key: string]: {
-      readonly name: string;
-      readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
-    };
-  };
-  college: {
-    [key: string]: {
-      readonly name: string;
-      readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
-    };
-  };
-  major: MutableMajorRequirements<DecoratedCollegeOrMajorRequirement>;
-  minor: {
-    [key: string]: {
-      readonly name: string;
-      readonly schools: readonly string[];
-      readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
-    };
-  };
-  grad: {
-    [key: string]: {
-      readonly name: string;
-      // Unsure if grad programs can be offered by multiple schools, but allows flexibility.
-      readonly schools: readonly string[];
-      readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
-    };
-  };
-};
+type InitialRequirementDecorator = (
+  requirement: CollegeOrMajorRequirement
+) => DecoratedCollegeOrMajorRequirement;
+type RequirementDecorator = (
+  requirement: DecoratedCollegeOrMajorRequirement
+) => DecoratedCollegeOrMajorRequirement;
 
 const getEligibleCoursesFromRequirementCheckers = (
   checkers: readonly RequirementChecker[]
@@ -70,13 +46,20 @@ const getEligibleCoursesFromRequirementCheckers = (
         .filter(course => oneRequirementChecker(course))
         .map(course => course.crseId)
     );
-    // Sort by course ID to get a more stable ordered json
-    return Array.from(courseIdSet).sort((a, b) => a - b);
+    return Array.from(courseIdSet);
   });
 
-const decorateRequirementWithCourses = (
-  requirement: CollegeOrMajorRequirement
-): DecoratedCollegeOrMajorRequirement => {
+const applyDecoratorsToRequirements = (
+  requirements: readonly CollegeOrMajorRequirement[],
+  initialDecorator: InitialRequirementDecorator,
+  ...decorators: RequirementDecorator[]
+): readonly DecoratedCollegeOrMajorRequirement[] =>
+  requirements.map(requirement => {
+    const decoratedRequirement = initialDecorator(requirement);
+    return decorators.reduce((res, decorator) => decorator(res), decoratedRequirement);
+  });
+
+const decorateRequirementWithCourses: InitialRequirementDecorator = requirement => {
   switch (requirement.fulfilledBy) {
     case 'self-check':
       return requirement;
@@ -119,8 +102,232 @@ const decorateRequirementWithCourses = (
   }
 };
 
-const requirementsJsonWithSatisfiableCourses = (): MutableDecoratedJson => {
+const equivalentCourseIds = new Set(Object.keys(courseToExamMapping));
+const generateExamCourseIdsFromEquivalentCourses = (
+  courses: readonly number[]
+): { examCourseIds: Set<number>; examEquivalentCourses: Set<string> } => {
+  const examCourseIds = new Set<number>();
+  const examEquivalentCourses = new Set<string>();
+  courses
+    .map(course => course.toString())
+    .filter(course => equivalentCourseIds.has(course))
+    .forEach(course => {
+      courseToExamMapping[course].forEach(exam => examCourseIds.add(exam));
+      examEquivalentCourses.add(course);
+    });
+  return {
+    examCourseIds,
+    examEquivalentCourses,
+  };
+};
+
+/**
+ * Map this function across every list of course ids and figure out which
+ * exams' course ids should be added (if any).
+ */
+const addCourseIdsForAssociatedExams = (courses: readonly number[]): number[] => {
+  const { examCourseIds } = generateExamCourseIdsFromEquivalentCourses(courses);
+  return courses.concat(...examCourseIds);
+};
+
+/**
+ * Compute requirements conditions for AP/IB exams
+ */
+const computeConditionsForExams = (courses: readonly (readonly number[])[]) => {
+  const conditions: Record<
+    number,
+    {
+      colleges: string[];
+      majorsExcluded?: string[];
+    }
+  > = {};
+  const { examCourseIds, examEquivalentCourses } = generateExamCourseIdsFromEquivalentCourses(
+    courses.flat()
+  );
+  examCourseIds.forEach(exam => {
+    const { collegeConditions, majorsExcluded } = examRequirementsMapping[exam];
+    const validColleges = new Set<string>();
+    examToCourseMapping[exam].forEach(course => {
+      if (examEquivalentCourses.has(course.toString()))
+        collegeConditions[course].forEach(college => validColleges.add(college));
+    });
+    if (validColleges.size === colleges.length) return;
+    conditions[exam] = {
+      colleges: [...validColleges],
+      ...(majorsExcluded && { majorsExcluded }),
+    };
+  });
+  return conditions;
+};
+
+const decorateRequirementWithExams: RequirementDecorator = requirement => {
+  if (requirement.disallowTransferCredit) {
+    return requirement;
+  }
+  switch (requirement.fulfilledBy) {
+    case 'self-check':
+      return requirement;
+    case 'courses':
+    case 'credits': {
+      const { courses, conditions, additionalRequirements, ...rest } = requirement;
+      const examConditions = computeConditionsForExams(courses);
+      const newConditions = {
+        ...conditions,
+        ...examConditions,
+      };
+      return {
+        ...rest,
+        courses: courses.map(addCourseIdsForAssociatedExams),
+        ...(Object.keys(newConditions).length !== 0 && { conditions: newConditions }),
+        additionalRequirements:
+          additionalRequirements &&
+          Object.fromEntries(
+            Object.entries(additionalRequirements).map(
+              ([
+                name,
+                {
+                  courses: additionalRequirementCourses,
+                  conditions: additionalRequirementConditions,
+                  ...additionalRequirementRest
+                },
+              ]) => {
+                const additionalRequirementExamConditions = computeConditionsForExams(
+                  additionalRequirementCourses
+                );
+                const additionalRequirementNewConditions = {
+                  ...additionalRequirementConditions,
+                  ...additionalRequirementExamConditions,
+                };
+                return [
+                  name,
+                  {
+                    ...additionalRequirementRest,
+                    courses: additionalRequirementCourses.map(addCourseIdsForAssociatedExams),
+                    ...(Object.keys(additionalRequirementNewConditions).length !== 0 && {
+                      conditions: additionalRequirementNewConditions,
+                    }),
+                  },
+                ];
+              }
+            )
+          ),
+      };
+    }
+    case 'toggleable': {
+      const { fulfillmentOptions } = requirement;
+      return {
+        ...requirement,
+        fulfillmentOptions: Object.fromEntries(
+          Object.entries(fulfillmentOptions).map(([optionName, option]) => {
+            const { courses, conditions, ...rest } = option;
+            const examConditions = computeConditionsForExams(courses);
+            const newConditions = {
+              ...conditions,
+              ...examConditions,
+            };
+            return [
+              optionName,
+              {
+                ...rest,
+                courses: courses.map(addCourseIdsForAssociatedExams),
+                ...(Object.keys(newConditions).length !== 0 && { conditions: newConditions }),
+              },
+            ];
+          })
+        ),
+      };
+    }
+    default:
+      throw new Error();
+  }
+};
+
+// Sort by course ID to get a more stable ordered json
+const sortRequirementCourses: RequirementDecorator = requirement => {
+  switch (requirement.fulfilledBy) {
+    case 'self-check':
+      return requirement;
+    case 'courses':
+    case 'credits': {
+      const { courses, additionalRequirements, ...rest } = requirement;
+      return {
+        ...rest,
+        courses: courses.map(c => [...c].sort((a, b) => a - b)),
+        additionalRequirements:
+          additionalRequirements &&
+          Object.fromEntries(
+            Object.entries(additionalRequirements).map(
+              ([
+                name,
+                { courses: additionalRequirementsCourses, ...additionalRequirementRest },
+              ]) => {
+                return [
+                  name,
+                  {
+                    ...additionalRequirementRest,
+                    courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
+                  },
+                ];
+              }
+            )
+          ),
+      };
+    }
+    case 'toggleable': {
+      const { fulfillmentOptions } = requirement;
+      return {
+        ...requirement,
+        fulfillmentOptions: Object.fromEntries(
+          Object.entries(fulfillmentOptions).map(([optionName, option]) => {
+            const { courses, ...rest } = option;
+            return [
+              optionName,
+              {
+                ...rest,
+                courses: courses.map(c => [...c].sort((a, b) => a - b)),
+              },
+            ];
+          })
+        ),
+      };
+    }
+    default:
+      throw new Error();
+  }
+};
+
+const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
   const { university, college, major, minor, grad } = sourceRequirements;
+  type MutableDecoratedJson = {
+    university: {
+      [key: string]: {
+        readonly name: string;
+        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+      };
+    };
+    college: {
+      [key: string]: {
+        readonly name: string;
+        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+      };
+    };
+    major: MutableMajorRequirements<DecoratedCollegeOrMajorRequirement>;
+    minor: {
+      [key: string]: {
+        readonly name: string;
+        readonly schools: readonly string[];
+        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+      };
+    };
+    grad: {
+      [key: string]: {
+        readonly name: string;
+        // Unsure if grad programs can be offered by multiple schools, but allows flexibility.
+        readonly schools: readonly string[];
+        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+      };
+    };
+  };
   const decoratedJson: MutableDecoratedJson = {
     university: {},
     college: {},
@@ -128,42 +335,47 @@ const requirementsJsonWithSatisfiableCourses = (): MutableDecoratedJson => {
     minor: {},
     grad: {},
   };
-  const decorateRequirementsWithCourses = (requirements: readonly CollegeOrMajorRequirement[]) =>
-    requirements.map(decorateRequirementWithCourses);
+  const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) =>
+    applyDecoratorsToRequirements(
+      requirements,
+      decorateRequirementWithCourses,
+      decorateRequirementWithExams,
+      sortRequirementCourses
+    );
   Object.entries(university).forEach(([universityName, universityRequirement]) => {
     const { requirements, ...rest } = universityRequirement;
     decoratedJson.university[universityName] = {
       ...rest,
-      requirements: decorateRequirementsWithCourses(requirements),
+      requirements: decorateRequirements(requirements),
     };
   });
   Object.entries(college).forEach(([collegeName, collegeRequirement]) => {
     const { requirements, ...rest } = collegeRequirement;
     decoratedJson.college[collegeName] = {
       ...rest,
-      requirements: decorateRequirementsWithCourses(requirements),
+      requirements: decorateRequirements(requirements),
     };
   });
   Object.entries(major).forEach(([majorName, majorRequirement]) => {
     const { requirements, specializations, ...rest } = majorRequirement;
     decoratedJson.major[majorName] = {
       ...rest,
-      requirements: decorateRequirementsWithCourses(requirements),
-      specializations: decorateRequirementsWithCourses(specializations ?? []),
+      requirements: decorateRequirements(requirements),
+      specializations: decorateRequirements(specializations ?? []),
     };
   });
   Object.entries(minor).forEach(([minorName, minorRequirement]) => {
     const { requirements, ...rest } = minorRequirement;
     decoratedJson.minor[minorName] = {
       ...rest,
-      requirements: decorateRequirementsWithCourses(requirements),
+      requirements: decorateRequirements(requirements),
     };
   });
   Object.entries(grad).forEach(([gradName, gradRequirement]) => {
     const { requirements, ...rest } = gradRequirement;
     decoratedJson.grad[gradName] = {
       ...rest,
-      requirements: decorateRequirementsWithCourses(requirements),
+      requirements: decorateRequirements(requirements),
     };
   });
 
@@ -192,177 +404,7 @@ const requirementsJsonWithSatisfiableCourses = (): MutableDecoratedJson => {
   return decoratedJson;
 };
 
-const equivalentCourseIds = new Set(Object.keys(courseToExamMapping));
-const generateExamCourseIdsFromEquivalentCourses = (
-  courses: readonly number[]
-): { examCourseIds: Set<number>; examEquivalentCourses: Set<string> } => {
-  const examCourseIds = new Set<number>();
-  const examEquivalentCourses = new Set<string>();
-  courses
-    .map(course => course.toString())
-    .filter(course => equivalentCourseIds.has(course))
-    .forEach(course => {
-      courseToExamMapping[course].forEach(exam => examCourseIds.add(exam));
-      examEquivalentCourses.add(course);
-    });
-  return {
-    examCourseIds,
-    examEquivalentCourses,
-  };
-};
-
-/**
- * Map this function across every list of course ids and figure out which
- * exams' course ids should be added (if any).
- */
-const addCourseIdsForAssociatedExams = (courses: readonly number[]): number[] => {
-  const { examCourseIds } = generateExamCourseIdsFromEquivalentCourses(courses);
-  return [...[...examCourseIds].sort(), ...courses];
-};
-
-/**
- * Compute requirements conditions for AP/IB exams
- */
-const computeConditionsForExams = (courses: readonly (readonly number[])[]) => {
-  const conditions: Record<
-    number,
-    {
-      colleges: string[];
-      majorsExcluded?: string[];
-    }
-  > = {};
-  const { examCourseIds, examEquivalentCourses } = generateExamCourseIdsFromEquivalentCourses(
-    courses.flat()
-  );
-  examCourseIds.forEach(exam => {
-    const { collegeConditions, majorsExcluded } = examRequirementsMapping[exam];
-    const validColleges = new Set<string>();
-    examToCourseMapping[exam].forEach(course => {
-      if (examEquivalentCourses.has(course.toString()))
-        collegeConditions[course].forEach(college => validColleges.add(college));
-    });
-    if (validColleges.size === colleges.length) return;
-    conditions[exam] = majorsExcluded
-      ? {
-          colleges: [...validColleges].sort(),
-          majorsExcluded,
-        }
-      : {
-          colleges: [...validColleges].sort(),
-        };
-  });
-  return conditions;
-};
-
-const decorateRequirementWithExams = (
-  requirement: DecoratedCollegeOrMajorRequirement
-): DecoratedCollegeOrMajorRequirement => {
-  if (requirement.disallowTransferCredit) {
-    return requirement;
-  }
-  switch (requirement.fulfilledBy) {
-    case 'self-check':
-      return requirement;
-    case 'courses':
-    case 'credits': {
-      const { courses, conditions, ...rest } = requirement;
-      const examConditions = computeConditionsForExams(courses);
-      const newConditions = {
-        ...conditions,
-        ...examConditions,
-      };
-      return Object.keys(newConditions).length !== 0
-        ? {
-            ...rest,
-            courses: courses.map(addCourseIdsForAssociatedExams),
-            conditions: newConditions,
-          }
-        : {
-            ...rest,
-            courses: courses.map(addCourseIdsForAssociatedExams),
-          };
-    }
-    case 'toggleable': {
-      const { fulfillmentOptions } = requirement;
-      return {
-        ...requirement,
-        fulfillmentOptions: Object.fromEntries(
-          Object.entries(fulfillmentOptions).map(([optionName, option]) => {
-            const { courses, conditions, ...rest } = option;
-            const examConditions = computeConditionsForExams(courses);
-            const newConditions = {
-              ...conditions,
-              ...examConditions,
-            };
-            return [
-              optionName,
-              Object.keys(newConditions).length !== 0
-                ? {
-                    ...rest,
-                    courses: courses.map(addCourseIdsForAssociatedExams),
-                    conditions: newConditions,
-                  }
-                : { ...rest, courses: courses.map(addCourseIdsForAssociatedExams) },
-            ];
-          })
-        ),
-      };
-    }
-    default:
-      throw new Error();
-  }
-};
-
-const requirementsJsonWithSatisfiableExams = (
-  decoratedJson: MutableDecoratedJson
-): DecoratedRequirementsJson => {
-  const decorateRequirementsWithExams = (
-    requirements: readonly DecoratedCollegeOrMajorRequirement[]
-  ) => requirements.map(decorateRequirementWithExams);
-  const { university, college, major, minor, grad } = decoratedJson;
-  Object.entries(university).forEach(([universityName, universityRequirement]) => {
-    const { requirements, ...rest } = universityRequirement;
-    decoratedJson.university[universityName] = {
-      ...rest,
-      requirements: decorateRequirementsWithExams(requirements),
-    };
-  });
-  Object.entries(college).forEach(([collegeName, collegeRequirement]) => {
-    const { requirements, ...rest } = collegeRequirement;
-    decoratedJson.college[collegeName] = {
-      ...rest,
-      requirements: decorateRequirementsWithExams(requirements),
-    };
-  });
-  Object.entries(major).forEach(([majorName, majorRequirement]) => {
-    const { requirements, specializations, ...rest } = majorRequirement;
-    decoratedJson.major[majorName] = {
-      ...rest,
-      requirements: decorateRequirementsWithExams(requirements),
-      specializations: decorateRequirementsWithExams(specializations ?? []),
-    };
-  });
-  Object.entries(minor).forEach(([minorName, minorRequirement]) => {
-    const { requirements, ...rest } = minorRequirement;
-    decoratedJson.minor[minorName] = {
-      ...rest,
-      requirements: decorateRequirementsWithExams(requirements),
-    };
-  });
-  Object.entries(grad).forEach(([gradName, gradRequirement]) => {
-    const { requirements, ...rest } = gradRequirement;
-    decoratedJson.grad[gradName] = {
-      ...rest,
-      requirements: decorateRequirementsWithExams(requirements),
-    };
-  });
-
-  return decoratedJson;
-};
-
-const decoratedRequirements = requirementsJsonWithSatisfiableExams(
-  requirementsJsonWithSatisfiableCourses()
-);
+const decoratedRequirements = generateDecoratedRequirementsJson();
 
 const decoratedRequirementsString = JSON.stringify(decoratedRequirements, undefined, 2);
 
