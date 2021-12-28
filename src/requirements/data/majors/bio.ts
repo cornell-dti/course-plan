@@ -190,7 +190,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
         checker: includesWithSubRequirements(
           ['CHEM 2510', 'CHEM 3010'],
           ['BIOMG 3310', 'BIOMG 3320', 'BIOMG 3300', 'BIOMG 3340'],
-          ['BIOMG 3420'],
+          ['BIOMG 4320'],
           ['BIOMG 4400'],
           ['CHEM 2870', 'CHEM 2880', 'CHEM 3890', 'CHEM 3900'],
           ['BIOMG 4380', 'BIOMG 6310', 'CHEM 4500', 'BIOG 4990']
