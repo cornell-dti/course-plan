@@ -359,7 +359,7 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
     decoratedJson.major[majorName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
-      specializations: decorateRequirements(specializations ?? []),
+      specializations: specializations && decorateRequirements(specializations),
     };
   });
   Object.entries(minor).forEach(([minorName, minorRequirement]) => {
