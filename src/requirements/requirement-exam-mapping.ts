@@ -5,10 +5,13 @@ import examData, {
 } from './data/exams/ExamCredit';
 import { colleges, College } from './data';
 
+// TODO @bshen try to refactor these types
 type ExamRequirementsCollegeConditions = Record<number, College[]>;
 type ExamRequirementsConditions = {
-  collegeConditions: ExamRequirementsCollegeConditions; // if the user IS NOT in one of these colleges, the course id cannot fulfill the requirement
-  majorsExcluded?: string[]; // if the user IS in one of these majors, the course id cannot fulfill the requirement
+  /** If the user IS NOT in one of these colleges, the course id cannot fulfill the requirement. */
+  collegeConditions: ExamRequirementsCollegeConditions;
+  /** If the user IS in one of these majors, the course id cannot fulfill the requirement. */
+  majorsExcluded?: string[];
 };
 
 /**
@@ -119,21 +122,19 @@ export const examRequirementsMapping: Record<
   };
 }, {});
 
-export const examToCourseMapping: Record<number, string[]> = Object.fromEntries(
+export const examToCourseMapping: Record<string, number[]> = Object.fromEntries(
   Object.entries(examRequirementsMapping).map(([id, conditions]) => [
     id,
-    Object.keys(conditions.collegeConditions),
+    Object.keys(conditions.collegeConditions).map(k => parseInt(k, 10)),
   ])
 );
 
-export const courseToExamMapping: Record<number, string[]> = Object.entries(
+export const courseToExamMapping: Record<string, number[]> = Object.entries(
   examToCourseMapping
-).reduce((mapping: Record<number, string[]>, [id, courses]) => {
-  courses
-    .map(c => parseInt(c, 10))
-    .forEach(course => {
-      if (!mapping[course]) mapping[course] = [];
-      mapping[course] = [...mapping[course], id];
-    });
+).reduce((mapping: Record<number, number[]>, [id, courses]) => {
+  courses.forEach(course => {
+    if (!mapping[course]) mapping[course] = [];
+    mapping[course] = [...mapping[course], parseInt(id, 10)];
+  });
   return mapping;
 }, {});
