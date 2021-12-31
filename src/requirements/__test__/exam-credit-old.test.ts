@@ -2,7 +2,10 @@ import getCourseEquivalentsFromUserExams, {
   ExamsTakenOld,
   getCourseEquivalentsFromOneMajor,
 } from '../requirement-exam-utils';
-import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID } from '../data/constants';
+import {
+  NO_FULFILLMENTS_COURSE_ID as NO_EQUIVALENT_COURSES_COURSE_ID,
+  CREDITS_COURSE_ID,
+} from '../data/constants';
 
 /**
  * Tests for getCourseEquivalentsFromOneMajor

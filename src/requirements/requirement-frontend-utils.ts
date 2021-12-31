@@ -1,6 +1,7 @@
 import { SPECIAL_COURSES } from './data/constants';
 import requirementJson from './typed-requirement-json';
 import specialized from './specialize';
+import { examCourseIds } from './requirement-exam-mapping';
 
 /**
  * A collection of helper functions
@@ -12,8 +13,10 @@ import specialized from './specialize';
  * @returns true if the course is AP/IB equivalent course or credit
  */
 export const courseIsAPIB = (course: CourseTaken): boolean =>
+  // TODO @bshen simplify logic, deprecate special courses
   Object.values(SPECIAL_COURSES).includes(course.courseId) ||
-  ['AP', 'IB'].includes(course.code.split(' ')[0]);
+  ['AP', 'IB'].includes(course.code.split(' ')[0]) ||
+  examCourseIds.includes(course.courseId);
 
 /**
  * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase
@@ -326,7 +329,7 @@ const computeFulfillmentStatistics = (
       acknowledgedCheckerWarningOptIn: [],
       optOut: [],
     };
-    // If a requirement has checker warning, do not match it the course unless it's acknoledged.
+    // If a requirement has checker warning, do not match it the course unless it's acknowledged.
     if (
       overrideOptions.optOut.includes(requirementName) ||
       (hasRequirementCheckerWarning &&

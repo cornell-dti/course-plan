@@ -1,5 +1,5 @@
 import examData, { ExamFulfillment, ExamFulfillments } from './data/exams/ExamCredit';
-import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
+import { NO_FULFILLMENTS_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
 
 /** @deprecated old infra */
 type ExamTakenOld = {
@@ -88,7 +88,7 @@ function userDataToCourses(
     }
     if (!courseEquivalentsExist) {
       courses.push({
-        courseId: NO_EQUIVALENT_COURSES_COURSE_ID,
+        courseId: NO_FULFILLMENTS_COURSE_ID,
         uniqueId: name,
         code: name,
         credits: 0,
@@ -167,7 +167,7 @@ export const examsTakenToExamCourses = (exams: ExamsTaken): CourseTaken[] => {
       });
     } else {
       examCourses.push({
-        courseId: NO_EQUIVALENT_COURSES_COURSE_ID,
+        courseId: NO_FULFILLMENTS_COURSE_ID,
         uniqueId: examName,
         code: examName,
         credits: 0,

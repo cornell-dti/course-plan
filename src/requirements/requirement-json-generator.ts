@@ -7,7 +7,7 @@ import {
   MutableMajorRequirements,
 } from './types';
 import sourceRequirements, { colleges } from './data';
-import { NO_EQUIVALENT_COURSES_COURSE_ID, SPECIAL_COURSES } from './data/constants';
+import { NO_FULFILLMENTS_COURSE_ID, SPECIAL_COURSES } from './data/constants';
 import {
   examRequirementsMapping,
   examToCourseMapping,
@@ -28,7 +28,7 @@ const specialCourses: Course[] = Object.entries(SPECIAL_COURSES)
     acadCareer: '',
     acadGroup: '',
   }))
-  .filter(({ crseId }) => crseId !== NO_EQUIVALENT_COURSES_COURSE_ID);
+  .filter(({ crseId }) => crseId !== NO_FULFILLMENTS_COURSE_ID);
 
 type InitialRequirementDecorator = (
   requirement: CollegeOrMajorRequirement
