@@ -1,5 +1,5 @@
 /** Exam course ID for special course that satisfies no requirements (not even total credits). */
-export const NO_FULFILLMENTS_COURSE_ID = 10; // TODO @bshen rename to NO_FULFILLMENTS_COURSE_ID
+export const NO_FULFILLMENTS_COURSE_ID = 10;
 
 /** @deprecated Course ID for special course that satisfies total academic credits requirement. */
 export const CREDITS_COURSE_ID = 11;
