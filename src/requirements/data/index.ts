@@ -70,7 +70,7 @@ import spanishMinorRequirements from './minors/spanish';
 // import mengCSRequirements from './grad/meng-cs';
 import mpaRequirements from './grad/mpa';
 
-import MATH2940 from './specializations/en';
+import { MATH2940, CHEM2080 } from './specializations/en';
 
 const json: RequirementsJson = {
   university: {
@@ -178,7 +178,7 @@ const json: RequirementsJson = {
       name: 'Computer Science',
       schools: ['EN', 'AS1', 'AS2'],
       requirements: csRequirements,
-      specializations: [MATH2940],
+      specializations: [MATH2940, CHEM2080],
     },
     DEA: {
       name: 'Design and Environmental Analysis',
