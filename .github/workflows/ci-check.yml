@@ -44,7 +44,9 @@ jobs:
           node-version: '16'
           cache: 'npm'
       - name: NPM Install
-        run: npm install && npm run req-gen
+        run: npm install
+      - name: Run req-gen
+        run: npm run req-gen
       - name: Check that the requirements json has no changes
         run: exit $(git status --porcelain | wc -l)
   frontend-tests:
