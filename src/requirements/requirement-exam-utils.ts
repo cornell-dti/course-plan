@@ -110,9 +110,7 @@ export function getCourseEquivalentsFromOneMajor(
 }
 
 /** @deprecated old infra */
-export default function getCourseEquivalentsFromOneUserExam(
-  user: AppOnboardingData
-): readonly CourseTaken[] {
+export function getCourseEquivalentsFromUserExams(user: AppOnboardingData): readonly CourseTaken[] {
   const examCourseCodeSet = new Set<string>();
   const { college, major: majors } = user;
   const userExamData: ExamsTakenOld = { AP: [], IB: [] };
@@ -179,15 +177,14 @@ export const examsTakenToExamCourses = (exams: ExamsTaken): CourseTaken[] => {
   return examCourses;
 };
 
-// TODO @bshen make this default export
-export const userDataToExamCourses = (user: AppOnboardingData): CourseTaken[] => {
+export default function userDataToExamCourses(user: AppOnboardingData): CourseTaken[] {
   const examsTaken = user.exam.map(({ type: examType, subject, score }) => ({
     examType,
     subject,
     score,
   }));
   return examsTakenToExamCourses(examsTaken);
-};
+}
 
 const toSubjects = (data: ExamFulfillments) => {
   const subjects = [...new Set(Object.keys(data))];

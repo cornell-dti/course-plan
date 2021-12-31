@@ -1,7 +1,6 @@
-import {
+import userDataToExamCourses, {
   ExamsTaken,
   examsTakenToExamCourses,
-  userDataToExamCourses,
 } from '../requirement-exam-utils';
 import { NO_EQUIVALENT_COURSES_COURSE_ID } from '../data/constants';
 
