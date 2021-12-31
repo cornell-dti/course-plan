@@ -16,7 +16,7 @@ export const courseIsAPIB = (course: CourseTaken): boolean =>
   // TODO @bshen simplify logic, deprecate special courses
   Object.values(SPECIAL_COURSES).includes(course.courseId) ||
   ['AP', 'IB'].includes(course.code.split(' ')[0]) ||
-  examCourseIds.includes(course.courseId);
+  examCourseIds.has(course.courseId);
 
 /**
  * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase
