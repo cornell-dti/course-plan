@@ -44,6 +44,11 @@ export function getCurrentYear(): number {
   return new Date().getFullYear();
 }
 
+// the number of years +- the current year to show in new semester and onboarding dropdowns
+export function getYearRange(): number {
+  return 6;
+}
+
 export function getCollegeFullName(acronym: string | undefined): string {
   // Return empty string if college is not in requirementJSON
   const college = acronym ? requirementJSON.college[acronym] : null;

@@ -143,7 +143,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import { clickOutside, getCurrentYear } from '@/utilities';
+import { clickOutside, getCurrentYear, getYearRange } from '@/utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -232,7 +232,7 @@ export default defineComponent({
     },
     semesters(): Readonly<Record<string, string>> {
       const semsDict: Record<string, string> = {};
-      const yearRange = 6;
+      const yearRange = getYearRange();
       const curYear = getCurrentYear();
       for (let i = -yearRange; i <= yearRange; i += 1) {
         const yr = String(curYear + i);
