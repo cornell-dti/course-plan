@@ -48,6 +48,10 @@ export default class RequirementFulfillmentGraph<
     return edges;
   }
 
+  public isEmpty(): boolean {
+    return this.requirementToCoursesMap.size === 0;
+  }
+
   public addRequirementNode(requirement: Requirement): void {
     if (!this.requirementToCoursesMap.has(requirement)) {
       this.requirementToCoursesMap.set(requirement, new Map());
@@ -103,5 +107,17 @@ export default class RequirementFulfillmentGraph<
       newCopy.courseToRequirementsMap.set(key, new Set(requirementSet));
     });
     return newCopy;
+  }
+
+  public add(graph: RequirementFulfillmentGraph<Requirement, Course>): void {
+    graph.getAllEdges().forEach(([req, course]) => {
+      this.addEdge(req, course);
+    });
+  }
+
+  public subtract(graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>): void {
+    graph.getAllEdges().forEach(([req, course]) => {
+      this.removeEdge(req, course);
+    });
   }
 }

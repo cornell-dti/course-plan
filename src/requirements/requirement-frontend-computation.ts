@@ -246,6 +246,7 @@ export default function computeGroupedRequirementFulfillmentReports(
 
   const {
     userRequirements,
+    userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
     doubleCountedCourseUniqueIDSet,
@@ -357,7 +358,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   }
 
   return {
-    userRequirementsMap: Object.fromEntries(userRequirements.map(it => [it.id, it])),
+    userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
     doubleCountedCourseUniqueIDSet,

@@ -1,3 +1,4 @@
+import { getConstraintViolations } from './requirement-constraints-utils';
 import RequirementFulfillmentGraph, { CourseWithUniqueId } from './requirement-graph';
 
 interface CourseForRequirementGraph extends CourseWithUniqueId {
@@ -130,16 +131,11 @@ export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   graph: RequirementFulfillmentGraph<Requirement, Course>,
   allowDoubleCounting: (requirement: Requirement) => boolean
 ): ReadonlySet<string | number> => {
-  const doubleCountedCourseUniqueIDSet = new Set<string | number>();
-  graph.getAllCourses().forEach(course => {
-    const requirementsThatDoesNotAllowDoubleCounting = graph
-      .getConnectedRequirementsFromCourse(course)
-      .filter(it => !allowDoubleCounting(it));
-    if (requirementsThatDoesNotAllowDoubleCounting.length > 1) {
-      // Illegal double counting
-      requirementsThatDoesNotAllowDoubleCounting.forEach(r => graph.removeEdge(r, course));
-      doubleCountedCourseUniqueIDSet.add(course.uniqueId);
-    }
-  });
-  return doubleCountedCourseUniqueIDSet;
+  const constraintViolations = getConstraintViolations(graph, allowDoubleCounting);
+  if (constraintViolations) {
+    const { constraintViolationsGraph, doubleCountedCourseUniqueIDSet } = constraintViolations;
+    graph.subtract(constraintViolationsGraph);
+    return doubleCountedCourseUniqueIDSet;
+  }
+  return new Set(); // TODO @bshen return null
 };

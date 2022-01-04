@@ -1,6 +1,7 @@
 import { SPECIAL_COURSES } from './data/constants';
 import requirementJson from './typed-requirement-json';
 import specialized from './specialize';
+import { getConstraintViolationsForSingleCourse } from './requirement-constraints-utils';
 
 /**
  * A collection of helper functions
@@ -438,10 +439,12 @@ export function computeFulfillmentCoursesAndStatistics(
 
 export function getAllEligibleRelatedRequirementIds(
   courseId: number,
+  uniqueId: number,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): readonly string[] {
-  return groupedRequirements
+  const requirements = groupedRequirements
     .flatMap(it => it.reqs)
     .flatMap(({ requirement }) => {
       const spec = getMatchedRequirementFulfillmentSpecification(
@@ -455,6 +458,17 @@ export function getAllEligibleRelatedRequirementIds(
       }
       return [];
     });
+  // only return the requirements that are in a constraint violation
+  const constraintViolations = getConstraintViolationsForSingleCourse(
+    { uniqueId },
+    requirements,
+    userRequirementsMap
+  );
+  if (constraintViolations) {
+    const { constraintViolationsGraph } = constraintViolations;
+    return constraintViolationsGraph.getAllRequirements();
+  }
+  return [];
 }
 
 export function getRelatedUnfulfilledRequirements(
