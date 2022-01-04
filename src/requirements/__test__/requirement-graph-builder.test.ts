@@ -150,6 +150,7 @@ it('removeIllegalEdgesFromRequirementFulfillmentGraph tests', () => {
   expect(
     Array.from(
       removeIllegalEdgesFromRequirementFulfillmentGraph(graph, r => r === 'R1' || r === 'R4')
+        .doubleCountedCourseUniqueIDSet
     )
   ).toEqual([1]);
 

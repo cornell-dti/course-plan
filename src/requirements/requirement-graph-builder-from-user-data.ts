@@ -112,7 +112,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     requirementGraphBuilderParameters
   );
   const safeRequirementFulfillmentGraph = dangerousRequirementFulfillmentGraph.copy();
-  const doubleCountedCourseUniqueIDSet = removeIllegalEdgesFromRequirementFulfillmentGraph(
+  const { doubleCountedCourseUniqueIDSet } = removeIllegalEdgesFromRequirementFulfillmentGraph(
     safeRequirementFulfillmentGraph,
     requirementID => userRequirementsMap[requirementID].allowCourseDoubleCounting || false
   );
