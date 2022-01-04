@@ -462,7 +462,7 @@ export function getAllEligibleRelatedRequirementIds(
   const constraintViolations = getConstraintViolationsForSingleCourse(
     { uniqueId },
     requirements,
-    userRequirementsMap
+    requirementID => userRequirementsMap[requirementID].allowCourseDoubleCounting || false
   );
   if (constraintViolations) {
     const { constraintViolationsGraph } = constraintViolations;
