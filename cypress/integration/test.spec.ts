@@ -3,9 +3,9 @@
  * Can and should be expanded on in more files to test more specific functionality and ensure future bugs are caught earlier
  */
 
-import { getCurrentYear, getYearRange } from '../../src/utilities';
+import { getCurrentYear, yearRange } from '../../src/utilities';
 
-const startYear = getCurrentYear() - getYearRange();
+const startYear = getCurrentYear() - yearRange;
 
 // Before running tests, starts on landing page, logs in to firebase, then visits the dashboard
 // Log in occurs with TEST_UID of the courseplan testing account using a function from the cypress-firebase package

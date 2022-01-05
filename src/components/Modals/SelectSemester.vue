@@ -97,7 +97,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { getCurrentSeason, getCurrentYear, clickOutside, getYearRange } from '@/utilities';
+import { getCurrentSeason, getCurrentYear, clickOutside, yearRange } from '@/utilities';
 import store from '@/store';
 
 import fall from '@/assets/images/fallEmoji.svg';
@@ -151,7 +151,7 @@ export default defineComponent({
       [winter, 'Winter'],
     ] as const;
     const years = [];
-    const yearRange = getYearRange();
+    const yearRange = yearRange;
     let startYear = currentYear - yearRange;
     while (startYear <= currentYear + yearRange) {
       years.push(startYear);
