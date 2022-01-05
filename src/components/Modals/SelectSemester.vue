@@ -151,7 +151,6 @@ export default defineComponent({
       [winter, 'Winter'],
     ] as const;
     const years = [];
-    const yearRange = yearRange;
     let startYear = currentYear - yearRange;
     while (startYear <= currentYear + yearRange) {
       years.push(startYear);
