@@ -334,29 +334,27 @@ const computeFulfillmentStatistics = (
     }
     const arbitraryOptInSlotNames = new Set(overrideOptions.arbitraryOptIn[requirementName] || []);
 
-    if (arbitraryOptInSlotNames.size > 0) {
-      for (
-        let subRequirementIndex = 0;
-        subRequirementIndex < eligibleCourses.length;
-        subRequirementIndex += 1
+    for (
+      let subRequirementIndex = 0;
+      subRequirementIndex < eligibleCourses.length;
+      subRequirementIndex += 1
+    ) {
+      const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
+      if (arbitraryOptInSlotNames.has(slotName)) {
+        // the user wants to use this course to override this sub-requirement
+        coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+        subRequirementProgress[subRequirementIndex] +=
+          fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+        // don't break, in case the user wants to override more sub-requirements with the same course
+      } else if (
+        eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
+        subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
       ) {
-        const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
-        if (arbitraryOptInSlotNames.has(slotName)) {
-          // the user wants to use this course to override this sub-requirement
-          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
-          subRequirementProgress[subRequirementIndex] +=
-            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-          // don't break, in case the user wants to override more sub-requirements with the same course
-        } else if (
-          eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
-          subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
-        ) {
-          // this course is eligible to fulfill this sub-requirement, and the user did not opt out
-          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
-          subRequirementProgress[subRequirementIndex] +=
-            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-          break;
-        }
+        // this course is eligible to fulfill this sub-requirement, and the user did not opt out
+        coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+        subRequirementProgress[subRequirementIndex] +=
+          fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+        break;
       }
     }
   });
