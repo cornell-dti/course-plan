@@ -105,15 +105,6 @@ export const courseIsForeignLang = (course: Course): boolean =>
   FLcourses.some(language => course.subject?.includes(language) ?? false);
 
 /**
- * Detects special courses, as defined in constants.ts
- *
- * @param course course object with useful information retrived from Cornell courses API.
- * @returns if the course is a special course
- */
-export const courseIsSpecial = (course: Course): boolean =>
-  Object.values(SPECIAL_COURSES).includes(course.crseId);
-
-/**
  * This function checks whether a course's maximum number of credits reaches a specified minimum
  *
  * @param course course object with useful information retrived from Cornell courses API.

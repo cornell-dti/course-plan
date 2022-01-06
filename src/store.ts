@@ -28,18 +28,6 @@ type DerivedCoursesData = {
   readonly courseToSemesterMap: Readonly<Record<number, FirestoreSemester>>;
 };
 
-/**
- * Some AP/IB equivalent course data that can be derived from onboarding data, but added to the global store
- * for efficiency and ease of access.
- * @deprecated old infra
- */
-type DerivedAPIBEquivalentCourseData = {
-  // Mapping from exam name to unique ids (there can be multiple)
-  readonly examToUniqueIdsMap: Readonly<Record<string, Set<string | number>>>;
-  // Mapping from unique id to exam name
-  readonly uniqueIdToExamMap: Readonly<Record<string | number, string>>;
-};
-
 export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
   userName: FirestoreUserName;
@@ -47,7 +35,6 @@ export type VuexStoreState = {
   semesters: readonly FirestoreSemester[];
   orderByNewest: boolean;
   derivedCoursesData: DerivedCoursesData;
-  derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
@@ -88,10 +75,6 @@ const store: TypedVuexStore = new TypedVuexStore({
       courseMap: {},
       courseToSemesterMap: {},
     },
-    derivedAPIBEquivalentCourseData: {
-      examToUniqueIdsMap: {},
-      uniqueIdToExamMap: {},
-    },
     toggleableRequirementChoices: {},
     overriddenFulfillmentChoices: {},
     userRequirementsMap: {},
@@ -125,12 +108,6 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setDerivedCourseData(state: VuexStoreState, data: DerivedCoursesData) {
       state.derivedCoursesData = data;
-    },
-    setDerivedAPIBEquivalentCourseData(
-      state: VuexStoreState,
-      data: DerivedAPIBEquivalentCourseData
-    ) {
-      state.derivedAPIBEquivalentCourseData = data;
     },
     setToggleableRequirementChoices(
       state: VuexStoreState,
@@ -207,29 +184,6 @@ const autoRecomputeDerivedData = (): (() => void) =>
       };
       store.commit('setDerivedCourseData', derivedCourseData);
     }
-    /* TODO @bshen remove old infra
-    if (payload.type === 'setOnboardingData') {
-      const examToUniqueIdsMap: Record<string, Set<string | number>> = {};
-      const uniqueIdToExamMap: Record<string | number, string> = {};
-      const equivalentCourses = getCourseEquivalentsFromUserExams(state.onboardingData);
-      state.onboardingData.exam.forEach(({ type, subject }) => {
-        const examName = `${type} ${subject}`;
-        examToUniqueIdsMap[examName] = new Set();
-      });
-      equivalentCourses.forEach(({ uniqueId, code }) => {
-        uniqueIdToExamMap[uniqueId] = code;
-        examToUniqueIdsMap[code].add(uniqueId);
-      });
-      const derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData = {
-        examToUniqueIdsMap,
-        uniqueIdToExamMap,
-      };
-      store.commit('setDerivedAPIBEquivalentCourseData', derivedAPIBEquivalentCourseData);
-      // Recompute overriddenFulfillmentChoices, which is dependent
-      // on onboardingData and derivedAPIBEquivalentCourseData
-      store.commit('setOverriddenFulfillmentChoices', state.overriddenFulfillmentChoices);
-    }
-    */
     // Recompute requirements
     if (
       payload.type === 'setOnboardingData' ||

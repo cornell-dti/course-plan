@@ -4,7 +4,6 @@ import {
   includesWithSubRequirements,
   courseMatchesCodeOptions,
   ifCodeMatch,
-  courseIsSpecial,
 } from '../checkers-common';
 
 const csRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -135,7 +134,6 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: [
       (course: Course): boolean => {
-        if (courseIsSpecial(course)) return false;
         const { subject, catalogNbr } = course;
         return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
       },
