@@ -141,7 +141,7 @@ it('Test that only one semester button shows', () => {
   cy.get('[data-cyId=newSemester-seasonWrapper]').click();
   cy.get('[data-cyId=newSemester-seasonItem]').first().click();
 
-  // click 2015
+  // click oldest year
   cy.get('[data-cyId=newSemester-yearWrapper]').click();
   cy.get('[data-cyId=newSemester-yearItem]').first().click();
 
