@@ -47,6 +47,10 @@ const examFulfillmentList: ExamFulfillment[] = Object.values(examData)
   .map((examFulfillments: ExamFulfillments) => Object.values(examFulfillments))
   .flat(2);
 
+export const examCourseIds: Set<number> = new Set(
+  examFulfillmentList.map(({ courseId }) => courseId)
+);
+
 /**
  * Mapping for exams from course id to requirements info.
  * The requirements info includes:
