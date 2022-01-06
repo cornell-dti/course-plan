@@ -113,7 +113,7 @@ export function getCourseEquivalentsFromOneMajor(
 export default function getCourseEquivalentsFromOneUserExam(
   user: AppOnboardingData
 ): readonly CourseTaken[] {
-  const examKeys = new Set<{ code: string; courseId: number }>();
+  const examKeys = new Map<string, Set<number>>();
   const { college, major: majors } = user;
   const userExamData: ExamsTakenOld = { AP: [], IB: [] };
   user.exam.forEach((exam: FirestoreAPIBExam) => {
@@ -127,8 +127,13 @@ export default function getCourseEquivalentsFromOneUserExam(
     ...majors.map((major: string) =>
       getCourseEquivalentsFromOneMajor(college, major, userExamData).filter(
         ({ code, courseId }) => {
-          if (!examKeys.has({ code, courseId })) {
-            examKeys.add({ code, courseId });
+          const courseIds = examKeys.get(code);
+          if (!courseIds) {
+            examKeys.set(code, new Set([courseId]));
+            return true;
+          }
+          if (!courseIds.has(courseId)) {
+            courseIds.add(courseId);
             return true;
           }
           return false;
