@@ -285,7 +285,8 @@ export default defineComponent({
               uniqueID,
               store.state.groupedRequirementFulfillmentReport,
               store.state.toggleableRequirementChoices,
-              store.state.userRequirementsMap
+              store.state.userRequirementsMap,
+              store.state.onboardingData.major
             ).filter(it => it !== requirementID);
             choices[uniqueID] = { ...choice, optOut };
           });
