@@ -1,5 +1,5 @@
 import { CREDITS_COURSE_ID } from './data/constants';
-import { getUserRequirements, requirementAllowDoubleCounting } from './requirement-frontend-utils';
+import { getUserRequirements } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import {
   BuildRequirementFulfillmentGraphParameters,
@@ -114,9 +114,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   const safeRequirementFulfillmentGraph = dangerousRequirementFulfillmentGraph.copy();
   const { doubleCountedCourseUniqueIDSet } = removeIllegalEdgesFromRequirementFulfillmentGraph(
     safeRequirementFulfillmentGraph,
-    requirementID =>
-      !!userRequirementsMap[requirementID] &&
-      requirementAllowDoubleCounting(userRequirementsMap[requirementID], onboardingData.major)
+    requirementID => userRequirementsMap[requirementID].allowCourseDoubleCounting || false
   );
 
   return {

@@ -152,8 +152,7 @@ export default defineComponent({
           this.selfCheckCourses[option].uniqueID,
           store.state.groupedRequirementFulfillmentReport,
           store.state.toggleableRequirementChoices,
-          store.state.userRequirementsMap,
-          store.state.onboardingData.major
+          store.state.userRequirementsMap
         ),
       }));
     },
@@ -178,8 +177,7 @@ export default defineComponent({
             newCourse.uniqueID,
             store.state.groupedRequirementFulfillmentReport,
             store.state.toggleableRequirementChoices,
-            store.state.userRequirementsMap,
-            store.state.onboardingData.major
+            store.state.userRequirementsMap
           ),
         }),
         this.$gtag

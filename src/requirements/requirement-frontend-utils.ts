@@ -445,8 +445,7 @@ export function getAllEligibleRelatedRequirementIds(
   uniqueId: number,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
-  majors: readonly string[]
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): readonly string[] {
   const requirements = groupedRequirements
     .flatMap(it => it.reqs)
@@ -466,9 +465,7 @@ export function getAllEligibleRelatedRequirementIds(
   const constraintViolations = getConstraintViolationsForSingleCourse(
     { uniqueId },
     requirements,
-    requirementID =>
-      !!userRequirementsMap[requirementID] &&
-      requirementAllowDoubleCounting(userRequirementsMap[requirementID], majors)
+    requirementID => userRequirementsMap[requirementID].allowCourseDoubleCounting || false
   );
   if (constraintViolations) {
     const { constraintViolationsGraph } = constraintViolations;
