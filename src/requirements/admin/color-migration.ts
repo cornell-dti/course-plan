@@ -61,7 +61,7 @@ async function main() {
     await runOnUser(userEmail, runOnDB);
     return;
   }
-  const collection = await usernameCollection.get();
+  const collection = await subjectColorsCollection.get();
   const userEmails = collection.docs.map(it => it.id);
   for (userEmail of userEmails) {
     console.group(`Running on ${userEmail}...`);
