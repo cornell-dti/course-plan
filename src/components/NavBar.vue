@@ -252,7 +252,6 @@ $mobile-navbar-height: 4.5rem;
     }
   }
 
-  // Need to add plan-mobile-icon
   .plan-mobile-icon {
     background-image: url('@/assets/images/navbar/toolbox-mobile-icon.svg');
   }
