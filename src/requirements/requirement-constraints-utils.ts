@@ -10,34 +10,34 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
   course: CourseWithUniqueId,
   requirements: readonly Requirement[],
   allowDoubleCounting: (requirement: Requirement) => boolean
-): RequirementFulfillmentGraphConstraintViolations<Requirement> | null => {
+): RequirementFulfillmentGraphConstraintViolations<Requirement> => {
   const constraintViolationsGraph = new RequirementFulfillmentGraph<
     Requirement,
     CourseWithUniqueId
   >();
-
   // TODO take into consideration grad, minors, etc. (see requirementAllowDoubleCounting())
   const requirementsThatDoNotAllowDoubleCounting = new Set(
     requirements.filter(req => !allowDoubleCounting(req))
   );
+  const doubleCountedCourseUniqueIDSet = new Set<string | number>();
   if (requirementsThatDoNotAllowDoubleCounting.size > 1) {
     requirementsThatDoNotAllowDoubleCounting.forEach(req => {
       constraintViolationsGraph.addRequirementNode(req);
       constraintViolationsGraph.addEdge(req, course);
     });
-    return {
-      constraintViolationsGraph,
-      requirementsThatDoNotAllowDoubleCounting: new Set(requirementsThatDoNotAllowDoubleCounting),
-      doubleCountedCourseUniqueIDSet: new Set([course.uniqueId]),
-    };
+    doubleCountedCourseUniqueIDSet.add(course.uniqueId);
   }
-  return null;
+  return {
+    constraintViolationsGraph,
+    requirementsThatDoNotAllowDoubleCounting,
+    doubleCountedCourseUniqueIDSet,
+  };
 };
 
 export const getConstraintViolations = <Requirement extends string>(
   graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>,
   allowDoubleCounting: (requirement: Requirement) => boolean
-): RequirementFulfillmentGraphConstraintViolations<Requirement> | null => {
+): RequirementFulfillmentGraphConstraintViolations<Requirement> => {
   const constraintViolationsGraph = new RequirementFulfillmentGraph<
     Requirement,
     CourseWithUniqueId
@@ -45,32 +45,26 @@ export const getConstraintViolations = <Requirement extends string>(
   const requirementsThatDoNotAllowDoubleCounting = new Set<Requirement>();
   const doubleCountedCourseUniqueIDSet = new Set<string | number>();
   graph.getAllCourses().forEach(course => {
-    const constraintViolations = getConstraintViolationsForSingleCourse(
+    const {
+      constraintViolationsGraph: constraintViolationsGraphForSingleCourse,
+      requirementsThatDoNotAllowDoubleCounting: requirementsThatDoNotAllowDoubleCountingForSingleCourse,
+      doubleCountedCourseUniqueIDSet: doubleCountedCourseUniqueIDSetForSingleCourse,
+    } = getConstraintViolationsForSingleCourse(
       course,
       graph.getConnectedRequirementsFromCourse(course),
       allowDoubleCounting
     );
-    if (constraintViolations) {
-      const {
-        constraintViolationsGraph: constraintViolationsGraphForSingleCourse,
-        requirementsThatDoNotAllowDoubleCounting: requirementsThatDoNotAllowDoubleCountingForSingleCourse,
-        doubleCountedCourseUniqueIDSet: doubleCountedCourseUniqueIDSetForSingleCourse,
-      } = constraintViolations;
-      constraintViolationsGraph.add(constraintViolationsGraphForSingleCourse);
-      requirementsThatDoNotAllowDoubleCountingForSingleCourse.forEach(id =>
-        requirementsThatDoNotAllowDoubleCounting.add(id)
-      );
-      doubleCountedCourseUniqueIDSetForSingleCourse.forEach(id =>
-        doubleCountedCourseUniqueIDSet.add(id)
-      );
-    }
+    constraintViolationsGraph.add(constraintViolationsGraphForSingleCourse);
+    requirementsThatDoNotAllowDoubleCountingForSingleCourse.forEach(id =>
+      requirementsThatDoNotAllowDoubleCounting.add(id)
+    );
+    doubleCountedCourseUniqueIDSetForSingleCourse.forEach(id =>
+      doubleCountedCourseUniqueIDSet.add(id)
+    );
   });
-  if (!constraintViolationsGraph.isEmpty()) {
-    return {
-      constraintViolationsGraph,
-      requirementsThatDoNotAllowDoubleCounting,
-      doubleCountedCourseUniqueIDSet,
-    };
-  }
-  return null;
+  return {
+    constraintViolationsGraph,
+    requirementsThatDoNotAllowDoubleCounting,
+    doubleCountedCourseUniqueIDSet,
+  };
 };

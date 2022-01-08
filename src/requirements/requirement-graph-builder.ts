@@ -131,15 +131,12 @@ export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   graph: RequirementFulfillmentGraph<Requirement, Course>,
   allowDoubleCounting: (requirement: Requirement) => boolean
 ): { doubleCountedCourseUniqueIDSet: ReadonlySet<string | number> } => {
-  const constraintViolations = getConstraintViolations(graph, allowDoubleCounting);
-  if (constraintViolations) {
-    const { constraintViolationsGraph, doubleCountedCourseUniqueIDSet } = constraintViolations;
-    graph.subtract(constraintViolationsGraph);
-    return {
-      doubleCountedCourseUniqueIDSet,
-    };
-  }
+  const { constraintViolationsGraph, doubleCountedCourseUniqueIDSet } = getConstraintViolations(
+    graph,
+    allowDoubleCounting
+  );
+  graph.subtract(constraintViolationsGraph);
   return {
-    doubleCountedCourseUniqueIDSet: new Set(),
+    doubleCountedCourseUniqueIDSet,
   };
 };
