@@ -36,7 +36,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { clickOutside } from '@/utilities';
+import { clickOutside, isPlaceholderCourse } from '@/utilities';
 import store from '@/store';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
@@ -81,6 +81,7 @@ export default defineComponent({
         .flatMap(it => it.courses)
         .forEach(course => {
           if (
+            isPlaceholderCourse(course) ||
             !canFulfillChecker(
               store.state.userRequirementsMap,
               store.state.toggleableRequirementChoices,
@@ -88,11 +89,11 @@ export default defineComponent({
               course.crseId
             )
           ) {
-            // If the course can't help fulfill the checker, do not add to choices.
+            // If the course can't help fulfill the checker (or is a placeholder), do not add to choices.
             return;
           }
 
-          const currentlyMatchedRequirements = store.state.requirementFulfillmentGraph.getConnectedRequirementsFromCourse(
+          const currentlyMatchedRequirements = store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse(
             { uniqueId: course.uniqueID }
           );
           if (currentlyMatchedRequirements.includes(this.subReqId)) {
@@ -102,7 +103,7 @@ export default defineComponent({
 
           const currentRequirementAllowDoubleCounting =
             store.state.userRequirementsMap[this.subReqCourseId]?.allowCourseDoubleCounting;
-          const allOtherRequirementsAllowDoubleCounting = store.state.requirementFulfillmentGraph
+          const allOtherRequirementsAllowDoubleCounting = store.state.safeRequirementFulfillmentGraph
             .getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
             .every(reqID => store.state.userRequirementsMap[reqID]?.allowCourseDoubleCounting);
           if (!currentRequirementAllowDoubleCounting && !allOtherRequirementsAllowDoubleCounting) {

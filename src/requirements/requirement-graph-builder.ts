@@ -49,7 +49,7 @@ export type BuildRequirementFulfillmentGraphParameters<
   ) => readonly number[];
 };
 
-const buildRequirementFulfillmentGraph = <
+export const buildRequirementFulfillmentGraph = <
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >({
@@ -114,8 +114,8 @@ const buildRequirementFulfillmentGraph = <
     userChoiceOnOptInOptOutCourse.optIn.forEach(optedInRequirement => {
       graph.addEdge(optedInRequirement, course);
     });
-    userChoiceOnOptInOptOutCourse.optOut.forEach(optedInRequirement => {
-      graph.removeEdge(optedInRequirement, course);
+    userChoiceOnOptInOptOutCourse.optOut.forEach(optedOutRequirement => {
+      graph.removeEdge(optedOutRequirement, course);
     });
   });
 
@@ -123,4 +123,23 @@ const buildRequirementFulfillmentGraph = <
   return graph;
 };
 
-export default buildRequirementFulfillmentGraph;
+export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
+  Requirement extends string,
+  Course extends CourseForRequirementGraph
+>(
+  graph: RequirementFulfillmentGraph<Requirement, Course>,
+  allowDoubleCounting: (requirement: Requirement) => boolean
+): ReadonlySet<string | number> => {
+  const doubleCountedCourseUniqueIDSet = new Set<string | number>();
+  graph.getAllCourses().forEach(course => {
+    const requirementsThatDoesNotAllowDoubleCounting = graph
+      .getConnectedRequirementsFromCourse(course)
+      .filter(it => !allowDoubleCounting(it));
+    if (requirementsThatDoesNotAllowDoubleCounting.length > 1) {
+      // Illegal double counting
+      requirementsThatDoesNotAllowDoubleCounting.forEach(r => graph.removeEdge(r, course));
+      doubleCountedCourseUniqueIDSet.add(course.uniqueId);
+    }
+  });
+  return doubleCountedCourseUniqueIDSet;
+};

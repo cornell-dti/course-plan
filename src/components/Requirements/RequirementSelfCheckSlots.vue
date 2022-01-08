@@ -7,8 +7,8 @@
       <incomplete-self-check
         :subReqId="requirementFulfillment.requirement.id"
         :subReqName="requirementFulfillment.requirement.name"
-        :subReqFulfillment="requirementFulfillment.fulfilledBy"
-        :subReqCourseId="requirementFulfillment.minCountFulfilled"
+        :subReqFulfillment="requirementFulfillment.fulfillment.fulfilledBy"
+        :subReqCourseId="requirementFulfillment.fulfillment.safeMinCountFulfilled"
       />
     </div>
   </div>
@@ -39,7 +39,7 @@ export default defineComponent({
     fulfilledSelfCheckCourses(): readonly CourseTaken[] {
       // selectedCourses are courses that fulfill the requirement based on user-choice
       // they are taken from requirement graph
-      const selectedCourses = store.state.requirementFulfillmentGraph.getConnectedCoursesFromRequirement(
+      const selectedCourses = store.state.dangerousRequirementFulfillmentGraph.getConnectedCoursesFromRequirement(
         this.requirementFulfillment.requirement.id
       );
 
@@ -54,18 +54,20 @@ export default defineComponent({
       );
       if (requirementFulfillmentSpec !== null) {
         if (requirementFulfillmentSpec.fulfilledBy === 'credits') {
-          this.requirementFulfillment.courses[0].forEach(completedCourse =>
+          this.requirementFulfillment.fulfillment.dangerousCourses[0].forEach(completedCourse =>
             fulfillableCourses.push(completedCourse)
           );
         } else {
-          this.requirementFulfillment.courses.forEach((requirementFulfillmentCourseSlot, i) => {
-            const slotMinCount = requirementFulfillmentSpec.perSlotMinCount[i];
-            for (let j = 0; j < slotMinCount; j += 1) {
-              if (j < requirementFulfillmentCourseSlot.length) {
-                fulfillableCourses.push(requirementFulfillmentCourseSlot[j]);
+          this.requirementFulfillment.fulfillment.dangerousCourses.forEach(
+            (requirementFulfillmentCourseSlot, i) => {
+              const slotMinCount = requirementFulfillmentSpec.perSlotMinCount[i];
+              for (let j = 0; j < slotMinCount; j += 1) {
+                if (j < requirementFulfillmentCourseSlot.length) {
+                  fulfillableCourses.push(requirementFulfillmentCourseSlot[j]);
+                }
               }
             }
-          });
+          );
         }
       }
       // fulfillableCourses are then filtered to be AP/IB/transfer courses only

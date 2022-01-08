@@ -97,7 +97,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
+import { getCurrentSeason, getCurrentYear, clickOutside, yearRange } from '@/utilities';
 import store from '@/store';
 
 import fall from '@/assets/images/fallEmoji.svg';
@@ -124,8 +124,6 @@ type Data = {
     readonly season: DisplayOption;
   };
 };
-
-const yearRange = 6;
 
 export default defineComponent({
   props: {
@@ -308,6 +306,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .duplicate-p {
   color: red;
 }
@@ -358,7 +358,7 @@ export default defineComponent({
     font-size: 14px;
     line-height: 14px;
 
-    color: #b6b6b6;
+    color: $darkPlaceholderGray;
   }
 
   &-icon {
