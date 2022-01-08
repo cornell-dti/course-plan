@@ -83,6 +83,7 @@
           <template #item="{ element }">
             <div class="semester-courseWrapper">
               <course
+                v-if="!isPlaceholderCourse(element)"
                 :courseObj="element"
                 :isReqCourse="false"
                 :compact="compact"
@@ -95,6 +96,12 @@
                 @color-subject="colorSubject"
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
+              />
+              <placeholder
+                v-else
+                :compact="compact"
+                :semesterIndex="semesterIndex + 1"
+                :placeholderObj="element"
               />
             </div>
           </template>
@@ -122,6 +129,7 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
+import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
@@ -130,7 +138,7 @@ import EditSemester from '@/components/Modals/EditSemester.vue';
 import ClearSemester from '@/components/Modals/ClearSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
-import { clickOutside } from '@/utilities';
+import { clickOutside, isPlaceholderCourse } from '@/utilities';
 
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
@@ -161,6 +169,7 @@ export default defineComponent({
     ClearSemester,
     NewCourseModal,
     SemesterMenu,
+    Placeholder,
   },
   data() {
     return {
@@ -196,7 +205,7 @@ export default defineComponent({
     },
     year: { type: Number, required: true },
     courses: {
-      type: Array as PropType<readonly FirestoreSemesterCourse[]>,
+      type: Array as PropType<readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[]>,
       required: true,
     },
     compact: { type: Boolean, required: true },
@@ -231,7 +240,7 @@ export default defineComponent({
 
   computed: {
     coursesForDraggable: {
-      get(): readonly FirestoreSemesterCourse[] {
+      get(): readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[] {
         return this.courses;
       },
       /**
@@ -300,27 +309,18 @@ export default defineComponent({
     creditString() {
       let credits = 0;
       this.courses.forEach(course => {
-        credits += course.credits;
+        if (!isPlaceholderCourse(course)) {
+          credits += course.credits;
+        }
       });
       if (credits === 1) {
         return `${credits.toString()} credit`;
       }
       return `${credits.toString()} credits`;
     },
-    // Note: Currently not used
-    deleteDuplicateCourses(): readonly FirestoreSemesterCourse[] {
-      const uniqueCoursesNames: string[] = [];
-      const uniqueCourses: FirestoreSemesterCourse[] = [];
-      this.courses.forEach(course => {
-        if (uniqueCoursesNames.indexOf(course.name) === -1) {
-          uniqueCourses.push(course);
-          uniqueCoursesNames.push(course.name);
-        }
-      });
-      return uniqueCourses;
-    },
   },
   methods: {
+    isPlaceholderCourse,
     onDragStart() {
       this.isDraggedFrom = true;
       this.scrollable = true;
@@ -397,7 +397,9 @@ export default defineComponent({
       const updater = (semester: FirestoreSemester): FirestoreSemester => ({
         ...semester,
         courses: semester.courses.map(course =>
-          course.code.split(' ')[0] === subject ? { ...course, color } : course
+          !isPlaceholderCourse(course) && course.code.split(' ')[0] === subject
+            ? { ...course, color }
+            : course
         ),
       });
       editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));

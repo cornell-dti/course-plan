@@ -1,7 +1,6 @@
 import { Store } from 'vuex';
 
 import * as fb from './firebase-frontend-config';
-import getCourseEquivalentsFromUserExams from './requirements/requirement-exam-utils';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
@@ -12,6 +11,7 @@ import {
   getCurrentSeason,
   getCurrentYear,
   sortedSemesters,
+  isPlaceholderCourse,
 } from './utilities';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
@@ -31,6 +31,7 @@ type DerivedCoursesData = {
 /**
  * Some AP/IB equivalent course data that can be derived from onboarding data, but added to the global store
  * for efficiency and ease of access.
+ * @deprecated old infra
  */
 type DerivedAPIBEquivalentCourseData = {
   // Mapping from exam name to unique ids (there can be multiple)
@@ -50,7 +51,9 @@ export type VuexStoreState = {
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
-  requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
@@ -94,7 +97,10 @@ const store: TypedVuexStore = new TypedVuexStore({
     userRequirementsMap: {},
     // It won't be null once the app loads.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    requirementFulfillmentGraph: null!,
+    dangerousRequirementFulfillmentGraph: null!,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    safeRequirementFulfillmentGraph: null!,
+    doubleCountedCourseUniqueIDSet: new Set(),
     groupedRequirementFulfillmentReport: [],
     subjectColors: {},
     uniqueIncrementer: 0,
@@ -143,12 +149,16 @@ const store: TypedVuexStore = new TypedVuexStore({
       data: Pick<
         VuexStoreState,
         | 'userRequirementsMap'
-        | 'requirementFulfillmentGraph'
+        | 'dangerousRequirementFulfillmentGraph'
+        | 'safeRequirementFulfillmentGraph'
+        | 'doubleCountedCourseUniqueIDSet'
         | 'groupedRequirementFulfillmentReport'
       >
     ) {
       state.userRequirementsMap = data.userRequirementsMap;
-      state.requirementFulfillmentGraph = data.requirementFulfillmentGraph;
+      state.dangerousRequirementFulfillmentGraph = data.dangerousRequirementFulfillmentGraph;
+      state.safeRequirementFulfillmentGraph = data.safeRequirementFulfillmentGraph;
+      state.doubleCountedCourseUniqueIDSet = data.doubleCountedCourseUniqueIDSet;
       state.groupedRequirementFulfillmentReport = data.groupedRequirementFulfillmentReport;
     },
     setSubjectColors(state: VuexStoreState, colors: Readonly<Record<string, string>>) {
@@ -176,6 +186,10 @@ const autoRecomputeDerivedData = (): (() => void) =>
       const courseToSemesterMap: Record<number, FirestoreSemester> = {};
       state.semesters.forEach(semester => {
         semester.courses.forEach(course => {
+          if (isPlaceholderCourse(course)) {
+            return;
+          }
+
           const { code } = course;
           if (allCourseSet.has(code)) {
             duplicatedCourseCodeSet.add(code);
@@ -193,6 +207,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
       };
       store.commit('setDerivedCourseData', derivedCourseData);
     }
+    /* TODO @bshen remove old infra
     if (payload.type === 'setOnboardingData') {
       const examToUniqueIdsMap: Record<string, Set<string | number>> = {};
       const uniqueIdToExamMap: Record<string | number, string> = {};
@@ -214,6 +229,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
       // on onboardingData and derivedAPIBEquivalentCourseData
       store.commit('setOverriddenFulfillmentChoices', state.overriddenFulfillmentChoices);
     }
+    */
     // Recompute requirements
     if (
       payload.type === 'setOnboardingData' ||
