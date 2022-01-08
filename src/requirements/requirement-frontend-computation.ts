@@ -1,6 +1,6 @@
 import { isPlaceholderCourse } from '../utilities';
 import { SWIM_TEST_COURSE_ID } from './data/constants';
-import getCourseEquivalentsFromUserExams from './requirement-exam-utils';
+import userDataToExamCourses from './requirement-exam-utils';
 import {
   courseIsAPIB,
   convertFirestoreSemesterCourseToCourseTaken,
@@ -179,7 +179,7 @@ export function getCourseCodesArray(
       }
     });
   });
-  courses.push(...getCourseEquivalentsFromUserExams(onboardingData));
+  courses.push(...userDataToExamCourses(onboardingData));
   return courses;
 }
 
