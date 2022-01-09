@@ -98,31 +98,35 @@ export function allowCourseDoubleCountingBetweenRequirements(
   requirementA: RequirementWithIDSourceType,
   requirementB: RequirementWithIDSourceType
 ): boolean {
-  // at least one requirement has the allowCourseDoubleCounting flag
-  if (requirementA.allowCourseDoubleCounting || requirementB.allowCourseDoubleCounting) {
+  const allowCourseDoubleCounting =
+    requirementA.allowCourseDoubleCounting || requirementB.allowCourseDoubleCounting || false;
+
+  // requirement source type is the same
+  if (requirementA.sourceType === requirementB.sourceType) {
+    // at least one source type is minor
+    if (requirementA.sourceType === 'Minor') {
+      return true;
+    }
+    return (
+      // at least one requirement has the allowCourseDoubleCounting flag
+      allowCourseDoubleCounting ||
+      // or the source specific name is different
+      requirementA.sourceSpecificName !== requirementB.sourceSpecificName
+    );
+  }
+  // requirement source type is not the same
+  // exactly one source type is minor
+  if (requirementA.sourceType === 'Minor' || requirementB.sourceType === 'Minor') {
     return true;
   }
-  // // requirement source type is the same
-  // if (requirementA.sourceType === requirementB.sourceType) {
-  //   // at least one source type is minor
-  //   if (requirementA.sourceType === 'Minor') {
-  //     return true; // TODO confirm this
-  //   }
-  //   return requirementA.sourceSpecificName !== requirementB.sourceSpecificName;
-  // }
-  // // requirement source type is not the same
-  // // exactly one source type is minor
-  // if (requirementA.sourceType === 'Minor' || requirementB.sourceType === 'Minor') {
-  //   return true; // TODO confirm this
-  // }
-  // return false;
-
-  return (
-    requirementA.sourceType === 'Minor' ||
-    requirementB.sourceType === 'Minor' ||
-    (requirementA.sourceType === requirementB.sourceType &&
-      requirementA.sourceSpecificName !== requirementB.sourceSpecificName)
-  );
+  // one source type is college and one source type is major
+  if (
+    (requirementA.sourceType === 'College' && requirementB.sourceType === 'Major') ||
+    (requirementA.sourceType === 'Major' && requirementB.sourceType === 'College')
+  ) {
+    return allowCourseDoubleCounting;
+  }
+  return false;
 }
 
 /**
@@ -492,7 +496,7 @@ export function getAllEligibleRelatedRequirementIds(
       return [];
     });
   // only return the requirements that are in a constraint violation
-  const constraintViolations = getConstraintViolationsForSingleCourse(
+  const { constraintViolationsGraph } = getConstraintViolationsForSingleCourse(
     { uniqueId },
     requirements,
     (reqA, reqB) =>
@@ -501,11 +505,7 @@ export function getAllEligibleRelatedRequirementIds(
         userRequirementsMap[reqB]
       )
   );
-  if (constraintViolations) {
-    const { constraintViolationsGraph } = constraintViolations;
-    return constraintViolationsGraph.getAllRequirements();
-  }
-  return [];
+  return constraintViolationsGraph.getAllRequirements();
 }
 
 export function getRelatedUnfulfilledRequirements(

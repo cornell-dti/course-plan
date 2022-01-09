@@ -56,10 +56,12 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
     string | number,
     Set<Set<Requirement>>
   >();
-  requirementsThatDoNotAllowDoubleCounting.set(
-    course.uniqueId,
-    requirementsThatDoNotAllowDoubleCountingForSingleCourse
-  );
+  if (requirementsThatDoNotAllowDoubleCountingForSingleCourse.size > 0) {
+    requirementsThatDoNotAllowDoubleCounting.set(
+      course.uniqueId,
+      requirementsThatDoNotAllowDoubleCountingForSingleCourse
+    );
+  }
   return {
     constraintViolationsGraph,
     requirementsThatDoNotAllowDoubleCounting,
