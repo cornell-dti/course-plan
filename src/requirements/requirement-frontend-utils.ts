@@ -102,29 +102,27 @@ export function allowCourseDoubleCountingBetweenRequirements(
   if (requirementA.allowCourseDoubleCounting || requirementB.allowCourseDoubleCounting) {
     return true;
   }
-  // requirement source type is the same
-  if (requirementA.sourceType === requirementB.sourceType) {
-    // at least one source type is minor
-    if (requirementA.sourceType == 'Minor') {
-      return true; // TODO confirm this
-    }
-    return requirementA.sourceSpecificName !== requirementB.sourceSpecificName;
-  }
-  // requirement source type is not the same
-  else {
-    // exactly one source type is minor
-    if (requirementA.sourceType === 'Minor' || requirementB.sourceType === 'Minor') {
-      return true; // TODO confirm this
-    }
-    return false;
-  }
+  // // requirement source type is the same
+  // if (requirementA.sourceType === requirementB.sourceType) {
+  //   // at least one source type is minor
+  //   if (requirementA.sourceType === 'Minor') {
+  //     return true; // TODO confirm this
+  //   }
+  //   return requirementA.sourceSpecificName !== requirementB.sourceSpecificName;
+  // }
+  // // requirement source type is not the same
+  // // exactly one source type is minor
+  // if (requirementA.sourceType === 'Minor' || requirementB.sourceType === 'Minor') {
+  //   return true; // TODO confirm this
+  // }
+  // return false;
 
-  // return (
-  //   requirementA.sourceType === 'Minor' ||
-  //   requirementB.sourceType === 'Minor' ||
-  //   (requirementA.sourceType === requirementB.sourceType &&
-  //     requirementA.sourceSpecificName !== requirementB.sourceSpecificName)
-  // );
+  return (
+    requirementA.sourceType === 'Minor' ||
+    requirementB.sourceType === 'Minor' ||
+    (requirementA.sourceType === requirementB.sourceType &&
+      requirementA.sourceSpecificName !== requirementB.sourceSpecificName)
+  );
 }
 
 /**
