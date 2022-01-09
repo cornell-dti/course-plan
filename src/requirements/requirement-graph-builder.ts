@@ -129,14 +129,16 @@ export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   Course extends CourseForRequirementGraph
 >(
   graph: RequirementFulfillmentGraph<Requirement, Course>,
-  requirementConstraint: (requirementA: Requirement, requirementB: Requirement) => boolean
-): { doubleCountedCourseUniqueIDSet: ReadonlySet<string | number> } => {
-  const { constraintViolationsGraph, doubleCountedCourseUniqueIDSet } = getConstraintViolations(
-    graph,
-    requirementConstraint
-  );
-  graph.subtract(constraintViolationsGraph);
-  return {
+  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
+): {
+  requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<Set<Requirement>>>;
+  doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
+} => {
+  const {
+    constraintViolationsGraph,
+    requirementsThatDoNotAllowDoubleCounting,
     doubleCountedCourseUniqueIDSet,
-  };
+  } = getConstraintViolations(graph, requirementConstraintHolds);
+  graph.subtract(constraintViolationsGraph);
+  return { requirementsThatDoNotAllowDoubleCounting, doubleCountedCourseUniqueIDSet };
 };

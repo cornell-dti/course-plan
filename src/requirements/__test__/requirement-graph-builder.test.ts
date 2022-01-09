@@ -147,10 +147,13 @@ it('removeIllegalEdgesFromRequirementFulfillmentGraph tests', () => {
   graph.addEdge('R1', { uniqueId: 2, courseId: 0 });
   graph.addEdge('R1', { uniqueId: 3, courseId: 0 });
   graph.addEdge('R4', { uniqueId: 3, courseId: 0 });
+  const doubleCountable = ['R1', 'R4'];
   expect(
     Array.from(
-      removeIllegalEdgesFromRequirementFulfillmentGraph(graph, r => r === 'R1' || r === 'R4')
-        .doubleCountedCourseUniqueIDSet
+      removeIllegalEdgesFromRequirementFulfillmentGraph(
+        graph,
+        (rA, rB) => doubleCountable.includes(rA) || doubleCountable.includes(rB)
+      ).doubleCountedCourseUniqueIDSet
     )
   ).toEqual([1]);
 
