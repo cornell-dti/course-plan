@@ -77,6 +77,9 @@ export function canFulfillChecker(
   return eligibleCourseIds.has(crseId);
 }
 
+/**
+ * @deprecated TODO @bshen
+ */
 export function requirementAllowDoubleCounting(
   requirement: RequirementWithIDSourceType,
   majors: readonly string[]
@@ -89,6 +92,39 @@ export function requirementAllowDoubleCounting(
     if (requirement.sourceSpecificName !== majors[0]) return true;
   }
   return requirement.allowCourseDoubleCounting || false;
+}
+
+export function allowCourseDoubleCountingBetweenRequirements(
+  requirementA: RequirementWithIDSourceType,
+  requirementB: RequirementWithIDSourceType
+): boolean {
+  // at least one requirement has the allowCourseDoubleCounting flag
+  if (requirementA.allowCourseDoubleCounting || requirementB.allowCourseDoubleCounting) {
+    return true;
+  }
+  // requirement source type is the same
+  if (requirementA.sourceType === requirementB.sourceType) {
+    // at least one source type is minor
+    if (requirementA.sourceType == 'Minor') {
+      return true; // TODO confirm this
+    }
+    return requirementA.sourceSpecificName !== requirementB.sourceSpecificName;
+  }
+  // requirement source type is not the same
+  else {
+    // exactly one source type is minor
+    if (requirementA.sourceType === 'Minor' || requirementB.sourceType === 'Minor') {
+      return true; // TODO confirm this
+    }
+    return false;
+  }
+
+  // return (
+  //   requirementA.sourceType === 'Minor' ||
+  //   requirementB.sourceType === 'Minor' ||
+  //   (requirementA.sourceType === requirementB.sourceType &&
+  //     requirementA.sourceSpecificName !== requirementB.sourceSpecificName)
+  // );
 }
 
 /**
@@ -188,11 +224,7 @@ export function getUserRequirements({
       )
     : [];
   // flatten all requirements into single array
-  const allReqs = [uniReqs, collegeReqs, majorReqs, minorReqs, gradReqs].flat();
-  return allReqs.map(requirement => ({
-    ...requirement,
-    allowCourseDoubleCounting: requirementAllowDoubleCounting(requirement, majors) || undefined,
-  }));
+  return [uniReqs, collegeReqs, majorReqs, minorReqs, gradReqs].flat();
 }
 
 /**
@@ -465,7 +497,11 @@ export function getAllEligibleRelatedRequirementIds(
   const constraintViolations = getConstraintViolationsForSingleCourse(
     { uniqueId },
     requirements,
-    requirementID => userRequirementsMap[requirementID].allowCourseDoubleCounting || false
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
   );
   if (constraintViolations) {
     const { constraintViolationsGraph } = constraintViolations;
