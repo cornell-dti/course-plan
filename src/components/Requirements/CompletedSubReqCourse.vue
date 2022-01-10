@@ -45,8 +45,8 @@ import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
-import store from '@/store';
-import { deleteCourseFromSemesters, isCourseConflict } from '@/global-firestore-data';
+import store, { isCourseConflict } from '@/store';
+import { deleteCourseFromSemesters } from '@/global-firestore-data';
 import { onboardingDataCollection } from '@/firebase-frontend-config';
 import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 

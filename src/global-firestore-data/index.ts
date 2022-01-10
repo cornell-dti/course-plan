@@ -4,14 +4,14 @@
 import store from '../store';
 
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '../user-data-converter';
-import { incrementUniqueID, isCourseConflict } from './utils';
+import { incrementUniqueID } from './utils';
 
 export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
   course: CornellCourseRosterCourse
 ): FirestoreSemesterCourse =>
   cornellCourseRosterCourseToFirebaseSemesterCourse(course, store, incrementUniqueID);
 
-export { incrementUniqueID, isCourseConflict };
+export { incrementUniqueID };
 export { default as setOnboardingData } from './onboarding-data';
 export {
   editSemesters,

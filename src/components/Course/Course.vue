@@ -63,8 +63,8 @@ import {
   reportSubjectColorChange,
 } from '@/components/BottomBar/BottomBarState';
 import { clickOutside } from '@/utilities';
-import { isCourseConflict } from '@/global-firestore-data';
 import EditColor from '../Modals/EditColor.vue';
+import { isCourseConflict } from '@/store';
 
 export default defineComponent({
   components: { CourseCaution, CourseMenu, EditColor },

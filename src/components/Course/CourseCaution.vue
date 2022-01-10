@@ -44,8 +44,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import CourseBaseTooltip from '@/components/Course/CourseBaseTooltip.vue';
-import store from '@/store';
-import { isCourseConflict } from '@/global-firestore-data';
+import store, { isCourseConflict } from '@/store';
 import { isPlaceholderCourse, isCourseTaken } from '@/utilities';
 
 type CourseCautions = {

@@ -391,6 +391,9 @@ export const updateSubjectColorData = (color: string, code: string): void => {
     });
 };
 
+export const isCourseConflict = (uniqueId: string | number): boolean =>
+  store.state.doubleCountedCourseUniqueIDSet.has(uniqueId);
+
 fb.auth.onAuthStateChanged(user => {
   if (user) {
     const simplifiedUser = {
