@@ -131,7 +131,7 @@ export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   graph: RequirementFulfillmentGraph<Requirement, Course>,
   requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
 ): {
-  requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<Set<Requirement>>>;
+  requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<Requirement[]>>;
   doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
 } => {
   const {

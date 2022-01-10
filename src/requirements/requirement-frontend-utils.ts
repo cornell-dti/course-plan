@@ -476,10 +476,10 @@ export function computeFulfillmentCoursesAndStatistics(
 
 export function getAllEligibleRelatedRequirementIds(
   courseId: number,
-  uniqueId: number,
+  // uniqueId: number,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices,
-  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
+  toggleableRequirementChoices: AppToggleableRequirementChoices
+  // userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): readonly string[] {
   const requirements = groupedRequirements
     .flatMap(it => it.reqs)
@@ -495,17 +495,19 @@ export function getAllEligibleRelatedRequirementIds(
       }
       return [];
     });
+  // TODO @bshen fix this
   // only return the requirements that are in a constraint violation
-  const { constraintViolationsGraph } = getConstraintViolationsForSingleCourse(
-    { uniqueId },
-    requirements,
-    (reqA, reqB) =>
-      allowCourseDoubleCountingBetweenRequirements(
-        userRequirementsMap[reqA],
-        userRequirementsMap[reqB]
-      )
-  );
-  return constraintViolationsGraph.getAllRequirements();
+  // const { constraintViolationsGraph } = getConstraintViolationsForSingleCourse(
+  //   { uniqueId },
+  //   requirements,
+  //   (reqA, reqB) =>
+  //     allowCourseDoubleCountingBetweenRequirements(
+  //       userRequirementsMap[reqA],
+  //       userRequirementsMap[reqB]
+  //     )
+  // );
+  // return constraintViolationsGraph.getAllRequirements();
+  return requirements;
 }
 
 export function getRelatedUnfulfilledRequirements(

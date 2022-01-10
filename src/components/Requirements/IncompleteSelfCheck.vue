@@ -149,10 +149,8 @@ export default defineComponent({
         // Keep existing behavior of keeping it connected to at most one requirement.
         optOut: getAllEligibleRelatedRequirementIds(
           this.selfCheckCourses[option].crseId,
-          this.selfCheckCourses[option].uniqueID,
           store.state.groupedRequirementFulfillmentReport,
-          store.state.toggleableRequirementChoices,
-          store.state.userRequirementsMap
+          store.state.toggleableRequirementChoices
         ),
       }));
     },
@@ -174,10 +172,8 @@ export default defineComponent({
           // the course to this specific requirement.
           optOut: getAllEligibleRelatedRequirementIds(
             newCourse.crseId,
-            newCourse.uniqueID,
             store.state.groupedRequirementFulfillmentReport,
-            store.state.toggleableRequirementChoices,
-            store.state.userRequirementsMap
+            store.state.toggleableRequirementChoices
           ),
         }),
         this.$gtag

@@ -44,7 +44,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
-  readonly requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<Set<string>>>;
+  readonly requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<string[]>>;
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));

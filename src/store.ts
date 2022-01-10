@@ -53,7 +53,7 @@ export type VuexStoreState = {
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
-  requirementsThatDoNotAllowDoubleCounting: ReadonlyMap<string | number, Set<Set<string>>>;
+  requirementsThatDoNotAllowDoubleCounting: ReadonlyMap<string | number, Set<string[]>>;
   doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
   subjectColors: Readonly<Record<string, string>>;

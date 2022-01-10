@@ -238,7 +238,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
-  readonly requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<Set<string>>>;
+  readonly requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<string[]>>;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   readonly groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
 } {

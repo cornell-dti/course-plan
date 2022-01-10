@@ -48,10 +48,6 @@ export default class RequirementFulfillmentGraph<
     return edges;
   }
 
-  public isEmpty(): boolean {
-    return this.requirementToCoursesMap.size === 0;
-  }
-
   public addRequirementNode(requirement: Requirement): void {
     if (!this.requirementToCoursesMap.has(requirement)) {
       this.requirementToCoursesMap.set(requirement, new Map());

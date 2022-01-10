@@ -104,7 +104,6 @@ export const getConstraintViolations = <Requirement extends string>(
       doubleCountedCourseUniqueIDSet.add(id)
     );
   });
-  console.log(requirementsThatDoNotAllowDoubleCounting, doubleCountedCourseUniqueIDSet);
   return {
     constraintViolationsGraph,
     requirementsThatDoNotAllowDoubleCounting,
