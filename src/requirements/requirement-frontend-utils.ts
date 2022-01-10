@@ -1,7 +1,6 @@
 import { SPECIAL_COURSES } from './data/constants';
 import requirementJson from './typed-requirement-json';
 import specialized from './specialize';
-import { getConstraintViolationsForSingleCourse } from './requirement-constraints-utils';
 import { examCourseIds } from './requirement-exam-mapping';
 
 /**
