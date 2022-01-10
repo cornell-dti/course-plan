@@ -2,7 +2,7 @@ import RequirementFulfillmentGraph, { CourseWithUniqueId } from './requirement-g
 
 type RequirementFulfillmentGraphConstraintViolations<Requirement extends string> = {
   constraintViolationsGraph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>;
-  requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<Set<Requirement>>>;
+  requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<Requirement[]>>;
   doubleCountedCourseUniqueIDSet: Set<string | number>;
 };
 
@@ -10,9 +10,19 @@ type RequirementFulfillmentGraphConstraintViolations<Requirement extends string>
 const setEquals = <T>(a: Set<T>, b: Set<T>) =>
   a.size === b.size && [...a].every(value => b.has(value));
 const setAdd = <T>(set: Set<T>, value: T) => {
-  if (!(value instanceof Set)) set.add(value);
-  else if (![...set].some(nestedSet => nestedSet instanceof Set && setEquals(nestedSet, value)))
+  if (
+    value instanceof Set &&
+    ![...set].some(nestedSet => nestedSet instanceof Set && setEquals(nestedSet, value))
+  ) {
     set.add(value);
+  } else if (
+    Array.isArray(value) &&
+    ![...set].some(
+      nestedList => Array.isArray(nestedList) && setEquals(new Set(nestedList), new Set(value))
+    )
+  ) {
+    set.add(value);
+  } else set.add(value);
 };
 
 export const getConstraintViolationsForSingleCourse = <Requirement extends string>(
@@ -44,18 +54,15 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
       doubleCountedCourseUniqueIDSet.add(course.uniqueId);
     }
   });
-  const requirementsThatDoNotAllowDoubleCountingForSingleCourse = new Set<Set<Requirement>>();
+  const requirementsThatDoNotAllowDoubleCountingForSingleCourse = new Set<Requirement[]>();
   Array.from(constraintViolatingRequirements.entries()).forEach(([k, v]) => {
-    const constraintViolatingRequirementSet = new Set([k, ...v]);
     setAdd(
       requirementsThatDoNotAllowDoubleCountingForSingleCourse,
-      constraintViolatingRequirementSet
+      // use the original requirements list to maintain order
+      requirements.filter(requirement => requirement === k || v.has(k))
     );
   });
-  const requirementsThatDoNotAllowDoubleCounting = new Map<
-    string | number,
-    Set<Set<Requirement>>
-  >();
+  const requirementsThatDoNotAllowDoubleCounting = new Map<string | number, Set<Requirement[]>>();
   if (requirementsThatDoNotAllowDoubleCountingForSingleCourse.size > 0) {
     requirementsThatDoNotAllowDoubleCounting.set(
       course.uniqueId,
@@ -77,10 +84,7 @@ export const getConstraintViolations = <Requirement extends string>(
     Requirement,
     CourseWithUniqueId
   >();
-  const requirementsThatDoNotAllowDoubleCounting = new Map<
-    string | number,
-    Set<Set<Requirement>>
-  >();
+  const requirementsThatDoNotAllowDoubleCounting = new Map<string | number, Set<Requirement[]>>();
   const doubleCountedCourseUniqueIDSet = new Set<string | number>();
   graph.getAllCourses().forEach(course => {
     const {
@@ -100,6 +104,7 @@ export const getConstraintViolations = <Requirement extends string>(
       doubleCountedCourseUniqueIDSet.add(id)
     );
   });
+  console.log(requirementsThatDoNotAllowDoubleCounting, doubleCountedCourseUniqueIDSet);
   return {
     constraintViolationsGraph,
     requirementsThatDoNotAllowDoubleCounting,
