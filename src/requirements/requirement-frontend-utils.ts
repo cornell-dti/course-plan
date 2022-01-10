@@ -1,5 +1,7 @@
 import { SPECIAL_COURSES } from './data/constants';
 import requirementJson from './typed-requirement-json';
+import specialized from './specialize';
+import { examCourseIds } from './requirement-exam-mapping';
 
 /**
  * A collection of helper functions
@@ -11,8 +13,10 @@ import requirementJson from './typed-requirement-json';
  * @returns true if the course is AP/IB equivalent course or credit
  */
 export const courseIsAPIB = (course: CourseTaken): boolean =>
+  // TODO @bshen simplify logic, deprecate special courses
   Object.values(SPECIAL_COURSES).includes(course.courseId) ||
-  ['AP', 'IB'].includes(course.code.split(' ')[0]);
+  ['AP', 'IB'].includes(course.code.split(' ')[0]) ||
+  examCourseIds.has(course.courseId);
 
 /**
  * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase
@@ -86,6 +90,65 @@ export function requirementAllowDoubleCounting(
   return requirement.allowCourseDoubleCounting || false;
 }
 
+/**
+ * Get the requirements for a provided collection of majors/minors
+ *
+ * @param sourceType The type of the field of study, e.g. 'Major' or 'Minor'
+ * @param fields the names of the majors/minors
+ * @returns An array of requirements corresponding to every field of study in `fields`
+ */
+const fieldOfStudyReqs = (sourceType: 'Major' | 'Minor', fields: readonly string[]) => {
+  const jsonKey = sourceType.toLowerCase() as 'major' | 'minor';
+  const fieldRequirements = requirementJson[jsonKey];
+  return fields
+    .map(field => {
+      const fieldRequirement = fieldRequirements[field];
+      return fieldRequirement?.requirements.map(
+        it =>
+          (({
+            ...it,
+            id: `${sourceType}-${field}-${it.name}`,
+            sourceType,
+            sourceSpecificName: field,
+          } as const) ?? [])
+      );
+    })
+    .flat();
+};
+
+/**
+ * Get the majors corresponding to a list of major names
+ *
+ * @param majorNames the majors of the majors
+ * @returns An array of `Major<DecoratedCollegeOrMajorRequirement>` representing
+ * with the provided names. Names corresponding to no known major are ignored.
+ */
+const getMajors = (majorNames: readonly string[]) =>
+  majorNames.map(name => requirementJson.major[name]).filter(major => major !== undefined);
+
+/**
+ * Get the specialized requirements for a college given a list of majors
+ *
+ * @param collegeName the name of the college the user is enrolled in
+ * @param majorNames an array of the names of the majors the user is planning for
+ * @returns An array of college requirements specialized for the user based on
+ * their majors
+ */
+const specializedForCollege = (collegeName: string, majorNames: readonly string[]) => {
+  const majors = getMajors(majorNames);
+  const collegeReqs = requirementJson.college[collegeName].requirements;
+  const spec = specialized(collegeReqs, majors);
+  return spec.map(
+    req =>
+      ({
+        ...req,
+        id: `College-${collegeName}-${req.name}`,
+        sourceType: 'College',
+        sourceSpecificName: collegeName,
+      } as const)
+  );
+};
+
 export function getUserRequirements({
   college,
   major: majors,
@@ -96,73 +159,36 @@ export function getUserRequirements({
   if (college && !(college in requirementJson.college))
     throw new Error(`College ${college} not found.`);
 
-  const universityReqs = requirementJson.university.UNI;
-  return [
-    // University requirements only added if college is defined, i.e. if the user has selected an undergraduate program.
-    ...(college
-      ? universityReqs.requirements.map(
-          it =>
-            ({
-              ...it,
-              id: `College-UNI-${it.name}`,
-              sourceType: 'College',
-              sourceSpecificName: college,
-            } as const)
-        )
-      : []),
-    ...(college
-      ? requirementJson.college[college].requirements.map(
-          it =>
-            ({
-              ...it,
-              id: `College-${college}-${it.name}`,
-              sourceType: 'College',
-              sourceSpecificName: college,
-            } as const)
-        )
-      : []),
-    ...majors
-      .map(major => {
-        const majorRequirement = requirementJson.major[major];
-        if (majorRequirement == null) return [];
-        return majorRequirement.requirements.map(
-          it =>
-            ({
-              ...it,
-              id: `Major-${major}-${it.name}`,
-              sourceType: 'Major',
-              sourceSpecificName: major,
-            } as const)
-        );
-      })
-      .flat(),
-    ...minors
-      .map(minor => {
-        const minorRequirement = requirementJson.minor[minor];
-        if (minorRequirement == null) return [];
-        return minorRequirement.requirements.map(
-          it =>
-            ({
-              ...it,
-              id: `Minor-${minor}-${it.name}`,
-              sourceType: 'Minor',
-              sourceSpecificName: minor,
-            } as const)
-        );
-      })
-      .flat(),
-    ...(grad
-      ? requirementJson.grad[grad].requirements.map(
-          it =>
-            ({
-              ...it,
-              id: `Grad-${grad}-${it.name}`,
-              sourceType: 'Grad',
-              sourceSpecificName: grad,
-            } as const)
-        )
-      : []),
-  ].map(requirement => ({
+  const rawUniReqs = requirementJson.university.UNI;
+  // University requirements only added if college is defined, i.e. if the user has selected an undergraduate program.
+  const uniReqs = college
+    ? rawUniReqs.requirements.map(
+        it =>
+          ({
+            ...it,
+            id: `College-UNI-${it.name}`,
+            sourceType: 'College',
+            sourceSpecificName: college,
+          } as const)
+      )
+    : [];
+  const collegeReqs = college ? specializedForCollege(college, majors) : [];
+  const majorReqs = fieldOfStudyReqs('Major', majors);
+  const minorReqs = fieldOfStudyReqs('Minor', minors);
+  const gradReqs = grad
+    ? requirementJson.grad[grad].requirements.map(
+        it =>
+          ({
+            ...it,
+            id: `Grad-${grad}-${it.name}`,
+            sourceType: 'Grad',
+            sourceSpecificName: grad,
+          } as const)
+      )
+    : [];
+  // flatten all requirements into single array
+  const allReqs = [uniReqs, collegeReqs, majorReqs, minorReqs, gradReqs].flat();
+  return allReqs.map(requirement => ({
     ...requirement,
     allowCourseDoubleCounting: requirementAllowDoubleCounting(requirement, majors) || undefined,
   }));
@@ -303,7 +329,7 @@ const computeFulfillmentStatistics = (
       acknowledgedCheckerWarningOptIn: [],
       optOut: [],
     };
-    // If a requirement has checker warning, do not match it the course unless it's acknoledged.
+    // If a requirement has checker warning, do not match it the course unless it's acknowledged.
     if (
       overrideOptions.optOut.includes(requirementName) ||
       (hasRequirementCheckerWarning &&

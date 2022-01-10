@@ -1,7 +1,6 @@
 import { Store } from 'vuex';
 
 import * as fb from './firebase-frontend-config';
-import getCourseEquivalentsFromUserExams from './requirements/requirement-exam-utils';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
@@ -32,6 +31,7 @@ type DerivedCoursesData = {
 /**
  * Some AP/IB equivalent course data that can be derived from onboarding data, but added to the global store
  * for efficiency and ease of access.
+ * @deprecated old infra
  */
 type DerivedAPIBEquivalentCourseData = {
   // Mapping from exam name to unique ids (there can be multiple)
@@ -207,6 +207,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
       };
       store.commit('setDerivedCourseData', derivedCourseData);
     }
+    /* TODO @bshen remove old infra
     if (payload.type === 'setOnboardingData') {
       const examToUniqueIdsMap: Record<string, Set<string | number>> = {};
       const uniqueIdToExamMap: Record<string | number, string> = {};
@@ -228,6 +229,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
       // on onboardingData and derivedAPIBEquivalentCourseData
       store.commit('setOverriddenFulfillmentChoices', state.overriddenFulfillmentChoices);
     }
+    */
     // Recompute requirements
     if (
       payload.type === 'setOnboardingData' ||

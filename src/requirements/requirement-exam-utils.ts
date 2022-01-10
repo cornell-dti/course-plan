@@ -1,5 +1,5 @@
 import examData, { ExamFulfillment, ExamFulfillments } from './data/exams/ExamCredit';
-import { NO_EQUIVALENT_COURSES_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
+import { NO_FULFILLMENTS_COURSE_ID, CREDITS_COURSE_ID } from './data/constants';
 
 /** @deprecated old infra */
 type ExamTakenOld = {
@@ -51,7 +51,8 @@ function userDataToCourses(
     if (fulfillment) {
       const courseEquivalents =
         (fulfillment.courseEquivalents &&
-          (fulfillment.courseEquivalents[college] || fulfillment.courseEquivalents.DEFAULT)) ||
+          (fulfillment.courseEquivalents[college] ||
+            fulfillment.courseEquivalents.OTHER_COLLEGES)) ||
         [];
       const excludedMajor =
         major && fulfillment.majorsExcluded && fulfillment.majorsExcluded.includes(major);
@@ -87,7 +88,7 @@ function userDataToCourses(
     }
     if (!courseEquivalentsExist) {
       courses.push({
-        courseId: NO_EQUIVALENT_COURSES_COURSE_ID,
+        courseId: NO_FULFILLMENTS_COURSE_ID,
         uniqueId: name,
         code: name,
         credits: 0,
@@ -109,10 +110,8 @@ export function getCourseEquivalentsFromOneMajor(
 }
 
 /** @deprecated old infra */
-export default function getCourseEquivalentsFromOneUserExam(
-  user: AppOnboardingData
-): readonly CourseTaken[] {
-  const examCourseCodeSet = new Set<string>();
+export function getCourseEquivalentsFromUserExams(user: AppOnboardingData): readonly CourseTaken[] {
+  const examKeys = new Map<string, Set<number>>();
   const { college, major: majors } = user;
   const userExamData: ExamsTakenOld = { AP: [], IB: [] };
   user.exam.forEach((exam: FirestoreAPIBExam) => {
@@ -124,13 +123,20 @@ export default function getCourseEquivalentsFromOneUserExam(
   }
   return [
     ...majors.map((major: string) =>
-      getCourseEquivalentsFromOneMajor(college, major, userExamData).filter(({ code }) => {
-        if (!examCourseCodeSet.has(code)) {
-          examCourseCodeSet.add(code);
-          return true;
+      getCourseEquivalentsFromOneMajor(college, major, userExamData).filter(
+        ({ code, courseId }) => {
+          const courseIds = examKeys.get(code);
+          if (!courseIds) {
+            examKeys.set(code, new Set([courseId]));
+            return true;
+          }
+          if (!courseIds.has(courseId)) {
+            courseIds.add(courseId);
+            return true;
+          }
+          return false;
         }
-        return false;
-      })
+      )
     ),
   ].flat();
 }
@@ -168,7 +174,7 @@ export const examsTakenToExamCourses = (exams: ExamsTaken): CourseTaken[] => {
       });
     } else {
       examCourses.push({
-        courseId: NO_EQUIVALENT_COURSES_COURSE_ID,
+        courseId: NO_FULFILLMENTS_COURSE_ID,
         uniqueId: examName,
         code: examName,
         credits: 0,
@@ -178,15 +184,14 @@ export const examsTakenToExamCourses = (exams: ExamsTaken): CourseTaken[] => {
   return examCourses;
 };
 
-// TODO @bshen make this default export
-export const userDataToExamCourses = (user: AppOnboardingData): CourseTaken[] => {
+export default function userDataToExamCourses(user: AppOnboardingData): CourseTaken[] {
   const examsTaken = user.exam.map(({ type: examType, subject, score }) => ({
     examType,
     subject,
     score,
   }));
   return examsTakenToExamCourses(examsTaken);
-};
+}
 
 const toSubjects = (data: ExamFulfillments) => {
   const subjects = [...new Set(Object.keys(data))];
