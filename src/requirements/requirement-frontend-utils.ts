@@ -1,4 +1,3 @@
-import { SPECIAL_COURSES } from './data/constants';
 import requirementJson from './typed-requirement-json';
 import specialized from './specialize';
 import { examCourseIds } from './requirement-exam-mapping';
@@ -13,10 +12,7 @@ import { examCourseIds } from './requirement-exam-mapping';
  * @returns true if the course is AP/IB equivalent course or credit
  */
 export const courseIsAPIB = (course: CourseTaken): boolean =>
-  // TODO @bshen simplify logic, deprecate special courses
-  Object.values(SPECIAL_COURSES).includes(course.courseId) ||
-  ['AP', 'IB'].includes(course.code.split(' ')[0]) ||
-  examCourseIds.has(course.courseId);
+  ['AP', 'IB'].includes(course.code.split(' ')[0]) || examCourseIds.has(course.courseId);
 
 /**
  * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase
@@ -345,7 +341,6 @@ const computeFulfillmentStatistics = (
   requirementName: string,
   coursesTaken: readonly CourseTaken[],
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
-  disallowTransferCredit: boolean,
   {
     fulfilledBy,
     hasRequirementCheckerWarning,
@@ -373,33 +368,27 @@ const computeFulfillmentStatistics = (
     }
     const arbitraryOptInSlotNames = new Set(overrideOptions.arbitraryOptIn[requirementName] || []);
 
-    // block AP/IB equivalent courses if disallowTransferCredit
-    if (
-      !(disallowTransferCredit && courseIsAPIB(courseTaken)) ||
-      arbitraryOptInSlotNames.size > 0
+    for (
+      let subRequirementIndex = 0;
+      subRequirementIndex < eligibleCourses.length;
+      subRequirementIndex += 1
     ) {
-      for (
-        let subRequirementIndex = 0;
-        subRequirementIndex < eligibleCourses.length;
-        subRequirementIndex += 1
+      const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
+      if (arbitraryOptInSlotNames.has(slotName)) {
+        // the user wants to use this course to override this sub-requirement
+        coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+        subRequirementProgress[subRequirementIndex] +=
+          fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+        // don't break, in case the user wants to override more sub-requirements with the same course
+      } else if (
+        eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
+        subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
       ) {
-        const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
-        if (arbitraryOptInSlotNames.has(slotName)) {
-          // the user wants to use this course to override this sub-requirement
-          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
-          subRequirementProgress[subRequirementIndex] +=
-            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-          // don't break, in case the user wants to override more sub-requirements with the same course
-        } else if (
-          eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
-          subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
-        ) {
-          // this course is eligible to fulfill this sub-requirement, and the user did not opt out
-          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
-          subRequirementProgress[subRequirementIndex] +=
-            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-          break;
-        }
+        // this course is eligible to fulfill this sub-requirement, and the user did not opt out
+        coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+        subRequirementProgress[subRequirementIndex] +=
+          fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+        break;
       }
     }
   });
@@ -447,12 +436,10 @@ export function computeFulfillmentCoursesAndStatistics(
     // Give self-check 1 required course and 0 fulfilled to prevent it from being fulfilled.
     return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 1, courses: [] };
   }
-  const disallowTransferCredit = requirement.disallowTransferCredit || false;
   const base = computeFulfillmentStatistics(
     requirement.id,
     coursesTaken,
     overriddenFulfillmentChoices,
-    disallowTransferCredit,
     spec
   );
   if (spec.additionalRequirements == null) return base;
@@ -461,13 +448,7 @@ export function computeFulfillmentCoursesAndStatistics(
     additionalRequirements: Object.fromEntries(
       Object.entries(spec.additionalRequirements).map(([name, subSpec]) => [
         name,
-        computeFulfillmentStatistics(
-          name,
-          coursesTaken,
-          overriddenFulfillmentChoices,
-          disallowTransferCredit,
-          subSpec
-        ),
+        computeFulfillmentStatistics(name, coursesTaken, overriddenFulfillmentChoices, subSpec),
       ])
     ),
   };
