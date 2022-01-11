@@ -1,5 +1,5 @@
 import { isPlaceholderCourse } from '../utilities';
-import { SWIM_TEST_COURSE_ID } from './data/constants';
+import { SWIM_TEST_COURSE_ID, SWIM_TEST_UNIQUE_ID } from './data/constants';
 import userDataToExamCourses from './requirement-exam-utils';
 import {
   courseIsAPIB,
@@ -130,6 +130,7 @@ const getSwimTestFulfillmentStatistics = (
   courses: readonly CourseTaken[],
   tookSwimTest: boolean
 ): RequirementFulfillment => {
+  // TODO make this a regular requirement instead of a special case
   const requirement: RequirementWithIDSourceType = {
     id: 'College-UNI-SwimTest',
     sourceType: 'College',
@@ -148,7 +149,7 @@ const getSwimTestFulfillmentStatistics = (
   if (tookSwimTest) {
     swimClasses.push({
       courseId: SWIM_TEST_COURSE_ID,
-      uniqueId: -1,
+      uniqueId: SWIM_TEST_UNIQUE_ID,
       code: 'Swim Test',
       credits: 0,
     });

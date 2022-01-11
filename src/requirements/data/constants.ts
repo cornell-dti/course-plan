@@ -16,3 +16,6 @@ export const SPECIAL_COURSES = {
 
 /** The real course ID of the course that fulfills swim test. */
 export const SWIM_TEST_COURSE_ID = 350002;
+
+/** The unique ID of the course that fulfills swim test. */
+export const SWIM_TEST_UNIQUE_ID = 'Swim Test';
