@@ -125,54 +125,20 @@ const getTotalCreditsFulfillmentStatistics = (
   };
 };
 
-const getSwimTestFulfillmentStatistics = (
-  college: string,
-  courses: readonly CourseTaken[],
-  tookSwimTest: boolean
-): RequirementFulfillment => {
-  // TODO make this a regular requirement instead of a special case
-  const requirement: RequirementWithIDSourceType = {
-    id: 'College-UNI-SwimTest',
-    sourceType: 'College',
-    sourceSpecificName: college,
-    name: 'Swim Test',
-    description:
-      'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming ' +
-      'and water safety competency requirement for all entering first-year undergraduate students.',
-    source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11637',
-    courses: [[SWIM_TEST_COURSE_ID]],
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1],
-    slotNames: ['Course'],
-  };
-  const swimClasses = courses.filter(it => it.courseId === SWIM_TEST_COURSE_ID);
-  if (tookSwimTest) {
-    swimClasses.push({
+export function getCourseCodesArray(
+  semesters: readonly FirestoreSemester[],
+  onboardingData: AppOnboardingData
+): readonly CourseTaken[] {
+  const courses: CourseTaken[] = [];
+  if (onboardingData.tookSwim === 'yes') {
+    courses.push({
       courseId: SWIM_TEST_COURSE_ID,
       uniqueId: SWIM_TEST_UNIQUE_ID,
       code: 'Swim Test',
       credits: 0,
     });
   }
-  const minCountFulfilled = swimClasses.length > 0 ? 1 : 0;
-  return {
-    requirement,
-    fulfillment: {
-      fulfilledBy: 'courses',
-      safeCourses: [swimClasses],
-      dangerousCourses: [swimClasses],
-      safeMinCountFulfilled: minCountFulfilled,
-      dangerousMinCountFulfilled: minCountFulfilled,
-      minCountRequired: 1,
-    },
-  };
-};
-
-export function getCourseCodesArray(
-  semesters: readonly FirestoreSemester[],
-  onboardingData: AppOnboardingData
-): readonly CourseTaken[] {
-  const courses: CourseTaken[] = [];
+  courses.push(...userDataToExamCourses(onboardingData));
   semesters.forEach(semester => {
     semester.courses.forEach(course => {
       if (!isPlaceholderCourse(course)) {
@@ -180,7 +146,6 @@ export function getCourseCodesArray(
       }
     });
   });
-  courses.push(...userDataToExamCourses(onboardingData));
   return courses;
 }
 
@@ -264,10 +229,6 @@ export default function computeGroupedRequirementFulfillmentReports(
   if (totalCreditsFulfillmentStatistics != null) {
     collegeFulfillmentStatistics.push(totalCreditsFulfillmentStatistics);
   }
-  if (college)
-    collegeFulfillmentStatistics.push(
-      getSwimTestFulfillmentStatistics(college, coursesTaken, onboardingData.tookSwim === 'yes')
-    );
   const majorFulfillmentStatisticsMap = new Map<string, RequirementFulfillment[]>();
   const minorFulfillmentStatisticsMap = new Map<string, RequirementFulfillment[]>();
   const gradFulfillmentStatisticsMap = new Map<string, RequirementFulfillment[]>();

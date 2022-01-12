@@ -1,6 +1,21 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
+import { SWIM_TEST_COURSE_ID, SWIM_TEST_REAL_COURSE_ID } from '../constants';
 
 const universityRequirements: readonly CollegeOrMajorRequirement[] = [
+  {
+    name: 'Swim Test',
+    description:
+      'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming ' +
+      'and water safety competency requirement for all entering first-year undergraduate students.',
+    source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11637',
+    checker: [
+      (course: Course): boolean =>
+        [SWIM_TEST_COURSE_ID, SWIM_TEST_REAL_COURSE_ID].includes(course.crseId),
+    ],
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1],
+    slotNames: ['Course'],
+  },
   {
     name: 'Physical Education',
     description:
