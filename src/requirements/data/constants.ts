@@ -7,6 +7,12 @@ export const FWS_COURSE_ID = 11;
 /** Equivalent course ID for special course that satisfies swim test requirement. */
 export const SWIM_TEST_COURSE_ID = 13;
 
+/** The unique ID of the special course that fulfills swim test. */
+export const SWIM_TEST_UNIQUE_ID = 'Swim Test';
+
+/** The code of the special course that fulfills swim test. */
+export const SWIM_TEST_CODE = 'Swim Test';
+
 /** List of special course IDs */
 export const SPECIAL_COURSES = {
   NO_FULFILLMENTS: NO_FULFILLMENTS_COURSE_ID,
@@ -16,6 +22,3 @@ export const SPECIAL_COURSES = {
 
 /** The real course ID of the course that fulfills swim test. */
 export const SWIM_TEST_REAL_COURSE_ID = 350002;
-
-/** The unique ID of the course that fulfills swim test. */
-export const SWIM_TEST_UNIQUE_ID = 'Swim Test';

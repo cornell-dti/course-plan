@@ -9,9 +9,9 @@
     @modal-closed="closeCurrentModal"
     :rightButtonIsDisabled="false"
   >
-    <div v-if="isTestReq" class="text-width">
+    <div v-if="isTransferCredit" class="text-width">
       Are you sure you want to remove "{{ reqName }}" for this requirement? This will delete the
-      selected transfer credit from your schedule.
+      selected transfer credit.
       <br />
       Transfer credits can be re-added in your Profile.
     </div>
@@ -29,7 +29,7 @@ export default defineComponent({
   components: { TeleportModal },
   props: {
     reqName: { type: String, required: true },
-    isTestReq: { type: Boolean, required: true },
+    isTransferCredit: { type: Boolean, required: true },
   },
   emits: {
     'close-delete-course-modal': (value: boolean) => typeof value === 'boolean',

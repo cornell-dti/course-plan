@@ -12,7 +12,7 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
   cornellCourseRosterCourseToFirebaseSemesterCourse(course, store, incrementUniqueID);
 
 export { incrementUniqueID };
-export { default as setOnboardingData } from './onboarding-data';
+export { setAppOnboardingData, deleteTransferCredit } from './onboarding-data';
 export {
   editSemesters,
   editSemester,
