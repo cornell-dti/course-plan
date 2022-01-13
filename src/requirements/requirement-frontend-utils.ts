@@ -102,10 +102,6 @@ export function allowCourseDoubleCountingBetweenRequirements(
 
   // requirement source type is the same
   if (requirementA.sourceType === requirementB.sourceType) {
-    // at least one source type is minor
-    if (requirementA.sourceType === 'Minor') {
-      return true;
-    }
     return (
       // at least one requirement has the allowCourseDoubleCounting flag
       allowCourseDoubleCounting ||
