@@ -73,23 +73,6 @@ export function canFulfillChecker(
 }
 
 /**
- * @deprecated TODO @bshen
- */
-// export function requirementAllowDoubleCounting(
-//   requirement: RequirementWithIDSourceType,
-//   majors: readonly string[]
-// ): boolean {
-//   // All minor requirements are automatically double-countable.
-//   if (requirement.sourceType === 'Minor') return true;
-//   if (requirement.sourceType === 'Major') {
-//     if (majors == null) throw new Error("shouldn't get here since we have major requirements!");
-//     // If it's not the first major, then it's double countable.
-//     if (requirement.sourceSpecificName !== majors[0]) return true;
-//   }
-//   return requirement.allowCourseDoubleCounting || false;
-// }
-
-/**
  * Course double counting is a constraint relation between two requirements.
  * Instead of asking "does a requirement allow double counting with all other requirements?",
  * we frame it as "does requirementA and requirementB allow double counting with each other?"
@@ -551,50 +534,4 @@ export function getRelatedUnfulfilledRequirements(
     }
   }
   return { directlyRelatedRequirements, selfCheckRequirements };
-}
-
-export function getAllEligibleRequirements(
-  courseId: number,
-  groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices
-): {
-  readonly requirementsThatAllowDoubleCounting: readonly RequirementWithIDSourceType[];
-  readonly relatedRequirements: readonly RequirementWithIDSourceType[];
-  readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
-} {
-  const requirementsThatAllowDoubleCounting: RequirementWithIDSourceType[] = [];
-  const relatedRequirements: RequirementWithIDSourceType[] = [];
-  const selfCheckRequirements: RequirementWithIDSourceType[] = [];
-  for (let i = 0; i < groupedRequirements.length; i += 1) {
-    const requirements = groupedRequirements[i].reqs;
-    for (let j = 0; j < requirements.length; j += 1) {
-      const { requirement } = requirements[j];
-      const requirementSpec = getMatchedRequirementFulfillmentSpecification(
-        requirement,
-        toggleableRequirementChoices
-      );
-      // potential self-check requirements
-      if (requirementSpec == null && !requirement.allowCourseDoubleCounting) {
-        selfCheckRequirements.push(requirement);
-      }
-      if (requirementSpec != null) {
-        const allEligibleCourses = requirementSpec.eligibleCourses.flat();
-        if (allEligibleCourses.includes(courseId)) {
-          if (requirement.allowCourseDoubleCounting) {
-            requirementsThatAllowDoubleCounting.push(requirement);
-          } else if (requirement.checkerWarning == null) {
-            relatedRequirements.push(requirement);
-          } else {
-            selfCheckRequirements.push(requirement);
-          }
-        }
-      }
-    }
-  }
-
-  return {
-    requirementsThatAllowDoubleCounting,
-    relatedRequirements,
-    selfCheckRequirements,
-  };
 }

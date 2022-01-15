@@ -238,7 +238,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
-  readonly requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<string[]>>;
+  readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   readonly groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
 } {
@@ -250,7 +250,7 @@ export default function computeGroupedRequirementFulfillmentReports(
     userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
-    requirementsThatDoNotAllowDoubleCounting,
+    courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
   } = buildRequirementFulfillmentGraphFromUserData(
     coursesTaken,
@@ -363,7 +363,7 @@ export default function computeGroupedRequirementFulfillmentReports(
     userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
-    requirementsThatDoNotAllowDoubleCounting,
+    courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
     groupedRequirementFulfillmentReport,
   };

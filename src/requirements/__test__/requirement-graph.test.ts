@@ -64,7 +64,7 @@ it('RequirementFulfillmentGraph.addGraph() works', () => {
   graph2.addRequirementNode('bar');
 
   graph1.addGraph(graph2);
-  expect(graph1.getAllRequirements()).toContainEqual('bar');
+  expect(graph1.getAllRequirements()).toContain('bar');
   expect(graph1.getConnectedCoursesFromRequirement('foo')).toContainEqual({ uniqueId: 123 });
   expect(graph1.getConnectedCoursesFromRequirement('foo')).toContainEqual({ uniqueId: 234 });
 });

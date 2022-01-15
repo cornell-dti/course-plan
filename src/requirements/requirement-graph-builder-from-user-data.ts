@@ -20,7 +20,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
-  readonly requirementsThatDoNotAllowDoubleCounting: Map<string | number, Set<string[]>>;
+  readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
@@ -94,7 +94,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   const safeRequirementFulfillmentGraph = dangerousRequirementFulfillmentGraph.copy();
   const {
     doubleCountedCourseUniqueIDSet,
-    requirementsThatDoNotAllowDoubleCounting,
+    courseToRequirementsInConstraintViolations,
   } = removeIllegalEdgesFromRequirementFulfillmentGraph(
     safeRequirementFulfillmentGraph,
     (reqA, reqB) =>
@@ -109,7 +109,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
-    requirementsThatDoNotAllowDoubleCounting,
+    courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
   };
 }
