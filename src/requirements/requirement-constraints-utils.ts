@@ -110,7 +110,7 @@ export const getConstraintViolations = <Requirement extends string>(
       doubleCountedCourseUniqueIDSet.add(id)
     );
     requirementsThatDoNotAllowDoubleCountingForSingleCourse.forEach(req =>
-      doubleCountedCourseUniqueIDSet.add(req)
+      requirementsThatDoNotAllowDoubleCounting.add(req)
     );
   });
   return {
