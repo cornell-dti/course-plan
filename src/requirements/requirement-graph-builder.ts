@@ -139,6 +139,6 @@ export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
     requirementsThatDoNotAllowDoubleCounting,
     doubleCountedCourseUniqueIDSet,
   } = getConstraintViolations(graph, requirementConstraintHolds);
-  graph.subtract(constraintViolationsGraph);
+  graph.subtractGraphEdges(constraintViolationsGraph);
   return { requirementsThatDoNotAllowDoubleCounting, doubleCountedCourseUniqueIDSet };
 };

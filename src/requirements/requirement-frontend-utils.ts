@@ -75,20 +75,28 @@ export function canFulfillChecker(
 /**
  * @deprecated TODO @bshen
  */
-export function requirementAllowDoubleCounting(
-  requirement: RequirementWithIDSourceType,
-  majors: readonly string[]
-): boolean {
-  // All minor requirements are automatically double-countable.
-  if (requirement.sourceType === 'Minor') return true;
-  if (requirement.sourceType === 'Major') {
-    if (majors == null) throw new Error("shouldn't get here since we have major requirements!");
-    // If it's not the first major, then it's double countable.
-    if (requirement.sourceSpecificName !== majors[0]) return true;
-  }
-  return requirement.allowCourseDoubleCounting || false;
-}
+// export function requirementAllowDoubleCounting(
+//   requirement: RequirementWithIDSourceType,
+//   majors: readonly string[]
+// ): boolean {
+//   // All minor requirements are automatically double-countable.
+//   if (requirement.sourceType === 'Minor') return true;
+//   if (requirement.sourceType === 'Major') {
+//     if (majors == null) throw new Error("shouldn't get here since we have major requirements!");
+//     // If it's not the first major, then it's double countable.
+//     if (requirement.sourceSpecificName !== majors[0]) return true;
+//   }
+//   return requirement.allowCourseDoubleCounting || false;
+// }
 
+/**
+ * Course double counting is a constraint relation between two requirements.
+ * Instead of asking "does a requirement allow double counting with all other requirements?",
+ * we frame it as "does requirementA and requirementB allow double counting with each other?"
+ *
+ * If true, a course can fulfill requirement A and requirement B without a constraint violation.
+ * If false, edges from course c to requirementA and requirementB cause a constraint violation (c,(rA,rB)).
+ */
 export function allowCourseDoubleCountingBetweenRequirements(
   requirementA: RequirementWithIDSourceType,
   requirementB: RequirementWithIDSourceType
@@ -117,6 +125,9 @@ export function allowCourseDoubleCountingBetweenRequirements(
   ) {
     return allowCourseDoubleCounting;
   }
+
+  // neither source type is minor, and source types are not college and major
+  // so, one source type is college or major and one source type is grad
   return false;
 }
 
@@ -452,10 +463,8 @@ export function computeFulfillmentCoursesAndStatistics(
 
 export function getAllEligibleRelatedRequirementIds(
   courseId: number,
-  // uniqueId: number,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
   toggleableRequirementChoices: AppToggleableRequirementChoices
-  // userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): readonly string[] {
   const requirements = groupedRequirements
     .flatMap(it => it.reqs)
@@ -471,18 +480,6 @@ export function getAllEligibleRelatedRequirementIds(
       }
       return [];
     });
-  // TODO @bshen fix this
-  // only return the requirements that are in a constraint violation
-  // const { constraintViolationsGraph } = getConstraintViolationsForSingleCourse(
-  //   { uniqueId },
-  //   requirements,
-  //   (reqA, reqB) =>
-  //     allowCourseDoubleCountingBetweenRequirements(
-  //       userRequirementsMap[reqA],
-  //       userRequirementsMap[reqB]
-  //     )
-  // );
-  // return constraintViolationsGraph.getAllRequirements();
   return requirements;
 }
 

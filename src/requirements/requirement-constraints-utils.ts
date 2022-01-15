@@ -96,7 +96,7 @@ export const getConstraintViolations = <Requirement extends string>(
       graph.getConnectedRequirementsFromCourse(course),
       requirementConstraintHolds
     );
-    constraintViolationsGraph.add(constraintViolationsGraphForSingleCourse);
+    constraintViolationsGraph.addGraph(constraintViolationsGraphForSingleCourse);
     requirementsThatDoNotAllowDoubleCountingForSingleCourse.forEach((v, k) =>
       requirementsThatDoNotAllowDoubleCounting.set(k, v)
     );

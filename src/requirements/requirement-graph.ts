@@ -105,13 +105,19 @@ export default class RequirementFulfillmentGraph<
     return newCopy;
   }
 
-  public add(graph: RequirementFulfillmentGraph<Requirement, Course>): void {
+  public addGraph(graph: RequirementFulfillmentGraph<Requirement, Course>): void {
+    graph.getAllRequirements().forEach(req => {
+      this.addRequirementNode(req);
+    });
     graph.getAllEdges().forEach(([req, course]) => {
       this.addEdge(req, course);
     });
   }
 
-  public subtract(graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>): void {
+  // does not subtract requirement nodes
+  public subtractGraphEdges(
+    graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>
+  ): void {
     graph.getAllEdges().forEach(([req, course]) => {
       this.removeEdge(req, course);
     });
