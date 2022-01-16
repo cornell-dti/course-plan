@@ -282,7 +282,6 @@ export default defineComponent({
             // and only remove the requirementID since that's the one we should keep.
             const optOut = getRelatedRequirementIdsForCourseOptOut(
               crseId,
-              uniqueID,
               requirementID,
               store.state.groupedRequirementFulfillmentReport,
               store.state.toggleableRequirementChoices,

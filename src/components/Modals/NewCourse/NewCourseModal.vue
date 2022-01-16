@@ -51,6 +51,7 @@ import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 import store from '@/store';
 import {
   allowCourseDoubleCountingBetweenRequirements,
+  getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
 import { getConstraintViolationsForSingleCourse } from '@/requirements/requirement-constraints-utils';
@@ -104,10 +105,7 @@ export default defineComponent({
       );
 
       const allReqs = [...directlyRelatedRequirements, ...selfCheckRequirements];
-      const {
-        requirementsThatDoNotAllowDoubleCounting,
-        courseToRequirementsInConstraintViolations,
-      } = getConstraintViolationsForSingleCourse(
+      const { requirementsThatDoNotAllowDoubleCounting } = getConstraintViolationsForSingleCourse(
         { uniqueId: -1 },
         allReqs.map(({ id }) => id),
         (reqA, reqB) =>
@@ -143,9 +141,13 @@ export default defineComponent({
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, {
         // Only exclude the selected requirement from opt-out.
-        optOut: this.relatedRequirements
-          .filter(it => it.id !== this.selectedRequirementID)
-          .map(it => it.id),
+        optOut: getRelatedRequirementIdsForCourseOptOut(
+          this.selectedCourse.crseId,
+          this.selectedRequirementID,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.toggleableRequirementChoices,
+          store.state.userRequirementsMap
+        ),
         // Only include the selected requirement from opt-in.
         acknowledgedCheckerWarningOptIn: this.selfCheckRequirements
           .filter(it => it.id === this.selectedRequirementID)

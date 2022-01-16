@@ -152,7 +152,6 @@ export default defineComponent({
         // Keep existing behavior of keeping it connected to at most one requirement.
         optOut: getRelatedRequirementIdsForCourseOptOut(
           crseId,
-          uniqueID,
           this.subReqId,
           store.state.groupedRequirementFulfillmentReport,
           store.state.toggleableRequirementChoices,
@@ -178,7 +177,6 @@ export default defineComponent({
           // the course to this specific requirement.
           optOut: getRelatedRequirementIdsForCourseOptOut(
             newCourse.crseId,
-            newCourse.uniqueID,
             this.subReqId,
             store.state.groupedRequirementFulfillmentReport,
             store.state.toggleableRequirementChoices,
