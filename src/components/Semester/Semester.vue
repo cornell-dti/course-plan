@@ -283,7 +283,8 @@ export default defineComponent({
             const optOut = getAllEligibleRelatedRequirementIds(
               crseId,
               store.state.groupedRequirementFulfillmentReport,
-              store.state.toggleableRequirementChoices
+              store.state.toggleableRequirementChoices,
+              store.state.onboardingData
             ).filter(it => it !== requirementID);
             choices[uniqueID] = { ...choice, optOut };
           });

@@ -85,6 +85,7 @@ export default defineComponent({
             !canFulfillChecker(
               store.state.userRequirementsMap,
               store.state.toggleableRequirementChoices,
+              store.state.onboardingData,
               this.subReqId,
               course.crseId
             )
@@ -150,7 +151,8 @@ export default defineComponent({
         optOut: getAllEligibleRelatedRequirementIds(
           this.selfCheckCourses[option].crseId,
           store.state.groupedRequirementFulfillmentReport,
-          store.state.toggleableRequirementChoices
+          store.state.toggleableRequirementChoices,
+          store.state.onboardingData
         ),
       }));
     },
@@ -173,7 +175,8 @@ export default defineComponent({
           optOut: getAllEligibleRelatedRequirementIds(
             newCourse.crseId,
             store.state.groupedRequirementFulfillmentReport,
-            store.state.toggleableRequirementChoices
+            store.state.toggleableRequirementChoices,
+            store.state.onboardingData
           ),
         }),
         this.$gtag
