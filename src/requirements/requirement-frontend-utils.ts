@@ -476,7 +476,7 @@ export function getRelatedRequirementIdsForCourseOptOut(
     });
   // only return the requirements that are in a constraint violation
   const uniqueId = -1; // dummy unique id
-  const { courseToRequirementsInConstraintViolations } = getConstraintViolationsForSingleCourse(
+  const { requirementsThatDoNotAllowDoubleCounting } = getConstraintViolationsForSingleCourse(
     { uniqueId },
     requirements,
     (reqA, reqB) =>
@@ -485,14 +485,10 @@ export function getRelatedRequirementIdsForCourseOptOut(
         userRequirementsMap[reqB]
       )
   );
-  const optOut = new Set<string>();
-  courseToRequirementsInConstraintViolations.get(uniqueId)?.forEach(requirementGroup => {
-    if (requirementGroup.includes(associatedRequirementId)) {
-      requirementGroup.forEach(requirement => optOut.add(requirement));
-    }
-  });
   // order does not need to be preserved
-  return Array.from(optOut).filter(it => it !== associatedRequirementId);
+  return Array.from(requirementsThatDoNotAllowDoubleCounting).filter(
+    it => it !== associatedRequirementId
+  );
 }
 
 export function getRelatedUnfulfilledRequirements(
