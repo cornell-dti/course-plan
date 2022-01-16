@@ -224,7 +224,7 @@ type MatchedRequirementFulfillmentSpecification =
 
 /**
  * The function respects the user choice on toggleable requirement, and provides the already decided
- * fulfillment strategy to follow. It also filter eligible courses based on the user's college/major.
+ * fulfillment strategy to follow. It also filters eligible courses based on the user's college/major.
  *
  * @returns a spec telling how the requirement progress should be computed, or null if the requirement
  * is self-check.
@@ -241,7 +241,8 @@ export function getMatchedRequirementFulfillmentSpecification(
   ) =>
     coursesList.map(courses =>
       courses.filter(courseId => {
-        if (!(conditions && courseId in conditions)) return true; // no requirement conditions
+        // no requirement conditions
+        if (!(conditions && courseId in conditions)) return true;
         const { colleges, majorsExcluded } = conditions[courseId];
         // user college is in colleges list
         if (college && !colleges.includes(college)) return false;
