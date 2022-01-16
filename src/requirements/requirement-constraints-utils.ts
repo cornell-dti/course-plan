@@ -74,7 +74,6 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
       courseToRequirementsInConstraintViolationsForSingleCourse
     );
   }
-  console.log(courseToRequirementsInConstraintViolations);
   return {
     constraintViolationsGraph,
     courseToRequirementsInConstraintViolations,
