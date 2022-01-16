@@ -72,10 +72,10 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         toggleableRequirementChoices,
         onboardingData
       );
-      if (spec != null && spec.hasRequirementCheckerWarning != null) {
-        return spec.eligibleCourses.flat();
+      if (spec == null || spec.hasRequirementCheckerWarning) {
+        return [];
       }
-      return [];
+      return spec.eligibleCourses.flat();
     },
   };
   const dangerousRequirementFulfillmentGraph = buildRequirementFulfillmentGraph(
