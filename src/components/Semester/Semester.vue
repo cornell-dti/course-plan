@@ -43,24 +43,45 @@
     </button>
     <div class="semester-content">
       <div class="semester-top" :class="{ 'semester-top--compact': compact }">
-        <div class="semester-left" :class="{ 'semester-left--compact': compact }">
+        <div
+          class="semester-left"
+          :class="{ 'semester-left--compact': compact }"
+        >
           <span class="semester-name" data-cyId="semesterName"
-            ><img class="season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
-            {{ year }}</span
+            ><img class="season-emoji" :src="seasonImg[season]" alt="" />
+            {{ season }} {{ year }}</span
           >
           <span class="semester-credits">{{ creditString }}</span>
         </div>
-        <div class="semester-right" :class="{ 'semester-right--compact': compact }">
-          <button class="semester-minimize" @click="minimizeSemester" data-cyId="minimizeSemester">
+        <div
+          class="semester-right"
+          :class="{ 'semester-right--compact': compact }"
+        >
+          <button
+            class="semester-minimize"
+            @click="minimizeSemester"
+            data-cyId="minimizeSemester"
+          >
             <img
               v-if="!isSemesterMinimized"
               src="@/assets/images/minimize.svg"
               alt="minimze semester"
             />
-            <img v-else src="@/assets/images/expand.svg" alt="expand semester" />
+            <img
+              v-else
+              src="@/assets/images/expand.svg"
+              alt="expand semester"
+            />
           </button>
-          <button class="semester-dotRow" @click="openSemesterMenu" data-cyId="semesterMenu">
-            <img src="@/assets/images/dots/threeDots.svg" alt="open menu for semester" />
+          <button
+            class="semester-dotRow"
+            @click="openSemesterMenu"
+            data-cyId="semesterMenu"
+          >
+            <img
+              src="@/assets/images/dots/threeDots.svg"
+              alt="open menu for semester"
+            />
           </button>
         </div>
       </div>
@@ -116,7 +137,9 @@
     <semester-menu
       v-if="semesterMenuOpen"
       class="semester-menu"
-      :isOpenModal="isDeleteSemesterOpen || isEditSemesterOpen || isClearSemesterOpen"
+      :isOpenModal="
+        isDeleteSemesterOpen || isEditSemesterOpen || isClearSemesterOpen
+      "
       @open-delete-semester-modal="openDeleteSemesterModal"
       @open-edit-semester-modal="openEditSemesterModal"
       @open-clear-semester-modal="openClearSemesterModal"
@@ -154,7 +177,7 @@ import {
   updateRequirementChoices,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
-import { getAllEligibleRelatedRequirementIds } from '@/requirements/requirement-frontend-utils';
+import { getRelatedRequirementIdsForCourseOptOut } from '@/requirements/requirement-frontend-utils';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -205,7 +228,9 @@ export default defineComponent({
     },
     year: { type: Number, required: true },
     courses: {
-      type: Array as PropType<readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[]>,
+      type: Array as PropType<
+        readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[]
+      >,
       required: true,
     },
     compact: { type: Boolean, required: true },
@@ -217,7 +242,8 @@ export default defineComponent({
   },
   emits: {
     'new-semester': () => true,
-    'course-onclick': (course: FirestoreSemesterCourse) => typeof course === 'object',
+    'course-onclick': (course: FirestoreSemesterCourse) =>
+      typeof course === 'object',
     'delete-semester': (season: string, year: number) =>
       typeof season === 'string' && typeof year === 'number',
   },
@@ -228,8 +254,12 @@ export default defineComponent({
     const droppable = (this.$refs.droppable as ComponentRef).$el;
     droppable.addEventListener('dragenter', this.onDragEnter);
     droppable.addEventListener('dragleave', this.onDragExit);
-    const savedSemesterMinimize = localStorage.getItem(JSON.stringify(this.semesterIndex));
-    this.isSemesterMinimized = savedSemesterMinimize ? JSON.parse(savedSemesterMinimize) : false;
+    const savedSemesterMinimize = localStorage.getItem(
+      JSON.stringify(this.semesterIndex)
+    );
+    this.isSemesterMinimized = savedSemesterMinimize
+      ? JSON.parse(savedSemesterMinimize)
+      : false;
   },
   beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);
@@ -240,7 +270,10 @@ export default defineComponent({
 
   computed: {
     coursesForDraggable: {
-      get(): readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[] {
+      get(): readonly (
+        | FirestoreSemesterCourse
+        | FirestoreSemesterPlaceholder
+      )[] {
         return this.courses;
       },
       /**
@@ -280,10 +313,13 @@ export default defineComponent({
             // the `optOut` field.
             // Below, we find all the requirements it can possibly match,
             // and only remove the requirementID since that's the one we should keep.
-            const optOut = getAllEligibleRelatedRequirementIds(
+            const optOut = getRelatedRequirementIdsForCourseOptOut(
               crseId,
+              uniqueID,
+              requirementID,
               store.state.groupedRequirementFulfillmentReport,
-              store.state.toggleableRequirementChoices
+              store.state.toggleableRequirementChoices,
+              store.state.userRequirementsMap
             ).filter(it => it !== requirementID);
             choices[uniqueID] = { ...choice, optOut };
           });
@@ -366,18 +402,32 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
-      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
+    addCourse(
+      data: CornellCourseRosterCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) {
+      const newCourse =
+        cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       // Since the course is new, we know the old choice does not exist.
-      addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+      addCourseToSemester(
+        this.year,
+        this.season,
+        newCourse,
+        () => choice,
+        this.$gtag
+      );
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
-      this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
+      this.openConfirmationModal(
+        `Added ${courseCode} to ${this.season} ${this.year}`
+      );
     },
     deleteCourse(courseCode: string, uniqueID: number) {
       deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
       // Update requirements menu
-      this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
+      this.openConfirmationModal(
+        `Removed ${courseCode} from ${this.season} ${this.year}`
+      );
     },
     colorCourse(color: string, uniqueID: number, courseCode: string) {
       editSemester(
@@ -416,7 +466,9 @@ export default defineComponent({
         (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
-            course.uniqueID === uniqueID ? { ...course, credits: credit } : course
+            course.uniqueID === uniqueID
+              ? { ...course, credits: credit }
+              : course
           ),
         })
       );

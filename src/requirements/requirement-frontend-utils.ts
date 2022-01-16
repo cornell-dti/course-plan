@@ -1,6 +1,7 @@
 import requirementJson from './typed-requirement-json';
 import specialized from './specialize';
 import { examCourseIds } from './requirement-exam-mapping';
+import { getConstraintViolationsForSingleCourse } from './requirement-constraints-utils';
 
 /**
  * A collection of helper functions
@@ -444,10 +445,13 @@ export function computeFulfillmentCoursesAndStatistics(
   };
 }
 
-export function getAllEligibleRelatedRequirementIds(
+export function getRelatedRequirementIdsForCourseOptOut(
   courseId: number,
+  uniqueId: number,
+  associatedRequirementId: string,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): readonly string[] {
   const requirements = groupedRequirements
     .flatMap(it => it.reqs)
@@ -458,12 +462,32 @@ export function getAllEligibleRelatedRequirementIds(
       );
       if (spec == null) return [];
       const allEligibleCourses = spec.eligibleCourses.flat();
-      if (allEligibleCourses.includes(courseId) && requirement.checkerWarning == null) {
+      if (
+        requirement.id === associatedRequirementId ||
+        (allEligibleCourses.includes(courseId) && requirement.checkerWarning == null)
+      ) {
         return [requirement.id];
       }
       return [];
     });
-  return requirements;
+  // only return the requirements that are in a constraint violation
+  const { courseToRequirementsInConstraintViolations } = getConstraintViolationsForSingleCourse(
+    { uniqueId },
+    requirements,
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
+  );
+  const optOut = new Set<string>();
+  courseToRequirementsInConstraintViolations.get(uniqueId)?.forEach(requirementGroup => {
+    if (requirementGroup.includes(associatedRequirementId)) {
+      requirementGroup.forEach(requirement => optOut.add(requirement));
+    }
+  });
+  // order does not need to be preserved
+  return Array.from(optOut);
 }
 
 export function getRelatedUnfulfilledRequirements(
@@ -501,9 +525,6 @@ export function getRelatedUnfulfilledRequirements(
         toggleableRequirementChoices
       );
       // potential self-check requirements
-      if (requirementSpec == null && !subRequirement.allowCourseDoubleCounting) {
-        selfCheckRequirements.push(subRequirement);
-      }
       if (requirementSpec != null) {
         const allEligibleCourses = requirementSpec.eligibleCourses.flat();
         if (allEligibleCourses.includes(courseId)) {
@@ -530,6 +551,8 @@ export function getRelatedUnfulfilledRequirements(
             }
           }
         }
+      } else {
+        selfCheckRequirements.push(subRequirement);
       }
     }
   }

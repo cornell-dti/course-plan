@@ -23,7 +23,8 @@
       data-cyId="newCourse-dropdown"
     />
     <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
-      {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}: {{ selectedCourse.titleLong }}
+      {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
+      {{ selectedCourse.titleLong }}
     </div>
     <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
@@ -31,7 +32,9 @@
         :key="courseSelectorKey"
         :editMode="editMode"
         :selectedRequirementID="selectedRequirementID"
-        :requirementsThatAllowDoubleCounting="requirementsThatAllowDoubleCounting"
+        :requirementsThatAllowDoubleCounting="
+          requirementsThatAllowDoubleCounting
+        "
         :relatedRequirements="relatedRequirements"
         :potentialRequirements="selfCheckRequirements"
         @on-selected-change="onSelectedChange"
@@ -48,14 +51,20 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
 import store from '@/store';
-import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
+import {
+  allowCourseDoubleCountingBetweenRequirements,
+  getRelatedUnfulfilledRequirements,
+} from '@/requirements/requirement-frontend-utils';
+import { getConstraintViolationsForSingleCourse } from '@/requirements/requirement-constraints-utils';
 
 export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
     'close-course-modal': () => true,
-    'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
-      typeof course === 'object' && typeof choice === 'object',
+    'add-course': (
+      course: CornellCourseRosterCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) => typeof course === 'object' && typeof choice === 'object',
   },
   data() {
     return {
@@ -88,39 +97,42 @@ export default defineComponent({
       this.$emit('close-course-modal');
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
+      const { directlyRelatedRequirements, selfCheckRequirements } =
+        getRelatedUnfulfilledRequirements(
+          selectedCourse,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.toggleableRequirementChoices,
+          store.state.overriddenFulfillmentChoices
+        );
+
+      const allReqs = [
+        ...directlyRelatedRequirements,
+        ...selfCheckRequirements,
+      ];
       const {
-        directlyRelatedRequirements,
-        selfCheckRequirements,
-      } = getRelatedUnfulfilledRequirements(
-        selectedCourse,
-        store.state.groupedRequirementFulfillmentReport,
-        store.state.toggleableRequirementChoices,
-        store.state.overriddenFulfillmentChoices
+        requirementsThatDoNotAllowDoubleCounting,
+        courseToRequirementsInConstraintViolations,
+      } = getConstraintViolationsForSingleCourse(
+        { uniqueId: -1 },
+        allReqs.map(({ id }) => id),
+        (reqA, reqB) =>
+          allowCourseDoubleCountingBetweenRequirements(
+            store.state.userRequirementsMap[reqA],
+            store.state.userRequirementsMap[reqB]
+          )
       );
 
-      const requirementsThatAllowDoubleCounting: string[] = [];
-      const relatedRequirements: RequirementWithIDSourceType[] = [];
-      directlyRelatedRequirements.forEach(it => {
-        if (it.allowCourseDoubleCounting) {
-          requirementsThatAllowDoubleCounting.push(it.name);
-        } else {
-          relatedRequirements.push(it);
-        }
-      });
-      const selfCheckRequirementsThatDoesNotAllowDoubleCounting: RequirementWithIDSourceType[] = [];
-      selfCheckRequirements.forEach(it => {
-        if (it.allowCourseDoubleCounting) {
-          requirementsThatAllowDoubleCounting.push(it.name);
-        } else {
-          selfCheckRequirementsThatDoesNotAllowDoubleCounting.push(it);
-        }
-      });
-
-      this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;
-      this.relatedRequirements = relatedRequirements;
-      this.selfCheckRequirements = selfCheckRequirementsThatDoesNotAllowDoubleCounting;
-      if (relatedRequirements.length > 0) {
-        this.selectedRequirementID = relatedRequirements[0].id;
+      this.requirementsThatAllowDoubleCounting = allReqs
+        .filter(req => !requirementsThatDoNotAllowDoubleCounting.has(req.id))
+        .map(({ name }) => name);
+      this.relatedRequirements = directlyRelatedRequirements.filter(req =>
+        requirementsThatDoNotAllowDoubleCounting.has(req.id)
+      );
+      this.selfCheckRequirements = selfCheckRequirements.filter(req =>
+        requirementsThatDoNotAllowDoubleCounting.has(req.id)
+      );
+      if (this.relatedRequirements.length > 0) {
+        this.selectedRequirementID = this.relatedRequirements[0].id;
       } else {
         this.selectedRequirementID = '';
       }
