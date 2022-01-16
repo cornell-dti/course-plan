@@ -499,13 +499,15 @@ export function getRelatedUnfulfilledRequirements(
   }: CornellCourseRosterCourse,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): {
-  readonly directlyRelatedRequirements: readonly RequirementWithIDSourceType[];
+  readonly relatedRequirements: readonly RequirementWithIDSourceType[];
   readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
+  readonly requirementsThatAllowDoubleCounting: readonly RequirementWithIDSourceType[];
 } {
   const code = `${subject} ${catalogNbr}`;
-  const directlyRelatedRequirements: RequirementWithIDSourceType[] = [];
+  const relatedRequirements: RequirementWithIDSourceType[] = [];
   const selfCheckRequirements: RequirementWithIDSourceType[] = [];
   for (let i = 0; i < groupedRequirements.length; i += 1) {
     const subreqs = groupedRequirements[i].reqs.filter(
@@ -545,7 +547,7 @@ export function getRelatedUnfulfilledRequirements(
           );
           if (fulfillmentStatisticsWithNewCourse.minCountFulfilled > existingMinCountFulfilled) {
             if (subRequirement.checkerWarning == null) {
-              directlyRelatedRequirements.push(subRequirement);
+              relatedRequirements.push(subRequirement);
             } else {
               selfCheckRequirements.push(subRequirement);
             }
@@ -556,5 +558,19 @@ export function getRelatedUnfulfilledRequirements(
       }
     }
   }
-  return { directlyRelatedRequirements, selfCheckRequirements };
+  const allRequirements = [...relatedRequirements, ...selfCheckRequirements];
+  const { requirementsThatDoNotAllowDoubleCounting } = getConstraintViolationsForSingleCourse(
+    { uniqueId: -1 },
+    allRequirements.map(({ id }) => id),
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
+  );
+  const requirementsThatAllowDoubleCounting = allRequirements.filter(
+    ({ id }) => !requirementsThatDoNotAllowDoubleCounting.has(id)
+  );
+
+  return { relatedRequirements, selfCheckRequirements, requirementsThatAllowDoubleCounting };
 }

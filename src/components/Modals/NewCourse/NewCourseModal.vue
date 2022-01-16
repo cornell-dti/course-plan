@@ -50,11 +50,9 @@ import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
 import store from '@/store';
 import {
-  allowCourseDoubleCountingBetweenRequirements,
   getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
-import { getConstraintViolationsForSingleCourse } from '@/requirements/requirement-constraints-utils';
 
 export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
@@ -95,34 +93,28 @@ export default defineComponent({
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
-        directlyRelatedRequirements,
+        relatedRequirements,
         selfCheckRequirements,
+        requirementsThatAllowDoubleCounting,
       } = getRelatedUnfulfilledRequirements(
         selectedCourse,
         store.state.groupedRequirementFulfillmentReport,
         store.state.toggleableRequirementChoices,
-        store.state.overriddenFulfillmentChoices
+        store.state.overriddenFulfillmentChoices,
+        store.state.userRequirementsMap
+      );
+      const requirementIdsThatAllowDoubleCounting = new Set(
+        requirementsThatAllowDoubleCounting.map(({ id }) => id)
       );
 
-      const allReqs = [...directlyRelatedRequirements, ...selfCheckRequirements];
-      const { requirementsThatDoNotAllowDoubleCounting } = getConstraintViolationsForSingleCourse(
-        { uniqueId: -1 },
-        allReqs.map(({ id }) => id),
-        (reqA, reqB) =>
-          allowCourseDoubleCountingBetweenRequirements(
-            store.state.userRequirementsMap[reqA],
-            store.state.userRequirementsMap[reqB]
-          )
+      this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting.map(
+        ({ name }) => name
       );
-
-      this.requirementsThatAllowDoubleCounting = allReqs
-        .filter(req => !requirementsThatDoNotAllowDoubleCounting.has(req.id))
-        .map(({ name }) => name);
-      this.relatedRequirements = directlyRelatedRequirements.filter(req =>
-        requirementsThatDoNotAllowDoubleCounting.has(req.id)
+      this.relatedRequirements = relatedRequirements.filter(
+        req => !requirementIdsThatAllowDoubleCounting.has(req.id)
       );
-      this.selfCheckRequirements = selfCheckRequirements.filter(req =>
-        requirementsThatDoNotAllowDoubleCounting.has(req.id)
+      this.selfCheckRequirements = selfCheckRequirements.filter(
+        req => !requirementIdsThatAllowDoubleCounting.has(req.id)
       );
       if (this.relatedRequirements.length > 0) {
         this.selectedRequirementID = this.relatedRequirements[0].id;
