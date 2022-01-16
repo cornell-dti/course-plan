@@ -23,7 +23,9 @@ const setAdd = <T>(set: Set<T>, value: T) => {
     )
   ) {
     set.add(value);
-  } else set.add(value);
+  } else if (!(value instanceof Set) && !Array.isArray(value)) {
+    set.add(value);
+  }
 };
 
 export const getConstraintViolationsForSingleCourse = <Requirement extends string>(
@@ -62,7 +64,7 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
     setAdd(
       courseToRequirementsInConstraintViolationsForSingleCourse,
       // use the original requirements list to maintain order
-      requirements.filter(requirement => requirement === k || v.has(k))
+      requirements.filter(requirement => requirement === k || v.has(requirement))
     );
   });
   const courseToRequirementsInConstraintViolations = new Map<string | number, Set<Requirement[]>>();
@@ -72,6 +74,7 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
       courseToRequirementsInConstraintViolationsForSingleCourse
     );
   }
+  console.log(courseToRequirementsInConstraintViolations);
   return {
     constraintViolationsGraph,
     courseToRequirementsInConstraintViolations,
