@@ -445,6 +445,11 @@ export function computeFulfillmentCoursesAndStatistics(
   };
 }
 
+/**
+ * Find related requirement ids to opt out of. This maintains the invariant that
+ * there are no constraint violations when adding a course to the semester.
+ * It should be deprecated after the new add modal is implemented.
+ */
 export function getRelatedRequirementIdsForCourseOptOut(
   courseId: number,
   associatedRequirementId: string,
