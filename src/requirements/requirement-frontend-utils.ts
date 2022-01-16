@@ -220,7 +220,7 @@ type MatchedRequirementFulfillmentSpecification =
 
 /**
  * The function respects the user choice on toggleable requirement, and provides the already decided
- * fulfillment strategy to follow.
+ * fulfillment strategy to follow. It also filter eligible courses based on the user's college/major.
  *
  * @returns a spec telling how the requirement progress should be computed, or null if the requirement
  * is self-check.
@@ -229,6 +229,27 @@ export function getMatchedRequirementFulfillmentSpecification(
   requirement: RequirementWithIDSourceType,
   toggleableRequirementChoices: AppToggleableRequirementChoices
 ): MatchedRequirementFulfillmentSpecification {
+  const { sourceType, sourceSpecificName } = requirement;
+  const filterEligibleCoursesByRequirementConditions = (
+    coursesList: readonly (readonly number[])[],
+    conditions: RequirementCourseConditions | undefined
+  ) =>
+    coursesList.map(courses =>
+      courses.filter(courseId => {
+        if (!(conditions && courseId in conditions)) return true; // no requirement conditions
+        const { colleges, majorsExcluded } = conditions[courseId];
+        // requirement is in colleges list
+        if (sourceType === 'College' && colleges.includes(sourceSpecificName)) return true;
+        // requirement is not in majorsExcluded list
+        if (
+          majorsExcluded &&
+          sourceType === 'Major' &&
+          !majorsExcluded.includes(sourceSpecificName)
+        )
+          return true;
+        return false;
+      })
+    );
   /**
    * Given a map of additional requirements, keep the requirement name key, but extract out the
    * requirement spec for each additional requirement.
@@ -237,6 +258,7 @@ export function getMatchedRequirementFulfillmentSpecification(
   const convertAdditionalRequirements = (additionalRequirements?: {
     readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<{
       readonly courses: readonly (readonly number[])[];
+      readonly conditions?: Readonly<RequirementCourseConditions>;
     }>;
   }): { readonly [name: string]: MatchedRequirementFulfillmentSpecificationBase } | undefined =>
     additionalRequirements == null
@@ -250,7 +272,10 @@ export function getMatchedRequirementFulfillmentSpecification(
               {
                 fulfilledBy: subRequirement.fulfilledBy,
                 hasRequirementCheckerWarning: false,
-                eligibleCourses: subRequirement.courses,
+                eligibleCourses: filterEligibleCoursesByRequirementConditions(
+                  subRequirement.courses,
+                  subRequirement.conditions
+                ),
                 perSlotMinCount: subRequirement.perSlotMinCount,
                 slotNames,
                 minNumberOfSlots: subRequirement.minNumberOfSlots,
@@ -267,7 +292,10 @@ export function getMatchedRequirementFulfillmentSpecification(
       return {
         fulfilledBy: requirement.fulfilledBy,
         hasRequirementCheckerWarning,
-        eligibleCourses: requirement.courses,
+        eligibleCourses: filterEligibleCoursesByRequirementConditions(
+          requirement.courses,
+          requirement.conditions
+        ),
         additionalRequirements: convertAdditionalRequirements(requirement.additionalRequirements),
         perSlotMinCount: requirement.perSlotMinCount,
         slotNames: requirement.slotNames,
@@ -277,7 +305,10 @@ export function getMatchedRequirementFulfillmentSpecification(
       return {
         fulfilledBy: requirement.fulfilledBy,
         hasRequirementCheckerWarning,
-        eligibleCourses: requirement.courses,
+        eligibleCourses: filterEligibleCoursesByRequirementConditions(
+          requirement.courses,
+          requirement.conditions
+        ),
         additionalRequirements: convertAdditionalRequirements(requirement.additionalRequirements),
         perSlotMinCount: requirement.perSlotMinCount,
         slotNames: [],
@@ -292,7 +323,10 @@ export function getMatchedRequirementFulfillmentSpecification(
       return {
         fulfilledBy: option.counting,
         hasRequirementCheckerWarning,
-        eligibleCourses: option.courses,
+        eligibleCourses: filterEligibleCoursesByRequirementConditions(
+          option.courses,
+          option.conditions
+        ),
         perSlotMinCount: option.perSlotMinCount,
         slotNames: option.counting === 'courses' ? option.slotNames : [],
         minNumberOfSlots: option.minNumberOfSlots,
