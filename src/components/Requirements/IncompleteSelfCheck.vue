@@ -177,8 +177,8 @@ export default defineComponent({
           // because the user intention is clear that we only want to bind
           // the course to this specific requirement.
           optOut: getRelatedRequirementIdsForCourseOptOut(
-            newCourse.uniqueID,
             newCourse.crseId,
+            newCourse.uniqueID,
             this.subReqId,
             store.state.groupedRequirementFulfillmentReport,
             store.state.toggleableRequirementChoices,
