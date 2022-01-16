@@ -32,9 +32,7 @@
         :key="courseSelectorKey"
         :editMode="editMode"
         :selectedRequirementID="selectedRequirementID"
-        :requirementsThatAllowDoubleCounting="
-          requirementsThatAllowDoubleCounting
-        "
+        :requirementsThatAllowDoubleCounting="requirementsThatAllowDoubleCounting"
         :relatedRequirements="relatedRequirements"
         :potentialRequirements="selfCheckRequirements"
         @on-selected-change="onSelectedChange"
@@ -61,10 +59,8 @@ export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
     'close-course-modal': () => true,
-    'add-course': (
-      course: CornellCourseRosterCourse,
-      choice: FirestoreCourseOptInOptOutChoices
-    ) => typeof course === 'object' && typeof choice === 'object',
+    'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
+      typeof course === 'object' && typeof choice === 'object',
   },
   data() {
     return {
@@ -97,18 +93,17 @@ export default defineComponent({
       this.$emit('close-course-modal');
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
-      const { directlyRelatedRequirements, selfCheckRequirements } =
-        getRelatedUnfulfilledRequirements(
-          selectedCourse,
-          store.state.groupedRequirementFulfillmentReport,
-          store.state.toggleableRequirementChoices,
-          store.state.overriddenFulfillmentChoices
-        );
+      const {
+        directlyRelatedRequirements,
+        selfCheckRequirements,
+      } = getRelatedUnfulfilledRequirements(
+        selectedCourse,
+        store.state.groupedRequirementFulfillmentReport,
+        store.state.toggleableRequirementChoices,
+        store.state.overriddenFulfillmentChoices
+      );
 
-      const allReqs = [
-        ...directlyRelatedRequirements,
-        ...selfCheckRequirements,
-      ];
+      const allReqs = [...directlyRelatedRequirements, ...selfCheckRequirements];
       const {
         requirementsThatDoNotAllowDoubleCounting,
         courseToRequirementsInConstraintViolations,

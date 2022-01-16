@@ -10,14 +10,8 @@
     <div class="separator"></div>
     <div class="top">{{ addCourseLabel }}</div>
     <div class="dropdown-select-wrapper">
-      <div
-        class="dropdown-select dropdown-input"
-        v-click-outside="closeMenuIfOpen"
-      >
-        <div
-          class="dropdown-placeholder dropdown-wrapper"
-          @click="showDropdown = !showDropdown"
-        >
+      <div class="dropdown-select dropdown-input" v-click-outside="closeMenuIfOpen">
+        <div class="dropdown-placeholder dropdown-wrapper" @click="showDropdown = !showDropdown">
           <span>Select Course</span>
         </div>
         <div class="dropdown-placeholder dropdown-arrow"></div>
@@ -99,10 +93,9 @@ export default defineComponent({
             return;
           }
 
-          const currentlyMatchedRequirements =
-            store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse(
-              { uniqueId: course.uniqueID }
-            );
+          const currentlyMatchedRequirements = store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse(
+            { uniqueId: course.uniqueID }
+          );
           if (currentlyMatchedRequirements.includes(this.subReqId)) {
             // If the course is already matched to the current requirement, do not add to choices.
             return;
@@ -111,20 +104,11 @@ export default defineComponent({
           /* TODO @bshen fix .allowCourseDoubleCounting flag
              we should allow the constraint violation to be broken, i.e. don't return early */
           const currentRequirementAllowDoubleCounting =
-            store.state.userRequirementsMap[this.subReqCourseId]
-              ?.allowCourseDoubleCounting;
-          const allOtherRequirementsAllowDoubleCounting =
-            store.state.safeRequirementFulfillmentGraph
-              .getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
-              .every(
-                reqID =>
-                  store.state.userRequirementsMap[reqID]
-                    ?.allowCourseDoubleCounting
-              );
-          if (
-            !currentRequirementAllowDoubleCounting &&
-            !allOtherRequirementsAllowDoubleCounting
-          ) {
+            store.state.userRequirementsMap[this.subReqCourseId]?.allowCourseDoubleCounting;
+          const allOtherRequirementsAllowDoubleCounting = store.state.safeRequirementFulfillmentGraph
+            .getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
+            .every(reqID => store.state.userRequirementsMap[reqID]?.allowCourseDoubleCounting);
+          if (!currentRequirementAllowDoubleCounting && !allOtherRequirementsAllowDoubleCounting) {
             // At this point, we need to consider double counting issues.
             // There are 2 ways we can add the course to the requirement without double counting violations:
             // 1. This requirement allows double counting.
@@ -176,14 +160,9 @@ export default defineComponent({
         ),
       }));
     },
-    addNewCourse(
-      course: CornellCourseRosterCourse,
-      season: FirestoreSemesterSeason,
-      year: number
-    ) {
+    addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterSeason, year: number) {
       this.showDropdown = false;
-      const newCourse =
-        cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(course);
+      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(course);
       addCourseToSemester(
         year,
         season,
