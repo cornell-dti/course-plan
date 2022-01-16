@@ -32,7 +32,7 @@
         :key="courseSelectorKey"
         :editMode="editMode"
         :selectedRequirementID="selectedRequirementID"
-        :requirementsThatAllowDoubleCounting="requirementsThatAllowDoubleCounting"
+        :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
         :relatedRequirements="relatedRequirements"
         :potentialRequirements="selfCheckRequirements"
         @on-selected-change="onSelectedChange"
@@ -65,7 +65,7 @@ export default defineComponent({
     return {
       selectedCourse: null as CornellCourseRosterCourse | null,
       selectedRequirementID: '',
-      requirementsThatAllowDoubleCounting: [] as readonly string[],
+      automaticallyFulfilledRequirements: [] as readonly string[],
       // relatedRequirements : the requirements that don't allow double counting
       relatedRequirements: [] as readonly RequirementWithIDSourceType[],
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
@@ -95,7 +95,7 @@ export default defineComponent({
       const {
         relatedRequirements,
         selfCheckRequirements,
-        requirementsThatAllowDoubleCounting,
+        automaticallyFulfilledRequirements,
       } = getRelatedUnfulfilledRequirements(
         selectedCourse,
         store.state.groupedRequirementFulfillmentReport,
@@ -103,18 +103,18 @@ export default defineComponent({
         store.state.overriddenFulfillmentChoices,
         store.state.userRequirementsMap
       );
-      const requirementIdsThatAllowDoubleCounting = new Set(
-        requirementsThatAllowDoubleCounting.map(({ id }) => id)
+      const automaticallyFulfilledRequirementIds = new Set(
+        automaticallyFulfilledRequirements.map(({ id }) => id)
       );
 
-      this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting.map(
+      this.automaticallyFulfilledRequirements = automaticallyFulfilledRequirements.map(
         ({ name }) => name
       );
       this.relatedRequirements = relatedRequirements.filter(
-        req => !requirementIdsThatAllowDoubleCounting.has(req.id)
+        req => !automaticallyFulfilledRequirementIds.has(req.id)
       );
       this.selfCheckRequirements = selfCheckRequirements.filter(
-        req => !requirementIdsThatAllowDoubleCounting.has(req.id)
+        req => !automaticallyFulfilledRequirementIds.has(req.id)
       );
       if (this.relatedRequirements.length > 0) {
         this.selectedRequirementID = this.relatedRequirements[0].id;

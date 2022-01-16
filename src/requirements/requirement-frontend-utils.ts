@@ -504,7 +504,7 @@ export function getRelatedUnfulfilledRequirements(
 ): {
   readonly relatedRequirements: readonly RequirementWithIDSourceType[];
   readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
-  readonly requirementsThatAllowDoubleCounting: readonly RequirementWithIDSourceType[];
+  readonly automaticallyFulfilledRequirements: readonly RequirementWithIDSourceType[];
 } {
   const code = `${subject} ${catalogNbr}`;
   const relatedRequirements: RequirementWithIDSourceType[] = [];
@@ -568,9 +568,9 @@ export function getRelatedUnfulfilledRequirements(
         userRequirementsMap[reqB]
       )
   );
-  const requirementsThatAllowDoubleCounting = allRequirements.filter(
+  const automaticallyFulfilledRequirements = relatedRequirements.filter(
     ({ id }) => !requirementsThatDoNotAllowDoubleCounting.has(id)
   );
 
-  return { relatedRequirements, selfCheckRequirements, requirementsThatAllowDoubleCounting };
+  return { relatedRequirements, selfCheckRequirements, automaticallyFulfilledRequirements };
 }
