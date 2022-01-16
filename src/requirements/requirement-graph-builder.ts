@@ -103,13 +103,7 @@ export const buildRequirementFulfillmentGraph = <
 
   // Phase 3: Respect user's choices on opt-in/opt-out.
   userCourses.forEach(course => {
-    const { uniqueId } = course;
-    // typeof uniqueId === 'string' means it's AP/IB equivalent course.
-    // uniqueId < 0 means it's swim test.
-    // User never gets to make a choice about these courses, so it will never appear in the choices.
-    // Therefore, removing those edges will nullify all these credits.
-    if (typeof uniqueId === 'string' || uniqueId < 0) return;
-    const userChoiceOnOptInOptOutCourse = userChoiceOnRequirementOverrides[uniqueId];
+    const userChoiceOnOptInOptOutCourse = userChoiceOnRequirementOverrides[course.uniqueId];
     if (userChoiceOnOptInOptOutCourse == null) return;
     userChoiceOnOptInOptOutCourse.optIn.forEach(optedInRequirement => {
       graph.addEdge(optedInRequirement, course);
