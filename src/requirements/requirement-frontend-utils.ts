@@ -487,7 +487,7 @@ export function getRelatedRequirementIdsForCourseOptOut(
     }
   });
   // order does not need to be preserved
-  return Array.from(optOut);
+  return Array.from(optOut).filter(it => it !== associatedRequirementId);
 }
 
 export function getRelatedUnfulfilledRequirements(

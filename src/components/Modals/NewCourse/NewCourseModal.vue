@@ -132,7 +132,6 @@ export default defineComponent({
     addCourse() {
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, {
-        // Only exclude the selected requirement from opt-out.
         optOut: getRelatedRequirementIdsForCourseOptOut(
           this.selectedCourse.crseId,
           this.selectedRequirementID,

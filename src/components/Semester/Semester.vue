@@ -286,7 +286,7 @@ export default defineComponent({
               store.state.groupedRequirementFulfillmentReport,
               store.state.toggleableRequirementChoices,
               store.state.userRequirementsMap
-            ).filter(it => it !== requirementID);
+            );
             choices[uniqueID] = { ...choice, optOut };
           });
           return choices;
