@@ -1,4 +1,4 @@
-import { FWS_COURSE_ID } from '../constants';
+import { FWS_COURSE_ID, LIBERAL_STUDIES_COURSE_ID } from '../constants';
 
 /**
  * Describes how exams can be converted to a representation understood by CoursePlan.
@@ -78,25 +78,41 @@ const examData: ExamData = {
       {
         courseId: 107,
         courseEquivalents: {
-          [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
+          EN: [LIBERAL_STUDIES_COURSE_ID], // Liberal Studies
         },
         minimumScore: 4,
         credits: 3,
       },
-    ],
-    'English Language and Composition': [
       {
         courseId: 108,
         courseEquivalents: {
           [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
         },
+        minimumScore: 5,
+        credits: 3,
+      },
+    ],
+    'English Language and Composition': [
+      {
+        courseId: 109,
+        courseEquivalents: {
+          EN: [LIBERAL_STUDIES_COURSE_ID], // Liberal Studies
+        },
         minimumScore: 4,
+        credits: 3,
+      },
+      {
+        courseId: 110,
+        courseEquivalents: {
+          [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
+        },
+        minimumScore: 5,
         credits: 3,
       },
     ],
     'French Language': [
       {
-        courseId: 109,
+        courseId: 111,
         courseEquivalents: {
           [OTHER_COLLEGES]: [353172], // FREN 2090
         },
@@ -104,12 +120,12 @@ const examData: ExamData = {
         credits: 3,
       },
     ],
-    'French Literature': [{ courseId: 110, minimumScore: 4, credits: 3 }],
-    'Italian Language': [{ courseId: 111, minimumScore: 4, credits: 3 }],
-    'Italian Literature': [{ courseId: 112, minimumScore: 4, credits: 3 }],
+    'French Literature': [{ courseId: 112, minimumScore: 4, credits: 3 }],
+    'Italian Language': [{ courseId: 113, minimumScore: 4, credits: 3 }],
+    'Italian Literature': [{ courseId: 114, minimumScore: 4, credits: 3 }],
     'Mathematics BC (Non-Engineering)': [
       {
-        courseId: 113,
+        courseId: 115,
         courseEquivalents: {
           [OTHER_COLLEGES]: [352116, 352120], // MATH 1110, MATH 1120
           EN: [],
@@ -120,7 +136,7 @@ const examData: ExamData = {
     ],
     'Mathematics BC (Engineering)': [
       {
-        courseId: 114,
+        courseId: 116,
         courseEquivalents: {
           [OTHER_COLLEGES]: [],
           EN: [352255], // MATH 1910
@@ -131,7 +147,7 @@ const examData: ExamData = {
     ],
     'Mathematics AB': [
       {
-        courseId: 115,
+        courseId: 117,
         courseEquivalents: {
           [OTHER_COLLEGES]: [352116], // MATH 1110
         },
@@ -141,7 +157,7 @@ const examData: ExamData = {
     ],
     'Physics I': [
       {
-        courseId: 116,
+        courseId: 118,
         courseEquivalents: {
           [OTHER_COLLEGES]: [355142], // PHYS 1101
         },
@@ -151,7 +167,7 @@ const examData: ExamData = {
     ],
     'Physics II': [
       {
-        courseId: 117,
+        courseId: 119,
         courseEquivalents: {
           [OTHER_COLLEGES]: [355143], // PHYS 1102
         },
@@ -161,7 +177,7 @@ const examData: ExamData = {
     ],
     'Physics C-Mechanics': [
       {
-        courseId: 118,
+        courseId: 120,
         courseEquivalents: {
           [OTHER_COLLEGES]: [355197], // PHYS 2207
           EN: [355146], // PHYS 1112
@@ -172,7 +188,7 @@ const examData: ExamData = {
     ],
     'Physics C-Electricity & Magnetism': [
       {
-        courseId: 119,
+        courseId: 121,
         courseEquivalents: {
           [OTHER_COLLEGES]: [355207], // PHYS 2213
         },
@@ -182,7 +198,7 @@ const examData: ExamData = {
     ],
     Psychology: [
       {
-        courseId: 120,
+        courseId: 122,
         courseEquivalents: {
           [OTHER_COLLEGES]: [351438], // PSYCH 1101
         },
@@ -192,21 +208,21 @@ const examData: ExamData = {
     ],
     'Spanish Language': [
       {
-        courseId: 120,
+        courseId: 123,
         minimumScore: 4,
         credits: 3,
       },
     ],
     'Spanish Literature': [
       {
-        courseId: 120,
+        courseId: 124,
         minimumScore: 4,
         credits: 3,
       },
     ],
     Statistics: [
       {
-        courseId: 121,
+        courseId: 125,
         courseEquivalents: {
           [OTHER_COLLEGES]: [
             350500, // AEM 2100
@@ -232,7 +248,7 @@ const examData: ExamData = {
         majorsExcluded: ['Biological Sciences'],
       },
       {
-        courseId: 122,
+        courseId: 126,
         courseEquivalents: {
           [OTHER_COLLEGES]: [
             350500, // AEM 2100

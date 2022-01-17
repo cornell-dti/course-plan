@@ -6,6 +6,7 @@ import {
   ifCodeMatch,
   courseIsForeignLang,
 } from '../checkers-common';
+import { LIBERAL_STUDIES_COURSE_ID } from '../constants';
 
 const engineeringLiberalArtsDistributions: readonly string[] = [
   'CA',
@@ -138,7 +139,9 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
           (course: Course): boolean =>
             engineeringLiberalArtsDistributions.some(
               distribution => course.catalogDistr?.includes(distribution) ?? false
-            ) || courseIsForeignLang(course),
+            ) ||
+            courseIsForeignLang(course) ||
+            course.crseId === LIBERAL_STUDIES_COURSE_ID,
         ],
         fulfilledBy: 'credits',
         perSlotMinCount: [18],
