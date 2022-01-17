@@ -97,8 +97,11 @@ export function allowCourseDoubleCountingBetweenRequirements(
     );
   }
   // requirement source type is not the same
-  // exactly one source type is minor
-  if (requirementA.sourceType === 'Minor' || requirementB.sourceType === 'Minor') {
+  // one source type is minor and one source type is college or major
+  if (
+    (requirementA.sourceType === 'Minor' && requirementB.sourceType !== 'Grad') ||
+    (requirementA.sourceType !== 'Grad' && requirementB.sourceType === 'Minor')
+  ) {
     return true;
   }
   // one source type is college and one source type is major
@@ -109,8 +112,7 @@ export function allowCourseDoubleCountingBetweenRequirements(
     return allowCourseDoubleCounting;
   }
 
-  // neither source type is minor, and source types are not college and major
-  // so, one source type is college or major and one source type is grad
+  // one source type is college or major or minor and one source type is grad
   return false;
 }
 
