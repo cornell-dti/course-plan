@@ -41,19 +41,15 @@ type FirestoreSemester = {
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
-type FirestoreAPIBExam = {
-  readonly type: 'AP' | 'IB';
-  readonly score: number;
-  readonly subject: string;
-};
 
 /** Represents the name of an exam a student can take for transfer credit */
 type TransferExamType = 'AP' | 'IB' | 'CASE';
 
 type FirestoreTransferExam = {
   readonly examType: TransferExamType;
-  readonly score: number;
   readonly subject: string;
+  readonly score?: number;
+  readonly type?: TransferExamType; // TODO @bshen migrate away
 };
 
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
@@ -64,7 +60,7 @@ type FirestoreOnboardingUserData = {
   readonly majors: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly minors: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly gradPrograms: readonly FirestoreCollegeMajorMinorOrGrad[];
-  readonly exam: readonly FirestoreAPIBExam[];
+  readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
 };
 
@@ -182,7 +178,7 @@ type AppOnboardingData = {
   readonly major: readonly string[];
   readonly minor: readonly string[];
   readonly grad?: string;
-  readonly exam: readonly FirestoreAPIBExam[];
+  readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
 };
 

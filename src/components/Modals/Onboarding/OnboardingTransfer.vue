@@ -85,16 +85,6 @@ type Data = {
   classes: TransferClassWithOptionalCourse[];
 };
 
-const asAPIB = (exam: FirestoreTransferExam) => {
-  const { examType } = exam;
-  if (examType === 'CASE') {
-    throw new TypeError('Cannot fetch credit from CASE exam');
-  }
-  return { ...exam, type: examType };
-};
-
-const asAPIBArray = (exams: readonly FirestoreTransferExam[]) => exams.map(asAPIB);
-
 const scores = {
   AP: [5, 4, 3, 2, 1],
   IB: [7, 6, 5, 4, 3, 2, 1],
@@ -122,11 +112,11 @@ export default defineComponent({
       CASE: [] as FirestoreTransferExam[],
     };
     this.onboardingData.exam.forEach(exam => {
-      exams[exam.type].push({ ...exam, examType: exam.type });
+      exams[exam.examType].push(exam);
     });
     exams.AP.push({ examType: 'AP', subject: placeholderText, score: 0 });
     exams.IB.push({ examType: 'IB', subject: placeholderText, score: 0 });
-    exams.CASE.push({ examType: 'CASE', subject: placeholderText, score: 0 });
+    exams.CASE.push({ examType: 'CASE', subject: placeholderText});
     const transferClasses: TransferClassWithOptionalCourse[] = [];
     transferClasses.push({ class: placeholderText, credits: 0 });
     return {
@@ -179,7 +169,7 @@ export default defineComponent({
       this.selectScore(score, i, 'IB');
     },
     addExam(examType: TransferExamType) {
-      const exam = { examType, subject: this.placeholderText, score: 0 };
+      const exam = { examType, subject: this.placeholderText, score: examType === 'CASE' ? undefined : 0 };
       this.exams[examType].push(exam);
     },
     removeExam(examType: TransferExamType, index: number) {
@@ -201,7 +191,7 @@ export default defineComponent({
     updateTransfer() {
       this.$emit(
         'updateTransfer',
-        [...asAPIBArray(this.exams.AP), ...asAPIBArray(this.exams.IB)],
+        [...this.exams.AP, ...this.exams.IB, ...this.exams.CASE],
         this.tookSwimTest
       );
     },
@@ -223,7 +213,7 @@ export default defineComponent({
   computed: {
     totalCredits(): number {
       let count = 0;
-      const aggregated = [...asAPIBArray(this.exams.AP), ...asAPIBArray(this.exams.IB)];
+      const aggregated = [...this.exams.AP, ...this.exams.IB, ...this.exams.CASE];
       aggregated.forEach(exam => {
         count += getExamCredit(exam);
       });

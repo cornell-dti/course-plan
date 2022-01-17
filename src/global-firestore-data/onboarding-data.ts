@@ -15,30 +15,35 @@ export const setAppOnboardingData = (
     majors: onboarding.major.map(acronym => ({ acronym })),
     minors: onboarding.minor.map(acronym => ({ acronym })),
     gradPrograms: onboarding.grad ? [{ acronym: onboarding.grad }] : [],
-    exam: onboarding.exam,
+    // TODO @bshen migration script from type to examType
+    exam: onboarding.exam.map(e => ({
+      ...e,
+      type: e.examType || e.type,
+      examType: e.type || e.examType,
+    })),
     tookSwim: onboarding.tookSwim,
   });
 };
 
-const setTookSwim = (tookSwim: 'yes' | 'no'): void => {
-  onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
-    tookSwim,
-  });
-};
-
-const setExams = (exam: FirestoreAPIBExam[]) => {
+const updateTransferCredit = (exam: readonly FirestoreTransferExam[], tookSwim: 'yes' | 'no') => {
   onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
     exam,
+    tookSwim,
   });
 };
 
 export const deleteTransferCredit = (code: string): void => {
   if (code === SWIM_TEST_CODE) {
-    setTookSwim('no');
+    updateTransferCredit(store.state.onboardingData.exam, 'no');
     return;
   }
-  const [type, subject] = code.split(/ (.*)/);
-  setExams(
-    store.state.onboardingData.exam.filter(e => !(e.type === type && e.subject === subject))
+  // Note: this assumes that the course code is `${examType} ${subject}`.
+  // This needs to be updated if that changes.
+  const [examType, subject] = code.split(/ (.*)/);
+  updateTransferCredit(
+    store.state.onboardingData.exam.filter(
+      e => !(e.examType === examType && e.subject === subject)
+    ),
+    store.state.onboardingData.tookSwim
   );
 };

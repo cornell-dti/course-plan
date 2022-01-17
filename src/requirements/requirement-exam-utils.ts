@@ -1,31 +1,44 @@
-import examData, { ExamFulfillment, ExamFulfillments } from './data/exams/ExamCredit';
+import examData, {
+  ExamFulfillmentBase,
+  ExamFulfillmentWithMinimumScore,
+  ExamFulfillments,
+} from './data/exams/ExamCredit';
 import { NO_FULFILLMENTS_COURSE_ID } from './data/constants';
 
-type ExamType = keyof typeof examData;
-type ExamTaken = {
-  readonly examType: ExamType;
-  readonly subject: string;
-  readonly score: number;
-};
-export type ExamsTaken = ExamTaken[];
-type ExamSubjects = Record<ExamType, string[]>;
+type ExamSubjects = Record<TransferExamType, string[]>;
 
-const getExamFulfillment = (userExam: ExamTaken): ExamFulfillment | undefined => {
-  const exam = examData[userExam.examType][userExam.subject];
-  const fulfillment = exam.reduce((prev: ExamFulfillment | undefined, curr: ExamFulfillment) => {
-    // check if exam name matches and score is high enough
-    if (userExam.score >= curr.minimumScore) {
-      // update exam variable if this exam has a higher minimum score
-      if (!prev || prev.minimumScore < curr.minimumScore) {
-        return curr;
-      }
-    }
-    return prev;
-  }, undefined);
-  return fulfillment;
+const getExamFulfillment = (
+  userExam: FirestoreTransferExam
+): ExamFulfillmentBase | ExamFulfillmentWithMinimumScore | undefined => {
+  switch (userExam.examType) {
+    case 'AP':
+    case 'IB':
+      const apibExam = examData[userExam.examType][userExam.subject];
+      return apibExam.reduce(
+        (
+          prev: ExamFulfillmentWithMinimumScore | undefined,
+          curr: ExamFulfillmentWithMinimumScore
+        ) => {
+          // check if exam name matches and score is high enough
+          if ((userExam.score || 0) >= curr.minimumScore) {
+            // update exam variable if this exam has a higher minimum score
+            if (!prev || prev.minimumScore < curr.minimumScore) {
+              return curr;
+            }
+          }
+          return prev;
+        },
+        undefined
+      );
+    case 'CASE':
+      const caseExam = examData[userExam.examType][userExam.subject];
+      return caseExam;
+    default:
+      throw new Error('Invalid exam type.');
+  }
 };
 
-export const examsTakenToExamCourses = (exams: ExamsTaken): CourseTaken[] => {
+export const examsTakenToExamCourses = (exams: FirestoreTransferExam[]): CourseTaken[] => {
   const examCourses: CourseTaken[] = [];
   exams.forEach(exam => {
     // match exam to fulfillment
@@ -54,7 +67,7 @@ export const examsTakenToExamCourses = (exams: ExamsTaken): CourseTaken[] => {
 };
 
 export default function userDataToExamCourses(user: AppOnboardingData): CourseTaken[] {
-  const examsTaken = user.exam.map(({ type: examType, subject, score }) => ({
+  const examsTaken = user.exam.map(({ examType, subject, score }) => ({
     examType,
     subject,
     score,
@@ -71,15 +84,10 @@ const toSubjects = (data: ExamFulfillments) => {
 export const examSubjects: ExamSubjects = {
   AP: toSubjects(examData.AP),
   IB: toSubjects(examData.IB),
+  CASE: toSubjects(examData.CASE),
 };
 
-export const getExamCredit = (examTaken: FirestoreAPIBExam): number => {
-  const exam = examData[examTaken.type][examTaken.subject];
-  const mostPossibleCredit = exam.reduce((credit, fulfillment) => {
-    if (examTaken.score >= fulfillment.minimumScore) {
-      return Math.max(credit, fulfillment.credits);
-    }
-    return credit;
-  }, 0);
-  return mostPossibleCredit;
+export const getExamCredit = (examTaken: FirestoreTransferExam): number => {
+  const fulfillment = getExamFulfillment(examTaken);
+  return fulfillment?.credits || 0;
 };
