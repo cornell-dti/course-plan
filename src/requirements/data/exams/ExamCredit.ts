@@ -87,6 +87,7 @@ const examData: ExamData = {
         courseId: 108,
         courseEquivalents: {
           [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
+          EN: [FWS_COURSE_ID, LIBERAL_STUDIES_COURSE_ID], // FWS, Liberal Studies
         },
         minimumScore: 5,
         credits: 3,
@@ -105,6 +106,7 @@ const examData: ExamData = {
         courseId: 110,
         courseEquivalents: {
           [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
+          EN: [FWS_COURSE_ID, LIBERAL_STUDIES_COURSE_ID], // FWS, Liberal Studies
         },
         minimumScore: 5,
         credits: 3,
