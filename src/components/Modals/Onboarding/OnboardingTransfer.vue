@@ -116,7 +116,7 @@ export default defineComponent({
     });
     exams.AP.push({ examType: 'AP', subject: placeholderText, score: 0 });
     exams.IB.push({ examType: 'IB', subject: placeholderText, score: 0 });
-    exams.CASE.push({ examType: 'CASE', subject: placeholderText});
+    exams.CASE.push({ examType: 'CASE', subject: placeholderText });
     const transferClasses: TransferClassWithOptionalCourse[] = [];
     transferClasses.push({ class: placeholderText, credits: 0 });
     return {
@@ -169,7 +169,11 @@ export default defineComponent({
       this.selectScore(score, i, 'IB');
     },
     addExam(examType: TransferExamType) {
-      const exam = { examType, subject: this.placeholderText, score: examType === 'CASE' ? undefined : 0 };
+      const exam = {
+        examType,
+        subject: this.placeholderText,
+        score: examType === 'CASE' ? undefined : 0,
+      };
       this.exams[examType].push(exam);
     },
     removeExam(examType: TransferExamType, index: number) {
