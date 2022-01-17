@@ -45,7 +45,7 @@ import {
 } from '@/global-firestore-data';
 import {
   canFulfillChecker,
-  getAllEligibleRelatedRequirementIds,
+  getRelatedRequirementIdsForCourseOptOut,
 } from '@/requirements/requirement-frontend-utils';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
@@ -101,6 +101,8 @@ export default defineComponent({
             return;
           }
 
+          /* TODO @bshen fix .allowCourseDoubleCounting flag
+             we should allow the constraint violation to be broken, i.e. don't return early */
           const currentRequirementAllowDoubleCounting =
             store.state.userRequirementsMap[this.subReqCourseId]?.allowCourseDoubleCounting;
           const allOtherRequirementsAllowDoubleCounting = store.state.safeRequirementFulfillmentGraph
@@ -139,7 +141,8 @@ export default defineComponent({
     },
     addExistingCourse(option: string) {
       this.showDropdown = false;
-      updateRequirementChoice(this.selfCheckCourses[option].uniqueID, choice => ({
+      const { uniqueID, crseId } = this.selfCheckCourses[option];
+      updateRequirementChoice(uniqueID, choice => ({
         ...choice,
         // Since we edit from a self-check requirement,
         // we know it must be `acknowledgedCheckerWarningOptIn`.
@@ -147,10 +150,12 @@ export default defineComponent({
           new Set([...choice.acknowledgedCheckerWarningOptIn, this.subReqId])
         ),
         // Keep existing behavior of keeping it connected to at most one requirement.
-        optOut: getAllEligibleRelatedRequirementIds(
-          this.selfCheckCourses[option].crseId,
+        optOut: getRelatedRequirementIdsForCourseOptOut(
+          crseId,
+          this.subReqId,
           store.state.groupedRequirementFulfillmentReport,
-          store.state.toggleableRequirementChoices
+          store.state.toggleableRequirementChoices,
+          store.state.userRequirementsMap
         ),
       }));
     },
@@ -170,10 +175,12 @@ export default defineComponent({
           // We also need to opt-out of all requirements without warnings,
           // because the user intention is clear that we only want to bind
           // the course to this specific requirement.
-          optOut: getAllEligibleRelatedRequirementIds(
+          optOut: getRelatedRequirementIdsForCourseOptOut(
             newCourse.crseId,
+            this.subReqId,
             store.state.groupedRequirementFulfillmentReport,
-            store.state.toggleableRequirementChoices
+            store.state.toggleableRequirementChoices,
+            store.state.userRequirementsMap
           ),
         }),
         this.$gtag

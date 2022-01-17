@@ -1,6 +1,7 @@
 import requirementJson from './typed-requirement-json';
 import specialized from './specialize';
 import { examCourseIds } from './requirement-exam-mapping';
+import { getConstraintViolationsForSingleCourse } from './requirement-constraints-utils';
 
 /**
  * A collection of helper functions
@@ -444,10 +445,17 @@ export function computeFulfillmentCoursesAndStatistics(
   };
 }
 
-export function getAllEligibleRelatedRequirementIds(
+/**
+ * Find related requirement ids to opt out of. This maintains the invariant that
+ * there are no constraint violations when adding a course to the semester.
+ * It should be deprecated after the new add modal is implemented.
+ */
+export function getRelatedRequirementIdsForCourseOptOut(
   courseId: number,
+  associatedRequirementId: string,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): readonly string[] {
   const requirements = groupedRequirements
     .flatMap(it => it.reqs)
@@ -458,12 +466,29 @@ export function getAllEligibleRelatedRequirementIds(
       );
       if (spec == null) return [];
       const allEligibleCourses = spec.eligibleCourses.flat();
-      if (allEligibleCourses.includes(courseId) && requirement.checkerWarning == null) {
+      if (
+        requirement.id === associatedRequirementId ||
+        (allEligibleCourses.includes(courseId) && requirement.checkerWarning == null)
+      ) {
         return [requirement.id];
       }
       return [];
     });
-  return requirements;
+  // only return the requirements that are in a constraint violation
+  const uniqueId = -1; // dummy unique id
+  const { requirementsThatDoNotAllowDoubleCounting } = getConstraintViolationsForSingleCourse(
+    { uniqueId },
+    requirements,
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
+  );
+  // order does not need to be preserved
+  return Array.from(requirementsThatDoNotAllowDoubleCounting).filter(
+    it => it !== associatedRequirementId
+  );
 }
 
 export function getRelatedUnfulfilledRequirements(
@@ -475,13 +500,15 @@ export function getRelatedUnfulfilledRequirements(
   }: CornellCourseRosterCourse,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): {
-  readonly directlyRelatedRequirements: readonly RequirementWithIDSourceType[];
+  readonly relatedRequirements: readonly RequirementWithIDSourceType[];
   readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
+  readonly automaticallyFulfilledRequirements: readonly RequirementWithIDSourceType[];
 } {
   const code = `${subject} ${catalogNbr}`;
-  const directlyRelatedRequirements: RequirementWithIDSourceType[] = [];
+  const relatedRequirements: RequirementWithIDSourceType[] = [];
   const selfCheckRequirements: RequirementWithIDSourceType[] = [];
   for (let i = 0; i < groupedRequirements.length; i += 1) {
     const subreqs = groupedRequirements[i].reqs.filter(
@@ -501,9 +528,6 @@ export function getRelatedUnfulfilledRequirements(
         toggleableRequirementChoices
       );
       // potential self-check requirements
-      if (requirementSpec == null && !subRequirement.allowCourseDoubleCounting) {
-        selfCheckRequirements.push(subRequirement);
-      }
       if (requirementSpec != null) {
         const allEligibleCourses = requirementSpec.eligibleCourses.flat();
         if (allEligibleCourses.includes(courseId)) {
@@ -524,14 +548,30 @@ export function getRelatedUnfulfilledRequirements(
           );
           if (fulfillmentStatisticsWithNewCourse.minCountFulfilled > existingMinCountFulfilled) {
             if (subRequirement.checkerWarning == null) {
-              directlyRelatedRequirements.push(subRequirement);
+              relatedRequirements.push(subRequirement);
             } else {
               selfCheckRequirements.push(subRequirement);
             }
           }
         }
+      } else {
+        selfCheckRequirements.push(subRequirement);
       }
     }
   }
-  return { directlyRelatedRequirements, selfCheckRequirements };
+  const allRequirements = [...relatedRequirements, ...selfCheckRequirements];
+  const { requirementsThatDoNotAllowDoubleCounting } = getConstraintViolationsForSingleCourse(
+    { uniqueId: -1 },
+    allRequirements.map(({ id }) => id),
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
+  );
+  const automaticallyFulfilledRequirements = relatedRequirements.filter(
+    ({ id }) => !requirementsThatDoNotAllowDoubleCounting.has(id)
+  );
+
+  return { relatedRequirements, selfCheckRequirements, automaticallyFulfilledRequirements };
 }
