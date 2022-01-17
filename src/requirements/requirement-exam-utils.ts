@@ -12,7 +12,7 @@ const getExamFulfillment = (
 ): ExamFulfillmentBase | ExamFulfillmentWithMinimumScore | undefined => {
   switch (userExam.examType) {
     case 'AP':
-    case 'IB':
+    case 'IB': {
       const apibExam = examData[userExam.examType][userExam.subject];
       return apibExam.reduce(
         (
@@ -30,9 +30,11 @@ const getExamFulfillment = (
         },
         undefined
       );
-    case 'CASE':
+    }
+    case 'CASE': {
       const caseExam = examData[userExam.examType][userExam.subject];
       return caseExam;
+    }
     default:
       throw new Error('Invalid exam type.');
   }
