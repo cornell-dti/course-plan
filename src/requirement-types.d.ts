@@ -81,7 +81,7 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
 
 /** Requirements may have conditions associated with certain course ids, eg. for AP/IB exams. */
 type RequirementCourseConditions = Record<
-  [courseId: number],
+  number,
   {
     /** If the user IS NOT in one of these colleges, the course id cannot fulfill the requirement. */
     readonly colleges: string[];
@@ -93,7 +93,7 @@ type RequirementCourseConditions = Record<
 type DecoratedCollegeOrMajorRequirement = RequirementCommon &
   RequirementFulfillmentInformation<{
     readonly courses: readonly (readonly number[])[];
-    readonly conditions?: readonly RequirementCourseConditions;
+    readonly conditions?: Readonly<RequirementCourseConditions>;
   }>;
 
 /**

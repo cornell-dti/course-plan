@@ -1,4 +1,7 @@
-import { getUserRequirements } from './requirement-frontend-utils';
+import {
+  getMatchedRequirementFulfillmentSpecification,
+  getUserRequirements,
+} from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import {
   BuildRequirementFulfillmentGraphParameters,
@@ -64,24 +67,15 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       const requirement = userRequirementsMap[requirementID];
       // When a requirement has checker warning, we do not add those edges in phase 1.
       // All edges will be explictly opt-in only from stage 3.
-      if (requirement.checkerWarning != null) return [];
-      let eligibleCoursesList: readonly (readonly number[])[];
-      switch (requirement.fulfilledBy) {
-        case 'self-check':
-          return [];
-        case 'courses':
-        case 'credits':
-          eligibleCoursesList = requirement.courses;
-          break;
-        case 'toggleable':
-          eligibleCoursesList = Object.values(requirement.fulfillmentOptions).flatMap(
-            it => it.courses
-          );
-          break;
-        default:
-          throw new Error();
+      const spec = getMatchedRequirementFulfillmentSpecification(
+        requirement,
+        toggleableRequirementChoices,
+        onboardingData
+      );
+      if (spec == null || spec.hasRequirementCheckerWarning) {
+        return [];
       }
-      return eligibleCoursesList.flat();
+      return spec.eligibleCourses.flat();
     },
   };
   const dangerousRequirementFulfillmentGraph = buildRequirementFulfillmentGraph(

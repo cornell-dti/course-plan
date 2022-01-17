@@ -80,6 +80,7 @@ export default defineComponent({
       return getFilter(
         store.state.userRequirementsMap,
         store.state.toggleableRequirementChoices,
+        store.state.onboardingData,
         this.requirementId
       );
     },
