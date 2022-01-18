@@ -90,9 +90,6 @@ const scores = {
   IB: [7, 6, 5, 4, 3, 2, 1],
 } as const;
 
-// TODO: replace stubbed in values
-const subjectsCASE = ['Computer Science', 'Chemistry', 'Physics', 'Foreign Language'];
-
 export default defineComponent({
   components: {
     OnboardingTransferSwimming,
@@ -210,7 +207,7 @@ export default defineComponent({
     subjects(examType: TransferExamType) {
       const currentSubjects = new Set(this.exams[examType].map(({ subject }) => subject));
       // stub in CASE exams here for now
-      const subjects = { ...examSubjects, CASE: subjectsCASE };
+      const subjects = { ...examSubjects };
       return subjects[examType].filter(subject => !currentSubjects.has(subject));
     },
   },
