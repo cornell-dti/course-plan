@@ -3,7 +3,7 @@
     <div class="info-section-wrapper">
       <div>
         <div class="section">
-          <h1 class="info-head">Credits</h1>
+          <h1 class="info-head">Credit</h1>
           <p class="info-fact">{{ courseObj.credits }}</p>
         </div>
         <div class="section">
