@@ -52,3 +52,34 @@ it('RequirementFulfillmentGraph.addRequirementNode() works', () => {
   graph.addRequirementNode('foo');
   expect(graph.getConnectedCoursesFromRequirement('foo')).toEqual([{ uniqueId: 234 }]);
 });
+
+it('RequirementFulfillmentGraph.addGraph() works', () => {
+  const graph1 = new RequirementFulfillmentGraph<string, CourseWithUniqueId>();
+  graph1.addRequirementNode('foo');
+  graph1.addEdge('foo', { uniqueId: 123 });
+
+  const graph2 = new RequirementFulfillmentGraph<string, CourseWithUniqueId>();
+  graph2.addRequirementNode('foo');
+  graph2.addEdge('foo', { uniqueId: 234 });
+  graph2.addRequirementNode('bar');
+
+  graph1.addGraph(graph2);
+  expect(graph1.getAllRequirements()).toContain('bar');
+  expect(graph1.getConnectedCoursesFromRequirement('foo')).toContainEqual({ uniqueId: 123 });
+  expect(graph1.getConnectedCoursesFromRequirement('foo')).toContainEqual({ uniqueId: 234 });
+});
+
+it('RequirementFulfillmentGraph.subtractGraphEdges() works', () => {
+  const graph1 = new RequirementFulfillmentGraph<string, CourseWithUniqueId>();
+  graph1.addRequirementNode('foo');
+  graph1.addEdge('foo', { uniqueId: 123 });
+  graph1.addEdge('foo', { uniqueId: 234 });
+
+  const graph2 = new RequirementFulfillmentGraph<string, CourseWithUniqueId>();
+  graph2.addRequirementNode('foo');
+  graph2.addEdge('foo', { uniqueId: 234 });
+
+  graph1.subtractGraphEdges(graph2);
+  expect(graph1.getConnectedCoursesFromRequirement('foo')).toContainEqual({ uniqueId: 123 });
+  expect(graph1.getConnectedCoursesFromRequirement('foo')).not.toContainEqual({ uniqueId: 234 });
+});
