@@ -287,7 +287,7 @@ export default defineComponent({
               store.state.onboardingData,
               store.state.toggleableRequirementChoices,
               store.state.userRequirementsMap
-            ).filter(it => it !== requirementID);
+            );
             choices[uniqueID] = { ...choice, optOut };
           });
           return choices;
