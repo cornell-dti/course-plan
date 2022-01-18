@@ -104,4 +104,22 @@ export default class RequirementFulfillmentGraph<
     });
     return newCopy;
   }
+
+  public addGraph(graph: RequirementFulfillmentGraph<Requirement, Course>): void {
+    graph.getAllRequirements().forEach(req => {
+      this.addRequirementNode(req);
+    });
+    graph.getAllEdges().forEach(([req, course]) => {
+      this.addEdge(req, course);
+    });
+  }
+
+  // does not subtract requirement nodes
+  public subtractGraphEdges(
+    graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>
+  ): void {
+    graph.getAllEdges().forEach(([req, course]) => {
+      this.removeEdge(req, course);
+    });
+  }
 }

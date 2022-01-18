@@ -204,6 +204,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   readonly groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
 } {
@@ -212,8 +213,10 @@ export default function computeGroupedRequirementFulfillmentReports(
 
   const {
     userRequirements,
+    userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
+    courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
   } = buildRequirementFulfillmentGraphFromUserData(
     coursesTaken,
@@ -321,9 +324,10 @@ export default function computeGroupedRequirementFulfillmentReports(
   }
 
   return {
-    userRequirementsMap: Object.fromEntries(userRequirements.map(it => [it.id, it])),
+    userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
+    courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
     groupedRequirementFulfillmentReport,
   };

@@ -1,3 +1,4 @@
+import { getConstraintViolations } from './requirement-constraints-utils';
 import RequirementFulfillmentGraph, { CourseWithUniqueId } from './requirement-graph';
 
 interface CourseForRequirementGraph extends CourseWithUniqueId {
@@ -122,18 +123,16 @@ export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   Course extends CourseForRequirementGraph
 >(
   graph: RequirementFulfillmentGraph<Requirement, Course>,
-  allowDoubleCounting: (requirement: Requirement) => boolean
-): ReadonlySet<string | number> => {
-  const doubleCountedCourseUniqueIDSet = new Set<string | number>();
-  graph.getAllCourses().forEach(course => {
-    const requirementsThatDoesNotAllowDoubleCounting = graph
-      .getConnectedRequirementsFromCourse(course)
-      .filter(it => !allowDoubleCounting(it));
-    if (requirementsThatDoesNotAllowDoubleCounting.length > 1) {
-      // Illegal double counting
-      requirementsThatDoesNotAllowDoubleCounting.forEach(r => graph.removeEdge(r, course));
-      doubleCountedCourseUniqueIDSet.add(course.uniqueId);
-    }
-  });
-  return doubleCountedCourseUniqueIDSet;
+  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
+): {
+  courseToRequirementsInConstraintViolations: Map<string | number, Set<Requirement[]>>;
+  doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
+} => {
+  const {
+    constraintViolationsGraph,
+    courseToRequirementsInConstraintViolations,
+    doubleCountedCourseUniqueIDSet,
+  } = getConstraintViolations(graph, requirementConstraintHolds);
+  graph.subtractGraphEdges(constraintViolationsGraph);
+  return { courseToRequirementsInConstraintViolations, doubleCountedCourseUniqueIDSet };
 };
