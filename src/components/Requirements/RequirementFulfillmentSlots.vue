@@ -100,7 +100,7 @@ export default defineComponent({
         store.state.onboardingData,
         {
           [this.requirementFulfillment.requirement.id]: this.toggleableRequirementChoice,
-        },
+        }
       );
       if (requirementFulfillmentSpec === null) return [];
       /**

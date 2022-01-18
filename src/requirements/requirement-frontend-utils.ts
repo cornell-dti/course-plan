@@ -29,6 +29,30 @@ export function convertFirestoreSemesterCourseToCourseTaken({
 }
 
 /**
+ * This returns a function that filters out courses that cannot fulfill a requirement with requirementId
+ * based on whether it is an eligible course or not. Used to filter out data for the self-check add modal.
+ */
+export const getFilterForRequirementFulfillment = (
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
+  onboardingData: AppOnboardingData,
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  requirementId: string
+): ((course: CornellCourseRosterCourse) => boolean) => {
+  const requirement = userRequirementsMap[requirementId];
+  // If we cannot find the relevant requirement, then default to true to be permissive.
+  if (requirement == null) return () => true;
+  const requirementSpec = getMatchedRequirementFulfillmentSpecification(
+    requirement,
+    onboardingData,
+    toggleableRequirementChoices
+  );
+  // If a requirement is truly self-check, then all courses can be used.
+  if (requirementSpec == null) return () => true;
+  const eligibleCourseIds = new Set(requirementSpec.eligibleCourses.flat());
+  return course => eligibleCourseIds.has(course.crseId);
+};
+
+/**
  * The function returns a boolean representing whether a course can fulfill requirement with requirementId based on
  * whether or not it is eligible. Used to filter out data for the self-check dropdown, and is based on the above filter.
  */
