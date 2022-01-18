@@ -317,8 +317,8 @@ export default defineComponent({
               crseId,
               requirementID,
               store.state.groupedRequirementFulfillmentReport,
-              store.state.toggleableRequirementChoices,
               store.state.onboardingData,
+              store.state.toggleableRequirementChoices,
               store.state.userRequirementsMap
             ).filter(it => it !== requirementID);
             choices[uniqueID] = { ...choice, optOut };

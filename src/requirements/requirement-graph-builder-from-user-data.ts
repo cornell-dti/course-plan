@@ -71,8 +71,8 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       // All edges will be explictly opt-in only from stage 3.
       const spec = getMatchedRequirementFulfillmentSpecification(
         requirement,
-        toggleableRequirementChoices,
-        onboardingData
+        onboardingData,
+        toggleableRequirementChoices
       );
       if (spec == null || spec.hasRequirementCheckerWarning) {
         return [];

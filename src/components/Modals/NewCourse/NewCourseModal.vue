@@ -137,8 +137,8 @@ export default defineComponent({
           this.selectedCourse.crseId,
           this.selectedRequirementID,
           store.state.groupedRequirementFulfillmentReport,
-          store.state.toggleableRequirementChoices,
           store.state.onboardingData,
+          store.state.toggleableRequirementChoices,
           store.state.userRequirementsMap
         ),
         // Only include the selected requirement from opt-in.

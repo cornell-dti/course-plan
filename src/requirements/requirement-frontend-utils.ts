@@ -29,37 +29,13 @@ export function convertFirestoreSemesterCourseToCourseTaken({
 }
 
 /**
- * This returns a function that filters out courses that cannot fulfill a requirement with requirementId
- * based on whether it is an eligible course or not. Used to filter out data for the self-check add modal.
- */
-export const getFilter = (
-  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
-  toggleableRequirementChoices: AppToggleableRequirementChoices,
-  onboardingData: AppOnboardingData,
-  requirementId: string
-): ((course: CornellCourseRosterCourse) => boolean) => {
-  const requirement = userRequirementsMap[requirementId];
-  // If we cannot find the relevant requirement, then default to true to be permissive.
-  if (requirement == null) return () => true;
-  const requirementSpec = getMatchedRequirementFulfillmentSpecification(
-    requirement,
-    toggleableRequirementChoices,
-    onboardingData
-  );
-  // If a requirement is truly self-check, then all courses can be used.
-  if (requirementSpec == null) return () => true;
-  const eligibleCourseIds = new Set(requirementSpec.eligibleCourses.flat());
-  return course => eligibleCourseIds.has(course.crseId);
-};
-
-/**
  * The function returns a boolean representing whether a course can fulfill requirement with requirementId based on
  * whether or not it is eligible. Used to filter out data for the self-check dropdown, and is based on the above filter.
  */
 export function canFulfillChecker(
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
-  toggleableRequirementChoices: AppToggleableRequirementChoices,
   onboardingData: AppOnboardingData,
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
   requirementId: string,
   crseId: number
 ): boolean {
@@ -68,8 +44,8 @@ export function canFulfillChecker(
   if (requirement == null) return true;
   const requirementSpec = getMatchedRequirementFulfillmentSpecification(
     requirement,
-    toggleableRequirementChoices,
-    onboardingData
+    onboardingData,
+    toggleableRequirementChoices
   );
   // If a requirement is truly self-check, then all courses can be used.
   if (requirementSpec == null) return true;
@@ -258,8 +234,8 @@ type MatchedRequirementFulfillmentSpecification =
  */
 export function getMatchedRequirementFulfillmentSpecification(
   requirement: RequirementWithIDSourceType,
-  toggleableRequirementChoices: AppToggleableRequirementChoices,
-  { college }: AppOnboardingData
+  { college }: AppOnboardingData,
+  toggleableRequirementChoices: AppToggleableRequirementChoices
 ): MatchedRequirementFulfillmentSpecification {
   const { sourceType, sourceSpecificName } = requirement;
   const filterEligibleCoursesByRequirementConditions = (
@@ -466,8 +442,8 @@ export function computeFulfillmentCoursesAndStatistics(
 ): RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements {
   const spec = getMatchedRequirementFulfillmentSpecification(
     requirement,
-    toggleableRequirementChoices,
-    onboardingData
+    onboardingData,
+    toggleableRequirementChoices
   );
   if (spec == null) {
     // Give self-check 1 required course and 0 fulfilled to prevent it from being fulfilled.
@@ -500,8 +476,8 @@ export function getRelatedRequirementIdsForCourseOptOut(
   courseId: number,
   associatedRequirementId: string,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices,
   onboardingData: AppOnboardingData,
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): readonly string[] {
   const requirements = groupedRequirements
@@ -509,8 +485,8 @@ export function getRelatedRequirementIdsForCourseOptOut(
     .flatMap(({ requirement }) => {
       const spec = getMatchedRequirementFulfillmentSpecification(
         requirement,
-        toggleableRequirementChoices,
-        onboardingData
+        onboardingData,
+        toggleableRequirementChoices
       );
       if (spec == null) return [];
       const allEligibleCourses = spec.eligibleCourses.flat();
@@ -574,8 +550,8 @@ export function getRelatedUnfulfilledRequirements(
       const existingCourses = existingCoursesInSlots.flat();
       const requirementSpec = getMatchedRequirementFulfillmentSpecification(
         subRequirement,
-        toggleableRequirementChoices,
-        onboardingData
+        onboardingData,
+        toggleableRequirementChoices
       );
       // potential self-check requirements
       if (requirementSpec != null) {
