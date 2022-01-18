@@ -154,7 +154,7 @@ import {
   updateRequirementChoices,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
-import { getAllEligibleRelatedRequirementIds } from '@/requirements/requirement-frontend-utils';
+import { getRelatedRequirementIdsForCourseOptOut } from '@/requirements/requirement-frontend-utils';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -280,12 +280,14 @@ export default defineComponent({
             // the `optOut` field.
             // Below, we find all the requirements it can possibly match,
             // and only remove the requirementID since that's the one we should keep.
-            const optOut = getAllEligibleRelatedRequirementIds(
+            const optOut = getRelatedRequirementIdsForCourseOptOut(
               crseId,
+              requirementID,
               store.state.groupedRequirementFulfillmentReport,
+              store.state.onboardingData,
               store.state.toggleableRequirementChoices,
-              store.state.onboardingData
-            ).filter(it => it !== requirementID);
+              store.state.userRequirementsMap
+            );
             choices[uniqueID] = { ...choice, optOut };
           });
           return choices;

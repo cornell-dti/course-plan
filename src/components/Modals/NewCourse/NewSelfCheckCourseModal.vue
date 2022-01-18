@@ -39,7 +39,7 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import SelectSemester from '@/components/Modals/SelectSemester.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 import store from '@/store';
-import { getFilter } from '@/requirements/requirement-frontend-utils';
+import { getFilterForRequirementFulfillment } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectSemester },
@@ -77,10 +77,10 @@ export default defineComponent({
       return this.selectedCourse != null && this.year > 0 && String(this.season) !== 'Select';
     },
     courseCanAppearInSearchResult(): (course: CornellCourseRosterCourse) => boolean {
-      return getFilter(
+      return getFilterForRequirementFulfillment(
         store.state.userRequirementsMap,
-        store.state.toggleableRequirementChoices,
         store.state.onboardingData,
+        store.state.toggleableRequirementChoices,
         this.requirementId
       );
     },

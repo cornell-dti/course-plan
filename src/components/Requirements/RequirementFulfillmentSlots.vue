@@ -97,10 +97,10 @@ export default defineComponent({
     requirementCoursesSlots(): SubReqCourseSlot[] {
       const requirementFulfillmentSpec = getMatchedRequirementFulfillmentSpecification(
         this.requirementFulfillment.requirement,
+        store.state.onboardingData,
         {
           [this.requirementFulfillment.requirement.id]: this.toggleableRequirementChoice,
-        },
-        store.state.onboardingData
+        }
       );
       if (requirementFulfillmentSpec === null) return [];
       /**

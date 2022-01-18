@@ -1,5 +1,6 @@
 import {
   getMatchedRequirementFulfillmentSpecification,
+  allowCourseDoubleCountingBetweenRequirements,
   getUserRequirements,
 } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
@@ -20,6 +21,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
+  readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
@@ -69,8 +71,8 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       // All edges will be explictly opt-in only from stage 3.
       const spec = getMatchedRequirementFulfillmentSpecification(
         requirement,
-        toggleableRequirementChoices,
-        onboardingData
+        onboardingData,
+        toggleableRequirementChoices
       );
       if (spec == null || spec.hasRequirementCheckerWarning) {
         return [];
@@ -86,9 +88,16 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     requirementGraphBuilderParameters
   );
   const safeRequirementFulfillmentGraph = dangerousRequirementFulfillmentGraph.copy();
-  const doubleCountedCourseUniqueIDSet = removeIllegalEdgesFromRequirementFulfillmentGraph(
+  const {
+    doubleCountedCourseUniqueIDSet,
+    courseToRequirementsInConstraintViolations,
+  } = removeIllegalEdgesFromRequirementFulfillmentGraph(
     safeRequirementFulfillmentGraph,
-    requirementID => userRequirementsMap[requirementID].allowCourseDoubleCounting || false
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
   );
 
   return {
@@ -96,6 +105,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
+    courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
   };
 }
