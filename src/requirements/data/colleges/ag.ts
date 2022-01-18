@@ -5,6 +5,8 @@ import {
   includesWithSingleRequirement,
 } from '../checkers-common';
 
+const CALSHumanitiesDistributions: readonly string[] = ['CA', 'D', 'HA', 'KCM', 'LA', 'SBA'];
+
 const calsCreditsRequirement: CollegeOrMajorRequirement = {
   name: 'CALS Credits',
   description:
@@ -101,10 +103,22 @@ const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequiremen
   perSlotMinCount: [6],
 };
 
+const calsChemistryOrPhysicsRequiement: CollegeOrMajorRequirement = {
+  name: 'Chemistry/Physics',
+  description:
+    'Complete a minimum of three academic credits of chemistry or physics. ' +
+    'Includes all Cornell courses with the CHEM or PHYS prefix at Cornell (excluding courses that are supplemental, independent study, research, TA, internship, and First-Year Writing Seminar).',
+  source:
+    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
+  checker: [(course: Course): boolean => ['CHEM', 'CHEME', 'PHYS'].includes(course.subject)],
+  fulfilledBy: 'credits',
+  perSlotMinCount: [3],
+};
+
 const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
   name: 'Physical and Life Sciences',
   description:
-    '18 credits in at least three disciplines of which six credits must be introductory life sciences/biology and three credits in chemistry or physics',
+    '18 credits in at least three disciplines of which six credits must be introductory life sciences/biology and three credits in chemistry or physics.',
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
   checker: includesWithSingleRequirement(
@@ -549,18 +563,6 @@ const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
   allowCourseDoubleCounting: true,
 };
 
-const calsChemistryOrPhysicsRequiement: CollegeOrMajorRequirement = {
-  name: 'Chemistry/Physics',
-  description:
-    'Complete a minimum of three academic credits of chemistry or physics. ' +
-    'Includes all Cornell courses with the CHEM or PHYS prefix at Cornell (excluding courses that are supplemental, independent study, research, TA, internship, and First-Year Writing Seminar).',
-  source:
-    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  checker: [(course: Course): boolean => ['CHEM', 'CHEME', 'PHYS'].includes(course.subject)],
-  fulfilledBy: 'credits',
-  perSlotMinCount: [3],
-};
-
 const calsQuantitativeLiteracyRequirement: CollegeOrMajorRequirement = {
   name: 'Quantitative Literacy',
   description:
@@ -575,48 +577,56 @@ const calsQuantitativeLiteracyRequirement: CollegeOrMajorRequirement = {
   slotNames: ['Course'],
 };
 
+// TODO: No more than two courses from the same course subject checker
 const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
   name: 'Social Sciences and Humanities',
-  description:
-    'Students must complete four courses of 3 or more credits each from the following seven categories of courses in the humanities and social sciences (' +
-    'CA, FL, D-AG, HA, KCM, LA, SBA). ' +
-    'At least one course category MUST be completed in three different categories. ' +
-    'No more than two courses in the same department will be counted toward the distribution requirement. ' +
-    'To view a searchable list of courses, please search for courses that fulfill distribution requirements.',
-  source:
-    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
+  description: 'At least 4 courses. No more than two courses from the same course subject. ',
+  source: 'https://oap.cals.cornell.edu/searchDist.aspx',
   checker: [
-    (course: Course): boolean => course.catalogDistr?.includes('CA-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('D-') ?? false,
-    courseIsForeignLang,
-    (course: Course): boolean => course.catalogDistr?.includes('HA-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('KCM-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('LA-') ?? false,
-    (course: Course): boolean => course.catalogDistr?.includes('SBA-') ?? false,
+    (course: Course): boolean =>
+      CALSHumanitiesDistributions.some(
+        distribution => course.catalogDistr?.includes(distribution) ?? false
+      ) || courseIsForeignLang(course),
   ],
   fulfilledBy: 'courses',
-  perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
-  slotNames: ['CA', 'D', 'FL', 'HA', 'KCM', 'LA', 'SBA'],
-  minNumberOfSlots: 4,
-};
-
-const calsHumanDiversityRequirement: CollegeOrMajorRequirement = {
-  name: 'Human Diversity (D)',
-  description: 'One course in the Human Diversity (D) category and must be completed.',
-  source:
-    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  checker: [(course: Course): boolean => course.catalogDistr?.includes('(D-') ?? false],
-  fulfilledBy: 'courses',
-  perSlotMinCount: [1],
+  perSlotMinCount: [4],
   slotNames: ['Course'],
-  allowCourseDoubleCounting: true,
+  additionalRequirements: {
+    'Courses must be from 3 different categories (CA, FL, D-AG, HA, KCM, LA, SBA).': {
+      checker: [
+        ...CALSHumanitiesDistributions.map(distribution => (course: Course): boolean =>
+          course.catalogDistr?.includes(distribution) ?? false
+        ),
+      ],
+      fulfilledBy: 'courses',
+      perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
+      slotNames: ['CA', 'FL', 'D', 'HA', 'KCM', 'LA', 'SBA'],
+      minNumberOfSlots: 3,
+    },
+    'Courses must have at least 12 credits.': {
+      checker: [
+        (course: Course): boolean =>
+          CALSHumanitiesDistributions.some(
+            distribution => course.catalogDistr?.includes(distribution) ?? false
+          ) || courseIsForeignLang(course),
+      ],
+      fulfilledBy: 'credits',
+      perSlotMinCount: [12],
+    },
+    'One course must be in the Human Diversity (D) category': {
+      checker: [(course: Course): boolean => course.catalogDistr?.includes('D') ?? false],
+      fulfilledBy: 'courses',
+      perSlotMinCount: [1],
+      slotNames: ['Human Diversity Course'],
+    },
+  },
 };
 
+// TODO: Find out how "If not required, all nine credits may be in written expression" is applied and specialize by major
 const calsWrittenAndOralExpressionRequirement: CollegeOrMajorRequirement = {
   name: 'Written and Oral Expression',
   description:
-    '9 credits total, of which at least six must be in written expression. ' +
-    'Oral expression is not required by the college, but may be required for some majors. ' +
+    '9 credits total. Oral expression is not required by the college, but may be required for some majors.' +
     'If not required, all nine credits may be in written expression. Writing in the Majors courses do not count towards the writing requirement.',
   source:
     'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
@@ -629,23 +639,19 @@ const calsWrittenAndOralExpressionRequirement: CollegeOrMajorRequirement = {
   ],
   fulfilledBy: 'credits',
   perSlotMinCount: [9],
-};
-
-const calsWrittenExpressionRequirement: CollegeOrMajorRequirement = {
-  name: 'Written Expression',
-  description: 'At least six credits must be in written expression.',
-  source:
-    'https://cals.cornell.edu/undergraduate-students/student-services/degree-requirements/graduation-requirements/distribution-requirements',
-  checker: [
-    courseIsFWS ||
-      ((course: Course): boolean =>
-        ['written expression', 'First-Year Writing Seminar'].some(
-          keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
-        )),
-  ],
-  fulfilledBy: 'credits',
-  perSlotMinCount: [6],
-  allowCourseDoubleCounting: true,
+  additionalRequirements: {
+    'At least six credits must be in written expression': {
+      checker: [
+        courseIsFWS ||
+          ((course: Course): boolean =>
+            ['written expression', 'First-Year Writing Seminar'].some(
+              keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
+            )),
+      ],
+      fulfilledBy: 'credits',
+      perSlotMinCount: [6],
+    },
+  },
 };
 
 const calsRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -655,9 +661,7 @@ const calsRequirements: readonly CollegeOrMajorRequirement[] = [
   calsChemistryOrPhysicsRequiement,
   calsQuantitativeLiteracyRequirement,
   calsSocialSciencesAndHumanitiesRequiement,
-  calsHumanDiversityRequirement,
   calsWrittenAndOralExpressionRequirement,
-  calsWrittenExpressionRequirement,
 ];
 
 export default calsRequirements;
