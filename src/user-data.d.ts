@@ -48,7 +48,7 @@ type TransferExamType = 'AP' | 'IB' | 'CASE';
 type FirestoreTransferExam = {
   readonly examType: TransferExamType;
   readonly subject: string;
-  readonly score?: number;
+  readonly score: number | string;
   readonly type?: TransferExamType; // TODO @bshen migrate away
 };
 

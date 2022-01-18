@@ -18,12 +18,19 @@ export type ExamFulfillmentWithMinimumScore = ExamFulfillmentBase & {
   readonly minimumScore: number;
 };
 
-export type ExamFulfillments<T = unknown> = Record<string, T>;
+/**
+ * If the user takes a CASE exam, it's possible that there there is Pass or Q/Q+/Q++ scoring.
+ */
+export type ExamFulfillmentWithCustomScoring = ExamFulfillmentBase & {
+  readonly score: string;
+};
+
+export type ExamFulfillments<T extends ExamFulfillmentBase> = Record<string, T[]>;
 
 export type ExamData = {
-  AP: ExamFulfillments<ExamFulfillmentWithMinimumScore[]>;
-  IB: ExamFulfillments<ExamFulfillmentWithMinimumScore[]>;
-  CASE: ExamFulfillments<ExamFulfillmentBase>;
+  AP: ExamFulfillments<ExamFulfillmentWithMinimumScore>;
+  IB: ExamFulfillments<ExamFulfillmentWithMinimumScore>;
+  CASE: ExamFulfillments<ExamFulfillmentWithCustomScoring>;
 };
 
 // If the user's college is not in the keys of courseEquivalents, their college is generalized to OTHER_COLLEGES
@@ -363,20 +370,52 @@ const examData: ExamData = {
     ],
   },
   CASE: {
-    'MATH 1910': {
-      courseId: 300,
-      courseEquivalents: {
-        EN: [352255],
+    French: [
+      {
+        courseId: 301,
+        courseEquivalents: {
+          [OTHER_COLLEGES]: [370328, 355146],
+        },
+        credits: 3,
+        score: 'Q',
       },
-      credits: 4,
-    },
-    'PHYS 1112': {
-      courseId: 301,
-      courseEquivalents: {
-        EN: [355146],
+      {
+        courseId: 302,
+        courseEquivalents: {
+          [OTHER_COLLEGES]: [],
+        },
+        credits: 4,
+        score: 'Q+',
       },
-      credits: 4,
-    },
+      {
+        courseId: 303,
+        courseEquivalents: {
+          [OTHER_COLLEGES]: [],
+        },
+        credits: 4,
+        score: 'Q++',
+      },
+    ],
+    'MATH 1910': [
+      {
+        courseId: 304,
+        courseEquivalents: {
+          EN: [352255],
+        },
+        credits: 4,
+        score: 'Pass',
+      },
+    ],
+    'PHYS 1112': [
+      {
+        courseId: 305,
+        courseEquivalents: {
+          EN: [355146],
+        },
+        credits: 4,
+        score: 'Pass',
+      },
+    ],
   },
 };
 

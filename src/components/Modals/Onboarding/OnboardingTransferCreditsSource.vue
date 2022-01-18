@@ -14,10 +14,9 @@
             @on-select="subject => $emit('on-subject-select', subject, index)"
           />
           <onboarding-transfer-exam-property-dropdown
-            v-if="scores"
             property-name="Score"
             :columnWide="false"
-            :availableOptions="scores"
+            :availableOptions="scores(exam)"
             :choice="exam.score"
             @on-select="score => $emit('on-score-select', score, index)"
           />
@@ -43,6 +42,7 @@
 </template>
 
 <script lang="ts">
+import { getExamScores } from '@/requirements/requirement-exam-utils';
 import { defineComponent, PropType } from 'vue';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
 
@@ -53,8 +53,8 @@ export default defineComponent({
   emits: {
     'on-subject-select': (subject: string, index: number) =>
       typeof subject === 'string' && typeof index === 'number',
-    'on-score-select': (score: number, index: number) =>
-      typeof score === 'number' && typeof index === 'number',
+    'on-score-select': (score: string | number, index: number) =>
+      (typeof score === 'string' || typeof score === 'number') && typeof index === 'number',
     'on-remove': (examType: TransferExamType, index: number) =>
       typeof examType === 'string' && typeof index === 'number',
     'on-add': (examType: TransferExamType) => typeof examType === 'string',
@@ -68,11 +68,6 @@ export default defineComponent({
     subjects: {
       type: Array as PropType<readonly string[]>,
       required: true,
-    },
-    scores: {
-      type: Array as PropType<readonly number[]>,
-      required: false,
-      default: undefined,
     },
     placeholderText: {
       type: String,
@@ -104,6 +99,10 @@ export default defineComponent({
     },
     hasExams(exams: readonly FirestoreTransferExam[], exam: FirestoreTransferExam): boolean {
       return !(exams.length === 1 && exam.subject === this.placeholderText);
+    },
+    scores(exam: FirestoreTransferExam) {
+      if (exam.subject === this.placeholderText) return [];
+      return getExamScores(exam).reverse();
     },
   },
 });

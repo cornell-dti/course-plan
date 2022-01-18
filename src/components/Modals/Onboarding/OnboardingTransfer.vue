@@ -16,7 +16,6 @@
             examType="AP"
             :exams="exams.AP"
             :subjects="subjectsAP"
-            :scores="scores.AP"
             :placeholderText="placeholderText"
             @on-subject-select="selectAPSubject"
             @on-score-select="selectAPScore"
@@ -27,7 +26,6 @@
             examType="IB"
             :exams="exams.IB"
             :subjects="subjectsIB"
-            :scores="scores.IB"
             :placeholderText="placeholderText"
             @on-subject-select="selectIBSubject"
             @on-score-select="selectIBScore"
@@ -41,6 +39,7 @@
             :subjects="subjectsCASE"
             :placeholderText="placeholderText"
             @on-subject-select="selectCASESubject"
+            @on-score-select="selectCASEScore"
             @on-remove="removeExam"
             @on-add="addExam"
           />
@@ -78,17 +77,8 @@ type Data = {
     IB: FirestoreTransferExam[];
     CASE: FirestoreTransferExam[];
   };
-  scores: {
-    AP: readonly number[];
-    IB: readonly number[];
-  };
   classes: TransferClassWithOptionalCourse[];
 };
-
-const scores = {
-  AP: [5, 4, 3, 2, 1],
-  IB: [7, 6, 5, 4, 3, 2, 1],
-} as const;
 
 export default defineComponent({
   components: {
@@ -111,16 +101,15 @@ export default defineComponent({
     this.onboardingData.exam.forEach(exam => {
       exams[exam.examType].push(exam);
     });
-    exams.AP.push({ examType: 'AP', subject: placeholderText, score: 0 });
-    exams.IB.push({ examType: 'IB', subject: placeholderText, score: 0 });
-    exams.CASE.push({ examType: 'CASE', subject: placeholderText });
+    exams.AP.push({ examType: 'AP', subject: placeholderText, score: '' });
+    exams.IB.push({ examType: 'IB', subject: placeholderText, score: '' });
+    exams.CASE.push({ examType: 'CASE', subject: placeholderText, score: '' });
     const transferClasses: TransferClassWithOptionalCourse[] = [];
     transferClasses.push({ class: placeholderText, credits: 0 });
     return {
       tookSwimTest:
         typeof this.onboardingData.tookSwim !== 'undefined' ? this.onboardingData.tookSwim : 'no',
       exams,
-      scores,
       classes: transferClasses,
       placeholderText,
     };
@@ -153,7 +142,7 @@ export default defineComponent({
     selectCASESubject(subject: string, i: number) {
       this.selectSubject(subject, i, 'CASE');
     },
-    selectScore(score: number, i: number, examType: TransferExamType) {
+    selectScore(score: string | number, i: number, examType: TransferExamType) {
       this.exams[examType] = this.exams[examType].map((exam, index) =>
         index === i ? { ...exam, score } : exam
       );
@@ -165,11 +154,14 @@ export default defineComponent({
     selectIBScore(score: number, i: number) {
       this.selectScore(score, i, 'IB');
     },
+    selectCASEScore(score: string, i: number) {
+      this.selectScore(score, i, 'CASE');
+    },
     addExam(examType: TransferExamType) {
       const exam = {
         examType,
         subject: this.placeholderText,
-        score: examType === 'CASE' ? undefined : 0,
+        score: '',
       };
       this.exams[examType].push(exam);
     },
@@ -207,8 +199,7 @@ export default defineComponent({
     subjects(examType: TransferExamType) {
       const currentSubjects = new Set(this.exams[examType].map(({ subject }) => subject));
       // stub in CASE exams here for now
-      const subjects = { ...examSubjects };
-      return subjects[examType].filter(subject => !currentSubjects.has(subject));
+      return examSubjects[examType].filter(subject => !currentSubjects.has(subject));
     },
   },
   computed: {
