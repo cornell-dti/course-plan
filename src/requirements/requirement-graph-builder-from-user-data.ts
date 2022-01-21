@@ -1,4 +1,7 @@
-import { getUserRequirements } from './requirement-frontend-utils';
+import {
+  allowCourseDoubleCountingBetweenRequirements,
+  getUserRequirements,
+} from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import {
   BuildRequirementFulfillmentGraphParameters,
@@ -17,6 +20,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
+  readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
@@ -88,9 +92,16 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     requirementGraphBuilderParameters
   );
   const safeRequirementFulfillmentGraph = dangerousRequirementFulfillmentGraph.copy();
-  const doubleCountedCourseUniqueIDSet = removeIllegalEdgesFromRequirementFulfillmentGraph(
+  const {
+    doubleCountedCourseUniqueIDSet,
+    courseToRequirementsInConstraintViolations,
+  } = removeIllegalEdgesFromRequirementFulfillmentGraph(
     safeRequirementFulfillmentGraph,
-    requirementID => userRequirementsMap[requirementID].allowCourseDoubleCounting || false
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
   );
 
   return {
@@ -98,6 +109,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
+    courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
   };
 }
