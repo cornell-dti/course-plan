@@ -42,8 +42,8 @@
 </template>
 
 <script lang="ts">
-import { getExamScores } from '@/requirements/requirement-exam-utils';
 import { defineComponent, PropType } from 'vue';
+import { getExamScores } from '@/requirements/requirement-exam-utils';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
 
 export default defineComponent({

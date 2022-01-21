@@ -39,6 +39,8 @@ const getExamFulfillment = (
         fulfillment => userExam.score.toString() === fulfillment.score
       );
     }
+    default:
+      return undefined;
   }
 };
 
@@ -103,8 +105,11 @@ export const getExamScores = (examTaken: FirestoreTransferExam): string[] | numb
       return Array.from(Array(5).keys(), n => n + 1);
     case 'IB':
       return Array.from(Array(7).keys(), n => n + 1);
-    case 'CASE':
+    case 'CASE': {
       const fulfillments = examData[examType][subject];
       return fulfillments?.map(({ score }) => score) || [];
+    }
+    default:
+      return [];
   }
 };
