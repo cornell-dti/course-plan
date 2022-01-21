@@ -53,8 +53,9 @@ export default defineComponent({
   emits: {
     'on-subject-select': (subject: string, index: number) =>
       typeof subject === 'string' && typeof index === 'number',
-    'on-score-select': (score: string | number, index: number) =>
-      (typeof score === 'string' || typeof score === 'number') && typeof index === 'number',
+    'on-score-select':
+      ((score: string, index: number) => typeof score === 'string' && typeof index === 'number') ||
+      ((score: number, index: number) => typeof score === 'number' && typeof index === 'number'),
     'on-remove': (examType: TransferExamType, index: number) =>
       typeof examType === 'string' && typeof index === 'number',
     'on-add': (examType: TransferExamType) => typeof examType === 'string',
