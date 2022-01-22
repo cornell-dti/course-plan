@@ -148,13 +148,13 @@ export default defineComponent({
       );
       this.updateTransfer();
     },
-    selectAPScore(score: number, i: number) {
+    selectAPScore(score: string | number, i: number) {
       this.selectScore(score, i, 'AP');
     },
-    selectIBScore(score: number, i: number) {
+    selectIBScore(score: string | number, i: number) {
       this.selectScore(score, i, 'IB');
     },
-    selectCASEScore(score: string, i: number) {
+    selectCASEScore(score: string | number, i: number) {
       this.selectScore(score, i, 'CASE');
     },
     addExam(examType: TransferExamType) {
