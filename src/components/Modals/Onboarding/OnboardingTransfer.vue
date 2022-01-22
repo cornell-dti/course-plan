@@ -141,6 +141,7 @@ export default defineComponent({
     },
     selectCASESubject(subject: string, i: number) {
       this.selectSubject(subject, i, 'CASE');
+      this.selectCASEScore('', i);
     },
     selectScore(score: string | number, i: number, examType: TransferExamType) {
       this.exams[examType] = this.exams[examType].map((exam, index) =>
