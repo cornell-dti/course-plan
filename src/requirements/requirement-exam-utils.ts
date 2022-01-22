@@ -98,8 +98,7 @@ export const getExamCredit = (examTaken: FirestoreTransferExam): number => {
   return fulfillment?.credits || 0;
 };
 
-export const getExamScores = (examTaken: FirestoreTransferExam): string[] | number[] => {
-  const { examType, subject } = examTaken;
+export const getExamScores = (examType: string, subject: string): string[] | number[] => {
   switch (examType) {
     case 'AP':
       return Array.from(Array(5).keys(), n => n + 1);
@@ -112,4 +111,11 @@ export const getExamScores = (examTaken: FirestoreTransferExam): string[] | numb
     default:
       return [];
   }
+};
+
+export const getExamScoresFromExamTaken = (
+  examTaken: FirestoreTransferExam
+): string[] | number[] => {
+  const { examType, subject } = examTaken;
+  return getExamScores(examType, subject);
 };

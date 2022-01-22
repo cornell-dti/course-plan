@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { getExamScores } from '@/requirements/requirement-exam-utils';
+import { getExamScoresFromExamTaken } from '@/requirements/requirement-exam-utils';
 import OnboardingTransferExamPropertyDropdown from './OnboardingTransferExamPropertyDropdown.vue';
 
 export default defineComponent({
@@ -102,7 +102,7 @@ export default defineComponent({
     },
     scores(exam: FirestoreTransferExam) {
       if (exam.subject === this.placeholderText) return [];
-      return getExamScores(exam).reverse();
+      return getExamScoresFromExamTaken(exam).reverse();
     },
   },
 });

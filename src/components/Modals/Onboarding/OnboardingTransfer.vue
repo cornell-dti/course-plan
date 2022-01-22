@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { examSubjects, getExamCredit } from '@/requirements/requirement-exam-utils';
+import { examSubjects, getExamCredit, getExamScores } from '@/requirements/requirement-exam-utils';
 import featureFlagCheckers from '@/feature-flags';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferCreditsSource from './OnboardingTransferCreditsSource.vue';
@@ -141,7 +141,10 @@ export default defineComponent({
     },
     selectCASESubject(subject: string, i: number) {
       this.selectSubject(subject, i, 'CASE');
-      this.selectCASEScore('', i);
+      const scores = getExamScores('CASE', subject) as string[];
+      if (!scores.includes(this.exams.CASE[i].score.toString())) {
+        this.selectCASEScore('', i);
+      }
     },
     selectScore(score: string | number, i: number, examType: TransferExamType) {
       this.exams[examType] = this.exams[examType].map((exam, index) =>
