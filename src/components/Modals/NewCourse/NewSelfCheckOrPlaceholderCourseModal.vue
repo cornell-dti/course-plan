@@ -59,6 +59,7 @@ export default defineComponent({
   },
   emits: {
     'close-course-modal': () => true,
+    'delete-placeholder': () => true,
     'add-course': (
       selected: CornellCourseRosterCourse,
       season: FirestoreSemesterSeason,
@@ -111,7 +112,7 @@ export default defineComponent({
     },
     cancelOrRemove() {
       if (this.isPlaceholderModal) {
-        // TODO @willespencer remove placeholder from plan
+        this.$emit('delete-placeholder');
       }
       this.closeCurrentModal();
     },

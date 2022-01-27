@@ -102,6 +102,7 @@
                 :compact="compact"
                 :semesterIndex="semesterIndex + 1"
                 :placeholderObj="element"
+                @delete-placeholder="deletePlaceholder"
               />
             </div>
           </template>
@@ -380,6 +381,10 @@ export default defineComponent({
       deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
+    },
+    deletePlaceholder(placeholderObj: FirestoreSemesterPlaceholder) {
+      deleteCourseFromSemester(this.year, this.season, placeholderObj.uniqueID, this.$gtag);
+      this.openConfirmationModal(`Removed ${placeholderObj.name} Placeholder`);
     },
     colorCourse(color: string, uniqueID: number, courseCode: string) {
       editSemester(

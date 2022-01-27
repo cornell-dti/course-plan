@@ -9,6 +9,7 @@
       :isPlaceholderModal="true"
       @add-course="assignCourse"
       @close-course-modal="closeModal"
+      @delete-placeholder="deletePlaceholder"
     />
     <div class="placeholder-color">
       <img src="@/assets/images/dots/sixDots.svg" alt="" />
@@ -33,6 +34,10 @@ export default defineComponent({
     placeholderObj: { type: Object as PropType<FirestoreSemesterPlaceholder>, required: true },
     compact: { type: Boolean, required: true },
     semesterIndex: { type: Number, required: false, default: 0 },
+  },
+  emits: {
+    'delete-placeholder': (placeholderObj: FirestoreSemesterPlaceholder) =>
+      typeof placeholderObj === 'object',
   },
   data() {
     return {
@@ -60,6 +65,9 @@ export default defineComponent({
     getRequirementLearnMore() {
       // TODO @willespencer get requirement learn more link to show on add modal
       return 'https://cornelldti.org';
+    },
+    deletePlaceholder() {
+      this.$emit('delete-placeholder', this.placeholderObj);
     },
   },
 });
