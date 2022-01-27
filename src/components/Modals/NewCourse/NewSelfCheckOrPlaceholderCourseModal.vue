@@ -19,7 +19,7 @@
       @on-escape="closeCurrentModal"
       @on-select="setCourse"
     />
-    <div>
+    <div v-if="!isPlaceholderModal">
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
         <select-semester
@@ -29,6 +29,12 @@
           @updateSemProps="updateSemProps"
         />
       </div>
+    </div>
+    <div v-else class="newCourse-description">
+      {{ subReqDescription }}
+      <a class="newCourse=link" :href="subReqLearnMore" target="_blank">
+        <strong>Learn More</strong></a
+      >
     </div>
   </TeleportModal>
 </template>
@@ -45,7 +51,10 @@ export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectSemester },
   props: {
     subReqName: { type: String, required: true },
+    subReqDescription: { type: String, default: '' },
+    subReqLearnMore: { type: String, default: '' },
     requirementId: { type: String, required: true },
+    isPlaceholderModal: { type: Boolean, default: false },
   },
   emits: {
     'close-course-modal': () => true,
@@ -68,7 +77,7 @@ export default defineComponent({
       return `Add Course to ${this.subReqName}`;
     },
     leftButtonText(): string {
-      return 'Cancel';
+      return this.isPlaceholderModal ? 'Remove' : 'Cancel';
     },
     rightButtonText(): string {
       return 'Add';
@@ -137,6 +146,9 @@ export default defineComponent({
     line-height: 17px;
     color: $lightPlaceholderGray;
     margin-bottom: 6px;
+  }
+  &-link {
+    color: $emGreen;
   }
 }
 

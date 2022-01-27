@@ -1,5 +1,15 @@
 <template>
   <div :class="{ 'placeholder--min': compact }" class="placeholder">
+    <new-self-check-or-placeholder-course-modal
+      v-if="isPlaceholderModalOpen"
+      :subReqName="placeholderObj.name"
+      :subReqDescription="getRequirementDescription()"
+      :subReqLearnMore="getRequirementLearnMore()"
+      :requirementId="getRequirementID()"
+      :isPlaceholderModal="true"
+      @add-course="assignCourse"
+      @close-course-modal="closeModal"
+    />
     <div class="placeholder-color">
       <img src="@/assets/images/dots/sixDots.svg" alt="" />
     </div>
@@ -15,17 +25,41 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
+import NewSelfCheckOrPlaceholderCourseModal from '@/components/Modals/NewCourse/NewSelfCheckOrPlaceholderCourseModal.vue';
 
 export default defineComponent({
-  components: { CourseCaution },
+  components: { CourseCaution, NewSelfCheckOrPlaceholderCourseModal },
   props: {
     placeholderObj: { type: Object as PropType<FirestoreSemesterPlaceholder>, required: true },
     compact: { type: Boolean, required: true },
     semesterIndex: { type: Number, required: false, default: 0 },
   },
+  data() {
+    return {
+      isPlaceholderModalOpen: false,
+    };
+  },
   methods: {
     openModal() {
-      // TODO: open modal to assign a course to a placeholder
+      this.isPlaceholderModalOpen = true;
+    },
+    closeModal() {
+      this.isPlaceholderModalOpen = false;
+    },
+    assignCourse() {
+      // TODO write the code that assigns a course to a placeholder
+    },
+    getRequirementID() {
+      // TODO get requirement ID from name and slot
+      return '0';
+    },
+    getRequirementDescription() {
+      // TODO get requirement description to show on add modal
+      return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum eu ligula in feugiat. Mauris sed cursus enim, eu feugiat nibh. Vivamus nisi lorem, dictum non aliquet non, blandit non quam. Maecenas vestibulum, ligula et cursus porta, elit nisi facilisis nunc, et faucibus risus arcu a tellus.';
+    },
+    getRequirementLearnMore() {
+      // TODO get requirement learn more link to show on add modal
+      return 'https://cornelldti.org';
     },
   },
 });
