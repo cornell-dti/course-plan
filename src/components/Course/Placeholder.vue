@@ -47,18 +47,18 @@ export default defineComponent({
       this.isPlaceholderModalOpen = false;
     },
     assignCourse() {
-      // TODO write the code that assigns a course to a placeholder
+      // TODO @willespencer write the code that assigns a course to a placeholder
     },
     getRequirementID() {
-      // TODO get requirement ID from name and slot
+      // TODO @willespencer get requirement ID from name and slot
       return '0';
     },
     getRequirementDescription() {
-      // TODO get requirement description to show on add modal
-      return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum eu ligula in feugiat. Mauris sed cursus enim, eu feugiat nibh. Vivamus nisi lorem, dictum non aliquet non, blandit non quam. Maecenas vestibulum, ligula et cursus porta, elit nisi facilisis nunc, et faucibus risus arcu a tellus.';
+      // TODO @willespencer get requirement description to show on add modal
+      return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum eu ligula in feugiat. Mauris sed cursus enim, eu feugiat nibh.';
     },
     getRequirementLearnMore() {
-      // TODO get requirement learn more link to show on add modal
+      // TODO @willespencer get requirement learn more link to show on add modal
       return 'https://cornelldti.org';
     },
   },

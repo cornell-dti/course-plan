@@ -3,10 +3,11 @@
     :title="modalTitle"
     content-class="content-course"
     :leftButtonText="leftButtonText"
+    :leftButtonWarningStyle="isPlaceholderModal"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="!canAddCourse"
     @modal-closed="closeCurrentModal"
-    @left-button-clicked="backOrCancel"
+    @left-button-clicked="cancelOrRemove"
     @right-button-clicked="addCourse"
   >
     <div class="newCourse-text">Search Course Roster</div>
@@ -32,7 +33,7 @@
     </div>
     <div v-else class="newCourse-description">
       {{ subReqDescription }}
-      <a class="newCourse=link" :href="subReqLearnMore" target="_blank">
+      <a class="newCourse-link" :href="subReqLearnMore" target="_blank">
         <strong>Learn More</strong></a
       >
     </div>
@@ -83,6 +84,9 @@ export default defineComponent({
       return 'Add';
     },
     canAddCourse(): boolean {
+      if (this.isPlaceholderModal) {
+        return this.selectedCourse != null;
+      }
       return this.selectedCourse != null && this.year > 0 && String(this.season) !== 'Select';
     },
     courseCanAppearInSearchResult(): (course: CornellCourseRosterCourse) => boolean {
@@ -105,7 +109,10 @@ export default defineComponent({
       this.$emit('add-course', this.selectedCourse, this.season, this.year);
       this.closeCurrentModal();
     },
-    backOrCancel() {
+    cancelOrRemove() {
+      if (this.isPlaceholderModal) {
+        // TODO @willespencer remove placeholder from plan
+      }
       this.closeCurrentModal();
     },
     updateSemProps(season: string, year: number) {
@@ -146,6 +153,10 @@ export default defineComponent({
     line-height: 17px;
     color: $lightPlaceholderGray;
     margin-bottom: 6px;
+  }
+  &-description {
+    margin: 0.375rem 0 1rem 0;
+    line-height: 14px;
   }
   &-link {
     color: $emGreen;
