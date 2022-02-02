@@ -12,7 +12,7 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
   cornellCourseRosterCourseToFirebaseSemesterCourse(course, store, incrementUniqueID);
 
 export { incrementUniqueID };
-export { default as setOnboardingData } from './onboarding-data';
+export { setAppOnboardingData, deleteTransferCredit } from './onboarding-data';
 export {
   editSemesters,
   editSemester,
@@ -26,11 +26,9 @@ export {
 } from './semesters';
 export { default as chooseToggleableRequirementOption } from './toggleable-requirement-choices';
 export {
-  addCourseToSelectableRequirements,
-  addCoursesToSelectableRequirements,
-  deleteCourseFromSelectableRequirements,
-} from './selectable-requirement-choices';
-export {
-  addOverriddenFulfillmentAPIB,
-  clearOverriddenFulfillmentsAPIB,
-} from './overridden-fulfillment-choices';
+  updateRequirementChoice,
+  updateRequirementChoices,
+  deleteCourseFromRequirementChoices,
+} from './override-fulfillment-choices';
+
+export { default as retrieveAnalytics } from './analytics';

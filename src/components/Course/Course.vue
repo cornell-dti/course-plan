@@ -158,10 +158,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-// TODO: font families
 @import '@/assets/scss/_variables.scss';
-
-$colored-grabber-width: 1.25rem;
 
 .course {
   box-sizing: border-box;

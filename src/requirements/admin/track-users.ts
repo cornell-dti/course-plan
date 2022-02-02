@@ -1,13 +1,10 @@
-/* eslint-disable import/no-import-module-exports */
-
-import functions from 'firebase-functions';
-import admin from 'firebase-admin';
-
-admin.initializeApp();
-const db = admin.firestore();
-const usernameCollection = db.collection('user-name');
-const semestersCollection = db.collection('user-semesters');
-const onboardingCollection = db.collection('user-onboarding-data');
+/* eslint-disable no-console */
+import {
+  onboardingDataCollection,
+  semestersCollection,
+  usernameCollection,
+  trackUsersCollection,
+} from '../../firebase-admin-config';
 
 const average = (array: readonly number[]) => array.reduce((a, b) => a + b) / array.length;
 function seasonToMonth(season: string) {
@@ -25,7 +22,9 @@ function seasonToMonth(season: string) {
   }
 }
 
-function isOld(semester: { year: number; season: string }) {
+// true if a semester is an "old semester," i.e. if a semester on CoursePlan has already passed in real life
+// the idea is that old semesters and new semesters represent whether users are planning in the future or just uploading courses
+function isOld(semester: FirestoreSemester) {
   const currentTime = new Date();
   const month = currentTime.getMonth() + 1;
   const year = currentTime.getFullYear();
@@ -78,37 +77,60 @@ function addYearToFrequencyDictionary(year: string, freqDict: Record<string, num
 }
 
 /**
- * TrackUsers returns user metrics based on
+ * TrackUsers outputs user metrics to a Firestore document with timestap based on
  * data from the user-name and user-semesters Firestore collections.
+ * Users are only included if they have finished onboarding (and have a document in the username collection)
  *
  * It returns the total number of users (total-users),
  * the total number of semesters across all users (total-semesters),
  * the average number of semesters per user (avg-semester),
  * the average number of older semesters that are/before the current semester
  * per user (avg-old-semester),
- * and the average number of newer semesters that are
- * after the current semester (avg-new-semester).
+ * the average number of newer semesters that are
+ * after the current semester (avg-new-semester),
+ * the number of undergrads, grads, and students with both degree types,
+ * the frequencies of each college, grad program, major, and minor,
+ * the averge number of majors, minors, and exams per undergrad,
+ * and the frequencies of each entrance and graduation year.
  */
 
-exports.TrackUsers = functions.https.onRequest(async (req, res) => {
-  let totalUsersCount = 0;
-  const semesters = [];
-  const oldSemesters = [];
-  const newSemesters = [];
-  let semesterCount = 0;
+async function trackUsers() {
+  let nameData = {} as FirestoreTrackUsersNameData;
+  let semesterData = {} as FirestoreTrackUsersSemesterData;
+  let onboardingData = {} as FirestoreTrackUsersOnboardingData;
 
-  const usernamePromise = usernameCollection.get().then(usernameQuerySnapshot => {
-    usernameQuerySnapshot.forEach(() => {
+  // set of all user emails that are in the usernameCollection (and thus finished onboarding)
+  const userEmails = new Set();
+
+  await usernameCollection.get().then(usernameQuerySnapshot => {
+    let totalUsersCount = 0;
+
+    usernameQuerySnapshot.forEach(doc => {
+      userEmails.add(doc.id);
       totalUsersCount += 1;
     });
     const usernameResponse = {
       'total-users': totalUsersCount,
     };
-    return usernameResponse;
+
+    console.log(usernameResponse);
+
+    nameData = {
+      totalUsers: usernameResponse['total-users'],
+    };
   });
 
-  const semesterPromise = semestersCollection.get().then(semesterQuerySnapshot => {
+  await semestersCollection.get().then(semesterQuerySnapshot => {
+    const semesters: number[] = [];
+    const oldSemesters: number[] = [];
+    const newSemesters: number[] = [];
+    let semesterCount = 0;
+
     semesterQuerySnapshot.forEach(doc => {
+      if (!userEmails.has(doc.id)) {
+        return;
+      }
+
       let oldSemesterCount = 0;
       let newSemesterCount = 0;
       doc.data().semesters.forEach(semester => {
@@ -129,10 +151,18 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
       'avg-old-semester': average(oldSemesters),
       'avg-new-semster': average(newSemesters),
     };
-    return semesterResponse;
+
+    console.log(semesterResponse);
+
+    semesterData = {
+      totalSemesters: semesterResponse['total-semesters'],
+      averageNumberSemesters: semesterResponse['avg-semester'],
+      averageNumberNewSemesters: semesterResponse['avg-new-semster'],
+      averageNumberOldSemesters: semesterResponse['avg-old-semester'],
+    };
   });
 
-  const onboardingPromise = onboardingCollection.get().then(onboardingQuerySnapshot => {
+  await onboardingDataCollection.get().then(onboardingQuerySnapshot => {
     let undergradCount = 0;
     let gradCount = 0;
     let undergradAndGradCount = 0;
@@ -150,6 +180,10 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
     const gradYearFreq: Record<string, number> = {};
 
     onboardingQuerySnapshot.forEach(doc => {
+      if (!userEmails.has(doc.id)) {
+        return;
+      }
+
       const { majors, minors, exam, colleges, gradPrograms } = doc.data();
 
       addToFrequencyDictionary(colleges, collegeFreq);
@@ -196,14 +230,37 @@ exports.TrackUsers = functions.https.onRequest(async (req, res) => {
       'grad-year-frequencies': gradYearFreq,
     };
 
-    return onboardingResponse;
+    console.log(onboardingResponse);
+
+    onboardingData = {
+      undergradUsers: onboardingResponse['undergrad-students'],
+      gradUsers: onboardingResponse['grad-students'],
+      undergradAndGradUsers: onboardingResponse['both-undergrad-and-grad-students'],
+      collegeFrequencies: onboardingResponse['undergrad-college-frequencies'],
+      majorFrequences: onboardingResponse['major-frequencies'],
+      minorFrequencies: onboardingResponse['minor-frequencies'],
+      graduateProgramFrequencies: onboardingResponse['graduate-program-frequencies'],
+      averageNumberUndergradMajors: onboardingResponse['average-number-majors-for-undergrads'],
+      averageNumberUndergradMinors: onboardingResponse['average-number-minors-for-undergrads'],
+      averageNumberUndergradAPIBExams:
+        onboardingResponse['average-number-ap/ib-exams-for-undergrads'],
+      entranceYearFrequencies: onboardingResponse['entrance-year-frequencies'],
+      gradYearFrequencies: onboardingResponse['grad-year-frequencies'],
+    };
   });
 
-  Promise.all([usernamePromise, semesterPromise, onboardingPromise]).then(promiseResponses => {
-    const response = Object.assign({}, ...promiseResponses);
-    // eslint-disable-next-line no-console
-    console.log(response);
-    res.send(response);
-    return response;
-  });
-});
+  // Create a document in collection with current timestamp
+  const date = new Date(Date.now());
+  const docId = date.toISOString();
+
+  const outputData: FirestoreTrackUsersData = {
+    nameData,
+    semesterData,
+    onboardingData,
+    timestamp: date,
+  };
+
+  trackUsersCollection.doc(docId).set(outputData);
+}
+
+trackUsers();

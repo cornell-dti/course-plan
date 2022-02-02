@@ -1,6 +1,9 @@
 <template>
   <div class="course-tooltip">
-    <div class="course-iconWrapper course-iconWrapper--caution">
+    <div
+      class="course-iconWrapper"
+      :class="{ 'course-iconWrapper--verticalBar': !hideVerticalBar }"
+    >
       <img class="course-icon course-icon--caution" :src="icon" :alt="alt" />
     </div>
     <div class="course-tooltiptext">
@@ -17,6 +20,7 @@ import caution from '@/assets/images/caution.svg';
 export default defineComponent({
   props: {
     isInformation: { type: Boolean, required: true },
+    hideVerticalBar: { type: Boolean, required: false, default: false },
   },
   computed: {
     icon(): string {
@@ -39,9 +43,12 @@ export default defineComponent({
     margin-left: 0.2rem;
     align-items: center;
 
-    &--caution {
+    &:before {
+      margin-right: 0.2rem;
+    }
+
+    &--verticalBar {
       &:before {
-        margin-right: 0.2rem;
         font-style: normal;
         content: '|';
       }
@@ -96,7 +103,7 @@ export default defineComponent({
   border-width: 0.313rem;
   border-style: solid;
   border-color: transparent transparent white transparent;
-  z-index: 3;
+  z-index: 4;
 }
 
 /** The element that produces a gray triangle */

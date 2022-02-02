@@ -52,10 +52,6 @@ export const toggleableRequirementChoicesCollection = db
   .collection('user-toggleable-requirement-choices')
   .withConverter(getTypedFirestoreDataConverter<AppToggleableRequirementChoices>());
 
-export const selectableRequirementChoicesCollection = db
-  .collection('user-selectable-requirement-choices')
-  .withConverter(getTypedFirestoreDataConverter<AppSelectableRequirementChoices>());
-
 export const overriddenFulfillmentChoicesCollection = db
   .collection('user-overridden-fulfillment-choices')
   .withConverter(getTypedFirestoreDataConverter<FirestoreOverriddenFulfillmentChoices>());
@@ -71,3 +67,7 @@ export const uniqueIncrementerCollection = db
 export const onboardingDataCollection = db
   .collection('user-onboarding-data')
   .withConverter(getTypedFirestoreDataConverter<FirestoreOnboardingUserData>());
+
+export const trackUsersCollection = db
+  .collection('track-users')
+  .withConverter(getTypedFirestoreDataConverter<FirestoreTrackUsersData>());

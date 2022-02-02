@@ -23,7 +23,8 @@
       data-cyId="newCourse-dropdown"
     />
     <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
-      {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}: {{ selectedCourse.titleLong }}
+      {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
+      {{ selectedCourse.titleLong }}
     </div>
     <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
@@ -31,7 +32,7 @@
         :key="courseSelectorKey"
         :editMode="editMode"
         :selectedRequirementID="selectedRequirementID"
-        :requirementsThatAllowDoubleCounting="requirementsThatAllowDoubleCounting"
+        :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
         :relatedRequirements="relatedRequirements"
         :potentialRequirements="selfCheckRequirements"
         @on-selected-change="onSelectedChange"
@@ -48,20 +49,23 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
 import store from '@/store';
-import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
+import {
+  getRelatedRequirementIdsForCourseOptOut,
+  getRelatedUnfulfilledRequirements,
+} from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
     'close-course-modal': () => true,
-    'add-course': (course: CornellCourseRosterCourse, requirementID: string) =>
-      typeof course === 'object' && typeof requirementID === 'string',
+    'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
+      typeof course === 'object' && typeof choice === 'object',
   },
   data() {
     return {
       selectedCourse: null as CornellCourseRosterCourse | null,
       selectedRequirementID: '',
-      requirementsThatAllowDoubleCounting: [] as readonly string[],
+      automaticallyFulfilledRequirements: [] as readonly string[],
       // relatedRequirements : the requirements that don't allow double counting
       relatedRequirements: [] as readonly RequirementWithIDSourceType[],
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
@@ -78,9 +82,6 @@ export default defineComponent({
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
     },
-    selectableRequirementChoices(): AppSelectableRequirementChoices {
-      return store.state.selectableRequirementChoices;
-    },
   },
   methods: {
     selectCourse(result: CornellCourseRosterCourse) {
@@ -92,38 +93,31 @@ export default defineComponent({
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
-        directlyRelatedRequirements,
+        relatedRequirements,
         selfCheckRequirements,
+        automaticallyFulfilledRequirements,
       } = getRelatedUnfulfilledRequirements(
         selectedCourse,
         store.state.groupedRequirementFulfillmentReport,
         store.state.toggleableRequirementChoices,
-        /* deprecated AppOverriddenFulfillmentChoices */ {}
+        store.state.overriddenFulfillmentChoices,
+        store.state.userRequirementsMap
+      );
+      const automaticallyFulfilledRequirementIds = new Set(
+        automaticallyFulfilledRequirements.map(({ id }) => id)
       );
 
-      const requirementsThatAllowDoubleCounting: string[] = [];
-      const relatedRequirements: RequirementWithIDSourceType[] = [];
-      directlyRelatedRequirements.forEach(it => {
-        if (it.allowCourseDoubleCounting) {
-          requirementsThatAllowDoubleCounting.push(it.name);
-        } else {
-          relatedRequirements.push(it);
-        }
-      });
-      const selfCheckRequirementsThatDoesNotAllowDoubleCounting: RequirementWithIDSourceType[] = [];
-      selfCheckRequirements.forEach(it => {
-        if (it.allowCourseDoubleCounting) {
-          requirementsThatAllowDoubleCounting.push(it.name);
-        } else {
-          selfCheckRequirementsThatDoesNotAllowDoubleCounting.push(it);
-        }
-      });
-
-      this.requirementsThatAllowDoubleCounting = requirementsThatAllowDoubleCounting;
-      this.relatedRequirements = relatedRequirements;
-      this.selfCheckRequirements = selfCheckRequirementsThatDoesNotAllowDoubleCounting;
-      if (relatedRequirements.length > 0) {
-        this.selectedRequirementID = relatedRequirements[0].id;
+      this.automaticallyFulfilledRequirements = automaticallyFulfilledRequirements.map(
+        ({ name }) => name
+      );
+      this.relatedRequirements = relatedRequirements.filter(
+        req => !automaticallyFulfilledRequirementIds.has(req.id)
+      );
+      this.selfCheckRequirements = selfCheckRequirements.filter(
+        req => !automaticallyFulfilledRequirementIds.has(req.id)
+      );
+      if (this.relatedRequirements.length > 0) {
+        this.selectedRequirementID = this.relatedRequirements[0].id;
       } else {
         this.selectedRequirementID = '';
       }
@@ -137,7 +131,20 @@ export default defineComponent({
     },
     addCourse() {
       if (this.selectedCourse == null) return;
-      this.$emit('add-course', this.selectedCourse, this.selectedRequirementID);
+      this.$emit('add-course', this.selectedCourse, {
+        optOut: getRelatedRequirementIdsForCourseOptOut(
+          this.selectedCourse.crseId,
+          this.selectedRequirementID,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.toggleableRequirementChoices,
+          store.state.userRequirementsMap
+        ),
+        // Only include the selected requirement from opt-in.
+        acknowledgedCheckerWarningOptIn: this.selfCheckRequirements
+          .filter(it => it.id === this.selectedRequirementID)
+          .map(it => it.id),
+        arbitraryOptIn: {},
+      });
       this.closeCurrentModal();
     },
     onSelectedChange(selected: string) {

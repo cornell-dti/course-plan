@@ -1,4 +1,8 @@
-import buildRequirementFulfillmentGraph from '../requirement-graph-builder';
+import RequirementFulfillmentGraph from '../requirement-graph';
+import {
+  buildRequirementFulfillmentGraph,
+  removeIllegalEdgesFromRequirementFulfillmentGraph,
+} from '../requirement-graph-builder';
 
 const CS3410 = { uniqueId: 3410, courseId: 1 };
 const CS3420 = { uniqueId: 3420, courseId: 2 };
@@ -22,18 +26,13 @@ const getAllCoursesThatCanPotentiallySatisfyRequirement = (
 };
 
 it('buildRequirementFulfillmentGraph phase 1 test 1', () => {
-  const graph = buildRequirementFulfillmentGraph(
-    {
-      requirements,
-      userCourses: [CS3410, CS3420, MATH4710],
-      userChoiceOnFulfillmentStrategy: {},
-      userChoiceOnDoubleCountingElimination: {},
-      userChoiceOnRequirementOverrides: {},
-      getAllCoursesThatCanPotentiallySatisfyRequirement,
-      allowDoubleCounting: () => false,
-    },
-    /* keepCoursesWithoutDoubleCountingEliminationChoice */ true
-  );
+  const graph = buildRequirementFulfillmentGraph({
+    requirements,
+    userCourses: [CS3410, CS3420, MATH4710],
+    userChoiceOnFulfillmentStrategy: {},
+    userChoiceOnRequirementOverrides: {},
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+  });
 
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([CS3410, CS3420]);
   expect(graph.getConnectedCoursesFromRequirement('Probability')).toEqual([MATH4710]);
@@ -43,18 +42,13 @@ it('buildRequirementFulfillmentGraph phase 1 test 1', () => {
 // This test ensures that we are actually using userCourses and drop any courses from pre-computed
 // course list that are not in userCourses.
 it('buildRequirementFulfillmentGraph phase 1 test 2', () => {
-  const graph = buildRequirementFulfillmentGraph(
-    {
-      requirements,
-      userCourses: [CS3410, MATH4710],
-      userChoiceOnFulfillmentStrategy: {},
-      userChoiceOnDoubleCountingElimination: {},
-      userChoiceOnRequirementOverrides: {},
-      getAllCoursesThatCanPotentiallySatisfyRequirement,
-      allowDoubleCounting: () => false,
-    },
-    /* keepCoursesWithoutDoubleCountingEliminationChoice */ true
-  );
+  const graph = buildRequirementFulfillmentGraph({
+    requirements,
+    userCourses: [CS3410, MATH4710],
+    userChoiceOnFulfillmentStrategy: {},
+    userChoiceOnRequirementOverrides: {},
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+  });
 
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([CS3410]);
   expect(graph.getConnectedCoursesFromRequirement('Probability')).toEqual([MATH4710]);
@@ -63,18 +57,13 @@ it('buildRequirementFulfillmentGraph phase 1 test 2', () => {
 
 // Following two tests test how we are removing edges depending on user choices on fulfillment strategy.
 it('buildRequirementFulfillmentGraph phase 2-1 test', () => {
-  const graph = buildRequirementFulfillmentGraph(
-    {
-      requirements,
-      userCourses: [CS3410, CS3420, MATH4710],
-      userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
-      userChoiceOnDoubleCountingElimination: {},
-      userChoiceOnRequirementOverrides: {},
-      getAllCoursesThatCanPotentiallySatisfyRequirement,
-      allowDoubleCounting: () => false,
-    },
-    /* keepCoursesWithoutDoubleCountingEliminationChoice */ true
-  );
+  const graph = buildRequirementFulfillmentGraph({
+    requirements,
+    userCourses: [CS3410, CS3420, MATH4710],
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
+    userChoiceOnRequirementOverrides: {},
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+  });
 
   // In this case, 3420 is removed since user chooses strategy 1.
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([CS3410]);
@@ -83,18 +72,13 @@ it('buildRequirementFulfillmentGraph phase 2-1 test', () => {
 });
 
 it('buildRequirementFulfillmentGraph phase 2-2 test', () => {
-  const graph = buildRequirementFulfillmentGraph(
-    {
-      requirements,
-      userCourses: [CS3410, CS3420, MATH4710],
-      userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3420.courseId] },
-      userChoiceOnDoubleCountingElimination: {},
-      userChoiceOnRequirementOverrides: {},
-      getAllCoursesThatCanPotentiallySatisfyRequirement,
-      allowDoubleCounting: () => false,
-    },
-    /* keepCoursesWithoutDoubleCountingEliminationChoice */ true
-  );
+  const graph = buildRequirementFulfillmentGraph({
+    requirements,
+    userCourses: [CS3410, CS3420, MATH4710],
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3420.courseId] },
+    userChoiceOnRequirementOverrides: {},
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+  });
 
   // In this case, 3410 is removed since user chooses strategy 2.
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([CS3420]);
@@ -104,18 +88,15 @@ it('buildRequirementFulfillmentGraph phase 2-2 test', () => {
 
 // The following two tests test that we will remove edges incompatible with user supplied choices.
 it('buildRequirementFulfillmentGraph phase 3 test 1', () => {
-  const graph = buildRequirementFulfillmentGraph(
-    {
-      requirements,
-      userCourses: [CS3410, CS3420, MATH4710],
-      userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
-      userChoiceOnDoubleCountingElimination: { [MATH4710.uniqueId]: 'Probability' },
-      userChoiceOnRequirementOverrides: {},
-      getAllCoursesThatCanPotentiallySatisfyRequirement,
-      allowDoubleCounting: () => false,
+  const graph = buildRequirementFulfillmentGraph({
+    requirements,
+    userCourses: [CS3410, CS3420, MATH4710],
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
+    userChoiceOnRequirementOverrides: {
+      [MATH4710.uniqueId]: { optIn: [], optOut: ['Elective'] },
     },
-    /* keepCoursesWithoutDoubleCountingEliminationChoice */ true
-  );
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+  });
 
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([CS3410]);
   expect(graph.getConnectedCoursesFromRequirement('Probability')).toEqual([MATH4710]);
@@ -123,81 +104,63 @@ it('buildRequirementFulfillmentGraph phase 3 test 1', () => {
 });
 
 it('buildRequirementFulfillmentGraph phase 3 test 2', () => {
-  const graph = buildRequirementFulfillmentGraph(
-    {
-      requirements,
-      userCourses: [CS3410, CS3420, MATH4710],
-      userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
-      userChoiceOnDoubleCountingElimination: { [MATH4710.uniqueId]: 'Elective' },
-      userChoiceOnRequirementOverrides: {},
-      getAllCoursesThatCanPotentiallySatisfyRequirement,
-      allowDoubleCounting: () => false,
+  const graph = buildRequirementFulfillmentGraph({
+    requirements,
+    userCourses: [CS3410, CS3420, MATH4710],
+    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
+    userChoiceOnRequirementOverrides: {
+      [MATH4710.uniqueId]: { optIn: [], optOut: ['Probability'] },
     },
-    /* keepCoursesWithoutDoubleCountingEliminationChoice */ true
-  );
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+  });
 
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([CS3410]);
   expect(graph.getConnectedCoursesFromRequirement('Probability')).toEqual([]);
   expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([CS3410, CS3420, MATH4710]);
 });
 
-// The following test ensures that we will remove edges when user makes no choice on courses.
+// The following test runs on a fully specified graph algorithm on complete user choices
 it('buildRequirementFulfillmentGraph phase 3 test 3', () => {
   const graph = buildRequirementFulfillmentGraph({
     requirements,
     userCourses: [CS3410, CS3420, MATH4710],
     userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
-    userChoiceOnDoubleCountingElimination: { [MATH4710.uniqueId]: 'Probability' },
-    userChoiceOnRequirementOverrides: {},
-    getAllCoursesThatCanPotentiallySatisfyRequirement,
-    allowDoubleCounting: () => false,
-  });
-
-  expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([]);
-  expect(graph.getConnectedCoursesFromRequirement('Probability')).toEqual([MATH4710]);
-  expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([]);
-});
-
-// The following test runs on a fully specified graph algorithm on complete user choices
-it('buildRequirementFulfillmentGraph phase 3 test 4', () => {
-  const graph = buildRequirementFulfillmentGraph({
-    requirements,
-    userCourses: [CS3410, CS3420, MATH4710],
-    userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
-    userChoiceOnDoubleCountingElimination: {
-      [CS3410.uniqueId]: 'CS3410/CS3420',
-      [CS3420.uniqueId]: 'Elective',
-      [MATH4710.uniqueId]: 'Elective',
+    userChoiceOnRequirementOverrides: {
+      [CS3410.uniqueId]: { optIn: [], optOut: ['Elective'] },
+      [MATH4710.uniqueId]: { optIn: [], optOut: ['Elective'] },
     },
-    userChoiceOnRequirementOverrides: {},
     getAllCoursesThatCanPotentiallySatisfyRequirement,
-    allowDoubleCounting: r => r === 'Probability',
   });
 
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([CS3410]);
   expect(graph.getConnectedCoursesFromRequirement('Probability')).toEqual([MATH4710]);
-  expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([CS3420, MATH4710]);
+  expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([CS3420]);
 });
 
-// Normally, we will remove all edges when there is no user choice associated with a unique ID.
-// If we do the same for AP/IB/swim courses, then all these courses will never be able to fulfill
-// anything.
-// The following test ensures that we don't regress again.
-it('AP/IB/swim test course edge is not removed in step 3', () => {
-  // Test this for a lot of different unique ID less than
-  for (let uniqueId = -1; uniqueId >= -10; uniqueId -= 1) {
-    const graph = buildRequirementFulfillmentGraph({
-      requirements,
-      userCourses: [{ courseId: CS3410.courseId, uniqueId }], // mock an AP/IB course
-      userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
-      userChoiceOnDoubleCountingElimination: {},
-      userChoiceOnRequirementOverrides: {},
-      getAllCoursesThatCanPotentiallySatisfyRequirement,
-      allowDoubleCounting: r => r === 'Probability',
-    });
+it('removeIllegalEdgesFromRequirementFulfillmentGraph tests', () => {
+  const graph = new RequirementFulfillmentGraph<string, { uniqueId: number; courseId: 0 }>();
+  graph.addEdge('R1', { uniqueId: 1, courseId: 0 });
+  graph.addEdge('R2', { uniqueId: 1, courseId: 0 });
+  graph.addEdge('R3', { uniqueId: 1, courseId: 0 });
+  graph.addEdge('R1', { uniqueId: 2, courseId: 0 });
+  graph.addEdge('R2', { uniqueId: 2, courseId: 0 });
+  graph.addEdge('R1', { uniqueId: 2, courseId: 0 });
+  graph.addEdge('R1', { uniqueId: 3, courseId: 0 });
+  graph.addEdge('R4', { uniqueId: 3, courseId: 0 });
+  const doubleCountable = ['R1', 'R4'];
+  expect(
+    Array.from(
+      removeIllegalEdgesFromRequirementFulfillmentGraph(
+        graph,
+        (rA, rB) => doubleCountable.includes(rA) || doubleCountable.includes(rB)
+      ).doubleCountedCourseUniqueIDSet
+    )
+  ).toEqual([1]);
 
-    expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([
-      { courseId: CS3410.courseId, uniqueId },
-    ]);
-  }
+  // Illegal double counting edges R2-1, R3-1 removed
+  expect(graph.getConnectedRequirementsFromCourse({ uniqueId: 1 })).toEqual(['R1']);
+  // Nothing removed
+  expect(graph.getConnectedRequirementsFromCourse({ uniqueId: 2 })).toEqual(['R1', 'R2']);
+  // Nothing removed
+  expect(graph.getConnectedRequirementsFromCourse({ uniqueId: 3 })).toEqual(['R1', 'R4']);
 });
