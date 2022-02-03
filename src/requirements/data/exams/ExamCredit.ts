@@ -15,6 +15,9 @@ export type ExamFulfillment = {
 export type ExamFulfillments = Record<string, ExamFulfillment[]>;
 export type ExamData = Record<'AP' | 'IB', ExamFulfillments>;
 
+// If the user's college is not in the keys of courseEquivalents, their college is generalized to OTHER_COLLEGES
+export const OTHER_COLLEGES = 'OTHER_COLLEGES';
+
 const examData: ExamData = {
   AP: {
     Biology: [
@@ -25,7 +28,7 @@ const examData: ExamData = {
       {
         courseId: 102,
         courseEquivalents: {
-          DEFAULT: [351265], // CHEM 2070
+          [OTHER_COLLEGES]: [351265], // CHEM 2070
           EN: [359187], // CHEM 2090
         },
         minimumScore: 5,
@@ -36,7 +39,7 @@ const examData: ExamData = {
       {
         courseId: 103,
         courseEquivalents: {
-          DEFAULT: [358526], // CS 1110
+          [OTHER_COLLEGES]: [358526], // CS 1110
         },
         minimumScore: 5,
         credits: 4,
@@ -46,7 +49,7 @@ const examData: ExamData = {
       {
         courseId: 104,
         courseEquivalents: {
-          DEFAULT: [350025], // ECON 1110
+          [OTHER_COLLEGES]: [350025], // ECON 1110
         },
         minimumScore: 4,
         credits: 3,
@@ -54,7 +57,7 @@ const examData: ExamData = {
       {
         courseId: 105,
         courseEquivalents: {
-          DEFAULT: [350025], // ECON 1110
+          [OTHER_COLLEGES]: [350025], // ECON 1110
           BU: [350025, 351468], // ECON 1110, HADM 1410
         },
         minimumScore: 5,
@@ -65,7 +68,7 @@ const examData: ExamData = {
       {
         courseId: 106,
         courseEquivalents: {
-          DEFAULT: [350038], // ECON 1120
+          [OTHER_COLLEGES]: [350038], // ECON 1120
         },
         minimumScore: 4,
         credits: 3,
@@ -75,7 +78,7 @@ const examData: ExamData = {
       {
         courseId: 107,
         courseEquivalents: {
-          DEFAULT: [FWS_COURSE_ID], // FWS
+          [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 4,
         credits: 3,
@@ -85,7 +88,7 @@ const examData: ExamData = {
       {
         courseId: 108,
         courseEquivalents: {
-          DEFAULT: [FWS_COURSE_ID], // FWS
+          [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 4,
         credits: 3,
@@ -95,7 +98,7 @@ const examData: ExamData = {
       {
         courseId: 109,
         courseEquivalents: {
-          DEFAULT: [353172], // FREN 2090
+          [OTHER_COLLEGES]: [353172], // FREN 2090
         },
         minimumScore: 4,
         credits: 3,
@@ -108,7 +111,7 @@ const examData: ExamData = {
       {
         courseId: 113,
         courseEquivalents: {
-          DEFAULT: [352116, 352120], // MATH 1110, MATH 1120
+          [OTHER_COLLEGES]: [352116, 352120], // MATH 1110, MATH 1120
           EN: [],
         },
         minimumScore: 4,
@@ -119,7 +122,7 @@ const examData: ExamData = {
       {
         courseId: 114,
         courseEquivalents: {
-          DEFAULT: [],
+          [OTHER_COLLEGES]: [],
           EN: [352255], // MATH 1910
         },
         minimumScore: 5,
@@ -130,7 +133,7 @@ const examData: ExamData = {
       {
         courseId: 115,
         courseEquivalents: {
-          DEFAULT: [352116], // MATH 1110
+          [OTHER_COLLEGES]: [352116], // MATH 1110
         },
         minimumScore: 4,
         credits: 4,
@@ -140,7 +143,7 @@ const examData: ExamData = {
       {
         courseId: 116,
         courseEquivalents: {
-          DEFAULT: [355142], // PHYS 1101
+          [OTHER_COLLEGES]: [355142], // PHYS 1101
         },
         minimumScore: 5,
         credits: 4,
@@ -150,7 +153,7 @@ const examData: ExamData = {
       {
         courseId: 117,
         courseEquivalents: {
-          DEFAULT: [355143], // PHYS 1102
+          [OTHER_COLLEGES]: [355143], // PHYS 1102
         },
         minimumScore: 5,
         credits: 4,
@@ -160,7 +163,7 @@ const examData: ExamData = {
       {
         courseId: 118,
         courseEquivalents: {
-          DEFAULT: [355197], // PHYS 2207
+          [OTHER_COLLEGES]: [355197], // PHYS 2207
           EN: [355146], // PHYS 1112
         },
         minimumScore: 5,
@@ -171,7 +174,7 @@ const examData: ExamData = {
       {
         courseId: 119,
         courseEquivalents: {
-          DEFAULT: [355207], // PHYS 2213
+          [OTHER_COLLEGES]: [355207], // PHYS 2213
         },
         minimumScore: 5,
         credits: 4,
@@ -181,7 +184,7 @@ const examData: ExamData = {
       {
         courseId: 120,
         courseEquivalents: {
-          DEFAULT: [351438], // PSYCH 1101
+          [OTHER_COLLEGES]: [351438], // PSYCH 1101
         },
         minimumScore: 4,
         credits: 3,
@@ -205,7 +208,7 @@ const examData: ExamData = {
       {
         courseId: 121,
         courseEquivalents: {
-          DEFAULT: [
+          [OTHER_COLLEGES]: [
             350500, // AEM 2100
             360952, // BTRY 3010
             352353, // BTRY 6010
@@ -231,7 +234,7 @@ const examData: ExamData = {
       {
         courseId: 122,
         courseEquivalents: {
-          DEFAULT: [
+          [OTHER_COLLEGES]: [
             350500, // AEM 2100
             360952, // BTRY 3010
             352353, // BTRY 6010
@@ -259,7 +262,7 @@ const examData: ExamData = {
       {
         courseId: 200,
         courseEquivalents: {
-          DEFAULT: [355142, 355143], // PHYS 1101, PHYS 1102
+          [OTHER_COLLEGES]: [355142, 355143], // PHYS 1101, PHYS 1102
         },
         minimumScore: 6,
         credits: 8,
@@ -269,7 +272,7 @@ const examData: ExamData = {
       {
         courseId: 202,
         courseEquivalents: {
-          DEFAULT: [351265], // CHEM 2070
+          [OTHER_COLLEGES]: [351265], // CHEM 2070
           EN: [359187], // CHEM 2090
         },
         minimumScore: 6,
@@ -280,7 +283,7 @@ const examData: ExamData = {
       {
         courseId: 203,
         courseEquivalents: {
-          DEFAULT: [358526], // CS 1110
+          [OTHER_COLLEGES]: [358526], // CS 1110
         },
         minimumScore: 6,
         credits: 4,
@@ -290,7 +293,7 @@ const examData: ExamData = {
       {
         courseId: 204,
         courseEquivalents: {
-          DEFAULT: [350025, 350038], // ECON 1110, ECON 1120
+          [OTHER_COLLEGES]: [350025, 350038], // ECON 1110, ECON 1120
         },
         minimumScore: 6,
         credits: 6,
@@ -300,7 +303,7 @@ const examData: ExamData = {
       {
         courseId: 205,
         courseEquivalents: {
-          DEFAULT: [FWS_COURSE_ID], // FWS
+          [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -310,7 +313,7 @@ const examData: ExamData = {
       {
         courseId: 206,
         courseEquivalents: {
-          DEFAULT: [FWS_COURSE_ID], // FWS
+          [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
         },
         minimumScore: 7,
         credits: 3,
@@ -320,7 +323,7 @@ const examData: ExamData = {
       {
         courseId: 207,
         courseEquivalents: {
-          DEFAULT: [352111, 352116], // MATH 1106, MATH 1110
+          [OTHER_COLLEGES]: [352111, 352116], // MATH 1106, MATH 1110
         },
         minimumScore: 6,
         credits: 4,
@@ -330,7 +333,7 @@ const examData: ExamData = {
       {
         courseId: 208,
         courseEquivalents: {
-          DEFAULT: [351265, 355142], // CHEM 2070, PHYS 1101
+          [OTHER_COLLEGES]: [351265, 355142], // CHEM 2070, PHYS 1101
         },
         minimumScore: 6,
         credits: 8,
@@ -340,7 +343,7 @@ const examData: ExamData = {
       {
         courseId: 209,
         courseEquivalents: {
-          DEFAULT: [355142, 355197], // PHYS 1101, PHYS 2207
+          [OTHER_COLLEGES]: [355142, 355197], // PHYS 1101, PHYS 2207
           EN: [355146], // PHYS 1112
         },
         minimumScore: 6,

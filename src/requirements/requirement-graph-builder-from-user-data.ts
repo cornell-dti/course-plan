@@ -1,32 +1,13 @@
-import { CREDITS_COURSE_ID } from './data/constants';
-import { getUserRequirements } from './requirement-frontend-utils';
+import {
+  allowCourseDoubleCountingBetweenRequirements,
+  getUserRequirements,
+} from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
-import buildRequirementFulfillmentGraph, {
+import {
   BuildRequirementFulfillmentGraphParameters,
+  buildRequirementFulfillmentGraph,
+  removeIllegalEdgesFromRequirementFulfillmentGraph,
 } from './requirement-graph-builder';
-
-/**
- * Removes all AP/IB equivalent course credit if it's a duplicate crseId.
- * In the future, we may need to implement a more fleshed-out system.
- * Eg. "A student taking CHEM 1560, CHEM 2070, or 2090 will forfeit AP [CHEM] credit."
- *
- * @param coursesTaken a list of classes taken by the user, with some metadata (e.g. no. of credits)
- * helping to compute requirement progress.
- */
-function forfeitTransferCredit(coursesTaken: readonly CourseTaken[]): readonly CourseTaken[] {
-  // filter out AP/IB equivalent courses with legitimate course ids
-  const equivalentCourses = coursesTaken.filter(course => course.courseId !== CREDITS_COURSE_ID);
-
-  // generate set for all forfeited equivalent course ids
-  const equivalentCourseIds = new Set(equivalentCourses.map(({ courseId }) => courseId));
-  // filter out any credits-only courses generated from AP/IB exams
-  const transferCreditCourses = coursesTaken.filter(
-    course => course.courseId === CREDITS_COURSE_ID && !equivalentCourseIds.has(course.courseId)
-  );
-
-  // return the filtered array of courses taken
-  return equivalentCourses.concat(transferCreditCourses);
-}
 
 export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],
@@ -36,7 +17,10 @@ export default function buildRequirementFulfillmentGraphFromUserData(
 ): {
   readonly userRequirements: readonly RequirementWithIDSourceType[];
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
-  readonly requirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
+  readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
@@ -46,7 +30,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     CourseTaken
   > = {
     requirements: userRequirements.map(it => it.id),
-    userCourses: forfeitTransferCredit(coursesTaken),
+    userCourses: coursesTaken,
     userChoiceOnFulfillmentStrategy: Object.fromEntries(
       userRequirements
         .map(requirement => {
@@ -104,9 +88,28 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       return eligibleCoursesList.flat();
     },
   };
-  const requirementFulfillmentGraph = buildRequirementFulfillmentGraph(
+  const dangerousRequirementFulfillmentGraph = buildRequirementFulfillmentGraph(
     requirementGraphBuilderParameters
   );
+  const safeRequirementFulfillmentGraph = dangerousRequirementFulfillmentGraph.copy();
+  const {
+    doubleCountedCourseUniqueIDSet,
+    courseToRequirementsInConstraintViolations,
+  } = removeIllegalEdgesFromRequirementFulfillmentGraph(
+    safeRequirementFulfillmentGraph,
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
+  );
 
-  return { userRequirements, userRequirementsMap, requirementFulfillmentGraph };
+  return {
+    userRequirements,
+    userRequirementsMap,
+    dangerousRequirementFulfillmentGraph,
+    safeRequirementFulfillmentGraph,
+    courseToRequirementsInConstraintViolations,
+    doubleCountedCourseUniqueIDSet,
+  };
 }

@@ -20,6 +20,14 @@ type FirestoreSemesterCourse = {
   readonly color: string;
 };
 
+type FirestoreSemesterPlaceholder = {
+  readonly name: string;
+  readonly uniqueID: number;
+  readonly reqGroup: string;
+  readonly slot: number;
+  readonly startingSemester: number;
+};
+
 // This is used for drag&drop between SubRequirement and Semester
 type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
   readonly requirementID?: string;
@@ -29,7 +37,7 @@ type FirestoreSemesterSeason = 'Fall' | 'Spring' | 'Summer' | 'Winter';
 type FirestoreSemester = {
   readonly year: number;
   readonly season: FirestoreSemesterSeason;
-  readonly courses: readonly FirestoreSemesterCourse[];
+  readonly courses: readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[];
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
@@ -91,6 +99,7 @@ type FirestoreTrackUsersData = {
   nameData: FirestoreTrackUsersNameData;
   semesterData: FirestoreTrackUsersSemesterData;
   onboardingData: FirestoreTrackUsersOnboardingData;
+  timestamp: Date;
 };
 
 type FirestoreTrackUsersNameData = {
