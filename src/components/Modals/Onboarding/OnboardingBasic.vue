@@ -27,36 +27,70 @@
           >
           <input class="onboarding-input" v-model="lastName" @input="updateBasic()" />
         </div>
-        <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-          <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font"
-              >Entrance Year<span class="onboarding-required-star">*</span>
-            </span></label
-          >
-          <div class="onboarding-selectWrapper">
-            <onboarding-basic-single-dropdown
-              :availableChoices="semesters"
-              :choice="entranceYear"
-              :cannotBeRemoved="true"
-              :scrollBottomToElement="2020"
-              @on-select="selectEntranceYear"
-            />
+        <div class="onboarding-yearSemWrapper">
+          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <label class="onboarding-label"
+              ><span class="onboarding-subHeader--font"
+                >Entrance Season<span class="onboarding-required-star">*</span>
+              </span></label
+            >
+            <div class="onboarding-selectWrapper">
+              <onboarding-basic-single-dropdown
+                :availableChoices="seasons"
+                :choice="entranceSemChoice"
+                :cannotBeRemoved="true"
+                @on-select="selectEntranceSem"
+              />
+            </div>
+          </div>
+          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <label class="onboarding-label"
+              ><span class="onboarding-subHeader--font"
+                >Entrance Year<span class="onboarding-required-star">*</span>
+              </span></label
+            >
+            <div class="onboarding-selectWrapper">
+              <onboarding-basic-single-dropdown
+                :availableChoices="semesters"
+                :choice="entranceYear"
+                :cannotBeRemoved="true"
+                :scrollBottomToElement="2020"
+                @on-select="selectEntranceYear"
+              />
+            </div>
           </div>
         </div>
-        <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-          <label class="onboarding-label"
-            ><span class="onboarding-subHeader--font"
-              >Graduation Year<span class="onboarding-required-star">*</span>
-            </span></label
-          >
-          <div class="onboarding-selectWrapper">
-            <onboarding-basic-single-dropdown
-              :availableChoices="semesters"
-              :choice="gradYear"
-              :cannotBeRemoved="true"
-              :scrollBottomToElement="2024"
-              @on-select="selectGraduationYear"
-            />
+        <div class="onboarding-yearSemWrapper">
+          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <label class="onboarding-label"
+              ><span class="onboarding-subHeader--font"
+                >Graduation Season<span class="onboarding-required-star">*</span>
+              </span></label
+            >
+            <div class="onboarding-selectWrapper">
+              <onboarding-basic-single-dropdown
+                :availableChoices="seasons"
+                :choice="gradSemChoice"
+                :cannotBeRemoved="true"
+                @on-select="selectGraduationSem"
+              />
+            </div>
+          </div>
+          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <label class="onboarding-label"
+              ><span class="onboarding-subHeader--font"
+                >Graduation Year<span class="onboarding-required-star">*</span>
+              </span></label
+            >
+            <div class="onboarding-selectWrapper">
+              <onboarding-basic-single-dropdown
+                :availableChoices="semesters"
+                :choice="gradYear"
+                :cannotBeRemoved="true"
+                :scrollBottomToElement="2024"
+                @on-select="selectGraduationYear"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -161,7 +195,9 @@ export default defineComponent({
   emits: {
     updateBasic(
       gradYear: string,
+      gradSem: FirestoreSemesterSeason,
       entranceYear: string,
+      entranceSem: FirestoreSemesterSeason,
       collegeAcronym: string,
       majorAcronyms: readonly string[],
       minorAcronyms: readonly string[],
@@ -170,7 +206,9 @@ export default defineComponent({
     ) {
       return (
         typeof gradYear === 'string' &&
+        typeof gradSem === 'string' &&
         typeof entranceYear === 'string' &&
+        typeof entranceSem === 'string' &&
         typeof collegeAcronym === 'string' &&
         Array.isArray(majorAcronyms) &&
         Array.isArray(minorAcronyms) &&
@@ -197,7 +235,9 @@ export default defineComponent({
       lastName: this.userName.lastName,
       placeholderText,
       gradYear: this.onboardingData.gradYear,
+      gradSem: this.onboardingData.gradSem,
       entranceYear: this.onboardingData.entranceYear,
+      entranceSem: this.onboardingData.entranceSem,
       collegeAcronym,
       majorAcronyms,
       minorAcronyms,
@@ -253,13 +293,29 @@ export default defineComponent({
       }
       return semsDict;
     },
+    seasons(): Readonly<Record<string, string>> {
+      return {
+        Fall: 'Fall',
+        Spring: 'Spring',
+        Summer: 'Summer',
+        Winter: 'Winter',
+      };
+    },
+    gradSemChoice(): string {
+      return this.gradSem ? (this.gradSem as string) : '';
+    },
+    entranceSemChoice(): string {
+      return this.gradSem ? (this.entranceSem as string) : '';
+    },
   },
   methods: {
     updateBasic() {
       this.$emit(
         'updateBasic',
         this.gradYear,
+        this.gradSem,
         this.entranceYear,
+        this.entranceSem,
         this.collegeAcronym,
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
@@ -294,6 +350,14 @@ export default defineComponent({
     },
     selectEntranceYear(year: string) {
       this.entranceYear = year;
+      this.updateBasic();
+    },
+    selectGraduationSem(season: string) {
+      this.gradSem = season as FirestoreSemesterSeason;
+      this.updateBasic();
+    },
+    selectEntranceSem(season: string) {
+      this.entranceSem = season as FirestoreSemesterSeason;
       this.updateBasic();
     },
     selectCollege(acronym: string) {

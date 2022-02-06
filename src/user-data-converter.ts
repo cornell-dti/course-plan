@@ -142,8 +142,10 @@ export const firestoreSemesterCourseToBottomBarCourse = ({
 
 export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardingData => ({
   // TODO: take into account multiple colleges
-  gradYear: data.gradYear ? data.gradYear : '',
-  entranceYear: data.entranceYear ? data.entranceYear : '',
+  gradYear: data.gradYear ?? '',
+  gradSem: data.gradSem,
+  entranceYear: data.entranceYear ?? '',
+  entranceSem: data.entranceSem,
   college: data.colleges.length !== 0 ? data.colleges[0].acronym : undefined,
   major: data.majors.map(({ acronym }) => acronym),
   minor: data.minors.map(({ acronym }) => acronym),

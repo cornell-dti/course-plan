@@ -244,7 +244,9 @@ export default defineComponent({
     },
     updateBasic(
       gradYear: string,
+      gradSem: FirestoreSemesterSeason,
       entranceYear: string,
+      entranceSem: FirestoreSemesterSeason,
       college: string,
       major: readonly string[],
       minor: readonly string[],
@@ -255,7 +257,9 @@ export default defineComponent({
       this.onboarding = {
         ...this.onboarding,
         gradYear,
+        gradSem,
         entranceYear,
+        entranceSem,
         college,
         major,
         minor,
