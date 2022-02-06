@@ -210,11 +210,7 @@ export default defineComponent({
   },
   methods: {
     submitOnboarding() {
-      const revised = { ...this.onboarding };
-      if (revised.college === 'AS') {
-        const year = Number.parseInt(revised.entranceYear, 10);
-        revised.college = year < 2020 ? 'AS1' : 'AS2';
-      }
+      const revised = this.setASCollegeReqs();
       this.clearTransferCreditIfGraduate();
       setAppOnboardingData(this.name, revised);
       // indicates first time user onboarding
@@ -294,6 +290,15 @@ export default defineComponent({
       ) {
         this.cancel();
       }
+    },
+    // determine which AS reqs to set depending on user's starting semester
+    setASCollegeReqs() {
+      const revised = { ...this.onboarding };
+      if (revised.college === 'AS') {
+        const year = Number.parseInt(revised.entranceYear, 10);
+        revised.college = year < 2020 ? 'AS1' : 'AS2';
+      }
+      return revised;
     },
   },
 });
