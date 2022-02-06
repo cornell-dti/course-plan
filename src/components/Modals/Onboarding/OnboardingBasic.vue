@@ -184,6 +184,13 @@ export default defineComponent({
     const minorAcronyms = [...this.onboardingData.minor];
     if (majorAcronyms.length === 0) majorAcronyms.push('');
     if (minorAcronyms.length === 0) minorAcronyms.push('');
+
+    // convert AS1/AS2 acronym in firebase to AS for the frontend
+    let collegeAcronym = this.onboardingData.college ?? '';
+    if (collegeAcronym === 'AS1' || collegeAcronym === 'AS2') {
+      collegeAcronym = 'AS';
+    }
+
     return {
       firstName: this.userName.firstName,
       middleName: this.userName.middleName,
@@ -191,7 +198,7 @@ export default defineComponent({
       placeholderText,
       gradYear: this.onboardingData.gradYear,
       entranceYear: this.onboardingData.entranceYear,
-      collegeAcronym: this.onboardingData.college ?? '',
+      collegeAcronym,
       majorAcronyms,
       minorAcronyms,
       gradAcronym: this.onboardingData.grad ? this.onboardingData.grad : '',
@@ -212,7 +219,7 @@ export default defineComponent({
     majors(): Readonly<Record<string, string>> {
       const majors: Record<string, string> = {};
       const majorJSON = reqsData.major;
-      const acr = this.collegeAcronym.replace('AS', 'AS2');
+      const acr = this.collegeAcronym !== 'AS' ? this.collegeAcronym : 'AS2';
       Object.keys(majorJSON).forEach(key => {
         // only show majors for schools the user is in
         if (majorJSON[key].schools.includes(acr)) {
