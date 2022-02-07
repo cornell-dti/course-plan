@@ -27,70 +27,69 @@
           >
           <input class="onboarding-input" v-model="lastName" @input="updateBasic()" />
         </div>
-        <div class="onboarding-yearSemWrapper">
-          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"
-              ><span class="onboarding-subHeader--font"
-                >Entrance Season<span class="onboarding-required-star">*</span>
-              </span></label
-            >
-            <div class="onboarding-selectWrapper">
-              <onboarding-basic-single-dropdown
-                :availableChoices="seasons"
-                :choice="entranceSemChoice"
-                :cannotBeRemoved="true"
-                @on-select="selectEntranceSem"
-              />
-            </div>
-          </div>
-          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"
-              ><span class="onboarding-subHeader--font"
-                >Entrance Year<span class="onboarding-required-star">*</span>
-              </span></label
-            >
-            <div class="onboarding-selectWrapper">
-              <onboarding-basic-single-dropdown
-                :availableChoices="semesters"
-                :choice="entranceYear"
-                :cannotBeRemoved="true"
-                :scrollBottomToElement="2020"
-                @on-select="selectEntranceYear"
-              />
-            </div>
+        <div
+          class="onboarding-inputWrapper onboarding-inputWrapper--name onboarding-inputWrapper--description"
+        >
+          <label class="onboarding-label"
+            ><span class="onboarding-subHeader--font"
+              >Entrance Season<span class="onboarding-required-star">*</span>
+            </span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="seasons"
+              :choice="entranceSemChoice"
+              :cannotBeRemoved="true"
+              @on-select="selectEntranceSem"
+            />
           </div>
         </div>
-        <div class="onboarding-yearSemWrapper">
-          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"
-              ><span class="onboarding-subHeader--font"
-                >Graduation Season<span class="onboarding-required-star">*</span>
-              </span></label
-            >
-            <div class="onboarding-selectWrapper">
-              <onboarding-basic-single-dropdown
-                :availableChoices="seasons"
-                :choice="gradSemChoice"
-                :cannotBeRemoved="true"
-                @on-select="selectGraduationSem"
-              />
-            </div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+          <label class="onboarding-label"
+            ><span class="onboarding-subHeader--font"
+              >Entrance Year<span class="onboarding-required-star">*</span>
+            </span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="semesters"
+              :choice="entranceYear"
+              :cannotBeRemoved="true"
+              :scrollBottomToElement="2020"
+              @on-select="selectEntranceYear"
+            />
           </div>
-          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"
-              ><span class="onboarding-subHeader--font"
-                >Graduation Year<span class="onboarding-required-star">*</span>
-              </span></label
-            >
-            <div class="onboarding-selectWrapper">
-              <onboarding-basic-single-dropdown
-                :availableChoices="semesters"
-                :choice="gradYear"
-                :cannotBeRemoved="true"
-                :scrollBottomToElement="2024"
-                @on-select="selectGraduationYear"
-              />
-            </div>
+        </div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--name"></div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+          <label class="onboarding-label"
+            ><span class="onboarding-subHeader--font"
+              >Graduation Season<span class="onboarding-required-star">*</span>
+            </span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="seasons"
+              :choice="gradSemChoice"
+              :cannotBeRemoved="true"
+              @on-select="selectGraduationSem"
+            />
+          </div>
+        </div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+          <label class="onboarding-label"
+            ><span class="onboarding-subHeader--font"
+              >Graduation Year<span class="onboarding-required-star">*</span>
+            </span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="semesters"
+              :choice="gradYear"
+              :cannotBeRemoved="true"
+              :scrollBottomToElement="2024"
+              @on-select="selectGraduationYear"
+            />
           </div>
         </div>
       </div>
