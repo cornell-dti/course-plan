@@ -10,9 +10,9 @@ export const setAppOnboardingData = (
   setUsernameData(name);
   onboardingDataCollection.doc(store.state.currentFirebaseUser.email).set({
     gradYear: onboarding.gradYear,
-    gradSem: onboarding.gradSem,
+    gradSem: onboarding.gradSem ?? '',
     entranceYear: onboarding.entranceYear,
-    entranceSem: onboarding.entranceSem,
+    entranceSem: onboarding.entranceSem ?? '',
     colleges: onboarding.college ? [{ acronym: onboarding.college }] : [],
     majors: onboarding.major.map(acronym => ({ acronym })),
     minors: onboarding.minor.map(acronym => ({ acronym })),
