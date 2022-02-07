@@ -144,7 +144,9 @@ export default defineComponent({
         this.name.firstName === '' ||
         this.name.lastName === '' ||
         this.onboarding.gradYear === '' ||
+        !this.onboarding.gradSem ||
         this.onboarding.entranceYear === '' ||
+        !this.onboarding.entranceSem ||
         (this.onboarding.college === '' && this.onboarding.grad === '')
       );
     },
@@ -185,11 +187,11 @@ export default defineComponent({
       if (this.name.lastName === '') {
         messages.push('a last name');
       }
-      if (this.onboarding.gradYear === '') {
-        messages.push('a graduation year');
+      if (this.onboarding.gradYear === '' || !this.onboarding.gradSem) {
+        messages.push('a graduation date');
       }
-      if (this.onboarding.entranceYear === '') {
-        messages.push('an entrance year');
+      if (this.onboarding.entranceYear === '' || !this.onboarding.entranceSem) {
+        messages.push('an entrance date');
       }
 
       // generate the string depending on how many error messages are selected
