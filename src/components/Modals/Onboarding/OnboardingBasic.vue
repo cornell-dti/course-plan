@@ -38,6 +38,7 @@
           <div class="onboarding-selectWrapper">
             <onboarding-basic-single-dropdown
               :availableChoices="seasons"
+              :correspondingImages="seasonImgs"
               :choice="entranceSemChoice"
               :cannotBeRemoved="true"
               @on-select="selectEntranceSem"
@@ -70,6 +71,7 @@
           <div class="onboarding-selectWrapper">
             <onboarding-basic-single-dropdown
               :availableChoices="seasons"
+              :correspondingImages="seasonImgs"
               :choice="gradSemChoice"
               :cannotBeRemoved="true"
               @on-select="selectGraduationSem"
@@ -180,6 +182,11 @@ import { clickOutside, getCurrentYear, yearRange } from '@/utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
+import fall from '@/assets/images/fallEmoji.svg';
+import spring from '@/assets/images/springEmoji.svg';
+import winter from '@/assets/images/winterEmoji.svg';
+import summer from '@/assets/images/summerEmoji.svg';
+
 const placeholderText = 'Select one';
 
 export default defineComponent({
@@ -284,6 +291,14 @@ export default defineComponent({
         Spring: 'Spring',
         Summer: 'Summer',
         Winter: 'Winter',
+      };
+    },
+    seasonImgs(): Readonly<Record<FirestoreSemesterSeason, string>> {
+      return {
+        Fall: fall,
+        Spring: spring,
+        Summer: summer,
+        Winter: winter,
       };
     },
     gradSemChoice(): string {
