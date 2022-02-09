@@ -302,10 +302,10 @@ export default defineComponent({
       };
     },
     gradSemChoice(): string {
-      return this.gradSem ? (this.gradSem as string) : '';
+      return this.gradSem as string;
     },
     entranceSemChoice(): string {
-      return this.gradSem ? (this.entranceSem as string) : '';
+      return this.entranceSem as string;
     },
   },
   methods: {
