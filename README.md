@@ -27,6 +27,19 @@ Then access http://localhost:8080/
 
 ## Contributors
 
+### SP22
+- **Will Spencer** - Developer
+- **Ben Shen** - Developer
+- **Noah Schiff** - Developer
+- **Yuxuan Chen** - Designer
+- **Robin Ahn** - Designer
+- **Kehui Guo** - Designer
+- **Miranda Yu** - PMM
+- **Jessica Feng** - TPM
+- **Michael Farkouh** - Co-PM
+- **Ein Chang** - Co-PM
+
+
 ### FA21
 
 - **Will Spencer** - Developer
