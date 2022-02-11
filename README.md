@@ -28,6 +28,7 @@ Then access http://localhost:8080/
 ## Contributors
 
 ### SP22
+
 - **Will Spencer** - Developer
 - **Ben Shen** - Developer
 - **Noah Schiff** - Developer
@@ -38,7 +39,6 @@ Then access http://localhost:8080/
 - **Jessica Feng** - TPM
 - **Michael Farkouh** - Co-PM
 - **Ein Chang** - Co-PM
-
 
 ### FA21
 
