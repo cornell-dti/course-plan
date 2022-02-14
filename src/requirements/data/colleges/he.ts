@@ -14,7 +14,6 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [43],
-    allowCourseDoubleCounting: true,
   },
   {
     name: '9 Credits In HE Outside Major',

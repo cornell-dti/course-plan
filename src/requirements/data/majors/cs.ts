@@ -4,6 +4,7 @@ import {
   includesWithSubRequirements,
   courseMatchesCodeOptions,
   ifCodeMatch,
+  courseIsSpecial,
 } from '../checkers-common';
 
 const csRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -30,17 +31,11 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 3110'],
       ['CS 3410', 'CS 3420'],
       ['CS 4820'],
-      ['CS 4410', 'CS 4414']
+      ['CS 4410']
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
-    slotNames: [
-      'CS 2800 or CS 2802',
-      'CS 3110',
-      'CS 3410 or CS 3420',
-      'CS 4820',
-      'CS 4410 or CS 4414',
-    ],
+    slotNames: ['CS 2800 or CS 2802', 'CS 3110', 'CS 3410 or CS 3420', 'CS 4820', 'CS 4410'],
   },
   {
     name: 'CS Electives',
@@ -140,6 +135,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: [
       (course: Course): boolean => {
+        if (courseIsSpecial(course)) return false;
         const { subject, catalogNbr } = course;
         return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
       },

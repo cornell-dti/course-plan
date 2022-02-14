@@ -194,7 +194,7 @@ requirement is in it's own file.
 
 ### Final Computation for Frontend Vue Components
 
-- [`requirement-frontend-computation.ts`](./requirement-frontend-computation.ts) builds the
+- [`requirement-frontend-computation.ts`](./requirement-fronend-computation.ts) builds the
   requirement graph and fulfillment progress for each requirement.
 
 ## Contributing

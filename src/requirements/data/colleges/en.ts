@@ -4,6 +4,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
   ifCodeMatch,
+  courseIsSpecial,
   courseIsForeignLang,
 } from '../checkers-common';
 
@@ -173,6 +174,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: [
       (course: Course): boolean => {
+        if (courseIsSpecial(course)) return false;
         const { subject, catalogNbr } = course;
         return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
       },

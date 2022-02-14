@@ -1,9 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import {
-  courseIsForeignLang,
-  courseIsFWS,
-  includesWithSingleRequirement,
-} from '../checkers-common';
+import { courseIsFWS, includesWithSingleRequirement } from '../checkers-common';
 
 const calsCreditsRequirement: CollegeOrMajorRequirement = {
   name: 'CALS Credits',
@@ -588,7 +584,7 @@ const calsSocialSciencesAndHumanitiesRequiement: CollegeOrMajorRequirement = {
   checker: [
     (course: Course): boolean => course.catalogDistr?.includes('CA-') ?? false,
     (course: Course): boolean => course.catalogDistr?.includes('D-') ?? false,
-    courseIsForeignLang,
+    (course: Course): boolean => course.catalogDistr?.includes('FL-') ?? false,
     (course: Course): boolean => course.catalogDistr?.includes('HA-') ?? false,
     (course: Course): boolean => course.catalogDistr?.includes('KCM-') ?? false,
     (course: Course): boolean => course.catalogDistr?.includes('LA-') ?? false,

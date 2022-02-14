@@ -117,7 +117,7 @@ export default defineComponent({
   width: 100vw;
   min-height: 100vh;
   background-color: rgba(0, 0, 0, 0.7);
-  z-index: 4;
+  z-index: 3;
   padding: 1rem;
 
   &-simple {

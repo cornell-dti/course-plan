@@ -1,8 +1,9 @@
-import userDataToExamCourses, {
+import {
   ExamsTaken,
   examsTakenToExamCourses,
+  userDataToExamCourses,
 } from '../requirement-exam-utils';
-import { NO_FULFILLMENTS_COURSE_ID } from '../data/constants';
+import { NO_EQUIVALENT_COURSES_COURSE_ID } from '../data/constants';
 
 /**
  * Tests for examsTakenToExamCourses
@@ -38,7 +39,7 @@ it('Exam score is too low', () => {
     code: 'AP Computer Science A',
     uniqueId: 'AP Computer Science A',
     credits: 0,
-    courseId: NO_FULFILLMENTS_COURSE_ID,
+    courseId: NO_EQUIVALENT_COURSES_COURSE_ID,
   };
   expect(examCourses[0]).toEqual(expected);
 });

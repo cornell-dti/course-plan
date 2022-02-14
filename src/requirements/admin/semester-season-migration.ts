@@ -14,8 +14,13 @@ async function runOnUser(userEmail: string, runOnDB: boolean) {
       return (data && data.semesters) || [];
     });
 
-  // TODO replace with new script
-  const newSemesters = semesters;
+  console.group(`Running on ${userEmail}...`);
+  const newSemesters = semesters.map(semester =>
+    // each semester should have type but not necessarily season
+    ({ ...semester, season: semester.season || semester.type })
+  );
+  console.log(semesters, '=>', newSemesters);
+  console.groupEnd();
 
   if (runOnDB) {
     await semestersCollection.doc(userEmail).update({ semesters: newSemesters });

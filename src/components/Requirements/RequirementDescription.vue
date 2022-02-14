@@ -57,28 +57,24 @@ export default defineComponent({
       return this.requirementFulfillment.requirement;
     },
     nestedRequirements(): readonly string[] | null {
-      if (this.requirementFulfillment.fulfillment.additionalRequirements) {
-        return Object.keys(this.requirementFulfillment.fulfillment.additionalRequirements);
+      if (this.requirementFulfillment.additionalRequirements) {
+        return Object.keys(this.requirementFulfillment.additionalRequirements);
       }
       return null;
     },
     progressString(): string {
-      const currentVisibleNestedRequirementStatistics = (this.requirementFulfillment.fulfillment
+      const currentVisibleNestedRequirementStatistics = (this.requirementFulfillment
         .additionalRequirements || {})[this.choice];
       if (currentVisibleNestedRequirementStatistics != null) {
         const {
-          safeMinCountFulfilled,
+          minCountFulfilled,
           minCountRequired,
           fulfilledBy,
         } = currentVisibleNestedRequirementStatistics;
-        return `${safeMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
+        return `${minCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
       }
-      const {
-        safeMinCountFulfilled,
-        minCountRequired,
-        fulfilledBy,
-      } = this.requirementFulfillment.fulfillment;
-      return `${safeMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
+      const { minCountFulfilled, minCountRequired, fulfilledBy } = this.requirementFulfillment;
+      return `${minCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
     },
   },
 });

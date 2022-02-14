@@ -148,12 +148,12 @@ export default defineComponent({
       const ongoing: RequirementFulfillment[] = [];
       const completed: RequirementFulfillment[] = [];
       this.req.reqs.forEach(req => {
-        if (req.fulfillment.safeMinCountFulfilled < req.fulfillment.minCountRequired) {
+        if (req.minCountFulfilled < req.minCountRequired) {
           ongoing.push(req);
         } else if (
-          req.fulfillment.additionalRequirements != null &&
-          Object.values(req.fulfillment.additionalRequirements).some(
-            it => it.safeMinCountFulfilled < it.minCountRequired
+          req.additionalRequirements != null &&
+          Object.values(req.additionalRequirements).some(
+            it => it.minCountFulfilled < it.minCountRequired
           )
         ) {
           ongoing.push(req);

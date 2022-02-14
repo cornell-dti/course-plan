@@ -93,33 +93,4 @@ export default class RequirementFulfillmentGraph<
     if (requirementSet == null) return [];
     return Array.from(requirementSet);
   }
-
-  public copy(): RequirementFulfillmentGraph<Requirement, Course> {
-    const newCopy = new RequirementFulfillmentGraph<Requirement, Course>();
-    this.requirementToCoursesMap.forEach((courseIdToCourseMap, key) => {
-      newCopy.requirementToCoursesMap.set(key, new Map(courseIdToCourseMap.entries()));
-    });
-    this.courseToRequirementsMap.forEach((requirementSet, key) => {
-      newCopy.courseToRequirementsMap.set(key, new Set(requirementSet));
-    });
-    return newCopy;
-  }
-
-  public addGraph(graph: RequirementFulfillmentGraph<Requirement, Course>): void {
-    graph.getAllRequirements().forEach(req => {
-      this.addRequirementNode(req);
-    });
-    graph.getAllEdges().forEach(([req, course]) => {
-      this.addEdge(req, course);
-    });
-  }
-
-  // does not subtract requirement nodes
-  public subtractGraphEdges(
-    graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>
-  ): void {
-    graph.getAllEdges().forEach(([req, course]) => {
-      this.removeEdge(req, course);
-    });
-  }
 }

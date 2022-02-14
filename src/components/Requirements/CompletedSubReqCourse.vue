@@ -1,7 +1,7 @@
 <template>
   <div class="completedsubreqcourse">
     <delete-course-modal
-      :isTransferCredit="isTransferCredit"
+      :isTestReq="isTransferCredit"
       :reqName="courseTaken.code"
       v-if="deleteModalVisible"
       @close-delete-course-modal="onDeleteCourseModalClose"
@@ -43,7 +43,8 @@ import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
 import store from '@/store';
-import { deleteCourseFromSemesters, deleteTransferCredit } from '@/global-firestore-data';
+import { deleteCourseFromSemesters } from '@/global-firestore-data';
+import { onboardingDataCollection } from '@/firebase-frontend-config';
 import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
@@ -101,7 +102,14 @@ export default defineComponent({
 
       if (isDelete) {
         if (this.isTransferCredit) {
-          deleteTransferCredit(this.courseTaken.code);
+          const type = this.courseTaken.code.substr(0, 2);
+          const name = this.courseTaken.code.substr(3);
+
+          const onBoardingData = store.state.onboardingData;
+
+          onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
+            exam: onBoardingData.exam.filter(e => !(e.type === type && e.subject === name)),
+          });
         } else {
           const { uniqueId } = this.courseTaken;
           if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);

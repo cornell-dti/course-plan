@@ -42,21 +42,23 @@ export default defineComponent({
     requirementFulfillmentProgress(): string {
       const {
         requirement,
-        fulfillment: { safeMinCountFulfilled, minCountRequired, additionalRequirements },
+        minCountFulfilled,
+        minCountRequired,
+        additionalRequirements,
       } = this.requirementFulfillment;
       if (requirement.fulfilledBy === 'self-check') return 'self check';
       if (additionalRequirements == null) {
-        return `${safeMinCountFulfilled}/${minCountRequired} ${this.requirementFulfillment.fulfillment.fulfilledBy}`;
+        return `${minCountFulfilled}/${minCountRequired} ${this.requirementFulfillment.fulfilledBy}`;
       }
       const additionalRequirementsList = Object.values(additionalRequirements);
       // Compute progress string x/y requirements fulfilled.
       // We also need to include the main requirement into consideration.
-      let totalFulfilledRequirements = safeMinCountFulfilled >= minCountRequired ? 1 : 0;
+      let totalFulfilledRequirements = minCountFulfilled >= minCountRequired ? 1 : 0;
       const totalRequirementsCount = 1 + additionalRequirementsList.length;
       for (let i = 0; i < additionalRequirementsList.length; i += 1) {
         const additionalRequirementProgress = additionalRequirementsList[i];
         if (
-          additionalRequirementProgress.safeMinCountFulfilled >=
+          additionalRequirementProgress.minCountFulfilled >=
           additionalRequirementProgress.minCountRequired
         ) {
           totalFulfilledRequirements += 1;

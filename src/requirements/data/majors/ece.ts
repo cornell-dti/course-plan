@@ -55,7 +55,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     slotNames: ['ECE 3030 or ECE 3150', 'ECE 3100 or ECE 3250', 'ECE 3140'],
   },
   {
-    name: 'Advanced Programming/Computer Engineering',
+    name: 'Advanced Programming/Computer Engineering ',
     description:
       'At least three credits of computer programming at a level above that of CS 1110/1112/1114/1115 and CS 1130/1132/1133/1142, or an advanced computer engineering course at a level above ECE 3140. ' +
       'Current courses that meet this requirement are CS 2110, ENGRD 3200, AEP 4380, ECE 2400, ECE 4740, ECE 4750, or ECE 4760. Other courses may be allowed by an ECE petition.',

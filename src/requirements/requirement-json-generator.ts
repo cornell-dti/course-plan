@@ -4,15 +4,9 @@ import {
   DecoratedRequirementsJson,
   RequirementChecker,
   Course,
-  MutableMajorRequirements,
 } from './types';
-import sourceRequirements, { colleges } from './data';
-import { NO_FULFILLMENTS_COURSE_ID, SPECIAL_COURSES } from './data/constants';
-import {
-  examRequirementsMapping,
-  examToCourseMapping,
-  courseToExamMapping,
-} from './requirement-exam-mapping';
+import sourceRequirements from './data';
+import { NO_EQUIVALENT_COURSES_COURSE_ID, SPECIAL_COURSES } from './data/constants';
 import { fullCoursesArray } from '../assets/courses/typed-full-courses';
 
 /**
@@ -28,14 +22,7 @@ const specialCourses: Course[] = Object.entries(SPECIAL_COURSES)
     acadCareer: '',
     acadGroup: '',
   }))
-  .filter(({ crseId }) => crseId !== NO_FULFILLMENTS_COURSE_ID);
-
-type InitialRequirementDecorator = (
-  requirement: CollegeOrMajorRequirement
-) => DecoratedCollegeOrMajorRequirement;
-type RequirementDecorator = (
-  requirement: DecoratedCollegeOrMajorRequirement
-) => DecoratedCollegeOrMajorRequirement;
+  .filter(({ crseId }) => crseId !== NO_EQUIVALENT_COURSES_COURSE_ID);
 
 const getEligibleCoursesFromRequirementCheckers = (
   checkers: readonly RequirementChecker[]
@@ -46,20 +33,13 @@ const getEligibleCoursesFromRequirementCheckers = (
         .filter(course => oneRequirementChecker(course))
         .map(course => course.crseId)
     );
-    return Array.from(courseIdSet);
+    // Sort by course ID to get a more stable ordered json
+    return Array.from(courseIdSet).sort((a, b) => a - b);
   });
 
-const applyDecoratorsToRequirements = (
-  requirements: readonly CollegeOrMajorRequirement[],
-  initialDecorator: InitialRequirementDecorator,
-  ...decorators: RequirementDecorator[]
-): readonly DecoratedCollegeOrMajorRequirement[] =>
-  requirements.map(requirement => {
-    const decoratedRequirement = initialDecorator(requirement);
-    return decorators.reduce((res, decorator) => decorator(res), decoratedRequirement);
-  });
-
-const decorateRequirementWithCourses: InitialRequirementDecorator = requirement => {
+const decorateRequirementWithCourses = (
+  requirement: CollegeOrMajorRequirement
+): DecoratedCollegeOrMajorRequirement => {
   switch (requirement.fulfilledBy) {
     case 'self-check':
       return requirement;
@@ -102,199 +82,7 @@ const decorateRequirementWithCourses: InitialRequirementDecorator = requirement 
   }
 };
 
-const equivalentCourseIds = new Set(Object.keys(courseToExamMapping));
-const generateExamCourseIdsFromEquivalentCourses = (
-  courses: readonly number[]
-): { examCourseIds: Set<number>; examEquivalentCourses: Set<string> } => {
-  const examCourseIds = new Set<number>();
-  const examEquivalentCourses = new Set<string>();
-  courses
-    .map(course => course.toString())
-    .filter(course => equivalentCourseIds.has(course))
-    .forEach(course => {
-      courseToExamMapping[course].forEach(exam => examCourseIds.add(exam));
-      examEquivalentCourses.add(course);
-    });
-  return {
-    examCourseIds,
-    examEquivalentCourses,
-  };
-};
-
-/**
- * Map this function across every list of course ids and figure out which
- * exams' course ids should be added (if any).
- */
-const addCourseIdsForAssociatedExams = (courses: readonly number[]): number[] => {
-  const { examCourseIds } = generateExamCourseIdsFromEquivalentCourses(courses);
-  return courses.concat(...examCourseIds);
-};
-
-/**
- * Compute requirements conditions for AP/IB exams
- */
-const computeConditionsForExams = (courses: readonly (readonly number[])[]) => {
-  const conditions: Record<
-    number,
-    {
-      colleges: string[];
-      majorsExcluded?: string[];
-    }
-  > = {};
-  const { examCourseIds, examEquivalentCourses } = generateExamCourseIdsFromEquivalentCourses(
-    courses.flat()
-  );
-  examCourseIds.forEach(exam => {
-    const { collegeConditions, majorsExcluded } = examRequirementsMapping[exam];
-    const validColleges = new Set<string>();
-    examToCourseMapping[exam].forEach(course => {
-      if (examEquivalentCourses.has(course.toString()))
-        collegeConditions[course].forEach(college => validColleges.add(college));
-    });
-    if (validColleges.size === colleges.length) return;
-    conditions[exam] = {
-      colleges: [...validColleges].sort(),
-      ...(majorsExcluded && { majorsExcluded }),
-    };
-  });
-  return conditions;
-};
-
-const decorateRequirementWithExams: RequirementDecorator = requirement => {
-  if (requirement.disallowTransferCredit) {
-    return requirement;
-  }
-  switch (requirement.fulfilledBy) {
-    case 'self-check':
-      return requirement;
-    case 'courses':
-    case 'credits': {
-      const { courses, conditions, additionalRequirements, ...rest } = requirement;
-      const examConditions = computeConditionsForExams(courses);
-      const newConditions = {
-        ...conditions,
-        ...examConditions,
-      };
-      return {
-        ...rest,
-        courses: courses.map(addCourseIdsForAssociatedExams),
-        ...(Object.keys(newConditions).length !== 0 && { conditions: newConditions }),
-        additionalRequirements:
-          additionalRequirements &&
-          Object.fromEntries(
-            Object.entries(additionalRequirements).map(
-              ([
-                name,
-                {
-                  courses: additionalRequirementCourses,
-                  conditions: additionalRequirementConditions,
-                  ...additionalRequirementRest
-                },
-              ]) => {
-                const additionalRequirementExamConditions = computeConditionsForExams(
-                  additionalRequirementCourses
-                );
-                const additionalRequirementNewConditions = {
-                  ...additionalRequirementConditions,
-                  ...additionalRequirementExamConditions,
-                };
-                return [
-                  name,
-                  {
-                    ...additionalRequirementRest,
-                    courses: additionalRequirementCourses.map(addCourseIdsForAssociatedExams),
-                    ...(Object.keys(additionalRequirementNewConditions).length !== 0 && {
-                      conditions: additionalRequirementNewConditions,
-                    }),
-                  },
-                ];
-              }
-            )
-          ),
-      };
-    }
-    case 'toggleable': {
-      const { fulfillmentOptions } = requirement;
-      return {
-        ...requirement,
-        fulfillmentOptions: Object.fromEntries(
-          Object.entries(fulfillmentOptions).map(([optionName, option]) => {
-            const { courses, conditions, ...rest } = option;
-            const examConditions = computeConditionsForExams(courses);
-            const newConditions = {
-              ...conditions,
-              ...examConditions,
-            };
-            return [
-              optionName,
-              {
-                ...rest,
-                courses: courses.map(addCourseIdsForAssociatedExams),
-                ...(Object.keys(newConditions).length !== 0 && { conditions: newConditions }),
-              },
-            ];
-          })
-        ),
-      };
-    }
-    default:
-      throw new Error();
-  }
-};
-
-// Sort by course ID to get a more stable ordered json
-const sortRequirementCourses: RequirementDecorator = requirement => {
-  switch (requirement.fulfilledBy) {
-    case 'self-check':
-      return requirement;
-    case 'courses':
-    case 'credits': {
-      const { courses, additionalRequirements, ...rest } = requirement;
-      return {
-        ...rest,
-        courses: courses.map(c => [...c].sort((a, b) => a - b)),
-        additionalRequirements:
-          additionalRequirements &&
-          Object.fromEntries(
-            Object.entries(additionalRequirements).map(
-              ([
-                name,
-                { courses: additionalRequirementsCourses, ...additionalRequirementRest },
-              ]) => [
-                name,
-                {
-                  ...additionalRequirementRest,
-                  courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
-                },
-              ]
-            )
-          ),
-      };
-    }
-    case 'toggleable': {
-      const { fulfillmentOptions } = requirement;
-      return {
-        ...requirement,
-        fulfillmentOptions: Object.fromEntries(
-          Object.entries(fulfillmentOptions).map(([optionName, option]) => {
-            const { courses, ...rest } = option;
-            return [
-              optionName,
-              {
-                ...rest,
-                courses: courses.map(c => [...c].sort((a, b) => a - b)),
-              },
-            ];
-          })
-        ),
-      };
-    }
-    default:
-      throw new Error();
-  }
-};
-
-const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
+const produceSatisfiableCoursesAttachedRequirementJson = (): DecoratedRequirementsJson => {
   const { university, college, major, minor, grad } = sourceRequirements;
   type MutableDecoratedJson = {
     university: {
@@ -309,7 +97,13 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
         readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
       };
     };
-    major: MutableMajorRequirements<DecoratedCollegeOrMajorRequirement>;
+    major: {
+      [key: string]: {
+        readonly name: string;
+        readonly schools: readonly string[];
+        readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+      };
+    };
     minor: {
       [key: string]: {
         readonly name: string;
@@ -334,12 +128,7 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
     grad: {},
   };
   const decorateRequirements = (requirements: readonly CollegeOrMajorRequirement[]) =>
-    applyDecoratorsToRequirements(
-      requirements,
-      decorateRequirementWithCourses,
-      decorateRequirementWithExams,
-      sortRequirementCourses
-    );
+    requirements.map(decorateRequirementWithCourses);
   Object.entries(university).forEach(([universityName, universityRequirement]) => {
     const { requirements, ...rest } = universityRequirement;
     decoratedJson.university[universityName] = {
@@ -355,26 +144,16 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
     };
   });
   Object.entries(major).forEach(([majorName, majorRequirement]) => {
-    const { requirements, specializations, ...rest } = majorRequirement;
-    decoratedJson.major[majorName] = {
-      ...rest,
-      requirements: decorateRequirements(requirements),
-      specializations: specializations && decorateRequirements(specializations),
-    };
+    const { requirements, ...rest } = majorRequirement;
+    decoratedJson.major[majorName] = { ...rest, requirements: decorateRequirements(requirements) };
   });
   Object.entries(minor).forEach(([minorName, minorRequirement]) => {
     const { requirements, ...rest } = minorRequirement;
-    decoratedJson.minor[minorName] = {
-      ...rest,
-      requirements: decorateRequirements(requirements),
-    };
+    decoratedJson.minor[minorName] = { ...rest, requirements: decorateRequirements(requirements) };
   });
   Object.entries(grad).forEach(([gradName, gradRequirement]) => {
     const { requirements, ...rest } = gradRequirement;
-    decoratedJson.grad[gradName] = {
-      ...rest,
-      requirements: decorateRequirements(requirements),
-    };
+    decoratedJson.grad[gradName] = { ...rest, requirements: decorateRequirements(requirements) };
   });
 
   // Check no duplicate requirement identifier
@@ -402,7 +181,10 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
   return decoratedJson;
 };
 
-const decoratedRequirements = generateDecoratedRequirementsJson();
-const decoratedRequirementsString = JSON.stringify(decoratedRequirements, undefined, 2);
+const decoratedRequirementString = JSON.stringify(
+  produceSatisfiableCoursesAttachedRequirementJson(),
+  undefined,
+  2
+);
 
-writeFileSync('src/requirements/decorated-requirements.json', decoratedRequirementsString);
+writeFileSync('src/requirements/decorated-requirements.json', decoratedRequirementString);

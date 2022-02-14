@@ -27,24 +27,6 @@ Then access http://localhost:8080/
 
 ## Contributors
 
-### FA21
-
-- **Will Spencer** - Developer
-- **Toby Ko** - Developer
-- **Zak Kent** - Developer
-- **Sam Zhou** - Developer
-- **Ben Shen** - Developer
-- **Vaishnavi Gupta** - Developer
-- **Aryan Yadav** - Developer
-- **Noah Schiff** - Developer
-- **Yuxuan Chen** - Designer
-- **Robin Ahn** - Designer
-- **Kehui Guo** - Designer
-- **Miranda Yu** - PMM
-- **Michael Farkouh** - APM
-- **Hahnbee Lee** - TPM
-- **Ein Chang** - PM
-
 ### SP21
 
 - **Hahnbee Lee** - Developer

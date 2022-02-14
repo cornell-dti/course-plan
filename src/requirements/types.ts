@@ -15,19 +15,13 @@ export type CollegeRequirements<R> = {
   };
 };
 
-export type Major<R> = Readonly<{
-  name: string;
-  schools: readonly string[];
-  requirements: readonly R[];
-  /** College requirements that have been "specialized" for this major */
-  specializations?: readonly R[];
-}>;
-
-export type MutableMajorRequirements<R> = {
-  [majorCode: string]: Major<R>;
+export type MajorRequirements<R> = {
+  readonly [collegeCode: string]: {
+    readonly name: string;
+    readonly schools: readonly string[];
+    readonly requirements: readonly R[];
+  };
 };
-
-export type MajorRequirements<R> = Readonly<MutableMajorRequirements<R>>;
 
 type GenericRequirementsJson<R> = {
   readonly university: CollegeRequirements<R>;

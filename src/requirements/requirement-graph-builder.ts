@@ -1,4 +1,3 @@
-import { getConstraintViolations } from './requirement-constraints-utils';
 import RequirementFulfillmentGraph, { CourseWithUniqueId } from './requirement-graph';
 
 interface CourseForRequirementGraph extends CourseWithUniqueId {
@@ -25,21 +24,22 @@ export type BuildRequirementFulfillmentGraphParameters<
    */
   readonly userChoiceOnFulfillmentStrategy: Readonly<Record<Requirement, readonly number[]>>;
   /**
-   * The mapping from course's unique ID to requirement override opt-in and opt-out options.
+   * The mapping from course's unique ID to requirement.
+   * It describes how the user decides how a course is used to satisfy requirements.
+   * Suppose a course with unique ID c can be used to satisfy both r1 and r2, but the
+   * requirements do not allow double counting, then a mapping `c => r1` means that we should keep the
+   * (r1, c) edge in the graph and drop the (r2, c) edge.
+   */
+  readonly userChoiceOnDoubleCountingElimination: Readonly<Record<string | number, Requirement>>;
+  /**
+   * The mapping from course's unique ID to requirement override (opt-in) options.
    * It describes how the user wants to use a course to override requirements.
-   * This handles AP/IB overrides, as well as general overrides. This can encode double counting
-   * elimination as opt-out.
+   * This handles AP/IB overrides, as well as general overrides.
    * The granularity of optIn/optOut being slot-specific requires the actual
    * slot computation to be handled in the frontend computation. When building the
-   * graph, only optIn/optOut choices are relevant (to add the extra edges).
+   * graph, only optIn choices are relevant (to add the extra edges).
    */
-  readonly userChoiceOnRequirementOverrides: {
-    readonly [uniqueId: string]: {
-      // Including both acknowledged and arbitrary opt-in.
-      readonly optIn: readonly Requirement[];
-      readonly optOut: readonly Requirement[];
-    };
-  };
+  readonly userChoiceOnRequirementOverrides: Readonly<Record<string, Set<Requirement>>>;
   /**
    * Naively give a list of courses ID that can satisfy a requirement. Most of the time this function
    * should just return the pre-computed eligible course id list. For requirements have multiple
@@ -48,21 +48,29 @@ export type BuildRequirementFulfillmentGraphParameters<
   readonly getAllCoursesThatCanPotentiallySatisfyRequirement: (
     requirement: Requirement
   ) => readonly number[];
+  /**
+   * Report whether a requirement allows a course connected to it to also be used to fulfill some
+   * other requirement.
+   */
+  readonly allowDoubleCounting: (requirement: Requirement) => boolean;
 };
 
-export const buildRequirementFulfillmentGraph = <
+const buildRequirementFulfillmentGraph = <
   Requirement extends string,
   Course extends CourseForRequirementGraph
->({
-  requirements,
-  userCourses,
-  userChoiceOnFulfillmentStrategy,
-  userChoiceOnRequirementOverrides,
-  getAllCoursesThatCanPotentiallySatisfyRequirement,
-}: BuildRequirementFulfillmentGraphParameters<Requirement, Course>): RequirementFulfillmentGraph<
-  Requirement,
-  Course
-> => {
+>(
+  {
+    requirements,
+    userCourses,
+    userChoiceOnFulfillmentStrategy,
+    userChoiceOnDoubleCountingElimination,
+    userChoiceOnRequirementOverrides,
+    getAllCoursesThatCanPotentiallySatisfyRequirement,
+    allowDoubleCounting,
+  }: BuildRequirementFulfillmentGraphParameters<Requirement, Course>,
+  /** A flag for testing. Prod code should never use this */
+  keepCoursesWithoutDoubleCountingEliminationChoice = false
+): RequirementFulfillmentGraph<Requirement, Course> => {
   const graph = new RequirementFulfillmentGraph<Requirement, Course>();
   const userCourseCourseIDToCourseMap = new Map<number, Course[]>();
   userCourses.forEach(course => {
@@ -102,37 +110,38 @@ export const buildRequirementFulfillmentGraph = <
     }
   );
 
-  // Phase 3: Respect user's choices on opt-in/opt-out.
+  // Phase 3: Respect user's choices on double-counted courses.
+  userCourses.forEach(({ uniqueId }) => {
+    // typeof uniqueId === 'string' means it's AP/IB equivalent course.
+    // uniqueId < 0 means it's swim test.
+    // User never gets to make a choice about these courses, so it will never appear in the choices.
+    // Therefore, removing those edges will nullify all these credits.
+    if (typeof uniqueId === 'string' || uniqueId < 0) return;
+    const chosenRequirement = userChoiceOnDoubleCountingElimination[uniqueId];
+    graph.getConnectedRequirementsFromCourse({ uniqueId }).forEach(connectedRequirement => {
+      if (allowDoubleCounting(connectedRequirement)) return;
+      // keepCoursesWithoutDoubleCountingEliminationChoice is used to avoid removing edges when
+      // the user choice is null on the course. It is used to test phase-1 and phase-2 output
+      // independently.
+      if (keepCoursesWithoutDoubleCountingEliminationChoice && chosenRequirement == null) return;
+      if (connectedRequirement !== chosenRequirement) {
+        graph.removeEdge(connectedRequirement, { uniqueId });
+      }
+    });
+  });
+
+  // Phase 4: Respect user's choices on overrides (optIn only).
   userCourses.forEach(course => {
-    const userChoiceOnOptInOptOutCourse = userChoiceOnRequirementOverrides[course.uniqueId];
-    if (userChoiceOnOptInOptOutCourse == null) return;
-    userChoiceOnOptInOptOutCourse.optIn.forEach(optedInRequirement => {
-      graph.addEdge(optedInRequirement, course);
-    });
-    userChoiceOnOptInOptOutCourse.optOut.forEach(optedOutRequirement => {
-      graph.removeEdge(optedOutRequirement, course);
-    });
+    const { uniqueId } = course;
+    if (uniqueId in userChoiceOnRequirementOverrides) {
+      userChoiceOnRequirementOverrides[uniqueId].forEach(requirement => {
+        graph.addEdge(requirement, course);
+      });
+    }
   });
 
   // Phase MAX_INT: PROFIT!
   return graph;
 };
 
-export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
-  Requirement extends string,
-  Course extends CourseForRequirementGraph
->(
-  graph: RequirementFulfillmentGraph<Requirement, Course>,
-  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
-): {
-  courseToRequirementsInConstraintViolations: Map<string | number, Set<Requirement[]>>;
-  doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
-} => {
-  const {
-    constraintViolationsGraph,
-    courseToRequirementsInConstraintViolations,
-    doubleCountedCourseUniqueIDSet,
-  } = getConstraintViolations(graph, requirementConstraintHolds);
-  graph.subtractGraphEdges(constraintViolationsGraph);
-  return { courseToRequirementsInConstraintViolations, doubleCountedCourseUniqueIDSet };
-};
+export default buildRequirementFulfillmentGraph;

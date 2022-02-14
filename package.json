@@ -11,7 +11,6 @@
     "courses-gen": "npm run ts-node -- src/requirements/courses-json-generator.ts",
     "req-gen": "npm run ts-node -- src/requirements/requirement-json-generator.ts",
     "req-graph-dump": "npm run ts-node -- src/requirements/admin/requirement-graph-dumper.ts",
-    "track-users": "npm run ts-node -- src/requirements/admin/track-users.ts",
     "lint": "eslint . --cache",
     "tsc": "tsc",
     "type-check": "vue-tsc --noEmit",

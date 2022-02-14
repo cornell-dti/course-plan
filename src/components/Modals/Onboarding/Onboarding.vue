@@ -108,7 +108,7 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { setAppOnboardingData, populateSemesters } from '@/global-firestore-data';
+import { setOnboardingData, populateSemesters } from '@/global-firestore-data';
 import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
 import timeline1Text from '@/assets/images/timeline1text.svg';
 import timeline2Text from '@/assets/images/timeline2text.svg';
@@ -211,7 +211,7 @@ export default defineComponent({
   methods: {
     submitOnboarding() {
       this.clearTransferCreditIfGraduate();
-      setAppOnboardingData(this.name, this.onboarding);
+      setOnboardingData(this.name, this.onboarding);
       // indicates first time user onboarding
       if (!this.isEditingProfile) populateSemesters(this.onboarding);
       this.$emit('onboard');

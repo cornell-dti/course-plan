@@ -136,7 +136,6 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Course'],
-    disallowTransferCredit: true,
   },
   {
     name: 'Natural Science I',
