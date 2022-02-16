@@ -1,5 +1,16 @@
 <template>
   <div :class="{ 'placeholder--min': compact }" class="placeholder">
+    <new-self-check-or-placeholder-course-modal
+      v-if="isPlaceholderModalOpen"
+      :subReqName="placeholderObj.name"
+      :subReqDescription="getRequirementDescription()"
+      :subReqLearnMore="getRequirementLearnMore()"
+      :requirementId="getRequirementID()"
+      :isPlaceholderModal="true"
+      @add-course="assignCourse"
+      @close-course-modal="closeModal"
+      @delete-placeholder="deletePlaceholder"
+    />
     <div class="placeholder-color">
       <img src="@/assets/images/dots/sixDots.svg" alt="" />
     </div>
@@ -15,17 +26,48 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
+import NewSelfCheckOrPlaceholderCourseModal from '@/components/Modals/NewCourse/NewSelfCheckOrPlaceholderCourseModal.vue';
 
 export default defineComponent({
-  components: { CourseCaution },
+  components: { CourseCaution, NewSelfCheckOrPlaceholderCourseModal },
   props: {
     placeholderObj: { type: Object as PropType<FirestoreSemesterPlaceholder>, required: true },
     compact: { type: Boolean, required: true },
     semesterIndex: { type: Number, required: false, default: 0 },
   },
+  emits: {
+    'delete-placeholder': (placeholderObj: FirestoreSemesterPlaceholder) =>
+      typeof placeholderObj === 'object',
+  },
+  data() {
+    return {
+      isPlaceholderModalOpen: false,
+    };
+  },
   methods: {
     openModal() {
-      // TODO: open modal to assign a course to a placeholder
+      this.isPlaceholderModalOpen = true;
+    },
+    closeModal() {
+      this.isPlaceholderModalOpen = false;
+    },
+    assignCourse() {
+      // TODO @willespencer write the code that assigns a course to a placeholder
+    },
+    getRequirementID() {
+      // TODO @willespencer get requirement ID from name and slot
+      return '0';
+    },
+    getRequirementDescription() {
+      // TODO @willespencer get requirement description to show on add modal
+      return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum eu ligula in feugiat. Mauris sed cursus enim, eu feugiat nibh.';
+    },
+    getRequirementLearnMore() {
+      // TODO @willespencer get requirement learn more link to show on add modal
+      return 'https://cornelldti.org';
+    },
+    deletePlaceholder() {
+      this.$emit('delete-placeholder', this.placeholderObj);
     },
   },
 });

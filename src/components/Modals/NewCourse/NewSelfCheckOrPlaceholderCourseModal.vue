@@ -3,10 +3,11 @@
     :title="modalTitle"
     content-class="content-course"
     :leftButtonText="leftButtonText"
+    :leftButtonWarningStyle="isPlaceholderModal"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="!canAddCourse"
     @modal-closed="closeCurrentModal"
-    @left-button-clicked="backOrCancel"
+    @left-button-clicked="cancelOrRemove"
     @right-button-clicked="addCourse"
   >
     <div class="newCourse-text">Search Course Roster</div>
@@ -19,7 +20,7 @@
       @on-escape="closeCurrentModal"
       @on-select="setCourse"
     />
-    <div>
+    <div v-if="!isPlaceholderModal">
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
         <select-semester
@@ -29,6 +30,12 @@
           @updateSemProps="updateSemProps"
         />
       </div>
+    </div>
+    <div v-else class="newCourse-description">
+      {{ subReqDescription }}
+      <a class="newCourse-link" :href="subReqLearnMore" target="_blank">
+        <strong>Learn More</strong></a
+      >
     </div>
   </TeleportModal>
 </template>
@@ -45,10 +52,14 @@ export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectSemester },
   props: {
     subReqName: { type: String, required: true },
+    subReqDescription: { type: String, default: '' },
+    subReqLearnMore: { type: String, default: '' },
     requirementId: { type: String, required: true },
+    isPlaceholderModal: { type: Boolean, default: false },
   },
   emits: {
     'close-course-modal': () => true,
+    'delete-placeholder': () => true,
     'add-course': (
       selected: CornellCourseRosterCourse,
       season: FirestoreSemesterSeason,
@@ -68,12 +79,15 @@ export default defineComponent({
       return `Add Course to ${this.subReqName}`;
     },
     leftButtonText(): string {
-      return 'Cancel';
+      return this.isPlaceholderModal ? 'Remove' : 'Cancel';
     },
     rightButtonText(): string {
       return 'Add';
     },
     canAddCourse(): boolean {
+      if (this.isPlaceholderModal) {
+        return this.selectedCourse != null;
+      }
       return this.selectedCourse != null && this.year > 0 && String(this.season) !== 'Select';
     },
     courseCanAppearInSearchResult(): (course: CornellCourseRosterCourse) => boolean {
@@ -96,7 +110,10 @@ export default defineComponent({
       this.$emit('add-course', this.selectedCourse, this.season, this.year);
       this.closeCurrentModal();
     },
-    backOrCancel() {
+    cancelOrRemove() {
+      if (this.isPlaceholderModal) {
+        this.$emit('delete-placeholder');
+      }
       this.closeCurrentModal();
     },
     updateSemProps(season: string, year: number) {
@@ -137,6 +154,13 @@ export default defineComponent({
     line-height: 17px;
     color: $lightPlaceholderGray;
     margin-bottom: 6px;
+  }
+  &-description {
+    margin: 0.375rem 0 1rem 0;
+    line-height: 14px;
+  }
+  &-link {
+    color: $emGreen;
   }
 }
 

@@ -22,8 +22,16 @@
           </button>
         </div>
         <slot class="modal-body"></slot>
-        <div v-if="!isSimpleModal" class="modal-buttonWrapper">
-          <button class="modal-button" @click="leftButtonClicked">
+        <div
+          v-if="!isSimpleModal"
+          class="modal-buttonWrapper"
+          :class="{ 'modal-buttonWrapper--warningStyle': leftButtonWarningStyle }"
+        >
+          <button
+            class="modal-button"
+            @click="leftButtonClicked"
+            :class="{ 'modal-button--warningStyle': leftButtonWarningStyle }"
+          >
             {{ leftButtonText }}
           </button>
           <button
@@ -55,6 +63,7 @@ export default defineComponent({
     title: { type: String, default: '' },
     contentClass: { type: String, required: true },
     leftButtonText: { type: String, default: '' },
+    leftButtonWarningStyle: { type: Boolean, default: false },
     rightButtonText: { type: String, default: '' },
     rightButtonImage: { type: String, default: '' },
     rightButtonAlt: { type: String, default: '' },
@@ -176,6 +185,10 @@ export default defineComponent({
     margin-top: 1rem;
     display: flex;
     justify-content: flex-end;
+
+    &--warningStyle {
+      justify-content: space-between;
+    }
   }
 
   &-button {
@@ -188,6 +201,11 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &--warningStyle {
+      color: $error;
+      border: 1px solid $error;
+    }
 
     &--add {
       color: $white;

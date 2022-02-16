@@ -1,6 +1,6 @@
 <template>
   <div class="incompleteselfcheck">
-    <new-self-check-course-modal
+    <new-self-check-or-placeholder-course-modal
       v-if="isCourseModalOpen"
       :subReqName="subReqName"
       :requirementId="subReqId"
@@ -48,7 +48,7 @@ import {
   getRelatedRequirementIdsForCourseOptOut,
 } from '@/requirements/requirement-frontend-utils';
 
-import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
+import NewSelfCheckOrPlaceholderCourseModal from '@/components/Modals/NewCourse/NewSelfCheckOrPlaceholderCourseModal.vue';
 
 type Data = {
   showDropdown: boolean;
@@ -57,7 +57,7 @@ type Data = {
 
 export default defineComponent({
   components: {
-    NewSelfCheckCourseModal,
+    NewSelfCheckOrPlaceholderCourseModal,
   },
   props: {
     subReqId: { type: String, required: true },
