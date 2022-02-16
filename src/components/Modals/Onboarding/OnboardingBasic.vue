@@ -194,6 +194,7 @@ export default defineComponent({
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    isEditingProfile: { type: Boolean, required: true },
   },
   emits: {
     updateBasic(
@@ -225,15 +226,24 @@ export default defineComponent({
     const minorAcronyms = [...this.onboardingData.minor];
     if (majorAcronyms.length === 0) majorAcronyms.push('');
     if (minorAcronyms.length === 0) minorAcronyms.push('');
+
+    // if sem has not been previously filled out, choice is automatically is "Fall"/"Spring" for new users, old users have no data
+    let { gradSem } = this.onboardingData;
+    let { entranceSem } = this.onboardingData;
+    if (!this.isEditingProfile) {
+      gradSem = gradSem !== '' ? gradSem : 'Spring';
+      entranceSem = entranceSem !== '' ? entranceSem : 'Fall';
+    }
+
     return {
       firstName: this.userName.firstName,
       middleName: this.userName.middleName,
       lastName: this.userName.lastName,
       placeholderText,
       gradYear: this.onboardingData.gradYear,
-      gradSem: this.onboardingData.gradSem,
+      gradSem,
       entranceYear: this.onboardingData.entranceYear,
-      entranceSem: this.onboardingData.entranceSem,
+      entranceSem,
       collegeAcronym: this.onboardingData.college ? this.onboardingData.college : '',
       majorAcronyms,
       minorAcronyms,

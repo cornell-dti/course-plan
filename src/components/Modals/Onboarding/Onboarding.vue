@@ -40,6 +40,7 @@
             v-if="currentPage == 1"
             :userName="name"
             :onboardingData="onboarding"
+            :isEditingProfile="isEditingProfile"
             @updateBasic="updateBasic"
           />
           <onboarding-transfer
