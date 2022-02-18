@@ -92,7 +92,7 @@ export default defineComponent({
       required: true,
     },
     semesterIndex: { type: Number, required: false, default: 0 },
-    isCompactView: { type: Boolean, required: true}
+    isCompactView: { type: Boolean, required: true },
   },
   computed: {
     courseCautions(): CourseCautions {
