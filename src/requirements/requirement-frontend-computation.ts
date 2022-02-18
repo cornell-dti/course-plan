@@ -239,14 +239,12 @@ export default function computeGroupedRequirementFulfillmentReports(
     const dangerousRequirementFulfillmentStatistics = computeFulfillmentCoursesAndStatistics(
       requirement,
       dangerousRequirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement.id),
-      onboardingData,
       toggleableRequirementChoices,
       overriddenFulfillmentChoices
     );
     const safeRequirementFulfillmentStatistics = computeFulfillmentCoursesAndStatistics(
       requirement,
       safeRequirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement.id),
-      onboardingData,
       toggleableRequirementChoices,
       overriddenFulfillmentChoices
     );

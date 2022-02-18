@@ -137,7 +137,6 @@ export default defineComponent({
           this.selectedCourse.crseId,
           this.selectedRequirementID,
           store.state.groupedRequirementFulfillmentReport,
-          store.state.onboardingData,
           store.state.toggleableRequirementChoices,
           store.state.userRequirementsMap
         ),
