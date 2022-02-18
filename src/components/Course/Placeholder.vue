@@ -7,7 +7,7 @@
       <div class="placeholder-name" :class="{ 'placeholder-name--min': compact }">
         {{ placeholderObj.name }}
       </div>
-      <course-caution :course="placeholderObj" :semesterIndex="semesterIndex" />
+      <course-caution :course="placeholderObj" :semesterIndex="semesterIndex" :isCompactView="compact"/>
     </div>
   </div>
 </template>

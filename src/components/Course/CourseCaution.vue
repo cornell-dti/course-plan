@@ -2,7 +2,7 @@
   <course-base-tooltip
     v-if="hasCourseCautions"
     :isInformation="false"
-    :hideVerticalBar="courseCautions.isPlaceholderWrongSemester"
+    :hideVerticalBar="courseCautions.isPlaceholderWrongSemester || isCompactView"
   >
     <div v-if="singleWarning">
       <div v-if="courseCautions.noMatchedRequirement">
@@ -92,6 +92,7 @@ export default defineComponent({
       required: true,
     },
     semesterIndex: { type: Number, required: false, default: 0 },
+    isCompactView: { type: Boolean, required: true}
   },
   computed: {
     courseCautions(): CourseCautions {
