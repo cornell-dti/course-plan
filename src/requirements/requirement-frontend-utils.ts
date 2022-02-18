@@ -272,8 +272,6 @@ export function getMatchedRequirementFulfillmentSpecification(
         if (!(conditions && courseId in conditions)) return true;
         // otherwise, inspect conditions to see if we should disallow course
         const { colleges, majorsExcluded } = conditions[courseId];
-        // user college is not in colleges list
-        if (college && !colleges.includes(college)) return false;
         // requirement is not in colleges list
         if (sourceType === 'College' && !colleges.includes(sourceSpecificName)) return false;
         // requirement is in majorsExcluded list
