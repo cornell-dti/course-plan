@@ -13,6 +13,15 @@
       {{ selectedCourse.code }}:
       {{ selectedCourse.name }}
     </div>
+
+    <div class="courseConflict-description">
+      <span v-if="numConflicts <= 1"> This course can fulfill these requirements. Select one </span>
+      <div v-else>
+        <span>Please fix the following</span
+        ><span class="courseConflict--bold">{{ ` ${numConflicts} ` }}</span
+        ><span>conflicts</span>
+      </div>
+    </div>
   </TeleportModal>
 </template>
 
@@ -38,6 +47,10 @@ export default defineComponent({
     rightButtonText(): string {
       return this.conflictsResolved ? 'Done' : 'Save';
     },
+    numConflicts(): number {
+      // TODO @willespencer programatically determine this number instead of hardcoding
+      return 2;
+    },
   },
   methods: {
     closeCurrentModal() {
@@ -61,6 +74,10 @@ export default defineComponent({
     font-size: 14px;
     line-height: 17px;
     color: $lightPlaceholderGray;
+  }
+
+  &--bold {
+    font-weight: bold;
   }
 }
 

@@ -397,6 +397,7 @@ export default defineComponent({
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
 
       // TODO @willespencer handle opening conflict modal better
+      // should not add course if it is opening, should happen after first step of adding a course, and should not happen if no conflicts
       if (this.handleRequirementConflicts) {
         this.openConflictModal(newCourse);
       }
