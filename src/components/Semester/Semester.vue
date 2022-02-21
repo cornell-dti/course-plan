@@ -13,6 +13,11 @@
       v-if="isCourseModalOpen"
       @add-course="addCourse"
     />
+    <course-conflict-modal
+      @close-course-modal="closeConflictModal"
+      v-if="isConflictModalOpen"
+      :selectedCourse="conflictCourse"
+    />
     <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
       @delete-semester="deleteSemester"
@@ -131,6 +136,7 @@ import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
+import CourseConflictModal from '@/components/Modals/NewCourse/CourseConflictModal.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
@@ -155,6 +161,7 @@ import {
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
 import { getRelatedRequirementIdsForCourseOptOut } from '@/requirements/requirement-frontend-utils';
+import featureFlagCheckers from '@/feature-flags';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -168,6 +175,7 @@ export default defineComponent({
     EditSemester,
     ClearSemester,
     NewCourseModal,
+    CourseConflictModal,
     SemesterMenu,
     Placeholder,
   },
@@ -187,7 +195,9 @@ export default defineComponent({
       isShadowCounter: 0,
       isDraggedFrom: false,
       isCourseModalOpen: false,
+      isConflictModalOpen: false,
       isSemesterMinimized: false,
+      conflictCourse: {} as FirestoreSemesterCourse,
 
       seasonImg: {
         Fall: fall,
@@ -320,6 +330,9 @@ export default defineComponent({
       }
       return `${credits.toString()} credits`;
     },
+    handleRequirementConflicts(): boolean {
+      return featureFlagCheckers.isRequirementConflictsEnabled();
+    },
   },
   methods: {
     isPlaceholderCourse,
@@ -350,6 +363,13 @@ export default defineComponent({
     closeCourseModal() {
       this.isCourseModalOpen = false;
     },
+    openConflictModal(course: FirestoreSemesterCourse) {
+      this.conflictCourse = course;
+      this.isConflictModalOpen = !this.isConflictModalOpen;
+    },
+    closeConflictModal() {
+      this.isConflictModalOpen = false;
+    },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
       this.closeConfirmationModal();
@@ -375,6 +395,11 @@ export default defineComponent({
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
+
+      // TODO @willespencer handle opening conflict modal better
+      if (this.handleRequirementConflicts) {
+        this.openConflictModal(newCourse);
+      }
     },
     deleteCourse(courseCode: string, uniqueID: number) {
       deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
