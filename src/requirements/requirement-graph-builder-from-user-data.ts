@@ -76,7 +76,11 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       if (spec == null || spec.hasRequirementCheckerWarning) {
         return [];
       }
-      return spec.eligibleCourses.flat();
+      const courses = spec.eligibleCourses.flat();
+      Object.values(spec.additionalRequirements || {}).forEach(additionalSpec => {
+        courses.push(...additionalSpec.eligibleCourses.flat());
+      });
+      return courses;
     },
   };
   const dangerousRequirementFulfillmentGraph = buildRequirementFulfillmentGraph(

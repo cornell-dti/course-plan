@@ -79,7 +79,6 @@ export default defineComponent({
     courseCanAppearInSearchResult(): (course: CornellCourseRosterCourse) => boolean {
       return getFilterForRequirementFulfillment(
         store.state.userRequirementsMap,
-        store.state.onboardingData,
         store.state.toggleableRequirementChoices,
         this.requirementId
       );

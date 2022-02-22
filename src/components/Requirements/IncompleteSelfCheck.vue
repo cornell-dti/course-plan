@@ -84,7 +84,6 @@ export default defineComponent({
             isPlaceholderCourse(course) ||
             !canFulfillChecker(
               store.state.userRequirementsMap,
-              store.state.onboardingData,
               store.state.toggleableRequirementChoices,
               this.subReqId,
               course.crseId
@@ -155,7 +154,6 @@ export default defineComponent({
           crseId,
           this.subReqId,
           store.state.groupedRequirementFulfillmentReport,
-          store.state.onboardingData,
           store.state.toggleableRequirementChoices,
           store.state.userRequirementsMap
         ),
@@ -181,7 +179,6 @@ export default defineComponent({
             newCourse.crseId,
             this.subReqId,
             store.state.groupedRequirementFulfillmentReport,
-            store.state.onboardingData,
             store.state.toggleableRequirementChoices,
             store.state.userRequirementsMap
           ),

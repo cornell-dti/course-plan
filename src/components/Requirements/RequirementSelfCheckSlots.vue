@@ -48,7 +48,6 @@ export default defineComponent({
       let fulfillableCourses: CourseTaken[] = [];
       const requirementFulfillmentSpec = getMatchedRequirementFulfillmentSpecification(
         this.requirementFulfillment.requirement,
-        store.state.onboardingData,
         {
           [this.requirementFulfillment.requirement.id]: this.toggleableRequirementChoice,
         }

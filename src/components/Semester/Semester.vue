@@ -284,7 +284,6 @@ export default defineComponent({
               crseId,
               requirementID,
               store.state.groupedRequirementFulfillmentReport,
-              store.state.onboardingData,
               store.state.toggleableRequirementChoices,
               store.state.userRequirementsMap
             );
