@@ -10,6 +10,7 @@
   >
     <new-course-modal
       @close-course-modal="closeCourseModal"
+      @select-course="selectCourse"
       v-if="isCourseModalOpen"
       @add-course="addCourse"
     />
@@ -388,6 +389,7 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
+    // TODO @willespencer refactor the below methods after gatekeep removed (only 1 method)
     addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       // Since the course is new, we know the old choice does not exist.
@@ -395,10 +397,16 @@ export default defineComponent({
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
+    },
+    selectCourse(data: CornellCourseRosterCourse) {
+      // TODO @willespencer handle opening conflict modal better: should not happen if no conflicts
+      // TODO @willespencer add the course to semester, add confirmation modal
 
-      // TODO @willespencer handle opening conflict modal better
-      // should not add course if it is opening, should happen after first step of adding a course, and should not happen if no conflicts
+      // only perform operations if the gatekeep is true
       if (this.handleRequirementConflicts) {
+        const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
+
+        this.closeCourseModal();
         this.openConflictModal(newCourse);
       }
     },
