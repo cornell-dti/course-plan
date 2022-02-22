@@ -17,7 +17,6 @@
     "type-check": "vue-tsc --noEmit",
     "build:staging": "vite build --mode staging",
     "format": "prettier --ignore-path .gitignore --write \"**/*.{js,ts,css,scss,html,vue}\"",
-    "format:all": "prettier --write \"**/*.{js,ts,css,scss,html,vue}\"",
     "format:check": "prettier --check \"**/*.{js,ts,css,scss,html,vue}\"",
     "test": "jest",
     "cypress:open": "cypress open",
