@@ -16,19 +16,19 @@
     </div>
 
     <div class="courseConflict-description">
-      <span v-if="numConflicts <= 1">
+      <span v-if="numTotalConflicts <= 1">
         This course can fulfill these requirements. Select one:
       </span>
       <div v-else>
         <span>Please fix the following</span
-        ><span class="courseConflict--bold">{{ ` ${numConflicts} ` }}</span
+        ><span class="courseConflict--bold">{{ ` ${numTotalConflicts} ` }}</span
         ><span>conflicts</span>
       </div>
     </div>
 
-    <div v-for="index in numConflicts" :key="index" class="courseConflict-conflict">
-      <div v-if="numConflicts > 1">{{ `${index}. Choose only one requirement:` }}</div>
-      <single-conflict-editor />
+    <div v-for="index in numTotalConflicts" :key="index" class="courseConflict-conflict">
+      <div v-if="numTotalConflicts > 1">{{ `${index}. Choose only one requirement:` }}</div>
+      <single-conflict-editor :conflictNumber="index" @conflict-changed="handleChangedConflict" />
       <div v-if="index === 1" class="courseConflict-warning">
         <span>*Requirements with</span>
         <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
@@ -53,17 +53,22 @@ export default defineComponent({
   props: {
     selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
   },
+  data() {
+    // TODO @willespencer remove hardcoded initial list of reqs
+    return {
+      selectedReqsPerConflict: [['req1, req2, selectableReq1'], ['req1, req2, selectableReq1']],
+      numConflictsUnresolved: 2,
+    };
+  },
   computed: {
     conflictsResolved(): boolean {
-      // TODO @willespencer update method to determine if conflicts are fully resolved
-      return true;
+      return this.numConflictsUnresolved === 0;
     },
     rightButtonText(): string {
       return this.conflictsResolved ? 'Done' : 'Save';
     },
-    numConflicts(): number {
-      // TODO @willespencer programatically determine this number instead of hardcoding
-      return 2;
+    numTotalConflicts(): number {
+      return this.selectedReqsPerConflict.length;
     },
     errorText(): string {
       if (!this.conflictsResolved) {
@@ -82,6 +87,21 @@ export default defineComponent({
     addCourse() {
       // TODO @willespencer handle what happens when conflicts are saved or resolved
       this.closeCurrentModal();
+    },
+    handleChangedConflict(selectedReqs: string[], index: number) {
+      this.selectedReqsPerConflict[index - 1] = selectedReqs;
+      this.updateNumUnresolvedConflicts();
+    },
+    // conflicts exist for each list of reqs in selectedReqsPerConflict if number of reqs selected != 1
+    updateNumUnresolvedConflicts() {
+      let count = 0;
+      for (let i = 0; i < this.selectedReqsPerConflict.length; i += 1) {
+        if (this.selectedReqsPerConflict[i].length !== 1) {
+          count += 1;
+        }
+      }
+
+      this.numConflictsUnresolved = count;
     },
   },
 });
