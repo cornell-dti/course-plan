@@ -26,10 +26,10 @@
       </div>
     </div>
 
-    <div v-for="index in numConflicts" :key="index">
+    <div v-for="index in numConflicts" :key="index" class="courseConflict-conflict">
       <div v-if="numConflicts > 1">{{ `${index}. Choose only one requirement:` }}</div>
       <single-conflict-editor />
-      <div v-if="index === 1">
+      <div v-if="index === 1" class="courseConflict-warning">
         <span>*Requirements with</span>
         <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
         <span>are broad so check carefully before selecting them</span>
@@ -63,7 +63,7 @@ export default defineComponent({
     },
     numConflicts(): number {
       // TODO @willespencer programatically determine this number instead of hardcoding
-      return 1;
+      return 2;
     },
     errorText(): string {
       if (!this.conflictsResolved) {
@@ -94,6 +94,16 @@ export default defineComponent({
     font-size: 14px;
     line-height: 17px;
     color: $lightPlaceholderGray;
+  }
+
+  &-conflict {
+    margin-top: 1rem;
+  }
+
+  &-warning {
+    font-size: 12px;
+    color: $medium;
+    margin-top: 1rem;
   }
 
   &--bold {
