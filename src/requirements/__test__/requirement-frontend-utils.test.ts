@@ -61,7 +61,7 @@ it('computeFulfillmentCoursesAndStatistics credit test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1234, 4), getMockCourseTaken(5678, 4)],
-      mockOnboardingData,
+
       {},
       {}
     )
@@ -77,7 +77,7 @@ it('computeFulfillmentCoursesAndStatistics credit test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1234, 4), getMockCourseTaken(5678, 4), getMockCourseTaken(9101112, 4)],
-      mockOnboardingData,
+
       {},
       {}
     )
@@ -110,7 +110,7 @@ it('computeFulfillmentCoursesAndStatistics course (without minNumberOfSlots) tes
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1), getMockCourseTaken(2), getMockCourseTaken(3), getMockCourseTaken(4)],
-      mockOnboardingData,
+
       {},
       {}
     )
@@ -130,7 +130,7 @@ it('computeFulfillmentCoursesAndStatistics course (without minNumberOfSlots) tes
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1), getMockCourseTaken(2), getMockCourseTaken(4), getMockCourseTaken(3)],
-      mockOnboardingData,
+
       {},
       {}
     )
@@ -195,7 +195,7 @@ it('computeFulfillmentCoursesAndStatistics course (with additional requirements)
         getMockCourseTaken(3, 3),
         getMockCourseTaken(4, 4),
       ],
-      mockOnboardingData,
+
       {},
       {}
     )
@@ -252,7 +252,7 @@ it('computeFulfillmentCoursesAndStatistics course (with minNumberOfSlots) test',
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1), getMockCourseTaken(2), getMockCourseTaken(3)],
-      mockOnboardingData,
+
       {},
       {}
     )
@@ -293,7 +293,7 @@ it('computeFulfillmentCoursesAndStatistics toggleable requirement test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1)],
-      mockOnboardingData,
+
       {},
       {}
     )
@@ -307,7 +307,7 @@ it('computeFulfillmentCoursesAndStatistics toggleable requirement test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1)],
-      mockOnboardingData,
+
       {
         MOCK_ID: 'A',
       },
@@ -323,7 +323,7 @@ it('computeFulfillmentCoursesAndStatistics toggleable requirement test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1)],
-      mockOnboardingData,
+
       {
         MOCK_ID: 'B',
       },

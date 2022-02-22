@@ -71,17 +71,12 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       // All edges will be explictly opt-in only from stage 3.
       const spec = getMatchedRequirementFulfillmentSpecification(
         requirement,
-        onboardingData,
         toggleableRequirementChoices
       );
       if (spec == null || spec.hasRequirementCheckerWarning) {
         return [];
       }
-      const courses = spec.eligibleCourses.flat();
-      Object.values(spec.additionalRequirements || {}).forEach(additionalSpec => {
-        courses.push(...additionalSpec.eligibleCourses.flat());
-      });
-      return courses;
+      return spec.eligibleCourses.flat();
     },
   };
   const dangerousRequirementFulfillmentGraph = buildRequirementFulfillmentGraph(
