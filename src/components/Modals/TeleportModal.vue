@@ -26,6 +26,7 @@
           <button v-if="leftButtonText" class="modal-button" @click="leftButtonClicked">
             {{ leftButtonText }}
           </button>
+          <div v-if="errorText" class="modal-error">{{ errorText }}</div>
           <button
             class="modal-button modal-button--add"
             :class="{ 'modal-button--disabled': rightButtonIsDisabled }"
@@ -59,6 +60,7 @@ export default defineComponent({
     rightButtonImage: { type: String, default: '' },
     rightButtonAlt: { type: String, default: '' },
     rightButtonIsDisabled: { type: Boolean, default: false },
+    errorText: { type: String, default: '' },
     isSimpleModal: { type: Boolean, default: false }, // true if the modal will set its own styling for its position
     hasNoBackground: { type: Boolean, default: false }, // true for modals without the gray overlay behind them
     hasClickableTransparentBackground: { type: Boolean, default: false }, // modals without a gray overlay behind them AND clicking on the background closes the modal
@@ -176,6 +178,7 @@ export default defineComponent({
     margin-top: 1rem;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
   }
 
   &-button {
@@ -202,6 +205,11 @@ export default defineComponent({
       border: 1px solid $sangBlue;
       background-color: $disabledGray;
     }
+  }
+
+  &-error {
+    color: $error;
+    margin-right: 0.5rem;
   }
 }
 

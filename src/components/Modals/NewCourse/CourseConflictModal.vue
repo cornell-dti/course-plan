@@ -4,6 +4,7 @@
     content-class="content-course"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="selectedCourse == null"
+    :errorText="errorText"
     @modal-closed="closeCurrentModal"
     @right-button-clicked="addItem"
   >
@@ -15,11 +16,23 @@
     </div>
 
     <div class="courseConflict-description">
-      <span v-if="numConflicts <= 1"> This course can fulfill these requirements. Select one </span>
+      <span v-if="numConflicts <= 1">
+        This course can fulfill these requirements. Select one:
+      </span>
       <div v-else>
         <span>Please fix the following</span
         ><span class="courseConflict--bold">{{ ` ${numConflicts} ` }}</span
         ><span>conflicts</span>
+      </div>
+    </div>
+
+    <div v-for="index in numConflicts" :key="index">
+      <div v-if="numConflicts > 1">{{ `${index}. Choose only one requirement:` }}</div>
+      <single-conflict-editor />
+      <div v-if="index === 1">
+        <span>*Requirements with</span>
+        <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
+        <span>are broad so check carefully before selecting them</span>
       </div>
     </div>
   </TeleportModal>
@@ -28,9 +41,10 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
+import SingleConflictEditor from '@/components/Modals/NewCourse/SingleConflictEditor.vue';
 
 export default defineComponent({
-  components: { TeleportModal },
+  components: { TeleportModal, SingleConflictEditor },
   emits: {
     'close-course-modal': () => true,
     'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
@@ -49,7 +63,13 @@ export default defineComponent({
     },
     numConflicts(): number {
       // TODO @willespencer programatically determine this number instead of hardcoding
-      return 2;
+      return 1;
+    },
+    errorText(): string {
+      if (!this.conflictsResolved) {
+        return 'Conflict: Please only choose one requirement';
+      }
+      return '';
     },
   },
   methods: {
@@ -99,5 +119,13 @@ export default defineComponent({
   .content-course {
     width: 100%;
   }
+}
+
+.warning-icon {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+  width: 14px;
+  height: 14px;
 }
 </style>
