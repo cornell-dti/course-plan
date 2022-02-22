@@ -56,7 +56,10 @@ export default defineComponent({
   data() {
     // TODO @willespencer remove hardcoded initial list of reqs
     return {
-      selectedReqsPerConflict: [['req1, req2, selectableReq1'], ['req1, req2, selectableReq1']],
+      selectedReqsPerConflict: [
+        ['req1', 'req2', 'selectableReq1'],
+        ['req1', 'req2', 'selectableReq1'],
+      ],
       numConflictsUnresolved: 2,
     };
   },
@@ -100,7 +103,6 @@ export default defineComponent({
           count += 1;
         }
       }
-
       this.numConflictsUnresolved = count;
     },
   },
