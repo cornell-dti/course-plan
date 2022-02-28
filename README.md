@@ -29,6 +29,7 @@ Then access http://localhost:8080/
 
 ### SP22
 
+- **Andrew Xu** - Developer
 - **Will Spencer** - Developer
 - **Ben Shen** - Developer
 - **Noah Schiff** - Developer
