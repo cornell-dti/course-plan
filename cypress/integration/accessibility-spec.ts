@@ -30,23 +30,43 @@ it('Visit dashboard and check dashboard accessibility', () => {
   cy.checkA11y();
 });
 
+// Check the accessibility of the bottom bar
+// Note that a course must be added in case the plan is empty to do so
+it('Check accessibility of the bottom bar', () => {
+  // open add modal and try to add CS 1110
+  cy.get('[data-cyId=semester-addCourse]').click();
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 1110');
+  cy.get('[data-cyId=newCourse-searchResult]').first().click();
+  cy.get('[data-cyId=modal-button]').click();
+
+  // open the bottom bar
+  cy.get('[data-cyId=semester-course]').eq(0).click();
+
+  cy.checkA11y('[data-cyId=bottombar]'); // only check accessibility within the bottom bar
+});
+
 // Check the accessibility of each page of Onboarding
 // Note that the selector in checkA11y ensures violations behind the modal are not caught
 it('Check accessibility of onboarding modal pages', () => {
   cy.get('[data-cyId=editProfile]').click();
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(500);
   cy.checkA11y('[data-cyId=onboarding]'); // only check accessibility within the onboarding modal
 
   cy.get('[data-cyId=onboarding-nextButton]').click();
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(500);
   cy.checkA11y('[data-cyId=onboarding]');
 
   cy.get('[data-cyId=onboarding-nextButton]').click();
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(500);
   cy.checkA11y('[data-cyId=onboarding]');
 
   cy.get('[data-cyId=onboarding-finishButton]').click();
+});
+
+it('Visit privacy policy and check accessibility', () => {
+  cy.visit('localhost:8080/policy');
+
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(2000); // ensure the page has time to load
+
+  cy.injectAxe(); // re-inject the library due to switching page
+
+  cy.checkA11y();
 });
