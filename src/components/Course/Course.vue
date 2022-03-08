@@ -212,7 +212,8 @@ export default defineComponent({
   &-dotRow {
     padding: 8px 0;
     display: flex;
-    position: right;
+    position: relative;
+
     &:hover,
     &:active,
     &:focus {
