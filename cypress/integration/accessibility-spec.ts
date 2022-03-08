@@ -1,5 +1,5 @@
 /**
- * A test file that tests accessibility on all parts of CoursePlan
+ * A test file that tests accessibility on all views of CoursePlan
  * Can and should be expanded in the future.
  */
 
@@ -19,7 +19,7 @@ it('Check landing page accessibility', () => {
   cy.checkA11y();
 });
 
-it('Visit dashboard and check dashboard accessibility', () => {
+it('Visit dashboard and check semesterview accessibility', () => {
   cy.visit('localhost:8080');
 
   // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -27,13 +27,26 @@ it('Visit dashboard and check dashboard accessibility', () => {
 
   cy.injectAxe(); // re-inject the library due to switching page
 
-  cy.checkA11y();
+  cy.checkA11y('[data-cyId=semesterView]'); // only check accessibility within the semesterView
 });
 
-// Check the accessibility of the bottom bar
-// Note that a course must be added in case the plan is empty to do so
+it('Check navbar accessibility', () => {
+  cy.checkA11y('[data-cyId=navbar]'); // only check accessibility within the navbar
+});
+
+// Check the accessibility of the requirements sidebar with all toggles fully open
+// Note that the selector in checkA11y ensures only the sidebar is inspected
+it('Check accessibility of the requirements sidebar', () => {
+  // open all dropdowns in the sidebar
+  cy.get('[data-cyId=requirements-viewMore]').click({ multiple: true });
+  cy.get('[data-cyId=requirements-showCompleted]').click({ multiple: true });
+  cy.get('[data-cyId=requirements-displayToggle]').click({ multiple: true });
+
+  cy.checkA11y('[data-cyId=reqsSidebar]');
+});
+
 it('Check accessibility of the bottom bar', () => {
-  // open add modal and try to add CS 1110
+  // Note that a course must be added in case the plan is empty to do so
   cy.get('[data-cyId=semester-addCourse]').click();
   cy.get('[data-cyId=newCourse-dropdown]').type('CS 1110');
   cy.get('[data-cyId=newCourse-searchResult]').first().click();
