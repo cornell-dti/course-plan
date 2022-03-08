@@ -84,3 +84,14 @@ it('Visit privacy policy and check accessibility', () => {
 
   cy.checkA11y(null, null, null, true);
 });
+
+it('Visit 404 page and check accessibility', () => {
+  cy.visit('localhost:8080/404');
+
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(2000); // ensure the page has time to load
+
+  cy.injectAxe(); // re-inject the library due to switching page
+
+  cy.checkA11y(null, null, null, true);
+});
