@@ -56,7 +56,7 @@
               :availableChoices="entranceSemesters"
               :choice="entranceYear"
               :cannotBeRemoved="true"
-              :scrollBottomToElement="2020"
+              :scrollBottomToElement="suggestedEntranceSem"
               @on-select="selectEntranceYear"
             />
           </div>
@@ -89,7 +89,7 @@
               :availableChoices="gradSemesters"
               :choice="gradYear"
               :cannotBeRemoved="true"
-              :scrollBottomToElement="2024"
+              :scrollBottomToElement="suggestedGradSem"
               @on-select="selectGraduationYear"
             />
           </div>
@@ -303,6 +303,12 @@ export default defineComponent({
         semsDict[yr] = yr;
       }
       return semsDict;
+    },
+    suggestedEntranceSem(): Readonly<number> {
+      return getCurrentYear();
+    },
+    suggestedGradSem(): Readonly<number> {
+      return parseInt(this.entranceYear, 10) + 4;
     },
     seasons(): Readonly<Record<string, string>> {
       return {
