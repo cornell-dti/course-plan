@@ -177,22 +177,24 @@ export default defineComponent({
       );
     },
     /**
-     * Display error if graduation semester comes before entrance semester, comparing both year and season
+     * Display error if the entrance and graduation year are not blank and the graduation semester comes before entrance semester, comparing the season if not blank
      *
      * @returns true if graduation semesters comes before entrance semester, false otherwise
      */
     isInvalidGraduationYear(): boolean {
       const { gradYear } = this.onboarding;
       const { entranceYear } = this.onboarding;
-      if (gradYear !== '' && entranceYear !== '')
-        if (gradYear === entranceYear) {
+      if (gradYear !== '' && entranceYear !== '') {
+        if (this.onboarding.entranceSem && this.onboarding.gradSem && gradYear === entranceYear) {
           // TODO - refactor to use SeasonOrdinal
           const order = ['Winter', 'Spring', 'Summer', 'Fall'];
           return (
             order.indexOf(this.onboarding.gradSem) < order.indexOf(this.onboarding.entranceSem)
           );
         }
-      return gradYear < entranceYear;
+        return gradYear < entranceYear;
+      }
+      return false;
     },
     /**
      * Set error text depending on which fields are missing
