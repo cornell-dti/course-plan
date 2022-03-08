@@ -58,7 +58,7 @@
         <div class="onboarding-error" data-cyId="onboarding-error" v-if="isError">
           {{ errorText }}
         </div>
-        <div class="onboarding-error" v-if="isInvalidGraduationYear">
+        <div class="onboarding-error" v-if="isInvalidGraduationSemester">
           Your graduation semester cannot come before your entrance semester. Please select a
           graduation semester after {{ onboarding.entranceSem }} {{ onboarding.entranceYear }}.
         </div>
@@ -181,7 +181,7 @@ export default defineComponent({
      *
      * @returns true if graduation semesters comes before entrance semester, false otherwise
      */
-    isInvalidGraduationYear(): boolean {
+    isInvalidGraduationSemester(): boolean {
       const { gradYear } = this.onboarding;
       const { entranceYear } = this.onboarding;
       if (gradYear !== '' && entranceYear !== '') {
@@ -255,11 +255,17 @@ export default defineComponent({
       this.currentPage = page;
     },
     canProgress() {
-      return !(this.isError || this.isInvalidMajorMinorGradError || this.isInvalidGraduationYear);
+      return !(
+        this.isError ||
+        this.isInvalidMajorMinorGradError ||
+        this.isInvalidGraduationSemester
+      );
     },
     goNext() {
       // Only move onto next page if error message is not displayed
-      if (!(this.isError || this.isInvalidMajorMinorGradError || this.isInvalidGraduationYear)) {
+      if (
+        !(this.isError || this.isInvalidMajorMinorGradError || this.isInvalidGraduationSemester)
+      ) {
         // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
         if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage === 1) {
           this.currentPage += 2;

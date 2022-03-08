@@ -53,7 +53,7 @@
           >
           <div class="onboarding-selectWrapper">
             <onboarding-basic-single-dropdown
-              :availableChoices="entranceSemesters"
+              :availableChoices="entranceYears"
               :choice="entranceYear"
               :cannotBeRemoved="true"
               :scrollBottomToElement="suggestedEntranceSem"
@@ -86,7 +86,7 @@
           >
           <div class="onboarding-selectWrapper">
             <onboarding-basic-single-dropdown
-              :availableChoices="gradSemesters"
+              :availableChoices="gradYears"
               :choice="gradYear"
               :cannotBeRemoved="true"
               :scrollBottomToElement="suggestedGradSem"
@@ -286,7 +286,7 @@ export default defineComponent({
         Object.entries(reqsData.grad).map(([key, { name }]) => [key, name])
       );
     },
-    entranceSemesters(): Readonly<Record<string, string>> {
+    entranceYears(): Readonly<Record<string, string>> {
       const semsDict: Record<string, string> = {};
       const curYear = getCurrentYear();
       for (let i = -entranceYearRange; i <= entranceYearRange; i += 1) {
@@ -295,7 +295,7 @@ export default defineComponent({
       }
       return semsDict;
     },
-    gradSemesters(): Readonly<Record<string, string>> {
+    gradYears(): Readonly<Record<string, string>> {
       const semsDict: Record<string, string> = {};
       const { entranceYear } = this;
       for (let i = 0; i <= gradYearRange; i += 1) {
