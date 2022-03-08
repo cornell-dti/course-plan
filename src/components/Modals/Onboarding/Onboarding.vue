@@ -58,6 +58,10 @@
         <div class="onboarding-error" data-cyId="onboarding-error" v-if="isError">
           {{ errorText }}
         </div>
+        <div class="onboarding-error" v-if="isInvalidGraduationYear">
+          Your graduation semester cannot come before your entrance semester. Please select a
+          graduation semester after {{ onboarding.entranceSem }} {{ onboarding.entranceYear }}.
+        </div>
         <div class="onboarding-error" v-if="isInvalidMajorMinorGradError">
           Invalid major, minor, or graduate program. Delete the placeholder major, minor, or program
           and try again.
@@ -173,6 +177,24 @@ export default defineComponent({
       );
     },
     /**
+     * Display error if graduation semester comes before entrance semester, comparing both year and season
+     *
+     * @returns true if graduation semesters comes before entrance semester, false otherwise
+     */
+    isInvalidGraduationYear(): boolean {
+      const { gradYear } = this.onboarding;
+      const { entranceYear } = this.onboarding;
+      if (gradYear !== '' && entranceYear !== '')
+        if (gradYear === entranceYear) {
+          // TODO - refactor to use SeasonOrdinal
+          const order = ['Winter', 'Spring', 'Summer', 'Fall'];
+          return (
+            order.indexOf(this.onboarding.gradSem) < order.indexOf(this.onboarding.entranceSem)
+          );
+        }
+      return gradYear < entranceYear;
+    },
+    /**
      * Set error text depending on which fields are missing
      *
      * @returns a string containing the names of all types of required data missing from onboarding.
@@ -231,11 +253,11 @@ export default defineComponent({
       this.currentPage = page;
     },
     canProgress() {
-      return !(this.isError || this.isInvalidMajorMinorGradError);
+      return !(this.isError || this.isInvalidMajorMinorGradError || this.isInvalidGraduationYear);
     },
     goNext() {
       // Only move onto next page if error message is not displayed
-      if (!(this.isError || this.isInvalidMajorMinorGradError)) {
+      if (!(this.isError || this.isInvalidMajorMinorGradError || this.isInvalidGraduationYear)) {
         // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
         if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage === 1) {
           this.currentPage += 2;
@@ -316,6 +338,7 @@ export default defineComponent({
     &-header {
       text-align: center;
     }
+
     &-inputWrapper {
       text-align: center;
     }
