@@ -178,7 +178,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import { clickOutside, getCurrentYear, yearRange } from '@/utilities';
+import { clickOutside, getCurrentYear, entranceYearRange, gradYearRange } from '@/utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -289,7 +289,7 @@ export default defineComponent({
     entranceSemesters(): Readonly<Record<string, string>> {
       const semsDict: Record<string, string> = {};
       const curYear = getCurrentYear();
-      for (let i = -yearRange; i <= yearRange; i += 1) {
+      for (let i = -entranceYearRange; i <= entranceYearRange; i += 1) {
         const yr = String(curYear + i);
         semsDict[yr] = yr;
       }
@@ -298,7 +298,7 @@ export default defineComponent({
     gradSemesters(): Readonly<Record<string, string>> {
       const semsDict: Record<string, string> = {};
       const { entranceYear } = this;
-      for (let i = 0; i <= yearRange * 2; i += 1) {
+      for (let i = 0; i <= gradYearRange; i += 1) {
         const yr = String(parseInt(entranceYear, 10) + i);
         semsDict[yr] = yr;
       }
