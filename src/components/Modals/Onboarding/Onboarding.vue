@@ -188,11 +188,11 @@ export default defineComponent({
       if (this.name.lastName === '') {
         messages.push('a last name');
       }
-      if (this.onboarding.gradYear === '' || !this.onboarding.gradSem) {
-        messages.push('a graduation date');
-      }
       if (this.onboarding.entranceYear === '' || !this.onboarding.entranceSem) {
         messages.push('an entrance date');
+      }
+      if (this.onboarding.gradYear === '' || !this.onboarding.gradSem) {
+        messages.push('a graduation date');
       }
 
       // generate the string depending on how many error messages are selected
