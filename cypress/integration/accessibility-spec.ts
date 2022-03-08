@@ -29,3 +29,24 @@ it('Visit dashboard and check dashboard accessibility', () => {
 
   cy.checkA11y();
 });
+
+// Check the accessibility of each page of Onboarding
+// Note that the selector in checkA11y ensures violations behind the modal are not caught
+it('Check accessibility of onboarding modal pages', () => {
+  cy.get('[data-cyId=editProfile]').click();
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(500);
+  cy.checkA11y('[data-cyId=onboarding]'); // only check accessibility within the onboarding modal
+
+  cy.get('[data-cyId=onboarding-nextButton]').click();
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(500);
+  cy.checkA11y('[data-cyId=onboarding]');
+
+  cy.get('[data-cyId=onboarding-nextButton]').click();
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(500);
+  cy.checkA11y('[data-cyId=onboarding]');
+
+  cy.get('[data-cyId=onboarding-finishButton]').click();
+});
