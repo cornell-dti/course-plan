@@ -365,12 +365,20 @@ export default defineComponent({
         }
       }
     },
+    // Clear graduation year if a new entrance year is selected and the graduation year is no longer in the dropdown
+    clearGradYearIfIllegal() {
+      const gradYear = parseInt(this.gradYear, 10);
+      if (!(gradYear in this.gradYears)) {
+        this.gradYear = '';
+      }
+    },
     selectGraduationYear(year: string) {
       this.gradYear = year;
       this.updateBasic();
     },
     selectEntranceYear(year: string) {
       this.entranceYear = year;
+      this.clearGradYearIfIllegal();
       this.updateBasic();
     },
     selectGraduationSem(season: string) {
