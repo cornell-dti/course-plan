@@ -3,7 +3,7 @@
     title="Fix Course Conflict"
     content-class="content-course"
     :rightButtonText="rightButtonText"
-    :rightButtonIsHighlighted="!conflictsResolved"
+    :rightButtonIsHighlighted="!conflictsFullyResolved"
     @modal-closed="closeCurrentModal"
     @right-button-clicked="addItem"
   >
@@ -34,7 +34,7 @@
         <span>are broad so check carefully before selecting them</span>
       </div>
     </div>
-    <div v-if="!conflictsResolved" class="courseConflict-error">{{ errorText }}</div>
+    <div v-if="!conflictsFullyResolved" class="courseConflict-error">{{ errorText }}</div>
   </TeleportModal>
 </template>
 
@@ -60,16 +60,16 @@ export default defineComponent({
         ['req1', 'req2', 'selectableReq1'],
         ['req1', 'req2', 'selectableReq1'],
       ],
-      numConflictsUnresolved: 2,
-      numConflictsUnselected: 0,
+      hasUnresolvedConflicts: true,
+      hasUnselectedConflicts: false,
     };
   },
   computed: {
-    conflictsResolved(): boolean {
-      return this.numConflictsUnresolved === 0 && this.numConflictsUnselected === 0;
+    conflictsFullyResolved(): boolean {
+      return !this.hasUnresolvedConflicts && !this.hasUnselectedConflicts;
     },
     rightButtonText(): string {
-      return this.conflictsResolved ? 'Done' : 'Save';
+      return this.conflictsFullyResolved ? 'Done' : 'Save';
     },
     numTotalConflicts(): number {
       return this.selectedReqsPerConflict.length;
@@ -77,7 +77,7 @@ export default defineComponent({
     errorText(): string {
       // set the error text to point out no reqs are selected if none are selected for at least one conflict
       // and that all other conflicts also have no choice selected or are fulfilled
-      if (this.numConflictsUnselected > 0 && this.numConflictsUnresolved === 0) {
+      if (this.hasUnselectedConflicts && !this.hasUnresolvedConflicts) {
         return 'Warning: No requirements are selected for a conflict';
       }
       return 'Conflict: Please only choose one requirement';
@@ -96,23 +96,24 @@ export default defineComponent({
     },
     handleChangedConflict(selectedReqs: string[], index: number) {
       this.selectedReqsPerConflict[index - 1] = selectedReqs;
-      this.updateNumUnresolvedConflicts();
+      this.updateConflictStatus();
     },
     // conflicts exist for each list of reqs in selectedReqsPerConflict if number of reqs selected != 1
-    updateNumUnresolvedConflicts() {
-      let unresolvedCount = 0;
-      let unselectedCount = 0;
+    // there is a conflict fully unselected if all requirements within it are unselected
+    updateConflictStatus() {
+      let unresolved = false;
+      let unselected = false;
       for (let i = 0; i < this.selectedReqsPerConflict.length; i += 1) {
         if (this.selectedReqsPerConflict[i].length > 1) {
-          unresolvedCount += 1;
+          unresolved = true;
         }
 
         if (this.selectedReqsPerConflict[i].length === 0) {
-          unselectedCount += 1;
+          unselected = true;
         }
       }
-      this.numConflictsUnresolved = unresolvedCount;
-      this.numConflictsUnselected = unselectedCount;
+      this.hasUnresolvedConflicts = unresolved;
+      this.hasUnselectedConflicts = unselected;
     },
   },
 });
