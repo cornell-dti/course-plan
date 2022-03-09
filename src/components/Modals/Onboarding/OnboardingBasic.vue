@@ -27,6 +27,24 @@
           >
           <input class="onboarding-input" v-model="lastName" @input="updateBasic()" />
         </div>
+        <div
+          class="onboarding-inputWrapper onboarding-inputWrapper--name onboarding-inputWrapper--description"
+        >
+          <label class="onboarding-label"
+            ><span class="onboarding-subHeader--font"
+              >Entrance Season<span class="onboarding-required-star">*</span>
+            </span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="seasons"
+              :correspondingImages="seasonImgs"
+              :choice="entranceSemChoice"
+              :cannotBeRemoved="true"
+              @on-select="selectEntranceSem"
+            />
+          </div>
+        </div>
         <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
           <label class="onboarding-label"
             ><span class="onboarding-subHeader--font"
@@ -40,6 +58,23 @@
               :cannotBeRemoved="true"
               :scrollBottomToElement="2020"
               @on-select="selectEntranceYear"
+            />
+          </div>
+        </div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--name"></div>
+        <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+          <label class="onboarding-label"
+            ><span class="onboarding-subHeader--font"
+              >Graduation Season<span class="onboarding-required-star">*</span>
+            </span></label
+          >
+          <div class="onboarding-selectWrapper">
+            <onboarding-basic-single-dropdown
+              :availableChoices="seasons"
+              :correspondingImages="seasonImgs"
+              :choice="gradSemChoice"
+              :cannotBeRemoved="true"
+              @on-select="selectGraduationSem"
             />
           </div>
         </div>
@@ -147,6 +182,11 @@ import { clickOutside, getCollegeFullName, getCurrentYear, yearRange } from '@/u
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
+import fall from '@/assets/images/fallEmoji.svg';
+import spring from '@/assets/images/springEmoji.svg';
+import winter from '@/assets/images/winterEmoji.svg';
+import summer from '@/assets/images/summerEmoji.svg';
+
 const placeholderText = 'Select one';
 
 export default defineComponent({
@@ -157,11 +197,14 @@ export default defineComponent({
       type: Object as PropType<AppOnboardingData>,
       required: true,
     },
+    isEditingProfile: { type: Boolean, required: true },
   },
   emits: {
     updateBasic(
       gradYear: string,
+      gradSem: FirestoreSemesterSeason,
       entranceYear: string,
+      entranceSem: FirestoreSemesterSeason,
       collegeAcronym: string,
       majorAcronyms: readonly string[],
       minorAcronyms: readonly string[],
@@ -170,7 +213,9 @@ export default defineComponent({
     ) {
       return (
         typeof gradYear === 'string' &&
+        typeof gradSem === 'string' &&
         typeof entranceYear === 'string' &&
+        typeof entranceSem === 'string' &&
         typeof collegeAcronym === 'string' &&
         Array.isArray(majorAcronyms) &&
         Array.isArray(minorAcronyms) &&
@@ -191,13 +236,23 @@ export default defineComponent({
       collegeAcronym = 'AS';
     }
 
+    // if sem has not been previously filled out, choice is automatically is "Fall"/"Spring" for new users, old users have no data
+    let { gradSem } = this.onboardingData;
+    let { entranceSem } = this.onboardingData;
+    if (!this.isEditingProfile) {
+      gradSem = gradSem !== '' ? gradSem : 'Spring';
+      entranceSem = entranceSem !== '' ? entranceSem : 'Fall';
+    }
+
     return {
       firstName: this.userName.firstName,
       middleName: this.userName.middleName,
       lastName: this.userName.lastName,
       placeholderText,
       gradYear: this.onboardingData.gradYear,
+      gradSem,
       entranceYear: this.onboardingData.entranceYear,
+      entranceSem,
       collegeAcronym,
       majorAcronyms,
       minorAcronyms,
@@ -253,13 +308,37 @@ export default defineComponent({
       }
       return semsDict;
     },
+    seasons(): Readonly<Record<string, string>> {
+      return {
+        Fall: 'Fall',
+        Spring: 'Spring',
+        Summer: 'Summer',
+        Winter: 'Winter',
+      };
+    },
+    seasonImgs(): Readonly<Record<FirestoreSemesterSeason, string>> {
+      return {
+        Fall: fall,
+        Spring: spring,
+        Summer: summer,
+        Winter: winter,
+      };
+    },
+    gradSemChoice(): string {
+      return this.gradSem as string;
+    },
+    entranceSemChoice(): string {
+      return this.entranceSem as string;
+    },
   },
   methods: {
     updateBasic() {
       this.$emit(
         'updateBasic',
         this.gradYear,
+        this.gradSem,
         this.entranceYear,
+        this.entranceSem,
         this.collegeAcronym,
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
@@ -294,6 +373,14 @@ export default defineComponent({
     },
     selectEntranceYear(year: string) {
       this.entranceYear = year;
+      this.updateBasic();
+    },
+    selectGraduationSem(season: string) {
+      this.gradSem = season as FirestoreSemesterSeason;
+      this.updateBasic();
+    },
+    selectEntranceSem(season: string) {
+      this.entranceSem = season as FirestoreSemesterSeason;
       this.updateBasic();
     },
     selectCollege(acronym: string) {
