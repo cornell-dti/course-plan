@@ -110,7 +110,7 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import { setAppOnboardingData, populateSemesters } from '@/global-firestore-data';
-import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
+import { getMajorFullName, getMinorFullName, getGradFullName, SeasonOrdinal } from '@/utilities';
 import timeline1Text from '@/assets/images/timeline1text.svg';
 import timeline2Text from '@/assets/images/timeline2text.svg';
 import timeline3Text from '@/assets/images/timeline3text.svg';
@@ -299,11 +299,20 @@ export default defineComponent({
       }
     },
     // determine which AS reqs to set depending on user's starting semester
+    // AS1 for students entering before Fall 2020, AS2 for students after
     setASCollegeReqs() {
       const revised = { ...this.onboarding };
       if (revised.college === 'AS') {
         const year = Number.parseInt(revised.entranceYear, 10);
-        revised.college = year < 2020 ? 'AS1' : 'AS2';
+        const season: FirestoreSemesterSeason =
+          revised.entranceSem === '' ? 'Fall' : revised.entranceSem; // default to fall if not provided
+        if (year < 2020) {
+          revised.college = 'AS1';
+        } else if (year === 2020 && SeasonOrdinal[season] < SeasonOrdinal.Fall) {
+          revised.college = 'AS1';
+        } else {
+          revised.college = 'AS2';
+        }
       }
       return revised;
     },
