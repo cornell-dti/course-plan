@@ -61,11 +61,12 @@ export default defineComponent({
         ['req1', 'req2', 'selectableReq1'],
       ],
       numConflictsUnresolved: 2,
+      numConflictsUnselected: 0,
     };
   },
   computed: {
     conflictsResolved(): boolean {
-      return this.numConflictsUnresolved === 0;
+      return this.numConflictsUnresolved === 0 && this.numConflictsUnselected === 0;
     },
     rightButtonText(): string {
       return this.conflictsResolved ? 'Done' : 'Save';
@@ -74,6 +75,11 @@ export default defineComponent({
       return this.selectedReqsPerConflict.length;
     },
     errorText(): string {
+      // set the error text to point out no reqs are selected if none are selected for at least one conflict
+      // and that all other conflicts also have no choice selected or are fulfilled
+      if (this.numConflictsUnselected > 0 && this.numConflictsUnresolved === 0) {
+        return 'Warning: No requirements are selected';
+      }
       return 'Conflict: Please only choose one requirement';
     },
   },
@@ -94,13 +100,19 @@ export default defineComponent({
     },
     // conflicts exist for each list of reqs in selectedReqsPerConflict if number of reqs selected != 1
     updateNumUnresolvedConflicts() {
-      let count = 0;
+      let unresolvedCount = 0;
+      let unselectedCount = 0;
       for (let i = 0; i < this.selectedReqsPerConflict.length; i += 1) {
-        if (this.selectedReqsPerConflict[i].length !== 1) {
-          count += 1;
+        if (this.selectedReqsPerConflict[i].length > 1) {
+          unresolvedCount += 1;
+        }
+
+        if (this.selectedReqsPerConflict[i].length === 0) {
+          unselectedCount += 1;
         }
       }
-      this.numConflictsUnresolved = count;
+      this.numConflictsUnresolved = unresolvedCount;
+      this.numConflictsUnselected = unselectedCount;
     },
   },
 });
