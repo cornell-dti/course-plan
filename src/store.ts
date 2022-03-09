@@ -61,7 +61,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     userName: { firstName: '', middleName: '', lastName: '' },
     onboardingData: {
       gradYear: '',
+      gradSem: '',
       entranceYear: '',
+      entranceSem: '',
       college: '',
       major: [],
       minor: [],
