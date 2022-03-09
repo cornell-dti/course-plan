@@ -78,7 +78,7 @@ export default defineComponent({
       // set the error text to point out no reqs are selected if none are selected for at least one conflict
       // and that all other conflicts also have no choice selected or are fulfilled
       if (this.numConflictsUnselected > 0 && this.numConflictsUnresolved === 0) {
-        return 'Warning: No requirements are selected';
+        return 'Warning: No requirements are selected for a conflict';
       }
       return 'Conflict: Please only choose one requirement';
     },
