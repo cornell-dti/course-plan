@@ -3,8 +3,7 @@
     title="Fix Course Conflict"
     content-class="content-course"
     :rightButtonText="rightButtonText"
-    :rightButtonIsDisabled="selectedCourse == null"
-    :errorText="errorText"
+    :rightButtonIsHighlighted="!conflictsResolved"
     @modal-closed="closeCurrentModal"
     @right-button-clicked="addItem"
   >
@@ -35,6 +34,7 @@
         <span>are broad so check carefully before selecting them</span>
       </div>
     </div>
+    <div v-if="!conflictsResolved" class="courseConflict-error">{{ errorText }}</div>
   </TeleportModal>
 </template>
 
@@ -74,10 +74,7 @@ export default defineComponent({
       return this.selectedReqsPerConflict.length;
     },
     errorText(): string {
-      if (!this.conflictsResolved) {
-        return 'Conflict: Please only choose one requirement';
-      }
-      return '';
+      return 'Conflict: Please only choose one requirement';
     },
   },
   methods: {
@@ -129,6 +126,12 @@ export default defineComponent({
   }
 
   &--bold {
+    font-weight: bold;
+  }
+
+  &-error {
+    color: $error;
+    margin-top: 1rem;
     font-weight: bold;
   }
 }
