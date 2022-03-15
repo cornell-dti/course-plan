@@ -27,7 +27,7 @@
           }"
           class="college-title-top"
         >
-          {{ getCollegeFullName(collegeAcronym) }}
+          {{ getCollegeFullName(onboardingData.college) }}
         </p>
       </button>
     </div>
@@ -213,11 +213,6 @@ export default defineComponent({
     },
   },
   computed: {
-    // get college acronym, but special case for A&S to be switched from AS1/AS2 to just AS
-    collegeAcronym(): string {
-      const acronym = this.onboardingData.college ?? '';
-      return acronym.includes('AS') ? 'AS' : acronym;
-    },
     // number of fully fulfilled requirements, note pure self-checks are never fulfilled
     requirementFulfilled(): number {
       let fulfilled = 0;
