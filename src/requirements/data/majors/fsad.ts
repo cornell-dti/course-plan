@@ -17,6 +17,12 @@ const fashionDesignAdditionalRequirements: readonly string[] = [
   'HA'
 ];
 
+const fashionDesignNaturalScienceRequirements: readonly string[] = [
+  'PBS', 
+  'BIOLS-AG', 
+  'BIONLS-AG'
+]
+
 const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Social Science',
@@ -64,22 +70,30 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     slotNames: ['Course'],
   },
   {
-    name: 'Natural Science I and II',
+    name: 'Natural Science I',
     description: 'This fulfills the college distribution natural sciences requirement.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23626',
     // Allow double counting, because it overlaps with human ecology's requirements.
     allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements(
-      ['BIOG 1140'],
-      // ['BIOG 1440', 'BIOG 1445'],
-      // ['BIOMG 1350'],
-      // ['BIOEE 1610'],
-      // ['CHEM 1560', 'CHEM 2070'],
-      // ['CS 2110', 'CS 2112']
+      ['BIOG 1140', 'BIOG 1440', 'BIOG 1445', 'BIOMG 1350', 'BIOEE 1610', 'CHEM 1560', 'CHEM 2070','CHEM 2080', 'PHYS 1101', 'PHYS 2207', 'PHYS 1102', 'PHYS 2208'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Course'],
+  },
+  {
+    name: 'Natural Science II',
+    description: 'Choose any 3 credit course with a PBS, BIOLS-AG, or BIONLS-AG Course Distribution.',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23626',
+    checker: [
+      (course: Course): boolean =>
+        fashionDesignNaturalScienceRequirements.some(
+          distribution => course.catalogDistr?.includes(distribution) ?? false
+        ),
+    ],
+    fulfilledBy: 'credits',
+    perSlotMinCount: [3],
   },
   {
     name: 'Psychology',
