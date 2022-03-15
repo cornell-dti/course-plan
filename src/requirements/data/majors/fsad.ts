@@ -153,8 +153,8 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23626',
     checker: [
       (course: Course): boolean => {
-        const { catalogNbr } = course;
-        return ifCodeMatch(catalogNbr, '3***') || ifCodeMatch(catalogNbr, '4***') || ifCodeMatch(catalogNbr, '6***');
+        const { subject, catalogNbr } = course;
+        return ifCodeMatch(subject, 'FSAD') && (ifCodeMatch(catalogNbr, '3***') || ifCodeMatch(catalogNbr, '4***') || ifCodeMatch(catalogNbr, '6***'));
       },
     ],
     fulfilledBy: 'courses',
