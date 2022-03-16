@@ -58,6 +58,7 @@ export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
     'close-course-modal': () => true,
+    'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
     'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
       typeof course === 'object' && typeof choice === 'object',
   },
@@ -86,6 +87,7 @@ export default defineComponent({
   methods: {
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
+      this.$emit('select-course', this.selectedCourse);
       this.getReqsRelatedToCourse(result);
     },
     closeCurrentModal() {
