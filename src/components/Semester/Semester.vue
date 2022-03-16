@@ -18,6 +18,7 @@
       @close-course-modal="closeConflictModal"
       v-if="isConflictModalOpen"
       :selectedCourse="conflictCourse"
+      :courseConflicts="courseConflicts"
     />
     <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
@@ -162,6 +163,8 @@ import {
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
 import { getRelatedRequirementIdsForCourseOptOut } from '@/requirements/requirement-frontend-utils';
+import computeGroupedRequirementFulfillmentReports from '@/requirements/requirement-frontend-computation';
+
 import featureFlagCheckers from '@/feature-flags';
 
 type ComponentRef = { $el: HTMLDivElement };
@@ -199,6 +202,7 @@ export default defineComponent({
       isConflictModalOpen: false,
       isSemesterMinimized: false,
       conflictCourse: {} as FirestoreSemesterCourse,
+      courseConflicts: new Set(),
 
       seasonImg: {
         Fall: fall,
@@ -364,8 +368,9 @@ export default defineComponent({
     closeCourseModal() {
       this.isCourseModalOpen = false;
     },
-    openConflictModal(course: FirestoreSemesterCourse) {
+    openConflictModal(course: FirestoreSemesterCourse, conflicts: Set<string[]>) {
       this.conflictCourse = course;
+      this.courseConflicts = conflicts;
       this.isConflictModalOpen = !this.isConflictModalOpen;
     },
     closeConflictModal() {
@@ -399,15 +404,33 @@ export default defineComponent({
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
     },
     selectCourse(data: CornellCourseRosterCourse) {
-      // TODO @willespencer handle opening conflict modal better: should not happen if no conflicts
-      // TODO @willespencer add the course to semester, add confirmation modal
-
       // only perform operations if the gatekeep is true
       if (this.handleRequirementConflicts) {
         const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
 
+        // set choice to nothing (no opting out, no opting in)
+        const choice: FirestoreCourseOptInOptOutChoices = {
+          optOut: [],
+          acknowledgedCheckerWarningOptIn: [],
+          arbitraryOptIn: {},
+        };
+
+        // add the course to the semeser (with no choice made)
+        addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
         this.closeCourseModal();
-        this.openConflictModal(newCourse);
+
+        const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
+          newCourse.uniqueID
+        );
+
+        // only open conflict modal if conflicts exist
+        if (conflicts && conflicts.size > 0) {
+          this.openConflictModal(newCourse, conflicts);
+        }
+
+        // TODO @willespencer confirmation should happen later when there are conflicts
+        const courseCode = `${data.subject} ${data.catalogNbr}`;
+        this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
       }
     },
     deleteCourse(courseCode: string, uniqueID: number) {

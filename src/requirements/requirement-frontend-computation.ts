@@ -321,6 +321,8 @@ export default function computeGroupedRequirementFulfillmentReports(
     });
   }
 
+  console.log('HI');
+
   return {
     userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
