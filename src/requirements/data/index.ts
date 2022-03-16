@@ -30,7 +30,7 @@ import essRequirements from './majors/ess';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
 import epRequirements from './majors/ep';
-import fashionDesignRequirements from './majors/fsad'
+import fashionDesignRequirements from './majors/fsad';
 import foodSciRequirements from './majors/foodsci';
 import governmentRequirements from './majors/govt';
 import hdRequirements from './majors/hd';
