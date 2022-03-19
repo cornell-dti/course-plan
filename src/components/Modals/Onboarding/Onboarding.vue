@@ -224,10 +224,10 @@ export default defineComponent({
         messages.push('a last name');
       }
       if (this.onboarding.entranceYear === '' || !this.onboarding.entranceSem) {
-        messages.push('an entrance date');
+        messages.push('an entrance semester');
       }
       if (this.onboarding.gradYear === '' || !this.onboarding.gradSem) {
-        messages.push('a graduation date');
+        messages.push('a graduation semester');
       }
 
       // generate the string depending on how many error messages are selected
