@@ -2,7 +2,8 @@ import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 import { coursesColorSet } from './assets/constants/colors';
 
-/** Enumerated type to define seasons as integers in season order */
+/** Enumerated type to define seasons as integers in season order
+ * where the seasons are defined chronologically */
 export const SeasonOrdinal = {
   Winter: 0,
   Spring: 1,

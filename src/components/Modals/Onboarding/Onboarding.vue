@@ -198,7 +198,7 @@ export default defineComponent({
       const { entranceYear } = this.onboarding;
       if (gradYear !== '' && entranceYear !== '') {
         if (this.onboarding.entranceSem && this.onboarding.gradSem && gradYear === entranceYear) {
-          const order = Object.keys(SeasonOrdinal).sort();
+          const order = Object.keys(SeasonOrdinal);
           return (
             order.indexOf(this.onboarding.gradSem) < order.indexOf(this.onboarding.entranceSem)
           );
