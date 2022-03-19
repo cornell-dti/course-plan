@@ -318,28 +318,6 @@ export default defineComponent({
     entranceSemChoice(): string {
       return this.entranceSem as string;
     },
-    seasons(): Readonly<Record<string, string>> {
-      return {
-        Fall: 'Fall',
-        Spring: 'Spring',
-        Summer: 'Summer',
-        Winter: 'Winter',
-      };
-    },
-    seasonImgs(): Readonly<Record<FirestoreSemesterSeason, string>> {
-      return {
-        Fall: fall,
-        Spring: spring,
-        Summer: summer,
-        Winter: winter,
-      };
-    },
-    gradSemChoice(): string {
-      return this.gradSem as string;
-    },
-    entranceSemChoice(): string {
-      return this.entranceSem as string;
-    },
   },
   methods: {
     updateBasic() {
@@ -387,14 +365,6 @@ export default defineComponent({
     selectEntranceYear(year: string) {
       this.entranceYear = year;
       this.clearGradYearIfIllegal();
-      this.updateBasic();
-    },
-    selectGraduationSem(season: string) {
-      this.gradSem = season as FirestoreSemesterSeason;
-      this.updateBasic();
-    },
-    selectEntranceSem(season: string) {
-      this.entranceSem = season as FirestoreSemesterSeason;
       this.updateBasic();
     },
     selectGraduationSem(season: string) {
