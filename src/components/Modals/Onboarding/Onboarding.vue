@@ -141,9 +141,10 @@ export default defineComponent({
       name: { ...this.userName },
       onboarding: {
         ...this.onboardingData,
-        ...!(this.onboardingData.gradYear in computeGradYears(this.onboardingData.entranceYear)) && {
-          gradYear: '',
-        },
+        gradYear:
+          this.onboardingData.gradYear in computeGradYears(this.onboardingData.entranceYear)
+            ? this.onboardingData.gradYear
+            : '',
       },
     };
   },
