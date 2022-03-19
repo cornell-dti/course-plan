@@ -52,6 +52,25 @@ export const entranceYearRange = 6;
 // ex. if the entrance year is 2022, and yearRange is 6, then the entrance year options are 2022-2034
 export const gradYearRange = entranceYearRange * 2;
 
+export function computeGradYears(entranceYear: string): Readonly<Record<string, string>> {
+  const semsDict: Record<string, string> = {};
+  for (let i = 0; i <= gradYearRange; i += 1) {
+    const yr = String(parseInt(entranceYear, 10) + i);
+    semsDict[yr] = yr;
+  }
+  return semsDict;
+}
+
+export function computeEntranceYears(): Readonly<Record<string, string>> {
+  const semsDict: Record<string, string> = {};
+  const curYear = getCurrentYear();
+  for (let i = -entranceYearRange; i <= entranceYearRange; i += 1) {
+    const yr = String(curYear + i);
+    semsDict[yr] = yr;
+  }
+  return semsDict;
+}
+
 export function getCollegeFullName(acronym: string | undefined): string {
   // Return empty string if college is not in requirementJSON
   const college = acronym ? requirementJSON.college[acronym] : null;

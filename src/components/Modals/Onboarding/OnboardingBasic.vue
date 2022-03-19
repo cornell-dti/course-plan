@@ -178,7 +178,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import { clickOutside, getCurrentYear, entranceYearRange, gradYearRange } from '@/utilities';
+import { clickOutside, getCurrentYear, computeGradYears, computeEntranceYears } from '@/utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -254,6 +254,10 @@ export default defineComponent({
     'click-outside': clickOutside,
   },
   computed: {
+    entranceYears: computeEntranceYears,
+    gradYears(): Readonly<Record<string, string>> {
+      return computeGradYears(this.entranceYear);
+    },
     colleges(): Readonly<Record<string, string>> {
       return Object.fromEntries(
         Object.entries(reqsData.college).map(([key, { name }]) => [key, name])
@@ -285,24 +289,6 @@ export default defineComponent({
       return Object.fromEntries(
         Object.entries(reqsData.grad).map(([key, { name }]) => [key, name])
       );
-    },
-    entranceYears(): Readonly<Record<string, string>> {
-      const semsDict: Record<string, string> = {};
-      const curYear = getCurrentYear();
-      for (let i = -entranceYearRange; i <= entranceYearRange; i += 1) {
-        const yr = String(curYear + i);
-        semsDict[yr] = yr;
-      }
-      return semsDict;
-    },
-    gradYears(): Readonly<Record<string, string>> {
-      const semsDict: Record<string, string> = {};
-      const { entranceYear } = this;
-      for (let i = 0; i <= gradYearRange; i += 1) {
-        const yr = String(parseInt(entranceYear, 10) + i);
-        semsDict[yr] = yr;
-      }
-      return semsDict;
     },
     suggestedEntranceSem(): Readonly<number> {
       return getCurrentYear();
@@ -368,7 +354,7 @@ export default defineComponent({
     // Clear graduation year if a new entrance year is selected and the graduation year is no longer in the dropdown
     clearGradYearIfIllegal() {
       const gradYear = parseInt(this.gradYear, 10);
-      if (!(gradYear in this.gradYears)) {
+      if (!(gradYear in computeGradYears(this.entranceYear))) {
         this.gradYear = '';
       }
     },
