@@ -1,18 +1,20 @@
 <template>
   <div>
     <div class="conflictEditor-reqs">
-      <div class="conflictEditor-req" v-for="[reqName, bool] in checkedReqs" :key="reqName">
+      <div
+        class="conflictEditor-req"
+        v-for="([reqName, bool], index) in checkedReqs"
+        :key="reqName"
+      >
         <input type="checkbox" :id="reqName" :checked="bool" @change="checkOrUncheckReq(reqName)" />
-        <label :for="reqName" class="conflictEditor-label">{{ reqName }}</label>
-      </div>
-      <!-- TODO add back selectable reqs -->
-      <!-- <div class="conflictEditor-req">
-        <input type="checkbox" value="selectableReq1" v-model="checkedReqs" />
-        <label for="selectableReq1" class="conflictEditor-label">
+        <label v-if="!isReqSelfCheck(index)" :for="reqName" class="conflictEditor-label">{{
+          reqName
+        }}</label>
+        <label v-else :for="reqName" class="conflictEditor-label">
           <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
-          Selectable Req #1</label
+          {{ reqName }}</label
         >
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -24,6 +26,7 @@ export default defineComponent({
   props: {
     checkedReqs: { type: Object as PropType<Map<string, boolean>>, required: true },
     conflictNumber: { type: Number, required: true },
+    numSelfChecks: { type: Number, required: true },
   },
   emits: {
     'conflict-changed': (reqName: string, conflictNum: number) =>
@@ -32,6 +35,10 @@ export default defineComponent({
   methods: {
     checkOrUncheckReq(reqName: string) {
       this.$emit('conflict-changed', reqName, this.conflictNumber);
+    },
+    // req is self check if index has numSelfChecks or fewer reqs until it reaches the end of the list
+    isReqSelfCheck(index: string) {
+      return parseInt(index, 10) >= this.checkedReqs.size - this.numSelfChecks;
     },
   },
 });

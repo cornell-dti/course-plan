@@ -7,7 +7,6 @@
     @modal-closed="closeCurrentModal"
     @right-button-clicked="addItem"
   >
-    <!-- TODO @willespencer factor out selected course? -->
     <div class="courseConflict-text">Selected Course</div>
     <div class="selected-course" data-cyId="courseConflict-selectedCourse">
       {{ selectedCourse.code }}:
@@ -30,6 +29,7 @@
       <single-conflict-editor
         :checkedReqs="selectedReqsPerConflict[index - 1]"
         :conflictNumber="index"
+        :numSelfChecks="numSelfCheckRequirements"
         @conflict-changed="handleChangedConflict"
       />
       <div v-if="index === 1" class="courseConflict-warning">
@@ -57,21 +57,24 @@ export default defineComponent({
   props: {
     selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     courseConflicts: { type: Object as PropType<Set<string[]>>, required: true },
+    selfCheckRequirements: {
+      type: Object as PropType<RequirementWithIDSourceType[]>,
+      required: true,
+    },
   },
   data() {
-    // convert the set of conflicts to a list of dicts, where each dict is a mapping of req options to bools representing if they are selected
+    // convert the set of conflicts and self-check reqs to a list of dicts, where each dict is a mapping of req options to bools representing if they are selected
     const selectedReqsPerConflict: Map<string, boolean>[] = [];
     this.courseConflicts.forEach(singleConflictList => {
       const singleConflictDict = new Map<string, boolean>();
       singleConflictList.forEach(req => {
         singleConflictDict.set(req, true);
       });
+      this.selfCheckRequirements.forEach(singleSelfCheckReq => {
+        singleConflictDict.set(singleSelfCheckReq.name, true);
+      });
       selectedReqsPerConflict.push(singleConflictDict);
     });
-
-    console.log(selectedReqsPerConflict);
-    console.log(this.courseConflicts);
-    console.log(selectedReqsPerConflict[0]);
 
     return {
       selectedReqsPerConflict,
@@ -88,6 +91,9 @@ export default defineComponent({
     },
     numTotalConflicts(): number {
       return this.selectedReqsPerConflict.length;
+    },
+    numSelfCheckRequirements(): number {
+      return this.selfCheckRequirements.length;
     },
     errorText(): string {
       // set the error text to point out no reqs are selected if none are selected for at least one conflict

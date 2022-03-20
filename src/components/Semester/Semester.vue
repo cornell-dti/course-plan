@@ -19,6 +19,7 @@
       v-if="isConflictModalOpen"
       :selectedCourse="conflictCourse"
       :courseConflicts="courseConflicts"
+      :selfCheckRequirements="selfCheckRequirements"
     />
     <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
@@ -162,8 +163,10 @@ import {
   updateRequirementChoices,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
-import { getRelatedRequirementIdsForCourseOptOut } from '@/requirements/requirement-frontend-utils';
-import computeGroupedRequirementFulfillmentReports from '@/requirements/requirement-frontend-computation';
+import {
+  getRelatedRequirementIdsForCourseOptOut,
+  getRelatedUnfulfilledRequirements,
+} from '@/requirements/requirement-frontend-utils';
 
 import featureFlagCheckers from '@/feature-flags';
 
@@ -203,6 +206,7 @@ export default defineComponent({
       isSemesterMinimized: false,
       conflictCourse: {} as FirestoreSemesterCourse,
       courseConflicts: new Set<string[]>(),
+      selfCheckRequirements: [] as RequirementWithIDSourceType[],
 
       seasonImg: {
         Fall: fall,
@@ -368,9 +372,14 @@ export default defineComponent({
     closeCourseModal() {
       this.isCourseModalOpen = false;
     },
-    openConflictModal(course: FirestoreSemesterCourse, conflicts: Set<string[]>) {
+    openConflictModal(
+      course: FirestoreSemesterCourse,
+      conflicts: Set<string[]>,
+      selfCheckRequirements: readonly RequirementWithIDSourceType[]
+    ) {
       this.conflictCourse = course;
       this.courseConflicts = conflicts;
+      this.selfCheckRequirements = selfCheckRequirements;
       this.isConflictModalOpen = !this.isConflictModalOpen;
     },
     closeConflictModal() {
@@ -423,9 +432,18 @@ export default defineComponent({
           newCourse.uniqueID
         );
 
+        const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
+          data,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.onboardingData,
+          store.state.toggleableRequirementChoices,
+          store.state.overriddenFulfillmentChoices,
+          store.state.userRequirementsMap
+        );
+
         // only open conflict modal if conflicts exist
         if (conflicts && conflicts.size > 0) {
-          this.openConflictModal(newCourse, conflicts);
+          this.openConflictModal(newCourse, conflicts, selfCheckRequirements);
         }
 
         // TODO @willespencer confirmation should happen later when there are conflicts
