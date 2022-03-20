@@ -27,7 +27,11 @@
 
     <div v-for="index in numTotalConflicts" :key="index" class="courseConflict-conflict">
       <div v-if="numTotalConflicts > 1">{{ `${index}. Choose only one requirement:` }}</div>
-      <single-conflict-editor :conflictNumber="index" @conflict-changed="handleChangedConflict" />
+      <single-conflict-editor
+        :checkedReqs="selectedReqsPerConflict[index - 1]"
+        :conflictNumber="index"
+        @conflict-changed="handleChangedConflict"
+      />
       <div v-if="index === 1" class="courseConflict-warning">
         <span>*Requirements with</span>
         <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
@@ -52,14 +56,25 @@ export default defineComponent({
   },
   props: {
     selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    courseConflicts: { type: Object as PropType<Set<string[]>>, required: true },
   },
   data() {
-    // TODO @willespencer remove hardcoded initial list of reqs
+    // convert the set of conflicts to a list of dicts, where each dict is a mapping of req options to bools representing if they are selected
+    const selectedReqsPerConflict: Map<string, boolean>[] = [];
+    this.courseConflicts.forEach(singleConflictList => {
+      const singleConflictDict = new Map<string, boolean>();
+      singleConflictList.forEach(req => {
+        singleConflictDict.set(req, true);
+      });
+      selectedReqsPerConflict.push(singleConflictDict);
+    });
+
+    console.log(selectedReqsPerConflict);
+    console.log(this.courseConflicts);
+    console.log(selectedReqsPerConflict[0]);
+
     return {
-      selectedReqsPerConflict: [
-        ['req1', 'req2', 'selectableReq1'],
-        ['req1', 'req2', 'selectableReq1'],
-      ],
+      selectedReqsPerConflict,
       hasUnresolvedConflicts: true,
       hasUnselectedConflicts: false,
     };
@@ -94,8 +109,9 @@ export default defineComponent({
       // TODO @willespencer handle what happens when conflicts are saved or resolved
       this.closeCurrentModal();
     },
-    handleChangedConflict(selectedReqs: string[], index: number) {
-      this.selectedReqsPerConflict[index - 1] = selectedReqs;
+    handleChangedConflict(selectedReq: string, index: number) {
+      const conflict = this.selectedReqsPerConflict[index - 1];
+      conflict.set(selectedReq, !conflict.get(selectedReq));
       this.updateConflictStatus();
     },
     // conflicts exist for each list of reqs in selectedReqsPerConflict if number of reqs selected != 1
@@ -104,16 +120,26 @@ export default defineComponent({
       let unresolved = false;
       let unselected = false;
       for (let i = 0; i < this.selectedReqsPerConflict.length; i += 1) {
-        if (this.selectedReqsPerConflict[i].length > 1) {
+        const conflict = this.selectedReqsPerConflict[i];
+        const numReqsSelected = this.countNumberReqsSelected(conflict);
+        if (numReqsSelected > 1) {
           unresolved = true;
         }
 
-        if (this.selectedReqsPerConflict[i].length === 0) {
+        if (numReqsSelected === 0) {
           unselected = true;
         }
       }
       this.hasUnresolvedConflicts = unresolved;
       this.hasUnselectedConflicts = unselected;
+    },
+    // count number of reqs selected for a conflict (i.e. set to true in the map)
+    countNumberReqsSelected(conflict: Map<string, boolean>) {
+      let count = 0;
+      conflict.forEach((value: boolean) => {
+        if (value) count += 1;
+      });
+      return count;
     },
   },
 });

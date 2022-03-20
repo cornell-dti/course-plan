@@ -202,7 +202,7 @@ export default defineComponent({
       isConflictModalOpen: false,
       isSemesterMinimized: false,
       conflictCourse: {} as FirestoreSemesterCourse,
-      courseConflicts: new Set(),
+      courseConflicts: new Set<string[]>(),
 
       seasonImg: {
         Fall: fall,

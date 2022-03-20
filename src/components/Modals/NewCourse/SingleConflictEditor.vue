@@ -1,47 +1,37 @@
 <template>
   <div>
-    <!-- TODO @willespencer programatically generate conflicts -->
     <div class="conflictEditor-reqs">
-      <div class="conflictEditor-req">
-        <input type="checkbox" value="req1" v-model="checkedReqs" />
-        <label for="req1" class="conflictEditor-label">Requirement #1</label>
+      <div class="conflictEditor-req" v-for="[reqName, bool] in checkedReqs" :key="reqName">
+        <input type="checkbox" :id="reqName" :checked="bool" @change="checkOrUncheckReq(reqName)" />
+        <label :for="reqName" class="conflictEditor-label">{{ reqName }}</label>
       </div>
-      <div class="conflictEditor-req">
-        <input type="checkbox" value="req2" v-model="checkedReqs" />
-        <label for="req2" class="conflictEditor-label">Requirement #2</label>
-      </div>
-      <div class="conflictEditor-req">
+      <!-- TODO add back selectable reqs -->
+      <!-- <div class="conflictEditor-req">
         <input type="checkbox" value="selectableReq1" v-model="checkedReqs" />
         <label for="selectableReq1" class="conflictEditor-label">
           <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
           Selectable Req #1</label
         >
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
+    checkedReqs: { type: Object as PropType<Map<string, boolean>>, required: true },
     conflictNumber: { type: Number, required: true },
   },
-  data() {
-    return {
-      checkedReqs: ['req1', 'req2', 'selectableReq1'],
-    };
-  },
   emits: {
-    'conflict-changed': (selectedReqs: string[], conflictNum: number) =>
-      Array.isArray(selectedReqs) && typeof conflictNum === 'number',
+    'conflict-changed': (reqName: string, conflictNum: number) =>
+      typeof reqName === 'string' && typeof conflictNum === 'number',
   },
-  watch: {
-    checkedReqs(newVal, oldVal) {
-      if (oldVal) {
-        this.$emit('conflict-changed', newVal, this.conflictNumber);
-      }
+  methods: {
+    checkOrUncheckReq(reqName: string) {
+      this.$emit('conflict-changed', reqName, this.conflictNumber);
     },
   },
 });
