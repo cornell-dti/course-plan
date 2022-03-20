@@ -55,9 +55,11 @@ export const gradYearRange = entranceYearRange * 2;
 
 export function computeGradYears(entranceYear: string): Readonly<Record<string, string>> {
   const semsDict: Record<string, string> = {};
-  for (let i = 0; i <= gradYearRange; i += 1) {
-    const yr = String(parseInt(entranceYear, 10) + i);
-    semsDict[yr] = yr;
+  if (entranceYear) {
+    for (let i = 0; i <= gradYearRange; i += 1) {
+      const yr = String(parseInt(entranceYear, 10) + i);
+      semsDict[yr] = yr;
+    }
   }
   return semsDict;
 }
