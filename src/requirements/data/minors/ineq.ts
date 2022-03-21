@@ -3,7 +3,7 @@ import { includesWithSubRequirements } from '../checkers-common';
 
 const inequalityRequirements: readonly CollegeOrMajorRequirement[] = [
   {
-    name: 'The Core Course',
+    name: 'Inequality Core Course',
     description:
       'This course introduces students to contemporary debates and controversies' +
       ' about inequality. Learn how and why inequality varies across time and space,' +
@@ -23,7 +23,7 @@ const inequalityRequirements: readonly CollegeOrMajorRequirement[] = [
     slotNames: ['Course'],
   },
   {
-    name: 'Overview Course',
+    name: 'Inequality Overview Course',
     description: 'An Overview Course',
     source: 'https://inequality.cornell.edu/minor-overview-and-requirements',
     checker: includesWithSubRequirements([
@@ -45,29 +45,12 @@ const inequalityRequirements: readonly CollegeOrMajorRequirement[] = [
     slotNames: ['Course'],
   },
   {
-    name: 'Four Electives',
+    name: 'Four Elective Courses',
     description:
       'Four electives chosen from the full list of elective courses.' +
       'If enrolled in the Health Equity Track, two of those four electives must ' +
       'be electives labelled with the indicated health-equity focus. The other two' +
       'can be chosen from the broader list and can include other health-equity courses.',
-    source: 'https://inequality.cornell.edu/minor-overview-and-requirements',
-    checker: includesWithSubRequirements([
-      'SOC 2220',
-      'DSOC 2220',
-      'PAM 2220',
-      'ILROB 2220',
-      'PHIL 1950',
-      'AMST 2225',
-      'GOVT 2225',
-    ]),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1],
-    slotNames: ['Course'],
-  },
-  {
-    name: 'Overview Course',
-    description: 'An Overview Course',
     source: 'https://inequality.cornell.edu/minor-overview-and-requirements',
     checker: includesWithSubRequirements([
       'CRP 1101',
