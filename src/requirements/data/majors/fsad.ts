@@ -21,8 +21,6 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'This fulfills the college distribution social sciences requirement. Choose one 3 credit course from Anthropology, Sociology or Development Sociology.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23626',
-    // Allow double counting, because it overlaps with human ecology's requirements.
-    allowCourseDoubleCounting: true,
     checker: [
       (course: Course): boolean => {
         const { subject } = course;
@@ -42,8 +40,6 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'This fulfills the college distribution humanities requirement. Choose one Art History course. Note: May be taken while abroad.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23626',
-    // Allow double counting, because it overlaps with human ecology's requirements.
-    allowCourseDoubleCounting: true,
     checker: [
       (course: Course): boolean => {
         const { subject } = course;
@@ -59,8 +55,6 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'This fulfills the college distribution quantitative and analytical courses requirement. Must be taken at Cornell, AP Statistics is not accepted.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23626',
-    // Allow double counting, because it overlaps with human ecology's requirements.
-    allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements(['PAM 2100', 'AEM 2100', 'STSCI 2100', 'PSYCH 2500']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
