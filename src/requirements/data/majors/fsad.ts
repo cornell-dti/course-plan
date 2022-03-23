@@ -64,8 +64,6 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Natural Science I',
     description: 'This fulfills the college distribution natural sciences requirement.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23626',
-    // Allow double counting, because it overlaps with human ecology's requirements.
-    allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements([
       'BIOG 1140',
       'BIOG 1440',
@@ -102,8 +100,6 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Psychology',
     description: 'This fulfills the college distribution social sciences requirement.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23626',
-    // Allow double counting, because it overlaps with human ecology's requirements.
-    allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements(['HD 1150', 'HD 1170', 'PSYCH 1101']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -113,8 +109,6 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Ethics-Sustainability',
     description: 'Choose from one of the following.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23626',
-    // Allow double counting, because it overlaps with human ecology's requirements.
-    // allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements([
       'AEM 3205',
       'BEE 3299',
@@ -139,8 +133,6 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Introductory Economics',
     description: 'This fulfills the college distribution social sciences requirement.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=45&poid=23626',
-    // Allow double counting, because it overlaps with human ecology's requirements.
-    allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements(['ECON 1110']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
