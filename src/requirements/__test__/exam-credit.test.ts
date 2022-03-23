@@ -68,7 +68,9 @@ it('Two exams are converted to the correct courses', () => {
 it('Exam is converted to correct course', () => {
   const userData: AppOnboardingData = {
     gradYear: '2020',
+    gradSem: 'Spring',
     entranceYear: '2016',
+    entranceSem: 'Fall',
     college: 'EN',
     major: [],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],

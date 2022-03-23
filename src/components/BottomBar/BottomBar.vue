@@ -1,5 +1,10 @@
 <template>
-  <div class="bottombar" :class="{ wideBar: isNavbarWide }" v-if="hasBottomBarCourses">
+  <div
+    class="bottombar"
+    data-cyId="bottombar"
+    :class="{ wideBar: isNavbarWide }"
+    v-if="hasBottomBarCourses"
+  >
     <div class="bottombar-tabview" :class="{ expandedTabView: isExpanded }">
       <bottom-bar-tab-view :maxBottomBarTabs="maxBottomBarTabs" />
     </div>

@@ -1,4 +1,8 @@
-import { getUserRequirements } from './requirement-frontend-utils';
+import {
+  getMatchedRequirementFulfillmentSpecification,
+  allowCourseDoubleCountingBetweenRequirements,
+  getUserRequirements,
+} from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import {
   BuildRequirementFulfillmentGraphParameters,
@@ -17,6 +21,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
+  readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
 } {
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
@@ -64,33 +69,30 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       const requirement = userRequirementsMap[requirementID];
       // When a requirement has checker warning, we do not add those edges in phase 1.
       // All edges will be explictly opt-in only from stage 3.
-      if (requirement.checkerWarning != null) return [];
-      let eligibleCoursesList: readonly (readonly number[])[];
-      switch (requirement.fulfilledBy) {
-        case 'self-check':
-          return [];
-        case 'courses':
-        case 'credits':
-          eligibleCoursesList = requirement.courses;
-          break;
-        case 'toggleable':
-          eligibleCoursesList = Object.values(requirement.fulfillmentOptions).flatMap(
-            it => it.courses
-          );
-          break;
-        default:
-          throw new Error();
+      const spec = getMatchedRequirementFulfillmentSpecification(
+        requirement,
+        toggleableRequirementChoices
+      );
+      if (spec == null || spec.hasRequirementCheckerWarning) {
+        return [];
       }
-      return eligibleCoursesList.flat();
+      return spec.eligibleCourses.flat();
     },
   };
   const dangerousRequirementFulfillmentGraph = buildRequirementFulfillmentGraph(
     requirementGraphBuilderParameters
   );
   const safeRequirementFulfillmentGraph = dangerousRequirementFulfillmentGraph.copy();
-  const doubleCountedCourseUniqueIDSet = removeIllegalEdgesFromRequirementFulfillmentGraph(
+  const {
+    doubleCountedCourseUniqueIDSet,
+    courseToRequirementsInConstraintViolations,
+  } = removeIllegalEdgesFromRequirementFulfillmentGraph(
     safeRequirementFulfillmentGraph,
-    requirementID => userRequirementsMap[requirementID].allowCourseDoubleCounting || false
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
   );
 
   return {
@@ -98,6 +100,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
+    courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
   };
 }

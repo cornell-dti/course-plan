@@ -40,6 +40,7 @@ export type VuexStoreState = {
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  courseToRequirementsInConstraintViolations: ReadonlyMap<string | number, Set<string[]>>;
   doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
   subjectColors: Readonly<Record<string, string>>;
@@ -60,7 +61,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     userName: { firstName: '', middleName: '', lastName: '' },
     onboardingData: {
       gradYear: '',
+      gradSem: '',
       entranceYear: '',
+      entranceSem: '',
       college: '',
       major: [],
       minor: [],
@@ -83,6 +86,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     dangerousRequirementFulfillmentGraph: null!,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     safeRequirementFulfillmentGraph: null!,
+    courseToRequirementsInConstraintViolations: new Map(),
     doubleCountedCourseUniqueIDSet: new Set(),
     groupedRequirementFulfillmentReport: [],
     subjectColors: {},
@@ -128,6 +132,7 @@ const store: TypedVuexStore = new TypedVuexStore({
         | 'userRequirementsMap'
         | 'dangerousRequirementFulfillmentGraph'
         | 'safeRequirementFulfillmentGraph'
+        | 'courseToRequirementsInConstraintViolations'
         | 'doubleCountedCourseUniqueIDSet'
         | 'groupedRequirementFulfillmentReport'
       >
@@ -135,6 +140,8 @@ const store: TypedVuexStore = new TypedVuexStore({
       state.userRequirementsMap = data.userRequirementsMap;
       state.dangerousRequirementFulfillmentGraph = data.dangerousRequirementFulfillmentGraph;
       state.safeRequirementFulfillmentGraph = data.safeRequirementFulfillmentGraph;
+      state.courseToRequirementsInConstraintViolations =
+        data.courseToRequirementsInConstraintViolations;
       state.doubleCountedCourseUniqueIDSet = data.doubleCountedCourseUniqueIDSet;
       state.groupedRequirementFulfillmentReport = data.groupedRequirementFulfillmentReport;
     },

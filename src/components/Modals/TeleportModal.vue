@@ -23,12 +23,15 @@
         </div>
         <slot class="modal-body"></slot>
         <div v-if="!isSimpleModal" class="modal-buttonWrapper">
-          <button class="modal-button" @click="leftButtonClicked">
+          <button v-if="leftButtonText" class="modal-button" @click="leftButtonClicked">
             {{ leftButtonText }}
           </button>
           <button
             class="modal-button modal-button--add"
-            :class="{ 'modal-button--disabled': rightButtonIsDisabled }"
+            :class="{
+              'modal-button--disabled': rightButtonIsDisabled,
+              'modal-button--highlighted': rightButtonIsHighlighted,
+            }"
             @click="rightButtonClicked"
             data-cyId="modal-button"
             :disabled="rightButtonIsDisabled"
@@ -59,6 +62,7 @@ export default defineComponent({
     rightButtonImage: { type: String, default: '' },
     rightButtonAlt: { type: String, default: '' },
     rightButtonIsDisabled: { type: Boolean, default: false },
+    rightButtonIsHighlighted: { type: Boolean, default: false },
     isSimpleModal: { type: Boolean, default: false }, // true if the modal will set its own styling for its position
     hasNoBackground: { type: Boolean, default: false }, // true for modals without the gray overlay behind them
     hasClickableTransparentBackground: { type: Boolean, default: false }, // modals without a gray overlay behind them AND clicking on the background closes the modal
@@ -176,6 +180,7 @@ export default defineComponent({
     margin-top: 1rem;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
   }
 
   &-button {
@@ -201,6 +206,10 @@ export default defineComponent({
       opacity: 0.3;
       border: 1px solid $sangBlue;
       background-color: $disabledGray;
+    }
+
+    &--highlighted {
+      border: 2px solid $error;
     }
   }
 }
