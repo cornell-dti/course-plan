@@ -13,13 +13,17 @@
       <div class="dashboard-menus">
         <nav-bar
           class="dashboard-nav"
+          data-cyId="navbar"
           :isDisplayingRequirementsMobile="requirementsIsDisplayedMobile"
+          @openPlan="openPlan"
+          @openTools="openTools"
           @editProfile="editProfile"
           @toggleRequirementsMobile="toggleRequirementsMobile"
         />
         <requirement-side-bar
           class="dashboard-reqs"
-          v-if="loaded"
+          data-cyId="reqsSidebar"
+          v-if="loaded && !showToolsPage"
           :isMobile="isTablet"
           :isDisplayingMobile="requirementsIsDisplayedMobile"
           :isMinimized="requirementsIsMinimized"
@@ -28,14 +32,14 @@
           @showTourEndWindow="showTourEnd"
         />
         <bottom-bar
-          v-if="!(isTablet && requirementsIsDisplayedMobile)"
+          v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage"
           :isNavbarWide="requirementsIsMinimized"
           :isExpanded="bottomBarIsExpanded"
           :maxBottomBarTabs="maxBottomBarTabs"
         />
       </div>
       <semester-view
-        v-if="loaded && !(isTablet && requirementsIsDisplayedMobile)"
+        v-if="loaded && !(isTablet && requirementsIsDisplayedMobile) && !showToolsPage"
         ref="semesterview"
         :compact="compactVal"
         :startTour="startTour"
@@ -44,6 +48,7 @@
         :isMobile="isMobile"
         @compact-updated="compactUpdated"
       />
+      <tools-container class="toolsPage" v-if="showToolsPage" />
     </div>
     <tour-window
       title="Welcome to CoursePlan!"
@@ -77,6 +82,7 @@ import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
+import ToolsContainer from '@/containers/Tools.vue';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
@@ -123,6 +129,7 @@ export default defineComponent({
     RequirementSideBar,
     SemesterView,
     TourWindow,
+    ToolsContainer,
   },
   data() {
     return {
@@ -139,6 +146,7 @@ export default defineComponent({
       welcomeHidden: false,
       startTour: false,
       showTourEndWindow: false,
+      showToolsPage: false,
     };
   },
   computed: {
@@ -221,6 +229,14 @@ export default defineComponent({
       }
     },
 
+    openPlan() {
+      this.showToolsPage = false;
+    },
+
+    openTools() {
+      this.showToolsPage = true;
+    },
+
     editProfile() {
       this.isEditingProfile = true;
       this.startOnboarding();
@@ -269,6 +285,10 @@ export default defineComponent({
   .emoji-text {
     height: 14px;
   }
+}
+
+.toolsPage {
+  width: 100%;
 }
 
 .semester {

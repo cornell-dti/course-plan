@@ -1,6 +1,6 @@
 import { isPlaceholderCourse } from '../utilities';
-import { SWIM_TEST_COURSE_ID } from './data/constants';
-import getCourseEquivalentsFromUserExams from './requirement-exam-utils';
+import { SWIM_TEST_CODE, SWIM_TEST_COURSE_ID, SWIM_TEST_UNIQUE_ID } from './data/constants';
+import userDataToExamCourses from './requirement-exam-utils';
 import {
   courseIsAPIB,
   convertFirestoreSemesterCourseToCourseTaken,
@@ -125,53 +125,20 @@ const getTotalCreditsFulfillmentStatistics = (
   };
 };
 
-const getSwimTestFulfillmentStatistics = (
-  college: string,
-  courses: readonly CourseTaken[],
-  tookSwimTest: boolean
-): RequirementFulfillment => {
-  const requirement: RequirementWithIDSourceType = {
-    id: 'College-UNI-SwimTest',
-    sourceType: 'College',
-    sourceSpecificName: college,
-    name: 'Swim Test',
-    description:
-      'The Faculty Advisory Committee on Athletics and Physical Education has established a basic swimming ' +
-      'and water safety competency requirement for all entering first-year undergraduate students.',
-    source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11637',
-    courses: [[SWIM_TEST_COURSE_ID]],
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1],
-    slotNames: ['Course'],
-  };
-  const swimClasses = courses.filter(it => it.courseId === SWIM_TEST_COURSE_ID);
-  if (tookSwimTest) {
-    swimClasses.push({
-      courseId: SWIM_TEST_COURSE_ID,
-      uniqueId: -1,
-      code: 'Swim Test',
-      credits: 0,
-    });
-  }
-  const minCountFulfilled = swimClasses.length > 0 ? 1 : 0;
-  return {
-    requirement,
-    fulfillment: {
-      fulfilledBy: 'courses',
-      safeCourses: [swimClasses],
-      dangerousCourses: [swimClasses],
-      safeMinCountFulfilled: minCountFulfilled,
-      dangerousMinCountFulfilled: minCountFulfilled,
-      minCountRequired: 1,
-    },
-  };
-};
-
 export function getCourseCodesArray(
   semesters: readonly FirestoreSemester[],
   onboardingData: AppOnboardingData
 ): readonly CourseTaken[] {
   const courses: CourseTaken[] = [];
+  if (onboardingData.tookSwim === 'yes') {
+    courses.push({
+      courseId: SWIM_TEST_COURSE_ID,
+      uniqueId: SWIM_TEST_UNIQUE_ID,
+      code: SWIM_TEST_CODE,
+      credits: 0,
+    });
+  }
+  courses.push(...userDataToExamCourses(onboardingData));
   semesters.forEach(semester => {
     semester.courses.forEach(course => {
       if (!isPlaceholderCourse(course)) {
@@ -179,7 +146,6 @@ export function getCourseCodesArray(
       }
     });
   });
-  courses.push(...getCourseEquivalentsFromUserExams(onboardingData));
   return courses;
 }
 
@@ -238,6 +204,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   readonly groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
 } {
@@ -246,8 +213,10 @@ export default function computeGroupedRequirementFulfillmentReports(
 
   const {
     userRequirements,
+    userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
+    courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
   } = buildRequirementFulfillmentGraphFromUserData(
     coursesTaken,
@@ -263,10 +232,6 @@ export default function computeGroupedRequirementFulfillmentReports(
   if (totalCreditsFulfillmentStatistics != null) {
     collegeFulfillmentStatistics.push(totalCreditsFulfillmentStatistics);
   }
-  if (college)
-    collegeFulfillmentStatistics.push(
-      getSwimTestFulfillmentStatistics(college, coursesTaken, onboardingData.tookSwim === 'yes')
-    );
   const majorFulfillmentStatisticsMap = new Map<string, RequirementFulfillment[]>();
   const minorFulfillmentStatisticsMap = new Map<string, RequirementFulfillment[]>();
   const gradFulfillmentStatisticsMap = new Map<string, RequirementFulfillment[]>();
@@ -357,9 +322,10 @@ export default function computeGroupedRequirementFulfillmentReports(
   }
 
   return {
-    userRequirementsMap: Object.fromEntries(userRequirements.map(it => [it.id, it])),
+    userRequirementsMap,
     dangerousRequirementFulfillmentGraph,
     safeRequirementFulfillmentGraph,
+    courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
     groupedRequirementFulfillmentReport,
   };

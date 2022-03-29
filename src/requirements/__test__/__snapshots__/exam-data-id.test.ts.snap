@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ID of the exams are unchanged. 1`] = `
+Array [
+  "AP Biology",
+  "AP Chemistry",
+  "AP Computer Science A",
+  "AP English Language and Composition",
+  "AP English Literature and Composition",
+  "AP French Language",
+  "AP French Literature",
+  "AP Italian Language",
+  "AP Italian Literature",
+  "AP Macroeconomics",
+  "AP Mathematics AB",
+  "AP Mathematics BC (Engineering)",
+  "AP Mathematics BC (Non-Engineering)",
+  "AP Microeconomics",
+  "AP Physics C-Electricity & Magnetism",
+  "AP Physics C-Mechanics",
+  "AP Physics I",
+  "AP Physics II",
+  "AP Psychology",
+  "AP Spanish Language",
+  "AP Spanish Literature",
+  "AP Statistics",
+  "IB Chemical and Physical Systems",
+  "IB Chemistry",
+  "IB Computer Science",
+  "IB Economics",
+  "IB English Language and Literature",
+  "IB English Literature A",
+  "IB Mathematics",
+  "IB Physical Science",
+  "IB Physics",
+]
+`;

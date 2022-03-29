@@ -1,7 +1,6 @@
 import { Store } from 'vuex';
 
 import * as fb from './firebase-frontend-config';
-import getCourseEquivalentsFromUserExams from './requirements/requirement-exam-utils';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';
@@ -29,17 +28,6 @@ type DerivedCoursesData = {
   readonly courseToSemesterMap: Readonly<Record<number, FirestoreSemester>>;
 };
 
-/**
- * Some AP/IB equivalent course data that can be derived from onboarding data, but added to the global store
- * for efficiency and ease of access.
- */
-type DerivedAPIBEquivalentCourseData = {
-  // Mapping from exam name to unique ids (there can be multiple)
-  readonly examToUniqueIdsMap: Readonly<Record<string, Set<string | number>>>;
-  // Mapping from unique id to exam name
-  readonly uniqueIdToExamMap: Readonly<Record<string | number, string>>;
-};
-
 export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
   userName: FirestoreUserName;
@@ -47,12 +35,12 @@ export type VuexStoreState = {
   semesters: readonly FirestoreSemester[];
   orderByNewest: boolean;
   derivedCoursesData: DerivedCoursesData;
-  derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
   safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  courseToRequirementsInConstraintViolations: ReadonlyMap<string | number, Set<string[]>>;
   doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
   subjectColors: Readonly<Record<string, string>>;
@@ -73,7 +61,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     userName: { firstName: '', middleName: '', lastName: '' },
     onboardingData: {
       gradYear: '',
+      gradSem: '',
       entranceYear: '',
+      entranceSem: '',
       college: '',
       major: [],
       minor: [],
@@ -88,10 +78,6 @@ const store: TypedVuexStore = new TypedVuexStore({
       courseMap: {},
       courseToSemesterMap: {},
     },
-    derivedAPIBEquivalentCourseData: {
-      examToUniqueIdsMap: {},
-      uniqueIdToExamMap: {},
-    },
     toggleableRequirementChoices: {},
     overriddenFulfillmentChoices: {},
     userRequirementsMap: {},
@@ -100,6 +86,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     dangerousRequirementFulfillmentGraph: null!,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     safeRequirementFulfillmentGraph: null!,
+    courseToRequirementsInConstraintViolations: new Map(),
     doubleCountedCourseUniqueIDSet: new Set(),
     groupedRequirementFulfillmentReport: [],
     subjectColors: {},
@@ -126,12 +113,6 @@ const store: TypedVuexStore = new TypedVuexStore({
     setDerivedCourseData(state: VuexStoreState, data: DerivedCoursesData) {
       state.derivedCoursesData = data;
     },
-    setDerivedAPIBEquivalentCourseData(
-      state: VuexStoreState,
-      data: DerivedAPIBEquivalentCourseData
-    ) {
-      state.derivedAPIBEquivalentCourseData = data;
-    },
     setToggleableRequirementChoices(
       state: VuexStoreState,
       toggleableRequirementChoices: AppToggleableRequirementChoices
@@ -151,6 +132,7 @@ const store: TypedVuexStore = new TypedVuexStore({
         | 'userRequirementsMap'
         | 'dangerousRequirementFulfillmentGraph'
         | 'safeRequirementFulfillmentGraph'
+        | 'courseToRequirementsInConstraintViolations'
         | 'doubleCountedCourseUniqueIDSet'
         | 'groupedRequirementFulfillmentReport'
       >
@@ -158,6 +140,8 @@ const store: TypedVuexStore = new TypedVuexStore({
       state.userRequirementsMap = data.userRequirementsMap;
       state.dangerousRequirementFulfillmentGraph = data.dangerousRequirementFulfillmentGraph;
       state.safeRequirementFulfillmentGraph = data.safeRequirementFulfillmentGraph;
+      state.courseToRequirementsInConstraintViolations =
+        data.courseToRequirementsInConstraintViolations;
       state.doubleCountedCourseUniqueIDSet = data.doubleCountedCourseUniqueIDSet;
       state.groupedRequirementFulfillmentReport = data.groupedRequirementFulfillmentReport;
     },
@@ -206,27 +190,6 @@ const autoRecomputeDerivedData = (): (() => void) =>
         courseToSemesterMap,
       };
       store.commit('setDerivedCourseData', derivedCourseData);
-    }
-    if (payload.type === 'setOnboardingData') {
-      const examToUniqueIdsMap: Record<string, Set<string | number>> = {};
-      const uniqueIdToExamMap: Record<string | number, string> = {};
-      const equivalentCourses = getCourseEquivalentsFromUserExams(state.onboardingData);
-      state.onboardingData.exam.forEach(({ type, subject }) => {
-        const examName = `${type} ${subject}`;
-        examToUniqueIdsMap[examName] = new Set();
-      });
-      equivalentCourses.forEach(({ uniqueId, code }) => {
-        uniqueIdToExamMap[uniqueId] = code;
-        examToUniqueIdsMap[code].add(uniqueId);
-      });
-      const derivedAPIBEquivalentCourseData: DerivedAPIBEquivalentCourseData = {
-        examToUniqueIdsMap,
-        uniqueIdToExamMap,
-      };
-      store.commit('setDerivedAPIBEquivalentCourseData', derivedAPIBEquivalentCourseData);
-      // Recompute overriddenFulfillmentChoices, which is dependent
-      // on onboardingData and derivedAPIBEquivalentCourseData
-      store.commit('setOverriddenFulfillmentChoices', state.overriddenFulfillmentChoices);
     }
     // Recompute requirements
     if (

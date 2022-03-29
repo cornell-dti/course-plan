@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="
-        editMode ? requirementsThatAllowDoubleCounting.length > 0 : chosenRequirementText.length > 0
+        editMode ? automaticallyFulfilledRequirements.length > 0 : chosenRequirementText.length > 0
       "
     >
       <div class="newCourse-title">
@@ -10,7 +10,7 @@
       </div>
       <div class="newCourse-requirements-container">
         <div class="newCourse-requirements" data-cyId="newCourse-requirements">
-          {{ editMode ? requirementsThatAllowDoubleCounting.join(', ') : chosenRequirementText }}
+          {{ editMode ? automaticallyFulfilledRequirements.join(', ') : chosenRequirementText }}
         </div>
       </div>
     </div>
@@ -82,7 +82,7 @@ export default defineComponent({
   props: {
     editMode: { type: Boolean, required: true },
     selectedRequirementID: { type: String, required: true },
-    requirementsThatAllowDoubleCounting: {
+    automaticallyFulfilledRequirements: {
       type: Array as PropType<readonly string[]>,
       required: true,
     },
@@ -104,12 +104,12 @@ export default defineComponent({
   computed: {
     chosenRequirementText(): string {
       if (this.selectedRequirementID === '') {
-        return this.requirementsThatAllowDoubleCounting.join(', ');
+        return this.automaticallyFulfilledRequirements.join(', ');
       }
       const chosenRequirementNames = [...this.relatedRequirements, ...this.potentialRequirements]
         .filter(it => it.id === this.selectedRequirementID)
         .map(it => it.name);
-      return [...this.requirementsThatAllowDoubleCounting, ...chosenRequirementNames].join(', ');
+      return [...this.automaticallyFulfilledRequirements, ...chosenRequirementNames].join(', ');
     },
     // nonAutoRequirements = relatedRequirements + potentialRequirements
     // All the requirements that are not automatically associated with the course

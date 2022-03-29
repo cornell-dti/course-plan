@@ -79,8 +79,22 @@ type RequirementFulfillmentInformation<T = Record<string, unknown>> =
     } & T)
   | ToggleableRequirementFulfillmentInformation<T>;
 
+/** Requirements may have conditions associated with certain course ids, eg. for AP/IB exams. */
+type RequirementCourseConditions = Record<
+  number,
+  {
+    /** If the user IS NOT in one of these colleges, the course id cannot fulfill the requirement. */
+    readonly colleges: string[];
+    /** If the user IS in one of these majors, the course id cannot fulfill the requirement. */
+    readonly majorsExcluded?: string[];
+  }
+>;
+
 type DecoratedCollegeOrMajorRequirement = RequirementCommon &
-  RequirementFulfillmentInformation<{ readonly courses: readonly (readonly number[])[] }>;
+  RequirementFulfillmentInformation<{
+    readonly courses: readonly (readonly number[])[];
+    readonly conditions?: Readonly<RequirementCourseConditions>;
+  }>;
 
 /**
  * CourseTaken is the data type used in requirement computation.
@@ -90,7 +104,7 @@ type DecoratedCollegeOrMajorRequirement = RequirementCommon &
 type CourseTaken = {
   /** The course ID from course roster, or our dummy id to denote special courses like FWS equiv. */
   readonly courseId: number;
-  /** Using the unique ID of firestore course for real course, -1 for swim test, and string for AP/IB. */
+  /** Using the unique ID of firestore course for real course, string for swim test and AP/IB. */
   readonly uniqueId: string | number;
   /**
    * Course code like 'CS 2112', 'AP CS'.

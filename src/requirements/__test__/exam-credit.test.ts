@@ -1,9 +1,8 @@
-import {
+import userDataToExamCourses, {
   ExamsTaken,
   examsTakenToExamCourses,
-  userDataToExamCourses,
 } from '../requirement-exam-utils';
-import { NO_EQUIVALENT_COURSES_COURSE_ID } from '../data/constants';
+import { NO_FULFILLMENTS_COURSE_ID } from '../data/constants';
 
 /**
  * Tests for examsTakenToExamCourses
@@ -39,7 +38,7 @@ it('Exam score is too low', () => {
     code: 'AP Computer Science A',
     uniqueId: 'AP Computer Science A',
     credits: 0,
-    courseId: NO_EQUIVALENT_COURSES_COURSE_ID,
+    courseId: NO_FULFILLMENTS_COURSE_ID,
   };
   expect(examCourses[0]).toEqual(expected);
 });
@@ -69,7 +68,9 @@ it('Two exams are converted to the correct courses', () => {
 it('Exam is converted to correct course', () => {
   const userData: AppOnboardingData = {
     gradYear: '2020',
+    gradSem: 'Spring',
     entranceYear: '2016',
+    entranceSem: 'Fall',
     college: 'EN',
     major: [],
     exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],

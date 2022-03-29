@@ -40,6 +40,7 @@
             v-if="currentPage == 1"
             :userName="name"
             :onboardingData="onboarding"
+            :isEditingProfile="isEditingProfile"
             @updateBasic="updateBasic"
           />
           <onboarding-transfer
@@ -108,8 +109,8 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { setOnboardingData, populateSemesters } from '@/global-firestore-data';
-import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
+import { setAppOnboardingData, populateSemesters } from '@/global-firestore-data';
+import { getMajorFullName, getMinorFullName, getGradFullName, SeasonOrdinal } from '@/utilities';
 import timeline1Text from '@/assets/images/timeline1text.svg';
 import timeline2Text from '@/assets/images/timeline2text.svg';
 import timeline3Text from '@/assets/images/timeline3text.svg';
@@ -144,7 +145,9 @@ export default defineComponent({
         this.name.firstName === '' ||
         this.name.lastName === '' ||
         this.onboarding.gradYear === '' ||
+        !this.onboarding.gradSem ||
         this.onboarding.entranceYear === '' ||
+        !this.onboarding.entranceSem ||
         (this.onboarding.college === '' && this.onboarding.grad === '')
       );
     },
@@ -185,11 +188,11 @@ export default defineComponent({
       if (this.name.lastName === '') {
         messages.push('a last name');
       }
-      if (this.onboarding.gradYear === '') {
-        messages.push('a graduation year');
+      if (this.onboarding.entranceYear === '' || !this.onboarding.entranceSem) {
+        messages.push('an entrance semester');
       }
-      if (this.onboarding.entranceYear === '') {
-        messages.push('an entrance year');
+      if (this.onboarding.gradYear === '' || !this.onboarding.gradSem) {
+        messages.push('a graduation semester');
       }
 
       // generate the string depending on how many error messages are selected
@@ -210,10 +213,11 @@ export default defineComponent({
   },
   methods: {
     submitOnboarding() {
+      const revised = this.setASCollegeReqs();
       this.clearTransferCreditIfGraduate();
-      setOnboardingData(this.name, this.onboarding);
+      setAppOnboardingData(this.name, revised);
       // indicates first time user onboarding
-      if (!this.isEditingProfile) populateSemesters(this.onboarding);
+      if (!this.isEditingProfile) populateSemesters(revised);
       this.$emit('onboard');
     },
     goBack() {
@@ -243,7 +247,9 @@ export default defineComponent({
     },
     updateBasic(
       gradYear: string,
+      gradSem: FirestoreSemesterSeason,
       entranceYear: string,
+      entranceSem: FirestoreSemesterSeason,
       college: string,
       major: readonly string[],
       minor: readonly string[],
@@ -254,7 +260,9 @@ export default defineComponent({
       this.onboarding = {
         ...this.onboarding,
         gradYear,
+        gradSem,
         entranceYear,
+        entranceSem,
         college,
         major,
         minor,
@@ -289,6 +297,24 @@ export default defineComponent({
       ) {
         this.cancel();
       }
+    },
+    // determine which AS reqs to set depending on user's starting semester
+    // AS1 for students entering before Fall 2020, AS2 for students after
+    setASCollegeReqs() {
+      const revised = { ...this.onboarding };
+      if (revised.college === 'AS') {
+        const year = Number.parseInt(revised.entranceYear, 10);
+        const season: FirestoreSemesterSeason =
+          revised.entranceSem === '' ? 'Fall' : revised.entranceSem; // default to fall if not provided
+        if (year < 2020) {
+          revised.college = 'AS1';
+        } else if (year === 2020 && SeasonOrdinal[season] < SeasonOrdinal.Fall) {
+          revised.college = 'AS1';
+        } else {
+          revised.college = 'AS2';
+        }
+      }
+      return revised;
     },
   },
 });

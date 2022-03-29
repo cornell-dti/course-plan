@@ -44,9 +44,18 @@ export function getCurrentYear(): number {
   return new Date().getFullYear();
 }
 
+// the number of year options to include in dropdowns before and after the current year
+// ex. if the current year is 2022, and yearRange is 6, then we want to display years from 2016-2028
+export const yearRange = 6;
+
 export function getCollegeFullName(acronym: string | undefined): string {
-  // Return empty string if college is not in requirementJSON
+  // return Arts and Sciences for AS, AS1, or AS2
+  if (acronym && acronym.startsWith('AS')) {
+    return 'Arts and Sciences';
+  }
   const college = acronym ? requirementJSON.college[acronym] : null;
+
+  // Return empty string if college is not in requirementJSON
   return college ? college.name : '';
 }
 
