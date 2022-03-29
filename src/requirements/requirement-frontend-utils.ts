@@ -1,7 +1,7 @@
-import { SPECIAL_COURSES } from './data/constants';
 import requirementJson from './typed-requirement-json';
 import specialized from './specialize';
 import { examCourseIds } from './requirement-exam-mapping';
+import { getConstraintViolationsForSingleCourse } from './requirement-constraints-utils';
 
 /**
  * A collection of helper functions
@@ -13,10 +13,7 @@ import { examCourseIds } from './requirement-exam-mapping';
  * @returns true if the course is AP/IB equivalent course or credit
  */
 export const courseIsAPIB = (course: CourseTaken): boolean =>
-  // TODO @bshen simplify logic, deprecate special courses
-  Object.values(SPECIAL_COURSES).includes(course.courseId) ||
-  ['AP', 'IB'].includes(course.code.split(' ')[0]) ||
-  examCourseIds.has(course.courseId);
+  ['AP', 'IB'].includes(course.code.split(' ')[0]) || examCourseIds.has(course.courseId);
 
 /**
  * The function converts a FireStoreSemesterCourse, the course structure stored in Firebase
@@ -35,7 +32,7 @@ export function convertFirestoreSemesterCourseToCourseTaken({
  * This returns a function that filters out courses that cannot fulfill a requirement with requirementId
  * based on whether it is an eligible course or not. Used to filter out data for the self-check add modal.
  */
-export const getFilter = (
+export const getFilterForRequirementFulfillment = (
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   requirementId: string
@@ -76,18 +73,48 @@ export function canFulfillChecker(
   return eligibleCourseIds.has(crseId);
 }
 
-export function requirementAllowDoubleCounting(
-  requirement: RequirementWithIDSourceType,
-  majors: readonly string[]
+/**
+ * Course double counting is a constraint relation between two requirements.
+ * Instead of asking "does a requirement allow double counting with all other requirements?",
+ * we frame it as "does requirementA and requirementB allow double counting with each other?"
+ *
+ * If true, a course can fulfill requirement A and requirement B without a constraint violation.
+ * If false, edges from course c to requirementA and requirementB cause a constraint violation (c,(rA,rB)).
+ */
+export function allowCourseDoubleCountingBetweenRequirements(
+  requirementA: RequirementWithIDSourceType,
+  requirementB: RequirementWithIDSourceType
 ): boolean {
-  // All minor requirements are automatically double-countable.
-  if (requirement.sourceType === 'Minor') return true;
-  if (requirement.sourceType === 'Major') {
-    if (majors == null) throw new Error("shouldn't get here since we have major requirements!");
-    // If it's not the first major, then it's double countable.
-    if (requirement.sourceSpecificName !== majors[0]) return true;
+  const allowCourseDoubleCounting =
+    requirementA.allowCourseDoubleCounting || requirementB.allowCourseDoubleCounting || false;
+
+  // requirement source type is the same
+  if (requirementA.sourceType === requirementB.sourceType) {
+    return (
+      // at least one requirement has the allowCourseDoubleCounting flag
+      allowCourseDoubleCounting ||
+      // or the source specific name is different
+      requirementA.sourceSpecificName !== requirementB.sourceSpecificName
+    );
   }
-  return requirement.allowCourseDoubleCounting || false;
+  // requirement source type is not the same
+  // one source type is minor and one source type is college or major
+  if (
+    (requirementA.sourceType === 'Minor' && requirementB.sourceType !== 'Grad') ||
+    (requirementA.sourceType !== 'Grad' && requirementB.sourceType === 'Minor')
+  ) {
+    return true;
+  }
+  // one source type is college and one source type is major
+  if (
+    (requirementA.sourceType === 'College' && requirementB.sourceType === 'Major') ||
+    (requirementA.sourceType === 'Major' && requirementB.sourceType === 'College')
+  ) {
+    return allowCourseDoubleCounting;
+  }
+
+  // one source type is college or major or minor and one source type is grad
+  return false;
 }
 
 /**
@@ -187,11 +214,7 @@ export function getUserRequirements({
       )
     : [];
   // flatten all requirements into single array
-  const allReqs = [uniReqs, collegeReqs, majorReqs, minorReqs, gradReqs].flat();
-  return allReqs.map(requirement => ({
-    ...requirement,
-    allowCourseDoubleCounting: requirementAllowDoubleCounting(requirement, majors) || undefined,
-  }));
+  return [uniReqs, collegeReqs, majorReqs, minorReqs, gradReqs].flat();
 }
 
 /**
@@ -224,7 +247,7 @@ type MatchedRequirementFulfillmentSpecification =
 
 /**
  * The function respects the user choice on toggleable requirement, and provides the already decided
- * fulfillment strategy to follow.
+ * fulfillment strategy to follow. It also filters eligible courses based on the user's college/major.
  *
  * @returns a spec telling how the requirement progress should be computed, or null if the requirement
  * is self-check.
@@ -233,6 +256,26 @@ export function getMatchedRequirementFulfillmentSpecification(
   requirement: RequirementWithIDSourceType,
   toggleableRequirementChoices: AppToggleableRequirementChoices
 ): MatchedRequirementFulfillmentSpecification {
+  const { sourceType, sourceSpecificName } = requirement;
+  const filterEligibleCoursesByRequirementConditions = (
+    coursesList: readonly (readonly number[])[],
+    conditions: RequirementCourseConditions | undefined
+  ) =>
+    coursesList.map(courses =>
+      courses.filter(courseId => {
+        // allow course if there are no requirement conditions
+        if (!(conditions && courseId in conditions)) return true;
+        // otherwise, inspect conditions to see if we should disallow course
+        const { colleges, majorsExcluded } = conditions[courseId];
+        // requirement is not in colleges list
+        if (sourceType === 'College' && !colleges.includes(sourceSpecificName)) return false;
+        // requirement is in majorsExcluded list
+        if (majorsExcluded && sourceType === 'Major' && majorsExcluded.includes(sourceSpecificName))
+          return false;
+        // course passes all conditions
+        return true;
+      })
+    );
   /**
    * Given a map of additional requirements, keep the requirement name key, but extract out the
    * requirement spec for each additional requirement.
@@ -241,6 +284,7 @@ export function getMatchedRequirementFulfillmentSpecification(
   const convertAdditionalRequirements = (additionalRequirements?: {
     readonly [name: string]: RequirementFulfillmentInformationCourseOrCreditBase<{
       readonly courses: readonly (readonly number[])[];
+      readonly conditions?: Readonly<RequirementCourseConditions>;
     }>;
   }): { readonly [name: string]: MatchedRequirementFulfillmentSpecificationBase } | undefined =>
     additionalRequirements == null
@@ -254,7 +298,10 @@ export function getMatchedRequirementFulfillmentSpecification(
               {
                 fulfilledBy: subRequirement.fulfilledBy,
                 hasRequirementCheckerWarning: false,
-                eligibleCourses: subRequirement.courses,
+                eligibleCourses: filterEligibleCoursesByRequirementConditions(
+                  subRequirement.courses,
+                  subRequirement.conditions
+                ),
                 perSlotMinCount: subRequirement.perSlotMinCount,
                 slotNames,
                 minNumberOfSlots: subRequirement.minNumberOfSlots,
@@ -271,7 +318,10 @@ export function getMatchedRequirementFulfillmentSpecification(
       return {
         fulfilledBy: requirement.fulfilledBy,
         hasRequirementCheckerWarning,
-        eligibleCourses: requirement.courses,
+        eligibleCourses: filterEligibleCoursesByRequirementConditions(
+          requirement.courses,
+          requirement.conditions
+        ),
         additionalRequirements: convertAdditionalRequirements(requirement.additionalRequirements),
         perSlotMinCount: requirement.perSlotMinCount,
         slotNames: requirement.slotNames,
@@ -281,7 +331,10 @@ export function getMatchedRequirementFulfillmentSpecification(
       return {
         fulfilledBy: requirement.fulfilledBy,
         hasRequirementCheckerWarning,
-        eligibleCourses: requirement.courses,
+        eligibleCourses: filterEligibleCoursesByRequirementConditions(
+          requirement.courses,
+          requirement.conditions
+        ),
         additionalRequirements: convertAdditionalRequirements(requirement.additionalRequirements),
         perSlotMinCount: requirement.perSlotMinCount,
         slotNames: [],
@@ -296,7 +349,10 @@ export function getMatchedRequirementFulfillmentSpecification(
       return {
         fulfilledBy: option.counting,
         hasRequirementCheckerWarning,
-        eligibleCourses: option.courses,
+        eligibleCourses: filterEligibleCoursesByRequirementConditions(
+          option.courses,
+          option.conditions
+        ),
         perSlotMinCount: option.perSlotMinCount,
         slotNames: option.counting === 'courses' ? option.slotNames : [],
         minNumberOfSlots: option.minNumberOfSlots,
@@ -311,7 +367,6 @@ const computeFulfillmentStatistics = (
   requirementName: string,
   coursesTaken: readonly CourseTaken[],
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
-  disallowTransferCredit: boolean,
   {
     fulfilledBy,
     hasRequirementCheckerWarning,
@@ -339,33 +394,27 @@ const computeFulfillmentStatistics = (
     }
     const arbitraryOptInSlotNames = new Set(overrideOptions.arbitraryOptIn[requirementName] || []);
 
-    // block AP/IB equivalent courses if disallowTransferCredit
-    if (
-      !(disallowTransferCredit && courseIsAPIB(courseTaken)) ||
-      arbitraryOptInSlotNames.size > 0
+    for (
+      let subRequirementIndex = 0;
+      subRequirementIndex < eligibleCourses.length;
+      subRequirementIndex += 1
     ) {
-      for (
-        let subRequirementIndex = 0;
-        subRequirementIndex < eligibleCourses.length;
-        subRequirementIndex += 1
+      const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
+      if (arbitraryOptInSlotNames.has(slotName)) {
+        // the user wants to use this course to override this sub-requirement
+        coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+        subRequirementProgress[subRequirementIndex] +=
+          fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+        // don't break, in case the user wants to override more sub-requirements with the same course
+      } else if (
+        eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
+        subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
       ) {
-        const slotName = fulfilledBy === 'courses' ? slotNames[subRequirementIndex] : 'Course';
-        if (arbitraryOptInSlotNames.has(slotName)) {
-          // the user wants to use this course to override this sub-requirement
-          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
-          subRequirementProgress[subRequirementIndex] +=
-            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-          // don't break, in case the user wants to override more sub-requirements with the same course
-        } else if (
-          eligibleCourses[subRequirementIndex].includes(courseTaken.courseId) &&
-          subRequirementProgress[subRequirementIndex] < perSlotMinCount[subRequirementIndex]
-        ) {
-          // this course is eligible to fulfill this sub-requirement, and the user did not opt out
-          coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
-          subRequirementProgress[subRequirementIndex] +=
-            fulfilledBy === 'courses' ? 1 : courseTaken.credits;
-          break;
-        }
+        // this course is eligible to fulfill this sub-requirement, and the user did not opt out
+        coursesThatFulfilledSubRequirements[subRequirementIndex].push(courseTaken);
+        subRequirementProgress[subRequirementIndex] +=
+          fulfilledBy === 'courses' ? 1 : courseTaken.credits;
+        break;
       }
     }
   });
@@ -413,12 +462,10 @@ export function computeFulfillmentCoursesAndStatistics(
     // Give self-check 1 required course and 0 fulfilled to prevent it from being fulfilled.
     return { fulfilledBy: 'self-check', minCountFulfilled: 0, minCountRequired: 1, courses: [] };
   }
-  const disallowTransferCredit = requirement.disallowTransferCredit || false;
   const base = computeFulfillmentStatistics(
     requirement.id,
     coursesTaken,
     overriddenFulfillmentChoices,
-    disallowTransferCredit,
     spec
   );
   if (spec.additionalRequirements == null) return base;
@@ -427,24 +474,25 @@ export function computeFulfillmentCoursesAndStatistics(
     additionalRequirements: Object.fromEntries(
       Object.entries(spec.additionalRequirements).map(([name, subSpec]) => [
         name,
-        computeFulfillmentStatistics(
-          name,
-          coursesTaken,
-          overriddenFulfillmentChoices,
-          disallowTransferCredit,
-          subSpec
-        ),
+        computeFulfillmentStatistics(name, coursesTaken, overriddenFulfillmentChoices, subSpec),
       ])
     ),
   };
 }
 
-export function getAllEligibleRelatedRequirementIds(
+/**
+ * Find related requirement ids to opt out of. This maintains the invariant that
+ * there are no constraint violations when adding a course to the semester.
+ * It should be deprecated after the new add modal is implemented.
+ */
+export function getRelatedRequirementIdsForCourseOptOut(
   courseId: number,
+  associatedRequirementId: string,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): readonly string[] {
-  return groupedRequirements
+  const requirements = groupedRequirements
     .flatMap(it => it.reqs)
     .flatMap(({ requirement }) => {
       const spec = getMatchedRequirementFulfillmentSpecification(
@@ -453,11 +501,29 @@ export function getAllEligibleRelatedRequirementIds(
       );
       if (spec == null) return [];
       const allEligibleCourses = spec.eligibleCourses.flat();
-      if (allEligibleCourses.includes(courseId) && requirement.checkerWarning == null) {
+      if (
+        requirement.id === associatedRequirementId ||
+        (allEligibleCourses.includes(courseId) && requirement.checkerWarning == null)
+      ) {
         return [requirement.id];
       }
       return [];
     });
+  // only return the requirements that are in a constraint violation
+  const uniqueId = -1; // dummy unique id
+  const { requirementsThatDoNotAllowDoubleCounting } = getConstraintViolationsForSingleCourse(
+    { uniqueId },
+    requirements,
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
+  );
+  // order does not need to be preserved
+  return Array.from(requirementsThatDoNotAllowDoubleCounting).filter(
+    it => it !== associatedRequirementId
+  );
 }
 
 // display the entire number of fulfillents, including those that are dangerous
@@ -477,14 +543,17 @@ export function getRelatedUnfulfilledRequirements(
     enrollGroups: [{ unitsMaximum: credits }],
   }: CornellCourseRosterCourse,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
+  onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
 ): {
-  readonly directlyRelatedRequirements: readonly RequirementWithIDSourceType[];
+  readonly relatedRequirements: readonly RequirementWithIDSourceType[];
   readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
+  readonly automaticallyFulfilledRequirements: readonly RequirementWithIDSourceType[];
 } {
   const code = `${subject} ${catalogNbr}`;
-  const directlyRelatedRequirements: RequirementWithIDSourceType[] = [];
+  const relatedRequirements: RequirementWithIDSourceType[] = [];
   const selfCheckRequirements: RequirementWithIDSourceType[] = [];
   for (let i = 0; i < groupedRequirements.length; i += 1) {
     const subreqs = groupedRequirements[i].reqs.filter(
@@ -504,9 +573,6 @@ export function getRelatedUnfulfilledRequirements(
         toggleableRequirementChoices
       );
       // potential self-check requirements
-      if (requirementSpec == null && !subRequirement.allowCourseDoubleCounting) {
-        selfCheckRequirements.push(subRequirement);
-      }
       if (requirementSpec != null) {
         const allEligibleCourses = requirementSpec.eligibleCourses.flat();
         if (allEligibleCourses.includes(courseId)) {
@@ -527,60 +593,30 @@ export function getRelatedUnfulfilledRequirements(
           );
           if (fulfillmentStatisticsWithNewCourse.minCountFulfilled > existingMinCountFulfilled) {
             if (subRequirement.checkerWarning == null) {
-              directlyRelatedRequirements.push(subRequirement);
+              relatedRequirements.push(subRequirement);
             } else {
               selfCheckRequirements.push(subRequirement);
             }
           }
         }
+      } else {
+        selfCheckRequirements.push(subRequirement);
       }
     }
   }
-  return { directlyRelatedRequirements, selfCheckRequirements };
-}
+  const allRequirements = [...relatedRequirements, ...selfCheckRequirements];
+  const { requirementsThatDoNotAllowDoubleCounting } = getConstraintViolationsForSingleCourse(
+    { uniqueId: -1 },
+    allRequirements.map(({ id }) => id),
+    (reqA, reqB) =>
+      allowCourseDoubleCountingBetweenRequirements(
+        userRequirementsMap[reqA],
+        userRequirementsMap[reqB]
+      )
+  );
+  const automaticallyFulfilledRequirements = relatedRequirements.filter(
+    ({ id }) => !requirementsThatDoNotAllowDoubleCounting.has(id)
+  );
 
-export function getAllEligibleRequirements(
-  courseId: number,
-  groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices
-): {
-  readonly requirementsThatAllowDoubleCounting: readonly RequirementWithIDSourceType[];
-  readonly relatedRequirements: readonly RequirementWithIDSourceType[];
-  readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
-} {
-  const requirementsThatAllowDoubleCounting: RequirementWithIDSourceType[] = [];
-  const relatedRequirements: RequirementWithIDSourceType[] = [];
-  const selfCheckRequirements: RequirementWithIDSourceType[] = [];
-  for (let i = 0; i < groupedRequirements.length; i += 1) {
-    const requirements = groupedRequirements[i].reqs;
-    for (let j = 0; j < requirements.length; j += 1) {
-      const { requirement } = requirements[j];
-      const requirementSpec = getMatchedRequirementFulfillmentSpecification(
-        requirement,
-        toggleableRequirementChoices
-      );
-      // potential self-check requirements
-      if (requirementSpec == null && !requirement.allowCourseDoubleCounting) {
-        selfCheckRequirements.push(requirement);
-      }
-      if (requirementSpec != null) {
-        const allEligibleCourses = requirementSpec.eligibleCourses.flat();
-        if (allEligibleCourses.includes(courseId)) {
-          if (requirement.allowCourseDoubleCounting) {
-            requirementsThatAllowDoubleCounting.push(requirement);
-          } else if (requirement.checkerWarning == null) {
-            relatedRequirements.push(requirement);
-          } else {
-            selfCheckRequirements.push(requirement);
-          }
-        }
-      }
-    }
-  }
-
-  return {
-    requirementsThatAllowDoubleCounting,
-    relatedRequirements,
-    selfCheckRequirements,
-  };
+  return { relatedRequirements, selfCheckRequirements, automaticallyFulfilledRequirements };
 }

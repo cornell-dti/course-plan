@@ -6,7 +6,7 @@ const mockRequirementCommon = {
   id: 'MOCK_ID',
   source: '',
   sourceType: 'College',
-  sourceSpecificName: 'Engineering',
+  sourceSpecificName: 'EN',
 } as const;
 
 const getMockCourseTaken = (courseId: number, credits = 0): CourseTaken => ({
@@ -52,6 +52,7 @@ it('computeFulfillmentCoursesAndStatistics credit test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1234, 4), getMockCourseTaken(5678, 4)],
+
       {},
       {}
     )
@@ -67,6 +68,7 @@ it('computeFulfillmentCoursesAndStatistics credit test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1234, 4), getMockCourseTaken(5678, 4), getMockCourseTaken(9101112, 4)],
+
       {},
       {}
     )
@@ -99,6 +101,7 @@ it('computeFulfillmentCoursesAndStatistics course (without minNumberOfSlots) tes
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1), getMockCourseTaken(2), getMockCourseTaken(3), getMockCourseTaken(4)],
+
       {},
       {}
     )
@@ -118,6 +121,7 @@ it('computeFulfillmentCoursesAndStatistics course (without minNumberOfSlots) tes
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1), getMockCourseTaken(2), getMockCourseTaken(4), getMockCourseTaken(3)],
+
       {},
       {}
     )
@@ -182,6 +186,7 @@ it('computeFulfillmentCoursesAndStatistics course (with additional requirements)
         getMockCourseTaken(3, 3),
         getMockCourseTaken(4, 4),
       ],
+
       {},
       {}
     )
@@ -238,6 +243,7 @@ it('computeFulfillmentCoursesAndStatistics course (with minNumberOfSlots) test',
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1), getMockCourseTaken(2), getMockCourseTaken(3)],
+
       {},
       {}
     )
@@ -275,7 +281,13 @@ it('computeFulfillmentCoursesAndStatistics toggleable requirement test', () => {
   // The first one has no choice so it defaults to the first option.
   // The second one chooses option A, and the third one chooses option B.
   expect(
-    computeFulfillmentCoursesAndStatistics(mockRequirement, [getMockCourseTaken(1)], {}, {})
+    computeFulfillmentCoursesAndStatistics(
+      mockRequirement,
+      [getMockCourseTaken(1)],
+
+      {},
+      {}
+    )
   ).toEqual<StatisticsResultType>({
     courses: [[getMockCourseTaken(1)]],
     fulfilledBy: 'courses',
@@ -286,6 +298,7 @@ it('computeFulfillmentCoursesAndStatistics toggleable requirement test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1)],
+
       {
         MOCK_ID: 'A',
       },
@@ -301,6 +314,7 @@ it('computeFulfillmentCoursesAndStatistics toggleable requirement test', () => {
     computeFulfillmentCoursesAndStatistics(
       mockRequirement,
       [getMockCourseTaken(1)],
+
       {
         MOCK_ID: 'B',
       },

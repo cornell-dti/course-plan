@@ -118,6 +118,7 @@ export default defineComponent({
       required: true,
     },
     semesterIndex: { type: Number, required: false, default: 0 },
+    isCompactView: { type: Boolean, required: true },
   },
   computed: {
     courseCautions(): CourseCautions {
@@ -155,9 +156,9 @@ export default defineComponent({
 
       return '';
     },
-    // hide vertical bar next to warning if icon is in a placeholder or requirements bar
+    // hide vertical bar next to warning if icon is in a placeholder, compact view, or requirements bar
     shouldHideVerticalBar(): boolean {
-      return isPlaceholderCourse(this.course) || isCourseTaken(this.course);
+      return isPlaceholderCourse(this.course) || isCourseTaken(this.course) || this.isCompactView;
     },
   },
   methods: {

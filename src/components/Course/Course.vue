@@ -26,7 +26,14 @@
     <div class="course-content" @click="courseOnClick()">
       <div class="course-main">
         <div class="course-top">
-          <div class="course-code" data-cyId="courseCode">{{ courseObj.code }}</div>
+          <div class="course-left">
+            <div class="course-code" data-cyId="courseCode">{{ courseObj.code }}</div>
+            <course-caution
+              v-if="!isReqCourse && compact"
+              :course="courseObj"
+              :isCompactView="true"
+            />
+          </div>
           <button v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
           </button>
@@ -35,7 +42,7 @@
         <div v-if="!compact" class="course-info">
           <span class="course-credits">{{ creditString }}</span>
           <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
-          <course-caution v-if="!isReqCourse" :course="courseObj" />
+          <course-caution v-if="!isReqCourse" :course="courseObj" :isCompactView="false" />
         </div>
       </div>
     </div>
@@ -221,6 +228,7 @@ export default defineComponent({
     padding: 8px 0;
     display: flex;
     position: relative;
+
     &:hover,
     &:active,
     &:focus {
@@ -232,7 +240,12 @@ export default defineComponent({
     width: calc(100% - #{$colored-grabber-width});
     padding: 0 1rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  &-left {
+    display: flex;
     align-items: center;
   }
 
@@ -244,7 +257,6 @@ export default defineComponent({
   }
 
   &-code {
-    flex: 1 1 auto;
     font-size: 14px;
     line-height: 17px;
     color: $primaryGray;

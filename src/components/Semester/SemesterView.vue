@@ -1,6 +1,7 @@
 <template>
   <main
     class="semesterView"
+    data-cyId="semesterView"
     :class="{
       bottomBar: isBottomBar && isBottomBarExpanded,
       expandedBottomBarSemesterView: isBottomBarExpanded,

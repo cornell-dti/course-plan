@@ -13,6 +13,7 @@
       <div class="dashboard-menus">
         <nav-bar
           class="dashboard-nav"
+          data-cyId="navbar"
           :isDisplayingRequirementsMobile="requirementsIsDisplayedMobile"
           @openPlan="openPlan"
           @openTools="openTools"
@@ -21,6 +22,7 @@
         />
         <requirement-side-bar
           class="dashboard-reqs"
+          data-cyId="reqsSidebar"
           v-if="loaded && !showToolsPage"
           :isMobile="isTablet"
           :isDisplayingMobile="requirementsIsDisplayedMobile"
