@@ -13,7 +13,7 @@ import {
   sortedSemesters,
   isPlaceholderCourse,
 } from './utilities';
-import featureFlagCheckers from '@/feature-flags';
+import featureFlagCheckers from './feature-flags';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
