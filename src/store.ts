@@ -13,6 +13,7 @@ import {
   sortedSemesters,
   isPlaceholderCourse,
 } from './utilities';
+import featureFlagCheckers from '@/feature-flags';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
@@ -355,6 +356,7 @@ export const updateSubjectColorData = (color: string, code: string): void => {
 };
 
 export const isCourseConflict = (uniqueId: string | number): boolean =>
+  featureFlagCheckers.isRequirementConflictsEnabled() &&
   store.state.doubleCountedCourseUniqueIDSet.has(uniqueId);
 
 fb.auth.onAuthStateChanged(user => {
