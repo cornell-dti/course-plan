@@ -178,7 +178,13 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import { clickOutside, getCurrentYear, getCollegeFullName, computeGradYears, computeEntranceYears } from '@/utilities';
+import {
+  clickOutside,
+  getCurrentYear,
+  getCollegeFullName,
+  computeGradYears,
+  computeEntranceYears,
+} from '@/utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
