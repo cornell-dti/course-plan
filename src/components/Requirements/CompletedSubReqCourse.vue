@@ -15,7 +15,9 @@
           /></span>
           {{ slotName }}
         </div>
-        <button class="reqCourse-button" @click="onDeleteModalOpen">Delete ></button>
+        <button class="reqCourse-button" @click="onDeleteModalOpen"> 
+          <img src="/assets/gear.svg" alt="open menu for course card" data-v-2cebd5c6="" draggable="false">
+        </button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
