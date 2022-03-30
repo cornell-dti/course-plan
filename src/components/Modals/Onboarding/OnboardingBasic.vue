@@ -178,7 +178,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import { clickOutside, getCurrentYear, computeGradYears, computeEntranceYears } from '@/utilities';
+import { clickOutside, getCurrentYear, getCollegeFullName, computeGradYears, computeEntranceYears } from '@/utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -193,7 +193,10 @@ export default defineComponent({
   components: { OnboardingBasicMultiDropdown, OnboardingBasicSingleDropdown },
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
     isEditingProfile: { type: Boolean, required: true },
   },
   emits: {
@@ -227,6 +230,12 @@ export default defineComponent({
     if (majorAcronyms.length === 0) majorAcronyms.push('');
     if (minorAcronyms.length === 0) minorAcronyms.push('');
 
+    // convert AS1/AS2 acronym in firebase to AS for the frontend
+    let collegeAcronym = this.onboardingData.college ?? '';
+    if (collegeAcronym === 'AS1' || collegeAcronym === 'AS2') {
+      collegeAcronym = 'AS';
+    }
+
     // if sem has not been previously filled out, choice is automatically is "Fall"/"Spring" for new users, old users have no data
     let { gradSem } = this.onboardingData;
     let { entranceSem } = this.onboardingData;
@@ -244,7 +253,7 @@ export default defineComponent({
       gradSem,
       entranceYear: this.onboardingData.entranceYear,
       entranceSem,
-      collegeAcronym: this.onboardingData.college ? this.onboardingData.college : '',
+      collegeAcronym,
       majorAcronyms,
       minorAcronyms,
       gradAcronym: this.onboardingData.grad ? this.onboardingData.grad : '',
@@ -259,16 +268,20 @@ export default defineComponent({
       return computeGradYears(this.entranceYear);
     },
     colleges(): Readonly<Record<string, string>> {
-      return Object.fromEntries(
-        Object.entries(reqsData.college).map(([key, { name }]) => [key, name])
-      );
+      const base = Object.entries(reqsData.college)
+        .filter(college => !college[0].startsWith('AS'))
+        .map(([key, { name }]) => [key, name]);
+      base.push(['AS', getCollegeFullName('AS')]);
+      base.sort((c1, c2) => c1[1].localeCompare(c2[1]));
+      return Object.fromEntries(base);
     },
     majors(): Readonly<Record<string, string>> {
       const majors: Record<string, string> = {};
       const majorJSON = reqsData.major;
+      const acr = this.collegeAcronym !== 'AS' ? this.collegeAcronym : 'AS2';
       Object.keys(majorJSON).forEach(key => {
         // only show majors for schools the user is in
-        if (majorJSON[key].schools.includes(this.collegeAcronym)) {
+        if (majorJSON[key].schools.includes(acr)) {
           majors[key] = majorJSON[key].name;
         }
       });
@@ -331,7 +344,11 @@ export default defineComponent({
         this.majorAcronyms.filter(it => it !== ''),
         this.minorAcronyms.filter(it => it !== ''),
         this.gradAcronym,
-        { firstName: this.firstName, middleName: this.middleName, lastName: this.lastName }
+        {
+          firstName: this.firstName,
+          middleName: this.middleName,
+          lastName: this.lastName,
+        }
       );
     },
     // Clear a major if a new college is selected and the major is not in it

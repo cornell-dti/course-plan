@@ -247,10 +247,11 @@ export default defineComponent({
   },
   methods: {
     submitOnboarding() {
+      const revised = this.setASCollegeReqs();
       this.clearTransferCreditIfGraduate();
-      setAppOnboardingData(this.name, this.onboarding);
+      setAppOnboardingData(this.name, revised);
       // indicates first time user onboarding
-      if (!this.isEditingProfile) populateSemesters(this.onboarding);
+      if (!this.isEditingProfile) populateSemesters(revised);
       this.$emit('onboard');
     },
     goBack() {
@@ -336,6 +337,24 @@ export default defineComponent({
       ) {
         this.cancel();
       }
+    },
+    // determine which AS reqs to set depending on user's starting semester
+    // AS1 for students entering before Fall 2020, AS2 for students after
+    setASCollegeReqs() {
+      const revised = { ...this.onboarding };
+      if (revised.college === 'AS') {
+        const year = Number.parseInt(revised.entranceYear, 10);
+        const season: FirestoreSemesterSeason =
+          revised.entranceSem === '' ? 'Fall' : revised.entranceSem; // default to fall if not provided
+        if (year < 2020) {
+          revised.college = 'AS1';
+        } else if (year === 2020 && SeasonOrdinal[season] < SeasonOrdinal.Fall) {
+          revised.college = 'AS1';
+        } else {
+          revised.college = 'AS2';
+        }
+      }
+      return revised;
     },
   },
 });
