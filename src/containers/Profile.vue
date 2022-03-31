@@ -31,9 +31,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
-import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
-import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
-import { setAppOnboardingData, populateSemesters } from '@/global-firestore-data';
+import { setAppOnboardingData } from '@/global-firestore-data';
 import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
 import timeline1Text from '@/assets/images/timeline1text.svg';
 import timeline2Text from '@/assets/images/timeline2text.svg';
@@ -45,7 +43,7 @@ const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
 
 export default defineComponent({
-  components: { OnboardingBasic, OnboardingReview, OnboardingTransfer },
+  components: { OnboardingBasic },
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: {
