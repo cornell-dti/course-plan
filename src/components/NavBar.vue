@@ -35,7 +35,7 @@
             <span>Tools</span>
           </div>
         </div>
-        <div class="navbar-buttonWrapper desktop" @click="editProfile" data-cyId="editProfile">
+        <div class="navbar-buttonWrapper desktop" @click="openProfile" data-cyId="openProfile">
           <button class="navbar-iconWrapper profile-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Profile</span>
@@ -77,7 +77,7 @@
           <div class="navbar-iconWrapper tools-mobile-icon" />
           <span class="nav-mobile-button-text">Tools</span>
         </button>
-        <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="editProfile">
+        <button class="nav-mobile-button" data-cyId="navbar-openProfile" @click="openProfile">
           <div class="navbar-iconWrapper profile-mobile-icon" />
           <span class="nav-mobile-button-text">Edit Profile</span>
         </button>
@@ -110,7 +110,7 @@ export default defineComponent({
   props: {
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
   },
-  emits: ['openPlan', 'openTools', 'editProfile', 'toggleRequirementsMobile'],
+  emits: ['openPlan', 'openTools', 'editProfile', 'toggleRequirementsMobile', 'openProfile'],
   data() {
     return {
       menuOpen: false,
@@ -140,6 +140,10 @@ export default defineComponent({
     editProfile() {
       this.menuOpen = false;
       this.$emit('editProfile');
+    },
+    openProfile() {
+      this.menuOpen = false;
+      this.$emit('openProfile');
     },
     toggleRequirementsMobile() {
       this.menuOpen = false;
