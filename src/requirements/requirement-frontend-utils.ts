@@ -2,6 +2,7 @@ import requirementJson from './typed-requirement-json';
 import specialized from './specialize';
 import { examCourseIds } from './requirement-exam-mapping';
 import { getConstraintViolationsForSingleCourse } from './requirement-constraints-utils';
+import featureFlagCheckers from '@/feature-flags';
 
 /**
  * A collection of helper functions
@@ -263,6 +264,9 @@ export function getMatchedRequirementFulfillmentSpecification(
   ) =>
     coursesList.map(courses =>
       courses.filter(courseId => {
+        // do not include ap/ib course if feature flag is not toggled
+        if (!featureFlagCheckers.isAPIBFulfillmentEnabled() && examCourseIds.has(courseId))
+          return false;
         // allow course if there are no requirement conditions
         if (!(conditions && courseId in conditions)) return true;
         // otherwise, inspect conditions to see if we should disallow course
