@@ -10,6 +10,9 @@
           value="name"
         />
         {{ requirement.description }}
+        <a :style="{ color: `#${color}` }" :href="requirement.source" target="_blank">
+          <strong>Learn More</strong></a
+        >
       </label>
       <label
         v-for="name in nestedRequirements"
