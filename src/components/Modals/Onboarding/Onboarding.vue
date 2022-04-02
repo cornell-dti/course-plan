@@ -58,6 +58,10 @@
         <div class="onboarding-error" data-cyId="onboarding-error" v-if="isError">
           {{ errorText }}
         </div>
+        <div class="onboarding-error" v-if="isInvalidGraduationSemester">
+          Your graduation semester cannot come before your entrance semester. Please select a
+          graduation semester after {{ onboarding.entranceSem }} {{ onboarding.entranceYear }}.
+        </div>
         <div class="onboarding-error" v-if="isInvalidMajorMinorGradError">
           Invalid major, minor, or graduate program. Delete the placeholder major, minor, or program
           and try again.
@@ -110,7 +114,13 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import { setAppOnboardingData, populateSemesters } from '@/global-firestore-data';
-import { getMajorFullName, getMinorFullName, getGradFullName, SeasonOrdinal } from '@/utilities';
+import {
+  getMajorFullName,
+  getMinorFullName,
+  getGradFullName,
+  computeGradYears,
+  SeasonOrdinal,
+} from '@/utilities';
 import timeline1Text from '@/assets/images/timeline1text.svg';
 import timeline2Text from '@/assets/images/timeline2text.svg';
 import timeline3Text from '@/assets/images/timeline3text.svg';
@@ -135,7 +145,13 @@ export default defineComponent({
     return {
       currentPage: 1,
       name: { ...this.userName },
-      onboarding: { ...this.onboardingData },
+      onboarding: {
+        ...this.onboardingData,
+        gradYear:
+          this.onboardingData.gradYear in computeGradYears(this.onboardingData.entranceYear)
+            ? this.onboardingData.gradYear
+            : '',
+      },
     };
   },
   computed: {
@@ -171,6 +187,24 @@ export default defineComponent({
           .some((minorFullName: string) => minorFullName === '') ||
         (this.onboarding.grad ? getGradFullName(this.onboarding.grad) === '' : false)
       );
+    },
+    /**
+     * Display error if the entrance and graduation year are not blank and the graduation semester comes before entrance semester, comparing the season if not blank
+     *
+     * @returns true if graduation semesters comes before entrance semester, false otherwise
+     */
+    isInvalidGraduationSemester(): boolean {
+      const { gradYear } = this.onboarding;
+      const { entranceYear } = this.onboarding;
+      if (gradYear !== '' && entranceYear !== '') {
+        if (this.onboarding.entranceSem && this.onboarding.gradSem && gradYear === entranceYear) {
+          return (
+            SeasonOrdinal[this.onboarding.gradSem] < SeasonOrdinal[this.onboarding.entranceSem]
+          );
+        }
+        return gradYear < entranceYear;
+      }
+      return false;
     },
     /**
      * Set error text depending on which fields are missing
@@ -232,11 +266,17 @@ export default defineComponent({
       this.currentPage = page;
     },
     canProgress() {
-      return !(this.isError || this.isInvalidMajorMinorGradError);
+      return !(
+        this.isError ||
+        this.isInvalidMajorMinorGradError ||
+        this.isInvalidGraduationSemester
+      );
     },
     goNext() {
       // Only move onto next page if error message is not displayed
-      if (!(this.isError || this.isInvalidMajorMinorGradError)) {
+      if (
+        !(this.isError || this.isInvalidMajorMinorGradError || this.isInvalidGraduationSemester)
+      ) {
         // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
         if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage === 1) {
           this.currentPage += 2;
@@ -335,6 +375,7 @@ export default defineComponent({
     &-header {
       text-align: center;
     }
+
     &-inputWrapper {
       text-align: center;
     }
