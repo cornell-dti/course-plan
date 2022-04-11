@@ -9,7 +9,12 @@
       </div>
     </div>
     <div class="profileContainer-editPage">
-      <onboarding-basic :userName="name" :onboardingData="onboarding" @updateBasic="updateBasic" />
+      <onboarding-basic
+        :userName="name"
+        :onboardingData="onboarding"
+        :isEditingProfile="true"
+        @updateBasic="updateBasic"
+      />
     </div>
     <div>
       <button
