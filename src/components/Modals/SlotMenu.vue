@@ -13,7 +13,7 @@
           <img
             class="slotMenu-icon"
             src="@/assets/images/edit.svg"
-            alt="edit requirement pencil icon"
+            alt="replace requirement swap icon"
           />
           <span class="slotMenu-replace">Replace</span>
         </div>
@@ -25,7 +25,7 @@
           <img
             class="slotMenu-icon"
             src="@/assets/images/trash.svg"
-            alt="delete requirement trashcan icon"
+            alt="remove requirement trashcan icon"
           />
           <span class="slotMenu-remove">Remove</span>
         </div>
