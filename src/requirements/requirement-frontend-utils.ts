@@ -530,6 +530,18 @@ export function getRelatedRequirementIdsForCourseOptOut(
   );
 }
 
+// display the entire number of fulfillents, including those that are dangerous
+export function fulfillmentProgressString({
+  fulfilledBy,
+  dangerousMinCountFulfilled,
+  safeMinCountFulfilled,
+  minCountRequired,
+}: MixedRequirementFulfillmentStatistics) {
+  return featureFlagCheckers.isRequirementConflictsEnabled()
+    ? `${dangerousMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`
+    : `${safeMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
+}
+
 export function getRelatedUnfulfilledRequirements(
   {
     crseId: courseId,
