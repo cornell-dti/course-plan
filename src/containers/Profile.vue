@@ -32,7 +32,6 @@
 import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import { setAppOnboardingData } from '@/global-firestore-data';
-import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
 
 export default defineComponent({
   components: { OnboardingBasic },
