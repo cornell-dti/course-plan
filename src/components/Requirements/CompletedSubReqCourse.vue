@@ -15,8 +15,7 @@
           /></span>
           {{ slotName }}
         </div>
-        <button class="reqCourse-button" @click="onDeleteModalOpen"> 
-          <img src="@/assets/gear.svg" alt="gear">
+        <button class="reqCourse-button" @click="onDeleteModalOpen">
         </button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
@@ -177,13 +176,12 @@ export default defineComponent({
   }
 }
 
-.reqCourse {
-  &-button {
-    font-size: 14px;
-    line-height: 15px;
-    color: $yuxuanBlue;
-    padding: 0 0.2rem 0.4rem;
-    cursor: pointer;
+.reqCourse-button {
+  padding: 0 0.5rem 0rem;
+  cursor: pointer;
+  background: url("@/assets/images/gear.svg") no-repeat;
+  &:hover {
+    background: url("@/assets/images/settingsBlue.svg") no-repeat;
   }
 }
 </style>
