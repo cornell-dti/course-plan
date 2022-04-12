@@ -15,7 +15,7 @@
             src="@/assets/images/edit.svg"
             alt="edit requirement pencil icon"
           />
-          <span class="slotMenu-edit">Edit</span>
+          <span class="slotMenu-replace">Replace</span>
         </div>
       </div>
     </button>
@@ -27,7 +27,7 @@
             src="@/assets/images/trash.svg"
             alt="delete requirement trashcan icon"
           />
-          <span class="slotMenu-delete">Delete</span>
+          <span class="slotMenu-remove">Remove</span>
         </div>
       </div>
     </button>
@@ -100,10 +100,10 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
   }
-  &-delete {
-    color: #eb6d6d;
+  &-remove {
+    color: black;
   }
-  &-edit {
+  &-replace {
     color: black;
   }
   &-icon {

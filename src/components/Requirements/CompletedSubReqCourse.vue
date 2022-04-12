@@ -15,7 +15,7 @@
           /></span>
           {{ slotName }}
         </div>
-        <button class="reqCourse-button" @click="onDeleteModalOpen">
+        <button class="reqCourse-button" @click="openSlotMenu">
         </button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
