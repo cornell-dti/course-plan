@@ -8,17 +8,27 @@
         <span> get your information up-to-date! </span>
       </div>
     </div>
+    <div class="profileContainer-buttonGroup">
+      <button class="profileContainer-button" @click="openBasicInfo">Basic Information</button>
+      <button class="profileContainer-button" @click="openTransferCredit">Transfer Credit</button>
+    </div>
     <div class="profileContainer-editPage">
       <onboarding-basic
+        v-if="currentPage === 1"
         :userName="name"
         :onboardingData="onboarding"
         :isEditingProfile="true"
         @updateBasic="updateBasic"
       />
+      <onboarding-transfer
+        v-if="currentPage == 2"
+        :onboardingData="onboarding"
+        @updateTransfer="updateTransfer"
+      />
     </div>
     <div>
       <button
-        class="profileContainer-button"
+        class="profileContainer-finishButton"
         @click="submitOnboarding"
         data-cyId="onboarding-finishButton"
       >
@@ -31,6 +41,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
+import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { setAppOnboardingData } from '@/global-firestore-data';
 import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
 import timeline1Text from '@/assets/images/timeline1text.svg';
@@ -43,7 +54,7 @@ const placeholderText = 'Select one';
 const FINAL_PAGE = 3;
 
 export default defineComponent({
-  components: { OnboardingBasic },
+  components: { OnboardingBasic, OnboardingTransfer },
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: {
@@ -216,6 +227,12 @@ export default defineComponent({
         this.cancel();
       }
     },
+    openBasicInfo() {
+      this.currentPage = 1;
+    },
+    openTransferCredit() {
+      this.currentPage = 2;
+    },
   },
 });
 </script>
@@ -264,11 +281,29 @@ export default defineComponent({
     color: #757575;
   }
 
-  &-editPage {
-    width: 80%;
+  &-buttonGroup {
+    float: left;
+    width: 20%;
   }
 
   &-button {
+    margin: 50px;
+    font-family: 'Proxima Nova';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    color: #000000;
+  }
+
+  &-editPage {
+    float: left;
+    width: 80%;
+  }
+
+  &-finishButton {
     background: $emGreen;
     border: 0;
     box-sizing: border-box;
@@ -279,6 +314,7 @@ export default defineComponent({
     margin: 5px;
     width: 80px;
     min-height: 1.75rem;
+    float: right;
 
     &-previous {
       background: $white;
