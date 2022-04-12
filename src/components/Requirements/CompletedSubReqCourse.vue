@@ -16,7 +16,7 @@
           {{ slotName }}
         </div>
         <button class="reqCourse-button" @click="onDeleteModalOpen"> 
-          <img src="/assets/gear.svg" alt="open menu for course card" data-v-2cebd5c6="" draggable="false">
+          <img src="@/assets/gear.svg" alt="gear">
         </button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
