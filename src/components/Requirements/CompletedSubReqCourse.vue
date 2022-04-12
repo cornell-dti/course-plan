@@ -15,8 +15,7 @@
           /></span>
           {{ slotName }}
         </div>
-        <button class="reqCourse-button" @click="openSlotMenu">
-        </button>
+        <button class="reqCourse-button" @click="openSlotMenu"></button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
@@ -179,9 +178,9 @@ export default defineComponent({
 .reqCourse-button {
   padding: 0 0.5rem 0rem;
   cursor: pointer;
-  background: url("@/assets/images/gear.svg") no-repeat;
+  background: url('@/assets/images/gear.svg') no-repeat;
   &:hover {
-    background: url("@/assets/images/settingsBlue.svg") no-repeat;
+    background: url('@/assets/images/settingsBlue.svg') no-repeat;
   }
 }
 </style>

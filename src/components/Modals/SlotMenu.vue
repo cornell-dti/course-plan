@@ -12,7 +12,7 @@
         <div class="slotMenu-left">
           <img
             class="slotMenu-icon"
-            src="@/assets/images/edit.svg"
+            src="@/assets/images/replace.svg"
             alt="replace requirement swap icon"
           />
           <span class="slotMenu-replace">Replace</span>
@@ -24,7 +24,7 @@
         <div class="slotMenu-left">
           <img
             class="slotMenu-icon"
-            src="@/assets/images/trash.svg"
+            src="@/assets/images/trashcan.svg"
             alt="remove requirement trashcan icon"
           />
           <span class="slotMenu-remove">Remove</span>
