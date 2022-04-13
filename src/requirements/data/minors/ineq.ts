@@ -41,11 +41,11 @@ const inequalityRequirements: readonly CollegeOrMajorRequirement[] = [
     slotNames: ['Course'],
   },
   {
-    name: 'Inequality Electivess',
+    name: 'Inequality Electives',
     description:
-      'Four electives chosen from the full list of elective courses.' +
+      'Four electives chosen from the full list of elective courses. ' +
       'If enrolled in the Health Equity Track, two of those four electives must ' +
-      'be electives labelled with the indicated health-equity focus. The other two' +
+      'be electives labelled with the indicated health-equity focus. The other two ' +
       'can be chosen from the broader list and can include other health-equity courses.',
     source: 'https://inequality.cornell.edu/minor-overview-and-requirements',
     checker: includesWithSubRequirements([
