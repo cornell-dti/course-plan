@@ -38,13 +38,13 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Physics',
     description:
-      'PHYS 1112 and 2213, and, depending on the Major, either PHYS 2214 or a designated mathematics or science course.',
+    'The normal program in physics includes PHYS 1112, PHYS 2213, and PHYS 2214 or the corresponding honors courses (PHYS 1116, PHYS 2217, and PHYS 2218). Depending on the major, a designated mathematics or science course can be substituted for PHYS 2214/2218.',
     source:
-      'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: includesWithSubRequirements(['PHYS 1112'], ['PHYS 2213']),
+      'https://courses.cornell.edu/content.php?catoid=45&navoid=17985#Engineering_Core_Requirements',
+    checker: includesWithSubRequirements(['PHYS 1112', 'PHYS 1116'], ['PHYS 2213', 'PHYS 2217']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
-    slotNames: ['PHYS 1112', 'PHYS 2213'],
+    slotNames: ['PHYS 1112 or PHYS 1116', 'PHYS 2213 or PHYS 2217'],
   },
   {
     name: 'Chemistry',
