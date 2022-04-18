@@ -206,7 +206,7 @@ export default defineComponent({
       isSemesterMinimized: false,
       conflictCourse: {} as FirestoreSemesterCourse,
       courseConflicts: new Set<string[]>(),
-      selfCheckRequirements: [] as RequirementWithIDSourceType[],
+      selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
 
       seasonImg: {
         Fall: fall,

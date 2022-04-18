@@ -58,7 +58,7 @@ export default defineComponent({
     selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     courseConflicts: { type: Object as PropType<Set<string[]>>, required: true },
     selfCheckRequirements: {
-      type: Object as PropType<RequirementWithIDSourceType[]>,
+      type: Object as PropType<readonly RequirementWithIDSourceType[]>,
       required: true,
     },
   },
