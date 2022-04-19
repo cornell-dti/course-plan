@@ -6,7 +6,12 @@
         v-for="([reqName, bool], index) in checkedReqs"
         :key="reqName"
       >
-        <input type="checkbox" :id="reqName" :checked="bool" @change="checkOrUncheckReq(reqName)" />
+        <input
+          type="checkbox"
+          :id="reqName"
+          :checked="bool"
+          @change="checkOrUncheckReq(reqName, index)"
+        />
         <label v-if="!isReqSelfCheck(index)" :for="reqName" class="conflictEditor-label">{{
           reqName
         }}</label>
@@ -21,9 +26,12 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import { toggleRequirementChoice } from `@/global-firestore-data`;
+import store from '@/store';
 
 export default defineComponent({
   props: {
+    selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     checkedReqs: { type: Object as PropType<Map<string, boolean>>, required: true },
     conflictNumber: { type: Number, required: true },
     numSelfChecks: { type: Number, required: true },
@@ -33,8 +41,23 @@ export default defineComponent({
       typeof reqName === 'string' && typeof conflictNum === 'number',
   },
   methods: {
-    checkOrUncheckReq(reqName: string) {
+    checkOrUncheckReq(reqName: string, index: string) {
       this.$emit('conflict-changed', reqName, this.conflictNumber);
+
+      // edit the requirements assigned to the course when editor changed
+      if (this.isReqSelfCheck(index)) {
+        toggleRequirementChoice(
+          this.selectedCourse.uniqueID,
+          store.state.userRequirementsMap[reqName].id,
+          'acknowledgedCheckerWarningOptIn'
+        );
+      } else {
+        toggleRequirementChoice(
+          this.selectedCourse.uniqueID,
+          store.state.userRequirementsMap[reqName].id,
+          'optOut'
+        );
+      }
     },
     // req is self check if index has numSelfChecks or fewer reqs until it reaches the end of the list
     isReqSelfCheck(index: string) {
