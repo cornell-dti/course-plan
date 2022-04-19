@@ -6,6 +6,12 @@
       v-if="deleteModalVisible"
       @close-delete-course-modal="onDeleteCourseModalClose"
     />
+    <replace-course-modal
+      v-if="replaceModalVisible"
+      @select-course="selectCourse"
+      @add-course="addCourse"
+      @close-replace-course-modal="onReplaceCourseModalClose"
+    />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
@@ -31,6 +37,7 @@
     <slot-menu
       v-if="slotMenuOpen"
       :position="slotMenuPosition"
+      @open-replace-slot-modal="onReplaceModalOpen"
       @open-delete-slot-modal="onDeleteModalOpen"
       @close-slot-menu="closeSlotMenu"
     />
@@ -42,6 +49,7 @@ import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
+import ReplaceCourseModal from '@/components/Modals/ReplaceCourseModal.vue';
 import store from '@/store';
 import { deleteCourseFromSemesters, deleteTransferCredit } from '@/global-firestore-data';
 import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
@@ -49,12 +57,13 @@ import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, DeleteCourseModal, SlotMenu },
+  components: { ReqCourse, DeleteCourseModal, ReplaceCourseModal, SlotMenu },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
   data: () => ({
+    replaceModalVisible: false,
     deleteModalVisible: false,
     slotMenuOpen: false,
     mousePosition: { x: 0, y: 0 },
@@ -107,6 +116,12 @@ export default defineComponent({
           if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);
         }
       }
+    },
+    onReplaceModalOpen(): void {
+      this.replaceModalVisible = true;
+    },
+    onReplaceCourseModalClose(): void {
+      this.replaceModalVisible = false;
     },
     openSlotMenu(e: MouseEvent) {
       this.mousePosition = {

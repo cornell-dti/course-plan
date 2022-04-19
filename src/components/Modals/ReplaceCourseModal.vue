@@ -1,5 +1,5 @@
 <template>
-  <TeleportModal
+  <teleport-modal
     title="Replace Course"
     content-class="content-course"
     :leftButtonText="leftButtonText"
@@ -39,7 +39,7 @@
         @edit-mode="toggleEditMode"
       />
     </div>
-  </TeleportModal>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
@@ -57,7 +57,7 @@ import {
 export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
-    'close-course-modal': () => true,
+    'close-replace-course-modal': () => true,
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
     'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
       typeof course === 'object' && typeof choice === 'object',
@@ -91,7 +91,7 @@ export default defineComponent({
       this.getReqsRelatedToCourse(result);
     },
     closeCurrentModal() {
-      this.$emit('close-course-modal');
+      this.$emit('close-replace-course-modal');
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
