@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { toggleRequirementChoice } from `@/global-firestore-data`;
+import { toggleRequirementChoice } from '@/global-firestore-data';
 import store from '@/store';
 
 export default defineComponent({
