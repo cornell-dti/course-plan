@@ -30,6 +30,7 @@
         :checkedReqs="selectedReqsPerConflict[index - 1]"
         :conflictNumber="index"
         :numSelfChecks="numSelfCheckRequirements"
+        :selectedCourse="selectedCourse"
         @conflict-changed="handleChangedConflict"
       />
       <div v-if="index === 1" class="courseConflict-warning">
@@ -70,7 +71,7 @@ export default defineComponent({
         singleConflictDict.set(req, true);
       });
       this.selfCheckRequirements.forEach(singleSelfCheckReq => {
-        singleConflictDict.set(singleSelfCheckReq.name, true);
+        singleConflictDict.set(singleSelfCheckReq.id, false);
       });
       selectedReqsPerConflict.push(singleConflictDict);
     });
