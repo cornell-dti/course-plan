@@ -4,6 +4,7 @@
       <div class="separator"></div>
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
+        <button class="reqCourse-button" @click="openSlotMenu"></button>
         <button
           v-if="showSeeAllLabel"
           class="draggable-requirements-heading-seeAll"
@@ -34,6 +35,12 @@
         </template>
       </draggable>
     </div>
+    <slot-menu
+      v-if="slotMenuOpen"
+      :position="slotMenuPosition"
+      @open-delete-slot-modal="onDeleteModalOpen"
+      @close-slot-menu="closeSlotMenu"
+    />
   </div>
 </template>
 
@@ -41,18 +48,20 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
-import { incrementUniqueID } from '@/global-firestore-data';
 import { GTagEvent } from '@/gtag';
+import SlotMenu from '@/components/Modals/SlotMenu.vue';
+import { incrementUniqueID } from '@/global-firestore-data';
 
 export default defineComponent({
-  components: { draggable, Course },
+  components: { draggable, Course, SlotMenu},
+  data: () => ({
+    deleteModalVisible: false,
+    scrollable: false,
+    slotMenuOpen: false,
+    mousePosition: { x: 0, y: 0 },
+  }),
   mounted() {
     this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
-  },
-  data() {
-    return {
-      scrollable: false,
-    };
   },
   beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);
@@ -91,6 +100,11 @@ export default defineComponent({
     coursesWithoutRequirementID(): readonly FirestoreSemesterCourse[] {
       return this.courses.map(({ requirementID: _, ...rest }) => rest);
     },
+    slotMenuPosition(): { x: number; y: number } {
+      return window.innerWidth > 863
+        ? { x: this.mousePosition.x + 10, y: this.mousePosition.y - 14 }
+        : { x: this.mousePosition.x - 120, y: this.mousePosition.y - 7 };
+    },
   },
   methods: {
     onDrag() {
@@ -110,6 +124,19 @@ export default defineComponent({
     },
     onShowAllCourses() {
       this.$emit('onShowAllCourses');
+    },
+    onDeleteModalOpen(): void {
+      this.deleteModalVisible = true;
+    },
+    openSlotMenu(e: MouseEvent) {
+      this.mousePosition = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+      this.slotMenuOpen = true;
+    },
+    closeSlotMenu() {
+      this.slotMenuOpen = false;
     },
   },
 });
@@ -173,6 +200,15 @@ export default defineComponent({
   &-course:active:hover {
     touch-action: none;
     cursor: grabbing;
+  }
+}
+
+.reqCourse-button {
+  padding: 0 0.5rem 0rem;
+  cursor: pointer;
+  background: url('@/assets/images/gear.svg') no-repeat;
+  &:hover {
+    background: url('@/assets/images/settingsBlue.svg') no-repeat;
   }
 }
 </style>
