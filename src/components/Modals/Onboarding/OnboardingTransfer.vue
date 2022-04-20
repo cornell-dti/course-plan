@@ -52,6 +52,10 @@
             >here</a
           >.
         </div>
+        <div class="onboarding-transferCreditDescription">
+          *Some transfer credits may incorrectly apply to requirements. We are working to fix these
+          bugs, so please double check transfer credits!
+        </div>
       </div>
     </div>
   </div>
