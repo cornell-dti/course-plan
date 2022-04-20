@@ -1,5 +1,10 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { includesWithSubRequirements, ifCodeMatch, courseIsForeignLang } from '../checkers-common';
+import {
+  includesWithSubRequirements,
+  ifCodeMatch,
+  courseIsForeignLang,
+  courseMatchesCodeOptions,
+} from '../checkers-common';
 
 const fashionDesignAdditionalRequirements: readonly string[] = [
   'PBS',
@@ -188,6 +193,17 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean => {
         const { subject, catalogNbr } = course;
+        if (
+          courseMatchesCodeOptions(course, [
+            'FSAD 4000',
+            'FSAD 4010',
+            'FSAD 4020',
+            'FSAD 4030',
+            'FSAD 4990',
+          ])
+        ) {
+          return false;
+        }
         return (
           ifCodeMatch(subject, 'FSAD') &&
           (ifCodeMatch(catalogNbr, '3***') ||
