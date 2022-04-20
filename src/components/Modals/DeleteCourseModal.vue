@@ -16,8 +16,8 @@
       Transfer credits can be re-added in your Profile.
     </div>
     <div v-else class="text-width">
-      Are you sure you want to remove <bolder>{{ reqName }}</bolder> from the
-      <bolder>requirement?</bolder>
+      Are you sure you want to remove <text-width-bold>{{ reqName }}</text-width-bold> from the
+      <teleport-modal-bold>{{ reqDesc }}?</teleport-modal-bold>
     </div>
   </teleport-modal>
 </template>
@@ -29,6 +29,7 @@ export default defineComponent({
   components: { TeleportModal },
   props: {
     reqName: { type: String, required: true },
+    reqDesc: { type: String, required: true},
     isTransferCredit: { type: Boolean, required: true },
   },
   emits: {
@@ -64,6 +65,9 @@ export default defineComponent({
   width: 28em;
   line-height: 17px;
   color: $lightPlaceholderGray;
+  &-bold {
+    font-weight: bold;
+  }
 }
 
 .modal {

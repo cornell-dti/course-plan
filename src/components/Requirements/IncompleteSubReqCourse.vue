@@ -1,10 +1,16 @@
 <template>
   <div class="incompletesubreqcourse" v-if="courses.length > 0">
+    <replace-course-modal
+      v-if="replaceModalVisible"
+      @select-course="selectCourse"
+      @add-course="addCourse"
+      @close-replace-course-modal="onReplaceCourseModalClose"
+    />
     <div class="draggable-requirements-wrapper" v-if="displayDescription">
       <div class="separator"></div>
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
-        <button class="reqCourse-button" @click="openSlotMenu"></button>
+        <button class="reqCourse-button" @click="openReplaceSlotMenu"></button>
         <button
           v-if="showSeeAllLabel"
           class="draggable-requirements-heading-seeAll"
@@ -35,11 +41,11 @@
         </template>
       </draggable>
     </div>
-    <slot-menu
-      v-if="slotMenuOpen"
-      :position="slotMenuPosition"
-      @open-delete-slot-modal="onDeleteModalOpen"
-      @close-slot-menu="closeSlotMenu"
+    <replace-slot-menu
+      v-if="replaceSlotMenuOpen"
+      :position="replaceSlotMenuPosition"
+      @close-slot-menu="closeReplaceSlotMenu"
+      @open-replace-slot-modal="onReplaceModalOpen"
     />
   </div>
 </template>
@@ -49,15 +55,16 @@ import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import { GTagEvent } from '@/gtag';
-import SlotMenu from '@/components/Modals/SlotMenu.vue';
+import ReplaceSlotMenu from '@/components/Modals/ReplaceSlotMenu.vue';
 import { incrementUniqueID } from '@/global-firestore-data';
+import ReplaceCourseModal from '@/components/Modals/ReplaceCourseModal.vue';
 
 export default defineComponent({
-  components: { draggable, Course, SlotMenu},
+  components: { draggable, Course, ReplaceSlotMenu, ReplaceCourseModal },
   data: () => ({
-    deleteModalVisible: false,
+    replaceModalVisible: false,
     scrollable: false,
-    slotMenuOpen: false,
+    replaceSlotMenuOpen: false,
     mousePosition: { x: 0, y: 0 },
   }),
   mounted() {
@@ -100,7 +107,7 @@ export default defineComponent({
     coursesWithoutRequirementID(): readonly FirestoreSemesterCourse[] {
       return this.courses.map(({ requirementID: _, ...rest }) => rest);
     },
-    slotMenuPosition(): { x: number; y: number } {
+    replaceSlotMenuPosition(): { x: number; y: number } {
       return window.innerWidth > 863
         ? { x: this.mousePosition.x + 10, y: this.mousePosition.y - 14 }
         : { x: this.mousePosition.x - 120, y: this.mousePosition.y - 7 };
@@ -125,18 +132,21 @@ export default defineComponent({
     onShowAllCourses() {
       this.$emit('onShowAllCourses');
     },
-    onDeleteModalOpen(): void {
-      this.deleteModalVisible = true;
+    onReplaceModalOpen(): void {
+      this.replaceModalVisible = true;
     },
-    openSlotMenu(e: MouseEvent) {
+    onReplaceCourseModalClose(): void {
+      this.replaceModalVisible = false;
+    },
+    openReplaceSlotMenu(e: MouseEvent) {
       this.mousePosition = {
         x: e.clientX,
         y: e.clientY,
       };
-      this.slotMenuOpen = true;
+      this.replaceSlotMenuOpen = true;
     },
-    closeSlotMenu() {
-      this.slotMenuOpen = false;
+    closeReplaceSlotMenu() {
+      this.replaceSlotMenuOpen = false;
     },
   },
 });

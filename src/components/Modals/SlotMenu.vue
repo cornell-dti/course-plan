@@ -7,7 +7,7 @@
     :hasCustomPosition="true"
     :position="position"
   >
-    <button class="slotMenu-section full-opacity-on-hover" @click="openEditSlotModal">
+    <button class="slotMenu-section full-opacity-on-hover" @click="openReplaceSlotModal">
       <div class="slotMenu-row">
         <div class="slotMenu-left">
           <img
@@ -45,7 +45,7 @@ export default defineComponent({
   },
   emits: {
     'open-delete-slot-modal': () => true,
-    'open-edit-slot-modal': () => true,
+    'open-replace-slot-modal': () => true,
     'close-slot-menu': (value: boolean) => typeof value === 'boolean',
   },
   methods: {
@@ -56,8 +56,8 @@ export default defineComponent({
       this.$emit('open-delete-slot-modal');
       this.closeCurrentModal();
     },
-    openEditSlotModal() {
-      this.$emit('open-edit-slot-modal');
+    openReplaceSlotModal() {
+      this.$emit('open-replace-slot-modal');
       this.closeCurrentModal();
     },
   },
