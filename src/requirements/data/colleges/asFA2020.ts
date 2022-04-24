@@ -21,7 +21,7 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     allowCourseDoubleCounting: true,
   },
   {
-    name: '100 A&S Credits',
+    name: 'A&S Credits',
     description:
       'Of the 120 Total Credits, a minimum of 100 credits must be taken in the College of Arts & Sciences. ' +
       'Note: AP, IB, and A-Level credits do not count.',
