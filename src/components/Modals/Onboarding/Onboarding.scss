@@ -533,6 +533,18 @@ input {
     }
   }
 
+  &-transferCreditWarning {
+    color: $warning;
+    margin-top: 1.5rem;
+  }
+
+  &-warningIcon {
+    float: left;
+    margin: 0.125rem 0.25rem 0 0;
+    width: 14px;
+    height: 14px;
+  }
+
   &-transferCredits {
     padding-top: 0;
   }
