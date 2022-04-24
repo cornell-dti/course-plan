@@ -95,6 +95,17 @@ export const courseIsFWS = (course: Course): boolean =>
   (course.catalogSatisfiesReq?.includes('First-Year Writing Seminar') ?? false);
 
 /**
+ * The 120 Credits and 100 A&S Credits for the College of Arts and Sciences both only count certain courses for as academic credit for the degree. Use this function for both requirements to ensure they agree.
+ *
+ * The full list of courses that don't count can be found at https://as.cornell.edu/registrar/courses-that-dont-count.
+ *
+ * @param course course object with useful information retrieved from Cornell courses API.
+ * @returns if the course counts for the A&S credit requirement.
+ */
+export const courseCountsForASCredit = (course: Course): boolean =>
+  !(course.subject === 'PE' || ifCodeMatch(course.catalogNbr, '10**'));
+
+/**
  * Call this function to check if a course meets a foreign language requirement, since the 'FL'
  * category is missing from course data
  *
