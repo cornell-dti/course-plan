@@ -32,7 +32,7 @@ const epRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Electronic Circuits Lab',
     description: 'Students can either take AEP 3630 or take ECE 2100 and ECE 2300.',
     source:
-      'https://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/fall2021/#pg76',
+      'https://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/fall2021/#pg79',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'AEP 3630': {
@@ -55,7 +55,7 @@ const epRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Experimental Physics Lab',
     description: 'Students can either take either PHYS 4410 or a combination of two courses.',
     source:
-      'https://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/fall2021/#pg76',
+      'https://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/fall2021/#pg79',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'PHYS 4410': {
@@ -85,7 +85,7 @@ const epRequirements: readonly CollegeOrMajorRequirement[] = [
       'Six major-approved electives (18-24 credits). All must be technical courses taken for a letter grade. ' +
       'Five of the six courses must be upper-level courses (3000 level or above). ' +
       'Nine credits of major-approved electives must be outside of AEP.',
-    source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19775',
+    source: 'https://cornellengineeringhandbook.freeflowdp.com/cornellengineeringhandbook/fall2021/#pg79',
     // Currently, the user must override in order to apply a non-upper-level course
     // TODO implement as compound requirement:
     // at least 18 credits
