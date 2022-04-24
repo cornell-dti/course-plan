@@ -19,6 +19,7 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'credits',
     perSlotMinCount: [100],
     allowCourseDoubleCounting: true,
+    disallowTransferCredit: true,
   },
   {
     name: 'First-Year Writing Seminars (FWS)',
