@@ -9,6 +9,17 @@
         <span class="onboarding-subHeader--font"> Transfer Credits (Optional)</span>
       </div>
       <div class="onboarding-transferCredits onboarding-inputs">
+        <div>
+          <img
+            class="onboarding-warningIcon"
+            src="@/assets/images/warning.svg"
+            alt="warning icon"
+          />
+          <div class="onboarding-transferCreditDescription onboarding-transferCreditWarning">
+            Some transfer credits may incorrectly apply to requirements. We are working to fix these
+            bugs, so please double check transfer credits!
+          </div>
+        </div>
         <div
           class="onboarding-inputWrapper onboarding-inputWrapper--college onboarding-inputWrapper--description"
         >
