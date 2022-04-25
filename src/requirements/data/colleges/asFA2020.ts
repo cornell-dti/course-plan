@@ -5,8 +5,10 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'A&S Credits',
     description:
-      'Of the 120 Total Credits, a minimum of 100 credits must be taken in the College of Arts & Sciences. ' +
-      'Note: AP, IB, and A-Level credits do not count.',
+      '100 credits in Arts & Sciences are required. ' +
+      'Students can take more than 20 credits outside of the College as long as they take 100 credits within; ' +
+      'they can also take all their credits in Arts & Sciences and accumulate more than 120. ' +
+      'Note: AP, IB, and A-Level credits do not count toward the 100 A&S credits.',
     source: 'https://as.cornell.edu/education/degree-requirements',
     checker: [
       (course: Course): boolean =>
