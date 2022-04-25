@@ -62,7 +62,8 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-AS2-total-credits',
         description:
           '120 academic credits are required. ' +
-          'PE courses and courses numbered 1000-1099 do not count towards the 120 credits.',
+          'AP credits count towards this requirement, but PE courses and courses numbered 1000-1099 do not. ' +
+          'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'https://courses.cornell.edu/content.php?catoid=45&navoid=17977#credit-req',
       };
       break;

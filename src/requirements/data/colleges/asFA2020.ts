@@ -1,25 +1,7 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import {
-  courseIsFWS,
-  ifCodeMatch,
-  courseIsForeignLang,
-  courseCountsForASCredit,
-} from '../checkers-common';
+import { courseIsFWS, ifCodeMatch, courseIsForeignLang } from '../checkers-common';
 
 const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
-  // {
-  //   name: '120 Total Credits',
-  //   description:
-  //     'Students must earn a minimum of 120 academic credits, which may include AP/test credits. ' +
-  //     'However, courses in military training, service as a teaching assistant, physical education, remedial or developmental training, ' +
-  //     'precalculus mathematics, supplemental science and mathematics, and offered by the Learning Strategies Center and English as a second language do not count. ' +
-  //     'The College\'s "Courses That Won\'t Count" website has a full list of excluded courses.',
-  //   source: 'https://as.cornell.edu/education/degree-requirements',
-  //   checker: [(course: Course): boolean => courseCountsForASCredit(course)],
-  //   fulfilledBy: 'credits',
-  //   perSlotMinCount: [120],
-  //   allowCourseDoubleCounting: true,
-  // },
   {
     name: 'A&S Credits',
     description:
@@ -28,7 +10,9 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://as.cornell.edu/education/degree-requirements',
     checker: [
       (course: Course): boolean =>
-        courseCountsForASCredit(course) &&
+        // Note that this does not completely agree with the 120 total academic credits because that incorrectly includes courses cross-listed with PE
+        course.subject !== 'PE' &&
+        !ifCodeMatch(course.catalogNbr, '10**') &&
         (course.acadGroup.includes('AS') ||
           course.subject === 'CS' ||
           (course.catalogDistr?.includes('-AS') ?? false)),
