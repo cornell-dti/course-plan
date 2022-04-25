@@ -51,7 +51,7 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-AS1-total-credits',
         description:
           '120 academic credits are required. ' +
-          'AP, IB, and A-Level credits count towards this requirement, but PE courses and courses numbered 1000-1099 do not. ' +
+          'AP, IB, and A-Level credits count toward this requirement, but PE courses and courses numbered 1000-1099 do not. ' +
           'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'http://courses.cornell.edu/content.php?catoid=41&navoid=11570#credit-req',
       };
@@ -62,7 +62,7 @@ const getTotalCreditsFulfillmentStatistics = (
         id: 'College-AS2-total-credits',
         description:
           '120 academic credits are required. ' +
-          'AP, IB, and A-Level credits count towards this requirement, but PE courses and courses numbered 1000-1099 do not. ' +
+          'AP, IB, and A-Level credits count toward this requirement, but PE courses and courses numbered 1000-1099 do not. ' +
           'Repeated courses may not apply to this requirement, but we do not check this.',
         source: 'https://courses.cornell.edu/content.php?catoid=45&navoid=17977#credit-req',
       };
