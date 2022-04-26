@@ -16,7 +16,7 @@
               class="selectSemester-dropdown-placeholder season-placeholder"
               :style="{ color: displayOptions.season.placeholderColor }"
             >
-              Season
+              {{ seasonPlaceholder }}
             </div>
             <div
               class="selectSemester-dropdown-placeholder season-arrow"
@@ -60,7 +60,7 @@
               class="selectSemester-dropdown-placeholder year-placeholder"
               :style="{ color: displayOptions.year.placeholderColor }"
             >
-              Year
+              {{ yearPlaceholder }}
             </div>
             <div
               class="selectSemester-dropdown-placeholder year-arrow"
@@ -91,7 +91,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { getCurrentSeason, getCurrentYear, clickOutside, yearRange } from '@/utilities';
+import { getCurrentYear, clickOutside, yearRange } from '@/utilities';
 import store from '@/store';
 
 import fall from '@/assets/images/fallEmoji.svg';
@@ -179,16 +179,16 @@ export default defineComponent({
   computed: {
     seasonPlaceholder(): string {
       // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
-      let defaultSeason: string = getCurrentSeason();
+      let defaultSeason = 'Season';
       if (this.isCourseModelSelectingSemester) {
-        defaultSeason = 'Select';
+        defaultSeason = 'Season';
       }
       return this.seasonText || this.season || defaultSeason;
     },
     yearPlaceholder(): string {
-      let defaultYear = String(getCurrentYear());
+      let defaultYear = 'Year';
       if (this.isCourseModelSelectingSemester) {
-        defaultYear = 'Select';
+        defaultYear = 'Year';
       }
       return String(this.yearText || this.year || defaultYear);
     },

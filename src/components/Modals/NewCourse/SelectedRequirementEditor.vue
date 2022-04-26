@@ -103,7 +103,7 @@ export default defineComponent({
 .newCourse {
   &-text {
     font-size: 14px;
-    line-height: 26px;
+    line-height: 30px;
     color: $lightPlaceholderGray;
   }
   &-name {
