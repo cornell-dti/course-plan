@@ -26,9 +26,15 @@
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
       {{ selectedCourse.titleLong }}
     </div>
-    <div class="newCourse-text">
-      <img class="requirement-checker-warning-icon" src="/src/assets/images/warning.svg" alt="warning icon" data-v-74b2c930="">
-      We can't check that this course correctly fulfills the requirement so check carefully before selecting.
+    <div class="newCourse-text" v-if="selectedCourse === null">
+      <img
+        class="requirement-checker-warning-icon"
+        src="/src/assets/images/warning.svg"
+        alt="warning icon"
+        data-v-74b2c930=""
+      />
+      We can't check that this course correctly fulfills the requirement so check carefully before
+      selecting.
     </div>
     <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
