@@ -12,8 +12,7 @@
       @updateSemProps="updateSemProps"
     />
     <div v-if="nonAutoRequirements.length > 0">
-      <div v-if="!editMode">
-      </div>
+      <div v-if="!editMode"></div>
       <div v-else>
         <requirements-dropdown
           :relatedRequirements="relatedRequirements"
@@ -29,7 +28,7 @@
 import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
-import SelectSemesterReplace from '@/components/Modals/SelectSemesterReplace.vue'
+import SelectSemesterReplace from '@/components/Modals/SelectSemesterReplace.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
