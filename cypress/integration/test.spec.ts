@@ -3,9 +3,9 @@
  * Can and should be expanded on in more files to test more specific functionality and ensure future bugs are caught earlier
  */
 
-import { getCurrentYear, yearRange } from '../../src/utilities';
+import { getCurrentYear, entranceYearRange } from '../../src/utilities';
 
-const startYear = getCurrentYear() - yearRange;
+const startYear = getCurrentYear() - entranceYearRange;
 
 // Before running tests, starts on landing page, logs in to firebase, then visits the dashboard
 // Log in occurs with TEST_UID of the courseplan testing account using a function from the cypress-firebase package
@@ -90,12 +90,12 @@ it('Edit a semester (Fall of oldest year -> Spring of second oldest year)', () =
     .contains(`Spring ${startYear + 1}`);
 });
 
-// Test that you can change entrance year, grad year, colleges and majors. A later requirements test is dependent on these choices
+// Test that you can change entrance semester, grad semester, colleges and majors. A later requirements test is dependent on these choices
 it('Switch to engineering college and cs major in class of 2022', () => {
   cy.get('[data-cyId=editProfile]').click();
 
-  // set Graduation year to 2018
-  cy.get('[data-cyId=onboarding-dropdown]').eq(0).click();
+  // set Entrance semester to 2018
+  cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
@@ -106,8 +106,19 @@ it('Switch to engineering college and cs major in class of 2022', () => {
       });
   });
 
-  // set Graduation year to 2022
-  cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
+  // set Graduation semester to Summer 2022
+  cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
+  cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
+    cy.wrap($el)
+      .invoke('text')
+      .then(text => {
+        if (text.includes('Summer')) {
+          cy.wrap($el).click();
+        }
+      });
+  });
+
+  cy.get('[data-cyId=onboarding-dropdown]').eq(3).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
@@ -119,7 +130,7 @@ it('Switch to engineering college and cs major in class of 2022', () => {
   });
 
   // set to Engineering college
-  cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
+  cy.get('[data-cyId=onboarding-dropdown]').eq(4).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
@@ -131,7 +142,7 @@ it('Switch to engineering college and cs major in class of 2022', () => {
   });
 
   // set to CS major
-  cy.get('[data-cyId=onboarding-dropdown]').eq(3).click();
+  cy.get('[data-cyId=onboarding-dropdown]').eq(5).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
@@ -146,9 +157,11 @@ it('Switch to engineering college and cs major in class of 2022', () => {
   cy.get('[data-cyId=onboarding-nextButton]').click();
   cy.get('[data-cyId=onboarding-nextButton]').click();
 
-  // confirm 2018, 2022, engineering, and computer science are selected on the review screen
+  // confirm Fall 2018, Summer 2022, engineering, and computer science are selected on the review screen
   cy.get('[data-cyId=onboarding-entranceYear]').contains('2018');
+  cy.get('[data-cyId=onboarding-entranceSeason]').contains('Fall');
   cy.get('[data-cyId=onboarding-gradYear]').contains('2022');
+  cy.get('[data-cyId=onboarding-gradSeason]').contains('Summer');
   cy.get('[data-cyId=onboarding-college]').contains('Engineering');
   cy.get('[data-cyId=onboarding-major]').contains('Computer Science');
   cy.get('[data-cyId=onboarding-finishButton]').click();

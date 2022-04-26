@@ -1,5 +1,12 @@
 <template>
-  <div :class="{ 'course--min': compact, active: active }" class="course">
+  <div
+    :class="{
+      'course--min': compact,
+      conflict: isCourseConflict(courseObj.uniqueID),
+      active: active,
+    }"
+    class="course"
+  >
     <edit-color
       :editedColor="editedColor"
       @color-course="colorCourse"
@@ -7,13 +14,26 @@
       @close-edit-color="closeEditColorModal"
       v-if="isEditColorOpen"
     />
-    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
+    <div
+      class="course-color"
+      :style="cssVars"
+      :class="{
+        'course-color--active': active,
+      }"
+    >
       <img src="@/assets/images/dots/sixDots.svg" alt="" />
     </div>
     <div class="course-content" @click="courseOnClick()">
       <div class="course-main">
         <div class="course-top">
-          <div class="course-code" data-cyId="courseCode">{{ courseObj.code }}</div>
+          <div class="course-left">
+            <div class="course-code" data-cyId="courseCode">{{ courseObj.code }}</div>
+            <course-caution
+              v-if="!isReqCourse && compact"
+              :course="courseObj"
+              :isCompactView="true"
+            />
+          </div>
           <button v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
             <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
           </button>
@@ -22,7 +42,7 @@
         <div v-if="!compact" class="course-info">
           <span class="course-credits">{{ creditString }}</span>
           <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
-          <course-caution v-if="!isReqCourse" :course="courseObj" />
+          <course-caution v-if="!isReqCourse" :course="courseObj" :isCompactView="false" />
         </div>
       </div>
     </div>
@@ -51,6 +71,7 @@ import {
 } from '@/components/BottomBar/BottomBarState';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
+import { isCourseConflict } from '@/store';
 
 export default defineComponent({
   components: { CourseCaution, CourseMenu, EditColor },
@@ -150,6 +171,7 @@ export default defineComponent({
       this.$emit('edit-course-credit', credit, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
     },
+    isCourseConflict,
   },
   directives: {
     'click-outside': clickOutside,
@@ -206,6 +228,7 @@ export default defineComponent({
     padding: 8px 0;
     display: flex;
     position: relative;
+
     &:hover,
     &:active,
     &:focus {
@@ -217,7 +240,12 @@ export default defineComponent({
     width: calc(100% - #{$colored-grabber-width});
     padding: 0 1rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  &-left {
+    display: flex;
     align-items: center;
   }
 
@@ -229,7 +257,6 @@ export default defineComponent({
   }
 
   &-code {
-    flex: 1 1 auto;
     font-size: 14px;
     line-height: 17px;
     color: $primaryGray;
@@ -277,6 +304,12 @@ export default defineComponent({
     justify-content: space-around;
     margin: 0.5rem;
   }
+}
+
+.conflict {
+  border: 1px solid rgba($conflictWarning, 0.5);
+  border-radius: 8px;
+  box-shadow: 1px 1px 5px rgba($conflictWarning, 0.5);
 }
 
 .active {

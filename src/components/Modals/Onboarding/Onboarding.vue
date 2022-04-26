@@ -40,6 +40,7 @@
             v-if="currentPage == 1"
             :userName="name"
             :onboardingData="onboarding"
+            :isEditingProfile="isEditingProfile"
             @updateBasic="updateBasic"
           />
           <onboarding-transfer
@@ -56,6 +57,10 @@
         </div>
         <div class="onboarding-error" data-cyId="onboarding-error" v-if="isError">
           {{ errorText }}
+        </div>
+        <div class="onboarding-error" v-if="isInvalidGraduationSemester">
+          Your graduation semester cannot come before your entrance semester. Please select a
+          graduation semester after {{ onboarding.entranceSem }} {{ onboarding.entranceYear }}.
         </div>
         <div class="onboarding-error" v-if="isInvalidMajorMinorGradError">
           Invalid major, minor, or graduate program. Delete the placeholder major, minor, or program
@@ -109,7 +114,13 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import { setAppOnboardingData, populateSemesters } from '@/global-firestore-data';
-import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
+import {
+  getMajorFullName,
+  getMinorFullName,
+  getGradFullName,
+  computeGradYears,
+  SeasonOrdinal,
+} from '@/utilities';
 import timeline1Text from '@/assets/images/timeline1text.svg';
 import timeline2Text from '@/assets/images/timeline2text.svg';
 import timeline3Text from '@/assets/images/timeline3text.svg';
@@ -134,7 +145,13 @@ export default defineComponent({
     return {
       currentPage: 1,
       name: { ...this.userName },
-      onboarding: { ...this.onboardingData },
+      onboarding: {
+        ...this.onboardingData,
+        gradYear:
+          this.onboardingData.gradYear in computeGradYears(this.onboardingData.entranceYear)
+            ? this.onboardingData.gradYear
+            : '',
+      },
     };
   },
   computed: {
@@ -144,7 +161,9 @@ export default defineComponent({
         this.name.firstName === '' ||
         this.name.lastName === '' ||
         this.onboarding.gradYear === '' ||
+        !this.onboarding.gradSem ||
         this.onboarding.entranceYear === '' ||
+        !this.onboarding.entranceSem ||
         (this.onboarding.college === '' && this.onboarding.grad === '')
       );
     },
@@ -170,6 +189,24 @@ export default defineComponent({
       );
     },
     /**
+     * Display error if the entrance and graduation year are not blank and the graduation semester comes before entrance semester, comparing the season if not blank
+     *
+     * @returns true if graduation semesters comes before entrance semester, false otherwise
+     */
+    isInvalidGraduationSemester(): boolean {
+      const { gradYear } = this.onboarding;
+      const { entranceYear } = this.onboarding;
+      if (gradYear !== '' && entranceYear !== '') {
+        if (this.onboarding.entranceSem && this.onboarding.gradSem && gradYear === entranceYear) {
+          return (
+            SeasonOrdinal[this.onboarding.gradSem] < SeasonOrdinal[this.onboarding.entranceSem]
+          );
+        }
+        return gradYear < entranceYear;
+      }
+      return false;
+    },
+    /**
      * Set error text depending on which fields are missing
      *
      * @returns a string containing the names of all types of required data missing from onboarding.
@@ -185,11 +222,11 @@ export default defineComponent({
       if (this.name.lastName === '') {
         messages.push('a last name');
       }
-      if (this.onboarding.gradYear === '') {
-        messages.push('a graduation year');
+      if (this.onboarding.entranceYear === '' || !this.onboarding.entranceSem) {
+        messages.push('an entrance semester');
       }
-      if (this.onboarding.entranceYear === '') {
-        messages.push('an entrance year');
+      if (this.onboarding.gradYear === '' || !this.onboarding.gradSem) {
+        messages.push('a graduation semester');
       }
 
       // generate the string depending on how many error messages are selected
@@ -210,10 +247,11 @@ export default defineComponent({
   },
   methods: {
     submitOnboarding() {
+      const revised = this.setASCollegeReqs();
       this.clearTransferCreditIfGraduate();
-      setAppOnboardingData(this.name, this.onboarding);
+      setAppOnboardingData(this.name, revised);
       // indicates first time user onboarding
-      if (!this.isEditingProfile) populateSemesters(this.onboarding);
+      if (!this.isEditingProfile) populateSemesters(revised);
       this.$emit('onboard');
     },
     goBack() {
@@ -228,11 +266,17 @@ export default defineComponent({
       this.currentPage = page;
     },
     canProgress() {
-      return !(this.isError || this.isInvalidMajorMinorGradError);
+      return !(
+        this.isError ||
+        this.isInvalidMajorMinorGradError ||
+        this.isInvalidGraduationSemester
+      );
     },
     goNext() {
       // Only move onto next page if error message is not displayed
-      if (!(this.isError || this.isInvalidMajorMinorGradError)) {
+      if (
+        !(this.isError || this.isInvalidMajorMinorGradError || this.isInvalidGraduationSemester)
+      ) {
         // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
         if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage === 1) {
           this.currentPage += 2;
@@ -243,7 +287,9 @@ export default defineComponent({
     },
     updateBasic(
       gradYear: string,
+      gradSem: FirestoreSemesterSeason,
       entranceYear: string,
+      entranceSem: FirestoreSemesterSeason,
       college: string,
       major: readonly string[],
       minor: readonly string[],
@@ -254,7 +300,9 @@ export default defineComponent({
       this.onboarding = {
         ...this.onboarding,
         gradYear,
+        gradSem,
         entranceYear,
+        entranceSem,
         college,
         major,
         minor,
@@ -290,6 +338,24 @@ export default defineComponent({
         this.cancel();
       }
     },
+    // determine which AS reqs to set depending on user's starting semester
+    // AS1 for students entering before Fall 2020, AS2 for students after
+    setASCollegeReqs() {
+      const revised = { ...this.onboarding };
+      if (revised.college === 'AS') {
+        const year = Number.parseInt(revised.entranceYear, 10);
+        const season: FirestoreSemesterSeason =
+          revised.entranceSem === '' ? 'Fall' : revised.entranceSem; // default to fall if not provided
+        if (year < 2020) {
+          revised.college = 'AS1';
+        } else if (year === 2020 && SeasonOrdinal[season] < SeasonOrdinal.Fall) {
+          revised.college = 'AS1';
+        } else {
+          revised.college = 'AS2';
+        }
+      }
+      return revised;
+    },
   },
 });
 </script>
@@ -309,6 +375,7 @@ export default defineComponent({
     &-header {
       text-align: center;
     }
+
     &-inputWrapper {
       text-align: center;
     }

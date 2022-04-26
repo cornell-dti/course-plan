@@ -8,17 +8,21 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
       '100 credits in Arts & Sciences are required. ' +
       'Students can take more than 20 credits outside of the College as long as they take 100 credits within; ' +
       'they can also take all their credits in Arts & Sciences and accumulate more than 120. ' +
-      'Note: AP, IB, and A-Level credits count toward the 120 total credits but not toward the 100 A&S credits.',
+      'Note: AP, IB, and A-Level credits do not count toward this requirement.',
     source: 'https://as.cornell.edu/education/degree-requirements',
     checker: [
       (course: Course): boolean =>
-        course.acadGroup.includes('AS') ||
-        course.subject === 'CS' ||
-        (course.catalogDistr?.includes('-AS') ?? false),
+        // Note that this does not completely agree with the 120 total academic credits because that incorrectly includes courses cross-listed with PE
+        course.subject !== 'PE' &&
+        !ifCodeMatch(course.catalogNbr, '10**') &&
+        (course.acadGroup.includes('AS') ||
+          course.subject === 'CS' ||
+          (course.catalogDistr?.includes('-AS') ?? false)),
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [100],
     allowCourseDoubleCounting: true,
+    disallowTransferCredit: true,
   },
   {
     name: 'First-Year Writing Seminars (FWS)',

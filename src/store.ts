@@ -13,6 +13,7 @@ import {
   sortedSemesters,
   isPlaceholderCourse,
 } from './utilities';
+import featureFlagCheckers from './feature-flags';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
@@ -61,7 +62,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     userName: { firstName: '', middleName: '', lastName: '' },
     onboardingData: {
       gradYear: '',
+      gradSem: '',
       entranceYear: '',
+      entranceSem: '',
       college: '',
       major: [],
       minor: [],
@@ -351,6 +354,10 @@ export const updateSubjectColorData = (color: string, code: string): void => {
       fb.subjectColorsCollection.doc(simplifiedUser.email).set(newSubjectColors);
     });
 };
+
+export const isCourseConflict = (uniqueId: string | number): boolean =>
+  featureFlagCheckers.isRequirementConflictsEnabled() &&
+  store.state.doubleCountedCourseUniqueIDSet.has(uniqueId);
 
 fb.auth.onAuthStateChanged(user => {
   if (user) {

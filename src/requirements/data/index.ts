@@ -8,7 +8,6 @@ import businessRequirements from './colleges/bu';
 import engineeringRequirements from './colleges/en';
 import humanEcologyRequirements from './colleges/he';
 import ilrRequirements from './colleges/il';
-
 import aemRequirements from './majors/aem';
 import asRequirements from './majors/as';
 import astroRequrements from './majors/astro';
@@ -30,6 +29,7 @@ import essRequirements from './majors/ess';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
 import epRequirements from './majors/ep';
+import fashionDesignRequirements from './majors/fsad';
 import foodSciRequirements from './majors/foodsci';
 import governmentRequirements from './majors/govt';
 import hdRequirements from './majors/hd';
@@ -47,7 +47,6 @@ import pamRequirements from './majors/pam';
 import physRequirements from './majors/phys';
 import spanishRequirements from './majors/spanish';
 import stsRequirements from './majors/sts';
-
 import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
@@ -58,6 +57,7 @@ import deaMinorRequirements from './minors/dea';
 import eceMinorRequirements from './minors/ece';
 import hpMinorRequirements from './minors/hp';
 import hdMinorRequirements from './minors/hd';
+import inequalityRequirements from './minors/ineq';
 import infoENMinorRequirements from './minors/infoEN';
 import lingMinorRequirements from './minors/ling';
 import mathMinorRequirements from './minors/math';
@@ -220,6 +220,11 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: epRequirements,
     },
+    FSAD: {
+      name: 'Fashion Design',
+      schools: ['HE'],
+      requirements: fashionDesignRequirements,
+    },
     FDSC: {
       name: 'Food Science',
       schools: ['AG'],
@@ -356,6 +361,11 @@ const json: RequirementsJson = {
       name: 'Human Development',
       schools: ['HE'],
       requirements: hdMinorRequirements,
+    },
+    INEQ: {
+      name: 'Inequality Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: inequalityRequirements,
     },
     ISST: {
       name: 'Information Science [Engineering]',
