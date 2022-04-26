@@ -32,7 +32,7 @@
         :numSelfChecks="numSelfCheckRequirements"
         @conflict-changed="handleChangedConflict"
       />
-      <div v-if="index === 1" class="courseConflict-warning">
+      <div v-if="shouldShowSelectableWarning(index)" class="courseConflict-warning">
         <span>*Requirements with</span>
         <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
         <span>are broad so check carefully before selecting them</span>
@@ -146,6 +146,10 @@ export default defineComponent({
         if (value) count += 1;
       });
       return count;
+    },
+    // only show the selectable req warning under the first req group, and only if there are selectable reqs
+    shouldShowSelectableWarning(index: number): boolean {
+      return index === 1 && this.selfCheckRequirements.length > 0;
     },
   },
 });
