@@ -13,11 +13,16 @@
           @change="checkOrUncheckReq(reqName, index)"
         />
         <label v-if="!isReqSelfCheck(index)" :for="reqName" class="conflictEditor-label">{{
-          reqName
+          getDisplayName(reqName)
         }}</label>
         <label v-else :for="reqName" class="conflictEditor-label">
           <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
-          {{ reqName }}</label
+          {{ getDisplayName(reqName) }}</label
+        >
+        <span
+          class="conflictEditor-pill"
+          :style="{ color: getPillColor(reqName), 'border-color': getPillColor(reqName) }"
+          >{{ getSourceName(reqName) }}</span
         >
       </div>
     </div>
@@ -28,6 +33,7 @@
 import { PropType, defineComponent } from 'vue';
 import { toggleRequirementChoice } from '@/global-firestore-data';
 import store from '@/store';
+import { getReqColor } from '@/utilities';
 
 export default defineComponent({
   props: {
@@ -63,11 +69,26 @@ export default defineComponent({
     isReqSelfCheck(index: string) {
       return parseInt(index, 10) >= this.checkedReqs.size - this.numSelfChecks;
     },
+    getDisplayName(reqId: string) {
+      return store.state.userRequirementsMap[reqId].name;
+    },
+    getSourceName(reqId: string) {
+      return store.state.userRequirementsMap[reqId].sourceType.toLowerCase();
+    },
+    getPillColor(reqId: string) {
+      const color = getReqColor(
+        store.state.userRequirementsMap[reqId].sourceType,
+        store.state.onboardingData
+      );
+      return `#${color}`;
+    },
   },
 });
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .conflictEditor {
   &-label {
     margin-left: 0.75rem;
@@ -86,6 +107,16 @@ export default defineComponent({
   &-label {
     margin-top: 0.125rem;
     margin-bottom: 0.125rem;
+  }
+
+  &-pill {
+    margin-left: 0.3rem;
+    padding: 0 0.3rem;
+    color: $sangBlue;
+    border: 1px solid $sangBlue;
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 14px;
   }
 }
 
