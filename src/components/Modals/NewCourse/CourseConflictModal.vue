@@ -78,9 +78,9 @@ export default defineComponent({
 
     this.courseConflicts.forEach(singleConflictList => {
       const conflictReqIds = [];
-      const singleConflictDict = new Map<string, boolean>();
+      const singleConflictMap = new Map<string, boolean>();
       singleConflictList.forEach(req => {
-        singleConflictDict.set(req, true);
+        singleConflictMap.set(req, true);
         conflictReqIds.push(req);
       });
 
@@ -91,12 +91,12 @@ export default defineComponent({
       let numSelfChecks = 0;
       this.selfCheckRequirements.forEach(singleSelfCheckReq => {
         if (reqsInConflict.includes(singleSelfCheckReq.id)) {
-          singleConflictDict.set(singleSelfCheckReq.id, true);
+          singleConflictMap.set(singleSelfCheckReq.id, true);
           numSelfChecks += 1;
         }
       });
 
-      selectedReqsPerConflict.push(singleConflictDict);
+      selectedReqsPerConflict.push(singleConflictMap);
       numSelfChecksPerConflict.push(numSelfChecks);
     });
 
@@ -163,11 +163,7 @@ export default defineComponent({
     },
     // count number of reqs selected for a conflict (i.e. set to true in the map)
     countNumberReqsSelected(conflict: Map<string, boolean>) {
-      let count = 0;
-      conflict.forEach((value: boolean) => {
-        if (value) count += 1;
-      });
-      return count;
+      return Array.from(conflict.values()).filter(Boolean).length;
     },
     // only show the selectable req warning under the first req group, and only if there are selectable reqs
     shouldShowSelectableWarning(index: number): boolean {
