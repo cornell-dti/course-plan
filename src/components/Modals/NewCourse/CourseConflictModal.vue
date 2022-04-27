@@ -171,7 +171,8 @@ export default defineComponent({
     },
     // only show the selectable req warning under the first req group, and only if there are selectable reqs
     shouldShowSelectableWarning(index: number): boolean {
-      return index === 1 && this.selfCheckRequirements.length > 0;
+      const maxNumSelfChecks = Math.max(...this.numSelfChecksPerConflict);
+      return index === 1 && maxNumSelfChecks > 0;
     },
     // get the reqs in conflictReqIds that are in conflict, based on course with uniqueID
     // self check requirements not in conflict with the other reqs will be excluded
