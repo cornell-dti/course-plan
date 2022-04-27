@@ -4,7 +4,7 @@
     content-class="content-course"
     :rightButtonText="rightButtonText"
     :rightButtonIsHighlighted="!conflictsFullyResolved"
-    @modal-closed="closeCurrentModal"
+    @modal-closed="removeCourseAndCloseModal"
     @right-button-clicked="addCourse"
   >
     <div class="courseConflict-text">Selected Course</div>
@@ -56,6 +56,7 @@ export default defineComponent({
   emits: {
     'close-course-modal': () => true,
     'resolve-conflicts': (course: FirestoreSemesterCourse) => typeof course === 'object',
+    'remove-course': (uniqueID: number) => typeof uniqueID === 'number',
   },
   props: {
     selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
@@ -129,12 +130,14 @@ export default defineComponent({
   methods: {
     closeCurrentModal() {
       this.$emit('close-course-modal');
-      this.$emit('resolve-conflicts', this.selectedCourse);
+    },
+    removeCourseAndCloseModal() {
+      this.closeCurrentModal();
+      this.$emit('remove-course', this.selectedCourse.uniqueID);
     },
     addCourse() {
-      // TODO @willespencer handle what happens when conflicts are saved or resolved
-
       this.closeCurrentModal();
+      this.$emit('resolve-conflicts', this.selectedCourse);
     },
     handleChangedConflict(selectedReq: string, index: number) {
       const conflict = this.selectedReqsPerConflict[index - 1];

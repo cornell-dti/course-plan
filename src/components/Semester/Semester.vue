@@ -21,6 +21,7 @@
       :courseConflicts="courseConflicts"
       :selfCheckRequirements="selfCheckRequirements"
       @resolve-conflicts="handleConflictsResolved"
+      @remove-course="deleteCourseWithoutModal"
     />
     <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
@@ -450,6 +451,9 @@ export default defineComponent({
     },
     handleConflictsResolved(course: FirestoreSemesterCourse) {
       this.openConfirmationModal(`Added ${course.code} to ${this.season} ${this.year}`);
+    },
+    deleteCourseWithoutModal(uniqueID: number) {
+      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
       deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
