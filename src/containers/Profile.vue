@@ -9,8 +9,24 @@
       </div>
     </div>
     <div class="profileContainer-buttonGroup">
-      <button class="profileContainer-button" @click="openBasicInfo">Basic Information</button>
-      <button class="profileContainer-button" @click="openTransferCredit">Transfer Credit</button>
+      <button
+        :class="{
+          'profileContainer-button': currentPage != 1,
+          'profileContainer-selectedButton': currentPage === 1,
+        }"
+        @click="openBasicInfo"
+      >
+        Basic Information
+      </button>
+      <button
+        :class="{
+          'profileContainer-button': currentPage != 2,
+          'profileContainer-selectedButton': currentPage === 2,
+        }"
+        @click="openTransferCredit"
+      >
+        Transfer Credit
+      </button>
     </div>
     <div class="profileContainer-editPage">
       <onboarding-basic
@@ -26,13 +42,17 @@
         @updateTransfer="updateTransfer"
       />
     </div>
+    <div class="profileContainer-error" data-cyId="onboarding-error" v-if="isError">
+      {{ errorText }}
+    </div>
     <div>
       <button
         class="profileContainer-finishButton"
         @click="submitOnboarding"
         data-cyId="onboarding-finishButton"
+        :disabled="isError"
       >
-        Finish
+        Save
       </button>
     </div>
   </div>
@@ -43,16 +63,8 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { setAppOnboardingData } from '@/global-firestore-data';
-import { getMajorFullName, getMinorFullName, getGradFullName } from '@/utilities';
-import timeline1Text from '@/assets/images/timeline1text.svg';
-import timeline2Text from '@/assets/images/timeline2text.svg';
-import timeline3Text from '@/assets/images/timeline3text.svg';
-
-const timelineTexts = [timeline1Text, timeline2Text, timeline3Text];
 
 const placeholderText = 'Select one';
-const FINAL_PAGE = 3;
-
 export default defineComponent({
   components: { OnboardingBasic, OnboardingTransfer },
   props: {
@@ -68,11 +80,15 @@ export default defineComponent({
       currentPage: 1,
       name: { ...this.userName },
       onboarding: { ...this.onboardingData },
+      changed: false,
     };
   },
   computed: {
     // Display error if a required field is empty
     isError(): boolean {
+      if (!this.changed) {
+        return true;
+      }
       return (
         this.name.firstName === '' ||
         this.name.lastName === '' ||
@@ -83,33 +99,15 @@ export default defineComponent({
         (this.onboarding.college === '' && this.onboarding.grad === '')
       );
     },
-    timelineTextImage(): string {
-      return timelineTexts[this.currentPage - 1];
-    },
-    /**
-     * Display error if onboarding data includes a major, minor, or graduate program
-     * that doesn't exist in requirementsJSON.
-     *
-     * @returns true if onboarding contains a major, minor, or program that is not in
-     * requirementsJSON on this branch, false otherwise.
-     */
-    isInvalidMajorMinorGradError(): boolean {
-      return (
-        this.onboarding.major
-          .map(getMajorFullName)
-          .some((majorFullName: string) => majorFullName === '') ||
-        this.onboarding.minor
-          .map(getMinorFullName)
-          .some((minorFullName: string) => minorFullName === '') ||
-        (this.onboarding.grad ? getGradFullName(this.onboarding.grad) === '' : false)
-      );
-    },
     /**
      * Set error text depending on which fields are missing
      *
      * @returns a string containing the names of all types of required data missing from onboarding.
      */
     errorText(): string {
+      if (!this.changed) {
+        return '';
+      }
       const messages = [];
       if (this.onboarding.college === '' && this.onboarding.grad === '') {
         messages.push('at least one undergraduate or graduate degree');
@@ -149,31 +147,6 @@ export default defineComponent({
       setAppOnboardingData(this.name, this.onboarding);
       this.$emit('onboard');
     },
-    goBack() {
-      // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
-      if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage > 1) {
-        this.currentPage = 1;
-      } else {
-        this.currentPage = this.currentPage - 1 === 0 ? 0 : this.currentPage - 1;
-      }
-    },
-    setPage(page: number) {
-      this.currentPage = page;
-    },
-    canProgress() {
-      return !(this.isError || this.isInvalidMajorMinorGradError);
-    },
-    goNext() {
-      // Only move onto next page if error message is not displayed
-      if (!(this.isError || this.isInvalidMajorMinorGradError)) {
-        // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
-        if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage === 1) {
-          this.currentPage += 2;
-        } else {
-          this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
-        }
-      }
-    },
     updateBasic(
       gradYear: string,
       gradSem: FirestoreSemesterSeason,
@@ -197,6 +170,7 @@ export default defineComponent({
         minor,
         grad,
       };
+      this.changed = true;
     },
     // clear transfer credits if the student is only in a graduate program, but previously set transfer credits
     clearTransferCreditIfGraduate() {
@@ -213,19 +187,7 @@ export default defineComponent({
         exam: userExams,
         tookSwim,
       };
-    },
-    cancel() {
-      if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
-        this.$emit('cancelOnboarding');
-      }
-    },
-    checkClickOutside(e: MouseEvent) {
-      if (
-        e.target === this.$refs.modalBackground &&
-        (this.onboardingData.college !== '' || this.onboardingData.grad !== '')
-      ) {
-        this.cancel();
-      }
+      this.changed = true;
     },
     openBasicInfo() {
       this.currentPage = 1;
@@ -267,6 +229,7 @@ export default defineComponent({
     height: 24px;
     right: 753px;
     top: 99px;
+    margin: 19px 0 50px 0;
 
     font-family: 'Proxima Nova';
     font-style: normal;
@@ -282,12 +245,37 @@ export default defineComponent({
   }
 
   &-buttonGroup {
+    margin: 35px 0 0;
     float: left;
-    width: 20%;
+    width: 30%;
+  }
+
+  &-error {
+    font-size: 16px;
+    line-height: 17px;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #d8000c;
+  }
+
+  &-selectedButton {
+    margin: 0 0 50px 0;
+    font-family: 'Proxima Nova';
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    color: #000000;
+    text-decoration: underline;
+    text-decoration-color: $emGreen;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 11px;
   }
 
   &-button {
-    margin: 50px;
+    margin: 0 0 50px 0;
     font-family: 'Proxima Nova';
     font-style: normal;
     font-weight: 400;
@@ -300,7 +288,7 @@ export default defineComponent({
 
   &-editPage {
     float: left;
-    width: 80%;
+    width: 70%;
   }
 
   &-finishButton {
@@ -322,16 +310,21 @@ export default defineComponent({
       border-radius: 0px;
       border-width: 0px;
     }
+  }
 
-    &--disabled {
-      opacity: 0.3;
-      border: 1px solid $sangBlue;
-      background-color: $disabledGray;
-
-      &:hover {
-        opacity: 0.3;
-      }
-    }
+  &-finishButton:disabled {
+    background: $emGreen;
+    border: 0;
+    opacity: 0.5;
+    box-sizing: border-box;
+    border-radius: 1px;
+    font-size: 14px;
+    line-height: 14px;
+    color: $white;
+    margin: 5px;
+    width: 80px;
+    min-height: 1.75rem;
+    float: right;
   }
 }
 </style>
