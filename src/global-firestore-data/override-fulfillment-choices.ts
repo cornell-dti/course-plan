@@ -26,6 +26,18 @@ export const updateRequirementChoice = (
     ),
   }));
 
+const removeRequirementChoice = (choices: readonly string[], id: string) =>
+  choices.filter(choice => choice !== id);
+
+const removeRequirementChoiceFromArbitraryOptIn = (
+  choices: { readonly [requirement: string]: readonly string[] },
+  requirementID: string
+) => {
+  const newChoices = { ...choices };
+  delete newChoices[requirementID];
+  return newChoices;
+};
+
 export const toggleRequirementChoice = (
   courseUniqueID: string | number,
   requirementID: string,
@@ -61,18 +73,6 @@ export const deleteCoursesFromRequirementChoices = (
 
 export const deleteCourseFromRequirementChoices = (courseUniqueID: string | number): void =>
   deleteCoursesFromRequirementChoices([courseUniqueID]);
-
-const removeRequirementChoice = (choices: readonly string[], id: string) =>
-  choices.filter(choice => choice !== id);
-
-const removeRequirementChoiceFromArbitraryOptIn = (
-  choices: { readonly [requirement: string]: readonly string[] },
-  requirementID: string
-) => {
-  const newChoices = { ...choices };
-  delete newChoices[requirementID];
-  return newChoices;
-};
 
 export const optOutRequirementChoices = (courseUniqueID: string | number, requirementID: string) =>
   updateRequirementChoice(
