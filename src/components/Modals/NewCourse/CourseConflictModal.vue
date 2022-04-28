@@ -193,17 +193,8 @@ export default defineComponent({
             )
         );
 
-        const validConflicts = constraintViolations.courseToRequirementsInConstraintViolations.get(
-          this.selectedCourse.uniqueID
-        );
-
-        if (!validConflicts || validConflicts.size !== 1) {
-          return;
-        }
-        const [firstConflict] = [...validConflicts];
-
-        // if selectable req is not in conflict with conflictReqIds, it will be missing from the first and only conflict
-        if (validConflicts && firstConflict.includes(selectableReqId)) {
+        // if selectable req is not in conflict with conflictReqIds, it will be missing from requirementsThatDoNotAllowDoubleCounting
+        if (constraintViolations.requirementsThatDoNotAllowDoubleCounting.has(selectableReqId)) {
           selectableReqIdsInConflict.push(selectableReqId);
         }
       });
