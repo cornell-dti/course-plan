@@ -28,7 +28,7 @@ const setTookSwim = (tookSwim: 'yes' | 'no'): void => {
   });
 };
 
-const setExams = (exam: FirestoreAPIBExam[]) => {
+const setExams = (exam: FirestoreAPIBExam[]): void => {
   onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
     exam,
   });
