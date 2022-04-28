@@ -78,26 +78,29 @@ export default defineComponent({
     });
 
     this.courseConflicts.forEach(singleConflictList => {
-      const conflictReqIds = [];
-      const singleConflictDict = new Map<string, boolean>();
+      const conflictReqIds: string[] = [];
+      const singleConflictMap = new Map<string, boolean>();
       singleConflictList.forEach(req => {
-        singleConflictDict.set(req, true);
+        singleConflictMap.set(req, true);
         conflictReqIds.push(req);
       });
 
-      conflictReqIds.push(...selectableReqIds);
-      const reqsInConflict = this.getReqsInConflict(this.selectedCourse.uniqueID, conflictReqIds);
+      const reqsInConflict = this.getReqsInConflict(
+        this.selectedCourse.uniqueID,
+        conflictReqIds,
+        selectableReqIds
+      );
 
       // filter out self checks that are not in conflict with the other reqs
       let numSelfChecks = 0;
       this.selfCheckRequirements.forEach(singleSelfCheckReq => {
         if (reqsInConflict.includes(singleSelfCheckReq.id)) {
-          singleConflictDict.set(singleSelfCheckReq.id, false);
+          singleConflictMap.set(singleSelfCheckReq.id, false);
           numSelfChecks += 1;
         }
       });
 
-      selectedReqsPerConflict.push(singleConflictDict);
+      selectedReqsPerConflict.push(singleConflictMap);
       numSelfChecksPerConflict.push(numSelfChecks);
     });
 
@@ -165,39 +168,40 @@ export default defineComponent({
     },
     // count number of reqs selected for a conflict (i.e. set to true in the map)
     countNumberReqsSelected(conflict: Map<string, boolean>) {
-      let count = 0;
-      conflict.forEach((value: boolean) => {
-        if (value) count += 1;
-      });
-      return count;
+      return Array.from(conflict.values()).filter(Boolean).length;
     },
     // only show the selectable req warning under the first req group, and only if there are selectable reqs
     shouldShowSelectableWarning(index: number): boolean {
       const maxNumSelfChecks = Math.max(...this.numSelfChecksPerConflict);
       return index === 1 && maxNumSelfChecks > 0;
     },
-    // get the reqs in conflictReqIds that are in conflict, based on course with uniqueID
-    // self check requirements not in conflict with the other reqs will be excluded
-    getReqsInConflict(uniqueID: string | number, conflictReqIds: string[]): string[] {
-      const constraintViolations = getConstraintViolationsForSingleCourse(
-        { uniqueId: uniqueID },
-        conflictReqIds,
-        (reqA, reqB) =>
-          allowCourseDoubleCountingBetweenRequirements(
-            store.state.userRequirementsMap[reqA],
-            store.state.userRequirementsMap[reqB]
-          )
-      );
+    // determine if each selectable req in selectableReqIds is in conflict with the reqs in conflictReqIds,
+    // based on course with uniqueID.
+    // return the list of conflictReqIds + selectableReqIds in conflict.
+    getReqsInConflict(
+      uniqueID: string | number,
+      conflictReqIds: string[],
+      selectableReqIds: string[]
+    ): string[] {
+      const selectableReqIdsInConflict: string[] = [];
+      selectableReqIds.forEach(selectableReqId => {
+        const constraintViolations = getConstraintViolationsForSingleCourse(
+          { uniqueId: uniqueID },
+          [...conflictReqIds, selectableReqId],
+          (reqA, reqB) =>
+            allowCourseDoubleCountingBetweenRequirements(
+              store.state.userRequirementsMap[reqA],
+              store.state.userRequirementsMap[reqB]
+            )
+        );
 
-      const validConflicts = constraintViolations.courseToRequirementsInConstraintViolations.get(
-        this.selectedCourse.uniqueID
-      );
-      let firstConflict: string[] = [];
-      if (validConflicts) {
-        [firstConflict] = [...validConflicts];
-      }
+        // if selectable req is not in conflict with conflictReqIds, it will be missing from requirementsThatDoNotAllowDoubleCounting
+        if (constraintViolations.requirementsThatDoNotAllowDoubleCounting.has(selectableReqId)) {
+          selectableReqIdsInConflict.push(selectableReqId);
+        }
+      });
 
-      return firstConflict;
+      return [...conflictReqIds, ...selectableReqIdsInConflict];
     },
   },
 });
