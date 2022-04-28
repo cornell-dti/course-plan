@@ -28,6 +28,7 @@ export { default as chooseToggleableRequirementOption } from './toggleable-requi
 export {
   updateRequirementChoices,
   updateRequirementChoice,
+  toggleRequirementChoice,
   deleteCoursesFromRequirementChoices,
   deleteCourseFromRequirementChoices,
   optInRequirementChoices,
