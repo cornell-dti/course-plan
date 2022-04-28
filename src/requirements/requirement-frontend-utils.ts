@@ -550,7 +550,6 @@ export function getRelatedUnfulfilledRequirements(
     enrollGroups: [{ unitsMaximum: credits }],
   }: CornellCourseRosterCourse,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
-  onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>

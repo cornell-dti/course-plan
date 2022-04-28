@@ -13,11 +13,11 @@ export const updateRequirementChoices = (
 
 export const updateRequirementChoice = (
   courseUniqueID: string | number,
-  choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices
+  updater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices
 ): void =>
   updateRequirementChoices(choices => ({
     ...choices,
-    [courseUniqueID]: choiceUpdater(
+    [courseUniqueID]: updater(
       store.state.overriddenFulfillmentChoices[courseUniqueID] || {
         arbitraryOptIn: {},
         acknowledgedCheckerWarningOptIn: [],
