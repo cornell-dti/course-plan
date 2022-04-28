@@ -20,6 +20,8 @@
       :selectedCourse="conflictCourse"
       :courseConflicts="courseConflicts"
       :selfCheckRequirements="selfCheckRequirements"
+      @resolve-conflicts="handleConflictsResolved"
+      @remove-course="deleteCourseWithoutModal"
     />
     <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
@@ -403,7 +405,7 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    // TODO @willespencer refactor the below methods after gatekeep removed (only 1 method)
+    // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
     addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       // Since the course is new, we know the old choice does not exist.
@@ -445,11 +447,13 @@ export default defineComponent({
         if (conflicts && conflicts.size > 0) {
           this.openConflictModal(newCourse, conflicts, selfCheckRequirements);
         }
-
-        // TODO @willespencer confirmation should happen later when there are conflicts
-        const courseCode = `${data.subject} ${data.catalogNbr}`;
-        this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
       }
+    },
+    handleConflictsResolved(course: FirestoreSemesterCourse) {
+      this.openConfirmationModal(`Added ${course.code} to ${this.season} ${this.year}`);
+    },
+    deleteCourseWithoutModal(uniqueID: number) {
+      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
       deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);

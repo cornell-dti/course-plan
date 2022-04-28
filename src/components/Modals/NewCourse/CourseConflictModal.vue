@@ -4,8 +4,8 @@
     content-class="content-course"
     :rightButtonText="rightButtonText"
     :rightButtonIsHighlighted="!conflictsFullyResolved"
-    @modal-closed="closeCurrentModal"
-    @right-button-clicked="addItem"
+    @modal-closed="removeCourseAndCloseModal"
+    @right-button-clicked="addCourse"
   >
     <div class="courseConflict-text">Selected Course</div>
     <div class="selected-course" data-cyId="courseConflict-selectedCourse">
@@ -30,6 +30,7 @@
         :checkedReqs="selectedReqsPerConflict[index - 1]"
         :conflictNumber="index"
         :numSelfChecks="numSelfChecksPerConflict[index - 1]"
+        :selectedCourse="selectedCourse"
         @conflict-changed="handleChangedConflict"
       />
       <div v-if="shouldShowSelectableWarning(index)" class="courseConflict-warning">
@@ -54,8 +55,8 @@ export default defineComponent({
   components: { TeleportModal, SingleConflictEditor },
   emits: {
     'close-course-modal': () => true,
-    'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
-      typeof course === 'object' && typeof choice === 'object',
+    'resolve-conflicts': (course: FirestoreSemesterCourse) => typeof course === 'object',
+    'remove-course': (uniqueID: number) => typeof uniqueID === 'number',
   },
   props: {
     selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
@@ -94,7 +95,7 @@ export default defineComponent({
       let numSelfChecks = 0;
       this.selfCheckRequirements.forEach(singleSelfCheckReq => {
         if (reqsInConflict.includes(singleSelfCheckReq.id)) {
-          singleConflictMap.set(singleSelfCheckReq.id, true);
+          singleConflictMap.set(singleSelfCheckReq.id, false);
           numSelfChecks += 1;
         }
       });
@@ -133,12 +134,13 @@ export default defineComponent({
     closeCurrentModal() {
       this.$emit('close-course-modal');
     },
-    addItem() {
-      this.addCourse();
+    removeCourseAndCloseModal() {
+      this.closeCurrentModal();
+      this.$emit('remove-course', this.selectedCourse.uniqueID);
     },
     addCourse() {
-      // TODO @willespencer handle what happens when conflicts are saved or resolved
       this.closeCurrentModal();
+      this.$emit('resolve-conflicts', this.selectedCourse);
     },
     handleChangedConflict(selectedReq: string, index: number) {
       const conflict = this.selectedReqsPerConflict[index - 1];
