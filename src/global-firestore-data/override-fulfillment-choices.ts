@@ -29,7 +29,7 @@ export const updateRequirementChoice = (
 const removeRequirementChoice = (choices: readonly string[], id: string) =>
   choices.filter(choice => choice !== id);
 
-const removeRequirementChoiceFromArbitraryOptIn = (
+const removeArbitraryOptIn = (
   choices: { readonly [requirement: string]: readonly string[] },
   requirementID: string
 ) => {
@@ -74,20 +74,41 @@ export const deleteCoursesFromRequirementChoices = (
 export const deleteCourseFromRequirementChoices = (courseUniqueID: string | number): void =>
   deleteCoursesFromRequirementChoices([courseUniqueID]);
 
-export const optOutRequirementChoices = (courseUniqueID: string | number, requirementID: string) =>
+export const addOptOut = (courseUniqueID: string | number, requirementID: string) =>
   updateRequirementChoice(
     courseUniqueID,
     ({ optOut, acknowledgedCheckerWarningOptIn, arbitraryOptIn }) => ({
+      // add to opt-out
       optOut: [...new Set([...optOut, requirementID])],
+      // remove from checker warning opt-in, since it contradicts any previous opt-in choices
       acknowledgedCheckerWarningOptIn: removeRequirementChoice(
         acknowledgedCheckerWarningOptIn,
         requirementID
       ),
-      arbitraryOptIn: removeRequirementChoiceFromArbitraryOptIn(arbitraryOptIn, requirementID),
+      // remove from arbitrary opt-in, since it contradicts any previous opt-in choices
+      arbitraryOptIn: removeArbitraryOptIn(arbitraryOptIn, requirementID),
     })
   );
 
-export const optInRequirementChoices = (
+export const addAcknowledgedCheckerWarningOptIn = (
+  courseUniqueID: string | number,
+  requirementID: string
+): void =>
+  updateRequirementChoice(
+    courseUniqueID,
+    ({ optOut, acknowledgedCheckerWarningOptIn, arbitraryOptIn }) => ({
+      // remove from opt-out, since it contradicts any previous opt-out choices
+      optOut: removeRequirementChoice(optOut, requirementID),
+      // add to checker warning opt-in
+      acknowledgedCheckerWarningOptIn: [
+        ...new Set([...acknowledgedCheckerWarningOptIn, requirementID]),
+      ],
+      // don't remove from arbitrary opt-in, since arbitrary opt-in is stronger
+      arbitraryOptIn,
+    })
+  );
+
+export const addArbitraryOptIn = (
   courseUniqueID: string | number,
   requirementID: string,
   slot: string
@@ -95,11 +116,15 @@ export const optInRequirementChoices = (
   updateRequirementChoice(
     courseUniqueID,
     ({ optOut, acknowledgedCheckerWarningOptIn, arbitraryOptIn }) => ({
-      optOut: removeRequirementChoice(optOut, requirementID),
+      // don't remove from opt-out, since the user may want to apply
+      // the course to a specific requirement slot
+      optOut,
+      // remove from checker warning opt-in, since arbitrary opt-in is stronger
       acknowledgedCheckerWarningOptIn: removeRequirementChoice(
         acknowledgedCheckerWarningOptIn,
         requirementID
       ),
+      // add to arbitrary opt-in
       arbitraryOptIn: {
         ...arbitraryOptIn,
         [requirementID]: [...new Set([...arbitraryOptIn[requirementID], slot])],

@@ -162,11 +162,9 @@ import {
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
-  updateRequirementChoices,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
 import {
-  getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
 
@@ -283,35 +281,6 @@ export default defineComponent({
             courses,
           })
         );
-        updateRequirementChoices(oldChoices => {
-          const choices = { ...oldChoices };
-          newCourses.forEach(({ uniqueID, requirementID, crseId }) => {
-            if (requirementID == null) {
-              // In this case, it's not a course from requirement bar
-              return;
-            }
-            const choice = choices[uniqueID] || {
-              arbitraryOptIn: {},
-              acknowledgedCheckerWarningOptIn: [],
-              optOut: [],
-            };
-            // We know the requirement must be dragged from requirements without warnings,
-            // because only those courses provide suggested courses.
-            // As a result, `acknowledgedCheckerWarningOptIn` is irrelevant and we only need to update
-            // the `optOut` field.
-            // Below, we find all the requirements it can possibly match,
-            // and only remove the requirementID since that's the one we should keep.
-            const optOut = getRelatedRequirementIdsForCourseOptOut(
-              crseId,
-              requirementID,
-              store.state.groupedRequirementFulfillmentReport,
-              store.state.toggleableRequirementChoices,
-              store.state.userRequirementsMap
-            );
-            choices[uniqueID] = { ...choice, optOut };
-          });
-          return choices;
-        });
       },
     },
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem

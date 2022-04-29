@@ -31,8 +31,9 @@ export {
   toggleRequirementChoice,
   deleteCoursesFromRequirementChoices,
   deleteCourseFromRequirementChoices,
-  optInRequirementChoices,
-  optOutRequirementChoices,
+  addOptOut,
+  addAcknowledgedCheckerWarningOptIn,
+  addArbitraryOptIn,
 } from './override-fulfillment-choices';
 
 export { default as retrieveAnalytics } from './analytics';
