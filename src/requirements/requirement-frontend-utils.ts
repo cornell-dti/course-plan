@@ -484,52 +484,6 @@ export function computeFulfillmentCoursesAndStatistics(
   };
 }
 
-/**
- * Find related requirement ids to opt out of. This maintains the invariant that
- * there are no constraint violations when adding a course to the semester.
- * It should be deprecated after the new add modal is implemented.
- */
-export function getRelatedRequirementIdsForCourseOptOut(
-  courseId: number,
-  associatedRequirementId: string,
-  groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
-  toggleableRequirementChoices: AppToggleableRequirementChoices,
-  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
-): readonly string[] {
-  const requirements = groupedRequirements
-    .flatMap(it => it.reqs)
-    .flatMap(({ requirement }) => {
-      const spec = getMatchedRequirementFulfillmentSpecification(
-        requirement,
-        toggleableRequirementChoices
-      );
-      if (spec == null) return [];
-      const allEligibleCourses = spec.eligibleCourses.flat();
-      if (
-        requirement.id === associatedRequirementId ||
-        (allEligibleCourses.includes(courseId) && requirement.checkerWarning == null)
-      ) {
-        return [requirement.id];
-      }
-      return [];
-    });
-  // only return the requirements that are in a constraint violation
-  const uniqueId = -1; // dummy unique id
-  const { requirementsThatDoNotAllowDoubleCounting } = getConstraintViolationsForSingleCourse(
-    { uniqueId },
-    requirements,
-    (reqA, reqB) =>
-      allowCourseDoubleCountingBetweenRequirements(
-        userRequirementsMap[reqA],
-        userRequirementsMap[reqB]
-      )
-  );
-  // order does not need to be preserved
-  return Array.from(requirementsThatDoNotAllowDoubleCounting).filter(
-    it => it !== associatedRequirementId
-  );
-}
-
 // display the entire number of fulfillents, including those that are dangerous
 export function fulfillmentProgressString({
   fulfilledBy,
