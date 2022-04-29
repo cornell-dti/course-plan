@@ -376,10 +376,10 @@ export default defineComponent({
     // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
     addCourse(data: CornellCourseRosterCourse, selectableReqId: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
       if (selectableReqId) {
         addAcknowledgedCheckerWarningOptIn(newCourse.uniqueID, selectableReqId);
       }
+      addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);

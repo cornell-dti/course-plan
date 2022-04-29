@@ -144,8 +144,8 @@ export default defineComponent({
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterSeason, year: number) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(course);
-      addCourseToSemester(year, season, newCourse, this.$gtag);
       addAcknowledgedCheckerWarningOptIn(newCourse.uniqueID, this.subReqId);
+      addCourseToSemester(year, season, newCourse, this.$gtag);
     },
     openCourseModal() {
       this.isCourseModalOpen = true;
