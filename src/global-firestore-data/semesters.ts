@@ -4,7 +4,6 @@ import { GTag, GTagEvent } from '../gtag';
 import { sortedSemesters } from '../utilities';
 
 import {
-  updateRequirementChoice,
   deleteCourseFromRequirementChoices,
   deleteCoursesFromRequirementChoices,
 } from './override-fulfillment-choices';
@@ -88,7 +87,6 @@ export const addCourseToSemester = (
   year: number,
   season: FirestoreSemesterSeason,
   newCourse: FirestoreSemesterCourse,
-  choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices,
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'add-course');
@@ -104,7 +102,6 @@ export const addCourseToSemester = (
     if (semesterFound) return newSemestersWithCourse;
     return [...oldSemesters, createSemester(year, season, [newCourse])];
   });
-  updateRequirementChoice(newCourse.uniqueID, choiceUpdater);
 };
 
 export const deleteCourseFromSemester = (

@@ -162,11 +162,10 @@ import {
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
+  addAcknowledgedCheckerWarningOptIn,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
-import {
-  getRelatedUnfulfilledRequirements,
-} from '@/requirements/requirement-frontend-utils';
+import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
 import featureFlagCheckers from '@/feature-flags';
 
@@ -375,10 +374,12 @@ export default defineComponent({
       this.isConfirmationOpen = false;
     },
     // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
-    addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
+    addCourse(data: CornellCourseRosterCourse, selectableReqId: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      // Since the course is new, we know the old choice does not exist.
-      addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+      addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
+      if (selectableReqId) {
+        addAcknowledgedCheckerWarningOptIn(newCourse.uniqueID, selectableReqId);
+      }
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
@@ -388,15 +389,7 @@ export default defineComponent({
       if (this.handleRequirementConflicts) {
         const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
 
-        // set choice to nothing (no opting out, no opting in)
-        const choice: FirestoreCourseOptInOptOutChoices = {
-          optOut: [],
-          acknowledgedCheckerWarningOptIn: [],
-          arbitraryOptIn: {},
-        };
-
-        // add the course to the semeser (with no choice made)
-        addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+        addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
         this.closeCourseModal();
 
         const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
