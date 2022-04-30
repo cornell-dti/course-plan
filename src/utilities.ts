@@ -1,6 +1,7 @@
 import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 import { coursesColorSet } from './assets/constants/colors';
+import { AdvisorPackage } from '@/requirements/tools-types';
 
 /** Enumerated type to define seasons as integers in season order
  * where the seasons are defined chronologically */
@@ -199,3 +200,24 @@ export const isPlaceholderCourse = (
 export const isCourseTaken = (
   element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse | CourseTaken
 ): element is CourseTaken => !!(element as CourseTaken).uniqueId;
+
+export function getAdvisor(
+  acronym: string,
+  type: AdvisorPackage['type'],
+  userName: FirestoreUserName
+): AdvisorPackage[] {
+  const lastInitial = userName.lastName.substr(0, 1); // handle empty name
+  return [
+    {
+      name: Math.random()
+        .toString(36)
+        .replace(/[^a-z]+/g, ''), // https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript for testing
+      email: `${Math.random()
+        .toString(36)
+        .replace(/[^a-z]+/g, '')}@gmail.com`,
+      type,
+      source: lastInitial,
+      acronym,
+    },
+  ];
+}
