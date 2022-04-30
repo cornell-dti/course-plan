@@ -5,7 +5,7 @@ import aapRequirements from './colleges/ar';
 import casPreFA2020Requirements from './colleges/asPreFA2020';
 import casFA2020Requirements from './colleges/asFA2020';
 import businessRequirements from './colleges/bu';
-import engineeringRequirements from './colleges/en';
+import engineeringRequirements, { engineeringAdvisors } from './colleges/en';
 import humanEcologyRequirements from './colleges/he';
 import ilrRequirements from './colleges/il';
 import aemRequirements from './majors/aem';
@@ -99,6 +99,7 @@ const json: RequirementsJson = {
     EN: {
       name: 'Engineering',
       requirements: engineeringRequirements,
+      advisors: engineeringAdvisors,
     },
     HE: {
       name: 'Human Ecology',

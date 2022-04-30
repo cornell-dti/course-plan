@@ -6,6 +6,8 @@ import {
   ifCodeMatch,
   courseIsForeignLang,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
+import { lastNameRange, lastNameRanges } from '@/requirements/advisor-checkers';
 
 const engineeringLiberalArtsDistributions: readonly string[] = [
   'CA',
@@ -229,3 +231,34 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default engineeringRequirements;
+
+export const engineeringAdvisors: AdvisorGroup = {
+  advisors: [
+    {
+      name: 'Liane Fitzgerald',
+      email: 'lnf27@cornell.edu',
+      checker: lastNameRange('E', 'J'),
+    },
+    {
+      name: 'Ryan DeLany',
+      email: 'rd525@cornell.edu',
+      checker: lastNameRanges([
+        ['C', 'D'],
+        ['Q', 'Z'],
+      ]),
+    },
+    {
+      name: 'Benjamin Martin',
+      email: 'bem87@cornell.edu',
+      checker: lastNameRanges([
+        ['A', 'B'],
+        ['K', 'P'],
+      ]),
+    },
+    {
+      name: 'Alexandria Pizzola',
+      email: 'anp63@cornell.edu',
+    },
+  ],
+  source: 'https://www.engineering.cornell.edu/students/undergraduate-students/advising/meet-staff',
+};
