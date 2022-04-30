@@ -10,7 +10,10 @@
     </div>
     <div class="toolsContainer-cards">
       <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
-        <!--      <img src="@/assets/images/dots/threeDots.svg" alt="open menu for semester" />-->
+        <advisor-card></advisor-card>
+      </card>
+      <card name="COOL CARD" class="toolsContainer-card" id="x" desired-height="200">
+        <!--        <advisor-card></advisor-card>-->
       </card>
     </div>
   </div>
@@ -18,9 +21,10 @@
 
 <script>
 import Card from '@/components/Tools/Card.vue';
+import AdvisorCard from '@/components/Tools/AdvisorCard.vue';
 
 export default {
-  components: { Card },
+  components: { AdvisorCard, Card },
 };
 </script>
 
@@ -32,6 +36,7 @@ export default {
   padding: 3rem 7rem;
 
   &-title {
+    min-width: 100%;
     font-size: 36px;
     font-weight: bold;
     color: #3c3c3c;
@@ -42,15 +47,20 @@ export default {
     font-size: 24px;
     color: #757575;
     padding-bottom: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &-cards {
     display: flex;
     flex-wrap: wrap;
+    justify-content: start;
   }
 
   &-card {
-    margin: 5px;
+    //margin: 5px;
+    //margin-right: 87px;
   }
 }
 

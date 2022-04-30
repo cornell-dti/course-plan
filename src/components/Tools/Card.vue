@@ -1,5 +1,5 @@
 <template>
-  <div class="card" :class="{ 'card--collapsed': isCollapsed }">
+  <div class="card" :style="cssVars" :class="{ 'card--collapsed': isCollapsed }">
     <div class="card-top">
       <button class="card-minspacer">
         <img v-if="!isCollapsed" src="@/assets/images/minimize.svg" alt="minimize card" />
@@ -28,7 +28,8 @@ export default defineComponent({
   props: {
     id: { type: String, required: true },
     name: { type: String, required: true },
-    desiredWidth: { type: Number, required: false, default: 260 },
+    desiredWidth: { type: Number, required: false, default: 574 },
+    desiredHeight: { type: Number, required: false, default: 275 },
   },
 
   data() {
@@ -46,6 +47,14 @@ export default defineComponent({
       localStorage.setItem(JSON.stringify(this.name), JSON.stringify(this.isCollapsed));
     },
   },
+  computed: {
+    cssVars() {
+      return {
+        '--w': `${this.desiredWidth}px`,
+        '--h': `${this.desiredHeight}px`,
+      };
+    },
+  },
 });
 </script>
 
@@ -53,18 +62,20 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .card {
-  width: 574px;
+  width: var(--w);
+  height: var(--h);
   box-sizing: border-box;
   box-shadow: 0 0 10px 4px $boxShadowGray;
   position: relative;
   border-radius: 10px;
-  height: 260px;
   border-width: 0; //TODO: figure out why border-width is default > 0
   align-items: center;
   background-color: $white;
+  margin: 5px 80px 5px 5px;
 
   &--collapsed {
     height: 50px;
+    margin-bottom: calc(var(--h) - 50px + 5px);
   }
 
   &-top {
@@ -79,6 +90,7 @@ export default defineComponent({
     display: flex;
     width: 100%;
     height: 50px;
+    min-height: 50px;
     justify-content: center;
     align-items: center;
   }
@@ -90,11 +102,13 @@ export default defineComponent({
   }
 
   &-content {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin: 14px 32px 14px 32px;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: calc(100% - 64px);
+    //height: calc(100% - 78px);
+    height: 100%;
   }
 
   &-name {
