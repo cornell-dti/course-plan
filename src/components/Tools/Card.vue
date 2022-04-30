@@ -66,7 +66,7 @@ export default defineComponent({
   box-shadow: 0 0 10px 4px $boxShadowGray;
   position: relative;
   border-radius: 10px;
-  border-width: 0; //TODO: figure out why border-width is default > 0
+  border-width: 0;
   align-items: center;
   background-color: $white;
   margin: 0 80px 40px 5px;

@@ -15,7 +15,6 @@
       <!--      <card name="Another Card" class="toolsContainer-card" id="x" :desired-width="400">-->
       <!--        <h1>This one has a smaller width than default!</h1>-->
       <!--      </card>-->
-      <!--      <card name="Even More Cards!" class="toolsContainer-card" id="y"> </card>-->
     </div>
   </div>
 </template>
@@ -63,18 +62,4 @@ export default {
     //  CSS handled in Card component. Go there to adjust margins.
   }
 }
-
-//@media only screen and (max-width: $medium-breakpoint) {
-//  .toolsContainer {
-//    padding: 5rem 4rem;
-//
-//    &-title {
-//      font-size: 30px;
-//    }
-//
-//    &-subtitle {
-//      font-size: 12px;
-//    }
-//  }
-//}
 </style>

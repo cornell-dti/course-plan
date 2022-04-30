@@ -8,7 +8,6 @@
       </div>
       <div v-for="(advisor, index) in advisors" :key="index" class="advisors-row">
         <span class="advisors-info,advisors-type"> {{ advisor.type }} </span>
-
         <span class="advisors-info, advisors-name">
           {{ advisor.name }}
         </span>
