@@ -14,6 +14,11 @@
         </span>
         <a class="advisors-info, advisors-email" :href="'mailto:' + advisor.email">
           {{ advisor.email }}
+          <img
+            class="advisors-email-icon"
+            src="@/assets/images/link-gray.svg"
+            alt="external link"
+          />
         </a>
       </div>
     </div>
@@ -113,6 +118,12 @@ export default defineComponent({
     &:focus,
     &:active {
       color: #7e7e7e;
+    }
+    display: flex;
+    align-items: center;
+
+    &-icon {
+      margin-left: 5px;
     }
   }
 
