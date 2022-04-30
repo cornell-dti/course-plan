@@ -104,7 +104,7 @@ import { defineComponent } from 'vue';
 import firebase from 'firebase/app';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
-import featureFlagCheckers from '@/feature-flags';
+// import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   props: {
@@ -118,7 +118,8 @@ export default defineComponent({
   },
   computed: {
     toolsEnabled(): boolean {
-      return featureFlagCheckers.isToolsEnabled();
+      return true;
+      // return featureFlagCheckers.isToolsEnabled();
     },
   },
   methods: {
