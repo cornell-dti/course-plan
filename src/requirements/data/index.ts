@@ -20,7 +20,7 @@ import chemERequirements from './majors/chemE';
 import civilRequirements from './majors/ce';
 import commRequirements from './majors/comm';
 import crpRequirements from './majors/crp';
-import csRequirements from './majors/cs';
+import csRequirements, { csAdvisors } from './majors/cs';
 import deaRequirements from './majors/dea';
 import easRequirements from './majors/eas';
 import economicsRequirements from './majors/econ';
@@ -179,6 +179,7 @@ const json: RequirementsJson = {
       schools: ['EN', 'AS1', 'AS2'],
       requirements: csRequirements,
       specializations: [MATH2940, CHEM2080],
+      advisors: csAdvisors,
     },
     DEA: {
       name: 'Design and Environmental Analysis',
