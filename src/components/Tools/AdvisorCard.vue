@@ -23,8 +23,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import store from '@/store';
-import { getAdvisor, getCollegeFullName, getMajorFullName } from '@/utilities';
+import { getCollegeFullName, getMajorFullName } from '@/utilities';
 import { AdvisorPackage } from '@/requirements/tools-types';
+import getAdvisor from '@/requirements/tools-utilities';
 
 export default defineComponent({
   props: {

@@ -12,7 +12,7 @@
       <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
         <advisor-card></advisor-card>
       </card>
-      <card name="COOL CARD" class="toolsContainer-card" id="x" desired-height="200">
+      <card name="COOL CARD" class="toolsContainer-card" id="x" :desired-height="200">
         <!--        <advisor-card></advisor-card>-->
       </card>
     </div>
