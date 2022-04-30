@@ -6,8 +6,8 @@ import {
   ifCodeMatch,
   courseIsForeignLang,
 } from '../checkers-common';
-import { AdvisorGroup } from '@/requirements/tools-types';
-import { lastNameRange, lastNameRanges } from '@/requirements/advisor-checkers';
+import { AdvisorGroup } from '../../tools-types';
+import { lastNameRange, lastNameRanges } from '../../advisor-checkers';
 
 const engineeringLiberalArtsDistributions: readonly string[] = [
   'CA',
