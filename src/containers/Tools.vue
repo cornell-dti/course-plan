@@ -12,9 +12,10 @@
       <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
         <advisor-card></advisor-card>
       </card>
-      <card name="COOL CARD" class="toolsContainer-card" id="x" :desired-height="200">
-        <!--        <advisor-card></advisor-card>-->
-      </card>
+      <!--      <card name="Another Card" class="toolsContainer-card" id="x" :desired-width="400">-->
+      <!--        <h1>This one has a smaller width than default!</h1>-->
+      <!--      </card>-->
+      <!--      <card name="Even More Cards!" class="toolsContainer-card" id="y"> </card>-->
     </div>
   </div>
 </template>
@@ -59,8 +60,7 @@ export default {
   }
 
   &-card {
-    //margin: 5px;
-    //margin-right: 87px;
+    //  CSS handled in Card component. Go there to adjust margins.
   }
 }
 

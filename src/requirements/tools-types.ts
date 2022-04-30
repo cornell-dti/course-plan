@@ -2,6 +2,7 @@ export type AdvisorGroup = {
   readonly advisors: Advisor[];
   readonly source: string;
 };
+
 export type AdvisorChecker = (user: FirestoreUserName) => boolean;
 
 export type Advisor = {
@@ -9,6 +10,7 @@ export type Advisor = {
   readonly email: string;
   readonly checker?: AdvisorChecker;
 };
+
 export type AdvisorPackage = {
   readonly name: string;
   readonly type: 'major' | 'minor' | 'college';

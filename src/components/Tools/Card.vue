@@ -11,12 +11,10 @@
         <img v-else src="@/assets/images/expand.svg" alt="expand card" />
       </button>
     </div>
-    <!--    <span>-&#45;&#45;THIS IS THE CENTER-&#45;&#45;</span>-->
     <div v-if="isCollapsed"></div>
     <hr class="card-divider" v-if="!isCollapsed" />
     <div class="card-content" v-if="!isCollapsed">
       <slot></slot>
-      <!-- this is for the content -->
     </div>
   </div>
 </template>
@@ -71,11 +69,11 @@ export default defineComponent({
   border-width: 0; //TODO: figure out why border-width is default > 0
   align-items: center;
   background-color: $white;
-  margin: 5px 80px 5px 5px;
+  margin: 0 80px 40px 5px;
 
   &--collapsed {
     height: 50px;
-    margin-bottom: calc(var(--h) - 50px + 5px);
+    margin-bottom: calc(var(--h) - 50px + 40px);
   }
 
   &-top {
@@ -107,7 +105,6 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     width: calc(100% - 64px);
-    //height: calc(100% - 78px);
     height: 100%;
   }
 
@@ -131,11 +128,5 @@ export default defineComponent({
     @extend .card-minimize;
     visibility: hidden;
   }
-
-  //&-buttons {
-  //  //display: flex;
-  //  //justify-content: space-around;
-  //  //margin: 0rem;
-  //}
 }
 </style>
