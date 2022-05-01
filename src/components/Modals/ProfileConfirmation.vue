@@ -14,6 +14,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
+
 export default defineComponent({
   components: { TeleportModal },
   emits: { 'close-modal': () => true, 'submit-onboarding': () => false },
@@ -27,8 +28,3 @@ export default defineComponent({
     },
   },
 });
-</script>
-
-<style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
-</style>
