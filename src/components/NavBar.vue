@@ -77,7 +77,7 @@
           <div class="navbar-iconWrapper tools-mobile-icon" />
           <span class="nav-mobile-button-text">Tools</span>
         </button>
-        <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="editProfile">
+        <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="openProfile">
           <div class="navbar-iconWrapper profile-mobile-icon" />
           <span class="nav-mobile-button-text">Edit Profile</span>
         </button>
@@ -110,7 +110,7 @@ export default defineComponent({
   props: {
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
   },
-  emits: ['openPlan', 'openTools', 'editProfile', 'toggleRequirementsMobile', 'openProfile'],
+  emits: ['openPlan', 'openTools', 'toggleRequirementsMobile', 'openProfile'],
   data() {
     return {
       menuOpen: false,
@@ -139,7 +139,6 @@ export default defineComponent({
     },
     editProfile() {
       this.menuOpen = false;
-      this.$emit('editProfile');
     },
     openProfile() {
       this.menuOpen = false;
