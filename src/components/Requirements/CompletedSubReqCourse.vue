@@ -3,6 +3,7 @@
     <delete-course-modal
       :isTransferCredit="isTransferCredit"
       :reqName="courseTaken.code"
+      :reqDesc="reqDesc"
       v-if="deleteModalVisible"
       @close-delete-course-modal="onDeleteCourseModalClose"
     />
@@ -61,6 +62,7 @@ export default defineComponent({
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
+    reqDesc: { type: String, required: true },
   },
   data: () => ({
     replaceModalVisible: false,
@@ -139,6 +141,9 @@ export default defineComponent({
   },
   emits: {
     'update:modelValue': (value: boolean) => typeof value === 'boolean',
+    'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
+    'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
+      typeof course === 'object' && typeof choice === 'object',
   },
 });
 </script>

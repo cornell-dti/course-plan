@@ -29,12 +29,15 @@ import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
 import SelectSemesterReplace from '@/components/Modals/SelectSemesterReplace.vue';
+import store from '@/store';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
 export default defineComponent({
   components: { RequirementsDropdown, SelectSemesterReplace },
   props: {
+    deleteSemSeason: { type: String as PropType<FirestoreSemesterSeason>, required: true },
+    deleteSemYear: { type: Number, required: true },
     editMode: { type: Boolean, required: true },
     selectedRequirementID: { type: String, required: true },
     automaticallyFulfilledRequirements: {
@@ -57,6 +60,9 @@ export default defineComponent({
     'edit-mode': () => true,
   },
   computed: {
+    semesters(): readonly FirestoreSemester[] {
+      return store.state.semesters;
+    },
     chosenRequirementText(): string {
       if (this.selectedRequirementID === '') {
         return this.automaticallyFulfilledRequirements.join(', ');
