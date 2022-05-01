@@ -152,7 +152,6 @@ export default defineComponent({
     submitOnboarding() {
       this.clearTransferCreditIfGraduate();
       setAppOnboardingData(this.name, this.onboarding);
-      alert('onboarding should be set now');
       this.$emit('onboard');
     },
     updateBasic(
@@ -208,7 +207,6 @@ export default defineComponent({
     },
     closeConfirmation() {
       this.isConfirmOpen = false;
-      alert(this.isConfirmOpen);
     },
   },
 });

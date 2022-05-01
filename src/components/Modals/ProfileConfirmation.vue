@@ -19,7 +19,6 @@ export default defineComponent({
   emits: { 'close-modal': () => true, 'submit-onboarding': () => false },
   methods: {
     closeConfirmationModal() {
-      alert('please fucking work');
       this.$emit('close-modal');
     },
     submitAndClose() {
