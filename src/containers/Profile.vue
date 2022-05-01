@@ -48,13 +48,18 @@
     <div>
       <button
         class="profileContainer-finishButton"
-        @click="submitOnboarding"
+        @click="openConfirmation"
         data-cyId="onboarding-finishButton"
         :disabled="isError"
       >
         Save
       </button>
     </div>
+    <profile-confirmation-modal
+      @close-modal="closeConfirmation"
+      v-if="this.isConfirmOpen"
+      @submit-onboarding="submitOnboarding"
+    />
   </div>
 </template>
 
@@ -63,10 +68,11 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { setAppOnboardingData } from '@/global-firestore-data';
+import ProfileConfirmationModal from '@/components/Modals/ProfileConfirmation.vue';
 
 const placeholderText = 'Select one';
 export default defineComponent({
-  components: { OnboardingBasic, OnboardingTransfer },
+  components: { OnboardingBasic, OnboardingTransfer, ProfileConfirmationModal },
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: {
@@ -81,6 +87,7 @@ export default defineComponent({
       name: { ...this.userName },
       onboarding: { ...this.onboardingData },
       changed: false,
+      isConfirmOpen: false,
     };
   },
   computed: {
@@ -145,6 +152,7 @@ export default defineComponent({
     submitOnboarding() {
       this.clearTransferCreditIfGraduate();
       setAppOnboardingData(this.name, this.onboarding);
+      alert('onboarding should be set now');
       this.$emit('onboard');
     },
     updateBasic(
@@ -194,6 +202,13 @@ export default defineComponent({
     },
     openTransferCredit() {
       this.currentPage = 2;
+    },
+    openConfirmation() {
+      this.isConfirmOpen = true;
+    },
+    closeConfirmation() {
+      this.isConfirmOpen = false;
+      alert(this.isConfirmOpen);
     },
   },
 });
