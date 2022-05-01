@@ -27,4 +27,4 @@ export default defineComponent({
       this.$emit('submit-onboarding');
     },
   },
-});
+}); 
