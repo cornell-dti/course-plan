@@ -3,6 +3,7 @@
     title="Save Changes"
     leftButtonText="Cancel"
     rightButtonText="OK"
+    content-class="content-clear"
     @modal-closed="closeConfirmationModal"
     @left-button-clicked="closeConfirmationModal"
     @right-button-clicked="submitAndClose"
@@ -27,4 +28,5 @@ export default defineComponent({
       this.$emit('submit-onboarding');
     },
   },
-}); 
+});
+</script>

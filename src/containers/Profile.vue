@@ -55,7 +55,7 @@
         Save
       </button>
     </div>
-    <profile-confirmation-modal
+    <profile-confirmation
       @close-modal="closeConfirmation"
       v-if="this.isConfirmOpen"
       @submit-onboarding="submitOnboarding"
@@ -68,11 +68,12 @@ import { PropType, defineComponent } from 'vue';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { setAppOnboardingData } from '@/global-firestore-data';
-import ProfileConfirmationModal from '@/components/Modals/ProfileConfirmation.vue';
+import ProfileConfirmation from '@/components/Modals/ProfileConfirmation.vue';
+import store from '@/store';
 
 const placeholderText = 'Select one';
 export default defineComponent({
-  components: { OnboardingBasic, OnboardingTransfer, ProfileConfirmationModal },
+  components: { OnboardingBasic, OnboardingTransfer, ProfileConfirmation },
   props: {
     userName: { type: Object as PropType<FirestoreUserName>, required: true },
     onboardingData: {
@@ -207,6 +208,7 @@ export default defineComponent({
     },
     closeConfirmation() {
       this.isConfirmOpen = false;
+      store.commit('setIsTeleportModalOpen', false);
     },
   },
 });
