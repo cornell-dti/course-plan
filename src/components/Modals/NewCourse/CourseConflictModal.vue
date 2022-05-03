@@ -9,8 +9,7 @@
   >
     <div class="courseConflict-text">Selected Course</div>
     <div class="selected-course" data-cyId="courseConflict-selectedCourse">
-      {{ selectedCourse.code }}:
-      {{ selectedCourse.name }}
+      {{ courseName }}
     </div>
 
     <div class="courseConflict-description">
@@ -50,16 +49,22 @@ import SingleConflictEditor from '@/components/Modals/NewCourse/SingleConflictEd
 import { getConstraintViolationsForSingleCourse } from '@/requirements/requirement-constraints-utils';
 import { allowCourseDoubleCountingBetweenRequirements } from '@/requirements/requirement-frontend-utils';
 import store from '@/store';
+import { isCourseTaken } from '@/utilities';
 
 export default defineComponent({
   components: { TeleportModal, SingleConflictEditor },
   emits: {
     'close-course-modal': () => true,
-    'resolve-conflicts': (course: FirestoreSemesterCourse) => typeof course === 'object',
-    'remove-course': (uniqueID: number) => typeof uniqueID === 'number',
+    'resolve-conflicts': (course: FirestoreSemesterCourse | CourseTaken) =>
+      typeof course === 'object',
+    'remove-course': (uniqueID: string | number) =>
+      typeof uniqueID === 'number' || typeof uniqueID === 'string',
   },
   props: {
-    selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    selectedCourse: {
+      type: Object as PropType<FirestoreSemesterCourse | CourseTaken>,
+      required: true,
+    },
     courseConflicts: { type: Object as PropType<Set<string[]>>, required: true },
     selfCheckRequirements: {
       type: Object as PropType<readonly RequirementWithIDSourceType[]>,
@@ -86,7 +91,7 @@ export default defineComponent({
       });
 
       const reqsInConflict = this.getReqsInConflict(
-        this.selectedCourse.uniqueID,
+        this.courseUniqueId,
         conflictReqIds,
         selectableReqIds
       );
@@ -129,6 +134,17 @@ export default defineComponent({
       }
       return 'Conflict: Please only choose one requirement';
     },
+    courseName(): string {
+      if (isCourseTaken(this.selectedCourse)) {
+        return this.selectedCourse.code;
+      }
+      return `${this.selectedCourse.code} ${this.selectedCourse.name}`;
+    },
+    courseUniqueId(): string | number {
+      return isCourseTaken(this.selectedCourse)
+        ? this.selectedCourse.uniqueId
+        : this.selectedCourse.uniqueID;
+    },
   },
   methods: {
     closeCurrentModal() {
@@ -136,7 +152,7 @@ export default defineComponent({
     },
     removeCourseAndCloseModal() {
       this.closeCurrentModal();
-      this.$emit('remove-course', this.selectedCourse.uniqueID);
+      this.$emit('remove-course', this.courseUniqueId);
     },
     addCourse() {
       this.closeCurrentModal();
