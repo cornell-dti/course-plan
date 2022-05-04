@@ -2,8 +2,6 @@
   <div class="incompletesubreqcourse" v-if="courses.length > 0">
     <replace-course-modal
       v-if="replaceModalVisible"
-      @select-course="selectCourse"
-      @add-course="addCourse"
       @close-replace-course-modal="onReplaceCourseModalClose"
     />
     <div class="draggable-requirements-wrapper" v-if="displayDescription">

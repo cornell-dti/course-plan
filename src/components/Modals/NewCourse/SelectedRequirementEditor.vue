@@ -59,6 +59,13 @@ export default defineComponent({
     'on-selected-change': (id: string) => typeof id === 'string',
     'edit-mode': () => true,
   },
+  data() {
+    return {
+      isDisabled: false,
+      season: '',
+      year: '',
+    };
+  },
   computed: {
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
@@ -98,6 +105,13 @@ export default defineComponent({
     toggleEditMode() {
       GTagEvent(this.$gtag, 'add-modal-edit-requirements');
       this.$emit('edit-mode');
+    },
+    disableButton(bool: boolean) {
+      this.isDisabled = bool;
+    },
+    updateSemProps(season: string, year: number) {
+      this.season = season;
+      this.year = String(year);
     },
   },
 });

@@ -9,8 +9,6 @@
     />
     <replace-course-modal
       v-if="replaceModalVisible"
-      @select-course="selectCourse"
-      @add-course="addCourse"
       @close-replace-course-modal="onReplaceCourseModalClose"
     />
     <div class="completed-reqCourses-course-wrapper">
