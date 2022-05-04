@@ -217,7 +217,7 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .profileContainer {
-  background-color: #f6fafc;
+  background-color: #ffffff;
   padding: 3rem 7rem;
 
   &-title {
