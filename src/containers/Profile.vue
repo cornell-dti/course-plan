@@ -341,4 +341,10 @@ export default defineComponent({
     float: right;
   }
 }
+
+@media only screen and (max-width: $medium-breakpoint) {
+  .profileContainer {
+    padding: 5rem 4rem;
+  }
+}
 </style>
